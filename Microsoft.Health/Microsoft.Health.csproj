@@ -39,18 +39,6 @@
     <!-- A reference to the entire .NET Framework is automatically included -->
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Allergy.cs" />
-    <Compile Include="ApplicationConnection.cs" />
-    <Compile Include="AuthenticatedConnection.cs" />
-    <Compile Include="CodableValue.cs" />
-    <Compile Include="HealthRecordAccessor.cs" />
-    <Compile Include="HealthRecordItem.cs" />
-    <Compile Include="HealthServiceAuthenticatedSessionTokenExpiredException.cs" />
-    <Compile Include="HealthServiceConnection.cs" />
-    <Compile Include="HealthServiceException.cs" />
-    <Compile Include="HealthServiceRequest.cs" />
-    <Compile Include="HttpContext.cs" />
-    <Compile Include="IEasyWebResponseHandler.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Validator.cs" />
     <Compile Include="XmlWriterHelper.cs" />

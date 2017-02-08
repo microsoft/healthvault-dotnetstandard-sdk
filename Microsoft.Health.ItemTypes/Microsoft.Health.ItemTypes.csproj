@@ -42,12 +42,6 @@
     <Compile Include="..\..\Microsoft.Health.ItemTypes\PersonItem.cs">
       <Link>PersonItem.cs</Link>
     </Compile>
-    <Compile Include="..\Microsoft.Health\XmlWriterHelper.cs">
-      <Link>XmlWriterHelper.cs</Link>
-    </Compile>
-    <Compile Include="..\Microsoft.Health\XPathHelper.cs">
-      <Link>XPathHelper.cs</Link>
-    </Compile>
     <Compile Include="..\OneSDK\Validator.cs">
       <Link>Validator.cs</Link>
     </Compile>
@@ -207,7 +201,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\OneSDK\Microsoft.Health.csproj">
+    <ProjectReference Include="..\Microsoft.Health\Microsoft.Health.csproj">
       <Project>{dbe2ba67-dbc3-479e-a374-1ce5ee33c453}</Project>
       <Name>Microsoft.Health</Name>
     </ProjectReference>
