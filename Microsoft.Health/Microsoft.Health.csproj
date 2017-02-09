@@ -39,6 +39,8 @@
     <!-- A reference to the entire .NET Framework is automatically included -->
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="EasyWebRequest.cs" />
+    <Compile Include="HealthServiceRequest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Validator.cs" />
     <Compile Include="XmlWriterHelper.cs" />

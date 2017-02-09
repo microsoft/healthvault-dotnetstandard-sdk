@@ -15,8 +15,7 @@ using System.Reflection;
 using System.Security;
 using System.Text;
 using System.Threading;
-// using System.Web;
-// using System.Net.Http;
+using System.Web;
 using System.Xml;
 using Microsoft.Health.Authentication;
 using Microsoft.Health.Web;
@@ -57,22 +56,21 @@ namespace Microsoft.Health
             string fileVersion = "?";
             string systemInfo = "Unknown";
 
-            // TODO: update the version string
             // safe attempt to obtain the assembly file version, and system information
-            //try
-            //{
-            //    fileVersion = FileVersionInfo.GetVersionInfo(Assembly.GetExecutingAssembly().Location).FileVersion;
-            //    systemInfo = String.Format(
-            //        CultureInfo.InvariantCulture,
-            //        "{0}; CLR {1}",
-            //        Environment.OSVersion.VersionString,
-            //        Environment.Version);
-            //}
-            //catch (Exception)
-            //{
-            //    // failure in obtaining version or system info should not
-            //    // prevent the initialzation from continuing.
-            //}
+            try
+            {
+                fileVersion = FileVersionInfo.GetVersionInfo(Assembly.GetExecutingAssembly().Location).FileVersion;
+                systemInfo = String.Format(
+                    CultureInfo.InvariantCulture,
+                    "{0}; CLR {1}",
+                    Environment.OSVersion.VersionString,
+                    Environment.Version);
+            }
+            catch (Exception)
+            {
+                // failure in obtaining version or system info should not
+                // prevent the initialzation from continuing.
+            }
 
             return String.Format(CultureInfo.InvariantCulture, "HV-NET/{0} ({1})", fileVersion, systemInfo);
         }

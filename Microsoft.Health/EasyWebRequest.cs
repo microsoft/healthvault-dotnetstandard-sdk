@@ -10,6 +10,8 @@ using System.IO.Compression;
 using System.Net;
 using System.Text;
 using System.Threading;
+using System.Net.Http;
+using System.Net.Http.Headers;
 
 namespace Microsoft.Health
 {
