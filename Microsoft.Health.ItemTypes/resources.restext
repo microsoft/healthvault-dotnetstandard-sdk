@@ -1,0 +1,1069 @@
+# Copyright(c) Microsoft Corporation.
+# This content is subject to the Microsoft Reference Source License,
+# see http://www.microsoft.com/resources/sharedsource/licensingbasics/sharedsourcelicenses.mspx.
+# All other rights reserved.
+
+ParseXmlNavNull=The XML navigator must be provided to parse the XML.
+WriteXmlNullWriter=The XmlWriter must be specified.
+WriteXmlEmptyNodeName=The containing node name must be specified.
+WhenNullValue=The value of the When property cannot be null.
+WhenNotSet=When property is not set. 
+WhitespaceOnlyValue=The value cannot contain only white space.
+StringNullOrEmpty=The string value cannot be null or the empty string.
+
+ListSeparator=, 
+ListFormat=, {0}
+GroupSeparator=; 
+OpenParen=(
+CloseParen=)
+XSpace=X 
+Percent={0}%
+NameAndValue={0}: {1}
+NameEqualsValue={0}={1}
+Range={0} - {1}
+DateRange={0} to {1}
+MeasurementRange={0} to {1}
+Ellipsis=...
+
+Sunday=Sunday
+Monday=Monday
+Tuesday=Tuesday
+Wednesday=Wednesday
+Thursday=Thursday
+Friday=Friday
+Saturday=Saturday
+
+Male=male
+Female=female
+
+True=true
+False=false
+
+
+# ApplicationDataReference.cs
+ApplicationDataReferenceUnexpectedNode=The specified XML does not contain an application-data-reference node.
+ApplicationDataReferenceNameNotSet=The name of the application data reference must be set before creating or updating the item.
+RenderFileNameEmptyValue=The value of the RenderFileName property cannot be an empty string.
+
+# Assessment.cs
+AssessmentValueMandatory=The value of the Value property cannot be null.
+AssessmentValueNotSet=The assessment value must be set before creating or updating the item.
+AssessmentNameMandatory=The value of the Name property cannot be null.
+AssessmentNameNotSet=The name of the assessed area must be set before creating or updating the item.
+AssessmentToStringFormat={0}: {1}
+
+# Baby.cs
+BabyToStringFormatWeightAndLength=({0}, {1})
+BabyToStringFormatWeight=({0})
+BabyToStringFormatLength=({0})
+
+# Basic.cs
+BasicUnexpectedNode=The specified XML does not contain a basic node.
+BasicBirthYearOutOfRange=The birth year must be between 1000 and 3000.
+BasicToStringFormatGenderAndBirthYear={0}; Born {1}
+BasicToStringFormatBirthYear=Born {0}
+BasicToStringFormatPostalCodeAndCountry={0}, {1}
+BasicToStringSeeDetails=See Details
+
+# BodyComposition.cs 
+BodyCompositionUnexpectedNode=The specified XML does not contain a body-composition node.
+BodyCompositionMeasurementNameNotSet=The measurement name of body composition is not set. 
+BodyCompositionValueNotSet=The value of body composition is not set.
+BodyCompositionMeasurementNameNullValue=The measurement name of body composition must be specified.  
+
+# BodyCompositionValue.cs
+BodyCompositionValuePercentValueOutOfRange=The percentage value of the body composition value is negative or bigger than 100%.
+BodyCompositionValueToStringFormatMassAndPercent={0}, {1}%
+
+# BodyDimension.cs
+BodyDimensionUnexpectedNode=The specified XML does not contain a body-dimension node. 
+BodyDimensionMeasurementNameNotSet=The name of the body dimension measurement is not set. 
+BodyDimensionValueNotSet=The value of body dimension is not set. 
+BodyDimensionMeasurementNameNullValue=The name of the body dimension measurement is null. 
+BodyDimensionValueNullValue=The value of the body dimension measurement is null.
+
+# BloodOxygenSaturation.cs
+BloodOxygenSaturationUnexpectedNode=The specified XML does not contain a blood-oxygen-saturation node. 
+BloodOxygenSaturationValueOutOfRange=The percentage value of the blood oxygen saturation is negative or bigger than 100%.  
+
+# BlueButtonTextFile.cs
+BlueButtonTextFileUnexpectedNode=The specified XML does not contain a blue-button-text-file node.
+BlueButtonTextFileNameNotSet=The instance name must be set before creating or updating the item.
+BlueButtonFileContentTypeNotSet=Content Type for the associated Blue Button file is not specified.
+BlueButtonStreamContentTypeNotSet=Content Type for the record stream is not specified.
+
+# CalorieGuideline.cs
+CalorieGuidelineNameNotSet=The name of the calorie guideline is not set. 
+CalorieGuidelineCaloriesNotSet=The number of calories of the calorie guideline is not set. 
+CalorieGuidelineNameNullValue=The name of the calorie guideline must be specified. 
+CalorieGuidelineCaloriesNullValue=The number of calories to support the guideline must be specified. 
+CalorieGuidelineUnexpectedNode=The specified XML does not contain a calorie-guideline node.
+
+# CarePlan.cs
+CarePlanUnexpectedNode=The specified XML does not contain a care-plan node.
+CarePlanNameNullOrEmpty=The name property cannot be null or empty.
+CarePlanFormat={0} ({1})
+
+# CarePlanGoal.cs
+CarePlanGoalNameNull=The name property cannot be null.
+CarePlanGoalFormat={0} ({1})
+CarePlanGoalDateInvalid=The EndDate must be after the StartDate.
+
+# CarePlanGoalGroup.cs
+CarePlanGoalGroupNameNull=The name property cannot be null.
+CarePlanGoalGroupGroupsNull=The Groups property cannot be null.
+CarePlanGoalGroupFormat={0} ({1})
+CarePlanGoalGroupGroupsEmpty=The Groups property cannot be an empty collection.
+
+# CarePlanGoalRange.cs
+CarePlanGoalRangeFormatMinOnly=>= {0}
+CarePlanGoalRangeFormatMaxOnly=<= {0}
+CarePlanGoalRangeFormatMinMax={0}, {1}
+CarePlanGoalRangeFormat={0} ({1})
+CarePlanGoalRangeStatusIndicatorNegative=The StatusIndicator property cannot be negative.
+
+# CarePlanTask.cs
+CarePlanTaskNameNull=The name property cannot be null.
+CarePlanTaskFormat={0} ({1})
+CarePlanTaskDateInvalid=The EndDate must be after the StartDate.
+CarePlanTaskSequenceNumberInvalid=The SequenceNumber property cannot be negative.
+
+# CarePlanTaskRecurrence.cs
+CarePlanTaskRecurrenceFormat={0} times per {1}
+CarePlanTaskRecurrenceInvalidTimeInInterval=The TimesInInterval value must be a positive integer.
+CarePlanTaskRecurrenceIntervalAndTimesBothSet=The Interval and TimesInInterval properties must both be set.
+
+# ClaimAmounts.cs
+ClaimAmountsToStringFormat=Charged={0}, negotiated={1}, copay={2}, deductible={3}, not covered={4}, eligible={5}, percentage={6}, coinsurance={7}, adjustments={8}, benefits={9}, patient responsibility={10}
+
+# Comment.cs
+CommentUnexpectedNode=The specified XML does not contain a comment node.
+CommentContentMandatory=The value of the Content property cannot be null or empty.
+
+# Concern.cs
+ConcernUnexpectedNode=The specified XML does not contain a concern node.
+ConcernDescriptionNotSet=The description of a concern is not set. 
+ConcernDescriptionMandatory=The description of a concern is mandatory. 
+
+# ConditionEntry.cs
+ConditionEntryNameMandatory=The name of a condition entry must be specified.
+ConditionEntryNameNotSet=The name of a conditon entry is not set. 
+
+# Contraindication.cs
+ContraindicationUnexpectedNode=The specified XML does not contain a contraindication node.
+ContraindicationSubstanceNotSet=The substance for the contraindication must be set before creating or updating the item.
+ContraindicationStatusNotSet=The status for the contraindication must be set before creating or updating the item.
+ContraindicationSubstanceMandatory=A contraindication must always have a substance.
+ContraindicationStatusMandatory=A contraindication must always have a status.
+
+#DefibrillatorEpisode.cs
+DefibrillatorEpisodeUnexpectedNode=The specified XML does not contain a defibrillator episode node.
+DefibrillatorEpisodeWhenNullValue=The value of When property cannot be null.
+
+#DefibrillatorEpisodeField.cs
+DefibrillatorEpisodeFieldUnexpectedNode=The specified XML does not contain a defibrillator episode field node.
+DefibrillatorEpisodeFieldNameNullValue=Name property of episode field cannot be null.
+DefibrillatorEpisodeFieldValueNullValue=Value property of episode field cannot be null.
+
+# Delivery.cs
+DeliveryLaborDurationMustBePositive=The labor duration must be greater than zero.
+
+# DietaryIntake.cs
+DietaryIntakeUnexpectedNode=The specified XML does not contain a dietary-intake node.
+FoodItemNullValue=The food item name must always have a value.
+DietaryIntakeServingSizeServingConsumedFormat= {0} ({1}, {2})
+DietaryIntakeServingSizeFormat= {0} ({1})
+
+# Encounter.cs 
+EncounterUnexpectedNode=The specified XML does not contain an encounter node.
+
+# Exercise.cs
+ExerciseUnexpectedNode=The specified XML does not contain a exercise node.
+ExerciseActivityMandatory=An exercise must always specify an activity.
+ExerciseActivityNotSet=The exercise activity must be set before creating or updating the item.
+ExerciseDurationNotPositive=The duration for an exercise must be positive.
+ExerciseToStringFormatDuration=, {0} min.
+
+# ExerciseDetail.cs
+ExerciseDetailNameNotSet=The name value must be set before creating or updating the item.
+ExerciseDetailValueNotSet=The value must be set before creating or updating the item.
+ExerciseDetailNameNullValue=The value of the Name property cannot be null.
+
+# ExerciseSample.cs
+OffsetMustBePositive=The value for OffsetInSeconds must be a positive value.
+
+# ExerciseSampleOneValue.cs
+ExerciseSampleOneValueToStringFormat=t={0}, v={1}
+
+# ExerciseSamples.cs
+SamplingIntervalMustBePositive=The value for the sampling interval must be a positive value.
+SamplingIntervalMustBeSet=The sampling interval must be set before adding samples.
+ExerciseSamplesUnexpectedNode=The specified XML does not contain a exercise-samples node.
+ExerciseSampleNameNotSet=The name value must be set before creating or updating the item.
+ExerciseSampleUnitNotSet=The unit value must be set before creating or updating the item.
+ExerciseSampleSamplingIntervalNotSet=The sampling interval value must be set before creating or updating the item.
+ExerciseSampleNameMandatory=The exercise sample must always specify a name.
+ExerciseSampleUnitMandatory=The exercise sample must always specify a unit.
+
+# ExerciseSamplesData.cs
+OneAndTwoValuedSamples=Exercise sample data must contain either SingleValuedSamples or TwoValuedSamples, but cannot contain both.
+
+# ExerciseSampleTwoValue.cs
+ExerciseSampleTwoValueToStringFormat=t={0}, v1={1}, v2={2}
+
+# ExerciseSgement.cs
+ExerciseSegmentActivityNotSet=The activity for the exercise segment must be set before creating or updating the item.
+ExerciseSegmentToStringFormat={0} ({1})
+ExerciseOffsetNotPositive=The offset must be positive.
+
+# ExplanationOfBenefits.cs
+ServicesMandatory=The services must be set before creating or updating the item.
+ExplanationOfBenefitsUnexpectedNode=The specified XML does not contain an explanation-of-benefits node.
+DateSubmittedNullValue=The value of the DateSubmitted property cannot be null.
+PatientNullValue=The value of the Patient property cannot be null.
+PlanNullValue=The value of the Plan property cannot be null.
+MemberIdNullOrEmptyValue=The value of the MemberId property cannot be null or empty.
+ClaimTypeNullValue=The value of the ClaimType property cannot be null.
+ClaimIdNullOrEmptyValue=The value of the ClaimId property cannot be null or empty.
+SubmittedByNullValue=The value of the SubmittedBy property cannot be null.
+ProviderNullValue=The value of the Provider property cannot be null.
+CurrencyNullValue=The value of the Currency property cannot be null.
+ClaimTotalsNullValue=The value of the ClaimTotals property cannot be null.
+ExplanationOfBenefitsToStringFormat={0}, {1}, {2} ({3})
+
+# FamilyHistory.cs
+FamilyHistoryUnexpectedNode=The specified XML does not contain a family-history node.
+FamilyHistoryConditionNotSet=The condition for the family history must be set before creating or updating the item.
+FamilyHistoryConditionMandatory=A family history must always have a condition.
+FamilyHistoryToStringFormat={0} ({1})
+
+# FamilyHistoryCondition.cs
+FamilyHistoryConditionUnexpectedNode=The specified XML does not contain a family history condition node.
+FamilyHistoryConditionConditionNotSet=The condition of family history condition must be set before creating or updating the item. 
+FamilyHistoryConditionConditionMandatory=A family history condition must always have a condition. 
+
+# FamilyHistoryPerson.cs
+FamilyHistoryPersonUnexpectedNode=The specified XML does not contain a family-history-condition node. 
+FamilyHistoryPersonRelativeNameNotSet=The relative name for family history person must be set before creating or updating the item.
+FamilyHistoryPersonRelativeNameMandatory=A family history person must always have a relative name.  
+
+# FamilyHistoryRelative.cs
+FamilyHistoryRelativeToStringFormatNameAndRelationship={0} ({1})
+
+# FamilyHistoryRelativeV3.cs
+RelationshipNullValue=The relationship between the relative and the record owner must be set.
+
+# FoodEnergyValue.cs
+FoodEnergyValueCaloriesNull=The calories field must always have a value.
+FoodEnergyValueFormat= {0} kCal
+
+# GeneralMeasurement.cs
+GeneralMeasurementDisplayNotSet=The display for general measurement must be set before creating or updating the item. 
+
+# GeneticSnpResults.cs
+ChromosomeNotSet=The chromosome for genetic snp results must be set before creating or updating the item. 
+GeneticSnpResultsUnexpectedNode=The specified XML does not contain a genetic snp results node.
+GenomeBuildNotSet=The genome build for genetic snp results must be set before creating or updating the item.
+InvalidNumberingScheme=The genome numbering scheme must be either 0 based or 1 based. 
+GeneticSnpResultsToStringFormat=Chromosome {0}, {1}
+
+# GoalAssociatedTypeInfo.cs
+AssociatedThingTypeVersionIdNullorEmpty=The thing type version id must always have a value.
+
+# GoalRange.cs
+GoalRangeNameNullValue=The range name must always have a value.
+GoalRangeWithMinAndMaxFormat=Min: {0} Max: {1}
+GoalRangeWithMinFormat=Min: {0}
+GoalRangeWithMaxFormat=Max: {0}
+
+# GoalRecurrence.cs
+GoalRecurrenceIntervalNullValue=The recurrence interval must always have a value.
+GoalRecurrenceFormat={0} times per {1}
+
+# GroupMembership.cs
+GroupMembershipUnexpectedNode=The specified XML does not contain a group-membership node.
+
+# GroupMembershipActivity.cs
+GroupMembershipActivityUnexpectedNode=The specified XML does not contain a group-membership-activity node.
+GroupMembershipActivityWhenNotSet=The date when the group membership activity occurred must be set before creating or updating the item.
+GroupMembershipActivityActivityNotSet=The activity that occurred for the group membership must be set before creating or updating the item.
+GroupMembershipActivityActivityMandatory=The value of the Activity property cannot be null.    
+    
+# GroupMembershipType.cs
+GroupMembershipTypeNameMandatory=The value of the Name property cannot be null or empty.
+GroupMembershipTypeNameNotSet=The group membership name must be set before creating or updating the item.
+GroupMembershipTypeValueMandatory=The value of the Value property cannot be null or empty.
+GroupMembershipTypeValueNotSet=The group membership value must be set before creating or updating the item.
+
+# HealthAssessment.cs
+HealthAssessmentUnexpectedNode=The specified XML does not contain a health-assessment node.
+HealthAssessmentNameNotSet=The health assessment name must be set before creating or updating the item.
+HealthAssessmentCategoryNotSet=The health assessment category must be set before creating or updating the item.
+HealthAssessmentCategoryMandatory=The value of the Category property cannot be null.
+HealthAssessmentResultNotSet=The health assessment result must contain at least one assessment before creating or updating the item.
+HealthAssessmentResultMandatory=The value of the Result property cannot be null and must contain at least on assessment.
+
+# HealthEvent.cs
+HealthEventUnexpectedNode=The specified XML does not contain a health-event node.
+EventNullValue=The value of the Event property cannot be null.
+
+# HealthGoal.cs
+HealthGoalUnexpectedNode=The specified XML does not contain a health-goal node.
+GoalNameNullValue=The goal name must always have a value.
+HealthGoalFormat={0} {1}
+HealthGoalWithTargetRangeAndRecurrenceFormat={0} {1} {2}
+
+# HealthJournalEntry.cs
+HealthJournalEntryUnexpectedNode=The specified XML does not contain a health-journal-entry node.
+HealthJournalEntryContentMandatory=The value of the Content property cannot be null or empty.
+
+# HeartRate.cs
+HeartRateUnexpectedNode=The specified XML does not contain a heart-rate node.
+HeartRateValueNegative=The value of heart rate cannot be negative.
+HeartRateToStringFormat={0} BPM
+
+# Immunization.cs
+ImmunizationUnexpectedNode=The specified XML does not contain an immunization node.
+ImmunizationNameMandatory=The value of the Name property cannot be null.
+ImmunizationNameNotSet=The immunization name must be set before creating or updating the item.
+ImmunizationToStringFormat={0} ({1})
+
+# LabTestResults.cs
+LabTestResultsUnexpectedNode=The specified XML does not contain a lab-test-results node.
+LabTestResultsLabGroupNotSet=A lab test results must always have at least one lab group. 
+LabTestResultsLabGroupMandatory=A lab test results must always have at least one lab group. 
+
+# LabTestResultsGroupType.cs
+LabTestResultsGroupTypeGroupNameNotSet=A lab test results group type group name must be set before creating or updating the item. 
+LabTestResultsGroupTypeGroupNameMandatory=A lab test results group type must always have a group name. 
+
+# LabTestResultValueType.cs
+LabTestResultValueTypeMeasurementNotSet=A lab test result value type must always have a measurement.
+
+# MealDefinition.cs
+MealDefinitionNameNullValue=Meal definition name must always have a value.
+MealDefinitionUnexpectedNode=The specified XML does not contain a meal-definition node.
+
+# MedicalImageStudy.cs
+MedicalImageStudySeriesMandatory=The value of the Series collection cannot be null or empty.
+MedicalImageStudyUnexpectedNode=The specified XML does not contain a medical-image-study node.
+
+# MedicalImageStudySeries.cs
+AcquisitionDateTimeMandatory=The value of the AcquisitionDateTime property cannot be null.
+ImagesMandatory=The value of the Images property cannot be null or empty.
+
+# MedicalImageStudySeriesImage.cs
+ImageBlobNameMandatory=The value of the ImageBlobName property cannot be null.
+
+# Medication.cs
+MedicationNameNotSet=A medication name must be set before creating or updating the item.
+MedicationNameMandatory=A medication must always have a name.
+MedicationUnexpectedNode=The specified XML does not contain a medication node.
+MedicationToStringFormatGenericName=({0})
+
+# Menstruation.cs
+MenstruationUnexpectedNode=The specified XML does not contain a menstrual-flow node.
+
+# Message.cs
+MessageUnexpectedNode=The specified XML does not contain a message node.
+MessageSizeOutOfRange=The Size property must be positive.
+
+# MessageAttachment.cs
+MessageNameMandatory=The value of the Name property cannot be null or empty.
+BlobNameMandatory=The value of BlobName property cannot be null or empty.
+
+# MedicationFill.cs
+MedicationFillUnexpectedNode=The specified XML does not contain a medication-fill node.
+MedicationFillNameMandatory=A medication fill must always have a name.
+MedicationFillNameNotSet=A medication fill name must be set before creating or updating the item.
+MedicationFillToStringFormat={0}, {1}
+
+# NutritionFact.cs
+NutrientNameNullValue=The nutrient name must always have a value.
+NutritionValueFormat= {0} {1}
+
+# Organization.cs
+OrganizationNameNotSet=The name of the organization must be specified. 
+
+# PapSession.cs
+PapSessionUnexpectedNode=The specified XML does not contain a pap-session node.
+DurationMinutesNegative=The DurationMinutes value cannot be negative.
+ApneaHypopneaIndexNegative=The ApneaHypopneaIndex value cannot be negative.
+ApneaIndexNegative=The ApneaIndex value cannot be negative.
+HypopneaIndexNegative=The HypopneaIndex value cannot be negative.
+OxygenDesaturationIndexNegative=The OxygenDesaturationIndex value cannot be negative.
+PapSessionToStringFormat=Apnea-Hypopnea Index: {0}
+MeanToStringFormat=Mean: {0}
+MedianToStringFormat=Median: {0}
+MaximumToStringFormat=Maximum: {0}
+Percentile95thToStringFormat=95th Percentile: {0}
+Percentile90thToStringFormat=90th Percentile: {0}
+
+# PeakFlow.cs
+PeakFlowUnexpectedNode=The specific XML does not contain a peak-flow node.
+PeakFlowWhenNotSet=The date when the peak flow reading occurred must be set before creating or updating the item.
+PeakFlowToStringFormatPefFev1Fev6=PEF: {0}; FEV1: {1}; FEV6: {2}
+PeakFlowToStringFormatPefFev1=PEF: {0}; FEV1: {1}
+PeakFlowToStringFormatPefFev6=PEF: {0}; FEV6: {1}
+PeakFlowToStringFormatFev1Fev6=FEV1: {0}; FEV6: {1}
+PeakFlowToStringFormatPef=PEF: {0}
+PeakFlowToStringFormatFev1=FEV1: {0}
+PeakFlowToStringFormatFev6=FEV6: {0}
+
+# Pregnancy.cs 
+PregnancyUnexpectedNode=The specified XML does not contain a pregnancy node.
+PregnancyFetusCountMustBeNonNegative=The fetus count must be greater than or equal to zero.
+
+# Prescription.cs
+PrescriptionPrescribedByNotSet=The prescriber must be set before creating or updating the item.
+PrescriptionPrescribedByNameMandatory=The prescription must always have the prescribed by property set.
+
+# PressureMeasurement.cs
+PressureNotPositive=The pressure measurement must be greater than or equal to zero.
+
+# Procedure.cs
+ProcedureUnexpectedNode=The specified XML does not contain a procedure node.
+ProcedureNameNotSet=The name of the procedure must be set before creating or updating the item.
+ProcedureNameNullValue=The value of the Name property cannot be null.
+ProcedureToStringFormatNameAndLocation={0} ({1})
+ProcedureToStringFormatLocation= ({0})
+
+# QuestionAnswer.cs
+QuestionAnswerUnexpectedNode=The specified XML does not contain a question-answer node.
+QuestionAnswerQuestionNotSet=The question must be set before creating or updating the item.
+QuestionAnswerQuestionMandatory=A question/answer must always have a question.
+
+# RespiratoryRateMeasurement.cs
+RespiratoryRateNotPositive=The respiratory rate measurement must be greater than or equal to zero.
+
+#Service.cs
+ServiceTypeNullValue=The service type must be set before creating or updating the item.
+ServiceDatesNullValue=The service dates must be set before creating or updating the item.
+ClaimAmountsNullValue=The claim amounts must be set before creating or updating the item.
+
+# SnpData.cs
+SnpItemsNotSet=SNP items must be set before creating or updating the item.
+ExtraCsvItemToParse=There are extra CSV item in other data that cannot be parsed into SNP item.
+
+# SnpItem.cs
+SnpItemToStringFormatReferenceSnpId=reference SNP ID : {0} 
+SnpItemToStringFormatStrandOrientation=Strand Orientation : {0} 
+SnpItemToStringFormatResult=Result : {0} 
+SnpItemToStringFormatAssayId=Assay ID : {0} 
+SnpItemToStringFormatStartAndEnd=Start position : {0} End position : {1}
+
+# Status.cs
+StatusUnexpectedNode=The specified XML does not contain a status node.
+StatusTypeNotSet=The status type of a status is not set. 
+StatusTypeMandatory=The status type of a status is mandatory.
+
+# StructuredMeasurement.cs
+StructuredMeasurementUnitsNotSet=The units for structured measurement must be set before creating or updating the item.
+StructuredMeasurementToStringFormat={0} {1}
+
+# TestResultRange.cs
+TestResultRangeRangeTypeNotSet=The type of test result range must be set before creating or updating the item.
+TestResultRangeTextNotSet=The value of test result range must be set before creating or updating the item. 
+TestResultRangeToStringFormat={0}, {1}
+
+# TestResultRangeValue.cs
+TestResultRangeValueToStringFormat={0}-{1}
+
+# Address.cs
+AddressCityMandatory=The value of the City property cannot be null.
+AddressCityNotSet=The city must be set before creating or updating the item.
+AddressCountryMandatory=The value of the Country property cannot be null.
+AddressCountryNotSet=The country must be set before creating or updating the item.
+AddressPostalCodeMandatory=The value of the PostalCode property cannot be null.
+AddressPostalCodeNotSet=The postal code must be set before creating or updating the item.
+AddressStreetNotSet=The street must contain at least one value before creating or updating the item.
+AddressStreetMandatory=The value of the Street property cannot be null and must contain at least one value.
+IsPrimary=(Primary)
+
+# AerobicData.cs
+AerobicDataToStringFormatDistanceAndDuration={0}, {1} minute(s)
+AerobicDataToStringFormatDuration={0} minute(s)
+AerobicDataToStringFormatDistance={0}
+
+# AerobicProfile.cs
+AerobicProfileMaxHRFormat={0}max 
+AerobicProfileRestingHRFormat={0}resting 
+AerobicProfileAnaerobicThresholdFormat={0}AT 
+AerobicProfileRelativeVO2MaxFormat={0} VO2max 
+
+
+# AerobicSession.cs
+AerobicSessionDurationNotPositive=The duration must be greater than zero.
+AerobicSessionPeakHrNotPositive=The peak heart rate must be greater than zero.
+AerobicSessionAvgHrNotPositive=The average heart rate must be greater than zero.
+AerobicSessionMinHrNotPositive=The minimum heart rate must be greater than zero.
+AerobicSessionEnergyNotPositive=The energy consumed must be greater than zero.
+AerobicSessionEnergyFromFatNotPositive=The energy from fat consumed must be greater than zero.
+AerobicSessionLeftRightBalanceNotPercentage=The left-right balance must be between zero and one inclusive.
+AerobicSessionPeakCadenceNotPositive=The peak cadence must be greater than zero.
+AerobicSessionAvgCadenceNotPositive=The average cadence must be greater than zero.
+AerobicSessionMinCadenceNotPositive=The minimum cadence must be greater than zero.
+AerobicSessionAvgTemperatureNotPositive=The average temperature must be greater than zero.
+AerobicSessionMinTemperatureNotPositive=The minimum temperature must be greater than zero.
+AerobicSessionAirPressureNotPositive=The air pressure must be greater than zero.
+
+# AerobicWeekly.cs
+AerobicWeeklyUnexpectedNode=The specific XML does not contain an aerobic-weekly node.
+AerobicWeeklySessionNull=The AerobicSession is mandatory and cannot be set to null.
+AerobicWeeklySessionNotSet=The aerobic session must be set before creating or updating the item.
+AerobicWeeklyRecurrenceNotPositive=The recurrence must be greater than zero.
+AerobicWeeklyGoalToStringFormat={0}, {1} time(s) per week
+
+# AerobicProfile.cs
+AerobicProfileUnexpectedNode=The specific XML does not contain an aerobic-profile node.
+
+# Alert.cs
+AlertDaysNotSet=The alert days must be set before creating or updating the item.
+AlertTimesNotSet=The alert times must be set before creating or updating the item.
+AlertDOWNull=The alert days cannot be null or empty.
+AlertTimesNull=The alert times cannot be null or empty.
+AlertTimeFormat=@ {0}
+AlertToStringFormat={0} {1}
+
+# AllergicEpisode.cs
+AllergicEpisodeUnexpectedNode=The specified XML does not contain an allergic-episode node.
+
+# Allergy.cs
+AllergyNameMandatory=An allergy item must always have a name.
+AllergyUnexpectedNode=The specified XML does not contain an allergy node.
+
+# AltitudeMeasurement.cs
+AltitudeNotPositive=The altitude value must be greater than zero.
+
+# Annotation.cs
+AnnotationUnexpectedNode=The specified XML does not contain an annotation node.
+AnnotationWhenNotSet=The date when the annotation was taken must be set before creating or updating the item.
+AnnotationAuthorFormat=Author: {0}
+AnnotationDateFormat=Date: {0}
+
+# ApplicationSpecific.cs
+AppSpecificUnexpectedNode=The specified XML does not contain an app-specific node.
+AppSpecificAppIdMandatory=The application identifier must be set before creating or updating the item.
+AppSpecificAppIdEmpty=The ApplicationId is mandatory and cannot be set to null or empty.
+AppSpecificTagMandatory=The subtype tag must be set before creating or updating the item.
+AppSpecificTagEmpty=The SubtypeTag is mandatory and cannot be set to null or empty.
+AppSpecificDescriptionMandatory=The description must be set before creating or updating the item.
+AppSpecificDescriptionEmpty=The Description is mandatory and cannot be set to null or empty.
+
+# Appointment.cs
+AppointmentUnexpectedNode=The specified XML does not contain an appointment node.
+
+# ApproximateDateTime.cs
+ApproximateDateTimeMissingMandatory=Either the ApproximateDate or the Description must be specified.
+ApproximateDateTimeDateNull=The approximate date cannot be null.
+ApproximateDateTimeDescriptionNullOrEmpty=The description cannot be null or empty;
+
+# AsthmaInhaler.cs
+AsthmaInhalerUnexpectedNode=The specific XML does not contain an asthma-inhaler node.
+AsthmaInhalerStartDateNotSet=The inhaler start date must be set before creating or updating the item.
+AsthmaInhalerStartDateMandatory=The StartDate is mandatory and cannot be set to null.
+
+# AsthmaInhalerUse.cs
+AsthmaInhalerUseUnexpectedNode=The specific XML does not contain an asthma-inhaler-use node.
+AsthmaInhalerUseWhenNotSet=The date when the use occurred must be set before creating or updating the item.
+AsthmaInhalerDrugNotSet=The drug being inhaled must be set before creating or updating the item.
+AsthmaInhalerDoseCountNotSet=The dosage count must be set before creating or updating the item.
+AsthmaInhalerUseDrugMandatory=The Drug property is mandatory and cannot be set to null or empty.
+AsthmaInhalerUseToStringFormatWithDrug={0}, {1} dose(s)
+AsthmaInhalerUseToStringFormat={0} dose(s)
+
+# Basic.cs
+BasicPostalCodeMandatory=The postal code cannot be null or empty;
+BasicCityMandatory=The city cannot be null or empty.
+BasicCountryMandatory=The country cannot be null or empty.
+BasicTimeZoneOutOfRange=The time zone must be between -960 and 960 minutes of offset from UTC.
+
+# BloodGlucose.cs 
+BGUnexpectedNode=The specified XML does not contain a blood-glucose node.
+BGValueMandatory=The value of the Value property cannot be null.
+BGValueNotSet=The blood glucose value must be set before creating or updating the blood glucose item.
+BGMeasurementTypeMandatory=The value of the GlucoseMeasurementType property cannot be null.
+BGMeasurementTypeNotSet=The blood glucose measurement type must be set before creating or updating the blood glucose item.
+BloodGlucoseNotPositive=The blood glucose value must be greater than zero.
+
+# BloodPressure.cs
+BPUnexpectedNode=The specified XML does not contain a blood-pressure node.
+BPSystolicNegative=The systolic pressure must not be negative.
+BPSystolicNotSet=The systolic pressure must be set before creating or updating the blood pressure item.
+BPDiastolicNegative=The diastolic pressure must not be negative.
+BPDiastolicNotSet=The diastolic pressure must be set before creating or updating the blood pressure item.
+BPPulseNegative=The pulse must not be negative.
+BPToStringFormat=Systolic {0}, Diastolic {1}
+
+# CardiacProfile.cs
+CardiacProfileUnexpectedNode=The specific XML does not contain a cardiac-profile node.
+CardiacProfileToStringFormatHasPersonalStrokeHistory=Has personal stroke history = {0}
+CardiacProfileToStringFormatHasPersonalHeartDiseaseHistory=Has personal heart disease history = {0}
+CardiacProfileToStringFormatHasFamlyStrokeHistory=Has family stroke history = {0}
+CardiacProfileToStringFormatHasFamlyHeartDiseaseHistory=Has family heart disease history = {0}
+CardiacProfileToStringFormatDiabetesDiagnosed=Diabetes diagnosed = {0}
+CardiacProfileToStringFormatRenalFailureDiagnosed=Renal failure diagnosed = {0}
+CardiacProfileToStringFormatOnHypertensionMeds=On hypertension medication = {0}
+CardiacProfileToStringFormatOnHypertensionDiet=On hypertension diet = {0}
+
+# CholesterolProfile.cs
+CholesterolProfileUnexpectedNode=The specific XML does not contain a cholesterol-profile node.
+CholesterolProfileToStringFormatTotal={0} mg/dL
+CholesterolProfileToStringFormatLDLAndHDL={0}/{1} (LDL/HDL in mg/dL)
+CholesterolProfileToStringFormatLDL={0} (LDL in mg/dL)
+CholesterolProfileToStringFormatHDL={0} (HDL in mg/dL)
+CholesterolProfileToStringFormatTriglyceride={0} (triglyceride in mg/dL)
+
+# CholesterolProfileV2.cs
+CholesterolProfileV2UnexpectedNode=The specific XML does not contain a cholesterol-profile node.
+CholesterolProfileV2ToStringFormatTotal={0} mmol/L
+CholesterolProfileV2ToStringFormatLDLAndHDL={0}/{1} (LDL/HDL)
+CholesterolProfileV2ToStringFormatLDL={0} (LDL in mmol/L)
+CholesterolProfileV2ToStringFormatHDL={0} (HDL in mmol/L)
+CholesterolProfileV2ToStringFormatTriglyceride={0} (triglyceride in mmol/L)
+
+
+# Contact.cs
+ContactInformationUnexpectedNode=The specified XML does not contain a contact node.
+ContactInformationMandatory=The value of the ContactInformation property cannot be null.
+ContactInformationNotSet=The contact information must be set before creating or updating the contact item.
+ContactInformationToStringSeeDetails=See Details
+
+# ContactInfo.cs
+ContactInfoFormatPrimary={0} (Primary)
+ContactInfoFormatAddress={0}, {1}
+
+# CodableValue.cs
+CodableValueNullText=The value of the Text property cannot be null or empty.
+
+# CodedValue.cs
+ValueNotSet=The code value must be set before creating or updating the item.
+NameNotSet=The code name must be set before creating or updating the item.
+CodedValueMandatory=The value of the Value property cannot be null.
+NameMandatory=The value of the Name property cannot be null.
+VocabularyKeyMandatory=The value of the Vocabulary key cannot be null.
+
+# Condition.cs
+ConditionUnexpectedNode=The specified XML does not contain a condition node.
+ConditionNameMandatory=A condition item must always have a name.
+ConditionNameNotSet=The condition name must be set before creating or updating the item.
+
+# Device.cs
+DeviceUnexpectedNode=The specified XML does not contain an device node.
+DeviceWhenNotSet=The date when the device was used must be set before creating or updating the item.
+
+# DiabeticProfile.cs
+DiabeticProfileUnexpectedNode=The specific XML does not contain a diabetic-profile node.
+DiabeticProfileMaxHbA1CRange=The maximum HbA1C must be between 0.0 and 1.0, inclusive.
+DiabeticProfileToStringFormatPercent={0}%
+
+# DietaryDailyIntake.cs
+DietaryDailyIntakeUnexpectedNode=The specified XML does not contain a dietary-intake-daily node.
+DietaryDailyIntakeToStringFormatCalories={0} kCal
+DietaryDailyIntakeToStringFormatTotalFat=fat:{0}{1}
+DietaryDailyIntakeToStringFormatProtein=protein:{0}{1}
+DietaryDailyIntakeToStringFormatTotalCarbs=carbs:{0}{1}
+DietaryDailyIntakeToStringUnitGrams=g
+
+# DailyMedicationUsage.cs
+DailyMedicationUsageUnexpectedNode=The specified XML does not contain a daily-medication-usage node.
+DailyMedicationUsageDrugNameNull=The drug name must always have a value.
+DailyMedicationUsageDrugNameNotSet=The drug name must be set before creating or updating the item.
+DailyMedUsageToStringFormatDrug=Drug: {0}
+DailyMedUsageToStringFormatPurpose=, Purpose: {0}
+DailyMedUsageToStringFormatDosesWithIntended=, Doses (taken/intended): {0}/{1}
+DailyMedUsageToStringFormatDosesWithIntendedUnknown=, Doses (taken/intended): {0}/?
+DailyMedUsageToStringFormatSingleDoseDescription=, Description: {0}
+
+# Directive.cs
+DirectiveUnexpectedNode=The specified XML does not contain a directive node.
+DirectiveStartDateMandatory=A directive item must always have a start date.
+DirectiveStartDateNotSet=The directive start date must be set before creating or updating the item.
+DirectiveStopDateMandatory=A directive item must always have a stop date.
+DirectiveStopDateNotSet=The directive stop date must be set before creating or updating the item.
+
+# DischargeSummary.cs
+DischargeSummaryUnexpectedNode=The specified XML does not contain an discharge-summary node.
+DischargeSummaryWhenNotSet=The date when the discharge summary was made must be set before creating or updating the item.
+
+# DisplayValue.cs
+DisplayValueToStringFormatWithUnits={0} {1}
+DisplayValueUnitsMandatory=The value of the Units property cannot be null.
+
+# DoseValue.cs
+DoseValueMustBePositive=The dose value must be greater than zero.
+DoseValueToStringDoseMinAndMax={0}-{1}
+DoseValueToStringDoseMin={0}-?
+DoseValueToStringDoseMax=?-{0}
+DoseValueTOStringDoseNeither=?-?
+
+# DurationValue.cs
+DurationValueStartDateNotSet=The duration start date must be set before creating or updating the item.
+DurationValueStartDateMandatory=A duration value must always have a start date.
+
+# Email.cs
+EmailAddressMandatory=The value of the Address property cannot be null.
+EmailAddressNotSet=The e-mail address must be set before creating or updating the item.
+
+# Emotion.cs
+EmotionUnexpectedNode=The specified XML does not contain an emotion node.
+EmotionToStringFormatMood=Mood {0}/5
+EmotionToStringFormatStress=, Stress {0}/5
+EmotionToStringFormatWellbeing=, Well Being {0}/5
+
+# FamilyHistory.cs
+FamilyHistoryAgeOfOnsetNegative=The age of onset of a condition must be greater than or equal to zero.
+FamilyHistoryAgeOfResolutionNegative=The age of resolution of a condition must be greater than or equal to zero.
+FamilyHistoryToStringFormatAgeOfOnset=, at {0} year(s) old
+FamilyHistoryToStringFormatAgeOfResolution=, resolved at {0} year(s) old
+
+
+# File.cs
+FileUnexpectedNode=The specified XML does not contain a file node.
+FileSizeNotPositive=The file size must be greater than zero.
+FileNameMandatory=The value of the Name property cannot be null or empty.
+FileSizeNotSet=The file size must be set before creating or updating the item.
+FileNameNotSet=The name must be set before creating or updating the item.
+FilePathMustBeSpecified=The file path must be specified to set the content of the file item.
+FileContentTypeMustBeSpecified=The file contenty type must be specified to set the content of the file item.
+FileStreamMustBeSpecified=The stream must be specified to set the content of the file item.
+FileStreamNameMustBeSpecified=The file name must be specified to set the content of the file item.
+FileRecordMustBeSpecified=The record must be specified to set the content of the file item using a stream.
+
+# FlowMeasurement.cs
+FlowNotPositive=The flow measurement must be greater than zero.
+
+# HbA1C.cs
+HbA1CUnexpectedNode=The specified XML does not contain a HbA1C node.
+HbA1CValueRange=The value must be a percentage between 0.0 and 1.0.
+HbA1CToStringFormatPercent={0}%
+
+# HbA1CV2.cs
+HbA1CV2UnexpectedNode=The specified XML does not contain a HbA1C node.
+HbA1CV2ValueMandatory=The value of the Value property cannot be null.
+
+# HeartRateZone.cs
+HeartRateZoneNoLowerBoundary=The lower boundary for the heart rate zone must be defined before creating or updating the item.
+HeartRateZoneNoUpperBoundary=The upper boundary for the heart rate zone must be defined before creating or updating the item.
+
+# HeartRateZoneGroup.cs
+HeartRateZoneGroupNoZones=At least one target heart rate zone must be defined before creating or updating the item.
+
+# Height.cs
+HeightUnexpectedNode=The specified XML does not contain a height node.
+HeightValueMandatory=The value of the Value property cannot be null.
+HeightValueNotSet=The height value must be set before creating or updating the height item.
+
+# HealthcareProxy.cs
+HealthcareProxyUnexpectedNode=The specified XML does not contain an healthcare-proxy node.
+HealthcareProxyWhenNotSet=The date when the healthcare proxy occurred must be set before creating or updating the item.
+
+# Immunization.cs
+ImmunizationDateAdministratedNotSet=The immunization administrated date must be set before creating or updating the item.
+ImmunizationDateAdministratedMandatory=The value of the DateAdministrated property cannot be null.
+
+# InsulinInjection.cs
+InsulinInjectionTypeMandatory=The insulin injection type cannot be null.
+InsulinInjectionTypeNotSet=The insulin type must be set before creating or updating the item.
+InsulinInjectionAmountNotSet=The insulin amount must be set before creating or updating the item.
+InsulinInjectionAmountMandatory=The insulin amount cannot be null.
+InsulinInjectionUnexpectedNode=The specified XML does not contain an insulin-injection node.
+InsulinInjectionToStringFormat={0} {1}
+
+# InsulinInjectionMeasurement.cs
+InsulinInjectionNotPositive=The insulin injection value must be greater than zero.
+
+# InsulinInjectionUse.cs
+InsulinInjectionUseUnexpectedNode=The specified XML does not contain an diabetes-insulin-injection-use node.
+InsulinInjectionWhenNotSet=The date when the use occurred must be set before creating or updating the item.
+
+# LabGroupType.cs
+LabGroupTypeNameMandatory=The value of the Name property cannot be null or empty.
+LabGroupTypeNameNotSet=The group name must be set before creating or updating the item.
+
+# LabResult.cs
+LabResultsUnexpectedNode=The specified XML does not contain a lab-results node.
+LabResultsWhenNotSet=The time when the lab results occurred must be set before creating or updating the item.
+LabResultsGroupAndTestNotSet=Either the lab group or lab tests must be set before creating or update the item.
+LabResultsGroupAndTestBothSet=Only the lab group or the lab tests may be set before creating or update the item, but not both.
+
+# LabResultType.cs
+LabResultTypeToStringFormatValueAndUnit={0} {1}
+
+
+# LapSession.cs
+LapSessionSecondsIntoSessionNonNegative=The seconds into the session must be greater than or equal to zero.
+
+# LifeGoal.cs
+LifeGoalUnexpectedNode=The specified XML does not contain a life-goal node.
+LifeGoalDescriptionMandatory=The value of the Description property cannot be null.
+LifeGoalDescriptionNotSet=The life goal description must be set before creating or updating the item.
+LifeGoalToStringFormat={0} by {1}
+
+# Length.cs
+LengthNotPositive=The length value must be greater than zero.
+LengthToStringFormatMeters={0} m
+
+# Link.cs
+LinkUnexpectedNode=The specified XML does not contain a link node.
+LinkUrlNotSet=The URL must be set before creating or updating the item.
+LinkUrlMandatory=The value of the Url property cannot be null.
+
+# Measurement.cs
+ValueNotPositive=The value must be greater than zero.
+
+# Medication.cs
+MedicationToStringFormatValueUnit={0} {1}
+
+# MicrobiologyLabResult.cs
+MicrobiologyLabResultsUnexpectedNode=The specified XML does not contain a microbiology-lab-results node.
+MicrobiologyLabResultsWhenNotSet=The time when the lab results occurred must be set before creating or updating the item.
+
+# Name.cs
+FullNotSet=The full name must be set before creating or updating the item.
+FullMandatory=The value of the Full property cannot be null or empty.
+NameToStringFormat={0} {1} {2} {3} {4}, {5}
+
+# Occurrence.cs
+OccurrenceWhenNotSet=The time when of occurrence must be set before creating or updating the item.
+OccurrenceMinutesNotSet=The duration in minutes of the occurrence must be set before creating or updating the item.
+OccurrenceWhenMandatory=The value of the When property cannot be null.
+OccurrenceMinutesMustBePositive=The value of the Minutes property must be greater than zero.
+
+# PaceMeasurement.cs
+PaceNotPositive=The pace value must be greater than zero.
+
+# Payer.cs
+PayerUnexpectedNode=The specified XML does not contain a payer node.
+PayerPlanNameMandatory=The value of the PlanName property cannot be null.
+PayerPlanNameNotSet=The plan name must be set before creating or updating the payer item.
+PayerToStringFormat={0} {1}
+
+# PasswordProtectedPackage.cs
+PackageUnexpectedNode=The specified XML does not contain a password-protected-package node.
+PackageKeyLengthOutOfRange=The KeyLength must be greater than zero and should match the length for the specified algorithm.
+PackageHashIterationOutOfRange=The HashIterations must be greater than zero.
+PackageSaltMandatory=The value of the Salt property cannot be null or empty.
+PackageAlgorithmNotSet=The algorithm must be set before creating or updating the password protected package.
+PackageSaltNotSet=The salt must be set before creating or updating the password protected package.
+PackageKeyLengthNotSet=The key length must be set before creating or updating the password protected package.
+
+# Person.cs
+PersonUnexpectedNode=The specified XML does not contain a person node.
+PersonNameMandatory=The value of the Name property cannot be null.
+PersonNameNotSet=The person's name must be set before creating or updating the contact item.
+PersonTypeMandatory=The value of the PersonType property cannot be null.
+PersonTypeNotSet=The person type must be set before creating or updating the contact item.
+PersonToStringFormat={0} ({1})
+
+# Personal.cs
+PersonalUnexpectedNode=The specified XML does not contain a personal node.
+PersonalToStringFormatBirthDateAndEthnicity={0}; {1}
+PersonalToStringFormatSeeDetails=See Details
+
+# PersonalImage.cs
+ImageStreamNull=The image stream must be specified.
+ImageStreamToLarge=The image must be less than 2GB in size.
+
+# Phone.cs
+PhoneNumberMandatory=The value of the Number property cannot be null.
+PhoneNumberNotSet=The telephone number must be set before creating or updating the item.
+
+# PowerMeasurement.cs
+PowerNotPositive=The power value must be greater than or equal to zero.
+
+# Problem.cs
+ProblemUnexpectedNode=The specified XML does not contain a problem node.
+ProblemWhenNotSet=The time when the problem occurred must be set before creating or updating the item.
+ProblemImportanceOutOfRange=The Problem importance must be between 1 and 5 inclusive.
+
+# Procedure.cs
+ProcedureWhenNotSet=The time when the procedure occurred must be set before creating or updating the item.
+
+# RadiologyLabResult.cs
+RadiologyLabResultsUnexpectedNode=The specified XML does not contain a radiology-lab-results node.
+RadiologyLabResultsWhenNotSet=The time when the lab results occurred must be set before creating or updating the item.
+
+# RespiratoryProfile.cs
+RespiratoryProfileUnexpectedNode=The specific XML does not contain a respiratory-profile node.
+RespiratoryProfileToStringEFRedZoneUpper=Red: 0 - {0}
+RespiratoryProfileToStringEFOrangeZone=Orange: {0} - {1}
+RespiratoryProfileToStringEFOrangeZoneUpper=Orange: ? - {0}
+RespiratoryProfileToStringEFYellowZone=Yellow: {0} - {1}
+RespiratoryProfileToStringEFYellowZoneUpper=Yellow: ? - {0}
+
+
+# Sample.cs
+SampleTimeOffsetNegative=The sample time offset must be greater than or equal to zero.
+ValueIsMandatory=The sample value is mandatory and cannot be null.
+
+# SampleSet.cs
+SampleSetBaseTimeMandatory=The sample set base time must be specified.
+SampleSetBaseTimeNotSpecified=The sample set base time must be set before creating or updating the item.
+
+# SleepJournalAM.cs
+SleepJournalAMUnexpectedNode=The specified XML does not contain a sleep-am node.
+SleepJournalAMWhenMandatory=The value of the When property cannot be null.
+SleepJournalAMWhenNotSet=When the sleep occurred must be set before creating or updating the item.
+SleepJournalAMBedTimeMandatory=The value of the Bedtime property cannot be null.
+SleepJournalAMBedTimeNotSet=The bed time must be set before creating or updating the item.
+SleepJournalAMWakeTimeMandatory=The value of the WakeTime property cannot be null.
+SleepJournalAMWakeTimeNotSet=The wake time must be set before creating or updating the item.
+SleepJournalAMWakeStateNotSet=The wake state must be set before creating or updating the item.
+SleepJournalAMSleepMinutesNotPositive=The value of the SleepMinutes property must be greater than zero.
+SleepJournalAMSleepMinutesNotSet=The minutes spent sleeping must be set before creating or updating the item.
+SleepJournalAMSettlingMinutesMandatory=The value of the SettlingMinutes property must be greater than zero.
+SleepJournalAMSettlingMinutesNotSet=The minutes spent settling must be set before creating or updating the item.
+SleepJournalAmToStringFormat={0}, {1}minutes
+
+# SleepJournalPM.cs
+SleepJournalPMUnexpectedNode=The specified XML does not contain a sleep-pm node.
+SleepJournalPMWhenMandatory=The value of the When property cannot be null.
+SleepJournalPMWhenNotSet=When the sleep occurred must be set before creating or updating the item.
+SleepJournalPMSleepinessNotSet=The sleepiness must be set before creating or updating the item.
+
+# SpeedMeasurement.cs
+SpeedNotPositive=The speed measurement must be greater than zero.
+
+# Spirometer.cs
+SpirometerUnexpectedNode=The specified XML does not contain an spirometer node.
+SpirometerWhenNotSet=The date when the spirometer reading occurred must be set before creating or updating the item.
+
+# TargetGlucoseZone.cs
+GlucoseZoneRelativeBoundaryRange=The relative zone boundary must be between 0.0 and 1.0, inclusive.
+GlucoseZoneNoLowerBoundary=The lower boundary for the glucose zone must be defined before creating or updating the item.
+GlucoseZoneNoUpperBoundary=The upper boundary for the glucose zone must be defined before creating or updating the item.
+
+# TemperatureMeasurement.cs
+TemperatureNotPositive=The temperature value must be greater than zero.
+
+# TorqueMeasurement.cs
+TorqueNotPositive=The torque value must be greater than or equal to zero.
+
+# UnitConversion.cs
+UnitConversionFormat=* {0} + {1}
+
+# VitalSignResultType.cs
+VitalSignResultTitleNotSet=The title of the vital sign result must be set before creating or updating the item.
+VitalSignResultTitleMandatory=The value of the Title property cannot be null.
+VitalSignResultToStringFormatValue=: {0}
+VitalSignResultToStringFormatUnit={0}
+
+# VitalSigns.cs
+VitalSignsUnexpectedNode=The specified XML does not contain a vital-signs node.
+VitalSignsWhenNotSet=The date when the vital signs were taken must be set before creating or updating the item.
+
+# VolumeMeasurement.cs
+VolumeNotPositive=The volume measurement must be greater than or equal to zero.
+
+# WeightValue.cs
+WeightValueKGNotSet=The weight value must be set before creating or updating the item.
+WeightNotPositive=The weight value must be greater than or equal to zero.
+WeightResultNotPositive=The resulting weight value must be greater than or equal to zero.
+
+# Weight.cs
+WeightUnexpectedNode=The specified XML does not contain a weight node.
+WeightValueMandatory=The value of the Value property cannot be null.
+WeightValueNotSet=The weight value must be set before creating or updating the weight item.
+
+# WeightGoal.cs
+WeightGoalUnexpectedNode=The specified XML does not contain a weight-goal node.
+WeightGoalToStringFormatMin=At least {0}
+MeasurementRangeWithDate={0} to {1} by {2}
+WeightGoalToStringFormatMinWithDate=At least {0} by {1}
+WeightGoalToStringFormatMaxWithDate={0} by {1}
+
+# WildcatDateTime.cs
+HealthServiceDateTimeDateNull=The date cannot be null.
+DateCompareToInvalidType=A HealthServiceDate object can only be compared with HealthServiceDate and DateTime objects.
+TimeCompareToInvalidType=An ApproximateTime object can only be compared with another ApproximateTime object.
+ApproximateDateCompareToInvalidType=An ApproximateDate object can only be compared with ApproximateDate and DateTime objects.
+ApproximateDateTimeCompareToInvalidType=An ApproximateDateTime object can only be compared with ApproximateDateTime and DateTime objects.
+
+TimeMillisecondsOutOfRange=The milliseconds must be between 0 and 999.
+TimeSecondsOutOfRange=The seconds must be between 0 and 59.
+TimeMinutesOutOfRange=The minute must be between 0 and 59.
+TimeHoursOutOfRange=The hour must be between 0 and 23.
+DateDayOutOfRange=The day must be between 1 and 31.
+DateMonthOutOfRange=The month must be between 1 and 12.
+DateYearOutOfRange=The year must be between 1000 and 9999.
+
+
+# ThingExtension.cs
+ItemExtensionSourceNullOrEmpty=The extension source must be specified.
+ExtensionSerializationSourceMissing=The extension source must be set before creating or updating a item.
+
+#WildcatVocabulary.cs
+VocabularyKeyNullOrEmpty=A valid vocabulary key must be specified.
+VocabularyKeysNullOrEmpty=At least one valid vocabulary key must be specified.
+VocabularyNameNullOrEmpty=A non-null and non-empty vocabulary name must be specified.
+VocabularyFamilyNullOrEmpty=A non-null and non-empty vocabulary family must be specified.
+VocabularyVersionNullOrEmpty=A non-null and non-empty vocabulary version must be specified.
+VocabularyItemCodeValueNullOrEmpty=A non-null and non-empty vocabulary item code value must be specified.
+VocabularySearchStringInvalid=A non-null search string between 1 and 255 characters must be specified.
+VocabularySearchTypeUnknown=A valid search type must be specified.
+VocabularySearchMaxResultsInvalid=Max results must be a positive integer.
+
+#VocabularyItemDataConverter.cs
+VocabularyItemNull=The vocabulary item cannot be null.
+VocabularyItemConversionNotSupported=The vocabulary item doesn't support the requested conversion.
+VocabularyItemConversionGeneralException=An error occurred during conversion.
+VocabularyItemUnsupportedConversion=Encountered unknown or unsupported conversion.
+
+#VocabularyItem.cs
+VocabularyItemValueNull=The vocabulary item value (code-value) cannot be null.
+VocabularyItemInfoXmlNull=The info xml cannot be null.
+
+# TypeIdSetDefinition.cs
+TypeIdSetGuidEmpty=The type identifier must be a non-empty Guid.
+
+# DateRangeSetDefinition.cs
+DateRangeMinLessThanMax=The dateMin must be less than or equal to dateMax.
+
+# UserTagSetDefinition.cs
+UserTagSetEmpty=At least one valid user tag must be specified.
+
+# AuthorizationRule.cs
+AuthorizationRuleBadPermissions=The permissions 'None' and 'Unknown' cannot be specified when constructing an AuthorizationRule.
+GetRulesXmlNullRules=A non-null list of authorizations must be specified.
+
+#OtherItemDataCSV.cs
+OtherItemDataFormat=The other data ContentType must be text/csv.
+OtherItemDataNull=The Data value cannot be null.
+OtherItemDataInvalidNumber=string is not a valid floating-point number.
+OtherItemDataValuesNull=List of values cannot be null.
+OtherItemDataEscapesNull=List of escapes cannot be null.
+
+#OtherITemDataCSVEscape.cs
+BeforeIndexNumberNegative=The BeforeIndexNumber value cannot be negative.
+CSVNameNull=The name of the escape cannot be null.
+CSVNameInvalid=Name cannot contain the '=' character.
+CSVValueNull=The value of the escape cannot be null.
+CSVValueInvalid=Value cannot contain the '=' character.
+
+# DirectoryFilter.cs
+DirectoryFilterIdsNull=The filter ids cannot be set to null or empty.
+
+#VocabularyAuthorization.cs
+VocabAuthNavIsNull=The vocabularyAuthorization navigator cannot be null.
+
+#VocabularySearchHelper.cs
+VocabularySearchParametersNull=A valid vocabulary search parameters object must be specified.
+JSONCallbackNameNullOrEmpty=A valid name of the JSON callback function must be specified.
+ServiceTokenEmpty=The service token must be a non empty valid Guid.
+
+#Insight.cs
+InsightUnexpectedNode=The specific XML does not contain an insight node.
+InsightIdNullValue=Raised Insight Id cannot be null.
+InsightCatalogIdNullValue=Catalog Id cannot be null.
+InsightExpirationDateNullValue=Expiration date cannot be null.
+InsightSummaryText={0}, {1}
+
+#InsightAttribution.cs
+InsightAttributionNameNullValue=Attribution name cannot be null.
+
+#MshRecordBase.cs 
+MshRecordUnexpectedNode=The specific XML does not contain an action-plan node.
+WrappedTypeNameNullValue=Wrapped type name cannot be null.
+WrappedInstanceJsonNullValue=Wrapped instance json cannot be null.
+MshItemSummaryText={0}, {1}

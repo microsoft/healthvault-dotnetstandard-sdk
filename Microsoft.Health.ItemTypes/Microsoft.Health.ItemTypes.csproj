@@ -36,15 +36,10 @@
   </PropertyGroup>
   <ItemGroup>
     <None Include="project.json" />
+    <EmbeddedResource Include="resources.restext" />
     <!-- A reference to the entire .NET Framework is automatically included -->
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\..\Microsoft.Health.ItemTypes\PersonItem.cs">
-      <Link>PersonItem.cs</Link>
-    </Compile>
-    <Compile Include="..\OneSDK\Validator.cs">
-      <Link>Validator.cs</Link>
-    </Compile>
     <Compile Include="ActionPlanWrapper.cs" />
     <Compile Include="Address.cs" />
     <Compile Include="AerobicData.cs" />
@@ -198,7 +193,61 @@
     <Compile Include="Message.cs" />
     <Compile Include="MessageAttachment.cs" />
     <Compile Include="MicrobiologyLabResults.cs" />
+    <Compile Include="Mood.cs" />
+    <Compile Include="MshItemBase.cs" />
+    <Compile Include="Name.cs" />
+    <Compile Include="Normalcy.cs" />
+    <Compile Include="NutritionFact.cs" />
+    <Compile Include="Occurrence.cs" />
+    <Compile Include="Organization.cs" />
+    <Compile Include="PaceMeasurement.cs" />
+    <Compile Include="PapSession.cs" />
+    <Compile Include="PapSessionMeasurements.cs" />
+    <Compile Include="Payer.cs" />
+    <Compile Include="PeakFlow.cs" />
+    <Compile Include="Person.cs" />
+    <Compile Include="Personal.cs" />
+    <Compile Include="PersonalImage.cs" />
+    <Compile Include="PersonItem.cs" />
+    <Compile Include="Phone.cs" />
+    <Compile Include="PowerMeasurement.cs" />
+    <Compile Include="Pregnancy.cs" />
+    <Compile Include="Prescription.cs" />
+    <Compile Include="PressureMeasurement.cs" />
+    <Compile Include="Problem.cs" />
+    <Compile Include="Procedure.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="QuestionAnswer.cs" />
+    <Compile Include="RadiologyLabResults.cs" />
+    <Compile Include="range.cs" />
+    <Compile Include="RelativeRating.cs" />
+    <Compile Include="RespiratoryProfile.cs" />
+    <Compile Include="RespiratoryRateMeasurement.cs" />
+    <Compile Include="Service.cs" />
+    <Compile Include="Sleepiness.cs" />
+    <Compile Include="SleepJournalAm.cs" />
+    <Compile Include="SleepJournalPm.cs" />
+    <Compile Include="SnpData.cs" />
+    <Compile Include="SnpItem.cs" />
+    <Compile Include="SpeedMeasurement.cs" />
+    <Compile Include="status.cs" />
+    <Compile Include="StringMeasurement.cs" />
+    <Compile Include="StructuredMeasurement.cs" />
+    <Compile Include="TargetGlucoseZone.cs" />
+    <Compile Include="TargetGlucoseZoneGroup.cs" />
+    <Compile Include="TemperatureMeasurement.cs" />
+    <Compile Include="TestResultRange.cs" />
+    <Compile Include="TestResultRangeValue.cs" />
+    <Compile Include="TorqueMeasurement.cs" />
+    <Compile Include="UnitConversion.cs" />
+    <Compile Include="VitalSignResultType.cs" />
+    <Compile Include="VitalSigns.cs" />
+    <Compile Include="VolumeMeasurement.cs" />
+    <Compile Include="WakeState.cs" />
+    <Compile Include="weight.cs" />
+    <Compile Include="WeightGoal.cs" />
+    <Compile Include="WeightValue.cs" />
+    <Compile Include="Wellbeing.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Microsoft.Health\Microsoft.Health.csproj">
