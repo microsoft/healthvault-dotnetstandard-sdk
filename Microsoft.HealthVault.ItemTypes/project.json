@@ -6,6 +6,6 @@
     "System.Xml.XPath": "4.3.0"
   },
   "frameworks": {
-    "netstandard1.5": {}
+    "netstandard1.3": {}
   }
 }
