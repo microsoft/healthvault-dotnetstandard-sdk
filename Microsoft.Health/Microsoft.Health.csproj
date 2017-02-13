@@ -236,11 +236,6 @@
     <Compile Include="OtherItemDataCSVEscape.cs" />
     <Compile Include="OtherItemDataCSVItem.cs" />
     <Compile Include="OtherItemDataCSVString.cs" />
-    <Compile Include="PatientConnect\ConnectPackage.cs" />
-    <Compile Include="PatientConnect\ConnectPackageCreationParameters.cs" />
-    <Compile Include="PatientConnect\ConnectPackageHelper.cs" />
-    <Compile Include="PatientConnect\PatientConnection.cs" />
-    <Compile Include="PatientConnect\ValidatedPatientConnection.cs" />
     <Compile Include="PersonInfo.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RecordAuthorization.cs" />
