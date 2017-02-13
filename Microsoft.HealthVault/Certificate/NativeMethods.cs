@@ -4,7 +4,6 @@
 // All other rights reserved.
 
 using System;
-using System.Runtime.ConstrainedExecution;
 using System.Runtime.InteropServices;
 using System.Security;
 using System.Text;
@@ -33,7 +32,7 @@ namespace Microsoft.HealthVault.Certificate
         /// <returns>True on success, false on error</returns>
         [DllImport("Crypt32.dll", CallingConvention = CallingConvention.StdCall, CharSet = CharSet.Unicode, SetLastError = true)]
         [return: MarshalAs(UnmanagedType.Bool)]
-        internal extern static bool CertStrToName(CertEncodingType dwCertEncodingType,
+        internal static extern bool CertStrToName(CertEncodingType dwCertEncodingType,
                                                     [MarshalAs(UnmanagedType.LPWStr)]string pszX500,
                                                     StringType dwStrType,
                                                     IntPtr pvReserved,
@@ -48,7 +47,7 @@ namespace Microsoft.HealthVault.Certificate
         /// 	Way to encode the certificate name
         /// </summary>
         [Flags]
-        internal enum CertEncodingType : int
+        internal enum CertEncodingType
         {
             X509AsnEncoding = 0x00000001,
             PKCS7AsnEncoding = 0x00010000
@@ -58,7 +57,7 @@ namespace Microsoft.HealthVault.Certificate
         /// String format for the certificate name
         /// </summary>
         [Flags]
-        internal enum StringType : int
+        internal enum StringType
         {
             SimpleNameString = 1,
             OIDNameString = 2,
@@ -88,18 +87,16 @@ namespace Microsoft.HealthVault.Certificate
         /// </remarks>
         /// <param name="pCertContext">CERT_CONTEXT to free</param>
         /// <returns>always true</returns>
-        [ReliabilityContract(Consistency.WillNotCorruptState, Cer.Success)]
         [DllImport("Crypt32.dll", CallingConvention = CallingConvention.StdCall)]
         [return: MarshalAs(UnmanagedType.Bool)]
-        internal extern static bool CertFreeCertificateContext(IntPtr pCertContext);
+        internal static extern bool CertFreeCertificateContext(IntPtr pCertContext);
 
         /// <summary>
         /// 	Delete a certificate context from the certificate store
         /// </summary>
-        [ReliabilityContract(Consistency.WillNotCorruptState, Cer.Success)]
         [DllImport("Crypt32.dll", CallingConvention = CallingConvention.StdCall, SetLastError = true)]
         [return: MarshalAs(UnmanagedType.Bool)]
-        internal extern static bool CertDeleteCertificateFromStore(IntPtr pCertContext);
+        internal static extern bool CertDeleteCertificateFromStore(IntPtr pCertContext);
 
         /// <summary>
         /// 	Close a certificate store handle
@@ -109,7 +106,6 @@ namespace Microsoft.HealthVault.Certificate
         /// </remarks>
         /// <param name="hCertStore">handle of the store to be closed</param>
         /// <param name="dwFlags">flags to close with</param>
-        [ReliabilityContract(Consistency.WillNotCorruptState, Cer.Success)]
         [DllImport("Crypt32.dll", CallingConvention = CallingConvention.StdCall)]
         [return: MarshalAs(UnmanagedType.Bool)]
         internal static extern bool CertCloseStore(IntPtr hCertStore, int dwFlags);
@@ -121,7 +117,6 @@ namespace Microsoft.HealthVault.Certificate
         /// 	See http://msdn.microsoft.com/library/default.asp?url=/library/en-us/seccrypto/security/cryptdestroykey.asp
         /// </remarks>
         /// <param name="hKey">key handle to close</param>
-        [ReliabilityContract(Consistency.WillNotCorruptState, Cer.Success)]
         [DllImport("Advapi32.dll", CallingConvention = CallingConvention.StdCall)]
         [return: MarshalAs(UnmanagedType.Bool)]
         internal static extern bool CryptDestroyKey(IntPtr hKey);
@@ -134,7 +129,6 @@ namespace Microsoft.HealthVault.Certificate
         /// </remarks>
         /// <param name="hProv">key container to close</param>
         /// <param name="dwFlags">reserved, must be zero</param>
-        [ReliabilityContract(Consistency.WillNotCorruptState, Cer.Success)]
         [DllImport("Advapi32.dll", CallingConvention = CallingConvention.StdCall)]
         [return: MarshalAs(UnmanagedType.Bool)]
         internal static extern bool CryptReleaseContext(IntPtr hProv, int dwFlags);
@@ -159,7 +153,7 @@ namespace Microsoft.HealthVault.Certificate
         /// <param name="pExtensions">[optional] certificate extensions</param>
         [DllImport("Crypt32.dll", CallingConvention = CallingConvention.StdCall, CharSet = CharSet.Unicode, SetLastError = true)]
         [SecurityCritical]
-        internal extern static CertificateHandle CertCreateSelfSignCertificate(
+        internal static extern CertificateHandle CertCreateSelfSignCertificate(
                                                     KeyContainerHandle hProv,
                                                     CryptoApiBlob pSubjectIssuerBlob,
                                                     SelfSignFlags dwFlags,
@@ -183,7 +177,7 @@ namespace Microsoft.HealthVault.Certificate
         /// <returns>handle to the store, NULL on error</returns>
         [DllImport("Crypt32.dll", CallingConvention = CallingConvention.StdCall, SetLastError = true)]
         [SecurityCritical]
-        internal extern static CertificateStoreHandle CertOpenStore(
+        internal static extern CertificateStoreHandle CertOpenStore(
                                                     IntPtr lpszStoreProvider,
                                                     int dwMsgAndCertEncodingType,
                                                     IntPtr hCryptProv,
@@ -204,7 +198,7 @@ namespace Microsoft.HealthVault.Certificate
         [DllImport("Crypt32.dll", CallingConvention = CallingConvention.StdCall, SetLastError = true)]
         [return: MarshalAs(UnmanagedType.Bool)]
         [SecurityCritical]
-        internal extern static bool CertAddCertificateContextToStore(
+        internal static extern bool CertAddCertificateContextToStore(
                                                     CertificateStoreHandle hCertStore,
                                                     CertificateHandle pCertContext,
                                                     AddDisposition dwAddDisposition,
@@ -225,7 +219,7 @@ namespace Microsoft.HealthVault.Certificate
         [DllImport("Advapi32.dll", CallingConvention = CallingConvention.StdCall, CharSet = CharSet.Unicode, SetLastError = true)]
         [return: MarshalAs(UnmanagedType.Bool)]
         [SecurityCritical]
-        internal extern static bool CryptAcquireContext(
+        internal static extern bool CryptAcquireContext(
                                                     [Out]out KeyContainerHandle phProv,
                                                     [MarshalAs(UnmanagedType.LPWStr)] string pszContainer,
                                                     [MarshalAs(UnmanagedType.LPWStr)]string pszProvider,
@@ -246,7 +240,7 @@ namespace Microsoft.HealthVault.Certificate
         [DllImport("Advapi32.dll", CallingConvention = CallingConvention.StdCall, SetLastError = true)]
         [return: MarshalAs(UnmanagedType.Bool)]
         [SecurityCritical]
-        internal extern static bool CryptGenKey(
+        internal static extern bool CryptGenKey(
                                                     KeyContainerHandle hProv,
                                                     AlgorithmType algId,
                                                     KeyFlags dwFlags,
@@ -266,7 +260,7 @@ namespace Microsoft.HealthVault.Certificate
         [DllImport("Crypt32.dll", CallingConvention = CallingConvention.StdCall, SetLastError = true)]
         [return: MarshalAs(UnmanagedType.Bool)]
         [SecurityCritical]
-        internal extern static bool PFXExportCertStoreEx(
+        internal static extern bool PFXExportCertStoreEx(
                                                     CertificateStoreHandle hStore,
                                                     IntPtr pPFX,
                                                     IntPtr szPassword,
@@ -276,14 +270,14 @@ namespace Microsoft.HealthVault.Certificate
         // Disable "field not used" warning to leave consts for documentation purposes
 #pragma warning disable 414
         [Flags]
-        internal enum SelfSignFlags : int
+        internal enum SelfSignFlags
         {
             NoKeyInfo = 2,
             NoSign = 1,
             None = 0
         }
 
-        internal enum AddDisposition : int
+        internal enum AddDisposition
         {
             New = 1,
             UseExisting = 2,
@@ -293,14 +287,14 @@ namespace Microsoft.HealthVault.Certificate
         }
 
         [Flags]
-        internal enum PfxExportFlags : int
+        internal enum PfxExportFlags
         {
             ReportNoPrivateKey = 0x00000001,
             ReportNotAbleToExportPrivateKey = 0x00000002,
             ExportPrivateKeys = 0x00000004
         }
 
-        internal enum ProviderType : int
+        internal enum ProviderType
         {
             RsaFull = 1,
             RsaSignature = 2,
@@ -332,13 +326,13 @@ namespace Microsoft.HealthVault.Certificate
             Silent = 0x00000040
         }
 
-        internal enum AlgorithmType : int
+        internal enum AlgorithmType
         {
             KeyExchange = 1,
             Signature = 2
         }
 
-        internal enum KeyFlags : int
+        internal enum KeyFlags
         {
             Exportable = 0x00000001,
             UserProtected = 0x00000002,
@@ -356,7 +350,7 @@ namespace Microsoft.HealthVault.Certificate
             Archivable = 0x00004000
         }
 
-        internal enum CertSystemStoreFlags : int
+        internal enum CertSystemStoreFlags
         {
             CurrentUserId = 1,
             LocalMachineId = 2,

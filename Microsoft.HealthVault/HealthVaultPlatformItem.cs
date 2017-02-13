@@ -594,7 +594,7 @@ namespace Microsoft.HealthVault.PlatformPrimitives
         /// If no filter was specified or if any specified filter was invalid.
         /// </exception>
         /// 
-        static internal void ValidateFilters(HealthRecordSearcher searcher)
+        internal static void ValidateFilters(HealthRecordSearcher searcher)
         {
             if (searcher.Filters.Count == 0)
             {

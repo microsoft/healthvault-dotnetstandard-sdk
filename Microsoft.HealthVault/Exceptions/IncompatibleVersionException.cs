@@ -5,11 +5,8 @@
 
 using System;
 using System.Globalization;
-using System.Runtime.Serialization;
-using System.Security;
-using System.Security.Permissions;
 
-namespace Microsoft.HealthVault
+namespace Microsoft.HealthVault.Exceptions
 {
     /// <summary>
     /// Indicates version incompatibility.
@@ -36,14 +33,12 @@ namespace Microsoft.HealthVault
             string incompatibleVersion)
             : this(compatibleVersions,
                     incompatibleVersion,
-                    String.Format(
+                    string.Format(
                         CultureInfo.CurrentUICulture,
                         ResourceRetriever.GetResourceString(
                             "IncompatibleVersionExceptionMessageFormatString"),
-                        compatibleVersions == null
-                            ? String.Empty : compatibleVersions,
-                        incompatibleVersion == null
-                            ? String.Empty : incompatibleVersion))
+                        compatibleVersions ?? string.Empty,
+                        incompatibleVersion ?? string.Empty))
         {
         }
 
@@ -107,21 +102,17 @@ namespace Microsoft.HealthVault
         /// Gets the compatible versions.
         /// </summary>
         /// 
-        public string CompatibleVersions
-        {
-            get { return _compatibleVersions; }
-        }
-        private string _compatibleVersions;
+        public string CompatibleVersions => _compatibleVersions;
+
+        private readonly string _compatibleVersions;
 
         /// <summary>
         /// Gets the incompatible version.
         /// </summary>
         /// 
-        public string IncompatibleVersion
-        {
-            get { return _incompatibleVersion; }
-        }
-        private string _incompatibleVersion;
+        public string IncompatibleVersion => _incompatibleVersion;
+
+        private readonly string _incompatibleVersion;
 
         #region FxCop required ctors
 
@@ -131,7 +122,6 @@ namespace Microsoft.HealthVault
         /// </summary>
         /// 
         public IncompatibleVersionException()
-            : base()
         {
         }
 
@@ -169,80 +159,6 @@ namespace Microsoft.HealthVault
         {
         }
 
-        #region Serialization
-
-        /// <summary>
-        /// Creates a new instance of the <see cref="IncompatibleVersionException"/> 
-        /// class with the specified serialization information.
-        /// </summary>
-        /// 
-        /// <param name="info">
-        /// Serialized information about this exception.
-        /// </param>
-        /// 
-        /// <param name="context">
-        /// The stream context of the serialized information.
-        /// </param>
-        /// 
-        /// <exception cref="ArgumentNullException">
-        /// The <paramref name="info"/> parameter is <b>null</b>.
-        /// </exception>
-        /// 
-        protected IncompatibleVersionException(
-            SerializationInfo info,
-            StreamingContext context)
-            : base(info, context)
-        {
-            if (info == null)
-            {
-                throw new ArgumentNullException(
-                    "info",
-                    ResourceRetriever.GetResourceString(
-                        "ExceptionSerializationInfoNull"));
-            }
-
-            info.AddValue("compatibleVersions", _compatibleVersions);
-            info.AddValue("incompatibleVersion", _incompatibleVersion);
-        }
-
-        /// <summary>
-        /// Serializes the exception.
-        /// </summary>
-        /// 
-        /// <param name="info">
-        /// The serialization information.
-        /// </param>
-        /// 
-        /// <param name="context">
-        /// The serialization context.
-        /// </param>
-        /// 
-        /// <exception cref="ArgumentNullException">
-        /// The <paramref name="info"/> parameter is <b>null</b>.
-        /// </exception>
-        [SecurityCritical]
-        [SecurityPermission(
-            SecurityAction.LinkDemand,
-            SerializationFormatter = true)]
-        public override void GetObjectData(
-            SerializationInfo info,
-            StreamingContext context)
-        {
-            if (info == null)
-            {
-                throw new ArgumentNullException(
-                    "info",
-                    ResourceRetriever.GetResourceString(
-                        "ExceptionSerializationInfoNull"));
-            }
-
-            base.GetObjectData(info, context);
-            info.AddValue("compatibleVersions", _compatibleVersions);
-            info.AddValue("incompatibleVersion", _incompatibleVersion);
-        }
-
-        #endregion Serialization
-
         #endregion FxCop required ctors
 
         /// <summary>
@@ -258,17 +174,7 @@ namespace Microsoft.HealthVault
         public override string ToString()
         {
             string result =
-                String.Join(" ",
-                new string[] {
-                    base.ToString(),
-                    GetType().ToString(),
-                    ":CompatibleVersions =",
-                    CompatibleVersions == null 
-                        ? String.Empty : CompatibleVersions,
-                    ":IncompatibleVersion =",
-                    IncompatibleVersion == null
-                        ? String.Empty : IncompatibleVersion
-                });
+                string.Join(" ", base.ToString(), GetType().ToString(), ":CompatibleVersions =", CompatibleVersions ?? string.Empty, ":IncompatibleVersion =", IncompatibleVersion ?? string.Empty);
             return result;
         }
     }

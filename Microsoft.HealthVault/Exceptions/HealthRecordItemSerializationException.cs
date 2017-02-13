@@ -4,11 +4,8 @@
 // All other rights reserved.
 
 using System;
-using System.Runtime.Serialization;
-using System.Security;
-using System.Security.Permissions;
 
-namespace Microsoft.HealthVault
+namespace Microsoft.HealthVault.Exceptions
 {
     /// <summary>
     /// Represents the exception thrown when the serialization of a 
@@ -62,56 +59,9 @@ namespace Microsoft.HealthVault
         /// </summary>
         /// 
         public HealthRecordItemSerializationException()
-            : base()
         {
         }
-
-        #region Serialization
-
-        /// <summary>
-        /// Creates an instance of the <see cref="HealthRecordItemSerializationException"/> 
-        /// class with the specified serialization information and context.
-        /// </summary>
-        /// 
-        /// <param name="info">
-        /// Serialized information about this exception.
-        /// </param>
-        /// 
-        /// <param name="context">
-        /// The source and destination of the serialized information.
-        /// </param>
-        /// 
-        protected HealthRecordItemSerializationException(
-            SerializationInfo info,
-            StreamingContext context)
-            : base(info, context)
-        {
-        }
-
-        /// <summary>
-        /// Serializes the exception.
-        /// </summary>
-        /// 
-        /// <param name="info">
-        /// The serialization information.
-        /// </param>
-        /// 
-        /// <param name="context">
-        /// The source and destination of the serialized information.
-        /// </param>
-        [SecurityCritical]
-        [SecurityPermission(
-            SecurityAction.LinkDemand,
-            SerializationFormatter = true)]
-        public override void GetObjectData(
-            SerializationInfo info,
-            StreamingContext context)
-        {
-            base.GetObjectData(info, context);
-        }
-
-        #endregion Serialization
-
+        
         #endregion FxCop required ctors
     }
 

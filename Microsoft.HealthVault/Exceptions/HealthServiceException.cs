@@ -5,11 +5,8 @@
 
 using System;
 using System.Globalization;
-using System.Runtime.Serialization;
-using System.Security;
-using System.Security.Permissions;
 
-namespace Microsoft.HealthVault
+namespace Microsoft.HealthVault.Exceptions
 {
     /// <summary>
     /// Represents the base class for all HealthVault exceptions 
@@ -98,20 +95,9 @@ namespace Microsoft.HealthVault
             int errorCodeId,
             HealthServiceResponseError error)
         {
-            string result = null;
-
-            if (error != null)
-            {
-                result = error.Message;
-            }
-            else
-            {
-                result =
-                    ResourceRetriever.FormatResourceString(
+            return error != null ? error.Message : ResourceRetriever.FormatResourceString(
                         "HealthServiceExceptionNoResponseError",
                         errorCodeId);
-            }
-            return result;
         }
 
         #region FxCop required ctors
@@ -122,7 +108,6 @@ namespace Microsoft.HealthVault
         /// </summary>
         /// 
         public HealthServiceException()
-            : base()
         {
         }
 
@@ -158,78 +143,6 @@ namespace Microsoft.HealthVault
         {
         }
 
-        #region Serialization
-
-        /// <summary>
-        /// Creates an instance of the <see cref="HealthServiceException"/> 
-        /// class with the specified serialization information.
-        /// </summary>
-        /// 
-        /// <param name="info">
-        /// Serialized information about this exception.
-        /// </param>
-        /// 
-        /// <param name="context">
-        /// The source and destination of the serialized information.
-        /// </param>
-        /// 
-        /// <exception cref="ArgumentNullException">
-        /// The <paramref name="info"/> parameter is <b>null</b>.
-        /// </exception>
-        /// 
-        protected HealthServiceException(
-            SerializationInfo info,
-            StreamingContext context)
-            : base(info, context)
-        {
-            if (info == null)
-            {
-                throw new ArgumentNullException(
-                    "info",
-                    ResourceRetriever.GetResourceString(
-                        "ExceptionSerializationInfoNull"));
-            }
-
-            _errorCodeId = info.GetInt32("errorId");
-        }
-
-        /// <summary>
-        /// Serializes the exception.
-        /// </summary>
-        /// 
-        /// <param name="info">
-        /// Serialized information about this exception.
-        /// </param>
-        /// 
-        /// <param name="context">
-        /// The source and destination of the serialized information.
-        /// </param>
-        /// 
-        /// <exception cref="ArgumentNullException">
-        /// The <paramref name="info"/> parameter is <b>null</b>.
-        /// </exception>
-        [SecurityCritical]
-        [SecurityPermission(
-            SecurityAction.LinkDemand,
-            SerializationFormatter = true)]
-        public override void GetObjectData(
-            SerializationInfo info,
-            StreamingContext context)
-        {
-            if (info == null)
-            {
-                throw new ArgumentNullException(
-                    "info",
-                    ResourceRetriever.GetResourceString(
-                        "ExceptionSerializationInfoNull"));
-            }
-
-            base.GetObjectData(info, context);
-            info.AddValue("errorId", _errorCodeId);
-        }
-
-        #endregion Serialization
-
         #endregion FxCop required ctors
 
         #region public properties
@@ -239,15 +152,8 @@ namespace Microsoft.HealthVault
         /// of error that causes this exception.
         /// </summary>
         /// 
-        public HealthServiceStatusCode ErrorCode
-        {
-            get
-            {
-                return
-                    HealthServiceStatusCodeManager.GetStatusCode(
-                    _errorCodeId);
-            }
-        }
+        public HealthServiceStatusCode ErrorCode => HealthServiceStatusCodeManager.GetStatusCode(
+            _errorCodeId);
 
         /// <summary>
         /// Gets the identifier of the status code in the HealthVault response.

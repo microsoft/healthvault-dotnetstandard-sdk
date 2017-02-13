@@ -655,7 +655,7 @@ namespace Microsoft.HealthVault
                 return _state;
             }
 
-            internal protected set
+            protected internal set
             {
                 _state = value;
             }

@@ -105,7 +105,7 @@ namespace Microsoft.HealthVault
 
         #region optionals
 
-        static internal bool? GetOptNavValueAsBool(
+        internal static bool? GetOptNavValueAsBool(
             XPathNavigator nav,
             string elementName)
         {
@@ -120,7 +120,7 @@ namespace Microsoft.HealthVault
             return result;
         }
 
-        static internal Guid? GetOptNavValueAsGuid(
+        internal static Guid? GetOptNavValueAsGuid(
             XPathNavigator nav,
             string elementName)
         {
@@ -144,7 +144,7 @@ namespace Microsoft.HealthVault
             return result;
         }
 
-        static internal int? GetOptNavValueAsInt(
+        internal static int? GetOptNavValueAsInt(
             XPathNavigator nav,
             string elementName)
         {
@@ -159,7 +159,7 @@ namespace Microsoft.HealthVault
             return result;
         }
 
-        static internal uint? GetOptNavValueAsUInt(
+        internal static uint? GetOptNavValueAsUInt(
             XPathNavigator nav,
             string elementName)
         {
@@ -181,7 +181,7 @@ namespace Microsoft.HealthVault
             return result;
         }
 
-        static internal long? GetOptNavValueAsLong(
+        internal static long? GetOptNavValueAsLong(
             XPathNavigator nav,
             string elementName)
         {
@@ -196,7 +196,7 @@ namespace Microsoft.HealthVault
             return result;
         }
 
-        static internal double? GetOptNavValueAsDouble(
+        internal static double? GetOptNavValueAsDouble(
             XPathNavigator nav,
             string elementName)
         {
@@ -211,7 +211,7 @@ namespace Microsoft.HealthVault
             return result;
         }
 
-        static internal string GetOptNavValue(
+        internal static string GetOptNavValue(
             XPathNavigator nav,
             string elementName)
         {
@@ -226,7 +226,7 @@ namespace Microsoft.HealthVault
             return result;
         }
 
-        static internal Uri GetOptNavValueAsUri(
+        internal static Uri GetOptNavValueAsUri(
             XPathNavigator nav,
             string elementName)
         {
@@ -247,7 +247,7 @@ namespace Microsoft.HealthVault
             return result;
         }
 
-        static internal DataType GetOptNavValue<DataType>(
+        internal static DataType GetOptNavValue<DataType>(
             XPathNavigator nav,
             string elementName)
             where DataType : new()
@@ -275,7 +275,7 @@ namespace Microsoft.HealthVault
         /// <param name="navigator">The navigator to use.</param>
         /// <param name="attributeName">The attribute to get.</param>
         /// <param name="defaultValue">The default value.</param>
-        static internal bool ParseAttributeAsBoolean(
+        internal static bool ParseAttributeAsBoolean(
             XPathNavigator navigator,
             string attributeName,
             bool defaultValue)
@@ -308,7 +308,7 @@ namespace Microsoft.HealthVault
         /// <param name="navigator">The navigator.</param>
         /// <param name="attributeName">The name of the attribute.</param>
         /// <param name="defaultValue">The default value.</param>
-        static internal long? ParseAttributeAsLong(
+        internal static long? ParseAttributeAsLong(
             XPathNavigator navigator,
             string attributeName,
             long? defaultValue)
@@ -345,7 +345,7 @@ namespace Microsoft.HealthVault
         /// <param name="navigator">The navigator.</param>
         /// <param name="attributeName">The name of the attribute.</param>
         /// <param name="defaultValue">The default value.</param>
-        static internal DateTime ParseAttributeAsDateTime(
+        internal static DateTime ParseAttributeAsDateTime(
             XPathNavigator navigator,
             string attributeName,
             DateTime defaultValue)
@@ -377,7 +377,7 @@ namespace Microsoft.HealthVault
         /// <param name="navigator">The navigator.</param>
         /// <param name="attributeName">The name of the attribute.</param>
         /// <param name="defaultValue">The default value</param>
-        static internal T ParseAttributeAsEnum<T>(
+        internal static T ParseAttributeAsEnum<T>(
             XPathNavigator navigator,
             string attributeName,
             T defaultValue)
@@ -411,7 +411,7 @@ namespace Microsoft.HealthVault
         /// <param name="nav">The navigator</param>
         /// <param name="itemPath">The xpath for the item</param>
         /// <returns></returns>
-        static internal Collection<T> ParseXmlCollection<T>(XPathNavigator nav, string itemPath) where T : HealthRecordItemData, new()
+        internal static Collection<T> ParseXmlCollection<T>(XPathNavigator nav, string itemPath) where T : HealthRecordItemData, new()
         {
             XPathNodeIterator itemIterator = nav.Select(itemPath);
 

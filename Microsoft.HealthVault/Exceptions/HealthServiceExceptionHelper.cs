@@ -4,7 +4,7 @@
 // All other rights reserved.
 
 
-namespace Microsoft.HealthVault
+namespace Microsoft.HealthVault.Exceptions
 {
     /// <summary>
     /// Helper class that allows the SDK to throw the appropriate
@@ -26,18 +26,10 @@ namespace Microsoft.HealthVault
         /// 
         internal static HealthServiceException GetHealthServiceException(HealthServiceResponseData responseData)
         {
-            HealthServiceException e = null;
             HealthServiceStatusCode errorCode =
                 HealthServiceStatusCodeManager.GetStatusCode(responseData.CodeId);
 
-            if (errorCode != HealthServiceStatusCode.UnmappedError)
-            {
-                e = GetHealthServiceException(errorCode, responseData.Error);
-            }
-            else
-            {
-                e = new HealthServiceException(responseData.CodeId, responseData.Error);
-            }
+            var e = errorCode != HealthServiceStatusCode.UnmappedError ? GetHealthServiceException(errorCode, responseData.Error) : new HealthServiceException(responseData.CodeId, responseData.Error);
 
             e.Response = responseData;
 
@@ -63,7 +55,7 @@ namespace Microsoft.HealthVault
             HealthServiceStatusCode errorCode,
             HealthServiceResponseError error)
         {
-            HealthServiceException e = null;
+            HealthServiceException e;
             switch (errorCode)
             {
                 case HealthServiceStatusCode.CredentialTokenExpired:

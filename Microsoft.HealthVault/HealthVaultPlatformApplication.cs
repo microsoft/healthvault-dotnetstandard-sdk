@@ -136,7 +136,7 @@ namespace Microsoft.HealthVault.PlatformPrimitives
             }
         }
 
-        static internal Collection<PersonInfo> GetAuthorizedPeople(
+        internal static Collection<PersonInfo> GetAuthorizedPeople(
             ApplicationConnection connection,
             Guid personIdCursor,
             DateTime authCreatedSinceDate,
