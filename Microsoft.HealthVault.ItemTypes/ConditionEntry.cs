@@ -5,9 +5,6 @@
 
 
 using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Globalization;
 using System.Xml;
 using System.Xml.XPath;
 
@@ -127,13 +124,13 @@ namespace Microsoft.HealthVault.ItemTypes
             _name.WriteXml("name", writer);
 
             // onset-date
-            XmlWriterHelper.WriteOpt<ApproximateDate>(
+            XmlWriterHelper.WriteOpt(
                 writer,
                 "onset-date",
                 _onsetDate);
 
             // resolution-date
-            XmlWriterHelper.WriteOpt<ApproximateDate>(
+            XmlWriterHelper.WriteOpt(
                 writer,
                 "resolution-date",
                 _resolutionDate);
@@ -145,13 +142,13 @@ namespace Microsoft.HealthVault.ItemTypes
                 _resolution);
 
            // occurrence
-            XmlWriterHelper.WriteOpt<CodableValue>( 
+            XmlWriterHelper.WriteOpt( 
                 writer,
                 "occurrence",
                 _occurrence);
 
            // severity
-            XmlWriterHelper.WriteOpt<CodableValue>( 
+            XmlWriterHelper.WriteOpt( 
                 writer,
                 "severity",
                 _severity);

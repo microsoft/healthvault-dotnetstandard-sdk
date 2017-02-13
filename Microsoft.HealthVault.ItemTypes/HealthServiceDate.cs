@@ -5,10 +5,7 @@
 
 
 using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Globalization;
-using System.Threading;
 using System.Xml;
 using System.Xml.XPath;
 
@@ -452,19 +449,6 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             return this.CompareTo(obj) == 0;
         }
-
-        /// <summary>
-        /// See the base class documentation.
-        /// </summary>
-        /// 
-        /// <returns>
-        /// See the base class documentation.
-        /// </returns>
-        /// 
-        public override int GetHashCode()
-        {
-            return base.GetHashCode();
-        }
         #endregion Equals
 
         #region Operators
@@ -651,23 +635,6 @@ namespace Microsoft.HealthVault.ItemTypes
         }
 
         #endregion Operators
-
-        /// <summary>
-        /// Gets a string representation of the date.
-        /// </summary>
-        /// 
-        /// <returns>
-        /// A string representation of the date.
-        /// </returns>
-        /// 
-        /// <remarks>
-        /// This method is not yet culture aware.
-        /// </remarks>
-        /// 
-        public override string ToString()
-        {
-            return ToString(Thread.CurrentThread.CurrentCulture);
-        }
 
         internal string ToString(IFormatProvider formatProvider)
         {

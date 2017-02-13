@@ -13,6 +13,7 @@ using System.Xml;
 using System.Xml.XPath;
 
 namespace Microsoft.HealthVault.ItemTypes
+namespace Microsoft.Health.ItemTypes
 {
     /// <summary>
     /// Provides values representing a person's gender.

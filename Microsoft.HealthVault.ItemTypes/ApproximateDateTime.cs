@@ -5,10 +5,7 @@
 
 
 using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Text;
-using System.Threading;
 using System.Xml;
 using System.Xml.XPath;
 
@@ -243,7 +240,7 @@ namespace Microsoft.HealthVault.ItemTypes
             Validator.ThrowIfStringNullOrEmpty(nodeName, "nodeName");
             Validator.ThrowIfArgumentNull(writer, "writer", "WriteXmlNullWriter");
 
-            if (_approximateDate == null && String.IsNullOrEmpty(_description))
+            if (_approximateDate == null && string.IsNullOrEmpty(_description))
             {
                 throw Validator.HealthRecordItemSerializationException("ApproximateDateTimeMissingMandatory");
             }
@@ -262,10 +259,7 @@ namespace Microsoft.HealthVault.ItemTypes
                     _approximateTime.WriteXml("time", writer);
                 }
 
-                if (_timeZone != null)
-                {
-                    _timeZone.WriteXml("tz", writer);
-                }
+                _timeZone?.WriteXml("tz", writer);
 
                 // </structured>
                 writer.WriteEndElement();
@@ -365,7 +359,7 @@ namespace Microsoft.HealthVault.ItemTypes
                 Validator.ThrowIfStringIsWhitespace(value, "Description");
                 
                 _description = value;
-                if (!String.IsNullOrEmpty(value))
+                if (!string.IsNullOrEmpty(value))
                 {
                     _approximateDate = null;
                     _approximateTime = null;
@@ -782,29 +776,12 @@ namespace Microsoft.HealthVault.ItemTypes
 
         #endregion Operators
 
-        /// <summary>
-        /// Gets a string representation of the approximate date/time.
-        /// </summary>
-        /// 
-        /// <returns>
-        /// A string representation of the approximate date/time.
-        /// </returns>
-        /// 
-        /// <remarks>
-        /// This method is not culture aware.
-        /// </remarks>
-        /// 
-        public override string ToString()
-        {
-            return ToString(Thread.CurrentThread.CurrentCulture);
-        }
-
         internal string ToString(IFormatProvider formatProvider)
         {
             StringBuilder result = new StringBuilder(50);
             string space = ResourceRetriever.GetSpace("sdkerrors");
 
-            if (String.IsNullOrEmpty(Description))
+            if (string.IsNullOrEmpty(Description))
             {
                 result.Append(ApproximateDate.ToString(formatProvider));
 
@@ -813,7 +790,7 @@ namespace Microsoft.HealthVault.ItemTypes
                 {
                     string time = ApproximateTime.ToString(formatProvider);
 
-                    if (!String.IsNullOrEmpty(time))
+                    if (!string.IsNullOrEmpty(time))
                     {
                         result.Append(space);
                         result.Append(time);

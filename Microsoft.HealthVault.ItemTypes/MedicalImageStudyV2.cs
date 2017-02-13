@@ -92,7 +92,7 @@ namespace Microsoft.HealthVault.ItemTypes
         /// A GUID.
         /// </value>
         /// 
-        public static new readonly Guid TypeId =
+        public new static readonly Guid TypeId =
             new Guid("cdfc0a9b-6d3b-4d16-afa8-02b86d621a8d");
 
         /// <summary>
@@ -192,7 +192,7 @@ namespace Microsoft.HealthVault.ItemTypes
                 medicalImageStudySeries.WriteXml("series", writer);
             }
 
-            XmlWriterHelper.WriteOpt<CodableValue>(writer, "reason", _reason);
+            XmlWriterHelper.WriteOpt(writer, "reason", _reason);
             XmlWriterHelper.WriteOptString(writer, "preview-blob-name", _previewBlobName);
 
             foreach (MedicalImageStudySeriesImage image in _keyImages)
@@ -201,7 +201,7 @@ namespace Microsoft.HealthVault.ItemTypes
             }
 
             XmlWriterHelper.WriteOptString(writer, "study-instance-uid", _studyInstanceUID);
-            XmlWriterHelper.WriteOpt<PersonItem>(writer, "referring-physician", _referringPhysician);
+            XmlWriterHelper.WriteOpt(writer, "referring-physician", _referringPhysician);
             XmlWriterHelper.WriteOptString(writer, "accession-number", _accessionNumber);
 
             writer.WriteEndElement();
@@ -456,7 +456,7 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             StringBuilder result = new StringBuilder(200);
 
-            if (!String.IsNullOrEmpty(Description) && !String.IsNullOrEmpty(Description.Trim()))
+            if (!string.IsNullOrEmpty(Description) && !string.IsNullOrEmpty(Description.Trim()))
             {
                 result.Append(Description);
             }
@@ -468,7 +468,7 @@ namespace Microsoft.HealthVault.ItemTypes
                     result.Append(ResourceRetriever.GetResourceString("ListSeparator"));
                 }
 
-                result.Append(Reason.ToString());
+                result.Append(Reason);
             }
 
             return result.ToString();

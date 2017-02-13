@@ -4,9 +4,6 @@
 // All other rights reserved.
 
 using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Globalization;
 using System.Xml;
 using System.Xml.XPath;
 
@@ -61,7 +58,7 @@ namespace Microsoft.HealthVault.ItemTypes
         /// A GUID.
         /// </value>
         /// 
-        public static new readonly Guid TypeId =
+        public new static readonly Guid TypeId =
             new Guid("98F76958-E34F-459B-A760-83C1699ADD38");
 
         /// <summary>
@@ -119,13 +116,13 @@ namespace Microsoft.HealthVault.ItemTypes
             // <when>
             _when.WriteXml("when", writer);
 
-            XmlWriterHelper.WriteOpt<ConcentrationMeasurement>(writer, "ldl", _ldl);
+            XmlWriterHelper.WriteOpt(writer, "ldl", _ldl);
 
-            XmlWriterHelper.WriteOpt<ConcentrationMeasurement>(writer, "hdl", _hdl);
+            XmlWriterHelper.WriteOpt(writer, "hdl", _hdl);
 
-            XmlWriterHelper.WriteOpt<ConcentrationMeasurement>(writer, "total-cholesterol", _totalCholesterol);
+            XmlWriterHelper.WriteOpt(writer, "total-cholesterol", _totalCholesterol);
 
-            XmlWriterHelper.WriteOpt<ConcentrationMeasurement>(writer, "triglyceride", _triglyceride);
+            XmlWriterHelper.WriteOpt(writer, "triglyceride", _triglyceride);
 
             // </cholesterol-profile>
             writer.WriteEndElement();
@@ -234,7 +231,7 @@ namespace Microsoft.HealthVault.ItemTypes
         /// 
         public override string ToString()
         {
-            string result = String.Empty;
+            string result = string.Empty;
 
             if (TotalCholesterol != null)
             {
@@ -242,7 +239,7 @@ namespace Microsoft.HealthVault.ItemTypes
             }
             else if (LDL != null && HDL != null)
             {
-                result = String.Format(
+                result = string.Format(
                     ResourceRetriever.GetResourceString("CholesterolProfileV2ToStringFormatLDLAndHDL"), 
                     LDL.ToString(),
                     HDL.ToString());

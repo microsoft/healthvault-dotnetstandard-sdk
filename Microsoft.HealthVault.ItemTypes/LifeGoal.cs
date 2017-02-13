@@ -5,10 +5,6 @@
 
 
 using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Globalization;
-using System.Text;
 using System.Xml;
 using System.Xml.XPath;
 
@@ -193,7 +189,7 @@ namespace Microsoft.HealthVault.ItemTypes
             if (Goal != null && Goal.TargetDate != null)
             {
                 result =
-                    String.Format(
+                    string.Format(
                         ResourceRetriever.GetResourceString(
                             "LifeGoalToStringFormat"),
                         Description,

@@ -4,10 +4,6 @@
 // All other rights reserved.
 
 using System;
-using System.Text;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Globalization;
 using System.Xml;
 using System.Xml.XPath;
 
@@ -203,11 +199,11 @@ namespace Microsoft.HealthVault.ItemTypes
             {
                 _snpData.StoreSnpItems();
 
-                if (!String.IsNullOrEmpty(_snpData.Data))
+                if (!string.IsNullOrEmpty(_snpData.Data))
                 {
                     Blob blob =
                         GetBlobStore(default(HealthRecordAccessor)).NewBlob(
-                            String.Empty,
+                            string.Empty,
                             _snpData.ContentType);
                     blob.WriteInline(_snpData.Data);
                 }
@@ -229,19 +225,19 @@ namespace Microsoft.HealthVault.ItemTypes
             writer.WriteElementString("numbering-scheme", ((int)_numberingScheme).ToString());
 
             // <ordered-by>
-            XmlWriterHelper.WriteOpt<Organization>(
+            XmlWriterHelper.WriteOpt(
                 writer,
                 "ordered-by",
                 _orderedBy);
 
             // <test-provider>
-            XmlWriterHelper.WriteOpt<Organization>(
+            XmlWriterHelper.WriteOpt(
                 writer,
                 "test-provider",
                 _testProvider);
 
             // <laboratory-name>
-            XmlWriterHelper.WriteOpt<Organization>(
+            XmlWriterHelper.WriteOpt(
                 writer,
                 "laboratory-name",
                 _laboratoryName);
@@ -504,7 +500,7 @@ namespace Microsoft.HealthVault.ItemTypes
         public override string ToString()
         {
             return
-                String.Format(
+                string.Format(
                     ResourceRetriever.GetResourceString(
                         "GeneticSnpResultsToStringFormat"),
                     _chromosome,
@@ -533,7 +529,7 @@ namespace Microsoft.HealthVault.ItemTypes
             get
             {
                 BlobStore store = GetBlobStore(default(HealthRecordAccessor));
-                Blob blob = store[String.Empty];
+                Blob blob = store[string.Empty];
 
                 // no data, create an instance for the user to use.
                 if (blob == null)

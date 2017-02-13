@@ -5,10 +5,6 @@
 
 
 using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Text;
-using System.Globalization;
 using System.Xml;
 using System.Xml.XPath;
 
@@ -99,25 +95,25 @@ namespace Microsoft.HealthVault.ItemTypes
             writer.WriteStartElement(nodeName);
 
             // relative-name
-            XmlWriterHelper.WriteOpt<PersonItem>(
+            XmlWriterHelper.WriteOpt(
                 writer,
                 "relative-name",
                 _relativeName);
 
             // relationship
-            XmlWriterHelper.WriteOpt<CodableValue>( 
+            XmlWriterHelper.WriteOpt( 
                 writer,
                 "relationship",
                 _relationship);
 
             // date-of-birth
-            XmlWriterHelper.WriteOpt<ApproximateDate>(
+            XmlWriterHelper.WriteOpt(
                 writer,
                 "date-of-birth",
                 _dateOfBirth);
 
            // date-of-death
-            XmlWriterHelper.WriteOpt<ApproximateDate>( 
+            XmlWriterHelper.WriteOpt( 
                 writer,
                 "date-of-death",
                 _dateOfDeath);
@@ -193,11 +189,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public override string ToString()
         {
-            string result = String.Empty;
+            string result = string.Empty;
             if (_relativeName != null && _relationship != null) 
             {
                 result =
-                    String.Format(
+                    string.Format(
                         ResourceRetriever.GetResourceString(
                             "FamilyHistoryRelativeToStringFormatNameAndRelationship"),
                         _relativeName.ToString(),
@@ -206,10 +202,10 @@ namespace Microsoft.HealthVault.ItemTypes
             else if (_relationship != null)
             {
                 result =
-                    String.Format(
+                    string.Format(
                         ResourceRetriever.GetResourceString(
                             "FamilyHistoryRelativeToStringFormatNameAndRelationship"),
-                        String.Empty,
+                        string.Empty,
                         _relationship.ToString()); 
             }
             else if (_relativeName != null)

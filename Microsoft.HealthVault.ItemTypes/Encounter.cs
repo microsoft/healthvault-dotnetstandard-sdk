@@ -5,9 +5,6 @@
 
 
 using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Globalization;
 using System.Text;
 using System.Xml;
 using System.Xml.XPath;
@@ -115,13 +112,13 @@ namespace Microsoft.HealthVault.ItemTypes
             writer.WriteStartElement("encounter");
 
             // <when>
-            XmlWriterHelper.WriteOpt<HealthServiceDateTime>(
+            XmlWriterHelper.WriteOpt(
                 writer,
                 "when",
                 _when);
             
             // <type>
-            XmlWriterHelper.WriteOpt<CodableValue>(
+            XmlWriterHelper.WriteOpt(
                 writer,
                 "type",
                 _type);
@@ -133,7 +130,7 @@ namespace Microsoft.HealthVault.ItemTypes
                 _reason);
 
             // <duration>
-            XmlWriterHelper.WriteOpt<DurationValue>(
+            XmlWriterHelper.WriteOpt(
                 writer,
                 "duration",
                 _duration);
@@ -145,7 +142,7 @@ namespace Microsoft.HealthVault.ItemTypes
                 _consentGranted);
 
             // <facility> 
-            XmlWriterHelper.WriteOpt<Organization>(
+            XmlWriterHelper.WriteOpt(
                 writer,
                 "facility", 
                 _facility);
@@ -277,7 +274,7 @@ namespace Microsoft.HealthVault.ItemTypes
                 result.Append(Type);
             }
 
-            if (!String.IsNullOrEmpty(Reason))
+            if (!string.IsNullOrEmpty(Reason))
             {
                 if (Type != null)
                 {

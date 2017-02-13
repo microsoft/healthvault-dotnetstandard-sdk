@@ -4,11 +4,9 @@
 // All other rights reserved.
 
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
-using System.Text;
 using System.Xml;
 using System.Xml.XPath;
 
@@ -72,7 +70,7 @@ namespace Microsoft.HealthVault.ItemTypes
         /// A GUID.
         /// </value>
         ///
-        public static new readonly Guid TypeId =
+        public new static readonly Guid TypeId =
             new Guid("dad8bb47-9ad0-4f09-a020-0ff051d1d0f7");
         
         /// <summary>
@@ -170,10 +168,10 @@ namespace Microsoft.HealthVault.ItemTypes
             
             _name.WriteXml("name", writer);
             XmlWriterHelper.WriteOptString(writer, "description", _description);
-            XmlWriterHelper.WriteOpt<ApproximateDateTime>(writer, "start-date", _startDate);
-            XmlWriterHelper.WriteOpt<ApproximateDateTime>(writer, "end-date", _endDate);
-            XmlWriterHelper.WriteOpt<AssociatedTypeInfo>(writer, "associated-type-info", _associatedTypeInfo);
-            XmlWriterHelper.WriteOpt<GoalRange>(writer, "target-range", _targetRange);
+            XmlWriterHelper.WriteOpt(writer, "start-date", _startDate);
+            XmlWriterHelper.WriteOpt(writer, "end-date", _endDate);
+            XmlWriterHelper.WriteOpt(writer, "associated-type-info", _associatedTypeInfo);
+            XmlWriterHelper.WriteOpt(writer, "target-range", _targetRange);
 
             if (_goalAdditionalRanges != null && _goalAdditionalRanges.Count != 0)
             {
@@ -183,7 +181,7 @@ namespace Microsoft.HealthVault.ItemTypes
                 }
             }
             
-            XmlWriterHelper.WriteOpt<GoalRecurrence>(writer, "recurrence", _recurrence);
+            XmlWriterHelper.WriteOpt(writer, "recurrence", _recurrence);
             writer.WriteEndElement();
         }
         
@@ -244,7 +242,7 @@ namespace Microsoft.HealthVault.ItemTypes
             
             set
             {
-                if (!String.IsNullOrEmpty(value) && String.IsNullOrEmpty(value.Trim()))
+                if (!string.IsNullOrEmpty(value) && string.IsNullOrEmpty(value.Trim()))
                 {
                     throw new ArgumentException(
                         ResourceRetriever.GetResourceString("errors", "WhitespaceOnlyValue"), "value");
@@ -401,7 +399,7 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             if (TargetRange != null && Recurrence != null)
             {
-                return String.Format(
+                return string.Format(
                         CultureInfo.CurrentUICulture,
                         ResourceRetriever.GetResourceString("HealthGoalWithTargetRangeAndRecurrenceFormat"),
                         Name.Text,
@@ -411,7 +409,7 @@ namespace Microsoft.HealthVault.ItemTypes
 
             if (TargetRange != null)
             {
-                return String.Format(
+                return string.Format(
                         CultureInfo.CurrentUICulture,
                         ResourceRetriever.GetResourceString("HealthGoalFormat"),
                         Name.Text,
@@ -420,7 +418,7 @@ namespace Microsoft.HealthVault.ItemTypes
 
             if (Recurrence != null)
             {
-                return String.Format(
+                return string.Format(
                         CultureInfo.CurrentUICulture,
                         ResourceRetriever.GetResourceString("HealthGoalFormat"),
                         Name.Text,

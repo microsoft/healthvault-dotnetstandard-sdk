@@ -7,7 +7,6 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Globalization;
 using System.Xml;
 using System.Xml.XPath;
 
@@ -246,7 +245,7 @@ namespace Microsoft.HealthVault.ItemTypes
             writer.WriteElementString("format-tag", SubtypeTag);
 
             // <when>
-            XmlWriterHelper.WriteOpt<HealthServiceDateTime>(
+            XmlWriterHelper.WriteOpt(
                 writer,
                 "when",
                 _when);
@@ -278,9 +277,9 @@ namespace Microsoft.HealthVault.ItemTypes
         /// 
         protected virtual void WriteApplicationSpecificXml(XmlWriter writer)
         {
-            for (int index = 0; index < _appSpecificXml.Count; ++index)
+            foreach (IXPathNavigable xPathNavigable in _appSpecificXml)
             {
-                writer.WriteRaw(_appSpecificXml[index].CreateNavigator().OuterXml);
+                writer.WriteRaw(xPathNavigable.CreateNavigator().OuterXml);
             }
         }
 
@@ -375,11 +374,9 @@ namespace Microsoft.HealthVault.ItemTypes
         /// Derived classes can ignore this member.
         /// </remarks>
         /// 
-        public Collection<IXPathNavigable> ApplicationSpecificXml
-        {
-            get { return _appSpecificXml; }
-        }
-        private Collection<IXPathNavigable> _appSpecificXml =
+        public Collection<IXPathNavigable> ApplicationSpecificXml => _appSpecificXml;
+
+        private readonly Collection<IXPathNavigable> _appSpecificXml =
             new Collection<IXPathNavigable>();
 
         /// <summary>

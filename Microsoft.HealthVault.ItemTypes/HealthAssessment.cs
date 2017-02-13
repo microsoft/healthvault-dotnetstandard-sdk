@@ -7,7 +7,6 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Globalization;
 using System.Text;
 using System.Xml;
 using System.Xml.XPath;
@@ -72,7 +71,7 @@ namespace Microsoft.HealthVault.ItemTypes
         /// 
         public HealthAssessment(
             HealthServiceDateTime when, 
-            String name,
+            string name,
             CodableValue category,
             IList<Assessment> result)
             : base(TypeId)
@@ -295,7 +294,7 @@ namespace Microsoft.HealthVault.ItemTypes
                 {
                     result.Append(ResourceRetriever.GetResourceString("GroupSeparator"));
                 }
-                result.Append(_result[index].ToString());
+                result.Append(_result[index]);
             }
 
             return result.ToString();

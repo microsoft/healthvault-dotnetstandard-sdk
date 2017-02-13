@@ -127,7 +127,7 @@ namespace Microsoft.HealthVault.ItemTypes
         /// If <see cref="Images"/> is <b>null</b> or doesn't contain any image. 
         /// </exception>
         /// 
-        public override void WriteXml(String nodeName, XmlWriter writer)
+        public override void WriteXml(string nodeName, XmlWriter writer)
         {
             Validator.ThrowIfStringNullOrEmpty(nodeName, "nodeName");
             Validator.ThrowIfWriterNull(writer);
@@ -145,16 +145,16 @@ namespace Microsoft.HealthVault.ItemTypes
             // images
             foreach (MedicalImageStudySeriesImage image in _images)
             {
-                XmlWriterHelper.WriteOpt<MedicalImageStudySeriesImage>(writer, "images", image);
+                XmlWriterHelper.WriteOpt(writer, "images", image);
             }
             // institution-name
-            XmlWriterHelper.WriteOpt<Organization>(writer, "institution-name", _institutionName);
+            XmlWriterHelper.WriteOpt(writer, "institution-name", _institutionName);
             // referring-physician
-            XmlWriterHelper.WriteOpt<PersonItem>(writer, "referring-physician", _referringPhysician);
+            XmlWriterHelper.WriteOpt(writer, "referring-physician", _referringPhysician);
             // modality
-            XmlWriterHelper.WriteOpt<CodableValue>(writer, "modality", _modality);
+            XmlWriterHelper.WriteOpt(writer, "modality", _modality);
             // body-part
-            XmlWriterHelper.WriteOpt<CodableValue>(writer, "body-part", _bodyPart);
+            XmlWriterHelper.WriteOpt(writer, "body-part", _bodyPart);
             // preview-blob-name
             XmlWriterHelper.WriteOptString(writer, "preview-blob-name", _previewBlobName);
             // series-instance-uid
@@ -198,7 +198,7 @@ namespace Microsoft.HealthVault.ItemTypes
         /// The <paramref name="value"/> contains only whitespace.
         /// </exception>
         /// 
-        public String Description
+        public string Description
         {
             get { return _description; }
             set 
@@ -207,7 +207,7 @@ namespace Microsoft.HealthVault.ItemTypes
                 _description = value; 
             }
         }
-        private String _description;
+        private string _description;
 
         /// <summary>
         /// Gets and sets medical images. 
@@ -306,7 +306,7 @@ namespace Microsoft.HealthVault.ItemTypes
         /// If <paramref name="value"/> contains only whitespace.
         /// </exception>
         /// 
-        public String PreviewBlobName
+        public string PreviewBlobName
         {
             get { return _previewBlobName; }
             set 
@@ -315,7 +315,7 @@ namespace Microsoft.HealthVault.ItemTypes
                 _previewBlobName = value; 
             }
         }
-        private String _previewBlobName;
+        private string _previewBlobName;
 
         /// <summary>
         /// Gets or sets the series instance UID.
@@ -331,7 +331,7 @@ namespace Microsoft.HealthVault.ItemTypes
         /// If <paramref name="value"/> contains only whitespace.
         /// </exception>
         /// 
-        public String SeriesInstanceUID
+        public string SeriesInstanceUID
         {
             get { return _seriesInstanceUID; }
             set
@@ -340,7 +340,7 @@ namespace Microsoft.HealthVault.ItemTypes
                 _seriesInstanceUID = value;
             }
         }
-        private String _seriesInstanceUID;
+        private string _seriesInstanceUID;
 
         
         /// <summary>
@@ -351,11 +351,11 @@ namespace Microsoft.HealthVault.ItemTypes
         /// A string representation of the medical image study series.
         /// </returns>
         /// 
-        public override String ToString()
+        public override string ToString()
         {
             StringBuilder result = new StringBuilder(200);
 
-            if (!String.IsNullOrEmpty(Description) && !String.IsNullOrEmpty(Description.Trim()))
+            if (!string.IsNullOrEmpty(Description) && !string.IsNullOrEmpty(Description.Trim()))
             {
                 result.Append(Description);
 
@@ -377,7 +377,7 @@ namespace Microsoft.HealthVault.ItemTypes
                     {
                         result.Append(ResourceRetriever.GetResourceString("errors", "ListSeparator")); 
                     }
-                    result.Append(AcquisitionDateTime.ToString());
+                    result.Append(AcquisitionDateTime);
                 }
 
                 if (InstitutionName != null)
@@ -386,7 +386,7 @@ namespace Microsoft.HealthVault.ItemTypes
                     {
                         result.Append(ResourceRetriever.GetResourceString("errors", "ListSeparator"));
                     }
-                    result.Append(InstitutionName.Name.ToString());
+                    result.Append(InstitutionName.Name);
                 }
 
                 if (ReferringPhysician != null)
@@ -395,7 +395,7 @@ namespace Microsoft.HealthVault.ItemTypes
                     {
                         result.Append(ResourceRetriever.GetResourceString("errors", "ListSeparator"));
                     }
-                    result.Append(ReferringPhysician.Name.ToString());
+                    result.Append(ReferringPhysician.Name);
                 }
 
                 result.Append(ResourceRetriever.GetResourceString("errors", "CloseParen"));

@@ -5,8 +5,6 @@
 
 
 using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Text;
 using System.Xml;
 using System.Xml.XPath;
@@ -186,14 +184,14 @@ namespace Microsoft.HealthVault.ItemTypes
 
             writer.WriteElementString("value", _value);
 
-            if (!String.IsNullOrEmpty(_family))
+            if (!string.IsNullOrEmpty(_family))
             {
                 writer.WriteElementString("family", _family);
             }
 
             writer.WriteElementString("type", _vocabName);
 
-            if (!String.IsNullOrEmpty(_version))
+            if (!string.IsNullOrEmpty(_version))
             {
                 writer.WriteElementString("version", _version);
             }
@@ -253,7 +251,7 @@ namespace Microsoft.HealthVault.ItemTypes
             get { return _family; }
             set
             {
-                if (!String.IsNullOrEmpty(value) && String.IsNullOrEmpty(value.Trim()))
+                if (!string.IsNullOrEmpty(value) && string.IsNullOrEmpty(value.Trim()))
                 {
                     throw Validator.ArgumentException("Family", "WhitespaceOnlyValue");
                 }
@@ -309,7 +307,7 @@ namespace Microsoft.HealthVault.ItemTypes
             get { return _version; }
             set
             {
-                if (!String.IsNullOrEmpty(value) && String.IsNullOrEmpty(value.Trim()))
+                if (!string.IsNullOrEmpty(value) && string.IsNullOrEmpty(value.Trim()))
                 {
                     throw Validator.ArgumentException("Version", "WhitespaceOnlyValue");
                 }

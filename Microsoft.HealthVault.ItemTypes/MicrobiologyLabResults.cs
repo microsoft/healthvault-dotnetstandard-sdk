@@ -5,9 +5,7 @@
 
 
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Globalization;
 using System.Text;
 using System.Xml;
 using System.Xml.XPath;
@@ -149,12 +147,12 @@ namespace Microsoft.HealthVault.ItemTypes
                 _labTests[index].WriteXml("lab-tests", writer);
             }
 
-            XmlWriterHelper.WriteOpt<CodableValue>(
+            XmlWriterHelper.WriteOpt(
                 writer, 
                 "sensitivity-agent", 
                 _sensitivityAgent);
 
-            XmlWriterHelper.WriteOpt<CodableValue>(
+            XmlWriterHelper.WriteOpt(
                 writer, 
                 "sensitivity-value", 
                 _sensitivityValue);
@@ -164,12 +162,12 @@ namespace Microsoft.HealthVault.ItemTypes
                 "sensitivity-interpretation", 
                 _sensitivityInterpretation);
 
-            XmlWriterHelper.WriteOpt<CodableValue>(
+            XmlWriterHelper.WriteOpt(
                 writer, 
                 "specimen-type",
                 _specimenType);
 
-            XmlWriterHelper.WriteOpt<CodableValue>(
+            XmlWriterHelper.WriteOpt(
                 writer, 
                 "organism-name", 
                 _organismName);
@@ -341,11 +339,11 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             StringBuilder result = new StringBuilder(100);
             
-            result.Append(When.ToString());
+            result.Append(When);
 
             for (int index = 0; index < LabTests.Count; ++index)
             {
-                if (!String.IsNullOrEmpty(LabTests[index].Name))
+                if (!string.IsNullOrEmpty(LabTests[index].Name))
                 {
                     result.AppendFormat(
                         ResourceRetriever.GetResourceString(

@@ -5,11 +5,7 @@
 
 
 using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Globalization;
-using System.Text;
-using System.Threading;
 using System.Xml;
 using System.Xml.XPath;
 
@@ -417,7 +413,7 @@ namespace Microsoft.HealthVault.ItemTypes
         /// 
         public int CompareTo(DateTime other)
         {
-            int result = 0;
+            int result;
 
             do // false loop
             {
@@ -681,31 +677,14 @@ namespace Microsoft.HealthVault.ItemTypes
         }
 
         #endregion Operators
-
-        /// <summary>
-        /// Gets a string representation of the approximate date.
-        /// </summary>
-        /// 
-        /// <returns>
-        /// A string representation of the approximate date.
-        /// </returns>
-        /// 
-        /// <remarks>
-        /// Note, this is not culture sensitive.
-        /// </remarks>
-        /// 
-        public override string ToString()
-        {
-            return ToString(Thread.CurrentThread.CurrentCulture);
-        }
         
         internal string ToString(IFormatProvider formatProvider)
         {
-            String result = null;
+            string result;
 
             if (Month == null)
             {
-                result = String.Format("{0:D4}", Year);
+                result = string.Format("{0:D4}", Year);
             }
             else
             {

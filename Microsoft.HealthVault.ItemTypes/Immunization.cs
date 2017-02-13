@@ -5,10 +5,6 @@
 
 
 using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Globalization;
-using System.Text;
 using System.Xml;
 using System.Xml.XPath;
 
@@ -191,19 +187,19 @@ namespace Microsoft.HealthVault.ItemTypes
             _name.WriteXml("name", writer);
 
             // <administration-date>
-            XmlWriterHelper.WriteOpt<ApproximateDateTime>(
+            XmlWriterHelper.WriteOpt(
                 writer,
                 "administration-date",
                 _dateAdministrated);
 
             // <administrator>
-            XmlWriterHelper.WriteOpt<PersonItem>(
+            XmlWriterHelper.WriteOpt(
                 writer,
                 "administrator",
                 Administrator);
             
             // <manufacturer>
-            XmlWriterHelper.WriteOpt<CodableValue>(
+            XmlWriterHelper.WriteOpt(
                 writer,
                 "manufacturer",
                 _manufacturer);
@@ -215,13 +211,13 @@ namespace Microsoft.HealthVault.ItemTypes
                 _lot);
 
             // <route>
-            XmlWriterHelper.WriteOpt<CodableValue>(
+            XmlWriterHelper.WriteOpt(
                 writer,
                 "route",
                 Route);
             
             // <expiration-date>
-            XmlWriterHelper.WriteOpt<ApproximateDate>(
+            XmlWriterHelper.WriteOpt(
                 writer,
                 "expiration-date",
                 _expirationDate);
@@ -233,7 +229,7 @@ namespace Microsoft.HealthVault.ItemTypes
                 _sequence);
 
             // <anatomic-surface> 
-            XmlWriterHelper.WriteOpt<CodableValue>(
+            XmlWriterHelper.WriteOpt(
                 writer,
                 "anatomic-surface",
                 AnatomicSurface); 
@@ -503,7 +499,7 @@ namespace Microsoft.HealthVault.ItemTypes
             if (DateAdministrated != null)
             {
                 result =
-                    String.Format(
+                    string.Format(
                         ResourceRetriever.GetResourceString(
                             "ImmunizationToStringFormat"),
                         Name.ToString(),

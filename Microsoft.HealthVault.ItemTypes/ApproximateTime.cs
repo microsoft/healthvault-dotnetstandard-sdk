@@ -5,11 +5,7 @@
 
 
 using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Globalization;
-using System.Text;
-using System.Threading;
 using System.Xml;
 using System.Xml.XPath;
 
@@ -818,25 +814,12 @@ namespace Microsoft.HealthVault.ItemTypes
 
         #endregion Operators
 
-        /// <summary>
-        /// Gets a string representation of the time.
-        /// </summary>
-        /// 
-        /// <returns>
-        /// A string representation of the time.
-        /// </returns>
-        /// 
-        public override string ToString()
-        {
-            return ToString(Thread.CurrentThread.CurrentCulture);
-        }
-
         internal string ToString(IFormatProvider formatProvider)
         {
                 // If the default constructor is called, _hour is null, so we return empty.
             if (_hour == null)
             {
-                return String.Empty;
+                return string.Empty;
             }
 
             DateTimeFormatInfo formatInfo =

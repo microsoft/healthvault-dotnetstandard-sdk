@@ -5,9 +5,7 @@
 
 
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Globalization;
 using System.Text;
 using System.Xml;
 using System.Xml.XPath;
@@ -20,14 +18,6 @@ namespace Microsoft.HealthVault.ItemTypes
     /// 
     public class Delivery : HealthRecordItemData
     {
-        /// <summary>
-        /// Creates a new instance of the <see cref="Delivery"/> class with default values.
-        /// </summary>
-        /// 
-        public Delivery()
-        {
-        }
-
         /// <summary>
         /// Populates the data from the specified XML.
         /// </summary>
@@ -99,23 +89,23 @@ namespace Microsoft.HealthVault.ItemTypes
             
             writer.WriteStartElement(nodeName);
 
-            XmlWriterHelper.WriteOpt<Organization>(writer, "location", _location);
-            XmlWriterHelper.WriteOpt<ApproximateDateTime>(writer, "time-of-delivery", _timeOfDelivery);
+            XmlWriterHelper.WriteOpt(writer, "location", _location);
+            XmlWriterHelper.WriteOpt(writer, "time-of-delivery", _timeOfDelivery);
             XmlWriterHelper.WriteOptDouble(writer, "labor-duration", _laborDuration);
 
-            for (int index = 0; index < _complications.Count; ++index)
+            foreach (CodableValue complication in _complications)
             {
-                _complications[index].WriteXml("complications", writer);
+                complication.WriteXml("complications", writer);
             }
 
-            for (int index = 0; index < _anesthesia.Count; ++index)
+            foreach (CodableValue anesthesia in _anesthesia)
             {
-                _anesthesia[index].WriteXml("anesthesia", writer);
+                anesthesia.WriteXml("anesthesia", writer);
             }
-            
-            XmlWriterHelper.WriteOpt<CodableValue>(writer, "delivery-method", _deliveryMethod);
-            XmlWriterHelper.WriteOpt<CodableValue>(writer, "outcome", _outcome);
-            XmlWriterHelper.WriteOpt<Baby>(writer, "baby", _baby);
+
+            XmlWriterHelper.WriteOpt(writer, "delivery-method", _deliveryMethod);
+            XmlWriterHelper.WriteOpt(writer, "outcome", _outcome);
+            XmlWriterHelper.WriteOpt(writer, "baby", _baby);
             XmlWriterHelper.WriteOptString(writer, "note", _note);
 
             writer.WriteEndElement();
@@ -187,11 +177,9 @@ namespace Microsoft.HealthVault.ItemTypes
         /// The preferred vocabulary for this value is "delivery-complications". 
         /// </remarks>
         /// 
-        public Collection<CodableValue> Complications
-        {
-            get { return _complications; }
-        }
-        private Collection<CodableValue> _complications = new Collection<CodableValue>();
+        public Collection<CodableValue> Complications => _complications;
+
+        private readonly Collection<CodableValue> _complications = new Collection<CodableValue>();
 
         /// <summary>
         /// Gets a collection containing any anesthesia used during labor and delivery.
@@ -202,11 +190,9 @@ namespace Microsoft.HealthVault.ItemTypes
         /// The preferred vocabulary for this value is "anesthesia-methods". 
         /// </remarks>
         /// 
-        public Collection<CodableValue> Anesthesia
-        {
-            get { return _anesthesia; }
-        }
-        private Collection<CodableValue> _anesthesia = new Collection<CodableValue>();
+        public Collection<CodableValue> Anesthesia => _anesthesia;
+
+        private readonly Collection<CodableValue> _anesthesia = new Collection<CodableValue>();
 
         /// <summary>
         /// Gets or sets the method of delivery.
@@ -291,9 +277,9 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             StringBuilder result = new StringBuilder(200);
 
-            if (Baby != null && Baby.Name != null)
+            if (Baby?.Name != null)
             {
-                result.Append(Baby.Name.ToString());
+                result.Append(Baby.Name);
             }
 
             if (TimeOfDelivery != null ||
@@ -308,10 +294,10 @@ namespace Microsoft.HealthVault.ItemTypes
 
                 if (TimeOfDelivery != null)
                 {
-                    result.Append(TimeOfDelivery.ToString());
+                    result.Append(TimeOfDelivery);
                 }
 
-                if (Baby != null && Baby.Weight != null)
+                if (Baby?.Weight != null)
                 {
                     if (TimeOfDelivery != null)
                     {
@@ -319,18 +305,18 @@ namespace Microsoft.HealthVault.ItemTypes
                             ResourceRetriever.GetResourceString(
                                 "ListSeparator"));
                     }
-                    result.Append(Baby.Weight.ToString());
+                    result.Append(Baby.Weight);
                 }
 
-                if (Baby != null && Baby.Length != null)
+                if (Baby?.Length != null)
                 {
-                    if (TimeOfDelivery != null || (Baby != null && Baby.Weight != null))
+                    if (TimeOfDelivery != null || (Baby?.Weight != null))
                     {
                         result.Append(
                             ResourceRetriever.GetResourceString(
                                 "ListSeparator"));
                     }
-                    result.Append(Baby.Length.ToString());
+                    result.Append(Baby.Length);
                 }
 
                 result.Append(

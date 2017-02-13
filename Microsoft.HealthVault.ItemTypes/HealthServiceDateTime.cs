@@ -5,11 +5,7 @@
 
 
 using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Globalization;
 using System.Text;
-using System.Threading;
 using System.Xml;
 using System.Xml.XPath;
 
@@ -349,23 +345,6 @@ namespace Microsoft.HealthVault.ItemTypes
         }
         private CodableValue _timeZone;
 
-        /// <summary>
-        /// Gets the date and time as a string.
-        /// </summary>
-        /// 
-        /// <returns>
-        /// The date and time represented as a string.
-        /// </returns>
-        /// 
-        /// <remarks>
-        /// This method is not yet culture aware.
-        /// </remarks>
-        /// 
-        public override string ToString()
-        {
-            return ToString(Thread.CurrentThread.CurrentCulture);
-        }
-
         internal string ToString(IFormatProvider formatProvider)
         {
             StringBuilder result = new StringBuilder(40);
@@ -377,7 +356,7 @@ namespace Microsoft.HealthVault.ItemTypes
             {
                 string time = Time.ToString(formatProvider);
 
-                if (!String.IsNullOrEmpty(time))
+                if (!string.IsNullOrEmpty(time))
                 {
                     result.Append(space);
                     result.Append(time);
@@ -387,7 +366,7 @@ namespace Microsoft.HealthVault.ItemTypes
             if (TimeZone != null)
             {
                 result.Append(space);
-                result.Append(TimeZone.ToString());
+                result.Append(TimeZone);
             }
             return result.ToString();
         }

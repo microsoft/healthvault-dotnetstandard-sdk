@@ -5,8 +5,6 @@
 
 
 using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Globalization;
 using System.Xml;
 using System.Xml.XPath;
@@ -132,19 +130,19 @@ namespace Microsoft.HealthVault.ItemTypes
                 _value.ToString(CultureInfo.InvariantCulture));
 
             // <measurement-method>
-            XmlWriterHelper.WriteOpt<CodableValue>(
+            XmlWriterHelper.WriteOpt(
                 writer,
                 "measurement-method",
                 _measurementMethod);
 
             // <measurement-conditions>
-            XmlWriterHelper.WriteOpt<CodableValue>(
+            XmlWriterHelper.WriteOpt(
                 writer,
                 "measurement-conditions",
                 _measurementConditions);
 
             // <measurement-flags>
-            XmlWriterHelper.WriteOpt<CodableValue>(
+            XmlWriterHelper.WriteOpt(
                 writer,
                 "measurement-flags",
                 _measurementFlags);
@@ -277,7 +275,7 @@ namespace Microsoft.HealthVault.ItemTypes
         public override string ToString()
         {
             return 
-                String.Format(
+                string.Format(
                     ResourceRetriever.GetResourceString(
                         "HeartRateToStringFormat"),
                     _value.ToString(CultureInfo.InvariantCulture));

@@ -6,8 +6,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Globalization;
 using System.Xml;
 using System.Xml.XPath;
 
@@ -129,7 +127,7 @@ namespace Microsoft.HealthVault.ItemTypes
             writer.WriteStartElement(nodeName);
 
             // <activity>
-            XmlWriterHelper.WriteOpt<CodableValue>(
+            XmlWriterHelper.WriteOpt(
                 writer,
                 "activity",
                 _activity);
@@ -328,7 +326,7 @@ namespace Microsoft.HealthVault.ItemTypes
             if (_title != null)
             {
                 return
-                    String.Format(
+                    string.Format(
                         ResourceRetriever.GetResourceString(
                             "ExerciseSegmentToStringFormat"),
                         _title,

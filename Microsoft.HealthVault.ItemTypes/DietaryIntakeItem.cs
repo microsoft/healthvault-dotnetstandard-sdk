@@ -4,11 +4,9 @@
 // All other rights reserved.
 
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
-using System.Text;
 using System.Xml;
 using System.Xml.XPath;
 
@@ -25,7 +23,6 @@ namespace Microsoft.HealthVault.ItemTypes
         /// </summary>
         ///
         public DietaryIntakeItem()
-            : base()
         {
         }
         
@@ -49,7 +46,6 @@ namespace Microsoft.HealthVault.ItemTypes
         /// </exception>
         ///
         public DietaryIntakeItem(CodableValue foodItem)
-        : base()
         {
             FoodItem = foodItem;
         }
@@ -157,40 +153,40 @@ namespace Microsoft.HealthVault.ItemTypes
             writer.WriteStartElement(nodeName);
             
             _foodItem.WriteXml("food-item", writer);
-            XmlWriterHelper.WriteOpt<CodableValue>(writer, "serving-size", _servingSize);
+            XmlWriterHelper.WriteOpt(writer, "serving-size", _servingSize);
             XmlWriterHelper.WriteOptDouble(writer, "servings-consumed", _servingsConsumed);
-            XmlWriterHelper.WriteOpt<CodableValue>(writer, "meal", _meal);
-            XmlWriterHelper.WriteOpt<HealthServiceDateTime>(writer, "when", _when);
-            XmlWriterHelper.WriteOpt<FoodEnergyValue>(writer, "energy", _energy);
-            XmlWriterHelper.WriteOpt<FoodEnergyValue>(writer, "energy-from-fat", _energyFromFat);
-            XmlWriterHelper.WriteOpt<WeightValue>(writer, "total-fat", _totalFat);
-            XmlWriterHelper.WriteOpt<WeightValue>(writer, "saturated-fat", _saturatedFat);
-            XmlWriterHelper.WriteOpt<WeightValue>(writer, "trans-fat", _transFat);
-            XmlWriterHelper.WriteOpt<WeightValue>(writer, "monounsaturated-fat", _monounsaturatedFat);
-            XmlWriterHelper.WriteOpt<WeightValue>(writer, "polyunsaturated-fat", _polyunsaturatedFat);
-            XmlWriterHelper.WriteOpt<WeightValue>(writer, "protein", _protein);
-            XmlWriterHelper.WriteOpt<WeightValue>(writer, "carbohydrates", _carbohydrates);
-            XmlWriterHelper.WriteOpt<WeightValue>(writer, "dietary-fiber", _dietaryFiber);
-            XmlWriterHelper.WriteOpt<WeightValue>(writer, "sugars", _sugars);
-            XmlWriterHelper.WriteOpt<WeightValue>(writer, "sodium", _sodium);
-            XmlWriterHelper.WriteOpt<WeightValue>(writer, "cholesterol", _cholesterol);
-            XmlWriterHelper.WriteOpt<WeightValue>(writer, "calcium", _calcium);
-            XmlWriterHelper.WriteOpt<WeightValue>(writer, "iron", _iron);
-            XmlWriterHelper.WriteOpt<WeightValue>(writer, "magnesium", _magnesium);
-            XmlWriterHelper.WriteOpt<WeightValue>(writer, "phosphorus", _phosphorus);
-            XmlWriterHelper.WriteOpt<WeightValue>(writer, "potassium", _potassium);
-            XmlWriterHelper.WriteOpt<WeightValue>(writer, "zinc", _zinc);
-            XmlWriterHelper.WriteOpt<WeightValue>(writer, "vitamin-A-RAE", _vitaminARAE);
-            XmlWriterHelper.WriteOpt<WeightValue>(writer, "vitamin-E", _vitaminE);
-            XmlWriterHelper.WriteOpt<WeightValue>(writer, "vitamin-D", _vitaminD);
-            XmlWriterHelper.WriteOpt<WeightValue>(writer, "vitamin-C", _vitaminC);
-            XmlWriterHelper.WriteOpt<WeightValue>(writer, "thiamin", _thiamin);
-            XmlWriterHelper.WriteOpt<WeightValue>(writer, "riboflavin", _riboflavin);
-            XmlWriterHelper.WriteOpt<WeightValue>(writer, "niacin", _niacin);
-            XmlWriterHelper.WriteOpt<WeightValue>(writer, "vitamin-B-6", _vitaminB6);
-            XmlWriterHelper.WriteOpt<WeightValue>(writer, "folate-DFE", _folateDFE);
-            XmlWriterHelper.WriteOpt<WeightValue>(writer, "vitamin-B-12", _vitaminB12);
-            XmlWriterHelper.WriteOpt<WeightValue>(writer, "vitamin-K", _vitaminK);
+            XmlWriterHelper.WriteOpt(writer, "meal", _meal);
+            XmlWriterHelper.WriteOpt(writer, "when", _when);
+            XmlWriterHelper.WriteOpt(writer, "energy", _energy);
+            XmlWriterHelper.WriteOpt(writer, "energy-from-fat", _energyFromFat);
+            XmlWriterHelper.WriteOpt(writer, "total-fat", _totalFat);
+            XmlWriterHelper.WriteOpt(writer, "saturated-fat", _saturatedFat);
+            XmlWriterHelper.WriteOpt(writer, "trans-fat", _transFat);
+            XmlWriterHelper.WriteOpt(writer, "monounsaturated-fat", _monounsaturatedFat);
+            XmlWriterHelper.WriteOpt(writer, "polyunsaturated-fat", _polyunsaturatedFat);
+            XmlWriterHelper.WriteOpt(writer, "protein", _protein);
+            XmlWriterHelper.WriteOpt(writer, "carbohydrates", _carbohydrates);
+            XmlWriterHelper.WriteOpt(writer, "dietary-fiber", _dietaryFiber);
+            XmlWriterHelper.WriteOpt(writer, "sugars", _sugars);
+            XmlWriterHelper.WriteOpt(writer, "sodium", _sodium);
+            XmlWriterHelper.WriteOpt(writer, "cholesterol", _cholesterol);
+            XmlWriterHelper.WriteOpt(writer, "calcium", _calcium);
+            XmlWriterHelper.WriteOpt(writer, "iron", _iron);
+            XmlWriterHelper.WriteOpt(writer, "magnesium", _magnesium);
+            XmlWriterHelper.WriteOpt(writer, "phosphorus", _phosphorus);
+            XmlWriterHelper.WriteOpt(writer, "potassium", _potassium);
+            XmlWriterHelper.WriteOpt(writer, "zinc", _zinc);
+            XmlWriterHelper.WriteOpt(writer, "vitamin-A-RAE", _vitaminARAE);
+            XmlWriterHelper.WriteOpt(writer, "vitamin-E", _vitaminE);
+            XmlWriterHelper.WriteOpt(writer, "vitamin-D", _vitaminD);
+            XmlWriterHelper.WriteOpt(writer, "vitamin-C", _vitaminC);
+            XmlWriterHelper.WriteOpt(writer, "thiamin", _thiamin);
+            XmlWriterHelper.WriteOpt(writer, "riboflavin", _riboflavin);
+            XmlWriterHelper.WriteOpt(writer, "niacin", _niacin);
+            XmlWriterHelper.WriteOpt(writer, "vitamin-B-6", _vitaminB6);
+            XmlWriterHelper.WriteOpt(writer, "folate-DFE", _folateDFE);
+            XmlWriterHelper.WriteOpt(writer, "vitamin-B-12", _vitaminB12);
+            XmlWriterHelper.WriteOpt(writer, "vitamin-K", _vitaminK);
 
             if (_additionalNutritionFacts.Count != 0)
             {
@@ -1084,7 +1080,7 @@ namespace Microsoft.HealthVault.ItemTypes
             {
                 if (ServingsConsumed.HasValue)
                 {
-                    return String.Format(
+                    return string.Format(
                         CultureInfo.CurrentUICulture,
                         ResourceRetriever.GetResourceString("DietaryIntakeServingSizeServingConsumedFormat"),
                         FoodItem.Text,
@@ -1093,7 +1089,7 @@ namespace Microsoft.HealthVault.ItemTypes
                 }
                 else
                 {
-                    return String.Format(
+                    return string.Format(
                         CultureInfo.CurrentUICulture,
                         ResourceRetriever.GetResourceString("DietaryIntakeServingSizeFormat"),
                         FoodItem.Text,

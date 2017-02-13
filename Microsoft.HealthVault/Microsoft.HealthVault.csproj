@@ -100,6 +100,8 @@
     <Compile Include="Certificate\Util.cs" />
     <Compile Include="CommonItemData.cs" />
     <Compile Include="ConversionFailureException.cs" />
+    <Compile Include="CryptoConfiguration.cs" />
+    <Compile Include="CryptoUtil.cs" />
     <Compile Include="CultureSpecificDictionary.cs" />
     <Compile Include="DateRange.cs" />
     <Compile Include="DateRangeSetDefinition.cs" />

@@ -7,7 +7,6 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Globalization;
 using System.Text;
 using System.Xml;
 using System.Xml.XPath;
@@ -168,7 +167,7 @@ namespace Microsoft.HealthVault.ItemTypes
             // <distance>
             if (_distance != null)
             {
-                XmlWriterHelper.WriteOpt<Length>(writer, "distance", _distance);
+                XmlWriterHelper.WriteOpt(writer, "distance", _distance);
             }
 
             // <duration>

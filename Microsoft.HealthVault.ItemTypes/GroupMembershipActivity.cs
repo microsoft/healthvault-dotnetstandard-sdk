@@ -5,9 +5,6 @@
 
 
 using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Globalization;
 using System.Xml;
 using System.Xml.XPath;
 
@@ -142,11 +139,11 @@ namespace Microsoft.HealthVault.ItemTypes
         /// 
         public override string ToString()
         {
-            string result = String.Empty;
+            string result = string.Empty;
 
             if (Activity != null)
             {
-                result = Activity.Value.ToString();
+                result = Activity.Value;
             }
 
             if (ActivityInfo != null)

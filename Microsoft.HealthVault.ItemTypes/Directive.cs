@@ -5,8 +5,6 @@
 
 
 using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Xml;
 using System.Xml.XPath;
 
@@ -206,12 +204,12 @@ namespace Microsoft.HealthVault.ItemTypes
             // <directive>
             writer.WriteStartElement("directive");
 
-            XmlWriterHelper.WriteOpt<ApproximateDateTime>(
+            XmlWriterHelper.WriteOpt(
                 writer,
                 "start-date",
                 _startDate);
 
-            XmlWriterHelper.WriteOpt<ApproximateDateTime>(
+            XmlWriterHelper.WriteOpt(
                 writer,
                 "stop-date",
                 _stopDate);
@@ -230,7 +228,7 @@ namespace Microsoft.HealthVault.ItemTypes
 
 
             // <prohibited-interventions>
-            XmlWriterHelper.WriteOpt<CodableValue>(
+            XmlWriterHelper.WriteOpt(
                 writer,
                 "prohibited-interventions", 
                 _prohibitedInterventions);
@@ -242,61 +240,61 @@ namespace Microsoft.HealthVault.ItemTypes
                 _additionalInstructions);
 
             // <attending-physician>
-            XmlWriterHelper.WriteOpt<PersonItem>(
+            XmlWriterHelper.WriteOpt(
                 writer,
                 "attending-physician", 
                 _attendingPhysician);
             
             // <attending-physician-endorsement>
-            XmlWriterHelper.WriteOpt<HealthServiceDateTime>(
+            XmlWriterHelper.WriteOpt(
                 writer,
                 "attending-physician-endorsement", 
                 _attendingPhysicianEndorsement);
 
             // <attending-nurse>
-            XmlWriterHelper.WriteOpt<PersonItem>(
+            XmlWriterHelper.WriteOpt(
                 writer,
                 "attending-nurse",
                 _attendingNurse);
 
             // <attending-nurse-endorsement>
-            XmlWriterHelper.WriteOpt<HealthServiceDateTime>(
+            XmlWriterHelper.WriteOpt(
                 writer,
                 "attending-nurse-endorsement",
                 _attendingNurseEndorsement);
             
             // <expiration-date>
-            XmlWriterHelper.WriteOpt<HealthServiceDateTime>(
+            XmlWriterHelper.WriteOpt(
                 writer,
                 "expiration-date", 
                 _expirationDate);
 
             // <discontinuation-date>
-            XmlWriterHelper.WriteOpt<ApproximateDateTime>(
+            XmlWriterHelper.WriteOpt(
                 writer,
                 "discontinuation-date", 
                 _discontinuationDate);
 
             // <discontinuation-physician>
-            XmlWriterHelper.WriteOpt<PersonItem>(
+            XmlWriterHelper.WriteOpt(
                 writer,
                 "discontinuation-physician",
                 _discontinuationPhysician);
 
             // <discontinuation-physician-endorsement>
-            XmlWriterHelper.WriteOpt<HealthServiceDateTime>(
+            XmlWriterHelper.WriteOpt(
                 writer,
                 "discontinuation-physician-endorsement",
                 _discontinuationPhysicianEndorsement);
 
             // <discontinuation-nurse>
-            XmlWriterHelper.WriteOpt<PersonItem>(
+            XmlWriterHelper.WriteOpt(
                 writer,
                 "discontinuation-nurse",
                 _discontinuationNurse);
 
             // <discontinuation-nurse-endorsement>
-            XmlWriterHelper.WriteOpt<HealthServiceDateTime>(
+            XmlWriterHelper.WriteOpt(
                 writer,
                 "discontinuation-nurse-endorsement",
                 _discontinuationNurseEndorsement);
@@ -627,7 +625,7 @@ namespace Microsoft.HealthVault.ItemTypes
         /// 
         public override string ToString()
         {
-            return Description ?? String.Empty;
+            return Description ?? string.Empty;
         }
     }
 }

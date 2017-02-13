@@ -7,7 +7,6 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Globalization;
 using System.Text;
 using System.Xml;
 using System.Xml.XPath;
@@ -201,7 +200,7 @@ namespace Microsoft.HealthVault.ItemTypes
 
             writer.WriteStartElement(nodeName);
 
-            if (!String.IsNullOrEmpty(_description))
+            if (!string.IsNullOrEmpty(_description))
             {
                 writer.WriteElementString("description", _description);
             }
@@ -219,7 +218,7 @@ namespace Microsoft.HealthVault.ItemTypes
             }
 
             writer.WriteElementString("city", _city);
-            if (!String.IsNullOrEmpty(_state))
+            if (!string.IsNullOrEmpty(_state))
             {
                 writer.WriteElementString("state", _state);
             }
@@ -287,11 +286,9 @@ namespace Microsoft.HealthVault.ItemTypes
         /// A string collection of address information.
         /// </value>
         /// 
-        public Collection<string> Street
-        {
-            get { return _street; }
-        }
-        private Collection<string> _street = new Collection<string>();
+        public Collection<string> Street => _street;
+
+        private readonly Collection<string> _street = new Collection<string>();
 
         /// <summary>
         /// Gets or sets the city.
@@ -455,24 +452,24 @@ namespace Microsoft.HealthVault.ItemTypes
 
             result.Append(City);
 
-            if (!String.IsNullOrEmpty(County))
+            if (!string.IsNullOrEmpty(County))
             {
                 result.AppendFormat(listFormat, County);
             }
 
-            if (!String.IsNullOrEmpty(State))
+            if (!string.IsNullOrEmpty(State))
             {
                 result.AppendFormat(listFormat, State);
             }
 
             result.AppendFormat(listFormat, PostalCode);
 
-            if (!String.IsNullOrEmpty(Country))
+            if (!string.IsNullOrEmpty(Country))
             {
                 result.AppendFormat(listFormat, Country);
             }
 
-            if (!String.IsNullOrEmpty(Description))
+            if (!string.IsNullOrEmpty(Description))
             {
                 result.AppendFormat(listFormat, Description);
             }

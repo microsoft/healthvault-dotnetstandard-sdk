@@ -7,7 +7,6 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Xml;
 using System.Xml.XPath;
 
@@ -19,7 +18,7 @@ namespace Microsoft.HealthVault.ItemTypes
     /// </summary>
     /// 
     public class CodableValue : HealthRecordItemData,
-        IList<CodedValue>, ICollection<CodedValue>, IEnumerable<CodedValue>
+        IList<CodedValue>
     {
         /// <summary>
         /// Constructs a CodableValue with empty values.
@@ -257,10 +256,8 @@ namespace Microsoft.HealthVault.ItemTypes
         /// Gets the number of code items
         /// </summary>
         /// 
-        public int Count
-        {
-            get { return Codes.Count; }
-        }
+        public int Count => Codes.Count;
+
         /// <summary>
         /// Gets a value indicating whether the code item list is read-only.
         /// </summary>
@@ -269,10 +266,7 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <b>true</b> if the list is read-only; otherwise, <b>false</b>.
         /// </value>
         /// 
-        public bool IsReadOnly
-        {
-            get { return false; }
-        }
+        public bool IsReadOnly => false;
 
         /// <summary>
         /// Adds an item to the code list. 
@@ -490,10 +484,7 @@ namespace Microsoft.HealthVault.ItemTypes
 
             foreach (CodedValue codedValue in _codes)
             {
-                if (codedValue != null)
-                {
-                    codedValue.WriteXml("code", writer);
-                }
+                codedValue?.WriteXml("code", writer);
             }
 
             writer.WriteEndElement();
@@ -537,7 +528,7 @@ namespace Microsoft.HealthVault.ItemTypes
             if (_text == null)
             {
                 // not initialized
-                return String.Empty;
+                return string.Empty;
             }
             else
             {
@@ -559,10 +550,8 @@ namespace Microsoft.HealthVault.ItemTypes
         /// add <see cref="CodedValue"/> instances to the returned collection.
         /// </remarks>
         /// 
-        internal IList<CodedValue> Codes
-        {
-            get { return _codes; }
-        }
-        private List<CodedValue> _codes = new List<CodedValue>();
+        internal IList<CodedValue> Codes => _codes;
+
+        private readonly List<CodedValue> _codes = new List<CodedValue>();
     }
 }

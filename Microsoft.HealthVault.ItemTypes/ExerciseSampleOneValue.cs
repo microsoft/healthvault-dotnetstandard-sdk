@@ -4,8 +4,6 @@
 // All other rights reserved.
 
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Microsoft.HealthVault.ItemTypes
 {
@@ -68,7 +66,7 @@ namespace Microsoft.HealthVault.ItemTypes
         public override string ToString()
         {
             return 
-                String.Format(
+                string.Format(
                     ResourceRetriever.GetResourceString(
                         "ExerciseSampleOneValueToStringFormat"),
                     OffsetInSeconds.ToString(),

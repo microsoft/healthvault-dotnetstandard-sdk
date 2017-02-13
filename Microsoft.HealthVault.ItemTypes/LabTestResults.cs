@@ -7,7 +7,6 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Globalization;
 using System.Text;
 using System.Xml;
 using System.Xml.XPath;
@@ -128,7 +127,7 @@ namespace Microsoft.HealthVault.ItemTypes
             writer.WriteStartElement("lab-test-results");
 
             // when
-            XmlWriterHelper.WriteOpt<ApproximateDateTime>(
+            XmlWriterHelper.WriteOpt(
                 writer,
                 "when",
                 _when);
@@ -140,7 +139,7 @@ namespace Microsoft.HealthVault.ItemTypes
             }
 
             // ordered-by
-            XmlWriterHelper.WriteOpt<Organization>(
+            XmlWriterHelper.WriteOpt(
                 writer,
                 "ordered-by",
                 _orderedBy);
@@ -208,18 +207,18 @@ namespace Microsoft.HealthVault.ItemTypes
             {
                 if (_labGroup[index].GroupName != null)
                 {
-                    if (!String.IsNullOrEmpty(_labGroup[index].GroupName.Text))
+                    if (!string.IsNullOrEmpty(_labGroup[index].GroupName.Text))
                     {
                         if (index > 0)
                         {
                             result.AppendFormat(
                                 ResourceRetriever.GetResourceString(
                                     "ListFormat"),
-                                _labGroup[index].GroupName.Text.ToString());
+                                _labGroup[index].GroupName.Text);
                         }
                         else
                         {
-                            result.Append(_labGroup[index].GroupName.Text.ToString());
+                            result.Append(_labGroup[index].GroupName.Text);
                         }
                     }
                 }

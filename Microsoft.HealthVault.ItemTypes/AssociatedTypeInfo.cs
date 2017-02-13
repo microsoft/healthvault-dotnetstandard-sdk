@@ -4,10 +4,6 @@
 // All other rights reserved.
 
 using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Globalization;
-using System.Text;
 using System.Xml;
 using System.Xml.XPath;
 
@@ -58,7 +54,7 @@ namespace Microsoft.HealthVault.ItemTypes
             if (navigator == null)
             {
                 throw new ArgumentNullException(
-                    "navigator",
+                    nameof(navigator),
                     ResourceRetriever.GetResourceString(
                         "errors", "ParseXmlNavNull"));
             }
@@ -97,18 +93,18 @@ namespace Microsoft.HealthVault.ItemTypes
         /// 
         public override void WriteXml(string nodeName, XmlWriter writer)
         {
-            if (String.IsNullOrEmpty(nodeName))
+            if (string.IsNullOrEmpty(nodeName))
             {
                 throw new ArgumentException(
                     ResourceRetriever.GetResourceString(
                         "errors", "WriteXmlEmptyNodeName"), 
-                    "nodeName");
+                    nameof(nodeName));
             }
             
             if (writer == null)
             {
                 throw new ArgumentNullException(
-                    "writer",
+                    nameof(writer),
                     ResourceRetriever.GetResourceString(
                         "errors", "WriteXmlNullWriter"));
             }
@@ -169,10 +165,10 @@ namespace Microsoft.HealthVault.ItemTypes
             
             set
             {
-                if (!String.IsNullOrEmpty(value) && String.IsNullOrEmpty(value.Trim()))
+                if (!string.IsNullOrEmpty(value) && string.IsNullOrEmpty(value.Trim()))
                 {
                     throw new ArgumentException(
-                        ResourceRetriever.GetResourceString("errors", "WhitespaceOnlyValue"), "value");
+                        ResourceRetriever.GetResourceString("errors", "WhitespaceOnlyValue"), nameof(value));
                 }
                 
                 _thingTypeValueXPath = value;
@@ -203,10 +199,10 @@ namespace Microsoft.HealthVault.ItemTypes
             
             set
             {
-                if (!String.IsNullOrEmpty(value) && String.IsNullOrEmpty(value.Trim()))
+                if (!string.IsNullOrEmpty(value) && string.IsNullOrEmpty(value.Trim()))
                 {
                     throw new ArgumentException(
-                        ResourceRetriever.GetResourceString("errors", "WhitespaceOnlyValue"), "value");
+                        ResourceRetriever.GetResourceString("errors", "WhitespaceOnlyValue"), nameof(value));
                 }
                 
                 _thingTypeDisplayXPath = value;

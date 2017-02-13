@@ -7,9 +7,7 @@
 using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Globalization;
-using System.Text;
 using System.Xml;
 using System.Xml.XPath;
 
@@ -72,7 +70,7 @@ namespace Microsoft.HealthVault.ItemTypes
             if (genderNav != null)
             {
                 string genderString = genderNav.Value;
-                if (String.Equals(
+                if (string.Equals(
                         genderString, 
                         "m", 
                         StringComparison.Ordinal))
@@ -80,7 +78,7 @@ namespace Microsoft.HealthVault.ItemTypes
                     _gender = ItemTypes.Gender.Male;
                 }
                 else if (
-                    String.Equals(
+                    string.Equals(
                         genderString,
                         "f",
                         StringComparison.Ordinal))
@@ -152,20 +150,14 @@ namespace Microsoft.HealthVault.ItemTypes
                 {
                     writer.WriteElementString("gender", "f");
                 }
-                else
-                {
-
-                    // We don't want to write anything out here because we want the gender
-                    // to be unknown. Platform's BasicV2.xsd only accepts "m" or "f" currently.
-                }
             }
 
             XmlWriterHelper.WriteOptInt(writer, "birthyear", _birthYear);
-            XmlWriterHelper.WriteOpt<CodableValue>(writer, "country", _country);
+            XmlWriterHelper.WriteOpt(writer, "country", _country);
             XmlWriterHelper.WriteOptString(writer, "postcode", _postalCode);
             XmlWriterHelper.WriteOptString(writer, "city", _city);
 
-            XmlWriterHelper.WriteOpt<CodableValue>(writer,
+            XmlWriterHelper.WriteOpt(writer,
                                                    "state",
                                                    _stateOrProvince);
 
@@ -355,11 +347,9 @@ namespace Microsoft.HealthVault.ItemTypes
         /// A list of the languages.
         /// </value>
         /// 
-        public IList<Language> Languages
-        {
-            get { return _languages; }
-        }
-        private List<Language> _languages = new List<Language>();
+        public IList<Language> Languages => _languages;
+
+        private readonly List<Language> _languages = new List<Language>();
 
         /// <summary>
         /// Gets a string representation of the basic item.
@@ -371,13 +361,11 @@ namespace Microsoft.HealthVault.ItemTypes
         /// 
         public override string ToString()
         {
-            string result = String.Empty;
             if (Gender != null || BirthYear != null)
             {
                 if (Gender != null && BirthYear != null)
                 {
-                    result =
-                        String.Format(
+                    return string.Format(
                             CultureInfo.CurrentCulture,
                             ResourceRetriever.GetResourceString(
                                 "BasicToStringFormatGenderAndBirthYear"),
@@ -385,55 +373,41 @@ namespace Microsoft.HealthVault.ItemTypes
                                 Gender.ToString()),
                             BirthYear);
                 }
-                else if (BirthYear != null)
+                if (BirthYear != null)
                 {
-                    result =
-                        String.Format(
-                            CultureInfo.CurrentCulture,
-                            ResourceRetriever.GetResourceString(
-                                "BasicToStringFormatBirthYear"),
-                            BirthYear);
-                }
-                else
-                {
-                    result =
+                    return string.Format(
+                        CultureInfo.CurrentCulture,
                         ResourceRetriever.GetResourceString(
-                            Gender.ToString());
+                            "BasicToStringFormatBirthYear"),
+                        BirthYear);
                 }
+                return ResourceRetriever.GetResourceString(
+                    Gender.ToString());
             }
-            else if (PostalCode != null || Country != null)
+            if (PostalCode != null || Country != null)
             {
                 if (PostalCode != null && Country != null)
                 {
-                    result =
-                        String.Format(
-                            CultureInfo.CurrentCulture,
-                            ResourceRetriever.GetResourceString(
-                                "BasicToStringFormatPostalCodeAndCountry"),
-                            PostalCode,
-                            Country);
+                    return string.Format(
+                        CultureInfo.CurrentCulture,
+                        ResourceRetriever.GetResourceString(
+                            "BasicToStringFormatPostalCodeAndCountry"),
+                        PostalCode,
+                        Country);
                 }
-                else if (Country != null)
+                if (Country != null)
                 {
-                    result = Country.Text;
+                    return Country.Text;
                 }
-                else
-                {
-                    result = PostalCode;
-                } 
+                return PostalCode;
             }
-            else if (CommonData.Note != null)
+            if (CommonData.Note != null)
             {
-                result = CommonData.Note;
-            }
-            else
-            {
-                result =
-                    ResourceRetriever.GetResourceString(
-                        "BasicToStringSeeDetails");
+                return CommonData.Note;
             }
 
-            return result;
+            return ResourceRetriever.GetResourceString(
+                "BasicToStringSeeDetails");
         }
     }
 }

@@ -5,8 +5,6 @@
 
 
 using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Globalization;
 using System.Xml;
 using System.Xml.XPath;
@@ -25,7 +23,6 @@ namespace Microsoft.HealthVault.ItemTypes
         /// </summary>
         /// 
         public DoubleMeasurement()
-            : base()
         {
         }
 
@@ -141,11 +138,6 @@ namespace Microsoft.HealthVault.ItemTypes
         /// where appropriate.
         /// </remarks>
         /// 
-        protected virtual string ValueElementName
-        {
-            get { return _valueElementName; }
-            set { _valueElementName = value; }
-        }
-        private string _valueElementName = "value";
+        protected virtual string ValueElementName { get; set; } = "value";
     }
 }

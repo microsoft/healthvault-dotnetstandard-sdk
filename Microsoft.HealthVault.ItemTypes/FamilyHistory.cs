@@ -5,10 +5,6 @@
 
 
 using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Globalization;
-using System.Text;
 using System.Xml;
 using System.Xml.XPath;
 
@@ -119,7 +115,7 @@ namespace Microsoft.HealthVault.ItemTypes
             _relativeCondition.WriteXml("condition", writer);
 
             // <relative>
-            XmlWriterHelper.WriteOpt<FamilyHistoryRelative>(
+            XmlWriterHelper.WriteOpt(
                 writer,
                 "relative",
                 _relative);
@@ -178,7 +174,7 @@ namespace Microsoft.HealthVault.ItemTypes
             if (_relative != null && _relative.Relationship != null)
             {
                 result =
-                    String.Format(
+                    string.Format(
                         ResourceRetriever.GetResourceString(
                             "FamilyHistoryToStringFormat"),
                         _relativeCondition.Name.ToString(),

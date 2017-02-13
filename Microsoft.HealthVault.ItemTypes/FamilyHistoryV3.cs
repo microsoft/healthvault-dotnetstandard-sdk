@@ -4,9 +4,7 @@
 // All other rights reserved.
 
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Globalization;
 using System.Text;
 using System.Xml;
 using System.Xml.XPath;
@@ -110,7 +108,7 @@ namespace Microsoft.HealthVault.ItemTypes
             }
 
             // <relative>
-            XmlWriterHelper.WriteOpt<FamilyHistoryRelativeV3>(
+            XmlWriterHelper.WriteOpt(
                 writer,
                 "relative",
                 _relative);
@@ -167,13 +165,13 @@ namespace Microsoft.HealthVault.ItemTypes
                 {
                     sb.Append(ResourceRetriever.GetResourceString("ListSeparator"));
                 }
-                sb.Append(condition.Name.ToString());
+                sb.Append(condition.Name);
             }
 
             string result = sb.ToString();
             if (_relative != null && _relative.Relationship != null)
             {
-                result = String.Format(
+                result = string.Format(
                         ResourceRetriever.GetResourceString("FamilyHistoryToStringFormat"),
                         result, 
                         _relative.Relationship.Text);

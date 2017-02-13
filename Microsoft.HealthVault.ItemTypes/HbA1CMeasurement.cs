@@ -32,7 +32,6 @@ namespace Microsoft.HealthVault.ItemTypes
         /// </summary>
         /// 
         public HbA1CMeasurement()
-            : base()
         {
         }
 

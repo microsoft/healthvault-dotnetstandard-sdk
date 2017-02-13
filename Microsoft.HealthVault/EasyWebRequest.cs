@@ -62,12 +62,7 @@ namespace Microsoft.HealthVault
         /// To disable proxy usage, set this property to null.
         /// </summary>
         /// 
-        internal static IWebProxy DefaultWebProxy
-        {
-            get { return _defaultWebProxy; }
-            set { _defaultWebProxy = value; }
-        }
-        private static IWebProxy _defaultWebProxy = WebRequest.DefaultWebProxy;
+        internal static IWebProxy DefaultWebProxy { get; set; } = WebRequest.DefaultWebProxy;
 
         /// <summary>
         /// Gets or sets the number of times the request will be retried if
@@ -110,7 +105,7 @@ namespace Microsoft.HealthVault
 
         /// <summary>
         /// Sets the proxy to use with this instance of
-        /// EasyWebRequest. The default setting is to use
+        /// EasyWebRequest. The default setting is to use 
         /// <see cref="EasyWebRequest.DefaultWebProxy"/>.
         /// To disable proxy usage, set this property to null.
         /// </summary>
@@ -991,7 +986,7 @@ namespace Microsoft.HealthVault
 
         // Factory for testing
         /// <summary> default constructor for GET </summary>
-        static internal EasyWebRequest Create()
+        internal static EasyWebRequest Create()
         {
             return Create(null);
         }
@@ -1004,7 +999,7 @@ namespace Microsoft.HealthVault
         /// text to send 
         /// </param>
         /// 
-        static internal EasyWebRequest Create(string stringRequest)
+        internal static EasyWebRequest Create(string stringRequest)
         {
             EasyWebRequest instance;
 
@@ -1034,7 +1029,7 @@ namespace Microsoft.HealthVault
         /// Significant byte count in the buffer.
         /// </param>
         /// 
-        static internal EasyWebRequest Create(Byte[] utf8EncodedXml, int length)
+        internal static EasyWebRequest Create(Byte[] utf8EncodedXml, int length)
         {
             EasyWebRequest instance = Create();
             instance._xmlRequest = utf8EncodedXml;
@@ -1045,7 +1040,7 @@ namespace Microsoft.HealthVault
 
         static EasyWebRequest _requestOverride;
 
-        static public EasyWebRequest RequestOverride
+        public static EasyWebRequest RequestOverride
         {
             get { return _requestOverride; }
             set { _requestOverride = value; }

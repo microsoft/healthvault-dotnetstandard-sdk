@@ -4,11 +4,8 @@
 // All other rights reserved.
 
 using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
-using System.Text;
 using System.Xml;
 using System.Xml.XPath;
 
@@ -103,7 +100,7 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public override void WriteXml(string nodeName, XmlWriter writer)
         {
-            if (String.IsNullOrEmpty(nodeName))
+            if (string.IsNullOrEmpty(nodeName))
             {
                 throw new ArgumentException(
                     ResourceRetriever.GetResourceString(
@@ -130,8 +127,8 @@ namespace Microsoft.HealthVault.ItemTypes
             
             _name.WriteXml("name", writer);
             XmlWriterHelper.WriteOptString(writer, "description", _description);
-            XmlWriterHelper.WriteOpt<GeneralMeasurement>(writer, "minimum", _minimum);
-            XmlWriterHelper.WriteOpt<GeneralMeasurement>(writer, "maximum", _maximum);
+            XmlWriterHelper.WriteOpt(writer, "minimum", _minimum);
+            XmlWriterHelper.WriteOpt(writer, "maximum", _maximum);
             writer.WriteEndElement();
         }
         
@@ -192,7 +189,7 @@ namespace Microsoft.HealthVault.ItemTypes
             
             set
             {
-                if (!String.IsNullOrEmpty(value) && String.IsNullOrEmpty(value.Trim()))
+                if (!string.IsNullOrEmpty(value) && string.IsNullOrEmpty(value.Trim()))
                 {
                     throw new ArgumentException(
                         ResourceRetriever.GetResourceString("errors", "WhitespaceOnlyValue"), "value");
@@ -263,7 +260,7 @@ namespace Microsoft.HealthVault.ItemTypes
             if (Minimum != null && Maximum != null)
             {
                 return 
-                    String.Format(
+                    string.Format(
                         CultureInfo.CurrentCulture,
                         ResourceRetriever.GetResourceString("GoalRangeWithMinAndMaxFormat"),
                         Minimum.ToString(),
@@ -273,7 +270,7 @@ namespace Microsoft.HealthVault.ItemTypes
             if (Minimum != null)
             {
                 return 
-                    String.Format(
+                    string.Format(
                         CultureInfo.CurrentCulture,
                         ResourceRetriever.GetResourceString("GoalRangeWithMinFormat"),
                         Minimum.ToString());
@@ -282,7 +279,7 @@ namespace Microsoft.HealthVault.ItemTypes
             if (Maximum != null)
             {
                 return 
-                    String.Format(
+                    string.Format(
                         CultureInfo.CurrentCulture,
                         ResourceRetriever.GetResourceString("GoalRangeWithMaxFormat"),
                         Maximum.ToString());

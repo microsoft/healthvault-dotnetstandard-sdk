@@ -5,10 +5,7 @@
 
 
 using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Globalization;
-using System.Text;
 using System.Xml;
 using System.Xml.XPath;
 
@@ -125,15 +122,15 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             Validator.ThrowIfNavigatorNull(navigator);
 
-            _units = navigator.GetAttribute("units", String.Empty);
-            _unitsCode = navigator.GetAttribute("units-code", String.Empty);
-            if (String.IsNullOrEmpty(_unitsCode))
+            _units = navigator.GetAttribute("units", string.Empty);
+            _unitsCode = navigator.GetAttribute("units-code", string.Empty);
+            if (string.IsNullOrEmpty(_unitsCode))
             {
                 _unitsCode = null;
             }
 
-            _text = navigator.GetAttribute("text", String.Empty);
-            if (String.IsNullOrEmpty(_text))
+            _text = navigator.GetAttribute("text", string.Empty);
+            if (string.IsNullOrEmpty(_text))
             {
                 _text = null;
             }
@@ -175,12 +172,12 @@ namespace Microsoft.HealthVault.ItemTypes
 
             writer.WriteAttributeString("units", _units);
 
-            if (!String.IsNullOrEmpty(_unitsCode))
+            if (!string.IsNullOrEmpty(_unitsCode))
             {
                 writer.WriteAttributeString("units-code", _unitsCode);
             }
 
-            if (!String.IsNullOrEmpty(_text))
+            if (!string.IsNullOrEmpty(_text))
             {
                 writer.WriteAttributeString("text", _text);
             }
@@ -200,25 +197,23 @@ namespace Microsoft.HealthVault.ItemTypes
         /// 
         public override string ToString()
         {
-            String result = String.Empty;
+            string result;
 
             if (_text != null)
             {
-                result = _text;
+                return _text;
             }
-            else
-            {
-                result = Value.ToString(CultureInfo.CurrentCulture);
 
-                if (!String.IsNullOrEmpty(Units))
-                {
-                    result =
-                        String.Format(
-                            ResourceRetriever.GetResourceString(
-                                "DisplayValueToStringFormatWithUnits"),
-                            result,
-                            Units);
-                }
+            result = Value.ToString(CultureInfo.CurrentCulture);
+
+            if (!string.IsNullOrEmpty(Units))
+            {
+                result =
+                    string.Format(
+                        ResourceRetriever.GetResourceString(
+                            "DisplayValueToStringFormatWithUnits"),
+                        result,
+                        Units);
             }
 
             return result;

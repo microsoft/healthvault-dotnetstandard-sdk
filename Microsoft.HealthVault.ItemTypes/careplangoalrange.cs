@@ -4,10 +4,7 @@
 // All other rights reserved.
 
 using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Globalization;
-using System.Text;
 using System.Xml;
 using System.Xml.XPath;
 
@@ -189,13 +186,13 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public override string ToString()
         {
-            string rangeValue = String.Empty;
+            string rangeValue = string.Empty;
 
             if (_minimumValue != null &&
                 _maximumValue != null)
             {
                 rangeValue =
-                    String.Format(
+                    string.Format(
                         CultureInfo.CurrentUICulture,
                         ResourceRetriever.GetResourceString("CarePlanGoalRangeFormatMinMax"),
                         _minimumValue,
@@ -204,7 +201,7 @@ namespace Microsoft.HealthVault.ItemTypes
             else if (_minimumValue != null)
             {
                 rangeValue =
-                    String.Format(
+                    string.Format(
                         CultureInfo.CurrentUICulture,
                         ResourceRetriever.GetResourceString("CarePlanGoalRangeFormatMinOnly"),
                         _minimumValue);
@@ -212,14 +209,14 @@ namespace Microsoft.HealthVault.ItemTypes
             else if (_maximumValue != null)
             {
                 rangeValue =
-                    String.Format(
+                    string.Format(
                         CultureInfo.CurrentUICulture,
                         ResourceRetriever.GetResourceString("CarePlanGoalRangeFormatMaxOnly"),
                         _maximumValue);
             }
 
             return
-                String.Format(
+                string.Format(
                         CultureInfo.CurrentUICulture,
                         ResourceRetriever.GetResourceString("CarePlanGoalRangeFormat"),
                         rangeValue,

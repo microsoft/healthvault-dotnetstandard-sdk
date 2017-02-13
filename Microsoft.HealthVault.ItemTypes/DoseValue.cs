@@ -5,10 +5,6 @@
 
 
 using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Globalization;
-using System.Text;
 using System.Xml;
 using System.Xml.XPath;
 
@@ -24,7 +20,7 @@ namespace Microsoft.HealthVault.ItemTypes
         /// Creates a new instance of the <see cref="DoseValue"/> class with empty values.
         /// </summary>
         /// 
-        public DoseValue() : base()
+        public DoseValue()
         {
         }
 
@@ -254,52 +250,43 @@ namespace Microsoft.HealthVault.ItemTypes
         /// 
         public override string ToString()
         {
-            String result = String.Empty;
-
             if (Description != null)
             {
-                result = Description;
+                return Description;
             }
-            else if (ExactDose != null)
+
+            if (ExactDose != null)
             {
-                result = ExactDose.Value.ToString();
+                return ExactDose.Value.ToString();
             }
-            else
+            
+            if (MinDose != null && MaxDose != null)
             {
-                if (MinDose != null && MaxDose != null)
-                {
-                    result =
-                        String.Format(
-                            ResourceRetriever.GetResourceString(
-                                "DoseValueToStringDoseMinAndMax"),
-                        MinDose.Value,
-                        MaxDose.Value);
-                }
-                else if (MinDose != null)
-                {
-                    result =
-                        String.Format(
-                            ResourceRetriever.GetResourceString(
-                                "DoseValueToStringDoseMin"),
-                        MinDose.Value);
-                }
-                else if (MaxDose != null)
-                {
-                    result =
-                        String.Format(
-                            ResourceRetriever.GetResourceString(
-                                "DoseValueToStringDoseMax"),
-                        MaxDose.Value);
-                }
-                else
-                {
-                    result =
-                        String.Format(
-                            ResourceRetriever.GetResourceString(
-                                "DoseValueTOStringDoseNeither"));
-                }
+                return string.Format(
+                        ResourceRetriever.GetResourceString(
+                            "DoseValueToStringDoseMinAndMax"),
+                    MinDose.Value,
+                    MaxDose.Value);
             }
-            return result;
+
+            if (MinDose != null)
+            {
+                return string.Format(
+                        ResourceRetriever.GetResourceString(
+                            "DoseValueToStringDoseMin"),
+                    MinDose.Value);
+            }
+
+            if (MaxDose != null)
+            {
+                return string.Format(
+                        ResourceRetriever.GetResourceString(
+                            "DoseValueToStringDoseMax"),
+                    MaxDose.Value);
+            }
+            return string.Format(
+                    ResourceRetriever.GetResourceString(
+                        "DoseValueTOStringDoseNeither"));
         }
     }
 }

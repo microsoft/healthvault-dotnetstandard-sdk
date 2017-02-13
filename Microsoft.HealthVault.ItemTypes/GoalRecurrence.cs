@@ -4,11 +4,8 @@
 // All other rights reserved.
 
 using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
-using System.Text;
 using System.Xml;
 using System.Xml.XPath;
 
@@ -109,7 +106,7 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public override void WriteXml(string nodeName, XmlWriter writer)
         {
-            if (String.IsNullOrEmpty(nodeName))
+            if (string.IsNullOrEmpty(nodeName))
             {
                 throw new ArgumentException(
                     ResourceRetriever.GetResourceString(
@@ -207,7 +204,7 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public override string ToString()
         {
-            return String.Format(
+            return string.Format(
                         CultureInfo.CurrentUICulture,
                         ResourceRetriever.GetResourceString("GoalRecurrenceFormat"),
                         TimesInInterval.ToString(CultureInfo.CurrentCulture),

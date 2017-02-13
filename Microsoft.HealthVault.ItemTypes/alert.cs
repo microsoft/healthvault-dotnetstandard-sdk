@@ -172,11 +172,9 @@ namespace Microsoft.HealthVault.ItemTypes
         /// values to the returned collection.
         /// </remarks>
         /// 
-        public Collection<DayOfWeek> DaysOfWeek
-        {
-            get { return _daysOfWeek; }
-        }
-        private Collection<DayOfWeek> _daysOfWeek =
+        public Collection<DayOfWeek> DaysOfWeek => _daysOfWeek;
+
+        private readonly Collection<DayOfWeek> _daysOfWeek =
             new Collection<DayOfWeek>();
 
         /// <summary>
@@ -193,11 +191,9 @@ namespace Microsoft.HealthVault.ItemTypes
         /// instances to the returned collection.
         /// </remarks>
         /// 
-        public Collection<ApproximateTime> Times
-        {
-            get { return _times; }
-        }
-        private Collection<ApproximateTime> _times =
+        public Collection<ApproximateTime> Times => _times;
+
+        private readonly Collection<ApproximateTime> _times =
             new Collection<ApproximateTime>();
 
         /// <summary>
@@ -249,7 +245,7 @@ namespace Microsoft.HealthVault.ItemTypes
                 }
             }
 
-            return String.Format(
+            return string.Format(
                 ResourceRetriever.GetResourceString(
                     "AlertToStringFormat"),
                 daysOfWeek.ToString(),

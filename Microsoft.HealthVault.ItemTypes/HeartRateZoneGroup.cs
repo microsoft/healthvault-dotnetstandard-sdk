@@ -7,7 +7,6 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Globalization;
 using System.Xml;
 using System.Xml.XPath;
 
@@ -90,7 +89,7 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             Validator.ThrowIfNavigatorNull(navigator);
 
-            string name = navigator.GetAttribute("name", String.Empty);
+            string name = navigator.GetAttribute("name", string.Empty);
             if (name.Length != 0)
             {
                 _name = name;
@@ -144,7 +143,7 @@ namespace Microsoft.HealthVault.ItemTypes
 
             writer.WriteStartElement(nodeName);
 
-            if (!String.IsNullOrEmpty(_name))
+            if (!string.IsNullOrEmpty(_name))
             {
                 writer.WriteAttributeString("name", _name);
             }

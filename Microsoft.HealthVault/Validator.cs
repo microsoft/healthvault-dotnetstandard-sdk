@@ -7,6 +7,7 @@ using System;
 using System.IO;
 using System.Net;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 using System.Security;
 using System.Xml;
 using System.Xml.XPath;

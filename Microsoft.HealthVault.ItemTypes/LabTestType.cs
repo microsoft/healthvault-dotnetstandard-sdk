@@ -5,9 +5,7 @@
 
 
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Globalization;
 using System.Text;
 using System.Xml;
 using System.Xml.XPath;
@@ -118,8 +116,8 @@ namespace Microsoft.HealthVault.ItemTypes
             _when.WriteXml("when", writer);
 
             XmlWriterHelper.WriteOptString(writer, "name", _name);
-            XmlWriterHelper.WriteOpt<CodableValue>(writer, "substance", _substance);
-            XmlWriterHelper.WriteOpt<CodableValue>(writer, "collection-method", _collectionMethod);
+            XmlWriterHelper.WriteOpt(writer, "substance", _substance);
+            XmlWriterHelper.WriteOpt(writer, "collection-method", _collectionMethod);
             XmlWriterHelper.WriteOptString(writer, "abbreviation", _abbreviation);
             XmlWriterHelper.WriteOptString(writer, "description", _description);
 
@@ -128,8 +126,8 @@ namespace Microsoft.HealthVault.ItemTypes
                 codeValue.WriteXml("code", writer);
             }
 
-            XmlWriterHelper.WriteOpt<LabResultType>(writer, "result", _result);
-            XmlWriterHelper.WriteOpt<CodableValue>(writer, "status", _status);
+            XmlWriterHelper.WriteOpt(writer, "result", _result);
+            XmlWriterHelper.WriteOpt(writer, "status", _status);
 
             writer.WriteEndElement();
         }
@@ -288,9 +286,9 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             StringBuilder result = new StringBuilder(200);
 
-            result.Append(When.ToString());
+            result.Append(When);
 
-            if (!String.IsNullOrEmpty(this.Name))
+            if (!string.IsNullOrEmpty(this.Name))
             {
                 result.AppendFormat(
                     ResourceRetriever.GetResourceString(
@@ -319,10 +317,10 @@ namespace Microsoft.HealthVault.ItemTypes
                 result.AppendFormat(
                     ResourceRetriever.GetResourceString(
                         "ListFormat"),
-                    TestAbbreviation.ToString());
+                    TestAbbreviation);
             }
 
-            if (!String.IsNullOrEmpty(Description))
+            if (!string.IsNullOrEmpty(Description))
             {
                 result.AppendFormat(
                     ResourceRetriever.GetResourceString(

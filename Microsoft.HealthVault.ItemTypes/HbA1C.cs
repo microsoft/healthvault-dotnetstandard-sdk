@@ -5,8 +5,6 @@
 
 
 using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Globalization;
 using System.Xml;
 using System.Xml.XPath;
@@ -143,7 +141,7 @@ namespace Microsoft.HealthVault.ItemTypes
             }
 
             // <device-id>
-            if (!String.IsNullOrEmpty(_deviceId))
+            if (!string.IsNullOrEmpty(_deviceId))
             {
                 writer.WriteElementString("device-id", _deviceId);
             }
@@ -253,7 +251,7 @@ namespace Microsoft.HealthVault.ItemTypes
         public override string ToString()
         {
             return 
-                String.Format(
+                string.Format(
                     ResourceRetriever.GetResourceString(
                         "HbA1CToStringFormatPercent"),
                     (Value * 100.0).ToString(CultureInfo.CurrentCulture));

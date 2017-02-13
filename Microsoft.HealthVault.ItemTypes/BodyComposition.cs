@@ -5,10 +5,7 @@
 
 
 using System;
-using System.Text;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Globalization;
 using System.Xml;
 using System.Xml.XPath;
 
@@ -158,13 +155,13 @@ namespace Microsoft.HealthVault.ItemTypes
             _value.WriteXml("value", writer);
 
             // <measurement-method>
-            XmlWriterHelper.WriteOpt<CodableValue>(
+            XmlWriterHelper.WriteOpt(
                 writer,
                 "measurement-method",
                 _measurementMethod);
 
             // <site>
-            XmlWriterHelper.WriteOpt<CodableValue>(
+            XmlWriterHelper.WriteOpt(
                 writer,
                 "site",
                 _site);
@@ -309,13 +306,10 @@ namespace Microsoft.HealthVault.ItemTypes
                 elements.Add(_measurementName.ToString());
             }
 
-            if (_value != null)
+            string valueString = _value?.ToString();
+            if (!string.IsNullOrEmpty(valueString))
             {
-                string valueString = _value.ToString();
-                if (!String.IsNullOrEmpty(valueString))
-                {
-                    elements.Add(valueString);
-                }
+                elements.Add(valueString);
             }
 
             if (_measurementMethod != null)
@@ -326,7 +320,7 @@ namespace Microsoft.HealthVault.ItemTypes
             string separator =
                 ResourceRetriever.GetResourceString("ListSeparator");
 
-            return String.Join(separator, elements.ToArray());
+            return string.Join(separator, elements.ToArray());
         }
     }
 }

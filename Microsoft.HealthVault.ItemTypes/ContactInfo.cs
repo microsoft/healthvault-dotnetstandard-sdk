@@ -5,10 +5,7 @@
 
 
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Globalization;
-using System.Text;
 using System.Xml;
 using System.Xml.XPath;
 
@@ -267,12 +264,12 @@ namespace Microsoft.HealthVault.ItemTypes
         /// 
         public override string ToString()
         {
-            String result = String.Empty;
+            string result = string.Empty;
 
             if (PrimaryPhone != null)
             {
                 result =
-                    String.Format(
+                    string.Format(
                         ResourceRetriever.GetResourceString(
                             "ContactInfoFormatPrimary"),
                         PrimaryPhone.Number);
@@ -285,7 +282,7 @@ namespace Microsoft.HealthVault.ItemTypes
             {
                 result = Address[0].City;
 
-                if (!String.IsNullOrEmpty(Address[0].County))
+                if (!string.IsNullOrEmpty(Address[0].County))
                 {
                     result += 
                          ResourceRetriever.GetResourceString(
@@ -293,7 +290,7 @@ namespace Microsoft.HealthVault.ItemTypes
                          Address[0].County;
                 }
 
-                if (!String.IsNullOrEmpty(Address[0].State))
+                if (!string.IsNullOrEmpty(Address[0].State))
                 {
                     result += 
                          ResourceRetriever.GetResourceString(
@@ -304,7 +301,7 @@ namespace Microsoft.HealthVault.ItemTypes
             else if (PrimaryEmail != null)
             {
                 result =
-                    String.Format(
+                    string.Format(
                         ResourceRetriever.GetResourceString(
                             "ContactInfoFormatPrimary"),
                         PrimaryEmail.Address);

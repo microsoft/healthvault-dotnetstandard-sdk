@@ -189,7 +189,7 @@ namespace Microsoft.HealthVault.ItemTypes
                 imageStudySeries.WriteXml("series", writer);
             }
 
-            XmlWriterHelper.WriteOpt<CodableValue>(writer, "reason", _reason);
+            XmlWriterHelper.WriteOpt(writer, "reason", _reason);
             XmlWriterHelper.WriteOptString(writer, "preview-blob-name", _previewBlobName);
 
             foreach (MedicalImageStudySeriesImage image in _keyImages)
@@ -387,7 +387,7 @@ namespace Microsoft.HealthVault.ItemTypes
                 {
                     result.Append(ResourceRetriever.GetResourceString("ListSeparator"));
                 }
-                result.Append(Reason.ToString());
+                result.Append(Reason);
             }
 
             return result.ToString();

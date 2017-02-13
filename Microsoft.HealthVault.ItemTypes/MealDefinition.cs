@@ -4,11 +4,8 @@
 // All other rights reserved.
 
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics.CodeAnalysis;
-using System.Globalization;
-using System.Text;
 using System.Xml;
 using System.Xml.XPath;
 
@@ -67,7 +64,7 @@ namespace Microsoft.HealthVault.ItemTypes
         /// A GUID.
         /// </value>
         ///
-        public static new readonly Guid TypeId =
+        public new static readonly Guid TypeId =
             new Guid("074e122a-335a-4a47-a63d-00a8f3e79e60");
 
         /// <summary>
@@ -147,9 +144,9 @@ namespace Microsoft.HealthVault.ItemTypes
 
             writer.WriteStartElement("meal-definition");
             _name.WriteXml("name", writer);
-            XmlWriterHelper.WriteOpt<CodableValue>(writer, "meal-type", _mealType);
+            XmlWriterHelper.WriteOpt(writer, "meal-type", _mealType);
             XmlWriterHelper.WriteOptString(writer, "description", _description);
-            XmlWriterHelper.WriteXmlCollection<DietaryIntakeItem>(writer, "dietary-items", _dietaryIntakeItems, "dietary-item");
+            XmlWriterHelper.WriteXmlCollection(writer, "dietary-items", _dietaryIntakeItems, "dietary-item");
             writer.WriteEndElement();
         }
 

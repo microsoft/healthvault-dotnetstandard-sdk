@@ -5,9 +5,6 @@
 
 
 using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Globalization;
 using System.Text;
 using System.Xml;
 using System.Xml.XPath;
@@ -143,61 +140,61 @@ namespace Microsoft.HealthVault.ItemTypes
             _name.WriteXml("name", writer);
 
             // <generic-name>
-            XmlWriterHelper.WriteOpt<CodableValue>(
+            XmlWriterHelper.WriteOpt(
                 writer,
                 "generic-name",
                 _genericName);
 
             // <dose>
-            XmlWriterHelper.WriteOpt<GeneralMeasurement>(
+            XmlWriterHelper.WriteOpt(
                 writer,
                 "dose",
                 _dose);
 
             // <strength>
-            XmlWriterHelper.WriteOpt<GeneralMeasurement>(
+            XmlWriterHelper.WriteOpt(
                 writer,
                 "strength",
                 _strength);
 
             // <frequency>
-            XmlWriterHelper.WriteOpt<GeneralMeasurement>(
+            XmlWriterHelper.WriteOpt(
                 writer,
                 "frequency",
                 _frequency);
 
             // <route>
-            XmlWriterHelper.WriteOpt<CodableValue>(
+            XmlWriterHelper.WriteOpt(
                 writer,
                 "route",
                 _route);
 
             // <indication>
-            XmlWriterHelper.WriteOpt<CodableValue>(
+            XmlWriterHelper.WriteOpt(
                 writer,
                 "indication",
                 _indication);
 
             // <date-started>
-            XmlWriterHelper.WriteOpt<ApproximateDateTime>(
+            XmlWriterHelper.WriteOpt(
                 writer,
                 "date-started",
                 _dateStarted);
 
             // <date-discontinued>
-            XmlWriterHelper.WriteOpt<ApproximateDateTime>(
+            XmlWriterHelper.WriteOpt(
                 writer,
                 "date-discontinued",
                 _dateDiscontinued);
 
             // <prescribed>
-            XmlWriterHelper.WriteOpt<CodableValue>(
+            XmlWriterHelper.WriteOpt(
                 writer,
                 "prescribed",
                 _prescribed);
 
             // <prescription>
-            XmlWriterHelper.WriteOpt<Prescription>(
+            XmlWriterHelper.WriteOpt(
                 writer,
                 "prescription",
                 _prescription);
@@ -397,7 +394,7 @@ namespace Microsoft.HealthVault.ItemTypes
             StringBuilder result = new StringBuilder(200);
             string space = ResourceRetriever.GetSpace("errors");
 
-            result.Append(Name.ToString());
+            result.Append(Name);
 
             if (GenericName != null)
             {
@@ -427,7 +424,7 @@ namespace Microsoft.HealthVault.ItemTypes
             if (Frequency != null)
             {
                 result.Append(space);
-                result.Append(Frequency.ToString());
+                result.Append(Frequency);
             }
             return result.ToString();
         }

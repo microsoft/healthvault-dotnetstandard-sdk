@@ -5,10 +5,6 @@
 
 
 using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Globalization;
-using System.Text;
 using System.Xml;
 using System.Xml.XPath;
 
@@ -131,11 +127,11 @@ namespace Microsoft.HealthVault.ItemTypes
 
             _name.WriteXml("name", writer);
 
-            XmlWriterHelper.WriteOpt<ApproximateDateTime>(writer, "date-filled", _dateFilled);
+            XmlWriterHelper.WriteOpt(writer, "date-filled", _dateFilled);
             XmlWriterHelper.WriteOptInt(writer, "days-supply", _daysSupply);
-            XmlWriterHelper.WriteOpt<HealthServiceDate>(writer, "next-refill-date", _nextRefillDate);
+            XmlWriterHelper.WriteOpt(writer, "next-refill-date", _nextRefillDate);
             XmlWriterHelper.WriteOptInt(writer, "refills-left", _refillsLeft);
-            XmlWriterHelper.WriteOpt<Organization>(writer, "pharmacy", _pharmacy);
+            XmlWriterHelper.WriteOpt(writer, "pharmacy", _pharmacy);
             XmlWriterHelper.WriteOptString(writer, "prescription-number", _prescriptionNumber);
             XmlWriterHelper.WriteOptString(writer, "lot-number", _lotNumber);
 
@@ -304,13 +300,13 @@ namespace Microsoft.HealthVault.ItemTypes
             if (_dateFilled != null)
             {
                 result = 
-                    String.Format(
+                    string.Format(
                         ResourceRetriever.GetResourceString(
                             "MedicationFillToStringFormat"),
                         Name.ToString(),
                         _dateFilled.ToString());
             }
-            return result.ToString();
+            return result;
         }
     }
 }

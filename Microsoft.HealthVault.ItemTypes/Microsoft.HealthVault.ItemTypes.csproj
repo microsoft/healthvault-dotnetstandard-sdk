@@ -40,12 +40,15 @@
     <!-- A reference to the entire .NET Framework is automatically included -->
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\..\Microsoft.Health.ItemTypes\PersonItem.cs">
+      <Link>PersonItem.cs</Link>
+    </Compile>
     <Compile Include="ActionPlanWrapper.cs" />
     <Compile Include="Address.cs" />
     <Compile Include="AerobicData.cs" />
     <Compile Include="AerobicProfile.cs" />
     <Compile Include="AerobicWeeklyGoal.cs" />
-    <Compile Include="alert.cs" />
+    <Compile Include="Alert.cs" />
     <Compile Include="AllergicEpisode.cs" />
     <Compile Include="Allergy.cs" />
     <Compile Include="AltitudeMeasurement.cs" />
@@ -60,7 +63,7 @@
     <Compile Include="AssociatedTypeInfo.cs" />
     <Compile Include="AsthmaInhaler.cs" />
     <Compile Include="AsthmaInhalerUse.cs" />
-    <Compile Include="baby.cs" />
+    <Compile Include="Baby.cs" />
     <Compile Include="Basic.cs" />
     <Compile Include="BasicV2.cs" />
     <Compile Include="BloodGlucose.cs" />
@@ -73,11 +76,11 @@
     <Compile Include="BodyDimension.cs" />
     <Compile Include="CalorieGuideline.cs" />
     <Compile Include="CardiacProfile.cs" />
-    <Compile Include="careplan.cs" />
-    <Compile Include="careplangoal.cs" />
-    <Compile Include="careplangoalgroup.cs" />
-    <Compile Include="careplangoalrange.cs" />
-    <Compile Include="careplantask.cs" />
+    <Compile Include="CarePlan.cs" />
+    <Compile Include="CarePlanGoal.cs" />
+    <Compile Include="CarePlanGoalGroup.cs" />
+    <Compile Include="CarePlanGoalRange.cs" />
+    <Compile Include="CarePlanTask.cs" />
     <Compile Include="CarePlanTaskRecurrence.cs" />
     <Compile Include="ccd.cs" />
     <Compile Include="ccr.cs" />
@@ -87,7 +90,7 @@
     <Compile Include="ClaimAmounts.cs" />
     <Compile Include="CodableValue.cs" />
     <Compile Include="CodedValue.cs" />
-    <Compile Include="comment.cs" />
+    <Compile Include="Comment.cs" />
     <Compile Include="ConcentrationMeasurement.cs" />
     <Compile Include="Concern.cs" />
     <Compile Include="Condition.cs" />
@@ -114,7 +117,7 @@
     <Compile Include="Email.cs" />
     <Compile Include="Emotion.cs" />
     <Compile Include="Encounter.cs" />
-    <Compile Include="exercise.cs" />
+    <Compile Include="Exercise.cs" />
     <Compile Include="ExerciseDetail.cs" />
     <Compile Include="ExerciseSampleOneValue.cs" />
     <Compile Include="ExerciseSamples.cs" />
@@ -128,7 +131,7 @@
     <Compile Include="FamilyHistoryRelative.cs" />
     <Compile Include="FamilyHistoryRelativeV3.cs" />
     <Compile Include="FamilyHistoryV3.cs" />
-    <Compile Include="file.cs" />
+    <Compile Include="File.cs" />
     <Compile Include="FlowMeasurement.cs" />
     <Compile Include="FoodEnergyValue.cs" />
     <Compile Include="Gender.cs" />
@@ -151,8 +154,6 @@
     <Compile Include="HealthEvent.cs" />
     <Compile Include="HealthGoal.cs" />
     <Compile Include="HealthJournalEntry.cs" />
-    <Compile Include="HealthRecordItem.cs" />
-    <Compile Include="HealthRecordItemData.cs" />
     <Compile Include="HealthServiceDate.cs" />
     <Compile Include="HealthServiceDateTime.cs" />
     <Compile Include="HeartRate.cs" />

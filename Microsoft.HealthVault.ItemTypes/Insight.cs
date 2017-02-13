@@ -5,7 +5,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Globalization;
 using System.Xml;
 using System.Xml.XPath;
@@ -81,7 +80,7 @@ namespace Microsoft.HealthVault.ItemTypes
         /// A GUID.
         /// </value>
         /// 
-        public static new readonly Guid TypeId =
+        public new static readonly Guid TypeId =
             new Guid("5D15B7BC-0499-4DC4-8DF7-EF1A2332CFB5");
 
         /// <summary>
@@ -235,7 +234,7 @@ namespace Microsoft.HealthVault.ItemTypes
         public override string ToString()
         {
             string value =
-                String.Format(
+                string.Format(
                 CultureInfo.CurrentCulture,
                 ResourceRetriever.GetResourceString("InsightSummaryText"),
                 _raisedInsightId,
@@ -602,7 +601,7 @@ namespace Microsoft.HealthVault.ItemTypes
 
         private static List<string> GetStringList(XPathNavigator subItemNav, string subItemName)
         {
-            if (subItemNav == null || String.IsNullOrEmpty(subItemName))
+            if (subItemNav == null || string.IsNullOrEmpty(subItemName))
             {
                 return null;
             }
@@ -620,7 +619,7 @@ namespace Microsoft.HealthVault.ItemTypes
 
         private static Dictionary<string, object> GetDictionary(XPathNavigator subItemNav, string subItemName)
         {
-            if (subItemNav == null || String.IsNullOrEmpty(subItemName))
+            if (subItemNav == null || string.IsNullOrEmpty(subItemName))
             {
                 return null;
             }

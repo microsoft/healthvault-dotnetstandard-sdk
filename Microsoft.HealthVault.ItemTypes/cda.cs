@@ -4,11 +4,6 @@
 // All other rights reserved.
 
 using System;
-using System.Diagnostics.CodeAnalysis;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Globalization;
-using System.Xml;
 using System.Xml.XPath;
 
 namespace Microsoft.HealthVault.ItemTypes

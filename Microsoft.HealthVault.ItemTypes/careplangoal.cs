@@ -4,11 +4,9 @@
 // All other rights reserved.
 
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
-using System.Text;
 using System.Xml;
 using System.Xml.XPath;
 
@@ -119,11 +117,11 @@ namespace Microsoft.HealthVault.ItemTypes
             {
                 _name.WriteXml("name", writer);
                 XmlWriterHelper.WriteOptString(writer, "description", _description);
-                XmlWriterHelper.WriteOpt<ApproximateDateTime>(writer, "start-date", _startDate);
-                XmlWriterHelper.WriteOpt<ApproximateDateTime>(writer, "end-date", _endDate);
-                XmlWriterHelper.WriteOpt<ApproximateDateTime>(writer, "target-completion-date", _targetCompletionDate);
-                XmlWriterHelper.WriteOpt<AssociatedTypeInfo>(writer, "associated-type-info", _goalAssociatedTypeInfo);
-                XmlWriterHelper.WriteOpt<GoalRange>(writer, "target-range", _targetRange);
+                XmlWriterHelper.WriteOpt(writer, "start-date", _startDate);
+                XmlWriterHelper.WriteOpt(writer, "end-date", _endDate);
+                XmlWriterHelper.WriteOpt(writer, "target-completion-date", _targetCompletionDate);
+                XmlWriterHelper.WriteOpt(writer, "associated-type-info", _goalAssociatedTypeInfo);
+                XmlWriterHelper.WriteOpt(writer, "target-range", _targetRange);
 
                 if (_goalAdditionalRanges != null && _goalAdditionalRanges.Count != 0)
                 {
@@ -133,7 +131,7 @@ namespace Microsoft.HealthVault.ItemTypes
                     }
                 }
 
-                XmlWriterHelper.WriteOpt<GoalRecurrence>(writer, "recurrence", _recurrence);
+                XmlWriterHelper.WriteOpt(writer, "recurrence", _recurrence);
                 XmlWriterHelper.WriteOptString(writer, "reference-id", _referenceId);
             }
 
@@ -342,12 +340,9 @@ namespace Microsoft.HealthVault.ItemTypes
         /// If there is no information about goalAdditionalRanges the collection should be empty.
         /// </remarks>
         ///
-        public Collection<GoalRange> GoalAdditionalRanges
-        {
-            get { return _goalAdditionalRanges; }
-        }
+        public Collection<GoalRange> GoalAdditionalRanges => _goalAdditionalRanges;
 
-        private Collection<GoalRange> _goalAdditionalRanges = new Collection<GoalRange>();
+        private readonly Collection<GoalRange> _goalAdditionalRanges = new Collection<GoalRange>();
 
         /// <summary>
         /// Gets or sets recurrence for goals.
@@ -419,7 +414,7 @@ namespace Microsoft.HealthVault.ItemTypes
             }
             else
             {
-                result = String.Format(
+                result = string.Format(
                     CultureInfo.CurrentUICulture,
                     ResourceRetriever.GetResourceString("CarePlanGoalFormat"),
                     _name.Text,
