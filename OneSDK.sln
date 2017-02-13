@@ -3,9 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
 VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.Health", "Microsoft.Health\Microsoft.Health.csproj", "{DBE2BA67-DBC3-479E-A374-1CE5EE33C453}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.HealthVault", "Microsoft.HealthVault\Microsoft.HealthVault.csproj", "{DBE2BA67-DBC3-479E-A374-1CE5EE33C453}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.Health.ItemTypes", "Microsoft.Health.ItemTypes\Microsoft.Health.ItemTypes.csproj", "{105AC0FB-6FE4-475D-A4A6-6EF660337E5E}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.HealthVault.ItemTypes", "Microsoft.HealthVault.ItemTypes\Microsoft.HealthVault.ItemTypes.csproj", "{105AC0FB-6FE4-475D-A4A6-6EF660337E5E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
