@@ -229,13 +229,6 @@
     <Compile Include="MailMessage.cs" />
     <Compile Include="MailMessageFromApplication.cs" />
     <Compile Include="MailRecipient.cs" />
-    <Compile Include="MeaningfulUse\DocumentReceipt.cs" />
-    <Compile Include="MeaningfulUse\DocumentReceiptCollection.cs" />
-    <Compile Include="MeaningfulUse\DopuDocumentReceipt.cs" />
-    <Compile Include="MeaningfulUse\DopuDocumentReceiptCollection.cs" />
-    <Compile Include="MeaningfulUse\PatientActivity.cs" />
-    <Compile Include="MeaningfulUse\PatientActivityCollection.cs" />
-    <Compile Include="MeaningfulUse\ReportCollection.cs" />
     <Compile Include="OfflineWebApplicationConnection.cs" />
     <Compile Include="OtherItemData.cs" />
     <Compile Include="OtherItemDataCSV.cs" />
