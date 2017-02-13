@@ -47,7 +47,6 @@
     <Compile Include="ApplicationConnection.cs" />
     <Compile Include="ApplicationInfo.cs" />
     <Compile Include="ApplicationOptions.cs" />
-    <Compile Include="ApplicationProvisioning\Provisioner.cs" />
     <Compile Include="ApplicationSettings.cs" />
     <Compile Include="AuthenticatedConnection.cs" />
     <Compile Include="Authentication\AbstractCryptoServiceProviderHash.cs" />
