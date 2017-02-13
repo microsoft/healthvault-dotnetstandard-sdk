@@ -694,7 +694,7 @@ namespace Microsoft.Health
                 else
                 {
                     string[] methods
-                        = SDKHelper.SplitAndTrim(_responseCompressionMethods.ToLower(CultureInfo.InvariantCulture), ',');
+                        = SDKHelper.SplitAndTrim(_responseCompressionMethods.ToLowerInvariant(), ',');
 
                     for (int i = 0; i < methods.Length; ++i)
                     {

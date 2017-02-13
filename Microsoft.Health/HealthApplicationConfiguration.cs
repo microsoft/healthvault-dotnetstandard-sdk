@@ -71,6 +71,7 @@ namespace Microsoft.Health
             get { return _current; }
             set { _current = value; }
         }
+
         private static volatile HealthApplicationConfiguration _current =
             new HealthApplicationConfiguration();
 
@@ -185,7 +186,7 @@ namespace Microsoft.Health
                 if (HealthVaultUrl != null)
                 {
                     return new Uri(
-                        HealthVaultUrl.GetLeftPart(UriPartial.Authority) + "/streaming/wildcatblob.ashx");
+                        HealthVaultUrl.GetComponents(UriComponents.Scheme | UriComponents.Host, UriFormat.Unescaped) + "/streaming/wildcatblob.ashx");
                 }
 
                 return null;
@@ -889,7 +890,7 @@ namespace Microsoft.Health
 
             if (!String.IsNullOrEmpty(tempCompressionMethods))
             {
-                string[] methods = SDKHelper.SplitAndTrim(tempCompressionMethods.ToLower(CultureInfo.InvariantCulture), ',');
+                string[] methods = SDKHelper.SplitAndTrim(tempCompressionMethods.ToLowerInvariant(), ',');
 
                 for (int i = 0; i < methods.Length; ++i)
                 {
