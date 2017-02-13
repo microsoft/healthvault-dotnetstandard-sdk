@@ -8,8 +8,6 @@
 using System.Diagnostics.CodeAnalysis;
 
 [module: SuppressMessage("Microsoft.Security.Cryptography", "CA5357:RijndaelCannotBeUsed", Scope = "member", Target = "Microsoft.Health.Authentication.CryptoConfiguration.#CreateSymmetricAlgorithm(System.String,System.Byte[])")]
-[module: SuppressMessage("Microsoft.Security.Cryptography", "CA5357:RijndaelCannotBeUsed", Scope = "member", Target = "Microsoft.Health.Package.ConnectPackageCreationParameters.#SetupConnectPackageEncryptionAlgorithm(System.Byte[],System.Byte[])")]
-[module: SuppressMessage("Microsoft.Security.Cryptography", "CA5357:RijndaelCannotBeUsed", Scope = "member", Target = "Microsoft.Health.Package.ConnectPackageCreationParameters.#SetupBlobEncryptionAlgorithm(System.Byte[],System.Byte[])")]
 [module: SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes", Scope = "member", Target = "Microsoft.Health.HealthServiceRequest.#ConstructVersionString()")]
 [module: SuppressMessage("Microsoft.Design", "CA1063:ImplementIDisposableCorrectly", Scope = "member", Target = "Microsoft.Health.BlobStream.#Dispose()")]
 [module: SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes", Scope = "member", Target = "Microsoft.Health.EasyWebRequest.#StartPostRequest()")]
@@ -53,7 +51,6 @@ using System.Diagnostics.CodeAnalysis;
 [module: SuppressMessage("Microsoft.Globalization", "CA1305:SpecifyIFormatProvider", Scope = "member", Target = "Microsoft.Health.HealthRecordItem.#AddCorePutThingsRequestParameters(System.Xml.XmlWriter,System.Boolean,Microsoft.Health.HealthRecordItemSections)", MessageId = "System.UInt32.ToString")]
 [module: SuppressMessage("Microsoft.Globalization", "CA1308:NormalizeStringsToUppercase", Scope = "member", Target = "Microsoft.Health.HealthRecordView.#AddBlobFormatXml(System.Xml.XmlWriter)")]
 [module: SuppressMessage("Microsoft.Globalization", "CA1308:NormalizeStringsToUppercase", Scope = "member", Target = "Microsoft.Health.PlatformPrimitives.HealthVaultPlatformInformation.#WriteSectionSpecs(System.Xml.XmlWriter,Microsoft.Health.HealthRecordItemTypeSections)")]
-[module: SuppressMessage("Microsoft.Globalization", "CA1308:NormalizeStringsToUppercase", Scope = "member", Target = "Microsoft.Health.Package.ConnectPackageCreationParameters.#SetupEncryptionParameters()")]
 [module: SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity", Scope = "member", Target = "Microsoft.Health.ApplicationInfo.#GetRequestParameters(System.Guid)")]
 [module: SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity", Scope = "member", Target = "Microsoft.Health.HealthRecordFilter.#CreateFromXml(System.Xml.XPath.XPathNavigator)")]
 [module: SuppressMessage("Microsoft.MSInternal", "CA900:AptcaAssembliesShouldBeReviewed")]
@@ -90,8 +87,6 @@ using System.Diagnostics.CodeAnalysis;
 [module: SuppressMessage("Microsoft.Naming", "CA1720:IdentifiersShouldNotContainTypeNames", Scope = "member", Target = "Microsoft.Health.ApplicationConnection.#SearchVocabulary(Microsoft.Health.VocabularyKey,System.String,Microsoft.Health.VocabularySearchType,System.Nullable`1<System.Int32>)", MessageId = "string")]
 [module: SuppressMessage("Microsoft.Naming", "CA1720:IdentifiersShouldNotContainTypeNames", Scope = "member", Target = "Microsoft.Health.ApplicationConnection.#SearchVocabularyKeys(System.String,Microsoft.Health.VocabularySearchType,System.Nullable`1<System.Int32>)", MessageId = "string")]
 [module: SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", Scope = "type", Target = "Microsoft.Health.ApplicationProvisioning.Provisioner", MessageId = "Provisioner")]
-[module: SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly", Scope = "member", Target = "Microsoft.Health.Package.ConnectPackageCreationParameters.#ConnectPackageHMACAlgorithmName", MessageId = "HMAC")]
-[module: SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly", Scope = "member", Target = "Microsoft.Health.Package.ConnectPackageCreationParameters.#ConnectPackageHMACAlgorithm", MessageId = "HMAC")]
 [module: SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", Scope = "member", Target = "Microsoft.Health.Authentication.ApplicationTokenCreationInfo.#.ctor(System.Guid,System.Boolean)", MessageId = "Mra")]
 [module: SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", Scope = "member", Target = "Microsoft.Health.Authentication.ApplicationTokenCreationInfo.#.ctor(System.Guid,System.Boolean,System.String)", MessageId = "Mra")]
 [module: SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly", Scope = "member", Target = "Microsoft.Health.Authentication.ApplicationTokenCreationInfo.#IsMRA", MessageId = "MRA")]

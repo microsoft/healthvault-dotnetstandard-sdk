@@ -10,7 +10,6 @@ using System.IO;
 using System.Net;
 using System.Security.Cryptography;
 using System.Xml.XPath;
-using Microsoft.HealthVault.Package;
 
 namespace Microsoft.HealthVault
 {
@@ -32,14 +31,6 @@ namespace Microsoft.HealthVault
         internal BlobStream(HealthRecordAccessor record, Blob blob)
         {
             _record = record;
-            _blob = blob;
-            _length = blob.ContentLength;
-            _canWrite = true;
-        }
-
-        internal BlobStream(ConnectPackageCreationParameters connectPackageParameters, Blob blob)
-        {
-            _connectPackageParameters = connectPackageParameters;
             _blob = blob;
             _length = blob.ContentLength;
             _canWrite = true;
@@ -70,7 +61,6 @@ namespace Microsoft.HealthVault
         }
 
         private HealthRecordAccessor _record;
-        private ConnectPackageCreationParameters _connectPackageParameters;
         private Blob _blob;
         private byte[] _inlineData;
         private long? _length;
@@ -82,35 +72,6 @@ namespace Microsoft.HealthVault
         private List<byte[]> _blockHashes = new List<byte[]>();
         private BlobHasher _blobHasher;
 
-        /// <summary>
-        /// Not supported.
-        /// </summary>
-        /// <param name="buffer"/>
-        /// <param name="offset"/>
-        /// <param name="count"/>
-        /// <param name="callback"/>
-        /// <param name="state"/>
-        /// <exception cref="NotSupportedException"/>
-        public override IAsyncResult BeginRead(
-            byte[] buffer, int offset, int count, AsyncCallback callback, object state)
-        {
-            throw new NotSupportedException();
-        }
-
-        /// <summary>
-        /// Not supported.
-        /// </summary>
-        /// <param name="buffer"/>
-        /// <param name="offset"/>
-        /// <param name="count"/>
-        /// <param name="callback"/>
-        /// <param name="state"/>
-        /// <exception cref="NotSupportedException"/>
-        public override IAsyncResult BeginWrite(
-            byte[] buffer, int offset, int count, AsyncCallback callback, object state)
-        {
-            throw new NotSupportedException();
-        }
 
         /// <summary>
         /// Gets a value indicating whether the current stream supports reading.
@@ -163,15 +124,6 @@ namespace Microsoft.HealthVault
         private bool _canWrite;
 
         /// <summary>
-        /// Closes the current stream and releases any resources associated with the current stream.
-        /// </summary>
-        /// 
-        public override void Close()
-        {
-            Dispose(true);
-        }
-
-        /// <summary>
         /// Releases all resources held by the <see cref="BlobStream"/>.
         /// </summary>
         /// 
@@ -217,28 +169,6 @@ namespace Microsoft.HealthVault
         {
             Dispose(true);
             GC.SuppressFinalize(this);
-        }
-
-        /// <summary>
-        /// Not supported.
-        /// </summary>
-        /// 
-        /// <exception cref="NotSupportedException"/>
-        /// 
-        public override int EndRead(IAsyncResult asyncResult)
-        {
-            throw new NotSupportedException();
-        }
-
-        /// <summary>
-        /// Not supported.
-        /// </summary>
-        /// 
-        /// <exception cref="NotSupportedException"/>
-        /// 
-        public override void EndWrite(IAsyncResult asyncResult)
-        {
-            throw new NotSupportedException();
         }
 
         /// <summary>
@@ -651,12 +581,6 @@ namespace Microsoft.HealthVault
         /// The number of bytes to be written to the current stream.
         /// </param>
         /// 
-        /// <remarks>
-        /// If the request bytes to write don't make a full chunk, they will be buffered and
-        /// written when a full chunk size is written or <see cref="Flush"/> or <see cref="Close"/>
-        /// is called.
-        /// </remarks>
-        /// 
         /// <exception cref="ArgumentNullException">
         /// If <paramref name="buffer"/> is <b>null</b>.
         /// </exception>
@@ -882,11 +806,6 @@ namespace Microsoft.HealthVault
         /// <param name="value">
         /// The byte to write to the stream.
         /// </param>
-        /// 
-        /// <remarks>
-        /// The bytes are buffered until the BLOB chunk size is obtained or <see cref="Flush"/> or
-        /// <see cref="Close"/> is called.
-        /// </remarks>
         /// 
         /// <exception cref="NotSupportedException">
         /// If the stream does not support reading.

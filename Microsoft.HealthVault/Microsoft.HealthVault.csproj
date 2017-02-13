@@ -188,7 +188,6 @@
     <Compile Include="HealthVaultPlatformInformation.cs" />
     <Compile Include="HealthVaultPlatformItem.cs" />
     <Compile Include="HealthVaultPlatformMessage.cs" />
-    <Compile Include="HealthVaultPlatformPatientConnect.cs" />
     <Compile Include="HealthVaultPlatformPerson.cs" />
     <Compile Include="HealthVaultPlatformProvisioning.cs" />
     <Compile Include="HealthVaultPlatformRecord.cs" />
