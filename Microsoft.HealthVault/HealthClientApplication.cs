@@ -440,8 +440,8 @@ namespace Microsoft.HealthVault
         /// 
         public Uri GetApplicationCreationUrl()
         {
-            string clientName = Environment.MachineName;
-
+            string clientName = Environment.GetEnvironmentVariable("Machine");
+            
             return GetApplicationCreationUrl(clientName, String.Empty);
         }
 
@@ -723,7 +723,7 @@ namespace Microsoft.HealthVault
         [SecurityCritical]
         public void StartApplicationCreationProcess()
         {
-            string clientName = Environment.MachineName;
+            string clientName = Environment.GetEnvironmentVariable("Machine");
 
             StartApplicationCreationProcess(clientName);
         }
@@ -996,7 +996,6 @@ namespace Microsoft.HealthVault
             // The request is executed by launching it in the registered browser
             // The user then walks through the process of authorizing the application
             ProcessStartInfo startInfo = new ProcessStartInfo(uri.AbsoluteUri);
-            startInfo.ErrorDialog = true;
             startInfo.UseShellExecute = true;
             startInfo.CreateNoWindow = false; // create in a new window, which we can control
             Process process = Process.Start(startInfo);

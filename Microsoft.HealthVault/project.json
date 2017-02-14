@@ -4,6 +4,7 @@
     "Microsoft.NETCore.Portable.Compatibility": "1.0.1",
     "NETStandard.Library": "1.6.0",
     "System.Collections.Specialized": "4.3.0",
+    "System.Diagnostics.Process": "4.3.0",
     "System.Diagnostics.TraceSource": "4.3.0",
     "System.Net.Http": "4.3.0",
     "System.Runtime.Serialization.Formatters": "4.3.0",
