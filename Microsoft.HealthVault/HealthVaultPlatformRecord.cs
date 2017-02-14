@@ -9,6 +9,7 @@ using System.Collections.ObjectModel;
 using System.Text;
 using System.Xml;
 using System.Xml.XPath;
+using Microsoft.HealthVault.Exceptions;
 
 namespace Microsoft.HealthVault.PlatformPrimitives
 {
@@ -307,29 +308,19 @@ namespace Microsoft.HealthVault.PlatformPrimitives
 
             XmlWriterSettings settings = SDKHelper.XmlUnicodeWriterSettings;
 
-            XmlWriter writer = null;
-            try
+            using (XmlWriter writer = XmlWriter.Create(parameters, settings))
             {
-                writer = XmlWriter.Create(parameters, settings);
-                for (int i = 0; i < healthRecordItemTypeIds.Count; ++i)
+                foreach (Guid guid in healthRecordItemTypeIds)
                 {
                     writer.WriteElementString(
                         "thing-type-id",
-                        healthRecordItemTypeIds[i].ToString());
+                        guid.ToString());
                 }
                 writer.Flush();
             }
-            finally
-            {
-                if (writer != null)
-                {
-                    writer.Close();
-                }
-                writer = null;
-            }
             return parameters.ToString();
         }
-        private static XPathExpression _queryPermissionsInfoPath =
+        private static readonly XPathExpression _queryPermissionsInfoPath =
             XPathExpression.Compile("/wc:info");
 
         internal static XPathExpression GetQueryPermissionsInfoXPathExpression(
@@ -342,7 +333,7 @@ namespace Microsoft.HealthVault.PlatformPrimitives
                 "wc",
                 "urn:com.microsoft.wc.methods.response.QueryPermissions");
 
-            XPathExpression infoPathClone = null;
+            XPathExpression infoPathClone;
             lock (_queryPermissionsInfoPath)
             {
                 infoPathClone = _queryPermissionsInfoPath.Clone();
@@ -401,19 +392,21 @@ namespace Microsoft.HealthVault.PlatformPrimitives
                 XmlWriterSettings settings = SDKHelper.XmlUnicodeWriterSettings;
                 using (XmlWriter writer = XmlWriter.Create(parameters, settings))
                 {
-                    for (int i = 0; i < applicationIds.Count; i++)
+                    foreach (Guid guid in applicationIds)
                     {
                         writer.WriteElementString(
                             "application-id",
-                            applicationIds[i].ToString());
+                            guid.ToString());
                     }
                 }
             }
 
             HealthServiceRequest request =
-                new HealthServiceRequest(connection, "GetValidGroupMembership", 1, accessor);
+                new HealthServiceRequest(connection, "GetValidGroupMembership", 1, accessor)
+                {
+                    Parameters = parameters.ToString()
+                };
 
-            request.Parameters = parameters.ToString();
             request.Execute();
 
             XPathExpression infoPath =

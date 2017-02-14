@@ -313,7 +313,7 @@ namespace Microsoft.HealthVault
             }
             finally
             {
-                store.Close();
+                store.Dispose();
             }
 
             if (rsaProvider == null || String.IsNullOrEmpty(thumbprint))

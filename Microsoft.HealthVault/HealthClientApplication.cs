@@ -10,6 +10,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Security;
 using System.Security.Cryptography.X509Certificates;
 using Microsoft.HealthVault.Certificate;
+using Microsoft.HealthVault.Exceptions;
 using Microsoft.HealthVault.Web.Authentication;
 
 namespace Microsoft.HealthVault

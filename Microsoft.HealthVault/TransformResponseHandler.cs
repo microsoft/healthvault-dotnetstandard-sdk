@@ -7,6 +7,7 @@ using System;
 using System.IO;
 using System.Net;
 using System.Xml;
+using Microsoft.HealthVault.Exceptions;
 
 namespace Microsoft.HealthVault
 {
@@ -51,10 +52,9 @@ namespace Microsoft.HealthVault
             }
             finally
             {
-                if (newStreamCreated && responseStream != null)
+                if (newStreamCreated)
                 {
-                    responseStream.Close();
-                    responseStream.Dispose();
+                    responseStream?.Dispose();
                 }
             }
         }
@@ -73,26 +73,23 @@ namespace Microsoft.HealthVault
                 {
                     reader.NameTable.Add("wc");
 
-                    if (SDKHelper.ReadUntil(reader, "response"))
+                    if (SDKHelper.ReadUntil(reader, "response") && 
+                        SDKHelper.ReadUntil(reader, "status") && 
+                        SDKHelper.ReadUntil(reader, "code"))
                     {
-                        if (SDKHelper.ReadUntil(reader, "status"))
+                        HealthServiceResponseData responseData = new HealthServiceResponseData
                         {
-                            if (SDKHelper.ReadUntil(reader, "code"))
-                            {
-                                HealthServiceResponseData responseData = new HealthServiceResponseData();
-                                responseData.CodeId = reader.ReadElementContentAsInt();
-                                responseData.ResponseHeaders = responseHeaders;
+                            CodeId = reader.ReadElementContentAsInt(),
+                            ResponseHeaders = responseHeaders
+                        };
 
-                                if (responseData.Code != HealthServiceStatusCode.Ok)
-                                {
-                                    responseData.Error = HealthServiceRequest.HandleErrorResponse(reader);
+                        if (responseData.Code != HealthServiceStatusCode.Ok)
+                        {
+                            responseData.Error = HealthServiceRequest.HandleErrorResponse(reader);
 
-                                    HealthServiceException e =
-                                        HealthServiceExceptionHelper.GetHealthServiceException(responseData);
+                            HealthServiceException e = HealthServiceExceptionHelper.GetHealthServiceException(responseData);
 
-                                    throw e;
-                                }
-                            }
+                            throw e;
                         }
                     }
                 }

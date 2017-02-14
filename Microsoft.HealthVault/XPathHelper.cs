@@ -250,7 +250,7 @@ namespace Microsoft.HealthVault
         internal static DataType GetOptNavValue<DataType>(
             XPathNavigator nav,
             string elementName)
-            where DataType : new()
+            where DataType : HealthRecordItemData, new()
         {
             DataType result = default(DataType);
 

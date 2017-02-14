@@ -132,7 +132,7 @@
     <Compile Include="HealthClientApplication.cs" />
     <Compile Include="HealthClientAuthorizedConnection.cs" />
     <Compile Include="HealthRecordAccessor.cs" />
-    <Compile Include="HealthRecordAuthorizationNotPossible.cs" />
+    <Compile Include="Exceptions\HealthRecordAuthorizationNotPossibleException.cs" />
     <Compile Include="HealthRecordAuthorizationStatus.cs" />
     <Compile Include="HealthRecordExporter.cs" />
     <Compile Include="HealthRecordFilter.cs" />
@@ -160,7 +160,7 @@
     <Compile Include="HealthRecordItemTypeSections.cs" />
     <Compile Include="HealthRecordItemTypeVersionInfo.cs" />
     <Compile Include="HealthRecordPermissions.cs" />
-    <Compile Include="HealthRecordReauthorizationRequired.cs" />
+    <Compile Include="Exceptions\HealthRecordReauthorizationRequiredException.cs" />
     <Compile Include="HealthRecordSearcher.cs" />
     <Compile Include="HealthRecordState.cs" />
     <Compile Include="HealthRecordUpdateInfo.cs" />

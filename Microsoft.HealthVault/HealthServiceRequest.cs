@@ -880,7 +880,6 @@ namespace Microsoft.HealthVault
             {
                 if (newStreamCreated && responseStream != null)
                 {
-                    responseStream.Close();
                     responseStream.Dispose();
                 }
             }
@@ -990,7 +989,6 @@ namespace Microsoft.HealthVault
             }
             finally
             {
-                stream.Close();
                 stream = null;
             }
 

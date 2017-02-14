@@ -33,7 +33,15 @@ namespace Microsoft.HealthVault
             _record = record;
             _blob = blob;
             _length = blob.ContentLength;
-            _canWrite = true;
+            CanWrite = true;
+        }
+
+        internal BlobStream(ConnectPackageCreationParameters connectPackageParameters, Blob blob)
+        {
+            _connectPackageParameters = connectPackageParameters;
+            _blob = blob;
+            _length = blob.ContentLength;
+            CanWrite = true;
         }
 
         internal BlobStream(
@@ -117,11 +125,7 @@ namespace Microsoft.HealthVault
         /// Gets a value indicating whether the current stream supports writing.
         /// </summary>
         /// 
-        public override bool CanWrite
-        {
-            get { return _canWrite; }
-        }
-        private bool _canWrite;
+        public override bool CanWrite { get; }
 
         /// <summary>
         /// Releases all resources held by the <see cref="BlobStream"/>.
@@ -748,8 +752,6 @@ namespace Microsoft.HealthVault
                     _bytesInBuffer -= chunkSizeToWrite;
                     stream.Flush();
                 }
-
-                stream.Close();
             }
 
             request.GetResponse();

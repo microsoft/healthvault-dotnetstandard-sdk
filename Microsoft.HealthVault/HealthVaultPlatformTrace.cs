@@ -12,7 +12,7 @@ namespace Microsoft.HealthVault
 {
     internal class HealthVaultPlatformTrace
     {
-        private static object _lock = new object();
+        private static readonly object _lock = new object();
         private static ITraceSource s_traceSource;
 
         internal static ITraceSource TraceSource

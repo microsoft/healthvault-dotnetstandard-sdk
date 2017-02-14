@@ -13,6 +13,7 @@ using System.Web;
 using System.Xml;
 using System.Xml.XPath;
 using Microsoft.HealthVault.Authentication;
+using Microsoft.HealthVault.Exceptions;
 
 namespace Microsoft.HealthVault
 {
@@ -396,13 +397,13 @@ namespace Microsoft.HealthVault
         /// Shell.
         /// </exception>
         /// 
-        /// <exception cref="HealthRecordAuthorizationNotPossible">
+        /// <exception cref="HealthRecordAuthorizationNotPossibleException">
         /// If the user does not have access to a health record that meets the minimum authorization
         /// requirements of the application. The user will need to request more access from the 
         /// custodian to use this application.
         /// </exception>
         /// 
-        /// <exception cref="HealthRecordReauthorizationRequired">
+        /// <exception cref="HealthRecordReauthorizationRequiredException">
         /// If the user had authorized a health record for this application but the application
         /// changed its required base authorizations such that the user must reauthorize the
         /// application. The application should direct the user to the APPAUTH target of the Shell.
@@ -488,10 +489,10 @@ namespace Microsoft.HealthVault
 
                         case ApplicationRecordAuthorizationAction.ReauthorizationNotPossible:
                         case ApplicationRecordAuthorizationAction.RecordLocationNotSupported:
-                            throw new HealthRecordAuthorizationNotPossible();
+                            throw new HealthRecordAuthorizationNotPossibleException();
 
                         case ApplicationRecordAuthorizationAction.ReauthorizationRequired:
-                            throw new HealthRecordReauthorizationRequired();
+                            throw new HealthRecordReauthorizationRequiredException();
 
                         default:
                             throw new HealthServiceException(

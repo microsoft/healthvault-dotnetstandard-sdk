@@ -4,6 +4,7 @@
 // All other rights reserved.
 
 using System;
+using Microsoft.HealthVault.Exceptions;
 
 namespace Microsoft.HealthVault
 {
@@ -19,13 +20,6 @@ namespace Microsoft.HealthVault
     /// </remarks>
     public class GetAuthorizedPeopleSettings
     {
-        /// <summary>
-        /// Creates a <see cref="GetAuthorizedPeopleSettings" /> object with default values.
-        /// </summary>
-        public GetAuthorizedPeopleSettings()
-        {
-        }
-
         /// <summary>
         /// Gets or sets the number of <see cref="PersonInfo"/> objects to retrieve when a network 
         /// call is made to the HealthVault service to retrieve the next batch.
@@ -70,12 +64,7 @@ namespace Microsoft.HealthVault
         /// <br/><br/>
         /// The application is responsible for converting from local time to UTC.        
         /// </remarks>
-        public DateTime AuthorizationsCreatedSince
-        {
-            get { return _authorizationsCreatedSince; }
-            set { _authorizationsCreatedSince = value; }
-        }
-        private DateTime _authorizationsCreatedSince = DateTime.MinValue;
+        public DateTime AuthorizationsCreatedSince { get; set; } = DateTime.MinValue;
 
         /// <summary>
         /// Gets or sets the person id that determines the starting point for the 
@@ -98,11 +87,6 @@ namespace Microsoft.HealthVault
         /// The new iterator will begin with the authorized person that follows the last successfully retrieved PersonInfo.
         /// </remarks>
         /// 
-        public Guid StartingPersonId
-        {
-            get { return _startingPersonId; }
-            set { _startingPersonId = value; }
-        }
-        private Guid _startingPersonId;
+        public Guid StartingPersonId { get; set; }
     }
 }

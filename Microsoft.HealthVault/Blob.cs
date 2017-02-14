@@ -588,7 +588,6 @@ namespace Microsoft.HealthVault
                 memoryStream.Flush();
 
                 result = encoding.GetString(memoryStream.GetBuffer(), 0, (int)memoryStream.Position);
-                memoryStream.Close();
             }
 
             return result;
@@ -622,7 +621,6 @@ namespace Microsoft.HealthVault
                 memoryStream.Flush();
 
                 result = memoryStream.ToArray();
-                memoryStream.Close();
             }
 
             return result;

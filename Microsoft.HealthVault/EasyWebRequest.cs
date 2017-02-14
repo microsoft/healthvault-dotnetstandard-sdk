@@ -12,6 +12,7 @@ using System.Text;
 using System.Threading;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using Microsoft.HealthVault.Exceptions;
 
 namespace Microsoft.HealthVault
 {
@@ -431,7 +432,6 @@ namespace Microsoft.HealthVault
         private void StartGetRequest()
         {
             HttpWebResponse webResponse = null;
-            Stream responseStream = null;
 
             _webRequest.Timeout = _timeoutMilliseconds;
 
@@ -442,27 +442,20 @@ namespace Microsoft.HealthVault
                 string contentEncoding = webResponse.Headers["Content-Encoding"];
                 contentEncoding = contentEncoding ?? String.Empty;
 
-                responseStream =
+                using (Stream responseStream =
                     CreateInputDecompressionStream(
                         webResponse.GetResponseStream(),
                         contentEncoding,
-                        false);
-
-                SetResponse(responseStream);
-
-                if (_customHandler != null)
+                        false))
                 {
-                    _customHandler.HandleResponse(CreateResponseWrapper(), webResponse.Headers);
+                    SetResponse(responseStream);
+
+                    _customHandler?.HandleResponse(CreateResponseWrapper(), webResponse.Headers);
                 }
+
             }
             finally
             {
-                if (responseStream != null)
-                {
-                    responseStream.Close();
-                    responseStream.Dispose();
-                }
-
                 if (webResponse != null)
                 {
                     webResponse.Close();
@@ -593,34 +586,36 @@ namespace Microsoft.HealthVault
             }
             finally
             {
-                _eventAsyncReady.Close();
+                _eventAsyncReady.Dispose();
                 _eventAsyncReady = null;
             }
         }
 
         private void RequestCallback(IAsyncResult asyncResult)
         {
-            Stream requestStream = null;
 
             try
             {
                 string contentEncoding = _webRequest.Headers["Content-Encoding"];
                 contentEncoding = contentEncoding ?? String.Empty;
 
-                requestStream = CreateOutputCompressionStream(
+                using (Stream requestStream = CreateOutputCompressionStream(
                     _webRequest.EndGetRequestStream(asyncResult),
                     contentEncoding,
-                    false);
+                    false))
+                {
+                    
 
-                if (_xmlRequest != null)
-                {
-                    this.WriteXmlToStream(requestStream);
+                    if (_xmlRequest != null)
+                    {
+                        this.WriteXmlToStream(requestStream);
+                    }
+                    else if (_stringRequest != null)
+                    {
+                        this.WriteTextToStream(requestStream);
+                    }
+                    /* else GET request so do nothing on purpose */
                 }
-                else if (_stringRequest != null)
-                {
-                    this.WriteTextToStream(requestStream);
-                }
-                /* else GET request so do nothing on purpose */
             }
             catch (Exception e)
             {
@@ -628,10 +623,6 @@ namespace Microsoft.HealthVault
             }
             finally
             {
-                if (requestStream != null)
-                {
-                    requestStream.Close();
-                }
                 _eventAsyncReady.Set();
             }
         }
@@ -745,7 +736,7 @@ namespace Microsoft.HealthVault
             }
             finally
             {
-                _eventAsyncReady.Close();
+                _eventAsyncReady.Dispose();
                 _eventAsyncReady = null;
 
                 if (_requestCancelTrigger != null)
@@ -791,15 +782,8 @@ namespace Microsoft.HealthVault
             }
             finally
             {
-                if (_eventAsyncReady != null)
-                {
-                    _eventAsyncReady.Set();
-                }
-                if (responseStream != null)
-                {
-                    responseStream.Close();
-                    responseStream.Dispose();
-                }
+                _eventAsyncReady?.Set();
+                responseStream?.Dispose();
                 if (webResponse != null)
                 {
                     webResponse.Close();
@@ -974,11 +958,7 @@ namespace Microsoft.HealthVault
         {
             if (disposing)
             {
-                if (_requestCancelTrigger != null)
-                {
-                    _requestCancelTrigger.Close();
-                    _requestCancelTrigger = null;
-                }
+                _requestCancelTrigger = null;
             }
         }
 

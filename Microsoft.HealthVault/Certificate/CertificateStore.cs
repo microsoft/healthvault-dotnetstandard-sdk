@@ -219,11 +219,7 @@ namespace Microsoft.HealthVault.Certificate
         {
             if (disposing)
             {
-                if (this.m_store != null)
-                {
-                    this.m_store.Close();
-                    this.m_store = null;
-                }
+                this.m_store = null;
             }
         }
 

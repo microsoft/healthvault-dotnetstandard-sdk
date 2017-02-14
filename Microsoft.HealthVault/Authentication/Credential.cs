@@ -7,9 +7,9 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Text;
-using System.Web;
 using System.Xml;
 using System.Xml.XPath;
+using Microsoft.HealthVault.Exceptions;
 using Microsoft.HealthVault.Rest;
 using Microsoft.HealthVault.Web.Authentication;
 
@@ -676,11 +676,9 @@ namespace Microsoft.HealthVault.Authentication
         {
             StringBuilder infoXml = new StringBuilder(128);
             XmlWriterSettings settings = SDKHelper.XmlUnicodeWriterSettings;
-            XmlWriter writer = null;
 
-            try
+            using (XmlWriter writer = XmlWriter.Create(infoXml, settings))
             {
-                writer = XmlWriter.Create(infoXml, settings);
 
                 // Add the PersonInfo elements
                 writer.WriteStartElement("auth-info");
@@ -712,14 +710,7 @@ namespace Microsoft.HealthVault.Authentication
                 writer.WriteEndElement();
                 writer.Flush();
             }
-            finally
-            {
-                if (writer != null)
-                {
-                    writer.Close();
-                }
-            }
-            return (infoXml.ToString());
+            return infoXml.ToString();
         }
 
         /// <summary>

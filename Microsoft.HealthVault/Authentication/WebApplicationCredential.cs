@@ -795,12 +795,8 @@ namespace Microsoft.HealthVault.Web.Authentication
             StringBuilder requestXml = new StringBuilder(2048);
             XmlWriterSettings settings = SDKHelper.XmlUnicodeWriterSettings;
 
-            XmlWriter writer = null;
-
-            try
+            using (XmlWriter writer = XmlWriter.Create(requestXml, settings))
             {
-                writer = XmlWriter.Create(requestXml, settings);
-
                 writer.WriteStartElement("content");
 
                 writer.WriteStartElement("app-id");
@@ -814,13 +810,6 @@ namespace Microsoft.HealthVault.Web.Authentication
                 writer.WriteEndElement();
 
                 writer.WriteEndElement(); // content
-            }
-            finally
-            {
-                if (writer != null)
-                {
-                    writer.Close();
-                }
             }
 
             return requestXml.ToString();

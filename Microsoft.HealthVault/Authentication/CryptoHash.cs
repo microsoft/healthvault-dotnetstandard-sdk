@@ -79,12 +79,7 @@ namespace Microsoft.HealthVault.Authentication
         /// To reuse the <see cref="CryptoHash"/> instance, call Reset().
         /// </remarks>
         /// 
-        protected bool IsFinalized
-        {
-            get { return _isFinalized; }
-            set { _isFinalized = value; }
-        }
-        private bool _isFinalized;
+        protected bool IsFinalized { get; set; }
 
         #endregion
 
@@ -255,10 +250,7 @@ namespace Microsoft.HealthVault.Authentication
         /// This method is only called internally and is subject to change.
         /// </remarks>
         /// 
-        protected virtual string DigestAlgorithmName
-        {
-            get { return "hash"; }
-        }
+        protected virtual string DigestAlgorithmName => "hash";
 
         /// <summary>
         /// Gets the name of the start element for the serialized info XML.
@@ -270,10 +262,7 @@ namespace Microsoft.HealthVault.Authentication
         /// <see cref="WriteInfoXml"/>.
         /// </returns>
         /// 
-        protected string StartElementName
-        {
-            get { return (DigestAlgorithmName + "-alg"); }
-        }
+        protected string StartElementName => DigestAlgorithmName + "-alg";
 
         /// <summary>
         /// Writes the XML to use when authenticating with the HealthVault 
@@ -296,10 +285,10 @@ namespace Microsoft.HealthVault.Authentication
         {
             if (writer == null)
             {
-                throw new ArgumentNullException("writer");
+                throw new ArgumentNullException(nameof(writer));
             }
             writer.WriteStartElement(StartElementName);
-            writer.WriteAttributeString("algName", AlgorithmName.ToString());
+            writer.WriteAttributeString("algName", AlgorithmName);
             writer.WriteEndElement();
         }
 
