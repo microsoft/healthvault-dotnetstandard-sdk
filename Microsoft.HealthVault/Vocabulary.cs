@@ -19,7 +19,7 @@ namespace Microsoft.HealthVault
     public class Vocabulary : Dictionary<string, VocabularyItem>, IXmlSerializable
     {
         internal Vocabulary()
-            : base(StringComparer.InvariantCultureIgnoreCase)
+            : base(StringComparer.CurrentCultureIgnoreCase)
         {
         }
 

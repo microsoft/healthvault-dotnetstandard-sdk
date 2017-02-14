@@ -204,7 +204,7 @@ namespace Microsoft.HealthVault
         {
             return
                 GetResourceString(
-                    Assembly.GetCallingAssembly(),
+                    typeof(ResourceRetriever).GetTypeInfo().Assembly,
                     "resources",
                     resourceId);
         }
@@ -250,7 +250,7 @@ namespace Microsoft.HealthVault
         {
             return
                 GetResourceString(
-                    Assembly.GetCallingAssembly(),
+                    typeof(ResourceRetriever).GetTypeInfo().Assembly,
                     baseName,
                     resourceId);
         }
@@ -406,7 +406,7 @@ namespace Microsoft.HealthVault
 
             string template =
                 GetResourceString(
-                    Assembly.GetCallingAssembly(),
+                    typeof(ResourceRetriever).GetTypeInfo().Assembly,
                     baseName,
                     resourceId);
 
@@ -451,7 +451,7 @@ namespace Microsoft.HealthVault
         internal static string GetSpace(string baseName)
         {
             string xSpace = GetResourceString(
-                                    Assembly.GetCallingAssembly(),
+                                    typeof(ResourceRetriever).GetTypeInfo().Assembly,
                                     baseName,
                                     "XSpace");
 

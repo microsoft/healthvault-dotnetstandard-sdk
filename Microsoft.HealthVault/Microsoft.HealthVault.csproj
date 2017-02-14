@@ -252,7 +252,6 @@
     <Compile Include="VocabularySearchHelper.cs" />
     <Compile Include="VocabularySearchParameters.cs" />
     <Compile Include="VocabularySearchType.cs" />
-    <Compile Include="WebApplicationConnection.cs" />
     <Compile Include="XmlWriterHelper.cs" />
     <Compile Include="XPathHelper.cs" />
   </ItemGroup>

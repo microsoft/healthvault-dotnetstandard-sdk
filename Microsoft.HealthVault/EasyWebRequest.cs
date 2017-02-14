@@ -481,7 +481,7 @@ namespace Microsoft.HealthVault
                 ms.Flush();
 
                 // Skip the preamble.
-                buff = ms.GetBuffer();
+                buff = ms.ToArray();
                 int offset = 0;
                 count = (int)ms.Length;
                 byte[] pre = Encoding.UTF8.GetPreamble();

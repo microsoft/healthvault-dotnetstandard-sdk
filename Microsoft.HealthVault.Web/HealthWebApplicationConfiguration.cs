@@ -6,6 +6,7 @@
 using System;
 using System.Globalization;
 using System.Web;
+using Microsoft.HealthVault.Exceptions;
 
 namespace Microsoft.HealthVault.Web
 {
