@@ -11,6 +11,7 @@ using System.Runtime.CompilerServices;
 using System.Security;
 using System.Xml;
 using System.Xml.XPath;
+using Microsoft.HealthVault.Exceptions;
 
 namespace Microsoft.HealthVault
 {

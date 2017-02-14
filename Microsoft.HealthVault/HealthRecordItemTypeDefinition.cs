@@ -15,7 +15,7 @@ using System.Xml;
 using System.Xml.Schema;
 using System.Xml.XPath;
 using System.Xml.Xsl;
-using Microsoft.Health.Extensions;
+using Microsoft.HealthVault.Extensions;
 
 namespace Microsoft.HealthVault
 {

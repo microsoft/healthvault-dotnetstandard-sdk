@@ -5,7 +5,6 @@
 
 using System;
 using System.Collections.Specialized;
-using System.Configuration;
 using System.Text;
 using System.Web;
 using Microsoft.HealthVault.ItemTypes;
