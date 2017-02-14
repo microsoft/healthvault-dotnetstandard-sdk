@@ -3,6 +3,7 @@
 // see http://www.microsoft.com/resources/sharedsource/licensingbasics/sharedsourcelicenses.mspx.
 // All other rights reserved.
 
+using Microsoft.HealthVault.Exceptions;
 using System;
 using System.Collections.ObjectModel;
 using System.Text;
@@ -15,25 +16,25 @@ namespace Microsoft.HealthVault
     /// <summary>
     /// Searches for health record items in HealthVault records.
     /// </summary>
-    /// 
+    ///
     /// <remarks>
     /// This class wraps up the logic for constructing a "GetThings" query
-    /// against the HealthVault service.  It generates the necessary XML to 
+    /// against the HealthVault service.  It generates the necessary XML to
     /// call the "GetThings" and retrieve health record items that match the specified
     /// criteria.
     /// </remarks>
-    /// 
+    ///
     public class HealthRecordSearcher
     {
         /// <summary>
-        /// Creates a new instance of the <see cref="HealthRecordSearcher"/> 
+        /// Creates a new instance of the <see cref="HealthRecordSearcher"/>
         /// class with the default parameters.
         /// </summary>
-        /// 
+        ///
         /// <exception cref="ArgumentNullException">
         /// The <paramref name="record"/> parameter is <b>null</b>.
         /// </exception>
-        /// 
+        ///
         public HealthRecordSearcher(HealthRecordAccessor record)
         {
             Validator.ThrowIfArgumentNull(record, "record", "HealthRecordSearcherCtorArgumentNull");
@@ -43,17 +44,17 @@ namespace Microsoft.HealthVault
         /// <summary>
         /// Gets the health record that is being searched for health record items.
         /// </summary>
-        /// 
+        ///
         /// <value>
         /// A <see cref="HealthRecordAccessor"/> representing the record.
         /// </value>
-        /// 
+        ///
         /// <remarks>
-        /// The authenticated person must have 
+        /// The authenticated person must have
         /// <see cref="HealthRecordItemPermissions.Read"/> access rights to the
         /// health record to get results from the query.
         /// </remarks>
-        /// 
+        ///
         public HealthRecordAccessor Record
         {
             get { return _record; }
@@ -63,12 +64,12 @@ namespace Microsoft.HealthVault
         /// <summary>
         /// Gets the filters associated with the search.
         /// </summary>
-        /// 
+        ///
         /// <remarks>
         /// To add a search filter, call the Add method of the
         /// returned collection.
         /// </remarks>
-        /// 
+        ///
         public Collection<HealthRecordFilter> Filters
         {
             get { return _filters; }
@@ -77,113 +78,113 @@ namespace Microsoft.HealthVault
             new Collection<HealthRecordFilter>();
 
         /// <summary>
-        /// Gets the health record items that match the filters as specified by 
+        /// Gets the health record items that match the filters as specified by
         /// the properties of this class.
         /// </summary>
-        /// 
+        ///
         /// <returns>
         /// A collection of health record items that match the applied filters.
         /// </returns>
-        /// 
+        ///
         /// <remarks>
         /// This method accesses the HealthVault service across the network.
         /// </remarks>
-        /// 
+        ///
         /// <exception cref="HealthServiceException">
-        /// The response from the server was anything but 
+        /// The response from the server was anything but
         /// <see cref="HealthServiceStatusCode.Ok"/>.
         /// -or-
         /// <see cref="HealthRecordSearcher.Filters"/> is empty
         /// or contains invalid filters.
         /// </exception>
-        /// 
+        ///
         public ReadOnlyCollection<HealthRecordItemCollection> GetMatchingItems()
         {
             return HealthVaultPlatform.GetMatchingItems(Record.Connection, Record, this);
         }
 
         /// <summary>
-        /// Gets the health record items that match the filters as specified by 
+        /// Gets the health record items that match the filters as specified by
         /// the properties of this class.
         /// </summary>
-        /// 
+        ///
         /// <returns>
         /// An XmlReader representing the raw results of the search.
         /// </returns>
-        /// 
+        ///
         /// <remarks>
         /// This method accesses the HealthVault service across the network.
         /// <br/><br/>
         /// This method is typically used when the calling application wants to
-        /// handle the raw health record item XML directly instead of using the 
+        /// handle the raw health record item XML directly instead of using the
         /// object model.
         /// </remarks>
-        /// 
+        ///
         public XmlReader GetMatchingItemsReader()
         {
             return HealthVaultPlatform.GetMatchingItemsReader(Record.Connection, Record, this);
         }
 
         /// <summary>
-        /// Gets the health record items that match the filters as specified by 
+        /// Gets the health record items that match the filters as specified by
         /// the properties of this class.
         /// </summary>
-        /// 
+        ///
         /// <returns>
         /// An XPathNavigator representing the raw results of the search.
         /// </returns>
-        /// 
+        ///
         /// <remarks>
         /// This method accesses the HealthVault service across the network.
         /// <br/><br/>
         /// This method is typically used when the calling application wants to
-        /// handle the raw health record item XML directly instead of using the 
+        /// handle the raw health record item XML directly instead of using the
         /// object model.
         /// </remarks>
-        /// 
+        ///
         public XPathNavigator GetMatchingItemsRaw()
         {
             return HealthVaultPlatform.GetMatchingItemsRaw(Record.Connection, Record, this);
         }
 
         /// <summary>
-        /// Gets a single health record item from the associated record by 
+        /// Gets a single health record item from the associated record by
         /// using the item identifier.
         /// </summary>
-        /// 
+        ///
         /// <param name="itemId">
         /// The unique identifier for the health record item.
         /// </param>
-        /// 
+        ///
         /// <param name="sections">
         /// The data sections of the health record item that should be retrieved.
         /// </param>
-        /// 
+        ///
         /// <returns>
-        /// An instance of a <see cref="HealthRecordItem"/> 
+        /// An instance of a <see cref="HealthRecordItem"/>
         /// representing the health record item with the specified identifier.
         /// </returns>
-        /// 
+        ///
         /// <remarks>
         /// This method accesses the HealthVault service across the network.
         /// <br/><br/>
         /// All filters are cleared and replaced with a single filter
         /// for the specified item.
         /// </remarks>
-        /// 
+        ///
         /// <exception cref="HealthServiceException">
-        /// The server returned something other than a code of 
+        /// The server returned something other than a code of
         /// HealthServiceStatusCode.OK, or the result count did not equal one (1).
         /// -or-
         /// <see cref="HealthRecordSearcher.Filters"/> is empty
         /// or contains invalid filters.
         /// </exception>
-        /// 
+        ///
         public HealthRecordItem GetSingleItem(
             Guid itemId,
             HealthRecordItemSections sections)
         {
-            // Create a new searcher to get the item. 
+            // Create a new searcher to get the item.
             HealthRecordSearcher searcher = new HealthRecordSearcher(Record);
 
             HealthRecordFilter filter = new HealthRecordFilter();
@@ -239,22 +240,22 @@ namespace Microsoft.HealthVault
         }
 
         /// <summary>
-        /// Gets the health record items specified by the 
-        /// <see cref="Filters"/> and runs them through the specified 
+        /// Gets the health record items specified by the
+        /// <see cref="Filters"/> and runs them through the specified
         /// transform.
         /// </summary>
-        /// 
+        ///
         /// <param name="transform">
         /// A URL to a transform to run on the resulting XML. This can be
         /// a fully-qualified URL or the name of one of the standard XSLs
         /// provided by the HealthVault system.
         /// </param>
-        /// 
+        ///
         /// <returns>
         /// The string resulting from performing the specified transform on
         /// the XML representation of the items.
         /// </returns>
-        /// 
+        ///
         /// <remarks>
         /// This method accesses the HealthVault service across the network.
         /// <br/><br/>
@@ -273,33 +274,33 @@ namespace Microsoft.HealthVault
         /// Transform fragments cannot contain embedded script. The following set
         /// of parameters are passed to all final-xsl transforms:<br/>
         /// <ul>
-        ///     <li>currentDateTimeUtc - the date and time just before the transform 
+        ///     <li>currentDateTimeUtc - the date and time just before the transform
         ///     started executing</li>
         ///     <li>requestingApplicationName - the name of the application that
         ///     made the request to HealthVault.</li>
         ///     <li>countryCode - the ISO 3166 country code from the request.</li>
         ///     <li>languageCode - the ISO 639-1 language code from the request.</li>
         ///     <li>personName - the name of the person making the request.</li>
-        ///     <li>recordName - if the request identified a HealthVault record to 
+        ///     <li>recordName - if the request identified a HealthVault record to
         ///     be used, this parameter contains the name of that record.</li>
         /// </ul>
         /// </remarks>
-        /// 
+        ///
         /// <exception cref="ArgumentException">
         /// The <paramref name="transform"/> parameter is <b>null</b> or empty.
         /// </exception>
-        /// 
+        ///
         /// <exception cref="ArgumentException">
         /// <see cref="HealthRecordView.Sections"/> does not
         /// contain the XML section in the view.
         /// </exception>
-        /// 
+        ///
         /// <exception cref="HealthServiceException">
         /// There is a failure retrieving the items.
         /// -or-
         /// No filters have been specified.
         /// </exception>
-        /// 
+        ///
         public string GetTransformedItems(string transform)
         {
             return HealthVaultPlatform.GetTransformedItems(Record.Connection, Record, this, transform);
@@ -310,15 +311,15 @@ namespace Microsoft.HealthVault
         /// <summary>
         /// Generates the XML for the parameters for the "GetThings" request.
         /// </summary>
-        /// 
+        ///
         /// <returns>
         /// An XML string defining the parameters for the "GetThings" call.
         /// </returns>
-        /// 
+        ///
         /// <exception cref="HealthServiceException">
         /// No filters have been specified.
         /// </exception>
-        ///         
+        ///
         internal string GetParametersXml()
         {
             if (Filters.Count == 0)
@@ -332,7 +333,6 @@ namespace Microsoft.HealthVault
                     HealthServiceExceptionHelper.GetHealthServiceException(
                         HealthServiceStatusCode.InvalidFilter, error);
                 throw e;
-
             }
 
             StringBuilder parameters = new StringBuilder(128);

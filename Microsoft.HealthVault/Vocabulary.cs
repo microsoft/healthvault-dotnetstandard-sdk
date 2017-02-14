@@ -15,11 +15,11 @@ namespace Microsoft.HealthVault
     /// <summary>
     /// Vocabulary list
     /// </summary>
-    /// 
+    ///
     public class Vocabulary : Dictionary<string, VocabularyItem>, IXmlSerializable
     {
         internal Vocabulary()
-            : base(StringComparer.CurrentCultureIgnoreCase)
+            : base(StringComparer.OrdinalIgnoreCase)
         {
         }
 
@@ -53,65 +53,65 @@ namespace Microsoft.HealthVault
         /// Gets or sets culture information containing the language in which the
         /// vocabulary items are represented.
         /// </summary>
-        /// 
+        ///
         public CultureInfo Culture
         {
             get { return _culture; }
             set { _culture = value; }
         }
-        CultureInfo _culture;
+        private CultureInfo _culture;
 
         /// <summary>
         /// Gets the name of the <see cref="Vocabulary"/>.
         /// </summary>
-        /// 
+        ///
         /// <value>
         /// A string representing the <see cref="Vocabulary"/> name.
         /// </value>
-        /// 
+        ///
         public string Name
         {
             get { return _name; }
         }
-        string _name;
+        private string _name;
 
         /// <summary>
         /// Gets the family of the vocabulary.
         /// </summary>
-        /// 
+        ///
         /// <value>
         /// A string representing the <see cref="Vocabulary"/> family.
         /// </value>
-        /// 
+        ///
         /// <remarks>
-        /// The family indicates the source of the 
-        /// information in the vocabulary, including 
-        /// external standards such as ISO or 
-        /// internal standards such as HealthVault Vocabulary. 
+        /// The family indicates the source of the
+        /// information in the vocabulary, including
+        /// external standards such as ISO or
+        /// internal standards such as HealthVault Vocabulary.
         /// </remarks>
-        /// 
+        ///
         public string Family
         {
             get { return _family; }
         }
-        string _family;
+        private string _family;
 
         /// <summary>
         /// Gets the version of the <see cref="Vocabulary"/>.
         /// </summary>
-        /// 
+        ///
         /// <value>
         /// A string representing the <see cref="Vocabulary"/> version.
         /// </value>
-        /// 
+        ///
         public string Version
         {
             get { return _version; }
         }
-        string _version;
+        private string _version;
 
         /// <summary>
-        /// Gets if the vocabulary contains none empty member.  
+        /// Gets if the vocabulary contains none empty member.
         /// </summary>
         public bool IsNotEmpty
         {
@@ -132,10 +132,10 @@ namespace Microsoft.HealthVault
         private bool _isNotEmpty;
 
         /// <summary>
-        /// Gets if the set vocabulary items in the <see cref="Vocabulary"/> has been truncated i.e. 
-        /// there could be more <see cref="VocabularyItem"/>s in the <see cref="Vocabulary"/>. 
+        /// Gets if the set vocabulary items in the <see cref="Vocabulary"/> has been truncated i.e.
+        /// there could be more <see cref="VocabularyItem"/>s in the <see cref="Vocabulary"/>.
         /// </summary>
-        /// 
+        ///
         [Obsolete("Use Vocabulary.IsTruncated instead.")]
         public bool IsTruncted
         {
@@ -143,10 +143,10 @@ namespace Microsoft.HealthVault
         }
 
         /// <summary>
-        /// Gets if the set vocabulary items in the <see cref="Vocabulary"/> has been truncated i.e. 
-        /// there could be more <see cref="VocabularyItem"/>s in the <see cref="Vocabulary"/>. 
+        /// Gets if the set vocabulary items in the <see cref="Vocabulary"/> has been truncated i.e.
+        /// there could be more <see cref="VocabularyItem"/>s in the <see cref="Vocabulary"/>.
         /// </summary>
-        /// 
+        ///
         public bool IsTruncated
         {
             get { return _isTruncated; }
