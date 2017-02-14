@@ -14,7 +14,8 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 [assembly: NeutralResourcesLanguage("en")]
-[assembly: InternalsVisibleTo("Microsoft.Health.ItemTypes")]
+[assembly: InternalsVisibleTo("Microsoft.HealthVault.ItemTypes"),
+           InternalsVisibleTo("Microsoft.HealthVault.Web")]
 
 // Version information for an assembly consists of the following four values:
 //
