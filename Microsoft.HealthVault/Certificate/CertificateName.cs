@@ -5,14 +5,10 @@
 
 using System;
 using System.Diagnostics;
-using System.Globalization;
 using System.Security;
-using System.Security.Cryptography;
-using System.Text;
 
 namespace Microsoft.HealthVault.Certificate
 {
-
     /// <summary>
     /// Wrapper around a disntinguished name for a certificate.  
     /// </summary>
@@ -23,8 +19,12 @@ namespace Microsoft.HealthVault.Certificate
     /// </remarks>
     internal sealed class CertificateName
     {
+        private static ICertificateUtilities certificateUtilities;
+
         #region private variables
-        private string _distinguishedName = null;
+
+        private string distinguishedName = null;
+
         #endregion
 
         #region public methods
@@ -38,7 +38,7 @@ namespace Microsoft.HealthVault.Certificate
         internal CertificateName(string distinguishedName)
         {
             Validator.ThrowIfStringNullOrEmpty(distinguishedName, "distinguishedName");
-            this._distinguishedName = distinguishedName;
+            this.distinguishedName = distinguishedName;
             return;
         }
 
@@ -60,47 +60,8 @@ namespace Microsoft.HealthVault.Certificate
         [SecuritySafeCritical]
         private byte[] GetEncodedName()
         {
-            Debug.Assert(!String.IsNullOrEmpty(_distinguishedName));
-
-            int encodingSize = 0;
-            StringBuilder errorString = null;
-
-            // first figure out how big of a buffer is needed
-            NativeMethods.CertStrToName(
-                NativeMethods.CertEncodingType.X509AsnEncoding | NativeMethods.CertEncodingType.PKCS7AsnEncoding,
-                DistinguishedName,
-                NativeMethods.StringType.OIDNameString | NativeMethods.StringType.ReverseFlag,
-                IntPtr.Zero,
-                null,
-                ref encodingSize,
-                ref errorString);
-
-            // allocate the buffer, and then do the conversion
-            byte[] encodedBytes = new byte[encodingSize];
-            bool ok =
-                NativeMethods.CertStrToName(
-                    NativeMethods.CertEncodingType.X509AsnEncoding | NativeMethods.CertEncodingType.PKCS7AsnEncoding,
-                    DistinguishedName,
-                    NativeMethods.StringType.OIDNameString | NativeMethods.StringType.ReverseFlag,
-                    IntPtr.Zero,
-                    encodedBytes,
-                    ref encodingSize,
-                    ref errorString);
-
-            // if the conversion failed, throw an exception
-            if (!ok)
-            {
-                string lastError = Util.GetLastErrorMessage();
-                throw new CryptographicException(
-                    String.Format(
-                        CultureInfo.CurrentCulture,
-                        ResourceRetriever.GetResourceString(
-                            "CertificateNameConversionFailed"),
-                            lastError,
-                            errorString));
-            }
-
-            return encodedBytes;
+            Debug.Assert(!String.IsNullOrEmpty(distinguishedName));
+            return certificateUtilities.GetEncodedName(distinguishedName);
         }
         #endregion
 
@@ -112,8 +73,8 @@ namespace Microsoft.HealthVault.Certificate
         {
             get
             {
-                Debug.Assert(!String.IsNullOrEmpty(_distinguishedName));
-                return _distinguishedName;
+                Debug.Assert(!String.IsNullOrEmpty(distinguishedName));
+                return distinguishedName;
             }
         }
         #endregion
