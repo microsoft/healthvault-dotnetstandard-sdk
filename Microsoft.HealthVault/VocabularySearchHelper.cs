@@ -146,7 +146,7 @@ namespace Microsoft.HealthVault
                 HealthApplicationConfiguration.Current.ApplicationId);
 
             X509Certificate2 certificate
-                = HealthApplicationConfiguration.Current.ApplicationCertificate;
+                = ApplicationCertificateStore.Current.ApplicationCertificate;
             queryString.AppendFormat(
                 "&thumbprint={0}",
                 HttpUtility.UrlEncode(certificate.Thumbprint));

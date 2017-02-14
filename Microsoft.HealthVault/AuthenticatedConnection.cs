@@ -14,6 +14,7 @@ using System.Xml;
 using System.Xml.XPath;
 using Microsoft.HealthVault.Authentication;
 using Microsoft.HealthVault.Exceptions;
+using Microsoft.HealthVault.Extensions;
 
 namespace Microsoft.HealthVault
 {
@@ -170,7 +171,7 @@ namespace Microsoft.HealthVault
             ManualResetEvent cancelTrigger)
         {
             Guid appId = HealthApplicationConfiguration.Current.ApplicationId;
-            Uri healthServiceUrl = HealthApplicationConfiguration.Current.HealthVaultMethodUrl;
+            Uri healthServiceUrl = HealthApplicationConfiguration.Current.GetHealthVaultMethodUrl();
             Uri shellUrl = HealthApplicationConfiguration.Current.HealthVaultShellUrl;
 
             if (appId == Guid.Empty)

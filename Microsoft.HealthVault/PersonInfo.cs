@@ -9,6 +9,7 @@ using System.Text;
 using System.Xml;
 using System.Xml.XPath;
 using Microsoft.HealthVault.Authentication;
+using Microsoft.HealthVault.Extensions;
 using Microsoft.HealthVault.PlatformPrimitives;
 using Microsoft.HealthVault.Web;
 
@@ -316,7 +317,7 @@ namespace Microsoft.HealthVault
                 else if (serviceInstance == null)
                 {
                     healthServiceUri =
-                        HealthApplicationConfiguration.Current.HealthVaultMethodUrl;
+                        HealthApplicationConfiguration.Current.GetHealthVaultMethodUrl();
                 }
 
                 XPathNavigator credNav = connectionNav.SelectSingleNode("credential");

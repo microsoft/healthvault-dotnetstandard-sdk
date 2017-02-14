@@ -43,7 +43,7 @@
     <Compile Include="ActiveRecordAuthorization.cs" />
     <Compile Include="AnonymousConnection.cs" />
     <Compile Include="ApplicationBinaryConfiguration.cs" />
-    <Compile Include="ApplicationConfiguration.cs" />
+    <Compile Include="ApplicationCertificateStore.cs" />
     <Compile Include="ApplicationConnection.cs" />
     <Compile Include="ApplicationInfo.cs" />
     <Compile Include="ApplicationOptions.cs" />
@@ -126,6 +126,7 @@
     <Compile Include="Exceptions\InvalidConfigurationException.cs" />
     <Compile Include="Exceptions\SignatureFailureException.cs" />
     <Compile Include="Exceptions\TypeHandlerAlreadyRegisteredException.cs" />
+    <Compile Include="Extensions\HealthApplicationConfigurationExtensions.cs" />
     <Compile Include="GetAuthorizedPeopleSettings.cs" />
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="HealthApplicationConfiguration.cs" />
@@ -199,6 +200,7 @@
     <Compile Include="HealthVaultXmlResolver.cs" />
     <Compile Include="HttpContext.cs" />
     <Compile Include="IEasyWebResponseHandler.cs" />
+    <Compile Include="IHealthApplicationConfiguration.cs" />
     <Compile Include="IItemTypePropertyConversion.cs" />
     <Compile Include="IMarshallable.cs" />
     <Compile Include="InactiveRecordAuthorization.cs" />

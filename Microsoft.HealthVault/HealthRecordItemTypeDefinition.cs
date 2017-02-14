@@ -15,6 +15,7 @@ using System.Xml;
 using System.Xml.Schema;
 using System.Xml.XPath;
 using System.Xml.Xsl;
+using Microsoft.Health.Extensions;
 
 namespace Microsoft.HealthVault
 {
@@ -239,7 +240,7 @@ namespace Microsoft.HealthVault
                     {
                         result = XmlSchema.Read(xmlReader, null);
                         result.SourceUri =
-                            HealthApplicationConfiguration.Current.HealthVaultTypeSchemaUrl.OriginalString;
+                            HealthApplicationConfiguration.Current.GetHealthVaultTypeSchemaUrl().OriginalString;
                     }                    
                 }
 
@@ -262,7 +263,7 @@ namespace Microsoft.HealthVault
                     result = new XmlSchemaSet();
                     result.XmlResolver =
                         new HealthVaultXmlResolver(
-                            HealthApplicationConfiguration.Current.HealthVaultTypeSchemaUrl);
+                            HealthApplicationConfiguration.Current.GetHealthVaultTypeSchemaUrl());
 
                     result.Add(TypeSchema);
 

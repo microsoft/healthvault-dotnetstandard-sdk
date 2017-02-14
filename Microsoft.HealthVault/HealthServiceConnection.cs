@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Net;
 using Microsoft.HealthVault.Authentication;
+using Microsoft.HealthVault.Extensions;
 
 namespace Microsoft.HealthVault
 {
@@ -532,7 +533,7 @@ namespace Microsoft.HealthVault
             {
                 if (_requestUrl == null)
                 {
-                    return HealthApplicationConfiguration.Current.HealthVaultMethodUrl;
+                    return HealthApplicationConfiguration.Current.GetHealthVaultMethodUrl();
                 }
                 return _requestUrl;
             }
@@ -565,7 +566,7 @@ namespace Microsoft.HealthVault
             }
         }
         private Uri _otherDataStreamUrl =
-            HealthApplicationConfiguration.Current.BlobStreamUrl;
+            HealthApplicationConfiguration.Current.GetBlobStreamUrl();
 
         /// <summary>
         /// Gets or sets the request timeout in seconds.

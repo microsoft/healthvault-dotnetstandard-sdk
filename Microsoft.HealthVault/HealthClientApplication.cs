@@ -11,6 +11,7 @@ using System.Security;
 using System.Security.Cryptography.X509Certificates;
 using Microsoft.HealthVault.Certificate;
 using Microsoft.HealthVault.Exceptions;
+using Microsoft.HealthVault.Extensions;
 using Microsoft.HealthVault.Web.Authentication;
 
 namespace Microsoft.HealthVault
@@ -99,7 +100,7 @@ namespace Microsoft.HealthVault
                 throw Validator.InvalidConfigurationException("InvalidRequestUrlConfiguration");
             }
 
-            if (HealthApplicationConfiguration.Current.HealthVaultMethodUrl == null)
+            if (HealthApplicationConfiguration.Current.GetHealthVaultMethodUrl() == null)
             {
                 throw Validator.InvalidConfigurationException("InvalidRequestUrlConfiguration");
             }
@@ -107,7 +108,7 @@ namespace Microsoft.HealthVault
             return Create(applicationId,
                 masterApplicationId,
                 HealthApplicationConfiguration.Current.HealthVaultShellUrl,
-                HealthApplicationConfiguration.Current.HealthVaultMethodUrl);
+                HealthApplicationConfiguration.Current.GetHealthVaultMethodUrl());
         }
 
         /// <summary>

@@ -206,7 +206,7 @@ namespace Microsoft.HealthVault.Web.Authentication
             Guid applicationId)
             : this(
                 applicationId,
-                HealthApplicationConfiguration.Current.GetApplicationCertificate(applicationId))
+                ApplicationCertificateStore.Current.GetApplicationCertificate(applicationId))
         {
             _certOriginFromStore = true;
         }
@@ -406,7 +406,7 @@ namespace Microsoft.HealthVault.Web.Authentication
             SignMethod = CryptoConfiguration.SignatureAlgorithmName;
 
             _cert =
-                HealthApplicationConfiguration.Current.GetApplicationCertificateFromStore(
+                ApplicationCertificateStore.Current.GetApplicationCertificateFromStore(
                     applicationId,
                     storeLocation,
                     certSubject);
@@ -930,7 +930,7 @@ namespace Microsoft.HealthVault.Web.Authentication
             else
             {
                 _applicationId = applicationId;
-                _cert = HealthApplicationConfiguration.Current.ApplicationCertificate;
+                _cert = ApplicationCertificateStore.Current.ApplicationCertificate;
                 _digestMethod = HealthApplicationConfiguration.Current.SignatureHashAlgorithmName;
                 _signMethod = HealthApplicationConfiguration.Current.SignatureAlgorithmName;
                 _certOriginFromStore = false;
