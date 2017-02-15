@@ -21,12 +21,7 @@ namespace Microsoft.HealthVault.Authentication
         /// The application id guid.
         /// </returns>
         /// 
-        public Guid ApplicationId
-        {
-            get { return _applicationId; }
-            internal set { _applicationId = value; }
-        }
-        private Guid _applicationId;
+        public Guid ApplicationId { get; internal set; }
 
         /// <summary>
         /// Gets the authentication token creation status.
@@ -36,12 +31,7 @@ namespace Microsoft.HealthVault.Authentication
         /// An instance of <see cref="AuthenticationTokenCreationStatus"/>.
         /// </returns>
         /// 
-        public AuthenticationTokenCreationStatus Status
-        {
-            get { return _status; }
-            internal set { _status = value; }
-        }
-        private AuthenticationTokenCreationStatus _status;
+        public AuthenticationTokenCreationStatus Status { get; internal set; }
 
         /// <summary>
         /// Gets the authentication token.
@@ -51,12 +41,7 @@ namespace Microsoft.HealthVault.Authentication
         /// An instance of <see cref="AuthenticationToken"/>.
         /// </returns>
         /// 
-        public string AuthenticationToken
-        {
-            get { return _authToken; }
-            set { _authToken = value; }
-        }
-        private string _authToken;
+        public string AuthenticationToken { get; set; }
 
         /// <summary>
         /// Gets the authentication token.
@@ -66,12 +51,7 @@ namespace Microsoft.HealthVault.Authentication
         /// An instance of <see cref="AuthenticationToken"/>.
         /// </returns>
         /// 
-        public string StsTokenPayload
-        {
-            get { return _stsTokenPayload; }
-            internal set { _stsTokenPayload = value; }
-        }
-        private string _stsTokenPayload;
+        public string StsTokenPayload { get; internal set; }
 
         /// <summary>
         /// Gets the application record authorization action.
@@ -88,12 +68,7 @@ namespace Microsoft.HealthVault.Authentication
         /// 
         /// <seealso cref="Status"/>
         /// 
-        public ApplicationRecordAuthorizationAction ApplicationRecordAuthorizationAction
-        {
-            get { return _action; }
-            internal set { _action = value; }
-        }
-        private ApplicationRecordAuthorizationAction _action;
+        public ApplicationRecordAuthorizationAction ApplicationRecordAuthorizationAction { get; internal set; }
 
         /// <summary>
         /// Gets a value indicating whether the result contains a successfully 

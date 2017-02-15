@@ -518,6 +518,5 @@ namespace Microsoft.HealthVault.Authentication
 
         #endregion
     }
-
 }
 

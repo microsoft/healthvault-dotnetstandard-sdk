@@ -79,12 +79,7 @@ namespace Microsoft.HealthVault.Authentication
         /// To reuse the <see cref="CryptoHash"/> instance, call Reset().
         /// </remarks>
         /// 
-        protected bool IsFinalized
-        {
-            get { return _isFinalized; }
-            set { _isFinalized = value; }
-        }
-        private bool _isFinalized;
+        protected bool IsFinalized { get; set; }
 
         #endregion
 
@@ -101,8 +96,7 @@ namespace Microsoft.HealthVault.Authentication
         /// </remarks>
         /// 
         public CryptoHash()
-            :
-            this(CryptoConfiguration.HashAlgorithmName)
+            : this(CryptoConfiguration.HashAlgorithmName)
         {
         }
 
@@ -255,10 +249,7 @@ namespace Microsoft.HealthVault.Authentication
         /// This method is only called internally and is subject to change.
         /// </remarks>
         /// 
-        protected virtual string DigestAlgorithmName
-        {
-            get { return "hash"; }
-        }
+        protected virtual string DigestAlgorithmName => "hash";
 
         /// <summary>
         /// Gets the name of the start element for the serialized info XML.

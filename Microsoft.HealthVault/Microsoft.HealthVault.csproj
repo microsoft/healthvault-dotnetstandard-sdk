@@ -63,10 +63,14 @@
     <Compile Include="Authentication\CryptoHashFinalized.cs" />
     <Compile Include="Authentication\CryptoHmac.cs" />
     <Compile Include="Authentication\CryptoHMACFinalized.cs" />
+    <Compile Include="Authentication\CryptoService.cs" />
     <Compile Include="Authentication\CryptoServiceProvderHmac.cs" />
     <Compile Include="Authentication\CryptoServiceProviderHash.cs" />
     <Compile Include="Authentication\CryptoServiceProviderUnsafe.cs" />
     <Compile Include="Authentication\CryptoUtil.cs" />
+    <Compile Include="Authentication\DefaultCryptoConfiguration.cs" />
+    <Compile Include="Authentication\ICryptoConfiguration.cs" />
+    <Compile Include="Authentication\ICryptoService.cs" />
     <Compile Include="Authentication\PassportCredential.cs" />
     <Compile Include="Authentication\SafeCryptoContextHandle.cs" />
     <Compile Include="Authentication\SafeCryptoHashHandle.cs" />
