@@ -12,7 +12,6 @@
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Web;
-using System.Web.Mvc;
 using System.Web.Routing;
 
 namespace Microsoft.HealthVault.Web.Mvc

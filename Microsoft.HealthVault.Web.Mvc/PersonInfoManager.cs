@@ -9,11 +9,11 @@
 //
 // ********************************************************
 
+using Microsoft.HealthVault.Web.Authentication;
 using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Security.Principal;
 using System.Web;
-using Microsoft.HealthVault.Web.Authentication;
 
 namespace Microsoft.HealthVault.Web.Mvc
 {
@@ -27,7 +27,7 @@ namespace Microsoft.HealthVault.Web.Mvc
         private readonly bool _useSession;
 
         /// <summary>
-        /// Constructs an instance of the <see cref="PersonInfoManager"/> class using the 
+        /// Constructs an instance of the <see cref="PersonInfoManager"/> class using the
         /// default <see cref="HealthWebApplicationConfiguration"/> settings.
         /// </summary>
         /// <param name="context">The current context</param>
@@ -89,7 +89,7 @@ namespace Microsoft.HealthVault.Web.Mvc
                 return;
             }
 
-            PersonInfo freshPersonInfo = 
+            PersonInfo freshPersonInfo =
                 HealthVaultPlatform.GetPersonInfo(PersonInfo.ApplicationConnection);
             if (freshPersonInfo == null)
             {

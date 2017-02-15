@@ -3,7 +3,6 @@
 // see http://www.microsoft.com/resources/sharedsource/licensingbasics/sharedsourcelicenses.mspx.
 // All other rights reserved.
 
-
 using System;
 using System.Security;
 using System.Security.Permissions;
@@ -29,12 +28,12 @@ namespace Microsoft.HealthVault.Web
         /// to. These child controls are in turn defined within an inline
         /// template.
         /// </summary>
-        /// 
+        ///
         /// <param name="container">
-        /// The <see cref="Control"/> object to contain the instances of the 
+        /// The <see cref="Control"/> object to contain the instances of the
         /// controls from the inline template.
         /// </param>
-        /// 
+        ///
         [SecuritySafeCritical]
         public void InstantiateIn(Control container)
         {

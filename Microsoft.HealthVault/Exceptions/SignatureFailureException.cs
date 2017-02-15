@@ -8,7 +8,7 @@ using System;
 namespace Microsoft.HealthVault.Exceptions
 {
     /// <summary>
-    /// Represents the exception thrown when a failure occurs during a 
+    /// Represents the exception thrown when a failure occurs during a
     /// signature operation.
     /// </summary>
     ///
@@ -16,32 +16,32 @@ namespace Microsoft.HealthVault.Exceptions
     public class SignatureFailureException : Exception
     {
         /// <summary>
-        /// Creates an instance of the <see cref="SignatureFailureException"/> 
+        /// Creates an instance of the <see cref="SignatureFailureException"/>
         /// class with the specified message.
         /// </summary>
-        /// 
+        ///
         /// <param name="message">
         /// The exception message.
         /// </param>
-        /// 
+        ///
         public SignatureFailureException(string message)
             : base(message)
         {
         }
 
         /// <summary>
-        /// Creates an instance of the <see cref="SignatureFailureException"/> 
+        /// Creates an instance of the <see cref="SignatureFailureException"/>
         /// class with the specified message and inner exception.
         /// </summary>
-        /// 
+        ///
         /// <param name="message">
         /// The exception message.
         /// </param>
-        /// 
+        ///
         /// <param name="innerException">
         /// The exception that occurred during the signature operation.
         /// </param>
-        /// 
+        ///
         public SignatureFailureException(
             string message,
             Exception innerException)
@@ -52,7 +52,7 @@ namespace Microsoft.HealthVault.Exceptions
         #region FxCop required ctors
 
         /// <summary>
-        /// Creates an instance of the <see cref="SignatureFailureException"/> 
+        /// Creates an instance of the <see cref="SignatureFailureException"/>
         /// class with default values.
         /// </summary>
         public SignatureFailureException()
@@ -61,5 +61,4 @@ namespace Microsoft.HealthVault.Exceptions
 
         #endregion FxCop required ctors
     }
-
 }

@@ -11,26 +11,26 @@ namespace Microsoft.HealthVault
     /// Provides information about a person who has not yet accepted an invitation to share a
     /// HealthVault record.
     /// </summary>
-    /// 
+    ///
     public class InactiveRecordAuthorization : RecordAuthorization
     {
         /// <summary>
         /// Constructs an instance of <see cref="InactiveRecordAuthorization"/> with default values.
         /// </summary>
-        /// 
+        ///
         public InactiveRecordAuthorization()
         {
         }
 
         /// <summary>
-        /// Populates the class members with data from the specified 
+        /// Populates the class members with data from the specified
         /// active person information XML.
         /// </summary>
-        /// 
+        ///
         /// <param name="navigator">
         /// The XML to get the person information from.
         /// </param>
-        /// 
+        ///
         internal override void ParseXml(XPathNavigator navigator)
         {
             base.ParseXml(navigator);
@@ -47,13 +47,12 @@ namespace Microsoft.HealthVault
             _granteeName = navigator.SelectSingleNode("grantee-name").Value;
         }
 
-
         #region public properties
 
         /// <summary>
         /// Gets the name of the person that sent the invitation to share their HealthVault record.
         /// </summary>
-        /// 
+        ///
         public string GrantorName
         {
             get { return _grantorName; }
@@ -70,6 +69,5 @@ namespace Microsoft.HealthVault
         private string _granteeName;
 
         #endregion public properties
-
     }
 }

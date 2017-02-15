@@ -12,7 +12,6 @@ namespace Microsoft.HealthVault.Certificate
 {
     internal class CertificateUtilities : ICertificateUtilities
     {
-
         #region ICertificateUtilities implementation
 
         [SuppressMessage(
@@ -58,7 +57,7 @@ namespace Microsoft.HealthVault.Certificate
                         }
                         else
                         {
-                            // okay to use DangerousGetHandle here as handle is valid and 
+                            // okay to use DangerousGetHandle here as handle is valid and
                             // used for creation of the certificate only. No reference is added
                             //
                             certificate = new X509Certificate2(nativeCert.DangerousGetHandle());
@@ -78,12 +77,12 @@ namespace Microsoft.HealthVault.Certificate
         /// <summary>
         /// Removes the key container for the specified certificate name.
         /// </summary>
-        /// 
+        ///
         /// <param name="certificateName">
         /// The certificate name which was used in creating
         /// the key container.
         /// </param>
-        /// 
+        ///
         /// <exception cref="ArgumentException">
         /// If <paramref name="certificateName"/> is <b>null</b>, empty, or all whitespace.
         /// </exception>
@@ -188,7 +187,7 @@ namespace Microsoft.HealthVault.Certificate
                         (int)storeFlags,
                         marshalStoreName);
 
-                // add the certificate to the store                           
+                // add the certificate to the store
                 if (!NativeMethods.CertAddCertificateContextToStore(
                         store,
                         nativeCert,
@@ -237,7 +236,6 @@ namespace Microsoft.HealthVault.Certificate
 
             return result;
         }
-
 
         /// <summary>
         /// Generate a key pair to be used in the certificate

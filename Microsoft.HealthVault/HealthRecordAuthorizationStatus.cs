@@ -3,7 +3,6 @@
 // see http://www.microsoft.com/resources/sharedsource/licensingbasics/sharedsourcelicenses.mspx.
 // All other rights reserved.
 
-
 namespace Microsoft.HealthVault
 {
     /// <summary>
@@ -18,14 +17,13 @@ namespace Microsoft.HealthVault
     ///
     public enum HealthRecordAuthorizationStatus
     {
-
         /// <summary>
         /// An unknown state was returned from the server.
         /// </summary>
-        Unknown = 0,    
-        
+        Unknown = 0,
+
         /// <summary>
-        /// The record should be accessible to the application. 
+        /// The record should be accessible to the application.
         /// </summary>
         NoActionRequired = 1,
 
@@ -43,7 +41,5 @@ namespace Microsoft.HealthVault
         /// The user must reauthorize this application.
         /// </summary>
         ReauthorizationRequired = 4,
-
     }
-
 }

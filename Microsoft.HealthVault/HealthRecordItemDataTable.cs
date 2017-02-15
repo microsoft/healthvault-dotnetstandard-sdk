@@ -6,44 +6,41 @@
 using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Diagnostics.CodeAnalysis;
 using System.IO;
-using System.Runtime.Serialization;
-using System.Security;
 using System.Xml;
 using System.Xml.XPath;
 
 namespace Microsoft.HealthVault
 {
-    /// <summary> 
-    /// Represents a data table that populates itself with HealthVault data. 
+    /// <summary>
+    /// Represents a data table that populates itself with HealthVault data.
     /// </summary>
-    /// 
+    ///
     [Serializable]
     public class HealthRecordItemDataTable : DataTable
     {
-        /// <summary> 
-        /// Creates a new instance of the <see cref="HealthRecordItemDataTable"/> 
+        /// <summary>
+        /// Creates a new instance of the <see cref="HealthRecordItemDataTable"/>
         /// class with the specified table view and filter.
         /// </summary>
-        /// 
+        ///
         /// <param name="view">
         /// The view that the data table should take on the data.
         /// </param>
-        /// 
+        ///
         /// <param name="filter">
-        /// The filter used to gather health record items from the HealthVault 
+        /// The filter used to gather health record items from the HealthVault
         /// service.
         /// </param>
-        /// 
+        ///
         /// <exception cref="ArgumentNullException">
         /// The <paramref name="filter"/> parameter is <b>null</b>.
         /// </exception>
-        /// 
+        ///
         /// <exception cref="ArgumentException">
-        /// The <paramref name="view"/> parameter is 
-        /// <see cref="HealthRecordItemDataTableView.SingleTypeTable"/> and 
-        /// the <paramref name="filter"/> parameter contains more than one type 
+        /// The <paramref name="view"/> parameter is
+        /// <see cref="HealthRecordItemDataTableView.SingleTypeTable"/> and
+        /// the <paramref name="filter"/> parameter contains more than one type
         /// identifier.
         /// </exception>
         public HealthRecordItemDataTable(
@@ -62,7 +59,7 @@ namespace Microsoft.HealthVault
             _view = view;
         }
 
-        /// <summary> 
+        /// <summary>
         /// Fills in the data table with data from a list of HealthRecordItem.
         /// </summary>
         /// <param name="record"/>
@@ -128,26 +125,26 @@ namespace Microsoft.HealthVault
             }
         }
 
-        /// <summary> 
+        /// <summary>
         /// Fills in the data table with data from the HealthVault service.
         /// </summary>
-        /// 
-        /// <param name="recordId"> 
+        ///
+        /// <param name="recordId">
         /// The unique health record identifier to get the data from.
         /// </param>
-        /// 
-        /// <param name="connection"> 
+        ///
+        /// <param name="connection">
         /// The connection to the HealthVault service to use.
         /// </param>
-        /// 
+        ///
         /// <remarks>
         /// This method makes a web-method call to the HealthVault service.
         /// </remarks>
-        /// 
+        ///
         /// <exception cref="HealthServiceException">
         /// An error occurred while accessing the HealthVault service.
         /// </exception>
-        /// 
+        ///
         public void GetData(
             Guid recordId,
             ApplicationConnection connection)
@@ -157,63 +154,63 @@ namespace Microsoft.HealthVault
             GetData(record);
         }
 
-        /// <summary> 
+        /// <summary>
         /// Fills in the data table with data from the HealthVault service.
         /// </summary>
-        /// 
-        /// <param name="record"> 
+        ///
+        /// <param name="record">
         /// The health record to get the data from.
         /// </param>
-        /// 
+        ///
         /// <remarks>
         /// This method makes a web-method call to the HealthVault service.
         /// </remarks>
-        /// 
+        ///
         /// <exception cref="HealthServiceException">
         /// An error occurred while accessing the HealthVault service.
         /// </exception>
-        /// 
+        ///
         public void GetData(HealthRecordAccessor record)
         {
             GetData(record, 0, Int32.MaxValue);
         }
 
-        /// <summary> 
-        /// Fills in the data table with data from the HealthVault service 
+        /// <summary>
+        /// Fills in the data table with data from the HealthVault service
         /// starting at the specific index for the count specified.
         /// </summary>
-        /// 
-        /// <param name="record"> 
+        ///
+        /// <param name="record">
         /// The health record to get the data from.
         /// </param>
-        /// 
+        ///
         /// <param name="startIndex">
         /// The index to start retrieving full data from HealthVault.
         /// </param>
-        /// 
+        ///
         /// <param name="count">
         /// The count of full items to retrieve.
         /// </param>
-        /// 
+        ///
         /// <remarks>
         /// This method makes a web-method call to the HealthVault service.
-        /// 
+        ///
         /// The default <see cref="GetData(HealthRecordAccessor)"/> implementation
         /// fills the data with complete information for all items matching
         /// the filter. If the <see cref="HealthRecordItemDataTable"/> is being
         /// bound to a HealthServiceDataGrid or other such control that supports
-        /// paging, this may not be the desired result as many calls to 
+        /// paging, this may not be the desired result as many calls to
         /// HealthVault may be required to fetch all the data.  This overload
         /// of GetData allows the caller to specify the index and the count of
         /// the full items to retrieve to match the page that is currently visible.
         /// The <see cref="HealthRecordItemDataTable"/> will be filled with
         /// empty values except for the rows specified.
         /// </remarks>
-        /// 
+        ///
         /// <exception cref="HealthServiceException">
         /// An error occurred while accessing the HealthVault service.
         /// </exception>
-        /// 
+        ///
         public void GetData(
             HealthRecordAccessor record,
             int startIndex,
@@ -273,7 +270,7 @@ namespace Microsoft.HealthVault
                         numberOfFullThingsToRetrieve);
 
                 // Note, not all partial things may still exist when doing
-                // the next query so AddRows may return less than 
+                // the next query so AddRows may return less than
                 // numberOfFullThingsToRetrieve. Just skip anything that is
                 // missing.
                 AddRows(nav);
@@ -288,6 +285,7 @@ namespace Microsoft.HealthVault
                 ++thingIndex;
             }
         }
+
         private bool _isFirstRow = true;
 
         /// <summary>
@@ -397,7 +395,6 @@ namespace Microsoft.HealthVault
                             new DataColumn(rowNav.Name, typeof(String)));
                     }
                 } while (rowNav.MoveToNextAttribute());
-
             }
         }
 
@@ -517,12 +514,12 @@ namespace Microsoft.HealthVault
         /// <summary>
         /// Gets the definition for the type of items in the data table.
         /// </summary>
-        /// 
+        ///
         /// <remarks>
         /// This value is set only if the single type table view is being
         /// shown.
         /// </remarks>
-        /// 
+        ///
         public HealthRecordItemTypeDefinition SingleTypeDefinition
         {
             get { return _singleTypeDefinition; }
@@ -532,13 +529,13 @@ namespace Microsoft.HealthVault
         /// <summary>
         /// Gets the display columns for the table.
         /// </summary>
-        /// 
+        ///
         /// <remarks>
-        /// This collection will be empty until 
+        /// This collection will be empty until
         /// <see cref="GetData(HealthRecordAccessor)"/> or
         /// <see cref="GetData(Guid,ApplicationConnection)"/> is called.
         /// </remarks>
-        /// 
+        ///
         public Dictionary<string, ItemTypeDataColumn> DisplayColumns
         {
             get { return _displayColumns; }
@@ -549,7 +546,7 @@ namespace Microsoft.HealthVault
         /// <summary>
         /// Gets the view of the data that the table will show.
         /// </summary>
-        /// 
+        ///
         public HealthRecordItemDataTableView View
         {
             get { return _view; }
@@ -560,7 +557,7 @@ namespace Microsoft.HealthVault
         /// Gets or sets the filter to use when getting data from the
         /// health record.
         /// </summary>
-        /// 
+        ///
         public HealthRecordFilter Filter
         {
             get
@@ -575,17 +572,17 @@ namespace Microsoft.HealthVault
         }
         private HealthRecordFilter _filter = new HealthRecordFilter();
 
-        /// <summary> 
-        /// Gets a value indicating whether the data was filtered by the 
+        /// <summary>
+        /// Gets a value indicating whether the data was filtered by the
         /// HealthVault service.
         /// </summary>
-        /// 
-        /// <remarks> 
-        /// This value is set only after 
-        /// <see cref="GetData(HealthRecordAccessor)"/> 
+        ///
+        /// <remarks>
+        /// This value is set only after
+        /// <see cref="GetData(HealthRecordAccessor)"/>
         /// or <see cref="GetData(Guid,ApplicationConnection)"/> is called.
         /// </remarks>
-        /// 
+        ///
         public bool WasFiltered
         {
             get { return _wasFiltered; }
@@ -593,26 +590,24 @@ namespace Microsoft.HealthVault
         private bool _wasFiltered;
 
         /// <summary>
-        /// <b>true</b> if the data has been retrieved from the HealthVault service; 
+        /// <b>true</b> if the data has been retrieved from the HealthVault service;
         /// otherwise, <b>false</b>.
         /// </summary>
-        /// 
+        ///
         /// <remarks>
-        /// This value is set only after 
-        /// <see cref="GetData(HealthRecordAccessor)"/> 
+        /// This value is set only after
+        /// <see cref="GetData(HealthRecordAccessor)"/>
         /// or <see cref="GetData(Guid,ApplicationConnection)"/> is called.
         /// <br/><br/>
-        /// This property returns <b>false</b> if there was an error contacting 
-        /// the HealthVault service, but returns <b>true</b> if the call was 
+        /// This property returns <b>false</b> if there was an error contacting
+        /// the HealthVault service, but returns <b>true</b> if the call was
         /// made successfully but the filter produced no results.
         /// </remarks>
-        /// 
+        ///
         public bool HasData
         {
             get { return _hasData; }
         }
         private bool _hasData;
     }
-
 }
-

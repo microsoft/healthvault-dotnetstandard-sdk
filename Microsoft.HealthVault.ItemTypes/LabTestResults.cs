@@ -3,7 +3,6 @@
 // see http://www.microsoft.com/resources/sharedsource/licensingbasics/sharedsourcelicenses.mspx.
 // All other rights reserved.
 
-
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -11,36 +10,35 @@ using System.Text;
 using System.Xml;
 using System.Xml.XPath;
 
-
 namespace Microsoft.HealthVault.ItemTypes
 {
     /// <summary>
     /// A series of lab test results.
     /// </summary>
-    /// 
+    ///
     public class LabTestResults : HealthRecordItem
     {
         /// <summary>
-        /// Initialize a new instance of the <see cref="LabTestResults"/> 
+        /// Initialize a new instance of the <see cref="LabTestResults"/>
         /// class with default values.
         /// </summary>
-        /// 
+        ///
         public LabTestResults()
             : base(TypeId)
         {
         }
 
         /// <summary>
-        /// Initialize a new instance of the <see cref="LabTestResults"/> 
+        /// Initialize a new instance of the <see cref="LabTestResults"/>
         /// class with mandatory parameters.
         /// </summary>
-        /// 
+        ///
         /// <param name="labGroups">Lab groups is a set of lab results.</param>
-        /// 
+        ///
         /// <exception cref="ArgumentNullException">
         /// If <paramref name="labGroups"/> parameter is <b> null </b>.
         /// </exception>
-        /// 
+        ///
         public LabTestResults(IEnumerable<LabTestResultGroup> labGroups)
             : base(TypeId)
         {
@@ -55,23 +53,23 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <summary>
         /// Retrieves the unique identifier for the item type.
         /// </summary>
-        /// 
+        ///
         public new static readonly Guid TypeId =
             new Guid("5800eab5-a8c2-482a-a4d6-f1db25ae08c3");
 
         /// <summary>
-        /// Populates this <see cref="LabTestResults"/> instance from the data in the XML. 
+        /// Populates this <see cref="LabTestResults"/> instance from the data in the XML.
         /// </summary>
-        /// 
+        ///
         /// <param name="typeSpecificXml">
         /// The XML to get the lab test results data from.
         /// </param>
-        /// 
+        ///
         /// <exception cref="InvalidOperationException">
         /// If the first node in <paramref name="typeSpecificXml"/> is not
         /// a lab test results node.
         /// </exception>
-        /// 
+        ///
         protected override void ParseXml(IXPathNavigable typeSpecificXml)
         {
             XPathNavigator itemNav =
@@ -79,7 +77,7 @@ namespace Microsoft.HealthVault.ItemTypes
 
             Validator.ThrowInvalidIfNull(itemNav, "LabTestResultsUnexpectedNode");
 
-            // when 
+            // when
             _when =
                 XPathHelper.GetOptNavValue<ApproximateDateTime>(itemNav, "when");
 
@@ -97,25 +95,24 @@ namespace Microsoft.HealthVault.ItemTypes
             // ordered-by
             _orderedBy =
                 XPathHelper.GetOptNavValue<Organization>(itemNav, "ordered-by");
-
         }
 
         /// <summary>
         /// Writes the lab test results data to the specified XmlWriter.
-        /// </summary> 
-        /// 
+        /// </summary>
+        ///
         /// <param name="writer">
         /// The XmlWriter to write the lab test results data to.
         /// </param>
-        /// 
+        ///
         /// <exception cref="ArgumentNullException">
         /// If <paramref name="writer"/> parameter is <b>null</b>.
         /// </exception>
-        /// 
+        ///
         /// <exception cref="HealthRecordItemSerializationException">
         /// If <see cref="Groups"/> is <b>null</b> or empty.
-        /// </exception> 
-        /// 
+        /// </exception>
+        ///
         public override void WriteXml(XmlWriter writer)
         {
             Validator.ThrowIfWriterNull(writer);
@@ -149,14 +146,14 @@ namespace Microsoft.HealthVault.ItemTypes
         }
 
         /// <summary>
-        /// Gets or sets the date and time of the lab tests results.  
+        /// Gets or sets the date and time of the lab tests results.
         /// </summary>
-        /// 
+        ///
         /// <remarks>
-        /// The date and time should be set to <b> null </b> if they are 
-        /// unknown. 
+        /// The date and time should be set to <b> null </b> if they are
+        /// unknown.
         /// </remarks>
-        /// 
+        ///
         public ApproximateDateTime When
         {
             get { return _when; }
@@ -167,7 +164,7 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <summary>
         /// Gets a set of lab results.
         /// </summary>
-        /// 
+        ///
         public Collection<LabTestResultGroup> Groups
         {
             get { return _labGroup; }
@@ -179,11 +176,11 @@ namespace Microsoft.HealthVault.ItemTypes
         /// Gets or sets the information about the organization which
         /// ordered the lab tests.
         /// </summary>
-        /// 
+        ///
         /// <remarks>
-        /// It should be set to <b> null</b> if it is unknown. 
+        /// It should be set to <b> null</b> if it is unknown.
         /// </remarks>
-        /// 
+        ///
         public Organization OrderedBy
         {
             get { return _orderedBy; }
@@ -193,12 +190,12 @@ namespace Microsoft.HealthVault.ItemTypes
 
         /// <summary>
         /// Gets a string representation of the lab test results item.
-        /// </summary> 
+        /// </summary>
         ///
         /// <returns>
         /// A string representation of the lab test results item.
         /// </returns>
-        /// 
+        ///
         public override string ToString()
         {
             StringBuilder result = new StringBuilder(200);

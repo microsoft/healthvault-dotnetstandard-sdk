@@ -7,7 +7,7 @@ namespace Microsoft.HealthVault
 {
     /// <summary>
     /// Defines the set of supported blob hash algorithms.
-    /// </summary>    
+    /// </summary>
     public enum BlobHashAlgorithm
     {
         /// <summary>

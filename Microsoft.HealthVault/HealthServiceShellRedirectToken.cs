@@ -9,10 +9,10 @@ using System.Collections.ObjectModel;
 namespace Microsoft.HealthVault
 {
     /// <summary>
-    /// Represents the redirect information that can be supplied along with the Shell redirect 
+    /// Represents the redirect information that can be supplied along with the Shell redirect
     /// URL to access specific functionalities in the Shell.
     /// </summary>
-    /// 
+    ///
     public class HealthServiceShellRedirectToken
     {
         internal HealthServiceShellRedirectToken(
@@ -26,14 +26,14 @@ namespace Microsoft.HealthVault
         }
 
         /// <summary>
-        /// Gets a string token used to redirect to specific parts within the 
-        /// Shell, accessing specific functions. 
+        /// Gets a string token used to redirect to specific parts within the
+        /// Shell, accessing specific functions.
         /// </summary>
-        /// 
+        ///
         /// <returns>
         /// A string representing the redirect token.
         /// </returns>
-        /// 
+        ///
         public string Token
         {
             get { return _token; }
@@ -41,14 +41,14 @@ namespace Microsoft.HealthVault
         private string _token;
 
         /// <summary>
-        /// Gets a localized text description of the Shell functionality  
-        /// accessible by using the token. 
+        /// Gets a localized text description of the Shell functionality
+        /// accessible by using the token.
         /// </summary>
-        /// 
+        ///
         /// <returns>
         /// A string representing the Shell functionality description.
         /// </returns>
-        /// 
+        ///
         public string Description
         {
             get { return _description; }
@@ -56,14 +56,14 @@ namespace Microsoft.HealthVault
         private string _description;
 
         /// <summary>
-        /// Gets a collection of parameters that must be supplied in the query 
+        /// Gets a collection of parameters that must be supplied in the query
         /// string in addition to the redirect token.
         /// </summary>
-        /// 
+        ///
         /// <returns>
         /// A read-only collection containing the parameters.
         /// </returns>
-        /// 
+        ///
         public ReadOnlyCollection<string> QueryStringParameters
         {
             get

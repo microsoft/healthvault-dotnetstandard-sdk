@@ -15,12 +15,12 @@ namespace Microsoft.HealthVault.Certificate
     /// </summary>
     internal class CertificateStore : IDisposable
     {
-        X509Store m_store;
+        private X509Store m_store;
 
         /// <summary>
         /// Creates an instance of CertificateStore.
         /// </summary>
-        /// 
+        ///
         /// <exception ref="CryptographicException">
         /// The store is unreadable.
         /// </exception>
@@ -37,9 +37,9 @@ namespace Microsoft.HealthVault.Certificate
         /// <summary>
         /// Creates an instance of CertificateStore.
         /// </summary>
-        /// 
+        ///
         /// <param name="storeType">Specifies store type.</param>
-        /// 
+        ///
         /// <exception ref="CryptographicException">
         /// The store is unreadable.
         /// </exception>
@@ -57,11 +57,11 @@ namespace Microsoft.HealthVault.Certificate
         /// <summary>
         /// Gets certificate by looking up subject name in the store.
         /// </summary>
-        /// 
+        ///
         /// <param name="subjectName">
         /// Subject name of the certificate to lookup in the certificate store.
         /// </param>
-        /// 
+        ///
         /// <returns>The certificate associated with the subject name.</returns>
         internal X509Certificate2 this[string subjectName]
         {
@@ -74,15 +74,15 @@ namespace Microsoft.HealthVault.Certificate
         /// <summary>
         /// Gets the X509Certificate asociated with the appID.
         /// </summary>
-        /// 
+        ///
         /// <param name="appID">
         /// Id of the application to lookup the certificate.
         /// </param>
-        /// 
+        ///
         /// <returns>
         /// The certificate associated with the appID.
         /// </returns>
-        /// 
+        ///
         internal X509Certificate2 this[Guid appID]
         {
             get
@@ -94,7 +94,7 @@ namespace Microsoft.HealthVault.Certificate
         /// <summary>
         /// Adds the certificate to the store.
         /// </summary>
-        /// 
+        ///
         /// <param name="cert">
         /// The certificate to be added to the store.
         /// </param>
@@ -106,7 +106,7 @@ namespace Microsoft.HealthVault.Certificate
         /// <summary>
         /// Removes certificate from the store.
         /// </summary>
-        /// 
+        ///
         /// <param name="appID">
         /// Id for the application for which the certificate is to be removed.
         /// </param>
@@ -122,7 +122,7 @@ namespace Microsoft.HealthVault.Certificate
         /// <summary>
         /// Removes certificate from store.
         /// </summary>
-        /// 
+        ///
         /// <param name="cert">
         /// Certificate that is to be removed.
         /// </param>
@@ -142,11 +142,11 @@ namespace Microsoft.HealthVault.Certificate
         /// <summary>
         /// Checks if the certificate associated with appID exists in store.
         /// </summary>
-        /// 
+        ///
         /// <param name="appID">
         /// Id for the application.
         /// </param>
-        /// 
+        ///
         /// <returns>
         /// Boolean value indicating whether certificate for appID exists in store
         /// </returns>
@@ -158,19 +158,19 @@ namespace Microsoft.HealthVault.Certificate
         /// <summary>
         /// Checks if the certificate by subjectName exists in store.
         /// </summary>
-        /// 
+        ///
         /// <param name="subjectName">
         /// Subject name of the certificate.
         /// </param>
-        /// 
+        ///
         /// <returns>
         /// Boolean value indicating whether certificate exists in store
         /// </returns>
-        /// 
-        /// <exception cref="ArgumentException"> 
-        /// subjectName cannot be empty or null 
+        ///
+        /// <exception cref="ArgumentException">
+        /// subjectName cannot be empty or null
         /// </exception>
-        /// 
+        ///
         internal bool Contains(string subjectName)
         {
             Validator.ThrowIfStringNullOrEmpty(subjectName, "subjectName");
@@ -180,19 +180,19 @@ namespace Microsoft.HealthVault.Certificate
         /// <summary>
         /// Finds certificate by SubjectName.
         /// </summary>
-        /// 
+        ///
         /// <param name="subjectName">
         /// Subject name of certificate to be looked up.
         /// </param>
-        /// 
+        ///
         /// <returns>
         /// Returns the certificate associated with the subject name.
         /// </returns>
-        /// 
-        /// <exception cref="ArgumentException"> 
-        /// subjectName cannot be empty or null 
+        ///
+        /// <exception cref="ArgumentException">
+        /// subjectName cannot be empty or null
         /// </exception>
-        /// 
+        ///
         internal X509Certificate2 FindBySubject(string subjectName)
         {
             Validator.ThrowIfStringNullOrEmpty(subjectName, "subjectName");
@@ -211,11 +211,12 @@ namespace Microsoft.HealthVault.Certificate
         }
 
         #region Dispose
+
         /// <summary>
-        /// 	Clean up the contained resources that need disposing. 
+        /// 	Clean up the contained resources that need disposing.
         /// </summary>
         /// <param name="disposing">true if called from Dispose, false if from the finalizer</param>
-        /// 
+        ///
         protected virtual void Dispose(bool disposing)
         {
             if (disposing)
@@ -234,6 +235,7 @@ namespace Microsoft.HealthVault.Certificate
             // Use SupressFinalize in case a subclass of this type implements a finalizer.
             GC.SuppressFinalize(this);
         }
+
         #endregion
     }
 }

@@ -12,20 +12,20 @@ namespace Microsoft.HealthVault
     /// <summary>
     /// Represents a loose relationship between health record item instances.
     /// </summary>
-    /// 
+    ///
     /// <remarks>
-    /// The relationship defined is not maintained by HealthVault. It is completely up to the 
+    /// The relationship defined is not maintained by HealthVault. It is completely up to the
     /// application defining and consuming the relationship to ensure the related item exists
     /// and is in the same health record.
     /// </remarks>
-    /// 
+    ///
     public class HealthRecordItemRelationship
     {
         /// <summary>
         /// Creates a new instance of the <see cref="HealthRecordItemRelationship"/>
         /// instance with default values.
         /// </summary>
-        /// 
+        ///
         public HealthRecordItemRelationship()
         {
         }
@@ -34,15 +34,15 @@ namespace Microsoft.HealthVault
         /// Constructs a <see cref="HealthRecordItemRelationship" /> instance for a relationship
         /// to the item with the specified ID.
         /// </summary>
-        /// 
+        ///
         /// <param name="itemId">
         /// The unique identifier of the health record item to related to.
         /// </param>
-        /// 
+        ///
         /// <exception cref="ArgumentException">
         /// If <paramref name="itemId"/> is <see cref="System.Guid.Empty"/>.
         /// </exception>
-        /// 
+        ///
         public HealthRecordItemRelationship(Guid itemId)
         {
             Validator.ThrowArgumentExceptionIf(
@@ -57,16 +57,16 @@ namespace Microsoft.HealthVault
         /// Constructs a <see cref="HealthRecordItemRelationship" /> instance for a relationship
         /// to the item with the specified key.
         /// </summary>
-        /// 
+        ///
         /// <param name="itemKey">
         /// The unique key of the health record item to related to, including the item ID and
         /// optionally the item version stamp.
         /// </param>
-        ///     
+        ///
         /// <exception cref="ArgumentNullException">
         /// If <paramref name="itemKey"/> is <b>null</b>.
         /// </exception>
-        /// 
+        ///
         public HealthRecordItemRelationship(HealthRecordItemKey itemKey)
         {
             Validator.ThrowIfArgumentNull(itemKey, "itemKey", "RelationshipItemKeyNotSpecified");
@@ -78,15 +78,15 @@ namespace Microsoft.HealthVault
         /// Constructs a <see cref="HealthRecordItemRelationship" /> instance for a relationship
         /// to the item with the specified key.
         /// </summary>
-        /// 
+        ///
         /// <param name="clientId">
         /// A client assigned ID for the health record item to relate to.
         /// </param>
-        ///     
+        ///
         /// <exception cref="ArgumentException">
         /// If <paramref name="clientId"/> is <b>null</b> or <b>empty</b>.
         /// </exception>
-        /// 
+        ///
         public HealthRecordItemRelationship(string clientId)
         {
             Validator.ThrowIfStringNullOrEmpty(clientId, "clientId");
@@ -97,22 +97,22 @@ namespace Microsoft.HealthVault
         /// Constructs a <see cref="HealthRecordItemRelationship" /> instance for a relationship
         /// to the item with the specified key and relationship type.
         /// </summary>
-        /// 
+        ///
         /// <param name="itemKey">
         /// The unique key of the health record item to related to, including the item ID and
         /// optionally the item version stamp.
         /// </param>
-        ///  
+        ///
         /// <param name="relationshipType">
         /// The application defined type for the relationship. This is usually a descriptive tagging
         /// for the relationship. For example, a Annotation item may have a
         /// "annotation" relationship with a Problem item.
         /// </param>
-        /// 
+        ///
         /// <exception cref="ArgumentNullException">
         /// If <paramref name="itemKey"/> is <b>null</b>.
         /// </exception>
-        /// 
+        ///
         public HealthRecordItemRelationship(HealthRecordItemKey itemKey, string relationshipType)
             : this(itemKey)
         {
@@ -123,21 +123,21 @@ namespace Microsoft.HealthVault
         /// Constructs a <see cref="HealthRecordItemRelationship" /> instance for a relationship
         /// to the item with the specified client ID and relationship type.
         /// </summary>
-        /// 
+        ///
         /// <param name="clientId">
         /// A client assigned ID of the health record item to be related to.
         /// </param>
-        ///  
+        ///
         /// <param name="relationshipType">
         /// The application defined type for the relationship. This is usually a descriptive tagging
         /// for the relationship. For example, an Annotation item may have a
         /// "annotation" relationship with a Problem item.
         /// </param>
-        /// 
+        ///
         /// <exception cref="ArgumentNullException">
         /// If <paramref name="clientId"/> is <b>null</b>.
         /// </exception>
-        /// 
+        ///
         public HealthRecordItemRelationship(string clientId, string relationshipType)
             : this(clientId)
         {
@@ -204,12 +204,12 @@ namespace Microsoft.HealthVault
         /// <summary>
         /// Gets or sets the key for the related <see cref="HealthRecordItem" />.
         /// </summary>
-        /// 
+        ///
         /// <value>
         /// An instance of the <see cref="HealthRecordItemKey"/> class with the item ID specified
         /// and optionally the item version stamp.
         /// </value>
-        /// 
+        ///
         public HealthRecordItemKey ItemKey
         {
             get { return _itemKey; }
@@ -230,14 +230,14 @@ namespace Microsoft.HealthVault
         /// <summary>
         /// Gets or sets the type of relationship between the items.
         /// </summary>
-        /// 
+        ///
         /// <remarks>
         /// This property is optional.
         /// A relationship type is application defined and should be somewhat descriptive about the
         /// relationship. For example, an Annotation item may have an
         /// "annotation" relationship to a Problem item.
         /// </remarks>
-        /// 
+        ///
         public string RelationshipType
         {
             get { return _relationshipType; }
@@ -246,4 +246,3 @@ namespace Microsoft.HealthVault
         private string _relationshipType;
     }
 }
-

@@ -13,6 +13,7 @@ namespace Microsoft.HealthVault.Rest
         internal const string CorrelationIdContextKey = "WC_CorrelationId";
 
         // Formatting
+
         #region Format constants
         internal const string HmacFormat = "{0}&{1}&{2}&{3}&{4}&{5}";
         internal const string AuthorizationHeaderElement = "{0}={1}";
@@ -22,6 +23,7 @@ namespace Microsoft.HealthVault.Rest
         #endregion
 
         // Authorization header elements
+
         #region Authorization Header Constants
 
         /// <summary>
@@ -43,10 +45,11 @@ namespace Microsoft.HealthVault.Rest
         /// User Token entry in the Authorization Header
         /// </summary>
         public const string UserToken = "user-token";
-        
+
         #endregion
 
         // Headers
+
         #region Header constants
         /// <summary>
         /// Hmac Custom Header Name
@@ -67,7 +70,8 @@ namespace Microsoft.HealthVault.Rest
         /// standard authorization header Name
         /// </summary>
         public const string AuthorizationHeaderName = "Authorization";
-        #endregion 
+        #endregion
+
 
         /// <summary>
         /// Content Type for Json

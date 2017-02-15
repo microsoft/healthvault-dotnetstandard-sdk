@@ -26,6 +26,7 @@ namespace Microsoft.HealthVault.Certificate
         #endregion
 
         #region Contructors
+
         /// <summary>
         /// Create a null blob
         /// </summary>
@@ -47,6 +48,7 @@ namespace Microsoft.HealthVault.Certificate
             Marshal.Copy(data, 0, pbData, data.Length);
             return;
         }
+
         #endregion
 
         #region Public properties
@@ -143,6 +145,7 @@ namespace Microsoft.HealthVault.Certificate
             Marshal.Copy(pbData, bytes, 0, cbData);
             return bytes;
         }
+
         #endregion
 
         #region Dispose

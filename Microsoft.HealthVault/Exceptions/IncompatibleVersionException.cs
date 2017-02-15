@@ -11,7 +11,7 @@ namespace Microsoft.HealthVault.Exceptions
     /// <summary>
     /// Indicates version incompatibility.
     /// </summary>
-    /// 
+    ///
     [Serializable]
     public class IncompatibleVersionException : Exception
     {
@@ -19,15 +19,15 @@ namespace Microsoft.HealthVault.Exceptions
         /// Creates a new instance of the <see cref="IncompatibleVersionException"/>
         /// class.
         /// </summary>
-        /// 
+        ///
         /// <param name="compatibleVersions">
         /// The compatible versions supported.
         /// </param>
-        /// 
+        ///
         /// <param name="incompatibleVersion">
         /// The incompatible version encountered.
         /// </param>
-        /// 
+        ///
         public IncompatibleVersionException(
             string compatibleVersions,
             string incompatibleVersion)
@@ -43,21 +43,21 @@ namespace Microsoft.HealthVault.Exceptions
         }
 
         /// <summary>
-        /// Creates a new instance of the <see cref="IncompatibleVersionException"/> 
+        /// Creates a new instance of the <see cref="IncompatibleVersionException"/>
         /// class with an error message.
         /// </summary>
-        /// 
+        ///
         /// <param name="compatibleVersions">
         /// The compatible versions supported.
         /// </param>
-        /// 
-        /// <param name="incompatibleVersion">The incompatible version 
+        ///
+        /// <param name="incompatibleVersion">The incompatible version
         /// encountered.</param>
-        /// 
+        ///
         /// <param name="message">
         /// The error message.
         /// </param>
-        /// 
+        ///
         public IncompatibleVersionException(
             string compatibleVersions,
             string incompatibleVersion,
@@ -67,26 +67,26 @@ namespace Microsoft.HealthVault.Exceptions
         }
 
         /// <summary>
-        /// Creates a new instance of the <see cref="IncompatibleVersionException"/> 
+        /// Creates a new instance of the <see cref="IncompatibleVersionException"/>
         /// class with an error message and a nested exception.
         /// </summary>
-        /// 
+        ///
         /// <param name="compatibleVersions">
         /// The compatible versions supported.
         /// </param>
-        /// 
+        ///
         /// <param name="incompatibleVersion">
         /// The incompatible version encountered.
         /// </param>
-        /// 
+        ///
         /// <param name="message">
         /// The error message.
         /// </param>
-        /// 
+        ///
         /// <param name="innerException">
         /// The nested exception.
         /// </param>
-        /// 
+        ///
         public IncompatibleVersionException(
             string compatibleVersions,
             string incompatibleVersion,
@@ -101,7 +101,7 @@ namespace Microsoft.HealthVault.Exceptions
         /// <summary>
         /// Gets the compatible versions.
         /// </summary>
-        /// 
+        ///
         public string CompatibleVersions => _compatibleVersions;
 
         private readonly string _compatibleVersions;
@@ -109,7 +109,7 @@ namespace Microsoft.HealthVault.Exceptions
         /// <summary>
         /// Gets the incompatible version.
         /// </summary>
-        /// 
+        ///
         public string IncompatibleVersion => _incompatibleVersion;
 
         private readonly string _incompatibleVersion;
@@ -117,41 +117,41 @@ namespace Microsoft.HealthVault.Exceptions
         #region FxCop required ctors
 
         /// <summary>
-        /// Creates a new instance of the <see cref="IncompatibleVersionException"/> 
+        /// Creates a new instance of the <see cref="IncompatibleVersionException"/>
         /// class with default values.
         /// </summary>
-        /// 
+        ///
         public IncompatibleVersionException()
         {
         }
 
         /// <summary>
-        /// Creates a new instance of the <see cref="IncompatibleVersionException"/> 
+        /// Creates a new instance of the <see cref="IncompatibleVersionException"/>
         /// class with the specified message.
         /// </summary>
-        /// 
+        ///
         /// <param name="message">
         /// The error message.
         /// </param>
-        /// 
+        ///
         public IncompatibleVersionException(string message)
             : base(message)
         {
         }
 
         /// <summary>
-        /// Creates a new instance of the <see cref="IncompatibleVersionException"/> 
+        /// Creates a new instance of the <see cref="IncompatibleVersionException"/>
         /// class with the specified message and inner exception.
         /// </summary>
-        /// 
+        ///
         /// <param name="message">
         /// The error message.
         /// </param>
-        /// 
+        ///
         /// <param name="innerException">
         /// The inner exception.
         /// </param>
-        /// 
+        ///
         public IncompatibleVersionException(
             string message,
             Exception innerException)
@@ -162,15 +162,15 @@ namespace Microsoft.HealthVault.Exceptions
         #endregion FxCop required ctors
 
         /// <summary>
-        /// Gets the string representation of the <see cref="IncompatibleVersionException"/> 
+        /// Gets the string representation of the <see cref="IncompatibleVersionException"/>
         /// object.
         /// </summary>
-        /// 
-        /// <returns> 
-        /// A string representing the contents of the 
+        ///
+        /// <returns>
+        /// A string representing the contents of the
         /// <see cref="IncompatibleVersionException"/> object.
         /// </returns>
-        /// 
+        ///
         public override string ToString()
         {
             string result =
@@ -179,4 +179,3 @@ namespace Microsoft.HealthVault.Exceptions
         }
     }
 }
-

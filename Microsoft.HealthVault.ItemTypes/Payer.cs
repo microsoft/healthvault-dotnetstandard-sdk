@@ -3,54 +3,48 @@
 // see http://www.microsoft.com/resources/sharedsource/licensingbasics/sharedsourcelicenses.mspx.
 // All other rights reserved.
 
-
 using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Globalization;
-using System.Text;
 using System.Xml;
 using System.Xml.XPath;
 
 namespace Microsoft.HealthVault.ItemTypes
 {
     /// <summary>
-    /// Represents a health record item type that encapsulates information for 
+    /// Represents a health record item type that encapsulates information for
     /// one who pays for health and/or medical expenses.
     /// </summary>
-    /// 
+    ///
     public class Payer : HealthRecordItem
     {
         /// <summary>
-        /// Creates a new instance of the <see cref="Payer"/> class with default 
+        /// Creates a new instance of the <see cref="Payer"/> class with default
         /// values.
         /// </summary>
-        /// 
+        ///
         /// <remarks>
         /// The item is not added to the health record until the
-        /// <see cref="HealthRecordAccessor.NewItem(HealthRecordItem)"/> method 
+        /// <see cref="HealthRecordAccessor.NewItem(HealthRecordItem)"/> method
         /// is called.
         /// </remarks>
-        /// 
+        ///
         public Payer()
             : base(TypeId)
         {
         }
 
-
         /// <summary>
-        /// Creates a new instance of the <see cref="Payer"/> class 
+        /// Creates a new instance of the <see cref="Payer"/> class
         /// specifying the mandatory values.
         /// </summary>
-        /// 
+        ///
         /// <param name="planName">
         /// The name of the plan that pays for health and/or medical expenses.
         /// </param>
-        /// 
+        ///
         /// <exception cref="ArgumentException">
         /// The <paramref name="planName"/> parameter is <b>null</b> or empty.
         /// </exception>
-        /// 
+        ///
         public Payer(string planName)
             : base(TypeId)
         {
@@ -60,23 +54,23 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <summary>
         /// Retrieves the unique identifier for the item type.
         /// </summary>
-        /// 
+        ///
         public new static readonly Guid TypeId =
             new Guid("9366440c-ec81-4b89-b231-308a4c4d70ed");
 
         /// <summary>
         /// Populates this <see cref="Payer"/> instance from the data in the XML.
         /// </summary>
-        /// 
+        ///
         /// <param name="typeSpecificXml">
         /// The XML to get the payer data from.
         /// </param>
-        /// 
+        ///
         /// <exception cref="InvalidOperationException">
         /// The first node in <paramref name="typeSpecificXml"/> parameter is not
         /// a payer node.
         /// </exception>
-        /// 
+        ///
         protected override void ParseXml(IXPathNavigable typeSpecificXml)
         {
             XPathNavigator payerNav =
@@ -161,32 +155,31 @@ namespace Microsoft.HealthVault.ItemTypes
                 _contact = new ContactInfo();
                 _contact.ParseXml(contactNav);
             }
-
         }
 
         /// <summary>
         /// Writes the payer data to the specified XmlWriter.
         /// </summary>
-        /// 
+        ///
         /// <param name="writer">
         /// The XmlWriter to write the payer data to.
         /// </param>
-        /// 
+        ///
         /// <exception cref="ArgumentNullException">
         /// If <paramref name="writer"/> is <b>null</b>.
         /// </exception>
-        /// 
+        ///
         /// <exception cref="HealthRecordItemSerializationException">
         /// The <see cref="PlanName"/> parameter has not been set.
         /// </exception>
-        /// 
+        ///
         public override void WriteXml(XmlWriter writer)
         {
             Validator.ThrowIfWriterNull(writer);
             Validator.ThrowSerializationIfNull(
-                _planName, 
+                _planName,
                 "PayerPlanNameNotSet");
-            
+
             // <payer>
             writer.WriteStartElement("payer");
 
@@ -250,7 +243,6 @@ namespace Microsoft.HealthVault.ItemTypes
                 _contact.WriteXml("contact", writer);
             }
 
-
             // </payer>
             writer.WriteEndElement();
         }
@@ -258,24 +250,24 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <summary>
         /// Gets or sets the plan name.
         /// </summary>
-        /// 
+        ///
         /// <returns>
         /// A string representing the name.
         /// </returns>
-        /// 
+        ///
         /// <exception cref="ArgumentException">
         /// The <paramref name="value"/> parameter is <b>null</b>, empty, or contains only
         /// whitespace when set.
         /// </exception>
-        /// 
+        ///
         public string PlanName
         {
             get { return _planName; }
-            set 
+            set
             {
                 Validator.ThrowIfStringNullOrEmpty(value, "PlanName");
                 Validator.ThrowIfStringIsWhitespace(value, "PlanName");
-                _planName = value; 
+                _planName = value;
             }
         }
         private string _planName;
@@ -283,15 +275,15 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <summary>
         /// Gets or sets the coverage type, such as medical, dental, and so on.
         /// </summary>
-        /// 
+        ///
         /// <returns>
         /// A <see cref="CodableValue"/> instance representing the type.
-        /// </returns> 
-        /// 
+        /// </returns>
+        ///
         /// <remarks>
         /// Set the value to <b>null</b> if the coverage type should not be stored.
         /// </remarks>
-        /// 
+        ///
         public CodableValue CoverageType
         {
             get { return _coverageType; }
@@ -304,20 +296,20 @@ namespace Microsoft.HealthVault.ItemTypes
         /// </summary>
         /// <returns>
         /// A string representing the identifier.
-        /// </returns> 
-        /// 
+        /// </returns>
+        ///
         /// <remarks>
         /// Set the value to <b>null</b> if the carrier identifier should not be stored.
         /// </remarks>
-        /// 
+        ///
         /// <exception cref="ArgumentException">
         /// If <paramref name="value"/> contains only whitespace.
         /// </exception>
-        /// 
+        ///
         public string CarrierId
         {
             get { return _carrierId; }
-            set 
+            set
             {
                 Validator.ThrowIfStringIsWhitespace(value, "CarrierId");
                 _carrierId = value;
@@ -328,23 +320,23 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <summary>
         /// Gets or sets the group number.
         /// </summary>
-        /// 
+        ///
         /// <returns>
         /// A string representing the group number.
-        /// </returns> 
-        /// 
+        /// </returns>
+        ///
         /// <remarks>
         /// Set the value to <b>null</b> if the group number should not be stored.
         /// </remarks>
-        /// 
+        ///
         /// <exception cref="ArgumentException">
         /// If <paramref name="value"/> contains only whitespace.
         /// </exception>
-        /// 
+        ///
         public string GroupNumber
         {
             get { return _groupNumber; }
-            set 
+            set
             {
                 Validator.ThrowIfStringIsWhitespace(value, "GroupNumber");
                 _groupNumber = value;
@@ -355,23 +347,23 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <summary>
         /// Gets or sets the plan code.
         /// </summary>
-        /// 
+        ///
         /// <returns>
         /// A string representing the plan code.
-        /// </returns> 
-        /// 
+        /// </returns>
+        ///
         /// <remarks>
         /// Set the value to <b>null</b> if the plan code should not be stored.
         /// </remarks>
-        /// 
+        ///
         /// <exception cref="ArgumentException">
         /// If <paramref name="value"/> contains only whitespace.
         /// </exception>
-        /// 
+        ///
         public string PlanCode
         {
             get { return _planCode; }
-            set 
+            set
             {
                 Validator.ThrowIfStringIsWhitespace(value, "PlanCode");
                 _planCode = value;
@@ -382,24 +374,24 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <summary>
         /// Gets or sets the subscriber identifier.
         /// </summary>
-        /// 
+        ///
         /// <returns>
         /// A string representing the identifier.
-        /// </returns> 
-        /// 
+        /// </returns>
+        ///
         /// <remarks>
-        /// Set the value to <b>null</b> if the subscriber identifier should 
+        /// Set the value to <b>null</b> if the subscriber identifier should
         /// not be stored.
         /// </remarks>
-        /// 
+        ///
         /// <exception cref="ArgumentException">
         /// If <paramref name="value"/> contains only whitespace.
         /// </exception>
-        /// 
+        ///
         public string SubscriberId
         {
             get { return _subscriberId; }
-            set 
+            set
             {
                 Validator.ThrowIfStringIsWhitespace(value, "SubscriberId");
                 _subscriberId = value;
@@ -410,23 +402,23 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <summary>
         /// Gets or sets the person code.
         /// </summary>
-        /// 
+        ///
         /// <returns>
         /// A string representing the code.
-        /// </returns> 
-        /// 
+        /// </returns>
+        ///
         /// <remarks>
         /// Set the value to <b>null</b> if the person code should not be stored.
         /// </remarks>
-        /// 
+        ///
         /// <exception cref="ArgumentException">
         /// If <paramref name="value"/> contains only whitespace.
         /// </exception>
-        /// 
+        ///
         public string PersonCode
         {
             get { return _personCode; }
-            set 
+            set
             {
                 Validator.ThrowIfStringIsWhitespace(value, "PersonCode");
                 _personCode = value;
@@ -437,23 +429,23 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <summary>
         /// Gets or sets the subscriber name.
         /// </summary>
-        /// 
+        ///
         /// <returns>
         /// A string representing the name.
-        /// </returns> 
-        /// 
+        /// </returns>
+        ///
         /// <remarks>
         /// Set the value to <b>null</b> if the subscriber name should not be stored.
         /// </remarks>
-        /// 
+        ///
         /// <exception cref="ArgumentException">
         /// If <paramref name="value"/> contains only whitespace.
         /// </exception>
-        /// 
+        ///
         public string SubscriberName
         {
             get { return _subscriberName; }
-            set 
+            set
             {
                 Validator.ThrowIfStringIsWhitespace(value, "SubscriberName");
                 _subscriberName = value;
@@ -464,20 +456,20 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <summary>
         /// Gets or sets the subscriber's date of birth.
         /// </summary>
-        /// 
+        ///
         /// <returns>
         /// A <see cref="HealthServiceDateTime"/> instance representing the date.
-        /// </returns> 
-        /// 
+        /// </returns>
+        ///
         /// <remarks>
-        /// Set the value to <b>null</b> if the subscriber's date of birth should not 
+        /// Set the value to <b>null</b> if the subscriber's date of birth should not
         /// be stored.
         /// </remarks>
-        /// 
+        ///
         public HealthServiceDateTime SubscriberDateOfBirth
         {
             get { return _subscriberDateOfBirth; }
-            set { _subscriberDateOfBirth  = value; }
+            set { _subscriberDateOfBirth = value; }
         }
         private HealthServiceDateTime _subscriberDateOfBirth;
 
@@ -485,15 +477,15 @@ namespace Microsoft.HealthVault.ItemTypes
         /// Gets or sets a value indicating whether this is the primary coverage for the
         /// person.
         /// </summary>
-        /// 
+        ///
         /// <returns>
         /// <b>true</b> if this is primary coverage; otherwise, <b>false</b>.
-        /// </returns> 
-        /// 
+        /// </returns>
+        ///
         /// <remarks>
         /// Set the value to <b>null</b> if the is primary should not be stored.
         /// </remarks>
-        /// 
+        ///
         public bool? IsPrimary
         {
             get { return _isPrimary; }
@@ -506,13 +498,13 @@ namespace Microsoft.HealthVault.ItemTypes
         /// </summary>
         /// <returns>
         /// A <see cref="HealthServiceDateTime"/> instance representing the date.
-        /// </returns> 
-        /// 
+        /// </returns>
+        ///
         /// <remarks>
-        /// Set the value to <b>null</b> if the expiration date should not 
+        /// Set the value to <b>null</b> if the expiration date should not
         /// be stored.
         /// </remarks>
-        /// 
+        ///
         public HealthServiceDateTime ExpirationDate
         {
             get { return _expirationDate; }
@@ -523,16 +515,16 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <summary>
         /// Gets or sets the payer contact information.
         /// </summary>
-        /// 
+        ///
         /// <returns>
         /// A <see cref="ContactInfo"/> instance representing the information.
         /// </returns>
-        /// 
+        ///
         /// <remarks>
         /// Set the value to <b>null</b> if the payer contact information
         /// should not be stored.
         /// </remarks>
-        /// 
+        ///
         public ContactInfo Contact
         {
             get { return _contact; }
@@ -543,11 +535,11 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <summary>
         /// Gets a string representation of the payer item.
         /// </summary>
-        /// 
+        ///
         /// <returns>
         /// A string representing the payer item.
         /// </returns>
-        /// 
+        ///
         public override string ToString()
         {
             string result = PlanName;
@@ -564,5 +556,4 @@ namespace Microsoft.HealthVault.ItemTypes
             return result;
         }
     }
-
 }

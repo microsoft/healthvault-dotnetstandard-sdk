@@ -14,39 +14,39 @@ namespace Microsoft.HealthVault.ItemTypes.Csv
     /// The OtherItemDataCSV class is used to store and retrieve data stored in the HealthVault
     /// comma-separated format.
     /// </summary>
-    /// 
+    ///
     /// <remarks>
     /// It is not used directly but through a derived class that is specific to a health record item type -
-    /// for example, the ExerciseSamplesData class. 
+    /// for example, the ExerciseSamplesData class.
     /// </remarks>
     public abstract class OtherItemDataCsv : OtherItemData
     {
         /// <summary>
-        /// Creates a new instance of the <see cref="OtherItemDataCsv"/> class 
+        /// Creates a new instance of the <see cref="OtherItemDataCsv"/> class
         /// </summary>
         protected OtherItemDataCsv()
         {
         }
 
         /// <summary>
-        /// Creates a new instance of the <see cref="OtherItemDataCsv"/> class 
+        /// Creates a new instance of the <see cref="OtherItemDataCsv"/> class
         /// with the specified data, encoding, and content type.
         /// </summary>
-        /// 
+        ///
         /// <param name="data">
         /// The data to store in the other data section of the health record
         /// item.
         /// </param>
-        /// 
+        ///
         /// <param name="contentEncoding">
         /// The type of encoding that was done on the data. Usually this will
         /// be "base64" but other encodings are acceptable.
         /// </param>
-        /// 
+        ///
         /// <param name="contentType">
         /// The MIME-content type of the data.
         /// </param>
-        /// 
+        ///
         protected OtherItemDataCsv(
             string data,
             string contentEncoding,
@@ -56,8 +56,8 @@ namespace Microsoft.HealthVault.ItemTypes.Csv
         }
 
         /// <summary>
-        /// Walk the other data string, keeping track of escapes, and break it at any point where 
-        /// there is an unescaped specified character. 
+        /// Walk the other data string, keeping track of escapes, and break it at any point where
+        /// there is an unescaped specified character.
         /// </summary>
         /// <param name="dataString">The string to search.</param>
         /// <param name="characterToBreakAt">The character to break apart at.</param>
@@ -104,8 +104,8 @@ namespace Microsoft.HealthVault.ItemTypes.Csv
         /// Parse the comma-separated representation into an array of strings.
         /// </summary>
         /// <remarks>
-        /// When this method returns, the Escapes collection will contain any 
-        /// escapes encountered during the parsing. 
+        /// When this method returns, the Escapes collection will contain any
+        /// escapes encountered during the parsing.
         /// </remarks>
         /// <returns>A collection of the strings.</returns>
         /// <exception cref="ArgumentException">
@@ -157,7 +157,7 @@ namespace Microsoft.HealthVault.ItemTypes.Csv
         }
 
         /// <summary>
-        /// Parses the comma-delimited data into a series of double values. 
+        /// Parses the comma-delimited data into a series of double values.
         /// </summary>
         /// <remarks>
         /// The collection contains two kinds of values.
@@ -196,10 +196,10 @@ namespace Microsoft.HealthVault.ItemTypes.Csv
         }
 
         /// <summary>
-        /// Create the comma-delimited representation of a set of data and escapes. 
+        /// Create the comma-delimited representation of a set of data and escapes.
         /// </summary>
         /// <remarks>
-        /// The escapes are inserted into the comma-delimited list in the appropriate places. 
+        /// The escapes are inserted into the comma-delimited list in the appropriate places.
         /// Any escape that occurs after the last element is ignored.
         /// </remarks>
         /// <param name="values">The collection of values to store.</param>

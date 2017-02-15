@@ -3,10 +3,10 @@
 // see http://www.microsoft.com/resources/sharedsource/licensingbasics/sharedsourcelicenses.mspx.
 // All other rights reserved.
 
+using Microsoft.HealthVault.Web;
 using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
-using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -14,9 +14,6 @@ using System.Net;
 using System.Reflection;
 using System.Security.Cryptography;
 using System.Text;
-using System.Web;
-using Microsoft.HealthVault.Web.Authentication;
-using Microsoft.HealthVault.Web;
 
 namespace Microsoft.HealthVault.Rest
 {
@@ -24,46 +21,46 @@ namespace Microsoft.HealthVault.Rest
     /// Represents an individual request to a HealthVault REST service.
     /// The class wraps up the header generation and web request/response.
     /// </summary>
-    /// 
+    ///
     /// <remarks>
-    /// This class is not thread safe. A new instance should be created when multiple requests 
+    /// This class is not thread safe. A new instance should be created when multiple requests
     /// must execute concurrently.
     /// </remarks>
-    /// 
+    ///
     public class HealthServiceRestRequest : IEasyWebResponseHandler
     {
         //// TODO: GCorvera Hook up response id
         private const string ResponseIdContextKey = "WC_ResponseId";
 
         /// <summary>
-        /// Creates a new instance of the <see cref="HealthServiceRestRequest"/> 
+        /// Creates a new instance of the <see cref="HealthServiceRestRequest"/>
         /// class for the specified parameters.
         /// </summary>
-        /// 
+        ///
         /// <param name="connection">
         /// The client-side representation of the HealthVault service.
         /// </param>
-        /// 
+        ///
         /// <param name="httpVerb">
         /// The HTTP Verb to execute against the service.
         /// </param>
-        /// 
+        ///
         /// <param name="path">
         /// The path to the resource in the URL.
         /// </param>
-        /// 
+        ///
         /// <param name="queryStringParameters">
         /// A collection of query string parameters.
         /// </param>
-        /// 
+        ///
         /// <param name="requestBody">
         /// The body for this request.
         /// </param>
-        /// 
+        ///
         /// <param name="apiRoot">
         /// Domain name override, used to redirect to other endpoints.
         /// </param>
-        /// 
+        ///
         /// <param name="optionalHeaders">
         /// Optional headers to include in the API request.
         /// </param>
@@ -71,15 +68,15 @@ namespace Microsoft.HealthVault.Rest
         /// <exception cref="ArgumentNullException">
         /// The <paramref name="connection"/> parameter is <b>null</b>.
         /// </exception>
-        /// 
+        ///
         /// <exception cref="ArgumentException">
         /// The <paramref name="httpVerb"/> parameter is <b>null</b> or empty.
         /// </exception>
-        /// 
+        ///
         /// <exception cref="ArgumentException">
         /// The <paramref name="path"/> parameter is <b>null</b> or empty.
         /// </exception>
-        /// 
+        ///
         public HealthServiceRestRequest(
             HealthServiceConnection connection,
             string httpVerb,
@@ -104,26 +101,26 @@ namespace Microsoft.HealthVault.Rest
         }
 
         /// <summary>
-        /// Creates a new instance of the <see cref="HealthServiceRestRequest"/> 
+        /// Creates a new instance of the <see cref="HealthServiceRestRequest"/>
         /// class for the specified parameters.
         /// </summary>
-        /// 
+        ///
         /// <param name="connection">
         /// The client-side representation of the HealthVault service.
         /// </param>
-        /// 
+        ///
         /// <param name="httpVerb">
         /// The HTTP Verb to execute against the service.
         /// </param>
-        /// 
+        ///
         /// <param name="fullUri">
         /// The full URI of the API request.
         /// </param>
-        /// 
+        ///
         /// <param name="requestBody">
         /// The body for this request.
         /// </param>
-        /// 
+        ///
         /// <param name="optionalHeaders">
         /// Optional headers to include in the API request.
         /// </param>
@@ -131,15 +128,15 @@ namespace Microsoft.HealthVault.Rest
         /// <exception cref="ArgumentNullException">
         /// The <paramref name="connection"/> parameter is <b>null</b>.
         /// </exception>
-        /// 
+        ///
         /// <exception cref="ArgumentException">
         /// The <paramref name="httpVerb"/> parameter is <b>null</b> or empty.
         /// </exception>
-        /// 
+        ///
         /// <exception cref="ArgumentException">
         /// The <paramref name="fullUri"/> parameter is <b>null</b> or empty.
         /// </exception>
-        /// 
+        ///
         public HealthServiceRestRequest(
             HealthServiceConnection connection,
             string httpVerb,
@@ -176,12 +173,12 @@ namespace Microsoft.HealthVault.Rest
         /// can optionally set a correlation id. This will be passed up in web requests to
         /// HealthVault and used when HealthVault writes to its logs. If issues occur, this
         /// id can be used by the HealthVault team to help debug the issue.
-        /// 
+        ///
         /// For asp.net applications, we want to avoid the use of thread local for setting
         /// the request id since a single web request is not guaranteed to fully execute on the
         /// same thread - using HttpContext.Items is the recommended way.
-        /// 
-        /// For non web applications, this method sets a [ThreadStatic] variable which stores the 
+        ///
+        /// For non web applications, this method sets a [ThreadStatic] variable which stores the
         /// id in thread local storage. All HealthVault requests made on this thread will re-use this
         /// variable
         /// </summary>
@@ -201,7 +198,7 @@ namespace Microsoft.HealthVault.Rest
         }
 
         /// <summary>
-        /// Builds up the request and reads the response.        
+        /// Builds up the request and reads the response.
         /// </summary>
         public void Execute()
         {
@@ -226,7 +223,7 @@ namespace Microsoft.HealthVault.Rest
                     }
                     else
                     {
-                        SetResponse(response);                        
+                        SetResponse(response);
                     }
                 }
 
@@ -234,7 +231,7 @@ namespace Microsoft.HealthVault.Rest
             }
             while (retryCount >= 0);
         }
-        
+
         private void Initialize(
             HealthServiceConnection connection,
             string httpVerb,
@@ -262,8 +259,8 @@ namespace Microsoft.HealthVault.Rest
             }
             catch (WebException we)
             {
-                // An Unauthorized response might mean the token expired, we try to request for a 
-                // new token from the user and retry the call again 
+                // An Unauthorized response might mean the token expired, we try to request for a
+                // new token from the user and retry the call again
                 var response = we.Response as HttpWebResponse;
                 if (response != null &&
                     response.StatusCode == HttpStatusCode.Unauthorized &&
@@ -339,7 +336,7 @@ namespace Microsoft.HealthVault.Rest
                 request.Headers.Add(_optionalheaders);
             }
         }
-        
+
         private void SetResponse(HttpWebResponse response)
         {
             using (var responseStream = response.GetResponseStream())
@@ -479,14 +476,14 @@ namespace Microsoft.HealthVault.Rest
             }
         }
 
-        /// <summary> 
+        /// <summary>
         /// Represents the <see cref="IEasyWebResponseHandler"/> callback.
         /// </summary>
-        /// 
+        ///
         /// <param name="stream">
         /// The response stream.
-        /// </param>       
-        /// 
+        /// </param>
+        ///
         /// <param name="responseHeaders">
         /// Response headers.
         /// </param>

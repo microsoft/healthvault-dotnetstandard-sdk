@@ -3,37 +3,36 @@
 // see http://www.microsoft.com/resources/sharedsource/licensingbasics/sharedsourcelicenses.mspx.
 // All other rights reserved.
 
-
 namespace Microsoft.HealthVault.Authentication
 {
     /// <summary>
     /// Provides authentication token creation status codes.
     /// </summary>
-    /// 
+    ///
     public enum AuthenticationTokenCreationStatus
     {
         /// <summary>
         /// The server returned a value that this client cannot read.
         /// </summary>
-        /// 
+        ///
         Unknown = 0,
 
         /// <summary>
         /// The authentication token has been successfully returned.
         /// </summary>
-        /// 
+        ///
         Success = 1,
 
         /// <summary>
         /// The person is not authorized for the specified application.
         /// </summary>
-        /// 
+        ///
         PersonNotAuthorizedForApp = 2,
 
         /// <summary>
         /// The application requires acceptance by the person.
         /// </summary>
-        /// 
+        ///
         PersonAppAcceptanceRequired = 3,
 
         /// <summary>
@@ -47,4 +46,3 @@ namespace Microsoft.HealthVault.Authentication
         SecondFactorAuthenticationRequired = 5
     };
 }
-

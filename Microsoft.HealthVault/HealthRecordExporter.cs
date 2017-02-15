@@ -5,40 +5,34 @@
 
 using System;
 using System.Collections.ObjectModel;
-using System.Diagnostics.CodeAnalysis;
-using System.IO;
-using System.Net;
 using System.Text;
-using System.Web;
 using System.Xml;
-using System.Xml.Xsl;
-using Microsoft.HealthVault.Exceptions;
 
 namespace Microsoft.HealthVault
 {
     /// <summary>
     /// Exports HealthVault record items.
     /// </summary>
-    /// 
+    ///
     /// <remarks>
     /// This class will return results in HealthVault XML format. Derived classes should override...
     /// </remarks>
-    /// 
+    ///
     public class HealthRecordExporter
     {
         /// <summary>
         /// Constructs an instance of a HealthRecordExporter for the specified
         /// health record.
         /// </summary>
-        /// 
+        ///
         /// <param name="record">
         /// The health record to export data from.
         /// </param>
-        /// 
+        ///
         /// <exception cref="ArgumentNullException">
         /// The <paramref name="record"/> parameter is <b>null</b>.
         /// </exception>
-        /// 
+        ///
         public HealthRecordExporter(HealthRecordAccessor record)
         {
             Validator.ThrowIfArgumentNull(record, "record", "HealthRecordExporterCtorArgumentNull");
@@ -50,19 +44,19 @@ namespace Microsoft.HealthVault
         /// Constructs an instance of a HealthRecordExporter for the specified
         /// health record and the specified transform.
         /// </summary>
-        /// 
+        ///
         /// <param name="record">
         /// The health record to export data from.
         /// </param>
-        /// 
+        ///
         /// <param name="transform">
         /// The transform used to convert HealthVault XML to the destination format.
         /// </param>
-        /// 
+        ///
         /// <exception cref="ArgumentNullException">
         /// The <paramref name="record"/> parameter is <b>null</b>.
         /// </exception>
-        /// 
+        ///
         public HealthRecordExporter(HealthRecordAccessor record, XslCompiledTransform transform)
         {
             Validator.ThrowIfArgumentNull(record, "record", "HealthRecordExporterCtorArgumentNull");
@@ -75,35 +69,35 @@ namespace Microsoft.HealthVault
         /// Constructs an instance of a HealthRecordExporter for the specified
         /// health record and the specified transform tag.
         /// </summary>
-        /// 
+        ///
         /// <param name="record">
         /// The health record to export data from.
         /// </param>
-        /// 
+        ///
         /// <param name="transformTag">
-        /// The name of the transform to be retrieved from HealthVault to convert 
+        /// The name of the transform to be retrieved from HealthVault to convert
         /// the HealthVault XML to the destination format. For example, "toccr" will
         /// convert the data to the Continuity of Care Record XML format.
         /// </param>
-        /// 
+        ///
         /// <remarks>
         /// Note, this constructor makes a call to HealthVault to retrieve the specified
         /// data transform. The web request may cause a variety of WebExceptions to be thrown.
         /// </remarks>
-        /// 
+        ///
         /// <exception cref="ArgumentNullException">
         /// The <paramref name="record"/> parameter is <b>null</b>.
         /// </exception>
-        /// 
+        ///
         /// <exception cref="ArgumentException">
         /// The <paramref name="transformTag"/> parameter is <b>null</b> or empty.
         /// </exception>
-        /// 
+        ///
         /// <exception cref="WebException">
         /// If the transform with the specified <paramref name="transformTag"/>
         /// could not be found.
         /// </exception>
-        /// 
+        ///
         public HealthRecordExporter(HealthRecordAccessor record, string transformTag)
         {
             Validator.ThrowIfArgumentNull(record, "record", "HealthRecordExporterCtorArgumentNull");
@@ -127,17 +121,17 @@ namespace Microsoft.HealthVault
         /// <summary>
         /// Gets the health record that is being searched for health record items.
         /// </summary>
-        /// 
+        ///
         /// <value>
         /// A <see cref="HealthRecordAccessor"/> representing the record.
         /// </value>
-        /// 
+        ///
         /// <remarks>
-        /// The authenticated person must have 
+        /// The authenticated person must have
         /// <see cref="HealthRecordItemPermissions.Read"/> access rights to the
         /// health record to get results from the query.
         /// </remarks>
-        /// 
+        ///
         public HealthRecordAccessor Record
         {
             get { return _record; }
@@ -147,16 +141,16 @@ namespace Microsoft.HealthVault
         /// <summary>
         /// Gets the filters associated with the search.
         /// </summary>
-        /// 
+        ///
         /// <remarks>
         /// To add a search filter, call the Add method of the
         /// returned collection.
         /// </remarks>
-        /// 
+        ///
         public Collection<HealthRecordFilter> Filters { get; } = new Collection<HealthRecordFilter>();
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         public XslCompiledTransform Transform
         {
@@ -166,7 +160,7 @@ namespace Microsoft.HealthVault
         private XslCompiledTransform _transform;
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         public XsltArgumentList TransformArgumentList
         {
@@ -176,28 +170,28 @@ namespace Microsoft.HealthVault
 
         /// <summary>
         /// </summary>
-        /// 
+        ///
         /// <returns>
         /// </returns>
-        /// 
+        ///
         /// <remarks>
         /// This method accesses the HealthVault service across the network.
         /// If the filters specified do not reduce the amount of data being retrieved from the
         /// record, this method could take a significant amount of time as data gets paged into
         /// memory from HealthVault.
-        /// 
-        /// Note: There may be data in items that HealthVault does not include when converting 
+        ///
+        /// Note: There may be data in items that HealthVault does not include when converting
         /// to the CCR or CCD formats.
         /// </remarks>
-        /// 
+        ///
         /// <exception cref="HealthServiceException">
-        /// The response from the server was anything but 
+        /// The response from the server was anything but
         /// <see cref="HealthServiceStatusCode.Ok"/>.
         /// -or-
         /// <see cref="HealthRecordSearcher.Filters"/> is empty
         /// or contains invalid filters.
         /// </exception>
-        /// 
+        ///
         public string ExportItems()
         {
             HealthRecordSearcher searcher = new HealthRecordSearcher(_record);
@@ -263,7 +257,7 @@ namespace Microsoft.HealthVault
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="healthRecordItemsXml"></param>
         /// <returns></returns>
@@ -299,7 +293,7 @@ namespace Microsoft.HealthVault
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <returns></returns>
         private void AddStandardParametersToTransformArguments()
@@ -368,12 +362,12 @@ namespace Microsoft.HealthVault
         /// <summary>
         /// Client side filtering of the results of the HealthVault search for items.
         /// </summary>
-        /// 
+        ///
         /// <remarks>
         /// If more than one handler is added to the filter, the item will only be deemed to
         /// pass the filter if all handlers return true.
         /// </remarks>
-        /// 
+        ///
         public Collection<HealthRecordClientFilterHandler> ClientFilters
         {
             get { return _clientFilters; }
@@ -385,14 +379,14 @@ namespace Microsoft.HealthVault
     /// <summary>
     /// Defines the method signature for client side filtering of HealthRecordItems.
     /// </summary>
-    /// 
+    ///
     /// <param name="item">
     /// The <see cref="HealthRecordItem"/> to perform the filter test on.
     /// </param>
-    /// 
+    ///
     /// <returns>
     /// True if the <paramref name="item"/> passes the filter.
     /// </returns>
-    /// 
+    ///
     public delegate bool HealthRecordClientFilterHandler(HealthRecordItem item);
 }

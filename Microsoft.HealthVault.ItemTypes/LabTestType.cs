@@ -3,8 +3,6 @@
 // see http://www.microsoft.com/resources/sharedsource/licensingbasics/sharedsourcelicenses.mspx.
 // All other rights reserved.
 
-
-using System;
 using System.Collections.ObjectModel;
 using System.Text;
 using System.Xml;
@@ -15,14 +13,14 @@ namespace Microsoft.HealthVault.ItemTypes
     /// <summary>
     /// Represents a lab test component, including the lab result value.
     /// </summary>
-    /// 
+    ///
     public class LabTestType : HealthRecordItemData
     {
         /// <summary>
-        /// Constructs a new instance of the <see cref="LabTestType"/> class with 
+        /// Constructs a new instance of the <see cref="LabTestType"/> class with
         /// default values.
         /// </summary>
-        /// 
+        ///
         public LabTestType()
             : base()
         {
@@ -32,28 +30,28 @@ namespace Microsoft.HealthVault.ItemTypes
         /// Constructs a new instance of the <see cref="LabTestType"/> with the specified test
         /// date.
         /// </summary>
-        /// 
+        ///
         /// <param name="when">
         /// The date and time when the laboratory test was performed.
         /// </param>
-        /// 
+        ///
         public LabTestType(HealthServiceDateTime when)
         {
             When = when;
         }
 
-        /// <summary> 
+        /// <summary>
         /// Populates the data for the lab test type from the XML.
         /// </summary>
-        /// 
-        /// <param name="navigator"> 
+        ///
+        /// <param name="navigator">
         /// The XML node representing the lab test type.
         /// </param>
-        /// 
+        ///
         /// <exception cref="ArgumentNullException">
         /// The <paramref name="navigator"/> parameter is <b>null</b>.
         /// </exception>
-        /// 
+        ///
         public override void ParseXml(XPathNavigator navigator)
         {
             Validator.ThrowIfNavigatorNull(navigator);
@@ -64,9 +62,9 @@ namespace Microsoft.HealthVault.ItemTypes
             _name = XPathHelper.GetOptNavValue(navigator, "name");
             _substance = XPathHelper.GetOptNavValue<CodableValue>(navigator, "substance");
 
-            _collectionMethod = 
+            _collectionMethod =
                 XPathHelper.GetOptNavValue<CodableValue>(
-                    navigator, 
+                    navigator,
                     "collection-method");
 
             _abbreviation = XPathHelper.GetOptNavValue(navigator, "abbreviation");
@@ -85,26 +83,26 @@ namespace Microsoft.HealthVault.ItemTypes
             _status = XPathHelper.GetOptNavValue<CodableValue>(navigator, "status");
         }
 
-        /// <summary> 
+        /// <summary>
         /// Writes the lab test type data to the specified XML writer.
         /// </summary>
-        /// 
+        ///
         /// <param name="nodeName">
         /// The name of the outer element for the lab test type.
         /// </param>
-        /// 
-        /// <param name="writer"> 
+        ///
+        /// <param name="writer">
         /// The XmlWriter to write the lab test type to.
         /// </param>
-        /// 
+        ///
         /// <exception cref="ArgumentException">
         /// The <paramref name="nodeName"/> parameter is <b>null</b> or empty.
         /// </exception>
-        /// 
+        ///
         /// <exception cref="ArgumentNullException">
         /// The <paramref name="writer"/> parameter is <b>null</b>.
         /// </exception>
-        /// 
+        ///
         public override void WriteXml(string nodeName, XmlWriter writer)
         {
             Validator.ThrowIfStringNullOrEmpty(nodeName, "nodeName");
@@ -135,16 +133,16 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <summary>
         /// Gets or sets the date when the lab test was conducted.
         /// </summary>
-        /// 
+        ///
         /// <value>
-        /// A <see cref="HealthServiceDateTime"/> instance representing 
+        /// A <see cref="HealthServiceDateTime"/> instance representing
         /// the date and time. The default value is the current year, month, and day.
         /// </value>
-        /// 
+        ///
         /// <exception cref="ArgumentNullException">
         /// The <paramref name="value"/> parameter is <b>null</b>.
         /// </exception>
-        /// 
+        ///
         public HealthServiceDateTime When
         {
             get { return _when; }
@@ -159,15 +157,15 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <summary>
         /// Gets or sets the name of the test.
         /// </summary>
-        /// 
+        ///
         /// <exception cref="ArgumentException">
         /// If <paramref name="value"/> contains only whitespace.
         /// </exception>
-        /// 
+        ///
         public string Name
         {
             get { return _name; }
-            set 
+            set
             {
                 Validator.ThrowIfStringIsWhitespace(value, "Name");
                 _name = value;
@@ -178,7 +176,7 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <summary>
         /// Gets or sets the substance that was tested.
         /// </summary>
-        /// 
+        ///
         public CodableValue Substance
         {
             get { return _substance; }
@@ -189,7 +187,7 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <summary>
         /// Gets or sets the method used to collect the substance.
         /// </summary>
-        /// 
+        ///
         public CodableValue CollectionMethod
         {
             get { return _collectionMethod; }
@@ -200,15 +198,15 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <summary>
         /// Gets or sets the abbreviation for the test.
         /// </summary>
-        /// 
+        ///
         /// <exception cref="ArgumentException">
         /// If <paramref name="value"/> contains only whitespace.
         /// </exception>
-        /// 
+        ///
         public string TestAbbreviation
         {
             get { return _abbreviation; }
-            set 
+            set
             {
                 Validator.ThrowIfStringIsWhitespace(value, "TestAbbreviation");
                 _abbreviation = value;
@@ -219,15 +217,15 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <summary>
         /// Gets or sets the description for the test.
         /// </summary>
-        /// 
+        ///
         /// <exception cref="ArgumentException">
         /// If <paramref name="value"/> contains only whitespace.
         /// </exception>
-        /// 
+        ///
         public string Description
         {
             get { return _description; }
-            set 
+            set
             {
                 Validator.ThrowIfStringIsWhitespace(value, "Description");
                 _description = value;
@@ -235,11 +233,10 @@ namespace Microsoft.HealthVault.ItemTypes
         }
         private string _description;
 
-
         /// <summary>
         /// Gets a collection of the clinical code(s) used for the test.
         /// </summary>
-        /// 
+        ///
         public Collection<CodableValue> Code
         {
             get { return _code; }
@@ -249,7 +246,7 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <summary>
         /// Gets or sets the result of the lab test.
         /// </summary>
-        /// 
+        ///
         public LabResultType Result
         {
             get { return _result; }
@@ -257,16 +254,15 @@ namespace Microsoft.HealthVault.ItemTypes
         }
         private LabResultType _result;
 
-
         /// <summary>
         /// Gets or sets the status of the lab results.
         /// </summary>
-        /// 
+        ///
         /// <value>
         /// A CodableValue representing the status of the lab results. For example, "completed" or
         /// "pending". These values can be found in the "lab-results-status" HealthVault vocabulary.
         /// </value>
-        /// 
+        ///
         public CodableValue Status
         {
             get { return _status; }
@@ -277,11 +273,11 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <summary>
         /// Gets a string representation of the lab test type.
         /// </summary>
-        /// 
+        ///
         /// <returns>
         /// A string representing the lab test type.
         /// </returns>
-        /// 
+        ///
         public override string ToString()
         {
             StringBuilder result = new StringBuilder(200);
@@ -328,7 +324,7 @@ namespace Microsoft.HealthVault.ItemTypes
                     Description);
             }
 
-           if (Result != null)
+            if (Result != null)
             {
                 result.AppendFormat(
                     ResourceRetriever.GetResourceString(

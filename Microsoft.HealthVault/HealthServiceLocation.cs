@@ -8,24 +8,24 @@ using System;
 namespace Microsoft.HealthVault
 {
     /// <summary>
-    /// Provides methods that retrieve URLs of important locations for the 
+    /// Provides methods that retrieve URLs of important locations for the
     /// HealthVault service.
     /// </summary>
-    /// 
+    ///
     public static class HealthServiceLocation
     {
         /// <summary>
         /// Constructs a URL to be redirected to via the HealthVault service Shell
         /// URL redirector, given the specified redirect parameters.
         /// </summary>
-        /// 
+        ///
         /// <param name="redirectParameters">
         /// Parameters used to contruct the redirect URL.
         /// </param>
         /// <returns>
         /// The constructed URL.
         /// </returns>
-        /// 
+        ///
         /// <exception cref="UriFormatException">
         /// The specified parameters construct an invalid URL.
         /// </exception>
@@ -45,26 +45,26 @@ namespace Microsoft.HealthVault
         /// Constructs a URL to be redirected to via the HealthVault service Shell
         /// URL redirector, given the specified location.
         /// </summary>
-        /// 
+        ///
         /// <param name="targetLocation">
-        /// A known constant indicating the internal HealthVault 
+        /// A known constant indicating the internal HealthVault
         /// service Shell location to redirect to.
         /// See <a href="http://msdn.microsoft.com/en-us/library/ff803620.aspx">Shell redirect interface</a>.
         /// </param>
-        /// 
+        ///
         /// <remarks>
-        /// The <paramref name="targetLocation"/> is passed as the target 
+        /// The <paramref name="targetLocation"/> is passed as the target
         /// parameter value to the redirector URL.
         /// </remarks>
-        /// 
+        ///
         /// <returns>
         /// The constructed URL.
         /// </returns>
-        /// 
+        ///
         /// <exception cref="UriFormatException">
         /// The specific target location constructs an improper URL.
         /// </exception>
-        /// 
+        ///
         public static Uri GetHealthServiceShellUrl(string targetLocation)
         {
             return GetHealthServiceShellUrl(HealthApplicationConfiguration.Current.HealthVaultShellUrl, targetLocation);
@@ -74,30 +74,30 @@ namespace Microsoft.HealthVault
         /// Constructs a URL to be redirected to via the HealthVault service Shell
         /// URL redirector, given the specified location.
         /// </summary>
-        /// 
+        ///
         /// <param name="shellUrl">
         /// The HealthVault Shell redirector URL.
         /// </param>
-        /// 
+        ///
         /// <param name="targetLocation">
-        /// A known constant indicating the internal HealthVault 
+        /// A known constant indicating the internal HealthVault
         /// service Shell location to redirect to.
         /// See <a href="http://msdn.microsoft.com/en-us/library/ff803620.aspx">Shell redirect interface</a>.
         /// </param>
-        /// 
+        ///
         /// <remarks>
-        /// The <paramref name="targetLocation"/> is passed as the target 
+        /// The <paramref name="targetLocation"/> is passed as the target
         /// parameter value to the redirector URL.
         /// </remarks>
-        /// 
+        ///
         /// <returns>
         /// The constructed URL.
         /// </returns>
-        /// 
+        ///
         /// <exception cref="UriFormatException">
         /// The specific target location constructs an improper URL.
         /// </exception>
-        /// 
+        ///
         public static Uri GetHealthServiceShellUrl(
             Uri shellUrl,
             string targetLocation)
@@ -109,34 +109,34 @@ namespace Microsoft.HealthVault
         /// Constructs a URL to be redirected to via the HealthVault service
         /// Shell URL redirector, given the specified location and query.
         /// </summary>
-        /// 
+        ///
         /// <param name="targetLocation">
-        /// A known constant indicating the internal HealthVault 
+        /// A known constant indicating the internal HealthVault
         /// service Shell location to redirect to.
         /// See <a href="http://msdn.microsoft.com/en-us/library/ff803620.aspx">Shell redirect interface</a>.
         /// </param>
-        /// 
+        ///
         /// <param name="targetQuery">
-        /// The query string value to pass to the URL to which redirection is 
+        /// The query string value to pass to the URL to which redirection is
         /// taking place.
         /// </param>
-        /// 
+        ///
         /// <remarks>
-        /// The <paramref name="targetLocation"/> is passed as the target 
+        /// The <paramref name="targetLocation"/> is passed as the target
         /// parameter value to the redirector URL.
-        /// The <paramref name="targetQuery"/> is URL-encoded and 
-        /// passed to the redirector URL as the target query string parameter 
+        /// The <paramref name="targetQuery"/> is URL-encoded and
+        /// passed to the redirector URL as the target query string parameter
         /// value.
         /// </remarks>
-        /// 
+        ///
         /// <returns>
         /// The constructed URL.
         /// </returns>
-        /// 
+        ///
         /// <exception cref="UriFormatException">
         /// The specific target location constructs an improper URL.
         /// </exception>
-        /// 
+        ///
         public static Uri GetHealthServiceShellUrl(
             string targetLocation,
             string targetQuery)
@@ -151,38 +151,38 @@ namespace Microsoft.HealthVault
         /// Constructs a URL to be redirected to via the HealthVault service
         /// Shell URL redirector, given the specified location and query.
         /// </summary>
-        /// 
+        ///
         /// <param name="shellUrl">
         /// The HealthVault Shell redirector URL.
         /// </param>
-        /// 
+        ///
         /// <param name="targetLocation">
-        /// A known constant indicating the internal HealthVault 
+        /// A known constant indicating the internal HealthVault
         /// service Shell location to redirect to.
         /// See <a href="http://msdn.microsoft.com/en-us/library/ff803620.aspx">Shell redirect interface</a>.
         /// </param>
-        /// 
+        ///
         /// <param name="targetQuery">
-        /// The query string value to pass to the URL to which redirection is 
+        /// The query string value to pass to the URL to which redirection is
         /// taking place.
         /// </param>
-        /// 
+        ///
         /// <remarks>
-        /// The <paramref name="targetLocation"/> is passed as the target 
+        /// The <paramref name="targetLocation"/> is passed as the target
         /// parameter value to the redirector URL.
-        /// The <paramref name="targetQuery"/> is URL-encoded and 
-        /// passed to the redirector URL as the target query string parameter 
+        /// The <paramref name="targetQuery"/> is URL-encoded and
+        /// passed to the redirector URL as the target query string parameter
         /// value.
         /// </remarks>
-        /// 
+        ///
         /// <returns>
         /// The constructed URL.
         /// </returns>
-        /// 
+        ///
         /// <exception cref="UriFormatException">
         /// The specific target location constructs an improper URL.
         /// </exception>
-        /// 
+        ///
         public static Uri GetHealthServiceShellUrl(
             Uri shellUrl,
             string targetLocation,
@@ -211,4 +211,3 @@ namespace Microsoft.HealthVault
         }
     }
 }
-

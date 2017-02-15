@@ -9,30 +9,30 @@ using System.Xml.XPath;
 namespace Microsoft.HealthVault.ItemTypes
 {
     /// <summary>
-    /// Stores a Continuity of Care Document (CCD). 
+    /// Stores a Continuity of Care Document (CCD).
     /// </summary>
-    /// 
+    ///
     /// <remarks>
     /// The CCD XML can be accessed through the TypeSpecificXml property.
     /// </remarks>
-    /// 
+    ///
     public class CCD : HealthRecordItem
     {
         /// <summary>
-        /// Initializes an instance of the <see cref="CCD"/> class, 
+        /// Initializes an instance of the <see cref="CCD"/> class,
         /// with default values.
         /// </summary>
-        /// 
+        ///
         public CCD()
             : base(TypeId)
         {
         }
 
         /// <summary>
-        /// Initializes an instance of the <see cref="CCD"/> class, 
+        /// Initializes an instance of the <see cref="CCD"/> class,
         /// with specific data.
         /// </summary>
-        /// 
+        ///
         public CCD(IXPathNavigable typeSpecificData)
             : base(TypeId, typeSpecificData)
         {
@@ -41,7 +41,7 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <summary>
         /// Retrieves the unique identifier for the item type.
         /// </summary>
-        /// 
+        ///
         public new static readonly Guid TypeId =
             new Guid("9c48a2b8-952c-4f5a-935d-f3292326bf54");
     }

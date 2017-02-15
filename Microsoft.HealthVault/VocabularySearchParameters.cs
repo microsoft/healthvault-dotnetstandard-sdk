@@ -3,13 +3,12 @@
 // see http://www.microsoft.com/resources/sharedsource/licensingbasics/sharedsourcelicenses.mspx.
 // All other rights reserved.
 
-using System;
 using System.Globalization;
 
 namespace Microsoft.HealthVault
 {
     /// <summary>
-    /// The set of search parameters are used with the Vocabulary Search feature to specify the 
+    /// The set of search parameters are used with the Vocabulary Search feature to specify the
     /// vocabulary etc.
     /// </summary>
     public class VocabularySearchParameters
@@ -40,7 +39,7 @@ namespace Microsoft.HealthVault
         private VocabularyKey _vocabulary;
 
         /// <summary>
-        /// Gets or sets the culture in which the vocabulary will be searched. 
+        /// Gets or sets the culture in which the vocabulary will be searched.
         /// </summary>
         /// <remarks>
         /// If the culture is not set, the current UI culture will be used by default.

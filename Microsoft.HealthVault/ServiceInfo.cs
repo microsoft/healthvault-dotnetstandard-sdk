@@ -14,10 +14,10 @@ using System.Xml.XPath;
 namespace Microsoft.HealthVault
 {
     /// <summary>
-    /// Provides information about the HealthVault service to which you are 
+    /// Provides information about the HealthVault service to which you are
     /// connected.
     /// </summary>
-    /// 
+    ///
     public class ServiceInfo
     {
         private static IServiceInfoProvider _defaultServiceInfoProvider = new CachedServiceInfoProvider();
@@ -25,7 +25,7 @@ namespace Microsoft.HealthVault
         /// <summary>
         /// Gets the HealthVault service information.
         /// </summary>
-        /// 
+        ///
         /// <remarks>
         /// <p>
         /// By default, retrieval of <see cref="ServiceInfo"/> through this singleton property is thread-safe. It is obtained from the
@@ -34,13 +34,13 @@ namespace Microsoft.HealthVault
         /// The next get after this cache has expired will result in calling the HealthVault web-service to check for updates to the service
         /// information, and retrieving the updated service information when there is an update.
         /// </p>
-        /// 
+        ///
         /// <p>
         /// If you want to control the retrieval behavior of <see cref="ServiceInfo"/> objects through this singleton,
         /// use the <see cref="SetSingletonProvider(IServiceInfoProvider)"/> method to set your own implementation of the provider.
         /// </p>
         /// </remarks>
-        /// 
+        ///
         public static ServiceInfo Current
         {
             get
@@ -52,11 +52,11 @@ namespace Microsoft.HealthVault
         /// <summary>
         /// Sets the provider to be used for the <see cref="P:CurrentInfo"/> singleton.
         /// </summary>
-        /// 
+        ///
         /// <param name="defaultProvider">
         /// The service info provider to be used for the <see cref="P:CurrentInfo"/> singleton.
         /// </param>
-        /// 
+        ///
         public static void SetSingletonProvider(IServiceInfoProvider defaultProvider)
         {
             _defaultServiceInfoProvider = defaultProvider;
@@ -65,15 +65,15 @@ namespace Microsoft.HealthVault
         /// <summary>
         /// Creates a ServiceInfo instance out of the service definition XML.
         /// </summary>
-        /// 
+        ///
         /// <param name="serviceInfoXml">
         /// The XML representation of the ServiceInfo object.
         /// </param>
-        /// 
+        ///
         /// <returns>
         /// A ServiceInfo instance based on the specified service definition XML.
         /// </returns>
-        /// 
+        ///
         public static ServiceInfo Create(XPathNavigator serviceInfoXml)
         {
             if (serviceInfoXml == null)
@@ -150,11 +150,11 @@ namespace Microsoft.HealthVault
         /// <summary>
         /// Gets an XML representation of the ServiceInfo object.
         /// </summary>
-        /// 
+        ///
         /// <returns>
         /// An XML string representing the ServiceInfo object.
         /// </returns>
-        /// 
+        ///
         public string GetXml()
         {
             StringBuilder result = new StringBuilder();
@@ -288,7 +288,7 @@ namespace Microsoft.HealthVault
             }
         }
 
-        private static void WriteConfigs(XmlWriter writer, Dictionary<string,string> configs)
+        private static void WriteConfigs(XmlWriter writer, Dictionary<string, string> configs)
         {
             foreach (KeyValuePair<string, string> config in configs)
             {
@@ -465,16 +465,16 @@ namespace Microsoft.HealthVault
         /// <summary>
         /// Gets or sets the HealthVault URL.
         /// </summary>
-        /// 
+        ///
         /// <value>
         /// A Uri representing a URL to the HealthVault service.
         /// </value>
-        /// 
+        ///
         /// <remarks>
         /// This is the URL to the wildcat.ashx which is used to call the
         /// HealthVault XML methods.
         /// </remarks>
-        /// 
+        ///
         public Uri HealthServiceUrl
         {
             get { return _healthServiceUrl; }
@@ -485,17 +485,17 @@ namespace Microsoft.HealthVault
         /// <summary>
         /// Gets or sets the version of the HealthVault service.
         /// </summary>
-        /// 
+        ///
         /// <value>
         /// A string indicating the version of the HealthVault Service.
         /// </value>
-        /// 
+        ///
         /// <remarks>
-        /// This value is generally in the format of a 
+        /// This value is generally in the format of a
         /// <see cref="System.Version"/>, but can be changed by the
         /// HealthVault service provider.
         /// </remarks>
-        /// 
+        ///
         public string Version
         {
             get { return _healthVaultVersion; }
@@ -506,7 +506,7 @@ namespace Microsoft.HealthVault
         /// <summary>
         /// Gets or sets the latest information about the HealthVault Shell.
         /// </summary>
-        /// 
+        ///
         public HealthServiceShellInfo HealthServiceShellInfo
         {
             get { return _shellInfo; }
@@ -515,20 +515,20 @@ namespace Microsoft.HealthVault
         private HealthServiceShellInfo _shellInfo;
 
         /// <summary>
-        /// Gets the latest information about the assemblies that represent 
+        /// Gets the latest information about the assemblies that represent
         /// the HealthVault SDK.
         /// </summary>
-        /// 
+        ///
         /// <value>
         /// A read-only collection of information about the .NET assemblies
         /// that can be used as helpers for accessing the HealthVault service.
         /// </value>
-        /// 
+        ///
         /// <remarks>
-        /// This property is no longer supported and will always return an empty 
+        /// This property is no longer supported and will always return an empty
         /// collection.
         /// </remarks>
-        /// 
+        ///
         [Obsolete("No longer supported - remove references to this property.")]
         public ReadOnlyCollection<HealthServiceAssemblyInfo> Assemblies
         {
@@ -544,19 +544,19 @@ namespace Microsoft.HealthVault
         /// Gets or sets information about the methods that the HealthVault service
         /// exposes.
         /// </summary>
-        /// 
+        ///
         /// <value>
         /// A read-only collection of the HealthVault method definitions.
         /// </value>
-        /// 
+        ///
         /// <remarks>
         /// A HealthVault method is a named service point provided by the HealthVault
-        /// service that answers HTTP requests that contain XML adhering to 
+        /// service that answers HTTP requests that contain XML adhering to
         /// the HealthVault request schema. The elements of this collection
-        /// define the method name, and request and response schemas for the 
+        /// define the method name, and request and response schemas for the
         /// method.
         /// </remarks>
-        /// 
+        ///
         public ReadOnlyCollection<HealthServiceMethodInfo> Methods
         {
             get { return _methods; }
@@ -568,20 +568,20 @@ namespace Microsoft.HealthVault
         /// Gets or sets the URLs of the common schemas that are included in the
         /// method XSDs.
         /// </summary>
-        /// 
+        ///
         /// <value>
         /// A read-only collection containing the URLs of the schemas that
         /// are included in the <see cref="Methods"/> request and response
         /// schemas.
         /// </value>
-        /// 
+        ///
         /// <remarks>
         /// Many of the <see cref="Methods"/> contain types that are common
         /// across different method requests and responses. These types are
         /// defined in the included schema URLs so that they can be referenced
         /// by each of the methods as needed.
         /// </remarks>
-        /// 
+        ///
         public ReadOnlyCollection<Uri> IncludedSchemaUrls
         {
             get { return _includes; }
@@ -592,13 +592,13 @@ namespace Microsoft.HealthVault
         /// <summary>
         /// Gets or sets the public configuration values for the HealthVault service.
         /// </summary>
-        /// 
+        ///
         /// <value>
         /// The dictionary returned uses the configuration value name as the key. All entries are
-        /// public configuration values that the HealthVault service exposes as information to 
+        /// public configuration values that the HealthVault service exposes as information to
         /// HealthVault applications. Values can be used to throttle health record item queries, etc.
         /// </value>
-        /// 
+        ///
         public Dictionary<string, string> ConfigurationValues
         {
             get { return _configurationValues; }
@@ -609,7 +609,7 @@ namespace Microsoft.HealthVault
         /// <summary>
         /// Gets the set of available HealthVault instances.
         /// </summary>
-        /// 
+        ///
         /// <remarks>
         /// In order to work seamlessly across the globe, HealthVault
         /// is deployed in multiple data centers around the world. Each
@@ -623,7 +623,7 @@ namespace Microsoft.HealthVault
         /// record data, they can make a call to any instance to learn
         /// of the instance in which that user's data is stored.
         /// </remarks>
-        /// 
+        ///
         public Dictionary<string, HealthServiceInstance> ServiceInstances
         {
             get { return _instances; }
@@ -650,7 +650,7 @@ namespace Microsoft.HealthVault
         /// <summary>
         /// Gets the timestamp of when the service definition was last modified on Platform.
         /// </summary>
-        /// 
+        ///
         /// <remarks>
         /// Because a call to Platform may be handled by any of several servers,
         /// all of which refresh at slightly different times, this timestamp will vary

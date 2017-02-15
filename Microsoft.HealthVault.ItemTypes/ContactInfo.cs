@@ -3,8 +3,6 @@
 // see http://www.microsoft.com/resources/sharedsource/licensingbasics/sharedsourcelicenses.mspx.
 // All other rights reserved.
 
-
-using System;
 using System.Collections.ObjectModel;
 using System.Xml;
 using System.Xml.XPath;
@@ -14,13 +12,13 @@ namespace Microsoft.HealthVault.ItemTypes
     /// <summary>
     /// Represents information about a contact person.
     /// </summary>
-    /// 
+    ///
     public class ContactInfo : HealthRecordItemData
     {
         /// <summary>
         /// Creates a new instance of the <see cref="ContactInfo"/> class with default values.
         /// </summary>
-        /// 
+        ///
         public ContactInfo()
         {
         }
@@ -28,15 +26,15 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <summary>
         /// Populates the data from the specified XML.
         /// </summary>
-        /// 
+        ///
         /// <param name="navigator">
         /// The XML containing the contact information.
         /// </param>
-        /// 
+        ///
         /// <exception cref="ArgumentNullException">
         /// The <paramref name="navigator"/> parameter is <b>null</b>.
         /// </exception>
-        /// 
+        ///
         public override void ParseXml(XPathNavigator navigator)
         {
             Validator.ThrowIfNavigatorNull(navigator);
@@ -73,33 +71,33 @@ namespace Microsoft.HealthVault.ItemTypes
         /// Writes the XML representation of the contact information into
         /// the specified XML writer.
         /// </summary>
-        /// 
+        ///
         /// <param name="nodeName">
         /// The name of the outer node for the contact information.
         /// </param>
-        /// 
+        ///
         /// <param name="writer">
-        /// The XML writer into which the contact information should be 
+        /// The XML writer into which the contact information should be
         /// written.
         /// </param>
-        /// 
+        ///
         /// <exception cref="ArgumentException">
         /// The <paramref name="nodeName"/> parameter is <b>null</b> or empty.
         /// </exception>
-        /// 
+        ///
         /// <exception cref="ArgumentNullException">
         /// The <paramref name="writer"/> parameter is <b>null</b>.
         /// </exception>
-        /// 
+        ///
         /// <exception cref="HealthRecordItemSerializationException">
         /// A mandatory property has not been set.
         /// </exception>
-        /// 
+        ///
         public override void WriteXml(string nodeName, XmlWriter writer)
         {
             Validator.ThrowIfStringNullOrEmpty(nodeName, "nodeName");
             Validator.ThrowIfWriterNull(writer);
-            
+
             writer.WriteStartElement(nodeName);
 
             foreach (Address address in _address)
@@ -123,12 +121,12 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <summary>
         /// Gets the first address that is marked as IsPrimary".
         /// </summary>
-        /// 
+        ///
         /// <value>
-        /// The first <see cref="Address"/> value that is marked as IsPrimary, 
+        /// The first <see cref="Address"/> value that is marked as IsPrimary,
         /// or <b>null</b> if no primary addresses were found.
         /// </value>
-        /// 
+        ///
         public Address PrimaryAddress
         {
             get
@@ -153,13 +151,13 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <summary>
         /// Gets the first telephone number that is marked as IsPrimary.
         /// </summary>
-        /// 
+        ///
         /// <value>
-        /// The first value of <see cref="Phone"/> that is marked as 
-        /// IsPrimary, or <b>null</b> if no primary telephone numbers 
+        /// The first value of <see cref="Phone"/> that is marked as
+        /// IsPrimary, or <b>null</b> if no primary telephone numbers
         /// were found.
         /// </value>
-        /// 
+        ///
         public Phone PrimaryPhone
         {
             get
@@ -184,12 +182,12 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <summary>
         /// Gets the first email that is marked as IsPrimary.
         /// </summary>
-        /// 
+        ///
         /// <value>
-        /// The first value of <see cref="Email"/> that is marked as IsPrimary, 
+        /// The first value of <see cref="Email"/> that is marked as IsPrimary,
         /// or <b>null</b> if no primary email addresses were found.
         /// </value>
-        /// 
+        ///
         public Email PrimaryEmail
         {
             get
@@ -211,15 +209,14 @@ namespace Microsoft.HealthVault.ItemTypes
         }
         private Email _primaryEmail;
 
-
         /// <summary>
         /// Gets the addresses for the contact.
         /// </summary>
-        /// 
+        ///
         /// <value>
         /// A collection of addresses.
         /// </value>
-        /// 
+        ///
         public Collection<Address> Address
         {
             get { return _address; }
@@ -229,11 +226,11 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <summary>
         /// Gets the telephone numbers for the contact.
         /// </summary>
-        /// 
+        ///
         /// <value>
         /// A collection of phone numbers.
         /// </value>
-        /// 
+        ///
         public Collection<Phone> Phone
         {
             get { return _phone; }
@@ -243,11 +240,11 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <summary>
         /// Gets the email addresses for the contact.
         /// </summary>
-        /// 
+        ///
         /// <value>
         /// A collection of email addresses.
         /// </value>
-        /// 
+        ///
         public Collection<Email> Email
         {
             get { return _email; }
@@ -257,11 +254,11 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <summary>
         /// Gets a string representation of the contact information.
         /// </summary>
-        /// 
+        ///
         /// <returns>
         /// A string representation of the contact information.
         /// </returns>
-        /// 
+        ///
         public override string ToString()
         {
             string result = string.Empty;
@@ -284,7 +281,7 @@ namespace Microsoft.HealthVault.ItemTypes
 
                 if (!string.IsNullOrEmpty(Address[0].County))
                 {
-                    result += 
+                    result +=
                          ResourceRetriever.GetResourceString(
                             "ListSeparator") +
                          Address[0].County;
@@ -292,7 +289,7 @@ namespace Microsoft.HealthVault.ItemTypes
 
                 if (!string.IsNullOrEmpty(Address[0].State))
                 {
-                    result += 
+                    result +=
                          ResourceRetriever.GetResourceString(
                             "ListSeparator") +
                          Address[0].State;
@@ -314,5 +311,4 @@ namespace Microsoft.HealthVault.ItemTypes
             return result;
         }
     }
-
 }

@@ -10,30 +10,30 @@ namespace Microsoft.HealthVault
     /// <summary>
     /// Blob parameters returned by BeginPutBlob
     /// </summary>
-    /// 
+    ///
     internal class BlobPutParameters
     {
         /// <summary>
         /// Constructs a BlobPutParameters instance with the specified parameters.
         /// </summary>
-        /// 
+        ///
         /// <param name="blobReferenceUrl">
         /// The BLOB reference URL.
         /// </param>
-        /// 
+        ///
         /// <param name="chunkSize">
         /// The chunk size, in bytes, of the portion of a BLOB that should be sent to HealthVault
         /// in each request.
         /// </param>
-        /// 
+        ///
         /// <param name="maxBlobSize">
         /// The maximum overall size of a BLOB in bytes.
         /// </param>
-        /// 
+        ///
         /// <param name="blobHashAlgorithm">
         /// The hash algorithm to use for calculating the hash of this BLOB.
         /// </param>
-        /// 
+        ///
         /// <param name="blockSize">
         /// The block size, in bytes, used by the BLOB hash algorithm.
         /// </param>
@@ -55,29 +55,29 @@ namespace Microsoft.HealthVault
         /// <summary>
         /// Constructs a BlobPutParameters instance with the specified parameters.
         /// </summary>
-        /// 
+        ///
         /// <param name="blobReferenceUrl">
         /// The BLOB reference URL.
         /// </param>
-        /// 
+        ///
         /// <param name="chunkSize">
         /// The chunk size, in bytes, of the portion of a BLOB that should be sent to HealthVault
         /// in each request.
         /// </param>
-        /// 
+        ///
         /// <param name="postEncryptionChunkSize">
         /// The chunk size, in bytes, of the portion of a BLOB that should be sent to HealthVault
         /// in each request, after the connect package encryption has been applied to the portion.
         /// </param>
-        /// 
+        ///
         /// <param name="maxBlobSize">
         /// The maximum overall size of a BLOB in bytes.
         /// </param>
-        /// 
+        ///
         /// <param name="blobHashAlgorithm">
         /// The hash algorithm to use for calculating the hash of this BLOB.
         /// </param>
-        /// 
+        ///
         /// <param name="blockSize">
         /// The block size, in bytes, used by the BLOB hash algorithm.
         /// </param>
@@ -100,7 +100,7 @@ namespace Microsoft.HealthVault
         /// <summary>
         /// Gets the BLOB reference url.
         /// </summary>
-        /// 
+        ///
         internal Uri Url
         {
             get { return _url; }
@@ -110,7 +110,7 @@ namespace Microsoft.HealthVault
         /// <summary>
         /// Gets the put chunk size.
         /// </summary>
-        /// 
+        ///
         internal int ChunkSize
         {
             get { return _chunkSize; }
@@ -118,10 +118,10 @@ namespace Microsoft.HealthVault
         private int _chunkSize;
 
         /// <summary>
-        /// Gets the put chunk size for the bytes after the connect package encryption has been 
+        /// Gets the put chunk size for the bytes after the connect package encryption has been
         /// applied.
         /// </summary>
-        /// 
+        ///
         internal int PostEncryptionChunkSize
         {
             get { return _postEncryptionChunkSize; }
@@ -131,7 +131,7 @@ namespace Microsoft.HealthVault
         /// <summary>
         /// Gets the maximum size of the BLOB.
         /// </summary>
-        /// 
+        ///
         internal long MaxBlobSize
         {
             get { return _maxBlobSize; }

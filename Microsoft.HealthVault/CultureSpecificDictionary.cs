@@ -14,12 +14,13 @@ namespace Microsoft.HealthVault
     /// Dictionary for storing localized values.
     /// </summary>
     /// <remarks>
-    /// The key is the language-country string such as "en-US", and the value is whatever type is 
+    /// The key is the language-country string such as "en-US", and the value is whatever type is
     /// necessary, usually either string or byte[].
     /// </remarks>
     public abstract class CultureSpecificDictionary<TValue> : Dictionary<string, TValue>
     {
         internal delegate TValue ConvertToType(string xmlValue);
+
         internal delegate string ConvertFromType(TValue typeValue);
 
         internal abstract void AppendLocalizedElements(
@@ -95,14 +96,14 @@ namespace Microsoft.HealthVault
         }
 
         /// <summary>
-        /// Get the best value. 
+        /// Get the best value.
         /// </summary>
         /// <remarks>
-        /// The caller will typically only get one translated language back from the platform, 
-        /// and it may have a non-default language specifier. The best value property allows 
+        /// The caller will typically only get one translated language back from the platform,
+        /// and it may have a non-default language specifier. The best value property allows
         /// getting that value.
         /// </remarks>
-        /// 
+        ///
         public TValue BestValue
         {
             get
@@ -131,7 +132,7 @@ namespace Microsoft.HealthVault
         /// The default value is a value with no corresponding language-country specified.
         /// It's stored in the dictionary with key = DefaultLangauge.
         /// </remarks>
-        /// 
+        ///
         public TValue DefaultValue
         {
             get
@@ -161,9 +162,8 @@ namespace Microsoft.HealthVault
         /// <summary>
         /// Constant key to indicate the default string. Used in place of the language specifier.
         /// </summary>
-        /// 
+        ///
         public const string DefaultLanguage = "DefaultLanguage";
-
     }
 
     /// <summary>
@@ -214,7 +214,6 @@ namespace Microsoft.HealthVault
                 elementName,
                 stringConvert);
         }
-
     }
 
     /// <summary>
@@ -265,7 +264,6 @@ namespace Microsoft.HealthVault
                 elementName,
                 stringConvert);
         }
-
     }
 
     /// <summary>
@@ -316,7 +314,5 @@ namespace Microsoft.HealthVault
                 elementName,
                 byteArrayConvert);
         }
-
     }
-
 }

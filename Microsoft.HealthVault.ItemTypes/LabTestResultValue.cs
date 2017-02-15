@@ -3,50 +3,47 @@
 // see http://www.microsoft.com/resources/sharedsource/licensingbasics/sharedsourcelicenses.mspx.
 // All other rights reserved.
 
-
-using System;
 using System.Collections.ObjectModel;
 using System.Text;
 using System.Xml;
 using System.Xml.XPath;
-
 
 namespace Microsoft.HealthVault.ItemTypes
 {
     /// <summary>
     /// A clinical value within a laboratory result.
     /// </summary>
-    /// 
+    ///
     /// <remarks>
     /// This type defines a clinical value within a laboratory result,
     /// including value, unit, reference, and toxic ranges.
     /// </remarks>
-    /// 
+    ///
     public class LabTestResultValue : HealthRecordItemData
     {
         /// <summary>
-        /// Initialize a new instance of the <see cref="LabTestResultValue"/> 
+        /// Initialize a new instance of the <see cref="LabTestResultValue"/>
         /// class with default values.
         /// </summary>
-        /// 
+        ///
         public LabTestResultValue()
         {
         }
 
         /// <summary>
-        /// Initialize a new instance of the <see cref="LabTestResultValue"/> 
+        /// Initialize a new instance of the <see cref="LabTestResultValue"/>
         /// class with the specified measurement.
         /// </summary>
-        /// 
+        ///
         /// <param name="measurement">
         /// The value of the lab results.
         /// </param>
-        /// 
+        ///
         /// <exception cref="ArgumentNullException">
         /// If <paramref name="measurement"/> is <b> null </b>.
         /// </exception>
-        /// 
-        public LabTestResultValue(GeneralMeasurement measurement) 
+        ///
+        public LabTestResultValue(GeneralMeasurement measurement)
         {
             Measurement = measurement;
         }
@@ -54,15 +51,15 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <summary>
         /// Populates this <see cref="LabTestResultValue"/> instance from the data in the XML.
         /// </summary>
-        /// 
+        ///
         /// <param name="navigator">
         /// The XML to get the lab test result value type data from.
         /// </param>
-        /// 
+        ///
         /// <exception cref="ArgumentNullException">
         /// If the first node in <paramref name="navigator"/> is <b>null</b>.
         /// </exception>
-        /// 
+        ///
         public override void ParseXml(XPathNavigator navigator)
         {
             Validator.ThrowIfNavigatorNull(navigator);
@@ -88,7 +85,7 @@ namespace Microsoft.HealthVault.ItemTypes
             _flag = new Collection<CodableValue>();
             foreach (XPathNavigator flagNav in flagsIterator)
             {
-                CodableValue _singleflag=new CodableValue();
+                CodableValue _singleflag = new CodableValue();
                 _singleflag.ParseXml(flagNav);
                 _flag.Add(_singleflag);
             }
@@ -96,27 +93,27 @@ namespace Microsoft.HealthVault.ItemTypes
 
         /// <summary>
         /// Writes the lab test result value type data to the specified XmlWriter.
-        /// </summary> 
-        /// 
+        /// </summary>
+        ///
         /// <param name="nodeName">
         /// The name of the node to write the XML.</param>
-        /// 
+        ///
         /// <param name="writer">
         /// The XmlWriter to write the lab test result value type data to.
         /// </param>
-        /// 
+        ///
         /// <exception cref="ArgumentException">
         /// If <paramref name="nodeName"/> is <b> null </b> or empty.
         /// </exception>
-        /// 
+        ///
         /// <exception cref="ArgumentNullException">
         /// If <paramref name="writer"/> is <b> null </b>.
         /// </exception>
-        /// 
+        ///
         /// <exception cref="HealthRecordItemSerializationException">
         /// If <see cref="Measurement"/> is <b> null </b>.
-        /// </exception> 
-        /// 
+        /// </exception>
+        ///
         public override void WriteXml(string nodeName, XmlWriter writer)
         {
             Validator.ThrowIfStringNullOrEmpty(nodeName, "nodeName");
@@ -127,7 +124,7 @@ namespace Microsoft.HealthVault.ItemTypes
             writer.WriteStartElement(nodeName);
 
             // measurement
-            _measurement.WriteXml("measurement",writer);
+            _measurement.WriteXml("measurement", writer);
 
             // ranges
             for (int index = 0; index < _ranges.Count; ++index)
@@ -149,46 +146,45 @@ namespace Microsoft.HealthVault.ItemTypes
 
             // </lab-test-result-value-type>
             writer.WriteEndElement();
-         
         }
 
         /// <summary>
-        /// Gets or sets measurement.  
+        /// Gets or sets measurement.
         /// </summary>
-        /// 
+        ///
         /// <exception cref="ArgumentNullException">
         /// If <paramref name="value"/> is <b>null</b>.
         /// </exception>
-        /// 
+        ///
         public GeneralMeasurement Measurement
         {
-            get { return _measurement;}
+            get { return _measurement; }
             set
             {
                 Validator.ThrowIfArgumentNull(value, "Measurement", "LabTestResultValueTypeMeasurementNotSet");
-                _measurement =  value;
+                _measurement = value;
             }
         }
         private GeneralMeasurement _measurement;
 
         /// <summary>
-        /// Gets the ranges that are associated with this test.  
+        /// Gets the ranges that are associated with this test.
         /// </summary>
-        /// 
+        ///
         public Collection<TestResultRange> Ranges
         {
             get { return _ranges; }
         }
-        private Collection<TestResultRange> _ranges=new Collection<TestResultRange>();
+        private Collection<TestResultRange> _ranges = new Collection<TestResultRange>();
 
         /// <summary>
         /// Gets a collection containing the flags for laboratory results.
         /// </summary>
-        /// 
+        ///
         /// <value>
         /// Example values are normal, high, low.
         /// </value>
-        /// 
+        ///
         public Collection<CodableValue> Flag
         {
             get
@@ -200,7 +196,7 @@ namespace Microsoft.HealthVault.ItemTypes
 
         /// <summary>
         /// Gets a string representation of the lab test result value type item.
-        /// </summary> 
+        /// </summary>
         ///
         /// <returns>
         /// A string representation of the lab test result value type item.

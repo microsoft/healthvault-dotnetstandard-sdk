@@ -11,22 +11,22 @@ namespace Microsoft.HealthVault
     /// <summary>
     /// Provides information about a person who has access to a HealthVault record.
     /// </summary>
-    /// 
+    ///
     public class ActiveRecordAuthorization : RecordAuthorization
     {
         /// <summary>
         /// Constructs an instance of <see cref="ActiveRecordAuthorization"/> with default values.
         /// </summary>
-        /// 
+        ///
         public ActiveRecordAuthorization()
         {
         }
 
         /// <summary>
-        /// Populates the class members with data from the specified 
+        /// Populates the class members with data from the specified
         /// active person information XML.
         /// </summary>
-        /// 
+        ///
         /// <param name="navigator">
         /// The XML to get the active person information from.
         /// </param>
@@ -47,11 +47,11 @@ namespace Microsoft.HealthVault
         /// <summary>
         /// Gets the person's name.
         /// </summary>
-        /// 
+        ///
         /// <value>
         /// The person's full name as it was entered into HealthVault.
         /// </value>
-        /// 
+        ///
         public string Name
         {
             get
@@ -62,6 +62,5 @@ namespace Microsoft.HealthVault
         private string _name;
 
         #endregion public properties
-
     }
 }

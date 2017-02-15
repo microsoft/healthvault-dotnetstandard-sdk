@@ -3,7 +3,6 @@
 // see http://www.microsoft.com/resources/sharedsource/licensingbasics/sharedsourcelicenses.mspx.
 // All other rights reserved.
 
-
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -14,50 +13,50 @@ using System.Xml.XPath;
 namespace Microsoft.HealthVault.ItemTypes
 {
     /// <summary>
-    /// Represents a health record item type that encapsulates a sleep journal 
+    /// Represents a health record item type that encapsulates a sleep journal
     /// evening entry.
     /// </summary>
-    /// 
+    ///
     public class SleepJournalPM : HealthRecordItem
     {
         /// <summary>
-        /// Creates a new instance of the <see cref="SleepJournalPM"/> class 
+        /// Creates a new instance of the <see cref="SleepJournalPM"/> class
         /// with default values.
         /// </summary>
-        /// 
+        ///
         /// <remarks>
         /// The item is not added to the health record until the
-        /// <see cref="HealthRecordAccessor.NewItem(HealthRecordItem)"/> method 
+        /// <see cref="HealthRecordAccessor.NewItem(HealthRecordItem)"/> method
         /// is called.
         /// </remarks>
-        /// 
+        ///
         public SleepJournalPM()
             : base(TypeId)
         {
         }
 
         /// <summary>
-        /// Creates a new instance of the <see cref="SleepJournalPM"/> class 
+        /// Creates a new instance of the <see cref="SleepJournalPM"/> class
         /// specifying the mandatory values.
         /// </summary>
-        /// 
+        ///
         /// <param name="when">
         /// The date/time when the PM sleep journal entry was taken.
         /// </param>
-        /// 
+        ///
         /// <param name="sleepiness">
         /// The state of sleepiness the person was in throughout the day.
         /// </param>
-        /// 
+        ///
         /// <exception cref="ArgumentNullException">
         /// The <paramref name="when"/> parameter is <b>null</b>.
         /// </exception>
-        /// 
+        ///
         /// <exception cref="ArgumentException">
-        /// The <paramref name="sleepiness"/> parameter is 
+        /// The <paramref name="sleepiness"/> parameter is
         /// <see cref="ItemTypes.Sleepiness.Unknown"/>.
         /// </exception>
-        /// 
+        ///
         public SleepJournalPM(
             HealthServiceDateTime when,
             Sleepiness sleepiness)
@@ -70,27 +69,27 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <summary>
         /// Retrieves the unique identifier for the item type.
         /// </summary>
-        /// 
+        ///
         /// <value>
         /// A GUID.
         /// </value>
-        /// 
+        ///
         public new static readonly Guid TypeId =
             new Guid("031f5706-7f1a-11db-ad56-7bd355d89593");
 
         /// <summary>
         /// Populates this <see cref="SleepJournalPM"/> instance from the data in the XML.
         /// </summary>
-        /// 
+        ///
         /// <param name="typeSpecificXml">
         /// The XML to get the evening sleep journal data from.
         /// </param>
-        /// 
+        ///
         /// <exception cref="InvalidOperationException">
         /// The first node in <paramref name="typeSpecificXml"/> is not
         /// a sleep-pm node.
         /// </exception>
-        /// 
+        ///
         protected override void ParseXml(IXPathNavigable typeSpecificXml)
         {
             XPathNavigator sleepNav =
@@ -131,9 +130,9 @@ namespace Microsoft.HealthVault.ItemTypes
                 Occurrence exerciseTaken = new Occurrence();
                 exerciseTaken.ParseXml(exerciseNav);
                 _exercise.Add(exerciseTaken);
-            } 
-            
-            _sleepiness = 
+            }
+
+            _sleepiness =
                 (Sleepiness)
                 sleepNav.SelectSingleNode("sleepiness").ValueAsInt;
         }
@@ -141,20 +140,20 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <summary>
         /// Writes the evening sleep journal data to the specified XmlWriter.
         /// </summary>
-        /// 
+        ///
         /// <param name="writer">
         /// The XmlWriter to write the evening sleep journal data to.
         /// </param>
-        /// 
+        ///
         /// <exception cref="ArgumentNullException">
         /// If <paramref name="writer"/> is <b>null</b>.
         /// </exception>
-        /// 
+        ///
         /// <exception cref="HealthRecordItemSerializationException">
-        /// The <see cref="When"/> or <see cref="Sleepiness"/> properties 
+        /// The <see cref="When"/> or <see cref="Sleepiness"/> properties
         /// have not been set.
         /// </exception>
-        /// 
+        ///
         public override void WriteXml(XmlWriter writer)
         {
             Validator.ThrowIfWriterNull(writer);
@@ -205,42 +204,41 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <summary>
         /// Gets or sets the date and time when the journal entry is made.
         /// </summary>
-        /// 
+        ///
         /// <value>
-        /// An instance of <see cref="HealthServiceDateTime"/> representing 
+        /// An instance of <see cref="HealthServiceDateTime"/> representing
         /// the date and time.
         /// </value>
-        /// 
+        ///
         /// <exception cref="ArgumentNullException">
         /// The <paramref name="value"/> parameter is <b>null</b> during set.
         /// </exception>
-        /// 
+        ///
         public HealthServiceDateTime When
         {
             get { return _when; }
-            set 
+            set
             {
                 Validator.ThrowIfArgumentNull(value, "When", "SleepJournalPMWhenMandatory");
-                _when = value; 
+                _when = value;
             }
         }
         private HealthServiceDateTime _when;
-
 
         /// <summary>
         /// Gets the time(s) in which caffeine was consumed
         /// during the day.
         /// </summary>
-        /// 
+        ///
         /// <value>
         /// A collection of times.
         /// </value>
-        /// 
+        ///
         /// <remarks>
-        /// To add occurrences of caffeine intake, add new <see cref="ApproximateTime"/> 
+        /// To add occurrences of caffeine intake, add new <see cref="ApproximateTime"/>
         /// instances to the returned collection.
         /// </remarks>
-        /// 
+        ///
         public Collection<ApproximateTime> Caffeine
         {
             get { return _caffeine; }
@@ -252,16 +250,16 @@ namespace Microsoft.HealthVault.ItemTypes
         /// Gets or sets the time(s) in which alcohol was consumed
         /// during the day.
         /// </summary>
-        /// 
+        ///
         /// <value>
         /// A collection of times.
-        /// </value> 
-        /// 
+        /// </value>
+        ///
         /// <remarks>
-        /// To add occurrences of alcohol intake, add new <see cref="ApproximateTime"/> 
+        /// To add occurrences of alcohol intake, add new <see cref="ApproximateTime"/>
         /// instances to the returned collection.
         /// </remarks>
-        /// 
+        ///
         public Collection<ApproximateTime> Alcohol
         {
             get { return _alcohol; }
@@ -272,16 +270,16 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <summary>
         /// Gets the occurrences of any naps during the day.
         /// </summary>
-        /// 
+        ///
         /// <value>
         /// A collection of occurrences.
         /// </value>
-        /// 
+        ///
         /// <remarks>
-        /// To add an occurrence of a nap, add new <see cref="Occurrence"/> instances 
+        /// To add an occurrence of a nap, add new <see cref="Occurrence"/> instances
         /// to the returned collection.
         /// </remarks>
-        /// 
+        ///
         public Collection<Occurrence> Naps
         {
             get { return _naps; }
@@ -290,19 +288,19 @@ namespace Microsoft.HealthVault.ItemTypes
             new Collection<Occurrence>();
 
         /// <summary>
-        /// Gets the occurrences of any exercise that occurred 
+        /// Gets the occurrences of any exercise that occurred
         /// during the day.
         /// </summary>
-        /// 
+        ///
         /// <value>
         /// A collection of occurrences.
-        /// </value> 
-        /// 
+        /// </value>
+        ///
         /// <remarks>
-        /// To add an occurrence of an exercise, add new <see cref="Occurrence"/> instances 
+        /// To add an occurrence of an exercise, add new <see cref="Occurrence"/> instances
         /// to the returned collection.
         /// </remarks>
-        /// 
+        ///
         public Collection<Occurrence> Exercise
         {
             get { return _exercise; }
@@ -314,24 +312,24 @@ namespace Microsoft.HealthVault.ItemTypes
         /// Gets or sets the state of sleepiness the person was in throughout
         /// the day.
         /// </summary>
-        /// 
+        ///
         /// <value>
         /// An instance of <see cref="Sleepiness"/> representing the state.
         /// </value>
-        /// 
+        ///
         /// <exception cref="ArgumentException">
-        /// The <paramref name="value"/> parameter is 
+        /// The <paramref name="value"/> parameter is
         /// <see cref="ItemTypes.Sleepiness.Unknown"/>.
         /// </exception>
-        /// 
+        ///
         public Sleepiness Sleepiness
         {
             get { return _sleepiness; }
-            set 
+            set
             {
                 Validator.ThrowArgumentExceptionIf(
                     value == Sleepiness.Unknown,
-                    "Sleepiness", 
+                    "Sleepiness",
                     "SleepJournalPMSleepinessNotSet");
                 _sleepiness = value;
             }
@@ -341,11 +339,11 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <summary>
         /// Gets the string representation of the sleep journal entry.
         /// </summary>
-        /// 
+        ///
         /// <returns>
         /// A string representing the sleep journal entry.
         /// </returns>
-        /// 
+        ///
         public override string ToString()
         {
             return When.ToString();

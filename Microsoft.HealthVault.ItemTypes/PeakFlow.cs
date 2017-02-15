@@ -3,12 +3,8 @@
 // see http://www.microsoft.com/resources/sharedsource/licensingbasics/sharedsourcelicenses.mspx.
 // All other rights reserved.
 
-
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Globalization;
-using System.Text;
 using System.Xml;
 using System.Xml.XPath;
 
@@ -17,43 +13,43 @@ namespace Microsoft.HealthVault.ItemTypes
     /// <summary>
     /// Represents a health record item that encapsulates a single peak flow reading.
     /// </summary>
-    /// 
+    ///
     /// <remarks>
     /// Peak flow measures are typically collected on a daily basis by patients to track their
     /// lung function.
     /// </remarks>
-    /// 
+    ///
     public class PeakFlow : HealthRecordItem
     {
         /// <summary>
         /// Creates a new instance of the <see cref="PeakFlow"/> class with default values.
         /// </summary>
-        /// 
+        ///
         /// <remarks>
         /// The item is not added to the health record until the
-        /// <see cref="HealthRecordAccessor.NewItem(HealthRecordItem)"/> method 
+        /// <see cref="HealthRecordAccessor.NewItem(HealthRecordItem)"/> method
         /// is called.
         /// </remarks>
-        /// 
+        ///
         public PeakFlow()
             : base(TypeId)
         {
         }
 
         /// <summary>
-        /// Creates a new instance of the <see cref="PeakFlow"/> class 
+        /// Creates a new instance of the <see cref="PeakFlow"/> class
         /// specifying the mandatory values.
         /// </summary>
-        /// 
+        ///
         /// <param name="when">
         /// The date and time when the peak flow reading occurred.
         /// </param>
-        /// 
+        ///
         /// <exception cref="ArgumentNullException">
         /// The <paramref name="when"/> parameter is <b>null</b>.
         /// </exception>
-        /// 
-        public PeakFlow(ApproximateDateTime when) : base (TypeId)
+        ///
+        public PeakFlow(ApproximateDateTime when) : base(TypeId)
         {
             this.When = when;
         }
@@ -61,23 +57,23 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <summary>
         /// Retrieves the unique identifier for the item type.
         /// </summary>
-        /// 
+        ///
         public new static readonly Guid TypeId =
             new Guid("5d8419af-90f0-4875-a370-0f881c18f6b3");
 
         /// <summary>
         /// Populates this <see cref="PeakFlow"/> instance from the data in the XML.
         /// </summary>
-        /// 
+        ///
         /// <param name="typeSpecificXml">
         /// The XML to get the peack flow data from.
         /// </param>
-        /// 
+        ///
         /// <exception cref="InvalidOperationException">
-        /// The first node in the <paramref name="typeSpecificXml"/> parameter 
+        /// The first node in the <paramref name="typeSpecificXml"/> parameter
         /// is not a peak-flow node.
         /// </exception>
-        /// 
+        ///
         protected override void ParseXml(IXPathNavigable typeSpecificXml)
         {
             XPathNavigator itemNav =
@@ -89,17 +85,15 @@ namespace Microsoft.HealthVault.ItemTypes
             _when = new ApproximateDateTime();
             _when.ParseXml(itemNav.SelectSingleNode("when"));
 
-
             _peakExpiratoryFlow =
                 XPathHelper.GetOptNavValue<FlowMeasurement>(
                     itemNav,
-                    "pef");       
-            
-            _fev1 = 
+                    "pef");
+
+            _fev1 =
                 XPathHelper.GetOptNavValue<VolumeMeasurement>(
                     itemNav,
                     "fev1");
-
 
             _fev6 =
                 XPathHelper.GetOptNavValue<VolumeMeasurement>(
@@ -120,19 +114,19 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <summary>
         /// Writes the peak flow data to the specified XmlWriter.
         /// </summary>
-        /// 
+        ///
         /// <param name="writer">
         /// The XmlWriter to write the peak flow data to.
         /// </param>
-        /// 
+        ///
         /// <exception cref="ArgumentNullException">
         /// If <paramref name="writer"/> is <b>null</b>.
         /// </exception>
-        /// 
+        ///
         /// <exception cref="HealthRecordItemSerializationException">
         /// If <see cref="When"/> is <b>null</b>.
         /// </exception>
-        /// 
+        ///
         public override void WriteXml(XmlWriter writer)
         {
             Validator.ThrowIfWriterNull(writer);
@@ -144,13 +138,11 @@ namespace Microsoft.HealthVault.ItemTypes
             // <when>
             _when.WriteXml("when", writer);
 
-
-
             XmlWriterHelper.WriteOpt<FlowMeasurement>(
                 writer,
                 "pef",
-                _peakExpiratoryFlow);    
-            
+                _peakExpiratoryFlow);
+
             XmlWriterHelper.WriteOpt<VolumeMeasurement>(
                 writer,
                 "fev1",
@@ -161,12 +153,10 @@ namespace Microsoft.HealthVault.ItemTypes
                 "fev6",
                 _fev6);
 
-            
             foreach (CodableValue flag in _measurementFlags)
             {
                 flag.WriteXml("measurement-flags", writer);
             }
-
 
             // </peak-flow>
             writer.WriteEndElement();
@@ -175,20 +165,20 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <summary>
         /// Gets or sets the date and time when the peak flow reading occurred.
         /// </summary>
-        /// 
+        ///
         /// <returns>
-        /// A <see cref="ApproximateDateTime"/> instance representing the date 
+        /// A <see cref="ApproximateDateTime"/> instance representing the date
         /// and time.
         /// </returns>
-        /// 
+        ///
         /// <remarks>
         /// The value defaults to the current year only.
         /// </remarks>
-        /// 
+        ///
         /// <exception cref="ArgumentNullException">
         /// The <paramref name="value"/> parameter is <b>null</b>.
         /// </exception>
-        /// 
+        ///
         public ApproximateDateTime When
         {
             get { return _when; }
@@ -200,21 +190,20 @@ namespace Microsoft.HealthVault.ItemTypes
         }
         private ApproximateDateTime _when = new ApproximateDateTime();
 
-
         /// <summary>
-        /// Gets or sets the peak expiratory flow measured in liters per 
+        /// Gets or sets the peak expiratory flow measured in liters per
         /// second (L/s).
         /// </summary>
-        /// 
+        ///
         /// <returns>
         /// A number representing the peak flow.
-        /// </returns> 
-        /// 
+        /// </returns>
+        ///
         /// <remarks>
         /// Set the value to <b>null</b> if the peak expiratory flow should not
         /// be stored.
         /// </remarks>
-        /// 
+        ///
         public FlowMeasurement Pef
         {
             get { return _peakExpiratoryFlow; }
@@ -223,19 +212,19 @@ namespace Microsoft.HealthVault.ItemTypes
         private FlowMeasurement _peakExpiratoryFlow;
 
         /// <summary>
-        /// Gets or sets the forced expiratory volume in one second, measured in 
+        /// Gets or sets the forced expiratory volume in one second, measured in
         /// liters (L).
         /// </summary>
-        /// 
+        ///
         /// <returns>
         /// A number representing the volume.
-        /// </returns> 
-        /// 
+        /// </returns>
+        ///
         /// <remarks>
         /// Set the value to <b>null</b> if the forced expiratory volume should not
         /// be stored.
         /// </remarks>
-        /// 
+        ///
         public VolumeMeasurement Fev1
         {
             get { return _fev1; }
@@ -244,19 +233,19 @@ namespace Microsoft.HealthVault.ItemTypes
         private VolumeMeasurement _fev1;
 
         /// <summary>
-        /// Gets or sets the forced expiratory volume in six seconds, measured in 
+        /// Gets or sets the forced expiratory volume in six seconds, measured in
         /// liters (L).
         /// </summary>
-        /// 
+        ///
         /// <returns>
         /// A number representing the volume.
-        /// </returns> 
-        /// 
+        /// </returns>
+        ///
         /// <remarks>
         /// Set the value to <b>null</b> if the forced expiratory volume should not
         /// be stored.
         /// </remarks>
-        /// 
+        ///
         public VolumeMeasurement Fev6
         {
             get { return _fev6; }
@@ -264,34 +253,32 @@ namespace Microsoft.HealthVault.ItemTypes
         }
         private VolumeMeasurement _fev6;
 
-
         /// <summary>
         /// Gets a collection of additional information about the measurement.
         /// </summary>
-        /// 
+        ///
         /// <returns>
         /// A collection of <see cref="CodableValue"/> representing the flags.
-        /// </returns> 
-        /// 
+        /// </returns>
+        ///
         /// <remarks>
         /// Examples: incomplete measurement.
         /// </remarks>
-        /// 
+        ///
         public Collection<CodableValue> MeasurementFlags
         {
             get { return _measurementFlags; }
         }
         private Collection<CodableValue> _measurementFlags = new Collection<CodableValue>();
 
-
         /// <summary>
         /// Gets a string representation of the peak flow reading.
         /// </summary>
-        /// 
+        ///
         /// <returns>
         /// A string representing the peak flow reading.
         /// </returns>
-        /// 
+        ///
         public override string ToString()
         {
             string result = String.Empty;

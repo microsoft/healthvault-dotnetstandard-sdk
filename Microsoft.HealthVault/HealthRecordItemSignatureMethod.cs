@@ -11,17 +11,17 @@ namespace Microsoft.HealthVault
     public enum HealthRecordItemSignatureMethod
     {
         /// <summary>
-        /// 
+        ///
         /// </summary>
         Unknown = 0,
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         HV1 = 1,
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         HV2 = 2,
     }

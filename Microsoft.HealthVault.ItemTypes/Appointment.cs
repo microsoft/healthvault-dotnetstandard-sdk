@@ -3,7 +3,6 @@
 // see http://www.microsoft.com/resources/sharedsource/licensingbasics/sharedsourcelicenses.mspx.
 // All other rights reserved.
 
-
 using System;
 using System.Text;
 using System.Xml;
@@ -14,38 +13,38 @@ namespace Microsoft.HealthVault.ItemTypes
     /// <summary>
     /// Represents a health record item type that encapsulates a medical appointment.
     /// </summary>
-    /// 
+    ///
     public class Appointment : HealthRecordItem
     {
         /// <summary>
-        /// Creates a new instance of the <see cref="Appointment"/> class with default 
+        /// Creates a new instance of the <see cref="Appointment"/> class with default
         /// values.
         /// </summary>
-        /// 
+        ///
         /// <remarks>
         /// The item isn't added to the health record until the
-        /// <see cref="HealthRecordAccessor.NewItem(HealthRecordItem)"/> method 
+        /// <see cref="HealthRecordAccessor.NewItem(HealthRecordItem)"/> method
         /// is called.
         /// </remarks>
-        /// 
+        ///
         public Appointment()
             : base(TypeId)
         {
         }
 
         /// <summary>
-        /// Creates a new instance of the <see cref="Appointment"/> class with 
+        /// Creates a new instance of the <see cref="Appointment"/> class with
         /// the specified date and time.
         /// </summary>
-        /// 
+        ///
         /// <param name="when">
         /// The date and time for the appointment.
         /// </param>
-        ///  
+        ///
         /// <exception cref="ArgumentException">
         /// The <paramref name="when"/> parameter is <b>null</b>.
         /// </exception>
-        /// 
+        ///
         public Appointment(HealthServiceDateTime when)
             : base(TypeId)
         {
@@ -55,27 +54,27 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <summary>
         /// Retrieves the unique identifier for the item type.
         /// </summary>
-        /// 
+        ///
         /// <value>
         /// A GUID.
         /// </value>
-        /// 
+        ///
         public new static readonly Guid TypeId =
             new Guid("4B18AEB6-5F01-444C-8C70-DBF13A2F510B");
 
         /// <summary>
         /// Populates this appointment instance from the data in the XML.
         /// </summary>
-        /// 
+        ///
         /// <param name="typeSpecificXml">
         /// The XML to get the appointment data from.
         /// </param>
-        /// 
+        ///
         /// <exception cref="InvalidOperationException">
         /// The first node in <paramref name="typeSpecificXml"/> is not
         /// an appointment node.
         /// </exception>
-        /// 
+        ///
         protected override void ParseXml(IXPathNavigable typeSpecificXml)
         {
             XPathNavigator appointmentNav =
@@ -138,21 +137,20 @@ namespace Microsoft.HealthVault.ItemTypes
                 _careClass = new CodableValue();
                 _careClass.ParseXml(careClassNav);
             }
-
         }
 
         /// <summary>
         /// Writes the appointment data to the specified XmlWriter.
         /// </summary>
-        /// 
+        ///
         /// <param name="writer">
         /// The XmlWriter to write the appointment data to.
         /// </param>
-        /// 
+        ///
         /// <exception cref="ArgumentNullException">
         /// If <paramref name="writer"/> is <b>null</b>.
         /// </exception>
-        /// 
+        ///
         public override void WriteXml(XmlWriter writer)
         {
             Validator.ThrowIfArgumentNull(writer, "writer", "WriteXmlNullWriter");
@@ -192,16 +190,16 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <summary>
         /// Gets or sets the date when the appointment occurred.
         /// </summary>
-        /// 
+        ///
         /// <value>
-        /// A <see cref="HealthServiceDateTime"/> instance representing 
+        /// A <see cref="HealthServiceDateTime"/> instance representing
         /// the date. The default value is the current year, month, and day.
         /// </value>
-        /// 
+        ///
         /// <exception cref="ArgumentNullException">
         /// The <paramref name="value"/> parameter is <b>null</b>.
         /// </exception>
-        /// 
+        ///
         public HealthServiceDateTime When
         {
             get { return _when; }
@@ -216,15 +214,15 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <summary>
         /// Gets or sets the duration of the appointment.
         /// </summary>
-        /// 
+        ///
         /// <value>
         /// A <see cref="DurationValue"/> instance representing  the duration.
-        /// </value> 
-        /// 
+        /// </value>
+        ///
         /// <remarks>
         /// Set the value to <b>null</b> if the duration should not be stored.
         /// </remarks>
-        /// 
+        ///
         public DurationValue Duration
         {
             get { return _duration; }
@@ -235,16 +233,16 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <summary>
         /// Gets or sets the service for the appointment.
         /// </summary>
-        /// 
+        ///
         /// <value>
         /// A <see cref="CodableValue"/> instance representing the service.
-        /// </value> 
-        /// 
+        /// </value>
+        ///
         /// <remarks>
-        /// Set the value to <b>null</b> if the service should not be 
+        /// Set the value to <b>null</b> if the service should not be
         /// stored.
         /// </remarks>
-        /// 
+        ///
         public CodableValue Service
         {
             get { return _service; }
@@ -255,36 +253,36 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <summary>
         /// Gets or sets the clinic information.
         /// </summary>
-        /// 
+        ///
         /// <value>
         /// A <see cref="PersonItem"/> instance representing the clinic information.
         /// </value>
-        /// 
+        ///
         /// <remarks>
         /// Set the value to <b>null</b> if the clinic information
         /// should not be stored.
         /// </remarks>
-        /// 
+        ///
         public PersonItem Clinic
         {
             get { return _clinic; }
             set { _clinic = value; }
         }
         private PersonItem _clinic;
-        
+
         /// <summary>
         /// Gets or sets the specialty for the appointment.
         /// </summary>
-        /// 
+        ///
         /// <value>
         /// A <see cref="CodableValue"/> instance representing the specialty.
-        /// </value> 
-        /// 
+        /// </value>
+        ///
         /// <remarks>
-        /// Set the value to <b>null</b> if the specialty should not be 
+        /// Set the value to <b>null</b> if the specialty should not be
         /// stored.
         /// </remarks>
-        /// 
+        ///
         public CodableValue Specialty
         {
             get { return _specialty; }
@@ -295,36 +293,36 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <summary>
         /// Gets or sets the status for the appointment.
         /// </summary>
-        /// 
+        ///
         /// <value>
         /// A <see cref="CodableValue"/> instance representing the status.
-        /// </value> 
-        /// 
+        /// </value>
+        ///
         /// <remarks>
-        /// Set the value to <b>null</b> if the status should not be 
+        /// Set the value to <b>null</b> if the status should not be
         /// stored.
         /// </remarks>
-        /// 
+        ///
         public CodableValue Status
         {
             get { return _status; }
             set { _status = value; }
         }
         private CodableValue _status;
-        
+
         /// <summary>
         /// Gets or sets the care class for the appointment.
         /// </summary>
-        /// 
+        ///
         /// <value>
         /// A <see cref="CodableValue"/> instance representing the care class.
-        /// </value> 
-        /// 
+        /// </value>
+        ///
         /// <remarks>
-        /// Set the value to <b>null</b> if the care class should not be 
+        /// Set the value to <b>null</b> if the care class should not be
         /// stored.
         /// </remarks>
-        /// 
+        ///
         public CodableValue CareClass
         {
             get { return _careClass; }
@@ -335,11 +333,11 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <summary>
         /// Gets a string representation of the appointment item.
         /// </summary>
-        /// 
+        ///
         /// <returns>
         /// A string representation of the appointment item.
         /// </returns>
-        /// 
+        ///
         public override string ToString()
         {
             StringBuilder result = new StringBuilder(200);

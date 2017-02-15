@@ -9,50 +9,47 @@ using System.Collections.ObjectModel;
 using System.Text;
 using System.Xml;
 using System.Xml.XPath;
-using Microsoft.HealthVault.Exceptions;
-using Microsoft.HealthVault.Web;
 
 namespace Microsoft.HealthVault
 {
-
     /// <summary>
-    /// Represents the API set used to access a health record for an individual. 
+    /// Represents the API set used to access a health record for an individual.
     /// </summary>
-    /// 
+    ///
     /// <remarks>
     /// A HealthRecordAccessor represents a person's view of a health record.
     /// This view can vary based upon the access rights the person has to the
     /// record. More than one person might have access to the same record but have
     /// different views. For instance, a husband might have a HealthRecordAccessor
-    /// instance for himself and another for his wife's health record to which 
+    /// instance for himself and another for his wife's health record to which
     /// she granted him access.
     /// </remarks>
-    /// 
+    ///
     public class HealthRecordAccessor
     {
         /// <summary>
         /// Creates an instance of a HealthRecordAccessor object using
         /// the specified XML.
         /// </summary>
-        /// 
+        ///
         /// <param name="connection">
         /// A connection for the current user.
         /// </param>
-        /// 
+        ///
         /// <param name="navigator">
         /// The XML containing the record information.
         /// </param>
-        /// 
+        ///
         /// <returns>
         /// A new instance of a HealthRecordAccessor object containing the
         /// record information.
         /// </returns>
-        /// 
+        ///
         /// <exception cref="ArgumentNullException">
-        /// The <paramref name="connection"/> or <paramref name="navigator"/> 
+        /// The <paramref name="connection"/> or <paramref name="navigator"/>
         /// parameter is <b>null</b>.
         /// </exception>
-        /// 
+        ///
         public static HealthRecordAccessor CreateFromXml(
             ApplicationConnection connection,
             XPathNavigator navigator)
@@ -70,11 +67,11 @@ namespace Microsoft.HealthVault
         /// <summary>
         /// Parses HealthRecordAccessor member data from the specified XPathNavigator.
         /// </summary>
-        /// 
+        ///
         /// <param name="navigator">
         /// The XML containing the record information.
         /// </param>
-        /// 
+        ///
         internal virtual void ParseXml(XPathNavigator navigator)
         {
             string id = navigator.GetAttribute("id", String.Empty);
@@ -91,12 +88,12 @@ namespace Microsoft.HealthVault
         /// <summary>
         /// Retrieves the XML representation of the <see cref="HealthRecordAccessor"/>.
         /// </summary>
-        /// 
+        ///
         /// <returns>
-        /// A string containing the XML representation of the 
+        /// A string containing the XML representation of the
         /// <see cref="HealthRecordAccessor"/>.
         /// </returns>
-        /// 
+        ///
         public virtual string GetXml()
         {
             StringBuilder recordInfoXml = new StringBuilder(128);
@@ -130,33 +127,32 @@ namespace Microsoft.HealthVault
                 }
             }
         }
-        
 
         /// <summary>
         /// Creates a new instance of the <see cref="HealthRecordAccessor"/>
-        /// class. 
+        /// class.
         /// </summary>
-        /// 
+        ///
         /// <param name="connection">
-        /// An instance of a connection to which the record 
+        /// An instance of a connection to which the record
         /// operations will be directed.
         /// </param>
-        /// 
+        ///
         /// <param name="id">
         /// The unique identifier for the record.
         /// </param>
-        /// 
+        ///
         /// <remarks>
         /// This constructor creates a view of a personal health record.
         /// </remarks>
         /// <exception cref="ArgumentNullException">
         /// The <paramref name="connection"/> parameter is <b>null</b>.
         /// </exception>
-        /// 
+        ///
         /// <exception cref="ArgumentException">
         /// The <paramref name="id"/> parameter is Guid.Empty.
         /// </exception>
-        /// 
+        ///
         public HealthRecordAccessor(
             ApplicationConnection connection,
             Guid id)
@@ -175,20 +171,20 @@ namespace Microsoft.HealthVault
         /// <summary>
         /// Constructs a HealthRecordAccessor for deserialization purposes.
         /// </summary>
-        /// 
+        ///
         /// <param name="connection">
-        /// An instance of a connection to which the record 
+        /// An instance of a connection to which the record
         /// operations will be directed.
         /// </param>
-        /// 
+        ///
         /// <remarks>
         /// This constructor is useful only if ParseXml is called.
         /// </remarks>
-        /// 
+        ///
         /// <exception cref="ArgumentNullException">
         /// If <paramref name="connection"/> is <b>null</b>.
         /// </exception>
-        /// 
+        ///
         internal HealthRecordAccessor(
             ApplicationConnection connection)
         {
@@ -199,16 +195,16 @@ namespace Microsoft.HealthVault
         /// <summary>
         /// Gets the record identifier.
         /// </summary>
-        /// 
+        ///
         /// <value>
         /// A globally unique identifier (GUID) for the record.
         /// </value>
-        /// 
+        ///
         /// <remarks>
         /// The record identifier is issued when the record is created. Creating
         /// the account automatically creates a self record as well.
         /// </remarks>
-        /// 
+        ///
         public Guid Id
         {
             get { return _recordId; }
@@ -218,14 +214,14 @@ namespace Microsoft.HealthVault
         /// <summary>
         /// Gets the location of the person that this record is for.
         /// </summary>
-        /// 
+        ///
         public Location Location { get; protected set; }
 
         /// <summary>
         /// Gets a reference to the HealthVault service that
         /// created this <see cref="HealthRecordAccessor"/>.
         /// </summary>
-        /// 
+        ///
         public ApplicationConnection Connection
         {
             get { return _connection; }
@@ -239,18 +235,18 @@ namespace Microsoft.HealthVault
         /// <summary>
         /// Creates a new HealthRecordSearcher for this record.
         /// </summary>
-        /// 
+        ///
         /// <returns>
         /// A HealthRecordSearcher that searches for items associated
         /// with this record.
         /// </returns>
-        /// 
+        ///
         /// <remarks>
-        /// You can also call the <see cref="HealthRecordSearcher"/> constructor 
-        /// directly and pass in a reference to this 
+        /// You can also call the <see cref="HealthRecordSearcher"/> constructor
+        /// directly and pass in a reference to this
         /// <see cref="HealthRecordAccessor"/>.
         /// </remarks>
-        /// 
+        ///
         public HealthRecordSearcher CreateSearcher()
         {
             return new HealthRecordSearcher(this);
@@ -259,22 +255,22 @@ namespace Microsoft.HealthVault
         /// <summary>
         /// Creates a new HealthRecordSearcher for a list of specific types.
         /// </summary>
-        /// 
+        ///
         /// <returns>
         /// A <see cref="HealthRecordSearcher"/> that searches for items with specific type IDs
         /// within this record.
         /// </returns>
-        /// 
+        ///
         /// <remarks>
         /// The method adds a filter to the <see cref="HealthRecordSearcher"/> that only returns
         /// items of the specified type IDs. That filter may be accessed through the
         /// returned searcher using searcher.Filters[0].
-        /// 
-        /// You can also call the <see cref="HealthRecordSearcher"/> constructor 
-        /// directly and pass in a reference to this 
+        ///
+        /// You can also call the <see cref="HealthRecordSearcher"/> constructor
+        /// directly and pass in a reference to this
         /// <see cref="HealthRecordAccessor"/>.
         /// </remarks>
-        /// 
+        ///
         /// <param name="typeIds">
         /// A list of unique type ids to filter on.
         /// </param>
@@ -291,28 +287,28 @@ namespace Microsoft.HealthVault
         /// <summary>
         /// Gets the health record item specified by its ID.
         /// </summary>
-        /// 
+        ///
         /// <param name="itemId">
         /// The ID of the health record item to retrieve.
         /// </param>
-        /// 
+        ///
         /// <param name="sections">
         /// The data sections of the health record item to retrieve.
         /// </param>
-        /// 
+        ///
         /// <returns>
-        /// A <see cref="HealthRecordItem"/> with the specified data sections 
+        /// A <see cref="HealthRecordItem"/> with the specified data sections
         /// filled out.
         /// </returns>
-        /// 
+        ///
         /// <remarks>
         /// This method accesses the HealthVault service across the network.
         /// </remarks>
-        /// 
+        ///
         /// <exception cref="HealthServiceException">
         /// The HealthVault service returned an error.
         /// </exception>
-        /// 
+        ///
         public HealthRecordItem GetItem(
             Guid itemId,
             HealthRecordItemSections sections)
@@ -324,24 +320,24 @@ namespace Microsoft.HealthVault
         /// <summary>
         /// Gets the health record item specified by its ID.
         /// </summary>
-        /// 
+        ///
         /// <param name="itemId">
         /// The ID of the health record item to retrieve.
         /// </param>
-        /// 
+        ///
         /// <returns>
-        /// A <see cref="HealthRecordItem"/> with the default data sections (Core and XML) 
+        /// A <see cref="HealthRecordItem"/> with the default data sections (Core and XML)
         /// filled out.
         /// </returns>
-        /// 
+        ///
         /// <remarks>
         /// This method accesses the HealthVault service across the network.
         /// </remarks>
-        /// 
+        ///
         /// <exception cref="HealthServiceException">
         /// The HealthVault service returned an error.
         /// </exception>
-        /// 
+        ///
         public HealthRecordItem GetItem(
             Guid itemId)
         {
@@ -352,29 +348,29 @@ namespace Microsoft.HealthVault
         /// Gets the health record items related to this record filtered on the
         /// specified type.
         /// </summary>
-        /// 
+        ///
         /// <param name="typeId">
-        /// A unique identifier for the type of health record item to filter 
+        /// A unique identifier for the type of health record item to filter
         /// on.
         /// </param>
-        /// 
+        ///
         /// <param name="sections">
         /// The data sections of the health record item to retrieve.
         /// </param>
-        /// 
+        ///
         /// <returns>
         /// A collection of the health record items related to this record
         /// that match the specified type identifier.
         /// </returns>
-        /// 
+        ///
         /// <remarks>
         /// This method accesses the HealthVault service across the network.
         /// </remarks>
-        /// 
+        ///
         /// <exception cref="HealthServiceException">
         /// The HealthVault service returned an error.
         /// </exception>
-        /// 
+        ///
         public HealthRecordItemCollection GetItemsByType(
             Guid typeId,
             HealthRecordItemSections sections)
@@ -395,29 +391,29 @@ namespace Microsoft.HealthVault
         /// Gets the health record items related to this record filtered on the
         /// specified type.
         /// </summary>
-        /// 
+        ///
         /// <param name="typeId">
-        /// A unique identifier for the type of health record item to filter 
+        /// A unique identifier for the type of health record item to filter
         /// on.
         /// </param>
-        /// 
+        ///
         /// <param name="view">
         /// The view to use when retrieving the data.
         /// </param>
-        /// 
+        ///
         /// <returns>
         /// A collection of the health record items related to this record
         /// that match the specified type identifier.
         /// </returns>
-        /// 
+        ///
         /// <remarks>
         /// This method accesses the HealthVault service across the network.
         /// </remarks>
-        /// 
+        ///
         /// <exception cref="HealthServiceException">
         /// The HealthVault service returned an error.
         /// </exception>
-        /// 
+        ///
         public HealthRecordItemCollection GetItemsByType(
             Guid typeId,
             HealthRecordView view)
@@ -438,25 +434,25 @@ namespace Microsoft.HealthVault
         /// Gets the health record items related to this record filtered on the
         /// specified type.
         /// </summary>
-        /// 
+        ///
         /// <param name="typeId">
-        /// A unique identifier for the type of health record item to filter 
+        /// A unique identifier for the type of health record item to filter
         /// on.
         /// </param>
-        /// 
+        ///
         /// <returns>
         /// A collection of the health record items related to this record
         /// that match the specified type identifier.
         /// </returns>
-        /// 
+        ///
         /// <remarks>
         /// This method accesses the HealthVault service across the network.
         /// </remarks>
-        /// 
+        ///
         /// <exception cref="HealthServiceException">
         /// The HealthVault service returned an error.
         /// </exception>
-        /// 
+        ///
         public HealthRecordItemCollection GetItemsByType(
             Guid typeId)
         {
@@ -468,26 +464,26 @@ namespace Microsoft.HealthVault
         #region Thing Create/Update methods
 
         /// <summary>
-        /// Creates a new health record item associated with this record in the 
+        /// Creates a new health record item associated with this record in the
         /// HealthVault service.
         /// </summary>
-        /// 
+        ///
         /// <param name="item">
         /// The health record item to be created in the HealthVault service.
         /// </param>
-        /// 
+        ///
         /// <remarks>
         /// This method accesses the HealthVault service across the network.
         /// </remarks>
-        /// 
+        ///
         /// <exception cref="HealthServiceException">
         /// The HealthVault service returned an error.
         /// </exception>
-        /// 
+        ///
         /// <exception cref="ArgumentNullException">
         /// The HealthRecordItem supplied was null.
         /// </exception>
-        /// 
+        ///
         public void NewItem(HealthRecordItem item)
         {
             Validator.ThrowIfArgumentNull(item, "item", "NewItemNullItem");
@@ -498,26 +494,26 @@ namespace Microsoft.HealthVault
         /// <summary>
         /// Creates new health record items associated with the record.
         /// </summary>
-        /// 
+        ///
         /// <param name="items">
         /// The health record items from which to create new instances.
         /// </param>
-        /// 
+        ///
         /// <remarks>
         /// This method accesses the HealthVault service across the network.
         /// </remarks>
-        /// 
+        ///
         /// <exception cref="HealthServiceException">
-        /// The HealthVault service returned an error. 
+        /// The HealthVault service returned an error.
         /// The exception's Error property will contain the index of the
-        /// item on which the failure occurred in the ErrorInfo property. If any failures occur, 
+        /// item on which the failure occurred in the ErrorInfo property. If any failures occur,
         /// no items will have been created.
         /// </exception>
-        /// 
+        ///
         /// <exception cref="ArgumentNullException">
         /// At least one HealthRecordItem in the supplied list was null.
         /// </exception>
-        /// 
+        ///
         public void NewItems(IList<HealthRecordItem> items)
         {
             HealthVaultPlatform.NewItems(Connection, this, items);
@@ -526,22 +522,22 @@ namespace Microsoft.HealthVault
         /// <summary>
         /// Updates the specified health record item.
         /// </summary>
-        /// 
+        ///
         /// <param name="item">
         /// The health record item to be updated.
         /// </param>
-        /// 
+        ///
         /// <remarks>
-        /// Only new items are updated with the appropriate unique identifier. 
+        /// Only new items are updated with the appropriate unique identifier.
         /// All other sections must be updated manually.
         /// <br/><br/>
         /// This method accesses the HealthVault service across the network.
         /// </remarks>
-        /// 
+        ///
         /// <exception cref="ArgumentNullException">
         /// The <paramref name="item"/> parameter is <b>null</b>.
         /// </exception>
-        /// 
+        ///
         /// <exception cref="ArgumentException">
         /// The <paramref name="item"/> parameter does not have an ID.
         /// </exception>
@@ -549,7 +545,7 @@ namespace Microsoft.HealthVault
         /// <exception cref="HealthServiceException">
         /// The HealthVault service returned an error.
         /// </exception>
-        /// 
+        ///
         public void UpdateItem(HealthRecordItem item)
         {
             Validator.ThrowIfArgumentNull(item, "item", "UpdateItemNull");
@@ -558,25 +554,25 @@ namespace Microsoft.HealthVault
         }
 
         /// <summary>
-        /// Updates the specified health record items in one batch call to 
+        /// Updates the specified health record items in one batch call to
         /// the service.
         /// </summary>
-        /// 
+        ///
         /// <param name="itemsToUpdate">
         /// The health record items to be updated.
         /// </param>
-        /// 
+        ///
         /// <remarks>
-        /// Only new items are updated with the appropriate unique identifier. 
+        /// Only new items are updated with the appropriate unique identifier.
         /// All other sections must be updated manually.
         /// <br/><br/>
         /// This method accesses the HealthVault service across the network.
         /// </remarks>
-        /// 
+        ///
         /// <exception cref="ArgumentNullException">
         /// The <paramref name="itemsToUpdate"/> parameter is <b>null</b>.
         /// </exception>
-        /// 
+        ///
         /// <exception cref="ArgumentException">
         /// The <paramref name="itemsToUpdate"/> contains a <b>null</b> member or
         /// a <see cref="HealthRecordItem"/> instance that does not have an ID.
@@ -585,10 +581,10 @@ namespace Microsoft.HealthVault
         /// <exception cref="HealthServiceException">
         /// The HealthVault service returned an error.
         /// The exception's Error property will contain the index of the
-        /// item on which the failure occurred in the ErrorInfo property. If any failures occur, 
+        /// item on which the failure occurred in the ErrorInfo property. If any failures occur,
         /// no items will have been updated.
         /// </exception>
-        /// 
+        ///
         public void UpdateItems(
             IList<HealthRecordItem> itemsToUpdate)
         {
@@ -602,28 +598,28 @@ namespace Microsoft.HealthVault
         /// <summary>
         /// Marks the specified health record item as deleted.
         /// </summary>
-        /// 
+        ///
         /// <param name="item">
         /// The health record item to remove.
         /// </param>
-        /// 
+        ///
         /// <remarks>
         /// This method accesses the HealthVault service across the network.
         /// <br/><br/>
-        /// Health record items are never completely deleted. Instead, they 
-        /// are marked as deleted and are ignored for most normal operations. 
+        /// Health record items are never completely deleted. Instead, they
+        /// are marked as deleted and are ignored for most normal operations.
         /// Items can be undeleted by contacting customer service.
         /// </remarks>
-        /// 
+        ///
         /// <exception cref="ArgumentNullException">
         /// The <paramref name="item"/> parameter is <b>null</b>.
         /// </exception>
-        /// 
+        ///
         /// <exception cref="HealthServiceException">
-        /// There are errors that remove the health record item from 
+        /// There are errors that remove the health record item from
         /// the server.
         /// </exception>
-        /// 
+        ///
         public void RemoveItem(HealthRecordItem item)
         {
             Validator.ThrowIfArgumentNull(item, "item", "RemoveItemNull");
@@ -634,30 +630,30 @@ namespace Microsoft.HealthVault
         /// <summary>
         /// Marks the specified health record item as deleted.
         /// </summary>
-        /// 
+        ///
         /// <param name="itemsToRemove">
         /// A list of the health record items to remove.
         /// </param>
-        /// 
+        ///
         /// <remarks>
         /// This method accesses the HealthVault service across the network.
         /// <br/><br/>
         /// Health record items are never completely deleted. They are marked
-        /// as deleted and are ignored for most normal operations. Items can 
+        /// as deleted and are ignored for most normal operations. Items can
         /// be undeleted by contacting customer service.
         /// </remarks>
-        /// 
+        ///
         /// <exception cref="ArgumentException">
         /// The <paramref name="itemsToRemove"/> parameter is <b>null</b> or empty.
         /// </exception>
-        /// 
+        ///
         /// <exception cref="HealthServiceException">
         /// Errors removed the health record items from the server.
         /// The exception's Error property will contain the index of the
-        /// item on which the failure occurred in the ErrorInfo property. If any failures occur, 
+        /// item on which the failure occurred in the ErrorInfo property. If any failures occur,
         /// no items will have been removed.
         /// </exception>
-        /// 
+        ///
         public void RemoveItems(IList<HealthRecordItem> itemsToRemove)
         {
             Validator.ThrowArgumentExceptionIf(
@@ -683,30 +679,30 @@ namespace Microsoft.HealthVault
         /// <summary>
         /// Marks the specified health record item as deleted.
         /// </summary>
-        /// 
+        ///
         /// <param name="itemsToRemove">
         /// The unique item identifiers of the items to remove.
         /// </param>
-        /// 
+        ///
         /// <remarks>
         /// This method accesses the HealthVault service across the network.
         /// <br/><br/>
-        /// Health record items are never completely deleted. They are marked 
-        /// as deleted and are ignored for most normal operations. Items can 
+        /// Health record items are never completely deleted. They are marked
+        /// as deleted and are ignored for most normal operations. Items can
         /// be undeleted by contacting customer service.
         /// </remarks>
-        /// 
+        ///
         /// <exception cref="ArgumentException">
         /// The <paramref name="itemsToRemove"/> parameter is empty.
         /// </exception>
-        /// 
+        ///
         /// <exception cref="HealthServiceException">
         /// Errors removed the health record items from the server.
         /// The exception's Error property will contain the index of the
-        /// item on which the failure occurred in the ErrorInfo property. If any failures occur, 
+        /// item on which the failure occurred in the ErrorInfo property. If any failures occur,
         /// no items will have been removed.
         /// </exception>
-        /// 
+        ///
         public void RemoveItems(IList<HealthRecordItemKey> itemsToRemove)
         {
             HealthVaultPlatform.RemoveItems(Connection, this, itemsToRemove);
@@ -716,27 +712,27 @@ namespace Microsoft.HealthVault
         /// <summary>
         /// Marks the specified health record item as deleted.
         /// </summary>
-        /// 
+        ///
         /// <param name="itemId">
         /// The unique item identifier to remove.
         /// </param>
-        /// 
+        ///
         /// <remarks>
         /// This method accesses the HealthVault service across the network.
         /// <br/><br/>
-        /// Health record items are never completely deleted. They are marked 
-        /// as deleted and are ignored for most normal operations. Items can 
+        /// Health record items are never completely deleted. They are marked
+        /// as deleted and are ignored for most normal operations. Items can
         /// be undeleted by contacting customer service.
         /// </remarks>
-        /// 
+        ///
         /// <exception cref="ArgumentException">
         /// The <paramref name="itemId"/> parameter is Guid.Empty.
         /// </exception>
-        /// 
+        ///
         /// <exception cref="HealthServiceException">
         /// Errors removed the health record items from the server.
         /// </exception>
-        /// 
+        ///
         public void RemoveItem(HealthRecordItemKey itemId)
         {
             Validator.ThrowIfArgumentNull(itemId, "itemId", "RemoveItemNull");
@@ -751,14 +747,14 @@ namespace Microsoft.HealthVault
         /// <summary>
         /// Releases the authorization of the application on the health record.
         /// </summary>
-        /// 
+        ///
         /// <exception cref="HealthServiceException">
         /// Errors during the authorization release.
         /// </exception>
-        /// 
+        ///
         /// <remarks>
-        /// Once the application releases the authorization to the health record, 
-        /// calling any methods of this <see cref="HealthRecordAccessor"/> will result 
+        /// Once the application releases the authorization to the health record,
+        /// calling any methods of this <see cref="HealthRecordAccessor"/> will result
         /// in a <see cref="HealthServiceAccessDeniedException"/>."
         /// </remarks>
         public void RemoveApplicationAuthorization()
@@ -769,33 +765,33 @@ namespace Microsoft.HealthVault
         #endregion Authorization methods
 
         /// <summary>
-        /// Returns a list of <see cref="HealthRecordItemTypePermission"/> 
+        /// Returns a list of <see cref="HealthRecordItemTypePermission"/>
         /// objects which represent the permissions that the current
         /// authenticated person has for the HealthRecordItemTypes specified
         /// in the current health record when using the current application.
         /// </summary>
-        /// 
+        ///
         /// <param name="healthRecordItemTypes">
-        /// A collection of <see cref="HealthRecordItemTypeDefinition" /> 
-        /// representing the health record item types 
-        /// for which the permissions are being queried. 
+        /// A collection of <see cref="HealthRecordItemTypeDefinition" />
+        /// representing the health record item types
+        /// for which the permissions are being queried.
         /// </param>
-        /// 
+        ///
         /// <returns>
-        /// A list of <see cref="HealthRecordItemTypePermission"/> 
+        /// A list of <see cref="HealthRecordItemTypePermission"/>
         /// objects which represent the permissions that the current
         /// authenticated person has for the HealthRecordItemTypes specified
         /// in the current health record when using the current application.
         /// </returns>
-        /// 
-        /// <remarks> 
-        /// If the list of health record item types is empty, an empty list is 
-        /// returned. If for a health record item type, the person has 
-        /// neither online access nor offline access permissions, 
+        ///
+        /// <remarks>
+        /// If the list of health record item types is empty, an empty list is
+        /// returned. If for a health record item type, the person has
+        /// neither online access nor offline access permissions,
         /// HealthRecordItemTypePermission object is not returned for that
-        /// health record item type. 
+        /// health record item type.
         /// </remarks>
-        /// 
+        ///
         public Collection<HealthRecordItemTypePermission> QueryPermissions(
             IList<HealthRecordItemTypeDefinition> healthRecordItemTypes)
         {
@@ -810,36 +806,36 @@ namespace Microsoft.HealthVault
         }
 
         /// <summary>
-        /// Gets the permissions which the authenticated person 
+        /// Gets the permissions which the authenticated person
         /// has when using the calling application for the specified item types
         /// in this  record.
         /// </summary>
-        /// 
+        ///
         /// <param name="healthRecordItemTypeIds">
-        /// A collection of unique identifiers to identify the health record  
-        /// item types, for which the permissions are being queried. 
+        /// A collection of unique identifiers to identify the health record
+        /// item types, for which the permissions are being queried.
         /// </param>
-        /// 
+        ///
         /// <returns>
-        /// Returns a dictionary of <see cref="HealthRecordItemTypePermission"/> 
-        /// with health record item types as the keys. 
+        /// Returns a dictionary of <see cref="HealthRecordItemTypePermission"/>
+        /// with health record item types as the keys.
         /// </returns>
-        /// 
-        /// <remarks> 
-        /// If the list of health record item types is empty, an empty dictionary is 
-        /// returned. If for a health record item type, the person has 
-        /// neither online access nor offline access permissions, 
+        ///
+        /// <remarks>
+        /// If the list of health record item types is empty, an empty dictionary is
+        /// returned. If for a health record item type, the person has
+        /// neither online access nor offline access permissions,
         /// <b> null </b> will be returned for that type in the dictionary.
         /// </remarks>
-        /// 
+        ///
         /// <exception cref="ArgumentNullException">
         /// If <paramref name="healthRecordItemTypeIds"/> is <b>null</b>.
         /// </exception>
-        /// 
+        ///
         /// <exception cref="HealthServiceException">
-        /// If there is an exception during executing the request to HealthVault. 
+        /// If there is an exception during executing the request to HealthVault.
         /// </exception>
-        /// 
+        ///
         public IDictionary<Guid, HealthRecordItemTypePermission> QueryPermissionsByTypes(
             IList<Guid> healthRecordItemTypeIds)
         {
@@ -847,39 +843,39 @@ namespace Microsoft.HealthVault
         }
 
         /// <summary>
-        /// Gets the permissions which the authenticated person 
-        /// has when using the calling application for the specified item types 
+        /// Gets the permissions which the authenticated person
+        /// has when using the calling application for the specified item types
         /// in this health record.
         /// </summary>
-        /// 
+        ///
         /// <param name="healthRecordItemTypeIds">
-        /// A collection of uniqueidentifiers to identify the health record  
-        /// item types, for which the permissions are being queried. 
+        /// A collection of uniqueidentifiers to identify the health record
+        /// item types, for which the permissions are being queried.
         /// </param>
-        /// 
+        ///
         /// <returns>
-        /// A list of <see cref="HealthRecordItemTypePermission"/> 
+        /// A list of <see cref="HealthRecordItemTypePermission"/>
         /// objects which represent the permissions that the current
         /// authenticated person has for the HealthRecordItemTypes specified
         /// in the current health record when using the current application.
         /// </returns>
-        /// 
-        /// <remarks> 
-        /// If the list of health record item types is empty, an empty list is 
-        /// returned. If for a health record item type, the person has 
-        /// neither online access nor offline access permissions, 
+        ///
+        /// <remarks>
+        /// If the list of health record item types is empty, an empty list is
+        /// returned. If for a health record item type, the person has
+        /// neither online access nor offline access permissions,
         /// HealthRecordItemTypePermission object is not returned for that
-        /// health record item type. 
+        /// health record item type.
         /// </remarks>
-        /// 
+        ///
         /// <exception cref="ArgumentNullException">
         /// If <paramref name="healthRecordItemTypeIds"/> is <b>null</b>.
         /// </exception>
-        /// 
+        ///
         /// <exception cref="HealthServiceException">
-        /// If there is an exception during executing the request to HealthVault. 
+        /// If there is an exception during executing the request to HealthVault.
         /// </exception>
-        /// 
+        ///
         public Collection<HealthRecordItemTypePermission> QueryPermissions(
             IList<Guid> healthRecordItemTypeIds)
         {
@@ -887,39 +883,39 @@ namespace Microsoft.HealthVault
         }
 
         /// <summary>
-        /// Gets the permissions which the authenticated person 
-        /// has when using the calling application for the specified item types 
+        /// Gets the permissions which the authenticated person
+        /// has when using the calling application for the specified item types
         /// in this health record as well as the other permission settings such as <see cref="HealthRecordPermissions.MeaningfulUseOptIn">MeaningfulUseOptIn</see>.
         /// </summary>
-        /// 
+        ///
         /// <param name="healthRecordItemTypeIds">
-        /// A collection of uniqueidentifiers to identify the health record  
-        /// item types, for which the permissions are being queried. 
+        /// A collection of uniqueidentifiers to identify the health record
+        /// item types, for which the permissions are being queried.
         /// </param>
-        /// 
+        ///
         /// <returns>
         /// A <see cref="HealthRecordPermissions"/> object
         /// which contains a collection of <see cref="HealthRecordItemTypePermission"/> objects and
         /// other permission settings.
         /// </returns>
-        /// 
-        /// <remarks> 
-        /// If the list of health record item types is empty, an empty list is 
+        ///
+        /// <remarks>
+        /// If the list of health record item types is empty, an empty list is
         /// returned for <see cref="HealthRecordPermissions"/> object's ItemTypePermissions property.
-        /// If for a health record item type, the person has 
-        /// neither online access nor offline access permissions, 
+        /// If for a health record item type, the person has
+        /// neither online access nor offline access permissions,
         /// HealthRecordItemTypePermission object is not returned for that
-        /// health record item type. 
+        /// health record item type.
         /// </remarks>
-        /// 
+        ///
         /// <exception cref="ArgumentNullException">
         /// If <paramref name="healthRecordItemTypeIds"/> is <b>null</b>.
         /// </exception>
-        /// 
+        ///
         /// <exception cref="HealthServiceException">
         /// There is an error in the server request.
         /// </exception>
-        /// 
+        ///
         public HealthRecordPermissions QueryRecordPermissions(
             IList<Guid> healthRecordItemTypeIds)
         {
@@ -929,26 +925,26 @@ namespace Microsoft.HealthVault
         /// <summary>
         /// Gets valid group memberships for a record.
         /// </summary>
-        /// 
+        ///
         /// <remarks>
         /// Group membership thing types allow an application to signify that the
-        /// record belongs to an application defined group.  A record in the group may be 
-        /// eligible for special programs offered by other applications, for example.  
+        /// record belongs to an application defined group.  A record in the group may be
+        /// eligible for special programs offered by other applications, for example.
         /// Applications then need a away to query for valid group memberships.
         /// <br/>
         /// Valid group memberships are those memberships which are not expired, and whose
-        /// last updating application is authorized by the the last updating person to 
+        /// last updating application is authorized by the the last updating person to
         /// read and delete the membership.
         /// </remarks>
-        /// 
+        ///
         /// <param name="applicationIds">
-        /// A collection of unique application identifiers for which to 
-        /// search for group memberships.  For a null or empty application identifier 
-        /// list, return all valid group memberships for the record.  Otherwise, 
-        /// return only those group memberships last updated by one of the 
+        /// A collection of unique application identifiers for which to
+        /// search for group memberships.  For a null or empty application identifier
+        /// list, return all valid group memberships for the record.  Otherwise,
+        /// return only those group memberships last updated by one of the
         /// supplied application identifiers.
         /// </param>
-        /// 
+        ///
         /// <returns>
         /// A List of HealthRecordItems representing the valid group memberships.
         /// </returns>

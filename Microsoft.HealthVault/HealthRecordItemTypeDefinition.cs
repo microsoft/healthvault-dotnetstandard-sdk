@@ -3,6 +3,7 @@
 // see http://www.microsoft.com/resources/sharedsource/licensingbasics/sharedsourcelicenses.mspx.
 // All other rights reserved.
 
+using Microsoft.HealthVault.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -14,32 +15,30 @@ using System.Text;
 using System.Xml;
 using System.Xml.Schema;
 using System.Xml.XPath;
-using System.Xml.Xsl;
-using Microsoft.HealthVault.Extensions;
 
 namespace Microsoft.HealthVault
 {
     /// <summary>
     /// Describes the schema and structure of a health record item type.
     /// </summary>
-    /// 
+    ///
     public class HealthRecordItemTypeDefinition
     {
         /// <summary>
         /// Constructs an instance of <see cref="HealthRecordItemTypeDefinition"/> from the specified
         /// XML.
         /// </summary>
-        /// 
+        ///
         /// <param name="typeNavigator">
         /// XML navigator containing the information needed to construct the instance. This XML
         /// must adhere to the schema for a ThingType as defined by response-getthingtype.xsd.
         /// </param>
-        /// 
+        ///
         /// <returns>
-        /// An instance of <see cref="HealthRecordItemTypeDefinition"/> constructed from the 
+        /// An instance of <see cref="HealthRecordItemTypeDefinition"/> constructed from the
         /// specified XML.
         /// </returns>
-        /// 
+        ///
         public static HealthRecordItemTypeDefinition CreateFromXml(
             XPathNavigator typeNavigator)
         {
@@ -98,10 +97,10 @@ namespace Microsoft.HealthVault
                 _xsd = String.Empty;
             }
 
-            _columns = GetThingTypeColumns(typeNavigator); 
+            _columns = GetThingTypeColumns(typeNavigator);
 
             var transforms = new List<string>();
-            XPathNodeIterator transformsIterator =typeNavigator.Select("transforms/tag");
+            XPathNodeIterator transformsIterator = typeNavigator.Select("transforms/tag");
 
             foreach (XPathNavigator transformsNav in transformsIterator)
             {
@@ -128,7 +127,7 @@ namespace Microsoft.HealthVault
             }
 
             XPathNavigator updatedEndDateNavigator = typeNavigator.SelectSingleNode("updated-end-date-xpath");
-            
+
             if (updatedEndDateNavigator != null)
             {
                 UpdatedEndDateXPath = updatedEndDateNavigator.Value;
@@ -165,9 +164,9 @@ namespace Microsoft.HealthVault
             if (orderByPropertiesNav == null)
             {
                 return new HealthRecordItemTypeVersionInfo(
-                    versionTypeId, 
-                    versionName, 
-                    versionSequence, 
+                    versionTypeId,
+                    versionName,
+                    versionSequence,
                     new HealthRecordItemTypeOrderByProperties(new List<HealthRecordItemTypeProperty>(0)));
             }
 
@@ -183,11 +182,11 @@ namespace Microsoft.HealthVault
         /// <summary>
         /// Gets or sets the type name.
         /// </summary>
-        /// 
+        ///
         /// <value>
         /// A string representing the type name.
         /// </value>
-        /// 
+        ///
         public string Name
         {
             get { return _name; }
@@ -198,11 +197,11 @@ namespace Microsoft.HealthVault
         /// <summary>
         /// Gets or sets the type unique identifier.
         /// </summary>
-        /// 
+        ///
         /// <value>
         /// A GUID representing the type identifier.
         /// </value>
-        /// 
+        ///
         public Guid TypeId
         {
             get { return _id; }
@@ -213,11 +212,11 @@ namespace Microsoft.HealthVault
         /// <summary>
         /// Gets or sets the XML schema definition.
         /// </summary>
-        /// 
+        ///
         /// <value>
         /// A string representing the definition.
         /// </value>
-        /// 
+        ///
         public string XmlSchemaDefinition
         {
             get { return _xsd; }
@@ -241,7 +240,7 @@ namespace Microsoft.HealthVault
                         result = XmlSchema.Read(xmlReader, null);
                         result.SourceUri =
                             HealthApplicationConfiguration.Current.GetHealthVaultTypeSchemaUrl().OriginalString;
-                    }                    
+                    }
                 }
 
                 return result;
@@ -277,11 +276,11 @@ namespace Microsoft.HealthVault
         /// <summary>
         /// Gets or sets a value indicating whether instances of the type are creatable.
         /// </summary>
-        /// 
+        ///
         /// <value>
         /// <b>true</b> if the instances are creatable; otherwise, <b>false</b>.
         /// </value>
-        /// 
+        ///
         public bool IsCreatable
         {
             get { return _isCreatable; }
@@ -292,11 +291,11 @@ namespace Microsoft.HealthVault
         /// <summary>
         /// Gets or sets a value indicating whether instances of the type are immutable.
         /// </summary>
-        /// 
+        ///
         /// <value>
         /// <b>true</b> if the instances are immutable; otherwise, <b>false</b>.
         /// </value>
-        /// 
+        ///
         public bool IsImmutable
         {
             get { return _isImmutable; }
@@ -305,15 +304,15 @@ namespace Microsoft.HealthVault
         private bool _isImmutable;
 
         /// <summary>
-        /// Gets or sets a value indicating whether only a single instance of the type 
+        /// Gets or sets a value indicating whether only a single instance of the type
         /// can exist for each health record.
         /// </summary>
-        /// 
+        ///
         /// <value>
         /// <b>true</b> if only a single instance of the type can exist for each
         /// health record; otherwise, <b>false</b>.
         /// </value>
-        /// 
+        ///
         public bool IsSingletonType
         {
             get { return _isSingletonType; }
@@ -338,11 +337,11 @@ namespace Microsoft.HealthVault
         /// Gets or sets the column definitions when dealing with the type as a
         /// single type table.
         /// </summary>
-        /// 
+        ///
         /// <value>
         /// A read-only collection containing the defintions.
         /// </value>
-        /// 
+        ///
         public ReadOnlyCollection<ItemTypeDataColumn> ColumnDefinitions
         {
             get { return _columns; }
@@ -354,11 +353,11 @@ namespace Microsoft.HealthVault
         /// <summary>
         /// Gets or sets the HealthVault transform names supported by the type.
         /// </summary>
-        /// 
+        ///
         /// <value>
         /// A read-only collection containing the transforms.
         /// </value>
-        /// 
+        ///
         public ReadOnlyCollection<string> SupportedTransformNames
         {
             get { return _supportedTransformNames; }
@@ -370,16 +369,16 @@ namespace Microsoft.HealthVault
         /// <summary>
         /// Gets or sets the HealthVault transforms supported by the type.
         /// </summary>
-        /// 
+        ///
         /// <value>
         /// A dictionary containing each of the transforms supported by the type. The key is the
         /// transform name and the value is the source of the transform.
         /// </value>
-        /// 
+        ///
         /// <remarks>
         /// The transform can be run by calling one of the <see cref="TransformItem"/> overloads.
         /// </remarks>
-        /// 
+        ///
         public Dictionary<string, string> TransformSource
         {
             get { return _transformSource; }
@@ -404,11 +403,11 @@ namespace Microsoft.HealthVault
         /// <summary>
         /// Gets or sets the XPath to the effective date element in the <see cref="HealthRecordItem.TypeSpecificData"/>.
         /// </summary>
-        /// 
+        ///
         /// <value>
         /// The String representation of the XPath.
         /// </value>
-        /// 
+        ///
         public string EffectiveDateXPath
         {
             get { return _effectiveDateXPath; }
@@ -419,11 +418,11 @@ namespace Microsoft.HealthVault
         /// <summary>
         /// Gets or sets the XPath to the updated end date element in the <see cref="HealthRecordItem.TypeSpecificData"/>.
         /// </summary>
-        ///         
+        ///
         /// <value>
         /// The String representation of the XPath.
         /// </value>
-        /// 
+        ///
         public string UpdatedEndDateXPath
         {
             get;
@@ -435,26 +434,26 @@ namespace Microsoft.HealthVault
         /// <summary>
         /// Validates the type specific XML is valid based on item type definition schema.
         /// </summary>
-        /// 
+        ///
         /// <param name="typeSpecificXml">
         /// The type specific portion of the XML for a health record item. It does not include
         /// the header information like type-id, thing-id, etc.
         /// </param>
-        /// 
+        ///
         /// <returns>
         /// True if <paramref name="typeSpecificXml"/> is schema valid according to
         /// this type definition.
         /// </returns>
-        /// 
+        ///
         /// <exception cref="ArgumentException">
         /// If <paramref name="typeSpecificXml"/> is <b>null</b> or empty.
         /// </exception>
-        /// 
+        ///
         /// <exception cref="XmlSchemaException">
         /// If <paramref name="typeSpecificXml"/> is not valid according to
         /// this type definition.
         /// </exception>
-        /// 
+        ///
         [SuppressMessage("Microsoft.Usage", "CA2202:Do not dispose objects multiple times", Justification = "StringReader can be disposed multiple times. Usings block makes the code more readable")]
         public bool IsItemXmlSchemaValid(string typeSpecificXml)
         {
@@ -515,31 +514,31 @@ namespace Microsoft.HealthVault
         /// <summary>
         /// Transforms the XML of the specified health record item using the specified transform.
         /// </summary>
-        /// 
+        ///
         /// <param name="transformName">
         /// The name of the transform to use. Supported transforms for the type can be found in the
         /// <see cref="SupportedTransformNames"/> collection.
         /// </param>
-        /// 
+        ///
         /// <param name="item">
         /// The health record item to be transformed.
         /// </param>
-        /// 
+        ///
         /// <returns>
         /// A string containing the results of the transform.
         /// </returns>
-        /// 
+        ///
         /// <remarks>
         /// If the transform has been used before a cached instance of the compiled transform will
         /// be used. Compiled transforms are not thread safe. It is up to the caller to ensure
         /// that multiple threads do not attempt to use the same transform at the same time.
         /// </remarks>
-        /// 
+        ///
         /// <exception cref="KeyNotFoundException">
         /// If <paramref name="transformName"/> could not be found in the <see cref="TransformSource"/>
         /// collection.
         /// </exception>
-        /// 
+        ///
         [SuppressMessage("Microsoft.Usage", "CA2202:Do not dispose objects multiple times", Justification = "StringReader can be disposed multiple times. Usings block makes the code more readable")]
         public string TransformItem(string transformName, HealthRecordItem item)
         {
@@ -575,27 +574,27 @@ namespace Microsoft.HealthVault
         /// <summary>
         /// Gets a compiled version of the specified transform.
         /// </summary>
-        /// 
+        ///
         /// <param name="transformName">
         /// The name of the transform to get.
         /// </param>
-        /// 
+        ///
         /// <returns>
         /// A compiled version of the specified transform.
         /// </returns>
-        /// 
+        ///
         /// <exception cref="KeyNotFoundException">
         /// If <paramref name="transformName"/> is not found as a transform for the item type.
         /// </exception>
-        /// 
+        ///
         /// <exception cref="XmlException">
         /// There is a load or parse error in the specified transform.
         /// </exception>
-        /// 
+        ///
         /// <exception cref="XsltException">
         /// The specified style sheet contains an error.
         /// </exception>
-        /// 
+        ///
         [SuppressMessage("Microsoft.Usage", "CA2202:Do not dispose objects multiple times", Justification = "StringReader can be disposed multiple times. Usings block makes the code more readable")]
         public XslCompiledTransform GetTransform(string transformName)
         {
@@ -631,6 +630,7 @@ namespace Microsoft.HealthVault
 
             return transform;
         }
+
         #endregion TransformItem
     }
 }

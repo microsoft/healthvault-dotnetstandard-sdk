@@ -13,23 +13,23 @@ using System.Xml.XPath;
 namespace Microsoft.HealthVault
 {
     /// <summary>
-    /// Defines a result view for use with 
+    /// Defines a result view for use with
     /// <see cref="HealthRecordSearcher"/> searches.
     /// </summary>
-    /// 
+    ///
     /// <remarks>
-    /// This class wraps up the logic for constructing the format tag for 
+    /// This class wraps up the logic for constructing the format tag for
     /// querying health record items with the "GetThings" method.
     /// </remarks>
-    /// 
+    ///
     [DebuggerDisplay("Sections = {Sections}")]
     public class HealthRecordView
     {
         /// <summary>
-        /// Creates a new instance of the <see cref="HealthRecordView"/> class 
+        /// Creates a new instance of the <see cref="HealthRecordView"/> class
         /// using default values.
         /// </summary>
-        /// 
+        ///
         public HealthRecordView()
         {
         }
@@ -38,12 +38,12 @@ namespace Microsoft.HealthVault
         /// Gets or sets the sections that will be retrieved when the
         /// query is made.
         /// </summary>
-        /// 
+        ///
         /// <value>
         /// An instance of <see cref="HealthRecordItemSections"/>. The default
         /// values are Core and XML.
         /// </value>
-        /// 
+        ///
         public HealthRecordItemSections Sections
         {
             get { return _sections; }
@@ -58,19 +58,19 @@ namespace Microsoft.HealthVault
             HealthRecordItemSections.Xml;
 
         /// <summary>
-        /// Gets the names of the transforms to apply to the resulting 
+        /// Gets the names of the transforms to apply to the resulting
         /// XML data section.
         /// </summary>
-        /// 
+        ///
         /// <remarks>
         /// The name of the transform refers to the format of the data to
         /// which the transform converts the XML data. For example, "rss"
         /// converts the XML data into RSS format. Note, all formats to
-        /// which the data can be converted are legal XML documents 
-        /// (RSS, XHTML, and so on).  A list of the valid transform names is 
+        /// which the data can be converted are legal XML documents
+        /// (RSS, XHTML, and so on).  A list of the valid transform names is
         /// available in the HealthVault Developer's Guide.
         /// </remarks>
-        /// 
+        ///
         public Collection<string> TransformsToApply
         {
             get { return _transformsToApply; }
@@ -79,17 +79,17 @@ namespace Microsoft.HealthVault
             new Collection<string>();
 
         /// <summary>
-        /// Gets a collection of the version IDs for the types in which the results should be 
+        /// Gets a collection of the version IDs for the types in which the results should be
         /// formatted.
         /// </summary>
-        /// 
+        ///
         /// <remarks>
-        /// When a type gets versioned, HealthVault will retrieve instances of 
+        /// When a type gets versioned, HealthVault will retrieve instances of
         /// multiple versions even when only one type is specified in the request
         /// filter.  By default HealthVault will map the XML of the instance to
-        /// the version supported by the application based on the base 
+        /// the version supported by the application based on the base
         /// authorization XML specified in the configuration of the application in
-        /// HealthVault. However, if multiple versions are supported by the 
+        /// HealthVault. However, if multiple versions are supported by the
         /// application, it can use this property to state the version format to
         /// use when writing out the instance XML.
         /// For example, when querying for medications, HealthVault will retrieve
@@ -100,16 +100,16 @@ namespace Microsoft.HealthVault
         /// by declaring both type IDs in the applications configuration, then
         /// version one instances will be returned using the version one schema, and
         /// version two instances will be returned using the version two schema.
-        /// If this application wants to retrieve all instances using a common 
+        /// If this application wants to retrieve all instances using a common
         /// schema (say version two), then it would specify the version two type
         /// ID in this parameter and all instances will be mapped to version two
         /// of the medication schema before being returned.
-        /// Be careful when adding to this collection. If you are not specifying any 
+        /// Be careful when adding to this collection. If you are not specifying any
         /// <see cref="TransformsToApply"/> and the Microsoft.Health.ItemTypes namespace doesn't
         /// contain a class for parsing the type version you specify, you will get a
         /// <see cref="HealthRecordItem"/> instance rather than the type specific class instance.
         /// </remarks>
-        /// 
+        ///
         public Collection<Guid> TypeVersionFormat
         {
             get { return _typeVersionFormat; }
@@ -120,11 +120,11 @@ namespace Microsoft.HealthVault
         /// <summary>
         /// Gets a collection representing the names of the BLOBs to return for the item(s).
         /// </summary>
-        /// 
+        ///
         /// <remarks>
         /// If no BLOB names are specified, all BLOBs will be returned.
         /// </remarks>
-        /// 
+        ///
         public Collection<string> BlobNames
         {
             get { return _blobNames; }
@@ -134,11 +134,11 @@ namespace Microsoft.HealthVault
         /// <summary>
         /// Gets the format of the BLOB that should be returned.
         /// </summary>
-        /// 
+        ///
         /// <remarks>
         /// Defaults to <see cref="BlobFormat"/>.Unknown.
         /// </remarks>
-        /// 
+        ///
         public BlobFormat BlobFormat
         {
             get { return _blobFormat; }
@@ -149,12 +149,12 @@ namespace Microsoft.HealthVault
         /// <summary>
         /// Gets a string representation of the instance.
         /// </summary>
-        /// 
+        ///
         /// <returns>
         /// A string representing the XML used as the group portion of the
         /// XML request for a "GetThings" method call.
         /// </returns>
-        /// 
+        ///
         public override string ToString()
         {
             StringBuilder result = new StringBuilder(128);
@@ -229,15 +229,15 @@ namespace Microsoft.HealthVault
         /// Constructs the XML for the format tag used in the
         /// "GetThings" request.
         /// </summary>
-        /// 
+        ///
         /// <param name="writer">
         /// The XMLWriter that receives the format tag.
         /// </param>
-        /// 
+        ///
         /// <exception cref="ArgumentException">
         /// No sections or transforms were specified for the search.
         /// </exception>
-        /// 
+        ///
         internal void AddViewXml(XmlWriter writer)
         {
             // First check to be sure we either have sections and/or
@@ -358,8 +358,8 @@ namespace Microsoft.HealthVault
 
                 writer.WriteEndElement();
             }
-
         }
+
         #endregion internal helpers
     }
 }

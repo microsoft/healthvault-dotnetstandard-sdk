@@ -3,7 +3,6 @@
 // see http://www.microsoft.com/resources/sharedsource/licensingbasics/sharedsourcelicenses.mspx.
 // All other rights reserved.
 
-
 using System;
 using System.Xml;
 using System.Xml.XPath;
@@ -18,44 +17,44 @@ namespace Microsoft.HealthVault.ItemTypes
     /// An advance directive is a legal document that provides directions for future
     /// health care decisions in case the patient becomes incapacitated.
     /// </remarks>
-    /// 
+    ///
     public class Directive : HealthRecordItem
     {
         /// <summary>
         /// Creates a new instance of the <see cref="Directive"/> class with default values.
         /// </summary>
-        /// 
+        ///
         /// <remarks>
         /// The item is not added to the health record until the
-        /// <see cref="HealthRecordAccessor.NewItem(HealthRecordItem)"/> method 
+        /// <see cref="HealthRecordAccessor.NewItem(HealthRecordItem)"/> method
         /// is called.
         /// </remarks>
-        /// 
+        ///
         public Directive()
             : base(TypeId)
         {
         }
 
         /// <summary>
-        /// Creates a new instance of the <see cref="Directive"/> class 
+        /// Creates a new instance of the <see cref="Directive"/> class
         /// specifying the mandatory values.
         /// </summary>
-        /// 
+        ///
         /// <param name="startDate">
         /// The date the directive takes effect.
         /// </param>
-        /// 
+        ///
         /// <param name="stopDate">
         /// The date the directive stops being effective.
         /// </param>
-        /// 
+        ///
         /// <exception cref="ArgumentNullException">
         /// The <paramref name="startDate"/> parameter or <paramref name="stopDate"/>
         /// is <b>null</b> or empty.
         /// </exception>
-        /// 
+        ///
         public Directive(
-            ApproximateDateTime startDate, 
+            ApproximateDateTime startDate,
             ApproximateDateTime stopDate)
             : base(TypeId)
         {
@@ -66,23 +65,23 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <summary>
         /// Retrieves the unique identifier for the item type.
         /// </summary>
-        /// 
+        ///
         public new static readonly Guid TypeId =
             new Guid("822a5e5a-14f1-4d06-b92f-8f3f1b05218f");
 
         /// <summary>
         /// Populates this <see cref="Directive"/> instance from the data in the XML.
         /// </summary>
-        /// 
+        ///
         /// <param name="typeSpecificXml">
         /// The XML to get the directive data from.
         /// </param>
-        /// 
+        ///
         /// <exception cref="InvalidOperationException">
-        /// The first node of the <paramref name="typeSpecificXml"/> 
+        /// The first node of the <paramref name="typeSpecificXml"/>
         /// parameter is not a directive node.
         /// </exception>
-        /// 
+        ///
         protected override void ParseXml(IXPathNavigable typeSpecificXml)
         {
             XPathNavigator itemNav =
@@ -99,9 +98,8 @@ namespace Microsoft.HealthVault.ItemTypes
             _stopDate.ParseXml(itemNav.SelectSingleNode("stop-date"));
 
             // <description>
-            _description = 
+            _description =
                 XPathHelper.GetOptNavValue(itemNav, "description");
-
 
             // <full-resuscitation>
             _fullResuscitation =
@@ -151,56 +149,55 @@ namespace Microsoft.HealthVault.ItemTypes
             _discontinuationDate =
                 XPathHelper.GetOptNavValue<ApproximateDateTime>(
                     itemNav,
-                    "discontinuation-date"); 
+                    "discontinuation-date");
 
             // <discontinuation-physician>
             _discontinuationPhysician =
                 XPathHelper.GetOptNavValue<PersonItem>(
                     itemNav,
-                    "discontinuation-physician"); 
-            
+                    "discontinuation-physician");
+
             // <discontinuation-physician-endorsement>
             _discontinuationPhysicianEndorsement =
                 XPathHelper.GetOptNavValue<HealthServiceDateTime>(
                     itemNav,
-                    "discontinuation-physician-endorsement"); 
-
+                    "discontinuation-physician-endorsement");
 
             // <discontinuation-nurse>
             _discontinuationNurse =
                 XPathHelper.GetOptNavValue<PersonItem>(
                     itemNav,
-                    "discontinuation-nurse"); 
+                    "discontinuation-nurse");
 
             // <discontinuation-nurse-endorsement>
             _discontinuationNurseEndorsement =
                 XPathHelper.GetOptNavValue<HealthServiceDateTime>(
                     itemNav,
-                    "discontinuation-nurse-endorsement"); 
+                    "discontinuation-nurse-endorsement");
         }
 
         /// <summary>
         /// Writes the directive data to the specified XmlWriter.
         /// </summary>
-        /// 
+        ///
         /// <param name="writer">
         /// The XmlWriter to write the directive data to.
         /// </param>
-        /// 
+        ///
         /// <exception cref="ArgumentNullException">
         /// If <paramref name="writer"/> is <b>null</b>.
         /// </exception>
-        /// 
+        ///
         /// <exception cref="HealthRecordItemSerializationException">
         /// If <see cref="StartDate"/> or <see cref="StopDate"/> is <b>null</b>.
         /// </exception>
-        /// 
+        ///
         public override void WriteXml(XmlWriter writer)
         {
             Validator.ThrowIfWriterNull(writer);
             Validator.ThrowSerializationIfNull(_startDate, "DirectiveStartDateNotSet");
             Validator.ThrowSerializationIfNull(_stopDate, "DirectiveStopDateNotSet");
-            
+
             // <directive>
             writer.WriteStartElement("directive");
 
@@ -216,9 +213,8 @@ namespace Microsoft.HealthVault.ItemTypes
 
             XmlWriterHelper.WriteOptString(
                 writer,
-                "description", 
+                "description",
                 _description);
-
 
             // <full-resuscitation>
             XmlWriterHelper.WriteOptBool(
@@ -226,29 +222,28 @@ namespace Microsoft.HealthVault.ItemTypes
                 "full-resuscitation",
                 _fullResuscitation);
 
-
             // <prohibited-interventions>
             XmlWriterHelper.WriteOpt(
                 writer,
-                "prohibited-interventions", 
+                "prohibited-interventions",
                 _prohibitedInterventions);
-            
+
             // <additional-instructions>
             XmlWriterHelper.WriteOptString(
                 writer,
-                "additional-instructions", 
+                "additional-instructions",
                 _additionalInstructions);
 
             // <attending-physician>
             XmlWriterHelper.WriteOpt(
                 writer,
-                "attending-physician", 
+                "attending-physician",
                 _attendingPhysician);
-            
+
             // <attending-physician-endorsement>
             XmlWriterHelper.WriteOpt(
                 writer,
-                "attending-physician-endorsement", 
+                "attending-physician-endorsement",
                 _attendingPhysicianEndorsement);
 
             // <attending-nurse>
@@ -262,17 +257,17 @@ namespace Microsoft.HealthVault.ItemTypes
                 writer,
                 "attending-nurse-endorsement",
                 _attendingNurseEndorsement);
-            
+
             // <expiration-date>
             XmlWriterHelper.WriteOpt(
                 writer,
-                "expiration-date", 
+                "expiration-date",
                 _expirationDate);
 
             // <discontinuation-date>
             XmlWriterHelper.WriteOpt(
                 writer,
-                "discontinuation-date", 
+                "discontinuation-date",
                 _discontinuationDate);
 
             // <discontinuation-physician>
@@ -306,20 +301,20 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <summary>
         /// Gets or sets the description of the directive.
         /// </summary>
-        /// 
+        ///
         /// <returns>
         /// A string representing the directive description.
         /// </returns>
-        /// 
+        ///
         /// <exception cref="ArgumentException">
         /// The <paramref name="value"/> parameter is <b>null</b>, empty, or contains only
         /// whitespace when set.
         /// </exception>
-        /// 
+        ///
         public string Description
         {
             get { return _description; }
-            set 
+            set
             {
                 Validator.ThrowIfStringIsWhitespace(value, "Description");
                 _description = value;
@@ -330,46 +325,45 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <summary>
         /// Gets or sets the approximate date of the directive is effective.
         /// </summary>
-        /// 
+        ///
         /// <returns>
-        /// An <see cref="ApproximateDateTime"/> instance representing the 
+        /// An <see cref="ApproximateDateTime"/> instance representing the
         /// effective date of the directive.
-        /// </returns> 
-        /// 
+        /// </returns>
+        ///
         /// <exception cref="ArgumentNullException">
         /// The <paramref name="value"/> parameter is <b>null</b>.
         /// </exception>
-        /// 
+        ///
         public ApproximateDateTime StartDate
         {
             get { return _startDate; }
-            set 
+            set
             {
                 Validator.ThrowIfArgumentNull(value, "StartDate", "DirectiveStartDateMandatory");
                 _startDate = value;
             }
         }
         private ApproximateDateTime _startDate;
-        
 
         /// <summary>
         /// Gets or sets the approximate date the directive is no longer to
         /// be considered.
         /// </summary>
-        /// 
+        ///
         /// <returns>
-        /// An <see cref="ApproximateDateTime"/> instance representing the 
-        /// stop date of the directive. 
+        /// An <see cref="ApproximateDateTime"/> instance representing the
+        /// stop date of the directive.
         /// </returns>
-        /// 
+        ///
         /// <exception cref="ArgumentNullException">
         /// The <paramref name="value"/> parameter is <b>null</b>.
         /// </exception>
-        /// 
+        ///
         public ApproximateDateTime StopDate
         {
             get { return _stopDate; }
-            set 
+            set
             {
                 Validator.ThrowIfArgumentNull(value, "StopDate", "DirectiveStopDateMandatory");
                 _stopDate = value;
@@ -380,11 +374,11 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <summary>
         /// Gets or sets a value indicating the resuscitation status.
         /// </summary>
-        /// 
+        ///
         /// <returns>
         /// <b>true</b> for full resuscitation; otherwise, <b>false</b>.
         /// </returns>
-        /// 
+        ///
         public bool? FullResuscitation
         {
             get { return _fullResuscitation; }
@@ -395,11 +389,11 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <summary>
         /// Gets or sets the list of prohibited interventions in this directive.
         /// </summary>
-        /// 
+        ///
         /// <returns>
         /// A <see cref="CodableValue"/> instance representing the list.
         /// </returns>
-        /// 
+        ///
         public CodableValue ProhibitedInterventions
         {
             get { return _prohibitedInterventions; }
@@ -410,23 +404,23 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <summary>
         /// Gets or sets additional directive instructions.
         /// </summary>
-        /// 
+        ///
         /// <returns>
         /// A string representing the instructions.
         /// </returns>
-        /// 
+        ///
         /// <remarks>
         /// Set the value to <b>null</b> if the manufacturer should not be stored.
         /// </remarks>
-        /// 
+        ///
         /// <exception cref="ArgumentException">
         /// If <paramref name="value"/> contains only whitespace.
         /// </exception>
-        /// 
+        ///
         public string AdditionalInstructions
         {
             get { return _additionalInstructions; }
-            set 
+            set
             {
                 Validator.ThrowIfStringIsWhitespace(value, "AdditionalInstructions");
                 _additionalInstructions = value;
@@ -437,43 +431,43 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <summary>
         /// Gets or sets the attending physician endorsement details.
         /// </summary>
-        /// 
+        ///
         public PersonItem AttendingPhysician
         {
             get { return _attendingPhysician; }
             set { _attendingPhysician = value; }
         }
-        private PersonItem _attendingPhysician; 
+        private PersonItem _attendingPhysician;
 
         /// <summary>
-        /// Gets or sets the date and time for the attending physician 
+        /// Gets or sets the date and time for the attending physician
         /// endorsement details.
         /// </summary>
-        /// 
+        ///
         /// <returns>
         /// A <see cref="HealthServiceDateTime"/> instance representing the date and time.
-        /// </returns> 
-        /// 
+        /// </returns>
+        ///
         /// <remarks>
         /// The value defaults to the current year, month, and day.
         /// </remarks>
-        /// 
+        ///
         public HealthServiceDateTime AttendingPhysicianEndorsement
         {
             get { return _attendingPhysicianEndorsement; }
             set { _attendingPhysicianEndorsement = value; }
         }
         private HealthServiceDateTime _attendingPhysicianEndorsement;
-         
+
         /// <summary>
         /// Gets or sets the attending nurse endorsement details.
         /// </summary>
-        /// 
+        ///
         /// <returns>
-        /// A <see cref="PersonItem"/> instance representing the nurse 
+        /// A <see cref="PersonItem"/> instance representing the nurse
         /// endorsement details.
-        /// </returns>   
-        /// 
+        /// </returns>
+        ///
         public PersonItem AttendingNurse
         {
             get { return _attendingNurse; }
@@ -484,15 +478,15 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <summary>
         /// Gets or sets the date and time for the attending nurse endorsement details.
         /// </summary>
-        /// 
+        ///
         /// <returns>
         /// A <see cref="HealthServiceDateTime"/> instance representing the date and time.
-        /// </returns> 
-        /// 
+        /// </returns>
+        ///
         /// <remarks>
         /// The value defaults to the current year, month, and day.
         /// </remarks>
-        /// 
+        ///
         public HealthServiceDateTime AttendingNurseEndorsement
         {
             get { return _attendingNurseEndorsement; }
@@ -503,15 +497,15 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <summary>
         /// Gets or sets the date and time when the patient expired.
         /// </summary>
-        /// 
+        ///
         /// <returns>
         /// A <see cref="HealthServiceDateTime"/> instance representing the date and time.
-        /// </returns> 
-        /// 
+        /// </returns>
+        ///
         /// <remarks>
         /// The value defaults to the current year, month, and day.
         /// </remarks>
-        /// 
+        ///
         public HealthServiceDateTime ExpirationDate
         {
             get { return _expirationDate; }
@@ -522,92 +516,92 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <summary>
         /// Gets or sets the date/time when clinical support was discontinued.
         /// </summary>
-        /// 
+        ///
         /// <returns>
         /// An <see cref="ApproximateDateTime"/> instance representing the date and time.
-        /// </returns> 
-        /// 
+        /// </returns>
+        ///
         public ApproximateDateTime DiscontinuationDate
         {
             get { return _discontinuationDate; }
-            set {_discontinuationDate = value; }
+            set { _discontinuationDate = value; }
         }
         private ApproximateDateTime _discontinuationDate;
 
         /// <summary>
         /// Gets or sets the attending physician discontinuation details.
         /// </summary>
-        /// 
+        ///
         /// <returns>
         /// A <see cref="PersonItem"/> instance representing the details.
-        /// </returns> 
-        /// 
+        /// </returns>
+        ///
         /// <remarks>
-        /// This type provides discontinuation details including name, identity, 
+        /// This type provides discontinuation details including name, identity,
         /// and signature date and time of the attending physician.
         /// </remarks>
-        /// 
+        ///
         public PersonItem DiscontinuationPhysician
         {
             get { return _discontinuationPhysician; }
             set { _discontinuationPhysician = value; }
         }
-        private PersonItem _discontinuationPhysician; 
+        private PersonItem _discontinuationPhysician;
 
         /// <summary>
-        /// Gets or sets the date and time for the attending physician 
+        /// Gets or sets the date and time for the attending physician
         /// discontinuation endorsement.
         /// </summary>
-        /// 
+        ///
         /// <returns>
-        /// A <see cref="HealthServiceDateTime"/> instance representing the 
+        /// A <see cref="HealthServiceDateTime"/> instance representing the
         /// date and time.
-        /// </returns> 
-        /// 
+        /// </returns>
+        ///
         /// <remarks>
         /// The value defaults to the current year, month, and day.
         /// </remarks>
-        /// 
+        ///
         public HealthServiceDateTime DiscontinuationPhysicianEndorsement
         {
             get { return _discontinuationPhysicianEndorsement; }
             set { _discontinuationPhysicianEndorsement = value; }
         }
         private HealthServiceDateTime _discontinuationPhysicianEndorsement;
-        
+
         /// <summary>
         /// Gets or sets the attending nurse discontinuation details.
         /// </summary>
-        /// 
+        ///
         /// <returns>
         /// A <see cref="PersonItem"/> instance representing the details.
-        /// </returns> 
-        /// 
+        /// </returns>
+        ///
         /// <remarks>
-        /// This type provides discontinuation details including name, identity, 
+        /// This type provides discontinuation details including name, identity,
         /// and signature date and time of the attending nurse.
         /// </remarks>
-        /// 
+        ///
         public PersonItem DiscontinuationNurse
         {
             get { return _discontinuationNurse; }
             set { _discontinuationNurse = value; }
         }
-        private PersonItem _discontinuationNurse; 
+        private PersonItem _discontinuationNurse;
 
         /// <summary>
-        /// Gets or sets the date and time for the attending nurse 
+        /// Gets or sets the date and time for the attending nurse
         /// discontinuation endorsement.
         /// </summary>
-        /// 
+        ///
         /// <returns>
         /// A <see cref="HealthServiceDateTime"/> instance representing the date and time.
-        /// </returns> 
-        /// 
+        /// </returns>
+        ///
         /// <remarks>
         /// The value defaults to the current year, month, and day.
         /// </remarks>
-        /// 
+        ///
         public HealthServiceDateTime DiscontinuationNurseEndorsement
         {
             get { return _discontinuationNurseEndorsement; }
@@ -618,11 +612,11 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <summary>
         /// Gets a string representation of the directive item.
         /// </summary>
-        /// 
+        ///
         /// <returns>
         /// A string representation of the directive item.
         /// </returns>
-        /// 
+        ///
         public override string ToString()
         {
             return Description ?? string.Empty;

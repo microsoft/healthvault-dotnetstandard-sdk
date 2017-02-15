@@ -13,18 +13,18 @@ namespace Microsoft.HealthVault
     /// <summary>
     /// Contains the error context of the service when the error occurred.
     /// </summary>
-    /// 
+    ///
     public class HealthServiceErrorContext
     {
         /// <summary>
         /// Gets the name of the server that was handling the request when
         /// the error occurred.
         /// </summary>
-        /// 
+        ///
         /// <value>
         /// A string representing the server name.
         /// </value>
-        /// 
+        ///
         public string ServerName
         {
             get { return _serverName; }
@@ -36,11 +36,11 @@ namespace Microsoft.HealthVault
         /// Gets the IP addresses of the server that was handling the request
         /// when the error occurred.
         /// </summary>
-        /// 
+        ///
         /// <value>
         /// A read-only collection of IP addresses.
         /// </value>
-        /// 
+        ///
         public ReadOnlyCollection<IPAddress> ServerIPAddresses
         {
             get { return _serverIPAddresses; }
@@ -57,16 +57,16 @@ namespace Microsoft.HealthVault
         /// Gets the exception message and stack trace of the exception
         /// from the server.
         /// </summary>
-        /// 
+        ///
         /// <value>
         /// A string representing the exception message and stack trace.
         /// </value>
-        /// 
+        ///
         /// <remarks>
-        /// This is the ToString() of the exception that occurred while 
+        /// This is the ToString() of the exception that occurred while
         /// handling the request.
         /// </remarks>
-        /// 
+        ///
         public string InnerException
         {
             get { return _innerException; }
@@ -75,15 +75,15 @@ namespace Microsoft.HealthVault
         private string _innerException;
 
         /// <summary>
-        /// Retrieves the string representation of the <see cref="HealthServiceErrorContext"/> 
+        /// Retrieves the string representation of the <see cref="HealthServiceErrorContext"/>
         /// object.
         /// </summary>
-        /// 
-        /// <returns> 
+        ///
+        /// <returns>
         /// A string representing the contents of the <see cref="HealthServiceErrorContext"/>
         /// object.
         /// </returns>
-        /// 
+        ///
         public override string ToString()
         {
             string result = _serverName;

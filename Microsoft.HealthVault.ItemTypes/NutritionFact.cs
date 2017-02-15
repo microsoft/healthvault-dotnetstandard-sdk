@@ -3,15 +3,12 @@
 // see http://www.microsoft.com/resources/sharedsource/licensingbasics/sharedsourcelicenses.mspx.
 // All other rights reserved.
 
+using Microsoft.HealthVault.Exceptions;
 using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
-using System.Text;
 using System.Xml;
 using System.Xml.XPath;
-using Microsoft.HealthVault.Exceptions;
 
 namespace Microsoft.HealthVault.ItemTypes
 {
@@ -28,7 +25,7 @@ namespace Microsoft.HealthVault.ItemTypes
         public NutritionFact()
         {
         }
-        
+
         /// <summary>
         /// Creates a new instance of the <see cref="NutritionFact"/> class
         /// specifying mandatory values.
@@ -46,7 +43,7 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             Name = name;
         }
-        
+
         /// <summary>
         /// Populates this <see cref="NutritionFact"/> instance from the data in the specified XML.
         /// </summary>
@@ -58,7 +55,7 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <exception cref="ArgumentNullException">
         /// If <paramref name="navigator"/> parameter is <b>null</b>.
         /// </exception>
-        /// 
+        ///
         public override void ParseXml(XPathNavigator navigator)
         {
             if (navigator == null)
@@ -68,12 +65,12 @@ namespace Microsoft.HealthVault.ItemTypes
                     ResourceRetriever.GetResourceString(
                         "errors", "ParseXmlNavNull"));
             }
-            
+
             _name = new CodableValue();
             _name.ParseXml(navigator.SelectSingleNode("name"));
             _fact = XPathHelper.GetOptNavValue<GeneralMeasurement>(navigator, "fact");
         }
-        
+
         /// <summary>
         /// Writes the XML representation of the NutritionFact into
         /// the specified XML writer.
@@ -95,7 +92,7 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <exception cref="ArgumentNullException">
         /// If <paramref name="writer"/> parameter is <b>null</b>.
         /// </exception>
-        /// 
+        ///
         /// <exception cref="HealthRecordItemSerializationException">
         /// If <see cref="Name"/> is <b>null</b>.
         /// </exception>
@@ -106,10 +103,10 @@ namespace Microsoft.HealthVault.ItemTypes
             {
                 throw new ArgumentException(
                     ResourceRetriever.GetResourceString(
-                        "errors", "WriteXmlEmptyNodeName"), 
+                        "errors", "WriteXmlEmptyNodeName"),
                     "nodeName");
             }
-            
+
             if (writer == null)
             {
                 throw new ArgumentNullException(
@@ -117,7 +114,7 @@ namespace Microsoft.HealthVault.ItemTypes
                     ResourceRetriever.GetResourceString(
                         "errors", "WriteXmlNullWriter"));
             }
-            
+
             if (_name == null)
             {
                 throw new HealthRecordItemSerializationException(
@@ -126,16 +123,16 @@ namespace Microsoft.HealthVault.ItemTypes
             }
 
             writer.WriteStartElement(nodeName);
-            
+
             _name.WriteXml("name", writer);
             XmlWriterHelper.WriteOpt<GeneralMeasurement>(writer, "fact", _fact);
             writer.WriteEndElement();
         }
-        
+
         /// <summary>
         /// Gets or sets the name of the nutrient consumed.
         /// </summary>
-        /// 
+        ///
         /// <remarks>
         /// Example: calcium.
         /// If there is no information about name the value should be set to <b>null</b>.
@@ -144,7 +141,7 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <exception cref="ArgumentNullException">
         /// The <paramref name="value"/> parameter is <b>null</b>.
         /// </exception>
-        /// 
+        ///
         [SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly", Justification = "FXCop thinks that CodableValue is a collection, so it throws this error.")]
         public CodableValue Name
         {
@@ -152,7 +149,7 @@ namespace Microsoft.HealthVault.ItemTypes
             {
                 return _name;
             }
-            
+
             set
             {
                 if (value == null)
@@ -161,17 +158,17 @@ namespace Microsoft.HealthVault.ItemTypes
                         "value",
                         ResourceRetriever.GetResourceString("errors", "NutrientNameNullValue"));
                 }
-                
+
                 _name = value;
             }
         }
-        
+
         private CodableValue _name;
-        
+
         /// <summary>
         /// Gets or sets the amount of nutrient consumed.
         /// </summary>
-        /// 
+        ///
         /// <remarks>
         /// Examples include 30 cc, 500 mg, 15 liters, 30 inches, etc.
         /// If there is no information about fact the value should be set to <b>null</b>.
@@ -183,19 +180,19 @@ namespace Microsoft.HealthVault.ItemTypes
             {
                 return _fact;
             }
-            
+
             set
             {
                 _fact = value;
             }
         }
-        
+
         private GeneralMeasurement _fact;
-        
+
         /// <summary>
         /// Gets a string representation of the NutritionFact.
         /// </summary>
-        /// 
+        ///
         /// <returns>
         /// A string representation of the NutritionFact.
         /// </returns>

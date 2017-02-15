@@ -3,8 +3,6 @@
 // see http://www.microsoft.com/resources/sharedsource/licensingbasics/sharedsourcelicenses.mspx.
 // All other rights reserved.
 
-
-using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Text;
@@ -16,39 +14,39 @@ namespace Microsoft.HealthVault.ItemTypes
     /// <summary>
     /// Represents a physical mailing address.
     /// </summary>
-    /// 
+    ///
     public class Address : HealthRecordItemData
     {
         /// <summary>
         /// Creates a new instance of the <see cref="Address"/> class with default values.
         /// </summary>
-        /// 
+        ///
         public Address()
         {
         }
 
         /// <summary>
-        /// Creates a new instance of the <see cref="Address"/> class with 
+        /// Creates a new instance of the <see cref="Address"/> class with
         /// values for the mandatory properties.
         /// </summary>
-        /// 
+        ///
         /// <param name="city">
         /// The name of the city.
         /// </param>
-        /// 
+        ///
         /// <param name="country">
         /// The name of the country.
         /// </param>
-        /// 
+        ///
         /// <param name="postalCode">
         /// The postal code.
         /// </param>
-        /// 
+        ///
         /// <exception cref="ArgumentException">
         /// The <paramref name="city"/>, <paramref name="country"/> or
         /// <paramref name="postalCode"/> parameter is <b>null</b> or empty.
         /// </exception>
-        /// 
+        ///
         public Address(string city, string country, string postalCode)
         {
             Validator.ThrowIfStringNullOrEmpty(city, "city");
@@ -59,33 +57,33 @@ namespace Microsoft.HealthVault.ItemTypes
             _country = country;
             _postalCode = postalCode;
         }
-        
+
         /// <summary>
-        /// Creates a new instance of the <see cref="Address"/> class with 
+        /// Creates a new instance of the <see cref="Address"/> class with
         /// values for the mandatory properties.
         /// </summary>
-        /// 
+        ///
         /// <param name="street">
         /// The street address.
         /// </param>
-        /// 
+        ///
         /// <param name="city">
         /// The name of the city.
         /// </param>
-        /// 
+        ///
         /// <param name="country">
         /// The name of the country.
         /// </param>
-        /// 
+        ///
         /// <param name="postalCode">
         /// The postal code.
         /// </param>
-        /// 
+        ///
         /// <exception cref="ArgumentException">
         /// The <paramref name="street"/>, <paramref name="city"/>, <paramref name="country"/> or
         /// <paramref name="postalCode"/> parameter is <b>null</b> or empty.
         /// </exception>
-        /// 
+        ///
         public Address(string city, string country, string postalCode, IEnumerable<string> street)
         {
             Validator.ThrowIfArgumentNull(street, "street", "AddressStreetMandatory");
@@ -104,26 +102,26 @@ namespace Microsoft.HealthVault.ItemTypes
 
             Validator.ThrowArgumentExceptionIf(
                 _street.Count == 0,
-                "street", 
+                "street",
                 "AddressStreetMandatory");
         }
- 
+
         /// <summary>
         /// Populates the data from the specified XML.
         /// </summary>
-        /// 
+        ///
         /// <param name="navigator">
         /// The XML containing the address information.
         /// </param>
-        /// 
+        ///
         /// <exception cref="ArgumentNullException">
         /// The <paramref name="navigator"/> parameter is <b>null</b>.
         /// </exception>
-        /// 
+        ///
         public override void ParseXml(XPathNavigator navigator)
         {
             Validator.ThrowIfNavigatorNull(navigator);
-            
+
             XPathNavigator descNav =
                 navigator.SelectSingleNode("description");
 
@@ -162,29 +160,29 @@ namespace Microsoft.HealthVault.ItemTypes
         /// Writes the XML representation of the address into
         /// the specified XML writer.
         /// </summary>
-        /// 
+        ///
         /// <param name="nodeName">
         /// The name of the outer node for the address.
         /// </param>
-        /// 
+        ///
         /// <param name="writer">
-        /// The XML writer into which the address should be 
+        /// The XML writer into which the address should be
         /// written.
         /// </param>
-        /// 
+        ///
         /// <exception cref="ArgumentException">
         /// The <paramref name="nodeName"/> parameter is <b>null</b> or empty.
         /// </exception>
-        /// 
+        ///
         /// <exception cref="ArgumentNullException">
         /// The <paramref name="writer"/> parameter is <b>null</b>.
         /// </exception>
-        /// 
+        ///
         /// <exception cref="HealthRecordItemSerializationException">
-        /// The <see cref="Street"/> property is empty or <see cref="City"/>, 
+        /// The <see cref="Street"/> property is empty or <see cref="City"/>,
         /// <see cref="Country"/>, or <see cref="PostalCode"/> property has not been set.
         /// </exception>
-        /// 
+        ///
         public override void WriteXml(string nodeName, XmlWriter writer)
         {
             Validator.ThrowIfStringNullOrEmpty(nodeName, "nodeName");
@@ -208,7 +206,7 @@ namespace Microsoft.HealthVault.ItemTypes
             if (_isPrimary != null)
             {
                 writer.WriteElementString(
-                    "is-primary", 
+                    "is-primary",
                     SDKHelper.XmlFromBool((bool)_isPrimary));
             }
 
@@ -234,23 +232,23 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <summary>
         /// Gets or sets the description for the address.
         /// </summary>
-        /// 
+        ///
         /// <value>
         /// A string representing the description.
         /// </value>
-        /// 
+        ///
         /// <remarks>
         /// Set the value to <b>null</b> if the description should not be stored.
         /// </remarks>
-        /// 
+        ///
         /// <exception cref="ArgumentException">
         /// If <paramref name="value"/> contains only whitespace.
         /// </exception>
-        /// 
+        ///
         public string Description
         {
             get { return _description; }
-            set 
+            set
             {
                 Validator.ThrowIfStringIsWhitespace(value, "Description");
                 _description = value;
@@ -259,18 +257,18 @@ namespace Microsoft.HealthVault.ItemTypes
         private string _description;
 
         /// <summary>
-        /// Gets or sets a value indicating whether the address is the primary 
+        /// Gets or sets a value indicating whether the address is the primary
         /// address for the person.
         /// </summary>
-        /// 
+        ///
         /// <value>
         /// <b>true</b> if the address is the primary one; otherwise, <b>false</b>.
         /// </value>
-        /// 
+        ///
         /// <remarks>
         /// Set the value to <b>null</b> if <see cref="IsPrimary"/> should not be stored.
         /// </remarks>
-        /// 
+        ///
         public bool? IsPrimary
         {
             get { return _isPrimary; }
@@ -281,11 +279,11 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <summary>
         /// Gets the street number, name, apartment, and so on.
         /// </summary>
-        /// 
+        ///
         /// <value>
         /// A string collection of address information.
         /// </value>
-        /// 
+        ///
         public Collection<string> Street => _street;
 
         private readonly Collection<string> _street = new Collection<string>();
@@ -293,16 +291,16 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <summary>
         /// Gets or sets the city.
         /// </summary>
-        /// 
+        ///
         /// <value>
         /// A string representing the city name.
         /// </value>
-        /// 
+        ///
         /// <exception cref="ArgumentException">
         /// The <paramref name="value"/> parameter is <b>null</b>, empty, or contains only
         /// whitespace during set.
         /// </exception>
-        /// 
+        ///
         public string City
         {
             get { return _city; }
@@ -318,23 +316,23 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <summary>
         /// Gets or sets the state.
         /// </summary>
-        /// 
+        ///
         /// <value>
         /// A string representing the state name.
         /// </value>
-        /// 
+        ///
         /// <remarks>
         /// Set the value to <b>null</b> if the state should not be stored.
         /// </remarks>
-        /// 
+        ///
         /// <exception cref="ArgumentException">
         /// If <paramref name="value"/> contains only whitespace.
         /// </exception>
-        /// 
+        ///
         public string State
         {
             get { return _state; }
-            set 
+            set
             {
                 Validator.ThrowIfStringIsWhitespace(value, "State");
                 _state = value;
@@ -345,20 +343,20 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <summary>
         /// Gets or sets the country.
         /// </summary>
-        /// 
+        ///
         /// <value>
         /// A string representing the country name.
         /// </value>
-        /// 
+        ///
         /// <exception cref="ArgumentException">
-        /// The <paramref name="value"/> parameter is <b>null</b>, empty, or contains only 
+        /// The <paramref name="value"/> parameter is <b>null</b>, empty, or contains only
         /// whitespace during set.
         /// </exception>
-        /// 
+        ///
         public string Country
         {
             get { return _country; }
-            set 
+            set
             {
                 Validator.ThrowIfArgumentNull(value, "Country", "AddressCountryMandatory");
                 Validator.ThrowIfStringIsWhitespace(value, "Country");
@@ -370,16 +368,16 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <summary>
         /// Gets or sets the postal code.
         /// </summary>
-        /// 
+        ///
         /// <value>
         /// A string representing the postal code.
         /// </value>
-        /// 
+        ///
         /// <exception cref="ArgumentException">
         /// The <paramref name="value"/> parameter is <b>null</b>, empty, or contains only
         /// whitespace during set.
         /// </exception>
-        /// 
+        ///
         public string PostalCode
         {
             get { return _postalCode; }
@@ -395,19 +393,19 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <summary>
         /// Gets or sets the county.
         /// </summary>
-        /// 
+        ///
         /// <value>
         /// A string representing the county name.
         /// </value>
-        /// 
+        ///
         /// <remarks>
         /// Set the value to <b>null</b> if the county should not be stored.
         /// </remarks>
-        /// 
+        ///
         /// <exception cref="ArgumentException">
         /// If <paramref name="value"/> contains only whitespace.
         /// </exception>
-        /// 
+        ///
         public string County
         {
             get { return _county; }
@@ -427,12 +425,12 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <summary>
         /// Gets a string representation of the address.
         /// </summary>
-        /// 
+        ///
         /// <returns>
         /// A string representation of the address with commas separating the "lines"
         /// of the address.
         /// </returns>
-        /// 
+        ///
         public override string ToString()
         {
             StringBuilder result = new StringBuilder();

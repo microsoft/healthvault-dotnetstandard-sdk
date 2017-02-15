@@ -3,10 +3,9 @@
 // see http://www.microsoft.com/resources/sharedsource/licensingbasics/sharedsourcelicenses.mspx.
 // All other rights reserved.
 
-
 using System;
-using System.Diagnostics.CodeAnalysis;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Xml;
 using System.Xml.XPath;
@@ -22,41 +21,42 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <summary>
         /// Creates a new instance of the <see cref="BasicV2"/> class with default values.
         /// </summary>
-        /// 
+        ///
         /// <remarks>
         /// The item is not added to the health record until the
-        /// <see cref="HealthRecordAccessor.NewItem(HealthRecordItem)"/> method 
+        /// <see cref="HealthRecordAccessor.NewItem(HealthRecordItem)"/> method
         /// is called.
         /// </remarks>
-        /// 
+        ///
         public BasicV2()
             : base(TypeId)
         {
         }
+
         /// <summary>
         /// Retrieves the unique identifier for the item type.
         /// </summary>
-        /// 
+        ///
         /// <value>
         /// A GUID.
         /// </value>
-        /// 
+        ///
         public new static readonly Guid TypeId =
             new Guid("3b3e6b16-eb69-483c-8d7e-dfe116ae6092");
 
         /// <summary>
         /// Populates this <see cref="BasicV2"/> instance from the data in the XML.
         /// </summary>
-        /// 
+        ///
         /// <param name="typeSpecificXml">
         /// The XML to get the basic data from.
         /// </param>
-        /// 
+        ///
         /// <exception cref="InvalidOperationException">
         /// The first node in <paramref name="typeSpecificXml"/> is not
         /// a basic node.
         /// </exception>
-        /// 
+        ///
         protected override void ParseXml(IXPathNavigable typeSpecificXml)
         {
             XPathNavigator basicNav =
@@ -71,8 +71,8 @@ namespace Microsoft.HealthVault.ItemTypes
             {
                 string genderString = genderNav.Value;
                 if (string.Equals(
-                        genderString, 
-                        "m", 
+                        genderString,
+                        "m",
                         StringComparison.Ordinal))
                 {
                     _gender = ItemTypes.Gender.Male;
@@ -98,7 +98,7 @@ namespace Microsoft.HealthVault.ItemTypes
 
             _stateOrProvince =
                 XPathHelper.GetOptNavValue<CodableValue>(basicNav, "state");
-            
+
             XPathNavigator dayOfWeekNav =
                 basicNav.SelectSingleNode("firstdow");
             if (dayOfWeekNav != null)
@@ -124,15 +124,15 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <summary>
         /// Writes the basic data to the specified XmlWriter.
         /// </summary>
-        /// 
+        ///
         /// <param name="writer">
         /// The XmlWriter to write the basic data to.
         /// </param>
-        /// 
+        ///
         /// <exception cref="ArgumentNullException">
         /// If <paramref name="writer"/> is <b>null</b>.
         /// </exception>
-        /// 
+        ///
         public override void WriteXml(XmlWriter writer)
         {
             Validator.ThrowIfWriterNull(writer);
@@ -183,39 +183,39 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <summary>
         /// Gets or sets the gender of the person.
         /// </summary>
-        /// 
+        ///
         /// <value>
         /// The person's gender.
         /// </value>
-        /// 
+        ///
         /// <remarks>
         /// Set the value to <b>null</b> if the gender should not be stored.
         /// </remarks>
-        /// 
+        ///
         public Gender? Gender
         {
             get { return _gender; }
             set { _gender = value; }
         }
         private Gender? _gender;
-        
+
         /// <summary>
         /// Gets or sets the birth year of the person.
         /// </summary>
-        /// 
+        ///
         /// <value>
         /// An integer representing the year.
         /// </value>
-        /// 
+        ///
         /// <remarks>
         /// Set the value to <b>null</b> if the birth year should not be stored.
         /// </remarks>
-        /// 
+        ///
         /// <exception cref="ArgumentOutOfRangeException">
         /// The <paramref name="value"/> parameter is less than 1000 or greater than
         /// 3000 when setting the value.
         /// </exception>
-        /// 
+        ///
         public int? BirthYear
         {
             get { return _birthYear; }
@@ -233,40 +233,40 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <summary>
         /// Gets or sets the country of residence.
         /// </summary>
-        /// 
+        ///
         /// <remarks>
         /// Set the value to <b>null</b> if the country should not be stored.
         /// </remarks>
-        /// 
+        ///
         /// <value>
-        /// A codable value representing the country. 
+        /// A codable value representing the country.
         /// </value>
-        /// 
-        // FXCop thinks that CodableValue is a collection, so it throws this error. 
+        ///
+        // FXCop thinks that CodableValue is a collection, so it throws this error.
         [SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public CodableValue Country
         {
             get { return _country; }
-            set { _country = value; } 
+            set { _country = value; }
         }
         private CodableValue _country;
 
         /// <summary>
         /// Gets or sets the postal code of the country of residence.
         /// </summary>
-        /// 
+        ///
         /// <value>
         /// A string representing the postal code.
         /// </value>
-        /// 
+        ///
         /// <exception cref="ArgumentException">
         /// If <paramref name="value"/> contains only whitespace.
         /// </exception>
-        /// 
+        ///
         public string PostalCode
         {
             get { return _postalCode; }
-            set 
+            set
             {
                 Validator.ThrowIfStringIsWhitespace(value, "PostalCode");
                 _postalCode = value;
@@ -277,19 +277,19 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <summary>
         /// Gets or sets the city of residence.
         /// </summary>
-        /// 
+        ///
         /// <value>
         /// A string representing the city.
         /// </value>
-        /// 
+        ///
         /// <exception cref="ArgumentException">
         /// If <paramref name="value"/> contains only whitespace.
         /// </exception>
-        /// 
+        ///
         public string City
         {
             get { return _city; }
-            set 
+            set
             {
                 Validator.ThrowIfStringIsWhitespace(value, "City");
                 _city = value;
@@ -300,38 +300,38 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <summary>
         /// Gets or sets the state or province of residence.
         /// </summary>
-        /// 
+        ///
         /// <value>
         /// A string representing the state or province.
         /// </value>
-        /// 
+        ///
         /// <remarks>
         /// Set the value to <b>null</b> if the state
         /// should not be stored.
         /// </remarks>
-        /// 
-        // FXCop thinks that CodableValue is a collection, so it throws this error. 
+        ///
+        // FXCop thinks that CodableValue is a collection, so it throws this error.
         [SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public CodableValue StateOrProvince
         {
             get { return _stateOrProvince; }
-            set { _stateOrProvince = value; } 
+            set { _stateOrProvince = value; }
         }
         private CodableValue _stateOrProvince;
-        
+
         /// <summary>
         /// Gets or sets the preferred first day of the week.
         /// </summary>
-        /// 
+        ///
         /// <value>
         /// A <see cref="DayOfWeek"/> instance representing the day.
         /// </value>
-        /// 
+        ///
         /// <remarks>
-        /// Set the value to <b>null</b> if the first day of the week 
+        /// Set the value to <b>null</b> if the first day of the week
         /// should not be stored.
         /// </remarks>
-        /// 
+        ///
         public DayOfWeek? FirstDayOfWeek
         {
             get { return _firstDayOfWeek; }
@@ -342,11 +342,11 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <summary>
         /// Gets the language(s) the person speaks.
         /// </summary>
-        /// 
+        ///
         /// <value>
         /// A list of the languages.
         /// </value>
-        /// 
+        ///
         public IList<Language> Languages => _languages;
 
         private readonly List<Language> _languages = new List<Language>();
@@ -354,11 +354,11 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <summary>
         /// Gets a string representation of the basic item.
         /// </summary>
-        /// 
+        ///
         /// <returns>
         /// A string representation of the basic item.
         /// </returns>
-        /// 
+        ///
         public override string ToString()
         {
             if (Gender != null || BirthYear != null)

@@ -3,30 +3,28 @@
 // see http://www.microsoft.com/resources/sharedsource/licensingbasics/sharedsourcelicenses.mspx.
 // All other rights reserved.
 
-
 using System;
 using System.Collections.Generic;
 using System.Xml;
 using System.Xml.XPath;
 
-
 namespace Microsoft.HealthVault.ItemTypes
 {
     /// <summary>
-    /// Information about the body composition of the record owner. 
+    /// Information about the body composition of the record owner.
     /// </summary>
-    /// 
+    ///
     public class BodyComposition : HealthRecordItem
     {
         /// <summary>
         /// Creates an instance of information about the body composition of the record owner
         /// with default values.
         /// </summary>
-        /// 
+        ///
         /// <remarks>
         /// Examples: % body fat, lean muscle mass.
         /// </remarks>
-        /// 
+        ///
         public BodyComposition()
             : base(TypeId)
         {
@@ -36,28 +34,28 @@ namespace Microsoft.HealthVault.ItemTypes
         /// Creates an instance of information about the body composition of the record owner
         /// with specified time, measurement name, and value.
         /// </summary>
-        /// 
+        ///
         /// <remarks>
         /// Examples: % body fat, lean muscle mass.
         /// </remarks>
-        /// 
-        /// <param name="when"> 
-        /// The date and time of the measurement. 
+        ///
+        /// <param name="when">
+        /// The date and time of the measurement.
         /// </param>
-        /// 
+        ///
         /// <param name="measurementName">
         /// The name of the measurement.
         /// </param>
-        /// 
-        /// <param name="compositionValue"> 
-        /// The value of the measurement. 
+        ///
+        /// <param name="compositionValue">
+        /// The value of the measurement.
         /// </param>
-        /// 
+        ///
         /// <exception cref="ArgumentNullException">
-        /// If <paramref name="when"/>, <paramref name="measurementName"/> or 
+        /// If <paramref name="when"/>, <paramref name="measurementName"/> or
         /// <paramref name="compositionValue"/> is <b>null</b>.
         /// </exception>
-        /// 
+        ///
         public BodyComposition(
             ApproximateDateTime when,
             CodableValue measurementName,
@@ -72,23 +70,23 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <summary>
         /// Retrieves the unique identifier for the item type.
         /// </summary>
-        /// 
+        ///
         public new static readonly Guid TypeId =
             new Guid("18adc276-5144-4e7e-bf6c-e56d8250adf8");
 
         /// <summary>
         /// Populates this <see cref="BodyComposition"/> instance from the data in the XML.
         /// </summary>
-        /// 
+        ///
         /// <param name="typeSpecificXml">
         /// The XML to get the body composition data from.
         /// </param>
-        /// 
+        ///
         /// <exception cref="InvalidOperationException">
         /// If the first node in <paramref name="typeSpecificXml"/> is not
         /// a "body-composition" node.
         /// </exception>
-        /// 
+        ///
         protected override void ParseXml(IXPathNavigable typeSpecificXml)
         {
             XPathNavigator itemNav =
@@ -96,7 +94,7 @@ namespace Microsoft.HealthVault.ItemTypes
 
             Validator.ThrowInvalidIfNull(itemNav, "BodyCompositionUnexpectedNode");
 
-            // when (approxi-date-time, mandatory) 
+            // when (approxi-date-time, mandatory)
             _when = new ApproximateDateTime();
             _when.ParseXml(itemNav.SelectSingleNode("when"));
 
@@ -112,29 +110,28 @@ namespace Microsoft.HealthVault.ItemTypes
             _measurementMethod =
                 XPathHelper.GetOptNavValue<CodableValue>(itemNav, "measurement-method");
 
-            // site 
+            // site
             _site =
                 XPathHelper.GetOptNavValue<CodableValue>(itemNav, "site");
-
         }
 
         /// <summary>
         /// Writes the body composition data to the specified XmlWriter.
         /// </summary>
-        /// 
+        ///
         /// <param name="writer">
-        /// The XmlWriter to write the body composition data to. 
+        /// The XmlWriter to write the body composition data to.
         /// </param>
-        /// 
+        ///
         /// <exception cref="ArgumentNullException">
         /// If <paramref name="writer"/> is <b>null</b>.
         /// </exception>
-        /// 
+        ///
         /// <exception cref="HealthRecordItemSerializationException">
         /// If <see cref="When"/>, <see cref="MeasurementName"/> or <see cref="Value"/>
         /// is <b>null</b>.
         /// </exception>
-        /// 
+        ///
         public override void WriteXml(XmlWriter writer)
         {
             Validator.ThrowIfWriterNull(writer);
@@ -173,16 +170,16 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <summary>
         /// Gets or sets the date and time of this measurement.
         /// </summary>
-        /// 
+        ///
         /// <value>
-        /// A <see cref="HealthServiceDateTime"/> instance representing the date 
+        /// A <see cref="HealthServiceDateTime"/> instance representing the date
         /// and time.
         /// </value>
-        /// 
+        ///
         /// <exception cref="ArgumentNullException">
         /// If the <paramref name="value"/> parameter is <b>null</b>.
         /// </exception>
-        /// 
+        ///
         public ApproximateDateTime When
         {
             get { return _when; }
@@ -197,21 +194,21 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <summary>
         /// Gets or sets the name of this measurement.
         /// </summary>
-        /// 
+        ///
         /// <value>
         /// A <see cref="CodableValue"/> instance representing the name
         /// of this measurement.
         /// </value>
-        /// 
+        ///
         /// <remarks>
-        /// Examples: Body fat, lean muscle. The preferred vocabulary is 
+        /// Examples: Body fat, lean muscle. The preferred vocabulary is
         /// "body-composition-measurement-names".
         /// </remarks>
-        /// 
+        ///
         /// <exception cref="ArgumentNullException">
         /// If the <paramref name="value"/> parameter is <b>null</b>.
         /// </exception>
-        /// 
+        ///
         public CodableValue MeasurementName
         {
             get { return _measurementName; }
@@ -226,16 +223,16 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <summary>
         /// Gets or sets the value of this measurement.
         /// </summary>
-        /// 
+        ///
         /// <value>
-        /// A <see cref="BodyCompositionValue"/> instance representing the value of 
+        /// A <see cref="BodyCompositionValue"/> instance representing the value of
         /// this measurement.
         /// </value>
-        /// 
+        ///
         /// <exception cref="ArgumentNullException">
         /// If the <paramref name="value"/> parameter is <b>null</b>.
         /// </exception>
-        /// 
+        ///
         public BodyCompositionValue Value
         {
             get { return _value; }
@@ -250,18 +247,18 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <summary>
         /// Gets or sets the technique used to obtain the measurement.
         /// </summary>
-        /// 
+        ///
         /// <value>
-        /// A <see cref="CodableValue"/> instance representing the technique used 
-        /// to obtain the measurement. 
+        /// A <see cref="CodableValue"/> instance representing the technique used
+        /// to obtain the measurement.
         /// </value>
-        /// 
+        ///
         /// <remarks>
-        /// Examples: Bioelectrical impedance, DXA, Skinfold (calipers). If the measurement method 
+        /// Examples: Bioelectrical impedance, DXA, Skinfold (calipers). If the measurement method
         /// is missing, the value should be set to <b>null</b>. The preferred vocabulary is
         /// "body-composition-measurement-methods".
         /// </remarks>
-        /// 
+        ///
         public CodableValue MeasurementMethod
         {
             get { return _measurementMethod; }
@@ -272,16 +269,16 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <summary>
         /// Gets or sets the body part that is the subject of the measurement.
         /// </summary>
-        /// 
+        ///
         /// <value>
-        /// A <see cref="CodableValue"/> instance representing the site 
+        /// A <see cref="CodableValue"/> instance representing the site
         /// </value>
-        /// 
+        ///
         /// <remarks>
-        /// Examples: Left arm, head, torso. If the site is absent, the measurement is for 
+        /// Examples: Left arm, head, torso. If the site is absent, the measurement is for
         /// the whole body. The preferred vocabulary is "body-composition-sites".
         /// </remarks>
-        /// 
+        ///
         public CodableValue Site
         {
             get { return _site; }
@@ -292,15 +289,15 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <summary>
         /// Gets the representation of a body composition instance.
         /// </summary>
-        /// 
+        ///
         /// <returns>
         /// A string representation of the body composition item.
         /// </returns>
-        /// 
+        ///
         public override string ToString()
         {
             List<string> elements = new List<string>();
-            
+
             if (_measurementName != null)
             {
                 elements.Add(_measurementName.ToString());

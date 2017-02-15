@@ -11,7 +11,7 @@ namespace Microsoft.HealthVault
     /// <summary>
     /// A collection of vocabulary items belonging to a particular vocabulary.
     /// </summary>
-    /// 
+    ///
     public class VocabularyItemCollection : Vocabulary
     {
         internal VocabularyItemCollection()
@@ -22,7 +22,7 @@ namespace Microsoft.HealthVault
         /// <summary>
         /// Retrieves the vocabulary items in the intended order for this instance.
         /// </summary>
-        /// 
+        ///
         public ReadOnlyCollection<VocabularyItem> OrderedValues
         {
             get { return new ReadOnlyCollection<VocabularyItem>(_orderedItemsList); }
@@ -32,11 +32,11 @@ namespace Microsoft.HealthVault
         /// Retrieves the vocabulary item at the specified index based on the intended order
         /// for this instance.
         /// </summary>
-        /// 
+        ///
         /// <param name="index"></param>
-        /// 
+        ///
         /// <returns></returns>
-        /// 
+        ///
         public VocabularyItem this[int index]
         {
             get { return _orderedItemsList[index]; }
@@ -50,5 +50,4 @@ namespace Microsoft.HealthVault
 
         private List<VocabularyItem> _orderedItemsList;
     }
-
 }

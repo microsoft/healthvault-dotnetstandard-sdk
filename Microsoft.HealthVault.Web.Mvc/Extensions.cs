@@ -38,7 +38,7 @@ namespace Microsoft.HealthVault.Web.Mvc
         }
 
         /// <summary>
-        /// Returns a <see cref="Mvc.PersonInfoManager"/> to handle PersonInfo 
+        /// Returns a <see cref="Mvc.PersonInfoManager"/> to handle PersonInfo
         /// actions for the current request.
         /// </summary>
         /// <param name="context">The current HttpContext</param>
@@ -49,7 +49,7 @@ namespace Microsoft.HealthVault.Web.Mvc
         }
 
         /// <summary>
-        /// Returns a <see cref="Mvc.PersonInfoManager"/> to handle PersonInfo 
+        /// Returns a <see cref="Mvc.PersonInfoManager"/> to handle PersonInfo
         /// actions for the current request.
         /// </summary>
         /// <param name="context">The current HttpContext</param>

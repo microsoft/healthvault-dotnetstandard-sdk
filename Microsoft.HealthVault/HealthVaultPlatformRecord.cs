@@ -9,16 +9,14 @@ using System.Collections.ObjectModel;
 using System.Text;
 using System.Xml;
 using System.Xml.XPath;
-using Microsoft.HealthVault.Exceptions;
 
 namespace Microsoft.HealthVault.PlatformPrimitives
 {
-
     /// <summary>
     /// Provides low-level access to the HealthVault record operations.
     /// </summary>
     /// <remarks>
-    /// <see cref="HealthVaultPlatform"/> uses this class to perform operations. Set 
+    /// <see cref="HealthVaultPlatform"/> uses this class to perform operations. Set
     /// HealthVaultPlatformRecord.Current to a derived class to intercept all message calls.
     /// </remarks>
 
@@ -27,18 +25,18 @@ namespace Microsoft.HealthVault.PlatformPrimitives
         /// <summary>
         /// Enables mocking of calls to this class.
         /// </summary>
-        /// 
+        ///
         /// <remarks>
         /// The calling class should pass in a class that derives from this
-        /// class and overrides the calls to be mocked. 
+        /// class and overrides the calls to be mocked.
         /// </remarks>
-        /// 
+        ///
         /// <param name="mock">The mocking class.</param>
-        /// 
+        ///
         /// <exception cref="InvalidOperationException">
         /// There is already a mock registered for this class.
         /// </exception>
-        /// 
+        ///
         public static void EnableMock(HealthVaultPlatformRecord mock)
         {
             Validator.ThrowInvalidIf(_saved != null, "ClassAlreadyMocked");
@@ -50,11 +48,11 @@ namespace Microsoft.HealthVault.PlatformPrimitives
         /// <summary>
         /// Removes mocking of calls to this class.
         /// </summary>
-        /// 
+        ///
         /// <exception cref="InvalidOperationException">
         /// There is no mock registered for this class.
         /// </exception>
-        /// 
+        ///
         public static void DisableMock()
         {
             Validator.ThrowInvalidIfNull(_saved, "ClassIsntMocked");
@@ -62,6 +60,7 @@ namespace Microsoft.HealthVault.PlatformPrimitives
             _current = _saved;
             _saved = null;
         }
+
         internal static HealthVaultPlatformRecord Current
         {
             get { return _current; }
@@ -72,22 +71,22 @@ namespace Microsoft.HealthVault.PlatformPrimitives
         /// <summary>
         /// Releases the authorization of the application on the health record.
         /// </summary>
-        /// 
+        ///
         /// <param name="connection">
         /// The connection to use to access the data.
         /// </param>
-        /// 
+        ///
         /// <param name="accessor">
         /// The record to use.
         /// </param>
-        /// 
+        ///
         /// <exception cref="HealthServiceException">
         /// Errors during the authorization release.
         /// </exception>
-        /// 
+        ///
         /// <remarks>
-        /// Once the application releases the authorization to the health record, 
-        /// calling any methods of this <see cref="HealthRecordAccessor"/> will result 
+        /// Once the application releases the authorization to the health record,
+        /// calling any methods of this <see cref="HealthRecordAccessor"/> will result
         /// in a <see cref="HealthServiceAccessDeniedException"/>."
         /// </remarks>
         public virtual void RemoveApplicationAuthorization(
@@ -101,44 +100,44 @@ namespace Microsoft.HealthVault.PlatformPrimitives
         }
 
         /// <summary>
-        /// Gets the permissions which the authenticated person 
+        /// Gets the permissions which the authenticated person
         /// has when using the calling application for the specified item types
         /// in this  record.
         /// </summary>
-        /// 
+        ///
         /// <param name="connection">
         /// The connection to use to access the data.
         /// </param>
-        /// 
+        ///
         /// <param name="accessor">
         /// The record to use.
         /// </param>
         ///
         /// <param name="healthRecordItemTypeIds">
-        /// A collection of unique identifiers to identify the health record  
-        /// item types, for which the permissions are being queried. 
+        /// A collection of unique identifiers to identify the health record
+        /// item types, for which the permissions are being queried.
         /// </param>
-        /// 
+        ///
         /// <returns>
-        /// Returns a dictionary of <see cref="HealthRecordItemTypePermission"/> 
-        /// with health record item types as the keys. 
+        /// Returns a dictionary of <see cref="HealthRecordItemTypePermission"/>
+        /// with health record item types as the keys.
         /// </returns>
-        /// 
-        /// <remarks> 
-        /// If the list of health record item types is empty, an empty dictionary is 
-        /// returned. If for a health record item type, the person has 
-        /// neither online access nor offline access permissions, 
+        ///
+        /// <remarks>
+        /// If the list of health record item types is empty, an empty dictionary is
+        /// returned. If for a health record item type, the person has
+        /// neither online access nor offline access permissions,
         /// <b> null </b> will be returned for that type in the dictionary.
         /// </remarks>
-        /// 
+        ///
         /// <exception cref="ArgumentNullException">
         /// If <paramref name="healthRecordItemTypeIds"/> is <b>null</b>.
         /// </exception>
-        /// 
+        ///
         /// <exception cref="HealthServiceException">
-        /// If there is an exception during executing the request to HealthVault. 
+        /// If there is an exception during executing the request to HealthVault.
         /// </exception>
-        /// 
+        ///
         public virtual IDictionary<Guid, HealthRecordItemTypePermission> QueryPermissionsByTypes(
             ApplicationConnection connection,
             HealthRecordAccessor accessor,
@@ -166,47 +165,47 @@ namespace Microsoft.HealthVault.PlatformPrimitives
         }
 
         /// <summary>
-        /// Gets the permissions which the authenticated person 
-        /// has when using the calling application for the specified item types 
+        /// Gets the permissions which the authenticated person
+        /// has when using the calling application for the specified item types
         /// in this health record.
         /// </summary>
-        /// 
+        ///
         /// <param name="connection">
         /// The connection to use to access the data.
         /// </param>
-        /// 
+        ///
         /// <param name="accessor">
         /// The record to use.
         /// </param>
-        /// 
+        ///
         /// <param name="healthRecordItemTypeIds">
-        /// A collection of uniqueidentifiers to identify the health record  
-        /// item types, for which the permissions are being queried. 
+        /// A collection of uniqueidentifiers to identify the health record
+        /// item types, for which the permissions are being queried.
         /// </param>
-        /// 
+        ///
         /// <returns>
-        /// A list of <see cref="HealthRecordItemTypePermission"/> 
+        /// A list of <see cref="HealthRecordItemTypePermission"/>
         /// objects which represent the permissions that the current
         /// authenticated person has for the HealthRecordItemTypes specified
         /// in the current health record when using the current application.
         /// </returns>
-        /// 
-        /// <remarks> 
-        /// If the list of health record item types is empty, an empty list is 
-        /// returned. If for a health record item type, the person has 
-        /// neither online access nor offline access permissions, 
+        ///
+        /// <remarks>
+        /// If the list of health record item types is empty, an empty list is
+        /// returned. If for a health record item type, the person has
+        /// neither online access nor offline access permissions,
         /// HealthRecordItemTypePermission object is not returned for that
-        /// health record item type. 
+        /// health record item type.
         /// </remarks>
-        /// 
+        ///
         /// <exception cref="ArgumentNullException">
         /// If <paramref name="healthRecordItemTypeIds"/> is <b>null</b>.
         /// </exception>
-        /// 
+        ///
         /// <exception cref="HealthServiceException">
-        /// If there is an exception during executing the request to HealthVault. 
+        /// If there is an exception during executing the request to HealthVault.
         /// </exception>
-        /// 
+        ///
         public virtual Collection<HealthRecordItemTypePermission> QueryPermissions(
             ApplicationConnection connection,
             HealthRecordAccessor accessor,
@@ -216,47 +215,47 @@ namespace Microsoft.HealthVault.PlatformPrimitives
         }
 
         /// <summary>
-        /// Gets the permissions which the authenticated person 
-        /// has when using the calling application for the specified item types 
+        /// Gets the permissions which the authenticated person
+        /// has when using the calling application for the specified item types
         /// in this health record as well as the other permission settings such as MeaningfulUseOptIn.
         /// </summary>
-        /// 
+        ///
         /// <param name="connection">
         /// The connection to use to access the data.
         /// </param>
-        /// 
+        ///
         /// <param name="accessor">
         /// The record to use.
         /// </param>
-        /// 
+        ///
         /// <param name="healthRecordItemTypeIds">
-        /// A collection of uniqueidentifiers to identify the health record  
-        /// item types, for which the permissions are being queried. 
+        /// A collection of uniqueidentifiers to identify the health record
+        /// item types, for which the permissions are being queried.
         /// </param>
-        /// 
+        ///
         /// <returns>
         /// A <see cref="HealthRecordPermissions"/> object
         /// which contains a collection of <see cref="HealthRecordItemTypePermission"/> objects and
         /// other permission settings.
         /// </returns>
-        /// 
-        /// <remarks> 
-        /// If the list of health record item types is empty, an empty list is 
+        ///
+        /// <remarks>
+        /// If the list of health record item types is empty, an empty list is
         /// returned for <see cref="HealthRecordPermissions"/> object's ItemTypePermissions property.
-        /// If for a health record item type, the person has 
-        /// neither online access nor offline access permissions, 
+        /// If for a health record item type, the person has
+        /// neither online access nor offline access permissions,
         /// HealthRecordItemTypePermission object is not returned for that
-        /// health record item type. 
+        /// health record item type.
         /// </remarks>
-        /// 
+        ///
         /// <exception cref="ArgumentNullException">
         /// If <paramref name="healthRecordItemTypeIds"/> is <b>null</b>.
         /// </exception>
-        /// 
+        ///
         /// <exception cref="HealthServiceException">
         /// There is an error in the server request.
         /// </exception>
-        /// 
+        ///
         public virtual HealthRecordPermissions QueryRecordPermissions(
             ApplicationConnection connection,
             HealthRecordAccessor accessor,
@@ -320,6 +319,7 @@ namespace Microsoft.HealthVault.PlatformPrimitives
             }
             return parameters.ToString();
         }
+
         private static readonly XPathExpression _queryPermissionsInfoPath =
             XPathExpression.Compile("/wc:info");
 
@@ -347,34 +347,34 @@ namespace Microsoft.HealthVault.PlatformPrimitives
         /// <summary>
         /// Gets valid group memberships for a record.
         /// </summary>
-        /// 
+        ///
         /// <remarks>
         /// Group membership thing types allow an application to signify that the
-        /// record belongs to an application defined group.  A record in the group may be 
-        /// eligible for special programs offered by other applications, for example.  
+        /// record belongs to an application defined group.  A record in the group may be
+        /// eligible for special programs offered by other applications, for example.
         /// Applications then need a away to query for valid group memberships.
         /// <br/>
         /// Valid group memberships are those memberships which are not expired, and whose
-        /// last updating application is authorized by the the last updating person to 
+        /// last updating application is authorized by the the last updating person to
         /// read and delete the membership.
         /// </remarks>
-        /// 
+        ///
         /// <param name="connection">
         /// The connection to use to access the data.
         /// </param>
-        /// 
+        ///
         /// <param name="accessor">
         /// The record to use.
         /// </param>
-        /// 
+        ///
         /// <param name="applicationIds">
-        /// A collection of unique application identifiers for which to 
-        /// search for group memberships.  For a null or empty application identifier 
-        /// list, return all valid group memberships for the record.  Otherwise, 
-        /// return only those group memberships last updated by one of the 
+        /// A collection of unique application identifiers for which to
+        /// search for group memberships.  For a null or empty application identifier
+        /// list, return all valid group memberships for the record.  Otherwise,
+        /// return only those group memberships last updated by one of the
         /// supplied application identifiers.
         /// </param>
-        /// 
+        ///
         /// <returns>
         /// A List of HealthRecordItems representing the valid group memberships.
         /// </returns>
@@ -432,4 +432,3 @@ namespace Microsoft.HealthVault.PlatformPrimitives
         }
     }
 }
-

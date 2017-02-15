@@ -3,7 +3,6 @@
 // see http://www.microsoft.com/resources/sharedsource/licensingbasics/sharedsourcelicenses.mspx.
 // All other rights reserved.
 
-
 using System;
 using System.Text;
 using System.Xml;
@@ -14,20 +13,20 @@ namespace Microsoft.HealthVault.ItemTypes
     /// <summary>
     /// Represents a medication health record item.
     /// </summary>
-    /// 
+    ///
     public class Medication : HealthRecordItem
     {
         /// <summary>
-        /// Creates a new instance of the <see cref="Medication"/> class with default 
+        /// Creates a new instance of the <see cref="Medication"/> class with default
         /// values.
         /// </summary>
-        /// 
+        ///
         /// <remarks>
         /// The item is not added to the health record until the
-        /// <see cref="HealthRecordAccessor.NewItem(HealthRecordItem)"/> method 
+        /// <see cref="HealthRecordAccessor.NewItem(HealthRecordItem)"/> method
         /// is called.
         /// </remarks>
-        /// 
+        ///
         public Medication()
             : base(TypeId)
         {
@@ -36,15 +35,15 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <summary>
         /// Creates a new instance of the <see cref="Medication"/> class with the specified name.
         /// </summary>
-        /// 
+        ///
         /// <param name="name">
         /// The name of the medication.
         /// </param>
-        /// 
+        ///
         /// <exception cref="ArgumentNullException">
         /// If <paramref name="name"/> is <b>null</b>.
         /// </exception>
-        /// 
+        ///
         public Medication(CodableValue name)
             : base(TypeId)
         {
@@ -54,23 +53,23 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <summary>
         /// The unique identifier for the item type.
         /// </summary>
-        /// 
+        ///
         public new static readonly Guid TypeId =
             new Guid("30cafccc-047d-4288-94ef-643571f7919d");
 
         /// <summary>
         /// Populates this medication instance from the data in the XML.
         /// </summary>
-        /// 
+        ///
         /// <param name="typeSpecificXml">
         /// The XML to get the medication data from.
         /// </param>
-        /// 
+        ///
         /// <exception cref="InvalidOperationException">
         /// If the first node in <paramref name="typeSpecificXml"/> is not
         /// a medication node.
         /// </exception>
-        /// 
+        ///
         protected override void ParseXml(IXPathNavigable typeSpecificXml)
         {
             XPathNavigator itemNav =
@@ -115,19 +114,19 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <summary>
         /// Writes the medication data to the specified XmlWriter.
         /// </summary>
-        /// 
+        ///
         /// <param name="writer">
         /// The XmlWriter to write the medication data to.
         /// </param>
-        /// 
+        ///
         /// <exception cref="ArgumentNullException">
         /// The <paramref name="writer"/> parameter is <b>null</b>.
         /// </exception>
-        /// 
+        ///
         /// <exception cref="HealthRecordItemSerializationException">
         /// The <see cref="Name"/> property has not been set.
         /// </exception>
-        /// 
+        ///
         public override void WriteXml(XmlWriter writer)
         {
             Validator.ThrowIfWriterNull(writer);
@@ -206,15 +205,15 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <summary>
         /// Gets or sets the medication name and clinical code.
         /// </summary>
-        /// 
+        ///
         /// <exception cref="ArgumentNullException">
         /// If <paramref name="value"/> is <b>null</b> on set.
         /// </exception>
-        /// 
+        ///
         public CodableValue Name
         {
             get { return _name; }
-            set 
+            set
             {
                 Validator.ThrowIfArgumentNull(value, "Name", "MedicationNameMandatory");
                 _name = value;
@@ -222,15 +221,14 @@ namespace Microsoft.HealthVault.ItemTypes
         }
         private CodableValue _name;
 
-
         /// <summary>
         /// Gets or sets the generic name of the medication.
         /// </summary>
-        /// 
+        ///
         /// <remarks>
         /// If the value is not known, it will be set to <b>null</b>.
         /// </remarks>
-        /// 
+        ///
         public CodableValue GenericName
         {
             get { return _genericName; }
@@ -241,12 +239,12 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <summary>
         /// Gets or sets the dose of the medication.
         /// </summary>
-        /// 
+        ///
         /// <remarks>
         /// If the value is not known, it will be set to <b>null</b>.
         /// Examples: 1 tablet, 50 ml.
         /// </remarks>
-        /// 
+        ///
         public GeneralMeasurement Dose
         {
             get { return _dose; }
@@ -257,12 +255,12 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <summary>
         /// Gets or sets the strength of the medication.
         /// </summary>
-        /// 
+        ///
         /// <remarks>
         /// If the value is not known, it will be set to <b>null</b>.
         /// Examples: 500 mg, 10 mg/ml.
         /// </remarks>
-        /// 
+        ///
         public GeneralMeasurement Strength
         {
             get { return _strength; }
@@ -273,12 +271,12 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <summary>
         /// Gets or sets how often the medication is taken.
         /// </summary>
-        /// 
+        ///
         /// <remarks>
         /// If the value is not known, it will be set to <b>null</b>.
         /// Examples: 1 tablet per day, 2 every 6 hours, as needed.
         /// </remarks>
-        /// 
+        ///
         public GeneralMeasurement Frequency
         {
             get { return _frequency; }
@@ -289,12 +287,12 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <summary>
         /// Gets or sets the route by which the medication is administered.
         /// </summary>
-        /// 
+        ///
         /// <remarks>
         /// If the value is not known, it will be set to <b>null</b>.
         /// The preferred vocabulary for route is "medication-routes".
         /// </remarks>
-        /// 
+        ///
         public CodableValue Route
         {
             get { return _route; }
@@ -305,11 +303,11 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <summary>
         /// Gets or sets the indication for the medication.
         /// </summary>
-        /// 
+        ///
         /// <remarks>
         /// If the value is not known, it will be set to <b>null</b>.
         /// </remarks>
-        /// 
+        ///
         public CodableValue Indication
         {
             get { return _indication; }
@@ -320,11 +318,11 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <summary>
         /// Gets or sets the date on which the person started taken the medication.
         /// </summary>
-        /// 
+        ///
         /// <remarks>
         /// If the value is not known, it will be set to <b>null</b>.
         /// </remarks>
-        /// 
+        ///
         public ApproximateDateTime DateStarted
         {
             get { return _dateStarted; }
@@ -335,11 +333,11 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <summary>
         /// Gets or sets the date on which the medication was discontinued.
         /// </summary>
-        /// 
+        ///
         /// <remarks>
         /// If the value is not known, it will be set to <b>null</b>.
         /// </remarks>
-        /// 
+        ///
         public ApproximateDateTime DateDiscontinued
         {
             get { return _dateDiscontinued; }
@@ -347,18 +345,17 @@ namespace Microsoft.HealthVault.ItemTypes
         }
         private ApproximateDateTime _dateDiscontinued;
 
-
         /// <summary>
         /// Gets or sets the source of the prescription.
         /// </summary>
-        /// 
+        ///
         /// <remarks>
         /// A medication that is prescribed by a physician should code "prescribed"
-        /// into this element. 
+        /// into this element.
         /// If the value is not known, it will be set to <b>null</b>.
         /// The preferred vocabulary for prescribed is "medication-prescribed".
         /// </remarks>
-        /// 
+        ///
         public CodableValue Prescribed
         {
             get { return _prescribed; }
@@ -369,11 +366,11 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <summary>
         /// Gets or sets the prescription for the medication.
         /// </summary>
-        /// 
+        ///
         /// <remarks>
         /// If the value is not known, it will be set to <b>null</b>.
         /// </remarks>
-        /// 
+        ///
         public Prescription Prescription
         {
             get { return _prescription; }
@@ -384,11 +381,11 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <summary>
         /// Gets a string representation of the medication.
         /// </summary>
-        /// 
+        ///
         /// <returns>
         /// A string representation of the medication.
         /// </returns>
-        /// 
+        ///
         public override string ToString()
         {
             StringBuilder result = new StringBuilder(200);

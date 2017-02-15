@@ -3,7 +3,6 @@
 // see http://www.microsoft.com/resources/sharedsource/licensingbasics/sharedsourcelicenses.mspx.
 // All other rights reserved.
 
-
 namespace Microsoft.HealthVault.ItemTypes.Csv
 {
     /// <summary>
@@ -30,6 +29,5 @@ namespace Microsoft.HealthVault.ItemTypes.Csv
             get { return _value; }
             set { _value = value; }
         }
-
     }
 }

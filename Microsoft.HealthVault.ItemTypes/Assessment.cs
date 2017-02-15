@@ -3,50 +3,47 @@
 // see http://www.microsoft.com/resources/sharedsource/licensingbasics/sharedsourcelicenses.mspx.
 // All other rights reserved.
 
-
-using System;
 using System.Xml;
 using System.Xml.XPath;
-
 
 namespace Microsoft.HealthVault.ItemTypes
 {
     /// <summary>
     /// Defines a result from a health assessment containing the name and value of the assessed area.
     /// </summary>
-    /// 
+    ///
     /// <remarks>
     /// See <see cref="HealthAssessment"/> for more information.
     /// </remarks>
-    /// 
+    ///
     public class Assessment : HealthRecordItemData
     {
         /// <summary>
-        /// Constructs a new instance of the <see cref="Assessment"/> class 
+        /// Constructs a new instance of the <see cref="Assessment"/> class
         /// with default values.
         /// </summary>
-        /// 
+        ///
         public Assessment()
         {
         }
 
         /// <summary>
-        /// Constructs a new instance of the <see cref="Assessment"/> class 
+        /// Constructs a new instance of the <see cref="Assessment"/> class
         /// with name and value.
         /// </summary>
-        /// 
+        ///
         /// <param name="name">
         /// The name of the assessed area. See <see cref="Name"/> for more information.
         /// </param>
-        /// 
+        ///
         /// <param name="value">
         /// The calculated value of the assessed area. See <see cref="Value"/> for more information.
         /// </param>
-        /// 
+        ///
         /// <exception cref="ArgumentNullException">
         /// If <paramref name="name"/> or <paramref name="value"/> is <b> null </b>.
         /// </exception>
-        /// 
+        ///
         public Assessment(CodableValue name, CodableValue value)
         {
             Name = name;
@@ -54,13 +51,13 @@ namespace Microsoft.HealthVault.ItemTypes
         }
 
         /// <summary>
-        /// Populates this <see cref="Assessment"/> instance from the data in the XML. 
+        /// Populates this <see cref="Assessment"/> instance from the data in the XML.
         /// </summary>
-        /// 
+        ///
         /// <param name="navigator">
         /// The XML to get the assessment data from.
         /// </param>
-        /// 
+        ///
         /// <exception cref="ArgumentNullException">
         /// If <paramref name="navigator"/> is <b> null </b>.
         /// </exception>
@@ -79,33 +76,32 @@ namespace Microsoft.HealthVault.ItemTypes
 
             // <group>
             _group = XPathHelper.GetOptNavValue<CodableValue>(navigator, "group");
-
-       }
+        }
 
         /// <summary>
         /// Writes the assessment data to the specified XmlWriter.
-        /// </summary> 
-        /// 
+        /// </summary>
+        ///
         /// <param name="nodeName">
         /// The name of the outer node for the assessment item.
         /// </param>
-        /// 
+        ///
         /// <param name="writer">
         /// The XmlWriter to write the assessment data to.
         /// </param>
-        /// 
+        ///
         /// <exception cref="ArgumentException">
         /// If <paramref name="nodeName"/> is <b> null </b> or empty.
         /// </exception>
-        /// 
+        ///
         /// <exception cref="ArgumentNullException">
         /// If <paramref name="writer"/> is <b> null </b>.
         /// </exception>
-        /// 
+        ///
         /// <exception cref="HealthRecordItemSerializationException">
         /// If <see cref="Name"/> or <see cref="Value"/> is <b>null</b>.
-        /// </exception> 
-        /// 
+        /// </exception>
+        ///
         public override void WriteXml(string nodeName, XmlWriter writer)
         {
             Validator.ThrowIfStringNullOrEmpty(nodeName, "nodeName");
@@ -123,24 +119,24 @@ namespace Microsoft.HealthVault.ItemTypes
 
             // <group>
             XmlWriterHelper.WriteOpt(writer, "group", _group);
- 
+
             writer.WriteEndElement();
         }
 
         /// <summary>
-        /// Gets or sets the name of the assessed area.  
+        /// Gets or sets the name of the assessed area.
         /// </summary>
-        /// 
+        ///
         /// <remarks>
         /// Examples: Heart attack risk, high blood pressure.
         /// The preferred vocabulary for route is "health-assessment-name".
         /// Contact the HealthVault team to help define the preferred vocabulary.
         /// </remarks>
-        /// 
+        ///
         /// <exception cref="ArgumentNullException">
-        /// If setter value is <b>null</b>. 
+        /// If setter value is <b>null</b>.
         /// </exception>
-        /// 
+        ///
         public CodableValue Name
         {
             get { return _name; }
@@ -152,23 +148,22 @@ namespace Microsoft.HealthVault.ItemTypes
         }
         private CodableValue _name;
 
-
         /// <summary>
         /// Gets or sets the calculated value of the assessed area.
         /// </summary>
-        /// 
+        ///
         /// <remarks>
-        /// The value may be coded using a specific set of values. 
+        /// The value may be coded using a specific set of values.
         /// Example: Low/Medium/High risk.
-        /// A list of vocabularies may be found in the preferred vocabulary 
-        /// "health-assessment-value-sets". 
+        /// A list of vocabularies may be found in the preferred vocabulary
+        /// "health-assessment-value-sets".
         /// Contact the HealthVault team to help define the preferred vocabulary.
         /// </remarks>
-        /// 
+        ///
         /// <exception cref="ArgumentNullException">
         /// If <paramref name="value"/> is <b>null</b>.
         /// </exception>
-        /// 
+        ///
         public CodableValue Value
         {
             get { return _value; }
@@ -184,15 +179,15 @@ namespace Microsoft.HealthVault.ItemTypes
         /// Gets or sets the additional information that can be used to help organize the
         /// results.
         /// </summary>
-        /// 
+        ///
         /// <remarks>
-        /// The group is used to specify which group a specific result is in. 
+        /// The group is used to specify which group a specific result is in.
         /// For example, the supporting assessments that follow a main assessment are coded
         /// to indicate that they are supporting by specifying the "supporting" code.
         /// The preferred vocabulary for route is "health-assessment-groups".
         /// Contact the HealthVault team to help define the preferred vocabulary.
         /// </remarks>
-        /// 
+        ///
         public CodableValue Group
         {
             get { return _group; }
@@ -202,8 +197,8 @@ namespace Microsoft.HealthVault.ItemTypes
 
         /// <summary>
         /// Gets a string of the name or description of the assessment.
-        /// </summary> 
-        /// 
+        /// </summary>
+        ///
         public override string ToString()
         {
             string result = string.Empty;

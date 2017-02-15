@@ -3,7 +3,6 @@
 // see http://www.microsoft.com/resources/sharedsource/licensingbasics/sharedsourcelicenses.mspx.
 // All other rights reserved.
 
-
 using System;
 using System.Xml;
 using System.Xml.XPath;
@@ -11,40 +10,40 @@ using System.Xml.XPath;
 namespace Microsoft.HealthVault.ItemTypes
 {
     /// <summary>
-    /// Represents a health record item type that encapsulates a person's 
+    /// Represents a health record item type that encapsulates a person's
     /// cholesterol profile (Lipid profile) at a single point in time.
     /// </summary>
-    /// 
+    ///
     public class CholesterolProfile : HealthRecordItem
     {
         /// <summary>
         /// Creates a new instance of the <see cref="CholesterolProfile"/> class with default values.
         /// </summary>
-        /// 
+        ///
         /// <remarks>
         /// The item is not added to the health record until the
-        /// <see cref="HealthRecordAccessor.NewItem(HealthRecordItem)"/> 
+        /// <see cref="HealthRecordAccessor.NewItem(HealthRecordItem)"/>
         /// method is called.
         /// </remarks>
-        /// 
+        ///
         public CholesterolProfile()
             : base(TypeId)
         {
         }
- 
+
         /// <summary>
-        /// Creates a new instance of the <see cref="CholesterolProfile"/> class 
+        /// Creates a new instance of the <see cref="CholesterolProfile"/> class
         /// with the specified date.
         /// </summary>
-        /// 
+        ///
         /// <param name="when">
         /// The date when the cholesterol profile was take.
         /// </param>
-        /// 
+        ///
         /// <exception cref="ArgumentNullException">
         /// The <paramref name="when"/> parameter is <b>null</b>.
         /// </exception>
-        /// 
+        ///
         public CholesterolProfile(HealthServiceDate when)
             : base(TypeId)
         {
@@ -54,27 +53,27 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <summary>
         /// Retrieves the unique identifier for the item type.
         /// </summary>
-        /// 
+        ///
         /// <value>
         /// A GUID.
         /// </value>
-        /// 
+        ///
         public new static readonly Guid TypeId =
             new Guid("796C186F-B874-471c-8468-3EEFF73BF66E");
 
         /// <summary>
         /// Populates this <see cref="CholesterolProfile"/> instance from the data in the XML.
         /// </summary>
-        /// 
+        ///
         /// <param name="typeSpecificXml">
         /// The XML to get the cholesterol profile data from.
         /// </param>
-        /// 
+        ///
         /// <exception cref="InvalidOperationException">
         /// The first node in <paramref name="typeSpecificXml"/> is not
         /// a cholesterol-profile node.
         /// </exception>
-        /// 
+        ///
         protected override void ParseXml(IXPathNavigable typeSpecificXml)
         {
             XPathNavigator itemNav =
@@ -98,15 +97,15 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <summary>
         /// Writes the cholesterol profile data to the specified XmlWriter.
         /// </summary>
-        /// 
+        ///
         /// <param name="writer">
         /// The XmlWriter to write the cholesterol profile data to.
         /// </param>
-        /// 
+        ///
         /// <exception cref="ArgumentNullException">
         /// If <paramref name="writer"/> is <b>null</b>.
         /// </exception>
-        /// 
+        ///
         public override void WriteXml(XmlWriter writer)
         {
             Validator.ThrowIfWriterNull(writer);
@@ -118,43 +117,42 @@ namespace Microsoft.HealthVault.ItemTypes
             _when.WriteXml("when", writer);
 
             XmlWriterHelper.WriteOptInt(
-                writer, 
-                "ldl", 
+                writer,
+                "ldl",
                 _ldl);
 
             XmlWriterHelper.WriteOptInt(
-                writer, 
-                "hdl", 
+                writer,
+                "hdl",
                 _hdl);
 
             XmlWriterHelper.WriteOptInt(
-                writer, 
-                "total-cholesterol", 
+                writer,
+                "total-cholesterol",
                 _totalCholesterol);
 
             XmlWriterHelper.WriteOptInt(
-                writer, 
-                "triglyceride", 
+                writer,
+                "triglyceride",
                 _triglyceride);
 
             // </cholesterol-profile>
             writer.WriteEndElement();
         }
 
-
         /// <summary>
         /// Gets or sets the date when the cholesterol profile was taken.
         /// </summary>
-        /// 
+        ///
         /// <value>
-        /// A <see cref="HealthServiceDateTime"/> representing the date. 
+        /// A <see cref="HealthServiceDateTime"/> representing the date.
         /// The default value is the current year, month, and day.
         /// </value>
-        /// 
+        ///
         /// <exception cref="ArgumentNullException">
         /// The <paramref name="value"/> parameter is <b>null</b>.
         /// </exception>
-        /// 
+        ///
         public HealthServiceDate When
         {
             get { return _when; }
@@ -169,11 +167,11 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <summary>
         /// Gets or sets the person's low density lipoprotein in mg/dL.
         /// </summary>
-        /// 
+        ///
         /// <value>
         /// The value of the person's LDL measurement or <b>null</b> if unknown.
         /// </value>
-        /// 
+        ///
         public int? LDL
         {
             get { return _ldl; }
@@ -181,15 +179,14 @@ namespace Microsoft.HealthVault.ItemTypes
         }
         private int? _ldl;
 
-
         /// <summary>
         /// Gets or sets the person's high density lipoprotein in mg/dL.
         /// </summary>
-        /// 
+        ///
         /// <value>
         /// The value of the person's HDL measurement or <b>null</b> if unknown.
         /// </value>
-        /// 
+        ///
         public int? HDL
         {
             get { return _hdl; }
@@ -200,11 +197,11 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <summary>
         /// Gets or sets the person's total cholesterol in mg/dL.
         /// </summary>
-        /// 
+        ///
         /// <value>
         /// The value of the person's total cholesterol measurement or <b>null</b> if unknown.
         /// </value>
-        /// 
+        ///
         public int? TotalCholesterol
         {
             get { return _totalCholesterol; }
@@ -215,11 +212,11 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <summary>
         /// Gets or sets the person's triglyceride in mg/dL.
         /// </summary>
-        /// 
+        ///
         /// <value>
         /// The value of the person's triglyceride measurement or <b>null</b> if unknown.
         /// </value>
-        /// 
+        ///
         public int? Triglyceride
         {
             get { return _triglyceride; }
@@ -230,11 +227,11 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <summary>
         /// Gets a string representation of the cholesterol profile.
         /// </summary>
-        /// 
+        ///
         /// <returns>
         /// A string representing the cholesterol profile.
         /// </returns>
-        /// 
+        ///
         public override string ToString()
         {
             string result = string.Empty;
@@ -257,7 +254,7 @@ namespace Microsoft.HealthVault.ItemTypes
             }
             else if (LDL != null)
             {
-                result = 
+                result =
                     string.Format(
                         ResourceRetriever.GetResourceString(
                             "CholesterolProfileToStringFormatLDL"),
@@ -265,7 +262,7 @@ namespace Microsoft.HealthVault.ItemTypes
             }
             else if (HDL != null)
             {
-                result = 
+                result =
                     string.Format(
                         ResourceRetriever.GetResourceString(
                             "CholesterolProfileToStringFormatHDL"),
@@ -273,17 +270,14 @@ namespace Microsoft.HealthVault.ItemTypes
             }
             else if (Triglyceride != null)
             {
-                result = 
+                result =
                     string.Format(
                         ResourceRetriever.GetResourceString(
                             "CholesterolProfileToStringFormatTriglyceride"),
                         Triglyceride.Value);
             }
 
-
             return result;
         }
-
     }
-
 }

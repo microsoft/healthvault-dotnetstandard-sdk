@@ -29,20 +29,20 @@ namespace Microsoft.HealthVault
         /// using <paramref name="loadValue"/>, and then caches that value.
         ///
         /// The cache is invalid after the specified <paramref name="timeToLive"/>.
-        /// 
+        ///
         /// <paramref name="reloadValue"/> is invoked on the next get request after the cache has expired,
         /// passing in the previously cached value.
         /// </summary>
-        /// 
+        ///
         /// <param name="loadValue">
         /// Function used for the initial loading of the value.
         /// </param>
-        /// 
+        ///
         /// <param name="reloadValue">
         /// Function used for reloading the value after it has expired.  The current expired
         /// value is passed in.
         /// </param>
-        /// 
+        ///
         /// <param name="timeToLive">
         /// Period of time before the value is considered expired.
         /// </param>
@@ -57,10 +57,10 @@ namespace Microsoft.HealthVault
         /// <summary>
         /// Gets the lazily initialized value.
         /// </summary>
-        /// 
+        ///
         /// <remarks>
         /// On first call to this getter, we load the value.
-        /// 
+        ///
         /// This is thread-safe.
         /// </remarks>
         public T Value

@@ -3,20 +3,20 @@
 // see http://www.microsoft.com/resources/sharedsource/licensingbasics/sharedsourcelicenses.mspx.
 // All other rights reserved.
 
+using Microsoft.HealthVault.Exceptions;
+using Microsoft.HealthVault.ItemTypes;
 using System;
 using System.IO;
 using System.Xml;
 using System.Xml.Serialization;
 using System.Xml.XPath;
-using Microsoft.HealthVault.Exceptions;
-using Microsoft.HealthVault.ItemTypes;
 
 namespace Microsoft.HealthVault
 {
     /// <summary>
     /// Represents an item in the HealthVault <see cref="Vocabulary"/>.
     /// </summary>
-    /// 
+    ///
     [XmlRoot("item")]
     public class VocabularyItem : HealthRecordItemData, IXmlSerializable
     {
@@ -63,18 +63,18 @@ namespace Microsoft.HealthVault
             _abbreviationText = abbreviationText;
         }
 
-        /// <summary> 
+        /// <summary>
         /// Populates the description of the code from the XML.
         /// </summary>
-        /// 
-        /// <param name="navigator"> 
+        ///
+        /// <param name="navigator">
         /// The XML node representing the coded item.
         /// </param>
-        /// 
+        ///
         /// <exception cref="ArgumentNullException">
         /// The <paramref name="navigator"/> parameter is <b>null</b>.
         /// </exception>
-        /// 
+        ///
         public override void ParseXml(XPathNavigator navigator)
         {
             Validator.ThrowIfNavigatorNull(navigator);
@@ -104,7 +104,7 @@ namespace Microsoft.HealthVault
                 catch (XmlException)
                 {
                     //don't want to expose info about XML parse errors here
-                    //to the outside world as recommended in .NET 
+                    //to the outside world as recommended in .NET
                     //documentation
                     throw new HealthServiceException(
                         HealthServiceStatusCode.VocabularyLoadError);
@@ -112,27 +112,27 @@ namespace Microsoft.HealthVault
             }
         }
 
-        /// <summary> 
+        /// <summary>
         /// Writes the vocabulary item to the specified XML writer.
         /// </summary>
-        /// 
+        ///
         /// <param name="nodeName">
         /// The name of the outer element for the code value.
         /// </param>
-        /// 
-        /// <param name="writer"> 
+        ///
+        /// <param name="writer">
         /// The XmlWriter to write the code description to.
         /// </param>
-        /// 
+        ///
         /// <exception cref="ArgumentNullException">
         /// The <paramref name="writer"/> parameter is <b>null</b>.
         /// </exception>
-        /// 
+        ///
         /// <exception cref="HealthRecordItemSerializationException">
-        /// The Value or VocabularyName property 
+        /// The Value or VocabularyName property
         /// is <b>null</b> or empty.
         /// </exception>
-        /// 
+        ///
         internal void WriteXmlInternal(string nodeName, XmlWriter writer)
         {
             Validator.ThrowIfWriterNull(writer);
@@ -163,31 +163,31 @@ namespace Microsoft.HealthVault
             }
         }
 
-        /// <summary> 
+        /// <summary>
         /// Writes the vocabulary item to the specified XML writer.
         /// </summary>
-        /// 
+        ///
         /// <param name="nodeName">
         /// The name of the outer element for the code value.
         /// </param>
-        /// 
-        /// <param name="writer"> 
+        ///
+        /// <param name="writer">
         /// The XmlWriter to write the vocabulary item to.
         /// </param>
-        /// 
+        ///
         /// <exception cref="ArgumentException">
         /// The <paramref name="nodeName"/> parameter is <b>null</b> or empty.
         /// </exception>
-        /// 
+        ///
         /// <exception cref="ArgumentNullException">
         /// The <paramref name="writer"/> parameter is <b>null</b>.
         /// </exception>
-        /// 
+        ///
         /// <exception cref="HealthRecordItemSerializationException">
-        /// The <see cref="Value"/> or <see cref="VocabularyName"/> property 
+        /// The <see cref="Value"/> or <see cref="VocabularyName"/> property
         /// is <b>null</b> or empty.
         /// </exception>
-        /// 
+        ///
         public override void WriteXml(string nodeName, XmlWriter writer)
         {
             Validator.ThrowIfStringNullOrEmpty(nodeName, "nodeName");
@@ -215,13 +215,13 @@ namespace Microsoft.HealthVault
         }
 
         /// <summary>
-        /// Gets a localized display text. 
+        /// Gets a localized display text.
         /// </summary>
-        /// 
+        ///
         /// <value>
         /// A string representing the display text.
         /// </value>
-        /// 
+        ///
         public string DisplayText
         {
             get { return _displayText; }
@@ -229,14 +229,14 @@ namespace Microsoft.HealthVault
         private string _displayText = String.Empty;
 
         /// <summary>
-        /// Gets a localized and abbreviated representation 
+        /// Gets a localized and abbreviated representation
         /// of the display text.
         /// </summary>
-        /// 
+        ///
         /// <value>
         /// A string representing the abbreviation text.
         /// </value>
-        /// 
+        ///
         public string AbbreviationText
         {
             get { return _abbreviationText; }
@@ -246,11 +246,11 @@ namespace Microsoft.HealthVault
         /// <summary>
         /// Gets any extra information associated with the code item.
         /// </summary>
-        /// 
+        ///
         /// <value>
         /// An IXPathNavigable object representing the extra information.
         /// </value>
-        /// 
+        ///
         public IXPathNavigable InfoXml
         {
             get { return _infoXml; }
@@ -262,7 +262,7 @@ namespace Microsoft.HealthVault
         /// </summary>
         /// <remarks>
         /// The info xml is a place where additional xml information can
-        /// be stored in an XML item. 
+        /// be stored in an XML item.
         /// </remarks>
         /// <param name="infoXml"></param>
         public void SetInfoXml(string infoXml)
@@ -279,7 +279,7 @@ namespace Microsoft.HealthVault
             catch (XmlException)
             {
                 //don't want to expose info about XML parse errors here
-                //to the outside world as recommended in .NET 
+                //to the outside world as recommended in .NET
                 //documentation
                 throw new HealthServiceException(
                     HealthServiceStatusCode.VocabularyLoadError);
@@ -289,11 +289,11 @@ namespace Microsoft.HealthVault
         /// <summary>
         /// Retrieves the code item as a string.
         /// </summary>
-        /// 
+        ///
         /// <returns>
-        /// The display text associated with this code item. 
+        /// The display text associated with this code item.
         /// </returns>
-        /// 
+        ///
         public override string ToString()
         {
             return _displayText;
@@ -302,7 +302,7 @@ namespace Microsoft.HealthVault
         /// <summary>
         /// The <see cref="Vocabulary"/> to which this item belongs.
         /// </summary>
-        /// 
+        ///
         public Vocabulary Vocabulary
         {
             get { return _vocabulary; }
@@ -367,21 +367,21 @@ namespace Microsoft.HealthVault
         /// <summary>
         /// Gets or sets the code value.
         /// </summary>
-        /// 
+        ///
         /// <value>
         /// A string representing the code value.
         /// </value>
-        /// 
+        ///
         /// <remarks>
         /// The code value is the identifier for the code in the specified
         /// vocabulary and family.
         /// </remarks>
-        /// 
+        ///
         /// <exception cref="ArgumentException">
         /// The <paramref name="value"/> parameter is <b>null</b>, empty, or contains only
         /// whitespace during set.
         /// </exception>
-        /// 
+        ///
         public string Value
         {
             get { return _value; }
@@ -397,21 +397,21 @@ namespace Microsoft.HealthVault
         /// <summary>
         /// Gets or sets the code family.
         /// </summary>
-        /// 
+        ///
         /// <value>
         /// A string representing the code family.
         /// </value>
-        /// 
+        ///
         /// <remarks>
         /// Set the value to <b>null</b> if the property should not be stored.
         /// <br/><br/>
         /// The family represents the NCPDP value for a code.
         /// </remarks>
-        /// 
+        ///
         /// <exception cref="ArgumentException">
         /// If <paramref name="value"/> contains only whitespace.
         /// </exception>
-        /// 
+        ///
         public string Family
         {
             get { return _family; }
@@ -429,16 +429,16 @@ namespace Microsoft.HealthVault
         /// <summary>
         /// Gets or sets the vocabulary name.
         /// </summary>
-        /// 
+        ///
         /// <value>
         /// A string representing the vocabulary name.
         /// </value>
-        /// 
+        ///
         /// <exception cref="ArgumentException">
         /// The <paramref name="value"/> set is <b>null</b>, empty, or contains only
         /// whitespace during set.
         /// </exception>
-        /// 
+        ///
         public string VocabularyName
         {
             get { return _vocabName; }
@@ -454,19 +454,19 @@ namespace Microsoft.HealthVault
         /// <summary>
         /// Gets or sets the code version.
         /// </summary>
-        /// 
+        ///
         /// <value>
         /// A string representing the code version.
         /// </value>
-        /// 
+        ///
         /// <remarks>
         /// Set the value to <b>null</b> if the property should not be stored.
         /// </remarks>
-        /// 
+        ///
         /// <exception cref="ArgumentException">
         /// If <paramref name="value"/> contains only whitespace.
         /// </exception>
-        /// 
+        ///
         public string Version
         {
             get { return _version; }

@@ -20,45 +20,45 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <summary>
         /// Creates a new instance of the <see cref="Insight"/> class with default values.
         /// </summary>
-        /// 
+        ///
         /// <remarks>
         /// The item is not added to the health record until the
-        /// <see cref="HealthRecordAccessor.NewItem(HealthRecordItem)"/> 
-        /// method is called.        
+        /// <see cref="HealthRecordAccessor.NewItem(HealthRecordItem)"/>
+        /// method is called.
         /// </remarks>
         public Insight() : base(TypeId)
         {
         }
 
         /// <summary>
-        /// Creates a new instance of the <see cref="Insight"/> class 
+        /// Creates a new instance of the <see cref="Insight"/> class
         /// with the specified date.
         /// </summary>
-        /// 
+        ///
         /// <param name="raisedInsightId">
         /// Unique Id of this insight instance.
         /// </param>
-        /// 
+        ///
         /// <param name="catalogId">
         /// Unique Id of the catalog item used to generate this insight.
         /// </param>
-        /// 
+        ///
         /// <param name="when">
         /// The date when the insight was generated.
         /// </param>
-        /// 
+        ///
         /// <param name="expirationDate">
         /// The date when the insight will expire.
         /// </param>
-        /// 
+        ///
         /// <exception cref="ArgumentNullException">
         /// The <paramref name="when"/> parameter is <b>null</b>.
         /// </exception>
-        /// 
+        ///
         /// <exception cref="ArgumentNullException">
         /// The <paramref name="expirationDate"/> parameter is <b>null</b>.
         /// </exception>
-        /// 
+        ///
         public Insight(
             string raisedInsightId,
             string catalogId,
@@ -75,22 +75,22 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <summary>
         /// Retrieves the unique identifier for the item type.
         /// </summary>
-        /// 
+        ///
         /// <value>
         /// A GUID.
         /// </value>
-        /// 
+        ///
         public new static readonly Guid TypeId =
             new Guid("5D15B7BC-0499-4DC4-8DF7-EF1A2332CFB5");
 
         /// <summary>
         /// Populates this <see cref="Insight"/> instance from the data in the XML.
         /// </summary>
-        /// 
+        ///
         /// <param name="typeSpecificXml">
         /// The XML to get the insight data from.
         /// </param>
-        /// 
+        ///
         /// <exception cref="InvalidOperationException">
         /// The first node in <paramref name="typeSpecificXml"/> is not
         /// an insight node.
@@ -120,7 +120,7 @@ namespace Microsoft.HealthVault.ItemTypes
             _comparisonPivot = XPathHelper.GetOptNavValue(itemNav, "comparison-pivot");
             _tonePivot = XPathHelper.GetOptNavValue(itemNav, "tone-pivot");
             _scopePivot = XPathHelper.GetOptNavValue(itemNav, "scope-pivot");
-            
+
             XPathNavigator dataUsedNav = itemNav.SelectSingleNode("data-used-pivot");
             _dataUsedPivot = GetStringList(dataUsedNav, "data-used");
 
@@ -142,15 +142,15 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <summary>
         /// Writes the insight data to the specified XmlWriter.
         /// </summary>
-        /// 
+        ///
         /// <param name="writer">
         /// The XmlWriter to write the insight data to.
         /// </param>
-        /// 
+        ///
         /// <exception cref="ArgumentNullException">
         /// If <paramref name="writer"/> is <b>null</b>.
         /// </exception>
-        /// 
+        ///
         public override void WriteXml(XmlWriter writer)
         {
             Validator.ThrowIfWriterNull(writer);
@@ -226,7 +226,7 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <summary>
         /// Gets a string representation of the insight.
         /// </summary>
-        /// 
+        ///
         /// <returns>
         /// A string representing the insight.
         /// </returns>
@@ -246,22 +246,22 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <summary>
         /// Uniquely identifies an instance of Insight generated for a user.
         /// </summary>
-        ///         
+        ///
         /// <exception cref="ArgumentNullException">
         /// The <paramref name="value"/> parameter is <b>null</b>.
         /// </exception>
-        public string RaisedInsightId 
+        public string RaisedInsightId
         {
-            get 
-            { 
-                return _raisedInsightId; 
+            get
+            {
+                return _raisedInsightId;
             }
 
-            set 
+            set
             {
                 Validator.ThrowIfArgumentNull(value, "RaisedInsightId", "InsightIdNullValue");
                 Validator.ThrowIfStringIsEmptyOrWhitespace(value, "RaisedInsightId");
-                _raisedInsightId = value; 
+                _raisedInsightId = value;
             }
         }
 
@@ -270,22 +270,22 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <summary>
         /// Unique identity of the catalog item used to create this Insight.
         /// </summary>
-        /// 
+        ///
         /// <exception cref="ArgumentNullException">
         /// The <paramref name="value"/> parameter is <b>null</b>.
         /// </exception>
         public string CatalogId
         {
-            get 
-            { 
-                return _catalogId; 
+            get
+            {
+                return _catalogId;
             }
 
-            set 
+            set
             {
-                Validator.ThrowIfArgumentNull(value, "CatalogId", "InsightCatalogIdNullValue");                
-                Validator.ThrowIfStringIsEmptyOrWhitespace(value, "CatalogId");                
-                _catalogId = value; 
+                Validator.ThrowIfArgumentNull(value, "CatalogId", "InsightCatalogIdNullValue");
+                Validator.ThrowIfStringIsEmptyOrWhitespace(value, "CatalogId");
+                _catalogId = value;
             }
         }
 
@@ -294,16 +294,16 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <summary>
         /// Gets or sets the date when the insight was created.
         /// </summary>
-        /// 
+        ///
         /// <value>
-        /// A <see cref="HealthServiceDateTime"/> representing the date. 
+        /// A <see cref="HealthServiceDateTime"/> representing the date.
         /// The default value is the current year, month, and day.
         /// </value>
-        /// 
+        ///
         /// <exception cref="ArgumentNullException">
         /// The <paramref name="value"/> parameter is <b>null</b>.
         /// </exception>
-        /// 
+        ///
         public HealthServiceDateTime When
         {
             get
@@ -323,21 +323,21 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <summary>
         /// Date and time when this Insight instance expires.
         /// </summary>
-        /// 
+        ///
         /// <exception cref="ArgumentNullException">
         /// The <paramref name="value"/> parameter is <b>null</b>.
         /// </exception>
-        public HealthServiceDateTime ExpirationDate 
+        public HealthServiceDateTime ExpirationDate
         {
-            get 
-            { 
-                return _expirationDate; 
+            get
+            {
+                return _expirationDate;
             }
 
-            set 
+            set
             {
                 Validator.ThrowIfArgumentNull(value, "ExpirationDate", "InsightExpirationDateNullValue");
-                _expirationDate = value; 
+                _expirationDate = value;
             }
         }
 
@@ -346,22 +346,22 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <summary>
         /// Shows what does this Insight impact. For example sleep or activity etc.
         /// </summary>
-        /// 
+        ///
         /// <value>
-        /// The value of insight's channel enum or <b>null</b> if unknown. 
+        /// The value of insight's channel enum or <b>null</b> if unknown.
         /// </value>
         public string Channel
         {
             get { return _channel; }
             set { _channel = value; }
         }
-        
+
         private string _channel;
 
         /// <summary>
         /// Represents the algorithm class used to create this Insight.
         /// </summary>
-        /// 
+        ///
         /// <value>
         /// The value of insight's algo class enum or <b>null</b> if unknown.
         /// </value>
@@ -376,7 +376,7 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <summary>
         /// Represents which way the Insight is trending. For example positive, negative or neutral.
         /// </summary>
-        /// 
+        ///
         /// <value>
         /// The value of insight's directionality enum or <b>null</b> if unknown.
         /// </value>
@@ -385,17 +385,17 @@ namespace Microsoft.HealthVault.ItemTypes
             get { return _directionality; }
             set { _directionality = value; }
         }
-        
+
         private string _directionality;
 
         /// <summary>
         /// Represents the aggregation time span of the data. Example, data is aggregated weekly or daily.
         /// </summary>
-        /// 
+        ///
         /// <value>
         /// The value of insight's timespan pivot enum or <b>null</b> if unknown.
         /// </value>
-        public string TimespanPivot 
+        public string TimespanPivot
         {
             get { return _timespanPivot; }
             set { _timespanPivot = value; }
@@ -406,11 +406,11 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <summary>
         /// Represents how the user was compared for deriving this Insight. Example with themselves or people similar to the user.
         /// </summary>
-        /// 
+        ///
         /// <value>
         /// The value of insight's comparison pivot enum or <b>null</b> if unknown.
         /// </value>
-        public string ComparisonPivot 
+        public string ComparisonPivot
         {
             get { return _comparisonPivot; }
             set { _comparisonPivot = value; }
@@ -419,13 +419,13 @@ namespace Microsoft.HealthVault.ItemTypes
         private string _comparisonPivot;
 
         /// <summary>
-        /// Represents the tone of the Insight, like better or worse. 
+        /// Represents the tone of the Insight, like better or worse.
         /// </summary>
-        /// 
+        ///
         /// <value>
         /// The value of insight's tone pivot enum or <b>null</b> if unknown.
         /// </value>
-        public string TonePivot 
+        public string TonePivot
         {
             get { return _tonePivot; }
             set { _tonePivot = value; }
@@ -436,11 +436,11 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <summary>
         /// Represents the scope of the Insight like for a specific event or event types.
         /// </summary>
-        /// 
+        ///
         /// <value>
         /// The value of insight's scope pivot enum or <b>null</b> if unknown.
         /// </value>
-        public string ScopePivot 
+        public string ScopePivot
         {
             get { return _scopePivot; }
             set { _scopePivot = value; }
@@ -451,11 +451,11 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <summary>
         /// Represents a list of data types used as input to the insight calculation.
         /// </summary>
-        /// 
+        ///
         /// <value>
         /// List of datatype enum values or <b>null</b> if unknown.
         /// </value>
-        public List<string> DataUsedPivot 
+        public List<string> DataUsedPivot
         {
             get { return _dataUsedPivot; }
             set { _dataUsedPivot = value; }
@@ -466,11 +466,11 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <summary>
         /// Describes how we got to this conclusion and why this Insight is relevant to the user.
         /// </summary>
-        /// 
+        ///
         /// <value>
         /// The value of annotation text or <b>null</b> if unknown.
         /// </value>
-        public string Annotation 
+        public string Annotation
         {
             get { return _annotation; }
             set { _annotation = value; }
@@ -481,11 +481,11 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <summary>
         /// Represents the strength of the data used for calculating the Insights.
         /// </summary>
-        /// 
+        ///
         /// <value>
         /// The value representing strength of this insight or <b>null</b> if unknown.
         /// </value>
-        public double? Strength 
+        public double? Strength
         {
             get { return _strength; }
             set { _strength = value; }
@@ -496,11 +496,11 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <summary>
         /// Confidence level of the insight process that generated the insight.
         /// </summary>
-        /// 
+        ///
         /// <value>
         /// The value representing the confidence or <b>null</b> if unknown.
         /// </value>
-        public double? Confidence 
+        public double? Confidence
         {
             get { return _confidence; }
             set { _confidence = value; }
@@ -511,7 +511,7 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <summary>
         /// Where was this insight generated.
         /// </summary>
-        /// 
+        ///
         /// <value>
         /// The value of the insight's origin or <b>null</b> if unknown.
         /// </value>
@@ -526,7 +526,7 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <summary>
         /// Tags associated with this insight. Can be used by clients for grouping, filtering etc.
         /// </summary>
-        /// 
+        ///
         /// <value>
         /// List of tags associated with this insight or <b>null</b> if unknown.
         /// </value>
@@ -542,11 +542,11 @@ namespace Microsoft.HealthVault.ItemTypes
         /// Contains the key-value collection associated with the Insight. Keys and their description is included
         /// in Insights Catalog.
         /// </summary>
-        /// 
+        ///
         /// <value>
         /// List of key-values containing the insight values or <b>null</b> if unknown.
         /// </value>
-        public Dictionary<string, object> Values 
+        public Dictionary<string, object> Values
         {
             get { return _values; }
             set { _values = value; }
@@ -557,11 +557,11 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <summary>
         /// Gets or sets links for Insights.
         /// </summary>
-        /// 
+        ///
         /// <value>
         /// List of key-values containing links for this insight or <b>null</b> if unknown.
         /// </value>
-        public Dictionary<string, object> Links 
+        public Dictionary<string, object> Links
         {
             get { return _links; }
             set { _links = value; }
@@ -572,7 +572,7 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <summary>
         /// Gets or sets insight messages.
         /// </summary>
-        /// 
+        ///
         /// <value>
         /// Collection of message strings associated with this insight.
         /// </value>
@@ -587,7 +587,7 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <summary>
         /// Gets or sets insight attribution
         /// </summary>
-        /// 
+        ///
         /// <value>
         /// Attribution information for this insight.
         /// </value>
@@ -649,7 +649,7 @@ namespace Microsoft.HealthVault.ItemTypes
 
             // <itemName>
             writer.WriteStartElement(itemName);
-            
+
             foreach (string item in items)
             {
                 writer.WriteElementString(subItemName, item);
@@ -670,7 +670,7 @@ namespace Microsoft.HealthVault.ItemTypes
 
             foreach (KeyValuePair<string, object> item in dictionary)
             {
-                // <value> - parent element of key-value pair. 
+                // <value> - parent element of key-value pair.
                 writer.WriteStartElement(subItemName);
 
                 writer.WriteElementString("key", item.Key);
@@ -678,8 +678,8 @@ namespace Microsoft.HealthVault.ItemTypes
                 // <value> - value of the key-value pair element.
                 writer.WriteStartElement("value");
                 writer.WriteValue(item.Value);
-                
-                // </value> 
+
+                // </value>
                 writer.WriteEndElement();
 
                 // </value>

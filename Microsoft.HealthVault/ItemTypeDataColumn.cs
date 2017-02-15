@@ -4,7 +4,7 @@
 // All other rights reserved.
 
 using System;
-using System.Data;
+using System.Data.Common;
 using System.Xml;
 using System.Xml.XPath;
 
@@ -16,7 +16,7 @@ namespace Microsoft.HealthVault
     /// transform.
     /// </summary>
     /// 
-    public class ItemTypeDataColumn : DataColumn
+    public class ItemTypeDataColumn : DbColumn
     {
         internal static ItemTypeDataColumn CreateFromXml(
             XPathNavigator columnNavigator)
@@ -95,14 +95,14 @@ namespace Microsoft.HealthVault
             int width,
             bool visible,
             string orderBy)
-            : base(tag, type)
         {
             if (type == null)
             {
-                type = typeof(Object);
+                type = typeof(object);
             }
 
-            base.Caption = label;
+            ColumnName = tag;
+            BaseColumnName = label;
             _typeName = type.ToString();
             _width = width;
             _visible = visible;
@@ -116,10 +116,9 @@ namespace Microsoft.HealthVault
             int width,
             bool visible,
             string orderBy)
-            : base(tag, GetDataType(type))
         {
-            base.Caption = label;
-
+            ColumnName = tag;
+            BaseColumnName = label;
             _typeName = type;
             _width = width;
             _visible = visible;
@@ -163,9 +162,9 @@ namespace Microsoft.HealthVault
             return dataType;
         }
 
-        internal static Object GetNotPresentValue(Type columnType)
+        internal static object GetNotPresentValue(Type columnType)
         {
-            Object result = null;
+            object result = null;
             switch (columnType.Name)
             {
                 case "Boolean":
@@ -198,7 +197,7 @@ namespace Microsoft.HealthVault
             return
                 new ItemTypeDataColumn(
                     ColumnName,
-                    Caption,
+                    BaseColumnName,
                     _typeName,
                     _width,
                     _visible,
@@ -208,11 +207,11 @@ namespace Microsoft.HealthVault
         /// <summary>
         /// Gets the column type name.
         /// </summary>
-        /// 
+        ///
         /// <value>
         /// A string representing the column type name.
         /// </value>
-        /// 
+        ///
         /// <remarks>
         /// The current types supported are:<br/><br/>
         /// Boolean<br/>
@@ -222,7 +221,7 @@ namespace Microsoft.HealthVault
         /// Int64<br/>
         /// TimeSpan<br/>
         /// </remarks>
-        /// 
+        ///
         public string ColumnTypeName
         {
             get { return _typeName; }
@@ -232,11 +231,11 @@ namespace Microsoft.HealthVault
         /// <summary>
         /// Gets the column display width.
         /// </summary>
-        /// 
+        ///
         /// <value>
         /// An integer representing the column display width.
         /// </value>
-        /// 
+        ///
         public int ColumnWidth
         {
             get { return _width; }
@@ -246,11 +245,11 @@ namespace Microsoft.HealthVault
         /// <summary>
         /// Gets whether or not the columns should be shown by default.
         /// </summary>
-        /// 
+        ///
         /// <value>
         /// True indicates the column should be shown by default.
         /// </value>
-        /// 
+        ///
         public bool VisibleByDefault
         {
             get { return _visible; }
@@ -269,7 +268,7 @@ namespace Microsoft.HealthVault
         {
             get
             {
-                return !String.IsNullOrEmpty(_orderBy) ? _orderBy : null;
+                return !string.IsNullOrEmpty(_orderBy) ? _orderBy : null;
             }
         }
         private readonly string _orderBy;
@@ -285,18 +284,17 @@ namespace Microsoft.HealthVault
         public override string ToString()
         {
             return
-                String.Join(
+                string.Join(
                     ":",
                     new string[] 
                     { 
                         ColumnName, 
-                        Caption, 
+                        BaseColumnName, 
                         ColumnTypeName, 
                         ColumnWidth.ToString(), 
                         VisibleByDefault.ToString(),
                         OrderBy
                     });
         }
-
     }
 }

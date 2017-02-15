@@ -3,7 +3,6 @@
 // see http://www.microsoft.com/resources/sharedsource/licensingbasics/sharedsourcelicenses.mspx.
 // All other rights reserved.
 
-
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -19,10 +18,10 @@ namespace Microsoft.HealthVault.Web
     /// <summary>
     /// An ASP.NET server control for viewing health record items.
     /// </summary>
-    /// 
+    ///
     /// <remarks>
-    /// The HealthRecordItemDataGrid works with the 
-    /// <see cref="Microsoft.Health.HealthRecordItemDataTable"/> to show a 
+    /// The HealthRecordItemDataGrid works with the
+    /// <see cref="Microsoft.Health.HealthRecordItemDataTable"/> to show a
     /// paged list of the health record items matching the specified
     /// search criteria.<br/>
     /// <br/>
@@ -35,17 +34,17 @@ namespace Microsoft.HealthVault.Web
         /// <summary>
         /// Constructs a HealthRecordItemDataGrid instance with default values.
         /// </summary>
-        /// 
+        ///
         /// <remarks>
         /// It is usually not necessary to explicitly instantiate the data
         /// grid. Instead, specify the grid in an .aspx file.
         /// </remarks>
-        /// 
+        ///
         public HealthRecordItemDataGrid()
         {
             // We are initializing the GridView in the constructor
             // so that the pages that consume HealthRecordItemDataGrid can have
-            // access to the grid view's properties. If we do it on 
+            // access to the grid view's properties. If we do it on
             // CreateChildControls(), it happens after Load, so we would
             // get uninitialized exceptions.
             gridView = new GridView();
@@ -60,7 +59,7 @@ namespace Microsoft.HealthVault.Web
         /// Overrides the base class OnPreRender to populate the data from
         /// HealthVault.
         /// </summary>
-        /// 
+        ///
         /// <param name="e">
         /// The event arguments.
         /// </param>
@@ -84,16 +83,16 @@ namespace Microsoft.HealthVault.Web
 
         /// <summary>
         /// Called by the ASP.NET page to notify server controls that use
-        /// composition-based implementation to create any child controls they 
+        /// composition-based implementation to create any child controls they
         /// contain in preparation for posting back or rendering.
         /// </summary>
-        /// 
+        ///
         [SecuritySafeCritical]
         protected override void CreateChildControls()
         {
             base.CreateChildControls();
 
-            // Set the GridView properties            
+            // Set the GridView properties
             gridView.AutoGenerateColumns = false;
             gridView.RowDataBound +=
                 new GridViewRowEventHandler(OnRowDataBound);
@@ -117,10 +116,10 @@ namespace Microsoft.HealthVault.Web
         #region Client side events
 
         /// <summary>
-        /// Gets or sets n event handler that gets fired when an event occurs 
+        /// Gets or sets n event handler that gets fired when an event occurs
         /// within a row of the data grid.
         /// </summary>
-        /// 
+        ///
         /// <remarks>
         /// The JavaScript row event handler should be in the form of:
         /// function Foo(thingId, thingTypeId, thingVersion, eventType, row, event)
@@ -129,9 +128,9 @@ namespace Microsoft.HealthVault.Web
         /// thingVersion = the version stamp of the thing type
         /// eventType = onmouseover, onmouseout, onclick
         /// row = the row index that the event occurred on.
-        /// event = javascript event 
+        /// event = javascript event
         /// </remarks>
-        /// 
+        ///
         public string JavaScriptRowEventHandler
         {
             get { return _jsRowEventHandler; }
@@ -166,7 +165,7 @@ namespace Microsoft.HealthVault.Web
 
                 if (isPersonal)
                 {
-                    // Note: e.Row.Cells[0].Text has already been encoded by the BoundField, so 
+                    // Note: e.Row.Cells[0].Text has already been encoded by the BoundField, so
                     // it is safe to append it as is to the personal text. Setting the text now
                     // will NOT invoke another HtmlEncode, so personal text can be html and will
                     // render properly
@@ -174,7 +173,8 @@ namespace Microsoft.HealthVault.Web
                 }
             }
         }
-        const string IsPersonalText = "<span id=\"personalText\" >Personal</span> ";
+
+        private const string IsPersonalText = "<span id=\"personalText\" >Personal</span> ";
 
         private void BindJavaScriptRowEventHandler(GridViewRow row)
         {
@@ -253,15 +253,16 @@ namespace Microsoft.HealthVault.Web
             row.Attributes.Add("onmouseout", mouseOutScript);
             row.Attributes.Add("onclick", onClickScript);
         }
+
         #endregion Client side events
 
         #region Server-side actions
 
-        /// <summary> 
+        /// <summary>
         /// Gets or sets the header text for the action links column.
         /// </summary>
-        /// 
-        /// <remarks> 
+        ///
+        /// <remarks>
         /// This value is ignored unless <see cref="ActionLabels"/> and
         /// <see cref="ActionCommands"/> are also set.<br/>
         /// <br/>
@@ -276,7 +277,7 @@ namespace Microsoft.HealthVault.Web
         /// The ActionHeaderText is the text used for the column that is
         /// automatically added.
         /// </remarks>
-        /// 
+        ///
         public string ActionHeaderText
         {
             get { return _actionHeaderText; }
@@ -284,11 +285,11 @@ namespace Microsoft.HealthVault.Web
         }
         private string _actionHeaderText;
 
-        /// <summary> 
+        /// <summary>
         /// Gets or sets the action links separator.
         /// </summary>
-        /// 
-        /// <remarks> 
+        ///
+        /// <remarks>
         /// This value is ignored unless <see cref="ActionLabels"/> and
         /// <see cref="ActionCommands"/> are also set.<br/>
         /// <br/>
@@ -303,7 +304,7 @@ namespace Microsoft.HealthVault.Web
         /// The ActionSpacer is the HTML used to separate multiple actions
         /// in the added column. The default value is a single space.
         /// </remarks>
-        /// 
+        ///
         public string ActionSpacer
         {
             get { return _actionSpacer; }
@@ -311,12 +312,12 @@ namespace Microsoft.HealthVault.Web
         }
         private string _actionSpacer = " ";
 
-        /// <summary> 
+        /// <summary>
         /// Gets or sets the action link text.
         /// </summary>
-        /// 
-        /// <remarks> 
-        /// This value is ignored unless 
+        ///
+        /// <remarks>
+        /// This value is ignored unless
         /// <see cref="ActionCommands"/> is also set.<br/>
         /// <br/>
         /// Actions are server-side events that can be configured through
@@ -332,7 +333,7 @@ namespace Microsoft.HealthVault.Web
         /// Each label corresponds to the command at the same index in the
         /// <see cref="ActionCommands"/> property.
         /// </remarks>
-        /// 
+        ///
         public string ActionLabels
         {
             get { return _csvActionLabels; }
@@ -345,12 +346,12 @@ namespace Microsoft.HealthVault.Web
         private string _csvActionLabels;
         private string[] _actionLabels;
 
-        /// <summary> 
+        /// <summary>
         /// Gets or sets the action commands.
         /// </summary>
-        /// 
-        /// <remarks> 
-        /// This value is ignored unless 
+        ///
+        /// <remarks>
+        /// This value is ignored unless
         /// <see cref="ActionLabels"/> is also set.<br/>
         /// <br/>
         /// Actions are server-side events that can be configured through
@@ -364,11 +365,11 @@ namespace Microsoft.HealthVault.Web
         /// The ActionCommands is a comma separated list that must have the same
         /// number of values as the <see cref="ActionLabels"/> property.
         /// Each command corresponds to the label at the same index in the
-        /// <see cref="ActionLabels"/> property. When the action link is 
+        /// <see cref="ActionLabels"/> property. When the action link is
         /// clicked <see cref="Action"/> event is fired with the action command
         /// as an argument.
         /// </remarks>
-        /// 
+        ///
         public string ActionCommands
         {
             get { return _csvActionCommands; }
@@ -381,13 +382,13 @@ namespace Microsoft.HealthVault.Web
         private string _csvActionCommands;
         private string[] _actionCommands;
 
-        /// <summary> 
+        /// <summary>
         /// The event handler for client-side action events.
         /// </summary>
-        /// 
-        /// <remarks> 
+        ///
+        /// <remarks>
         /// If present, this javascript function is called when action links
-        /// are clicked before the server-side <see cref="Action"/> 
+        /// are clicked before the server-side <see cref="Action"/>
         /// handler.<br/>
         /// <br/>
         /// The function should return true to proceed, or false to abort
@@ -400,7 +401,7 @@ namespace Microsoft.HealthVault.Web
         /// <li>key = thing id and version stamp, comma-separated</li>
         /// </ul>
         /// </remarks>
-        /// 
+        ///
         public string OnClientAction
         {
             get { return (_clientActionFunction); }
@@ -408,10 +409,10 @@ namespace Microsoft.HealthVault.Web
         }
         private string _clientActionFunction;
 
-        /// <summary> 
+        /// <summary>
         /// The event handler for the server-side action event.
         /// </summary>
-        /// 
+        ///
         /// <remarks>
         /// The Action event is fired in response to an action link being
         /// clicked. The Action event can be handled by associating a method
@@ -420,19 +421,19 @@ namespace Microsoft.HealthVault.Web
         /// <br/>
         /// The action command is passed to the event handler as a parameter.
         /// </remarks>
-        /// 
+        ///
         public event CommandEventHandler Action;
 
-        /// <summary> 
+        /// <summary>
         /// The event handler for a "last chance" look at the grid before
         /// it is rendered.
         /// </summary>
-        /// 
+        ///
         /// <remarks>
         /// This event is fired just before rendering. The grid is full and
         /// all actions are complete.<br/>
         /// <br/>
-        /// Note that using this event requires looking directly into the 
+        /// Note that using this event requires looking directly into the
         /// contents of the control! This is not guaranteed to be supported
         /// in future versions of the SDK and therefore you should use it
         /// at your own risk.
@@ -440,25 +441,25 @@ namespace Microsoft.HealthVault.Web
         ///
         public event EventHandler FinalPreRender;
 
-        /// <summary> 
+        /// <summary>
         /// The default event handler for the server-side action event.
         /// </summary>
-        /// 
+        ///
         /// <param name="sender">
         /// The source of the event.
         /// </param>
-        /// 
+        ///
         /// <param name="e">
         /// A <see cref="System.Web.UI.WebControls.CommandEventArgs"/> that
         /// contains the event data.
         /// </param>
-        /// 
+        ///
         /// <remarks>
         /// This method handles the built-in actions like "_wcDelete" and then
         /// passes on any unknown commands to the <see cref="Action"/>
         /// event handler.
         /// </remarks>
-        /// 
+        ///
         public void HandleAction(Object sender, CommandEventArgs e)
         {
             switch (e.CommandName)
@@ -479,8 +480,8 @@ namespace Microsoft.HealthVault.Web
                     break;
             }
         }
-        private const string BuiltinActionDelete = "_wcDelete";
 
+        private const string BuiltinActionDelete = "_wcDelete";
 
         private void DeleteThing(Guid thingId, Guid versionStamp)
         {
@@ -604,7 +605,7 @@ namespace Microsoft.HealthVault.Web
         /// <summary>
         /// Renders the HTML for the HealthRecordItemDataGrid.
         /// </summary>
-        /// 
+        ///
         /// <remarks>
         /// The control consists of 3 main elements:
         /// <div class="CssClass">
@@ -669,22 +670,22 @@ namespace Microsoft.HealthVault.Web
         /// Populates the encapsulated GridView by building the search filters
         /// or use the FilterOverride to get health record information.
         /// </summary>
-        /// 
+        ///
         /// <remarks>
-        /// To get information on results returned, look at the 
+        /// To get information on results returned, look at the
         /// <see cref="IsFiltered"/> and <see cref="ResultCount"/>
         /// properties.
         /// </remarks>
-        /// 
+        ///
         /// <exception cref="InvalidOperationException">
         /// If the <see cref="HealthRecordItemDataGrid"/> instance is placed in
         /// a page not deriving from <see cref="HealthServicePage"/>.
         /// </exception>
-        /// 
+        ///
         [SecurityCritical]
         protected void PopulateGridView()
         {
-            // Clear out the GridView            
+            // Clear out the GridView
             gridView.Columns.Clear();
             gridView.DataSource = null;
             gridView.DataBind();
@@ -823,7 +824,7 @@ namespace Microsoft.HealthVault.Web
                 }
             }
 
-            // For auditing we want to do special columns                
+            // For auditing we want to do special columns
             if (ShowAuditColumns)
             {
                 switch (cdef.ColumnName)
@@ -841,21 +842,21 @@ namespace Microsoft.HealthVault.Web
                         break;
 
                     case "wc-audit-personname":
-                        // If the filter is filtered by a person, don't 
+                        // If the filter is filtered by a person, don't
                         // show the person column.
                         visible = filter.UpdatedPerson == Guid.Empty;
                         break;
 
                     case "wc-audit-appname":
-                        // If the filter is filtered by a application, 
+                        // If the filter is filtered by a application,
                         // don't show the application column.
                         visible = filter.UpdatedApplication == Guid.Empty;
                         break;
 
                     case "wc-audit-action":
-                        // For an action, we need to use a special 
-                        // templated field. The templated field overrides 
-                        // data binding and will convert the enum string 
+                        // For an action, we need to use a special
+                        // templated field. The templated field overrides
+                        // data binding and will convert the enum string
                         // to a string we want to show.
                         TemplateField tfield = new TemplateField();
 
@@ -898,7 +899,6 @@ namespace Microsoft.HealthVault.Web
             gridView.Columns.Add(fld);
         }
 
-
         private void GridView_PageIndexChanging(
             object sender,
             GridViewPageEventArgs e)
@@ -908,17 +908,17 @@ namespace Microsoft.HealthVault.Web
         }
 
         /// <summary>
-        /// Builds the filter used to populate the data grid. The filter is 
+        /// Builds the filter used to populate the data grid. The filter is
         /// generated by looking at the TypeIds.
         /// </summary>
-        /// 
+        ///
         /// <returns>
-        /// A <see cref="Microsoft.HealthVault.HealthRecordFilter"/> that is used 
-        /// by the underlying 
+        /// A <see cref="Microsoft.HealthVault.HealthRecordFilter"/> that is used
+        /// by the underlying
         /// <see cref="Microsoft.HealthVault.HealthRecordItemDataTable"/>
         /// to retrieve data for the data grid.
         /// </returns>
-        /// 
+        ///
         private HealthRecordFilter BuildFilterFromParams()
         {
             HealthRecordFilter filter = new HealthRecordFilter();
@@ -931,11 +931,11 @@ namespace Microsoft.HealthVault.Web
 
         private readonly GridView gridView;
 
-        /// <summary> 
+        /// <summary>
         /// Gets or sets the filter to use to get information from the
         /// health record.
         /// </summary>
-        /// 
+        ///
         /// <remarks>
         /// The data grid can either show health record items of specific
         /// types specified by the <see cref="TypeIds"/> property or by
@@ -944,7 +944,7 @@ namespace Microsoft.HealthVault.Web
         /// If this property is set the <see cref="TypeIds"/> property will
         /// be ignored.
         /// </remarks>
-        /// 
+        ///
         public HealthRecordFilter FilterOverride
         {
             get { return _filterOverride; }
@@ -956,16 +956,16 @@ namespace Microsoft.HealthVault.Web
         /// Gets or sets the unique type identifier for the health record
         /// items to show in the data grid.
         /// </summary>
-        /// 
+        ///
         /// <remarks>
         /// The data grid can either show health record items of specific
-        /// types or by specifying a more detailed filter in the 
+        /// types or by specifying a more detailed filter in the
         /// <see cref="FilterOverride"/> property.<br/>
         /// <br/>
         /// If the <see cref="FilterOverride"/> property is set, this property
         /// is ignored.
         /// </remarks>
-        /// 
+        ///
         public ICollection<Guid> TypeIds => _typeIds;
 
         private readonly List<Guid> _typeIds = new List<Guid>();
@@ -973,13 +973,13 @@ namespace Microsoft.HealthVault.Web
         /// <summary>
         /// Gets the HealthVault record to use.
         /// </summary>
-        /// 
+        ///
         /// <remarks>
         /// If the value is <b>null</b> the property will attempt to use the page property of
         /// the control to obtain the selected record. This will only work if the page is derived
         /// from <see cref="HealthServicePage"/>.
         /// </remarks>
-        /// 
+        ///
         public HealthRecordAccessor Record
         {
             get
@@ -1003,27 +1003,27 @@ namespace Microsoft.HealthVault.Web
         /// Gets a value that indicates whether the result data has been
         /// filtered by HealthVault.
         /// </summary>
-        /// 
+        ///
         /// <remarks>
-        /// To use this property, override the 
-        /// <see cref="System.Web.UI.Page.OnPreRenderComplete"/>, call the 
+        /// To use this property, override the
+        /// <see cref="System.Web.UI.Page.OnPreRenderComplete"/>, call the
         /// base class implementation, and then check if the data was filtered.
         /// </remarks>
-        /// 
+        ///
         public bool IsFiltered => _isFiltered;
 
         private bool _isFiltered;
 
-        /// <summary> 
+        /// <summary>
         /// Gets or sets the type of view the data table exposes through the
         /// data grid.
         /// </summary>
-        /// 
+        ///
         /// <remarks>
-        /// The default value is 
+        /// The default value is
         /// <see cref="HealthRecordItemDataTableView.Default"/>.
         /// </remarks>
-        /// 
+        ///
         public HealthRecordItemDataTableView TableView
         {
             get { return _tableView; }
@@ -1031,11 +1031,11 @@ namespace Microsoft.HealthVault.Web
         }
         private HealthRecordItemDataTableView _tableView;
 
-        /// <summary> 
+        /// <summary>
         /// Gets or sets a value which indicates to the data grid that data
         /// has changed and it should be refreshed.
         /// </summary>
-        /// 
+        ///
         public bool DataChanged
         {
             get { return _dataChanged; }
@@ -1046,13 +1046,13 @@ namespace Microsoft.HealthVault.Web
         /// <summary>
         /// Gets the number of results returned in the data grid.
         /// </summary>
-        /// 
+        ///
         /// <remarks>
         /// To provide alternate UI when no results are returned, override
-        /// the <see cref="System.Web.UI.Page.OnPreRenderComplete"/>, call the 
+        /// the <see cref="System.Web.UI.Page.OnPreRenderComplete"/>, call the
         /// base class implementation, and then check this property.
         /// </remarks>
-        /// 
+        ///
         public int ResultCount
         {
             get { return _numResults; }
@@ -1062,15 +1062,15 @@ namespace Microsoft.HealthVault.Web
         /// <summary>
         /// The columns that should be shown in the data grid.
         /// </summary>
-        /// 
+        ///
         /// <remarks>
         /// This is a comma separated list of the columns that should be shown
         /// in the data grid. If the value is "*" all data columns will be
-        /// shown. If the value is null or empty, the display 
-        /// columns defined for the specified item type are shown. 
+        /// shown. If the value is null or empty, the display
+        /// columns defined for the specified item type are shown.
         /// The default value is null.
         /// </remarks>
-        /// 
+        ///
         public string VisibleColumns
         {
             get { return _visibleColumns; }
@@ -1081,7 +1081,7 @@ namespace Microsoft.HealthVault.Web
         /// <summary>
         /// Gets or sets the CSS class used for the control layout.
         /// </summary>
-        /// 
+        ///
         /// <remarks>
         /// <div class="CssClass">
         ///    <div>
@@ -1092,7 +1092,7 @@ namespace Microsoft.HealthVault.Web
         /// To control the way the controls look use CSS selector methods
         /// i.e. div.myClass div table tr td to access the td of the grid
         /// </remarks>
-        /// 
+        ///
         public string CssClass
         {
             get { return _cssClass; }
@@ -1103,13 +1103,13 @@ namespace Microsoft.HealthVault.Web
         /// <summary>
         /// Gets or sets the CSS class used for alternating row styles.
         /// </summary>
-        /// 
+        ///
         /// <remarks>
         /// To have alternating row styles for the data grid, the styles
         /// need to be controlled by a separate CSS class and will be attached
         /// to the table rows on Render.
         /// </remarks>
-        /// 
+        ///
         public string AlternatingRowCssClass
         {
             get { return _alternatingRowCssClass; }
@@ -1118,14 +1118,14 @@ namespace Microsoft.HealthVault.Web
         private string _alternatingRowCssClass;
 
         /// <summary>
-        /// Gets or sets the cell padding for the data grid. 
+        /// Gets or sets the cell padding for the data grid.
         /// </summary>
-        /// 
+        ///
         /// <remarks>
         /// The default value is 0.<br/>
         /// This value must be set before <see cref="Render"/> is called.
         /// </remarks>
-        /// 
+        ///
         public int CellPadding
         {
             get { return gridView.CellPadding; }
@@ -1135,12 +1135,12 @@ namespace Microsoft.HealthVault.Web
         /// <summary>
         /// Gets or sets the cell spacing for the data grid.
         /// </summary>
-        /// 
+        ///
         /// <remarks>
         /// The default value is 0.<br/>
         /// This value must be set before <see cref="Render"/> is called.
         /// </remarks>
-        ///  
+        ///
         public int CellSpacing
         {
             get { return gridView.CellSpacing; }
@@ -1150,13 +1150,13 @@ namespace Microsoft.HealthVault.Web
         /// <summary>
         /// Gets or sets the number or results that are shown per page.
         /// </summary>
-        /// 
+        ///
         /// <remarks>
-        /// This value can also be configured using a web.config setting 
+        /// This value can also be configured using a web.config setting
         /// named "DataGrid_ItemsPerPage".<br/>
         /// This value must be set before <see cref="Render"/> is called.
         /// </remarks>
-        /// 
+        ///
         public int PageSize
         {
             get { return gridView.PageSize; }
@@ -1166,15 +1166,15 @@ namespace Microsoft.HealthVault.Web
         /// <summary>
         /// Gets or sets the page index to be shown.
         /// </summary>
-        /// 
+        ///
         /// <exception cref="ArgumentOutOfRangeException">
         /// If the PageIndex property is set to a value less than 0.
         /// </exception>
-        /// 
+        ///
         /// <remarks>
         /// This value must be set before <see cref="Render"/> is called.
         /// </remarks>
-        /// 
+        ///
         public int PageIndex
         {
             get { return gridView.PageIndex; }
@@ -1186,11 +1186,11 @@ namespace Microsoft.HealthVault.Web
         /// automatically show error messages when no results are found or
         /// when the results are filtered.
         /// </summary>
-        /// 
+        ///
         /// <remarks>
         /// The default value is false.
         /// </remarks>
-        /// 
+        ///
         public bool ShowErrorMessages
         {
             get { return _showErrorMessages; }
@@ -1201,26 +1201,26 @@ namespace Microsoft.HealthVault.Web
         /// <summary>
         /// Gets the client ID of the grid view portion of the control.
         /// </summary>
-        /// 
+        ///
         /// <remarks>
         /// This is the ID of the &lt;table/&gt; element in the control so that
         /// it may be accessed using client side scripting or CSS.
         /// </remarks>
-        /// 
+        ///
         public string GridViewClientId
         {
             get { return gridView.ClientID; }
         }
 
         /// <summary>
-        /// Gets or sets a value which indicates to the data grid whether or not to show the 
+        /// Gets or sets a value which indicates to the data grid whether or not to show the
         /// signed column if the column is defined for the specified item type.
         /// </summary>
-        /// 
+        ///
         /// <remarks>
         /// The default value is false.
         /// </remarks>
-        /// 
+        ///
         public bool ShowIsSignedColumn
         {
             get { return _showIsSignedColumn; }
@@ -1229,15 +1229,15 @@ namespace Microsoft.HealthVault.Web
         private bool _showIsSignedColumn;
 
         /// <summary>
-        /// Gets or sets a value shown in the signed column if the column is defined for the 
+        /// Gets or sets a value shown in the signed column if the column is defined for the
         /// specified item type.
         /// </summary>
-        /// 
+        ///
         /// <remarks>
         /// Instead of showing 'True' when item is signed, we could show an image by overriding
         /// the signed column value.
         /// </remarks>
-        /// 
+        ///
         public string IsSignedColumnValueOverride
         {
             get { return _isSignedColumnValueOverride; }
@@ -1247,14 +1247,14 @@ namespace Microsoft.HealthVault.Web
         private const string WCIsSignedAttributeName = "wc-issigned";
 
         /// <summary>
-        /// Gets or sets a value which indicates to the data grid whether or not to show the 
+        /// Gets or sets a value which indicates to the data grid whether or not to show the
         /// personal flag for items marked as personal.
         /// </summary>
-        /// 
+        ///
         /// <remarks>
         /// The default value is false.
         /// </remarks>
-        /// 
+        ///
         public bool ShowIsPersonalFlag
         {
             get { return _showIsPersonalFlag; }
@@ -1263,14 +1263,14 @@ namespace Microsoft.HealthVault.Web
         private bool _showIsPersonalFlag;
 
         /// <summary>
-        /// Gets or sets a value which indicates to the data grid whether or not to show the 
+        /// Gets or sets a value which indicates to the data grid whether or not to show the
         /// audit columns for items.
         /// </summary>
-        /// 
+        ///
         /// <remarks>
         /// The default value is false.
         /// </remarks>
-        /// 
+        ///
         public bool ShowAuditColumns
         {
             get { return _showAuditColumns; }
@@ -1279,14 +1279,14 @@ namespace Microsoft.HealthVault.Web
         private bool _showAuditColumns;
 
         /// <summary>
-        /// Gets or sets a value which indicates to the data grid whether or not to show the 
+        /// Gets or sets a value which indicates to the data grid whether or not to show the
         /// action links in each row.
         /// </summary>
-        /// 
+        ///
         /// <remarks>
         /// The default value is true.
         /// </remarks>
-        /// 
+        ///
         public bool ShowActionLinks
         {
             get { return _showActionLinks; }

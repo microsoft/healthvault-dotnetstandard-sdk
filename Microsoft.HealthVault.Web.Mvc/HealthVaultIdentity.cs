@@ -28,7 +28,7 @@ namespace Microsoft.HealthVault.Web.Mvc
         /// <param name="personInfo">The <see cref="PersonInfo"/> object to represent</param>
         public HealthVaultIdentity(PersonInfo personInfo)
         {
-             PersonInfo = personInfo;
+            PersonInfo = personInfo;
         }
 
         /// <summary>

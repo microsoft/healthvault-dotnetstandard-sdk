@@ -3,7 +3,6 @@
 // see http://www.microsoft.com/resources/sharedsource/licensingbasics/sharedsourcelicenses.mspx.
 // All other rights reserved.
 
-
 using System;
 using System.Xml;
 using System.Xml.XPath;
@@ -13,20 +12,20 @@ namespace Microsoft.HealthVault.ItemTypes
     /// <summary>
     /// Represents a health record item about filling a medication.
     /// </summary>
-    /// 
+    ///
     public class MedicationFill : HealthRecordItem
     {
         /// <summary>
-        /// Creates a new instance of the <see cref="MedicationFill"/> class with default 
+        /// Creates a new instance of the <see cref="MedicationFill"/> class with default
         /// values.
         /// </summary>
-        /// 
+        ///
         /// <remarks>
         /// The item is not added to the health record until the
-        /// <see cref="HealthRecordAccessor.NewItem(HealthRecordItem)"/> method 
+        /// <see cref="HealthRecordAccessor.NewItem(HealthRecordItem)"/> method
         /// is called.
         /// </remarks>
-        /// 
+        ///
         public MedicationFill()
             : base(TypeId)
         {
@@ -35,15 +34,15 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <summary>
         /// Creates a new instance of the <see cref="MedicationFill"/> class with the specified name.
         /// </summary>
-        /// 
+        ///
         /// <param name="name">
         /// The name of the medication.
         /// </param>
-        /// 
+        ///
         /// <exception cref="ArgumentNullException">
         /// If <paramref name="name"/> is <b>null</b>.
         /// </exception>
-        /// 
+        ///
         public MedicationFill(CodableValue name)
             : base(TypeId)
         {
@@ -53,23 +52,23 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <summary>
         /// The unique identifier for the item type.
         /// </summary>
-        /// 
+        ///
         public new static readonly Guid TypeId =
             new Guid("167ecf6b-bb54-43f9-a473-507b334907e0");
 
         /// <summary>
         /// Populates this medication fill instance from the data in the XML.
         /// </summary>
-        /// 
+        ///
         /// <param name="typeSpecificXml">
         /// The XML to get the medication fill data from.
         /// </param>
-        /// 
+        ///
         /// <exception cref="InvalidOperationException">
         /// If the first node in <paramref name="typeSpecificXml"/> is not
         /// a medication-fill node.
         /// </exception>
-        /// 
+        ///
         protected override void ParseXml(IXPathNavigable typeSpecificXml)
         {
             XPathNavigator itemNav =
@@ -105,19 +104,19 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <summary>
         /// Writes the medication fill data to the specified XmlWriter.
         /// </summary>
-        /// 
+        ///
         /// <param name="writer">
         /// The XmlWriter to write the medication fill data to.
         /// </param>
-        /// 
+        ///
         /// <exception cref="ArgumentNullException">
         /// The <paramref name="writer"/> parameter is <b>null</b>.
         /// </exception>
-        /// 
+        ///
         /// <exception cref="HealthRecordItemSerializationException">
         /// The <see cref="Name"/> property has not been set.
         /// </exception>
-        /// 
+        ///
         public override void WriteXml(XmlWriter writer)
         {
             Validator.ThrowIfWriterNull(writer);
@@ -141,21 +140,21 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <summary>
         /// Gets or sets the medication name and clinical code.
         /// </summary>
-        /// 
+        ///
         /// <remarks>
-        /// The name should be understandable to the person taking the medication, such as the 
+        /// The name should be understandable to the person taking the medication, such as the
         /// brand name.
         /// The preferred vocabularies for medication name are "RxNorm" or "NDC".
         /// </remarks>
-        /// 
+        ///
         /// <exception cref="ArgumentNullException">
         /// If <paramref name="value"/> is <b>null</b> on set.
         /// </exception>
-        /// 
+        ///
         public CodableValue Name
         {
             get { return _name; }
-            set 
+            set
             {
                 Validator.ThrowIfArgumentNull(value, "Name", "MedicationFillNameMandatory");
                 _name = value;
@@ -166,11 +165,11 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <summary>
         /// Gets or sets the date the prescription was filled.
         /// </summary>
-        /// 
+        ///
         /// <remarks>
         /// If the value is not known, it will be set to <b>null</b>.
         /// </remarks>
-        /// 
+        ///
         public ApproximateDateTime DateFilled
         {
             get { return _dateFilled; }
@@ -181,11 +180,11 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <summary>
         /// Gets or sets the number of days supply of the medication.
         /// </summary>
-        /// 
+        ///
         /// <remarks>
         /// If the value is not known, it will be set to <b>null</b>.
         /// </remarks>
-        /// 
+        ///
         public int? DaysSupply
         {
             get { return _daysSupply; }
@@ -196,11 +195,11 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <summary>
         /// Gets or sets the date on which the prescription can be refilled.
         /// </summary>
-        /// 
+        ///
         /// <remarks>
         /// If the value is not known, it will be set to <b>null</b>.
         /// </remarks>
-        /// 
+        ///
         public HealthServiceDate NextRefillDate
         {
             get { return _nextRefillDate; }
@@ -211,11 +210,11 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <summary>
         /// Gets or sets the number of medication refills left.
         /// </summary>
-        /// 
+        ///
         /// <remarks>
         /// If the value is not known, it will be set to <b>null</b>.
         /// </remarks>
-        /// 
+        ///
         public int? RefillsLeft
         {
             get { return _refillsLeft; }
@@ -226,11 +225,11 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <summary>
         /// Gets or sets the pharmacy.
         /// </summary>
-        /// 
+        ///
         /// <remarks>
         /// If the value is not known, it will be set to <b>null</b>.
         /// </remarks>
-        /// 
+        ///
         public Organization Pharmacy
         {
             get { return _pharmacy; }
@@ -241,19 +240,19 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <summary>
         /// Gets or sets the free form prescription number.
         /// </summary>
-        /// 
+        ///
         /// <remarks>
         /// If the value is not known, it will be set to <b>null</b>.
         /// </remarks>
-        /// 
+        ///
         /// <exception cref="ArgumentException">
         /// If <paramref name="value"/> contains only whitespace.
         /// </exception>
-        /// 
+        ///
         public string PrescriptionNumber
         {
             get { return _prescriptionNumber; }
-            set 
+            set
             {
                 Validator.ThrowIfStringIsWhitespace(value, "PrescriptionNumber");
                 _prescriptionNumber = value;
@@ -264,19 +263,19 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <summary>
         /// Gets or sets the lot number for the medication.
         /// </summary>
-        /// 
+        ///
         /// <remarks>
         /// If the value is not known, it will be set to <b>null</b>.
         /// </remarks>
-        /// 
+        ///
         /// <exception cref="ArgumentException">
         /// If <paramref name="value"/> contains only whitespace.
         /// </exception>
-        /// 
+        ///
         public string LotNumber
         {
             get { return _lotNumber; }
-            set 
+            set
             {
                 Validator.ThrowIfStringIsWhitespace(value, "LotNumber");
                 _lotNumber = value;
@@ -284,22 +283,21 @@ namespace Microsoft.HealthVault.ItemTypes
         }
         private string _lotNumber;
 
-        
         /// <summary>
         /// Gets a string representation of the medication fill.
         /// </summary>
-        /// 
+        ///
         /// <returns>
         /// A string representation of the medication fill.
         /// </returns>
-        /// 
+        ///
         public override string ToString()
         {
             string result = Name.ToString();
 
             if (_dateFilled != null)
             {
-                result = 
+                result =
                     string.Format(
                         ResourceRetriever.GetResourceString(
                             "MedicationFillToStringFormat"),

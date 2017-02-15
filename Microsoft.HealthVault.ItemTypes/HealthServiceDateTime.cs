@@ -3,7 +3,6 @@
 // see http://www.microsoft.com/resources/sharedsource/licensingbasics/sharedsourcelicenses.mspx.
 // All other rights reserved.
 
-
 using System;
 using System.Text;
 using System.Xml;
@@ -11,32 +10,32 @@ using System.Xml.XPath;
 
 namespace Microsoft.HealthVault.ItemTypes
 {
-    /// <summary> 
+    /// <summary>
     /// Represents a date and time.
     /// </summary>
-    /// 
+    ///
     /// <remarks>
     /// A <see cref="HealthServiceDateTime"/> is different from a <see cref="System.DateTime"/>
-    /// in that the time is optional and it can be determined if it was 
+    /// in that the time is optional and it can be determined if it was
     /// specified. Also, the time zone is optional and is not interpreted in
     /// any way by HealthVault.
     /// </remarks>
-    /// 
-    public class HealthServiceDateTime 
-        : HealthRecordItemData, 
+    ///
+    public class HealthServiceDateTime
+        : HealthRecordItemData,
             IComparable,
             IComparable<HealthServiceDateTime>,
             IComparable<DateTime>
     {
         /// <summary>
-        /// Creates a new instance of the <see cref="HealthServiceDateTime"/> class 
+        /// Creates a new instance of the <see cref="HealthServiceDateTime"/> class
         /// with the date set to the current date and the time not set.
         /// </summary>
-        /// 
+        ///
         public HealthServiceDateTime()
         {
             DateTime now = DateTime.Now;
-            _date = 
+            _date =
                 new HealthServiceDate(
                     now.Year,
                     now.Month,
@@ -44,18 +43,18 @@ namespace Microsoft.HealthVault.ItemTypes
         }
 
         /// <summary>
-        /// Creates a new instance of the <see cref="HealthServiceDateTime"/> class 
+        /// Creates a new instance of the <see cref="HealthServiceDateTime"/> class
         /// with the specified date.
         /// </summary>
-        /// 
+        ///
         /// <param name="date">
         /// The date.
         /// </param>
-        /// 
+        ///
         /// <exception cref="ArgumentNullException">
         /// The <paramref name="date"/> parameter is <b>null</b>.
         /// </exception>
-        /// 
+        ///
         public HealthServiceDateTime(HealthServiceDate date)
         {
             this.Date = date;
@@ -63,22 +62,22 @@ namespace Microsoft.HealthVault.ItemTypes
         }
 
         /// <summary>
-        /// Creates a new instance of the <see cref="HealthServiceDateTime"/> 
+        /// Creates a new instance of the <see cref="HealthServiceDateTime"/>
         /// class with the specified date and time.
         /// </summary>
-        /// 
+        ///
         /// <param name="date">
         /// The date.
         /// </param>
-        /// 
+        ///
         /// <param name="time">
         /// The approximate time.
         /// </param>
-        /// 
+        ///
         /// <exception cref="ArgumentNullException">
         /// The <paramref name="date"/> parameter is <b>null</b>.
         /// </exception>
-        /// 
+        ///
         public HealthServiceDateTime(HealthServiceDate date, ApproximateTime time)
         {
             this.Date = date;
@@ -86,28 +85,28 @@ namespace Microsoft.HealthVault.ItemTypes
         }
 
         /// <summary>
-        /// Creates a new instance of the <see cref="HealthServiceDateTime"/> 
+        /// Creates a new instance of the <see cref="HealthServiceDateTime"/>
         /// class with the specified date, time, and time zone.
         /// </summary>
-        /// 
+        ///
         /// <param name="date">
         /// The date.
         /// </param>
-        /// 
+        ///
         /// <param name="time">
         /// The approximate time.
         /// </param>
-        /// 
+        ///
         /// <param name="timeZone">
         /// The optional time zone for the <paramref name="time"/>.
         /// </param>
-        /// 
+        ///
         /// <exception cref="ArgumentNullException">
         /// The <paramref name="date"/> parameter is <b>null</b>.
         /// </exception>
-        /// 
+        ///
         public HealthServiceDateTime(
-            HealthServiceDate date, 
+            HealthServiceDate date,
             ApproximateTime time,
             CodableValue timeZone)
         {
@@ -115,29 +114,29 @@ namespace Microsoft.HealthVault.ItemTypes
             this.Time = time;
             this.TimeZone = timeZone;
         }
-        
+
         /// <summary>
-        /// Creates a new instance of the <see cref="HealthServiceDateTime"/> 
+        /// Creates a new instance of the <see cref="HealthServiceDateTime"/>
         /// class from the specified DateTime instance.
         /// </summary>
-        /// 
+        ///
         /// <param name="dateTime">
         /// The date and time used to construct the HealthVault date and time.
         /// </param>
-        /// 
+        ///
         /// <remarks>
         /// The time zone is ignored.
         /// </remarks>
-        /// 
+        ///
         public HealthServiceDateTime(DateTime dateTime)
         {
-            _date = 
+            _date =
                 new HealthServiceDate(
                     dateTime.Year,
                     dateTime.Month,
                     dateTime.Day);
-            
-            _time = 
+
+            _time =
                 new ApproximateTime(
                     dateTime.Hour,
                     dateTime.Minute,
@@ -148,14 +147,14 @@ namespace Microsoft.HealthVault.ItemTypes
             }
         }
 
-        /// <summary> 
+        /// <summary>
         /// Populates the data for the date and time from the XML.
         /// </summary>
-        /// 
-        /// <param name="navigator"> 
+        ///
+        /// <param name="navigator">
         /// The XML node representing the date and time.
         /// </param>
-        /// 
+        ///
         public override void ParseXml(XPathNavigator navigator)
         {
             Validator.ThrowIfNavigatorNull(navigator);
@@ -184,26 +183,26 @@ namespace Microsoft.HealthVault.ItemTypes
             }
         }
 
-        /// <summary> 
+        /// <summary>
         /// Writes the date and time to the specified XML writer.
         /// </summary>
-        /// 
+        ///
         /// <param name="nodeName">
         /// The name of the outer element for the date and time.
         /// </param>
-        /// 
-        /// <param name="writer"> 
+        ///
+        /// <param name="writer">
         /// The XmlWriter to write the date and time to.
         /// </param>
-        /// 
+        ///
         /// <exception cref="ArgumentException">
         /// The <paramref name="nodeName"/> parameter is <b>null</b> or empty.
         /// </exception>
-        /// 
+        ///
         /// <exception cref="ArgumentNullException">
         /// The <paramref name="writer"/> parameter is <b>null</b>.
         /// </exception>
-        /// 
+        ///
         public override void WriteXml(string nodeName, XmlWriter writer)
         {
             Validator.ThrowIfStringNullOrEmpty(nodeName, "nodeName");
@@ -229,17 +228,17 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <summary>
         /// Casts the <see cref="HealthServiceDateTime"/> instance to a System.DateTime object.
         /// </summary>
-        /// 
+        ///
         /// <param name="wcDateTime">
         /// The <see cref="HealthServiceDateTime"/> instance to cast.
         /// </param>
-        /// 
+        ///
         /// <returns>
         /// A DateTime instance with the appropriate fields populated by the
         /// <see cref="HealthServiceDateTime"/> values.
         /// </returns>
-        /// 
-        public static explicit operator DateTime(HealthServiceDateTime wcDateTime) 
+        ///
+        public static explicit operator DateTime(HealthServiceDateTime wcDateTime)
         {
             int year = wcDateTime.Date.Year;
             int month = wcDateTime.Date.Month;
@@ -250,8 +249,8 @@ namespace Microsoft.HealthVault.ItemTypes
             {
                 int hour = wcDateTime.Time.Hour;
                 int minute = wcDateTime.Time.Minute;
-                int second = 
-                    wcDateTime.Time.Second == null ? 
+                int second =
+                    wcDateTime.Time.Second == null ?
                         0 : (int)wcDateTime.Time.Second;
 
                 int millisecond =
@@ -270,12 +269,12 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <summary>
         /// Converts the <see cref="HealthServiceDateTime"/> instance to a System.DateTime object.
         /// </summary>
-        /// 
+        ///
         /// <returns>
         /// A DateTime instance with the appropriate fields populated by the
         /// <see cref="HealthServiceDateTime"/> values.
         /// </returns>
-        /// 
+        ///
         public DateTime ToDateTime()
         {
             return (DateTime)this;
@@ -284,19 +283,19 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <summary>
         /// Gets or sets the date.
         /// </summary>
-        /// 
+        ///
         /// <remarks>
         /// Defaults to the current year, month, and day.
         /// </remarks>
-        /// 
+        ///
         /// <exception cref="ArgumentNullException">
         /// The <paramref name="value"/> parameter is <b>null</b> on set.
         /// </exception>
-        /// 
+        ///
         public HealthServiceDate Date
         {
             get { return _date; }
-            set 
+            set
             {
                 Validator.ThrowIfArgumentNull(value, "Date", "HealthServiceDateTimeDateNull");
                 _date = value;
@@ -307,17 +306,17 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <summary>
         /// Gets or sets the time.
         /// </summary>
-        /// 
+        ///
         /// <returns>
         /// An <see cref="ApproximateTime"/> instance representing the time.
         /// </returns>
-        /// 
+        ///
         /// <remarks>
         /// If the time isn't known it can be set to <b>null</b>. This value defaults
         /// to an absent time. The reference is valid but the time will not be
         /// stored unless the hour and minute are set.
         /// </remarks>
-        /// 
+        ///
         public ApproximateTime Time
         {
             get { return _time; }
@@ -328,16 +327,16 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <summary>
         /// Gets or sets the time zone.
         /// </summary>
-        /// 
+        ///
         /// <returns>
         /// A <see cref="CodableValue"/> instance representing the time zone.
         /// </returns>
-        /// 
+        ///
         /// <remarks>
         /// If the time zone is unknown, it can be set to <b>null</b>. This value defaults
         /// to <b>null</b>.
         /// </remarks>
-        /// 
+        ///
         public CodableValue TimeZone
         {
             get { return _timeZone; }
@@ -374,28 +373,28 @@ namespace Microsoft.HealthVault.ItemTypes
         #region IComparable
 
         /// <summary>
-        /// Compares the specified object to this <see cref="HealthServiceDateTime"/> 
+        /// Compares the specified object to this <see cref="HealthServiceDateTime"/>
         /// object.
         /// </summary>
-        /// 
+        ///
         /// <param name="obj">
         /// The object to be compared.
         /// </param>
-        /// 
+        ///
         /// <returns>
-        /// A 32-bit signed integer that indicates the relative order of the 
-        /// objects being compared. If the result is less than zero, the 
+        /// A 32-bit signed integer that indicates the relative order of the
+        /// objects being compared. If the result is less than zero, the
         /// instance is less than <paramref name="obj"/>. If the result is zero
         /// the instance is equal to <paramref name="obj"/>. If the result is
-        /// greater than zero, the instance is greater than 
+        /// greater than zero, the instance is greater than
         /// <paramref name="obj"/>.
         /// </returns>
-        /// 
+        ///
         /// <exception cref="ArgumentException">
         /// The <paramref name="obj"/> parameter is not a <see cref="HealthServiceDateTime"/>
         /// or <see cref="System.DateTime"/> object.
         /// </exception>
-        /// 
+        ///
         public int CompareTo(object obj)
         {
             int result = 0;
@@ -429,23 +428,23 @@ namespace Microsoft.HealthVault.ItemTypes
         }
 
         /// <summary>
-        /// Compares the specified object to this <see cref="HealthServiceDateTime"/> 
+        /// Compares the specified object to this <see cref="HealthServiceDateTime"/>
         /// object.
         /// </summary>
-        /// 
+        ///
         /// <param name="other">
         /// The date to be compared.
         /// </param>
-        /// 
+        ///
         /// <returns>
-        /// A 32-bit signed integer that indicates the relative order of the 
-        /// objects being compared. If the result is less than zero, the 
+        /// A 32-bit signed integer that indicates the relative order of the
+        /// objects being compared. If the result is less than zero, the
         /// instance is less than <paramref name="other"/>. If the result is zero
         /// the instance is equal to <paramref name="other"/>. If the result is
-        /// greater than zero, the instance is greater than 
+        /// greater than zero, the instance is greater than
         /// <paramref name="other"/>.
         /// </returns>
-        /// 
+        ///
         public int CompareTo(HealthServiceDateTime other)
         {
             int result = 0;
@@ -477,16 +476,16 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <summary>
         /// Compares the specified object to this HealthServiceDateTime object.
         /// </summary>
-        /// 
+        ///
         /// <param name="other">
         /// The date to be compared.
         /// </param>
         /// <returns>
-        /// A 32-bit signed integer that indicates the relative order of the 
-        /// objects being compared. If the result is less than zero, the 
+        /// A 32-bit signed integer that indicates the relative order of the
+        /// objects being compared. If the result is less than zero, the
         /// instance is less than <paramref name="other"/>. If the result is zero
         /// the instance is equal to <paramref name="other"/>. If the result is
-        /// greater than zero, the instance is greater than 
+        /// greater than zero, the instance is greater than
         /// <paramref name="other"/>.
         /// </returns>
         public int CompareTo(DateTime other)
@@ -530,7 +529,6 @@ namespace Microsoft.HealthVault.ItemTypes
                     result = -1;
                     break;
                 }
-
             } while (false);
             return result;
         }
@@ -542,23 +540,23 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <summary>
         /// Gets a value indicating whether the specified object is equal to this object.
         /// </summary>
-        /// 
+        ///
         /// <param name="obj">
         /// The object to be compared.
         /// </param>
-        /// 
+        ///
         /// <returns>
-        /// <b>true</b> if the <paramref name="obj"/> is a 
+        /// <b>true</b> if the <paramref name="obj"/> is a
         /// <see cref="HealthServiceDateTime"/> object and the year, month, and
         /// day exactly match the year, month, and day of this object; otherwise,
         /// <b>false</b>.
         /// </returns>
-        /// 
+        ///
         /// <exception cref="ArgumentException">
         /// The <paramref name="obj"/> parameter is not a <see cref="HealthServiceDateTime"/>
         /// object.
         /// </exception>
-        /// 
+        ///
         public override bool Equals(object obj)
         {
             return this.CompareTo(obj) == 0;
@@ -567,15 +565,16 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <summary>
         /// See the base class documentation.
         /// </summary>
-        /// 
+        ///
         /// <returns>
         /// See the base class documentation.
         /// </returns>
-        /// 
+        ///
         public override int GetHashCode()
         {
             return base.GetHashCode();
         }
+
         #endregion Equals
 
         #region Operators
@@ -584,26 +583,26 @@ namespace Microsoft.HealthVault.ItemTypes
         /// Gets a value indicating whether the specified object is equal to the specified
         /// date.
         /// </summary>
-        /// 
+        ///
         /// <param name="date">
         /// The date object to be compared.
         /// </param>
-        /// 
+        ///
         /// <param name="secondInstance">
         /// The second object to be compared.
         /// </param>
-        /// 
+        ///
         /// <returns>
-        /// <b>true</b> if the year, month, and day of the <paramref name="date"/> 
-        /// exactly match the year, month, and day of <paramref name="secondInstance"/>; 
+        /// <b>true</b> if the year, month, and day of the <paramref name="date"/>
+        /// exactly match the year, month, and day of <paramref name="secondInstance"/>;
         /// otherwise, <b>false</b>.
         /// </returns>
-        /// 
+        ///
         /// <exception cref="ArgumentException">
-        /// The <paramref name="secondInstance"/> parameter is not a 
+        /// The <paramref name="secondInstance"/> parameter is not a
         /// <see cref="HealthServiceDateTime"/> object.
         /// </exception>
-        /// 
+        ///
         public static bool operator ==(HealthServiceDateTime date, object secondInstance)
         {
             bool result = true;
@@ -630,26 +629,26 @@ namespace Microsoft.HealthVault.ItemTypes
         /// Gets a value indicating whether the specified object is not equal to the specified
         /// date.
         /// </summary>
-        /// 
+        ///
         /// <param name="date">
         /// The date object to be compared.
         /// </param>
-        /// 
+        ///
         /// <param name="secondInstance">
         /// The second object to be compared.
         /// </param>
-        /// 
+        ///
         /// <returns>
-        /// <b>false</b> if the year, month, and day of the <paramref name="date"/> 
-        /// exactly match the year, month, and day of <paramref name="secondInstance"/>; 
+        /// <b>false</b> if the year, month, and day of the <paramref name="date"/>
+        /// exactly match the year, month, and day of <paramref name="secondInstance"/>;
         /// otherwise, <b>true</b>.
         /// </returns>
-        /// 
+        ///
         /// <exception cref="ArgumentException">
-        /// The <paramref name="secondInstance"/> parameter is not a 
+        /// The <paramref name="secondInstance"/> parameter is not a
         /// <see cref="HealthServiceDateTime"/> object.
         /// </exception>
-        /// 
+        ///
         public static bool operator !=(HealthServiceDateTime date, object secondInstance)
         {
             bool result = false;
@@ -673,28 +672,28 @@ namespace Microsoft.HealthVault.ItemTypes
         }
 
         /// <summary>
-        /// Gets a value indicating whether the specified date is greater than 
+        /// Gets a value indicating whether the specified date is greater than
         /// the specified object.
         /// </summary>
-        /// 
+        ///
         /// <param name="date">
         /// The date object to be compared.
         /// </param>
-        /// 
+        ///
         /// <param name="secondInstance">
         /// The second object to be compared.
         /// </param>
-        /// 
+        ///
         /// <returns>
-        /// <b>true</b> if the year, month, and day of the <paramref name="date"/> 
-        /// is greater than the year, month, and day of <paramref name="secondInstance"/>; 
+        /// <b>true</b> if the year, month, and day of the <paramref name="date"/>
+        /// is greater than the year, month, and day of <paramref name="secondInstance"/>;
         /// otherwise, <b>false</b>.
         /// </returns>
-        /// 
+        ///
         /// <exception cref="ArgumentException">
         /// The <paramref name="secondInstance"/> parameter is not a <see cref="HealthServiceDateTime"/> object.
         /// </exception>
-        /// 
+        ///
         public static bool operator >(HealthServiceDateTime date, object secondInstance)
         {
             bool result = false;
@@ -721,25 +720,25 @@ namespace Microsoft.HealthVault.ItemTypes
         /// Gets a value indicating whether the specified date is less than the specified
         /// object.
         /// </summary>
-        /// 
+        ///
         /// <param name="date">
         /// The date object to be compared.
         /// </param>
-        /// 
+        ///
         /// <param name="secondInstance">
         /// The second object to be compared.
         /// </param>
-        /// 
+        ///
         /// <returns>
-        /// <b>true</b> if the year, month, and day of the <paramref name="date"/> 
-        /// is less than the year, month, and day of <paramref name="secondInstance"/>; 
+        /// <b>true</b> if the year, month, and day of the <paramref name="date"/>
+        /// is less than the year, month, and day of <paramref name="secondInstance"/>;
         /// otherwise, <b>false</b>.
         /// </returns>
-        /// 
+        ///
         /// <exception cref="ArgumentException">
         /// The <paramref name="secondInstance"/> parameter is not a <see cref="HealthServiceDateTime"/> object.
         /// </exception>
-        /// 
+        ///
         public static bool operator <(HealthServiceDateTime date, object secondInstance)
         {
             bool result = false;
@@ -763,8 +762,5 @@ namespace Microsoft.HealthVault.ItemTypes
         }
 
         #endregion Operators
-
-
     }
-
 }

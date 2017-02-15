@@ -11,71 +11,71 @@ using System.Xml.XPath;
 namespace Microsoft.HealthVault.ItemTypes
 {
     /// <summary>
-    /// Provides metadata about the encryption algorithm and parameters used to 
+    /// Provides metadata about the encryption algorithm and parameters used to
     /// protect some data with a password.
     /// </summary>
-    /// 
+    ///
     /// <remarks>
     /// The <see cref="PasswordProtectedPackage"/> item type defines the metadata for the
-    /// encryption algorithm used to protect data with a password. The 
+    /// encryption algorithm used to protect data with a password. The
     /// application should generate a password (or take it from the user) and
     /// encrypt the desired data. This data should be set in a <see cref="Blob"/> created off the
-    /// <see cref="BlobStore"/> retrieved from the 
+    /// <see cref="BlobStore"/> retrieved from the
     /// <see cref="HealthRecordItem.GetBlobStore(HealthRecordAccessor)"/>.
-    /// The properties of the Blob should be set with the parameters required 
-    /// to decrypt the data. These parameters are application dependant but 
+    /// The properties of the Blob should be set with the parameters required
+    /// to decrypt the data. These parameters are application dependant but
     /// should adhere to standard practices in dealing with PKCS5v2 data.
     /// </remarks>
-    /// 
+    ///
     public class PasswordProtectedPackage : HealthRecordItem
     {
         /// <summary>
-        /// Creates a new instance of the <see cref="PasswordProtectedPackage"/> class 
+        /// Creates a new instance of the <see cref="PasswordProtectedPackage"/> class
         /// with default values.
         /// </summary>
-        /// 
+        ///
         /// <remarks>
         /// The item is not added to the health record until the
-        /// <see cref="HealthRecordAccessor.NewItem(HealthRecordItem)"/> 
+        /// <see cref="HealthRecordAccessor.NewItem(HealthRecordItem)"/>
         /// method is called.
         /// </remarks>
-        /// 
+        ///
         public PasswordProtectedPackage()
             : base(TypeId)
         {
         }
 
         /// <summary>
-        /// Creates a new instance of the <see cref="PasswordProtectedPackage"/> class 
+        /// Creates a new instance of the <see cref="PasswordProtectedPackage"/> class
         /// specifying the mandatory values.
         /// </summary>
-        /// 
+        ///
         /// <param name="algorithm">
         /// The name of the algorithm used to protect the data.
         /// </param>
-        /// 
+        ///
         /// <param name="salt">
         /// A string representing the encoding of the bytes that were used as
         /// the salt when protecting the data.
         /// </param>
-        /// 
+        ///
         /// <param name="keyLength">
         /// The number of bits used by the algorithm.
         /// </param>
-        /// 
+        ///
         /// <remarks>
-        /// In general, the salt is a series of bytes encoded in an 
-        /// application-dependent way. The length of the salt must match the 
+        /// In general, the salt is a series of bytes encoded in an
+        /// application-dependent way. The length of the salt must match the
         /// algorithm. It is recommended that the salt encoding be base64.
         /// </remarks>
         /// <exception cref="ArgumentException">
         /// The <paramref name="salt"/> parameter is <b>null</b> or empty.
         /// </exception>
-        /// 
+        ///
         /// <exception cref="ArgumentOutOfRangeException">
         /// The <paramref name="keyLength"/> parameter is negative or zero.
         /// </exception>
-        /// 
+        ///
         public PasswordProtectedPackage(
             PasswordProtectAlgorithm algorithm,
             string salt,
@@ -90,28 +90,28 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <summary>
         /// Retrieves the unique identifier for the item type.
         /// </summary>
-        /// 
+        ///
         /// <value>
         /// A GUID.
         /// </value>
-        /// 
+        ///
         public new static readonly Guid TypeId =
             new Guid("c9287326-bb43-4194-858c-8b60768f000f");
 
         /// <summary>
-        /// Populates this PasswordProtectedPackage instance from the data 
+        /// Populates this PasswordProtectedPackage instance from the data
         /// in the XML.
         /// </summary>
-        /// 
+        ///
         /// <param name="typeSpecificXml">
         /// The XML to get the file data from.
         /// </param>
-        /// 
+        ///
         /// <exception cref="InvalidOperationException">
-        /// The first node in the <paramref name="typeSpecificXml"/> 
+        /// The first node in the <paramref name="typeSpecificXml"/>
         /// parameter is not a file node.
         /// </exception>
-        /// 
+        ///
         protected override void ParseXml(IXPathNavigable typeSpecificXml)
         {
             XPathNavigator packageNav =
@@ -150,21 +150,20 @@ namespace Microsoft.HealthVault.ItemTypes
             _keyLength =
                 packageNav.SelectSingleNode(
                     "parameters/key-length").ValueAsInt;
-
         }
 
         /// <summary>
         /// Writes the file data to the specified XmlWriter.
         /// </summary>
-        /// 
+        ///
         /// <param name="writer">
         /// The XmlWriter to write the password protected package to.
         /// </param>
-        /// 
+        ///
         /// <exception cref="ArgumentNullException">
         /// If <paramref name="writer"/> is <b>null</b>.
         /// </exception>
-        /// 
+        ///
         public override void WriteXml(XmlWriter writer)
         {
             Validator.ThrowIfWriterNull(writer);
@@ -227,12 +226,12 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <summary>
         /// Gets or sets the algorithm used to encrypt the package.
         /// </summary>
-        /// 
+        ///
         /// <value>
-        /// An instance of <see cref="PasswordProtectAlgorithm"/> 
+        /// An instance of <see cref="PasswordProtectAlgorithm"/>
         /// representing the algorithm.
         /// </value>
-        /// 
+        ///
         public PasswordProtectAlgorithm PasswordProtectAlgorithm
         {
             get { return _algorithm; }
@@ -245,22 +244,22 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <summary>
         /// Gets or sets the salt used when encrypting the package.
         /// </summary>
-        /// 
+        ///
         /// <value>
         /// A string representing the salt.
         /// </value>
-        /// 
+        ///
         /// <remarks>
-        /// In general, the salt is a series of bytes encoded in an 
-        /// application-dependent way. The length of the salt must match the 
+        /// In general, the salt is a series of bytes encoded in an
+        /// application-dependent way. The length of the salt must match the
         /// algorithm. It is recommended that the salt encoding be base64.
         /// </remarks>
-        /// 
+        ///
         /// <exception cref="ArgumentException">
         /// The <paramref name="value"/> parameter is <b>null</b>, empty, or contains only
         /// whitespace on set.
         /// </exception>
-        /// 
+        ///
         public string Salt
         {
             get { return _salt; }
@@ -277,16 +276,16 @@ namespace Microsoft.HealthVault.ItemTypes
         /// Gets or sets the number of hash iterations taken when protecting
         /// the package.
         /// </summary>
-        /// 
+        ///
         /// <value>
-        /// An integer representing the number of iterations. The default value 
+        /// An integer representing the number of iterations. The default value
         /// is 20000 iterations.
         /// </value>
-        /// 
+        ///
         /// <exception cref="ArgumentOutOfRangeException">
         /// The <paramref name="value"/> parameter is less than or equal to zero.
         /// </exception>
-        /// 
+        ///
         public int HashIterations
         {
             get
@@ -305,20 +304,20 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <summary>
         /// Gets or sets the key length in bits.
         /// </summary>
-        /// 
+        ///
         /// <value>
         /// An integer representing the key length.
         /// </value>
-        /// 
+        ///
         /// <remarks>
         /// The value should match that of the algorithm, for example, 168 bits
         /// for 3DES and 256 bits for AES256.
         /// </remarks>
-        /// 
+        ///
         /// <exception cref="ArgumentOutOfRangeException">
         /// The <paramref name="value"/> parameter is less than one.
         /// </exception>
-        /// 
+        ///
         public int KeyLength
         {
             get { return _keyLength; }
@@ -336,11 +335,11 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <summary>
         /// Gets a string representation of the password protected package definition.
         /// </summary>
-        /// 
+        ///
         /// <returns>
         /// A string representation of the password protected package.
         /// </returns>
-        /// 
+        ///
         public override string ToString()
         {
             string result = null;

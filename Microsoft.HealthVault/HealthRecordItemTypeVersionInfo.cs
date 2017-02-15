@@ -12,7 +12,9 @@ namespace Microsoft.HealthVault
     /// </summary>
     public class HealthRecordItemTypeVersionInfo
     {
-        private HealthRecordItemTypeVersionInfo() { }
+        private HealthRecordItemTypeVersionInfo()
+        {
+        }
 
         internal HealthRecordItemTypeVersionInfo(
             Guid versionTypeId,
@@ -58,7 +60,7 @@ namespace Microsoft.HealthVault
         private readonly int _versionSequence;
 
         /// <summary>
-        /// The set of properties that the thing-type can be 
+        /// The set of properties that the thing-type can be
         /// ordered by in the result.
         /// </summary>
         public HealthRecordItemTypeOrderByProperties OrderByProperties

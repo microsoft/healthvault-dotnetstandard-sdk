@@ -3,7 +3,6 @@
 // see http://www.microsoft.com/resources/sharedsource/licensingbasics/sharedsourcelicenses.mspx.
 // All other rights reserved.
 
-using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Xml;
@@ -24,7 +23,7 @@ namespace Microsoft.HealthVault.ItemTypes
         public CarePlanTask()
         {
         }
-        
+
         /// <summary>
         /// Creates a new instance of the <see cref="CarePlanTask"/> class
         /// specifying mandatory values.
@@ -42,7 +41,7 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             Name = name;
         }
-        
+
         /// <summary>
         /// Populates this <see cref="CarePlanTask"/> instance from the data in the specified XML.
         /// </summary>
@@ -54,11 +53,11 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <exception cref="ArgumentNullException">
         /// If <paramref name="navigator"/> parameter is <b>null</b>.
         /// </exception>
-        /// 
+        ///
         public override void ParseXml(XPathNavigator navigator)
         {
             Validator.ThrowIfNavigatorNull(navigator);
-            
+
             _name = new CodableValue();
             _name.ParseXml(navigator.SelectSingleNode("name"));
             _description = XPathHelper.GetOptNavValue(navigator, "description");
@@ -70,7 +69,7 @@ namespace Microsoft.HealthVault.ItemTypes
             _recurrence = XPathHelper.GetOptNavValue<CarePlanTaskRecurrence>(navigator, "recurrence");
             _referenceId = XPathHelper.GetOptNavValue(navigator, "reference-id");
         }
-        
+
         /// <summary>
         /// Writes the XML representation of the CarePlanTask into
         /// the specified XML writer.
@@ -92,7 +91,7 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <exception cref="ArgumentNullException">
         /// If <paramref name="writer"/> parameter is <b>null</b>.
         /// </exception>
-        /// 
+        ///
         /// <exception cref="HealthRecordItemSerializationException">
         /// If <see cref="Name"/> is <b>null</b>.
         /// </exception>
@@ -119,11 +118,11 @@ namespace Microsoft.HealthVault.ItemTypes
 
             writer.WriteEndElement();
         }
-        
+
         /// <summary>
         /// Gets or sets name of the task.
         /// </summary>
-        /// 
+        ///
         /// <remarks>
         /// If there is no information about name the value should be set to <b>null</b>.
         /// </remarks>
@@ -131,7 +130,7 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <exception cref="ArgumentNullException">
         /// The <paramref name="value"/> parameter is <b>null</b>.
         /// </exception>
-        /// 
+        ///
         [SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly", Justification = "FXCop thinks that CodableValue is a collection, so it throws this error.")]
         public CodableValue Name
         {
@@ -139,20 +138,20 @@ namespace Microsoft.HealthVault.ItemTypes
             {
                 return _name;
             }
-            
+
             set
             {
                 Validator.ThrowIfArgumentNull(value, "Name", "CarePlanTaskNameNull");
                 _name = value;
             }
         }
-        
+
         private CodableValue _name;
-        
+
         /// <summary>
         /// Gets or sets description of the task.
         /// </summary>
-        /// 
+        ///
         /// <remarks>
         /// If there is no information about description the value should be set to <b>null</b>.
         /// </remarks>
@@ -160,25 +159,25 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <exception cref="ArgumentException">
         /// The <paramref name="value"/> contains only whitespace.
         /// </exception>
-        /// 
+        ///
         public string Description
         {
             get
             {
                 return _description;
             }
-            
+
             set
             {
                 Validator.ThrowIfStringIsEmptyOrWhitespace(value, "Description");
                 _description = value;
             }
         }
-        
+
         private string _description;
 
         private static void ValidateDates(
-            ApproximateDateTime startDate, 
+            ApproximateDateTime startDate,
             ApproximateDateTime endDate)
         {
             if (startDate != null && endDate != null)
@@ -196,7 +195,7 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <summary>
         /// Gets or sets the start date for the task.
         /// </summary>
-        /// 
+        ///
         /// <remarks>
         /// If there is no information about startDate the value should be set to <b>null</b>.
         /// </remarks>
@@ -207,20 +206,20 @@ namespace Microsoft.HealthVault.ItemTypes
             {
                 return _startDate;
             }
-            
+
             set
             {
                 ValidateDates(value, _endDate);
                 _startDate = value;
             }
         }
-        
+
         private ApproximateDateTime _startDate;
-        
+
         /// <summary>
         /// Gets or sets the end date for the task.
         /// </summary>
-        /// 
+        ///
         /// <remarks>
         /// If there is no information about endDate the value should be set to <b>null</b>.
         /// </remarks>
@@ -231,20 +230,20 @@ namespace Microsoft.HealthVault.ItemTypes
             {
                 return _endDate;
             }
-            
+
             set
             {
                 ValidateDates(_startDate, value);
                 _endDate = value;
             }
         }
-        
+
         private ApproximateDateTime _endDate;
 
         /// <summary>
         /// Gets or sets the date user intends to complete the task.
         /// </summary>
-        /// 
+        ///
         /// <remarks>
         /// If there is no information about targetCompletionDate the value should be set to <b>null</b>.
         /// </remarks>
@@ -263,11 +262,11 @@ namespace Microsoft.HealthVault.ItemTypes
         }
 
         private ApproximateDateTime _targetCompletionDate;
-        
+
         /// <summary>
         /// Gets or sets sequence number associated with the task.
         /// </summary>
-        /// 
+        ///
         /// <remarks>
         /// Sequence number could be used to decide the order in which the tasks should be performed.
         /// </remarks>
@@ -278,24 +277,24 @@ namespace Microsoft.HealthVault.ItemTypes
             {
                 return _sequenceNumber;
             }
-            
+
             set
             {
-                 Validator.ThrowArgumentExceptionIf(
-                     value < 0,
-                    "SequenceNumber",
-                    "CarePlanTaskSequenceNumberInvalid");
+                Validator.ThrowArgumentExceptionIf(
+                    value < 0,
+                   "SequenceNumber",
+                   "CarePlanTaskSequenceNumberInvalid");
 
                 _sequenceNumber = value;
             }
         }
-        
+
         private int? _sequenceNumber;
 
         /// <summary>
         /// Gets or sets HealthVault type information related to this task.
         /// </summary>
-        /// 
+        ///
         /// <remarks>
         /// If there is no information about TaskAssociatedTypeInfo the value should be set to <b>null</b>.
         /// </remarks>
@@ -318,7 +317,7 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <summary>
         /// Gets or sets recurrence of the task.
         /// </summary>
-        /// 
+        ///
         /// <remarks>
         /// If there is no information about recurrence the value should be set to <b>null</b>.
         /// </remarks>
@@ -329,19 +328,19 @@ namespace Microsoft.HealthVault.ItemTypes
             {
                 return _recurrence;
             }
-            
+
             set
             {
                 _recurrence = value;
             }
         }
-        
+
         private CarePlanTaskRecurrence _recurrence;
 
         /// <summary>
         /// Gets or sets an unique id to distinguish one task from another.
         /// </summary>
-        /// 
+        ///
         /// <remarks>
         /// If there is no information about referenceId the value should be set to <b>null</b>.
         /// </remarks>
@@ -349,7 +348,7 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <exception cref="ArgumentException">
         /// The <paramref name="value"/> contains only whitespace.
         /// </exception>
-        /// 
+        ///
         public string ReferenceId
         {
             get
@@ -365,11 +364,11 @@ namespace Microsoft.HealthVault.ItemTypes
         }
 
         private string _referenceId;
-        
+
         /// <summary>
         /// Gets a string representation of the CarePlanTask.
         /// </summary>
-        /// 
+        ///
         /// <returns>
         /// A string representation of the CarePlanTask.
         /// </returns>

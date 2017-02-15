@@ -12,12 +12,11 @@ using System.Xml.XPath;
 
 namespace Microsoft.HealthVault.PlatformPrimitives
 {
-
     /// <summary>
     /// Provides low-level access to the HealthVault message operations.
     /// </summary>
     /// <remarks>
-    /// <see cref="HealthVaultPlatform"/> uses this class to perform operations. Set 
+    /// <see cref="HealthVaultPlatform"/> uses this class to perform operations. Set
     /// HealthVaultPlatformPerson.Current to a derived class to intercept all message calls.
     /// </remarks>
     public class HealthVaultPlatformPerson
@@ -25,18 +24,18 @@ namespace Microsoft.HealthVault.PlatformPrimitives
         /// <summary>
         /// Enables mocking of calls to this class.
         /// </summary>
-        /// 
+        ///
         /// <remarks>
         /// The calling class should pass in a class that derives from this
-        /// class and overrides the calls to be mocked. 
+        /// class and overrides the calls to be mocked.
         /// </remarks>
-        /// 
+        ///
         /// <param name="mock">The mocking class.</param>
-        /// 
+        ///
         /// <exception cref="InvalidOperationException">
         /// There is already a mock registered for this class.
         /// </exception>
-        /// 
+        ///
         public static void EnableMock(HealthVaultPlatformPerson mock)
         {
             Validator.ThrowInvalidIf(_saved != null, "ClassAlreadyMocked");
@@ -48,11 +47,11 @@ namespace Microsoft.HealthVault.PlatformPrimitives
         /// <summary>
         /// Removes mocking of calls to this class.
         /// </summary>
-        /// 
+        ///
         /// <exception cref="InvalidOperationException">
         /// There is no mock registered for this class.
         /// </exception>
-        /// 
+        ///
         public static void DisableMock()
         {
             Validator.ThrowInvalidIfNull(_saved, "ClassIsntMocked");
@@ -60,6 +59,7 @@ namespace Microsoft.HealthVault.PlatformPrimitives
             _current = _saved;
             _saved = null;
         }
+
         internal static HealthVaultPlatformPerson Current
         {
             get { return _current; }
@@ -68,18 +68,19 @@ namespace Microsoft.HealthVault.PlatformPrimitives
         private static HealthVaultPlatformPerson _saved;
 
         #region ApplicationSettings
+
         /// <summary>
         /// Gets the application settings for the current application and
         /// person.
         /// </summary>
-        /// 
+        ///
         /// <param name="connection">The connection to use to perform the operation. This connection
         /// must be authenticated. </param>
         ///
         /// <returns>
         /// The complete set application settings including the XML settings, selected record ID, etc.
         /// </returns>
-        /// 
+        ///
         public virtual ApplicationSettings GetApplicationSettings(HealthServiceConnection connection)
         {
             HealthServiceRequest request =
@@ -109,19 +110,19 @@ namespace Microsoft.HealthVault.PlatformPrimitives
         /// Sets the application settings for the current application and
         /// person.
         /// </summary>
-        /// 
+        ///
         /// <param name="connection">The connection to use to perform the operation. This connection
         /// must be authenticated. </param>
         ///
         /// <param name="applicationSettings">
         /// The application settings XML.
         /// </param>
-        /// 
+        ///
         /// <remarks>
-        /// This may be <b>null</b> if no application settings have been 
+        /// This may be <b>null</b> if no application settings have been
         /// stored for the application or user.
         /// </remarks>
-        /// 
+        ///
         public virtual void SetApplicationSettings(
             HealthServiceConnection connection,
             IXPathNavigable applicationSettings)
@@ -136,19 +137,19 @@ namespace Microsoft.HealthVault.PlatformPrimitives
         /// Sets the application settings for the current application and
         /// person.
         /// </summary>
-        /// 
+        ///
         /// <param name="connection">The connection to use to perform the operation. This connection
         /// must be authenticated. </param>
         ///
         /// <param name="requestParameters">
         /// The request parameters.
         /// </param>
-        /// 
+        ///
         /// <remarks>
-        /// This may be <b>null</b> if no application settings have been 
+        /// This may be <b>null</b> if no application settings have been
         /// stored for the application or user.
         /// </remarks>
-        /// 
+        ///
         public virtual void SetApplicationSettings(
             HealthServiceConnection connection,
             string requestParameters)
@@ -200,6 +201,7 @@ namespace Microsoft.HealthVault.PlatformPrimitives
 
             return infoPersonAppSettingsPathClone;
         }
+
         #endregion
 
         #region GetPersonInfo
@@ -207,25 +209,25 @@ namespace Microsoft.HealthVault.PlatformPrimitives
         /// <summary>
         /// Gets the information about the person specified.
         /// </summary>
-        /// 
+        ///
         /// <param name="connection">The connection to use to perform the operation. This connection
         /// must be authenticated. </param>
-        /// 
+        ///
         /// <returns>
         /// Information about the person's HealthVault account.
         /// </returns>
-        /// 
+        ///
         /// <remarks>
-        /// This method always calls the HealthVault service to get the latest 
-        /// information. It is recommended that the calling application cache 
-        /// the return value and only call this method again if it needs to 
+        /// This method always calls the HealthVault service to get the latest
+        /// information. It is recommended that the calling application cache
+        /// the return value and only call this method again if it needs to
         /// refresh the cache.
         /// </remarks>
-        /// 
+        ///
         /// <exception cref="HealthServiceException">
         /// The HealthVault service returned an error.
         /// </exception>
-        /// 
+        ///
         public virtual PersonInfo GetPersonInfo(ApplicationConnection connection)
         {
             HealthServiceRequest request =
@@ -274,25 +276,25 @@ namespace Microsoft.HealthVault.PlatformPrimitives
         /// Gets the <see cref="HealthRecordInfo"/> for the records identified
         /// by the specified <paramref name="recordIds"/>.
         /// </summary>
-        /// 
+        ///
         /// <param name="connection">The connection to use to perform the operation. This connection
         /// must be authenticated. </param>
         ///
         /// <param name="recordIds">
         /// The unique identifiers for the records to retrieve.
         /// </param>
-        /// 
+        ///
         /// <returns>
-        /// A collection of the records matching the specified record 
+        /// A collection of the records matching the specified record
         /// identifiers and authorized for the authenticated person.
         /// </returns>
-        /// 
+        ///
         /// <remarks>
         /// This method is useful in cases where the application is storing
         /// record identifiers and needs access to the functionality provided
         /// by the object model.
         /// </remarks>
-        /// 
+        ///
         public virtual Collection<HealthRecordInfo> GetAuthorizedRecords(
             ApplicationConnection connection,
             IList<Guid> recordIds)
@@ -350,4 +352,3 @@ namespace Microsoft.HealthVault.PlatformPrimitives
         #endregion GetAuthorizedRecords
     }
 }
-

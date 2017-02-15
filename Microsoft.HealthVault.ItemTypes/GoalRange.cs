@@ -3,12 +3,12 @@
 // see http://www.microsoft.com/resources/sharedsource/licensingbasics/sharedsourcelicenses.mspx.
 // All other rights reserved.
 
+using Microsoft.HealthVault.Exceptions;
 using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Xml;
 using System.Xml.XPath;
-using Microsoft.HealthVault.Exceptions;
 
 namespace Microsoft.HealthVault.ItemTypes
 {
@@ -25,7 +25,7 @@ namespace Microsoft.HealthVault.ItemTypes
         public GoalRange()
         {
         }
-        
+
         /// <summary>
         /// Creates a new instance of the <see cref="GoalRange"/> class
         /// specifying mandatory values.
@@ -43,7 +43,7 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             Name = name;
         }
-        
+
         /// <summary>
         /// Populates this <see cref="GoalRange"/> instance from the data in the specified XML.
         /// </summary>
@@ -55,7 +55,7 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <exception cref="ArgumentNullException">
         /// If <paramref name="navigator"/> parameter is <b>null</b>.
         /// </exception>
-        /// 
+        ///
         public override void ParseXml(XPathNavigator navigator)
         {
             if (navigator == null)
@@ -65,14 +65,14 @@ namespace Microsoft.HealthVault.ItemTypes
                     ResourceRetriever.GetResourceString(
                         "errors", "ParseXmlNavNull"));
             }
-            
+
             _name = new CodableValue();
             _name.ParseXml(navigator.SelectSingleNode("name"));
             _description = XPathHelper.GetOptNavValue(navigator, "description");
             _minimum = XPathHelper.GetOptNavValue<GeneralMeasurement>(navigator, "minimum");
             _maximum = XPathHelper.GetOptNavValue<GeneralMeasurement>(navigator, "maximum");
         }
-        
+
         /// <summary>
         /// Writes the XML representation of the GoalRange into
         /// the specified XML writer.
@@ -94,7 +94,7 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <exception cref="ArgumentNullException">
         /// If <paramref name="writer"/> parameter is <b>null</b>.
         /// </exception>
-        /// 
+        ///
         /// <exception cref="HealthRecordItemSerializationException">
         /// If <see cref="Name"/> is <b>null</b>.
         /// </exception>
@@ -105,10 +105,10 @@ namespace Microsoft.HealthVault.ItemTypes
             {
                 throw new ArgumentException(
                     ResourceRetriever.GetResourceString(
-                        "errors", "WriteXmlEmptyNodeName"), 
+                        "errors", "WriteXmlEmptyNodeName"),
                     "nodeName");
             }
-            
+
             if (writer == null)
             {
                 throw new ArgumentNullException(
@@ -116,7 +116,7 @@ namespace Microsoft.HealthVault.ItemTypes
                     ResourceRetriever.GetResourceString(
                         "errors", "WriteXmlNullWriter"));
             }
-            
+
             if (_name == null)
             {
                 throw new HealthRecordItemSerializationException(
@@ -125,18 +125,18 @@ namespace Microsoft.HealthVault.ItemTypes
             }
 
             writer.WriteStartElement(nodeName);
-            
+
             _name.WriteXml("name", writer);
             XmlWriterHelper.WriteOptString(writer, "description", _description);
             XmlWriterHelper.WriteOpt(writer, "minimum", _minimum);
             XmlWriterHelper.WriteOpt(writer, "maximum", _maximum);
             writer.WriteEndElement();
         }
-        
+
         /// <summary>
         /// Gets or sets the name of the goal range.
         /// </summary>
-        /// 
+        ///
         /// <remarks>
         /// If there is no information about name the value should be set to <b>null</b>.
         /// </remarks>
@@ -144,7 +144,7 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <exception cref="ArgumentNullException">
         /// The <paramref name="value"/> parameter is <b>null</b>.
         /// </exception>
-        /// 
+        ///
         [SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly", Justification = "FXCop thinks that CodableValue is a collection, so it throws this error.")]
         public CodableValue Name
         {
@@ -152,7 +152,7 @@ namespace Microsoft.HealthVault.ItemTypes
             {
                 return _name;
             }
-            
+
             set
             {
                 if (value == null)
@@ -161,17 +161,17 @@ namespace Microsoft.HealthVault.ItemTypes
                         "value",
                         ResourceRetriever.GetResourceString("errors", "GoalRangeNameNullValue"));
                 }
-                
+
                 _name = value;
             }
         }
-        
+
         private CodableValue _name;
-        
+
         /// <summary>
         /// Gets or sets a description for the goal range allows more detailed information about the range.
         /// </summary>
-        /// 
+        ///
         /// <remarks>
         /// This information could for instance be included in tooltips when hovering over a graph.
         /// If there is no information about description the value should be set to <b>null</b>.
@@ -180,14 +180,14 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <exception cref="ArgumentException">
         /// The <paramref name="value"/> contains only whitespace.
         /// </exception>
-        /// 
+        ///
         public string Description
         {
             get
             {
                 return _description;
             }
-            
+
             set
             {
                 if (!string.IsNullOrEmpty(value) && string.IsNullOrEmpty(value.Trim()))
@@ -195,17 +195,17 @@ namespace Microsoft.HealthVault.ItemTypes
                     throw new ArgumentException(
                         ResourceRetriever.GetResourceString("errors", "WhitespaceOnlyValue"), "value");
                 }
-                
+
                 _description = value;
             }
         }
-        
+
         private string _description;
-        
+
         /// <summary>
         /// Gets or sets minimum value of the range.
         /// </summary>
-        /// 
+        ///
         /// <remarks>
         /// For ranges greater than a specified value with no maximum, specify a minimum but no maximum.
         /// </remarks>
@@ -216,19 +216,19 @@ namespace Microsoft.HealthVault.ItemTypes
             {
                 return _minimum;
             }
-            
+
             set
             {
                 _minimum = value;
             }
         }
-        
+
         private GeneralMeasurement _minimum;
-        
+
         /// <summary>
         /// Gets or sets maximum value of the range.
         /// </summary>
-        /// 
+        ///
         /// <remarks>
         /// For ranges less than a specified value with no minimum, specify a maximum but no minimum.
         /// </remarks>
@@ -239,19 +239,19 @@ namespace Microsoft.HealthVault.ItemTypes
             {
                 return _maximum;
             }
-            
+
             set
             {
                 _maximum = value;
             }
         }
-        
+
         private GeneralMeasurement _maximum;
-        
+
         /// <summary>
         /// Gets a string representation of the GoalRange.
         /// </summary>
-        /// 
+        ///
         /// <returns>
         /// A string representation of the GoalRange.
         /// </returns>
@@ -260,7 +260,7 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             if (Minimum != null && Maximum != null)
             {
-                return 
+                return
                     string.Format(
                         CultureInfo.CurrentCulture,
                         ResourceRetriever.GetResourceString("GoalRangeWithMinAndMaxFormat"),
@@ -270,7 +270,7 @@ namespace Microsoft.HealthVault.ItemTypes
 
             if (Minimum != null)
             {
-                return 
+                return
                     string.Format(
                         CultureInfo.CurrentCulture,
                         ResourceRetriever.GetResourceString("GoalRangeWithMinFormat"),
@@ -279,7 +279,7 @@ namespace Microsoft.HealthVault.ItemTypes
 
             if (Maximum != null)
             {
-                return 
+                return
                     string.Format(
                         CultureInfo.CurrentCulture,
                         ResourceRetriever.GetResourceString("GoalRangeWithMaxFormat"),

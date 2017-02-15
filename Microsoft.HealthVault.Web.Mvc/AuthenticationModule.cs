@@ -28,7 +28,7 @@ namespace Microsoft.HealthVault.Web.Mvc
         /// <param name="context">The application context</param>
         public void Init(HttpApplication context)
         {
-            context.AuthenticateRequest += 
+            context.AuthenticateRequest +=
                 (s, e) => AuthenticateRequest((HttpApplication)s);
         }
 

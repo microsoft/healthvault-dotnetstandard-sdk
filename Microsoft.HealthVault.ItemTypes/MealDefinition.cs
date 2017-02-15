@@ -30,7 +30,7 @@ namespace Microsoft.HealthVault.ItemTypes
             : base(TypeId)
         {
         }
-        
+
         /// <summary>
         /// Creates a new instance of the <see cref="MealDefinition"/> class
         /// specifying mandatory values.
@@ -55,7 +55,7 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             Name = name;
         }
-        
+
         /// <summary>
         /// Retrieves the unique identifier for the item type.
         /// </summary>
@@ -78,12 +78,12 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <exception cref="ArgumentNullException">
         /// If <paramref name="typeSpecificXml"/> parameter is <b>null</b>.
         /// </exception>
-        /// 
+        ///
         /// <exception cref="InvalidOperationException">
         /// If the first node in <paramref name="typeSpecificXml"/> is not
         /// a MealDefinition node.
         /// </exception>
-        /// 
+        ///
         protected override void ParseXml(IXPathNavigable typeSpecificXml)
         {
             if (typeSpecificXml == null)
@@ -94,7 +94,7 @@ namespace Microsoft.HealthVault.ItemTypes
                         "errors", "ParseXmlNavNull"));
             }
 
-            XPathNavigator itemNav = 
+            XPathNavigator itemNav =
                 typeSpecificXml.CreateNavigator().SelectSingleNode("meal-definition");
 
             if (itemNav == null)
@@ -132,7 +132,7 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <exception cref="ArgumentNullException">
         /// If <paramref name="writer"/> parameter is <b>null</b>.
         /// </exception>
-        /// 
+        ///
         /// <exception cref="HealthRecordItemSerializationException">
         /// If <see cref="Name"/> is <b>null</b>.
         /// </exception>
@@ -153,15 +153,15 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <summary>
         /// Gets or sets the name of a meal definition.
         /// </summary>
-        /// 
+        ///
         /// <remarks>
         /// This can refer to a user-defined name or specific meals from standard meal plans.
         /// </remarks>
-        /// 
+        ///
         /// <exception cref="ArgumentNullException">
         /// The <paramref name="value"/> parameter is <b>null</b>.
         /// </exception>
-        /// 
+        ///
         [SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly", Justification = "FXCop thinks that CodableValue is a collection, so it throws this error.")]
         public CodableValue Name
         {
@@ -245,7 +245,7 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <summary>
         /// Gets a string representation of the Meal Definition.
         /// </summary>
-        /// 
+        ///
         /// <returns>
         /// A string representation of the Meal Definition.
         /// </returns>

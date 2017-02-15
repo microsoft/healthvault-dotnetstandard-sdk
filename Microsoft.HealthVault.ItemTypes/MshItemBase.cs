@@ -17,6 +17,7 @@ namespace Microsoft.HealthVault.ItemTypes
     public abstract class MshItemBase : HealthRecordItem
     {
         #region ctor
+
         /// <summary>
         /// Creates a new instance of the <see cref="MshItemBase"/> class
         /// specifying wrapped object.
@@ -50,9 +51,9 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <param name="versionStamp">Thing versionstamp</param>
         protected MshItemBase(
             Guid typeId,
-            string wrappedTypeName, 
+            string wrappedTypeName,
             string base64EncodedJson,
-            Guid thingId, 
+            Guid thingId,
             Guid versionStamp)
             : base(typeId)
         {
@@ -65,12 +66,13 @@ namespace Microsoft.HealthVault.ItemTypes
 
             Headers = new Dictionary<string, string>();
         }
+
         #endregion
 
         #region abstract
 
         /// <summary>
-        /// override root element name within thing xml 
+        /// override root element name within thing xml
         /// </summary>
         protected abstract string RootElementName { get; }
         #endregion
@@ -84,18 +86,18 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <summary>
         /// Full type name of wrapped object.
         /// </summary>
-        public string WrappedTypeName 
+        public string WrappedTypeName
         {
-            get 
+            get
             {
                 return _wrappedTypeName;
             }
 
-            set 
+            set
             {
                 Validator.ThrowIfArgumentNull(value, "WrappedTypeName", "WrappedTypeNameNullValue");
                 Validator.ThrowIfStringIsEmptyOrWhitespace(value, "WrappedTypeName");
-                _wrappedTypeName = value; 
+                _wrappedTypeName = value;
             }
         }
 
@@ -104,7 +106,7 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <summary>
         /// Wrapped instance in base64 encoded json format
         /// </summary>
-        public string WrappedInstanceJson 
+        public string WrappedInstanceJson
         {
             get
             {
@@ -123,10 +125,11 @@ namespace Microsoft.HealthVault.ItemTypes
         #endregion
 
         #region Overrides of HealthRecordItem
+
         /// <summary>
         /// Populates the <see cref="Message"/> instance from the data in the specified XML.
         /// </summary>
-        /// 
+        ///
         /// <param name="typeSpecificXml">
         /// The XML to get the Message data from.
         /// </param>
@@ -140,7 +143,7 @@ namespace Microsoft.HealthVault.ItemTypes
             navigator = navigator.SelectSingleNode(RootElementName);
             Validator.ThrowInvalidIfNull(navigator, "MshRecordUnexpectedNode");
 
-            // headers 
+            // headers
             Headers.Clear();
             var headersNav = navigator.SelectSingleNode("headers");
             if (headersNav != null)
@@ -161,14 +164,14 @@ namespace Microsoft.HealthVault.ItemTypes
                 }
             }
 
-            // type 
+            // type
             var typeNode = navigator.SelectSingleNode("type");
             if (typeNode != null)
             {
                 _wrappedTypeName = typeNode.Value;
             }
 
-            // wrapped instance 
+            // wrapped instance
             var jsonNode = navigator.SelectSingleNode("value");
             if (jsonNode != null)
             {
@@ -180,7 +183,7 @@ namespace Microsoft.HealthVault.ItemTypes
         /// Writes the XML representation of the Message into
         /// the specified XML writer.
         /// </summary>
-        /// 
+        ///
         /// <param name="writer">
         /// xml writer
         /// </param>
@@ -192,7 +195,7 @@ namespace Microsoft.HealthVault.ItemTypes
 
             writer.WriteStartElement(RootElementName);
 
-            // headers 
+            // headers
             if (Headers != null && Headers.Count > 0)
             {
                 writer.WriteStartElement("headers");
@@ -207,10 +210,10 @@ namespace Microsoft.HealthVault.ItemTypes
                 writer.WriteEndElement();
             }
 
-            // type 
+            // type
             writer.WriteElementString("type", WrappedTypeName);
 
-            // value: json base64 encoded 
+            // value: json base64 encoded
             writer.WriteStartElement("value");
             writer.WriteValue(WrappedInstanceJson);
             writer.WriteEndElement();
@@ -221,7 +224,7 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <summary>
         /// Gets a string representation of the msh item.
         /// </summary>
-        /// 
+        ///
         /// <returns>
         /// A string representing the msh item.
         /// </returns>

@@ -3,48 +3,47 @@
 // see http://www.microsoft.com/resources/sharedsource/licensingbasics/sharedsourcelicenses.mspx.
 // All other rights reserved.
 
+using Microsoft.Health.ItemTypes;
 using System;
 using System.Xml;
 using System.Xml.XPath;
-using Microsoft.Health.ItemTypes;
-using Microsoft.HealthVault.Exceptions;
 
 namespace Microsoft.HealthVault.ItemTypes
 {
     /// <summary>
     /// Stores a set of SNP genetic test results.
     /// </summary>
-    /// 
+    ///
     /// <remarks>
-    /// Examples: 
-    /// 
+    /// Examples:
+    ///
     /// The SNP data is stored in the blob store of the object, and must
     /// be fetched by specifying HealthItemRecordSections.BlobPayload.
     ///
     /// The format of the other-data section is the HealthVault comma-separated format.
-    /// 
+    ///
     /// Within the comma-separated data, each SNP is encoded as follows:
-    /// 
+    ///
     /// [refSNP id],[strand orientation],[result],[assay id],[start position],[end position]
-    /// 
+    ///
     /// Where:
     /// refSNP id: Reference SNP identifier from NCBI dbSNP database.
     ///  strand orientation: "+" encodes top, "-" encodes bottom.
     ///  result: the result of the test.
-    ///  assay id: platform dependent probe set id. 
-    ///  start position: start position on the chromosome. 
-    ///  end posiition: end position on the chromosome. 
-    /// 
+    ///  assay id: platform dependent probe set id.
+    ///  start position: start position on the chromosome.
+    ///  end posiition: end position on the chromosome.
+    ///
     /// Example: rs1891906,-,GT, SNP_C-315533, 940106, 940107
-    /// 
+    ///
     /// </remarks>
-    /// 
+    ///
     public class GeneticSnpResults : HealthRecordItem
     {
         /// <summary>
         /// Creates an instance of <see cref="GeneticSnpResults"/> with default values.
         /// </summary>
-        /// 
+        ///
         public GeneticSnpResults()
             : base(TypeId)
         {
@@ -52,32 +51,32 @@ namespace Microsoft.HealthVault.ItemTypes
         }
 
         /// <summary>
-        /// Creates an instance of <see cref="GeneticSnpResults"/> with specified 
-        /// parameters. 
+        /// Creates an instance of <see cref="GeneticSnpResults"/> with specified
+        /// parameters.
         /// </summary>
-        /// 
+        ///
         /// <param name="when">The date and time of the SNP test.</param>
-        /// 
+        ///
         /// <param name="genomeBuild">The genome build that defines the SNPs.</param>
         ///
         /// <param name="chromosome">The chromosome on which the SNPs are located.</param>
-        /// 
+        ///
         /// <param name="numberingScheme">The numbering scheme used for positions.</param>
-        /// 
+        ///
         /// <exception cref="ArgumentNullException">
-        /// If <paramref name="when"/> is <b> null</b>. 
+        /// If <paramref name="when"/> is <b> null</b>.
         /// </exception>
-        /// 
+        ///
         /// <exception cref="ArgumentException">
-        /// If <paramref name="genomeBuild"/> or <paramref name="chromosome" /> 
-        /// is <b>null</b> or empty, or <paramref name="numberingScheme"/> is not 0 or 1. 
-        /// </exception> 
-        /// 
+        /// If <paramref name="genomeBuild"/> or <paramref name="chromosome" />
+        /// is <b>null</b> or empty, or <paramref name="numberingScheme"/> is not 0 or 1.
+        /// </exception>
+        ///
         /// <exception cref="ArgumentOutOfRangeException" >
         /// The <paramref name="numberingScheme" /> is neither zero based scheme nor one
-        /// based scheme. 
+        /// based scheme.
         /// </exception>
-        /// 
+        ///
         public GeneticSnpResults(
             ApproximateDateTime when,
             string genomeBuild,
@@ -102,16 +101,16 @@ namespace Microsoft.HealthVault.ItemTypes
         /// Populates this <see cref="GeneticSnpResults"/> instance from the data
         /// in the XML.
         /// </summary>
-        /// 
+        ///
         /// <param name="typeSpecificXml">
         /// The XML to get the genetic snp result data from.
         /// </param>
-        /// 
+        ///
         /// <exception cref="InvalidOperationException">
         /// If the first node in <paramref name="typeSpecificXml"/> is not
         /// an "genetic-snp-results" node.
         /// </exception>
-        /// 
+        ///
         protected override void ParseXml(IXPathNavigable typeSpecificXml)
         {
             XPathNavigator itemNav =
@@ -119,14 +118,14 @@ namespace Microsoft.HealthVault.ItemTypes
 
             Validator.ThrowInvalidIfNull(itemNav, "GeneticSnpResultsUnexpectedNode");
 
-            // <when> mandatory 
+            // <when> mandatory
             _when = new ApproximateDateTime();
             _when.ParseXml(itemNav.SelectSingleNode("when"));
 
             // <genome-build> mandatory
             _genomeBuild = itemNav.SelectSingleNode("genome-build").Value;
 
-            // <chromosome> mandatory  
+            // <chromosome> mandatory
             _chromosome = itemNav.SelectSingleNode("chromosome").Value;
 
             // <numbering-scheme> mandatory
@@ -140,15 +139,15 @@ namespace Microsoft.HealthVault.ItemTypes
                 _numberingScheme = GenomeNumberingScheme.Unknown;
             }
 
-            // ordered-by 
+            // ordered-by
             _orderedBy =
                 XPathHelper.GetOptNavValue<Organization>(itemNav, "ordered-by");
 
-            // test-provider 
+            // test-provider
             _testProvider =
                 XPathHelper.GetOptNavValue<Organization>(itemNav, "test-provider");
 
-            // laboratory-name 
+            // laboratory-name
             _laboratoryName =
                 XPathHelper.GetOptNavValue<Organization>(itemNav, "laboratory-name");
 
@@ -156,33 +155,32 @@ namespace Microsoft.HealthVault.ItemTypes
             _annotationVersion =
                 XPathHelper.GetOptNavValue(itemNav, "annotation-version");
 
-            // dbSNP-build 
+            // dbSNP-build
             _dbSnpBuild =
                 XPathHelper.GetOptNavValue(itemNav, "dbSNP-build");
 
             // platform
             _platform =
                 XPathHelper.GetOptNavValue(itemNav, "platform");
-
         }
 
         /// <summary>
         /// Writes the SNP test results to the specified XmlWriter.
         /// </summary>
-        /// 
+        ///
         /// <param name="writer">
-        /// The XmlWriter to write the SNP test result data to. 
+        /// The XmlWriter to write the SNP test result data to.
         /// </param>
-        /// 
+        ///
         /// <exception cref="ArgumentNullException">
         /// If <paramref name="writer"/> is <b>null</b>.
         /// </exception>
-        /// 
+        ///
         /// <exception cref="HealthRecordItemSerializationException">
-        /// If <see cref="When"/> or <see cref="GenomeBuild"/> or <see cref="Chromosome" /> 
+        /// If <see cref="When"/> or <see cref="GenomeBuild"/> or <see cref="Chromosome" />
         /// is <b>null</b>.
         /// </exception>
-        /// 
+        ///
         public override void WriteXml(XmlWriter writer)
         {
             Validator.ThrowIfWriterNull(writer);
@@ -195,7 +193,6 @@ namespace Microsoft.HealthVault.ItemTypes
             Validator.ThrowSerializationIfNull(
                 _chromosome,
                 "ChromosomeNotSet");
-
 
             if (_snpData != null)
             {
@@ -220,7 +217,7 @@ namespace Microsoft.HealthVault.ItemTypes
             // <genome-build> mandatory
             writer.WriteElementString("genome-build", _genomeBuild);
 
-            // <chromosome> 
+            // <chromosome>
             writer.WriteElementString("chromosome", _chromosome);
 
             // <numbering-scheme>
@@ -256,7 +253,7 @@ namespace Microsoft.HealthVault.ItemTypes
                 "dbSNP-build",
                 _dbSnpBuild);
 
-            // <platform> 
+            // <platform>
             XmlWriterHelper.WriteOptString(
                 writer,
                 "platform",
@@ -264,22 +261,21 @@ namespace Microsoft.HealthVault.ItemTypes
 
             // </genetic-snp-results>
             writer.WriteEndElement();
-
         }
 
         /// <summary>
         /// Gets or sets the date and time when the samples were collected.
         /// </summary>
-        /// 
+        ///
         /// <value>
-        /// A <see cref="ApproximateDateTime"/> instance representing the date 
+        /// A <see cref="ApproximateDateTime"/> instance representing the date
         /// and time.
         /// </value>
-        /// 
+        ///
         /// <exception cref="ArgumentNullException">
         /// If the <paramref name="value"/> parameter is <b>null</b>.
         /// </exception>
-        /// 
+        ///
         public ApproximateDateTime When
         {
             get { return _when; }
@@ -292,13 +288,13 @@ namespace Microsoft.HealthVault.ItemTypes
         private ApproximateDateTime _when;
 
         /// <summary>
-        /// Gets or sets the genome build that defines the SNPs. 
+        /// Gets or sets the genome build that defines the SNPs.
         /// </summary>
         ///
         /// <remarks>
         /// Example: NCBI Build 36.3.
         /// </remarks>
-        /// 
+        ///
         /// <exception cref="ArgumentException" >
         /// If the <paramref name="value"/> parameter is <b>null</b>, empty, or contains only
         /// whitespace.
@@ -317,13 +313,13 @@ namespace Microsoft.HealthVault.ItemTypes
         private string _genomeBuild;
 
         /// <summary>
-        /// Gets or sets the chromosome on which the SNPs are located.  
+        /// Gets or sets the chromosome on which the SNPs are located.
         /// </summary>
         ///
         /// <remarks>
         /// Examples: 1, 22, X, MT
         /// </remarks>
-        /// 
+        ///
         /// <exception cref="ArgumentException" >
         /// If the <paramref name="value"/> parameter is <b>null</b>, empty, or contains only
         /// whitespace.
@@ -342,19 +338,19 @@ namespace Microsoft.HealthVault.ItemTypes
         private string _chromosome;
 
         /// <summary>
-        /// The numbering scheme used for positions. 
+        /// The numbering scheme used for positions.
         /// </summary>
-        /// 
+        ///
         /// <remarks>
         /// 0 = 0 based numbering scheme.
-        /// 1 = 1 based numbering scheme. 
+        /// 1 = 1 based numbering scheme.
         /// </remarks>
-        /// 
+        ///
         /// <exception cref="ArgumentOutOfRangeException" >
         /// The <paramref name="value" /> parameter is neither zero based scheme nor one
-        /// based scheme. 
+        /// based scheme.
         /// </exception>
-        /// 
+        ///
         public GenomeNumberingScheme NumberingScheme
         {
             get { return _numberingScheme; }
@@ -371,7 +367,7 @@ namespace Microsoft.HealthVault.ItemTypes
         private GenomeNumberingScheme _numberingScheme;
 
         /// <summary>
-        /// Gets or sets the person or organization that ordered the SNP test. 
+        /// Gets or sets the person or organization that ordered the SNP test.
         /// </summary>
         ///
         public Organization OrderedBy
@@ -382,13 +378,13 @@ namespace Microsoft.HealthVault.ItemTypes
         private Organization _orderedBy;
 
         /// <summary>
-        /// The organization that provides the SNP test service.  
+        /// The organization that provides the SNP test service.
         /// </summary>
         ///
         /// <remarks>
-        /// This organization typically also provides analysis of the results.  
+        /// This organization typically also provides analysis of the results.
         /// </remarks>
-        /// 
+        ///
         public Organization TestProvider
         {
             get { return _testProvider; }
@@ -397,9 +393,9 @@ namespace Microsoft.HealthVault.ItemTypes
         private Organization _testProvider;
 
         /// <summary>
-        /// The name of the laboratory that performed the test.  
+        /// The name of the laboratory that performed the test.
         /// </summary>
-        /// 
+        ///
         public Organization LaboratoryName
         {
             get { return _laboratoryName; }
@@ -423,11 +419,11 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <exception cref="ArgumentException">
         /// If <paramref name="value"/> contains only whitespace.
         /// </exception>
-        /// 
+        ///
         public string AnnotationVersion
         {
             get { return _annotationVersion; }
-            set 
+            set
             {
                 Validator.ThrowIfStringIsWhitespace(value, "AnnotationVersion");
                 _annotationVersion = value;
@@ -451,11 +447,11 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <exception cref="ArgumentException">
         /// If <paramref name="value"/> contains only whitespace.
         /// </exception>
-        /// 
+        ///
         public string dbSnpBuild
         {
             get { return _dbSnpBuild; }
-            set 
+            set
             {
                 Validator.ThrowIfStringIsWhitespace(value, "dbSnpBuild");
                 _dbSnpBuild = value;
@@ -479,11 +475,11 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <exception cref="ArgumentException">
         /// If <paramref name="value"/> contains only whitespace.
         /// </exception>
-        /// 
+        ///
         public string Platform
         {
             get { return _platform; }
-            set 
+            set
             {
                 Validator.ThrowIfStringIsWhitespace(value, "Platform");
                 _platform = value;
@@ -492,13 +488,13 @@ namespace Microsoft.HealthVault.ItemTypes
         private string _platform;
 
         /// <summary>
-        /// Gets the description of a SNP result instance. 
+        /// Gets the description of a SNP result instance.
         /// </summary>
-        /// 
+        ///
         /// <returns>
-        /// A string representation of the SNP result instance. 
+        /// A string representation of the SNP result instance.
         /// </returns>
-        /// 
+        ///
         public override string ToString()
         {
             return
@@ -510,24 +506,24 @@ namespace Microsoft.HealthVault.ItemTypes
         }
 
         /// <summary>
-        /// The SNP test results data.  
+        /// The SNP test results data.
         /// </summary>
         ///
         /// <remarks>
-        /// The SNP test result data is exposed as a <see cref="SnpData"/> instance. 
-        /// 
-        /// To get the SNP test result data when fetching an instance of the 
+        /// The SNP test result data is exposed as a <see cref="SnpData"/> instance.
+        ///
+        /// To get the SNP test result data when fetching an instance of the
         /// GeneticSnpResults health record item type, you must specify that
         /// the other-data section to be returned to access the SnpData.
         /// </remarks>
-        /// 
+        ///
         public SnpData SnpData
         {
-            // This property auto-creates when the user first accesses it. 
+            // This property auto-creates when the user first accesses it.
             // If there is no Blob, we will create a new one. If the Blob exists
-            // (ie it was fetched with the instance), we convert the other data 
-            // to a SnpData instance. 
-            // 
+            // (ie it was fetched with the instance), we convert the other data
+            // to a SnpData instance.
+            //
             get
             {
                 BlobStore store = GetBlobStore(default(HealthRecordAccessor));
@@ -542,13 +538,13 @@ namespace Microsoft.HealthVault.ItemTypes
                     }
                 }
                 // data is of the wrong type. The data has been fetched, but not yet encapsulated in the
-                // SnpData instance. 
+                // SnpData instance.
                 else
                 {
                     // Validate that it's text/csv before we change its type.
                     if (blob.ContentType == "text/csv")
                     {
-                        _snpData = 
+                        _snpData =
                             new SnpData(
                                 blob.ReadAsString(),
                                 null,

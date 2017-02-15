@@ -3,28 +3,27 @@
 // see http://www.microsoft.com/resources/sharedsource/licensingbasics/sharedsourcelicenses.mspx.
 // All other rights reserved.
 
-using System;
-using System.ComponentModel;
-using System.Diagnostics;
-using System.Diagnostics.CodeAnalysis;
-using System.Security;
-using System.Security.Cryptography.X509Certificates;
 using Microsoft.HealthVault.Certificate;
 using Microsoft.HealthVault.Exceptions;
 using Microsoft.HealthVault.Extensions;
 using Microsoft.HealthVault.Web.Authentication;
+using System;
+using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
+using System.Security;
+using System.Security.Cryptography.X509Certificates;
 
 namespace Microsoft.HealthVault
 {
     /// <summary>
     /// Represents a HealthVault client application.
     /// </summary>
-    /// 
+    ///
     /// <remarks>
     /// Use this class for creating a Windows client application
-    /// for connecting to HealthVault. 
+    /// for connecting to HealthVault.
     /// </remarks>
-    /// 
+    ///
     public class HealthClientApplication : IDisposable
     {
         #region Private variables
@@ -40,12 +39,12 @@ namespace Microsoft.HealthVault
         /// <summary>
         /// Private constructor for <see cref="HealthClientApplication"/>.
         /// </summary>
-        /// 
+        ///
         /// <remarks>
-        /// Constructor is private. For creating an instance of 
+        /// Constructor is private. For creating an instance of
         /// <see cref="HealthClientApplication"/> use Create.
         /// </remarks>
-        /// 
+        ///
         private HealthClientApplication()
         {
         }
@@ -53,44 +52,44 @@ namespace Microsoft.HealthVault
         /// <summary>
         /// Create the application using values stored in the app.config file.
         /// </summary>
-        /// 
+        ///
         /// <param name="applicationId">
         /// Unique identifier of the new local client application.
         /// </param>
-        /// 
+        ///
         /// <param name="masterApplicationId">
         /// Unique identifier of an existing HealthVault master application.
         /// The client application will be created as a child application using
         /// the specified application as a parent.
         /// </param>
-        /// 
+        ///
         /// <remarks>
         /// App.config entries are as follows:
         /// ShellUrl - The url of the HealthVault shell
         /// HealthServiceUrl - the url of the HealthVault platform
         /// </remarks>
-        /// 
+        ///
         /// <exception cref="InvalidConfigurationException">
-        /// The configuration file does not 
+        /// The configuration file does not
         /// contain an entry for either ShellUrl or HealthServiceUrl.
         /// </exception>
-        /// 
+        ///
         /// <exception cref="ArgumentException">
         /// Either the <paramref name="applicationId "/> or
-        /// <paramref name="masterApplicationId"/> parameter is <see cref="Guid.Empty"/>. 
+        /// <paramref name="masterApplicationId"/> parameter is <see cref="Guid.Empty"/>.
         /// </exception>
-        /// 
+        ///
         /// <exception ref="CryptographicException">
         /// If the certificate cannot be created or could not be added to the store.
         /// </exception>
-        /// 
+        ///
         /// <remarks>
         /// This method will lookup the certificate in the
         /// user certificate store by applicationId. If the
         /// certificate does not exist, then a new certificate will
         /// be created.
         /// </remarks>
-        /// 
+        ///
         public static HealthClientApplication Create(
             Guid applicationId,
             Guid masterApplicationId)
@@ -114,43 +113,43 @@ namespace Microsoft.HealthVault
         /// <summary>
         /// Create an application based on the passed-in values.
         /// </summary>
-        /// 
+        ///
         /// <param name="applicationId">
         /// Unique identifier of the new local client application.
         /// </param>
-        /// 
+        ///
         /// <param name="masterApplicationId">
         /// Unique identifier of an existing HealthVault master application.
         /// The client application will be created as a child application using
         /// the specified application as a parent.
         /// </param>
-        /// 
+        ///
         /// <param name="shellUrl">
         /// The URL of the HealthVault shell service.
         /// </param>
-        /// 
+        ///
         /// <param name="healthServiceUrl">
         /// The URL of the HealthVault platform service.
         /// </param>
-        /// 
+        ///
         /// <exception cref="ArgumentException">
-        /// The value of <paramref name="shellUrl"/> or 
-        /// <paramref name="healthServiceUrl"/> is 
-        /// <b>null</b>, or the value of <paramref name="applicationId"/> or 
+        /// The value of <paramref name="shellUrl"/> or
+        /// <paramref name="healthServiceUrl"/> is
+        /// <b>null</b>, or the value of <paramref name="applicationId"/> or
         /// <paramref name="masterApplicationId"/> is <see cref="Guid.Empty"/>.
         /// </exception>
-        /// 
+        ///
         /// <exception ref="CryptographicException">
         /// If the certificate cannot be created or could not be added to the store.
         /// </exception>
-        /// 
+        ///
         /// <remarks>
         /// This method looks up the certificate in the
         /// user certificate store using applicationId. If the
         /// certificate does not exist, then it will create
         /// a new certificate.
         /// </remarks>
-        /// 
+        ///
         public static HealthClientApplication Create(
             Guid applicationId,
             Guid masterApplicationId,
@@ -160,7 +159,7 @@ namespace Microsoft.HealthVault
             HealthClientApplication healthClientApplication = new HealthClientApplication();
 
             try
-            {                
+            {
                 Validator.ThrowArgumentExceptionIf(
                     applicationId == Guid.Empty,
                     "applicationId",
@@ -207,44 +206,44 @@ namespace Microsoft.HealthVault
         /// <summary>
         /// Create an application based on the passed-in values.
         /// </summary>
-        /// 
+        ///
         /// <param name="applicationId">
         /// Unique identifier of the new local client application.
         /// </param>
-        /// 
+        ///
         /// <param name="masterApplicationId">
         /// Unique identifier of an existing HealthVault master application.
         /// The client application will be created as a child application using
         /// the specified application as a parent.
         /// </param>
-        /// 
+        ///
         /// <param name="serviceInstance">
         /// The HealthVault web-service instance.
         /// </param>
-        /// 
+        ///
         /// <exception cref="ArgumentNullException">
         /// <paramref name="serviceInstance"/> is <b>null</b>.
         /// </exception>
-        /// 
+        ///
         /// <exception cref="ArgumentException">
         /// <see cref="HealthServiceInstance.HealthServiceUrl"/> or
         /// <see cref="HealthServiceInstance.ShellUrl" /> for the specified
         /// <paramref name="serviceInstance"/> is null;
-        /// or the value of <paramref name="applicationId"/> or 
+        /// or the value of <paramref name="applicationId"/> or
         /// <paramref name="masterApplicationId"/> is <see cref="Guid.Empty"/>.
         /// </exception>
-        /// 
+        ///
         /// <exception ref="CryptographicException">
         /// If the certificate cannot be created or could not be added to the store.
         /// </exception>
-        /// 
+        ///
         /// <remarks>
         /// This method looks up the certificate in the
         /// user certificate store using applicationId. If the
         /// certificate does not exist, then it will create
         /// a new certificate.
         /// </remarks>
-        /// 
+        ///
         public static HealthClientApplication Create(
             Guid applicationId,
             Guid masterApplicationId,
@@ -338,21 +337,21 @@ namespace Microsoft.HealthVault
         /// <summary>
         /// Gets an <see cref="ApplicationConnection"/> that represents the connection to HealthVault.
         /// </summary>
-        /// 
+        ///
         /// <exception ref="SecurityException">
         /// The required application-specific certificate is not found.
         /// </exception>
-        /// 
+        ///
         /// <exception cref="InvalidConfigurationException">
         /// The application Id or the certificate, or the healthServiceUrl
         /// are incorrect.
         /// </exception>
-        /// 
+        ///
         /// <remarks>
-        /// This method could cause a request to the network to retrieve the 
-        /// cryptographic object identifier of the certificate used by the 
-        /// application. For example in case the hosting machine is joined to 
-        /// a domain, resolving or retrieving the cryptographic object 
+        /// This method could cause a request to the network to retrieve the
+        /// cryptographic object identifier of the certificate used by the
+        /// application. For example in case the hosting machine is joined to
+        /// a domain, resolving or retrieving the cryptographic object
         /// identifier could result in an LDAP query.
         /// </remarks>
         public ApplicationConnection ApplicationConnection
@@ -377,26 +376,26 @@ namespace Microsoft.HealthVault
         /// Gets an <see cref="ApplicationInfo"/> from the HealthVault server that
         /// describes the client application.
         /// </summary>
-        /// 
+        ///
         /// <remarks>
         /// <para>This method makes a call to HealthVault to get the ApplicationInfo.
         /// If the application exists, then the ApplicationInfo is created and returned.</para>
         /// <para>If application does not exist, the method returns <b>null</b>.
-        /// To create the application on the server, 
+        /// To create the application on the server,
         /// call <see cref="HealthClientApplication.StartApplicationCreationProcess()" />.</para>
         /// </remarks>
-        /// 
+        ///
         /// <returns>
         /// An <see cref="ApplicationInfo"/> that describes the application,
         /// or <b>null</b> if the application does not exist on the server.
         /// </returns>
-        /// 
+        ///
         /// <exception cref="HealthServiceException">
         /// The HealthVault service returned an error. This exception does not indicate
         /// that the application does not exist on the server: the method returns <b>null</b>
         /// in that case and no exception is thrown.
         /// </exception>
-        /// 
+        ///
         public ApplicationInfo GetApplicationInfo()
         {
             ApplicationInfo applicationInfo = null;
@@ -424,24 +423,24 @@ namespace Microsoft.HealthVault
         /// </summary>
         /// <remarks>
         /// Open this URL in a browser window to allow the user to create the application.
-        /// By default, the client name will be set to the local machine name. 
+        /// By default, the client name will be set to the local machine name.
         /// </remarks>
         /// <exception cref="InvalidConfigurationException">
-        /// The value of <see cref="HealthClientApplication.ShellUrl"/> or 
-        /// <see cref="HealthClientApplication.HealthServiceUrl"/> is 
-        /// <b>null</b>, or the value of <see cref="HealthClientApplication.ApplicationId"/> or 
+        /// The value of <see cref="HealthClientApplication.ShellUrl"/> or
+        /// <see cref="HealthClientApplication.HealthServiceUrl"/> is
+        /// <b>null</b>, or the value of <see cref="HealthClientApplication.ApplicationId"/> or
         /// <see cref="HealthClientApplication.MasterApplicationId"/> is <see cref="Guid.Empty"/> or
         /// the required application-specific certificate is not found.
         /// </exception>
-        /// 
+        ///
         /// <returns>
         /// The URL of the application creation web page.
         /// </returns>
-        /// 
+        ///
         public Uri GetApplicationCreationUrl()
         {
             string clientName = Environment.GetEnvironmentVariable("Machine");
-            
+
             return GetApplicationCreationUrl(clientName, String.Empty);
         }
 
@@ -451,21 +450,21 @@ namespace Microsoft.HealthVault
         /// <remarks>
         /// Open this URL in a browser window to allow the user to create the application.
         /// </remarks>
-        /// 
+        ///
         /// <param name="clientName">The client name to use.</param>
-        /// 
+        ///
         /// <exception cref="InvalidConfigurationException">
-        /// The value of <see cref="HealthClientApplication.ShellUrl"/> or 
-        /// <see cref="HealthClientApplication.HealthServiceUrl"/> is 
-        /// <b>null</b>, or the value of <see cref="HealthClientApplication.ApplicationId"/> or 
+        /// The value of <see cref="HealthClientApplication.ShellUrl"/> or
+        /// <see cref="HealthClientApplication.HealthServiceUrl"/> is
+        /// <b>null</b>, or the value of <see cref="HealthClientApplication.ApplicationId"/> or
         /// <see cref="HealthClientApplication.MasterApplicationId"/> is <see cref="Guid.Empty"/> or
         /// the required application-specific certificate is not found.
         /// </exception>
-        /// 
+        ///
         /// <exception cref="ArgumentException">
         /// <paramref name="clientName"/> is empty or <b>null</b>.
         /// </exception>
-        /// 
+        ///
         /// <returns>
         /// The URL of the application creation web page.
         /// </returns>
@@ -480,35 +479,35 @@ namespace Microsoft.HealthVault
         /// <remarks>
         /// Open this URL in a browser window to allow the user to create the application.
         /// </remarks>
-        /// 
+        ///
         /// <param name="clientName">The client name to use.</param>
-        /// 
+        ///
         /// <param name="optionalQueryParameters">
         /// Optional parameters to be added to the creation URL:
-        /// 
+        ///
         /// <ul>
         ///     <li>ismra - the application can use multiple records for the same user at one time.</li>
         ///     <li>extrecordid - record identifier.</li>
         ///     <li>forceappauth - force redirect to APPAUTH target once user is authenticated.</li>
         ///     <li>onopt# - A sequence of online optional authorization rule names
         ///                 identifying which rules to present.  The sequence begins with 1.</li>
-        ///     <li>offopt# - A sequence of offline optional authorization rule names  
+        ///     <li>offopt# - A sequence of offline optional authorization rule names
         ///                 identifying which rules to present.  The sequence begins with 1.</li>
         /// </ul>
         /// </param>
-        /// 
+        ///
         /// <exception cref="InvalidConfigurationException">
-        /// The value of <see cref="HealthClientApplication.ShellUrl"/> or 
-        /// <see cref="HealthClientApplication.HealthServiceUrl"/> is 
-        /// <b>null</b>, or the value of <see cref="HealthClientApplication.ApplicationId"/> or 
+        /// The value of <see cref="HealthClientApplication.ShellUrl"/> or
+        /// <see cref="HealthClientApplication.HealthServiceUrl"/> is
+        /// <b>null</b>, or the value of <see cref="HealthClientApplication.ApplicationId"/> or
         /// <see cref="HealthClientApplication.MasterApplicationId"/> is <see cref="Guid.Empty"/> or
         /// the required application-specific certificate is not found.
         /// </exception>
-        /// 
+        ///
         /// <exception cref="ArgumentException">
         /// <paramref name="clientName"/> is empty or <b>null</b>.
         /// </exception>
-        /// 
+        ///
         /// <returns>
         /// The URL of the application creation web page.
         /// </returns>
@@ -542,7 +541,7 @@ namespace Microsoft.HealthVault
             }
 
             // Create the query string that passes the master app id, the app id, the client name, and
-            // the certificate public key to shell. 
+            // the certificate public key to shell.
             var redirect = new ShellRedirectParameters(_shellUrl.OriginalString)
             {
                 TargetLocation = "CreateApplication",
@@ -563,13 +562,13 @@ namespace Microsoft.HealthVault
         /// <remarks>
         /// Open this URL in a browser window to allow the user to authorize the application.
         /// </remarks>
-        /// 
+        ///
         /// <exception cref="InvalidConfigurationException">
-        /// The value of <see cref="HealthClientApplication.ShellUrl"/> is <b>null</b>, 
-        /// or the value of <see cref="HealthClientApplication.ApplicationId"/> is 
+        /// The value of <see cref="HealthClientApplication.ShellUrl"/> is <b>null</b>,
+        /// or the value of <see cref="HealthClientApplication.ApplicationId"/> is
         /// <see cref="Guid.Empty"/>.
         /// </exception>
-        /// 
+        ///
         /// <returns>
         /// The URL of the application authorization web page.
         /// </returns>
@@ -580,33 +579,33 @@ namespace Microsoft.HealthVault
         }
 
         /// <summary>
-        /// Gets the URL of a web page that will direct the user to authorize the application, 
+        /// Gets the URL of a web page that will direct the user to authorize the application,
         /// including optional APPAUTH parameters.
         /// </summary>
         /// <remarks>
         /// Open this URL in a browser window to allow the user to authorize the application.
         /// </remarks>
-        /// 
+        ///
         /// <param name="optionalQueryParameters">
         /// Optional parameters to be added to the authorization URL:
-        /// 
+        ///
         /// <ul>
         ///     <li>ismra - the application can use multiple records for the same user at one time.</li>
         ///     <li>extrecordid - record identifier.</li>
         ///     <li>forceappauth - force redirect to APPAUTH target once user is authenticated.</li>
         ///     <li>onopt# - A sequence of online optional authorization rule names
         ///                 identifying which rules to present.  The sequence begins with 1.</li>
-        ///     <li>offopt# - A sequence of offline optional authorization rule names  
+        ///     <li>offopt# - A sequence of offline optional authorization rule names
         ///                 identifying which rules to present.  The sequence begins with 1.</li>
         /// </ul>
         /// </param>
-        /// 
+        ///
         /// <exception cref="InvalidConfigurationException">
-        /// The value of <see cref="HealthClientApplication.ShellUrl"/> is <b>null</b>, 
-        /// or the value of <see cref="HealthClientApplication.ApplicationId"/> is 
+        /// The value of <see cref="HealthClientApplication.ShellUrl"/> is <b>null</b>,
+        /// or the value of <see cref="HealthClientApplication.ApplicationId"/> is
         /// <see cref="Guid.Empty"/>.
         /// </exception>
-        /// 
+        ///
         /// <returns>
         /// The URL of the application authorization web page.
         /// </returns>
@@ -637,16 +636,16 @@ namespace Microsoft.HealthVault
         /// <summary>
         /// Start the authorization process.
         /// </summary>
-        /// 
+        ///
         /// <remarks>
-        /// Starts the authorization process by opening an authorization page in the 
+        /// Starts the authorization process by opening an authorization page in the
         /// user's default browser.
-        /// After this call, the application is responsible for waiting 
-        /// until the authorization process is completed before continuing.  A typical 
+        /// After this call, the application is responsible for waiting
+        /// until the authorization process is completed before continuing.  A typical
         /// implementation will create a UI element that allows the user to indicate that
         /// authorization is complete.
         /// </remarks>
-        /// 
+        ///
         /// <exception cref="Win32Exception">
         /// There was an error opening the authorization URL.
         /// </exception>
@@ -661,30 +660,30 @@ namespace Microsoft.HealthVault
         /// <summary>
         /// Start the authorization process with optional APPAUTH parameters.
         /// </summary>
-        /// 
+        ///
         /// <remarks>
-        /// Starts the authorization process by opening an authorization page in the 
+        /// Starts the authorization process by opening an authorization page in the
         /// user's default browser with optional APPAUTH parameters.
-        /// After this call, the application is responsible for waiting 
-        /// until the authorization process is completed before continuing.  A typical 
+        /// After this call, the application is responsible for waiting
+        /// until the authorization process is completed before continuing.  A typical
         /// implementation will create a UI element that allows the user to indicate that
         /// authorization is complete.
         /// </remarks>
-        /// 
+        ///
         /// <param name="optionalQueryParameters">
         /// Optional parameters to be added to the authorization URL:
-        /// 
+        ///
         /// <ul>
         ///     <li>ismra - the application can use multiple records for the same user at one time.</li>
         ///     <li>extrecordid - record identifier.</li>
         ///     <li>forceappauth - force redirect to APPAUTH target once user is authenticated.</li>
         ///     <li>onopt# - A sequence of online optional authorization rule names
         ///                 identifying which rules to present.  The sequence begins with 1.</li>
-        ///     <li>offopt# - A sequence of offline optional authorization rule names  
+        ///     <li>offopt# - A sequence of offline optional authorization rule names
         ///                 identifying which rules to present.  The sequence begins with 1.</li>
         /// </ul>
         /// </param>
-        /// 
+        ///
         /// <exception cref="Win32Exception">
         /// There was an error opening the uri.
         /// </exception>
@@ -699,24 +698,24 @@ namespace Microsoft.HealthVault
         /// <summary>
         /// Start the application creation process with a default application name.
         /// </summary>
-        /// 
+        ///
         /// <remarks>
-        /// Starts the application creation process by opening a URL in the 
+        /// Starts the application creation process by opening a URL in the
         /// user's default browser.
-        /// After this call, the application is responsible for waiting 
-        /// until the authorization process is completed before continuing.  A typical 
+        /// After this call, the application is responsible for waiting
+        /// until the authorization process is completed before continuing.  A typical
         /// implementation will create a UI element that allows the user to indicate that
         /// application creation is complete.
         /// The name of the child application is set to the local machine name.
         /// </remarks>
-        /// 
+        ///
         /// <exception cref="InvalidConfigurationException">
-        /// The value of <see cref="HealthClientApplication.ShellUrl"/> or 
-        /// <see cref="HealthClientApplication.HealthServiceUrl"/> is 
-        /// <b>null</b>, or the value of <see cref="HealthClientApplication.ApplicationId"/> or 
+        /// The value of <see cref="HealthClientApplication.ShellUrl"/> or
+        /// <see cref="HealthClientApplication.HealthServiceUrl"/> is
+        /// <b>null</b>, or the value of <see cref="HealthClientApplication.ApplicationId"/> or
         /// <see cref="HealthClientApplication.MasterApplicationId"/> is <see cref="Guid.Empty"/>.
         /// </exception>
-        /// 
+        ///
         /// <exception cref="Win32Exception">
         /// There was an error opening the URL.
         /// </exception>
@@ -731,24 +730,24 @@ namespace Microsoft.HealthVault
         /// <summary>
         /// Start the application creation process with a specified application name.
         /// </summary>
-        /// 
+        ///
         /// <remarks>
-        /// Starts the application creation process by opening a URL in the 
+        /// Starts the application creation process by opening a URL in the
         /// user's default browser.
-        /// After this call, the application is responsible for waiting 
-        /// until the authorization process is completed before continuing.  A typical 
+        /// After this call, the application is responsible for waiting
+        /// until the authorization process is completed before continuing.  A typical
         /// implementation will create a UI element that allows the user to indicate that
         /// application creation is complete.
         /// </remarks>
-        /// 
+        ///
         /// <param name="clientName">
         /// The unique client name to use. The client name specifies the instance name
         /// of the application.
         /// </param>
         /// <exception cref="InvalidConfigurationException">
-        /// The value of <see cref="HealthClientApplication.ShellUrl"/> or 
-        /// <see cref="HealthClientApplication.HealthServiceUrl"/> is 
-        /// <b>null</b>, or the value of <see cref="HealthClientApplication.ApplicationId"/> or 
+        /// The value of <see cref="HealthClientApplication.ShellUrl"/> or
+        /// <see cref="HealthClientApplication.HealthServiceUrl"/> is
+        /// <b>null</b>, or the value of <see cref="HealthClientApplication.ApplicationId"/> or
         /// <see cref="HealthClientApplication.MasterApplicationId"/> is <see cref="Guid.Empty"/>.
         /// </exception>
         /// <exception cref="ArgumentException">
@@ -769,30 +768,30 @@ namespace Microsoft.HealthVault
         /// <summary>
         /// Creates an authorized client connection to the application.
         /// </summary>
-        /// 
+        ///
         /// <param name="personId">
         /// ID of the person for the connection.
         /// </param>
-        /// 
+        ///
         /// <exception ref="SecurityException">
         /// The required application-specific certificate is invalid.
         /// </exception>
-        /// 
+        ///
         /// <exception cref="ArgumentException">
         /// The <paramref name="personId"/> parameter is empty.
         /// </exception>
-        /// 
+        ///
         /// <exception cref="InvalidConfigurationException">
         /// The required application-specific certificate is not found,
-        /// the value of <see cref="HealthClientApplication.HealthServiceUrl"/> is 
+        /// the value of <see cref="HealthClientApplication.HealthServiceUrl"/> is
         /// <b>null</b>, or the value of <see cref="HealthClientApplication.ApplicationId"/>
         /// is <see cref="Guid.Empty"/>.
         /// </exception>
-        /// 
+        ///
         /// <returns>
         /// A <see cref="HealthClientAuthorizedConnection"/> instance.
         /// </returns>
-        /// 
+        ///
         public HealthClientAuthorizedConnection CreateAuthorizedConnection(Guid personId)
         {
             Validator.ThrowArgumentExceptionIf(
@@ -828,7 +827,7 @@ namespace Microsoft.HealthVault
         /// <summary>
         /// Deletes the certificate created as part of application creation
         /// </summary>
-        /// 
+        ///
         /// <exception cref="InvalidConfigurationException">
         /// The required application-specific certificate is not found,
         /// </exception>
@@ -855,7 +854,7 @@ namespace Microsoft.HealthVault
         /// <summary>
         /// Disposes the request.
         /// </summary>
-        /// 
+        ///
         public void Dispose()
         {
             Dispose(true);
@@ -865,9 +864,9 @@ namespace Microsoft.HealthVault
         /// <summary>
         /// Cleans up the cancel request trigger.
         /// </summary>
-        /// 
+        ///
         /// <param name="disposing"></param>
-        /// 
+        ///
         protected virtual void Dispose(bool disposing)
         {
             // No longer needed but keeping for back-compat
@@ -889,19 +888,18 @@ namespace Microsoft.HealthVault
                 X509Certificate2 x509Certificate2 = _childCert.Certificate;
                 return x509Certificate2;
             }
-
         }
 
         /// <summary>
         /// Creates the application.
         /// </summary>
-        /// 
+        ///
         /// <remarks>
-        /// The caller should store the value of the ApplicationId property so it can re-use this 
-        /// application. This method will lookup the certificate by application Id. If no 
+        /// The caller should store the value of the ApplicationId property so it can re-use this
+        /// application. This method will lookup the certificate by application Id. If no
         /// certificate is found, it creates one in the current user store.
         /// </remarks>
-        /// 
+        ///
         /// <exception ref="CryptographicException">
         /// If the certificate cannot be created or could not be added to the store.
         /// </exception>
@@ -915,36 +913,35 @@ namespace Microsoft.HealthVault
             {
                 _childCert = ApplicationCertificate.CreatePersistedCertificate(_applicationId);
             }
-
         }
 
         /// <summary>
         /// Create a connection to the application.
         /// </summary>
-        /// 
+        ///
         /// <remarks>
         /// The ApplicationId must be set before calling this method.
-        /// 
-        /// This method could cause a request to the network to retrieve the 
-        /// cryptographic object identifier of the certificate used by the 
-        /// application. For example in case the hosting machine is joined to 
-        /// a domain, resolving or retrieving the cryptographic object 
+        ///
+        /// This method could cause a request to the network to retrieve the
+        /// cryptographic object identifier of the certificate used by the
+        /// application. For example in case the hosting machine is joined to
+        /// a domain, resolving or retrieving the cryptographic object
         /// identifier could result in an LDAP query.
         /// </remarks>
-        /// 
+        ///
         /// <exception ref="SecurityException">
         /// The required application-specific certificate is not found.
         /// </exception>
-        /// 
+        ///
         /// <exception cref="ArgumentException">
         /// The person Id is empty.
         /// </exception>
-        /// 
+        ///
         /// <exception cref="InvalidConfigurationException">
         /// The application Id or the certificate, or the healthServiceUrl
         /// are incorrect.
         /// </exception>
-        /// 
+        ///
         /// <returns>
         /// An HealthClientAuthorizedConnection instance
         /// </returns>

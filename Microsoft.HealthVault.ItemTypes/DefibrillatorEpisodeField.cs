@@ -3,7 +3,6 @@
 // see http://www.microsoft.com/resources/sharedsource/licensingbasics/sharedsourcelicenses.mspx.
 // All other rights reserved.
 
-using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Xml;
 using System.Xml.XPath;
@@ -35,7 +34,7 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <param name="value">
         /// Represents the value of the name/value pair.
         /// </param>
-        /// 
+        ///
         /// <exception cref="ArgumentNullException">
         /// If <paramref name="name"/> is <b>null</b>.
         /// </exception>
@@ -43,7 +42,7 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <exception cref="ArgumentNullException">
         /// If <paramref name="value"/> is <b>null</b>.
         /// </exception>
-        /// 
+        ///
         public DefibrillatorEpisodeField(CodableValue name, CodableValue value)
         {
             Name = name;
@@ -61,7 +60,7 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <exception cref="ArgumentNullException">
         /// If <paramref name="navigator"/> parameter is <b>null</b>.
         /// </exception>
-        /// 
+        ///
         public override void ParseXml(XPathNavigator navigator)
         {
             Validator.ThrowIfNavigatorNull(navigator);
@@ -74,10 +73,10 @@ namespace Microsoft.HealthVault.ItemTypes
         }
 
         /// <summary>
-        /// Writes the XML representation of the  <see cref="DefibrillatorEpisodeField"/> into 
+        /// Writes the XML representation of the  <see cref="DefibrillatorEpisodeField"/> into
         /// the specified XML writer.
         /// </summary>
-        /// 
+        ///
         /// <param name="nodeName">
         /// The name of the outer node for the defibrillator episode field item.
         /// </param>
@@ -90,7 +89,7 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <exception cref="ArgumentNullException">
         /// If <paramref name="writer"/> parameter is <b>null</b>.
         /// </exception>
-        /// 
+        ///
         /// <exception cref="HealthRecordItemSerializationException">
         /// If name or value is <b>null</b>.
         /// </exception>

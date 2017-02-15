@@ -15,7 +15,6 @@ namespace Microsoft.HealthVault.Certificate
     [SecurityCritical]
     internal sealed class CertificateHandle : SafeHandle
     {
-
         /// <summary>
         /// Creates an instance of CertificateHandle
         /// </summary>
@@ -69,7 +68,6 @@ namespace Microsoft.HealthVault.Certificate
     [SecurityCritical]
     internal sealed class CertificateStoreHandle : SafeHandle
     {
-
         /// <summary>
         /// Constructor for CertificateStoreHandle.
         /// </summary>
@@ -104,7 +102,6 @@ namespace Microsoft.HealthVault.Certificate
     [SecurityCritical]
     internal sealed class KeyContainerHandle : SafeHandle
     {
-
         /// <summary>
         /// Constructor.
         /// </summary>
@@ -157,7 +154,7 @@ namespace Microsoft.HealthVault.Certificate
         }
 
         /// <summary>
-        /// Releases 
+        /// Releases
         /// </summary>
         /// <returns>Releases the handle associated with the public key </returns>
         [SecurityCritical]

@@ -3,11 +3,8 @@
 // see http://www.microsoft.com/resources/sharedsource/licensingbasics/sharedsourcelicenses.mspx.
 // All other rights reserved.
 
-
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Globalization;
 using System.Text;
 using System.Xml;
 using System.Xml.XPath;
@@ -17,19 +14,19 @@ namespace Microsoft.HealthVault.ItemTypes
     /// <summary>
     /// Record of a pregnancy.
     /// </summary>
-    /// 
+    ///
     public class Pregnancy : HealthRecordItem
     {
         /// <summary>
         /// Creates a new instance of the <see cref="Pregnancy"/> class with default values.
         /// </summary>
-        /// 
+        ///
         /// <remarks>
         /// The item is not added to the health record until the
-        /// <see cref="HealthRecordAccessor.NewItem(HealthRecordItem)"/> method 
+        /// <see cref="HealthRecordAccessor.NewItem(HealthRecordItem)"/> method
         /// is called.
         /// </remarks>
-        /// 
+        ///
         public Pregnancy()
             : base(TypeId)
         {
@@ -38,27 +35,27 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <summary>
         /// Retrieves the unique identifier for the item type.
         /// </summary>
-        /// 
+        ///
         /// <value>
         /// A GUID.
         /// </value>
-        /// 
+        ///
         public new static readonly Guid TypeId =
             new Guid("46d485cf-2b84-429d-9159-83152ba801f4");
 
         /// <summary>
         /// Information related to a pregnancy.
         /// </summary>
-        /// 
+        ///
         /// <param name="typeSpecificXml">
         /// The XML to get the pregnancy data from.
         /// </param>
-        /// 
+        ///
         /// <exception cref="InvalidOperationException">
         /// If the first node in <paramref name="typeSpecificXml"/> is not
         /// a pregnancy node.
         /// </exception>
-        /// 
+        ///
         protected override void ParseXml(IXPathNavigable typeSpecificXml)
         {
             XPathNavigator itemNav =
@@ -84,15 +81,15 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <summary>
         /// Writes the pregnancy data to the specified XmlWriter.
         /// </summary>
-        /// 
+        ///
         /// <param name="writer">
         /// The XmlWriter to write the pregnancy data to.
         /// </param>
-        /// 
+        ///
         /// <exception cref="ArgumentNullException">
         /// The <paramref name="writer"/> parameter is <b>null</b>.
         /// </exception>
-        /// 
+        ///
         public override void WriteXml(XmlWriter writer)
         {
             Validator.ThrowIfWriterNull(writer);
@@ -122,7 +119,7 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <remarks>
         /// If there is no due date the value should be set to <b>null</b>.
         /// </remarks>
-        /// 
+        ///
         public ApproximateDate DueDate
         {
             get { return _dueDate; }
@@ -133,11 +130,11 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <summary>
         /// Gets or sets the first day of the last menstrual cycle.
         /// </summary>
-        /// 
+        ///
         /// <remarks>
         /// If the last menstrual period is not known the value should be set to <b>null</b>.
         /// </remarks>
-        /// 
+        ///
         public HealthServiceDate LastMenstrualPeriod
         {
             get { return _lastMenstrualPeriod; }
@@ -148,12 +145,12 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <summary>
         /// Gets or sets the method of conception.
         /// </summary>
-        /// 
+        ///
         /// <remarks>
         /// If the conception method is not known the value should be set to <b>null</b>.
-        /// The preferred vocabulary for this value is "conception-methods". 
+        /// The preferred vocabulary for this value is "conception-methods".
         /// </remarks>
-        /// 
+        ///
         public CodableValue ConceptionMethod
         {
             get { return _conceptionMethod; }
@@ -164,11 +161,11 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <summary>
         /// Gets or sets the number of fetuses.
         /// </summary>
-        /// 
+        ///
         /// <remarks>
         /// If the fetus count is not known the value should be set to <b>null</b>.
         /// </remarks>
-        /// 
+        ///
         public int? FetusCount
         {
             get { return _fetusCount; }
@@ -186,15 +183,15 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <summary>
         /// Gets or sets the number of weeks of pregnancy at the time of delivery.
         /// </summary>
-        /// 
+        ///
         /// <remarks>
         /// If the gestational age is not known the value should be set to <b>null</b>.
         /// </remarks>
-        /// 
+        ///
         /// <exception cref="ArgumentOutOfRangeException">
         /// If <paramref name="value"/> is less than or equal to zero.
         /// </exception>
-        /// 
+        ///
         public int? GestationalAge
         {
             get { return _gestationalAge; }
@@ -204,7 +201,7 @@ namespace Microsoft.HealthVault.ItemTypes
                     value != null && value < 0,
                     "GestationalAge",
                     "PregnancyGestationalAgeMustBePositive");
-                _gestationalAge = value; 
+                _gestationalAge = value;
             }
         }
         private int? _gestationalAge;
@@ -212,25 +209,25 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <summary>
         /// Gets a collection of the details of the resolution of each fetus.
         /// </summary>
-        /// 
+        ///
         /// <remarks>
         /// If there is no delivery information the collection should be empty.
         /// </remarks>
-        /// 
+        ///
         public Collection<Delivery> Delivery
         {
             get { return _delivery; }
         }
         private Collection<Delivery> _delivery = new Collection<Delivery>();
 
-                /// <summary>
+        /// <summary>
         /// Gets a string representation of the pregnancy item.
         /// </summary>
-        /// 
+        ///
         /// <returns>
         /// A string representation of the pregnancy item.
         /// </returns>
-        /// 
+        ///
         public override string ToString()
         {
             StringBuilder result = new StringBuilder(200);

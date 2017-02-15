@@ -3,7 +3,6 @@
 // see http://www.microsoft.com/resources/sharedsource/licensingbasics/sharedsourcelicenses.mspx.
 // All other rights reserved.
 
-using System;
 using System.Globalization;
 using System.Xml;
 using System.Xml.XPath;
@@ -31,7 +30,7 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <exception cref="ArgumentNullException">
         /// If <paramref name="navigator"/> parameter is <b>null</b>.
         /// </exception>
-        /// 
+        ///
         public override void ParseXml(XPathNavigator navigator)
         {
             Validator.ThrowIfNavigatorNull(navigator);
@@ -40,7 +39,7 @@ namespace Microsoft.HealthVault.ItemTypes
             _interval = XPathHelper.GetOptNavValue<CodableValue>(navigator, "interval");
             _timesInInterval = XPathHelper.GetOptNavValueAsInt(navigator, "times-in-interval");
         }
-        
+
         /// <summary>
         /// Writes the XML representation of the CarePlanTaskRecurrence into
         /// the specified XML writer.
@@ -62,7 +61,7 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <exception cref="ArgumentNullException">
         /// If <paramref name="writer"/> parameter is <b>null</b>.
         /// </exception>
-        /// 
+        ///
         public override void WriteXml(string nodeName, XmlWriter writer)
         {
             Validator.ThrowIfStringNullOrEmpty(nodeName, "WriteXmlEmptyNodeName");
@@ -89,7 +88,7 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <remarks>
         ///  Uses the iCalendar format for recurrence specification as per RFC 2445, Section 4.3.10.
         /// </remarks>
-        /// 
+        ///
         public string IcalRecurrence
         {
             get
@@ -116,7 +115,7 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <remarks>
         /// For example: day, month, year.
         /// </remarks>
-        /// 
+        ///
         public CodableValue Interval
         {
             get
@@ -139,7 +138,7 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <remarks>
         /// Example: Two times in a week would be stored as interval = week, times-in-interval = 2.
         /// </remarks>
-        /// 
+        ///
         public int? TimesInInterval
         {
             get
@@ -150,8 +149,8 @@ namespace Microsoft.HealthVault.ItemTypes
             set
             {
                 Validator.ThrowArgumentExceptionIf(
-                    value <= 0, 
-                    "TimesInInterval", 
+                    value <= 0,
+                    "TimesInInterval",
                     "CarePlanTaskRecurrenceInvalidTimeInInterval");
 
                 _timesInInterval = value;
@@ -159,12 +158,12 @@ namespace Microsoft.HealthVault.ItemTypes
             }
         }
 
-        private int? _timesInInterval; 
+        private int? _timesInInterval;
 
         /// <summary>
         /// Gets a string representation of the CarePlanTaskRecurrence.
         /// </summary>
-        /// 
+        ///
         /// <returns>
         /// A string representation of the CarePlanTaskRecurrence.
         /// </returns>

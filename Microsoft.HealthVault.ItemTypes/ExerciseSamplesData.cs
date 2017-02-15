@@ -3,59 +3,58 @@
 // see http://www.microsoft.com/resources/sharedsource/licensingbasics/sharedsourcelicenses.mspx.
 // All other rights reserved.
 
+using Microsoft.HealthVault.ItemTypes.Csv;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.IO.Compression;
-using Microsoft.HealthVault;
 using System.Xml;
-using Microsoft.HealthVault.ItemTypes.Csv;
 
 namespace Microsoft.HealthVault.ItemTypes
 {
     /// <summary>
-    /// The ExerciseSamplesData class is used to store and retrieve samples data for the 
+    /// The ExerciseSamplesData class is used to store and retrieve samples data for the
     /// <see cref="ExerciseSamples"/> class. It handles converting from a sample data format to the
     /// comma-separated format.
     /// </summary>
     /// <remarks>
     /// Data is represented as either an array of samples with a single value (such as heart rate), or an array
     /// of samples with two values (such as a GPS position). The <see cref="SingleValuedSamples"/> or <see cref="TwoValuedSamples"/> properties
-    /// should be used as appropriate based on the stored data type. 
-    /// 
+    /// should be used as appropriate based on the stored data type.
+    ///
     /// The underlying format allows the sampling interval to be changed in the middle of a sample set. This class
     /// will detect sampling intervals that have changed, and insert appropriate escape values into the resulting data.
     /// </remarks>
-    public class ExerciseSamplesData: OtherItemDataCsv
+    public class ExerciseSamplesData : OtherItemDataCsv
     {
         /// <summary>
-        /// Creates a new instance of the <see cref="ExerciseSamplesData"/> class. 
+        /// Creates a new instance of the <see cref="ExerciseSamplesData"/> class.
         /// </summary>
         public ExerciseSamplesData()
         {
         }
 
         /// <summary>
-        /// Creates a new instance of the <see cref="ExerciseSamplesData"/> class 
+        /// Creates a new instance of the <see cref="ExerciseSamplesData"/> class
         /// with the specified data, encoding, and content type.
         /// </summary>
-        /// 
+        ///
         /// <param name="data">
         /// The data to store in the other data section of the health record
         /// item.
         /// </param>
-        /// 
+        ///
         /// <param name="contentEncoding">
         /// The type of encoding that was done on the data. Usually this will
         /// be "base64" but other encodings are acceptable.
         /// </param>
-        /// 
+        ///
         /// <param name="contentType">
         /// The MIME-content type of the data.
         /// </param>
-        /// 
+        ///
         public ExerciseSamplesData(
             string data,
             string contentEncoding,
@@ -73,7 +72,7 @@ namespace Microsoft.HealthVault.ItemTypes
                 return;
             }
 
-                // Only valid encoding here is base64, so we go with that...
+            // Only valid encoding here is base64, so we go with that...
             byte[] buffer = null;
 
             try
@@ -95,15 +94,14 @@ namespace Microsoft.HealthVault.ItemTypes
                 return;
             }
 
-                // look at the bytes to see if they are the proper gzip header...
+            // look at the bytes to see if they are the proper gzip header...
             if ((buffer[0] != 31) ||
                 (buffer[1] != 139))
             {
                 return;    // nothing we can do
             }
 
-                // gzip decompress...
-
+            // gzip decompress...
 
             using (MemoryStream bufferStream = new MemoryStream(buffer))
             {
@@ -122,7 +120,7 @@ namespace Microsoft.HealthVault.ItemTypes
 
         // Convert an OtherData instance to one of this type.
         // This is used to convert the OtherItemData instance that was deserialized when an ExerciseSamples
-        // instance was created to an instance of this type. 
+        // instance was created to an instance of this type.
         internal ExerciseSamplesData(OtherItemData otherItemData)
         {
             Data = otherItemData.Data;
@@ -133,7 +131,7 @@ namespace Microsoft.HealthVault.ItemTypes
         private double _samplingInterval;
 
         /// <summary>
-        /// Gets or sets the initial sampling interval for the set of samples. 
+        /// Gets or sets the initial sampling interval for the set of samples.
         /// </summary>
         /// <remarks>
         /// The sampling interval may change between two samples.
@@ -154,14 +152,14 @@ namespace Microsoft.HealthVault.ItemTypes
             }
         }
 
-        Collection<ExerciseSampleOneValue> _singleValuedSamples;
+        private Collection<ExerciseSampleOneValue> _singleValuedSamples;
 
         /// <summary>
         /// Gets the sample data as a collection of single values.
         /// </summary>
         /// <remarks>
         /// The majority of sample types contain only a single value per sample. This property
-        /// is used to access samples for those sample types. 
+        /// is used to access samples for those sample types.
         /// </remarks>
         public Collection<ExerciseSampleOneValue> SingleValuedSamples
         {
@@ -169,7 +167,7 @@ namespace Microsoft.HealthVault.ItemTypes
             {
                 if (_singleValuedSamples == null)
                 {
-                        // If there is no OtherData here, we're creating a new set of samples...
+                    // If there is no OtherData here, we're creating a new set of samples...
                     if (Data == null)
                     {
                         _singleValuedSamples = new Collection<ExerciseSampleOneValue>();
@@ -185,8 +183,8 @@ namespace Microsoft.HealthVault.ItemTypes
         }
 
         // Get all the samples as doubles, and create the collection that we want to return to the user.
-        // We set the time offset from the initial sampling interval and any escapes that are present to 
-        // reset it. 
+        // We set the time offset from the initial sampling interval and any escapes that are present to
+        // reset it.
         private void CreateSingleValuedSamples()
         {
             ProcessCompressedAndEncodedData();
@@ -223,14 +221,14 @@ namespace Microsoft.HealthVault.ItemTypes
             }
         }
 
-        Collection<ExerciseSampleTwoValue> _twoValuedSamples = null;
+        private Collection<ExerciseSampleTwoValue> _twoValuedSamples = null;
 
         /// <summary>
         /// Gets the sample data as a collection of two-valued samples.
         /// </summary>
         /// <remarks>
         /// Some samples types (such as GPS location) consist not of a single value but of two separate values
-        /// This property is used to access samples for those sample types. 
+        /// This property is used to access samples for those sample types.
         /// </remarks>
         public Collection<ExerciseSampleTwoValue> TwoValuedSamples
         {
@@ -253,8 +251,8 @@ namespace Microsoft.HealthVault.ItemTypes
         }
 
         // Get all the samples as doubles, and create the collection that we want to return to the user.
-        // We set the time offset from the initial sampling interval and any escapes that are present to 
-        // reset it. We also go from a single-valued list to the two-valued list.  
+        // We set the time offset from the initial sampling interval and any escapes that are present to
+        // reset it. We also go from a single-valued list to the two-valued list.
         private void CreateTwoValuedSamples()
         {
             ProcessCompressedAndEncodedData();
@@ -266,7 +264,7 @@ namespace Microsoft.HealthVault.ItemTypes
             double currentSampleInterval = _samplingInterval;
             double offsetInSeconds = -currentSampleInterval;
 
-            for (int sampleIndex = 0; sampleIndex < rawSamples.Count; sampleIndex ++) 
+            for (int sampleIndex = 0; sampleIndex < rawSamples.Count; sampleIndex++)
             {
                 OtherItemDataCsvItem item = rawSamples[sampleIndex];
 
@@ -297,7 +295,7 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <summary>
         /// Writes the exercise samples to the specified XmlWriter.
         /// </summary>
-        /// 
+        ///
         /// <param name="writer">
         /// The XmlWriter to write the height data to.
         /// </param>
@@ -317,7 +315,7 @@ namespace Microsoft.HealthVault.ItemTypes
                 throw Validator.InvalidOperationException("OneAndTwoValuedSamples");
             }
 
-                // Convert the samples to the text format and put them in the other data section...
+            // Convert the samples to the text format and put them in the other data section...
 
             if (_singleValuedSamples != null)
             {
@@ -329,8 +327,8 @@ namespace Microsoft.HealthVault.ItemTypes
                 StoreTwo();
             }
 
-                // The base class takes the other data string and puts it in the proper xml format. 
-            base.WriteXml(writer); 
+            // The base class takes the other data string and puts it in the proper xml format.
+            base.WriteXml(writer);
         }
 
         // Take the collection of samples the user gave us, and convert them into the underlying format.
@@ -345,7 +343,7 @@ namespace Microsoft.HealthVault.ItemTypes
             {
                 ExerciseSampleOneValue sample = _singleValuedSamples[sampleNumber];
 
-                // Is this sample coming when it's expected? 
+                // Is this sample coming when it's expected?
                 // if not, we need to put in an escape...
                 if (lastOffset + currentSamplingInterval != sample.OffsetInSeconds)
                 {
@@ -374,7 +372,7 @@ namespace Microsoft.HealthVault.ItemTypes
             {
                 ExerciseSampleTwoValue sample = _twoValuedSamples[sampleNumber];
 
-                // Is this sample coming when it's expected? 
+                // Is this sample coming when it's expected?
                 // if not, we need to put in an escape...
                 if (lastOffset + currentSamplingInterval != sample.OffsetInSeconds)
                 {

@@ -3,7 +3,6 @@
 // see http://www.microsoft.com/resources/sharedsource/licensingbasics/sharedsourcelicenses.mspx.
 // All other rights reserved.
 
-using System;
 using System.Globalization;
 using System.Xml;
 using System.Xml.XPath;
@@ -23,7 +22,7 @@ namespace Microsoft.HealthVault.ItemTypes
         public FoodEnergyValue()
         {
         }
-        
+
         /// <summary>
         /// Creates a new instance of the <see cref="FoodEnergyValue"/> class
         /// specifying mandatory values.
@@ -49,8 +48,8 @@ namespace Microsoft.HealthVault.ItemTypes
         /// The display value of the energy. This should contain the
         /// exact value as entered by the user, even if it uses some
         /// other unit of measure besides calories. The display value
-        /// <see cref="DisplayValue.Units"/> and 
-        /// <see cref="DisplayValue.UnitsCode"/> 
+        /// <see cref="DisplayValue.Units"/> and
+        /// <see cref="DisplayValue.UnitsCode"/>
         /// represents the unit of measure for the user-entered value.
         /// </param>
         ///
@@ -62,41 +61,41 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <summary>
         /// Verifies the value is a legal calories value.
         /// </summary>
-        /// 
+        ///
         /// <param name="value">
         /// The calorie measurement.
         /// </param>
-        /// 
+        ///
         /// <exception cref="ArgumentOutOfRangeException">
         /// The <paramref name="value"/> parameter is less than or equal to zero.
         /// </exception>
-        /// 
+        ///
         protected override void AssertMeasurementValue(double value)
         {
             Validator.ThrowArgumentOutOfRangeIf(value < 0.0, "value", "WeightNotPositive");
         }
 
-        /// <summary> 
+        /// <summary>
         /// Populates the data for the energy value from the XML.
         /// </summary>
-        /// 
-        /// <param name="navigator"> 
+        ///
+        /// <param name="navigator">
         /// The XML node representing the energy value.
         /// </param>
-        /// 
+        ///
         protected override void ParseValueXml(XPathNavigator navigator)
         {
             Value = navigator.SelectSingleNode("calories").ValueAsDouble;
         }
 
-        /// <summary> 
+        /// <summary>
         /// Writes the energy value to the specified XML writer.
         /// </summary>
-        /// 
-        /// <param name="writer"> 
+        ///
+        /// <param name="writer">
         /// The XmlWriter to write the energy value to.
         /// </param>
-        /// 
+        ///
         protected override void WriteValueXml(XmlWriter writer)
         {
             writer.WriteElementString("calories", XmlConvert.ToString(Value));
@@ -105,7 +104,7 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <summary>
         /// Gets or sets the amount of calories consumed.
         /// </summary>
-        /// 
+        ///
         /// <remarks>
         /// Calories are measured in kilocalories (kCal).
         /// </remarks>
@@ -119,15 +118,15 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <summary>
         /// Gets a string representation of the calories in the base units.
         /// </summary>
-        /// 
+        ///
         /// <value>
         /// A number representing the calories.
         /// </value>
-        /// 
+        ///
         /// <returns>
         /// The calories as a string in the base units.
         /// </returns>
-        /// 
+        ///
         protected override string GetValueString(double value)
         {
             return string.Format(

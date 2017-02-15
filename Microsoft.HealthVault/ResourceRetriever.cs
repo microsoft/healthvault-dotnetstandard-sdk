@@ -9,28 +9,27 @@ using System.Diagnostics;
 using System.Globalization;
 using System.Reflection;
 using System.Resources;
-using System.Threading;
 
 namespace Microsoft.HealthVault
 {
     /// <summary>
-    /// Helps manage ResourceManager instances. 
+    /// Helps manage ResourceManager instances.
     /// </summary>
-    /// 
+    ///
     /// <remarks>
     /// Due to the heavy-weight nature of ResourceManager it is a good idea
     /// to cache instances whenever possible. This class uses a static member
     /// to cache all ResourceManager instances that have been retrieved using
     /// the assembly and base name.
     /// </remarks>
-    /// 
+    ///
     internal static class ResourceRetriever
     {
         /// <summary>
         /// Maintains a cache of ResourceManager objects. This is a dictionary
-        /// that is keyed based on the full name of the default resource assembly. 
-        /// The value is another dictionary that is keyed based on the base 
-        /// name for the resource that is being retrieved. The value for this 
+        /// that is keyed based on the full name of the default resource assembly.
+        /// The value is another dictionary that is keyed based on the base
+        /// name for the resource that is being retrieved. The value for this
         /// dictionary is the ResourceManager.
         /// </summary>
         static
@@ -45,43 +44,43 @@ namespace Microsoft.HealthVault
         /// on the <see cref="ResourceManager"/> instance from which the string
         /// resource was retrieved.
         /// </summary>
-        /// 
+        ///
         /// <remarks>
-        /// This cache is only used if GetResourceString or FormatResourceString is used to 
-        /// retrieve the resource. If the caller calls GetResourceManager the resources 
+        /// This cache is only used if GetResourceString or FormatResourceString is used to
+        /// retrieve the resource. If the caller calls GetResourceManager the resources
         /// returned from the ResourceManager instance are not cached here though they
-        /// may be cached by the ResourceManager under some circumstances. According to 
+        /// may be cached by the ResourceManager under some circumstances. According to
         /// the BCL team they made a change to ResourceManager to cache resources less
         /// frequently.
         /// </remarks>
-        /// 
+        ///
         private static Dictionary<ResourceManager, Dictionary<string, Dictionary<string, string>>> _stringResources =
             new Dictionary<ResourceManager, Dictionary<string, Dictionary<string, string>>>();
 
         /// <summary>
         /// Used to synchronize access to the ResourceRetriever
         /// </summary>
-        static object syncRoot = new Object();
+        private static object syncRoot = new Object();
 
         /// <summary>
-        /// Gets the ResourceManager from the cache or gets an instance of 
-        /// the ResourceManager and returns it if it isn't already present 
+        /// Gets the ResourceManager from the cache or gets an instance of
+        /// the ResourceManager and returns it if it isn't already present
         /// in the cache.
         /// </summary>
-        /// 
+        ///
         /// <param name="assembly">
         /// The assembly to be used as the base for resource lookup.
         /// </param>
-        /// 
+        ///
         /// <param name="baseName">
         /// The base name of the resources to get the ResourceManager for.
         /// </param>
-        /// 
+        ///
         /// <returns>
-        /// A ResourceManager instance for the assembly and base name that 
+        /// A ResourceManager instance for the assembly and base name that
         /// were specified.
         /// </returns>
-        /// 
+        ///
         internal static ResourceManager GetResourceManager(
             Assembly assembly,
             string baseName)
@@ -116,7 +115,7 @@ namespace Microsoft.HealthVault
                     {
                         if (baseNameCache.ContainsKey(baseName))
                         {
-                            // Now do the lookup based on the resource 
+                            // Now do the lookup based on the resource
                             // base name
                             manager = baseNameCache[baseName];
                         }
@@ -143,8 +142,8 @@ namespace Microsoft.HealthVault
                 }
                 else
                 {
-                    // Since the assembly wasn't cached, we have to create 
-                    // base name cache entry and then add it into the cache 
+                    // Since the assembly wasn't cached, we have to create
+                    // base name cache entry and then add it into the cache
                     // keyed by the assembly location
 
                     Dictionary<string, ResourceManager> baseNameCacheEntry =
@@ -172,33 +171,33 @@ namespace Microsoft.HealthVault
         /// Gets the string from the resource manager based on the base name,
         /// and resource ID specified
         /// </summary>
-        /// 
+        ///
         /// <param name="resourceId">
         /// Resource ID for which the localized string needs to be retrieved
         /// </param>
-        /// 
+        ///
         /// <returns>
         /// Localized string, or null if the string does not exist
         /// </returns>
-        /// 
+        ///
         /// <remarks>
         /// The current thread's UI culture is used.
         /// </remarks>
-        /// 
+        ///
         /// <exception cref="ArgumentException">
-        /// ArgumentException if  
+        /// ArgumentException if
         /// <paramref name="resourceId"/> is null or empty.
         /// </exception>
-        /// 
+        ///
         /// <exception cref="InvalidOperationException">
         /// If the value of the specified resource is not a string.
         /// </exception>
-        /// 
+        ///
         /// <exception cref="MissingManifestResourceException">
-        /// If no usable set of resources have been found, and there are no 
+        /// If no usable set of resources have been found, and there are no
         /// neutral culture resources.
         /// </exception>
-        /// 
+        ///
         internal static string GetResourceString(
             string resourceId)
         {
@@ -213,37 +212,37 @@ namespace Microsoft.HealthVault
         /// Gets the string from the resource manager based on the base name,
         /// and resource ID specified
         /// </summary>
-        /// 
+        ///
         /// <param name="baseName">
         /// The base name of the resource to retrieve the string from.
         /// </param>
-        /// 
+        ///
         /// <param name="resourceId">
         /// Resource ID for which the localized string needs to be retrieved
         /// </param>
-        /// 
+        ///
         /// <returns>
         /// Localized string, or null if the string does not exist
         /// </returns>
-        /// 
+        ///
         /// <remarks>
         /// The current thread's UI culture is used.
         /// </remarks>
-        /// 
+        ///
         /// <exception cref="ArgumentException">
-        /// ArgumentException if <paramref name="baseName"/> or 
+        /// ArgumentException if <paramref name="baseName"/> or
         /// <paramref name="resourceId"/> are null or empty.
         /// </exception>
-        /// 
+        ///
         /// <exception cref="InvalidOperationException">
         /// If the value of the specified resource is not a string.
         /// </exception>
-        /// 
+        ///
         /// <exception cref="MissingManifestResourceException">
-        /// If no usable set of resources have been found, and there are no 
+        /// If no usable set of resources have been found, and there are no
         /// neutral culture resources.
         /// </exception>
-        /// 
+        ///
         internal static string GetResourceString(
             string baseName,
             string resourceId)
@@ -259,41 +258,41 @@ namespace Microsoft.HealthVault
         /// Gets the string from the resource manager based on the assembly,
         /// base name, resource ID, and culture specified
         /// </summary>
-        /// 
+        ///
         /// <param name="assembly">
         /// The base assembly from which to get the resources from.
         /// </param>
-        /// 
+        ///
         /// <param name="baseName">
         /// The base name of the resource to retrieve the string from.
         /// </param>
-        /// 
+        ///
         /// <param name="resourceId">
         /// Resource ID for which the localized string needs to be retrieved
         /// </param>
-        /// 
+        ///
         /// <returns>
         /// Localized String, or null if the string does not exist
         /// </returns>
-        /// 
+        ///
         /// <remarks>
         /// The current thread's UI culture is used.
         /// </remarks>
-        /// 
+        ///
         /// <exception cref="ArgumentException">
-        /// ArgumentException if <paramref name="baseName"/> or 
+        /// ArgumentException if <paramref name="baseName"/> or
         /// <paramref name="resourceId"/> are null or empty.
         /// </exception>
-        /// 
+        ///
         /// <exception cref="InvalidOperationException">
         /// If the value of the specified resource is not a string.
         /// </exception>
-        /// 
+        ///
         /// <exception cref="MissingManifestResourceException">
-        /// If no usable set of resources have been found, and there are no 
+        /// If no usable set of resources have been found, and there are no
         /// neutral culture resources.
         /// </exception>
-        /// 
+        ///
         internal static string GetResourceString(
             Assembly assembly,
             string baseName,
@@ -358,41 +357,41 @@ namespace Microsoft.HealthVault
 
         /// <summary>
         /// Gets a template string from the resource manager using the
-        /// calling assembly, and the current thread's UI culture, then 
+        /// calling assembly, and the current thread's UI culture, then
         /// inserts parameters using String.Format.
         /// </summary>
-        /// 
+        ///
         /// <param name="resourceId">
         /// Resource ID for which the localized string needs to be retrieved
         /// </param>
-        /// 
+        ///
         /// <param name="args">
         /// String.Format insertion parameters
         /// </param>
-        /// 
+        ///
         /// <returns>
         /// Localized string, or null if the string does not exist
         /// </returns>
-        /// 
+        ///
         /// <exception cref="ArgumentException">
-        /// ArgumentException if <paramref name="resourceId"/> 
+        /// ArgumentException if <paramref name="resourceId"/>
         /// is null or empty.
         /// </exception>
-        /// 
+        ///
         /// <exception cref="InvalidOperationException">
         /// If the value of the specified resource is not a string.
         /// </exception>
-        /// 
+        ///
         /// <exception cref="MissingManifestResourceException">
-        /// If no usable set of resources have been found, and there are no 
+        /// If no usable set of resources have been found, and there are no
         /// neutral culture resources.
         /// </exception>
-        /// 
+        ///
         /// <exception cref="FormatException">
-        /// If <paramref name="args"/> could not be formatted into the 
+        /// If <paramref name="args"/> could not be formatted into the
         /// resource string.
-        /// </exception> 
-        /// 
+        /// </exception>
+        ///
         internal static string FormatResourceString(
             string resourceId,
             params object[] args)
@@ -425,29 +424,29 @@ namespace Microsoft.HealthVault
         /// <summary>
         /// Gets the current representation of the space character.
         /// </summary>
-        /// 
+        ///
         /// <param name="baseName">
         /// The base name of the resource to retrieve the string from.
         /// </param>
-        /// 
+        ///
         /// <returns>
         /// Localized space, or null if the XSpace string cannot be found.
         /// </returns>
-        /// 
+        ///
         /// <exception cref="ArgumentException">
-        /// ArgumentException if <paramref name="baseName"/> 
+        /// ArgumentException if <paramref name="baseName"/>
         /// is null or empty.
         /// </exception>
-        /// 
+        ///
         /// <exception cref="InvalidOperationException">
         /// If the value of the specified resource is not a string.
         /// </exception>
-        /// 
+        ///
         /// <exception cref="MissingManifestResourceException">
-        /// If no usable set of resources have been found, and there are no 
+        /// If no usable set of resources have been found, and there are no
         /// neutral culture resources.
         /// </exception>
-        /// 
+        ///
         internal static string GetSpace(string baseName)
         {
             string xSpace = GetResourceString(
@@ -464,33 +463,33 @@ namespace Microsoft.HealthVault
         }
 
         /// <summary>
-        /// Creates a Resource manager instance based on the assembly 
+        /// Creates a Resource manager instance based on the assembly
         /// specified.
         /// </summary>
-        /// 
+        ///
         /// <param name="baseName">
-        /// The root name of the resources. 
-        /// For example, the root name for the resource file 
-        /// named "MyResource.en-US.resources" is "MyResource". 
+        /// The root name of the resources.
+        /// For example, the root name for the resource file
+        /// named "MyResource.en-US.resources" is "MyResource".
         /// </param>
-        /// 
+        ///
         /// <param name="assemblyToUse">
         /// The main Assembly for the resources
         /// </param>
-        /// 
+        ///
         /// <param name="usingResourceSet">
-        /// The Type of the custom ResourceSet to use. 
+        /// The Type of the custom ResourceSet to use.
         /// If a null reference, the default runtime ResourceSet is used
         /// </param>
-        /// 
+        ///
         /// <returns>
         /// Resource Manager instance
         /// </returns>
-        /// 
+        ///
         /// <exception cref="ArgumentException">
         /// Thrown if the resource manager instance could not be created
         /// </exception>
-        /// 
+        ///
         private static ResourceManager InitRMWithAssembly(
             string baseName,
             Assembly assemblyToUse,
@@ -527,6 +526,5 @@ namespace Microsoft.HealthVault
 
             return rm;
         }
-
     } // class ResourceRetriever
 } // namespace Microsoft.Health.Utility

@@ -17,7 +17,7 @@ namespace Microsoft.HealthVault.PlatformPrimitives
     /// Provides low-level access to the HealthVault message operations.
     /// </summary>
     /// <remarks>
-    /// <see cref="HealthVaultPlatform"/> uses this class to perform operations. Set 
+    /// <see cref="HealthVaultPlatform"/> uses this class to perform operations. Set
     /// HealthVaultPlatformApplication.Current to a derived class to intercept all message calls.
     /// </remarks>
 
@@ -26,18 +26,18 @@ namespace Microsoft.HealthVault.PlatformPrimitives
         /// <summary>
         /// Enables mocking of calls to this class.
         /// </summary>
-        /// 
+        ///
         /// <remarks>
         /// The calling class should pass in a class that derives from this
-        /// class and overrides the calls to be mocked. 
+        /// class and overrides the calls to be mocked.
         /// </remarks>
-        /// 
+        ///
         /// <param name="mock">The mocking class.</param>
-        /// 
+        ///
         /// <exception cref="InvalidOperationException">
         /// There is already a mock registered for this class.
         /// </exception>
-        /// 
+        ///
         public static void EnableMock(HealthVaultPlatformApplication mock)
         {
             Validator.ThrowInvalidIf(_saved != null, "ClassAlreadyMocked");
@@ -49,11 +49,11 @@ namespace Microsoft.HealthVault.PlatformPrimitives
         /// <summary>
         /// Removes mocking of calls to this class.
         /// </summary>
-        /// 
+        ///
         /// <exception cref="InvalidOperationException">
         /// There is no mock registered for this class.
         /// </exception>
-        /// 
+        ///
         public static void DisableMock()
         {
             Validator.ThrowInvalidIfNull(_saved, "ClassIsntMocked");
@@ -61,6 +61,7 @@ namespace Microsoft.HealthVault.PlatformPrimitives
             _current = _saved;
             _saved = null;
         }
+
         internal static HealthVaultPlatformApplication Current
         {
             get { return _current; }
@@ -72,37 +73,37 @@ namespace Microsoft.HealthVault.PlatformPrimitives
 
         /// <summary>
         /// Gets information about people authorized for an application.
-        /// </summary>                
-        /// 
+        /// </summary>
+        ///
         /// <remarks>
-        /// The returned IEnumerable iterator will access the HealthVault service 
-        /// across the network. See <see cref="GetAuthorizedPeopleSettings"/> for applicable 
+        /// The returned IEnumerable iterator will access the HealthVault service
+        /// across the network. See <see cref="GetAuthorizedPeopleSettings"/> for applicable
         /// settings.
         /// </remarks>
-        /// 
+        ///
         /// <param name="connection">The connection to use to perform the operation. This connection
         /// must be application-level. </param>
         ///
         /// <param name="settings">
-        /// The <see cref="GetAuthorizedPeopleSettings" /> object used to configure the 
+        /// The <see cref="GetAuthorizedPeopleSettings" /> object used to configure the
         /// IEnumerable iterator returned by this method.
         /// </param>
-        /// 
+        ///
         /// <returns>
-        /// An IEnumerable iterator of <see cref="PersonInfo"/> objects representing 
+        /// An IEnumerable iterator of <see cref="PersonInfo"/> objects representing
         /// people authorized for the application.
-        /// </returns>        
-        /// 
+        /// </returns>
+        ///
         /// <exception cref="HealthServiceException">
-        /// The HealthVault service returned an error. The retrieval can be retried from the 
-        /// current position by calling this method again and using the last successfully 
-        /// retrieved person Id for <see cref="GetAuthorizedPeopleSettings.StartingPersonId"/>.        
+        /// The HealthVault service returned an error. The retrieval can be retried from the
+        /// current position by calling this method again and using the last successfully
+        /// retrieved person Id for <see cref="GetAuthorizedPeopleSettings.StartingPersonId"/>.
         /// </exception>
-        /// 
+        ///
         /// <exception cref="ArgumentNullException">
         /// <paramref name="settings"/> is null.
         /// </exception>
-        /// 
+        ///
         public virtual IEnumerable<PersonInfo> GetAuthorizedPeople(
             ApplicationConnection connection,
             GetAuthorizedPeopleSettings settings)
@@ -176,7 +177,7 @@ namespace Microsoft.HealthVault.PlatformPrimitives
                     writer.WriteElementString("num-results", numResults.ToString(CultureInfo.InvariantCulture));
                 }
 
-                writer.WriteEndElement(); // parameters                
+                writer.WriteEndElement(); // parameters
                 writer.Flush();
             }
             request.Parameters = requestParameters.ToString();
@@ -197,7 +198,6 @@ namespace Microsoft.HealthVault.PlatformPrimitives
                 {
                     PersonInfo personInfo = PersonInfo.CreateFromXml(connection, nav);
                     personInfos.Add(personInfo);
-
                 } while (nav.MoveToNext("person-info", String.Empty));
 
                 nav.MoveToNext();
@@ -219,37 +219,37 @@ namespace Microsoft.HealthVault.PlatformPrimitives
         /// <summary>
         /// Gets the application configuration information for the calling application.
         /// </summary>
-        /// 
+        ///
         /// <param name="connection">The connection to use to perform the operation. This connection
         /// must be application level. </param>
         ///
         /// <param name="allLanguages">
-        /// A boolean value indicating whether the localized values all languages should be 
-        /// returned, just one language. This affects all properties which can have multiple 
-        /// localized values, including <see cref="ApplicationInfo.CultureSpecificNames"/>, 
+        /// A boolean value indicating whether the localized values all languages should be
+        /// returned, just one language. This affects all properties which can have multiple
+        /// localized values, including <see cref="ApplicationInfo.CultureSpecificNames"/>,
         /// <see cref="ApplicationInfo.CultureSpecificDescriptions"/>,
-        /// <see cref="ApplicationInfo.CultureSpecificAuthorizationReasons"/>, 
+        /// <see cref="ApplicationInfo.CultureSpecificAuthorizationReasons"/>,
         /// <see cref="ApplicationInfo.LargeLogo"/>,
         /// <see cref="ApplicationInfo.SmallLogo"/>,
         /// <see cref="ApplicationInfo.PrivacyStatement"/>,
         /// <see cref="ApplicationInfo.TermsOfUse"/>,
         /// and <see cref="ApplicationInfo.DtcSuccessMessage"/>
         /// </param>
-        /// 
+        ///
         /// <returns>
         /// An ApplicationInfo object for the calling application.
         /// </returns>
-        /// 
+        ///
         /// <remarks>
-        /// This method always calls the HealthVault service to get the latest 
-        /// information. It returns installation configuration about the calling 
+        /// This method always calls the HealthVault service to get the latest
+        /// information. It returns installation configuration about the calling
         /// application.
         /// </remarks>
-        /// 
+        ///
         /// <exception cref="HealthServiceException">
         /// The HealthVault service returned an error.
         /// </exception>
-        /// 
+        ///
         public virtual ApplicationInfo GetApplicationInfo(
             HealthServiceConnection connection,
             Boolean allLanguages)
@@ -287,10 +287,10 @@ namespace Microsoft.HealthVault.PlatformPrimitives
         #region GetUpdatedRecordsForApplication
 
         /// <summary>
-        /// Gets a list of health record IDs for the current application, 
+        /// Gets a list of health record IDs for the current application,
         /// that optionally have been updated since a specified date.
         /// </summary>
-        /// 
+        ///
         /// <param name="connection">The connection to use to perform the operation. This connection
         /// must be application level. </param>
         ///
@@ -298,11 +298,11 @@ namespace Microsoft.HealthVault.PlatformPrimitives
         /// Date that is used to filter health record IDs according to whether or not they have
         /// been updated since the specified date.
         /// </param>
-        /// 
+        ///
         /// <returns>
         /// List of health record IDs filtered by any specified input parameters.
         /// </returns>
-        /// 
+        ///
         public virtual IList<Guid> GetUpdatedRecordsForApplication(
             HealthServiceConnection connection,
             DateTime? updatedDate)
@@ -316,10 +316,10 @@ namespace Microsoft.HealthVault.PlatformPrimitives
         }
 
         /// <summary>
-        /// Gets a list of <see cref="HealthRecordUpdateInfo"/> objects for the current application, 
+        /// Gets a list of <see cref="HealthRecordUpdateInfo"/> objects for the current application,
         /// that optionally have been updated since a specified date.
         /// </summary>
-        /// 
+        ///
         /// <param name="connection">The connection to use to perform the operation. This connection
         /// must be application level. </param>
         ///
@@ -327,11 +327,11 @@ namespace Microsoft.HealthVault.PlatformPrimitives
         /// Date that is used to filter health record IDs according to whether or not they have
         /// been updated since the specified date.
         /// </param>
-        /// 
+        ///
         /// <returns>
         /// List of <see cref="HealthRecordUpdateInfo"/> objects filtered by any specified input parameters.
         /// </returns>
-        /// 
+        ///
         public virtual IList<HealthRecordUpdateInfo> GetUpdatedRecordInfoForApplication(
             HealthServiceConnection connection,
             DateTime? updatedDate)
@@ -414,14 +414,14 @@ namespace Microsoft.HealthVault.PlatformPrimitives
         /// Generates a new signup code that should be passed to HealthVault Shell in order
         /// to create a new user account.
         /// </summary>
-        /// 
+        ///
         /// <param name="connection">The connection to use to perform the operation. This connection
         /// must be application level. </param>
         ///
         /// <returns>
         /// A signup code that can be used to create an account.
         /// </returns>
-        /// 
+        ///
         public virtual string NewSignupCode(HealthServiceConnection connection)
         {
             HealthServiceRequest request =
@@ -440,4 +440,3 @@ namespace Microsoft.HealthVault.PlatformPrimitives
         #endregion
     }
 }
-

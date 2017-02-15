@@ -3,7 +3,6 @@
 // see http://www.microsoft.com/resources/sharedsource/licensingbasics/sharedsourcelicenses.mspx.
 // All other rights reserved.
 
-
 using System;
 using System.Xml;
 using System.Xml.XPath;
@@ -13,37 +12,37 @@ namespace Microsoft.HealthVault.ItemTypes
     /// <summary>
     /// Represents a health record item type that encapsulates a medical annotation.
     /// </summary>
-    /// 
+    ///
     public class Annotation : HealthRecordItem
     {
         /// <summary>
         /// Creates a new instance of the <see cref="Annotation"/> class with default values.
         /// </summary>
-        /// 
+        ///
         /// <remarks>
         /// The item is not added to the health record until the
-        /// <see cref="HealthRecordAccessor.NewItem(HealthRecordItem)"/> method 
+        /// <see cref="HealthRecordAccessor.NewItem(HealthRecordItem)"/> method
         /// is called.
         /// </remarks>
-        /// 
+        ///
         public Annotation()
             : base(TypeId)
         {
         }
 
         /// <summary>
-        /// Creates a new instance of the <see cref="Annotation"/> class with 
+        /// Creates a new instance of the <see cref="Annotation"/> class with
         /// the specified date and time.
         /// </summary>
-        /// 
+        ///
         /// <param name="when">
         /// The date/time when the annotation was taken.
         /// </param>
-        /// 
+        ///
         /// <exception cref="ArgumentException">
         /// The <paramref name="when"/> parameter is <b>null</b>.
         /// </exception>
-        /// 
+        ///
         public Annotation(HealthServiceDateTime when)
             : base(TypeId)
         {
@@ -53,27 +52,27 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <summary>
         /// Retrieves the unique identifier for the item type.
         /// </summary>
-        /// 
+        ///
         /// <value>
         /// A GUID.
         /// </value>
-        /// 
+        ///
         public new static readonly Guid TypeId =
             new Guid("7AB3E662-CC5B-4BE2-BF38-78F8AAD5B161");
 
         /// <summary>
         /// Populates this <see cref="Annotation"/> instance from the data in the XML.
         /// </summary>
-        /// 
+        ///
         /// <param name="typeSpecificXml">
         /// The XML to get the annotation data from.
         /// </param>
-        /// 
+        ///
         /// <exception cref="InvalidOperationException">
         /// The first node in <paramref name="typeSpecificXml"/> is not
         /// an annotation node.
         /// </exception>
-        /// 
+        ///
         protected override void ParseXml(IXPathNavigable typeSpecificXml)
         {
             XPathNavigator itemNav =
@@ -84,10 +83,10 @@ namespace Microsoft.HealthVault.ItemTypes
             _when = new HealthServiceDateTime();
             _when.ParseXml(itemNav.SelectSingleNode("when"));
 
-            _content = 
+            _content =
                 XPathHelper.GetOptNavValue(itemNav, "content");
 
-            _author = 
+            _author =
                 XPathHelper.GetOptNavValue<PersonItem>(itemNav, "author");
 
             _classification =
@@ -103,19 +102,19 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <summary>
         /// Writes the annotation data to the specified XmlWriter.
         /// </summary>
-        /// 
+        ///
         /// <param name="writer">
         /// The XmlWriter to write the annotation data to.
         /// </param>
-        /// 
+        ///
         /// <exception cref="ArgumentNullException">
         /// If <paramref name="writer"/> is <b>null</b>.
         /// </exception>
-        /// 
+        ///
         /// <exception cref="HealthRecordItemSerializationException">
         /// A mandatory property is <b>null</b>.
         /// </exception>
-        /// 
+        ///
         public override void WriteXml(XmlWriter writer)
         {
             Validator.ThrowIfArgumentNull(writer, "writer", "WriteXmlNullWriter");
@@ -129,20 +128,20 @@ namespace Microsoft.HealthVault.ItemTypes
 
             // <content>
             XmlWriterHelper.WriteOptString(
-                writer, 
-                "content", 
+                writer,
+                "content",
                 _content);
 
             // <author>
             XmlWriterHelper.WriteOpt(
-                writer, 
-                "author", 
+                writer,
+                "author",
                 Author);
 
             // <classification>
             XmlWriterHelper.WriteOptString(
-                writer, 
-                "classification", 
+                writer,
+                "classification",
                 _classification);
 
             // <index>
@@ -164,16 +163,16 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <summary>
         /// Gets or sets the date/time when the annotation was created.
         /// </summary>
-        /// 
+        ///
         /// <value>
-        /// A <see cref="HealthServiceDateTime"/>. The default value is 
+        /// A <see cref="HealthServiceDateTime"/>. The default value is
         /// the current year, month, and day.
         /// </value>
-        /// 
+        ///
         /// <exception cref="ArgumentNullException">
         /// The <paramref name="value"/> parameter is <b>null</b>.
         /// </exception>
-        /// 
+        ///
         public HealthServiceDateTime When
         {
             get { return _when; }
@@ -188,20 +187,20 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <summary>
         /// Gets or sets the content for the annotation.
         /// </summary>
-        /// 
+        ///
         /// <value>
         /// A string representing the content.
         /// </value>
-        /// 
+        ///
         /// <remarks>
-        /// Set the value to <b>null</b> if the content should not be 
+        /// Set the value to <b>null</b> if the content should not be
         /// stored.
         /// </remarks>
-        /// 
+        ///
         /// <exception cref="ArgumentException">
         /// If <paramref name="value"/> contains only whitespace.
         /// </exception>
-        /// 
+        ///
         public string Content
         {
             get { return _content; }
@@ -216,16 +215,16 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <summary>
         /// Gets or sets the author contact information.
         /// </summary>
-        /// 
+        ///
         /// <value>
         /// A <see cref="PersonItem"/> representing the author contact information.
         /// </value>
-        /// 
+        ///
         /// <remarks>
         /// Set the value to <b>null</b> if the author contact information
         /// should not be stored.
         /// </remarks>
-        /// 
+        ///
         public PersonItem Author
         {
             get { return _author; }
@@ -236,23 +235,23 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <summary>
         /// Gets or sets the classification for the annotation.
         /// </summary>
-        /// 
+        ///
         /// <value>
         /// A string representing the classification.
         /// </value>
-        /// 
+        ///
         /// <remarks>
         /// Set the value to <b>null</b> if the classification should not be fstored.
         /// </remarks>
-        /// 
+        ///
         /// <exception cref="ArgumentException">
         /// If <paramref name="value"/> contains only whitespace.
         /// </exception>
-        /// 
+        ///
         public string Classification
         {
             get { return _classification; }
-            set 
+            set
             {
                 Validator.ThrowIfStringIsWhitespace(value, "Classification");
                 _classification = value;
@@ -263,24 +262,24 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <summary>
         /// Gets or sets the index for the annotation.
         /// </summary>
-        /// 
+        ///
         /// <value>
         /// A string representing the index.
         /// </value>
-        /// 
+        ///
         /// <remarks>
-        /// Set the value to <b>null</b> if the index should not be 
+        /// Set the value to <b>null</b> if the index should not be
         /// stored.
         /// </remarks>
-        /// 
+        ///
         /// <exception cref="ArgumentException">
         /// If <paramref name="value"/> contains only whitespace.
         /// </exception>
-        /// 
+        ///
         public string Index
         {
             get { return _index; }
-            set 
+            set
             {
                 Validator.ThrowIfStringIsWhitespace(value, "Index");
                 _index = value;
@@ -291,24 +290,24 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <summary>
         /// Gets or sets the version for the annotation.
         /// </summary>
-        /// 
+        ///
         /// <value>
         /// A string representing the version.
         /// </value>
-        /// 
+        ///
         /// <remarks>
-        /// Set the value to <b>null</b> if the version should not be 
+        /// Set the value to <b>null</b> if the version should not be
         /// stored.
         /// </remarks>
-        /// 
+        ///
         /// <exception cref="ArgumentException">
         /// If <paramref name="value"/> contains only whitespace.
         /// </exception>
-        /// 
+        ///
         public string Version
         {
             get { return _version; }
-            set 
+            set
             {
                 Validator.ThrowIfStringIsWhitespace(value, "Version");
                 _version = value;
@@ -319,11 +318,11 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <summary>
         /// Gets a string representation of the annotation item.
         /// </summary>
-        /// 
+        ///
         /// <returns>
         /// A string representation of the annotation item.
         /// </returns>
-        /// 
+        ///
         public override string ToString()
         {
             string result;

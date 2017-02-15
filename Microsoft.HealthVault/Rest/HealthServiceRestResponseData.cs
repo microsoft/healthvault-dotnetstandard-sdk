@@ -20,10 +20,10 @@ namespace Microsoft.HealthVault.Rest
         /// <summary>
         /// Gets the status code of the response.
         /// </summary>
-        /// 
+        ///
         /// <value>
         /// A <see cref="HttpStatusCode"/> value.
-        /// </value>        
+        /// </value>
         public HttpStatusCode StatusCode
         {
             get
@@ -36,7 +36,7 @@ namespace Microsoft.HealthVault.Rest
                 _statusCode = value;
             }
         }
-        
+
         private HttpStatusCode _statusCode;
 
         /// <summary>

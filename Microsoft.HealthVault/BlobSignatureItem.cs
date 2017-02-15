@@ -3,8 +3,6 @@
 // see http://www.microsoft.com/resources/sharedsource/licensingbasics/sharedsourcelicenses.mspx.
 // All other rights reserved.
 
-using System;
-
 namespace Microsoft.HealthVault
 {
     /// <summary>
@@ -12,8 +10,8 @@ namespace Microsoft.HealthVault
     /// </summary>
     /// <remarks>
     /// For more details please see <see cref="HealthRecordItemSignature" />.
-    /// </remarks>    
-    /// 
+    /// </remarks>
+    ///
     public class BlobSignatureItem
     {
         /// <summary>
@@ -22,7 +20,7 @@ namespace Microsoft.HealthVault
         /// <param name="name"></param>
         /// <param name="contentType"></param>
         /// <param name="hashInfo"></param>
-        /// 
+        ///
         /// <exception cref="ArgumentNullException">
         /// If <paramref name="name"/> or <paramref name="contentType"/> are <b>null</b>.
         /// </exception>
@@ -46,7 +44,7 @@ namespace Microsoft.HealthVault
         private string _name;
 
         /// <summary>
-        /// Gets the content type of the BLOB. 
+        /// Gets the content type of the BLOB.
         /// </summary>
         public string ContentType
         {

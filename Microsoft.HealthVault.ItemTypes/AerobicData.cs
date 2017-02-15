@@ -3,7 +3,6 @@
 // see http://www.microsoft.com/resources/sharedsource/licensingbasics/sharedsourcelicenses.mspx.
 // All other rights reserved.
 
-
 using System;
 using System.Globalization;
 using System.Xml;
@@ -14,26 +13,26 @@ namespace Microsoft.HealthVault.ItemTypes
     /// <summary>
     /// Represents data about an aerobic session.
     /// </summary>
-    /// 
+    ///
     /// <remarks>
     /// Aerobic data can represent the data for an entire session, the data
     /// for a single lap, or the desired aerobic session for an aerobic goal.
     /// </remarks>
-    /// 
+    ///
     public class AerobicData : HealthRecordItemData
     {
-        /// <summary> 
+        /// <summary>
         /// Populates the data for the length from the XML.
         /// </summary>
-        /// 
-        /// <param name="navigator"> 
+        ///
+        /// <param name="navigator">
         /// The XML node representing the length.
         /// </param>
-        /// 
+        ///
         /// <exception cref="ArgumentNullException">
         /// The <paramref name="navigator"/> parameter is <b>null</b>.
         /// </exception>
-        /// 
+        ///
         public override void ParseXml(XPathNavigator navigator)
         {
             Validator.ThrowIfNavigatorNull(navigator);
@@ -126,7 +125,6 @@ namespace Microsoft.HealthVault.ItemTypes
                     navigator,
                     "min-power");
 
-
             _peakTorque =
                 XPathHelper.GetOptNavValue<TorqueMeasurement>(
                     navigator,
@@ -140,8 +138,8 @@ namespace Microsoft.HealthVault.ItemTypes
             _minTorque =
                 XPathHelper.GetOptNavValue<TorqueMeasurement>(
                     navigator,
-                    "min-torque"); 
-            
+                    "min-torque");
+
             _leftRightBalance =
                 XPathHelper.GetOptNavValueAsDouble(
                     navigator,
@@ -155,7 +153,6 @@ namespace Microsoft.HealthVault.ItemTypes
 
             _minCadence =
                 XPathHelper.GetOptNavValueAsDouble(navigator, "min-cadence");
-
 
             _peakTemperature =
                 XPathHelper.GetOptNavValue<TemperatureMeasurement>(
@@ -213,26 +210,26 @@ namespace Microsoft.HealthVault.ItemTypes
                     "aerobic-step-minutes");
         }
 
-        /// <summary> 
+        /// <summary>
         /// Writes the aerobic data to the specified XML writer.
         /// </summary>
-        /// 
+        ///
         /// <param name="nodeName">
         /// The name of the outer element for the aerobic data.
         /// </param>
-        /// 
-        /// <param name="writer"> 
+        ///
+        /// <param name="writer">
         /// The XmlWriter to write the aerobic data to.
         /// </param>
-        /// 
+        ///
         /// <exception cref="ArgumentException">
         /// The <paramref name="nodeName"/> parameter is <b>null</b> or empty.
         /// </exception>
-        /// 
+        ///
         /// <exception cref="ArgumentNullException">
         /// The <paramref name="writer"/> parameter is <b>null</b>.
         /// </exception>
-        /// 
+        ///
         public override void WriteXml(string nodeName, XmlWriter writer)
         {
             Validator.ThrowIfStringNullOrEmpty(nodeName, "nodeName");
@@ -255,7 +252,7 @@ namespace Microsoft.HealthVault.ItemTypes
                 // <minutes>
                 writer.WriteElementString(
                     "minutes",
-                    XmlConvert.ToString((double) _minutes));
+                    XmlConvert.ToString((double)_minutes));
             }
 
             if (_intensity != RelativeRating.None)
@@ -299,7 +296,6 @@ namespace Microsoft.HealthVault.ItemTypes
                 writer,
                 "energy-from-fat",
                 _energyFromFat);
-
 
             _peakSpeed?.WriteXml("peak-speed", writer);
 
@@ -361,7 +357,7 @@ namespace Microsoft.HealthVault.ItemTypes
             XmlWriterHelper.WriteOpt(writer, "elevation-loss", _elevationLoss);
             XmlWriterHelper.WriteOptInt(writer, "number-of-steps", _numberOfSteps);
             XmlWriterHelper.WriteOptInt(writer, "number-of-aerobic-steps", _numberOfAerobicSteps);
-            XmlWriterHelper.WriteOptDouble(writer, "aerobic-step-minutes", _aerobicStepMinutes);            
+            XmlWriterHelper.WriteOptDouble(writer, "aerobic-step-minutes", _aerobicStepMinutes);
 
             writer.WriteEndElement();
         }
@@ -369,12 +365,12 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <summary>
         /// Gets or sets the mode by which the aerobic session occurred.
         /// </summary>
-        /// 
+        ///
         /// <remarks>
         /// The mode of the aerobic session include actions such as bike, run, or
         /// swim and are defined by the HealthVault dictionary.
         /// </remarks>
-        /// 
+        ///
         public CodableValue Mode
         {
             get { return _mode; }
@@ -385,15 +381,15 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <summary>
         /// Gets or sets the length traversed by this aerobic session.
         /// </summary>
-        /// 
+        ///
         /// <value>
         /// A <see cref="Length"/> value representing the distance.
         /// </value>
-        /// 
+        ///
         /// <remarks>
         /// Set the value to <b>null</b> if there is no distance.
         /// </remarks>
-        /// 
+        ///
         public Length Distance
         {
             get { return _distance; }
@@ -420,19 +416,19 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <summary>
         /// Gets or sets the duration of the session in minutes.
         /// </summary>
-        /// 
+        ///
         /// <remarks>
         /// Set the value to <b>null</b> if there is no duration.
         /// </remarks>
-        /// 
+        ///
         /// <exception cref="ArgumentOutOfRangeException">
         /// The <paramref name="value"/> parameter is negative or zero when set.
         /// </exception>
-        /// 
+        ///
         public double? Duration
         {
             get { return _minutes; }
-            set 
+            set
             {
                 ThrowIfValueIsNegative(value, "AerobicSessionDurationNotPositive");
                 _minutes = value;
@@ -441,10 +437,10 @@ namespace Microsoft.HealthVault.ItemTypes
         private double? _minutes;
 
         /// <summary>
-        /// Gets the duration of the aerobic session as a 
+        /// Gets the duration of the aerobic session as a
         /// <see cref="System.TimeSpan"/>.
         /// </summary>
-        /// 
+        ///
         public TimeSpan DurationAsTimeSpan
         {
             get
@@ -469,12 +465,12 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <summary>
         /// Gets or sets the relative intensity of the session.
         /// </summary>
-        /// 
+        ///
         /// <remarks>
-        /// Set the value to <see cref="RelativeRating.None"/> if there is 
+        /// Set the value to <see cref="RelativeRating.None"/> if there is
         /// no intensity.
         /// </remarks>
-        /// 
+        ///
         public RelativeRating Intensity
         {
             get { return _intensity; }
@@ -485,16 +481,16 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <summary>
         /// Gets or sets the peak heart rate for the session.
         /// </summary>
-        /// 
+        ///
         /// <remarks>
         /// If there is no heart rate data for the session, the value should
         /// be set to <b>null</b>.
         /// </remarks>
-        /// 
+        ///
         /// <exception cref="ArgumentOutOfRangeException">
         /// The <paramref name="value"/> parameter is less than or equal to zero on set.
         /// </exception>
-        /// 
+        ///
         public int? PeakHeartRate
         {
             get { return _peakHr; }
@@ -509,20 +505,20 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <summary>
         /// Gets or sets the average heart rate for the session.
         /// </summary>
-        /// 
+        ///
         /// <remarks>
         /// If there is no heart rate data for the session, the value should
         /// be set to <b>null</b>.
         /// </remarks>
-        /// 
+        ///
         /// <exception cref="ArgumentOutOfRangeException">
         /// The <paramref name="value"/> parameter is less than or equal to zero on set.
         /// </exception>
-        /// 
+        ///
         public int? AverageHeartRate
         {
             get { return _averageHr; }
-            set 
+            set
             {
                 ThrowIfValueIsNegative(value, "AerobicSessionAvgHrNotPositive");
                 _averageHr = value;
@@ -530,21 +526,20 @@ namespace Microsoft.HealthVault.ItemTypes
         }
         private int? _averageHr;
 
-
         /// <summary>
         /// Gets or sets the minimum heart rate for the session.
         /// </summary>
-        /// 
+        ///
         /// <remarks>
         /// If there is no heart rate data for the session, the value should
         /// be set to <b>null</b>.
         /// </remarks>
-        /// 
+        ///
         /// <exception cref="ArgumentOutOfRangeException">
-        /// The <paramref name="value"/> parameter is less than or equal to 
+        /// The <paramref name="value"/> parameter is less than or equal to
         /// zero when set.
         /// </exception>
-        /// 
+        ///
         public int? MinHeartRate
         {
             get { return _minHr; }
@@ -556,20 +551,19 @@ namespace Microsoft.HealthVault.ItemTypes
         }
         private int? _minHr;
 
-
         /// <summary>
         /// Gets or sets the food energy consumed during the session.
         /// </summary>
-        /// 
+        ///
         /// <remarks>
         /// The energy consumed is measured in kilojoules.
         /// Set the value to <b>null</b> if there is no energy reading.
         /// </remarks>
-        /// 
+        ///
         /// <exception cref="ArgumentOutOfRangeException">
         /// The <paramref name="value"/> parameter is negative or zero when set.
         /// </exception>
-        /// 
+        ///
         public double? Energy
         {
             get { return _energy; }
@@ -584,16 +578,16 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <summary>
         /// Gets or sets the energy from fat consumed during the session.
         /// </summary>
-        /// 
+        ///
         /// <remarks>
         /// The energy consumed is measured in kilojoules.
         /// Set the value to <b>null</b> if there is no energy from fat reading.
         /// </remarks>
-        /// 
+        ///
         /// <exception cref="ArgumentOutOfRangeException">
         /// The <paramref name="value"/> parameter is negative or zero when set.
         /// </exception>
-        /// 
+        ///
         public double? EnergyFromFat
         {
             get { return _energyFromFat; }
@@ -606,14 +600,14 @@ namespace Microsoft.HealthVault.ItemTypes
         private double? _energyFromFat;
 
         /// <summary>
-        /// Gets or sets the peak speed, in meters per second, during the 
+        /// Gets or sets the peak speed, in meters per second, during the
         /// session.
         /// </summary>
-        /// 
+        ///
         /// <remarks>
         /// Set the value to <b>null</b> if there is no speed reading.
         /// </remarks>
-        /// 
+        ///
         public SpeedMeasurement PeakSpeed
         {
             get { return _peakSpeed; }
@@ -622,14 +616,14 @@ namespace Microsoft.HealthVault.ItemTypes
         private SpeedMeasurement _peakSpeed;
 
         /// <summary>
-        /// Gets or sets the average speed, in meters per second, during the 
+        /// Gets or sets the average speed, in meters per second, during the
         /// session.
         /// </summary>
-        /// 
+        ///
         /// <remarks>
         /// Set the value to <b>null</b> if there is no speed reading.
         /// </remarks>
-        /// 
+        ///
         public SpeedMeasurement AverageSpeed
         {
             get { return _averageSpeed; }
@@ -638,14 +632,14 @@ namespace Microsoft.HealthVault.ItemTypes
         private SpeedMeasurement _averageSpeed;
 
         /// <summary>
-        /// Gets or sets the minimum speed, in meters per second, during the 
+        /// Gets or sets the minimum speed, in meters per second, during the
         /// session.
         /// </summary>
-        /// 
+        ///
         /// <remarks>
         /// Set the value to <b>null</b> if there is no speed reading.
         /// </remarks>
-        /// 
+        ///
         public SpeedMeasurement MinSpeed
         {
             get { return _minSpeed; }
@@ -656,11 +650,11 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <summary>
         /// Gets or sets the peak pace, in seconds per 100 meters, during the session.
         /// </summary>
-        /// 
+        ///
         /// <remarks>
         /// Set the value to <b>null</b> if there is no pace reading.
         /// </remarks>
-        /// 
+        ///
         public PaceMeasurement PeakPace
         {
             get { return _peakPace; }
@@ -671,11 +665,11 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <summary>
         /// Gets or sets the average pace, in seconds per 100 meters, during the session.
         /// </summary>
-        /// 
+        ///
         /// <remarks>
         /// Set the value to <b>null</b> if there is no pace reading.
         /// </remarks>
-        /// 
+        ///
         public PaceMeasurement AveragePace
         {
             get { return _averagePace; }
@@ -689,11 +683,11 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <summary>
         /// Gets or sets the minimum pace, in seconds per 100 meters, during the session.
         /// </summary>
-        /// 
+        ///
         /// <remarks>
         /// Set the value to <b>null</b> if there is no pace reading.
         /// </remarks>
-        /// 
+        ///
         public PaceMeasurement MinPace
         {
             get { return _minPace; }
@@ -707,11 +701,11 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <summary>
         /// Gets or sets the peak power, in watts, during the session.
         /// </summary>
-        /// 
+        ///
         /// <remarks>
         /// Set the value to <b>null</b> if there is no power reading.
         /// </remarks>
-        /// 
+        ///
         public PowerMeasurement PeakPower
         {
             get { return _peakPower; }
@@ -725,11 +719,11 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <summary>
         /// Gets or sets the average power, in watts, during the session.
         /// </summary>
-        /// 
+        ///
         /// <remarks>
         /// Set the value to <b>null</b> if there is no power reading.
         /// </remarks>
-        /// 
+        ///
         public PowerMeasurement AveragePower
         {
             get { return _averagePower; }
@@ -743,11 +737,11 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <summary>
         /// Gets or sets the minimum power, in watts, during the session.
         /// </summary>
-        /// 
+        ///
         /// <remarks>
         /// Set the value to <b>null</b> if there is no power reading.
         /// </remarks>
-        /// 
+        ///
         public PowerMeasurement MinPower
         {
             get { return _minPower; }
@@ -761,11 +755,11 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <summary>
         /// Gets or sets the peak torque, in newton meters, during the session.
         /// </summary>
-        /// 
+        ///
         /// <remarks>
         /// Set the value to <b>null</b> if there is no torque reading.
         /// </remarks>
-        /// 
+        ///
         public TorqueMeasurement PeakTorque
         {
             get { return _peakTorque; }
@@ -779,11 +773,11 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <summary>
         /// Gets or sets the average torque, in newton meters, during the session.
         /// </summary>
-        /// 
+        ///
         /// <remarks>
         /// Set the value to <b>null</b> if there is no torque reading.
         /// </remarks>
-        /// 
+        ///
         public TorqueMeasurement AverageTorque
         {
             get { return _averageTorque; }
@@ -797,11 +791,11 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <summary>
         /// Gets or sets the minimum torque, in newton meters, during the session.
         /// </summary>
-        /// 
+        ///
         /// <remarks>
         /// Set the value to <b>null</b> if there is no torque reading.
         /// </remarks>
-        /// 
+        ///
         public TorqueMeasurement MinTorque
         {
             get { return _minTorque; }
@@ -812,22 +806,21 @@ namespace Microsoft.HealthVault.ItemTypes
         }
         private TorqueMeasurement _minTorque;
 
-
         /// <summary>
         /// Gets or sets the balance between left and right strokes.
         /// </summary>
-        /// 
+        ///
         /// <remarks>
-        /// The value is a percentage where the indicated value is the 
+        /// The value is a percentage where the indicated value is the
         /// percentage of the left stroke. The remaining percentage is
         /// the right stroke.
         /// Set the value to <b>null</b> if there is no balance reading.
         /// </remarks>
-        /// 
+        ///
         /// <exception cref="ArgumentOutOfRangeException">
         /// The <paramref name="value"/> parameter is negative or greater than one when set.
         /// </exception>
-        /// 
+        ///
         public double? LeftRightBalance
         {
             get { return _leftRightBalance; }
@@ -843,18 +836,18 @@ namespace Microsoft.HealthVault.ItemTypes
         private double? _leftRightBalance;
 
         /// <summary>
-        /// Gets or sets the peak cadence, in revolutions per minute (rpm), 
+        /// Gets or sets the peak cadence, in revolutions per minute (rpm),
         /// during the session.
         /// </summary>
-        /// 
+        ///
         /// <remarks>
         /// Set the value to <b>null</b> if there is no cadence reading.
         /// </remarks>
-        /// 
+        ///
         /// <exception cref="ArgumentOutOfRangeException">
         /// The <paramref name="value"/> parameter is negative or zero when set.
         /// </exception>
-        /// 
+        ///
         public double? PeakCadence
         {
             get { return _peakCadence; }
@@ -867,18 +860,18 @@ namespace Microsoft.HealthVault.ItemTypes
         private double? _peakCadence;
 
         /// <summary>
-        /// Gets or sets the average cadence, in revolutions per minute (rpm), 
+        /// Gets or sets the average cadence, in revolutions per minute (rpm),
         /// during the session.
         /// </summary>
-        /// 
+        ///
         /// <remarks>
         /// Set the value to <b>null</b> if there is no cadence reading.
         /// </remarks>
-        /// 
+        ///
         /// <exception cref="ArgumentOutOfRangeException">
         /// The <paramref name="value"/> parameter is negative or zero when set.
         /// </exception>
-        /// 
+        ///
         public double? AverageCadence
         {
             get { return _averageCadence; }
@@ -891,18 +884,18 @@ namespace Microsoft.HealthVault.ItemTypes
         private double? _averageCadence;
 
         /// <summary>
-        /// Gets or sets the minimum cadence, in revolutions per minute (rpm), 
+        /// Gets or sets the minimum cadence, in revolutions per minute (rpm),
         /// during the session.
         /// </summary>
-        /// 
+        ///
         /// <remarks>
         /// Set the value to <b>null</b> if there is no cadence reading.
         /// </remarks>
-        /// 
+        ///
         /// <exception cref="ArgumentOutOfRangeException">
         /// The <paramref name="value"/> parameter is negative or zero when set.
         /// </exception>
-        /// 
+        ///
         public double? MinCadence
         {
             get { return _minCadence; }
@@ -914,16 +907,15 @@ namespace Microsoft.HealthVault.ItemTypes
         }
         private double? _minCadence;
 
-
         /// <summary>
-        /// Gets or sets the peak temperature, in degrees Celsius (C), during 
+        /// Gets or sets the peak temperature, in degrees Celsius (C), during
         /// the session.
         /// </summary>
-        /// 
+        ///
         /// <remarks>
         /// Set the value to <b>null</b> if there is no temperature reading.
         /// </remarks>
-        /// 
+        ///
         public TemperatureMeasurement PeakTemperature
         {
             get { return _peakTemperature; }
@@ -935,14 +927,14 @@ namespace Microsoft.HealthVault.ItemTypes
         private TemperatureMeasurement _peakTemperature;
 
         /// <summary>
-        /// Gets or sets the average temperature, in degrees Celsius (C), 
+        /// Gets or sets the average temperature, in degrees Celsius (C),
         /// during the session.
         /// </summary>
-        /// 
+        ///
         /// <remarks>
         /// Set the value to <b>null</b> if there is no temperature reading.
         /// </remarks>
-        /// 
+        ///
         public TemperatureMeasurement AverageTemperature
         {
             get { return _averageTemperature; }
@@ -954,14 +946,14 @@ namespace Microsoft.HealthVault.ItemTypes
         private TemperatureMeasurement _averageTemperature;
 
         /// <summary>
-        /// Gets or sets the minimum temperature, in degrees Celsius (C), 
+        /// Gets or sets the minimum temperature, in degrees Celsius (C),
         /// during the session.
         /// </summary>
-        /// 
+        ///
         /// <remarks>
         /// Set the value to <b>null</b> if there is no temperature reading.
         /// </remarks>
-        /// 
+        ///
         public TemperatureMeasurement MinTemperature
         {
             get { return _minTemperature; }
@@ -970,15 +962,15 @@ namespace Microsoft.HealthVault.ItemTypes
         private TemperatureMeasurement _minTemperature;
 
         /// <summary>
-        /// Gets or sets the peak altitude, in meters above sea level, during 
+        /// Gets or sets the peak altitude, in meters above sea level, during
         /// the session.
         /// </summary>
-        /// 
+        ///
         /// <remarks>
         /// Negative values indicate the meters below sea level.
         /// Set the value to <b>null</b> if there is no altitude reading.
         /// </remarks>
-        /// 
+        ///
         public AltitudeMeasurement PeakAltitude
         {
             get { return _peakAltitude; }
@@ -987,15 +979,15 @@ namespace Microsoft.HealthVault.ItemTypes
         private AltitudeMeasurement _peakAltitude;
 
         /// <summary>
-        /// Gets or sets the average altitude, in meters above sea level, 
+        /// Gets or sets the average altitude, in meters above sea level,
         /// during the session.
         /// </summary>
-        /// 
+        ///
         /// <remarks>
         /// Negative values indicate the meters below sea level.
         /// Set the value to <b>null</b> if there is no altitude reading.
         /// </remarks>
-        /// 
+        ///
         public AltitudeMeasurement AverageAltitude
         {
             get { return _averageAltitude; }
@@ -1004,15 +996,15 @@ namespace Microsoft.HealthVault.ItemTypes
         private AltitudeMeasurement _averageAltitude;
 
         /// <summary>
-        /// Gets or sets the minimum altitude, in meters above sea level, 
+        /// Gets or sets the minimum altitude, in meters above sea level,
         /// during the session.
         /// </summary>
-        /// 
+        ///
         /// <remarks>
         /// Negative values indicate the meters below sea level.
         /// Set the value to <b>null</b> if there is no altitude reading.
         /// </remarks>
-        /// 
+        ///
         public AltitudeMeasurement MinAltitude
         {
             get { return _minAltitude; }
@@ -1023,11 +1015,11 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <summary>
         /// Gets or sets the elevation gained, in meters, during the session.
         /// </summary>
-        /// 
+        ///
         /// <remarks>
         /// Set the value to <b>null</b> if there is no elevation gain reading.
         /// </remarks>
-        /// 
+        ///
         public Length ElevationGain
         {
             get { return _elevationGain; }
@@ -1038,11 +1030,11 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <summary>
         /// Gets or sets the elevation lossed, in meters, during the session.
         /// </summary>
-        /// 
+        ///
         /// <remarks>
         /// Set the value to <b>null</b> if there is no elevation loss reading.
         /// </remarks>
-        /// 
+        ///
         public Length ElevationLoss
         {
             get { return _elevationLoss; }
@@ -1053,11 +1045,11 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <summary>
         /// Gets or sets the number of steps taken during the session.
         /// </summary>
-        /// 
+        ///
         /// <remarks>
         /// Set the value to <b>null</b> if there is no step readings.
         /// </remarks>
-        /// 
+        ///
         public int? NumberOfSteps
         {
             get { return _numberOfSteps; }
@@ -1068,11 +1060,11 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <summary>
         /// Gets or sets the number of aerobic steps taken during the session.
         /// </summary>
-        /// 
+        ///
         /// <remarks>
         /// Set the value to <b>null</b> if there is no aerobic step readings.
         /// </remarks>
-        /// 
+        ///
         public int? NumberOfAerobicSteps
         {
             get { return _numberOfAerobicSteps; }
@@ -1083,12 +1075,12 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <summary>
         /// Gets or sets the number of aerobic minutes during the session.
         /// </summary>
-        /// 
+        ///
         /// <remarks>
-        /// Set the value to <b>null</b> if there are no readings indicating the number of 
+        /// Set the value to <b>null</b> if there are no readings indicating the number of
         /// aerobic minutes.
         /// </remarks>
-        /// 
+        ///
         public double? AerobicStepMinutes
         {
             get { return _aerobicStepMinutes; }
@@ -1096,22 +1088,21 @@ namespace Microsoft.HealthVault.ItemTypes
         }
         private double? _aerobicStepMinutes;
 
-
         /// <summary>
         /// Gets a summary of the aerobic data.
         /// </summary>
-        /// 
+        ///
         /// <returns>
         /// A string summary of the aerobic data.
         /// </returns>
-        /// 
+        ///
         public override string ToString()
         {
             string result = string.Empty;
 
             if (Distance != null && Duration != null)
             {
-                result = 
+                result =
                     string.Format(
                         ResourceRetriever.GetResourceString(
                             "AerobicDataToStringFormatDistanceAndDuration"),

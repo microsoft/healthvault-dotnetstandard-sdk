@@ -13,19 +13,19 @@ namespace Microsoft.HealthVault
     /// Represents an audit trail of creations or updates to
     /// information in the HealthVault service.
     /// </summary>
-    /// 
+    ///
     /// <remarks>
     /// The audit records when the operation
     /// happened, by which application, and by which person.
     /// </remarks>
-    /// 
+    ///
     public class HealthServiceAudit
     {
         /// <summary>
         /// Creates a new instance of the <see cref="HealthServiceAudit"/>
         /// class using default values.
         /// </summary>
-        /// 
+        ///
         public HealthServiceAudit()
         {
         }
@@ -129,16 +129,16 @@ namespace Microsoft.HealthVault
         /// <summary>
         /// Gets the time stamp of the audit.
         /// </summary>
-        /// 
+        ///
         /// <value>
         /// A DateTime in UTC representing when the operation happened.
         /// </value>
-        /// 
+        ///
         /// <remarks>
         /// The application must convert the value to local time
         /// if needed.
         /// </remarks>
-        /// 
+        ///
         public DateTime Timestamp
         {
             get { return _timestamp; }
@@ -148,11 +148,11 @@ namespace Microsoft.HealthVault
         /// <summary>
         /// Gets the unique identifier of the application.
         /// </summary>
-        /// 
+        ///
         /// <value>
         /// A Guid representing the unique identifier of the application.
         /// </value>
-        /// 
+        ///
         public Guid ApplicationId
         {
             get { return _applicationId; }
@@ -162,11 +162,11 @@ namespace Microsoft.HealthVault
         /// <summary>
         /// Gets the name of the application.
         /// </summary>
-        /// 
+        ///
         /// <value>
         /// A string representing the name of the application.
         /// </value>
-        /// 
+        ///
         public string ApplicationName
         {
             get { return _applicationName; }
@@ -176,11 +176,11 @@ namespace Microsoft.HealthVault
         /// <summary>
         /// Gets the unique identifier of the person.
         /// </summary>
-        /// 
+        ///
         /// <value>
         /// A Guid representing the unique identifier of the person.
         /// </value>
-        /// 
+        ///
         public Guid PersonId
         {
             get { return _personId; }
@@ -190,7 +190,7 @@ namespace Microsoft.HealthVault
         /// <summary>
         /// Gets the name of the person.
         /// </summary>
-        /// 
+        ///
         public string PersonName
         {
             get { return _personName; }
@@ -198,18 +198,18 @@ namespace Microsoft.HealthVault
         private string _personName;
 
         /// <summary>
-        /// Gets the unique identifier of the impersonator. 
+        /// Gets the unique identifier of the impersonator.
         /// </summary>
-        /// 
+        ///
         /// <value>
         /// A Guid representing the identifier of the impersonator.
         /// </value>
-        /// 
+        ///
         /// <remarks>
-        /// The value is <b>null</b> if impersonation was not used to create, 
+        /// The value is <b>null</b> if impersonation was not used to create,
         /// change, or delete the <see cref="HealthRecordItem"/>.
         /// </remarks>
-        /// 
+        ///
         public Guid? ImpersonatorId
         {
             get { return _impersonatorId; }
@@ -217,18 +217,18 @@ namespace Microsoft.HealthVault
         private Guid? _impersonatorId;
 
         /// <summary>
-        /// Gets the name of the impersonator. 
+        /// Gets the name of the impersonator.
         /// </summary>
-        /// 
+        ///
         /// <value>
         /// A string representing the name of the impersonator.
         /// </value>
-        /// 
+        ///
         /// <remarks>
-        /// The value is <b>null</b> if impersonation was not used to create, 
+        /// The value is <b>null</b> if impersonation was not used to create,
         /// change, or delete the <see cref="HealthRecordItem"/>.
         /// </remarks>
-        /// 
+        ///
         public string ImpersonatorName
         {
             get { return _impersonatorName; }
@@ -236,14 +236,14 @@ namespace Microsoft.HealthVault
         private string _impersonatorName;
 
         /// <summary>
-        /// Gets the access avenue used to create, change, or delete the 
+        /// Gets the access avenue used to create, change, or delete the
         /// <see cref="HealthRecordItem"/>.
         /// </summary>
-        /// 
+        ///
         /// <value>
         /// A <see cref="HealthServiceAuditAccessAvenue"/>.
         /// </value>
-        /// 
+        ///
         public HealthServiceAuditAccessAvenue AccessAvenue
         {
             get { return _accessAvenue; }
@@ -254,7 +254,7 @@ namespace Microsoft.HealthVault
         /// <summary>
         /// Gets the action performed.
         /// </summary>
-        /// 
+        ///
         public HealthServiceAuditAction AuditAction
         {
             get { return _auditAction; }
@@ -265,19 +265,19 @@ namespace Microsoft.HealthVault
         /// The unique application identifier for the code base of the
         /// application that created the audit.
         /// </summary>
-        /// 
+        ///
         /// <remarks>
         /// When an application performs a write action on an item the audit
         /// is stamped with the applications unique identifier. In the case of
         /// master/child applications, or SODA applications, the <see cref="ApplicationId"/>
         /// is the identifier of the child or installation of the application.
-        /// The <see cref="MasterApplicationId"/> is the application identifier for the root of 
+        /// The <see cref="MasterApplicationId"/> is the application identifier for the root of
         /// the configuration for that application. In the case of master/child
         /// applications, this is the application identifier of the master. For
         /// SODA applications, this is the application identifier for the root
-        /// configuration of the application.        
+        /// configuration of the application.
         /// </remarks>
-        /// 
+        ///
         public Guid MasterApplicationId
         {
             get { return _masterAppId; }
@@ -287,13 +287,13 @@ namespace Microsoft.HealthVault
         /// <summary>
         /// Gets a string representation of the object.
         /// </summary>
-        /// 
+        ///
         /// <returns>
         /// A string in the following format:
         ///
         ///     "&lt;timestamp&gt;, &lt;app-id&gt;, &lt;person-id&gt;"
         /// </returns>
-        /// 
+        ///
         public override string ToString()
         {
             return
@@ -309,8 +309,8 @@ namespace Microsoft.HealthVault
         // {0} - timestamp
         // {1} - app-id
         // {2} - person-id
-        // {3} - audit-action 
-        // 
+        // {3} - audit-action
+        //
         private const string toStringFormat = "{0}, {1}, {2}, {3}";
     }
 }

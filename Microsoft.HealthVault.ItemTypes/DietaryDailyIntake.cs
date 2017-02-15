@@ -3,7 +3,6 @@
 // see http://www.microsoft.com/resources/sharedsource/licensingbasics/sharedsourcelicenses.mspx.
 // All other rights reserved.
 
-
 using System;
 using System.Globalization;
 using System.Text;
@@ -13,41 +12,41 @@ using System.Xml.XPath;
 namespace Microsoft.HealthVault.ItemTypes
 {
     /// <summary>
-    /// Represents a health record item type that encapsulates a person's 
+    /// Represents a health record item type that encapsulates a person's
     /// dietary intake for a day.
     /// </summary>
-    /// 
+    ///
     public class DietaryDailyIntake : HealthRecordItem
     {
         /// <summary>
-        /// Creates a new instance of the <see cref="DietaryDailyIntake"/> class with 
+        /// Creates a new instance of the <see cref="DietaryDailyIntake"/> class with
         /// default values.
         /// </summary>
-        /// 
+        ///
         /// <remarks>
         /// The item is not added to the health record until the
-        /// <see cref="HealthRecordAccessor.NewItem(HealthRecordItem)"/> 
+        /// <see cref="HealthRecordAccessor.NewItem(HealthRecordItem)"/>
         /// method is called.
         /// </remarks>
-        /// 
+        ///
         public DietaryDailyIntake()
             : base(TypeId)
         {
         }
 
         /// <summary>
-        /// Creates a new instance of the <see cref="DietaryDailyIntake"/> class 
+        /// Creates a new instance of the <see cref="DietaryDailyIntake"/> class
         /// specifying the mandatory values.
         /// </summary>
-        /// 
+        ///
         /// <param name="when">
         /// The date when the food was consumed.
         /// </param>
-        /// 
+        ///
         /// <exception cref="ArgumentNullException">
         /// The <paramref name="when"/> parameter is <b>null</b>.
         /// </exception>
-        /// 
+        ///
         public DietaryDailyIntake(HealthServiceDate when)
             : base(TypeId)
         {
@@ -57,28 +56,28 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <summary>
         /// Retrieves the unique identifier for the item type.
         /// </summary>
-        /// 
+        ///
         /// <value>
         /// A GUID.
         /// </value>
-        /// 
+        ///
         public new static readonly Guid TypeId =
             new Guid("9c29c6b9-f40e-44ff-b24e-fba6f3074638");
 
         /// <summary>
-        /// Populates this <see cref="DietaryDailyIntake"/> instance from the 
+        /// Populates this <see cref="DietaryDailyIntake"/> instance from the
         /// data in the XML.
         /// </summary>
-        /// 
+        ///
         /// <param name="typeSpecificXml">
         /// The XML to get the dietary intake data from.
         /// </param>
-        /// 
+        ///
         /// <exception cref="InvalidOperationException">
         /// The first node in <paramref name="typeSpecificXml"/> is not
         /// a <see cref="DietaryDailyIntake"/> node.
         /// </exception>
-        /// 
+        ///
         protected override void ParseXml(IXPathNavigable typeSpecificXml)
         {
             XPathNavigator intakeNav =
@@ -90,7 +89,7 @@ namespace Microsoft.HealthVault.ItemTypes
             _when = new HealthServiceDate();
             _when.ParseXml(intakeNav.SelectSingleNode("when"));
 
-            XPathNavigator caloriesNav = 
+            XPathNavigator caloriesNav =
                 intakeNav.SelectSingleNode("calories");
 
             if (caloriesNav != null)
@@ -183,15 +182,15 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <summary>
         /// Writes the dietary daily intake data to the specified XmlWriter.
         /// </summary>
-        /// 
+        ///
         /// <param name="writer">
         /// The XmlWriter to write the dietary daily intake data to.
         /// </param>
-        /// 
+        ///
         /// <exception cref="ArgumentNullException">
         /// If <paramref name="writer"/> is <b>null</b>.
         /// </exception>
-        /// 
+        ///
         public override void WriteXml(XmlWriter writer)
         {
             Validator.ThrowIfWriterNull(writer);
@@ -206,7 +205,7 @@ namespace Microsoft.HealthVault.ItemTypes
             if (_calories != null)
             {
                 writer.WriteElementString(
-                    "calories", 
+                    "calories",
                     _calories.Value.ToString(CultureInfo.InvariantCulture));
             }
 
@@ -241,23 +240,22 @@ namespace Microsoft.HealthVault.ItemTypes
             writer.WriteEndElement();
         }
 
-
         /// <summary>
         /// Gets or sets the date of the dietary intake.
         /// </summary>
-        /// 
+        ///
         /// <value>
         /// An instance of <see cref="HealthServiceDate"/> representing the date.
         /// </value>
-        /// 
+        ///
         /// <remarks>
         /// The value defaults to the current year, month, and day.
         /// </remarks>
-        /// 
+        ///
         /// <exception cref="ArgumentNullException">
         /// The <paramref name="value"/> parameter is <b>null</b>.
         /// </exception>
-        /// 
+        ///
         public HealthServiceDate When
         {
             get { return _when; }
@@ -272,16 +270,16 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <summary>
         /// Gets or sets the caloric intake for the day.
         /// </summary>
-        /// 
+        ///
         /// <value>
         /// An integer representing the intake.
-        /// </value> 
-        /// 
+        /// </value>
+        ///
         /// <remarks>
         /// If the caloric intake is not known, the value can be set to
         /// <b>null</b>.
         /// </remarks>
-        /// 
+        ///
         public int? Calories
         {
             get { return _calories; }
@@ -289,20 +287,19 @@ namespace Microsoft.HealthVault.ItemTypes
         }
         private int? _calories;
 
-
         /// <summary>
         /// Gets or sets the total intake of fat for the day.
         /// </summary>
-        /// 
+        ///
         /// <value>
         /// An instance of <see cref="WeightValue"/> representing the fat intake.
-        /// </value> 
-        /// 
+        /// </value>
+        ///
         /// <remarks>
         /// If the total fat is not known, the value can be set to
         /// <b>null</b>.
         /// </remarks>
-        /// 
+        ///
         public WeightValue TotalFat
         {
             get { return _totalFat; }
@@ -313,16 +310,16 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <summary>
         /// Gets or sets the intake of saturated fat for the day.
         /// </summary>
-        /// 
+        ///
         /// <value>
         /// An instance of <see cref="WeightValue"/> representing the fat intake.
-        /// </value> 
-        /// 
+        /// </value>
+        ///
         /// <remarks>
         /// If the saturated fat is not known, the value can be set to
         /// <b>null</b>.
         /// </remarks>
-        /// 
+        ///
         public WeightValue SaturatedFat
         {
             get { return _saturatedFat; }
@@ -333,16 +330,16 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <summary>
         /// Gets or sets the intake of trans fat for the day.
         /// </summary>
-        /// 
+        ///
         /// <value>
         /// An instance of <see cref="WeightValue"/> representing the fat intake.
-        /// </value> 
-        /// 
+        /// </value>
+        ///
         /// <remarks>
         /// If the trans fat is not known, the value can be set to
         /// <b>null</b>.
         /// </remarks>
-        /// 
+        ///
         public WeightValue TransFat
         {
             get { return _transFat; }
@@ -353,16 +350,16 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <summary>
         /// Gets or sets the intake of protein for the day.
         /// </summary>
-        /// 
+        ///
         /// <value>
         /// An instance of <see cref="WeightValue"/> representing the protein intake.
-        /// </value> 
-        /// 
+        /// </value>
+        ///
         /// <remarks>
         /// If the protein intake is not known, the value can be set to
         /// <b>null</b>.
         /// </remarks>
-        /// 
+        ///
         public WeightValue Protein
         {
             get { return _protein; }
@@ -373,17 +370,17 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <summary>
         /// Gets or sets the total intake of carbohydrates for the day.
         /// </summary>
-        /// 
+        ///
         /// <value>
-        /// An instance of <see cref="WeightValue"/> representing the 
+        /// An instance of <see cref="WeightValue"/> representing the
         /// carbohydrate intake.
-        /// </value> 
-        /// 
+        /// </value>
+        ///
         /// <remarks>
-        /// If the total carbohydrates intake is not known, the value can be 
+        /// If the total carbohydrates intake is not known, the value can be
         /// set to <b>null</b>.
         /// </remarks>
-        /// 
+        ///
         public WeightValue TotalCarbohydrates
         {
             get { return _totalCarbs; }
@@ -394,16 +391,16 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <summary>
         /// Gets or sets the intake of dietary fiber for the day.
         /// </summary>
-        /// 
+        ///
         /// <value>
         /// An instance of <see cref="WeightValue"/> representing the fiber intake.
-        /// </value> 
-        /// 
+        /// </value>
+        ///
         /// <remarks>
         /// If the dietary fiber intake is not known, the value can be set to
         /// <b>null</b>.
         /// </remarks>
-        /// 
+        ///
         public WeightValue DietaryFiber
         {
             get { return _fiber; }
@@ -414,16 +411,16 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <summary>
         /// Gets or sets the intake of sugars for the day.
         /// </summary>
-        /// 
+        ///
         /// <value>
         /// An instance of <see cref="WeightValue"/> representing the sugar intake.
-        /// </value> 
-        /// 
+        /// </value>
+        ///
         /// <remarks>
         /// If the sugar intake is not known, the value can be set to
         /// <b>null</b>.
         /// </remarks>
-        /// 
+        ///
         public WeightValue Sugars
         {
             get { return _sugars; }
@@ -434,16 +431,16 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <summary>
         /// Gets or sets the intake of sodium for the day.
         /// </summary>
-        /// 
+        ///
         /// <value>
         /// An instance of <see cref="WeightValue"/> representing the sodium intake.
-        /// </value> 
-        /// 
+        /// </value>
+        ///
         /// <remarks>
         /// If the sodium intake is not known the value can be set to
         /// <b>null</b>.
         /// </remarks>
-        /// 
+        ///
         public WeightValue Sodium
         {
             get { return _sodium; }
@@ -454,16 +451,16 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <summary>
         /// Gets or sets the intake of cholesterol for the day.
         /// </summary>
-        /// 
+        ///
         /// <value>
         /// An instance of <see cref="WeightValue"/> representing the cholesterol intake.
-        /// </value> 
-        /// 
+        /// </value>
+        ///
         /// <remarks>
         /// If the cholesterol intake is not known, the value can be set to
         /// <b>null</b>.
         /// </remarks>
-        /// 
+        ///
         public WeightValue Cholesterol
         {
             get { return _cholesterol; }
@@ -474,14 +471,14 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <summary>
         /// Gets a string representation of the dietary daily intake item.
         /// </summary>
-        /// 
+        ///
         /// <returns>
         /// A string representation of the dietary daily intake item.
         /// </returns>
-        /// 
+        ///
         public override string ToString()
         {
-            string listSeparator = 
+            string listSeparator =
                 ResourceRetriever.GetResourceString(
                         "ListSeparator");
 
@@ -502,7 +499,7 @@ namespace Microsoft.HealthVault.ItemTypes
                     result.Append(listSeparator);
                 }
 
-                AppendWeightValue(  result,
+                AppendWeightValue(result,
                                     TotalFat,
                                     "DietaryDailyIntakeToStringFormatTotalFat");
             }
@@ -514,7 +511,7 @@ namespace Microsoft.HealthVault.ItemTypes
                     result.Append(listSeparator);
                 }
 
-                AppendWeightValue(  result,
+                AppendWeightValue(result,
                                     Protein,
                                     "DietaryDailyIntakeToStringFormatProtein");
             }
@@ -526,8 +523,8 @@ namespace Microsoft.HealthVault.ItemTypes
                     result.Append(listSeparator);
                 }
 
-                AppendWeightValue(  result, 
-                                    TotalCarbohydrates, 
+                AppendWeightValue(result,
+                                    TotalCarbohydrates,
                                     "DietaryDailyIntakeToStringFormatTotalCarbs");
             }
             return result.ToString();
@@ -555,5 +552,4 @@ namespace Microsoft.HealthVault.ItemTypes
                 unitsString);
         }
     }
-
 }

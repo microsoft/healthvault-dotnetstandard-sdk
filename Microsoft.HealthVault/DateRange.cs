@@ -13,23 +13,23 @@ namespace Microsoft.HealthVault
     public class DateRange
     {
         /// <summary>
-        /// Creates a new instance of the <see cref="DateRange"/> class 
+        /// Creates a new instance of the <see cref="DateRange"/> class
         /// with the specified start and end dates.
         /// </summary>
-        /// 
+        ///
         /// <param name="start">
         /// The start date of the date range.
         /// </param>
-        /// 
+        ///
         /// <param name="end">
         /// The end date of the date range.
         /// </param>
-        /// 
+        ///
         /// <exception cref="ArgumentException">
-        /// The <paramref name="start"/> parameter is greater than the 
+        /// The <paramref name="start"/> parameter is greater than the
         /// <paramref name="end"/> parameter.
         /// </exception>
-        /// 
+        ///
         public DateRange(DateTime start, DateTime end)
         {
             Validator.ThrowArgumentExceptionIf(
@@ -44,11 +44,11 @@ namespace Microsoft.HealthVault
         /// <summary>
         /// Gets the minimum date of the range.
         /// </summary>
-        /// 
+        ///
         /// <value>
         /// A DateTime value.
         /// </value>
-        /// 
+        ///
         public DateTime Start
         {
             get { return _start; }
@@ -59,11 +59,11 @@ namespace Microsoft.HealthVault
         /// <summary>
         /// Gets the maximum date of the range.
         /// </summary>
-        /// 
+        ///
         /// <value>
         /// A DateTime value.
         /// </value>
-        /// 
+        ///
         public DateTime End
         {
             get { return _end; }

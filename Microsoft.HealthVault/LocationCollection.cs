@@ -24,11 +24,11 @@ namespace Microsoft.HealthVault
         /// Parses the location collection XML and populates the instance properties from
         /// the results.
         /// </summary>
-        /// 
+        ///
         /// <param name="locationCollection">
         /// XML of the location collection to be parsed.
         /// </param>
-        /// 
+        ///
         public void ParseXml(XPathNavigator locationCollection)
         {
             if (locationCollection == null)
@@ -60,15 +60,15 @@ namespace Microsoft.HealthVault
         /// <summary>
         /// Writes the location collection to the specified XmlWriter.
         /// </summary>
-        /// 
+        ///
         /// <param name="writer">
         /// The XmlWriter to write the location collection xml to.
         /// </param>
-        /// 
+        ///
         /// <param name="elementName">
         /// The name of the containing element to use when writing the location collection.
         /// </param>
-        /// 
+        ///
         public void WriteXml(XmlWriter writer, string elementName)
         {
             if (writer == null)

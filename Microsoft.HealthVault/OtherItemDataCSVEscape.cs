@@ -3,8 +3,6 @@
 // see http://www.microsoft.com/resources/sharedsource/licensingbasics/sharedsourcelicenses.mspx.
 // All other rights reserved.
 
-using System;
-
 namespace Microsoft.HealthVault.ItemTypes.Csv
 {
     /// <summary>
@@ -81,7 +79,7 @@ namespace Microsoft.HealthVault.ItemTypes.Csv
         }
 
         /// <summary>
-        /// Gets the escape in "Name=value" format. 
+        /// Gets the escape in "Name=value" format.
         /// </summary>
         internal string NameEqualsValue
         {

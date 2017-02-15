@@ -3,20 +3,20 @@
 // see http://www.microsoft.com/resources/sharedsource/licensingbasics/sharedsourcelicenses.mspx.
 // All other rights reserved.
 
+using Microsoft.HealthVault.Exceptions;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.IO.Compression;
 using System.Text;
-using Microsoft.HealthVault.Exceptions;
 
 namespace Microsoft.HealthVault
 {
     /// <summary>
     /// Used to encode BLOBs in various encoding schemes.
     /// </summary>
-    /// 
+    ///
     internal static class BlobEncoder
     {
         internal static byte[] Encode(byte[] rawBlobPayload, string contentEncoding)
@@ -230,6 +230,7 @@ namespace Microsoft.HealthVault
                 count = inputStream.Read(buffer, 0, buffer.Length);
             }
         }
+
         private const char c_encodingSeperator = ',';
     }
 }

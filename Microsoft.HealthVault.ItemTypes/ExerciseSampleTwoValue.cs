@@ -3,8 +3,6 @@
 // see http://www.microsoft.com/resources/sharedsource/licensingbasics/sharedsourcelicenses.mspx.
 // All other rights reserved.
 
-using System;
-
 namespace Microsoft.HealthVault.ItemTypes
 {
     /// <summary>
@@ -25,16 +23,16 @@ namespace Microsoft.HealthVault.ItemTypes
             Value2 = value2;
         }
 
-        double _offsetInSeconds;
+        private double _offsetInSeconds;
 
         /// <summary>
-        /// Gets or sets the offset in seconds of this data sample from the beginning of the sample set. 
+        /// Gets or sets the offset in seconds of this data sample from the beginning of the sample set.
         /// </summary>
-        /// 
+        ///
         /// <value>
         /// The offset in seconds.
         /// </value>
-        /// 
+        ///
         /// <exception cref="ArgumentOutOfRangeException">
         /// The <paramref name="OffsetInSeconds"/> value is less than zero.
         /// </exception>
@@ -51,7 +49,7 @@ namespace Microsoft.HealthVault.ItemTypes
             }
         }
 
-        double _value1;
+        private double _value1;
 
         /// <summary>
         /// Gets or sets the first data value stored in the sample.
@@ -62,7 +60,7 @@ namespace Microsoft.HealthVault.ItemTypes
             set { _value1 = value; }
         }
 
-        double _value2;
+        private double _value2;
 
         /// <summary>
         /// Gets or sets the second data value stored in the sample.

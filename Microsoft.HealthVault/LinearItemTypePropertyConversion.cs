@@ -3,9 +3,6 @@
 // see http://www.microsoft.com/resources/sharedsource/licensingbasics/sharedsourcelicenses.mspx.
 // All other rights reserved.
 
-using System;
-using System.Globalization;
-using System.Xml;
 using System.Xml.XPath;
 
 namespace Microsoft.HealthVault
@@ -18,11 +15,11 @@ namespace Microsoft.HealthVault
         /// <summary>
         /// Creates a new instance of the <see cref="LinearItemTypePropertyConversion"/> class.
         /// </summary>
-        /// 
+        ///
         /// <param name="multiplier">
         /// The multiplier to use in the linear conversion.
         /// </param>
-        /// 
+        ///
         /// <param name="offset">
         /// The offset to use in the linear conversion.
         /// </param>
@@ -48,11 +45,11 @@ namespace Microsoft.HealthVault
         /// Performs a linear conversion of the form
         /// returnValue = Multiplier * value + offset.
         /// </summary>
-        /// 
+        ///
         /// <param name="value">
         /// The value to be converted.
         /// </param>
-        /// 
+        ///
         /// <returns>
         /// The result of the linear conversion.
         /// </returns>
