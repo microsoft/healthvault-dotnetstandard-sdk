@@ -15,34 +15,34 @@ namespace Microsoft.HealthVault
     /// <summary>
     /// This class defines an authorization rule in the HealthVault service.
     /// </summary>
-    /// 
+    ///
     /// <remarks>
     /// Authorization rules are applied to authorized records to state what
     /// permissions the person or group being authorized has on the data in
     /// that record. See the HealthVault Developer's Guide for more information
     /// on how authorization works in HealthVault.
-    /// 
+    ///
     /// This rule does not necessarily represent a rule that is present
-    /// on the server. It can be used to generate the necessary XML when 
+    /// on the server. It can be used to generate the necessary XML when
     /// using the Shell pages to authorize records.
     /// </remarks>
-    /// 
+    ///
     public class AuthorizationRule
     {
         /// <summary>
         /// Creates a new instance of the <see cref="AuthorizationRule"/> class
         /// with the specified permissions.
         /// </summary>
-        /// 
+        ///
         /// <param name="permissions">
         /// The permissions granted.
         /// </param>
-        /// 
+        ///
         /// <exception cref="ArgumentException">
-        /// The <paramref name="permissions"/> parameter is 
+        /// The <paramref name="permissions"/> parameter is
         /// <see cref="HealthRecordItemPermissions.None"/>.
         /// </exception>
-        /// 
+        ///
         public AuthorizationRule(
             HealthRecordItemPermissions permissions)
             : this(permissions, null, null)
@@ -50,29 +50,29 @@ namespace Microsoft.HealthVault
         }
 
         /// <summary>
-        /// Creates a new instance of the <see cref="AuthorizationRule"/> class 
+        /// Creates a new instance of the <see cref="AuthorizationRule"/> class
         /// with the specified permissions, target and exception sets.
         /// </summary>
-        /// 
+        ///
         /// <param name="permissions">
-        /// The permissions granted. 
+        /// The permissions granted.
         /// </param>
-        /// 
+        ///
         /// <param name="targetSets">
         /// The set or sets of health record items to which this rule applies.
         /// </param>
-        /// 
+        ///
         /// <param name="exceptionSets">
-        /// The set or sets of health record items to which this rule does not 
-        /// apply even if contained in a set defined by 
+        /// The set or sets of health record items to which this rule does not
+        /// apply even if contained in a set defined by
         /// <paramref name="targetSets"/>.
         /// </param>
-        /// 
+        ///
         /// <exception cref="ArgumentException">
-        /// The <paramref name="permissions"/> parameter is 
+        /// The <paramref name="permissions"/> parameter is
         /// <see cref="HealthRecordItemPermissions.None"/>.
         /// </exception>
-        ///         
+        ///
         public AuthorizationRule(
             HealthRecordItemPermissions permissions,
             IList<AuthorizationSetDefinition> targetSets,
@@ -83,11 +83,11 @@ namespace Microsoft.HealthVault
         }
 
         /// <summary>
-        /// Creates a new instance of the <see cref="AuthorizationRule"/> class 
+        /// Creates a new instance of the <see cref="AuthorizationRule"/> class
         /// with the specified name, reason, permissions, target, exception sets,
         /// optional and display flags.
         /// </summary>
-        /// 
+        ///
         /// <param name="name">
         /// The name uniquely identifying this rule in a set
         /// </param>
@@ -97,16 +97,16 @@ namespace Microsoft.HealthVault
         /// </param>
         ///
         /// <param name="permissions">
-        /// The permissions granted. 
+        /// The permissions granted.
         /// </param>
-        /// 
+        ///
         /// <param name="targetSets">
         /// The set or sets of health record items to which this rule applies.
         /// </param>
-        /// 
+        ///
         /// <param name="exceptionSets">
-        /// The set or sets of health record items to which this rule does not 
-        /// apply even if contained in a set defined by 
+        /// The set or sets of health record items to which this rule does not
+        /// apply even if contained in a set defined by
         /// <paramref name="targetSets"/>.
         /// </param>
         ///
@@ -117,12 +117,12 @@ namespace Microsoft.HealthVault
         /// <param name="displayFlags">
         /// Flags controlling how to display this rule
         /// </param>
-        /// 
+        ///
         /// <exception cref="ArgumentException">
-        /// The <paramref name="permissions"/> parameter is 
+        /// The <paramref name="permissions"/> parameter is
         /// <see cref="HealthRecordItemPermissions.None"/>.
         /// </exception>
-        ///         
+        ///
         public AuthorizationRule(
             string name,
             string reason,
@@ -178,7 +178,7 @@ namespace Microsoft.HealthVault
         /// <summary>
         /// Gets the name uniquely identifying the rule within the rule set.
         /// </summary>
-        /// 
+        ///
         public string Name
         {
             get { return _name; }
@@ -188,11 +188,11 @@ namespace Microsoft.HealthVault
         /// <summary>
         /// Gets a value indicating whether the authorization rule is optional
         /// </summary>
-        /// 
+        ///
         /// <remarks>
         /// Optional rules are not required for application authorization.
         /// </remarks>
-        /// 
+        ///
         public bool IsOptional
         {
             get { return _isOptional; }
@@ -202,7 +202,7 @@ namespace Microsoft.HealthVault
         /// <summary>
         /// Gets the reason the application wants the access represented by this rule.
         /// </summary>
-        /// 
+        ///
         public string Reason
         {
             get
@@ -217,7 +217,7 @@ namespace Microsoft.HealthVault
         /// <remarks>
         ///  Each entry is a localized version of the same reason.
         /// </remarks>
-        /// 
+        ///
         public CultureSpecificStringDictionary CultureSpecificReasons
         {
             get { return _cultureSpecificReasons; }
@@ -228,7 +228,7 @@ namespace Microsoft.HealthVault
         /// <summary>
         /// Gets flags controlling display behavior of rules.
         /// </summary>
-        /// 
+        ///
         public AuthorizationRuleDisplayFlags DisplayFlags
         {
             get { return _displayFlags; }
@@ -239,11 +239,11 @@ namespace Microsoft.HealthVault
         /// <summary>
         /// Gets the permissions that the rule grants.
         /// </summary>
-        /// 
+        ///
         /// <value>
         /// An instance of <see cref="HealthRecordItemPermissions"/>.
         /// </value>
-        /// 
+        ///
         public HealthRecordItemPermissions Permissions
         {
             get { return _permissions; }
@@ -252,15 +252,15 @@ namespace Microsoft.HealthVault
             = HealthRecordItemPermissions.None;
 
         /// <summary>
-        /// Gets the sets of health record items to which this rule 
+        /// Gets the sets of health record items to which this rule
         /// grants permission.
         /// </summary>
-        /// 
+        ///
         /// <value>
         /// A read-only collection of type <see cref="AuthorizationSetDefinition"/>
         /// representing the items.
         /// </value>
-        /// 
+        ///
         public ReadOnlyCollection<AuthorizationSetDefinition> TargetSets
         {
             get { return _targetSets; }
@@ -268,15 +268,15 @@ namespace Microsoft.HealthVault
         private ReadOnlyCollection<AuthorizationSetDefinition> _targetSets;
 
         /// <summary>
-        /// Gets the sets of health record items that are excluded by this 
+        /// Gets the sets of health record items that are excluded by this
         /// rule even if they are part of the <see cref="TargetSets"/>.
         /// </summary>
-        /// 
+        ///
         /// <value>
         /// A read-only collection of type <see cref="AuthorizationSetDefinition"/>
         /// representing the items.
         /// </value>
-        /// 
+        ///
         public ReadOnlyCollection<AuthorizationSetDefinition> ExceptionSets
         {
             get { return _exceptionSets; }
@@ -286,11 +286,11 @@ namespace Microsoft.HealthVault
         /// <summary>
         /// Gets the XML representation of the <see cref="AuthorizationRule"/>.
         /// </summary>
-        /// 
+        ///
         /// <returns>
         /// The XML representation of the <see cref="AuthorizationRule"/>.
         /// </returns>
-        /// 
+        ///
         public override string ToString()
         {
             return GetXml();
@@ -299,20 +299,20 @@ namespace Microsoft.HealthVault
         /// <summary>
         /// Retrieves the authorization XML for the specified rules.
         /// </summary>
-        /// 
+        ///
         /// <param name="rules">
         /// The authorization rules to be included in the authorization XML.
         /// </param>
-        /// 
+        ///
         /// <returns>
         /// A string containing the XML representation of the specified
         /// authorization rules.
         /// </returns>
-        /// 
+        ///
         /// <exception cref="ArgumentNullException">
         /// The <paramref name="rules"/> is <b>null</b>.
         /// </exception>
-        /// 
+        ///
         public static string GetRulesXml(IList<AuthorizationRule> rules)
         {
             Validator.ThrowIfArgumentNull(rules, "rules", "GetRulesXmlNullRules");
@@ -340,31 +340,31 @@ namespace Microsoft.HealthVault
         }
 
         /// <summary>
-        /// Gets the base-64 encoding of the authorization XML for the 
+        /// Gets the base-64 encoding of the authorization XML for the
         /// specified rules.
         /// </summary>
-        /// 
+        ///
         /// <param name="rules">
         /// The authorization rules to be included in the authorization XML.
         /// </param>
-        /// 
+        ///
         /// <returns>
-        /// A string containing the base-64 encoding of the XML representation 
+        /// A string containing the base-64 encoding of the XML representation
         /// of the specified authorization rules.
         /// </returns>
-        /// 
+        ///
         /// <remarks>
         /// The base-64 encoding of the authorization rules can be used when
         /// calling the Shell web pages to authorize records, register an
         /// application, or set permissions on a record for a person or group.
-        /// The base-64 encoding of the authorization rules is passed as a 
+        /// The base-64 encoding of the authorization rules is passed as a
         /// value in the appropriate query string argument to the web page.
         /// </remarks>
-        /// 
+        ///
         /// <exception cref="ArgumentException">
         /// The <paramref name="rules"/> parameter is <b>null</b> or empty.
         /// </exception>
-        /// 
+        ///
         public static string GetBase64EncodedRulesXml(
             IList<AuthorizationRule> rules)
         {
@@ -378,11 +378,11 @@ namespace Microsoft.HealthVault
         /// <summary>
         /// Gets the XML representation of the rule.
         /// </summary>
-        /// 
+        ///
         /// <returns>
         /// A string containing XML representing the rule.
         /// </returns>
-        /// 
+        ///
         public string GetXml()
         {
             StringBuilder result = new StringBuilder();
@@ -502,11 +502,11 @@ namespace Microsoft.HealthVault
         }
 
         /// <summary>
-        /// Defines the states of a state machine that ensures that the sets 
-        /// are processed in the appropriate order to match the XML schema 
+        /// Defines the states of a state machine that ensures that the sets
+        /// are processed in the appropriate order to match the XML schema
         /// defined for target and exception sets.
         /// </summary>
-        /// 
+        ///
         private enum SetProcessingState
         {
             DateRange = 0,
@@ -535,20 +535,20 @@ namespace Microsoft.HealthVault
         /// Creates an instance of an AuthorizationRule object using
         /// the specified XML.
         /// </summary>
-        /// 
+        ///
         /// <param name="authNav">
         /// The XML containing the auth rules information.
         /// </param>
-        /// 
+        ///
         /// <returns>
-        /// A Collection of AuthorizationRule objects parsed out from 
+        /// A Collection of AuthorizationRule objects parsed out from
         /// the XML.
         /// </returns>
-        /// 
+        ///
         /// <exception cref="ArgumentNullException">
         /// If <paramref name="authNav"/> is null.
         /// </exception>
-        /// 
+        ///
         public static Collection<AuthorizationRule> CreateFromXml(
             XPathNavigator authNav)
         {
@@ -647,10 +647,10 @@ namespace Microsoft.HealthVault
             List<AuthorizationSetDefinition> exceptionSets =
                 GetSets(ruleNav, "exception-set");
 
-            // only do this if only type ID sets are allowed 
-            //                      AND 
+            // only do this if only type ID sets are allowed
+            //                      AND
             // we have either some target set or exception set data
-            // if we enter the if block w/o any target or exception set data to 
+            // if we enter the if block w/o any target or exception set data to
             // begin with, then we'll incorrectly return <b>null</b> when the XML
             // specified that permissions were allowed on all record data.
             if (onlyAllowTypeIdSets
@@ -746,6 +746,5 @@ namespace Microsoft.HealthVault
 
             return sets;
         }
-
     }
 }

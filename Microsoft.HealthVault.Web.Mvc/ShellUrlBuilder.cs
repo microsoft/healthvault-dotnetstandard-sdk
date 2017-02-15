@@ -27,7 +27,7 @@ namespace Microsoft.HealthVault.Web.Mvc
             HttpContextBase context,
             string target,
             IDictionary<string, object> parameters)
-        {   
+        {
             if (context == null)
             {
                 throw new ArgumentNullException(nameof(context));
@@ -149,7 +149,7 @@ namespace Microsoft.HealthVault.Web.Mvc
             }
 
             // absolute or scheme-relative urls are already ok
-            if (redirectOverride.IsAbsoluteUri || 
+            if (redirectOverride.IsAbsoluteUri ||
                 redirectOverride.OriginalString.StartsWith("//", StringComparison.OrdinalIgnoreCase))
             {
                 _params.Add("redirect", redirectOverride.OriginalString);

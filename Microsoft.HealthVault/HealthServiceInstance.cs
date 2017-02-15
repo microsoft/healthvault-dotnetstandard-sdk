@@ -84,11 +84,11 @@ namespace Microsoft.HealthVault
         /// <summary>
         /// Gets the instance ID.
         /// </summary>
-        /// 
+        ///
         /// <value>
         /// A string uniquely identifying the instance.
         /// </value>
-        /// 
+        ///
         public string Id
         {
             get { return _id; }
@@ -99,11 +99,11 @@ namespace Microsoft.HealthVault
         /// <summary>
         /// Gets the instance name.
         /// </summary>
-        /// 
+        ///
         /// <value>
         /// A friendly name for the instance.
         /// </value>
-        /// 
+        ///
         public string Name
         {
             get { return _name; }
@@ -114,11 +114,11 @@ namespace Microsoft.HealthVault
         /// <summary>
         /// Gets a description of the instance.
         /// </summary>
-        /// 
+        ///
         /// <value>
         /// A friendly description of the instance.
         /// </value>
-        /// 
+        ///
         public string Description
         {
             get { return _description; }
@@ -129,16 +129,16 @@ namespace Microsoft.HealthVault
         /// <summary>
         /// Gets the HealthVault URL.
         /// </summary>
-        /// 
+        ///
         /// <value>
         /// A Uri representing a URL to the HealthVault service.
         /// </value>
-        /// 
+        ///
         /// <remarks>
         /// This is the URL to the wildcat.ashx which is used to call the
         /// HealthVault XML methods.
         /// </remarks>
-        /// 
+        ///
         public Uri HealthServiceUrl
         {
             get { return _healthServiceUrl; }
@@ -149,7 +149,7 @@ namespace Microsoft.HealthVault
         /// <summary>
         /// Gets the Shell URL.
         /// </summary>
-        /// 
+        ///
         /// <value>
         /// A Uri representing the URL to access the HealthVault Shell.
         /// </value>

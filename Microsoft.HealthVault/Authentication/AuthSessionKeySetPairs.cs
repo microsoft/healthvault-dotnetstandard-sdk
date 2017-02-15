@@ -3,10 +3,10 @@
 // see http://www.microsoft.com/resources/sharedsource/licensingbasics/sharedsourcelicenses.mspx.
 // All other rights reserved.
 
+using Microsoft.HealthVault.Web.Authentication;
 using System;
 using System.Collections.Generic;
 using System.Threading;
-using Microsoft.HealthVault.Web.Authentication;
 
 namespace Microsoft.HealthVault.Authentication
 {
@@ -76,11 +76,11 @@ namespace Microsoft.HealthVault.Authentication
         /// Creates an unauthenticated keyset pair for the specified
         /// <paramref name="applicationId"/> with a new keyset.
         /// </summary>
-        /// 
+        ///
         /// <param name="applicationId">
         /// The application id to create the keyset pair for.
         /// </param>
-        /// 
+        ///
         internal AuthenticationTokenKeySetPair CreatePair(Guid applicationId)
         {
             try
@@ -113,4 +113,3 @@ namespace Microsoft.HealthVault.Authentication
         }
     }
 }
-

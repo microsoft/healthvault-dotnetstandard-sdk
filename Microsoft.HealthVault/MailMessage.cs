@@ -12,7 +12,7 @@ namespace Microsoft.HealthVault
     /// <summary>
     /// Class representing common methods/data for SDK mail messages
     /// </summary>
-    /// 
+    ///
     internal class MailMessage
     {
         internal MailMessage(

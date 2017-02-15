@@ -3,6 +3,8 @@
 // see http://www.microsoft.com/resources/sharedsource/licensingbasics/sharedsourcelicenses.mspx.
 // All other rights reserved.
 
+using Microsoft.HealthVault.Authentication;
+using Microsoft.HealthVault.Web;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -14,28 +16,23 @@ using System.Net;
 using System.Reflection;
 using System.Security;
 using System.Text;
-using System.Threading;
-using System.Web;
 using System.Xml;
-using Microsoft.HealthVault.Authentication;
-using Microsoft.HealthVault.Web;
 
 namespace Microsoft.HealthVault
 {
-
     /// <summary>
     /// Represents an individual request to a HealthVault service.
     /// The class wraps up the XML generation and web request/response.
     /// </summary>
-    /// 
+    ///
     /// <remarks>
-    /// An instance of this class can be retrieved by calling the 
-    /// <see cref="HealthServiceConnection.CreateRequest(string, int)"/> 
+    /// An instance of this class can be retrieved by calling the
+    /// <see cref="HealthServiceConnection.CreateRequest(string, int)"/>
     /// method.
-    /// This class is not thread safe. A new instance should be created when multiple requests 
+    /// This class is not thread safe. A new instance should be created when multiple requests
     /// must execute concurrently.
     /// </remarks>
-    /// 
+    ///
     public class HealthServiceRequest : IEasyWebResponseHandler
     {
         private const string CorrelationIdContextKey = "WC_CorrelationId";
@@ -76,18 +73,18 @@ namespace Microsoft.HealthVault
         }
 
         /// <summary>
-        /// Creates a new instance of the <see cref="HealthServiceRequest"/> 
+        /// Creates a new instance of the <see cref="HealthServiceRequest"/>
         /// class for the specified method.
         /// </summary>
-        /// 
+        ///
         /// <param name="connection">
         /// The client-side representation of the HealthVault service.
         /// </param>
-        /// 
+        ///
         /// <param name="methodName">
         /// The name of the method to invoke on the service.
         /// </param>
-        /// 
+        ///
         /// <param name="methodVersion">
         /// The version of the method to invoke on the service.
         /// </param>
@@ -95,15 +92,15 @@ namespace Microsoft.HealthVault
         /// <param name="record">
         /// The record to use.
         /// </param>
-        /// 
+        ///
         /// <exception cref="ArgumentNullException">
         /// The <paramref name="connection"/> parameter is <b>null</b>.
         /// </exception>
-        /// 
+        ///
         /// <exception cref="ArgumentException">
         /// The <paramref name="methodName"/> parameter is <b>null</b> or empty.
         /// </exception>
-        /// 
+        ///
         public HealthServiceRequest(
             HealthServiceConnection connection,
             string methodName,
@@ -115,30 +112,30 @@ namespace Microsoft.HealthVault
         }
 
         /// <summary>
-        /// Creates a new instance of the <see cref="HealthServiceRequest"/> 
+        /// Creates a new instance of the <see cref="HealthServiceRequest"/>
         /// class for the specified method.
         /// </summary>
-        /// 
+        ///
         /// <param name="connection">
         /// The client-side representation of the HealthVault service.
         /// </param>
-        /// 
+        ///
         /// <param name="methodName">
         /// The name of the method to invoke on the service.
         /// </param>
-        /// 
+        ///
         /// <param name="methodVersion">
         /// The version of the method to invoke on the service.
         /// </param>
-        /// 
+        ///
         /// <exception cref="ArgumentNullException">
         /// The <paramref name="connection"/> parameter is <b>null</b>.
         /// </exception>
-        /// 
+        ///
         /// <exception cref="ArgumentException">
         /// The <paramref name="methodName"/> parameter is <b>null</b> or empty.
         /// </exception>
-        /// 
+        ///
         public HealthServiceRequest(
             HealthServiceConnection connection,
             string methodName,
@@ -173,12 +170,12 @@ namespace Microsoft.HealthVault
         /// can optionally set a correlation id. This will be passed up in web requests to
         /// HealthVault and used when HealthVault writes to its logs. If issues occur, this
         /// id can be used by the HealthVault team to help debug the issue.
-        /// 
+        ///
         /// For asp.net applications, we want to avoid the use of thread local for setting
         /// the request id since a single web request is not guaranteed to fully execute on the
         /// same thread - using HttpContext.Items is the recommended way.
-        /// 
-        /// For non web applications, this method sets a [ThreadStatic] variable which stores the 
+        ///
+        /// For non web applications, this method sets a [ThreadStatic] variable which stores the
         /// id in thread local storage. All HealthVault requests made on this thread will re-use this
         /// variable
         /// </summary>
@@ -201,9 +198,9 @@ namespace Microsoft.HealthVault
 
         /// <summary>
         /// Gets the correlation id that was set by the user. For web applications, the correlation id
-        /// was set inside of HttpContext.Current.Items, so GetCorrelationId will retrieve from the 
+        /// was set inside of HttpContext.Current.Items, so GetCorrelationId will retrieve from the
         /// HttpContext
-        /// 
+        ///
         /// For non web applications, it will return whatever was set in the [ThreadStatic] variable.
         /// </summary>
         /// <returns></returns>
@@ -248,13 +245,13 @@ namespace Microsoft.HealthVault
         /// <summary>
         /// Gets the last response id that was returned by the HealthVault platform. The response id
         /// is found in the response headers and is set when a request finishes executing.
-        /// 
+        ///
         /// For web applications, the response id is stored in the HttpContext items to be shared across
         /// the web request.
-        /// 
+        ///
         /// For non web applications, the response id is stored in thread local storage so the last response
         /// in the current thread will be returned.
-        /// 
+        ///
         /// If an error occurs / exception thrown, the caller can call GetLastResponseId to get that response
         /// id which can be used to look up error information in the HealthVault logs.
         /// </summary>
@@ -280,12 +277,12 @@ namespace Microsoft.HealthVault
         /// Builds up the XML, makes the request and reads the response.
         /// Connectivity failures will except out of the http client
         /// </summary>
-        /// 
+        ///
         /// <exception cref ="HealthServiceException">
-        /// The HealthVault returns an exception in the form of an 
+        /// The HealthVault returns an exception in the form of an
         /// exception section in the response XML.
         /// </exception>
-        /// 
+        ///
         public virtual void Execute()
         {
             if (_connection.Credential != null)
@@ -302,7 +299,7 @@ namespace Microsoft.HealthVault
                 if (_connection.Credential != null)
                 {
                     // Mark the credential's authentication result as expired,
-                    // so that in the following 
+                    // so that in the following
                     // Credential.AuthenticateIfRequired we fetch a new token.
                     if (_connection.Credential.ExpireAuthenticationResult(_connection.ApplicationId))
                     {
@@ -357,14 +354,14 @@ namespace Microsoft.HealthVault
         /// Cancels any pending request to HealthVault that was initiated with the same connection
         /// as this request.
         /// </summary>
-        /// 
+        ///
         /// <remarks>
         /// Calling this method will cancel any requests that was started using the connection.
         /// It is up to the caller to start the request on another thread. Cancelling will cause
         /// a HealthServiceRequestCancelledException to be thrown on the thread the request was
         /// executed on.
         /// </remarks>
-        /// 
+        ///
         public void CancelRequest()
         {
             if (_currentEasyWeb != null)
@@ -383,13 +380,13 @@ namespace Microsoft.HealthVault
         /// response is no longer necessarily xml, it is returned as
         /// a string
         /// </summary>
-        /// 
+        ///
         /// <param name="transform">
         /// The public URL of the transform to apply to the results. If <b>null</b>,
         /// no transform is applied and the results are returned
         /// as a string.
         /// </param>
-        /// 
+        ///
         public virtual string ExecuteForTransform(string transform)
         {
             if (_connection.Credential != null)
@@ -406,7 +403,7 @@ namespace Microsoft.HealthVault
                 if (_connection.Credential != null)
                 {
                     // Mark the credential's authentication result as expired,
-                    // so that in the following 
+                    // so that in the following
                     // Credential.AuthenticateIfRequired we fetch a new token.
                     if (_connection.Credential.ExpireAuthenticationResult(_connection.ApplicationId))
                     {
@@ -460,15 +457,15 @@ namespace Microsoft.HealthVault
         /// <summary>
         /// Creates a Web request that can be sent to HealthVault.
         /// </summary>
-        /// 
+        ///
         /// <param name="transform">
         /// The optional XSL to apply.
         /// </param>
-        /// 
+        ///
         /// <returns>
         /// An instance of <see cref="EasyWebRequest"/>.
         /// </returns>
-        /// 
+        ///
         private EasyWebRequest BuildWebRequest(string transform)
         {
             if (_pendingCancel || _connection.CancelAllRequests)
@@ -510,18 +507,18 @@ namespace Microsoft.HealthVault
         }
 
         /// <summary>
-        /// Connects the XML using default values. 
+        /// Connects the XML using default values.
         /// </summary>
         ///
         /// <exception cref="XmlException">
         /// There is a failure building up the XML.
         /// </exception>
-        /// 
+        ///
         /// <private>
         /// This is protected so that the derived testing class can call it
         /// to create the request XML and then verify it is correct.
         /// </private>
-        /// 
+        ///
         protected void BuildRequestXml()
         {
             BuildRequestXml(null);
@@ -530,11 +527,11 @@ namespace Microsoft.HealthVault
         /// <summary>
         /// Gets or sets the request compression method used by the connection.
         /// </summary>
-        /// 
+        ///
         /// <returns>
         /// A string representing the request compression method.
         /// </returns>
-        /// 
+        ///
         public string RequestCompressionMethod
         {
             get { return _connection.RequestCompressionMethod; }
@@ -542,19 +539,19 @@ namespace Microsoft.HealthVault
         }
 
         /// <summary>
-        /// Connects the XML using the specified optional XSL. 
+        /// Connects the XML using the specified optional XSL.
         /// </summary>
-        /// <param name="transform">The optional XSL to apply.</param> 
+        /// <param name="transform">The optional XSL to apply.</param>
         ///
         /// <exception cref="XmlException">
         /// There is a failure building up the XML.
         /// </exception>
-        /// 
+        ///
         /// <private>
         /// This is protected so that the derived testing class can call it
         /// to create the request XML and then verify it is correct.
         /// </private>
-        /// 
+        ///
         [SuppressMessage("Microsoft.Usage", "CA2202:Do not dispose objects multiple times", Justification = "MemoryStream can be disposed multiple times. Usings block makes the code more readable")]
         protected void BuildRequestXml(string transform)
         {
@@ -567,19 +564,19 @@ namespace Microsoft.HealthVault
 
             GetInfoSection(out infoHash, out infoXml, out infoXmlLength);
             GetHeaderSection(transform, infoHash, out headerXml, out headerXmlLength);
-            
+
             using (MemoryStream requestXml = new MemoryStream(infoXml.Length + headerXml.Length + 512))
             {
                 XmlWriterSettings settings = SDKHelper.XmlUtf8WriterSettings;
 
-                using(XmlWriter writer = XmlWriter.Create(requestXml, settings))
+                using (XmlWriter writer = XmlWriter.Create(requestXml, settings))
                 {
                     // now, construct the final xml sequentially
                     // <request>
                     writer.WriteStartElement("wc-request", "request", "urn:com.microsoft.wc.request");
 
                     // <auth>
-                    // If we have an authenticated section, then construct the auth data otherwise do 
+                    // If we have an authenticated section, then construct the auth data otherwise do
                     // not include an auth section.
                     if (_connection.Credential != null)
                     {
@@ -620,7 +617,6 @@ namespace Microsoft.HealthVault
             {
                 using (XmlWriter writer = XmlWriter.Create(infoXml, settings))
                 {
-
                     writer.WriteStartElement("info");
                     writer.WriteRaw(Parameters);
                     writer.WriteEndElement();
@@ -747,22 +743,22 @@ namespace Microsoft.HealthVault
                     headerXml = xmlHeader.ToArray();
                     headerXmlLength = (int)xmlHeader.Length;
                 }
-            }            
+            }
         }
 
-        /// <summary> 
+        /// <summary>
         /// Represents the <see cref="IEasyWebResponseHandler"/> callback.
         /// </summary>
-        /// 
+        ///
         /// <param name="stream">
         /// The response stream.
         /// </param>
-        /// 
+        ///
         /// <exception cref ="HealthServiceException">
-        /// HealthVault returns an exception in the form of an 
+        /// HealthVault returns an exception in the form of an
         /// exception section in the response XML.
         /// </exception>
-        /// 
+        ///
         public void HandleResponseStream(Stream stream)
         {
             if (_responseStreamHandler != null)
@@ -775,25 +771,25 @@ namespace Microsoft.HealthVault
             }
         }
 
-        /// <summary> 
+        /// <summary>
         /// Represents the <see cref="IEasyWebResponseHandler"/> callback.
         /// </summary>
-        /// 
+        ///
         /// <param name="stream">
         /// The response stream.
         /// </param>
         /// <param name="responseHeaders">
         /// The response headers.
         /// </param>
-        /// 
+        ///
         /// <exception cref ="HealthServiceException">
-        /// HealthVault returns an exception in the form of an 
+        /// HealthVault returns an exception in the form of an
         /// exception section in the response XML.
         /// </exception>
-        /// 
+        ///
         public void HandleResponse(Stream stream, WebHeaderCollection responseHeaders)
         {
-            // Platform returns a platform request id with the responses. This allows 
+            // Platform returns a platform request id with the responses. This allows
             // developers to have additional information if necessary for debugging/logging purposes.
             Guid responseId;
             if (responseHeaders != null && Guid.TryParse(responseHeaders["WC_ResponseId"], out responseId))
@@ -819,26 +815,26 @@ namespace Microsoft.HealthVault
         /// <summary>
         /// Defines a delegate for handling the response stream for a request.
         /// </summary>
-        /// 
+        ///
         /// <param name="stream">
         /// The response stream of the request.
         /// </param>
-        /// 
+        ///
         public delegate void WebResponseStreamHandler(Stream stream);
 
         /// <summary>
-        /// Defines a delegate that gets or sets all responses for requests to the 
+        /// Defines a delegate that gets or sets all responses for requests to the
         /// HealthVault Service.
         /// </summary>
-        /// 
+        ///
         /// <remarks>
         /// If this property is set, the specified method is called once
         /// the response stream is retrieved for handling the result of the
         /// request to the HealthVault Service. If the property is not
-        /// set, the response is processed and the results can be 
+        /// set, the response is processed and the results can be
         /// retrieved using the <see cref="Response"/> property.
         /// </remarks>
-        /// 
+        ///
         public WebResponseStreamHandler ResponseStreamHandler
         {
             get { return _responseStreamHandler; }
@@ -849,16 +845,16 @@ namespace Microsoft.HealthVault
         /// <summary>
         /// Handles the data retrieved by making the web request.
         /// </summary>
-        /// 
+        ///
         /// <param name="stream">
         /// The response stream from the web request.
         /// </param>
-        /// 
+        ///
         /// <exception cref ="HealthServiceException">
-        /// HealthVault returns an exception in the form of an 
+        /// HealthVault returns an exception in the form of an
         /// exception section in the response XML.
         /// </exception>
-        /// 
+        ///
         public static HealthServiceResponseData HandleResponseStreamResult(
             Stream stream)
         {
@@ -885,25 +881,24 @@ namespace Microsoft.HealthVault
             }
 
             return result;
-
         }
 
         /// <summary>
         /// Handles the response data and headers retrieved from the web request.
         /// </summary>
-        /// 
+        ///
         /// <param name="stream">
         /// The response stream from the web request.
         /// </param>
         /// <param name="responseHeaders">
         /// The response headers from the web request.
         /// </param>
-        /// 
+        ///
         /// <exception cref ="HealthServiceException">
-        /// HealthVault returns an exception in the form of an 
+        /// HealthVault returns an exception in the form of an
         /// exception section in the response XML.
         /// </exception>
-        /// 
+        ///
         public static HealthServiceResponseData HandleResponseResult(Stream stream, WebHeaderCollection responseHeaders)
         {
             HealthServiceResponseData result = null;
@@ -1060,7 +1055,6 @@ namespace Microsoft.HealthVault
                     error.ErrorInfo = reader.ReadElementString();
                     SDKHelper.SkipToElement(reader);
                 }
-
             }
             return error;
         }
@@ -1072,11 +1066,11 @@ namespace Microsoft.HealthVault
         /// <summary>
         /// Gets or sets the method name to call.
         /// </summary>
-        /// 
+        ///
         /// <returns>
         /// A string representing the method name.
         /// </returns>
-        /// 
+        ///
         public string MethodName
         {
             get { return _methodName; }
@@ -1087,15 +1081,15 @@ namespace Microsoft.HealthVault
         /// <summary>
         /// Gets or sets the version of the method to call.
         /// </summary>
-        /// 
+        ///
         /// <returns>
         /// An integer representing the version.
         /// </returns>
-        /// 
+        ///
         /// <remarks>
         /// If <b>null</b>, the current version is called.
         /// </remarks>
-        /// 
+        ///
         public int? MethodVersion
         {
             get { return _methodVersion; }
@@ -1106,11 +1100,11 @@ namespace Microsoft.HealthVault
         /// <summary>
         /// Gets or sets the identifier of the person being impersonated.
         /// </summary>
-        /// 
+        ///
         /// <returns>
         /// A GUID representing the identifier.
         /// </returns>
-        /// 
+        ///
         public Guid ImpersonatedPersonId
         {
             get { return _targetPersonId; }
@@ -1121,11 +1115,11 @@ namespace Microsoft.HealthVault
         /// <summary>
         /// Gets or sets the record identifier.
         /// </summary>
-        /// 
+        ///
         /// <returns>
         /// A GUID representing the identifier.
         /// </returns>
-        /// 
+        ///
         public Guid RecordId
         {
             get { return _recordId; }
@@ -1136,11 +1130,11 @@ namespace Microsoft.HealthVault
         /// <summary>
         /// Gets or sets the culture-code for the request.
         /// </summary>
-        /// 
+        ///
         /// <returns>
         /// A string representing the culture-code.
         /// </returns>
-        /// 
+        ///
         public string CultureCode
         {
             get { return _cultureCode; }
@@ -1153,11 +1147,11 @@ namespace Microsoft.HealthVault
         /// <summary>
         /// Gets a string identifying this version of the HealthVault .NET APIs.
         /// </summary>
-        /// 
+        ///
         /// <returns>
         /// A string representing the version.
         /// </returns>
-        /// 
+        ///
         internal static string Version
         {
             get { return _version; }
@@ -1169,11 +1163,11 @@ namespace Microsoft.HealthVault
         /// Gets or sets the parameters for the method invocation.
         /// The parameters are specified via XML for the particular method.
         /// </summary>
-        /// 
+        ///
         /// <returns>
         /// A string representing the parameters.
         /// </returns>
-        /// 
+        ///
         public string Parameters
         {
             get
@@ -1199,15 +1193,15 @@ namespace Microsoft.HealthVault
         /// <summary>
         /// Gets or sets the timeout for the request, in seconds.
         /// </summary>
-        /// 
+        ///
         /// <returns>
         /// An integer representing the timeout, in seconds.
         /// </returns>
-        /// 
+        ///
         /// <exception cref="ArgumentOutOfRangeException">
         /// The timeout value is set to less than 0.
         /// </exception>
-        /// 
+        ///
         public int TimeoutSeconds
         {
             get { return _timeoutSeconds; }
@@ -1225,16 +1219,16 @@ namespace Microsoft.HealthVault
         /// <summary>
         /// Gets the response after Execute is called.
         /// </summary>
-        /// 
+        ///
         /// <returns>
         /// An instance of <see cref="HealthServiceResponseData"/>.
         /// </returns>
-        /// 
+        ///
         /// <private>
-        /// The setter is internal as a test hook so that the response can 
+        /// The setter is internal as a test hook so that the response can
         /// be set by test code in derived classes.
         /// </private>
-        /// 
+        ///
         public HealthServiceResponseData Response
         {
             get { return _response; }
@@ -1248,10 +1242,10 @@ namespace Microsoft.HealthVault
         #endregion
 
         /// <summary>
-        /// This is a test hook so that testing class can set different time 
+        /// This is a test hook so that testing class can set different time
         /// to live to verify if HealthVault checks for it.
         /// </summary>
-        /// 
+        ///
         internal int TimeToLiveSeconds
         {
             get
@@ -1269,7 +1263,7 @@ namespace Microsoft.HealthVault
         /// This is a test hook so that the derived testing class can
         /// verify the XML request.
         /// </summary>
-        /// 
+        ///
         internal Byte[] XmlRequest
         {
             get { return _xmlRequest; }

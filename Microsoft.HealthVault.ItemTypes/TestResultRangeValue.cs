@@ -3,12 +3,7 @@
 // see http://www.microsoft.com/resources/sharedsource/licensingbasics/sharedsourcelicenses.mspx.
 // All other rights reserved.
 
-
 using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Globalization;
-using System.Text;
 using System.Xml;
 using System.Xml.XPath;
 
@@ -17,39 +12,39 @@ namespace Microsoft.HealthVault.ItemTypes
     /// <summary>
     /// Represents a lab test result range value.
     /// </summary>
-    /// 
+    ///
     /// <remarks>
     /// A range consists of minimum and/or maximum values.
     /// An open-ended range may be created by omitting the minimum or maximum value.
-    /// 
+    ///
     /// For example, "greater than 3.5" is created by setting the minimum value to 3.5 and
-    /// the maximum value to null. 
+    /// the maximum value to null.
     /// </remarks>
-    /// 
-    /// 
+    ///
+    ///
     public class TestResultRangeValue : HealthRecordItemData
     {
         /// <summary>
-        /// Creates a new instance of the LabTestResultRangeValue class with 
+        /// Creates a new instance of the LabTestResultRangeValue class with
         /// default values.
         /// </summary>
-        /// 
+        ///
         public TestResultRangeValue()
         {
         }
 
-        /// <summary> 
+        /// <summary>
         /// Populates the data for the range from the XML.
         /// </summary>
-        /// 
-        /// <param name="navigator"> 
+        ///
+        /// <param name="navigator">
         /// The XML node representing the range.
         /// </param>
-        /// 
+        ///
         /// <exception cref="ArgumentNullException">
         /// The <paramref name="navigator"/> parameter is <b>null</b>.
         /// </exception>
-        /// 
+        ///
         public override void ParseXml(XPathNavigator navigator)
         {
             Validator.ThrowIfNavigatorNull(navigator);
@@ -58,26 +53,26 @@ namespace Microsoft.HealthVault.ItemTypes
             _maximum = XPathHelper.GetOptNavValueAsDouble(navigator, "maximum-range");
         }
 
-        /// <summary> 
+        /// <summary>
         /// Writes the range data to the specified XML writer.
         /// </summary>
-        /// 
+        ///
         /// <param name="nodeName">
         /// The name of the outer element for the range data.
         /// </param>
-        /// 
-        /// <param name="writer"> 
+        ///
+        /// <param name="writer">
         /// The XmlWriter to write the range data to.
         /// </param>
-        /// 
+        ///
         /// <exception cref="ArgumentException">
         /// The <paramref name="nodeName"/> parameter is <b>null</b> or empty.
         /// </exception>
-        /// 
+        ///
         /// <exception cref="ArgumentNullException">
         /// The <paramref name="writer"/> parameter is <b>null</b>.
         /// </exception>
-        /// 
+        ///
         public override void WriteXml(string nodeName, XmlWriter writer)
         {
             Validator.ThrowIfStringNullOrEmpty(nodeName, "nodeName");
@@ -103,7 +98,7 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <summary>
         /// Gets or sets the minimum value of the range.
         /// </summary>
-        /// 
+        ///
         /// <value>
         /// A value of type double? that represents the minimum value of the range.
         /// </value>
@@ -117,7 +112,7 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <summary>
         /// Gets or sets the maximum value of the range.
         /// </summary>
-        /// 
+        ///
         /// <value>
         /// A value of type double? that represents the maximum value of the range.
         /// </value>
@@ -130,7 +125,7 @@ namespace Microsoft.HealthVault.ItemTypes
 
         /// <summary>
         /// Gets a string representation of the test result range value.
-        /// </summary> 
+        /// </summary>
         ///
         /// <returns>
         /// A string representation of the test result range value item.
@@ -144,7 +139,7 @@ namespace Microsoft.HealthVault.ItemTypes
             return String.Format(
                 ResourceRetriever.GetResourceString(
                         "TestResultRangeValueToStringFormat"),
-                minimumString, 
+                minimumString,
                 maximumString);
         }
     }

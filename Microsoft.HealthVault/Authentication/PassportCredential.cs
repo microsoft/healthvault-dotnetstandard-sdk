@@ -11,7 +11,7 @@ namespace Microsoft.HealthVault.Authentication
     /// <summary>
     /// Represents the credential for those using Passport.
     /// </summary>
-    /// 
+    ///
     internal class PassportCredential : Credential
     {
         #region ctor
@@ -48,19 +48,19 @@ namespace Microsoft.HealthVault.Authentication
         /// <summary>
         /// Creates a new instance of a PassportCredential.
         /// </summary>
-        /// 
+        ///
         /// <param name="appId">
         /// A GUID representing the application identifier.
         /// </param>
-        /// 
+        ///
         /// <remarks>
         /// A new instance of a PassportCredential is created by first
-        /// calling into the Passport APIs and getting a ticket from the 
+        /// calling into the Passport APIs and getting a ticket from the
         /// Passport service for the person logging on. Once the ticket has
         /// been verified by the Shell, it passes it to HealthVault to create
         /// the session token.
         /// </remarks>
-        /// 
+        ///
         internal static PassportCredential Create(Guid appId)
         {
             PassportCredential cred = new PassportCredential(appId);
@@ -74,7 +74,7 @@ namespace Microsoft.HealthVault.Authentication
         /// Calls the CardSpace service and establishes the client side of the
         /// authenticated session.
         /// </summary>
-        /// 
+        ///
         internal void GetToken()
         {
             SharedSecret = new CryptoHmac();
@@ -83,11 +83,11 @@ namespace Microsoft.HealthVault.Authentication
         /// <summary>
         /// Represents the XMLWriter that receives credential information.
         /// </summary>
-        /// 
+        ///
         /// <param name="writer">
         /// The XMLWriter.
         /// </param>
-        /// 
+        ///
         public override void WriteInfoXml(XmlWriter writer)
         {
             writer.WriteStartElement("passport");
@@ -100,6 +100,3 @@ namespace Microsoft.HealthVault.Authentication
         }
     }
 }
-
-
-

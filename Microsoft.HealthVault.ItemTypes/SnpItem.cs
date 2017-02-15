@@ -4,7 +4,6 @@
 // All other rights reserved.
 
 using System;
-using System.Collections.Generic;
 using System.Text;
 
 namespace Microsoft.HealthVault.ItemTypes
@@ -15,9 +14,9 @@ namespace Microsoft.HealthVault.ItemTypes
     ///
     /// <remarks>
     /// Within the comma-separated data, each SNP is encoded as follows:
-    /// 
+    ///
     /// [refSNP id],[strand orientation],[result],[assay id],[start position],[end position]
-    /// 
+    ///
     /// Where:
     /// refSNP id: Reference SNP identifier from NCBI dbSNP database.
     ///  strand orientation: "+" encodes top, "-" encodes bottom.
@@ -25,17 +24,16 @@ namespace Microsoft.HealthVault.ItemTypes
     ///  assay id: Platform dependent probe set id.
     ///  start position: Start position on the chromosome.
     ///  end position: End position on the chromosome.
-    ///  
+    ///
     /// Example: rs1891906,-,GT, SNP_C-315533, 940106, 940107
     /// </remarks>
-    /// 
+    ///
     public class SnpItem
     {
-
         /// <summary>
-        /// Creates an instance of the <see cref="SnpItem"/> type with default values. 
+        /// Creates an instance of the <see cref="SnpItem"/> type with default values.
         /// </summary>
-        /// 
+        ///
         public SnpItem()
         {
         }
@@ -43,17 +41,17 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <summary>
         /// Creates an instance of the <see cref="SnpItem"/> type with the specified values.
         /// </summary>
-        /// 
+        ///
         /// <param name="referenceSnpId">Reference SNP Id (rs).</param>
         /// <param name="strandOrientation">The orientation of the strand. </param>
         /// <param name="result">The result of the SNP test. </param>
         /// <param name="assayId">The platform dependent probe set id. </param>
         /// <param name="startPosition">The start position on the chromosome. </param>
         /// <param name="endPosition">The end position on the chromosome. </param>
-        /// 
+        ///
         public SnpItem(
-            string referenceSnpId, 
-            string strandOrientation, 
+            string referenceSnpId,
+            string strandOrientation,
             string result,
             string assayId,
             int startPosition,
@@ -68,29 +66,28 @@ namespace Microsoft.HealthVault.ItemTypes
         }
 
         /// <summary>
-        /// Gets or sets the Reference SNP ID of the result. 
+        /// Gets or sets the Reference SNP ID of the result.
         /// </summary>
-        /// 
+        ///
         /// <remarks>
-        /// For example, rs132342. 
+        /// For example, rs132342.
         /// </remarks>
-        /// 
+        ///
         public string ReferenceSnpId
         {
             get { return _referenceSnpId; }
             set { _referenceSnpId = value; }
-
         }
         private string _referenceSnpId;
 
         /// <summary>
-        /// Gets or sets the orientation of the strand.  
+        /// Gets or sets the orientation of the strand.
         /// </summary>
-        /// 
+        ///
         /// <remarks>
         /// The value can be either + or -.
         /// </remarks>
-        /// 
+        ///
         public string StrandOrientation
         {
             get { return _strandOrientation; }
@@ -99,15 +96,15 @@ namespace Microsoft.HealthVault.ItemTypes
         private string _strandOrientation;
 
         /// <summary>
-        /// Gets or sets the result of the SNP test.  
+        /// Gets or sets the result of the SNP test.
         /// </summary>
-        /// 
+        ///
         /// <remarks>
-        /// For example, AA, AT. Each letter correspond to one copy of 
-        /// the specified SNP is the customer's genome, since each of us has two 
-        /// copies of each gene under normal circumstance.  
+        /// For example, AA, AT. Each letter correspond to one copy of
+        /// the specified SNP is the customer's genome, since each of us has two
+        /// copies of each gene under normal circumstance.
         /// </remarks>
-        /// 
+        ///
         public string Result
         {
             get { return _result; }
@@ -116,9 +113,9 @@ namespace Microsoft.HealthVault.ItemTypes
         private string _result;
 
         /// <summary>
-        /// Gets or sets the assay ID.  
+        /// Gets or sets the assay ID.
         /// </summary>
-        /// 
+        ///
         public string AssayId
         {
             get { return _assayId; }
@@ -127,9 +124,9 @@ namespace Microsoft.HealthVault.ItemTypes
         private string _assayId;
 
         /// <summary>
-        /// Gets or sets the start position.  
+        /// Gets or sets the start position.
         /// </summary>
-        /// 
+        ///
         public int StartPosition
         {
             get { return _startPosition; }
@@ -138,9 +135,9 @@ namespace Microsoft.HealthVault.ItemTypes
         private int _startPosition;
 
         /// <summary>
-        /// Gets or sets the end Position.  
+        /// Gets or sets the end Position.
         /// </summary>
-        /// 
+        ///
         public int EndPosition
         {
             get { return _endPosition; }
@@ -149,9 +146,9 @@ namespace Microsoft.HealthVault.ItemTypes
         private int _endPosition;
 
         /// <summary>
-        /// Gets a string representation of the snp result item. 
+        /// Gets a string representation of the snp result item.
         /// </summary>
-        /// 
+        ///
         public override string ToString()
         {
             StringBuilder result = new StringBuilder(200);
@@ -192,10 +189,8 @@ namespace Microsoft.HealthVault.ItemTypes
                     "SnpItemToStringFormatStartAndEnd"),
                 StartPosition,
                 EndPosition);
-            
-            return result.ToString();
 
+            return result.ToString();
         }
     }
 }
-

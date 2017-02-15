@@ -9,10 +9,9 @@
 //
 // ********************************************************
 
+using Microsoft.HealthVault.Exceptions;
 using System;
 using System.Diagnostics.CodeAnalysis;
-using System.Web.Mvc;
-using Microsoft.HealthVault.Exceptions;
 
 namespace Microsoft.HealthVault.Web.Mvc
 {
@@ -35,8 +34,8 @@ namespace Microsoft.HealthVault.Web.Mvc
             MessageId = "actionqs",
             Justification = "actionqs is the query parameter, shortened for url brevity")]
         [SuppressMessage(
-            "Microsoft.Security.Web.Configuration", 
-            "CA3147:MarkVerbHandlersWithValidateAntiforgeryToken", 
+            "Microsoft.Security.Web.Configuration",
+            "CA3147:MarkVerbHandlersWithValidateAntiforgeryToken",
             Justification = "We are doing cross posting so we are validating via referrer and encrypted credential")]
         public virtual ActionResult Index(string target, string actionqs)
         {
@@ -56,9 +55,9 @@ namespace Microsoft.HealthVault.Web.Mvc
 
         private bool IsValidUrl(string actionqs)
         {
-            // relative urls are ok, except those that are scheme relative, which could have 
+            // relative urls are ok, except those that are scheme relative, which could have
             // different host
-            if (Uri.IsWellFormedUriString(actionqs, UriKind.Relative) && 
+            if (Uri.IsWellFormedUriString(actionqs, UriKind.Relative) &&
                !actionqs.StartsWith("//", StringComparison.Ordinal))
             {
                 return true;

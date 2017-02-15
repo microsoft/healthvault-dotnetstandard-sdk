@@ -16,6 +16,7 @@ namespace Microsoft.HealthVault.Certificate
     internal static class NativeMethods
     {
         #region Certificate Name methods
+
         /// <summary>
         /// 	Convert a X.500 string to an encoded certificate name
         /// </summary>
@@ -136,6 +137,7 @@ namespace Microsoft.HealthVault.Certificate
         #endregion
 
         #region Create/Get/Export cetificate methods
+
         /// <summary>
         /// 	Build a self signed certificate
         /// </summary>
@@ -146,7 +148,7 @@ namespace Microsoft.HealthVault.Certificate
         /// <param name="pSubjectIssuerBlob">Pointer to the blob containing the DN of the certificate</param>
         /// <param name="dwFlags">Flags to override the default function behavior</param>
         /// <param name="pKeyProvInfo">[optional] information on the key provider for the certificate</param>
-        /// <param name="pSignatureAlgorithm">[optional] A pointer to a CRYPT_ALGORITHM_IDENTIFIER structure. 
+        /// <param name="pSignatureAlgorithm">[optional] A pointer to a CRYPT_ALGORITHM_IDENTIFIER structure.
         ///                                             If NULL, the default algorithm, SHA1RSA, is used.</param>
         /// <param name="pStartTime">[optional] begining of the certificate's validity</param>
         /// <param name="pEndTime">[optional] end of the certificate's validity</param>
@@ -245,6 +247,7 @@ namespace Microsoft.HealthVault.Certificate
                                                     AlgorithmType algId,
                                                     KeyFlags dwFlags,
                                                     [Out]out KeyHandle phKey);
+
         /// <summary>
         /// 	Export the certificates and private keys from a store
         /// </summary>
@@ -269,6 +272,7 @@ namespace Microsoft.HealthVault.Certificate
 
         // Disable "field not used" warning to leave consts for documentation purposes
 #pragma warning disable 414
+
         [Flags]
         internal enum SelfSignFlags
         {
@@ -411,6 +415,5 @@ namespace Microsoft.HealthVault.Certificate
         }
 
         #endregion
-
     }
 }

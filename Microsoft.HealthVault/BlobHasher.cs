@@ -3,16 +3,16 @@
 // see http://www.microsoft.com/resources/sharedsource/licensingbasics/sharedsourcelicenses.mspx.
 // All other rights reserved.
 
+using Microsoft.HealthVault.Authentication;
 using System;
 using System.Collections.Generic;
 using System.Security.Cryptography;
-using Microsoft.HealthVault.Authentication;
 
 namespace Microsoft.HealthVault
 {
     /// <summary>
     /// Used to calculate BLOB hashes.
-    /// </summary>    
+    /// </summary>
     internal class BlobHasher
     {
         /// <summary>
@@ -20,19 +20,19 @@ namespace Microsoft.HealthVault
         /// </summary>
         /// <param name="algorithm"></param>
         /// <param name="blockSize"></param>
-        /// 
+        ///
         /// <exception cref="ArgumentException">
         /// If <paramref name="algorithm"/> is not a supported blob hash algorithm.
         /// </exception>
-        /// 
+        ///
         /// <exception cref="ArgumentOutOfRangeException">
-        /// If <paramref name="blockSize"/> is not a positive value. 
+        /// If <paramref name="blockSize"/> is not a positive value.
         /// </exception>
-        /// 
+        ///
         /// <exception cref="CryptographicUnexpectedOperationException">
         /// If the hash algorithm's hash size has a partial byte length.
         /// </exception>
-        ///         
+        ///
         internal BlobHasher(BlobHashAlgorithm algorithm, int blockSize)
         {
             switch (algorithm)
@@ -70,20 +70,20 @@ namespace Microsoft.HealthVault
         /// <param name="offset"></param>
         /// <param name="count"></param>
         /// <returns>The block hashes.</returns>
-        /// 
+        ///
         /// <exception cref="ArgumentNullException">
         /// If <paramref name="data"/> is null.
         /// </exception>
-        /// 
+        ///
         /// <exception cref="ArgumentException">
         /// The sum of <paramref name="offset"/> and <paramref name="count"/> is greater than the
         /// <paramref name="data"/> length.
         /// </exception>
-        /// 
+        ///
         /// <exception cref="ArgumentOutOfRangeException">
-        /// If <paramref name="offset"/> or <paramref name="count"/> is negative 
+        /// If <paramref name="offset"/> or <paramref name="count"/> is negative
         /// </exception>
-        ///         
+        ///
         internal IList<byte[]> CalculateBlockHashes(byte[] data, int offset, int count)
         {
             Validator.ThrowIfArgumentNull(data, "data", "ArgumentNull");
@@ -127,11 +127,11 @@ namespace Microsoft.HealthVault
         /// </summary>
         /// <param name="blockHashes"></param>
         /// <returns>The BLOB hash.</returns>
-        /// 
+        ///
         /// <exception cref="ArgumentNullException">
         /// If <paramref name="blockHashes"/> is null.
         /// </exception>
-        /// 
+        ///
         /// <exception cref="ArgumentOutOfRangeException">
         /// If <paramref name="blockHashes"/> is empty.
         /// </exception>
@@ -158,7 +158,7 @@ namespace Microsoft.HealthVault
 
         /// <summary>
         /// Used for calculating the blob hash for inline blobs.
-        /// </summary>        
+        /// </summary>
         internal byte[] CalculateBlobHash(byte[] data, int offset, int count)
         {
             return CalculateBlobHash(CalculateBlockHashes(data, offset, count));

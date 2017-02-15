@@ -3,12 +3,7 @@
 // see http://www.microsoft.com/resources/sharedsource/licensingbasics/sharedsourcelicenses.mspx.
 // All other rights reserved.
 
-
 using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Globalization;
-using System.Text;
 using System.Xml;
 using System.Xml.XPath;
 
@@ -17,13 +12,13 @@ namespace Microsoft.HealthVault.ItemTypes
     /// <summary>
     /// Represents a person's name.
     /// </summary>
-    /// 
+    ///
     public class Name : HealthRecordItemData
     {
         /// <summary>
         /// Creates a new instance of the  <see cref="Name"/> class with default values.
         /// </summary>
-        /// 
+        ///
         public Name()
         {
         }
@@ -31,45 +26,45 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <summary>
         /// Creates a new instance of the  <see cref="Name"/> class with the specified full name.
         /// </summary>
-        /// 
+        ///
         /// <param name="fullName">
         /// The full name.
         /// </param>
-        /// 
+        ///
         /// <exception cref="ArgumentException">
         /// The <paramref name="fullName"/> parameter is <b>null</b> or empty.
         /// </exception>
-        /// 
+        ///
         public Name(string fullName)
         {
             this.Full = fullName;
         }
 
         /// <summary>
-        /// Creates a new instance of the  <see cref="Name"/> class with the 
+        /// Creates a new instance of the  <see cref="Name"/> class with the
         /// specified first, middle, and last name.
         /// </summary>
-        /// 
+        ///
         /// <param name="fullName">
         /// The full name.
         /// </param>
-        /// 
+        ///
         /// <param name="first">
         /// The first name (given name).
         /// </param>
-        /// 
+        ///
         /// <param name="middle">
         /// The middle name.
         /// </param>
-        /// 
+        ///
         /// <param name="last">
         /// The last name (surname).
         /// </param>
-        /// 
+        ///
         /// <exception cref="ArgumentException">
         /// The <paramref name="fullName"/> parameter is <b>null</b> or empty.
         /// </exception>
-        /// 
+        ///
         public Name(string fullName, string first, string middle, string last)
             : this(fullName)
         {
@@ -79,38 +74,38 @@ namespace Microsoft.HealthVault.ItemTypes
         }
 
         /// <summary>
-        /// Creates a new instance of the  <see cref="Name"/> class with the 
+        /// Creates a new instance of the  <see cref="Name"/> class with the
         /// specified first, middle, and last name and suffix.
         /// </summary>
-        /// 
+        ///
         /// <param name="fullName">
         /// The full name.
         /// </param>
-        /// 
+        ///
         /// <param name="first">
         /// The first name (given name).
         /// </param>
-        /// 
+        ///
         /// <param name="middle">
         /// The middle name.
         /// </param>
-        /// 
+        ///
         /// <param name="last">
         /// The last name (surname).
         /// </param>
-        /// 
+        ///
         /// <param name="suffix">
         /// The name suffix.
         /// </param>
-        /// 
+        ///
         /// <exception cref="ArgumentException">
         /// The <paramref name="fullName"/> parameter is <b>null</b> or empty.
         /// </exception>
-        /// 
+        ///
         public Name(
-            string fullName, 
-            string first, 
-            string middle, 
+            string fullName,
+            string first,
+            string middle,
             string last,
             CodableValue suffix)
             : this(fullName, first, middle, last)
@@ -121,15 +116,15 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <summary>
         /// Populates the data from the specified XML.
         /// </summary>
-        /// 
+        ///
         /// <param name="navigator">
         /// The XML containing the name information.
         /// </param>
-        /// 
+        ///
         /// <exception cref="ArgumentNullException">
         /// The <paramref name="navigator"/> parameter is <b>null</b>.
         /// </exception>
-        /// 
+        ///
         public override void ParseXml(XPathNavigator navigator)
         {
             Validator.ThrowIfNavigatorNull(navigator);
@@ -177,35 +172,34 @@ namespace Microsoft.HealthVault.ItemTypes
                 _suffix = new CodableValue();
                 _suffix.ParseXml(suffixNav);
             }
-
         }
 
         /// <summary>
         /// Writes the XML representation of the name into
         /// the specified XML writer.
         /// </summary>
-        /// 
+        ///
         /// <param name="nodeName">
         /// The name of the outer node for the name.
         /// </param>
-        /// 
+        ///
         /// <param name="writer">
-        /// The XML writer into which the name should be 
+        /// The XML writer into which the name should be
         /// written.
         /// </param>
-        /// 
+        ///
         /// <exception cref="ArgumentException">
         /// The <paramref name="nodeName"/> parameter is <b>null</b> or empty.
         /// </exception>
-        /// 
+        ///
         /// <exception cref="ArgumentNullException">
         /// The <paramref name="writer"/> parameter is <b>null</b>.
         /// </exception>
-        /// 
+        ///
         /// <exception cref="HealthRecordItemSerializationException">
         /// The <see cref="Full"/> property has not been set.
         /// </exception>
-        /// 
+        ///
         public override void WriteXml(string nodeName, XmlWriter writer)
         {
             Validator.ThrowIfStringNullOrEmpty(nodeName, "nodeName");
@@ -241,26 +235,25 @@ namespace Microsoft.HealthVault.ItemTypes
                 _suffix.WriteXml("suffix", writer);
             }
 
-
             writer.WriteEndElement();
         }
 
         /// <summary>
         /// Gets or sets the full name.
         /// </summary>
-        /// 
+        ///
         /// <value>
         /// A string representing the name.
         /// </value>
-        /// 
+        ///
         /// <exception cref="ArgumentException">
         /// The <paramref name="value"/> parameter is <b>null</b> or empty when setting.
         /// </exception>
-        /// 
+        ///
         public string Full
         {
             get { return _full; }
-            set 
+            set
             {
                 Validator.ThrowIfArgumentNull(value, "Full", "FullMandatory");
                 _full = value;
@@ -271,15 +264,15 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <summary>
         /// Gets or sets the person's title.
         /// </summary>
-        /// 
+        ///
         /// <value>
         /// A <see cref="CodableValue"/> representing the title.
         /// </value>
-        /// 
+        ///
         /// <remarks>
         /// Set the value to <b>null</b> if the title should not be stored.
         /// </remarks>
-        /// 
+        ///
         public CodableValue Title
         {
             get { return _title; }
@@ -290,15 +283,15 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <summary>
         /// Gets or sets the person's first name.
         /// </summary>
-        /// 
+        ///
         /// <value>
         /// A string representing the first name.
         /// </value>
-        /// 
+        ///
         /// <remarks>
         /// Set the value to <b>null</b> if the first name should not be stored.
         /// </remarks>
-        /// 
+        ///
         public string First
         {
             get { return _first; }
@@ -309,15 +302,15 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <summary>
         /// Gets or sets the person's middle name.
         /// </summary>
-        /// 
+        ///
         /// <value>
         /// A string representing the middle name.
         /// </value>
-        /// 
+        ///
         /// <remarks>
         /// Set the value to <b>null</b> if the middle name should not be stored.
         /// </remarks>
-        /// 
+        ///
         public string Middle
         {
             get { return _middle; }
@@ -328,15 +321,15 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <summary>
         /// Gets or sets the person's last name.
         /// </summary>
-        /// 
+        ///
         /// <value>
         /// A string representing the last name.
         /// </value>
-        /// 
+        ///
         /// <remarks>
         /// Set the value to <b>null</b> if the last name should not be stored.
         /// </remarks>
-        /// 
+        ///
         public string Last
         {
             get { return _last; }
@@ -347,15 +340,15 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <summary>
         /// Gets or sets the person's suffix.
         /// </summary>
-        /// 
+        ///
         /// <value>
         /// A string representing the suffix.
         /// </value>
-        /// 
+        ///
         /// <remarks>
         /// Set the value to <b>null</b> if the suffix should not be stored.
         /// </remarks>
-        /// 
+        ///
         public CodableValue Suffix
         {
             get { return _suffix; }
@@ -366,11 +359,11 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <summary>
         /// Gets a string representation of the name.
         /// </summary>
-        /// 
+        ///
         /// <returns>
         /// A string representation of the name.
         /// </returns>
-        /// 
+        ///
         public override string ToString()
         {
             string result = Full;
@@ -391,5 +384,4 @@ namespace Microsoft.HealthVault.ItemTypes
             return result;
         }
     }
-
 }

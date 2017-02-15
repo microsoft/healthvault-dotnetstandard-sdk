@@ -3,7 +3,6 @@
 // see http://www.microsoft.com/resources/sharedsource/licensingbasics/sharedsourcelicenses.mspx.
 // All other rights reserved.
 
-
 namespace Microsoft.HealthVault
 {
     /// <summary>
@@ -12,13 +11,12 @@ namespace Microsoft.HealthVault
     ///
     public enum HealthRecordState
     {
-
         /// <summary>
         /// An unknown state was returned from the server.
         /// </summary>
-        /// 
-        Unknown = 0,    
-        
+        ///
+        Unknown = 0,
+
         /// <summary>
         /// Active. All is well.
         /// </summary>
@@ -42,7 +40,5 @@ namespace Microsoft.HealthVault
         /// </summary>
         ///
         Deleted,
-
     }
-
 }

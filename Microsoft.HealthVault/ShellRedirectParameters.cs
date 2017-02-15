@@ -6,16 +6,13 @@
 using System;
 using System.Collections.Specialized;
 using System.Text;
-using System.Web;
-using Microsoft.HealthVault.ItemTypes;
-using Microsoft.HealthVault.Web;
 
 namespace Microsoft.HealthVault
 {
     /// <summary>
     /// Parameters for constructing a HealthVault Shell redirect URL.
     /// </summary>
-    /// 
+    ///
     /// <remarks>
     /// See the <a href="http://msdn.microsoft.com/en-us/library/ff803620.aspx">Shell redirect interface documentation</a> for
     /// complete listing of all parameters supported by Shell.
@@ -37,7 +34,7 @@ namespace Microsoft.HealthVault
         /// Initializes a new instance of the <see cref="ShellRedirectParameters"/> class with
         /// the specified Shell redirector URL.
         /// </summary>
-        /// 
+        ///
         public ShellRedirectParameters(string shellRedirectorUrl)
             : this()
         {
@@ -47,18 +44,18 @@ namespace Microsoft.HealthVault
         /// <summary>
         /// Gets or sets the base Shell redirector URL.
         /// </summary>
-        /// 
+        ///
         /// <remarks>
         /// <p>
         /// For example, "https://account.healthvault.com/redirect.aspx".
         /// </p>
-        /// 
+        ///
         /// <p>
-        /// If the specified URL does not end with "/redirect.aspx", when 
+        /// If the specified URL does not end with "/redirect.aspx", when
         /// <see cref="ConstructRedirectUrl"/> is called, "/redirect.aspx"
         /// is appended to the URL used for redirection.
         /// </p>
-        /// 
+        ///
         /// <p>
         /// If not specified, the value of the <see cref="HealthApplicationConfiguration.HealthVaultShellUrl"/> configuration is
         /// used for constructing the Shell redirect URL.
@@ -71,22 +68,22 @@ namespace Microsoft.HealthVault
         /// the application simultaneously deals with multiple records
         /// for the same person.
         /// </summary>
-        /// 
+        ///
         /// <remarks>
-        /// If set to true, this is encoded as the value of the <b>ismra</b> parameter in the 
+        /// If set to true, this is encoded as the value of the <b>ismra</b> parameter in the
         /// <b>targetqs</b> query string parameter.
-        /// 
+        ///
         /// <p>
         /// See the <a href="http://msdn.microsoft.com/en-us/library/ff803620.aspx">Shell redirect interface documentation</a>.
         /// </p>
         /// </remarks>
-        /// 
+        ///
         public bool? IsMultiRecordApplication { get; set; }
 
         /// <summary>
         /// Gets or sets the signup code parameter for creating a HealthVault account.
         /// </summary>
-        /// 
+        ///
         /// <remarks>
         /// <p>
         /// This is required for applications in locations with limited access to HealthVault.
@@ -99,71 +96,71 @@ namespace Microsoft.HealthVault
         /// <see cref="Microsoft.HealthVault.Package.ConnectPackage.CreatePackage" />,
         /// and <see cref="Microsoft.HealthVault.Package.ConnectPackage.AllocatePackageId" />.
         /// </p>
-        /// 
+        ///
         /// <p>
-        /// If specified, this is encoded as the value of the <b>signupcode</b> parameter in the 
+        /// If specified, this is encoded as the value of the <b>signupcode</b> parameter in the
         /// <b>targetqs</b> query string parameter.
         /// </p>
-        /// 
+        ///
         /// <p>
         /// See the <a href="http://msdn.microsoft.com/en-us/library/ff803620.aspx">Shell redirect interface documentation</a>.
         /// </p>
         /// </remarks>
-        /// 
+        ///
         public string SignupCode { get; set; }
 
         /// <summary>
         /// Gets or sets the name of the location to redirect to in HealthVault Shell.
         /// </summary>
-        /// 
+        ///
         /// <remarks>
         /// <p>
         /// See <a href="http://msdn.microsoft.com/en-us/library/ff803620.aspx">Shell redirect interface</a> for
         /// complete listing of target locations and their parameters.
         /// </p>
-        /// 
+        ///
         /// <p>
         /// This is encoded as the value of the <b>target</b> query string parameter in the
         /// redirect URL.
         /// </p>
         /// </remarks>
-        /// 
+        ///
         public string TargetLocation { get; set; }
 
         /// <summary>
         /// Gets the collection of target-specific parameters to pass to the target location.
         /// </summary>
-        /// 
+        ///
         /// <remarks>
         /// <p>
         /// See <a href="http://msdn.microsoft.com/en-us/library/ff803620.aspx">Shell redirect interface</a> for
         /// complete listing of target locations and their parameters.
         /// </p>
-        /// 
+        ///
         /// <p>
         /// This is encoded as a key-value query string (application/x-www-form-urlencoded) along with <see cref="P:TargetQueryString"/>
         /// as the value of the <b>targetqs</b> query string parameter in the redirect URL.
         /// </p>
         /// </remarks>
-        /// 
+        ///
         public NameValueCollection TargetParameters { get; private set; }
 
         /// <summary>
         /// Gets or sets the target-specific query string that is passed to the target location.
         /// </summary>
-        /// 
+        ///
         /// <remarks>
         /// <p>
         /// When specified, this value is used along with the <see cref="P:TargetParameters"/> name-value collection as the value
         /// of the <b>targetqs</b> query string parameter.
         /// </p>
-        /// 
+        ///
         /// <p>
         /// See <a href="http://msdn.microsoft.com/en-us/library/ff803620.aspx">Shell redirect interface</a> for
         /// complete listing of target locations and their parameters.
         /// </p>
         /// </remarks>
-        /// 
+        ///
         public string TargetQueryString { get; set; }
 
         /// <summary>
@@ -171,7 +168,7 @@ namespace Microsoft.HealthVault
         /// back to after the user interaction for the requested target
         /// location is complete.
         /// </summary>
-        /// 
+        ///
         /// <remarks>
         /// <p>
         /// This parameter is intended to make development in non-production HealthVault
@@ -179,53 +176,53 @@ namespace Microsoft.HealthVault
         /// will return to HealthVault's action URL configuration for the application ID.
         /// See the <a href="http://msdn.microsoft.com/en-us/library/ff803620.aspx">Shell redirect interface documentation</a>.
         /// </p>
-        /// 
+        ///
         /// <p>
-        /// If specified or configured, this is encoded as the value of the <b>redirect</b> parameter in the 
+        /// If specified or configured, this is encoded as the value of the <b>redirect</b> parameter in the
         /// <b>targetqs</b> query string parameter.
         /// </p>
         /// </remarks>
-        /// 
+        ///
         public string ReturnUrl { get; set; }
 
         /// <summary>
         /// Gets the collection of user-defined parameters which are included in the return redirect
         /// when HealthVault Shell redirects back to the application.
         /// </summary>
-        /// 
+        ///
         /// <remarks>
         /// <p>
         /// These parameters allow the application to transfer its state through the
         /// HealthVault Shell redirect.
         /// See the <a href="http://msdn.microsoft.com/en-us/library/ff803620.aspx">Shell redirect interface documentation</a>.
         /// </p>
-        /// 
+        ///
         /// <p>
         /// This is encoded as a key-value query string (application/x-www-form-urlencoded) along with <see cref="P:ActionQueryString"/>
         /// as the value of the <b>actionqs</b> parameter in the <b>targetqs</b> query string parameter.
         /// </p>
         /// </remarks>
-        /// 
+        ///
         public NameValueCollection ActionParameters { get; private set; }
 
         /// <summary>
         /// Gets or sets the query string which is included in the return redirect when HealthVault Shell
         /// redirects back to the application.
         /// </summary>
-        /// 
+        ///
         /// <remarks>
         /// <p>
         /// This query string allows the application to transfer its state through the
         /// HealthVault Shell redirect.
         /// See the <a href="http://msdn.microsoft.com/en-us/library/ff803620.aspx">Shell redirect interface documentation</a>.
         /// </p>
-        /// 
+        ///
         /// <p>
         /// When specified, this value is used along with the <see cref="P:ActionParameters"/> name-value collection as the value
         /// of the <b>actionqs</b> parameter in the <b>targetqs</b> query string parameter.
         /// </p>
         /// </remarks>
-        /// 
+        ///
         public string ActionQueryString { get; set; }
 
         /// <summary>
@@ -238,13 +235,13 @@ namespace Microsoft.HealthVault
         /// user to another instance of HealthVault Shell where the user's account might
         /// reside.
         /// </summary>
-        /// 
+        ///
         /// <remarks>
         /// <p>
         /// See the <a href="http://msdn.microsoft.com/en-us/library/ff803620.aspx">Shell redirect interface documentation</a>.
         /// </p>
         /// <p>
-        /// If set to true, this is encoded as the value of the <b>aib</b> parameter in the 
+        /// If set to true, this is encoded as the value of the <b>aib</b> parameter in the
         /// <b>targetqs</b> query string parameter.
         /// </p>
         /// </remarks>
@@ -253,19 +250,19 @@ namespace Microsoft.HealthVault
         /// <summary>
         /// Gets or sets the parameter that specifies the token redirection method.
         /// </summary>
-        /// 
+        ///
         /// <remarks>
         /// This is the HTTP method HealthVault Shell will use when redirecting user back
         /// to the application with the auth token.
         /// See the <a href="http://msdn.microsoft.com/en-us/library/ff803620.aspx">Shell redirect interface documentation</a>.
         /// </remarks>
-        /// 
+        ///
         public string TokenRedirectionMethod { get; set; }
 
         /// <summary>
         /// Makes a copy of the redirect parameters object.
         /// </summary>
-        /// 
+        ///
         /// <returns>
         /// A copy of the redirect parameters object.
         /// </returns>
@@ -293,7 +290,7 @@ namespace Microsoft.HealthVault
         /// <summary>
         /// Copies a NameValueCollection object.
         /// </summary>
-        /// 
+        ///
         private static NameValueCollection CloneParams(NameValueCollection source)
         {
             var result = new NameValueCollection();
@@ -308,25 +305,25 @@ namespace Microsoft.HealthVault
         /// <summary>
         /// Constructs a Shell redirect URL for the redirect parameters.
         /// </summary>
-        /// 
+        ///
         /// <returns>
         /// The constructed URL.
         /// </returns>
-        /// 
+        ///
         /// <exception cref="ArgumentException">
         /// No <see cref="TargetLocation"/> is specified.
         /// </exception>
-        /// 
+        ///
         /// <exception cref="ConfigurationException">
-        /// No <see cref="ShellRedirectorUrl"/> specified or 
+        /// No <see cref="ShellRedirectorUrl"/> specified or
         /// Shell URL configured for the application
         /// (<see cref="HealthApplicationConfiguration.HealthVaultShellUrl"/>).
         /// </exception>
-        /// 
+        ///
         /// <exception cref="UriFormatException">
         /// The specified parameters construct an invalid URL.
         /// </exception>
-        /// 
+        ///
         public Uri ConstructRedirectUrl()
         {
             // figure out Shell redirector URL
@@ -363,15 +360,15 @@ namespace Microsoft.HealthVault
         /// <summary>
         /// Construct the query string for the Shell redirect URL.
         /// </summary>
-        /// 
+        ///
         /// <returns>
         /// The Shell redirect query string.
         /// </returns>
-        /// 
+        ///
         /// <exception cref="ArgumentException">
         /// <see cref="TargetLocation"/> is not set.
         /// </exception>
-        /// 
+        ///
         public string ConstructRedirectorQueryString()
         {
             Validator.ThrowInvalidIf(String.IsNullOrEmpty(TargetLocation), "ShellTargetRequired");
@@ -391,11 +388,11 @@ namespace Microsoft.HealthVault
         /// <summary>
         /// Constructs the query string for the target.
         /// </summary>
-        /// 
+        ///
         /// <returns>
         /// The Shell redirect query string.
         /// </returns>
-        /// 
+        ///
         public string ConstructTargetQueryString()
         {
             // fold properties back into target params

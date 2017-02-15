@@ -13,28 +13,28 @@ namespace Microsoft.HealthVault
     /// <summary>
     /// Provides information about the HealthVault Shell.
     /// </summary>
-    /// 
+    ///
     public class HealthServiceShellInfo
     {
         /// <summary>
-        /// Constructs a <see cref="HealthServiceShellInfo"/> object from the  
+        /// Constructs a <see cref="HealthServiceShellInfo"/> object from the
         /// supplied XML.
         /// </summary>
-        /// 
+        ///
         /// <param name="nav">
-        /// An XPathNavigator to access the XML from which the 
+        /// An XPathNavigator to access the XML from which the
         /// <see cref="HealthServiceShellInfo"/> object will be constructed.
         /// </param>
-        /// 
+        ///
         /// <returns>
         /// A <see cref="HealthServiceShellInfo"/> object.
         /// </returns>
-        /// 
+        ///
         /// <exception cref="UriFormatException">
         /// A URL string returned by HealthVault is
         /// invalid.
         /// </exception>
-        /// 
+        ///
         internal static HealthServiceShellInfo CreateShellInfo(
             XPathNavigator nav)
         {
@@ -90,15 +90,15 @@ namespace Microsoft.HealthVault
         /// <summary>
         /// Gets the Shell base URL.
         /// </summary>
-        /// 
+        ///
         /// <returns>
         /// A Uri representing the Shell base URL.
         /// </returns>
-        /// 
+        ///
         /// <remarks>
         /// The URL used to access the HealthVault Shell.
         /// </remarks>
-        /// 
+        ///
         public Uri BaseUrl
         {
             get { return _baseUrl; }
@@ -108,16 +108,16 @@ namespace Microsoft.HealthVault
         /// <summary>
         /// Gets the Shell redirect URL.
         /// </summary>
-        /// 
+        ///
         /// <returns>
         /// A Uri representing the Shell redirect URL.
         /// </returns>
-        /// 
+        ///
         /// <remarks>
-        /// The URL used to redirect to specific functions within the 
+        /// The URL used to redirect to specific functions within the
         /// HealthVault Shell.
         /// </remarks>
-        /// 
+        ///
         public Uri RedirectUrl
         {
             get { return _redirectUrl; }
@@ -125,15 +125,15 @@ namespace Microsoft.HealthVault
         private Uri _redirectUrl;
 
         /// <summary>
-        /// Gets a collection of the possible redirect information that can be 
+        /// Gets a collection of the possible redirect information that can be
         /// supplied along with the shell redirect URL to access specific
         /// functionalities in the Shell.
         /// </summary>
-        /// 
+        ///
         /// <returns>
         /// A read-only collection containing the redirect information.
         /// </returns>
-        /// 
+        ///
         public ReadOnlyCollection<HealthServiceShellRedirectToken> RedirectTokens
         {
             get

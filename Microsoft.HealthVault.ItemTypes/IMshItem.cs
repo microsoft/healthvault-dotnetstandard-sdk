@@ -8,7 +8,7 @@ using System;
 namespace Microsoft.HealthVault.ItemTypes
 {
     /// <summary>
-    /// Contract to make sure wrapped object passes key value 
+    /// Contract to make sure wrapped object passes key value
     /// of <see cref="HealthRecordItem"/> class and type name.
     /// </summary>
     public interface IMshItem

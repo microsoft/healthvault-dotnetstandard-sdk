@@ -3,7 +3,6 @@
 // see http://www.microsoft.com/resources/sharedsource/licensingbasics/sharedsourcelicenses.mspx.
 // All other rights reserved.
 
-
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -11,44 +10,43 @@ using System.Globalization;
 using System.Text;
 using System.Xml;
 using System.Xml.XPath;
-using Microsoft.HealthVault.Exceptions;
 
 namespace Microsoft.HealthVault.ItemTypes
 {
     /// <summary>
     /// Represents a weekly alert schedule.
     /// </summary>
-    /// 
+    ///
     public class Alert : HealthRecordItemData
     {
         /// <summary>
         /// Creates a new instance of the <see cref="Alert"/> class with default values.
         /// </summary>
-        /// 
+        ///
         public Alert()
         {
         }
 
         /// <summary>
-        /// Creates a new instance of the <see cref="Alert"/> class with the 
+        /// Creates a new instance of the <see cref="Alert"/> class with the
         /// specified days and times.
         /// </summary>
-        /// 
+        ///
         /// <param name="daysOfWeek">
         /// The days of the week the alert should be triggered.
         /// </param>
-        /// 
+        ///
         /// <param name="times">
         /// The times in those days that the alert should be triggered.
         /// </param>
-        /// 
+        ///
         /// <exception cref="ArgumentNullException">
-        /// The <paramref name="daysOfWeek"/>  or <paramref name="times"/> 
+        /// The <paramref name="daysOfWeek"/>  or <paramref name="times"/>
         /// parameter is <b>null</b>.
         /// </exception>
-        /// 
+        ///
         public Alert(
-            IEnumerable<DayOfWeek> daysOfWeek, 
+            IEnumerable<DayOfWeek> daysOfWeek,
             IEnumerable<ApproximateTime> times)
         {
             Validator.ThrowIfArgumentNull(daysOfWeek, "daysOfWeek", "AlertDOWNull");
@@ -64,19 +62,19 @@ namespace Microsoft.HealthVault.ItemTypes
                 _times.Add(time);
             }
         }
-        
+
         /// <summary>
         /// Populates the data from the specified XML.
         /// </summary>
-        /// 
+        ///
         /// <param name="navigator">
         /// The XML containing the address information.
         /// </param>
-        /// 
+        ///
         /// <exception cref="ArgumentNullException">
         /// The <paramref name="navigator"/> parameter is <b>null</b>.
         /// </exception>
-        /// 
+        ///
         public override void ParseXml(XPathNavigator navigator)
         {
             Validator.ThrowIfNavigatorNull(navigator);
@@ -102,32 +100,31 @@ namespace Microsoft.HealthVault.ItemTypes
         /// Writes the XML representation of the alert into
         /// the specified XML writer.
         /// </summary>
-        /// 
+        ///
         /// <param name="nodeName">
         /// The name of the outer node for the alert.
         /// </param>
-        /// 
+        ///
         /// <param name="writer">
-        /// The XML writer into which the alert should be 
+        /// The XML writer into which the alert should be
         /// written.
         /// </param>
-        /// 
+        ///
         /// <exception cref="ArgumentException">
         /// The <paramref name="nodeName"/> parameter is <b>null</b> or empty.
         /// </exception>
-        /// 
+        ///
         /// <exception cref="ArgumentNullException">
         /// The <paramref name="writer"/> parameter is <b>null</b>.
         /// </exception>
-        /// 
+        ///
         /// <exception cref="HealthRecordItemSerializationException">
-        /// The <see cref="DaysOfWeek"/> property has no days set, or the 
+        /// The <see cref="DaysOfWeek"/> property has no days set, or the
         /// <see cref="Times"/> property contains no times.
         /// </exception>
-        /// 
+        ///
         public override void WriteXml(string nodeName, XmlWriter writer)
         {
-
             Validator.ThrowIfStringNullOrEmpty(nodeName, "nodeName");
             Validator.ThrowIfArgumentNull(writer, "writer", "WriteXmlNullWriter");
 
@@ -163,16 +160,16 @@ namespace Microsoft.HealthVault.ItemTypes
         /// Gets a collection of the days of the week which the alert applies
         /// to.
         /// </summary>
-        /// 
+        ///
         /// <value>
         /// A collection of days of the week.
         /// </value>
-        /// 
+        ///
         /// <remarks>
         /// To add days to be alerted, add <see cref="System.DayOfWeek"/>
         /// values to the returned collection.
         /// </remarks>
-        /// 
+        ///
         public Collection<DayOfWeek> DaysOfWeek => _daysOfWeek;
 
         private readonly Collection<DayOfWeek> _daysOfWeek =
@@ -182,16 +179,16 @@ namespace Microsoft.HealthVault.ItemTypes
         /// Gets a collection of the times in each of the specified days to
         /// be alerted.
         /// </summary>
-        /// 
+        ///
         /// <value>
         /// A collection of times.
         /// </value>
-        /// 
+        ///
         /// <remarks>
-        /// To add times to be alerted, add <see cref="ApproximateTime"/> 
+        /// To add times to be alerted, add <see cref="ApproximateTime"/>
         /// instances to the returned collection.
         /// </remarks>
-        /// 
+        ///
         public Collection<ApproximateTime> Times => _times;
 
         private readonly Collection<ApproximateTime> _times =
@@ -200,11 +197,11 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <summary>
         /// Gets a string representation of the alert.
         /// </summary>
-        /// 
+        ///
         /// <returns>
         /// A string representation of the alert.
         /// </returns>
-        /// 
+        ///
         public override string ToString()
         {
             StringBuilder daysOfWeek = new StringBuilder(50);
@@ -223,12 +220,12 @@ namespace Microsoft.HealthVault.ItemTypes
                         ResourceRetriever.GetResourceString(
                             "ListFormat"),
                          ResourceRetriever.GetResourceString(
-                            DaysOfWeek[daysIndex].ToString()));     
+                            DaysOfWeek[daysIndex].ToString()));
                 }
             }
 
             StringBuilder times = new StringBuilder(200);
-            for (int index=0; index < Times.Count; ++index)
+            for (int index = 0; index < Times.Count; ++index)
             {
                 if (index == 0)
                 {

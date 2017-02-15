@@ -10,9 +10,9 @@ using System.Xml.XPath;
 namespace Microsoft.HealthVault
 {
     /// <summary>
-    /// The set of properties that the thing-type can be 
+    /// The set of properties that the thing-type can be
     /// ordered by in the result.
-    /// </summary> 
+    /// </summary>
     public class HealthRecordItemTypeOrderByProperties
     {
         /// <summary>
@@ -24,7 +24,7 @@ namespace Microsoft.HealthVault
         }
 
         /// <summary>
-        /// The set of properties that the thing-type can be 
+        /// The set of properties that the thing-type can be
         /// ordered by in the result..
         /// </summary>
         public List<HealthRecordItemTypeProperty> Properties
@@ -36,12 +36,12 @@ namespace Microsoft.HealthVault
 
         /// <summary>
         /// This method converts the OrderByProperties xml to the
-        /// HealthRecordItemTypeOrderByProperties object. 
+        /// HealthRecordItemTypeOrderByProperties object.
         /// </summary>
         public static HealthRecordItemTypeOrderByProperties CreateFromXml(XPathNavigator orderByPropertiesNav)
         {
             XPathNodeIterator propertiesIter = orderByPropertiesNav.Select("property");
-            
+
             List<HealthRecordItemTypeProperty> properties =
                 (from XPathNavigator propertiesNav in propertiesIter select GetPropertyFromXml(propertiesNav)).ToList();
 

@@ -3,6 +3,7 @@
 // see http://www.microsoft.com/resources/sharedsource/licensingbasics/sharedsourcelicenses.mspx.
 // All other rights reserved.
 
+using Microsoft.HealthVault.Exceptions;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -12,53 +13,51 @@ using System.Globalization;
 using System.Text;
 using System.Xml;
 using System.Xml.XPath;
-using Microsoft.HealthVault.Exceptions;
 
 namespace Microsoft.HealthVault
 {
-
     /// <summary>
     /// Defines a filter for use with <see cref="HealthRecordSearcher"/>
     /// searches.
     /// </summary>
-    /// 
+    ///
     /// <remarks>
-    /// This class generates the XML for a single filter group for querying 
+    /// This class generates the XML for a single filter group for querying
     /// health record items with the "GetThings" method.
     /// </remarks>
-    /// 
+    ///
     [DebuggerDisplay("HealthRecordFilter")]
     public class HealthRecordFilter
     {
         /// <summary>
-        /// Creates a new instance of the <see cref="HealthRecordFilter"/> 
+        /// Creates a new instance of the <see cref="HealthRecordFilter"/>
         /// class using default values.
         /// </summary>
-        /// 
+        ///
         public HealthRecordFilter()
         {
             _typeIds = new TypeList(View);
         }
 
         /// <summary>
-        /// Creates a new instance of the <see cref="HealthRecordFilter"/> 
+        /// Creates a new instance of the <see cref="HealthRecordFilter"/>
         /// class with the specified name.
         /// </summary>
-        /// 
+        ///
         /// <param name="name">
         /// The name of the filter.
         /// </param>
-        /// 
+        ///
         /// <remarks>
         /// The name is used to distinguish results matching this filter as
-        /// opposed to results matching other filters when multiple filters 
+        /// opposed to results matching other filters when multiple filters
         /// are applied to the same search.
         /// </remarks>
-        /// 
+        ///
         /// <exception cref="ArgumentException">
         /// The <paramref name="name"/> parameter is <b>null</b> or empty.
         /// </exception>
-        /// 
+        ///
         public HealthRecordFilter(string name)
             : this()
         {
@@ -66,18 +65,18 @@ namespace Microsoft.HealthVault
         }
 
         /// <summary>
-        /// Creates a new instance of the <see cref="HealthRecordFilter"/> 
+        /// Creates a new instance of the <see cref="HealthRecordFilter"/>
         /// class with the specified maximum number of items to return.
         /// </summary>
-        /// 
+        ///
         /// <param name="maxItemsReturned">
         /// The maximum number of items to return that match the filter.
         /// </param>
-        /// 
+        ///
         /// <exception cref="ArgumentOutOfRangeException">
         /// The <paramref name="maxItemsReturned"/> parameter is negative.
         /// </exception>
-        /// 
+        ///
         public HealthRecordFilter(int maxItemsReturned)
             : this()
         {
@@ -85,32 +84,32 @@ namespace Microsoft.HealthVault
         }
 
         /// <summary>
-        /// Creates a new instance of the <see cref="HealthRecordFilter"/> 
+        /// Creates a new instance of the <see cref="HealthRecordFilter"/>
         /// class with the specified name and maximum number of items to return.
         /// </summary>
-        /// 
+        ///
         /// <param name="name">
         /// The name of the filter.
         /// </param>
-        /// 
+        ///
         /// <param name="maxItemsReturned">
         /// The maximum number of items to return that match the filter.
         /// </param>
-        /// 
+        ///
         /// <remarks>
         /// The name is used to distinguish results matching this filter as
-        /// opposed to results matching other filters when multiple filters 
+        /// opposed to results matching other filters when multiple filters
         /// are applied to the same search.
         /// </remarks>
-        /// 
+        ///
         /// <exception cref="ArgumentException">
         /// The <paramref name="name"/> parameter is <b>null</b> or empty.
         /// </exception>
-        /// 
+        ///
         /// <exception cref="ArgumentOutOfRangeException">
         /// The <paramref name="maxItemsReturned"/> parameter is negative.
         /// </exception>
-        /// 
+        ///
         public HealthRecordFilter(string name, int maxItemsReturned)
             : this()
         {
@@ -119,15 +118,15 @@ namespace Microsoft.HealthVault
         }
 
         /// <summary>
-        /// Creates a new instance of the <see cref="HealthRecordFilter"/> 
+        /// Creates a new instance of the <see cref="HealthRecordFilter"/>
         /// class with the specified unique item type identifiers as filters.
         /// </summary>
-        /// 
+        ///
         /// <param name="typeIds">
         /// The unique item type identifiers limiting the scope of the search to
         /// only the specified item types.
         /// </param>
-        /// 
+        ///
         public HealthRecordFilter(params Guid[] typeIds)
             : this()
         {
@@ -140,14 +139,14 @@ namespace Microsoft.HealthVault
         /// <summary>
         /// Checks whether at least one property is set.
         /// </summary>
-        /// 
+        ///
         /// <exception cref="HealthServiceException">
         /// One of the following is true:
         /// (1) The filter has no properties set;
         /// (2) Both ItemIds and ItemKeys are specified; or
         /// (3) There are more than the allowable number of order by clauses.
         /// </exception>
-        /// 
+        ///
         internal void ThrowIfNotValid()
         {
             bool isValid = AreFiltersPresent();
@@ -162,10 +161,10 @@ namespace Microsoft.HealthVault
             if (!isValid)
             {
                 HealthServiceResponseError error = new HealthServiceResponseError
-                    {
-                        Message = ResourceRetriever.GetResourceString(
+                {
+                    Message = ResourceRetriever.GetResourceString(
                             "HealthRecordSearcherInvalidFilter")
-                    };
+                };
 
                 HealthServiceException e =
                     HealthServiceExceptionHelper.GetHealthServiceException(
@@ -184,10 +183,10 @@ namespace Microsoft.HealthVault
             if (idTypesSpecified > 1)
             {
                 HealthServiceResponseError error = new HealthServiceResponseError
-                    {
-                        Message = ResourceRetriever.GetResourceString(
+                {
+                    Message = ResourceRetriever.GetResourceString(
                             "HealthRecordSearcherInvalidFilterIdsAndKeysSpecified")
-                    };
+                };
 
                 HealthServiceException e = HealthServiceExceptionHelper.GetHealthServiceException(
                         HealthServiceStatusCode.InvalidFilter,
@@ -214,17 +213,17 @@ namespace Microsoft.HealthVault
         /// <summary>
         /// Gets or sets the name of the filter.
         /// </summary>
-        /// 
+        ///
         /// <remarks>
         /// The name is used to distinguish results matching this filter as
-        /// opposed to results matching other filters when multiple filters 
+        /// opposed to results matching other filters when multiple filters
         /// are applied to the same search.
         /// </remarks>
-        /// 
+        ///
         /// <exception cref="ArgumentException">
         /// The <paramref name="value"/> parameter is <b>null</b> or empty.
         /// </exception>
-        /// 
+        ///
         public string Name
         {
             get { return _name; }
@@ -239,15 +238,15 @@ namespace Microsoft.HealthVault
         /// <summary>
         /// Gets or sets the maximum number of health record items to return.
         /// </summary>
-        /// 
+        ///
         /// <remarks>
         /// The default value returns all items that match the filter.
         /// </remarks>
-        /// 
+        ///
         /// <exception cref="ArgumentOutOfRangeException">
         /// The <paramref name="value"/> is set to less than zero.
         /// </exception>
-        /// 
+        ///
         public int MaxItemsReturned
         {
             get { return _maxItemsReturned; }
@@ -267,24 +266,24 @@ namespace Microsoft.HealthVault
         /// Gets or sets the maximum number of full health record items returned per request to
         /// HealthVault.
         /// </summary>
-        /// 
+        ///
         /// <remarks>
         /// By default HealthVault will only return a certain number of "full" health record items
         /// for any query. It then returns the "keys" for the remaining items that matched the
         /// query which can then be queried for by ID. <see cref="HealthRecordItemCollection"/>
         /// automatically manages this paging for you. However, if you want further control over
-        /// the count of full items retrieved on each request, 
+        /// the count of full items retrieved on each request,
         /// <see cref="MaxFullItemsReturnedPerRequest"/> can be set to optimize for smaller sets
         /// of data. For example, let's say the data being retrieved is being displayed in a
         /// GridView and the results are shown 10 items per page.  Rather than get the default
         /// number of full things, you can request 10 full items per request.  Then only if the
         /// user clicks to the second page would you need to get the next 10 items.
         /// </remarks>
-        /// 
+        ///
         /// <exception cref="ArgumentOutOfRangeException">
         /// The <paramref name="value"/> is set to less than zero.
         /// </exception>
-        /// 
+        ///
         public int MaxFullItemsReturnedPerRequest
         {
             get { return _maxFullItemsReturnedPerRequest; }
@@ -303,16 +302,16 @@ namespace Microsoft.HealthVault
         /// <summary>
         /// Gets or sets the view for the filter group.
         /// </summary>
-        /// 
+        ///
         /// <remarks>
         /// The default view retrieves the "Core" and data
         /// sections ("Xml").
         /// </remarks>
-        /// 
+        ///
         /// <exception cref="ArgumentNullException">
         /// The <paramref name="value"/> is <b>null</b>.
         /// </exception>
-        /// 
+        ///
         public HealthRecordView View
         {
             get { return _view; }
@@ -325,49 +324,49 @@ namespace Microsoft.HealthVault
         private HealthRecordView _view = new HealthRecordView();
 
         /// <summary>
-        /// Gets or sets the ids identifying health record items for 
+        /// Gets or sets the ids identifying health record items for
         /// the search filter.
         /// </summary>
-        /// 
+        ///
         /// <remarks>
-        /// Each specified ID is AND'd with any other filter parameter. The 
+        /// Each specified ID is AND'd with any other filter parameter. The
         /// filter limits the search to the specified health record items.
         /// It is illegal to specify both ItemIds and ItemKeys in a single
         /// filter.
         /// </remarks>
-        /// 
+        ///
         public IList<Guid> ItemIds => _thingIds;
 
         private readonly List<Guid> _thingIds = new List<Guid>();
 
         /// <summary>
-        /// Gets or sets the keys uniquely identifying health record items for 
+        /// Gets or sets the keys uniquely identifying health record items for
         /// the search filter.
         /// </summary>
-        /// 
+        ///
         /// <remarks>
-        /// Each specified ItemKey is AND'd with any other filter parameter. The 
+        /// Each specified ItemKey is AND'd with any other filter parameter. The
         /// filter limits the search to the specified health record items.
-        /// It is illegal to specify more than one of ItemIds, ClientItemIds or ItemKeys in a 
+        /// It is illegal to specify more than one of ItemIds, ClientItemIds or ItemKeys in a
         /// single filter.
         /// </remarks>
-        /// 
+        ///
         public IList<HealthRecordItemKey> ItemKeys => _thingKeys;
 
         private readonly List<HealthRecordItemKey> _thingKeys = new List<HealthRecordItemKey>();
 
         /// <summary>
-        /// Gets or sets the client assigned IDs identifying health record items for 
+        /// Gets or sets the client assigned IDs identifying health record items for
         /// the search filter.
         /// </summary>
-        /// 
+        ///
         /// <remarks>
-        /// Each specified ID is AND'd with any other filter parameter. The 
+        /// Each specified ID is AND'd with any other filter parameter. The
         /// filter limits the search to the specified health record items.
-        /// It is illegal to specify more than one of ItemIds, ClientItemIds or ItemKeys in a 
+        /// It is illegal to specify more than one of ItemIds, ClientItemIds or ItemKeys in a
         /// single filter.
         /// </remarks>
-        /// 
+        ///
         public IList<string> ClientItemIds => _clientItemIds;
 
         private readonly List<string> _clientItemIds = new List<string>();
@@ -375,7 +374,7 @@ namespace Microsoft.HealthVault
         /// <summary>
         /// Gets a collection of the order by clauses which orders the data returned from GetThings request.
         /// </summary>
-        /// 
+        ///
         /// <remarks>
         /// Currently only one order by clause is supported per request.
         /// Multiple clauses may be supported in the future.
@@ -384,7 +383,7 @@ namespace Microsoft.HealthVault
         /// specified in the order by clause will be returned, even if additional
         /// type IDs are listed in the filter spec.
         /// </remarks>
-        /// 
+        ///
         public IList<HealthRecordItemsOrderByClause> OrderByClauses => _orderByClauses;
 
         private readonly List<HealthRecordItemsOrderByClause> _orderByClauses = new List<HealthRecordItemsOrderByClause>();
@@ -393,32 +392,32 @@ namespace Microsoft.HealthVault
         /// Gets a collection of the unique item type identifiers to search
         /// for.
         /// </summary>
-        /// 
+        ///
         /// <remarks>
         /// Each health record item is associated with a type through a
-        /// type identifier. If set, these values are combined in an OR 
-        /// operation. The group is then combined in an AND operation with 
-        /// any other filter value in the search for matching health record 
-        /// items. This AND operation excludes ItemId as a filter value, 
+        /// type identifier. If set, these values are combined in an OR
+        /// operation. The group is then combined in an AND operation with
+        /// any other filter value in the search for matching health record
+        /// items. This AND operation excludes ItemId as a filter value,
         /// because ItemId results are obtained by an OR operation.
         /// To add a type ID, use the Add method of the returned collection.
         /// </remarks>
-        /// 
+        ///
         public IList<Guid> TypeIds => _typeIds;
 
         private readonly TypeList _typeIds;
 
         /// <summary>
-        /// Gets or sets a set of flags representing the health record item  
+        /// Gets or sets a set of flags representing the health record item
         /// states to search for.
         /// </summary>
-        /// 
+        ///
         /// <value>
-        /// The set of flags. If not specified, health record items with state 
-        /// <see cref="HealthRecordItemState.Active"/>  
+        /// The set of flags. If not specified, health record items with state
+        /// <see cref="HealthRecordItemState.Active"/>
         /// are returned.
         /// </value>
-        /// 
+        ///
         public HealthRecordItemStates States
         {
             get { return _states; }
@@ -427,17 +426,17 @@ namespace Microsoft.HealthVault
         private HealthRecordItemStates _states = HealthRecordItemStates.Default;
 
         /// <summary>
-        /// Gets or sets a value indicating whether to return only the flag 
-        /// specifying the current versions of the health record items that 
-        /// satisfy the filter restrictions. 
+        /// Gets or sets a value indicating whether to return only the flag
+        /// specifying the current versions of the health record items that
+        /// satisfy the filter restrictions.
         /// </summary>
-        /// 
+        ///
         /// <value>
         /// <b>true</b> to return only current versions of health record items;
-        /// <b>false</b> to return all versions of the health record items that 
-        /// satisfy the filter restrictions. 
+        /// <b>false</b> to return all versions of the health record items that
+        /// satisfy the filter restrictions.
         /// </value>
-        /// 
+        ///
         public bool CurrentVersionOnly
         {
             get
@@ -458,19 +457,19 @@ namespace Microsoft.HealthVault
         /// <summary>
         /// Gets or sets the minimum date of an updated item to return.
         /// </summary>
-        /// 
+        ///
         /// <value>
         /// The DateTime in UTC of the minimum date of an updated item to
         /// return.
         /// </value>
-        /// 
+        ///
         /// <remarks>
         /// If this property is not set, DateTime.MaxValue is returned.
         /// <br/><br/>
-        /// The application is responsible for converting from local time to 
+        /// The application is responsible for converting from local time to
         /// UTC, if applicable.
         /// </remarks>
-        /// 
+        ///
         public DateTime UpdatedDateMin
         {
             get
@@ -488,19 +487,19 @@ namespace Microsoft.HealthVault
         /// <summary>
         /// Gets or sets the maximum date of a returned updated item to return.
         /// </summary>
-        /// 
+        ///
         /// <value>
-        /// The DateTime in UTC of the maximum date of an updated item 
+        /// The DateTime in UTC of the maximum date of an updated item
         /// to return.
         /// </value>
-        /// 
+        ///
         /// <remarks>
         /// If this property is not set, DateTime.MinValue is returned.
         /// <br/><br/>
-        /// The application is responsible for converting from local time to 
+        /// The application is responsible for converting from local time to
         /// UTC, if applicable.
         /// </remarks>
-        /// 
+        ///
         public DateTime UpdatedDateMax
         {
             get
@@ -519,11 +518,11 @@ namespace Microsoft.HealthVault
         /// Gets or sets the search filter to filter on the person who
         /// last updated the health record item.
         /// </summary>
-        /// 
+        ///
         /// <remarks>
         /// If the property is not set, Guid.Empty is returned.
         /// </remarks>
-        /// 
+        ///
         public Guid UpdatedPerson
         {
             get
@@ -542,11 +541,11 @@ namespace Microsoft.HealthVault
         /// Gets or sets the search filter to filter on the application that
         /// last updated the health record item.
         /// </summary>
-        /// 
+        ///
         /// <remarks>
         /// If this property is not set, Guid.Empty is returned.
         /// </remarks>
-        /// 
+        ///
         public Guid UpdatedApplication
         {
             get
@@ -564,18 +563,18 @@ namespace Microsoft.HealthVault
         /// <summary>
         /// Gets or sets the minimum date the item was created.
         /// </summary>
-        /// 
+        ///
         /// <value>
         /// The DateTime in UTC of the minimum date a item was created.
         /// </value>
-        /// 
+        ///
         /// <remarks>
         /// If this property has not been set, DateTime.MaxValue is returned.
         /// <br/><br/>
-        /// The application is responsible for converting from local time to 
+        /// The application is responsible for converting from local time to
         /// UTC, if applicable.
         /// </remarks>
-        /// 
+        ///
         public DateTime CreatedDateMin
         {
             get
@@ -593,18 +592,18 @@ namespace Microsoft.HealthVault
         /// <summary>
         /// Gets or sets the maximum date the item was created.
         /// </summary>
-        /// 
+        ///
         /// <value>
         /// The DateTime in UTC of the maximum date a item was created.
         /// </value>
-        /// 
+        ///
         /// <remarks>
         /// If this property has not been set, DateTime.MinValue is returned.
         /// <br/><br/>
-        /// The application is responsible for converting from local time to 
+        /// The application is responsible for converting from local time to
         /// UTC  if applicable.
         /// </remarks>
-        /// 
+        ///
         public DateTime CreatedDateMax
         {
             get
@@ -623,11 +622,11 @@ namespace Microsoft.HealthVault
         /// Gets or sets the search filter to filter on the person who
         /// created the health record item.
         /// </summary>
-        /// 
+        ///
         /// <remarks>
         /// If this property has not been set, Guid.Empty is returned.
         /// </remarks>
-        /// 
+        ///
         public Guid CreatedPerson
         {
             get
@@ -646,11 +645,11 @@ namespace Microsoft.HealthVault
         /// Gets or sets the search filter to filter on the application that
         /// created the health record item.
         /// </summary>
-        /// 
+        ///
         /// <remarks>
         /// If this property has not been set, Guid.Empty is returned.
         /// </remarks>
-        /// 
+        ///
         public Guid CreatedApplication
         {
             get
@@ -668,18 +667,18 @@ namespace Microsoft.HealthVault
         /// <summary>
         /// Gets or sets the minimum date the item pertains to.
         /// </summary>
-        /// 
+        ///
         /// <value>
         /// The DateTime in UTC of the minimum effective date of a item.
         /// </value>
-        /// 
+        ///
         /// <remarks>
         /// If this property has not been set, DateTime.MaxValue is returned.
         /// <br/><br/>
-        /// The application is responsible for converting from local time to 
+        /// The application is responsible for converting from local time to
         /// UTC, if applicable.
         /// </remarks>
-        /// 
+        ///
         public DateTime EffectiveDateMin
         {
             get
@@ -697,18 +696,18 @@ namespace Microsoft.HealthVault
         /// <summary>
         /// Gets or sets the maximum date the item was pertains to.
         /// </summary>
-        /// 
+        ///
         /// <value>
         /// The DateTime in UTC of the maximum effective date of a item.
         /// </value>
-        /// 
+        ///
         /// <remarks>
         /// If this property has not been set, DateTime.MinValue is returned.
         /// <br/><br/>
-        /// The application is responsible for converting from local time to 
+        /// The application is responsible for converting from local time to
         /// UTC, if applicable.
         /// </remarks>
-        /// 
+        ///
         public DateTime EffectiveDateMax
         {
             get
@@ -727,7 +726,7 @@ namespace Microsoft.HealthVault
         /// Gets or sets the search filter to filter on the existence
         /// of data in an XML (structured data) item.
         /// </summary>
-        /// 
+        ///
         /// <value>
         /// A string representing the filter.
         /// </value>
@@ -736,27 +735,27 @@ namespace Microsoft.HealthVault
         ///
         /// If this property has not been set, <b>null</b> is returned.
         /// <br/><br/>
-        /// This can only be an existence check. It cannot be used for 
+        /// This can only be an existence check. It cannot be used for
         /// calculations or to return only specific values.
         /// </remarks>
-        /// 
+        ///
         public string XPath { get; set; }
 
         /// <summary>
         /// Gets or sets the minimum updated end date of the item.
         /// </summary>
-        /// 
+        ///
         /// <value>
         /// The DateTime of the minimum updated end date of a item.
         /// </value>
-        /// 
+        ///
         /// <remarks>
         /// If this property has not been set, DateTime.MaxValue is returned.
         /// <br/><br/>
-        /// The application is responsible for converting from local time to 
+        /// The application is responsible for converting from local time to
         /// UTC, if applicable.
         /// </remarks>
-        /// 
+        ///
         public DateTime UpdatedEndDateMin
         {
             get
@@ -774,18 +773,18 @@ namespace Microsoft.HealthVault
         /// <summary>
         /// Gets or sets the maximum updated end date of the item.
         /// </summary>
-        /// 
+        ///
         /// <value>
         /// The DateTime of the maximum updated end date of a item.
         /// </value>
-        /// 
+        ///
         /// <remarks>
         /// If this property has not been set, DateTime.MinValue is returned.
         /// <br/><br/>
-        /// The application is responsible for converting from local time to 
+        /// The application is responsible for converting from local time to
         /// UTC, if applicable.
         /// </remarks>
-        /// 
+        ///
         public DateTime UpdatedEndDateMax
         {
             get
@@ -814,12 +813,12 @@ namespace Microsoft.HealthVault
         /// <summary>
         /// Gets a string representation of the instance.
         /// </summary>
-        /// 
+        ///
         /// <returns>
         /// The XML that is used as the group portion of the
         /// XML request for a "GetThings" method call.
         /// </returns>
-        /// 
+        ///
         public override string ToString()
         {
             StringBuilder result = new StringBuilder(128);
@@ -1057,11 +1056,11 @@ namespace Microsoft.HealthVault
         /// Constructs the XML for the filter group which is used in the
         /// "GetThings" request.
         /// </summary>
-        /// 
+        ///
         /// <param name="writer">
         /// The Xml writer to write the filter group XML to.
         /// </param>
-        /// 
+        ///
         internal void AddFilterXml(XmlWriter writer)
         {
             // Open with a group tag

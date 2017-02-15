@@ -10,9 +10,9 @@ using System.Security;
 namespace Microsoft.HealthVault.Certificate
 {
     /// <summary>
-    /// Wrapper around a disntinguished name for a certificate.  
+    /// Wrapper around a disntinguished name for a certificate.
     /// </summary>
-    /// 
+    ///
     /// <remarks>
     /// Class is seperate from X500DistinguishedName since that
     /// class does not allow public access to the encoded name.
@@ -28,10 +28,11 @@ namespace Microsoft.HealthVault.Certificate
         #endregion
 
         #region public methods
+
         /// <summary>
         /// Creates a name for a given distinguished name.
         /// </summary>
-        ///	
+        ///
         /// <exception cref="ArgumentException">
         /// If <paramref name="distinguishedName"/> is null or empty
         /// </exception>
@@ -63,6 +64,7 @@ namespace Microsoft.HealthVault.Certificate
             Debug.Assert(!String.IsNullOrEmpty(distinguishedName));
             return certificateUtilities.GetEncodedName(distinguishedName);
         }
+
         #endregion
 
         #region public properties
@@ -78,6 +80,5 @@ namespace Microsoft.HealthVault.Certificate
             }
         }
         #endregion
-
     }
 }

@@ -16,7 +16,7 @@ namespace Microsoft.HealthVault
     public class BlobHashInfo
     {
         /// <summary>
-        /// Creates an instance of the <see cref="BlobHashInfo"/> class 
+        /// Creates an instance of the <see cref="BlobHashInfo"/> class
         /// with default values.
         /// </summary>
         public BlobHashInfo()
@@ -24,20 +24,20 @@ namespace Microsoft.HealthVault
         }
 
         /// <summary>
-        /// Creates an instance of the <see cref="BlobHashInfo"/> class 
+        /// Creates an instance of the <see cref="BlobHashInfo"/> class
         /// for a given hashing algorithm, hashblock size and hash.
         /// </summary>
-        /// 
+        ///
         /// <param name="blobHashAlgorithm">
         /// The hashing algorithm used.
         /// </param>
-        /// 
+        ///
         /// <param name="blobBlockSizeBytes">
         /// The size of the BLOB block size used in calculating hashes
         /// </param>
         ///
         /// <param name="hash">
-        /// Represents the BLOB hash value 
+        /// Represents the BLOB hash value
         /// </param>
         public BlobHashInfo(BlobHashAlgorithm blobHashAlgorithm, Int32 blobBlockSizeBytes, byte[] hash)
         {
@@ -112,7 +112,7 @@ namespace Microsoft.HealthVault
         private string _blobHashAlgorithmString;
 
         /// <summary>
-        /// The block size in bytes used by the <see cref="BlobHashAlgorithm" /> to 
+        /// The block size in bytes used by the <see cref="BlobHashAlgorithm" /> to
         /// calculate the BLOB hash.
         /// </summary>
         public int BlockSizeBytes
@@ -122,7 +122,7 @@ namespace Microsoft.HealthVault
         private int _blockSizeBytes;
 
         /// <summary>
-        /// Represents the BLOB hash as calculated by the <see cref="BlobHashAlgorithm" /> 
+        /// Represents the BLOB hash as calculated by the <see cref="BlobHashAlgorithm" />
         /// and <see cref="BlockSizeBytes" />
         /// </summary>
         public byte[] Hash

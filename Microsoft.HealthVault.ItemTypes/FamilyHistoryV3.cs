@@ -14,11 +14,11 @@ namespace Microsoft.HealthVault.ItemTypes
     /// <summary>
     /// The condition of a relative.
     /// </summary>
-    /// 
+    ///
     /// <remarks>
-    /// The family history condition item stores a condition 
+    /// The family history condition item stores a condition
     /// that a relative of the record-owner has.
-    /// 
+    ///
     /// To create a family tree, use the relationship-types vocabulary
     /// to code both directions of the parent/child relationship between
     /// one family member and another. These codes are stored as
@@ -34,10 +34,10 @@ namespace Microsoft.HealthVault.ItemTypes
     public class FamilyHistoryV3 : HealthRecordItem
     {
         /// <summary>
-        /// Initialize a new instance of the <see cref="FamilyHistoryV3"/> 
+        /// Initialize a new instance of the <see cref="FamilyHistoryV3"/>
         /// class with default values.
         /// </summary>
-        /// 
+        ///
         public FamilyHistoryV3()
             : base(TypeId)
         {
@@ -46,18 +46,18 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <summary>
         /// Retrieves the unique identifier for the item type.
         /// </summary>
-        /// 
+        ///
         public new static readonly Guid TypeId =
             new Guid("4a04fcc8-19c1-4d59-a8c7-2031a03f21de");
 
         /// <summary>
-        /// Populates this <see cref="FamilyHistoryV3"/> instance from the data in the XML. 
+        /// Populates this <see cref="FamilyHistoryV3"/> instance from the data in the XML.
         /// </summary>
-        /// 
+        ///
         /// <param name="typeSpecificXml">
         /// The XML to get the family history data from.
         /// </param>
-        /// 
+        ///
         /// <exception cref="InvalidOperationException">
         /// If the first node in <paramref name="typeSpecificXml"/> is not
         /// a family history node.
@@ -84,20 +84,20 @@ namespace Microsoft.HealthVault.ItemTypes
 
         /// <summary>
         /// Writes the family history data to the specified XmlWriter.
-        /// </summary> 
-        /// 
+        /// </summary>
+        ///
         /// <param name="writer">
         /// The XmlWriter to write the family history data to.
         /// </param>
-        /// 
+        ///
         /// <exception cref="ArgumentNullException">
         /// The <paramref name="writer"/> parameter is <b>null</b>.
         /// </exception>
-        /// 
+        ///
         public override void WriteXml(XmlWriter writer)
         {
             Validator.ThrowIfWriterNull(writer);
-            
+
             // <family-history>
             writer.WriteStartElement("family-history");
 
@@ -115,17 +115,16 @@ namespace Microsoft.HealthVault.ItemTypes
 
             // </familty-history>
             writer.WriteEndElement();
-
         }
 
         /// <summary>
         /// Gets a collection of a conditions.
         /// </summary>
-        /// 
+        ///
         /// <remarks>
         /// If there is no information about the condition of the relative the collection should be empty.
         /// </remarks>
-        /// 
+        ///
         public Collection<ConditionEntry> Conditions
         {
             get { return _conditions; }
@@ -135,11 +134,11 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <summary>
         /// Gets or sets information about the relative with this condition.
         /// </summary>
-        /// 
+        ///
         /// <remarks>
-        /// The relative should be set to <b>null</b> if it is unknown. 
+        /// The relative should be set to <b>null</b> if it is unknown.
         /// </remarks>
-        /// 
+        ///
         public FamilyHistoryRelativeV3 Relative
         {
             get { return _relative; }
@@ -149,7 +148,7 @@ namespace Microsoft.HealthVault.ItemTypes
 
         /// <summary>
         /// Gets a string representation of the family history item.
-        /// </summary> 
+        /// </summary>
         ///
         /// <returns>
         /// A string representation of the family history item.
@@ -173,7 +172,7 @@ namespace Microsoft.HealthVault.ItemTypes
             {
                 result = string.Format(
                         ResourceRetriever.GetResourceString("FamilyHistoryToStringFormat"),
-                        result, 
+                        result,
                         _relative.Relationship.Text);
             }
             return result;

@@ -2,7 +2,7 @@
 // Feel free to delete lines when you fix the underlying issue.
 // You should never add to this file; if you must suppress an FxCop warning, put the suppression inline.
 // If you absolutely MUST add to this file, you can run 'oacr fxcop <project> /target <assembly>'
-// where <project> is HealthVault or HealthVault_SDK and assembly is the dll you're building, including extension. 
+// where <project> is HealthVault or HealthVault_SDK and assembly is the dll you're building, including extension.
 // This will launch the fxcop gui. Click Analyze, then rightclick the error and select Copy As -> Module level suppression. Paste here.
 
 using System.Diagnostics.CodeAnalysis;
@@ -382,5 +382,5 @@ using System.Diagnostics.CodeAnalysis;
 [module: SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", Scope = "member", Target = "Microsoft.Health.ItemTypes.ConcentrationMeasurement.#.ctor(System.Double,Microsoft.Health.ItemTypes.DisplayValue)", MessageId = "millimoles")]
 [module: SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly", Scope = "member", Target = "Microsoft.Health.ItemTypes.CholesterolProfileV2.#LDL", MessageId = "LDL")]
 [module: SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly", Scope = "member", Target = "Microsoft.Health.ItemTypes.CholesterolProfileV2.#HDL", MessageId = "HDL")]
-[module: SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly", Scope="member", Target="Microsoft.Health.ItemTypes.DietaryIntakeItem.#VitaminARAE", MessageId="ARAE")]
-[module: SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly", Scope="member", Target="Microsoft.Health.ItemTypes.DietaryIntakeItem.#FolateDFE", MessageId="DFE")]
+[module: SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly", Scope = "member", Target = "Microsoft.Health.ItemTypes.DietaryIntakeItem.#VitaminARAE", MessageId = "ARAE")]
+[module: SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly", Scope = "member", Target = "Microsoft.Health.ItemTypes.DietaryIntakeItem.#FolateDFE", MessageId = "DFE")]

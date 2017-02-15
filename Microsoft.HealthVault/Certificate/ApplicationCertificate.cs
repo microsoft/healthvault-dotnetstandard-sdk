@@ -13,11 +13,11 @@ namespace Microsoft.HealthVault.Certificate
     /// <summary>
     /// Generates a new HealthVault application certificate.
     /// </summary>
-    /// 
+    ///
     /// <remarks>
     /// This certificate is typically used by HealthVaultClientApplication.
     /// </remarks>
-    /// 
+    ///
     public class ApplicationCertificate
     {
         #region constants
@@ -42,7 +42,7 @@ namespace Microsoft.HealthVault.Certificate
         /// <summary>
         /// Creates an instance of ApplicationCertificate with the specified certificate
         /// </summary>
-        /// 
+        ///
         private ApplicationCertificate(X509Certificate2 certificate)
         {
             Certificate = new X509Certificate2(certificate.Export(X509ContentType.Pfx));
@@ -52,7 +52,7 @@ namespace Microsoft.HealthVault.Certificate
         /// Generate an X509 certificate that works with the HealthVault SDK using the
         /// specified name.
         /// </summary>
-        /// 
+        ///
         /// <exception cref="ArgumentException">
         /// If <paramref name="certificateName"/> is <b>null</b>, empty, or all whitespace.
         /// </exception>
@@ -75,7 +75,7 @@ namespace Microsoft.HealthVault.Certificate
         /// Generate an X509 certificate that works with the HealthVault SDK using the
         /// specified name.
         /// </summary>
-        /// 
+        ///
         /// <exception cref="ArgumentException">
         /// If <paramref name="certificateName"/> is <b>null</b>, empty, or all whitespace.
         /// </exception>
@@ -98,16 +98,16 @@ namespace Microsoft.HealthVault.Certificate
         /// <summary>
         /// Generate or fetch a persisted certificate in the specified certificate store.
         /// </summary>
-        /// 
+        ///
         /// <param name="applicationId">
         /// The unique identifier of the application to create the certificate for.
         /// </param>
-        /// 
+        ///
         /// <returns>
-        /// An ApplicationCertificate instance containing the certificate for the 
+        /// An ApplicationCertificate instance containing the certificate for the
         /// specified application.
         /// </returns>
-        /// 
+        ///
         /// <exception cref="ArgumentException">
         /// If <paramref name="applicationId"/> is Guid.Empty.
         /// </exception>
@@ -122,20 +122,20 @@ namespace Microsoft.HealthVault.Certificate
         /// <summary>
         /// Generate or fetch a persisted certificate in the specified certificate store.
         /// </summary>
-        /// 
+        ///
         /// <param name="applicationId">
         /// The unique identifier of the application to create the certificate for.
         /// </param>
-        /// 
+        ///
         /// <param name="storeLocation">
         /// The store location to fetch or create the certificate in.
         /// </param>
-        /// 
+        ///
         /// <returns>
-        /// An ApplicationCertificate instance containing the certificate for the 
+        /// An ApplicationCertificate instance containing the certificate for the
         /// specified application.
         /// </returns>
-        /// 
+        ///
         /// <exception cref="ArgumentException">
         /// If <paramref name="applicationId"/> is Guid.Empty.
         /// </exception>
@@ -156,34 +156,33 @@ namespace Microsoft.HealthVault.Certificate
                 storeLocation);
         }
 
-
         /// <summary>
         /// Generate or fetch a persisted certificate in the specified certificate store.
         /// </summary>
-        /// 
+        ///
         /// <param name="applicationId">
         /// The unique identifier of the application to create the certificate for.
         /// </param>
-        /// 
+        ///
         /// <param name="alwaysCreate">
         /// If true, a new certificate will be created even if it already exists in
         /// the specified certificate store.
         /// </param>
-        /// 
+        ///
         /// <param name="persist">
         /// If true, the certificate is persisted in the specified certificate store, otherwise
         /// the key container is deleted.
         /// </param>
-        /// 
+        ///
         /// <param name="storeLocation">
         /// The store location to fetch or create the certificate in.
         /// </param>
-        /// 
+        ///
         /// <returns>
-        /// An ApplicationCertificate instance containing the certificate for the 
+        /// An ApplicationCertificate instance containing the certificate for the
         /// specified application.
         /// </returns>
-        /// 
+        ///
         /// <exception cref="ArgumentException">
         /// If <paramref name="applicationId"/> is Guid.Empty.
         /// </exception>
@@ -205,34 +204,34 @@ namespace Microsoft.HealthVault.Certificate
                 persist,
                 storeLocation);
         }
-        
+
         /// <summary>
         /// Generate or fetch a persisted certificate in the specified certificate store.
         /// </summary>
-        /// 
+        ///
         /// <param name="certificateName">
         /// The name to use when creating the certificate.
         /// </param>
-        /// 
+        ///
         /// <param name="alwaysCreate">
         /// If true a new certificate will be created even if it already exists in
         /// the specified certificate store.
         /// </param>
-        /// 
+        ///
         /// <param name="persist">
         /// If true, the certificate is persisted in the specified certificate store, otherwise
         /// the key container is deleted.
         /// </param>
-        /// 
+        ///
         /// <param name="storeLocation">
         /// The store location to fetch or create the certificate in.
         /// </param>
-        /// 
+        ///
         /// <returns>
-        /// An ApplicationCertificate instance containing the certificate for the 
+        /// An ApplicationCertificate instance containing the certificate for the
         /// specified application.
         /// </returns>
-        /// 
+        ///
         [SecurityCritical]
         public static ApplicationCertificate CreateCertificate(
             string certificateName,
@@ -280,7 +279,7 @@ namespace Microsoft.HealthVault.Certificate
         /// <summary>
         /// Gets the certificate.
         /// </summary>
-        /// 
+        ///
         public X509Certificate2 Certificate { get; private set; }
 
         #endregion
@@ -290,15 +289,15 @@ namespace Microsoft.HealthVault.Certificate
         /// <summary>
         /// Make subject for certificate using the specified application identifier.
         /// </summary>
-        /// 
+        ///
         /// <param name="appId">
         /// The unique application identifier.
         /// </param>
-        /// 
+        ///
         /// <returns>
         /// A certificate subject name using the application identifier to ensure uniqueness.
         /// </returns>
-        /// 
+        ///
         internal static string MakeCertSubject(Guid appId)
         {
             return MakeCertSubject(MakeCertName(appId));
@@ -307,15 +306,15 @@ namespace Microsoft.HealthVault.Certificate
         /// <summary>
         /// Make subject for certificate using the specified certificate name.
         /// </summary>
-        /// 
+        ///
         /// <param name="certificateName">
         /// The name of the certificate to make the subject for.
         /// </param>
-        /// 
+        ///
         /// <returns>
         /// A certificate subject name using the specified certificate name.
         /// </returns>
-        /// 
+        ///
         internal static string MakeCertSubject(string certificateName)
         {
             return "CN=" + certificateName;
@@ -324,11 +323,11 @@ namespace Microsoft.HealthVault.Certificate
         /// <summary>
         /// Make a certificate name using the application identifier to ensure uniqueness.
         /// </summary>
-        /// 
+        ///
         /// <param name="appId">
         /// The unique application identifier.
         /// </param>
-        /// 
+        ///
         /// <returns>
         /// A certificate name using the application identifier to ensure uniqueness.
         /// </returns>
@@ -343,9 +342,9 @@ namespace Microsoft.HealthVault.Certificate
         #region Private Methods
 
         /// <summary>
-        /// Creates a certificate 
+        /// Creates a certificate
         /// </summary>
-        /// 
+        ///
         [SuppressMessage(
             "Microsoft.Reliability",
             "CA2001:AvoidCallingProblematicMethods",
@@ -364,7 +363,7 @@ namespace Microsoft.HealthVault.Certificate
         /// Removes the certificate for the specified application identifier
         /// from the certificate store and deletes the key container.
         /// </summary>
-        /// 
+        ///
         /// <param name="applicationId">
         /// The unique identifier of the application for which to remove the certificate from the current
         /// user store.
@@ -379,12 +378,12 @@ namespace Microsoft.HealthVault.Certificate
         /// Removes the certificate for the specified application identifier
         /// from the certificate store and deletes the key container.
         /// </summary>
-        /// 
+        ///
         /// <param name="applicationId">
-        /// The unique identifier of the application for which to remove the certificate from the 
+        /// The unique identifier of the application for which to remove the certificate from the
         /// specified store.
         /// </param>
-        /// 
+        ///
         /// <param name="storeLocation">
         /// The certificate store from which to remove the certificate.
         /// </param>
@@ -403,7 +402,7 @@ namespace Microsoft.HealthVault.Certificate
         /// Removes the certificate with the specified certificate name
         /// from the certificate store and deletes the key container.
         /// </summary>
-        /// 
+        ///
         /// <param name="certificateName">
         /// The name of the certificate to delete.
         /// </param>
@@ -417,11 +416,11 @@ namespace Microsoft.HealthVault.Certificate
         /// Removes the certificate with the specified certificate name
         /// from the certificate store and deletes the key container.
         /// </summary>
-        /// 
+        ///
         /// <param name="certificateName">
         /// The name of the certificate to delete.
         /// </param>
-        /// 
+        ///
         /// <param name="storeLocation">
         /// The certificate store from which to remove the certificate.
         /// </param>
@@ -443,7 +442,7 @@ namespace Microsoft.HealthVault.Certificate
         /// <summary>
         /// Removes the key container for the specified application identifier.
         /// </summary>
-        /// 
+        ///
         /// <param name="applicationId">
         /// The unique identifier for the HealthVault application which was used in creating
         /// the key container.
@@ -457,12 +456,12 @@ namespace Microsoft.HealthVault.Certificate
         /// <summary>
         /// Removes the key container for the specified certificate name.
         /// </summary>
-        /// 
+        ///
         /// <param name="certificateName">
         /// The certificate name which was used in creating
         /// the key container.
         /// </param>
-        /// 
+        ///
         /// <exception cref="ArgumentException">
         /// If <paramref name="certificateName"/> is <b>null</b>, empty, or all whitespace.
         /// </exception>

@@ -3,7 +3,6 @@
 // see http://www.microsoft.com/resources/sharedsource/licensingbasics/sharedsourcelicenses.mspx.
 // All other rights reserved.
 
-using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Xml;
@@ -28,7 +27,7 @@ namespace Microsoft.HealthVault.ItemTypes
         public ClaimAmounts()
         {
         }
-        
+
         /// <summary>
         /// Creates a new instance of the <see cref="ClaimAmounts"/> class specifying mandatory values.
         /// </summary>
@@ -71,15 +70,15 @@ namespace Microsoft.HealthVault.ItemTypes
         /// </param>
         ///
         public ClaimAmounts(
-            decimal chargedAmount,    
-            decimal negotiatedAmount,    
-            decimal coPayment,    
-            decimal deductible,    
-            decimal amountNotCovered,    
-            decimal eligibleForBenefits,    
-            decimal coinsurance,    
-            decimal miscellaneousAdjustments,    
-            decimal benefitsPaid,    
+            decimal chargedAmount,
+            decimal negotiatedAmount,
+            decimal coPayment,
+            decimal deductible,
+            decimal amountNotCovered,
+            decimal eligibleForBenefits,
+            decimal coinsurance,
+            decimal miscellaneousAdjustments,
+            decimal benefitsPaid,
             decimal patientResponsibility)
         {
             ChargedAmount = chargedAmount;
@@ -93,7 +92,7 @@ namespace Microsoft.HealthVault.ItemTypes
             BenefitsPaid = benefitsPaid;
             PatientResponsibility = patientResponsibility;
         }
-        
+
         /// <summary>
         /// Populates this <see cref="ClaimAmounts"/> instance from the data in the specified XML.
         /// </summary>
@@ -170,7 +169,7 @@ namespace Microsoft.HealthVault.ItemTypes
 
             writer.WriteEndElement();
         }
-        
+
         /// <summary>
         /// Gets or sets the amount charged.
         /// </summary>
@@ -180,9 +179,9 @@ namespace Microsoft.HealthVault.ItemTypes
             get { return _chargedAmount; }
             set { _chargedAmount = value; }
         }
-            
+
         private decimal _chargedAmount;
-                
+
         /// <summary>
         /// Gets or sets the amount negotiated between the provider and the payer.
         /// </summary>
@@ -192,9 +191,9 @@ namespace Microsoft.HealthVault.ItemTypes
             get { return _negotiatedAmount; }
             set { _negotiatedAmount = value; }
         }
-            
+
         private decimal _negotiatedAmount;
-                
+
         /// <summary>
         /// Gets or sets the copayment amount.
         /// </summary>
@@ -207,7 +206,7 @@ namespace Microsoft.HealthVault.ItemTypes
         }
 
         private decimal _coPayment;
-                
+
         /// <summary>
         /// Gets or sets the deductible amount.
         /// </summary>
@@ -219,7 +218,7 @@ namespace Microsoft.HealthVault.ItemTypes
         }
 
         private decimal _deductible;
-                
+
         /// <summary>
         /// Gets or sets the amount for services not covered by the plan.
         /// </summary>
@@ -229,9 +228,9 @@ namespace Microsoft.HealthVault.ItemTypes
             get { return _amountNotCovered; }
             set { _amountNotCovered = value; }
         }
-            
+
         private decimal _amountNotCovered;
-                
+
         /// <summary>
         /// Gets or sets the amount that is eligible for benefits.
         /// </summary>
@@ -241,13 +240,13 @@ namespace Microsoft.HealthVault.ItemTypes
             get { return _eligibleForBenefits; }
             set { _eligibleForBenefits = value; }
         }
-            
+
         private decimal _eligibleForBenefits;
-                
+
         /// <summary>
         /// Gets or sets the percentage of the eligable amount that is covered by the payer.
         /// </summary>
-        /// 
+        ///
         /// <remarks>
         /// The value will be set to null if unknown.
         /// </remarks>
@@ -257,9 +256,9 @@ namespace Microsoft.HealthVault.ItemTypes
             get { return _percentageCovered; }
             set { _percentageCovered = value; }
         }
-            
+
         private double? _percentageCovered;
-                
+
         /// <summary>
         /// Gets or sets the amount paid by the person.
         /// </summary>
@@ -269,9 +268,9 @@ namespace Microsoft.HealthVault.ItemTypes
             get { return _coinsurance; }
             set { _coinsurance = value; }
         }
-            
+
         private decimal _coinsurance;
-                
+
         /// <summary>
         /// Gets or sets the adjustments that may affect the amount paid on the claim.
         /// </summary>
@@ -283,7 +282,7 @@ namespace Microsoft.HealthVault.ItemTypes
         }
 
         private decimal _miscellaneousAdjustments;
-                
+
         /// <summary>
         /// Gets or sets the amount paid by the payer.
         /// </summary>
@@ -293,9 +292,9 @@ namespace Microsoft.HealthVault.ItemTypes
             get { return _benefitsPaid; }
             set { _benefitsPaid = value; }
         }
-            
+
         private decimal _benefitsPaid;
-                
+
         /// <summary>
         /// Gets or sets the total amount paid by the patient.
         /// </summary>
@@ -338,4 +337,3 @@ namespace Microsoft.HealthVault.ItemTypes
         }
     }
 }
-    

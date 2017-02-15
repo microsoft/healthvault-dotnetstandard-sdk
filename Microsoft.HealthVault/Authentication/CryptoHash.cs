@@ -11,14 +11,14 @@ using System.Xml;
 namespace Microsoft.HealthVault.Authentication
 {
     /// <summary>
-    /// Encapsulates a cryptographic hash primitive and provides additional 
+    /// Encapsulates a cryptographic hash primitive and provides additional
     /// functionality to communicate the hash state via XML.
     /// </summary>
-    /// 
+    ///
     /// <remarks>
     /// CryptoHash is for internal use only and is subject to change.
     /// </remarks>
-    /// 
+    ///
     public class CryptoHash
     {
         #region properties
@@ -26,11 +26,11 @@ namespace Microsoft.HealthVault.Authentication
         /// <summary>
         /// Gets or sets the hash algorithm that instantiates the hash primitive.
         /// </summary>
-        /// 
+        ///
         /// <exception cref="ArgumentException">
         /// <see cref="AlgorithmName"/> is set to <b>null</b> or empty.
         /// </exception>
-        /// 
+        ///
         protected internal string AlgorithmName
         {
             get { return _algName; }
@@ -48,11 +48,11 @@ namespace Microsoft.HealthVault.Authentication
         /// <summary>
         /// Gets or sets an instance of the specified hash algorithm.
         /// </summary>
-        /// 
+        ///
         /// <exception cref="ArgumentException">
         /// <see cref="HashAlgorithm"/> is set to <b>null</b>.
         /// </exception>
-        /// 
+        ///
         protected HashAlgorithm HashAlgorithm
         {
             get { return _hashAlg; }
@@ -70,15 +70,15 @@ namespace Microsoft.HealthVault.Authentication
         /// <summary>
         /// Gets or sets a flag indicating whether the hash is already finalized.
         /// </summary>
-        /// 
+        ///
         /// <returns>
         /// <b>true</b> if the hash is already finalized; otherwise, <b>false</b>.
         /// </returns>
-        /// 
+        ///
         /// <remarks>
         /// To reuse the <see cref="CryptoHash"/> instance, call Reset().
         /// </remarks>
-        /// 
+        ///
         protected bool IsFinalized { get; set; }
 
         #endregion
@@ -86,15 +86,15 @@ namespace Microsoft.HealthVault.Authentication
         #region ctor
 
         /// <summary>
-        /// Creates a new instance of the <see cref="CryptoHash"/> class with 
+        /// Creates a new instance of the <see cref="CryptoHash"/> class with
         /// default values.
         /// </summary>
-        /// 
+        ///
         /// <remarks>
-        /// The default hash algorithm specified by <see cref="CryptoConfiguration"/> 
+        /// The default hash algorithm specified by <see cref="CryptoConfiguration"/>
         /// determines which hash primitive to use.
         /// </remarks>
-        /// 
+        ///
         public CryptoHash()
             :
             this(CryptoConfiguration.HashAlgorithmName)
@@ -102,23 +102,23 @@ namespace Microsoft.HealthVault.Authentication
         }
 
         /// <summary>
-        /// Creates a new instance of the <see cref="CryptoHash"/> class with 
+        /// Creates a new instance of the <see cref="CryptoHash"/> class with
         /// the specified hash algorithm name.
         /// </summary>
-        /// 
+        ///
         /// <remarks>
-        /// The caller must use <see cref="WriteInfoXml"/> to generate XML 
+        /// The caller must use <see cref="WriteInfoXml"/> to generate XML
         /// representing the final digest and <see cref="AlgorithmName"/>.
         /// </remarks>
-        /// 
+        ///
         /// <exception cref="ArgumentException">
         /// The <paramref name="algorithmName"/> parameter is not supported.
         /// </exception>
-        /// 
+        ///
         /// <param name="algorithmName">
         /// The well-known algorithm name for the hash primitive.
         /// </param>
-        /// 
+        ///
         public CryptoHash(string algorithmName)
         {
             AlgorithmName = algorithmName;
@@ -128,17 +128,17 @@ namespace Microsoft.HealthVault.Authentication
         #endregion
 
         /// <summary>
-        /// Resets the state of the <see cref="CryptoHash"/> instance and the 
+        /// Resets the state of the <see cref="CryptoHash"/> instance and the
         /// underlying hash primitive.
         /// </summary>
-        /// 
+        ///
         /// <remarks>
-        /// If the <see cref="CryptoHash"/> instance is already finalized, 
-        /// this will reset it so that the instance can be reused. Calling this 
-        /// method resets all data, so you must call <see cref="Finalize"/> 
+        /// If the <see cref="CryptoHash"/> instance is already finalized,
+        /// this will reset it so that the instance can be reused. Calling this
+        /// method resets all data, so you must call <see cref="Finalize"/>
         /// beforehand to retrieve the finalized hash data.
         /// </remarks>
-        /// 
+        ///
         internal virtual void Reset()
         {
             IsFinalized = false;
@@ -150,23 +150,23 @@ namespace Microsoft.HealthVault.Authentication
         /// Applies the current hash algorithm to the specified data, beginning
         /// at the specified index.
         /// </summary>
-        /// 
+        ///
         /// <param name="buffer">
         /// An array of bytes representing the UTF8 encoded data.
         /// </param>
-        /// 
+        ///
         /// <param name="index">
         /// An integer representing the starting location in the byte array.
         /// </param>
-        /// 
+        ///
         /// <param name="count">
         /// An integer representing the count of bytes.
         /// </param>
-        /// 
+        ///
         /// <exception cref="InvalidOperationException">
         /// <see cref="IsFinalized"/> is <b>true</b>.
         /// </exception>
-        /// 
+        ///
         internal virtual void ComputeHash(byte[] buffer, int index, int count)
         {
             if (IsFinalized)
@@ -179,15 +179,15 @@ namespace Microsoft.HealthVault.Authentication
         /// <summary>
         /// Applies the current hash algorithm to the specified data.
         /// </summary>
-        /// 
+        ///
         /// <param name="buffer">
         /// An array of bytes representing the data to be hashed.
         /// </param>
-        /// 
+        ///
         /// <exception cref="InvalidOperationException">
         /// <see cref="IsFinalized"/> is <b>true</b>.
         /// </exception>
-        /// 
+        ///
         internal virtual void ComputeHash(byte[] buffer)
         {
             ComputeHash(buffer, 0, buffer.Length);
@@ -196,16 +196,16 @@ namespace Microsoft.HealthVault.Authentication
         /// <summary>
         /// Applies the current hash algorithm to the provided string data.
         /// </summary>
-        /// 
+        ///
         /// <param name="data">
-        /// The string data to hash. The string data is UTF8 encoded and 
+        /// The string data to hash. The string data is UTF8 encoded and
         /// then hashed.
         /// </param>
-        /// 
+        ///
         /// <exception cref="ArgumentException">
         /// The <paramref name="data"/> parameter is <b>null</b> or empty.
         /// </exception>
-        /// 
+        ///
         internal void ComputeHash(string data)
         {
             if (String.IsNullOrEmpty(data))
@@ -218,16 +218,16 @@ namespace Microsoft.HealthVault.Authentication
         /// <summary>
         /// Constructs the representation of the finalized hash state.
         /// </summary>
-        /// 
+        ///
         /// <returns>
-        /// A <see cref="CryptoHashFinalized"/> object representing the 
+        /// A <see cref="CryptoHashFinalized"/> object representing the
         /// finalized state of the hash object is returned.
         /// </returns>
-        /// 
+        ///
         /// <exception cref="InvalidOperationException">
         /// <see cref="IsFinalized"/> is <b>true</b>.
         /// </exception>
-        /// 
+        ///
         public virtual CryptoHashFinalized Finalize()
         {
             if (IsFinalized)
@@ -243,44 +243,44 @@ namespace Microsoft.HealthVault.Authentication
         /// <summary>
         /// Gets the digest algorithm name.
         /// </summary>
-        /// 
+        ///
         /// <remarks>
         /// Child classes must specify the name of the digest
         /// algorithm they implement.
         /// This method is only called internally and is subject to change.
         /// </remarks>
-        /// 
+        ///
         protected virtual string DigestAlgorithmName => "hash";
 
         /// <summary>
         /// Gets the name of the start element for the serialized info XML.
         /// </summary>
-        /// 
+        ///
         /// <returns>
         /// A string representing the XML element name of the
-        /// section that contains the content written with 
+        /// section that contains the content written with
         /// <see cref="WriteInfoXml"/>.
         /// </returns>
-        /// 
+        ///
         protected string StartElementName => DigestAlgorithmName + "-alg";
 
         /// <summary>
-        /// Writes the XML to use when authenticating with the HealthVault 
+        /// Writes the XML to use when authenticating with the HealthVault
         /// service.
         /// </summary>
-        /// 
+        ///
         /// <remarks>
         /// This method is only called internally and is subject to change.
         /// </remarks>
-        /// 
+        ///
         /// <param name="writer">
         /// The XML writer receiving the data.
         /// </param>
-        /// 
+        ///
         /// <exception cref="ArgumentNullException">
-        /// The <paramref name="writer"/> parameter is <b>null</b>. 
+        /// The <paramref name="writer"/> parameter is <b>null</b>.
         /// </exception>
-        /// 
+        ///
         public virtual void WriteInfoXml(XmlWriter writer)
         {
             if (writer == null)
@@ -310,19 +310,19 @@ namespace Microsoft.HealthVault.Authentication
         /// Generates the info hash section for HealthVault service
         /// web requests given the specified string data.
         /// </summary>
-        /// 
+        ///
         /// <param name="text">
         /// A string representing the data.
         /// </param>
-        /// 
+        ///
         /// <returns>
         /// A string representing the info hash.
         /// </returns>
-        /// 
+        ///
         /// <exception cref="ArgumentException">
         /// The <paramref name="text"/> parameter is <b>null</b> or empty.
         /// </exception>
-        /// 
+        ///
         internal static string CreateInfoHash(string text)
         {
             if (String.IsNullOrEmpty(text))
@@ -336,16 +336,16 @@ namespace Microsoft.HealthVault.Authentication
         /// Generates the info hash section for HealthVault service
         /// web requests given the specified data.
         /// </summary>
-        /// 
+        ///
         /// <param name="buffer">
-        /// An array of bytes representing the UTF8 
+        /// An array of bytes representing the UTF8
         /// encoded data.
         /// </param>
-        /// 
+        ///
         /// <returns>
         /// A string representing the info hash.
         /// </returns>
-        /// 
+        ///
         internal static string CreateInfoHash(Byte[] buffer)
         {
             return CreateInfoHash(buffer, 0, buffer.Length);
@@ -356,23 +356,23 @@ namespace Microsoft.HealthVault.Authentication
         /// web requests given the specified data beginning at the specified
         /// index.
         /// </summary>
-        /// 
+        ///
         /// <param name="buffer">
         /// An array of bytes representing the UTF8 encoded data.
         /// </param>
-        /// 
+        ///
         /// <param name="index">
         /// An integer representing the starting location in the byte array.
         /// </param>
-        /// 
+        ///
         /// <param name="count">
         /// An integer representing the count of bytes.
         /// </param>
-        /// 
+        ///
         /// <returns>
         /// A string representing the info hash.
         /// </returns>
-        /// 
+        ///
         internal static string CreateInfoHash(Byte[] buffer, int index, int count)
         {
             CryptoHash hash = new CryptoHash();
@@ -381,5 +381,3 @@ namespace Microsoft.HealthVault.Authentication
         }
     }
 }
-
-

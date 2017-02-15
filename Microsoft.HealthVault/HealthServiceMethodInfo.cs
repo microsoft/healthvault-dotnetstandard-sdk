@@ -11,7 +11,7 @@ namespace Microsoft.HealthVault
     /// <summary>
     /// Provides information about the HealthVault methods.
     /// </summary>
-    /// 
+    ///
     public class HealthServiceMethodInfo
     {
         internal static HealthServiceMethodInfo CreateMethodInfo(
@@ -69,11 +69,11 @@ namespace Microsoft.HealthVault
         /// <summary>
         /// Gets the name of the method.
         /// </summary>
-        /// 
+        ///
         /// <value>
         /// A string representing the method name.
         /// </value>
-        /// 
+        ///
         public string Name
         {
             get { return _name; }
@@ -83,17 +83,15 @@ namespace Microsoft.HealthVault
         /// <summary>
         /// Gets the information about the supported versions of the method.
         /// </summary>
-        /// 
+        ///
         /// <value>
         /// A read-only collection containing version information.
         /// </value>
-        /// 
+        ///
         public ReadOnlyCollection<HealthServiceMethodVersionInfo> Versions
         {
             get { return _versions; }
         }
         private ReadOnlyCollection<HealthServiceMethodVersionInfo> _versions;
-
     }
-
 }

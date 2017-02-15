@@ -3,7 +3,6 @@
 // see http://www.microsoft.com/resources/sharedsource/licensingbasics/sharedsourcelicenses.mspx.
 // All other rights reserved.
 
-
 using System;
 using System.Security;
 using System.Security.Permissions;
@@ -14,7 +13,7 @@ using System.Web.UI.WebControls;
 namespace Microsoft.HealthVault.Web
 {
     /// <summary>
-    /// A <see cref="TemplateField"/> implementation used on the 
+    /// A <see cref="TemplateField"/> implementation used on the
     /// <see cref="HealthRecordItemDataGrid"/> to override Signed column.
     /// </summary>
     [AspNetHostingPermission(SecurityAction.InheritanceDemand, Level = AspNetHostingPermissionLevel.Minimal)]
@@ -25,20 +24,20 @@ namespace Microsoft.HealthVault.Web
         /// Constructs a GridViewIsSignedTemplate with the specified
         /// template type, column name, header text and the column value override.
         /// </summary>
-        /// 
+        ///
         /// <param name="type">
         /// Tells the template which type of a controls should be added to the
         /// container based on the health record item type.
         /// </param>
-        /// 
+        ///
         /// <param name="columnName">
         /// The name of the column the template applies to.
         /// </param>
-        /// 
+        ///
         /// <param name="headerText">
         /// The header text of the column.
         /// </param>
-        /// 
+        ///
         /// <param name="isSignedOverride">
         /// The override value of the column.
         /// </param>
@@ -61,12 +60,12 @@ namespace Microsoft.HealthVault.Web
         /// to. These child controls are in turn defined within an inline
         /// template.
         /// </summary>
-        /// 
+        ///
         /// <param name="container">
-        /// The <see cref="Control"/> object to contain the instances of the 
+        /// The <see cref="Control"/> object to contain the instances of the
         /// controls from the inline template.
         /// </param>
-        /// 
+        ///
         [SecuritySafeCritical]
         public void InstantiateIn(Control container)
         {

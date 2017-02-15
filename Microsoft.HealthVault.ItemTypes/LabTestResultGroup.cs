@@ -3,116 +3,113 @@
 // see http://www.microsoft.com/resources/sharedsource/licensingbasics/sharedsourcelicenses.mspx.
 // All other rights reserved.
 
-
-using System;
 using System.Collections.ObjectModel;
 using System.Text;
 using System.Xml;
 using System.Xml.XPath;
-
 
 namespace Microsoft.HealthVault.ItemTypes
 {
     /// <summary>
     ///  A set of lab test results.
     /// </summary>
-    /// 
+    ///
     public class LabTestResultGroup : HealthRecordItemData
     {
         /// <summary>
-        /// Initialize a new instance of the <see cref="LabTestResultGroup"/> 
+        /// Initialize a new instance of the <see cref="LabTestResultGroup"/>
         /// class with default values.
         /// </summary>
-        /// 
+        ///
         public LabTestResultGroup()
         {
         }
 
         /// <summary>
-        /// Initialize a new instance of the <see cref="LabTestResultGroup"/> 
+        /// Initialize a new instance of the <see cref="LabTestResultGroup"/>
         /// class with group name.
         /// </summary>
-        /// 
-        /// <param name="groupName"> 
+        ///
+        /// <param name="groupName">
         /// The name of this set of tests.
         /// </param>
-        /// 
+        ///
         /// <exception cref="ArgumentNullException">
         /// If <paramref name="groupName"/> is <b>null</b>.
         /// </exception>
-        /// 
+        ///
         public LabTestResultGroup(CodableValue groupName)
         {
             GroupName = groupName;
         }
 
         /// <summary>
-        /// Populates this <see cref="LabTestResultGroup"/> instance from the data in the XML. 
+        /// Populates this <see cref="LabTestResultGroup"/> instance from the data in the XML.
         /// </summary>
-        /// 
+        ///
         /// <param name="navigator">
         /// The XML to get the lab test results group type data from.
-        /// </param> 
-        /// 
+        /// </param>
+        ///
         /// <exception cref="ArgumentNullException">
         /// If <paramref name="navigator"/> is <b>null</b>.
         /// </exception>
-        /// 
-       public override void ParseXml(XPathNavigator navigator)
-       {
-           Validator.ThrowIfNavigatorNull(navigator);
+        ///
+        public override void ParseXml(XPathNavigator navigator)
+        {
+            Validator.ThrowIfNavigatorNull(navigator);
 
-           // group-name 
-           _groupName = new CodableValue();
-           _groupName.ParseXml(navigator.SelectSingleNode("group-name"));
-           
-           // laboratory-name
-           _laboratoryName = 
-               XPathHelper.GetOptNavValue<Organization>(navigator,"laboratory-name");
+            // group-name
+            _groupName = new CodableValue();
+            _groupName.ParseXml(navigator.SelectSingleNode("group-name"));
 
-           // status
-           _status = 
-               XPathHelper.GetOptNavValue<CodableValue>(navigator,"status");
+            // laboratory-name
+            _laboratoryName =
+                XPathHelper.GetOptNavValue<Organization>(navigator, "laboratory-name");
 
-           // sub-groups
-           XPathNodeIterator subGroupsIterator = navigator.Select("sub-groups");
+            // status
+            _status =
+                XPathHelper.GetOptNavValue<CodableValue>(navigator, "status");
 
-           _subGroups = new Collection<LabTestResultGroup>();
-           foreach (XPathNavigator subGroupNav in subGroupsIterator)
-           {
-               LabTestResultGroup _subGroup = new LabTestResultGroup();
-               _subGroup.ParseXml(subGroupNav);
-               _subGroups.Add(_subGroup);
-           }
+            // sub-groups
+            XPathNodeIterator subGroupsIterator = navigator.Select("sub-groups");
 
-           // results
-           XPathNodeIterator resultsIterator = navigator.Select("results");
+            _subGroups = new Collection<LabTestResultGroup>();
+            foreach (XPathNavigator subGroupNav in subGroupsIterator)
+            {
+                LabTestResultGroup _subGroup = new LabTestResultGroup();
+                _subGroup.ParseXml(subGroupNav);
+                _subGroups.Add(_subGroup);
+            }
 
-           _results = new Collection<LabTestResultDetails>();
-           foreach (XPathNavigator resultNav in resultsIterator)
-           {
-               LabTestResultDetails result = new LabTestResultDetails();
-               result.ParseXml(resultNav);
-               _results.Add(result);
-           }
+            // results
+            XPathNodeIterator resultsIterator = navigator.Select("results");
+
+            _results = new Collection<LabTestResultDetails>();
+            foreach (XPathNavigator resultNav in resultsIterator)
+            {
+                LabTestResultDetails result = new LabTestResultDetails();
+                result.ParseXml(resultNav);
+                _results.Add(result);
+            }
         }
 
         /// <summary>
         /// Writes the lab test results group type data to the specified XmlWriter.
-        /// </summary> 
-        /// 
+        /// </summary>
+        ///
         /// <param name="nodeName">
-        /// The name of the node to write XML output. 
+        /// The name of the node to write XML output.
         /// </param>
-        /// 
+        ///
         /// <param name="writer">
         /// The XmlWriter to write the lab test results group type data to.
-        /// </param> 
-        /// 
+        /// </param>
+        ///
         /// <exception cref="ArgumentException">
         /// If <paramref name="nodeName"/> parameter is <b> null </b> or empty.
         /// </exception>
-        /// 
+        ///
         /// <exception cref="ArgumentNullException">
         /// If <paramref name="writer"/> parameter is <b> null </b>.
         /// </exception>
@@ -120,7 +117,7 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <exception cref="HealthRecordItemSerializationException">
         /// If <see cref="GroupName"/> parameter is <b> null</b>.
         /// </exception>
-        /// 
+        ///
         public override void WriteXml(string nodeName, XmlWriter writer)
         {
             Validator.ThrowIfStringNullOrEmpty(nodeName, "nodeName");
@@ -131,16 +128,16 @@ namespace Microsoft.HealthVault.ItemTypes
             writer.WriteStartElement(nodeName);
 
             // group-name
-            _groupName.WriteXml("group-name",writer);
+            _groupName.WriteXml("group-name", writer);
 
             // laboratory-name
-            XmlWriterHelper.WriteOpt( 
+            XmlWriterHelper.WriteOpt(
                 writer,
                 "laboratory-name",
                 _laboratoryName);
 
             // status
-            XmlWriterHelper.WriteOpt( 
+            XmlWriterHelper.WriteOpt(
                 writer,
                 "status",
                 _status);
@@ -159,39 +156,39 @@ namespace Microsoft.HealthVault.ItemTypes
             {
                 _results[index].WriteXml("results", writer);
             }
-            
+
             // </lab-test-results-group-type>
             writer.WriteEndElement();
         }
 
         /// <summary>
-        /// Gets or sets the name of this set of tests.  
+        /// Gets or sets the name of this set of tests.
         /// </summary>
-        /// 
+        ///
         /// <exception cref="ArgumentNullException">
         /// If <paramref name="value"/> is <b>null</b>.
         /// </exception>
-        /// 
+        ///
         public CodableValue GroupName
         {
-            get { return _groupName;}
+            get { return _groupName; }
             set
             {
                 Validator.ThrowIfArgumentNull(value, "GroupName", "LabTestResultsGroupTypeGroupNameMandatory");
-                _groupName =  value;
+                _groupName = value;
             }
         }
         private CodableValue _groupName;
 
         /// <summary>
-        /// Gets or sets the information about the laboratory which performed 
+        /// Gets or sets the information about the laboratory which performed
         /// this set of tests.
         /// </summary>
-        /// 
+        ///
         /// <remarks>
         /// Laboratory name should be set to <b>null</b> if it is unknown.
         /// </remarks>
-        /// 
+        ///
         public Organization LaboratoryName
         {
             get { return _laboratoryName; }
@@ -200,25 +197,25 @@ namespace Microsoft.HealthVault.ItemTypes
         private Organization _laboratoryName;
 
         /// <summary>
-        /// Gets or sets the overall status of this group and the sub group tests.  
+        /// Gets or sets the overall status of this group and the sub group tests.
         /// </summary>
-        /// 
+        ///
         /// <remarks>
-        /// The status can be incomplete, pending, processing, etc. It should be 
-        /// set to <b>null</b> if it is unknown. 
+        /// The status can be incomplete, pending, processing, etc. It should be
+        /// set to <b>null</b> if it is unknown.
         /// </remarks>
-        /// 
+        ///
         public CodableValue Status
         {
-            get { return _status;}
+            get { return _status; }
             set { _status = value; }
         }
         private CodableValue _status;
 
         /// <summary>
-        /// Gets lab test result sub groups.  
+        /// Gets lab test result sub groups.
         /// </summary>
-        /// 
+        ///
         public Collection<LabTestResultGroup> SubGroups => _subGroups;
 
         private Collection<LabTestResultGroup> _subGroups =
@@ -227,21 +224,21 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <summary>
         /// Gets a set of results for this group.
         /// </summary>
-        /// 
+        ///
         public Collection<LabTestResultDetails> Results
         {
             get { return _results; }
         }
-        private Collection<LabTestResultDetails> _results=new Collection<LabTestResultDetails>();
+        private Collection<LabTestResultDetails> _results = new Collection<LabTestResultDetails>();
 
         /// <summary>
         /// Gets a string representation of the lab test results group type item.
-        /// </summary> 
+        /// </summary>
         ///
         /// <returns>
         /// A string representation of the lab test results group type item.
         /// </returns>
-        /// 
+        ///
         public override string ToString()
         {
             StringBuilder result = new StringBuilder(200);

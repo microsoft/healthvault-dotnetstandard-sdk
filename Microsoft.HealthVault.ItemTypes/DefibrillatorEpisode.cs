@@ -16,7 +16,7 @@ namespace Microsoft.HealthVault.ItemTypes
     /// Information containing a Defibrillator Episode.
     /// </summary>
     /// <remarks>
-    /// This information will usually be obtained from a 
+    /// This information will usually be obtained from a
     /// defibrillator device.
     /// </remarks>
     public class DefibrillatorEpisode : HealthRecordItem
@@ -24,31 +24,31 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <summary>
         /// Creates a new instance of the <see cref="DefibrillatorEpisode"/> class with default values.
         /// </summary>
-        /// 
+        ///
         /// <remarks>
         /// The item is not added to the health record until the
-        /// <see cref="HealthRecordAccessor.NewItem(HealthRecordItem)"/> 
+        /// <see cref="HealthRecordAccessor.NewItem(HealthRecordItem)"/>
         /// method is called.
         /// </remarks>
-        /// 
+        ///
         public DefibrillatorEpisode()
             : base(TypeId)
         {
         }
 
         /// <summary>
-        /// Creates a new instance of the <see cref="DefibrillatorEpisode"/> class 
+        /// Creates a new instance of the <see cref="DefibrillatorEpisode"/> class
         /// with the specified date.
         /// </summary>
-        /// 
+        ///
         /// <param name="when">
         /// The date when defibrillator episode was recorded.
         /// </param>
-        /// 
+        ///
         /// <exception cref="ArgumentNullException">
         /// The <paramref name="when"/> parameter is <b>null</b>.
         /// </exception>
-        /// 
+        ///
         public DefibrillatorEpisode(HealthServiceDateTime when)
             : base(TypeId)
         {
@@ -58,11 +58,11 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <summary>
         /// Retrieves the unique identifier for the item type.
         /// </summary>
-        /// 
+        ///
         /// <value>
         /// A GUID.
         /// </value>
-        /// 
+        ///
         public new static readonly Guid TypeId =
             new Guid("a3d38add-b7b2-4ccd-856b-9b14bbc4e075");
 
@@ -77,7 +77,7 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <exception cref="ArgumentNullException">
         /// If <paramref name="typeSpecificXml"/> parameter is <b>null</b>.
         /// </exception>
-        /// 
+        ///
         /// <exception cref="InvalidOperationException">
         /// If the first node in <paramref name="typeSpecificXml"/> is not
         /// a DefibrillatorEpisode node.
@@ -104,17 +104,17 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <summary>
         /// Writes the defibrillator episode data to the specified XmlWriter.
         /// </summary>
-        /// 
+        ///
         /// <param name="writer">
         /// The XmlWriter to write the defibrillator data to.
         /// </param>
-        /// 
+        ///
         /// <exception cref="ArgumentNullException">
         /// If <paramref name="writer"/> is <b>null</b>.
         /// </exception>
-        /// 
+        ///
         public override void WriteXml(XmlWriter writer)
-        {            
+        {
             Validator.ThrowIfWriterNull(writer);
             Validator.ThrowSerializationIfNull(_when, "DefibrillatorEpisodeWhenNullValue");
 
@@ -133,17 +133,17 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <summary>
         /// Gets a string representation of the defibrillator episode.
         /// </summary>
-        /// 
+        ///
         /// <returns>
         /// A string representing the defibrillator episode.
         /// </returns>
-        /// 
+        ///
         public override string ToString()
         {
             StringBuilder stringBuilder = new StringBuilder();
 
             if (EpisodeTypeGroup != null)
-            {                
+            {
                 stringBuilder.Append(EpisodeTypeGroup);
             }
 
@@ -171,16 +171,16 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <summary>
         /// Gets or sets the date when the defibrillator episode was recorded.
         /// </summary>
-        /// 
+        ///
         /// <value>
-        /// A <see cref="HealthServiceDateTime"/> representing the date. 
+        /// A <see cref="HealthServiceDateTime"/> representing the date.
         /// The default value is the current year, month, and day.
         /// </value>
-        /// 
+        ///
         /// <exception cref="ArgumentNullException">
         /// The <paramref name="value"/> parameter is <b>null</b>.
         /// </exception>
-        /// 
+        ///
         public HealthServiceDateTime When
         {
             get
@@ -227,8 +227,8 @@ namespace Microsoft.HealthVault.ItemTypes
         /// Gets and sets the episode type.
         /// </summary>
         /// <remarks>
-        /// Specifies the specific type of defibrillator episode. For example VT represents 
-        /// the episode type for Ventricular Tachycardia.         
+        /// Specifies the specific type of defibrillator episode. For example VT represents
+        /// the episode type for Ventricular Tachycardia.
         /// </remarks>
         /// <value>
         /// A <see cref="HealthServiceDateTime"/> representing the date.

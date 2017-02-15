@@ -4,10 +4,7 @@
 // All other rights reserved.
 
 using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Globalization;
-using System.Text;
 using System.Xml;
 using System.Xml.XPath;
 
@@ -26,7 +23,7 @@ namespace Microsoft.HealthVault.ItemTypes
         public UnitConversion()
         {
         }
-        
+
         /// <summary>
         /// Populates this <see cref="UnitConversion"/> instance from the data in the specified XML.
         /// </summary>
@@ -38,15 +35,15 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <exception cref="ArgumentNullException">
         /// If <paramref name="navigator"/> parameter is <b>null</b>.
         /// </exception>
-        /// 
+        ///
         public override void ParseXml(XPathNavigator navigator)
         {
             Validator.ThrowIfNavigatorNull(navigator);
-            
+
             _multiplier = XPathHelper.GetOptNavValueAsDouble(navigator, "multiplier");
             _offset = XPathHelper.GetOptNavValueAsDouble(navigator, "offset");
         }
-        
+
         /// <summary>
         /// Writes the XML representation of the UnitConversion into
         /// the specified XML writer.
@@ -68,61 +65,61 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <exception cref="ArgumentNullException">
         /// If <paramref name="writer"/> parameter is <b>null</b>.
         /// </exception>
-        /// 
+        ///
         public override void WriteXml(string nodeName, XmlWriter writer)
         {
             Validator.ThrowIfStringNullOrEmpty(nodeName, "nodeName");
-            Validator.ThrowIfArgumentNull(writer, "writer", "WriteXmlNullWriter");           
-            
+            Validator.ThrowIfArgumentNull(writer, "writer", "WriteXmlNullWriter");
+
             writer.WriteStartElement("unit-conversion");
-            
+
             XmlWriterHelper.WriteOptDouble(writer, "multiplier", _multiplier);
             XmlWriterHelper.WriteOptDouble(writer, "offset", _offset);
             writer.WriteEndElement();
         }
-        
+
         /// <summary>
         /// Gets or sets the multiplier.
         /// </summary>
-        /// 
+        ///
         public double? Multiplier
         {
             get
             {
                 return _multiplier;
             }
-            
+
             set
             {
                 _multiplier = value;
             }
         }
-        
+
         private double? _multiplier;
-        
+
         /// <summary>
         /// Gets or sets the offset.
         /// </summary>
-        /// 
+        ///
         public double? Offset
         {
             get
             {
                 return _offset;
             }
-            
+
             set
             {
                 _offset = value;
             }
         }
-        
+
         private double? _offset;
-        
+
         /// <summary>
         /// Gets a string representation of the UnitConversion.
         /// </summary>
-        /// 
+        ///
         /// <returns>
         /// A string representation of the UnitConversion.
         /// </returns>

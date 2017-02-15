@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Microsoft.HealthVault.Extensions
 {
@@ -73,7 +69,7 @@ namespace Microsoft.HealthVault.Extensions
         /// <remarks>
         /// This property is based on the "HealthVaultUrl" configuration
         /// value with the path modified to the appropriate handler.
-        /// </remarks> 
+        /// </remarks>
         internal static Uri GetHealthClientServiceUrl(this IHealthApplicationConfiguration configuration)
         {
             if (configuration.HealthVaultUrl != null)

@@ -3,8 +3,6 @@
 // see http://www.microsoft.com/resources/sharedsource/licensingbasics/sharedsourcelicenses.mspx.
 // All other rights reserved.
 
-using System.Xml;
-
 namespace Microsoft.HealthVault
 {
     /// <summary>
@@ -23,11 +21,11 @@ namespace Microsoft.HealthVault
         /// implementation of the <see cref="IItemTypePropertyConversion"/> object and the
         /// parameters with which it was constructed.
         /// </summary>
-        /// 
+        ///
         /// <param name="value">
         /// The value to be converted.
         /// </param>
-        /// 
+        ///
         /// <returns>
         /// The converted value.
         /// </returns>

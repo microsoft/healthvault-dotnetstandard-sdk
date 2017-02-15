@@ -11,7 +11,7 @@ namespace Microsoft.HealthVault
     /// <summary>
     /// Provides information about the HealthVault assemblies.
     /// </summary>
-    /// 
+    ///
     public class HealthServiceAssemblyInfo
     {
         internal static HealthServiceAssemblyInfo CreateAssemblyInfo(
@@ -40,16 +40,16 @@ namespace Microsoft.HealthVault
         /// <summary>
         /// Gets the HealthVault URL.
         /// </summary>
-        /// 
+        ///
         /// <value>
         /// An instance of Uri representing the HealthVault URL.
         /// </value>
-        /// 
+        ///
         /// <remarks>
         /// This is the URL to the HealthVault.ashx, which is used to call the
         /// HealthVault XML methods.
         /// </remarks>
-        /// 
+        ///
         public Uri Url
         {
             get { return _url; }
@@ -59,11 +59,11 @@ namespace Microsoft.HealthVault
         /// <summary>
         /// Gets the version of the HealthVault assembly.
         /// </summary>
-        /// 
+        ///
         /// <value>
         /// A string representing the version.
         /// </value>
-        /// 
+        ///
         public string Version
         {
             get { return _version; }
@@ -76,7 +76,7 @@ namespace Microsoft.HealthVault
         /// <value>
         /// An instance of Uri representing the documentation URL.
         /// </value>
-        /// 
+        ///
         public Uri DocumentationUrl
         {
             get { return _docUrl; }

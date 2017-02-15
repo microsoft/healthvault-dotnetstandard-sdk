@@ -3,22 +3,20 @@
 // see http://www.microsoft.com/resources/sharedsource/licensingbasics/sharedsourcelicenses.mspx.
 // All other rights reserved.
 
-
-
 namespace Microsoft.HealthVault.ItemTypes
 {
     /// <summary>
     /// Defines a method for registering all the health record item types with the
     /// <see cref="ItemTypeManager"/> that are in this assembly.
     /// </summary>
-    /// 
+    ///
     public static class ItemTypeRegistrar
     {
         /// <summary>
-        /// Registers all the health record item types in this assembly with the 
+        /// Registers all the health record item types in this assembly with the
         /// <see cref="ItemTypeManager"/>.
         /// </summary>
-        /// 
+        ///
         public static void RegisterAssemblyHealthRecordItemTypes()
         {
             foreach (ItemTypeManager.DefaultTypeHandler typeHandler in _defaultTypeHandlers)
@@ -127,6 +125,5 @@ namespace Microsoft.HealthVault.ItemTypes
                 new ItemTypeManager.DefaultTypeHandler(Insight.TypeId, typeof(Insight)),
                 new ItemTypeManager.DefaultTypeHandler(ActionPlanWrapper.TypeId, typeof(ActionPlanWrapper))
             };
-
     }
 }

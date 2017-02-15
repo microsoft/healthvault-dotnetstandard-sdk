@@ -10,7 +10,7 @@ using System.Xml.XPath;
 namespace Microsoft.HealthVault
 {
     /// <summary>
-    /// The property that the thing-type can be 
+    /// The property that the thing-type can be
     /// ordered by in the result.
     /// </summary>
     public class HealthRecordItemTypeProperty
@@ -39,13 +39,13 @@ namespace Microsoft.HealthVault
         }
 
         private readonly string _name;
-        
+
         /// <summary>
         /// The data type for the property.
         /// </summary>
         [SuppressMessage(
             "Microsoft.Naming",
-            "CA1721:PropertyNamesShouldNotMatchGetMethods", 
+            "CA1721:PropertyNamesShouldNotMatchGetMethods",
             Justification = "We don't want to the change the name specified in the schema definition.")]
         public string Type
         {
@@ -53,7 +53,7 @@ namespace Microsoft.HealthVault
         }
 
         private readonly string _type;
-        
+
         /// <summary>
         /// The xpath for the property.
         /// </summary>

@@ -22,11 +22,11 @@ namespace Microsoft.HealthVault.Authentication
         /// <summary>
         /// Initializes a new instance of the <see cref="Sha256Hmac"/> class.
         /// </summary>
-        /// 
+        ///
         /// <param name="key">
         /// The hmac key.
         /// </param>
-        /// 
+        ///
         /// <exception cref="ArgumentNullException">
         /// If <paramref name="key"/> is null.
         /// </exception>
@@ -59,8 +59,8 @@ namespace Microsoft.HealthVault.Authentication
         /// <summary>
         /// Releases the unmanaged resources and optionally releases the managed resources.
         /// </summary>
-        /// 
-        /// <param name="disposing">true to release both managed and unmanaged resources; 
+        ///
+        /// <param name="disposing">true to release both managed and unmanaged resources;
         /// false to release only unmanaged resources.
         /// </param>
         protected override void Dispose(bool disposing)
@@ -78,7 +78,7 @@ namespace Microsoft.HealthVault.Authentication
         /// <summary>
         /// Gets the size of the hash.
         /// </summary>
-        /// 
+        ///
         /// <value>
         /// The size of the hash.
         /// </value>
@@ -90,7 +90,7 @@ namespace Microsoft.HealthVault.Authentication
         /// <summary>
         /// Gets or sets the key.
         /// </summary>
-        /// 
+        ///
         /// <value>
         /// The key.
         /// </value>
@@ -107,15 +107,15 @@ namespace Microsoft.HealthVault.Authentication
         /// <summary>
         /// Core hashing function called by parent.
         /// </summary>
-        /// 
+        ///
         /// <param name="rgb">
         /// The data to hash.
         /// </param>
-        /// 
+        ///
         /// <param name="ib">
         /// The offset into the array.
         /// </param>
-        /// 
+        ///
         /// <param name="cb">
         /// The count of bytes to hash.
         /// </param>
@@ -127,7 +127,7 @@ namespace Microsoft.HealthVault.Authentication
         /// <summary>
         /// Finalizes the hash.
         /// </summary>
-        /// 
+        ///
         /// <returns>
         /// The final hash.
         /// </returns>

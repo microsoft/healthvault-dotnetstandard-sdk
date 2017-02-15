@@ -3,10 +3,10 @@
 // see http://www.microsoft.com/resources/sharedsource/licensingbasics/sharedsourcelicenses.mspx.
 // All other rights reserved.
 
+using Microsoft.HealthVault.ItemTypes;
 using System;
 using System.Collections.ObjectModel;
 using System.Xml;
-using Microsoft.HealthVault.ItemTypes;
 
 namespace Microsoft.HealthVault
 {
@@ -128,7 +128,7 @@ namespace Microsoft.HealthVault
         /// <remarks>
         /// If the collection is empty, not items are written.
         /// </remarks>
-        /// 
+        ///
         /// <typeparam name="T">The item type in the collection.</typeparam>
         /// <param name="writer">The writer to use.</param>
         /// <param name="collection">The collection to write.</param>

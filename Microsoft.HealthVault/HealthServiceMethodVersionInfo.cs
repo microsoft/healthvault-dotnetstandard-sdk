@@ -10,10 +10,10 @@ using System.Xml.XPath;
 namespace Microsoft.HealthVault
 {
     /// <summary>
-    /// Provides information about the supported versions of a HealthVault 
+    /// Provides information about the supported versions of a HealthVault
     /// service web method.
     /// </summary>
-    /// 
+    ///
     public class HealthServiceMethodVersionInfo
     {
         /// <summary>
@@ -47,11 +47,11 @@ namespace Microsoft.HealthVault
         /// <summary>
         /// Gets the name of the method.
         /// </summary>
-        /// 
+        ///
         /// <value>
         /// A string representing the method name.
         /// </value>
-        /// 
+        ///
         public string Name
         {
             get { return _method.Name; }
@@ -65,7 +65,7 @@ namespace Microsoft.HealthVault
         /// <value>
         /// An integer representing the method version number.
         /// </value>
-        /// 
+        ///
         public int Version
         {
             get { return _version; }
@@ -76,15 +76,15 @@ namespace Microsoft.HealthVault
         /// <summary>
         /// Gets the URL of the request schema for the method.
         /// </summary>
-        /// 
+        ///
         /// <value>
         /// A Uri representing the request schema.
         /// </value>
-        /// 
+        ///
         /// <remarks>
         /// This property returns <b>null</b> if the method takes no parameters.
         /// </remarks>
-        /// 
+        ///
         public Uri RequestSchemaUrl
         {
             get { return _requestSchemaUrl; }
@@ -95,11 +95,11 @@ namespace Microsoft.HealthVault
         /// <summary>
         /// Gets the file name of the request schema.
         /// </summary>
-        /// 
+        ///
         /// <value>
         /// A string representing the file name.
         /// </value>
-        /// 
+        ///
         public string RequestFileName
         {
             get
@@ -116,7 +116,7 @@ namespace Microsoft.HealthVault
         /// <summary>
         /// Gets the URL of the response schema for the method.
         /// </summary>
-        ///  
+        ///
         public Uri ResponseSchemaUrl
         {
             get { return _responseSchemaUrl; }
@@ -131,7 +131,7 @@ namespace Microsoft.HealthVault
         /// <value>
         /// A string representing the file name.
         /// </value>
-        /// 
+        ///
         public string ResponseFileName
         {
             get

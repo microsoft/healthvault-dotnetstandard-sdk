@@ -33,7 +33,7 @@ namespace Microsoft.HealthVault.ItemTypes
             : base(TypeId)
         {
         }
-        
+
         /// <summary>
         /// Creates a new instance of the <see cref="ExplanationOfBenefits"/> class specifying mandatory values.
         /// </summary>
@@ -81,33 +81,33 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <exception cref="ArgumentException">
         /// If <paramref name="memberId"/> is empty or contains only whitespace.
         /// If <paramref name="claimId"/> is empty or contains only whitespace.
-        /// If <paramref name="services"/> is <b>null</b> or doesn't contain any values.            
+        /// If <paramref name="services"/> is <b>null</b> or doesn't contain any values.
         /// </exception>
         ///
         /// <exception cref="ArgumentNullException">
         /// If <paramref name="memberId"/> is <b>null</b>.
         /// If <paramref name="claimId"/> is <b>null</b>.
-        /// If <paramref name="dateSubmitted"/> is <b>null</b>.            
-        /// If <paramref name="patient"/> is <b>null</b>.            
-        /// If <paramref name="plan"/> is <b>null</b>.            
-        /// If <paramref name="claimType"/> is <b>null</b>.            
-        /// If <paramref name="submittedBy"/> is <b>null</b>.            
-        /// If <paramref name="provider"/> is <b>null</b>.            
-        /// If <paramref name="currency"/> is <b>null</b>.            
-        /// If <paramref name="claimTotals"/> is <b>null</b>.            
+        /// If <paramref name="dateSubmitted"/> is <b>null</b>.
+        /// If <paramref name="patient"/> is <b>null</b>.
+        /// If <paramref name="plan"/> is <b>null</b>.
+        /// If <paramref name="claimType"/> is <b>null</b>.
+        /// If <paramref name="submittedBy"/> is <b>null</b>.
+        /// If <paramref name="provider"/> is <b>null</b>.
+        /// If <paramref name="currency"/> is <b>null</b>.
+        /// If <paramref name="claimTotals"/> is <b>null</b>.
         /// </exception>
         ///
         public ExplanationOfBenefits(
             HealthServiceDateTime dateSubmitted,
-            PersonItem patient,    
-            Organization plan,    
-            string memberId,    
-            CodableValue claimType,    
-            string claimId,    
-            Organization submittedBy,    
-            Organization provider,    
-            CodableValue currency,    
-            ClaimAmounts claimTotals,    
+            PersonItem patient,
+            Organization plan,
+            string memberId,
+            CodableValue claimType,
+            string claimId,
+            Organization submittedBy,
+            Organization provider,
+            CodableValue currency,
+            ClaimAmounts claimTotals,
             IEnumerable<Service> services) : base(TypeId)
         {
             DateSubmitted = dateSubmitted;
@@ -122,18 +122,18 @@ namespace Microsoft.HealthVault.ItemTypes
             ClaimTotals = claimTotals;
 
             Validator.ThrowIfArgumentNull(services, "services", "ServicesMandatory");
-            
+
             foreach (Service val in services)
             {
                 Services.Add(val);
             }
-            
+
             if (Services.Count == 0)
             {
                 throw Validator.ArgumentException("services", "ServicesMandatory");
             }
         }
-        
+
         /// <summary>
         /// Retrieves the unique identifier for the item type.
         /// </summary>
@@ -143,7 +143,7 @@ namespace Microsoft.HealthVault.ItemTypes
         /// </value>
         ///
         public new static readonly Guid TypeId = new Guid("356fbba9-e0c9-4f4f-b0d9-4594f2490d2f");
-        
+
         /// <summary>
         /// Populates this <see cref="ExplanationOfBenefits"/> instance from the data in the specified XML.
         /// </summary>
@@ -155,12 +155,12 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <exception cref="ArgumentNullException">
         /// If <paramref name="typeSpecificXml"/> parameter is <b>null</b>.
         /// </exception>
-        /// 
+        ///
         /// <exception cref="InvalidOperationException">
         /// If the first node in <paramref name="typeSpecificXml"/> is not
         /// a ExplanationOfBenefits node.
         /// </exception>
-        /// 
+        ///
         protected override void ParseXml(IXPathNavigable typeSpecificXml)
         {
             Validator.ThrowIfArgumentNull(typeSpecificXml, "typeSpecificXml", "ParseXmlNavNull");
@@ -181,17 +181,16 @@ namespace Microsoft.HealthVault.ItemTypes
             _submittedBy = XPathHelper.GetOptNavValue<Organization>(itemNav, "submitted-by");
             _provider = XPathHelper.GetOptNavValue<Organization>(itemNav, "provider");
             _currency = XPathHelper.GetOptNavValue<CodableValue>(itemNav, "currency");
-            _claimTotals = XPathHelper.GetOptNavValue<ClaimAmounts>(itemNav, "claim-totals");                            
-                            
+            _claimTotals = XPathHelper.GetOptNavValue<ClaimAmounts>(itemNav, "claim-totals");
+
             _services.Clear();
-            foreach(XPathNavigator servicesNav in itemNav.Select("services"))
+            foreach (XPathNavigator servicesNav in itemNav.Select("services"))
             {
                 Service service = new Service();
                 service.ParseXml(servicesNav);
                 _services.Add(service);
             }
         }
-        
 
         /// <summary>
         /// Writes the XML representation of the ExplanationOfBenefits into
@@ -206,7 +205,7 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <exception cref="ArgumentNullException">
         /// If <paramref name="writer"/> parameter is <b>null</b>.
         /// </exception>
-        /// 
+        ///
         /// <exception cref="HealthRecordItemSerializationException">
         /// If <see cref="DateSubmitted"/> is <b>null</b>.
         /// If <see cref="Patient"/> is <b>null</b>.
@@ -218,7 +217,7 @@ namespace Microsoft.HealthVault.ItemTypes
         /// If <see cref="Provider"/> is <b>null</b>.
         /// If <see cref="Currency"/> is <b>null</b>.
         /// If <see cref="ClaimTotals"/> is <b>null</b>.
-        /// If <see cref="Services"/> collection is <b>null</b> or empty.                
+        /// If <see cref="Services"/> collection is <b>null</b> or empty.
         /// </exception>
         ///
         public override void WriteXml(XmlWriter writer)
@@ -240,21 +239,21 @@ namespace Microsoft.HealthVault.ItemTypes
                 "ServicesMandatory");
 
             writer.WriteStartElement("explanation-of-benefits");
-            
+
             _dateSubmitted.WriteXml("date-submitted", writer);
             _patient.WriteXml("patient", writer);
             XmlWriterHelper.WriteOpt(writer, "relationship-to-member", _relationshipToMember);
             _plan.WriteXml("plan", writer);
             XmlWriterHelper.WriteOptString(writer, "group-id", _groupId);
-            writer.WriteElementString("member-id", _memberId);                    
+            writer.WriteElementString("member-id", _memberId);
             _claimType.WriteXml("claim-type", writer);
-            writer.WriteElementString("claim-id", _claimId);                    
+            writer.WriteElementString("claim-id", _claimId);
             _submittedBy.WriteXml("submitted-by", writer);
             _provider.WriteXml("provider", writer);
             _currency.WriteXml("currency", writer);
             _claimTotals.WriteXml("claim-totals", writer);
-                            
-            foreach(Service service in _services)
+
+            foreach (Service service in _services)
             {
                 service.WriteXml("services", writer);
             }
@@ -279,9 +278,9 @@ namespace Microsoft.HealthVault.ItemTypes
                 _dateSubmitted = value;
             }
         }
-        
+
         private HealthServiceDateTime _dateSubmitted;
-            
+
         /// <summary>
         /// Gets or sets the name of the patient.
         /// </summary>
@@ -301,23 +300,23 @@ namespace Microsoft.HealthVault.ItemTypes
         }
 
         private PersonItem _patient;
-            
+
         /// <summary>
         /// Gets or sets the relationship of the patient to the primary plan member.
         /// </summary>
         ///
         /// <remarks>
         /// If there is no information about the relationshipToMember the value should be set to <b>null</b>.
-        /// </remarks>            
+        /// </remarks>
         [SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public CodableValue RelationshipToMember
         {
             get { return _relationshipToMember; }
             set { _relationshipToMember = value; }
         }
-        
+
         private CodableValue _relationshipToMember;
-            
+
         /// <summary>
         /// Gets or sets the plan covering this claim.
         /// </summary>
@@ -335,16 +334,16 @@ namespace Microsoft.HealthVault.ItemTypes
                 _plan = value;
             }
         }
-        
+
         private Organization _plan;
-            
+
         /// <summary>
         /// Gets or sets the group id for the member's plan.
         /// </summary>
         ///
         /// <remarks>
-        /// If there is no information about the groupId the value should be set to <b>null</b> 
-        /// </remarks>            
+        /// If there is no information about the groupId the value should be set to <b>null</b>
+        /// </remarks>
         /// <exception cref="ArgumentException">
         /// The <paramref name="value"/> contains only whitespace.
         /// </exception>
@@ -352,15 +351,15 @@ namespace Microsoft.HealthVault.ItemTypes
         public string GroupId
         {
             get { return _groupId; }
-            set 
+            set
             {
                 Validator.ThrowIfStringNullOrEmpty(value, "GroupId");
-                _groupId = value; 
+                _groupId = value;
             }
         }
-        
+
         private string _groupId;
-            
+
         /// <summary>
         /// Gets or sets the member id of the plan member.
         /// </summary>
@@ -376,16 +375,16 @@ namespace Microsoft.HealthVault.ItemTypes
         public string MemberId
         {
             get { return _memberId; }
-            set 
+            set
             {
                 Validator.ThrowIfArgumentNull(value, "MemberId", "MemberIdNullOrEmptyValue");
                 Validator.ThrowIfStringIsEmptyOrWhitespace(value, "MemberId");
-                _memberId = value; 
+                _memberId = value;
             }
         }
-        
+
         private string _memberId;
-            
+
         /// <summary>
         /// Gets or sets the type of the claim (medical, dental, etc.)
         /// </summary>
@@ -404,9 +403,9 @@ namespace Microsoft.HealthVault.ItemTypes
                 _claimType = value;
             }
         }
-        
+
         private CodableValue _claimType;
-            
+
         /// <summary>
         /// Gets or sets the claim id.
         /// </summary>
@@ -422,16 +421,16 @@ namespace Microsoft.HealthVault.ItemTypes
         public string ClaimId
         {
             get { return _claimId; }
-            set 
+            set
             {
                 Validator.ThrowIfArgumentNull(value, "ClaimId", "ClaimIdNullOrEmptyValue");
                 Validator.ThrowIfStringIsEmptyOrWhitespace(value, "ClaimId");
-                _claimId = value; 
+                _claimId = value;
             }
         }
-        
+
         private string _claimId;
-            
+
         /// <summary>
         /// Gets or sets the organization that submitted this claim.
         /// </summary>
@@ -449,9 +448,9 @@ namespace Microsoft.HealthVault.ItemTypes
                 _submittedBy = value;
             }
         }
-        
+
         private Organization _submittedBy;
-            
+
         /// <summary>
         /// Gets or sets the provider that performed the services.
         /// </summary>
@@ -469,9 +468,9 @@ namespace Microsoft.HealthVault.ItemTypes
                 _provider = value;
             }
         }
-        
+
         private Organization _provider;
-            
+
         /// <summary>
         /// Gets or sets the currency used.
         /// </summary>
@@ -490,9 +489,9 @@ namespace Microsoft.HealthVault.ItemTypes
                 _currency = value;
             }
         }
-        
+
         private CodableValue _currency;
-            
+
         /// <summary>
         /// Gets or sets a summary of the financial information about this claim.
         /// </summary>
@@ -510,9 +509,9 @@ namespace Microsoft.HealthVault.ItemTypes
                 _claimTotals = value;
             }
         }
-        
+
         private ClaimAmounts _claimTotals;
-            
+
         /// <summary>
         /// Gets a collection of the services included in this claim.
         /// </summary>
@@ -525,7 +524,7 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             get { return _services; }
         }
-        
+
         private Collection<Service> _services = new Collection<Service>();
 
         /// <summary>
@@ -542,7 +541,7 @@ namespace Microsoft.HealthVault.ItemTypes
                 string.Format(CultureInfo.CurrentCulture,
                     ResourceRetriever.GetResourceString("ExplanationOfBenefitsToStringFormat"),
                     _provider.Name,
-                    _claimType.Text, 
+                    _claimType.Text,
                     _claimTotals.ChargedAmount,
                     _currency.Text);
 
@@ -550,4 +549,3 @@ namespace Microsoft.HealthVault.ItemTypes
         }
     }
 }
-    

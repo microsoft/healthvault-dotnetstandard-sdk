@@ -3,27 +3,26 @@
 // see http://www.microsoft.com/resources/sharedsource/licensingbasics/sharedsourcelicenses.mspx.
 // All other rights reserved.
 
-
 namespace Microsoft.HealthVault.Exceptions
 {
     /// <summary>
     /// Helper class that allows the SDK to throw the appropriate
-    /// HealthServiceException based on the status code returned by 
+    /// HealthServiceException based on the status code returned by
     /// HealthVault.
     /// </summary>
-    /// 
+    ///
     internal static class HealthServiceExceptionHelper
     {
         /// <summary>
         /// Helper method that allows the SDK to throw the appropriate
-        /// HealthServiceException based on the status code returned by 
+        /// HealthServiceException based on the status code returned by
         /// HealthVault.
         /// </summary>
-        /// 
+        ///
         /// <param name="responseData">
         /// The HealthServiceResponseData object created by parsing response returned by HealthVault.
         ///</param>
-        /// 
+        ///
         internal static HealthServiceException GetHealthServiceException(HealthServiceResponseData responseData)
         {
             HealthServiceStatusCode errorCode =
@@ -41,16 +40,16 @@ namespace Microsoft.HealthVault.Exceptions
         /// HealthServiceException based on the status code indicating the error
         /// type.
         /// </summary>
-        /// 
+        ///
         /// <param name="errorCode">
         /// The status code representing the error which occurred.
         /// </param>
-        /// 
+        ///
         /// <param name="error">
         /// Information about an error that occurred while processing
         /// the request.
         /// </param>
-        /// 
+        ///
         internal static HealthServiceException GetHealthServiceException(
             HealthServiceStatusCode errorCode,
             HealthServiceResponseError error)
@@ -88,7 +87,7 @@ namespace Microsoft.HealthVault.Exceptions
                 case HealthServiceStatusCode.RecordQuotaExceeded:
                     e = new HealthServiceRecordQuotaExceededException(error);
                     break;
-                case HealthServiceStatusCode.OtherDataItemSizeLimitExceeded :
+                case HealthServiceStatusCode.OtherDataItemSizeLimitExceeded:
                     e = new HealthServiceOtherDataSizeLimitExceededException(error);
                     break;
                 default:
@@ -98,5 +97,4 @@ namespace Microsoft.HealthVault.Exceptions
             return e;
         }
     }
-
 }

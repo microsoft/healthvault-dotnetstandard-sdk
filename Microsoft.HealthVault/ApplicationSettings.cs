@@ -10,23 +10,22 @@ using System.Xml.XPath;
 
 namespace Microsoft.HealthVault
 {
-
     /// <summary>
     /// Application specific settings for the user.
     /// </summary>
-    /// 
+    ///
     /// <remarks>
-    /// HealthVault can maintain settings for a specific user and application on behalf of the 
+    /// HealthVault can maintain settings for a specific user and application on behalf of the
     /// application. You may think of this like the HKEY_CURRENT_USER part of the Windows Registry
     /// for HealthVault.
     /// </remarks>
-    /// 
+    ///
     public class ApplicationSettings
     {
         /// <summary>
         /// Constructs an ApplicationSettings instance with default values.
         /// </summary>
-        /// 
+        ///
         public ApplicationSettings()
         {
         }
@@ -54,7 +53,7 @@ namespace Microsoft.HealthVault
         /// <summary>
         /// Gets or sets the application specific XML settings that the application has set for the user.
         /// </summary>
-        /// 
+        ///
         public IXPathNavigable XmlSettings
         {
             get { return _xmlSettings; }
@@ -66,7 +65,7 @@ namespace Microsoft.HealthVault
         /// Gets or sets the selected health record identifier that the user has chosen to use with this
         /// application.
         /// </summary>
-        /// 
+        ///
         public Guid SelectedRecordId
         {
             get { return _selectedRecordId; }
@@ -74,5 +73,4 @@ namespace Microsoft.HealthVault
         }
         private Guid _selectedRecordId;
     }
-
 }

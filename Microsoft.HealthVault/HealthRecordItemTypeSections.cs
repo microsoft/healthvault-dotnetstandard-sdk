@@ -37,7 +37,7 @@ namespace Microsoft.HealthVault
         Columns = 0x4,
 
         /// <summary>
-        /// Indicates the transforms supported by the health record item type definition 
+        /// Indicates the transforms supported by the health record item type definition
         /// should be returned.
         /// </summary>
         Transforms = 0x8,
@@ -61,7 +61,7 @@ namespace Microsoft.HealthVault
 
         /// <summary>
         /// Indicates all information for the health record item type definition
-        /// should be returned. 
+        /// should be returned.
         /// </summary>
         All = Core | Xsd | Columns | Transforms | TransformSource | Versions | EffectiveDateXPath
     }

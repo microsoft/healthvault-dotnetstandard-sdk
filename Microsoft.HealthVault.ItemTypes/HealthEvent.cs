@@ -16,7 +16,7 @@ namespace Microsoft.HealthVault.ItemTypes
     /// </summary>
     ///
     /// <remarks>
-    /// A health event is a health-related occurrence for the owner of the record.  For 
+    /// A health event is a health-related occurrence for the owner of the record.  For
     /// children, it might be used to record the date that the child first crawls.
     /// For adults, it might be used to record the date of an accident or progress through a rehabilitation.
     /// </remarks>
@@ -37,7 +37,7 @@ namespace Microsoft.HealthVault.ItemTypes
             : base(TypeId)
         {
         }
-        
+
         /// <summary>
         /// Creates a new instance of the <see cref="HealthEvent"/> class
         /// specifying mandatory values.
@@ -69,7 +69,7 @@ namespace Microsoft.HealthVault.ItemTypes
             When = when;
             Event = eventValue;
         }
-        
+
         /// <summary>
         /// Retrieves the unique identifier for the HealthEvent type.
         /// </summary>
@@ -80,7 +80,7 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public new static readonly Guid TypeId =
             new Guid("1572af76-1653-4c39-9683-9f9ca6584ba3");
-        
+
         /// <summary>
         /// Populates this <see cref="HealthEvent"/> instance from the data in the specified XML.
         /// </summary>
@@ -92,28 +92,28 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <exception cref="ArgumentNullException">
         /// If <paramref name="typeSpecificXml"/> parameter is <b>null</b>.
         /// </exception>
-        /// 
+        ///
         /// <exception cref="InvalidOperationException">
         /// If the first node in <paramref name="typeSpecificXml"/> is not
         /// a HealthEvent node.
         /// </exception>
-        /// 
+        ///
         protected override void ParseXml(IXPathNavigable typeSpecificXml)
         {
             Validator.ThrowIfArgumentNull(typeSpecificXml, "typeSpecificXml", "ParseXmlNavNull");
-            
+
             XPathNavigator itemNav =
                 typeSpecificXml.CreateNavigator().SelectSingleNode("health-event");
 
-            Validator.ThrowInvalidIfNull(itemNav, "HealthEventUnexpectedNode");            
-            
+            Validator.ThrowInvalidIfNull(itemNav, "HealthEventUnexpectedNode");
+
             _when = new ApproximateDateTime();
             _when.ParseXml(itemNav.SelectSingleNode("when"));
             _event = new CodableValue();
             _event.ParseXml(itemNav.SelectSingleNode("event"));
             _category = XPathHelper.GetOptNavValue<CodableValue>(itemNav, "category");
         }
-        
+
         /// <summary>
         /// Writes the XML representation of the HealthEvent into
         /// the specified XML writer.
@@ -127,7 +127,7 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <exception cref="ArgumentNullException">
         /// If <paramref name="writer"/> parameter is <b>null</b>.
         /// </exception>
-        /// 
+        ///
         /// <exception cref="HealthRecordItemSerializationException">
         /// If <see cref="When"/> is <b>null</b>.
         /// If <see cref="Event"/> is <b>null</b>.
@@ -139,48 +139,48 @@ namespace Microsoft.HealthVault.ItemTypes
 
             Validator.ThrowSerializationIfNull(_when, "WhenNullValue");
             Validator.ThrowSerializationIfNull(_event, "EventNullValue");
-            
+
             writer.WriteStartElement("health-event");
-            
+
             _when.WriteXml("when", writer);
             _event.WriteXml("event", writer);
             XmlWriterHelper.WriteOpt(writer, "category", _category);
             writer.WriteEndElement();
         }
-        
+
         /// <summary>
         /// Gets or sets the date and time the event occurred.
         /// </summary>
-        /// 
+        ///
         /// <exception cref="ArgumentNullException">
         /// The <paramref name="value"/> parameter is <b>null</b>.
         /// </exception>
-        /// 
+        ///
         public ApproximateDateTime When
         {
             get
             {
                 return _when;
             }
-            
+
             set
             {
                 Validator.ThrowIfArgumentNull(value, "value", "WhenNullValue");
-                
+
                 _when = value;
             }
         }
-        
+
         private ApproximateDateTime _when;
-        
+
         /// <summary>
         /// Gets or sets the name of the health event.
         /// </summary>
-        /// 
+        ///
         /// <exception cref="ArgumentNullException">
         /// The <paramref name="value"/> parameter is <b>null</b>.
         /// </exception>
-        /// 
+        ///
         [SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly", Justification = "FXCop thinks that CodableValue is a collection, so it throws this error.")]
         public CodableValue Event
         {
@@ -188,21 +188,21 @@ namespace Microsoft.HealthVault.ItemTypes
             {
                 return _event;
             }
-            
+
             set
             {
                 Validator.ThrowIfArgumentNull(value, "value", "EventNullValue");
-                
+
                 _event = value;
             }
         }
-        
+
         private CodableValue _event;
-        
+
         /// <summary>
         /// Gets or sets the category of the health event.
         /// </summary>
-        /// 
+        ///
         /// <remarks>
         /// The category can be used to group related events together. For example, 'pediatric'.
         /// If there is no information about category the value should be set to <b>null</b>.
@@ -215,19 +215,19 @@ namespace Microsoft.HealthVault.ItemTypes
             {
                 return _category;
             }
-            
+
             set
             {
                 _category = value;
             }
         }
-        
+
         private CodableValue _category;
-        
+
         /// <summary>
         /// Gets a string representation of the HealthEvent.
         /// </summary>
-        /// 
+        ///
         /// <returns>
         /// A string representation of the HealthEvent.
         /// </returns>

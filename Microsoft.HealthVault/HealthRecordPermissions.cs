@@ -11,7 +11,7 @@ namespace Microsoft.HealthVault
     /// Provides the permission information that the current
     /// authenticated person has for the record when using the current application.
     /// </summary>
-    /// 
+    ///
     public class HealthRecordPermissions
     {
         /// <summary>
@@ -32,7 +32,7 @@ namespace Microsoft.HealthVault
         /// Gets or sets whether the current record has opted in for
         /// Meaningful Use reporting.
         /// </summary>
-        /// 
+        ///
         /// <remarks>
         /// If set to true, the current record has explicitly opted into Meaningful Use reporting.
         /// If set to false, the current record has explicitly opted out of Meaningful Use reporting.

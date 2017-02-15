@@ -3,8 +3,6 @@
 // see http://www.microsoft.com/resources/sharedsource/licensingbasics/sharedsourcelicenses.mspx.
 // All other rights reserved.
 
-
-using System;
 using System.Xml;
 using System.Xml.XPath;
 
@@ -13,32 +11,32 @@ namespace Microsoft.HealthVault.ItemTypes
     /// <summary>
     /// Represents additional information about the exercise.
     /// </summary>
-    /// 
+    ///
     /// <remarks>
     /// The detail information typically stores information that is specific to the type of exercise activity
     /// and any device used to measure it.
-    /// 
+    ///
     /// Examples: Average heart rate, average temperature, intensity.
     /// </remarks>
-    /// 
+    ///
     public class ExerciseDetail : HealthRecordItemData
     {
         /// <summary>
-        /// Creates a new instance of the <see cref="ExerciseDetail"/> class 
+        /// Creates a new instance of the <see cref="ExerciseDetail"/> class
         /// with default values.
         /// </summary>
-        /// 
+        ///
         public ExerciseDetail()
         {
         }
 
         /// <summary>
-        /// Creates a new instance of the <see cref="ExerciseDetail"/> class 
+        /// Creates a new instance of the <see cref="ExerciseDetail"/> class
         /// with specified values
         /// </summary>
         /// <param name="name">The name of the information stored in this exercise detail. </param>
         /// <param name="value">The value of the exercise detail</param>
-        /// 
+        ///
         /// <exception cref="ArgumentNullException">
         /// The <paramref name="name"/> or <paramref name="value"/> is <b>null</b>.
         /// </exception>
@@ -48,18 +46,18 @@ namespace Microsoft.HealthVault.ItemTypes
             Value = value;
         }
 
-        /// <summary> 
+        /// <summary>
         /// Populates the data for the exercise detail from the XML.
         /// </summary>
-        /// 
-        /// <param name="navigator"> 
+        ///
+        /// <param name="navigator">
         /// The XML node representing the exercise detail.
         /// </param>
-        /// 
+        ///
         /// <exception cref="ArgumentNullException">
         /// The <paramref name="navigator"/> parameter is <b>null</b>.
         /// </exception>
-        /// 
+        ///
         public override void ParseXml(XPathNavigator navigator)
         {
             Validator.ThrowIfNavigatorNull(navigator);
@@ -71,22 +69,22 @@ namespace Microsoft.HealthVault.ItemTypes
                 XPathHelper.GetOptNavValue<StructuredMeasurement>(navigator, "value");
         }
 
-        /// <summary> 
+        /// <summary>
         /// Writes the exercise detail to the specified XML writer.
         /// </summary>
-        /// 
+        ///
         /// <param name="nodeName">
         /// The name of the outer element for the exercise detail.
         /// </param>
-        /// 
-        /// <param name="writer"> 
+        ///
+        /// <param name="writer">
         /// The XmlWriter to write the exercise detail data to.
         /// </param>
-        /// 
+        ///
         /// <exception cref="ArgumentException">
         /// The <paramref name="nodeName"/> parameter is <b>null</b> or empty.
         /// </exception>
-        /// 
+        ///
         /// <exception cref="ArgumentNullException">
         /// The <paramref name="writer"/> parameter is <b>null</b>.
         /// </exception>
@@ -115,24 +113,25 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <summary>
         /// Gets or sets the name of the information stored in this exercise detail.
         /// </summary>
-        /// 
+        ///
         /// <remarks>
         /// Names should be values contained in the exercise-detail-names vocabularies, and that
         /// vocabulary should be specified when adding new details.
         /// Constants that are equal to these names can be found as static members of the <see cref="ExerciseDetail"/> class.
         /// </remarks>
-        /// 
+        ///
         /// <value>
-        /// A CodedValue representing the detail name. 
+        /// A CodedValue representing the detail name.
         /// </value>
-        /// 
+        ///
         /// <exception cref="ArgumentNullException">
         /// The name is being set to null.
         /// </exception>
         public CodedValue Name
         {
             get { return _name; }
-            set {
+            set
+            {
                 Validator.ThrowIfArgumentNull(value, "Name", "ExerciseDetailNameNullValue");
                 _name = value;
             }
@@ -143,7 +142,7 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <summary>
         /// Gets or sets the value of the exercise detail.
         /// </summary>
-        /// 
+        ///
         /// <remarks>
         /// For example, to store an average heartrate of 125, place 125 in the value element and
         /// set the unit to "BPM".
@@ -152,7 +151,7 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <value>
         /// A <see cref="StructuredMeasurement"/> representing the detail value.
         /// </value>
-        /// 
+        ///
         /// <exception cref="ArgumentNullException">
         /// The value is being set to null.
         /// </exception>
@@ -170,7 +169,7 @@ namespace Microsoft.HealthVault.ItemTypes
 
         /// <summary>
         /// Gets a string representation of the ExerciseDetail item.
-        /// </summary> 
+        /// </summary>
         ///
         /// <returns>
         /// A string representation of the ExerciseDetail item.
@@ -178,7 +177,7 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public override string ToString()
         {
-            return 
+            return
                 string.Format(
                     ResourceRetriever.GetResourceString(
                         "NameEqualsValue"),
@@ -204,7 +203,7 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <summary>
         /// Detail name for MaximumHeartrate_BPM
         /// </summary>
-        public const string MaximumHeartrate_BPM= "MaximumHeartrate_BPM";
+        public const string MaximumHeartrate_BPM = "MaximumHeartrate_BPM";
 
         /// <summary>
         /// Detail name for PeakHeartrate_BPM (use MaximumHeartrate_BPM instead)
@@ -223,7 +222,7 @@ namespace Microsoft.HealthVault.ItemTypes
         /// Detail name for CaloriesBurned_calories.
         /// </summary>
         /// <remarks>
-        /// The CaloriesBurned_calories detail expresses the number of food calories required to 
+        /// The CaloriesBurned_calories detail expresses the number of food calories required to
         /// balance out the energy expended in the exercise.
         /// </remarks>
         public const string CaloriesBurned_calories = "CaloriesBurned_calories";
@@ -232,7 +231,7 @@ namespace Microsoft.HealthVault.ItemTypes
         /// Detail name for FatCaloriesBurned_calories.
         /// </summary>
         /// <remarks>
-        /// The FatCaloriesBurned_calories detail expresses the number of fat calories required to 
+        /// The FatCaloriesBurned_calories detail expresses the number of fat calories required to
         /// balance out the energy expended in the exercise.
         /// </remarks>
         public const string FatCaloriesBurned_calories = "FatCaloriesBurned_calories";
@@ -317,8 +316,8 @@ namespace Microsoft.HealthVault.ItemTypes
         /// Detail name for LeftRightBalance_percent.
         /// </summary>
         /// <remarks>
-        /// This detail stores the balance between the left and right leg when cycling, 
-        /// and is a number from 0 to 1. The detail stores the percentage of work the left leg is performing, 
+        /// This detail stores the balance between the left and right leg when cycling,
+        /// and is a number from 0 to 1. The detail stores the percentage of work the left leg is performing,
         /// and the right leg percentage is 1 minus the left leg value.
         /// For example, if the this value is 0.45, the left leg is doing 45% of the work and the right leg is
         /// doing 55% of the work.

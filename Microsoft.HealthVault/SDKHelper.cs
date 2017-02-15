@@ -16,7 +16,7 @@ namespace Microsoft.HealthVault
     /// <summary>
     /// HealthVault XML Helper Class
     /// </summary>
-    /// 
+    ///
     internal static class SDKHelper
     {
         internal static XmlReaderSettings XmlReaderSettings
@@ -93,15 +93,15 @@ namespace Microsoft.HealthVault
         /// <summary>
         /// invalid date marker
         /// </summary>
-        /// 
+        ///
         internal static readonly DateTime DateUnspecified = DateTime.MinValue;
 
         /// <summary>
         /// XML-formatted date time value
         /// </summary>
-        /// 
+        ///
         /// <returns></returns>
-        /// 
+        ///
         internal static string XmlFromNow()
         {
             return (XmlFromUtcDateTime(DateTime.UtcNow));
@@ -110,11 +110,11 @@ namespace Microsoft.HealthVault
         /// <summary>
         /// XML-formatted date time value
         /// </summary>
-        /// 
+        ///
         /// <param name="dateTime"></param>
-        /// 
+        ///
         /// <returns></returns>
-        /// 
+        ///
         internal static string XmlFromLocalDateTime(DateTime dateTime)
         {
             return (XmlFromUtcDateTime(dateTime.ToUniversalTime()));
@@ -123,15 +123,15 @@ namespace Microsoft.HealthVault
         /// <summary>
         /// XML Formatted date time value
         /// </summary>
-        /// 
+        ///
         /// <param name="dateTime"></param>
-        /// 
+        ///
         /// <returns></returns>
-        /// 
+        ///
         /// <exception cref="ArgumentException">
         /// If the date time value provided is not in UTC format.
         /// </exception>
-        /// 
+        ///
         internal static string XmlFromUtcDateTime(DateTime dateTime)
         {
             Validator.ThrowArgumentExceptionIf(
@@ -145,11 +145,11 @@ namespace Microsoft.HealthVault
         /// <summary>
         /// XML-formatted date time value
         /// </summary>
-        /// 
+        ///
         /// <param name="dateTime"></param>
-        /// 
+        ///
         /// <returns></returns>
-        /// 
+        ///
         internal static string XmlFromDateTime(DateTime dateTime)
         {
             return dateTime.ToString("yyyy-MM-ddTHH:mm:ss.FFFZ",
@@ -159,11 +159,11 @@ namespace Microsoft.HealthVault
         /// <summary>
         /// Read until we find a node with the name
         /// </summary>
-        /// 
+        ///
         /// <param name="xmlReader"></param>
-        /// 
+        ///
         /// <param name="elementName"></param>
-        /// 
+        ///
         internal static bool ReadUntil(XmlReader xmlReader,
                                     string elementName)
         {
@@ -182,9 +182,9 @@ namespace Microsoft.HealthVault
         /// <summary>
         /// Read until we get to the next element
         /// </summary>
-        /// 
+        ///
         /// <param name="xmlReader"></param>
-        /// 
+        ///
         internal static bool SkipToElement(XmlReader xmlReader)
         {
             Validator.ThrowIfArgumentNull(xmlReader, "xmlReader", "ArgumentNull");
@@ -251,13 +251,13 @@ namespace Microsoft.HealthVault
                 }
             }
         }
-        
-        [SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope", Justification = "New instance of StringReader is returned to the caller")]         
+
+        [SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope", Justification = "New instance of StringReader is returned to the caller")]
         internal static XmlReader GetXmlReaderForXml(string xml, XmlReaderSettings settings = null)
         {
             return GetXmlReader(new StringReader(xml), settings);
         }
-        
+
         internal static XmlReader GetXmlReader(TextReader input, XmlReaderSettings settings = null)
         {
             settings = settings ?? MinimumSafeXmlReaderSettings;

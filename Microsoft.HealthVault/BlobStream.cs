@@ -16,16 +16,16 @@ namespace Microsoft.HealthVault
     /// <summary>
     /// A stream for sending and receiving binary data associated with a health record item.
     /// </summary>
-    /// 
+    ///
     /// <remarks>
-    /// The stream can be written only for BLOBs created using 
-    /// <see cref="BlobStore.NewBlob(string, string)"/>. 
+    /// The stream can be written only for BLOBs created using
+    /// <see cref="BlobStore.NewBlob(string, string)"/>.
     /// If the blob has data retrieved from HealthVault
-    /// it will not be writable. Instead, use <see cref="BlobStore.NewBlob(string, string)"/> 
-    /// with the same name as the BLOB you wish to replace and then get the <see cref="BlobStream"/> 
+    /// it will not be writable. Instead, use <see cref="BlobStore.NewBlob(string, string)"/>
+    /// with the same name as the BLOB you wish to replace and then get the <see cref="BlobStream"/>
     /// from that <see cref="Blob"/> instance and write to it.
     /// </remarks>
-    /// 
+    ///
     public class BlobStream : Stream
     {
         internal BlobStream(HealthRecordAccessor record, Blob blob)
@@ -80,11 +80,10 @@ namespace Microsoft.HealthVault
         private List<byte[]> _blockHashes = new List<byte[]>();
         private BlobHasher _blobHasher;
 
-
         /// <summary>
         /// Gets a value indicating whether the current stream supports reading.
         /// </summary>
-        /// 
+        ///
         public override bool CanRead
         {
             get { return _canRead; }
@@ -94,11 +93,11 @@ namespace Microsoft.HealthVault
         /// <summary>
         /// Gets a value indicating whether the current stream supports seeking.
         /// </summary>
-        /// 
+        ///
         /// <value>
         /// True if the length of the stream is known, or false otherwise.
         /// </value>
-        /// 
+        ///
         public override bool CanSeek
         {
             get
@@ -115,7 +114,7 @@ namespace Microsoft.HealthVault
         /// <summary>
         /// Gets a value that determines whether the current stream can time out.
         /// </summary>
-        /// 
+        ///
         public override bool CanTimeout
         {
             get { return true; }
@@ -124,13 +123,13 @@ namespace Microsoft.HealthVault
         /// <summary>
         /// Gets a value indicating whether the current stream supports writing.
         /// </summary>
-        /// 
+        ///
         public override bool CanWrite { get; }
 
         /// <summary>
         /// Releases all resources held by the <see cref="BlobStream"/>.
         /// </summary>
-        /// 
+        ///
         ~BlobStream()
         {
             Dispose(false);
@@ -140,12 +139,12 @@ namespace Microsoft.HealthVault
         /// Releases all resources used by the stream object and optionally releases the managed
         /// resources.
         /// </summary>
-        /// 
+        ///
         /// <param name="disposing">
         /// true to release both managed and unmanaged resoures; false to release only unmanaged
         /// resoureces.
         /// </param>
-        /// 
+        ///
         /// <exception cref="InvalidOperationException">
         /// If no data has been written to the stream.
         /// </exception>
@@ -163,12 +162,13 @@ namespace Microsoft.HealthVault
             }
             _disposed = true;
         }
+
         private bool _disposed;
 
         /// <summary>
         /// Releases all resources used by the stream.
         /// </summary>
-        /// 
+        ///
         public new void Dispose()
         {
             Dispose(true);
@@ -176,14 +176,14 @@ namespace Microsoft.HealthVault
         }
 
         /// <summary>
-        /// Clears all buffers for this stream and causes any buffered data to be written to 
+        /// Clears all buffers for this stream and causes any buffered data to be written to
         /// HealthVault.
         /// </summary>
-        /// 
+        ///
         /// <exception cref="HealthServiceException">
         /// If a failure occurs calling HealthVault.
         /// </exception>
-        /// 
+        ///
         public override void Flush()
         {
         }
@@ -191,11 +191,11 @@ namespace Microsoft.HealthVault
         /// <summary>
         /// Gets the length BLOB.
         /// </summary>
-        /// 
+        ///
         /// <exception cref="NotSupportedException">
         /// If <see cref="CanSeek"/> is false or the length of the stream is not known.
         /// </exception>
-        /// 
+        ///
         public override long Length
         {
             get
@@ -216,15 +216,15 @@ namespace Microsoft.HealthVault
         /// <summary>
         /// Gets the position of the stream.
         /// </summary>
-        /// 
+        ///
         /// <remarks>
         /// Set is not supported.
         /// </remarks>
-        /// 
+        ///
         /// <exception cref="NotSupportedException">
         /// If <see cref="CanSeek"/> is false when the setter is called.
         /// </exception>
-        /// 
+        ///
         public override long Position
         {
             get
@@ -242,53 +242,53 @@ namespace Microsoft.HealthVault
         /// Reads a sequence of bytes from the current stream and advances the position within the
         /// stream by the number of bytes read.
         /// </summary>
-        /// 
+        ///
         /// <param name="buffer">
-        /// An array of bytes. When this method returns, the buffer contains the specified byte 
-        /// array with the values between offset and (offset + count - 1) replaced by the bytes 
-        /// read from the current source. 
+        /// An array of bytes. When this method returns, the buffer contains the specified byte
+        /// array with the values between offset and (offset + count - 1) replaced by the bytes
+        /// read from the current source.
         /// </param>
-        /// 
+        ///
         /// <param name="offset">
-        /// The zero-based byte offset in buffer at which to begin storing the data read from 
+        /// The zero-based byte offset in buffer at which to begin storing the data read from
         /// the current stream.
         /// </param>
-        /// 
+        ///
         /// <param name="count">
         /// The maximum number of bytes to be read from the current stream.
         /// </param>
-        /// 
+        ///
         /// <returns>
-        /// The total number of bytes read into the buffer. This can be less than the number of 
-        /// bytes requested if that many bytes are not currently available, or zero (0) if the 
-        /// end of the stream has been reached. 
+        /// The total number of bytes read into the buffer. This can be less than the number of
+        /// bytes requested if that many bytes are not currently available, or zero (0) if the
+        /// end of the stream has been reached.
         /// </returns>
-        /// 
+        ///
         /// <exception cref="NotSupportedException">
         /// If the stream does not support reading.
         /// </exception>
-        /// 
+        ///
         /// <exception cref="ArgumentNullException">
         /// <paramref name="buffer"/> is <b>null</b>.
         /// </exception>
-        /// 
+        ///
         /// <exception cref="ArgumentException">
         /// The sum of <paramref name="offset"/> and <paramref name="count"/> is greater than the
         /// <paramref name="buffer"/> length.
         /// </exception>
-        /// 
+        ///
         /// <exception cref="ArgumentOutOfRangeException">
         /// <paramref name="offset"/> or <paramref name="count"/> is negative.
         /// </exception>
-        /// 
+        ///
         /// <exception cref="ObjectDisposedException">
         /// Methods were called after the stream was closed.
         /// </exception>
-        /// 
+        ///
         /// <exception cref="HealthServiceException">
         /// If there was a failure reading the data from HealthVault.
         /// </exception>
-        /// 
+        ///
         public override int Read(byte[] buffer, int offset, int count)
         {
             if (!CanRead)
@@ -335,26 +335,26 @@ namespace Microsoft.HealthVault
         }
 
         /// <summary>
-        /// Reads a byte from the stream and advances the position within the stream by one byte, 
-        /// or returns -1 if at the end of the stream. 
+        /// Reads a byte from the stream and advances the position within the stream by one byte,
+        /// or returns -1 if at the end of the stream.
         /// </summary>
-        /// 
+        ///
         /// <returns>
         /// The unsigned byte cast to an <see cref="Int32"/>, or -1 if at the end of the stream.
         /// </returns>
-        /// 
+        ///
         /// <exception cref="NotSupportedException">
         /// If the stream does not support reading.
         /// </exception>
-        /// 
+        ///
         /// <exception cref="ObjectDisposedException">
         /// Methods were called after the stream was closed.
         /// </exception>
-        /// 
+        ///
         /// <exception cref="HealthServiceException">
         /// If there was a failure reading the data from HealthVault.
         /// </exception>
-        /// 
+        ///
         public override int ReadByte()
         {
             if (!CanRead)
@@ -401,6 +401,7 @@ namespace Microsoft.HealthVault
             }
             return result;
         }
+
         private const int _defaultStreamBufferSize = 1 << 20; // 1MB
 
         #region Read helpers
@@ -471,16 +472,16 @@ namespace Microsoft.HealthVault
         /// Gets or sets a value, in milliseconds, that determines how long the stream will attempt
         /// to read before timing out.
         /// </summary>
-        /// 
+        ///
         /// <value>
         /// A value, in milliseconds, that determines how long the stream will attempt to read
         /// before timing out.
         /// </value>
-        /// 
+        ///
         /// <remarks>
         /// Set the value to 0 or a negative number to request that there is no timeout.
         /// </remarks>
-        /// 
+        ///
         public override int ReadTimeout
         {
             get { return _readTimeout; }
@@ -491,30 +492,30 @@ namespace Microsoft.HealthVault
         /// <summary>
         /// Sets the position within the current stream.
         /// </summary>
-        /// 
+        ///
         /// <param name="offset">
         /// A byte offset releative to the <paramref name="origin"/> parameter.
         /// </param>
-        /// 
+        ///
         /// <param name="origin">
         /// A value of type <see cref="SeekOrigin"/> indicating the reference point used to obtain
         /// the new position.
         /// </param>
-        /// 
+        ///
         /// <returns>
         /// The new position within the current stream.
         /// </returns>
-        /// 
+        ///
         /// <exception cref="IOException">
         /// If <paramref name="offset"/> causes the position to be set before the beginning or
         /// after the end of the stream.
         /// </exception>
-        /// 
+        ///
         /// <exception cref="NotSupportedException">
-        /// <see cref="CanSeek"/> is false or <see cref="Length"/> is unknown and 
+        /// <see cref="CanSeek"/> is false or <see cref="Length"/> is unknown and
         /// <paramref name="origin"/> is <see cref="SeekOrigin.End"/>.
         /// </exception>
-        /// 
+        ///
         public override long Seek(long offset, SeekOrigin origin)
         {
             if (!CanSeek)
@@ -559,7 +560,7 @@ namespace Microsoft.HealthVault
         /// <summary>
         /// Not supported.
         /// </summary>
-        /// 
+        ///
         /// <exception cref="NotSupportedException"/>
         ///
         public override void SetLength(long value)
@@ -568,48 +569,48 @@ namespace Microsoft.HealthVault
         }
 
         /// <summary>
-        /// Writes a sequence of bytes to the current stream and advances the current position 
-        /// within this stream by the number of bytes written. 
+        /// Writes a sequence of bytes to the current stream and advances the current position
+        /// within this stream by the number of bytes written.
         /// </summary>
-        /// 
+        ///
         /// <param name="buffer">
         /// An array of bytes. This method copies count bytes from buffer to the current stream.
         /// </param>
-        /// 
+        ///
         /// <param name="offset">
-        /// The zero-based byte offset in buffer at which to begin copying bytes to the current 
+        /// The zero-based byte offset in buffer at which to begin copying bytes to the current
         /// stream.
         /// </param>
-        /// 
+        ///
         /// <param name="count">
         /// The number of bytes to be written to the current stream.
         /// </param>
-        /// 
+        ///
         /// <exception cref="ArgumentNullException">
         /// If <paramref name="buffer"/> is <b>null</b>.
         /// </exception>
-        /// 
+        ///
         /// <exception cref="ArgumentException">
         /// The sum of <paramref name="offset"/> and <paramref name="count"/> is greater than the
         /// <paramref name="buffer"/> length.
         /// </exception>
-        /// 
+        ///
         /// <exception cref="ArgumentOutOfRangeException">
         /// <paramref name="offset"/> or <paramref name="count"/> is negative.
         /// </exception>
-        /// 
+        ///
         /// <exception cref="NotSupportedException">
         /// If the stream does not support writing.
         /// </exception>
-        /// 
+        ///
         /// <exception cref="ObjectDisposedException">
         /// Methods were called after the stream was closed.
         /// </exception>
-        /// 
+        ///
         /// <exception cref="HealthServiceException">
         /// If there was a failure writing the data to HealthVault.
         /// </exception>
-        /// 
+        ///
         public override void Write(byte[] buffer, int offset, int count)
         {
             if (!CanWrite)
@@ -761,7 +762,7 @@ namespace Microsoft.HealthVault
         private List<BufferRequest> _bufferList = new List<BufferRequest>();
         private int _bytesInBuffer;
 
-        bool _triedToWrite;
+        private bool _triedToWrite;
 
         private class BufferRequest
         {
@@ -801,26 +802,26 @@ namespace Microsoft.HealthVault
         }
 
         /// <summary>
-        /// Writes a byte to the current position in the stream and advances the position within 
-        /// the stream by one byte. 
+        /// Writes a byte to the current position in the stream and advances the position within
+        /// the stream by one byte.
         /// </summary>
-        /// 
+        ///
         /// <param name="value">
         /// The byte to write to the stream.
         /// </param>
-        /// 
+        ///
         /// <exception cref="NotSupportedException">
         /// If the stream does not support reading.
         /// </exception>
-        /// 
+        ///
         /// <exception cref="ObjectDisposedException">
         /// Methods were called after the stram was closed.
         /// </exception>
-        /// 
+        ///
         /// <exception cref="HealthServiceException">
         /// If there was a failure writing the data to HealthVault.
         /// </exception>
-        /// 
+        ///
         public override void WriteByte(byte value)
         {
             if (!CanWrite)
@@ -840,11 +841,11 @@ namespace Microsoft.HealthVault
         /// <summary>
         /// Gets or sets the timeout for write requests.
         /// </summary>
-        /// 
+        ///
         /// <remarks>
         /// Set the value to zero or negative to request no timeout.
         /// </remarks>
-        /// 
+        ///
         public override int WriteTimeout
         {
             get { return _writeTimeout; }
@@ -920,20 +921,21 @@ namespace Microsoft.HealthVault
                     _blobPutParameters.HashBlockSize);
             }
         }
+
         private BlobPutParameters _blobPutParameters;
 
         /// <summary>
         /// Calls the BeginPutBlob HealthVault method.
         /// </summary>
-        /// 
+        ///
         /// <returns>
         /// The result of the BeginPutBlob method call as a BlobPutParameters instance.
         /// </returns>
-        /// 
+        ///
         /// <exception cref="HealthServiceException">
         /// If the call to HealthVault fails in some way.
         /// </exception>
-        /// 
+        ///
         private BlobPutParameters BeginPutBlob()
         {
             HealthServiceRequest request =
@@ -982,16 +984,16 @@ namespace Microsoft.HealthVault
         /// <summary>
         /// Calls the BeginPutBlob HealthVault method.
         /// </summary>
-        /// 
+        ///
         /// <returns>
-        /// The result of the BeginPutConnectPackageBlob method call as a 
+        /// The result of the BeginPutConnectPackageBlob method call as a
         /// BlobPutParameters instance.
         /// </returns>
-        /// 
+        ///
         /// <exception cref="HealthServiceException">
         /// If the call to HealthVault fails in some way.
         /// </exception>
-        /// 
+        ///
         private BlobPutParameters BeginPutConnectPackageBlob()
         {
             HealthServiceRequest request =

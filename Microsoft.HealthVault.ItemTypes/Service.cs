@@ -4,10 +4,8 @@
 // All other rights reserved.
 
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics.CodeAnalysis;
-using System.Text;
 using System.Xml;
 using System.Xml.XPath;
 
@@ -59,15 +57,15 @@ namespace Microsoft.HealthVault.ItemTypes
         /// </exception>
         ///
         public Service(
-            CodableValue serviceType,    
-            DurationValue serviceDates,    
+            CodableValue serviceType,
+            DurationValue serviceDates,
             ClaimAmounts claimAmounts)
         {
             ServiceType = serviceType;
             ServiceDates = serviceDates;
             ClaimAmounts = claimAmounts;
         }
-        
+
         /// <summary>
         /// Populates this <see cref="Service"/> instance from the data in the specified XML.
         /// </summary>
@@ -83,7 +81,7 @@ namespace Microsoft.HealthVault.ItemTypes
         public override void ParseXml(XPathNavigator navigator)
         {
             Validator.ThrowIfNavigatorNull(navigator);
-            
+
             _serviceType = XPathHelper.GetOptNavValue<CodableValue>(navigator, "service-type");
             _diagnosis = XPathHelper.GetOptNavValue<CodableValue>(navigator, "diagnosis");
             _billingCode = XPathHelper.GetOptNavValue<CodableValue>(navigator, "billing-code");
@@ -91,14 +89,13 @@ namespace Microsoft.HealthVault.ItemTypes
 
             _claimAmounts = new ClaimAmounts();
             _claimAmounts.ParseXml(navigator.SelectSingleNode("claim-amounts"));
-                            
+
             _notes.Clear();
-            foreach(XPathNavigator notesNav in navigator.Select("notes"))
+            foreach (XPathNavigator notesNav in navigator.Select("notes"))
             {
                 _notes.Add(notesNav.Value);
             }
         }
-        
 
         /// <summary>
         /// Writes the XML representation of the Service into
@@ -137,23 +134,23 @@ namespace Microsoft.HealthVault.ItemTypes
             Validator.ThrowSerializationIfNull(_claimAmounts, "ClaimAmountsNullValue");
 
             writer.WriteStartElement(nodeName);
-            
+
             _serviceType.WriteXml("service-type", writer);
-                            
+
             XmlWriterHelper.WriteOpt<CodableValue>(writer, "diagnosis", _diagnosis);
             XmlWriterHelper.WriteOpt<CodableValue>(writer, "billing-code", _billingCode);
-                            
+
             _serviceDates.WriteXml("service-dates", writer);
             _claimAmounts.WriteXml("claim-amounts", writer);
-                            
-            foreach(string note in _notes)
+
+            foreach (string note in _notes)
             {
                 writer.WriteElementString("notes", note);
             }
 
             writer.WriteEndElement();
         }
-        
+
         /// <summary>
         /// Gets or sets the type of the service.
         /// </summary>
@@ -174,7 +171,7 @@ namespace Microsoft.HealthVault.ItemTypes
         }
 
         private CodableValue _serviceType;
-                
+
         /// <summary>
         /// Gets or sets the diagnosis.
         /// </summary>
@@ -189,9 +186,9 @@ namespace Microsoft.HealthVault.ItemTypes
             get { return _diagnosis; }
             set { _diagnosis = value; }
         }
-            
+
         private CodableValue _diagnosis;
-                
+
         /// <summary>
         /// Gets or sets the billing code.
         /// </summary>
@@ -206,9 +203,9 @@ namespace Microsoft.HealthVault.ItemTypes
             get { return _billingCode; }
             set { _billingCode = value; }
         }
-            
+
         private CodableValue _billingCode;
-                
+
         /// <summary>
         /// Gets or sets the dates for this service.
         /// </summary>
@@ -228,7 +225,7 @@ namespace Microsoft.HealthVault.ItemTypes
         }
 
         private DurationValue _serviceDates;
-                
+
         /// <summary>
         /// Gets or sets the financial information for this service.
         /// </summary>
@@ -246,9 +243,9 @@ namespace Microsoft.HealthVault.ItemTypes
                 _claimAmounts = value;
             }
         }
-            
+
         private ClaimAmounts _claimAmounts;
-                
+
         /// <summary>
         /// Gets a collection of additional information about this service.
         /// </summary>
@@ -261,7 +258,7 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             get { return _notes; }
         }
-            
+
         private Collection<string> _notes = new Collection<string>();
 
         /// <summary>
@@ -274,8 +271,7 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public override string ToString()
         {
-            return ServiceType.Text;    
+            return ServiceType.Text;
         }
     }
 }
-    

@@ -3,16 +3,16 @@
 // see http://www.microsoft.com/resources/sharedsource/licensingbasics/sharedsourcelicenses.mspx.
 // All other rights reserved.
 
+using Microsoft.HealthVault.Exceptions;
 using System;
 using System.Globalization;
 using System.Web;
-using Microsoft.HealthVault.Exceptions;
 
 namespace Microsoft.HealthVault.Web
 {
     /// <summary>
     /// </summary>
-    /// 
+    ///
     public class HealthWebApplicationConfiguration : HealthApplicationConfiguration
     {
         #region configuration key constants
@@ -43,25 +43,25 @@ namespace Microsoft.HealthVault.Web
         public new static HealthWebApplicationConfiguration Current
         {
             get { return _current; }
-            set 
-            { 
-                _current = value; 
+            set
+            {
+                _current = value;
                 HealthApplicationConfiguration.Current = _current;
             }
         }
-        private static volatile HealthWebApplicationConfiguration _current = 
+        private static volatile HealthWebApplicationConfiguration _current =
             new HealthWebApplicationConfiguration();
 
         /// <summary>
-        /// Gets the number of items that are shown per page when using the 
+        /// Gets the number of items that are shown per page when using the
         /// <see cref="HealthRecordItemDataGrid"/>.
         /// </summary>
-        /// 
+        ///
         /// <remarks>
         /// This property corresponds to the "DataGrid_ItemsPerPage" configuration
         /// value. The value defaults to 20.
         /// </remarks>
-        /// 
+        ///
         public virtual int DataGridItemsPerPage
         {
             get
@@ -80,12 +80,12 @@ namespace Microsoft.HealthVault.Web
         /// <summary>
         /// Gets the URL of the page corresponding to the action.
         /// </summary>
-        /// 
+        ///
         /// <remarks>
         /// This property corresponds to the "WCPage_Action*" configuration
         /// values.
         /// </remarks>
-        /// 
+        ///
         public virtual Uri GetActionUrl(string action)
         {
             string resultUrl = GetConfigurationString(ConfigKeyActionPagePrefix + action, null);
@@ -93,16 +93,15 @@ namespace Microsoft.HealthVault.Web
                     new Uri(resultUrl, UriKind.RelativeOrAbsolute) : null;
         }
 
-
         /// <summary>
         /// Gets the list of allowed redirect sites.
         /// </summary>
-        /// 
+        ///
         /// <remarks>
         /// This property corresponds to the "WCPage_AllowedRedirectSites" configuration
         /// value.
         /// </remarks>
-        /// 
+        ///
         public virtual string AllowedRedirectSites
         {
             get
@@ -123,12 +122,12 @@ namespace Microsoft.HealthVault.Web
         /// Gets a value indicating whether the application works with multiple records
         /// at one time or just one.
         /// </summary>
-        /// 
+        ///
         /// <remarks>
         /// This property corresponds to the "WCPage_IsMRA" configuration
         /// value. The value defaults to false.
         /// </remarks>
-        /// 
+        ///
         public virtual bool IsMultipleRecordApplication
         {
             get
@@ -150,12 +149,12 @@ namespace Microsoft.HealthVault.Web
         /// Gets a value indicating whether the HealthVault token should be stored
         /// in the ASP.NET session rather than a cookie.
         /// </summary>
-        /// 
+        ///
         /// <remarks>
         /// This property corresponds to the "WCPage_UseAspSession" configuration
         /// value. The value defaults to "false".
         /// </remarks>
-        /// 
+        ///
         public virtual bool UseAspSession
         {
             get
@@ -177,12 +176,12 @@ namespace Microsoft.HealthVault.Web
         /// Gets a value indicating whether <see cref="HealthServicePage"/> should automatically
         /// redirect to SSL ports when reached through an unsecured port.
         /// </summary>
-        /// 
+        ///
         /// <remarks>
         /// This property corresponds to the "WCPage_SSLForSecure" configuration
         /// value. The value defaults to "true".
         /// </remarks>
-        /// 
+        ///
         public virtual bool UseSslForSecurity
         {
             get
@@ -201,14 +200,14 @@ namespace Microsoft.HealthVault.Web
         private const bool DefaultUseSslForSecurity = true;
 
         /// <summary>
-        /// Gets the name to use for the cookie which stores login information for the 
+        /// Gets the name to use for the cookie which stores login information for the
         /// user.
         /// </summary>
-        /// 
+        ///
         /// <remarks>
         /// The value defaults to <see cref="HttpRuntime.AppDomainAppVirtualPath"/> + "_wcpage".
         /// </remarks>
-        /// 
+        ///
         public virtual string CookieName
         {
             get
@@ -217,16 +216,15 @@ namespace Microsoft.HealthVault.Web
             }
         }
 
-
         /// <summary>
         /// Gets the key used to encrypt the cookie.
         /// </summary>
-        /// 
+        ///
         /// <remarks>
         /// This property corresponds to the "WCPage_CookieEncryptionKey" configuration
         /// value.
         /// </remarks>
-        /// 
+        ///
         public virtual byte[] CookieEncryptionKey
         {
             get
@@ -246,12 +244,12 @@ namespace Microsoft.HealthVault.Web
         /// <summary>
         /// Gets the maximum time a cookie will be stored.
         /// </summary>
-        /// 
+        ///
         /// <remarks>
         /// This property corresponds to the "WCPage_MaxCookieTimeoutMinutes" configuration
         /// value. The value defaults to 129600 (90 days).
         /// </remarks>
-        /// 
+        ///
         public virtual int MaxCookieTimeoutMinutes
         {
             get
@@ -272,12 +270,12 @@ namespace Microsoft.HealthVault.Web
         /// <summary>
         /// Gets the time a cookie will be stored.
         /// </summary>
-        /// 
+        ///
         /// <remarks>
         /// This property corresponds to the "WCPage_CookieTimeoutMinutes" configuration
         /// value. The value defaults to 20.
         /// </remarks>
-        /// 
+        ///
         public virtual int CookieTimeoutMinutes
         {
             get
@@ -298,12 +296,12 @@ namespace Microsoft.HealthVault.Web
         /// <summary>
         /// Gets the domain that will be used for the cookie.
         /// </summary>
-        /// 
+        ///
         /// <remarks>
         /// This property corresponds to the "WCPage_CookieDomain" configuration
         /// value. The value defaults to "".
         /// </remarks>
-        /// 
+        ///
         public virtual string CookieDomain
         {
             get
@@ -324,12 +322,12 @@ namespace Microsoft.HealthVault.Web
         /// <summary>
         /// Gets the path to be used for the cookie.
         /// </summary>
-        /// 
+        ///
         /// <remarks>
         /// This property corresponds to the "WCPage_CookiePath" configuration
         /// value. The value defaults to "".
         /// </remarks>
-        /// 
+        ///
         public virtual string CookiePath
         {
             get
@@ -350,12 +348,12 @@ namespace Microsoft.HealthVault.Web
         /// <summary>
         /// Gets a URL to use in place of the action URL in testing environments.
         /// </summary>
-        /// 
+        ///
         /// <remarks>
         /// This property corresponds to the "NonProductionActionUrlRedirectOverride" configuration
-        /// value. 
+        /// value.
         /// </remarks>
-        /// 
+        ///
         public virtual Uri ActionUrlRedirectOverride
         {
             get
@@ -363,7 +361,7 @@ namespace Microsoft.HealthVault.Web
                 if (!_actionUrlRedirectOverrideInitialized)
                 {
                     string url = GetConfigurationString(ConfigKeyNonProductionActionUrlRedirectOverride, String.Empty);
-                    
+
                     _actionUrlRedirectOverride = String.IsNullOrEmpty(url) ? null : new Uri(url, UriKind.RelativeOrAbsolute);
                     _actionUrlRedirectOverrideInitialized = true;
                 }
@@ -377,11 +375,11 @@ namespace Microsoft.HealthVault.Web
         /// <summary>
         /// Gets the scheme to use for secure HTTP addresses.
         /// </summary>
-        /// 
+        ///
         /// <remarks>
         /// Defaults to "https://".
         /// </remarks>
-        /// 
+        ///
         public virtual string SecureHttpScheme
         {
             get
@@ -393,11 +391,11 @@ namespace Microsoft.HealthVault.Web
         /// <summary>
         /// Gets the scheme to use for insecure HTTP addresses.
         /// </summary>
-        /// 
+        ///
         /// <remarks>
         /// Defaults to "http://".
         /// </remarks>
-        /// 
+        ///
         public virtual string InsecureHttpScheme
         {
             get
@@ -410,14 +408,14 @@ namespace Microsoft.HealthVault.Web
         /// Gets a value indicating whether a signup code is required when a user
         /// signs up for a HealthVault account.
         /// </summary>
-        /// 
+        ///
         /// <remarks>
         /// A signup code is only required under certain conditions. For instance,
         /// the account is being created from outside the United States.
         /// This property corresponds to the "WCPage_IsSignupCodeRequired" configuration
         /// value. The value defaults to "false".
         /// </remarks>
-        /// 
+        ///
         public virtual bool IsSignupCodeRequired
         {
             get
@@ -435,16 +433,15 @@ namespace Microsoft.HealthVault.Web
         private volatile bool _isSignupCodeRequiredInitialized;
         private const bool DefaultIsSignupCodeRequired = false;
 
-
         /// <summary>
         /// Gets the URL of the HealthVault Shell authentication page.
         /// </summary>
-        /// 
+        ///
         /// <remarks>
         /// This property uses the "ShellUrl" configuration value to construct the
         /// redirector URL with a target of "AUTH".
         /// </remarks>
-        /// 
+        ///
         public virtual Uri HealthVaultShellAuthenticationUrl
         {
             get
@@ -462,19 +459,19 @@ namespace Microsoft.HealthVault.Web
         /// <summary>
         /// Retrieves the specified setting for strings.
         /// </summary>
-        /// 
+        ///
         /// <param name="key">
         /// A string specifying the name of the setting.
         /// </param>
-        /// 
+        ///
         /// <param name="defaultValue">
         /// A string representing the default string value.
         /// </param>
-        /// 
+        ///
         /// <returns>
         /// A string representing the settings.
         /// </returns>
-        /// 
+        ///
         private string GetConfigurationString(string key, string defaultValue)
         {
             string result = GetConfigurationString(key);
@@ -623,4 +620,3 @@ namespace Microsoft.HealthVault.Web
         }
     }
 }
-

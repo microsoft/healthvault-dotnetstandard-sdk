@@ -23,15 +23,15 @@ namespace Microsoft.HealthVault
         /// <summary>
         /// Constructs a location instance with the specified country and state/province codes.
         /// </summary>
-        /// 
+        ///
         /// <param name="country">
         /// An ISO 3166-1 two-letter country code.
         /// </param>
-        /// 
+        ///
         /// <param name="stateProvince">
         /// An ISO 3166-2 state/province code without the country prefix.
         /// </param>
-        /// 
+        ///
         public Location(string country, string stateProvince)
         {
             Country = country;
@@ -41,11 +41,11 @@ namespace Microsoft.HealthVault
         /// <summary>
         /// Gets or sets the country code.
         /// </summary>
-        /// 
+        ///
         /// <remarks>
         /// An ISO 3166-1 two letter country code.
         /// </remarks>
-        /// 
+        ///
         public string Country
         {
             get
@@ -67,22 +67,22 @@ namespace Microsoft.HealthVault
         /// <summary>
         /// Gets or sets the state/province code.
         /// </summary>
-        /// 
+        ///
         /// <remarks>
         /// An ISO 3166-2 state/province code without the country prefix.
         /// </remarks>
-        /// 
+        ///
         public string StateProvince { get; set; }
 
         /// <summary>
         /// Parses the location XML and populates the instance properties from
         /// the results.
         /// </summary>
-        /// 
+        ///
         /// <param name="location">
         /// XML of the location to be parsed.
         /// </param>
-        /// 
+        ///
         public void ParseXml(XPathNavigator location)
         {
             XPathNavigator countryNav = location.SelectSingleNode("country");
@@ -101,15 +101,15 @@ namespace Microsoft.HealthVault
         /// <summary>
         /// Writes the location to the specified XmlWriter.
         /// </summary>
-        /// 
+        ///
         /// <param name="writer">
         /// The XmlWriter to write the location xml to.
         /// </param>
-        /// 
+        ///
         /// <param name="elementName">
         /// The name of the containing element to use when writing the location. Typically "location".
         /// </param>
-        /// 
+        ///
         public void WriteXml(XmlWriter writer, string elementName)
         {
             if (!String.IsNullOrEmpty(Country))
@@ -130,11 +130,11 @@ namespace Microsoft.HealthVault
         /// <summary>
         /// Gets a string representation of the location.
         /// </summary>
-        /// 
+        ///
         /// <returns>
         /// <cref name="Country"/>-<cref name="StateProvince"/>
         /// </returns>
-        /// 
+        ///
         public override string ToString()
         {
             string result = String.Empty;
@@ -155,4 +155,3 @@ namespace Microsoft.HealthVault
         }
     }
 }
-

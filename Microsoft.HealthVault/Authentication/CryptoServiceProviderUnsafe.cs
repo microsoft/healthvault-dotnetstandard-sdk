@@ -65,27 +65,27 @@ namespace Microsoft.HealthVault.Authentication
         /// <summary>
         /// Acquire the crypto context.
         /// </summary>
-        /// 
+        ///
         /// <param name="cryptoContext">
         /// The crypto context.
         /// </param>
-        /// 
+        ///
         /// <param name="container">
         /// The container.
         /// </param>
-        /// 
+        ///
         /// <param name="provider">
         /// The provider.
         /// </param>
-        /// 
+        ///
         /// <param name="providerType">
         /// Type of the provider.
         /// </param>
-        /// 
+        ///
         /// <param name="flags">
         /// The flags.
         /// </param>
-        /// 
+        ///
         /// <returns>
         /// <c>true</c> if successful, otherwise <c>false</c>.
         /// </returns>
@@ -102,15 +102,15 @@ namespace Microsoft.HealthVault.Authentication
         /// <summary>
         /// Release the crypto context.
         /// </summary>
-        /// 
+        ///
         /// <param name="prov">
         /// The provider handle.
         /// </param>
-        /// 
+        ///
         /// <param name="flags">
         /// The flags to pass to Capi.
         /// </param>
-        /// 
+        ///
         /// <returns>
         /// <c>true</c> if successful, otherwise <c>false</c>.
         /// </returns>
@@ -121,27 +121,27 @@ namespace Microsoft.HealthVault.Authentication
         /// <summary>
         /// Creates the hash handle.
         /// </summary>
-        /// 
+        ///
         /// <param name="cryptoContext">
         /// The crypto context.
         /// </param>
-        /// 
+        ///
         /// <param name="algorithmId">
         /// The algorithm id.
         /// </param>
-        /// 
+        ///
         /// <param name="key">
         /// The key.
         /// </param>
-        /// 
+        ///
         /// <param name="flags">
         /// The flags.
         /// </param>
-        /// 
+        ///
         /// <param name="hash">
         /// The hash
         /// </param>
-        /// 
+        ///
         /// <returns>
         /// <c>true</c> if successful, otherwise <c>false</c>.
         /// </returns>
@@ -158,11 +158,11 @@ namespace Microsoft.HealthVault.Authentication
         /// <summary>
         /// Destroys the crypto key.
         /// </summary>
-        /// 
+        ///
         /// <param name="key">
         /// The key handle.
         /// </param>
-        /// 
+        ///
         /// <returns>
         /// <c>true</c> if successful, otherwise <c>false</c>.
         /// </returns>
@@ -173,23 +173,23 @@ namespace Microsoft.HealthVault.Authentication
         /// <summary>
         /// Hashes the data.
         /// </summary>
-        /// 
+        ///
         /// <param name="hash">
         /// The hash handle.
         /// </param>
-        /// 
+        ///
         /// <param name="plainText">
         /// The plain text.
         /// </param>
-        /// 
+        ///
         /// <param name="length">
         /// The plain text length.
         /// </param>
-        /// 
+        ///
         /// <param name="flags">
         /// The flags.
         /// </param>
-        /// 
+        ///
         /// <returns>
         /// <c>true</c> if successful, otherwise <c>false</c>.
         /// </returns>
@@ -205,27 +205,27 @@ namespace Microsoft.HealthVault.Authentication
         /// <summary>
         /// Gets the Hash parameter.
         /// </summary>
-        /// 
+        ///
         /// <param name="hash">
         /// The hash handle.
         /// </param>
-        /// 
+        ///
         /// <param name="hashParameter">
         /// The hash parameter.
         /// </param>
-        /// 
+        ///
         /// <param name="hashValue">
         /// The hash value.
         /// </param>
-        /// 
+        ///
         /// <param name="length">
         /// The length of the value.
         /// </param>
-        /// 
+        ///
         /// <param name="flags">
         /// The flags.
         /// </param>
-        /// 
+        ///
         /// <returns>
         /// <c>true</c> if successful, otherwise <c>false</c>.
         /// </returns>
@@ -242,23 +242,23 @@ namespace Microsoft.HealthVault.Authentication
         /// <summary>
         /// Sets the hash param.
         /// </summary>
-        /// 
+        ///
         /// <param name="hash">
         /// The hash handle.
         /// </param>
-        /// 
+        ///
         /// <param name="paramter">
         /// The paramter.
         /// </param>
-        /// 
+        ///
         /// <param name="hmacInfo">
         /// The hmac info.
         /// </param>
-        /// 
+        ///
         /// <param name="flags">
         /// The flags.
         /// </param>
-        /// 
+        ///
         /// <returns>
         /// <c>true</c> if successful, otherwise <c>false</c>.
         /// </returns>
@@ -277,15 +277,15 @@ namespace Microsoft.HealthVault.Authentication
         /// api to obtain the length of the result and appropriately
         /// size a result byte buffer.
         /// </summary>
-        /// 
+        ///
         /// <param name="hashHandle">
         /// The hash handle.
         /// </param>
-        /// 
+        ///
         /// <param name="hashParameter">
         /// The hash parameter.
         /// </param>
-        /// 
+        ///
         /// <returns>
         /// <c>true</c> if successful, otherwise <c>false</c>.
         /// </returns>
@@ -314,31 +314,31 @@ namespace Microsoft.HealthVault.Authentication
         /// <summary>
         /// Import a hash key to the hash.
         /// </summary>
-        /// 
+        ///
         /// <param name="cryptoContext">
         /// The crypto context.
         /// </param>
-        /// 
+        ///
         /// <param name="key">
         /// The key data.
         /// </param>
-        /// 
+        ///
         /// <param name="keyLength">
         /// The key data length.
         /// </param>
-        /// 
+        ///
         /// <param name="pubKey">
         /// The pub key.
         /// </param>
-        /// 
+        ///
         /// <param name="flags">
         /// The flags.
         /// </param>
-        /// 
+        ///
         /// <param name="keyHandle">
         /// The key.
         /// </param>
-        /// 
+        ///
         /// <returns>
         /// <c>true</c> if successful, otherwise <c>false</c>.
         /// </returns>
@@ -353,21 +353,21 @@ namespace Microsoft.HealthVault.Authentication
             CryptImportKeyFlags flags,
             out SafeCryptoKeyHandle keyHandle);
 
-        // Import key requires a particular key format.  The following 
+        // Import key requires a particular key format.  The following
         // byte array formats the key blob header for a plain text key
         // suitable for an hmac.
         private static byte[] blobHeader = {
-            0x08,0x02,0x00,0x00,0x02,0x66,0x00,0x00 }; // plaintext blob header 
+            0x08,0x02,0x00,0x00,0x02,0x66,0x00,0x00 }; // plaintext blob header
 
         /// <summary>
         /// Gets the key BLOB suitable for calling CryptoImportKey for
         /// an hmac.
         /// </summary>
-        /// 
+        ///
         /// <param name="key">
         /// The key.
         /// </param>
-        /// 
+        ///
         /// <returns>
         /// The formatted key blob.
         /// </returns>
@@ -406,11 +406,11 @@ namespace Microsoft.HealthVault.Authentication
         /// <summary>
         /// Destroys the underlying crypto hash.
         /// </summary>
-        /// 
+        ///
         /// <param name="hash">
         /// The hash handle.
         /// </param>
-        /// 
+        ///
         /// <returns>
         /// <c>true</c> if successful, otherwise <c>false</c>.
         /// </returns>
@@ -422,19 +422,19 @@ namespace Microsoft.HealthVault.Authentication
         /// Wraps the CryptHashData method to marshal the correct
         /// byte pointer.
         /// </summary>
-        /// 
+        ///
         /// <param name="hash">
         /// The hash handle.
         /// </param>
-        /// 
+        ///
         /// <param name="data">
         /// The data to hash.
         /// </param>
-        /// 
+        ///
         /// <param name="offset">
         /// The offset into the data.
         /// </param>
-        /// 
+        ///
         /// <param name="count">
         /// The count of bytes to hash.
         /// </param>
@@ -445,7 +445,7 @@ namespace Microsoft.HealthVault.Authentication
             int offset,
             int count)
         {
-            // We could marshal the data as UnmanagedType.LPArray but we would 
+            // We could marshal the data as UnmanagedType.LPArray but we would
             // have to copy the array so that the first byte is at pos 0.  This
             // way we can take correct the region of the array in situ.
             unsafe

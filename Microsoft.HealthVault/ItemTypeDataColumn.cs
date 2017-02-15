@@ -207,11 +207,11 @@ namespace Microsoft.HealthVault
         /// <summary>
         /// Gets the column type name.
         /// </summary>
-        /// 
+        ///
         /// <value>
         /// A string representing the column type name.
         /// </value>
-        /// 
+        ///
         /// <remarks>
         /// The current types supported are:<br/><br/>
         /// Boolean<br/>
@@ -221,7 +221,7 @@ namespace Microsoft.HealthVault
         /// Int64<br/>
         /// TimeSpan<br/>
         /// </remarks>
-        /// 
+        ///
         public string ColumnTypeName
         {
             get { return _typeName; }
@@ -231,11 +231,11 @@ namespace Microsoft.HealthVault
         /// <summary>
         /// Gets the column display width.
         /// </summary>
-        /// 
+        ///
         /// <value>
         /// An integer representing the column display width.
         /// </value>
-        /// 
+        ///
         public int ColumnWidth
         {
             get { return _width; }
@@ -245,11 +245,11 @@ namespace Microsoft.HealthVault
         /// <summary>
         /// Gets whether or not the columns should be shown by default.
         /// </summary>
-        /// 
+        ///
         /// <value>
         /// True indicates the column should be shown by default.
         /// </value>
-        /// 
+        ///
         public bool VisibleByDefault
         {
             get { return _visible; }
@@ -288,7 +288,7 @@ namespace Microsoft.HealthVault
                     ":",
                     new string[] 
                     { 
-                        ColumnName,
+                        ColumnName, 
                         BaseColumnName, 
                         ColumnTypeName, 
                         ColumnWidth.ToString(), 
@@ -296,6 +296,5 @@ namespace Microsoft.HealthVault
                         OrderBy
                     });
         }
-
     }
 }

@@ -13,18 +13,18 @@ namespace Microsoft.HealthVault
     /// <summary>
     /// Represents data that is common for all types of health record items.
     /// </summary>
-    /// 
+    ///
     /// <remarks>
-    /// The common data for all health record item types includes data 
+    /// The common data for all health record item types includes data
     /// such as notes, source, and extensions.
     /// </remarks>
-    /// 
+    ///
     public class CommonItemData
     {
         /// <summary>
         /// Creates an empty instance of the CommonItemData class.
         /// </summary>
-        /// 
+        ///
         public CommonItemData()
         {
         }
@@ -142,17 +142,17 @@ namespace Microsoft.HealthVault
         /// <summary>
         /// Gets or sets the source of the health record item.
         /// </summary>
-        /// 
-        /// 
+        ///
+        ///
         /// <value>
         /// A string representing the item source.
         /// </value>
-        /// 
+        ///
         /// <remarks>
         /// The source is the description of the device or application
         /// from which the health record item came.
         /// </remarks>
-        /// 
+        ///
         public string Source
         {
             get { return _source; }
@@ -163,15 +163,15 @@ namespace Microsoft.HealthVault
         /// <summary>
         /// Gets or sets a note on the health record item.
         /// </summary>
-        /// 
+        ///
         /// <value>
         /// A string.
         /// </value>
-        /// 
+        ///
         /// <remarks>
         /// Notes are general annotations about the health record item.
         /// </remarks>
-        /// 
+        ///
         public string Note
         {
             get { return _note; }
@@ -180,19 +180,19 @@ namespace Microsoft.HealthVault
         private string _note;
 
         /// <summary>
-        /// Gets or sets a comma-separated list of tags on 
+        /// Gets or sets a comma-separated list of tags on
         /// the health record item.
         /// </summary>
-        /// 
+        ///
         /// <value>
         /// A string representing the tag list.
         /// </value>
-        /// 
+        ///
         /// <remarks>
         /// Tags enable users to group information freely. Applications
         /// must parse the tag list for individual tags.
         /// </remarks>
-        /// 
+        ///
         [Obsolete("This property will be soon removed. Please use HealthRecordItem.Tags instead.")]
         public string Tags
         {
@@ -202,20 +202,20 @@ namespace Microsoft.HealthVault
         private string _tags;
 
         /// <summary>
-        /// Gets the collection representing the extension data of the 
+        /// Gets the collection representing the extension data of the
         /// health record item.
         /// </summary>
-        /// 
+        ///
         /// <value>
         /// A collection of <see cref="HealthRecordItemExtension"/> objects.
         /// </value>
-        /// 
+        ///
         /// <remarks>
         /// To add extensions to the health record item, add an instance of the
-        /// <see cref="HealthRecordItemExtension"/> or derived class to this 
+        /// <see cref="HealthRecordItemExtension"/> or derived class to this
         /// collection.
         /// </remarks>
-        /// 
+        ///
         public Collection<HealthRecordItemExtension> Extensions
         {
             get { return _extensions; }
@@ -226,11 +226,11 @@ namespace Microsoft.HealthVault
         /// <summary>
         /// Gets the collection representing the health record items related to this one.
         /// </summary>
-        /// 
+        ///
         /// <value>
         /// A collection of <see cref="HealthRecordItemRelationship"/> objects.
         /// </value>
-        /// 
+        ///
         /// <remarks>
         /// The relationships between this item and the health record items defined in this collection
         /// are not maintained by HealthVault. It is solely the responsibility of applications to

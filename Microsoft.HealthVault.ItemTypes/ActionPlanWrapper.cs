@@ -8,14 +8,15 @@ using System;
 namespace Microsoft.HealthVault.ItemTypes
 {
     /// <summary>
-    /// Represents a health record item type that encapsulates action plan 
+    /// Represents a health record item type that encapsulates action plan
     /// related object.
     /// </summary>
     public class ActionPlanWrapper : MshItemBase
     {
         #region ctor
+
         /// <summary>
-        /// Creates a new instance of the <see cref="ActionPlanWrapper"/> 
+        /// Creates a new instance of the <see cref="ActionPlanWrapper"/>
         /// class with default values
         /// </summary>
         public ActionPlanWrapper()
@@ -40,17 +41,18 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <param name="wrappedTypeName">Wrapped type name</param>
         /// <param name="base64EncodedJson">Base64-encoded JSON</param>
         public ActionPlanWrapper(
-            string wrappedTypeName, 
+            string wrappedTypeName,
             string base64EncodedJson)
             : base(TypeId, wrappedTypeName, base64EncodedJson, Guid.Empty, Guid.Empty)
         {
         }
+
         #endregion
 
         /// <summary>
         /// Retrieves the unique identifier for the item type.
         /// </summary>
-        /// 
+        ///
         /// <value>
         /// A GUID.
         /// </value>

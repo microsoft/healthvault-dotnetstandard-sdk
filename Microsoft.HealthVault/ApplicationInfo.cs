@@ -9,22 +9,20 @@ using System.Collections.ObjectModel;
 using System.Text;
 using System.Xml;
 using System.Xml.XPath;
-using Microsoft.HealthVault.Exceptions;
 
 namespace Microsoft.HealthVault
 {
-
     /// <meta name="MSHAttr" content="CommunityContent:1" />
     /// <summary>
     /// Defines the configuration for a HealthVault application.
     /// </summary>
-    /// 
+    ///
     public class ApplicationInfo
     {
         /// <summary>
         /// Constructs an <see cref="ApplicationInfo"/> instance with default values.
         /// </summary>
-        /// 
+        ///
         public ApplicationInfo()
         {
         }
@@ -33,23 +31,23 @@ namespace Microsoft.HealthVault
         /// Constructs an <see cref="ApplicationInfo"/> instance with the specified application
         /// name and public keys.
         /// </summary>
-        /// 
+        ///
         /// <param name="name">
         /// The name of the application.
         /// </param>
-        /// 
+        ///
         /// <param name="publicKeys">
         /// The public key(s) used to uniquely and positively identify the application to the
         /// HealthVault service. The application signs it's first request to HealthVault using it's
         /// application private which matches the public key being passed here. When HealthVault
         /// receives that request it validates the signature using the public key.
         /// </param>
-        /// 
+        ///
         /// <exception cref="ArgumentException">
         /// If <paramref name="publicKeys"/> is <b>null</b> or empty.
         /// If <paramref name="name"/> is <b>null</b> or empty.
         /// </exception>
-        /// 
+        ///
         public ApplicationInfo(string name, IList<Byte[]> publicKeys)
         {
             Validator.ThrowIfStringNullOrEmpty(name, "name");
@@ -71,15 +69,15 @@ namespace Microsoft.HealthVault
         /// <summary>
         /// Creates an ApplicationInfo instance from the XML info section.
         /// </summary>
-        /// 
+        ///
         /// <param name="app">
         /// The navigator.
         /// </param>
-        /// 
+        ///
         /// <returns>
         /// A fully constructed ApplicationInfo object.
         /// </returns>
-        /// 
+        ///
         internal static ApplicationInfo CreateFromInfoXml(XPathNavigator app)
         {
             ApplicationInfo appInfo = new ApplicationInfo();
@@ -231,7 +229,7 @@ namespace Microsoft.HealthVault
                 ConfigurationOptions |= options;
             }
         }
-        
+
         internal string GetRequestParameters(Guid appId)
         {
             StringBuilder result = new StringBuilder();
@@ -317,7 +315,6 @@ namespace Microsoft.HealthVault
                         ApplicationOptions.PersistentTokensAllowed &&
                     PersistentTokenTtlInSeconds != null)
                 {
-
                     writer.WriteStartElement("persistent-tokens");
 
                     writer.WriteElementString("enabled", "true");
@@ -427,12 +424,12 @@ namespace Microsoft.HealthVault
         /// <summary>
         /// Gets or sets the application id.
         /// </summary>
-        /// 
+        ///
         /// <remarks>
         /// On retrieving an application this value will be set to the application id.
         /// When creating or updating an application, this value is ignored.
         /// </remarks>
-        /// 
+        ///
         public Guid Id
         {
             get { return _appId; }
@@ -443,12 +440,12 @@ namespace Microsoft.HealthVault
         /// <summary>
         /// Gets or sets the name of the application.
         /// </summary>
-        /// 
+        ///
         /// <remarks>
         /// On updating an application configuration the name will only be updated if it
         /// is not null.
         /// </remarks>
-        /// 
+        ///
         public string Name
         {
             get
@@ -473,17 +470,17 @@ namespace Microsoft.HealthVault
         /// <summary>
         /// Gets a collection of the public keys for the application.
         /// </summary>
-        /// 
+        ///
         /// <remarks>
         /// The public key(s) are used to uniquely and positively identify the application to the
         /// HealthVault service. The application signs its first request to HealthVault using its
         /// application private which matches the public key being passed here. When HealthVault
         /// receives that request it validates the signature using the public key.
-        /// 
+        ///
         /// On updating an application configuration the public key(s) will only be updated if the
         /// collection is not empty.
         /// </remarks>
-        /// 
+        ///
         public Collection<Byte[]> PublicKeys
         {
             get { return _publicKeys; }
@@ -493,15 +490,15 @@ namespace Microsoft.HealthVault
         /// <summary>
         /// Gets a collection of the online base authorization rules for the application.
         /// </summary>
-        /// 
+        ///
         /// <remarks>
         /// The online base authorization rules represent the set of data that the application
         /// can access when a user is logged on.
-        /// 
-        /// On updating an application configuration the online base authorization rules will only 
+        ///
+        /// On updating an application configuration the online base authorization rules will only
         /// be updated if the collection is not empty.
         /// </remarks>
-        /// 
+        ///
         public Collection<AuthorizationRule> OnlineBaseAuthorizations
         {
             get { return _onlineBaseAuthorizations; }
@@ -512,15 +509,15 @@ namespace Microsoft.HealthVault
         /// <summary>
         /// Gets a collection of the offline base authorization rules for the application.
         /// </summary>
-        /// 
+        ///
         /// <remarks>
         /// The offline base authorization rules represent the set of data that the application
         /// can access when a user is not logged on.
-        /// 
-        /// On updating an application configuration the offline base authorization rules will only 
+        ///
+        /// On updating an application configuration the offline base authorization rules will only
         /// be updated if the collection is not empty.
         /// </remarks>
-        /// 
+        ///
         public Collection<AuthorizationRule> OfflineBaseAuthorizations
         {
             get { return _offlineBaseAuthorizations; }
@@ -531,12 +528,12 @@ namespace Microsoft.HealthVault
         /// <summary>
         /// Gets a collection of the HealthVault methods the application can call.
         /// </summary>
-        /// 
+        ///
         /// <remarks>
-        /// On updating an application configuration the callable methods will only 
+        /// On updating an application configuration the callable methods will only
         /// be updated if the collection is not empty.
         /// </remarks>
-        /// 
+        ///
         public Collection<HealthVaultMethods> CallableMethods
         {
             get { return _callableMethods; }
@@ -548,7 +545,7 @@ namespace Microsoft.HealthVault
         /// Gets a collection of authorizations to HealthVault vocabularies, that the application
         ///  has access to.
         /// </summary>
-        /// 
+        ///
         public Collection<VocabularyAuthorization> VocabularyAuthorizations
         {
             get { return _vocabularyAuthorizations; }
@@ -560,7 +557,7 @@ namespace Microsoft.HealthVault
         /// Gets a collection of authorizations to HealthVault vocabularies. This represents the
         /// maximum authorization set that the application can grant to its child applications.
         /// </summary>
-        /// 
+        ///
         public Collection<VocabularyAuthorization> ChildVocabularyAuthorizationsCeiling
         {
             get { return _childVocabularyAuthorizationsCeiling; }
@@ -571,17 +568,17 @@ namespace Microsoft.HealthVault
         /// <summary>
         /// Gets or sets the action URL for the application.
         /// </summary>
-        /// 
+        ///
         /// <remarks>
         /// The action URL is the single point of re-entry to the application from the HealthVault
-        /// Shell. The implementation of the action URL must use the query string parameters to 
-        /// determine what the correct page is to show the user. See 
+        /// Shell. The implementation of the action URL must use the query string parameters to
+        /// determine what the correct page is to show the user. See
         /// Microsoft.Health.Web.HealthServiceActionPage for more information.
-        /// 
-        /// On updating an application configuration the action URL will only 
+        ///
+        /// On updating an application configuration the action URL will only
         /// be updated if the value is not null.
         /// </remarks>
-        /// 
+        ///
         public Uri ActionUrl
         {
             get { return _actionUrl; }
@@ -593,12 +590,12 @@ namespace Microsoft.HealthVault
         /// Gets or sets a description of the application which is shown to the user when
         /// authorizing the application to their record.
         /// </summary>
-        /// 
+        ///
         /// <remarks>
-        /// On updating an application configuration the description will only 
+        /// On updating an application configuration the description will only
         /// be updated if the value is not null.
         /// </remarks>
-        /// 
+        ///
         public string Description
         {
             get
@@ -622,18 +619,18 @@ namespace Microsoft.HealthVault
             new CultureSpecificStringDictionary();
 
         /// <summary>
-        /// Gets or sets the reason the application requires the base online and offline 
+        /// Gets or sets the reason the application requires the base online and offline
         /// authorization rules it is requesting.
         /// </summary>
-        /// 
+        ///
         /// <remarks>
         /// The authorization reason is shown to the user when they are authorizing the application
         /// to use their health record.
-        /// 
-        /// On updating an application configuration the authorization reason will only 
+        ///
+        /// On updating an application configuration the authorization reason will only
         /// be updated if the value is not null.
         /// </remarks>
-        /// 
+        ///
         public string AuthorizationReason
         {
             get
@@ -647,7 +644,7 @@ namespace Microsoft.HealthVault
         }
 
         /// <summary>
-        ///     Dictionary of language specifiers and localized authorization reasons of the 
+        ///     Dictionary of language specifiers and localized authorization reasons of the
         ///     application.
         /// </summary>
         public CultureSpecificStringDictionary CultureSpecificAuthorizationReasons
@@ -660,18 +657,18 @@ namespace Microsoft.HealthVault
         /// <summary>
         /// Gets or sets the domain name for the application.
         /// </summary>
-        /// 
+        ///
         /// <remarks>
-        /// The domain name is used when the application calls 
+        /// The domain name is used when the application calls
         /// ApplicationConnection.SendInsecureMessageFromApplication along with the
         /// specified mailbox as the sending party. For example, if the domain name of the application
         /// is "microsoft.com" and the mailbox is "example", then the user will get an email from
         /// "example@microsoft.com".
-        /// 
-        /// On updating an application configuration the domain name will only 
+        ///
+        /// On updating an application configuration the domain name will only
         /// be updated if the value is not null.
         /// </remarks>
-        /// 
+        ///
         public string DomainName
         {
             get { return _domainName; }
@@ -682,16 +679,16 @@ namespace Microsoft.HealthVault
         /// <summary>
         /// Gets or sets the large logo for the application.
         /// </summary>
-        /// 
+        ///
         /// <remarks>
         /// The large logo is shown at various times to the user when interacting with the
-        /// HealthVault Shell. The large logo must be 120x60 pixels or smaller, and is limited 
+        /// HealthVault Shell. The large logo must be 120x60 pixels or smaller, and is limited
         /// to 160kb in size.
-        /// 
-        /// On updating an application configuration the large logo will only 
+        ///
+        /// On updating an application configuration the large logo will only
         /// be updated if the value is not null.
         /// </remarks>
-        /// 
+        ///
         public ApplicationBinaryConfiguration LargeLogo
         {
             get { return _largeLogo; }
@@ -702,15 +699,15 @@ namespace Microsoft.HealthVault
         /// <summary>
         /// Gets or sets the small logo for the application.
         /// </summary>
-        /// 
+        ///
         /// <remarks>
         /// The small logo is shown at various times to the user when interacting with the
         /// HealthVault Shell. The small logo is limited to 40kb in size.
-        /// 
-        /// On updating an application configuration the small logo will only 
+        ///
+        /// On updating an application configuration the small logo will only
         /// be updated if the value is not null.
         /// </remarks>
-        ///         
+        ///
         public ApplicationBinaryConfiguration SmallLogo
         {
             get { return _smallLogo; }
@@ -721,14 +718,14 @@ namespace Microsoft.HealthVault
         /// <summary>
         /// Gets or sets the application's privacy statement.
         /// </summary>
-        /// 
+        ///
         /// <remarks>
         /// A link is provided from the HealthVault Shell to the application's privacy statement.
-        /// 
-        /// On updating an application configuration the privacy statement will only 
+        ///
+        /// On updating an application configuration the privacy statement will only
         /// be updated if the value is not null.
         /// </remarks>
-        /// 
+        ///
         public ApplicationBinaryConfiguration PrivacyStatement
         {
             get { return _privacyStatement; }
@@ -739,14 +736,14 @@ namespace Microsoft.HealthVault
         /// <summary>
         /// Gets or sets the application's terms of use.
         /// </summary>
-        /// 
+        ///
         /// <remarks>
         /// A link is provided from the HealthVault Shell to the application's terms of use.
-        /// 
-        /// On updating an application configuration the terms of use will only 
+        ///
+        /// On updating an application configuration the terms of use will only
         /// be updated if the value is not null.
         /// </remarks>
-        /// 
+        ///
         public ApplicationBinaryConfiguration TermsOfUse
         {
             get { return _termsOfUse; }
@@ -757,12 +754,12 @@ namespace Microsoft.HealthVault
         /// <summary>
         /// Gets or sets the application's Direct To Clinical success message.
         /// </summary>
-        /// 
+        ///
         /// <remarks>
-        /// On updating an application configuration the dtc success message will only 
+        /// On updating an application configuration the dtc success message will only
         /// be updated if the value is not null.
         /// </remarks>
-        /// 
+        ///
         public ApplicationBinaryConfiguration DtcSuccessMessage
         {
             get { return _dtcSuccessMessage; }
@@ -773,11 +770,11 @@ namespace Microsoft.HealthVault
         /// <summary>
         /// Gets or sets the application attributes.
         /// </summary>
-        /// 
+        ///
         /// <remarks>
         /// See <see cref="ExpectedApplicationAttributes"/> for a list of expected values.
         /// </remarks>
-        /// 
+        ///
         public Collection<string> ApplicationAttributes
         {
             get { return _applicationAttributes; }
@@ -796,16 +793,16 @@ namespace Microsoft.HealthVault
         /// <summary>
         /// Gets or sets various configuration options that applications can use.
         /// </summary>
-        /// 
+        ///
         /// <remarks>
         /// The configuration options tell HealthVault of any special behaviors that it should
-        /// allow or enforce for this application. See <see cref="ApplicationOptions"/> for more 
+        /// allow or enforce for this application. See <see cref="ApplicationOptions"/> for more
         /// information.
-        /// 
-        /// On updating an application configuration the configuration options will only 
+        ///
+        /// On updating an application configuration the configuration options will only
         /// be updated if the value is not null.
         /// </remarks>
-        /// 
+        ///
         public ApplicationOptions? ConfigurationOptions
         {
             get { return _configurationOptions; }
@@ -817,19 +814,19 @@ namespace Microsoft.HealthVault
         /// Gets or sets the length of time a user token will persist if they choose the "Keep me
         /// logged in on this computer" checkbox during HealthVault login.
         /// </summary>
-        /// 
+        ///
         /// <remarks>
         /// This value is only used if <see cref="ApplicationOptions.PersistentTokensAllowed"/> is
         /// specified in the <see cref="ConfigurationOptions"/>.
-        /// 
-        /// On updating an application configuration the persistent token ttl will only 
+        ///
+        /// On updating an application configuration the persistent token ttl will only
         /// be updated if the value is not null.
         /// </remarks>
-        /// 
+        ///
         /// <exception cref="ArgumentOutOfRangeException">
         /// The <paramref name="value"/> parameter is less than or equal to zero.
         /// </exception>
-        /// 
+        ///
         public int? PersistentTokenTtlInSeconds
         {
             get { return _persistentTokenTtlInSeconds; }
@@ -848,7 +845,7 @@ namespace Microsoft.HealthVault
         /// Gets or sets the IP address masks from which the application can
         /// call HealthVault.
         /// </summary>
-        /// 
+        ///
         /// <remarks>
         /// A comma separated list of IP address masks from which the
         /// application can call HealthVault.
@@ -886,15 +883,15 @@ namespace Microsoft.HealthVault
         /// <summary>
         /// Gets the instance identifiers for the HealthVault instances the application supports.
         /// </summary>
-        /// 
+        ///
         /// <remarks>
-        /// Use the <see cref="ServiceInfo"/> class to get instance information using these 
+        /// Use the <see cref="ServiceInfo"/> class to get instance information using these
         /// instance identifiers.
-        /// 
+        ///
         /// When updating a child application, if the supported instances is left blank, only the
         /// instance being connected to will be configured as the supported instances.
         /// </remarks>
-        /// 
+        ///
         public Collection<string> SupportedHealthVaultInstances
         {
             get { return _supportedInstances; }
@@ -904,17 +901,17 @@ namespace Microsoft.HealthVault
         /// <summary>
         /// Gets or sets whether the application supports all HealthVault instances.
         /// </summary>
-        /// 
+        ///
         /// <remarks>
         /// If set to true, the value of <see cref="P:SupportedHealthVaultInstances" /> is ignored.
         /// </remarks>
-        /// 
+        ///
         public bool SupportAllHealthVaultInstances { get; set; }
 
         /// <summary>
         /// Gets the list of Meaningful Use sources associated with this application.
         /// </summary>
-        /// 
+        ///
         /// <remarks>
         /// Gets the list of Meaningful Use sources associated with this application.
         /// For partners that contribute CCDA documents to HealthVault using Direct Messaging and wish to retrieve Meaningful Use reports,
@@ -922,7 +919,7 @@ namespace Microsoft.HealthVault
         /// Meaningful Use reports. The MeaningfulUseSources field specifies these Direct Messaging domains as a list of semi-colon delimited strings.
         /// Developers can associate Direct Messaging domains with an application ID, using the HealthVault Application Configuration Center.
         /// </remarks>
-        /// 
+        ///
         public Collection<string> MeaningfulUseSources
         {
             get { return _meaningfulUseSources; }
@@ -932,13 +929,13 @@ namespace Microsoft.HealthVault
         /// <summary>
         /// Gets the client service token.
         /// </summary>
-        /// 
+        ///
         /// <remarks>
         /// The client service token is used by browser scripts to access HealthVault client services
-        /// such as the vocabulary search service. The value of the client service token is set in 
-        /// the application configuration center. 
+        /// such as the vocabulary search service. The value of the client service token is set in
+        /// the application configuration center.
         /// </remarks>
-        /// 
+        ///
         public Guid? ClientServiceToken
         {
             get { return _clientServiceToken; }

@@ -14,7 +14,7 @@ namespace Microsoft.HealthVault
         /// <summary>
         /// Returns the service information retrieved from the HealthVault web-service.
         /// </summary>
-        /// 
+        ///
         /// <returns>
         /// Service information retrieved from the HealthVault web-service.
         /// </returns>

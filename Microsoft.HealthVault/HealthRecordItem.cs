@@ -3,46 +3,44 @@
 // see http://www.microsoft.com/resources/sharedsource/licensingbasics/sharedsourcelicenses.mspx.
 // All other rights reserved.
 
+using Microsoft.HealthVault.Exceptions;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Diagnostics.CodeAnalysis;
-using System.IO;
 using System.Security;
 using System.Security.Cryptography;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Xml;
 using System.Xml.XPath;
-using Microsoft.HealthVault.Exceptions;
 
 namespace Microsoft.HealthVault
 {
     /// <summary>
     /// Represents a health record item.
     /// </summary>
-    /// 
+    ///
     /// <remarks>
-    /// A health record item is a single piece of data in a health record 
-    /// that is accessible through the HealthVault service. Examples of health 
-    /// record items include a blood pressure measurement, an exercise session, 
+    /// A health record item is a single piece of data in a health record
+    /// that is accessible through the HealthVault service. Examples of health
+    /// record items include a blood pressure measurement, an exercise session,
     /// or an insurance claim.
     /// <br/><br/>
-    /// Health record items are typed and have XML data that adheres to the 
+    /// Health record items are typed and have XML data that adheres to the
     /// schema for the type.
     /// </remarks>
-    /// 
+    ///
     public class HealthRecordItem
     {
         /// <summary>
-        /// Derived classes must call this method when their default 
+        /// Derived classes must call this method when their default
         /// constructor is called.
         /// </summary>
-        /// 
+        ///
         /// <param name="typeId">
         /// The unique identifier of the type of which the item is an instance.
         /// </param>
-        /// 
+        ///
         protected internal HealthRecordItem(Guid typeId)
         {
             _typeId = typeId;
@@ -50,24 +48,24 @@ namespace Microsoft.HealthVault
         }
 
         /// <summary>
-        /// Creates a new instance of the <see cref="HealthRecordItem"/> class 
+        /// Creates a new instance of the <see cref="HealthRecordItem"/> class
         /// with the specified type identifier and type-specific data.
         /// </summary>
-        /// 
+        ///
         /// <param name="typeId">
         /// The unique identifier for the item type.
         /// </param>
-        /// 
+        ///
         /// <param name="typeSpecificData">
-        /// The type-specific data XML for the item. 
+        /// The type-specific data XML for the item.
         /// </param>
-        /// 
+        ///
         /// <remarks>
         /// This constructor is reserved for when there are no derived
         /// classes for the item type being created. In most situations, use the
         /// derived type constructor.
         /// </remarks>
-        /// 
+        ///
         public HealthRecordItem(Guid typeId, IXPathNavigable typeSpecificData)
             : this(typeId)
         {
@@ -77,18 +75,18 @@ namespace Microsoft.HealthVault
         /// <summary>
         /// Parses the type-specific XML data for the item.
         /// </summary>
-        /// 
+        ///
         /// <param name="typeSpecificXml">
         /// The type-specific data XML for the item.
         /// </param>
-        /// 
+        ///
         /// <remarks>
         /// Derived classes should override this method and populate their
         /// members with the data from the XML.
         /// <br/><br/>
         /// The default implementation does nothing.
         /// </remarks>
-        /// 
+        ///
         protected virtual void ParseXml(IXPathNavigable typeSpecificXml)
         {
         }
@@ -97,19 +95,19 @@ namespace Microsoft.HealthVault
         /// Writes the XML for the type-specific data of the item to the
         /// specified XmlWriter.
         /// </summary>
-        /// 
+        ///
         /// <param name="writer">
         /// The XmlWriter that receives the type-specific data.
         /// </param>
-        /// 
+        ///
         /// <remarks>
         /// Derived classes should override this method and write the type-
         /// specific XML which goes in the data-xml section of the item.
         /// <br/><br/>
-        /// The default implementation writes the XML in the 
+        /// The default implementation writes the XML in the
         /// <see cref="TypeSpecificData"/> property to the specified writer.
         /// </remarks>
-        /// 
+        ///
         public virtual void WriteXml(XmlWriter writer)
         {
             writer.WriteNode(_typeSpecificData.CreateNavigator(), true);
@@ -121,10 +119,10 @@ namespace Microsoft.HealthVault
         private string _signedItemXml;
 
         /// <summary>
-        /// Called after an update to indicate that the instance is in sync with the platform 
+        /// Called after an update to indicate that the instance is in sync with the platform
         /// instance.
         /// </summary>
-        /// 
+        ///
         internal void ClearDirtyFlags()
         {
             _areFlagsDirty = false;
@@ -133,20 +131,20 @@ namespace Microsoft.HealthVault
         /// <summary>
         /// Signs the <see cref="HealthRecordItem"/> with a digital signature.
         /// </summary>
-        /// 
+        ///
         /// <param name="signingCertificate">
         /// An X509 certificate. The private key from the certificate is used to sign the
         /// <see cref="HealthRecordItem"/>.
         /// </param>
-        /// 
+        ///
         /// <remarks>
         /// Creates an instance of <see cref="HealthRecordItemSignature"/> and calls its Sign method.
         /// </remarks>
-        /// 
+        ///
         /// <exception cref="ArgumentNullException">
         /// The specified argument is null.
         /// </exception>
-        /// 
+        ///
         /// <exception cref="InvalidOperationException">
         /// The <see cref="HealthRecordItem"/> is already signed and may only have one signature.
         /// </exception>
@@ -158,16 +156,16 @@ namespace Microsoft.HealthVault
         /// <exception cref="SignatureFailureException">
         /// Signing failed. See the inner exception.
         /// The inner exception may be one of the following:
-        /// An <see cref="XmlException"/> is thrown because there is a load or parse error loading 
+        /// An <see cref="XmlException"/> is thrown because there is a load or parse error loading
         /// the xsl.
-        /// A CryptographicException is thrown because the nodelist from the xsl does not contain 
+        /// A CryptographicException is thrown because the nodelist from the xsl does not contain
         /// an <see cref="XmlDsigXsltTransform"/> object.
-        /// A <see cref="CryptographicException"/> is thrown because signingCertificate.PrivateKey 
+        /// A <see cref="CryptographicException"/> is thrown because signingCertificate.PrivateKey
         /// is not an RSA or DSA key, or is unreadable.
-        /// A <see cref="CryptographicException"/> is thrown because signingCertificate.PrivateKey 
+        /// A <see cref="CryptographicException"/> is thrown because signingCertificate.PrivateKey
         /// is not a DSA or RSA object.
         /// </exception>
-        /// 
+        ///
         public void Sign(X509Certificate2 signingCertificate)
         {
             XmlDocument thingDoc = new XmlDocument();
@@ -215,44 +213,44 @@ namespace Microsoft.HealthVault
         /// <summary>
         /// Checks if the health record item's signature is valid.
         /// </summary>
-        /// 
+        ///
         /// <remarks>
-        /// Verifies that the signature on the item is valid for the XML representation of the 
+        /// Verifies that the signature on the item is valid for the XML representation of the
         /// item as retrieved from the HealthVault service.
         /// <br/><br/>
-        /// This method will always verify against the underlying XML of this item as returned 
-        /// from the service, even if local modifications are made to the item. In the case 
-        /// of new items that have not yet been created in the HealthVault service, this method 
+        /// This method will always verify against the underlying XML of this item as returned
+        /// from the service, even if local modifications are made to the item. In the case
+        /// of new items that have not yet been created in the HealthVault service, this method
         /// validates the signature against the XML of the item at the time of signing.
         /// <br /><br />
-        /// For more information about XML digital signatures see: 
-        /// <see cref="System.Security.Cryptography.Xml"/>. 
+        /// For more information about XML digital signatures see:
+        /// <see cref="System.Security.Cryptography.Xml"/>.
         /// </remarks>
-        /// 
+        ///
         /// <returns>
-        /// <b>true</b> if the signature is valid against the XML representation of the item 
+        /// <b>true</b> if the signature is valid against the XML representation of the item
         /// returned from the service, or for new items, if the signature is valid against
-        /// the XML of the item at the time the item was signed. Returns <b>false</b> if the 
+        /// the XML of the item at the time the item was signed. Returns <b>false</b> if the
         /// signature could not be validated.
         /// </returns>
-        /// 
+        ///
         /// <exception cref="InvalidOperationException">
-        /// The signature could not be validated because the <see cref="HealthRecordItem"/> is not 
+        /// The signature could not be validated because the <see cref="HealthRecordItem"/> is not
         /// signed.
         /// </exception>
-        /// 
+        ///
         /// <exception cref="SignatureFailureException">
-        /// Signature validation failed becaue either the 
+        /// Signature validation failed becaue either the
         /// <see cref="HealthRecordItemSignatureMethod"/> of this item is unknown and cannot be
-        /// validated, or the integrity of the signature could not be verified in which case the 
+        /// validated, or the integrity of the signature could not be verified in which case the
         /// inner exception contains details on the reasons why.
         /// The inner exception is <see cref="CryptographicException"/>, thrown because of one of:
-        /// The SignatureAlgorithm property of the public key in the 
+        /// The SignatureAlgorithm property of the public key in the
         /// signature does not match the SignatureMethod property.
         /// The signature description could not be created.
-        /// The hash algorithm could not be created. 
+        /// The hash algorithm could not be created.
         /// </exception>
-        /// 
+        ///
         [SecurityCritical]
         public bool IsSignatureValid()
         {
@@ -272,7 +270,7 @@ namespace Microsoft.HealthVault
 
             XmlDocument thingDoc = new XmlDocument();
             thingDoc.XmlResolver = null;
-            thingDoc.PreserveWhitespace = true;            
+            thingDoc.PreserveWhitespace = true;
 
             string signedThingXml = GetSignedItemXml(signature);
 
@@ -315,7 +313,7 @@ namespace Microsoft.HealthVault
         }
 
         /// <summary>
-        /// Fetches item xml in V1 signature format. 
+        /// Fetches item xml in V1 signature format.
         /// </summary>
         /// <returns></returns>
         internal string FetchV1SignedItemXml()
@@ -406,25 +404,25 @@ namespace Microsoft.HealthVault
         /// <summary>
         /// Checks if the certificates are valid.
         /// </summary>
-        /// 
+        ///
         /// <remarks>
         /// Validates the certificates of each signature on the <see cref="HealthRecordItem"/>.
         /// </remarks>
-        /// 
+        ///
         /// <exception cref="CertificateValidationException">
         /// Certificate validation failed.
         /// There may be an inner exception is <see cref="CryptographicException"/>, thrown because
         /// of:
-        /// The certificate is unreadable. 
+        /// The certificate is unreadable.
         /// If there is no inner exception, there will be a string with info about the certificate
         /// and the error.
         /// </exception>
-        /// 
+        ///
         /// <exception cref="InvalidOperationException">
-        /// The certificate could not be validated because the <see cref="HealthRecordItem"/> is 
+        /// The certificate could not be validated because the <see cref="HealthRecordItem"/> is
         /// not signed.
         /// </exception>
-        /// 
+        ///
         [SecurityCritical]
         public void ValidateCertificate()
         {
@@ -439,19 +437,19 @@ namespace Microsoft.HealthVault
         /// <summary>
         /// Gets the key of the health record item.
         /// </summary>
-        /// 
+        ///
         /// <value>
-        /// A globally unique identifier for the item issued when the item is 
-        /// created and a globally unique version stamp updated every time 
+        /// A globally unique identifier for the item issued when the item is
+        /// created and a globally unique version stamp updated every time
         /// the item is changed.
         /// </value>
-        /// 
+        ///
         /// <remarks>
         /// This is the only property that
-        /// is guaranteed to be available regardless of how 
+        /// is guaranteed to be available regardless of how
         /// <see cref="HealthRecordItem.Sections"/> is set.
         /// </remarks>
-        /// 
+        ///
         public HealthRecordItemKey Key
         {
             get { return _thingKey; }
@@ -462,18 +460,18 @@ namespace Microsoft.HealthVault
         /// <summary>
         /// Gets the type identifier for the health record item type.
         /// </summary>
-        /// 
+        ///
         /// <value>
         /// A globally unique identifier for the type of the item.
         /// </value>
-        /// 
-        /// <remarks> 
-        /// The types available can be queried using  
-        /// <see 
+        ///
+        /// <remarks>
+        /// The types available can be queried using
+        /// <see
         /// cref="ItemTypeManager.GetHealthRecordItemTypeDefinition(Guid,HealthServiceConnection)"/>
         /// .
         /// </remarks>
-        /// 
+        ///
         public Guid TypeId
         {
             get { return _typeId; }
@@ -484,19 +482,18 @@ namespace Microsoft.HealthVault
         /// <summary>
         /// Gets the health record item type name.
         /// </summary>
-        /// 
-        /// <remarks> 
-        /// The types and names of types available can be queried using 
-        /// <see 
+        ///
+        /// <remarks>
+        /// The types and names of types available can be queried using
+        /// <see
         /// cref="ItemTypeManager.GetHealthRecordItemTypeDefinition(Guid,HealthServiceConnection)"/>
         /// .
         /// </remarks>
-        /// 
+        ///
         public string TypeName
         {
             get { return _typeName; }
             internal set { _typeName = value; }
-
         }
         private string _typeName;
 
@@ -505,7 +502,7 @@ namespace Microsoft.HealthVault
         /// <summary>
         /// Gets or sets the date and time that the health record item data was taken.
         /// </summary>
-        /// 
+        ///
         /// <remarks>
         /// This might not be the same time that the data was entered
         /// into the system.
@@ -513,9 +510,9 @@ namespace Microsoft.HealthVault
         /// This data value is only available when the
         /// <see cref="HealthRecordItem.Sections"/> show the
         /// <see cref="HealthRecordItemSections.Core"/> bit
-        /// set.       
+        /// set.
         /// </remarks>
-        /// 
+        ///
         public DateTime EffectiveDate
         {
             get { return _effectiveDate; }
@@ -534,13 +531,13 @@ namespace Microsoft.HealthVault
         /// <summary>
         /// Gets the state of the <see cref="HealthRecordItem"/>.
         /// </summary>
-        /// 
+        ///
         /// <remarks>
         /// <see cref="HealthRecordItem.Sections"/> show the
         /// <see cref="HealthRecordItemSections.Core"/> bit
-        /// set.       
+        /// set.
         /// </remarks>
-        /// 
+        ///
         public HealthRecordItemState State
         {
             get { return _state; }
@@ -551,13 +548,13 @@ namespace Microsoft.HealthVault
         /// <summary>
         /// Gets the <see cref="HealthRecordItem"/> flags.
         /// </summary>
-        /// 
+        ///
         /// <remarks>
         /// <see cref="HealthRecordItem.Sections"/> show the
         /// <see cref="HealthRecordItemSections.Core"/> bit
-        /// set.       
+        /// set.
         /// </remarks>
-        /// 
+        ///
         public HealthRecordItemFlags Flags
         {
             get
@@ -579,14 +576,14 @@ namespace Microsoft.HealthVault
         /// <summary>
         /// Gets or sets the value indicating if the <see cref="HealthRecordItem"/> is private.
         /// </summary>
-        /// 
+        ///
         /// <remarks>
         /// Private items are accessible only by custodians.
         /// <see cref="HealthRecordItem.Sections"/> show the
         /// <see cref="HealthRecordItemSections.Core"/> bit
-        /// set.       
+        /// set.
         /// </remarks>
-        /// 
+        ///
         public bool IsPersonal
         {
             get { return IsFlagSet(HealthRecordItemFlags.Personal); }
@@ -606,12 +603,12 @@ namespace Microsoft.HealthVault
         /// <summary>
         /// Gets the value indicating if the <see cref="HealthRecordItem"/> is down-versioned.
         /// </summary>
-        /// 
+        ///
         /// <remarks>
         /// If this value is true then an attempt to update the <see cref="HealthRecordItem"/>
         /// will fail.
         /// </remarks>
-        /// 
+        ///
         public bool IsDownVersioned
         {
             get { return IsFlagSet(HealthRecordItemFlags.DownVersioned); }
@@ -620,13 +617,13 @@ namespace Microsoft.HealthVault
         /// <summary>
         /// Gets the value indicating if the <see cref="HealthRecordItem"/> is up-versioned.
         /// </summary>
-        /// 
+        ///
         /// <remarks>
         /// If this value is true then an application should get explicit permission to update the
-        /// instance from the user. This will cause the stored instance to be converted to the 
+        /// instance from the user. This will cause the stored instance to be converted to the
         /// type version which may cause data loss in some cases.
         /// </remarks>
-        /// 
+        ///
         public bool IsUpVersioned
         {
             get { return IsFlagSet(HealthRecordItemFlags.UpVersioned); }
@@ -668,8 +665,8 @@ namespace Microsoft.HealthVault
         /// Gets the audit information associated with the last update of
         /// this health record item.
         /// </summary>
-        /// 
-        /// <remarks> 
+        ///
+        /// <remarks>
         /// It is the responsibility of the application to convert the audit time
         /// to local time if necessary.
         /// <br/><br/>
@@ -678,7 +675,7 @@ namespace Microsoft.HealthVault
         /// <see cref="HealthRecordItemSections.Audits"/> bit
         /// set.
         /// </remarks>
-        /// 
+        ///
         public HealthServiceAudit LastUpdated
         {
             get { return _lastUpdated; }
@@ -690,8 +687,8 @@ namespace Microsoft.HealthVault
         /// Gets the audit information associated with the creation of
         /// this health record item.
         /// </summary>
-        /// 
-        /// <remarks> 
+        ///
+        /// <remarks>
         /// It is the responsibility of the application to convert the audit time
         /// to local time if necessary.
         /// <br/><br/>
@@ -700,7 +697,7 @@ namespace Microsoft.HealthVault
         /// <see cref="HealthRecordItemSections.Audits"/> bit
         /// set.
         /// </remarks>
-        /// 
+        ///
         public HealthServiceAudit Created
         {
             get { return _created; }
@@ -713,22 +710,22 @@ namespace Microsoft.HealthVault
         #region EffectivePermissions information
 
         /// <summary>
-        /// Gets the effective permissions on the item granted to the person 
+        /// Gets the effective permissions on the item granted to the person
         /// retrieving the <see cref="HealthRecordItem"/>.
         /// </summary>
-        /// 
+        ///
         /// <value>
         /// If the permissions are unknown, the value is <b>null</b>; otherwise
         /// the appropriate permissions are returned.
         /// </value>
-        /// 
-        /// <remarks> 
+        ///
+        /// <remarks>
         /// This data value is only available when the
         /// <see cref="HealthRecordItem.Sections"/> show the
-        /// <see cref="HealthRecordItemSections.EffectivePermissions"/> 
+        /// <see cref="HealthRecordItemSections.EffectivePermissions"/>
         /// bit set.
         /// </remarks>
-        /// 
+        ///
         public HealthRecordItemPermissions? EffectivePermissions
         {
             get { return _permissions; }
@@ -737,21 +734,21 @@ namespace Microsoft.HealthVault
         private HealthRecordItemPermissions? _permissions;
 
         /// <summary>
-        /// Gets a value indicating whether the <see cref="HealthRecordItem"/> 
+        /// Gets a value indicating whether the <see cref="HealthRecordItem"/>
         /// is immutable.
         /// </summary>
-        /// 
+        ///
         /// <value>
         /// <b>true</b> if the <see cref="HealthRecordItem"/> is immutable; otherwise,
         /// <b>false</b>.
         /// </value>
-        /// <remarks> 
+        /// <remarks>
         /// This data value is only available when the
         /// <see cref="HealthRecordItem.Sections"/> show the
-        /// <see cref="HealthRecordItemSections.EffectivePermissions"/> 
+        /// <see cref="HealthRecordItemSections.EffectivePermissions"/>
         /// bit set. Returns true if either Thing Type is immutable or Thing instance is read-only.
         /// </remarks>
-        /// 
+        ///
         public bool IsImmutable
         {
             get { return _isImmutable; }
@@ -770,7 +767,7 @@ namespace Microsoft.HealthVault
         /// Cannot change read-only flag to false if it is already true.
         /// </exception>
         /// <remarks>
-        /// Returns true if either Thing Type is immutable or Thing instance is read-only 
+        /// Returns true if either Thing Type is immutable or Thing instance is read-only
         /// but sets only the instance immutability.
         /// </remarks>
         public bool IsReadOnly
@@ -798,11 +795,11 @@ namespace Microsoft.HealthVault
         #region Xml data information
 
         /// <summary>
-        /// Gets or sets the XML representation of the type-specific data for the 
+        /// Gets or sets the XML representation of the type-specific data for the
         /// <see cref="HealthRecordItem"/>.
         /// </summary>
-        /// 
-        /// <remarks> 
+        ///
+        /// <remarks>
         /// This data might contain data from other applications that also work
         /// with the same type of data. Take care not to overwrite
         /// existing data when making updates. Do not remove or manipulate
@@ -816,7 +813,7 @@ namespace Microsoft.HealthVault
         /// <see cref="HealthRecordItemSections.Xml"/> bit
         /// set.
         /// </remarks>
-        /// 
+        ///
         public IXPathNavigable TypeSpecificData
         {
             get { return _typeSpecificData; }
@@ -827,20 +824,20 @@ namespace Microsoft.HealthVault
         /// <summary>
         /// Gets the transformed XML data of the <see cref="HealthRecordItem"/>.
         /// </summary>
-        /// 
-        /// <remarks> 
-        /// Transformed XML data is provided if you so specify in 
-        /// <see cref="HealthRecordSearcher"/>. The dictionary values are 
-        /// indexed by the name of the transform that was specified when the 
+        ///
+        /// <remarks>
+        /// Transformed XML data is provided if you so specify in
+        /// <see cref="HealthRecordSearcher"/>. The dictionary values are
+        /// indexed by the name of the transform that was specified when the
         /// search was performed.
         /// <br/><br/>
         /// This data value is only available to get when the
         /// <see cref="HealthRecordItem.Sections"/> show the
         /// <see cref="HealthRecordItemSections.Xml"/> bit
-        /// set though it will not contain data unless a transform was 
+        /// set though it will not contain data unless a transform was
         /// specified when getting the item.
         /// </remarks>
-        /// 
+        ///
         public IDictionary<string, XmlDocument> TransformedXmlData
         {
             get { return _transformedData; }
@@ -851,16 +848,16 @@ namespace Microsoft.HealthVault
         /// <summary>
         /// Gets the common data for the <see cref="HealthRecordItem"/>.
         /// </summary>
-        /// 
+        ///
         /// <value>
-        /// An instance of <see cref="CommonItemData"/> for the 
+        /// An instance of <see cref="CommonItemData"/> for the
         /// <see cref="HealthRecordItem"/>.
         /// </value>
-        /// 
+        ///
         /// <remarks>
         /// The common data includes notes, source, and extensions.
         /// </remarks>
-        /// 
+        ///
         public CommonItemData CommonData
         {
             get { return _common; }
@@ -875,13 +872,13 @@ namespace Microsoft.HealthVault
         /// <summary>
         /// Gets the BLOB store for this health record item.
         /// </summary>
-        /// 
+        ///
         /// <param name="record">
         /// The <see cref="HealthRecordAccessor"/> that any BLOB data will be written to. This parameter
-        /// may be <b>null</b> if only read access is required or the BLOB data to be written is 
+        /// may be <b>null</b> if only read access is required or the BLOB data to be written is
         /// for a <see cref="Package.ConnectPackage"/>.
         /// </param>
-        /// 
+        ///
         /// <remarks>
         /// This method replaces the previous OtherData property. All binary data is now created,
         /// updated, and retrieved through <see cref="BlobStore"/> instance associated with the
@@ -891,15 +888,15 @@ namespace Microsoft.HealthVault
         /// if <see cref="HealthRecordItemSections.BlobPayload"/> is not specified when retrieving
         /// the item. In this case it is possible to overwrite or remove existing Blobs in the
         /// <see cref="HealthRecordItem"/> instance stored in HealthVault by using the same name
-        /// as the existing Blob. It is recommended that if you are going to be manipulating 
+        /// as the existing Blob. It is recommended that if you are going to be manipulating
         /// Blobs in the BlobStore, that you specify
         /// <see cref="HealthRecordItemSections.BlobPayload"/> when retrieving the item.
         /// </remarks>
-        /// 
+        ///
         /// <returns>
         /// A <see cref="BlobStore"/> instance related to this health record item.
         /// </returns>
-        /// 
+        ///
         public BlobStore GetBlobStore(HealthRecordAccessor record)
         {
             if (_blobStore == null)
@@ -922,11 +919,11 @@ namespace Microsoft.HealthVault
         /// <summary>
         /// Gets the list of tags on the <see cref="HealthRecordItem"/>.
         /// </summary>
-        /// 
+        ///
         /// <value>
         /// A string representing the tag list.
         /// </value>
-        /// 
+        ///
         public Collection<string> Tags
         {
             get { return _tags; }
@@ -945,6 +942,7 @@ namespace Microsoft.HealthVault
             {
                 _item = item;
             }
+
             private HealthRecordItem _item;
 
             protected override void ClearItems()
@@ -977,13 +975,13 @@ namespace Microsoft.HealthVault
         #region Signatures
 
         /// <summary>
-        /// Gets the signatures for the <see cref="HealthRecordItem"/>. 
+        /// Gets the signatures for the <see cref="HealthRecordItem"/>.
         /// </summary>
-        /// 
+        ///
         /// <value>
         /// An collection of <see cref="HealthRecordItemSignature"/>.
         /// </value>
-        /// 
+        ///
         public Collection<HealthRecordItemSignature> HealthRecordItemSignatures
         {
             get { return _signatures; }
@@ -995,11 +993,11 @@ namespace Microsoft.HealthVault
         /// <summary>
         /// Gets the data sections that this HealthRecordItem represents.
         /// </summary>
-        /// 
+        ///
         /// <value>
         /// An instance of <see cref="HealthRecordItemSections"/>.
         /// </value>
-        /// 
+        ///
         public HealthRecordItemSections Sections
         {
             get { return _sections; }
@@ -1013,7 +1011,7 @@ namespace Microsoft.HealthVault
         /// Gets the size of the health record item which will be added to the quota used in the
         /// person's health record.
         /// </summary>
-        /// 
+        ///
         /// <remarks>
         /// This size may be used to determine if there is sufficient room left in the person's health
         /// record. It is recommended that this be used only for large items that may cause the
@@ -1023,11 +1021,11 @@ namespace Microsoft.HealthVault
         /// quota usage may also change on the HealthVault service due to data being added by other
         /// applications.
         /// </remarks>
-        /// 
+        ///
         /// <returns>
         /// The size in bytes of the health record item.
         /// </returns>
-        /// 
+        ///
         public int GetSizeInBytes()
         {
             StringBuilder thingXml = new StringBuilder(512);
@@ -1048,11 +1046,11 @@ namespace Microsoft.HealthVault
         /// <summary>
         /// Gets the XML representation of the health record item.
         /// </summary>
-        /// 
+        ///
         /// <returns>
         /// A string containing the XML representation of the item.
         /// </returns>
-        /// 
+        ///
         public string GetItemXml()
         {
             return GetItemXml("thing");
@@ -1061,19 +1059,19 @@ namespace Microsoft.HealthVault
         /// <summary>
         /// Gets the XML representation of the health record item.
         /// </summary>
-        /// 
+        ///
         /// <param name="sections">
         /// The sections of the item to write to the XML.
         /// </param>
-        /// 
+        ///
         /// <returns>
-        /// A string containing the XML representation of the item wrapped by a "thing" element. 
+        /// A string containing the XML representation of the item wrapped by a "thing" element.
         /// </returns>
-        /// 
+        ///
         /// <exception cref="ArgumentException">
         /// If <paramref name="sections"/> is <b>null</b> or empty.
         /// </exception>
-        /// 
+        ///
         public string GetItemXml(HealthRecordItemSections sections)
         {
             return GetItemXml(sections, "thing");
@@ -1082,20 +1080,20 @@ namespace Microsoft.HealthVault
         /// <summary>
         /// Gets the XML representation of the health record item.
         /// </summary>
-        /// 
+        ///
         /// <param name="elementName">
         /// The element that will wrap the thing's contents.
         /// </param>
-        /// 
+        ///
         /// <returns>
-        /// A string containing the XML representation of the item wrapped by the specified 
+        /// A string containing the XML representation of the item wrapped by the specified
         /// <paramref name="elementName"/>.
         /// </returns>
-        /// 
+        ///
         /// <exception cref="ArgumentException">
         /// If <paramref name="elementName"/> is <b>null</b> or empty.
         /// </exception>
-        /// 
+        ///
         public string GetItemXml(string elementName)
         {
             HealthRecordItemSections sections = _sections;
@@ -1111,24 +1109,24 @@ namespace Microsoft.HealthVault
         /// <summary>
         /// Gets the XML representation of the health record item.
         /// </summary>
-        /// 
+        ///
         /// <param name="sections">
         /// The sections of the item to write to the XML.
         /// </param>
-        /// 
+        ///
         /// <param name="elementName">
         /// The element that will wrap the thing's contents.
         /// </param>
-        /// 
+        ///
         /// <returns>
-        /// A string containing the XML representation of the item wrapped by the specified 
+        /// A string containing the XML representation of the item wrapped by the specified
         /// <paramref name="elementName"/>.
         /// </returns>
-        /// 
+        ///
         /// <exception cref="ArgumentException">
         /// If <paramref name="elementName"/> is <b>null</b> or empty.
         /// </exception>
-        /// 
+        ///
         public string GetItemXml(HealthRecordItemSections sections, string elementName)
         {
             Validator.ThrowIfStringNullOrEmpty(elementName, "elementName");
@@ -1189,7 +1187,7 @@ namespace Microsoft.HealthVault
         {
             bool updateRequired = false;
 
-            // First add the <__elementName__> tag  
+            // First add the <__elementName__> tag
             infoXmlWriter.WriteStartElement(elementName);
 
             // Add the <core> element and children
@@ -1240,22 +1238,22 @@ namespace Microsoft.HealthVault
         /// <summary>
         /// Gets the XML representation of the item for serialization.
         /// </summary>
-        /// 
+        ///
         /// <remarks>
         /// There are two ways to obtain an XML representation of the item.
         /// GetItemXml() returns only the XML for the type-specific information of the item.
         /// Serialize() returns the full XML.
-        /// 
-        /// Use GetItemXml() if you want to save the XML representation to pass to the HealthVault platform for a 
+        ///
+        /// Use GetItemXml() if you want to save the XML representation to pass to the HealthVault platform for a
         /// new or update operation.
         /// Use Serialize if you want to serialize and deserialize the item and have the deserialized item be
         /// identical to the serialized one.
         /// </remarks>
-        /// 
+        ///
         /// <returns>
         /// A string containing the XML representation of the item.
         /// </returns>
-        /// 
+        ///
         public string Serialize()
         {
             if (_fetchedXml == null)
@@ -1287,19 +1285,19 @@ namespace Microsoft.HealthVault
         private string _fetchedXml;
 
         /// <summary>
-        /// Create a <see cref="HealthRecordItem"/> instance from the item XML. 
+        /// Create a <see cref="HealthRecordItem"/> instance from the item XML.
         /// </summary>
-        /// 
+        ///
         /// <remarks>
         /// This method is identical to calling <see cref="ItemTypeManager.DeserializeItem(string)"/>.
-        /// 
+        ///
         /// The item XML should come from a previous call to <see cref="HealthRecordItem.Serialize"/>.
         /// </remarks>
-        /// 
+        ///
         /// <returns>
         /// A instance of the <see cref="HealthRecordItem"/> class.
         /// </returns>
-        /// 
+        ///
         public static HealthRecordItem Deserialize(string itemXml)
         {
             return ItemTypeManager.DeserializeItem(itemXml);
@@ -1310,11 +1308,11 @@ namespace Microsoft.HealthVault
         /// <summary>
         /// Adds the XML data section to the thing XML.
         /// </summary>
-        /// 
+        ///
         /// <param name="writer">
         /// The XML writer to use to write the XML data section to the thing XML.
         /// </param>
-        /// 
+        ///
         private void AddXmlPutThingsRequestParameters(XmlWriter writer)
         {
             // <data-xml>
@@ -1330,11 +1328,11 @@ namespace Microsoft.HealthVault
         /// <summary>
         /// Adds the BLOB payload section to the thing XML.
         /// </summary>
-        /// 
+        ///
         /// <param name="writer">
         /// The XML writer to use to write the BLOB payload section to the thing XML.
         /// </param>
-        /// 
+        ///
         private void AddBlobPayloadPutThingsRequestParameters(
             XmlWriter writer)
         {
@@ -1347,15 +1345,15 @@ namespace Microsoft.HealthVault
         /// <summary>
         /// Adds the signature section to the thing XML.
         /// </summary>
-        /// 
+        ///
         /// <param name="writer">
         /// The XML writer to use to write the signature section to the thing XML.
         /// </param>
-        /// 
+        ///
         /// <exception cref="InvalidOperationException">
         /// Signing failed. The thing was already signed and another signature is not allowed.
         /// </exception>
-        /// 
+        ///
         private void AddSignaturesPutThingsRequestParameters(
             XmlWriter writer)
         {
@@ -1370,11 +1368,11 @@ namespace Microsoft.HealthVault
         /// <summary>
         /// Adds the tags section to the thing XML.
         /// </summary>
-        /// 
+        ///
         /// <param name="writer">
         /// The XML writer to use to write the tags section to the thing XML.
         /// </param>
-        /// 
+        ///
         private void AddTagsPutThingsRequestParameters(
             XmlWriter writer)
         {
@@ -1395,23 +1393,23 @@ namespace Microsoft.HealthVault
         /// Adds the XML representing the core section to the specified
         /// XML writer.
         /// </summary>
-        /// 
+        ///
         /// <param name="writer">
         /// The XML writer to add the core section's element to.
         /// </param>
-        /// 
+        ///
         /// <param name="writeAllCore">
         /// If true, thing-state and eff-date elements will be written.
         /// </param>
-        /// 
+        ///
         /// <param name="sections">
         /// The sections to be written to the XML.
         /// </param>
-        /// 
+        ///
         /// <returns>
         /// True if the system sets or effective date needs to be updated.
         /// </returns>
-        /// 
+        ///
         private bool AddCorePutThingsRequestParameters(
             XmlWriter writer,
             bool writeAllCore,
@@ -1475,11 +1473,11 @@ namespace Microsoft.HealthVault
         /// Adds the XML representing the audits section to the specified
         /// XML writer.
         /// </summary>
-        /// 
+        ///
         /// <param name="writer">
         /// The XML writer to add the audits section's element to.
         /// </param>
-        /// 
+        ///
         private void AddAuditThingsRequestParameters(XmlWriter writer)
         {
             if (Created != null)
@@ -1500,7 +1498,7 @@ namespace Microsoft.HealthVault
         /// <summary>
         /// Adds the Updated End Date to the thing XML.
         /// </summary>
-        /// 
+        ///
         /// <param name="writer">
         /// The XML writer to use to write the XML data section to the thing XML.
         /// </param>
@@ -1527,27 +1525,27 @@ namespace Microsoft.HealthVault
         /// <summary>
         /// Populates the HealthRecordItem elements with data from the XML.
         /// </summary>
-        /// 
+        ///
         /// <param name="thingNavigator">
         /// The XML from which the health record item will be constructed.
         /// </param>
-        /// 
+        ///
         /// <param name="thingXml">
         /// The XML from which the health record item will be constructed.
         /// </param>
-        /// 
+        ///
         /// <remarks>
         /// Most of the methods called use an XmlNavigator. However AddSignatureSectionValues
         /// requires an XmlReader, because it requires the exact xml passed in, and XmlNavigator
         /// can change the white space.
         /// </remarks>
-        /// 
+        ///
         /// <exception cref="HealthRecordItemDeserializationException">
-        /// The derived type's <see cref="ParseXml(IXPathNavigable)"/> 
-        /// method throws an exception when called. The inner exception 
+        /// The derived type's <see cref="ParseXml(IXPathNavigable)"/>
+        /// method throws an exception when called. The inner exception
         /// will be the exception thrown by the method.
         /// </exception>
-        /// 
+        ///
         internal void ParseXml(XPathNavigator thingNavigator, string thingXml)
         {
             _fetchedXml = thingXml;
@@ -1588,7 +1586,7 @@ namespace Microsoft.HealthVault
             AddEffectivePermissionsSectionValues(thingNavigator);
             AddBlobPayloadSectionValues(thingNavigator);
 
-            // Do the data-xml section last so that the type specific 
+            // Do the data-xml section last so that the type specific
             // extensions have access to all the data, and so that failures
             // in the derived type can be handled more cleanly.
             AddXmlSectionValues(thingNavigator);
@@ -1598,16 +1596,16 @@ namespace Microsoft.HealthVault
         }
 
         /// <summary>
-        /// Adds the values from the core section of the health record item to 
-        /// the specified HealthRecordItem and updates the Sections 
+        /// Adds the values from the core section of the health record item to
+        /// the specified HealthRecordItem and updates the Sections
         /// appropriately.
         /// </summary>
-        /// 
+        ///
         /// <param name="thingNavigator">
         /// The containing XPath navigator in which to find a child named
         /// "core".
         /// </param>
-        /// 
+        ///
         private void AddCoreSectionValues(XPathNavigator thingNavigator)
         {
             XPathNavigator effectiveDateNav =
@@ -1654,16 +1652,16 @@ namespace Microsoft.HealthVault
         }
 
         /// <summary>
-        /// Adds the values from the created and updated sections of the 
-        /// health record item to the specified HealthRecordItem and updates 
+        /// Adds the values from the created and updated sections of the
+        /// health record item to the specified HealthRecordItem and updates
         /// the Sections appropriately.
         /// </summary>
-        /// 
+        ///
         /// <param name="thingNavigator">
         /// The containing XPath navigator in which to find a child named
         /// "created" and "updated".
         /// </param>
-        /// 
+        ///
         private void AddAuditsSectionValues(XPathNavigator thingNavigator)
         {
             // Check the "updated" group
@@ -1692,22 +1690,22 @@ namespace Microsoft.HealthVault
         }
 
         /// <summary>
-        /// Adds the values from the xml section of the health record item to 
-        /// the specified HealthRecordItem and updates the Sections 
+        /// Adds the values from the xml section of the health record item to
+        /// the specified HealthRecordItem and updates the Sections
         /// appropriately.
         /// </summary>
-        /// 
+        ///
         /// <param name="thingNavigator">
         /// The containing XPath navigator in which to find a child named
         /// "data-xml".
         /// </param>
-        /// 
+        ///
         /// <exception cref="HealthRecordItemDeserializationException">
-        /// If derived type's <see cref="ParseXml(IXPathNavigable)"/> throws 
-        /// an exception when called. The inner exception will be the 
+        /// If derived type's <see cref="ParseXml(IXPathNavigable)"/> throws
+        /// an exception when called. The inner exception will be the
         /// exception thrown by the method.
         /// </exception>
-        /// 
+        ///
         private void AddXmlSectionValues(XPathNavigator thingNavigator)
         {
             // Check for the "data-xml" data-group
@@ -1733,7 +1731,7 @@ namespace Microsoft.HealthVault
                         _common.ParseXml(commonNav);
                     }
 
-                    // The first child is always the type specific data 
+                    // The first child is always the type specific data
                     // element, of which there is only one.
                     dataXml.MoveToFollowing(XPathNodeType.Element);
 
@@ -1779,25 +1777,25 @@ namespace Microsoft.HealthVault
                     newDoc.XmlResolver = null;
                     newDoc.SafeLoadXml(dataXml.OuterXml);
 
-                     if (!TransformedXmlData.ContainsKey(transformName))
-                     {
+                    if (!TransformedXmlData.ContainsKey(transformName))
+                    {
                         TransformedXmlData.Add(transformName, newDoc);
-                     }
+                    }
                 }
             }
         }
 
         /// <summary>
-        /// Adds the values from the BLOB payload section of the health record item to 
-        /// the specified HealthRecordItem and updates the Sections 
+        /// Adds the values from the BLOB payload section of the health record item to
+        /// the specified HealthRecordItem and updates the Sections
         /// appropriately.
         /// </summary>
-        /// 
+        ///
         /// <param name="thingNavigator">
         /// The containing XPath navigator in which to find a child named
         /// "blob-payload".
         /// </param>
-        /// 
+        ///
         private void AddBlobPayloadSectionValues(XPathNavigator thingNavigator)
         {
             // Check for the "blob-payload"
@@ -1853,16 +1851,16 @@ namespace Microsoft.HealthVault
         }
 
         /// <summary>
-        /// Adds the values from the Signature section of the health record item to 
-        /// the specified HealthRecordItem and updates the Sections 
+        /// Adds the values from the Signature section of the health record item to
+        /// the specified HealthRecordItem and updates the Sections
         /// appropriately.
         /// </summary>
-        /// 
+        ///
         /// <param name="thingNavigator">
         /// The containing XPath navigator in which to find a child named
         /// "Signature".
-        /// </param>        
-        /// 
+        /// </param>
+        ///
         /// <param name="thingXml">
         /// The XML string of the thing used to create this health record item.
         /// </param>
@@ -1871,9 +1869,9 @@ namespace Microsoft.HealthVault
         /// <see cref="XmlException"/>: There is a load or parse error in the XML.
         /// <see cref="ArgumentNullException"/>: The <see cref="Signature"/> section of the
         /// document was not found.
-        /// <see cref="CryptographicException"/>: The <see cref="Signature"/> section of the 
+        /// <see cref="CryptographicException"/>: The <see cref="Signature"/> section of the
         /// document does not contain a valid SignatureValue property.
-        /// The <see cref="Signature"/> section of the document does not contain a valid 
+        /// The <see cref="Signature"/> section of the document does not contain a valid
         /// <see cref="SignedInfo"/> property.
         /// </exception>
         ///
@@ -1933,15 +1931,14 @@ namespace Microsoft.HealthVault
                     _sections |= HealthRecordItemSections.Signature;
                 }
             }
-
         }
 
         /// <summary>
         /// Adds tags to the HealthRecordItem and updates the Sections if tags are present.
         /// </summary>
-        /// 
+        ///
         /// <param name="thingNavigator"></param>
-        /// 
+        ///
         private void AddTagsSectionValues(XPathNavigator thingNavigator)
         {
             XPathNavigator tagsNav = thingNavigator.SelectSingleNode("tags");
@@ -1962,16 +1959,16 @@ namespace Microsoft.HealthVault
         }
 
         /// <summary>
-        /// Adds the values from the eff-permissions section of the 
-        /// health record item to the specified HealthRecordItem and updates 
+        /// Adds the values from the eff-permissions section of the
+        /// health record item to the specified HealthRecordItem and updates
         /// the Sections appropriately.
         /// </summary>
-        /// 
+        ///
         /// <param name="thingNavigator">
         /// The containing XPath navigator in which to find a child named
         /// "eff-permissions".
         /// </param>
-        /// 
+        ///
         private void AddEffectivePermissionsSectionValues(XPathNavigator thingNavigator)
         {
             // Check for the "eff-permissions" data-group
@@ -2022,7 +2019,7 @@ namespace Microsoft.HealthVault
 
         private void SetFlag(HealthRecordItemFlags flag)
         {
-            // Check if *all* bits in flag are set 
+            // Check if *all* bits in flag are set
             if ((_flags & flag) != flag)
             {
                 _flags |= flag;
@@ -2044,6 +2041,7 @@ namespace Microsoft.HealthVault
         {
             return (_flags & flagToCheck) == flagToCheck;
         }
+
         #endregion private helpers
     }
 }

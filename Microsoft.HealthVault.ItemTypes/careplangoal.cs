@@ -3,7 +3,6 @@
 // see http://www.microsoft.com/resources/sharedsource/licensingbasics/sharedsourcelicenses.mspx.
 // All other rights reserved.
 
-using System;
 using System.Collections.ObjectModel;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
@@ -25,7 +24,7 @@ namespace Microsoft.HealthVault.ItemTypes
         public CarePlanGoal()
         {
         }
-        
+
         /// <summary>
         /// Creates a new instance of the <see cref="CarePlanGoal"/> class
         /// specifying mandatory values.
@@ -43,7 +42,7 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             Name = name;
         }
-        
+
         /// <summary>
         /// Populates this <see cref="CarePlanGoal"/> instance from the data in the specified XML.
         /// </summary>
@@ -55,7 +54,7 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <exception cref="ArgumentNullException">
         /// If <paramref name="navigator"/> parameter is <b>null</b>.
         /// </exception>
-        /// 
+        ///
         public override void ParseXml(XPathNavigator navigator)
         {
             Validator.ThrowIfNavigatorNull(navigator);
@@ -79,7 +78,7 @@ namespace Microsoft.HealthVault.ItemTypes
             _recurrence = XPathHelper.GetOptNavValue<GoalRecurrence>(navigator, "recurrence");
             _referenceId = XPathHelper.GetOptNavValue(navigator, "reference-id");
         }
-        
+
         /// <summary>
         /// Writes the XML representation of the CarePlanGoal into
         /// the specified XML writer.
@@ -101,7 +100,7 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <exception cref="ArgumentNullException">
         /// If <paramref name="writer"/> parameter is <b>null</b>.
         /// </exception>
-        /// 
+        ///
         /// <exception cref="HealthRecordItemSerializationException">
         /// If <see cref="Name"/> is <b>null</b>.
         /// </exception>
@@ -137,11 +136,11 @@ namespace Microsoft.HealthVault.ItemTypes
 
             writer.WriteEndElement();
         }
-        
+
         /// <summary>
         /// Gets or sets name of the goal.
         /// </summary>
-        /// 
+        ///
         /// <remarks>
         /// Example: average blood-glucose for the last seven days
         /// </remarks>
@@ -149,7 +148,7 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <exception cref="ArgumentNullException">
         /// The <paramref name="value"/> parameter is <b>null</b>.
         /// </exception>
-        /// 
+        ///
         [SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly", Justification = "FXCop thinks that CodableValue is a collection, so it throws this error.")]
         public CodableValue Name
         {
@@ -157,20 +156,20 @@ namespace Microsoft.HealthVault.ItemTypes
             {
                 return _name;
             }
-            
+
             set
             {
                 Validator.ThrowIfArgumentNull(value, "Name", "CarePlanGoalNameNull");
                 _name = value;
             }
         }
-        
+
         private CodableValue _name;
-        
+
         /// <summary>
         /// Gets or sets description of the goal.
         /// </summary>
-        /// 
+        ///
         /// <remarks>
         /// If there is no information about description the value should be set to <b>null</b>.
         /// </remarks>
@@ -178,21 +177,21 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <exception cref="ArgumentException">
         /// The <paramref name="value"/> is empty or contains only whitespace.
         /// </exception>
-        /// 
+        ///
         public string Description
         {
             get
             {
                 return _description;
             }
-            
+
             set
             {
                 Validator.ThrowIfStringIsEmptyOrWhitespace(value, "Description");
                 _description = value;
             }
         }
-        
+
         private string _description;
 
         private static void ValidateDates(
@@ -209,12 +208,12 @@ namespace Microsoft.HealthVault.ItemTypes
                         "CarePlanGoalDateInvalid");
                 }
             }
-        }        
+        }
 
         /// <summary>
         /// Gets or sets the start date of the goal.
         /// </summary>
-        /// 
+        ///
         /// <remarks>
         /// If there is no information about startDate the value should be set to <b>null</b>.
         /// </remarks>
@@ -225,7 +224,7 @@ namespace Microsoft.HealthVault.ItemTypes
             {
                 return _startDate;
             }
-            
+
             set
             {
                 ValidateDates(value, _endDate);
@@ -233,13 +232,13 @@ namespace Microsoft.HealthVault.ItemTypes
                 _startDate = value;
             }
         }
-        
+
         private ApproximateDateTime _startDate;
-        
+
         /// <summary>
         /// Gets or sets the end date of the goal.
         /// </summary>
-        /// 
+        ///
         /// <remarks>
         /// If there is no information about endDate the value should be set to <b>null</b>.
         /// </remarks>
@@ -250,7 +249,7 @@ namespace Microsoft.HealthVault.ItemTypes
             {
                 return _endDate;
             }
-            
+
             set
             {
                 ValidateDates(_startDate, value);
@@ -258,13 +257,13 @@ namespace Microsoft.HealthVault.ItemTypes
                 _endDate = value;
             }
         }
-        
+
         private ApproximateDateTime _endDate;
 
         /// <summary>
         /// Gets or sets the date user intends to complete the goal.
         /// </summary>
-        /// 
+        ///
         /// <remarks>
         /// If there is no information about targetCompletionDate the value should be set to <b>null</b>.
         /// </remarks>
@@ -287,7 +286,7 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <summary>
         /// Gets or sets HealthVault type information related to this goal.
         /// </summary>
-        /// 
+        ///
         /// <remarks>
         /// If there is no information about GoalAssociatedTypeInfo the value should be set to <b>null</b>.
         /// </remarks>
@@ -310,7 +309,7 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <summary>
         /// Gets or sets the target range for the goal.
         /// </summary>
-        /// 
+        ///
         /// <remarks>
         /// This represents the ideal range for a goal, for example, the ideal weight, or the ideal blood pressure.
         /// If there is no information about targetRange the value should be set to <b>null</b>.
@@ -334,7 +333,7 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <summary>
         /// Gets or sets additional ranges for the goal.
         /// </summary>
-        /// 
+        ///
         /// <remarks>
         /// For example, in a blood pressure goal, it may be useful to include the 'hypertensive' range in addition to the ideal range.
         /// If there is no information about goalAdditionalRanges the collection should be empty.
@@ -347,7 +346,7 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <summary>
         /// Gets or sets recurrence for goals.
         /// </summary>
-        /// 
+        ///
         /// <remarks>
         /// A goal can be defined to be achieved every specific interval. Example, walking 70000 steps in a week.
         /// If there is no information about recurrence the value should be set to <b>null</b>.
@@ -371,7 +370,7 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <summary>
         /// Gets or sets an unique id to distinguish one goal from another.
         /// </summary>
-        /// 
+        ///
         /// <remarks>
         /// If there is no information about referenceId the value should be set to <b>null</b>.
         /// </remarks>
@@ -379,7 +378,7 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <exception cref="ArgumentException">
         /// The <paramref name="value"/> contains only whitespace.
         /// </exception>
-        /// 
+        ///
         public string ReferenceId
         {
             get
@@ -399,7 +398,7 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <summary>
         /// Gets a string representation of the CarePlanGoal.
         /// </summary>
-        /// 
+        ///
         /// <returns>
         /// A string representation of the CarePlanGoal.
         /// </returns>

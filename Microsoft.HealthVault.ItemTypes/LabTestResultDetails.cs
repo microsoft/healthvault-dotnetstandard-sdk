@@ -3,75 +3,72 @@
 // see http://www.microsoft.com/resources/sharedsource/licensingbasics/sharedsourcelicenses.mspx.
 // All other rights reserved.
 
-
-using System;
 using System.Text;
 using System.Xml;
 using System.Xml.XPath;
-
 
 namespace Microsoft.HealthVault.ItemTypes
 {
     /// <summary>
     /// A single laboratory test.
     /// </summary>
-    /// 
+    ///
     public class LabTestResultDetails : HealthRecordItemData
     {
         /// <summary>
-        /// Initialize a new instance of the <see cref="LabTestResultDetails"/> 
+        /// Initialize a new instance of the <see cref="LabTestResultDetails"/>
         /// class with default values.
         /// </summary>
-        /// 
+        ///
         public LabTestResultDetails()
         {
         }
 
         /// <summary>
-        /// Populates this <see cref="LabTestResultDetails"/> instance from the data in the XML. 
+        /// Populates this <see cref="LabTestResultDetails"/> instance from the data in the XML.
         /// </summary>
-        /// 
+        ///
         /// <param name="navigator">
         /// The XML to get the lab test result type data from.
         /// </param>
-        /// 
+        ///
         /// <exception cref="ArgumentNullException">
         /// If the first node in <paramref name="navigator"/> is not
         /// a lab test result type node.
         /// </exception>
-        /// 
+        ///
         public override void ParseXml(XPathNavigator navigator)
         {
             Validator.ThrowIfNavigatorNull(navigator);
 
-            // when 
-            _when = 
-                XPathHelper.GetOptNavValue<ApproximateDateTime>(navigator,"when");
+            // when
+            _when =
+                XPathHelper.GetOptNavValue<ApproximateDateTime>(navigator, "when");
 
-            // name 
+            // name
             _name =
                 XPathHelper.GetOptNavValue(navigator, "name");
 
             // substance
-            _substance = 
-                XPathHelper.GetOptNavValue<CodableValue>(navigator,"substance");
+            _substance =
+                XPathHelper.GetOptNavValue<CodableValue>(navigator, "substance");
 
             // collection-method
-            _collectionMethod = 
-                XPathHelper.GetOptNavValue<CodableValue>(navigator,"collection-method");
+            _collectionMethod =
+                XPathHelper.GetOptNavValue<CodableValue>(navigator, "collection-method");
 
             // clinical-code
-            _clinicalCode = 
-                XPathHelper.GetOptNavValue<CodableValue>(navigator,"clinical-code");
+            _clinicalCode =
+                XPathHelper.GetOptNavValue<CodableValue>(navigator, "clinical-code");
 
             // value
-            _value = 
-                XPathHelper.GetOptNavValue<LabTestResultValue>(navigator,"value");
+            _value =
+                XPathHelper.GetOptNavValue<LabTestResultValue>(navigator, "value");
 
             // status
-            _status = 
-                XPathHelper.GetOptNavValue<CodableValue>(navigator,"status");
-            
+            _status =
+                XPathHelper.GetOptNavValue<CodableValue>(navigator, "status");
+
             // note
             _note =
                 XPathHelper.GetOptNavValue(navigator, "note");
@@ -79,24 +76,24 @@ namespace Microsoft.HealthVault.ItemTypes
 
         /// <summary>
         /// Writes the lab test result type data to the specified XmlWriter.
-        /// </summary> 
-        /// 
+        /// </summary>
+        ///
         /// <param name="nodeName">
         /// The name of the node to write XML output.
         /// </param>
-        /// 
+        ///
         /// <param name="writer">
         /// The XmlWriter to write the lab test result type data to.
         /// </param>
-        /// 
+        ///
         /// <exception cref="ArgumentException">
         /// If <paramref name="nodeName"/> is <b> null </b> or empty.
         /// </exception>
-        /// 
+        ///
         /// <exception cref="ArgumentNullException">
         /// If <paramref name="writer"/> is <b> null </b>.
         /// </exception>
-        /// 
+        ///
         public override void WriteXml(string nodeName, XmlWriter writer)
         {
             Validator.ThrowIfStringNullOrEmpty(nodeName, "nodeName");
@@ -106,48 +103,48 @@ namespace Microsoft.HealthVault.ItemTypes
             writer.WriteStartElement(nodeName);
 
             // when
-            XmlWriterHelper.WriteOpt( 
+            XmlWriterHelper.WriteOpt(
                 writer,
                 "when",
                 _when);
 
             // name
-            XmlWriterHelper.WriteOptString( 
+            XmlWriterHelper.WriteOptString(
                 writer,
                 "name",
                 _name);
 
             // substance
-            XmlWriterHelper.WriteOpt( 
+            XmlWriterHelper.WriteOpt(
                 writer,
                 "substance",
                 _substance);
 
             // collection-method
-            XmlWriterHelper.WriteOpt( 
+            XmlWriterHelper.WriteOpt(
                 writer,
                 "collection-method",
                 _collectionMethod);
 
             // clinical-code
-            XmlWriterHelper.WriteOpt( 
+            XmlWriterHelper.WriteOpt(
                 writer,
                 "clinical-code",
                 _clinicalCode);
 
             // value
-            XmlWriterHelper.WriteOpt( 
+            XmlWriterHelper.WriteOpt(
                 writer,
                 "value",
                 _value);
 
             // status
-            XmlWriterHelper.WriteOpt( 
+            XmlWriterHelper.WriteOpt(
                 writer,
                 "status",
                 _status);
 
-            // note 
+            // note
             XmlWriterHelper.WriteOptString(
                 writer,
                 "note",
@@ -157,26 +154,25 @@ namespace Microsoft.HealthVault.ItemTypes
             writer.WriteEndElement();
         }
 
-        
         /// <summary>
-        /// Gets or sets date and the time of the laboratory test.  
+        /// Gets or sets date and the time of the laboratory test.
         /// </summary>
-        /// 
+        ///
         /// <remarks>
-        /// They should be set to <b>null</b> if they are unknown. 
+        /// They should be set to <b>null</b> if they are unknown.
         /// </remarks>
-        /// 
+        ///
         public ApproximateDateTime When
         {
-            get { return _when;}
+            get { return _when; }
             set { _when = value; }
         }
         private ApproximateDateTime _when;
 
         /// <summary>
-        /// Gets or sets name of the laboratory test.  
+        /// Gets or sets name of the laboratory test.
         /// </summary>
-        /// 
+        ///
         /// <remarks>
         /// It should be set to <b>null</b> or empty if it is unknown.
         /// </remarks>
@@ -184,11 +180,11 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <exception cref="ArgumentException">
         /// If <paramref name="value"/> contains only whitespace.
         /// </exception>
-        /// 
+        ///
         public string Name
         {
-            get { return _name;}
-            set 
+            get { return _name; }
+            set
             {
                 Validator.ThrowIfStringIsWhitespace(value, "Name");
                 _name = value;
@@ -197,109 +193,109 @@ namespace Microsoft.HealthVault.ItemTypes
         private string _name;
 
         /// <summary>
-        /// Gets or sets substance that is tested.  
+        /// Gets or sets substance that is tested.
         /// </summary>
-        /// 
+        ///
         /// <remarks>
         /// It should be set to <b>null</b> if it is unknown.
         /// </remarks>
         ///
         public CodableValue Substance
         {
-            get { return _substance;}
+            get { return _substance; }
             set { _substance = value; }
         }
         private CodableValue _substance;
 
         /// <summary>
-        /// Gets or sets the collection method for the laboratory test.  
+        /// Gets or sets the collection method for the laboratory test.
         /// </summary>
-        /// 
+        ///
         /// <remarks>
         /// It should be set to <b>null</b> if it is unknown.
         /// </remarks>
-        /// 
+        ///
         public CodableValue CollectionMethod
         {
-            get { return _collectionMethod;}
+            get { return _collectionMethod; }
             set { _collectionMethod = value; }
         }
         private CodableValue _collectionMethod;
 
         /// <summary>
-        /// Gets or sets the clinical code for the lab tests.  
+        /// Gets or sets the clinical code for the lab tests.
         /// </summary>
-        /// 
+        ///
         /// <remarks>
         /// It should be set to <b>null</b> if it is unknown.
         /// </remarks>
-        /// 
+        ///
         public CodableValue ClinicalCode
         {
-            get { return _clinicalCode;}
+            get { return _clinicalCode; }
             set { _clinicalCode = value; }
         }
         private CodableValue _clinicalCode;
 
         /// <summary>
-        /// Gets or sets the clinical value within a laboratory result. 
+        /// Gets or sets the clinical value within a laboratory result.
         /// </summary>
-        /// 
+        ///
         /// <remarks>
-        /// The type of value is defined within a laboratory result, which includes 
-        /// value, unit, reference and toxic range. It should be set to <b>null</b> 
+        /// The type of value is defined within a laboratory result, which includes
+        /// value, unit, reference and toxic range. It should be set to <b>null</b>
         /// if it is unknown.
         /// </remarks>
-        /// 
+        ///
         public LabTestResultValue Value
         {
-            get { return _value;}
+            get { return _value; }
             set { _value = value; }
         }
         private LabTestResultValue _value;
 
         /// <summary>
-        /// Gets or sets the status of the laboratory results.  
+        /// Gets or sets the status of the laboratory results.
         /// </summary>
-        /// 
-        /// <remarks> 
-        /// Examples of status include complete and pending. It should be 
-        /// set to <b>null</b> if it is unknown. 
+        ///
+        /// <remarks>
+        /// Examples of status include complete and pending. It should be
+        /// set to <b>null</b> if it is unknown.
         /// </remarks>
-        /// 
+        ///
         public CodableValue Status
         {
-            get { return _status;}
+            get { return _status; }
             set { _status = value; }
         }
         private CodableValue _status;
 
         /// <summary>
-        /// Gets or sets a note that augments the laboratory result.  
+        /// Gets or sets a note that augments the laboratory result.
         /// </summary>
-        /// 
-        /// <remarks> 
+        ///
+        /// <remarks>
         /// There are two scenarios in which a note is typically added:
-        /// A note may provide additional information about interpreting 
-        /// the result beyond what is stored in the ranges associated with 
-        /// the value. 
+        /// A note may provide additional information about interpreting
+        /// the result beyond what is stored in the ranges associated with
+        /// the value.
         /// Or, a note may be use to provide the textual result of a lab test
         /// that does not have a measured value.
-        /// 
+        ///
         /// Formatting:
         /// Notes may come from systems that require a line-based approach to textual display. To support
-        /// this, applications should render the spaces and newlines in the note, and use a fixed-width font. 
+        /// this, applications should render the spaces and newlines in the note, and use a fixed-width font.
         /// The form transform for the lab test results type shows one way to do this.
         /// </remarks>
-        /// 
+        ///
         /// <exception cref="ArgumentException">
         /// If <paramref name="value"/> contains only whitespace.
         /// </exception>
-        /// 
-        public string Note 
+        ///
+        public string Note
         {
-            get { return _note;}
-            set 
+            get { return _note; }
+            set
             {
                 Validator.ThrowIfStringIsWhitespace(value, "Note");
                 _note = value;
@@ -309,7 +305,7 @@ namespace Microsoft.HealthVault.ItemTypes
 
         /// <summary>
         /// Gets a string representation of the lab test result type item.
-        /// </summary> 
+        /// </summary>
         ///
         /// <returns>
         /// A string representation of the lab test result type item.

@@ -7,7 +7,7 @@ namespace Microsoft.HealthVault.Authentication
 {
     /// <summary>
     /// Implements base functionality for Capi hashes.  This class manages
-    /// the hash algorithm callbacks and manages the Capi context and hash 
+    /// the hash algorithm callbacks and manages the Capi context and hash
     /// handles.
     /// </summary>
     internal abstract class AbstractCryptoServiceProviderHash : IDisposable
@@ -23,18 +23,18 @@ namespace Microsoft.HealthVault.Authentication
         private ProviderType _providerType;
 
         /// <summary>
-        /// Initializes a new instance of the 
+        /// Initializes a new instance of the
         /// <see cref="AbstractCryptoServiceProviderHash"/> class.
         /// </summary>
-        /// 
+        ///
         /// <param name="provider">
         /// The name of the Capi provider.
         /// </param>
-        /// 
+        ///
         /// <param name="providerType">
         /// Type of the provider.
         /// </param>
-        /// 
+        ///
         /// <param name="algorithm">
         /// The hash algorithm.
         /// </param>
@@ -83,7 +83,7 @@ namespace Microsoft.HealthVault.Authentication
         /// <summary>
         /// Gets the crypto context.
         /// </summary>
-        /// 
+        ///
         /// <value>
         /// The crypto context.
         /// </value>
@@ -96,7 +96,7 @@ namespace Microsoft.HealthVault.Authentication
         /// <summary>
         /// Gets the algorithm id.
         /// </summary>
-        /// 
+        ///
         /// <value>
         /// The algorithm id.
         /// </value>
@@ -118,9 +118,9 @@ namespace Microsoft.HealthVault.Authentication
         /// <summary>
         /// Releases unmanaged and managed resources.
         /// </summary>
-        /// 
+        ///
         /// <param name="disposing">
-        /// <c>true</c> to release both managed and unmanaged resources; 
+        /// <c>true</c> to release both managed and unmanaged resources;
         /// <c>false</c> to release only unmanaged resources.
         /// </param>
         [SecurityCritical]
@@ -140,17 +140,17 @@ namespace Microsoft.HealthVault.Authentication
         }
 
         /// <summary>
-        /// Implements the core hashing functionality.  
+        /// Implements the core hashing functionality.
         /// </summary>
-        /// 
+        ///
         /// <param name="data">
         /// The array containing the bytes to hash.
         /// </param>
-        /// 
+        ///
         /// <param name="offset">
         /// The offset into the array.
         /// </param>
-        /// 
+        ///
         /// <param name="count">
         /// The count of bytes to hash.
         /// </param>
@@ -179,7 +179,7 @@ namespace Microsoft.HealthVault.Authentication
         /// <summary>
         /// Finalizes the hash.
         /// </summary>
-        /// 
+        ///
         /// <returns>
         /// Returns the hash value.
         /// </returns>

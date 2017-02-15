@@ -3,15 +3,9 @@
 // see http://www.microsoft.com/resources/sharedsource/licensingbasics/sharedsourcelicenses.mspx.
 // All other rights reserved.
 
-
 using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Globalization;
-using System.Text;
 using System.Xml;
 using System.Xml.XPath;
-
 
 namespace Microsoft.HealthVault.ItemTypes
 {
@@ -22,37 +16,37 @@ namespace Microsoft.HealthVault.ItemTypes
     public class TestResultRange : HealthRecordItemData
     {
         /// <summary>
-        /// Initialize a new instance of the <see cref="TestResultRange"/> 
+        /// Initialize a new instance of the <see cref="TestResultRange"/>
         /// class with default values.
         /// </summary>
-        /// 
+        ///
         /// <remarks>
-        /// Each test result can contain multiple ranges that are useful 
-        /// to interpret the result value. Examples include reference range 
+        /// Each test result can contain multiple ranges that are useful
+        /// to interpret the result value. Examples include reference range
         /// and therapeutic range.
         /// </remarks>
-        /// 
+        ///
         public TestResultRange()
         {
         }
 
         /// <summary>
-        /// Initialize a new instance of the <see cref="TestResultRange"/> 
+        /// Initialize a new instance of the <see cref="TestResultRange"/>
         /// class with mandatory parameters.
         /// </summary>
-        /// 
-        /// <param name="type"> 
+        ///
+        /// <param name="type">
         /// Type is the type of a test result.
         /// </param>
-        /// 
-        /// <param name="text"> 
-        /// Text is the range expressed as text. 
+        ///
+        /// <param name="text">
+        /// Text is the range expressed as text.
         /// </param>
-        /// 
+        ///
         /// <exception cref="ArgumentNullException">
         /// If <paramref name="text"/> or <paramref name="type"/> is <b> null </b>.
         /// </exception>
-        /// 
+        ///
         public TestResultRange(CodableValue type, CodableValue text)
         {
             RangeType = type;
@@ -60,13 +54,13 @@ namespace Microsoft.HealthVault.ItemTypes
         }
 
         /// <summary>
-        /// Populates this <see cref="TestResultRange"/> instance from the data in the XML. 
+        /// Populates this <see cref="TestResultRange"/> instance from the data in the XML.
         /// </summary>
-        /// 
+        ///
         /// <param name="navigator">
         /// The XML to get the test result range data from.
         /// </param>
-        /// 
+        ///
         /// <exception cref="ArgumentNullException">
         /// The first node in <paramref name="navigator"/> is <b>null</b>.
         /// </exception>
@@ -89,28 +83,28 @@ namespace Microsoft.HealthVault.ItemTypes
 
         /// <summary>
         /// Writes the test result range data to the specified XmlWriter.
-        /// </summary> 
-        /// 
+        /// </summary>
+        ///
         /// <param name="nodeName">
         /// The name of the node to write XML.
         /// </param>
-        /// 
+        ///
         /// <param name="writer">
         /// The XmlWriter to write the test result range data to.
         /// </param>
-        /// 
+        ///
         /// <exception cref="ArgumentException">
         /// If <paramref name="nodeName"/> is <b> null </b> or empty.
         /// </exception>
-        /// 
+        ///
         /// <exception cref="ArgumentNullException">
         /// If <paramref name="writer"/> is <b> null </b>.
         /// </exception>
         ///
         /// <exception cref="HealthRecordItemSerializationException">
         /// If <see cref="Type"/> or <see cref="Text"/> is <b> null </b>.
-        /// </exception> 
-        /// 
+        /// </exception>
+        ///
         public override void WriteXml(string nodeName, XmlWriter writer)
         {
             Validator.ThrowIfStringNullOrEmpty(nodeName, "nodeName");
@@ -137,13 +131,13 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <summary>
         /// Gets or sets the minimum and maximum of the range.
         /// </summary>
-        /// 
+        ///
         /// <remarks>
-        /// The minimum or maximum value may be omitted to specify open-ended ranges. 
+        /// The minimum or maximum value may be omitted to specify open-ended ranges.
         /// Example:
         /// The range "greater than 3.5" would be coded by setting the minimum to 3.5 and omitting the maximum.
         /// </remarks>
-        /// 
+        ///
         public TestResultRangeValue Value
         {
             get { return _value; }
@@ -152,16 +146,16 @@ namespace Microsoft.HealthVault.ItemTypes
         private TestResultRangeValue _value;
 
         /// <summary>
-        /// Gets or sets the type of the range.  
+        /// Gets or sets the type of the range.
         /// </summary>
-        /// 
+        ///
         /// <exception cref="ArgumentNullException">
         /// If <paramref name="RangeType"/> is <b>null</b>.
         /// </exception>
-        /// 
+        ///
         public CodableValue RangeType
         {
-            get { return _rangeType;}
+            get { return _rangeType; }
             set
             {
                 Validator.ThrowIfArgumentNull(value, "RangeType", "TestResultRangeRangeTypeNotSet");
@@ -170,31 +164,30 @@ namespace Microsoft.HealthVault.ItemTypes
         }
         private CodableValue _rangeType;
 
-
         /// <summary>
         /// Gets or sets the range expressed as text.
         /// </summary>
         /// <remarks>
         /// The text element is used in two different ways:
         /// When a numeric range is used, the text element should contain a textual version of the
-        /// numeric range. 
+        /// numeric range.
         /// When the range is non-numeric, the text element contains the range and the range value is omitted. The range may
         /// also be coded to a vocabulary.
-        /// 
+        ///
         /// Examples:
         /// A color range (such as clear to yellow) would be coded using by setting the text element to "clear to yellow",
         /// and by assigning a code from an appropriate vocabulary.
-        /// 
+        ///
         /// A numeric range (such as 0.5 - 1.6) would be stored in the minimum and maximum elements of the value, and \
         /// additionally would be coded by setting the text element to "0.5 - 1.6".
-        /// 
+        ///
         /// Contact the HealthVault team to help define this vocabulary.
         /// </remarks>
-        /// 
+        ///
         /// <exception cref="ArgumentNullException">
         /// If <paramref name="Text"/> is <b>null</b>.
         /// </exception>
-        /// 
+        ///
         public CodableValue Text
         {
             get { return _text; }
@@ -206,10 +199,9 @@ namespace Microsoft.HealthVault.ItemTypes
         }
         private CodableValue _text;
 
-
         /// <summary>
         /// Gets a string representation of the test result range item.
-        /// </summary> 
+        /// </summary>
         ///
         /// <returns>
         /// A string representation of the test result range item.

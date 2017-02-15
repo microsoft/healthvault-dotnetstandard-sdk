@@ -5,7 +5,6 @@ using System.Security.Cryptography;
 
 namespace Microsoft.HealthVault.Authentication
 {
-
     /// <summary>
     /// An HMAC implementation which delegates to the native Capi libarary.
     /// </summary>

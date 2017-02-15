@@ -3,7 +3,6 @@
 // see http://www.microsoft.com/resources/sharedsource/licensingbasics/sharedsourcelicenses.mspx.
 // All other rights reserved.
 
-
 using System;
 using System.Globalization;
 using System.Xml;
@@ -11,48 +10,48 @@ using System.Xml.XPath;
 
 namespace Microsoft.HealthVault.ItemTypes
 {
-    /// <summary> 
+    /// <summary>
     /// An approximation of a time.
     /// </summary>
-    /// 
+    ///
     /// <remarks>
-    /// An approximation of a time must have an hour and minute and can 
+    /// An approximation of a time must have an hour and minute and can
     /// also optionally have seconds specified.
     /// </remarks>
-    /// 
-    public class ApproximateTime 
+    ///
+    public class ApproximateTime
         : HealthRecordItemData,
             IComparable,
             IComparable<ApproximateTime>
     {
         /// <summary>
-        /// Creates a new instance of the <see cref="ApproximateTime"/> class 
+        /// Creates a new instance of the <see cref="ApproximateTime"/> class
         /// with default values.
         /// </summary>
-        /// 
+        ///
         public ApproximateTime()
         {
         }
 
         /// <summary>
-        /// Creates a new instance of the <see cref="ApproximateTime"/> class 
+        /// Creates a new instance of the <see cref="ApproximateTime"/> class
         /// with the specified hour and minute.
         /// </summary>
-        /// 
+        ///
         /// <param name="hour">
         /// The hour between 0 and 23.
         /// </param>
-        /// 
+        ///
         /// <param name="minute">
         /// The minute between 0 and 59.
         /// </param>
-        /// 
+        ///
         /// <exception cref="ArgumentOutOfRangeException">
         /// The <paramref name="hour"/> parameter is less than 0 or greater
         /// than 23, or the <paramref name="minute"/> parameter is less than 0 or
         /// greater than 59.
         /// </exception>
-        /// 
+        ///
         public ApproximateTime(int hour, int minute)
         {
             Hour = hour;
@@ -60,49 +59,48 @@ namespace Microsoft.HealthVault.ItemTypes
         }
 
         /// <summary>
-        /// Creates a new instance of the <see cref="ApproximateTime"/> class 
+        /// Creates a new instance of the <see cref="ApproximateTime"/> class
         /// with the specified hour, minute, and second.
         /// </summary>
-        /// 
+        ///
         /// <param name="hour">
         /// The hour between 0 and 23.
         /// </param>
-        /// 
+        ///
         /// <param name="minute">
         /// The minute between 0 and 59.
         /// </param>
-        /// 
+        ///
         /// <param name="second">
         /// The second between 0 and 59.
         /// </param>
-        /// 
+        ///
         /// <exception cref="ArgumentOutOfRangeException">
         /// The <paramref name="hour"/> parameter is less than 0 or greater
-        /// than 23, or the <paramref name="minute"/> or <paramref name="second"/> 
+        /// than 23, or the <paramref name="minute"/> or <paramref name="second"/>
         /// parameter is less than 0 or
         /// greater than 59.
         /// </exception>
-        /// 
+        ///
         public ApproximateTime(int hour, int minute, int second)
             : this(hour, minute)
         {
             Second = second;
         }
 
-
         /// <summary>
-        /// Creates a new instance of the <see cref="ApproximateTime"/> class 
+        /// Creates a new instance of the <see cref="ApproximateTime"/> class
         /// with the specified hour, minute, second, and millisecond.
         /// </summary>
-        /// 
+        ///
         /// <param name="hour">
         /// The hour between 0 and 23.
         /// </param>
-        /// 
+        ///
         /// <param name="minute">
         /// The minute between 0 and 59.
         /// </param>
-        /// 
+        ///
         /// <param name="second">
         /// The second between 0 and 59.
         /// </param>
@@ -110,15 +108,15 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <param name="millisecond">
         /// The millisecond between 0 and 999.
         /// </param>
-        /// 
+        ///
         /// <exception cref="ArgumentOutOfRangeException">
         /// The <paramref name="hour"/> parameter is less than 0 or greater
-        /// than 23, or the <paramref name="minute"/>, or <paramref name="second"/> 
+        /// than 23, or the <paramref name="minute"/>, or <paramref name="second"/>
         /// parameter is less than 0 or
         /// greater than 59, or <paramref name="millisecond"/> parameter is less than 0
         /// or greater than 999.
         /// </exception>
-        /// 
+        ///
         public ApproximateTime(int hour, int minute, int second, int millisecond)
             : this(hour, minute, second)
         {
@@ -128,7 +126,7 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <summary>
         /// Gets the current time including the hour, minute, and second.
         /// </summary>
-        /// 
+        ///
         public static ApproximateTime Now
         {
             get
@@ -138,18 +136,18 @@ namespace Microsoft.HealthVault.ItemTypes
             }
         }
 
-        /// <summary> 
+        /// <summary>
         /// Populates the data for the approximate time from the XML.
         /// </summary>
-        /// 
-        /// <param name="navigator"> 
+        ///
+        /// <param name="navigator">
         /// The XML node representing the approximate time.
         /// </param>
-        /// 
+        ///
         /// <exception cref="ArgumentNullException">
         /// The <paramref name="navigator"/> parameter is <b>null</b>.
         /// </exception>
-        /// 
+        ///
         public override void ParseXml(XPathNavigator navigator)
         {
             Validator.ThrowIfNavigatorNull(navigator);
@@ -179,31 +177,30 @@ namespace Microsoft.HealthVault.ItemTypes
             }
         }
 
-        /// <summary> 
+        /// <summary>
         /// Writes the approximate time to the specified XML writer.
         /// </summary>
-        /// 
+        ///
         /// <param name="nodeName">
         /// The name of the outer element for the approximate time.
         /// </param>
-        /// 
-        /// <param name="writer"> 
+        ///
+        /// <param name="writer">
         /// The XmlWriter to write the approximate time to.
         /// </param>
-        /// 
+        ///
         /// <exception cref="ArgumentException">
         /// The <paramref name="nodeName"/> parameter is <b>null</b> or empty.
         /// </exception>
-        /// 
+        ///
         /// <exception cref="ArgumentNullException">
         /// The <paramref name="writer"/> parameter is <b>null</b>.
         /// </exception>
-        /// 
+        ///
         public override void WriteXml(string nodeName, XmlWriter writer)
         {
             Validator.ThrowIfStringNullOrEmpty(nodeName, "nodeName");
             Validator.ThrowIfArgumentNull(writer, "writer", "WriteXmlNullWriter");
-
 
             // Having hour and minute null really means that we have
             // an unknown approximate time since both are required.
@@ -227,7 +224,7 @@ namespace Microsoft.HealthVault.ItemTypes
                 if (_millisecond != null)
                 {
                     writer.WriteElementString(
-                        "f", 
+                        "f",
                         ((int)_millisecond).ToString(
                             CultureInfo.InvariantCulture));
                 }
@@ -239,27 +236,27 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <summary>
         /// Gets or sets the hour of the time approximation.
         /// </summary>
-        /// 
+        ///
         /// <returns>
         /// An integer representing the hour.
         /// </returns>
-        /// 
+        ///
         /// <remarks>
         /// This value defaults to the current hour.
         /// </remarks>
-        /// 
+        ///
         /// <exception cref="ArgumentOutOfRangeException">
         /// The <paramref name="value"/> parameter is less than 0 or greater than 23
         /// when setting.
         /// </exception>
-        /// 
+        ///
         public int Hour
         {
-            get 
+            get
             {
-                return (_hour != null) ? _hour.Value : 0; 
+                return (_hour != null) ? _hour.Value : 0;
             }
-            set 
+            set
             {
                 Validator.ThrowArgumentOutOfRangeIf(
                     value < 0 || value > 23,
@@ -273,26 +270,27 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <summary>
         /// Gets or sets the minute of the time approximation.
         /// </summary>
-        /// 
+        ///
         /// <returns>
         /// An integer representing the minute.
-        /// </returns> 
-        /// 
+        /// </returns>
+        ///
         /// <remarks>
         /// This value defaults to the current minute.
         /// </remarks>
-        /// 
+        ///
         /// <exception cref="ArgumentOutOfRangeException">
         /// The <paramref name="value"/> parameter is less than 0 or greater than 59
         /// when setting.
         /// </exception>
-        /// 
+        ///
         public int Minute
         {
-            get 
+            get
             {
-                return (_minute != null) ? _minute.Value : 0; }
-            set 
+                return (_minute != null) ? _minute.Value : 0;
+            }
+            set
             {
                 Validator.ThrowArgumentOutOfRangeIf(
                     value < 0 || value > 59,
@@ -306,25 +304,25 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <summary>
         /// Gets or sets the seconds of the time approximation.
         /// </summary>
-        /// 
+        ///
         /// <returns>
         /// An integer representing the second.
-        /// </returns> 
-        /// 
+        /// </returns>
+        ///
         /// <remarks>
-        /// If the number of seconds is unknown, the value can be set to 
+        /// If the number of seconds is unknown, the value can be set to
         /// <b>null</b>. This value defaults to <b>null</b>.
         /// </remarks>
-        /// 
+        ///
         /// <exception cref="ArgumentOutOfRangeException">
         /// The <paramref name="value"/> parameter is less than 0 or greater than 59
         /// when setting.
         /// </exception>
-        /// 
+        ///
         public int? Second
         {
             get { return _second; }
-            set 
+            set
             {
                 if (value != null)
                 {
@@ -341,25 +339,25 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <summary>
         /// Gets or sets the milliseconds of the time approximation.
         /// </summary>
-        /// 
+        ///
         /// <returns>
         /// An integer representing the milliseconds.
         /// </returns>
-        /// 
+        ///
         /// <remarks>
-        /// If the number of milliseconds is unknown, the value can be set to <b>null</b>. 
+        /// If the number of milliseconds is unknown, the value can be set to <b>null</b>.
         /// This value defaults to <b>null</b>.
         /// </remarks>
-        /// 
+        ///
         /// <exception cref="ArgumentOutOfRangeException">
         /// The <paramref name="value"/> parameter is less than 0 or greater than 999
         /// when setting.
         /// </exception>
-        /// 
+        ///
         public Nullable<int> Millisecond
         {
             get { return _millisecond; }
-            set 
+            set
             {
                 // The following if statements cannot be combined with && becuase
                 // it would throw an exception if value == null.
@@ -378,18 +376,18 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <summary>
         /// Gets a boolean indicating whether this ApproximateTime has a value in it.
         /// </summary>
-        /// 
+        ///
         /// <returns>
         /// True if there is a value.
         /// </returns>
-        /// 
+        ///
         /// <remarks>
         /// ApproximateTime instances are initialized into state without a value, but the Hour and Minute
-        /// properties must still return numbers in that case. This property is used to tell the 
+        /// properties must still return numbers in that case. This property is used to tell the
         /// difference between an ApproximateTime that has no value and one where the hour and minute
         /// have been set to zero (ie 12:00 AM).
         /// </remarks>
-        /// 
+        ///
         public bool HasValue
         {
             get { return _hour.HasValue && _minute.HasValue; }
@@ -400,33 +398,33 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <summary>
         /// Compares the specified object to this ApproximateTime object.
         /// </summary>
-        /// 
+        ///
         /// <returns>
         /// An integer representing the object order.
-        /// </returns> 
-        /// 
+        /// </returns>
+        ///
         /// <param name="obj">
         /// The object to be compared.
         /// </param>
-        /// 
+        ///
         /// <returns>
-        /// A 32-bit signed integer that indicates the relative order of the 
-        /// objects being compared. 
+        /// A 32-bit signed integer that indicates the relative order of the
+        /// objects being compared.
         /// </returns>
-        /// 
+        ///
         /// <remarks>
-        /// If the result is less than zero, the 
+        /// If the result is less than zero, the
         /// instance is less than <paramref name="obj"/>. If the result is zero
         /// the instance is equal to <paramref name="obj"/>. If the result is
-        /// greater than zero, the instance is greater than 
+        /// greater than zero, the instance is greater than
         /// <paramref name="obj"/>.
         /// </remarks>
-        /// 
+        ///
         /// <exception cref="ArgumentException">
         /// The <paramref name="obj"/> parameter is not an <see cref="ApproximateTime"/>
         /// object.
         /// </exception>
-        /// 
+        ///
         public int CompareTo(object obj)
         {
             int result = 0;
@@ -442,7 +440,7 @@ namespace Microsoft.HealthVault.ItemTypes
                 ApproximateTime hsTime = obj as ApproximateTime;
                 Validator.ThrowArgumentExceptionIf(
                     hsTime == null,
-                    "obj", 
+                    "obj",
                     "TimeCompareToInvalidType");
 
                 result = CompareTo(hsTime);
@@ -453,24 +451,24 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <summary>
         /// Compares the specified object to this ApproximateDate object.
         /// </summary>
-        /// 
+        ///
         /// <param name="other">
         /// The time to be compared.
         /// </param>
-        /// 
+        ///
         /// <returns>
-        /// A 32-bit signed integer that indicates the relative order of the 
-        /// objects being compared. 
+        /// A 32-bit signed integer that indicates the relative order of the
+        /// objects being compared.
         /// </returns>
-        /// 
+        ///
         /// <remarks>
-        /// If the result is less than zero, the 
+        /// If the result is less than zero, the
         /// instance is less than <paramref name="other"/>. If the result is zero
         /// the instance is equal to <paramref name="other"/>. If the result is
-        /// greater than zero, the instance is greater than 
+        /// greater than zero, the instance is greater than
         /// <paramref name="other"/>.
         /// </remarks>
-        /// 
+        ///
         public int CompareTo(ApproximateTime other)
         {
             int result = 0;
@@ -569,28 +567,28 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <summary>
         /// Gets a value indicating whether the specified object is equal to this object.
         /// </summary>
-        /// 
+        ///
         /// <param name="obj">
         /// The object to be compared.
         /// </param>
-        /// 
+        ///
         /// <returns>
-        /// <b>true</b> if the <paramref name="obj"/> is a 
-        /// <see cref="ApproximateTime"/> object and the hour, minute, 
-        /// second, and millisecond exactly match; otherwise, <b>false</b>. 
+        /// <b>true</b> if the <paramref name="obj"/> is a
+        /// <see cref="ApproximateTime"/> object and the hour, minute,
+        /// second, and millisecond exactly match; otherwise, <b>false</b>.
         /// </returns>
-        /// 
+        ///
         /// <remarks>
-        /// If an <see cref="ApproximateDate"/> is less specific than the other 
-        /// <see cref="ApproximateDate"/>, the less specific one is considered less than 
+        /// If an <see cref="ApproximateDate"/> is less specific than the other
+        /// <see cref="ApproximateDate"/>, the less specific one is considered less than
         /// the more specific one, assuming that the current data is equal.
         /// </remarks>
-        /// 
+        ///
         /// <exception cref="ArgumentException">
         /// The <paramref name="obj"/> parameter is not an <see cref="ApproximateTime"/>
         /// object.
         /// </exception>
-        /// 
+        ///
         public override bool Equals(object obj)
         {
             return this.CompareTo(obj) == 0;
@@ -599,42 +597,43 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <summary>
         /// See the base class documentation.
         /// </summary>
-        /// 
+        ///
         /// <returns>
         /// See the base class documentation.
         /// </returns>
-        /// 
+        ///
         public override int GetHashCode()
         {
             return base.GetHashCode();
         }
+
         #endregion Equals
 
         #region Operators
 
         /// <summary>
-        /// Gets a value indicating whether the specified object is equal to 
+        /// Gets a value indicating whether the specified object is equal to
         /// the specified time.
         /// </summary>
-        /// 
+        ///
         /// <param name="time">
         /// The time object to be compared.
         /// </param>
-        /// 
+        ///
         /// <param name="obj">
         /// The second object to be compared.
         /// </param>
-        /// 
+        ///
         /// <returns>
-        /// <b>true</b> if <paramref name="time"/> has the hour, minute, 
+        /// <b>true</b> if <paramref name="time"/> has the hour, minute,
         /// second, and millisecond exactly match; otherwise, <b>false</b>.
         /// </returns>
-        /// 
+        ///
         /// <exception cref="ArgumentException">
-        /// The <paramref name="obj"/> parameter is not an 
+        /// The <paramref name="obj"/> parameter is not an
         /// <see cref="ApproximateTime"/> object.
         /// </exception>
-        /// 
+        ///
         public static bool operator ==(ApproximateTime time, object obj)
         {
             bool result = true;
@@ -658,34 +657,34 @@ namespace Microsoft.HealthVault.ItemTypes
         }
 
         /// <summary>
-        /// Gets a value indicating whether the specified object is not equal 
+        /// Gets a value indicating whether the specified object is not equal
         /// to the specified
         /// time.
         /// </summary>
-        /// 
+        ///
         /// <param name="time">
         /// The time object to be compared.
         /// </param>
-        /// 
+        ///
         /// <param name="obj">
         /// The second object to be compared.
         /// </param>
-        /// 
+        ///
         /// <returns>
-        /// <b>false</b> if <paramref name="time"/> has the hour, minute, 
-        /// second, and millisecond exactly match.        
+        /// <b>false</b> if <paramref name="time"/> has the hour, minute,
+        /// second, and millisecond exactly match.
         /// </returns>
-        /// 
+        ///
         /// <remarks>
-        /// If an <see cref="ApproximateDate"/> is less specific than the other 
-        /// <see cref="ApproximateDate"/>, the less specific one is considered less than 
+        /// If an <see cref="ApproximateDate"/> is less specific than the other
+        /// <see cref="ApproximateDate"/>, the less specific one is considered less than
         /// the more specific one, assuming that the current data is equal.
         /// </remarks>
-        /// 
+        ///
         /// <exception cref="ArgumentException">
         /// The <paramref name="obj"/> parameter is not an <see cref="ApproximateTime"/> object.
         /// </exception>
-        /// 
+        ///
         public static bool operator !=(ApproximateTime time, object obj)
         {
             bool result = false;
@@ -712,32 +711,32 @@ namespace Microsoft.HealthVault.ItemTypes
         /// Gets a value indicating whether the specified time is greater than the specified
         /// object.
         /// </summary>
-        /// 
+        ///
         /// <param name="time">
         /// The time object to be compared.
         /// </param>
-        /// 
+        ///
         /// <param name="obj">
         /// The second object to be compared.
         /// </param>
-        /// 
+        ///
         /// <returns>
-        /// <b>true</b> if <paramref name="time"/> has the hour, minute, 
-        /// second, and millisecond greater than that of 
+        /// <b>true</b> if <paramref name="time"/> has the hour, minute,
+        /// second, and millisecond greater than that of
         /// <paramref name="obj"/>.
         /// </returns>
-        /// 
+        ///
         /// <remarks>
-        /// If an <see cref="ApproximateDate"/> is less specific than the other 
-        /// <see cref="ApproximateDate"/>, the less specific one is considered less than 
+        /// If an <see cref="ApproximateDate"/> is less specific than the other
+        /// <see cref="ApproximateDate"/>, the less specific one is considered less than
         /// the more specific one, assuming that the current data is equal.
         /// </remarks>
-        /// 
+        ///
         /// <exception cref="ArgumentException">
-        /// The <paramref name="obj"/> parameter is not an 
+        /// The <paramref name="obj"/> parameter is not an
         /// <see cref="ApproximateTime"/> object.
         /// </exception>
-        /// 
+        ///
         public static bool operator >(ApproximateTime time, object obj)
         {
             bool result = false;
@@ -764,32 +763,32 @@ namespace Microsoft.HealthVault.ItemTypes
         /// Gets a value indicating whether the specified time is less than the specified
         /// object.
         /// </summary>
-        /// 
+        ///
         /// <param name="time">
         /// The time object to be compared.
         /// </param>
-        /// 
+        ///
         /// <param name="obj">
         /// The second object to be compared.
         /// </param>
-        /// 
+        ///
         /// <returns>
-        /// <b>true</b> if <paramref name="time"/> has the hour, minute, 
-        /// second, and millisecond less than that of 
-        /// <paramref name="obj"/>.       
+        /// <b>true</b> if <paramref name="time"/> has the hour, minute,
+        /// second, and millisecond less than that of
+        /// <paramref name="obj"/>.
         /// </returns>
-        /// 
+        ///
         /// <remarks>
-        /// If an <see cref="ApproximateDate"/> is less specific than the other 
-        /// <see cref="ApproximateDate"/>, the less specific one is considered less than 
+        /// If an <see cref="ApproximateDate"/> is less specific than the other
+        /// <see cref="ApproximateDate"/>, the less specific one is considered less than
         /// the more specific one, assuming that the current data is equal.
         /// </remarks>
-        /// 
+        ///
         /// <exception cref="ArgumentException">
-        /// The <paramref name="obj"/> parameter is not an 
+        /// The <paramref name="obj"/> parameter is not an
         /// <see cref="ApproximateTime"/> object.
         /// </exception>
-        /// 
+        ///
         public static bool operator <(ApproximateTime time, object obj)
         {
             bool result = false;
@@ -816,7 +815,7 @@ namespace Microsoft.HealthVault.ItemTypes
 
         internal string ToString(IFormatProvider formatProvider)
         {
-                // If the default constructor is called, _hour is null, so we return empty.
+            // If the default constructor is called, _hour is null, so we return empty.
             if (_hour == null)
             {
                 return string.Empty;
@@ -851,5 +850,4 @@ namespace Microsoft.HealthVault.ItemTypes
             return dt.ToString(format, formatProvider);
         }
     }
-
 }

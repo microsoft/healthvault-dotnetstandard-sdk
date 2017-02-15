@@ -2,7 +2,7 @@
 // Feel free to delete lines when you fix the underlying issue.
 // You should never add to this file; if you must suppress an FxCop warning, put the suppression inline.
 // If you absolutely MUST add to this file, you can run 'oacr fxcop <project> /target <assembly>'
-// where <project> is HealthVault or HealthVault_SDK and assembly is the dll you're building, including extension. 
+// where <project> is HealthVault or HealthVault_SDK and assembly is the dll you're building, including extension.
 // This will launch the fxcop gui. Click Analyze, then rightclick the error and select Copy As -> Module level suppression. Paste here.
 
 using System.Diagnostics.CodeAnalysis;
@@ -41,14 +41,14 @@ using System.Diagnostics.CodeAnalysis;
 [module: SuppressMessage("Microsoft.Performance", "CA1810:InitializeReferenceTypeStaticFieldsInline", Scope = "member", Target = "Microsoft.Health.Web.HealthWebApplicationConfiguration.#.cctor()")]
 [module: SuppressMessage("Microsoft.Usage", "CA1806:DoNotIgnoreMethodResults", Scope = "member", Target = "Microsoft.Health.Web.WebApplicationUtilities.#HandleTokenOnUrl(System.Web.HttpContext,System.Boolean,System.Guid)", MessageId = "System.Int32.TryParse(System.String,System.Int32@)")]
 [module: SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", Scope = "member", Target = "Microsoft.Health.Web.WebApplicationUtilities.#HandleTokenOnUrl(System.Web.HttpContext,System.Boolean,System.Guid)", MessageId = "isLoginRequired")]
-[module: SuppressMessage("Microsoft.Security.Web.Configuration", "CA3105:SetViewStateUserKey", Scope="member", Target="Microsoft.Health.Web.HealthServicePage.#OnInit(System.EventArgs)")]
-[module: SuppressMessage("Microsoft.Security.Web.Configuration", "CA3105:SetViewStateUserKey", Scope="type", Target="Microsoft.Health.Web.HealthServiceActionPage")]
-[module: SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope", Scope="member", Target="Microsoft.Health.Web.GridViewIsSignedTemplate.#InstantiateIn(System.Web.UI.Control)")]
-[module: SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope", Scope="member", Target="Microsoft.Health.Web.WebApplicationUtilities.#DeserializePersonInfo(System.String)")]
-[module: SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope", Scope="member", Target="Microsoft.Health.Web.WebApplicationUtilities.#DecompressInternal(System.Byte[],System.Int32)")]
-[module: SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope", Scope="member", Target="Microsoft.Health.Web.WebApplicationUtilities.#MarshalCookieVersion2(System.String)")]
-[module: SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope", Scope="member", Target="Microsoft.Health.Web.WebApplicationUtilities.#GetEncryptionAlgorithm()")]
-[module: SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope", Scope="member", Target="Microsoft.Health.Web.WebApplicationUtilities.#CompressInternal(System.String,System.Int32&)")]
-[module: SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope", Scope="member", Target="Microsoft.Health.Web.WebApplicationUtilities.#UnmarshalCookieVersion2(System.String)")]
-[module: SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope", Scope="member", Target="Microsoft.Health.Web.GridViewAuditActionTemplate.#InstantiateIn(System.Web.UI.Control)")]
-[module: SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope", Scope="member", Target="Microsoft.Health.Web.HealthRecordItemDataGrid.#AddActionLinksToContainer(System.Web.UI.Control,System.Int32,Microsoft.Health.Web.ActionTemplate)")]
+[module: SuppressMessage("Microsoft.Security.Web.Configuration", "CA3105:SetViewStateUserKey", Scope = "member", Target = "Microsoft.Health.Web.HealthServicePage.#OnInit(System.EventArgs)")]
+[module: SuppressMessage("Microsoft.Security.Web.Configuration", "CA3105:SetViewStateUserKey", Scope = "type", Target = "Microsoft.Health.Web.HealthServiceActionPage")]
+[module: SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope", Scope = "member", Target = "Microsoft.Health.Web.GridViewIsSignedTemplate.#InstantiateIn(System.Web.UI.Control)")]
+[module: SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope", Scope = "member", Target = "Microsoft.Health.Web.WebApplicationUtilities.#DeserializePersonInfo(System.String)")]
+[module: SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope", Scope = "member", Target = "Microsoft.Health.Web.WebApplicationUtilities.#DecompressInternal(System.Byte[],System.Int32)")]
+[module: SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope", Scope = "member", Target = "Microsoft.Health.Web.WebApplicationUtilities.#MarshalCookieVersion2(System.String)")]
+[module: SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope", Scope = "member", Target = "Microsoft.Health.Web.WebApplicationUtilities.#GetEncryptionAlgorithm()")]
+[module: SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope", Scope = "member", Target = "Microsoft.Health.Web.WebApplicationUtilities.#CompressInternal(System.String,System.Int32&)")]
+[module: SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope", Scope = "member", Target = "Microsoft.Health.Web.WebApplicationUtilities.#UnmarshalCookieVersion2(System.String)")]
+[module: SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope", Scope = "member", Target = "Microsoft.Health.Web.GridViewAuditActionTemplate.#InstantiateIn(System.Web.UI.Control)")]
+[module: SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope", Scope = "member", Target = "Microsoft.Health.Web.HealthRecordItemDataGrid.#AddActionLinksToContainer(System.Web.UI.Control,System.Int32,Microsoft.Health.Web.ActionTemplate)")]

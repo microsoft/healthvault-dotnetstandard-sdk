@@ -31,7 +31,7 @@ namespace Microsoft.HealthVault
         /// Gets the public configuration values for the HealthVault service's
         /// Meaningful Use features.
         /// </summary>
-        /// 
+        ///
         /// <value>
         /// The dictionary returned uses the configuration value name as the key. All entries are
         /// public configuration values that the HealthVault service exposes as information to
@@ -39,7 +39,7 @@ namespace Microsoft.HealthVault
         /// For example, the MaxMeaningfulUseReportItemsPerRetrieval configuration value specifies the maximum number
         /// of report entries returned per page for Meaningful Use reports.
         /// </value>
-        /// 
+        ///
         [SuppressMessage(
             "Microsoft.Usage",
             "CA2227:CollectionPropertiesShouldBeReadOnly",
@@ -53,15 +53,15 @@ namespace Microsoft.HealthVault
         private Dictionary<string, string> _configurationValues = new Dictionary<string, string>();
 
         /// <summary>
-        /// Constructs a <see cref="HealthServiceMeaningfulUseInfo"/> object from the  
+        /// Constructs a <see cref="HealthServiceMeaningfulUseInfo"/> object from the
         /// supplied XML.
         /// </summary>
-        /// 
+        ///
         /// <param name="nav">
-        /// An <see cref="XPathNavigator"/> to access the XML from which the 
+        /// An <see cref="XPathNavigator"/> to access the XML from which the
         /// <see cref="HealthServiceMeaningfulUseInfo"/> object will be constructed.
         /// </param>
-        /// 
+        ///
         /// <returns>
         /// A <see cref="HealthServiceMeaningfulUseInfo"/> object.
         /// </returns>

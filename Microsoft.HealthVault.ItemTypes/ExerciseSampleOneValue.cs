@@ -3,8 +3,6 @@
 // see http://www.microsoft.com/resources/sharedsource/licensingbasics/sharedsourcelicenses.mspx.
 // All other rights reserved.
 
-using System;
-
 namespace Microsoft.HealthVault.ItemTypes
 {
     /// <summary>
@@ -23,16 +21,16 @@ namespace Microsoft.HealthVault.ItemTypes
             Value = value;
         }
 
-        double _offsetInSeconds;
+        private double _offsetInSeconds;
 
         /// <summary>
-        /// Gets or sets the offset in seconds of this data sample from the beginning of the sample set. 
+        /// Gets or sets the offset in seconds of this data sample from the beginning of the sample set.
         /// </summary>
-        /// 
+        ///
         /// <value>
         /// The offset in seconds.
         /// </value>
-        /// 
+        ///
         /// <exception cref="ArgumentOutOfRangeException">
         /// The <paramref name="OffsetInSeconds"/> value is less than zero.
         /// </exception>
@@ -45,11 +43,11 @@ namespace Microsoft.HealthVault.ItemTypes
                     value < 0,
                     "OffsetInSeconds",
                     "OffsetMustBePositive");
-                _offsetInSeconds = value; 
+                _offsetInSeconds = value;
             }
         }
 
-        double _value;
+        private double _value;
 
         /// <summary>
         /// Gets or sets the data value stored in the sample.
@@ -65,7 +63,7 @@ namespace Microsoft.HealthVault.ItemTypes
         /// </summary>
         public override string ToString()
         {
-            return 
+            return
                 string.Format(
                     ResourceRetriever.GetResourceString(
                         "ExerciseSampleOneValueToStringFormat"),

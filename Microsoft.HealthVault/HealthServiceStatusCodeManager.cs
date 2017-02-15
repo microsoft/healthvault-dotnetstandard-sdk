@@ -3,30 +3,29 @@
 // see http://www.microsoft.com/resources/sharedsource/licensingbasics/sharedsourcelicenses.mspx.
 // All other rights reserved.
 
-
 namespace Microsoft.HealthVault
 {
     /// <summary>
-    /// Helper factory class to help cast any integer status code 
+    /// Helper factory class to help cast any integer status code
     /// to an appropriate HealthServiceStatusCode enum value.
     /// </summary>
-    /// 
+    ///
     internal static class HealthServiceStatusCodeManager
     {
         /// <summary>
-        /// Helper factory method to help cast any integer status code 
+        /// Helper factory method to help cast any integer status code
         /// to an appropriate HealthServiceStatusCode enum value.
         /// </summary>
-        /// 
-        /// <param name="statusCodeId"> 
-        /// the integer status code id 
+        ///
+        /// <param name="statusCodeId">
+        /// the integer status code id
         /// to be converted  to a HealthServiceStatusCode enum value.
         /// </param>
-        /// 
-        /// <returns> 
+        ///
+        /// <returns>
         /// HealthVaultStatus code enum object appropriately initialized.
         /// </returns>
-        /// 
+        ///
         internal static HealthServiceStatusCode GetStatusCode(int statusCodeId)
         {
             HealthServiceStatusCode statusCode = HealthServiceStatusCode.UnmappedError;

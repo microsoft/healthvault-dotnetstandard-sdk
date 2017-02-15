@@ -12,25 +12,25 @@ using System.Xml.XPath;
 namespace Microsoft.HealthVault
 {
     /// <summary>
-    /// This class defines an authorization to use a single <see cref="Vocabulary"/> or a family of 
+    /// This class defines an authorization to use a single <see cref="Vocabulary"/> or a family of
     /// Vocabularies in HealthVault.
     /// </summary>
-    /// 
+    ///
     public class VocabularyAuthorization : IEquatable<VocabularyAuthorization>
     {
         /// <summary>
         /// Creates a new instance of the <see cref="VocabularyAuthorization"/> class
         /// with permissions to access the specified vocabulary.
         /// </summary>
-        /// 
+        ///
         /// <param name="vocabularyFamily">
         /// The family of HealthVault Vocabularies.
         /// </param>
-        /// 
+        ///
         /// <exception cref="ArgumentException">
         /// The <paramref name="vocabularyFamily"/> parameter is <b>null</b> or <see cref="String.Empty"/>
         /// </exception>
-        /// 
+        ///
         public VocabularyAuthorization(string vocabularyFamily)
         {
             Validator.ThrowIfStringNullOrEmpty(vocabularyFamily, "vocabularyFamily");
@@ -41,21 +41,21 @@ namespace Microsoft.HealthVault
         /// Creates a new instance of the <see cref="VocabularyAuthorization"/> class
         /// with permissions to access the specified vocabulary or family of vocabularies.
         /// </summary>
-        /// 
+        ///
         /// <param name="vocabularyFamily">
         /// The family of HealthVault vocabularies.
         /// </param>
-        /// 
+        ///
         /// <param name="vocabularyName">
         /// The name of the HealthVault <see cref="Vocabulary"/>.
         /// </param>
-        /// 
+        ///
         /// <exception cref="ArgumentException">
         /// If the <paramref name="vocabularyFamily"/> parameter is <b>null</b> or <see cref="String.Empty"/>
         /// --OR--
         /// if the <paramref name="vocabularyName"/> parameter is <b>null</b> or <see cref="String.Empty"/>
         /// </exception>
-        /// 
+        ///
         public VocabularyAuthorization(string vocabularyFamily, string vocabularyName)
         {
             Validator.ThrowIfStringNullOrEmpty(vocabularyFamily, "vocabularyFamily");
@@ -78,7 +78,7 @@ namespace Microsoft.HealthVault
         /// Gets the name of the HealthVault <see cref="Vocabulary"/> being represented.
         /// </summary>
         /// <remarks>
-        /// The absence of a name, i.e. the name set to null, indicates that the Authorization 
+        /// The absence of a name, i.e. the name set to null, indicates that the Authorization
         /// covers all the vocabularies in the HealthVault vocabulary family.
         /// </remarks>
         public string VocabularyName
@@ -90,11 +90,11 @@ namespace Microsoft.HealthVault
         /// <summary>
         /// Gets the string representation of the <see cref="VocabularyAuthorization"/>.
         /// </summary>
-        /// 
+        ///
         /// <returns>
         /// The string representation of the <see cref="VocabularyAuthorization"/>.
         /// </returns>
-        /// 
+        ///
         public override string ToString()
         {
             StringBuilder result = new StringBuilder();
@@ -110,15 +110,15 @@ namespace Microsoft.HealthVault
         /// <summary>
         /// Writes the vocabulary authorization to the specified XmlWriter.
         /// </summary>
-        /// 
+        ///
         /// <param name="writer">
         /// The XmlWriter to write the vocabulary authorization to.
         /// </param>
-        /// 
+        ///
         /// <exception cref="ArgumentNullException">
         /// If <paramref name="writer"/> is <b>null</b>.
         /// </exception>
-        /// 
+        ///
         public void WriteXml(XmlWriter writer)
         {
             Validator.ThrowIfWriterNull(writer);
@@ -133,7 +133,7 @@ namespace Microsoft.HealthVault
         }
 
         /// <summary>
-        /// Parses the xml serialized form of the vocabulary authorization, to create a 
+        /// Parses the xml serialized form of the vocabulary authorization, to create a
         /// <see cref="VocabularyAuthorization"/>.
         /// </summary>
         /// <param name="vocabularyAuthorizationXml">
@@ -184,7 +184,7 @@ namespace Microsoft.HealthVault
         /// Determines whether this instance and another specified VocabularyAuthorization object
         /// have the same value and it is case insensitive.
         /// </summary>
-        /// 
+        ///
         /// <param name="other">
         /// An instance of VocabularyAuthorization.
         /// </param>
@@ -206,11 +206,11 @@ namespace Microsoft.HealthVault
         }
 
         /// <summary>
-        /// Determines whether this instance and a specified object, which must also be a 
-        /// VocabularyAuthorization object, has the same value and is case insensitive 
+        /// Determines whether this instance and a specified object, which must also be a
+        /// VocabularyAuthorization object, has the same value and is case insensitive
         /// (Overrides Object.Equals(Object).
         /// </summary>
-        /// 
+        ///
         public override bool Equals(Object obj)
         {
             VocabularyAuthorization vocabularyAuthorization = obj as VocabularyAuthorization;
@@ -220,7 +220,7 @@ namespace Microsoft.HealthVault
         /// <summary>
         /// returns the hashcode for the VocabularyAuthorization object.
         /// </summary>
-        /// 
+        ///
         public override int GetHashCode()
         {
             int hashCode = VocabularyFamily.ToUpperInvariant().GetHashCode();

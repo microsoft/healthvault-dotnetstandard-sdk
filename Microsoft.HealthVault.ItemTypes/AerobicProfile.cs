@@ -3,7 +3,6 @@
 // see http://www.microsoft.com/resources/sharedsource/licensingbasics/sharedsourcelicenses.mspx.
 // All other rights reserved.
 
-
 using System;
 using System.Collections.ObjectModel;
 using System.Globalization;
@@ -14,41 +13,41 @@ using System.Xml.XPath;
 namespace Microsoft.HealthVault.ItemTypes
 {
     /// <summary>
-    /// Represents a health record item type that encapsulates a person's 
+    /// Represents a health record item type that encapsulates a person's
     /// aerobic profile at a single point in time.
     /// </summary>
-    /// 
+    ///
     public class AerobicProfile : HealthRecordItem
     {
         /// <summary>
-        /// Creates a new instance of the <see cref="AerobicProfile"/> class with 
+        /// Creates a new instance of the <see cref="AerobicProfile"/> class with
         /// default values.
         /// </summary>
-        /// 
+        ///
         /// <remarks>
         /// The item is not added to the health record until the
-        /// <see cref="HealthRecordAccessor.NewItem(HealthRecordItem)"/> 
+        /// <see cref="HealthRecordAccessor.NewItem(HealthRecordItem)"/>
         /// method is called.
         /// </remarks>
-        /// 
+        ///
         public AerobicProfile()
             : base(TypeId)
         {
         }
- 
+
         /// <summary>
-        /// Creates a new instance of the <see cref="AerobicProfile"/> class 
+        /// Creates a new instance of the <see cref="AerobicProfile"/> class
         /// specifying the mandatory values.
         /// </summary>
-        /// 
+        ///
         /// <param name="when">
         /// The date/time when the aerobic profile was take.
         /// </param>
-        /// 
+        ///
         /// <exception cref="ArgumentNullException">
         /// The <paramref name="when"/> parameter is <b>null</b>.
         /// </exception>
-        /// 
+        ///
         public AerobicProfile(HealthServiceDateTime when)
             : base(TypeId)
         {
@@ -58,27 +57,27 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <summary>
         /// Retrieves the unique identifier for the item type.
         /// </summary>
-        /// 
+        ///
         /// <value>
         /// A GUID.
         /// </value>
-        /// 
+        ///
         public new static readonly Guid TypeId =
             new Guid("7b2ea78c-4b78-4f75-a6a7-5396fe38b09a");
 
         /// <summary>
         /// Populates this <see cref="AerobicProfile"/> instance from the data in the XML.
         /// </summary>
-        /// 
+        ///
         /// <param name="typeSpecificXml">
         /// The XML to get the aerobic profile data from.
         /// </param>
-        /// 
+        ///
         /// <exception cref="InvalidOperationException">
         /// The first node in <paramref name="typeSpecificXml"/> is not
         /// an aerobic-session node.
         /// </exception>
-        /// 
+        ///
         protected override void ParseXml(IXPathNavigable typeSpecificXml)
         {
             XPathNavigator aerobicProfileNav =
@@ -90,7 +89,7 @@ namespace Microsoft.HealthVault.ItemTypes
             _when = new HealthServiceDateTime();
             _when.ParseXml(aerobicProfileNav.SelectSingleNode("when"));
 
-            XPathNavigator maxHrNav = 
+            XPathNavigator maxHrNav =
                 aerobicProfileNav.SelectSingleNode("max-heartrate");
 
             if (maxHrNav != null)
@@ -148,15 +147,15 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <summary>
         /// Writes the aerobic profile data to the specified XmlWriter.
         /// </summary>
-        /// 
+        ///
         /// <param name="writer">
         /// The XmlWriter to write the aerobic profile data to.
         /// </param>
-        /// 
+        ///
         /// <exception cref="ArgumentNullException">
         /// If <paramref name="writer"/> is <b>null</b>.
         /// </exception>
-        /// 
+        ///
         public override void WriteXml(XmlWriter writer)
         {
             Validator.ThrowIfArgumentNull(writer, "writer", "WriteXmlNullWriter");
@@ -171,7 +170,7 @@ namespace Microsoft.HealthVault.ItemTypes
             if (_maxHr != null)
             {
                 writer.WriteElementString(
-                    "max-heartrate", 
+                    "max-heartrate",
                     _maxHr.Value.ToString(CultureInfo.InvariantCulture));
             }
 
@@ -192,7 +191,6 @@ namespace Microsoft.HealthVault.ItemTypes
                         CultureInfo.InvariantCulture));
             }
 
-
             if (_vo2Absolute != null || _vo2Relative != null)
             {
                 writer.WriteStartElement("VO2-max");
@@ -207,7 +205,6 @@ namespace Microsoft.HealthVault.ItemTypes
 
                 if (_vo2Relative != null)
                 {
-
                     XmlWriterHelper.WriteOptDouble(
                         writer,
                         "relative",
@@ -226,20 +223,19 @@ namespace Microsoft.HealthVault.ItemTypes
             writer.WriteEndElement();
         }
 
-
         /// <summary>
         /// Gets or sets the date when the aerobic profile was taken.
         /// </summary>
-        /// 
+        ///
         /// <value>
-        /// A <see cref="HealthServiceDateTime"/> instance representing the date. 
+        /// A <see cref="HealthServiceDateTime"/> instance representing the date.
         /// The default value is the current year, month, and day.
         /// </value>
-        /// 
+        ///
         /// <exception cref="ArgumentNullException">
         /// The <paramref name="value"/> parameter is <b>null</b>.
         /// </exception>
-        /// 
+        ///
         public HealthServiceDateTime When
         {
             get { return _when; }
@@ -254,16 +250,16 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <summary>
         /// Gets or sets the person's maximum heart rate.
         /// </summary>
-        /// 
+        ///
         /// <value>
         /// An integer representing the rate.
         /// </value>
-        /// 
+        ///
         /// <remarks>
         /// If the maximum heart rate is not known, the value can be set to
         /// <b>null</b>.
         /// </remarks>
-        /// 
+        ///
         public int? MaximumHeartRate
         {
             get { return _maxHr; }
@@ -271,20 +267,19 @@ namespace Microsoft.HealthVault.ItemTypes
         }
         private int? _maxHr;
 
-
         /// <summary>
         /// Gets or sets the person's resting heart rate.
         /// </summary>
-        /// 
+        ///
         /// <value>
         /// An integer representing the rate.
         /// </value>
-        /// 
+        ///
         /// <remarks>
         /// If the resting heart rate is not known, the value can be set to
         /// <b>null</b>.
         /// </remarks>
-        /// 
+        ///
         public int? RestingHeartRate
         {
             get { return _restingHr; }
@@ -296,16 +291,16 @@ namespace Microsoft.HealthVault.ItemTypes
         /// Gets or sets the person's anaerobic threshold in beats per minute
         /// (BPM).
         /// </summary>
-        /// 
+        ///
         /// <value>
         /// An integer representing the threshold.
         /// </value>
-        /// 
+        ///
         /// <remarks>
         /// If the anaerobic threshold is not known, the value can be set to
         /// <b>null</b>.
         /// </remarks>
-        /// 
+        ///
         public int? AnaerobicThreshold
         {
             get { return _anaerobicThreshold; }
@@ -316,34 +311,34 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <summary>
         /// Gets or sets the relative VO2 max for the person in mL/kg/min.
         /// </summary>
-        /// 
+        ///
         /// <value>
         /// A number representing the relative VO2 max.
         /// </value>
-        /// 
+        ///
         /// <remarks>
         /// If the relative VO2 max is not known, the value can be set to <b>null</b>.
         /// </remarks>
-        /// 
+        ///
         public double? RelativeVO2Max
         {
             get { return _vo2Relative; }
             set { _vo2Relative = value; }
         }
         private double? _vo2Relative;
-    
+
         /// <summary>
         /// Gets or sets the absolute V02 max for the person in mL/min.
         /// </summary>
-        /// 
+        ///
         /// <value>
         /// A number representing the absolute VO2 max.
         /// </value>
-        /// 
+        ///
         /// <remarks>
         /// If the absolute V02 max is not known, the value can be set to <b>null</b>.
         /// </remarks>
-        /// 
+        ///
         public double? AbsoluteVO2Max
         {
             get { return _vo2Absolute; }
@@ -354,18 +349,18 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <summary>
         /// Gets the target heart rate zone groups.
         /// </summary>
-        /// 
+        ///
         /// <value>
         /// A collection of zone groups.
         /// </value>
-        /// 
+        ///
         /// <remarks>
         /// Target heart rate zones are grouped to allow different sets of
         /// target zones based on activity, exercise theories, and so on.
         /// To add a group of heart rate zones, call the Add method on the
         /// returned collection.
         /// </remarks>
-        /// 
+        ///
         public Collection<HeartRateZoneGroup> TargetHeartRateZoneGroups => _zoneGroups;
 
         private readonly Collection<HeartRateZoneGroup> _zoneGroups =
@@ -374,11 +369,11 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <summary>
         /// Gets a string representation of the aerobic profile item.
         /// </summary>
-        /// 
+        ///
         /// <returns>
         /// A string representation fo the aerobic profile item.
         /// </returns>
-        /// 
+        ///
         public override string ToString()
         {
             StringBuilder result = new StringBuilder(256);
@@ -418,5 +413,4 @@ namespace Microsoft.HealthVault.ItemTypes
             return result.ToString();
         }
     }
-
 }

@@ -3,7 +3,6 @@
 // see http://www.microsoft.com/resources/sharedsource/licensingbasics/sharedsourcelicenses.mspx.
 // All other rights reserved.
 
-using System;
 using System.Globalization;
 using System.Xml;
 using System.Xml.XPath;
@@ -13,51 +12,51 @@ namespace Microsoft.HealthVault.ItemTypes
     /// <summary>
     /// Information about a relative of the record owner.
     /// </summary>
-    /// 
+    ///
     /// <remarks>
     /// A family history relative item stores the information about a relative
-    /// of the record owner, for example, mother, father or aunt. Relating 
-    /// this item to family history condition items will provide a comprehensive 
-    /// family medical history. 
+    /// of the record owner, for example, mother, father or aunt. Relating
+    /// this item to family history condition items will provide a comprehensive
+    /// family medical history.
     /// </remarks>
-    /// 
+    ///
     public class FamilyHistoryRelativeV3 : HealthRecordItemData
     {
         /// <summary>
-        /// Initialize a new instance of the <see cref="FamilyHistoryRelativeV3"/> 
+        /// Initialize a new instance of the <see cref="FamilyHistoryRelativeV3"/>
         /// class with default values.
         /// </summary>
-        /// 
+        ///
         public FamilyHistoryRelativeV3()
         {
         }
 
         /// <summary>
-        /// Initialize a new instance of the <see cref="FamilyHistoryRelativeV3"/> 
+        /// Initialize a new instance of the <see cref="FamilyHistoryRelativeV3"/>
         /// class with the specified relatinship.
         /// </summary>
-        /// 
+        ///
         /// <param name="relationship">
         /// The relationship of this person to the record owner.
         /// </param>
-        /// 
+        ///
         /// <exception cref="ArgumentNullException">
         /// The <paramref name="relationship"/> parameter is <b>null</b>.
         /// </exception>
-        /// 
+        ///
         public FamilyHistoryRelativeV3(CodableValue relationship)
         {
             Relationship = relationship;
         }
 
         /// <summary>
-        /// Populates this <see cref="FamilyHistoryRelativeV3"/> instance from the data in the XML. 
+        /// Populates this <see cref="FamilyHistoryRelativeV3"/> instance from the data in the XML.
         /// </summary>
-        /// 
+        ///
         /// <param name="navigator">
         /// The XML to get the relative's data from.
         /// </param>
-        /// 
+        ///
         /// <exception cref="ArgumentNullException">
         /// If <paramref name="navigator"/> is <b> null </b>.
         /// </exception>
@@ -89,28 +88,28 @@ namespace Microsoft.HealthVault.ItemTypes
 
         /// <summary>
         /// Writes the family history relative data to the specified XmlWriter.
-        /// </summary> 
-        /// 
+        /// </summary>
+        ///
         /// <param name="nodeName">
         /// The name of the outer node for the family history relative item.
         /// </param>
-        /// 
+        ///
         /// <param name="writer">
         /// The XmlWriter to write the family history relative data to.
         /// </param>
-        /// 
+        ///
         /// <exception cref="ArgumentException">
         /// If <paramref name="nodeName"/> is <b> null </b> or empty.
         /// </exception>
-        /// 
+        ///
         /// <exception cref="ArgumentNullException">
         /// If <paramref name="writer"/> is <b> null </b>.
         /// </exception>
-        /// 
+        ///
         /// <exception cref="HealthRecordItemSerializationException">
         /// If <see cref="Relationship"/> is <b> null </b>.
-        /// </exception> 
-        /// 
+        /// </exception>
+        ///
         public override void WriteXml(string nodeName, XmlWriter writer)
         {
             Validator.ThrowIfStringNullOrEmpty(nodeName, "nodeName");
@@ -149,17 +148,16 @@ namespace Microsoft.HealthVault.ItemTypes
 
             // </family-history-relative>
             writer.WriteEndElement();
-
         }
 
         /// <summary>
         /// Gets or sets the relationship between the relative and the record owner.
         /// </summary>
-        /// 
+        ///
         /// <exception cref="ArgumentNullException">
         /// The <paramref name="value"/> parameter is <b>null</b>.
         /// </exception>
-        /// 
+        ///
         public CodableValue Relationship
         {
             get { return _relationship; }
@@ -183,13 +181,13 @@ namespace Microsoft.HealthVault.ItemTypes
         private PersonItem _relativeName;
 
         /// <summary>
-        /// Gets or sets the date of birth of the relative.  
+        /// Gets or sets the date of birth of the relative.
         /// </summary>
-        /// 
+        ///
         /// <remarks>
-        /// The date of death should be set to <b>null</b> if it is unknown. 
+        /// The date of death should be set to <b>null</b> if it is unknown.
         /// </remarks>
-        /// 
+        ///
         public ApproximateDate DateOfBirth
         {
             get { return _dateOfBirth; }
@@ -198,13 +196,13 @@ namespace Microsoft.HealthVault.ItemTypes
         private ApproximateDate _dateOfBirth;
 
         /// <summary>
-        /// Gets or sets the date of death of the relative.  
+        /// Gets or sets the date of death of the relative.
         /// </summary>
-        /// 
+        ///
         /// <remarks>
-        /// The date of death should be set to <b>null</b> if it is unknown. 
+        /// The date of death should be set to <b>null</b> if it is unknown.
         /// </remarks>
-        /// 
+        ///
         public ApproximateDate DateOfDeath
         {
             get { return _dateOfDeath; }
@@ -213,24 +211,23 @@ namespace Microsoft.HealthVault.ItemTypes
         private ApproximateDate _dateOfDeath;
 
         /// <summary>
-        /// Gets or sets the region of origin the relative. 
+        /// Gets or sets the region of origin the relative.
         /// </summary>
-        /// 
+        ///
         /// <remarks>
         /// The region of origin should be set to <b>null</b> if it is unknown.
         /// </remarks>
-        /// 
+        ///
         public CodableValue RegionOfOrigin
         {
             get { return _regionOfOrigin; }
             set { _regionOfOrigin = value; }
         }
         private CodableValue _regionOfOrigin;
-        
-        
+
         /// <summary>
         /// Gets a string representation of the family history relative item.
-        /// </summary> 
+        /// </summary>
         ///
         /// <returns>
         /// A string representation of the family history relative item.

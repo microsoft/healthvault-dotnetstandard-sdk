@@ -3,22 +3,20 @@
 // see http://www.microsoft.com/resources/sharedsource/licensingbasics/sharedsourcelicenses.mspx.
 // All other rights reserved.
 
+using Microsoft.HealthVault.Exceptions;
 using System;
 using System.IO;
-using System.Net;
 using System.Reflection;
-using System.Runtime.CompilerServices;
 using System.Security;
 using System.Xml;
 using System.Xml.XPath;
-using Microsoft.HealthVault.Exceptions;
 
 namespace Microsoft.HealthVault
 {
     /// <summary>
-    /// Helps perform validation of parameters and throw appropriate exceptions. 
+    /// Helps perform validation of parameters and throw appropriate exceptions.
     /// </summary>
-    /// 
+    ///
     internal static class Validator
     {
         // Naming rules
@@ -160,6 +158,7 @@ namespace Microsoft.HealthVault
         #endregion
 
         #region conditions
+
         public static void ThrowIfStringIsWhitespace(string value, string parameterName)
         {
             if (!String.IsNullOrEmpty(value) && String.IsNullOrEmpty(value.Trim()))
@@ -279,6 +278,5 @@ namespace Microsoft.HealthVault
         }
 
         #endregion
-
     }
 }

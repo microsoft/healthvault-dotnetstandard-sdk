@@ -9,10 +9,9 @@
 //
 // ********************************************************
 
+using Microsoft.HealthVault.Exceptions;
 using System;
 using System.Diagnostics.CodeAnalysis;
-using System.Web.Mvc;
-using Microsoft.HealthVault.Exceptions;
 
 namespace Microsoft.HealthVault.Web.Mvc
 {
@@ -21,7 +20,7 @@ namespace Microsoft.HealthVault.Web.Mvc
     /// An unauthorized user will be redirected to HealthVault Shell to sign in.
     /// </summary>
     [SuppressMessage(
-        "Microsoft.Performance", 
+        "Microsoft.Performance",
         "CA1813:AvoidUnsealedAttributes",
         Justification = "Intended to be extendable")]
     [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method)]

@@ -3,12 +3,12 @@
 // see http://www.microsoft.com/resources/sharedsource/licensingbasics/sharedsourcelicenses.mspx.
 // All other rights reserved.
 
+using Microsoft.HealthVault.Exceptions;
 using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Xml;
 using System.Xml.XPath;
-using Microsoft.HealthVault.Exceptions;
 
 namespace Microsoft.HealthVault.ItemTypes
 {
@@ -25,7 +25,7 @@ namespace Microsoft.HealthVault.ItemTypes
         public GoalRecurrence()
         {
         }
-        
+
         /// <summary>
         /// Creates a new instance of the <see cref="GoalRecurrence"/> class
         /// specifying mandatory values.
@@ -49,7 +49,7 @@ namespace Microsoft.HealthVault.ItemTypes
             Interval = interval;
             TimesInInterval = timesInInterval;
         }
-        
+
         /// <summary>
         /// Populates this <see cref="GoalRecurrence"/> instance from the data in the specified XML.
         /// </summary>
@@ -61,7 +61,7 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <exception cref="ArgumentNullException">
         /// If <paramref name="navigator"/> parameter is <b>null</b>.
         /// </exception>
-        /// 
+        ///
         public override void ParseXml(XPathNavigator navigator)
         {
             if (navigator == null)
@@ -71,14 +71,14 @@ namespace Microsoft.HealthVault.ItemTypes
                     ResourceRetriever.GetResourceString(
                         "errors", "ParseXmlNavNull"));
             }
-            
+
             _interval = new CodableValue();
             _interval.ParseXml(navigator.SelectSingleNode("interval"));
             int? timesInInterval = XPathHelper.GetOptNavValueAsInt(navigator, "times-in-interval");
             Validator.ThrowInvalidIfNull(timesInInterval, "timesInInterval");
             _timesInInterval = timesInInterval.Value;
         }
-        
+
         /// <summary>
         /// Writes the XML representation of the GoalRecurrence into
         /// the specified XML writer.
@@ -100,7 +100,7 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <exception cref="ArgumentNullException">
         /// If <paramref name="writer"/> parameter is <b>null</b>.
         /// </exception>
-        /// 
+        ///
         /// <exception cref="HealthRecordItemSerializationException">
         /// If <see cref="Interval"/> is <b>null</b>.
         /// </exception>
@@ -111,10 +111,10 @@ namespace Microsoft.HealthVault.ItemTypes
             {
                 throw new ArgumentException(
                     ResourceRetriever.GetResourceString(
-                        "errors", "WriteXmlEmptyNodeName"), 
+                        "errors", "WriteXmlEmptyNodeName"),
                     "nodeName");
             }
-            
+
             if (writer == null)
             {
                 throw new ArgumentNullException(
@@ -122,7 +122,7 @@ namespace Microsoft.HealthVault.ItemTypes
                     ResourceRetriever.GetResourceString(
                         "errors", "WriteXmlNullWriter"));
             }
-            
+
             if (_interval == null)
             {
                 throw new HealthRecordItemSerializationException(
@@ -131,16 +131,16 @@ namespace Microsoft.HealthVault.ItemTypes
             }
 
             writer.WriteStartElement(nodeName);
-            
+
             _interval.WriteXml("interval", writer);
             XmlWriterHelper.WriteOptInt(writer, "times-in-interval", _timesInInterval);
             writer.WriteEndElement();
         }
-        
+
         /// <summary>
         /// Gets or sets specifies the recurrence interval of the goal. For example, day, week, year, etc.
         /// </summary>
-        /// 
+        ///
         /// <remarks>
         /// If there is no information about interval the value should be set to <b>null</b>.
         /// </remarks>
@@ -148,7 +148,7 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <exception cref="ArgumentNullException">
         /// The <paramref name="value"/> parameter is <b>null</b>.
         /// </exception>
-        /// 
+        ///
         [SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly", Justification = "FXCop thinks that CodableValue is a collection, so it throws this error.")]
         public CodableValue Interval
         {
@@ -156,26 +156,26 @@ namespace Microsoft.HealthVault.ItemTypes
             {
                 return _interval;
             }
-            
+
             set
             {
                 if (value == null)
                 {
                     throw new ArgumentNullException(
-                        "value", 
+                        "value",
                         ResourceRetriever.GetResourceString("errors", "GoalRecurrenceIntervalNullValue"));
                 }
-                
+
                 _interval = value;
             }
         }
-        
+
         private CodableValue _interval;
-        
+
         /// <summary>
         /// Gets or sets specifies the number of times the goal's target is intended to be achieved during the interval.
         /// </summary>
-        /// 
+        ///
         /// <remarks>
         /// For example, the goal "exercise for 30 minutes, 4 times per week" would be represented as: an interval of a "week", a times-in-interval of 4, and a goal target of 30 minutes.
         /// </remarks>
@@ -186,19 +186,19 @@ namespace Microsoft.HealthVault.ItemTypes
             {
                 return _timesInInterval;
             }
-            
+
             set
             {
                 _timesInInterval = value;
             }
         }
-        
+
         private int _timesInInterval;
-        
+
         /// <summary>
         /// Gets a string representation of the GoalRecurrence.
         /// </summary>
-        /// 
+        ///
         /// <returns>
         /// A string representation of the GoalRecurrence.
         /// </returns>

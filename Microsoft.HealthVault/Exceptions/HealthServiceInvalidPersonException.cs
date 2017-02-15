@@ -8,74 +8,75 @@ using System;
 namespace Microsoft.HealthVault.Exceptions
 {
     /// <summary>
-    /// The exception representing a HealthVault error code of 
+    /// The exception representing a HealthVault error code of
     /// <see cref = "HealthServiceStatusCode.InvalidPerson"/>.
     /// </summary>
-    /// 
+    ///
     [Serializable]
     public sealed class HealthServiceInvalidPersonException : HealthServiceException
     {
         /// <summary>
-        /// Creates an instance of the <see cref="HealthServiceInvalidPersonException"/> 
-        /// class with the specified error information to represent a 
-        /// HealthVault error code of 
+        /// Creates an instance of the <see cref="HealthServiceInvalidPersonException"/>
+        /// class with the specified error information to represent a
+        /// HealthVault error code of
         /// <see cref = "HealthServiceStatusCode.InvalidPerson"/>.
         /// </summary>
-        /// 
+        ///
         /// <remarks>
-        /// This constructor is internal to the SDK. Application developers 
-        /// using the SDK should catch instances of this exception instead of 
-        /// throwing new exceptions of this type. The error indicates that 
+        /// This constructor is internal to the SDK. Application developers
+        /// using the SDK should catch instances of this exception instead of
+        /// throwing new exceptions of this type. The error indicates that
         /// the person specified in the request is either nonexistent or inactive.
         /// </remarks>
-        /// 
+        ///
         /// <param name="error">
         /// information about an error that occurred while processing
         /// the request.
         /// </param>
-        /// 
+        ///
         internal HealthServiceInvalidPersonException(HealthServiceResponseError error)
             : base(HealthServiceStatusCode.InvalidPerson, error)
         {
         }
+
         #region FxCop required ctors
 
         /// <summary>
-        /// Creates an instance of the <see cref="HealthServiceInvalidPersonException"/> 
+        /// Creates an instance of the <see cref="HealthServiceInvalidPersonException"/>
         /// class with default values.
         /// </summary>
-        /// 
+        ///
         public HealthServiceInvalidPersonException()
         {
         }
 
         /// <summary>
-        /// Creates an instance of the <see cref="HealthServiceInvalidPersonException"/> 
+        /// Creates an instance of the <see cref="HealthServiceInvalidPersonException"/>
         /// class with the specified message.
         /// </summary>
-        /// 
+        ///
         /// <param name="message">
         /// The error message.
         /// </param>
-        /// 
+        ///
         public HealthServiceInvalidPersonException(string message)
             : base(message)
         {
         }
 
         /// <summary>
-        /// Creates an instance of the <see cref="HealthServiceInvalidPersonException"/> 
+        /// Creates an instance of the <see cref="HealthServiceInvalidPersonException"/>
         /// class with the specified message and inner exception.
         /// </summary>
-        /// 
+        ///
         /// <param name="message">
         /// The error message.
         /// </param>
-        /// 
+        ///
         /// <param name="innerException">
         /// The inner exception.
         /// </param>
-        /// 
+        ///
         public HealthServiceInvalidPersonException(string message, Exception innerException)
             : base(message, innerException)
         {
@@ -83,5 +84,4 @@ namespace Microsoft.HealthVault.Exceptions
 
         #endregion FxCop required ctors
     }
-
 }

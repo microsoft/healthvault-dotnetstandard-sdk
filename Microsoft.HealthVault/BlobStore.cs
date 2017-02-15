@@ -16,14 +16,14 @@ namespace Microsoft.HealthVault
     /// <summary>
     /// A collection of the BLOBs associated with a health record item.
     /// </summary>
-    /// 
+    ///
     /// <remarks>
-    /// The <see cref="BlobStore"/> is a dictionary that is read-only but allows removal of 
-    /// <see cref="Blob"/> instances. 
-    /// To add <see cref="Blob"/> instances to the dictionary use the 
+    /// The <see cref="BlobStore"/> is a dictionary that is read-only but allows removal of
+    /// <see cref="Blob"/> instances.
+    /// To add <see cref="Blob"/> instances to the dictionary use the
     /// <see cref="NewBlob(string, string)"/> method.
     /// </remarks>
-    /// 
+    ///
     public class BlobStore : IDictionary<string, Blob>
     {
         internal BlobStore(HealthRecordItem item, HealthRecordAccessor record)
@@ -51,7 +51,7 @@ namespace Microsoft.HealthVault
         /// <summary>
         /// Gets the count of BLOBs associated with the health record item.
         /// </summary>
-        /// 
+        ///
         public int Count
         {
             get { return _blobs.Count; }
@@ -60,11 +60,11 @@ namespace Microsoft.HealthVault
         /// <summary>
         /// Not supported.
         /// </summary>
-        /// 
+        ///
         /// <remarks>
         /// Use the <see cref="NewBlob(string, string)"/> method instead.
         /// </remarks>
-        /// 
+        ///
         public void Add(Blob blob)
         {
             throw new NotSupportedException();
@@ -73,11 +73,11 @@ namespace Microsoft.HealthVault
         /// <summary>
         /// Not supported.
         /// </summary>
-        /// 
+        ///
         /// <remarks>
         /// Use the <see cref="NewBlob(string, string)"/> method instead.
         /// </remarks>
-        /// 
+        ///
         public void Add(string key, Blob blob)
         {
             throw new NotSupportedException();
@@ -86,7 +86,7 @@ namespace Microsoft.HealthVault
         /// <summary>
         /// Clears all Blob instances from the BlobStore.
         /// </summary>
-        /// 
+        ///
         public void Clear()
         {
             _blobs.Clear();
@@ -95,20 +95,20 @@ namespace Microsoft.HealthVault
         /// <summary>
         /// Determines whether the BlobStore contains the specified Blob instance.
         /// </summary>
-        /// 
+        ///
         /// <param name="blob">
         /// The Blob instance to locate in the BlobStore.
         /// </param>
-        /// 
+        ///
         /// <returns>
         /// True if the Blob instance is in the store or false otherwise.
         /// </returns>
-        /// 
+        ///
         /// <remarks>
         /// This implementation is a reference comparison and does not equate Blob instances
         /// with the same name.
         /// </remarks>
-        /// 
+        ///
         public bool Contains(Blob blob)
         {
             return _blobs.ContainsValue(blob);
@@ -117,19 +117,19 @@ namespace Microsoft.HealthVault
         /// <summary>
         /// Determines whether the BlobStore contains a Blob with the specified key.
         /// </summary>
-        /// 
+        ///
         /// <param name="key">
         /// The key to locate in the BlobStore.
         /// </param>
-        /// 
+        ///
         /// <returns>
         /// True if the BlobStore contains a Blob with the key; otherwise, false.
         /// </returns>
-        /// 
+        ///
         /// <remarks>
         /// This is a case-sensitive comparison.
         /// </remarks>
-        /// 
+        ///
         public bool ContainsKey(string key)
         {
             key = MapNullKey(key);
@@ -139,11 +139,11 @@ namespace Microsoft.HealthVault
         /// <summary>
         /// Returns an enumerator that iterates through a collection.
         /// </summary>
-        /// 
+        ///
         /// <returns>
         /// An <see cref="IEnumerator"/> object that can be used to iterate through the collection.
         /// </returns>
-        /// 
+        ///
         IEnumerator IEnumerable.GetEnumerator()
         {
             return _blobs.GetEnumerator();
@@ -152,11 +152,11 @@ namespace Microsoft.HealthVault
         /// <summary>
         /// Returns an enumerator that iterates through a collection.
         /// </summary>
-        /// 
+        ///
         /// <returns>
         /// An <see cref="IEnumerator{T}"/> object that can be used to iterate through the collection.
         /// </returns>
-        /// 
+        ///
         IEnumerator<KeyValuePair<string, Blob>> IEnumerable<KeyValuePair<string, Blob>>.GetEnumerator()
         {
             return _blobs.GetEnumerator();
@@ -165,10 +165,10 @@ namespace Microsoft.HealthVault
         /// <summary>
         /// Gets a value indicating whether the BlobStore is read-only.
         /// </summary>
-        /// 
+        ///
         /// <remarks>
         /// The BlobStore cannot be added to through the Add methods. Instead the
-        /// <see cref="NewBlob(string, string)"/> method must be used. However, the <see cref="Clear"/> and 
+        /// <see cref="NewBlob(string, string)"/> method must be used. However, the <see cref="Clear"/> and
         /// <see cref="Remove"/> methods are available.
         /// </remarks>
         bool ICollection<KeyValuePair<string, Blob>>.IsReadOnly
@@ -179,11 +179,11 @@ namespace Microsoft.HealthVault
         /// <summary>
         /// Removes the first occurrence of a specific Blob from the BlobStore.
         /// </summary>
-        /// 
+        ///
         /// <param name="item">
         /// The Blob instance to remove.
         /// </param>
-        /// 
+        ///
         bool ICollection<KeyValuePair<string, Blob>>.Remove(KeyValuePair<string, Blob> item)
         {
             bool result = _blobs.Remove(item.Key);
@@ -195,19 +195,19 @@ namespace Microsoft.HealthVault
         }
 
         /// <summary>
-        /// Copies the elements of the BlobStore to an <see cref="Array"/>, starting at a 
+        /// Copies the elements of the BlobStore to an <see cref="Array"/>, starting at a
         /// particular <see cref="Array"/> index.
         /// </summary>
-        /// 
+        ///
         /// <param name="array">
         /// The one-dimensional <see cref="Array"/> that is the destination of the Blobs copied from
         /// the BlobStore. The <see cref="Array"/> must have zero-based indexing.
         /// </param>
-        /// 
+        ///
         /// <param name="arrayIndex">
         /// The zero-based index in <paramref name="array"/> at which copying begins.
         /// </param>
-        /// 
+        ///
         void ICollection<KeyValuePair<string, Blob>>.CopyTo(
             KeyValuePair<string, Blob>[] array,
             int arrayIndex)
@@ -218,15 +218,15 @@ namespace Microsoft.HealthVault
         /// <summary>
         /// Determines whether the BlobStore contains the specified item.
         /// </summary>
-        /// 
+        ///
         /// <param name="item">
         /// The Blob to locate in the BlobStore.
         /// </param>
-        /// 
+        ///
         /// <returns>
         /// True if <paramref name="item"/> is found in the BlobStore; otherwise, false.
         /// </returns>
-        /// 
+        ///
         bool ICollection<KeyValuePair<string, Blob>>.Contains(KeyValuePair<string, Blob> item)
         {
             return _blobs.ContainsKey(item.Key);
@@ -244,7 +244,7 @@ namespace Microsoft.HealthVault
         /// <summary>
         /// Gets an ICollection&lt;Blob&gt; containing the values in the BlobStore.
         /// </summary>
-        /// 
+        ///
         public ICollection<Blob> Values
         {
             get { return _blobs.Values; }
@@ -253,7 +253,7 @@ namespace Microsoft.HealthVault
         /// <summary>
         /// Gets an ICollection&lt;string&gt; containing the Blob names in the BlobStore.
         /// </summary>
-        /// 
+        ///
         public ICollection<string> Keys
         {
             get { return _blobs.Keys; }
@@ -262,21 +262,21 @@ namespace Microsoft.HealthVault
         /// <summary>
         /// Gets the value associated with the specified key.
         /// </summary>
-        /// 
+        ///
         /// <param name="key">
         /// The key whose value to get.
         /// </param>
-        /// 
+        ///
         /// <param name="value">
         /// When this method returns, the value associated with the specified key, if the key is found;
         /// otherwise, the default value for the type of the value parameter. This parameter is passed
         /// uninitialized.
         /// </param>
-        /// 
+        ///
         /// <returns>
         /// True if a Blob with the specified name exists in the BlobStore; otherwise, false.
         /// </returns>
-        /// 
+        ///
         public bool TryGetValue(string key, out Blob value)
         {
             key = MapNullKey(key);
@@ -286,15 +286,15 @@ namespace Microsoft.HealthVault
         /// <summary>
         /// Removes the Blob with the specified name from the BlobStore.
         /// </summary>
-        /// 
+        ///
         /// <param name="key">
         /// The name of the Blob to remove.
         /// </param>
-        /// 
+        ///
         /// <returns>
         /// True if the Blob is successfully removed; otherwise, false.
         /// </returns>
-        /// 
+        ///
         public bool Remove(string key)
         {
             key = MapNullKey(key);
@@ -311,16 +311,16 @@ namespace Microsoft.HealthVault
         /// <summary>
         /// Gets the BLOB with the specified name.
         /// </summary>
-        /// 
+        ///
         /// <param name="name">
         /// The name of the BLOB to retrieve for the item. A null key indicates the "default" BLOB.
         /// </param>
-        /// 
+        ///
         /// <returns>
-        /// The BLOB with the specified name or <b>null</b> if no BLOB with the specified name 
+        /// The BLOB with the specified name or <b>null</b> if no BLOB with the specified name
         /// exists.
         /// </returns>
-        /// 
+        ///
         public Blob this[string name]
         {
             get
@@ -350,32 +350,32 @@ namespace Microsoft.HealthVault
         /// <summary>
         /// Writes the specified bytes to the blob.
         /// </summary>
-        /// 
+        ///
         /// <param name="blobName">
         /// The name of the BLOB. It can be <see cref="String.Empty"/> but cannot be <b>null</b>.
         /// </param>
-        /// 
+        ///
         /// <param name="contentType">
         /// The content type of the BLOB.
         /// </param>
-        /// 
+        ///
         /// <param name="bytes">
         /// The bytes to write to the blob.
         /// </param>
-        /// 
+        ///
         /// <remarks>
         /// This is limited to about 3.5MB of data. Use <see cref="Blob.GetWriterStream"/> to write
         /// more data.
         /// </remarks>
-        /// 
+        ///
         /// <exception name="ArgumentNullException">
         /// If <paramref name="bytes"/> or <paramref name="blobName"/>is <b>null</b>.
         /// </exception>
-        /// 
+        ///
         /// <exception cref="ArgumentException">
         /// If <paramref name="contentType"/> is <b>null</b> or empty.
         /// </exception>
-        /// 
+        ///
         public void WriteInline(string blobName, string contentType, byte[] bytes)
         {
             Blob blob = NewBlob(blobName, contentType);
@@ -385,32 +385,32 @@ namespace Microsoft.HealthVault
         /// <summary>
         /// Writes the bytes from the specified stream.
         /// </summary>
-        /// 
+        ///
         /// <param name="blobName">
         /// The name of the BLOB. It can be <see cref="String.Empty"/> but cannot be <b>null</b>.
         /// </param>
-        /// 
+        ///
         /// <param name="contentType">
         /// The content type of the BLOB.
         /// </param>
-        /// 
+        ///
         /// <param name="stream">
         /// The stream to get the bytes from to write to the blob.
         /// </param>
-        /// 
+        ///
         /// <exception cref="ArgumentException">
         /// If <paramref name="contentType"/> is <b>null</b> or empty.
         /// </exception>
-        /// 
+        ///
         /// <exception name="ArgumentNullException">
-        /// If <paramref name="stream"/> or <paramref name="blobName"/> 
+        /// If <paramref name="stream"/> or <paramref name="blobName"/>
         /// is <b>null</b>.
         /// </exception>
-        /// 
+        ///
         /// <exception cref="HealthServiceException">
         /// If there is an error writing the data to HealthVault.
         /// </exception>
-        /// 
+        ///
         public void Write(
             string blobName,
             string contentType,
@@ -423,28 +423,28 @@ namespace Microsoft.HealthVault
         /// <summary>
         /// Creates a BLOB in the store with the specified name, content type, and encoding.
         /// </summary>
-        /// 
+        ///
         /// <param name="blobName">
         /// The name of the BLOB. It can be <see cref="String.Empty"/> but cannot be <b>null</b>.
         /// </param>
-        /// 
+        ///
         /// <param name="contentType">
         /// The content type of the BLOB.
         /// </param>
-        /// 
+        ///
         /// <returns>
         /// The <see cref="Blob"/> instance that was created in the store.
         /// </returns>
-        /// 
+        ///
         /// <exception cref="ArgumentNullException">
         /// If <paramref name="blobName"/> or <paramref name="contentType"/> is <b>null</b>.
         /// </exception>
-        /// 
+        ///
         /// <exception cref="ArgumentException">
         /// If a Blob with the same name already exists in the store. To update an existing Blob,
         /// remove the existing Blob and create a new one.
         /// </exception>
-        /// 
+        ///
         public Blob NewBlob(string blobName, string contentType)
         {
             Blob blob = new Blob(blobName, contentType, null, null, _record);
@@ -457,44 +457,44 @@ namespace Microsoft.HealthVault
         /// Recreates a BLOB in the store to allow for restarting multiple BLOB uploads on a
         /// <see cref="HealthRecordItem"/>.
         /// </summary>
-        /// 
+        ///
         /// <param name="blobName">
         /// The name of the BLOB. It can be <see cref="String.Empty"/> but cannot be <b>null</b>.
         /// </param>
-        /// 
+        ///
         /// <param name="contentType">
         /// The content type of the BLOB.
         /// </param>
-        /// 
+        ///
         /// <param name="hashInfo">
         /// The hash information for the BLOB.
         /// </param>
-        /// 
+        ///
         /// <param name="blobUrl">
         /// The HealthVault URL of the BLOB.
         /// </param>
-        /// 
+        ///
         /// <returns>
         /// The <see cref="Blob"/> instance that was recreated in the store.
         /// </returns>
-        /// 
+        ///
         /// <remarks>
-        /// This overload is intended to allow the caller to recover from issues that may arise 
+        /// This overload is intended to allow the caller to recover from issues that may arise
         /// while uploading large BLOBs or many BLOBs for a <see cref="HealthRecordItem"/>.
         /// If you have a large amount of data to upload, you can periodically save the state of
         /// the Blob instance (and BlobStream if necessary) and then use this method to recreate
         /// that same Blob instance in the store.
         /// </remarks>
-        /// 
+        ///
         /// <exception cref="ArgumentNullException">
         /// If <paramref name="blobName"/> or <paramref name="contentType"/> is <b>null</b>.
         /// </exception>
-        /// 
+        ///
         /// <exception cref="ArgumentException">
         /// If a Blob with the same name already exists in the store. To update an existing Blob,
         /// remove the existing Blob and create a new one.
         /// </exception>
-        /// 
+        ///
         public Blob NewBlob(
             string blobName,
             string contentType,
@@ -502,7 +502,6 @@ namespace Microsoft.HealthVault
             Uri blobUrl)
         {
             Blob blob = new Blob(blobName, contentType, null, null, hashInfo, _record) { Url = blobUrl };
-
 
             _blobs.Add(blobName, blob);
             _item.Sections |= HealthRecordItemSections.BlobPayload;

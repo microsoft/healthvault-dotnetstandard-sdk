@@ -3,13 +3,13 @@
 // see http://www.microsoft.com/resources/sharedsource/licensingbasics/sharedsourcelicenses.mspx.
 // All other rights reserved.
 
+using Microsoft.HealthVault.ItemTypes;
 using System;
 using System.Collections;
 using System.Collections.ObjectModel;
 using System.Globalization;
 using System.Xml;
 using System.Xml.XPath;
-using Microsoft.HealthVault.ItemTypes;
 
 namespace Microsoft.HealthVault
 {
@@ -263,6 +263,7 @@ namespace Microsoft.HealthVault
             }
             return result;
         }
+
         #endregion optionals
 
         /// <summary>
@@ -302,7 +303,7 @@ namespace Microsoft.HealthVault
         /// Parse an attribute on the navigator as a long integer.
         /// </summary>
         /// <remarks>
-        /// The parsed attribute value is returned as a nullable long integer if present, 
+        /// The parsed attribute value is returned as a nullable long integer if present,
         /// otherwise the <paramref name="defaultValue"/> is returned.
         /// </remarks>
         /// <param name="navigator">The navigator.</param>
@@ -371,7 +372,7 @@ namespace Microsoft.HealthVault
         /// Parse an attribute on the navigator as an enum.
         /// </summary>
         /// <remarks>
-        /// The attribute is returned as the enum type T if present, otherwise is the 
+        /// The attribute is returned as the enum type T if present, otherwise is the
         /// <paramref name="defaultValue"/> is returned.
         /// </remarks>
         /// <param name="navigator">The navigator.</param>

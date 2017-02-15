@@ -4,11 +4,8 @@
 // All other rights reserved.
 
 using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
-using System.Text;
 using System.Xml;
 using System.Xml.XPath;
 
@@ -99,12 +96,12 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <exception cref="ArgumentNullException">
         /// If <paramref name="typeSpecificXml"/> parameter is <b>null</b>.
         /// </exception>
-        /// 
+        ///
         /// <exception cref="InvalidOperationException">
         /// If the first node in <paramref name="typeSpecificXml"/> is not
         /// a PAP session node.
         /// </exception>
-        /// 
+        ///
         protected override void ParseXml(IXPathNavigable typeSpecificXml)
         {
             Validator.ThrowIfArgumentNull(typeSpecificXml, "typeSpecificXml", "ParseXmlNavNull");
@@ -144,7 +141,7 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <exception cref="ArgumentNullException">
         /// If <paramref name="writer"/> parameter is <b>null</b>.
         /// </exception>
-        /// 
+        ///
         /// <exception cref="HealthRecordItemSerializationException">
         /// If <see cref="When"/> is <b>null</b>.
         /// </exception>
@@ -157,7 +154,7 @@ namespace Microsoft.HealthVault.ItemTypes
             writer.WriteStartElement("pap-session");
 
             _when.WriteXml("when", writer);
-            
+
             XmlWriterHelper.WriteOptDouble(writer, "duration-minutes", _durationMinutes);
             XmlWriterHelper.WriteOptDouble(writer, "apnea-hypopnea-index", _apneaHypopneaIndex);
             XmlWriterHelper.WriteOptDouble(writer, "apnea-index", _apneaIndex);
@@ -183,9 +180,9 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public HealthServiceDateTime When
         {
-            get 
+            get
             {
-                return _when; 
+                return _when;
             }
 
             set
@@ -207,9 +204,9 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public double DurationMinutes
         {
-            get 
-            { 
-                return _durationMinutes; 
+            get
+            {
+                return _durationMinutes;
             }
 
             set
@@ -236,8 +233,8 @@ namespace Microsoft.HealthVault.ItemTypes
         public double ApneaHypopneaIndex
         {
             get
-            { 
-                return _apneaHypopneaIndex; 
+            {
+                return _apneaHypopneaIndex;
             }
 
             set
@@ -259,16 +256,16 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <remarks>
         /// If there is no information about the Apnea Index the value should be set to <b>null</b>.
         /// </remarks>
-        /// 
+        ///
         /// <exception cref="ArgumentOutOfRangeException">
         /// The <paramref name="value"/> parameter is less than 0.0.
         /// </exception>
-        /// 
+        ///
         public double? ApneaIndex
         {
-            get 
-            { 
-                return _apneaIndex; 
+            get
+            {
+                return _apneaIndex;
             }
 
             set
@@ -290,7 +287,7 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <remarks>
         /// If there is no information about the Hypopnea Index the value should be set to <b>null</b>.
         /// </remarks>
-        /// 
+        ///
         /// <exception cref="ArgumentOutOfRangeException">
         /// The <paramref name="value"/> parameter is less than 0.0.
         /// </exception>
@@ -298,9 +295,9 @@ namespace Microsoft.HealthVault.ItemTypes
         [SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", Justification = "Hypopnea is a valid element name in PAP session.")]
         public double? HypopneaIndex
         {
-            get 
-            { 
-                return _hypopneaIndex; 
+            get
+            {
+                return _hypopneaIndex;
             }
 
             set
@@ -322,17 +319,17 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <remarks>
         /// If there is no information about the Oxygen Desaturation Index the value should be set to <b>null</b>.
         /// </remarks>
-        /// 
+        ///
         /// <exception cref="ArgumentOutOfRangeException">
         /// The <paramref name="value"/> parameter is less than 0.0.
         /// </exception>
-        /// 
+        ///
         [SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", Justification = "Oxygen desaturation index is a valid element name in PAP session.")]
         public double? OxygenDesaturationIndex
         {
-            get 
-            { 
-                return _oxygenDesaturationIndex; 
+            get
+            {
+                return _oxygenDesaturationIndex;
             }
 
             set
@@ -354,7 +351,7 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <remarks>
         /// If there is no information about the pressure the value should be set to <b>null</b>.
         /// </remarks>
-        /// 
+        ///
         public PapSessionMeasurements<PressureMeasurement> Pressure
         {
             get { return _pressure; }
@@ -370,7 +367,7 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <remarks>
         /// If there is no information about the leak rate the value should be set to <b>null</b>.
         /// </remarks>
-        /// 
+        ///
         public PapSessionMeasurements<FlowMeasurement> LeakRate
         {
             get { return _leakRate; }
@@ -384,9 +381,9 @@ namespace Microsoft.HealthVault.ItemTypes
         /// </summary>
         ///
         /// <remarks>
-        /// If there is no information about the tidal volume the value should be set to <b>null</b>. 
+        /// If there is no information about the tidal volume the value should be set to <b>null</b>.
         /// </remarks>
-        /// 
+        ///
         public PapSessionMeasurements<VolumeMeasurement> TidalVolume
         {
             get { return _tidalVolume; }
@@ -402,7 +399,7 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <remarks>
         /// If there is no information about the minute ventilation the value should be set to <b>null</b>.
         /// </remarks>
-        /// 
+        ///
         public PapSessionMeasurements<VolumeMeasurement> MinuteVentilation
         {
             get { return _minuteVentilation; }
@@ -418,7 +415,7 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <remarks>
         /// If there is no information about the respiratory rate the value should be set to <b>null</b>.
         /// </remarks>
-        /// 
+        ///
         public PapSessionMeasurements<RespiratoryRateMeasurement> RespiratoryRate
         {
             get { return _respiratoryRate; }
@@ -439,7 +436,7 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             return String.Format(
                 CultureInfo.CurrentCulture,
-                ResourceRetriever.GetResourceString("PapSessionToStringFormat"), 
+                ResourceRetriever.GetResourceString("PapSessionToStringFormat"),
                 ApneaHypopneaIndex.ToString(CultureInfo.CurrentCulture));
         }
     }

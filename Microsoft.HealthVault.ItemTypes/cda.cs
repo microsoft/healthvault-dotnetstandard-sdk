@@ -9,30 +9,30 @@ using System.Xml.XPath;
 namespace Microsoft.HealthVault.ItemTypes
 {
     /// <summary>
-    /// Stores a Clinical Document Architecture (CDA) document. 
+    /// Stores a Clinical Document Architecture (CDA) document.
     /// </summary>
-    /// 
+    ///
     /// <remarks>
     /// The CDA XML can be accessed through the TypeSpecificXml property.
     /// </remarks>
-    /// 
+    ///
     public class CDA : HealthRecordItem
     {
         /// <summary>
-        /// Initializes an instance of the <see cref="CDA"/> class, 
+        /// Initializes an instance of the <see cref="CDA"/> class,
         /// with default values.
         /// </summary>
-        /// 
+        ///
         public CDA()
             : base(TypeId)
         {
         }
 
         /// <summary>
-        /// Initializes an instance of the <see cref="CDA"/> class, 
+        /// Initializes an instance of the <see cref="CDA"/> class,
         /// with specific data.
         /// </summary>
-        /// 
+        ///
         public CDA(IXPathNavigable typeSpecificData)
             : base(TypeId, typeSpecificData)
         {
@@ -41,7 +41,7 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <summary>
         /// Retrieves the unique identifier for the item type.
         /// </summary>
-        /// 
+        ///
         public new static readonly Guid TypeId =
             new Guid("1ed1cba6-9530-44a3-b7b5-e8219690ebcf");
     }

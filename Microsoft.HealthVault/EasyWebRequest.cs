@@ -3,6 +3,7 @@
 // see http://www.microsoft.com/resources/sharedsource/licensingbasics/sharedsourcelicenses.mspx.
 // All other rights reserved.
 
+using Microsoft.HealthVault.Exceptions;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -10,46 +11,43 @@ using System.IO.Compression;
 using System.Net;
 using System.Text;
 using System.Threading;
-using System.Net.Http;
-using System.Net.Http.Headers;
-using Microsoft.HealthVault.Exceptions;
 
 namespace Microsoft.HealthVault
 {
     /// <summary>
     /// helper for making web calls
     /// </summary>
-    /// 
+    ///
     internal class EasyWebRequest : IDisposable
     {
         /// <summary> default constructor for GET </summary>
         internal EasyWebRequest() { }
 
-        /// <summary> 
-        /// constructor for string POST 
+        /// <summary>
+        /// constructor for string POST
         /// </summary>
-        /// 
+        ///
         /// <param name="stringRequest">
-        /// text to send 
+        /// text to send
         /// </param>
-        /// 
+        ///
         private EasyWebRequest(string stringRequest)
         {
             _stringRequest = stringRequest;
         }
 
-        /// <summary> 
-        /// constructor for Xml POST 
+        /// <summary>
+        /// constructor for Xml POST
         /// </summary>
-        /// 
+        ///
         /// <param name="utf8EncodedXml">
-        /// Utf8 encoded Xml to send 
+        /// Utf8 encoded Xml to send
         /// </param>
-        /// 
+        ///
         /// <param name="length">
         /// Significant byte count in the buffer.
         /// </param>
-        /// 
+        ///
         private EasyWebRequest(Byte[] utf8EncodedXml, int length)
         {
             _xmlRequest = utf8EncodedXml;
@@ -62,20 +60,20 @@ namespace Microsoft.HealthVault
         /// i.e. the value returned by System.Net.WebRequest.DefaultWebProxy
         /// To disable proxy usage, set this property to null.
         /// </summary>
-        /// 
+        ///
         internal static IWebProxy DefaultWebProxy { get; set; } = WebRequest.DefaultWebProxy;
 
         /// <summary>
         /// Gets or sets the number of times the request will be retried if
         /// the server returns an Internal Error 500.
         /// </summary>
-        /// 
+        ///
         /// <remarks>
-        /// This value can be configured using the 
-        /// "RequestRetryOnInternal500Count" key in the application 
+        /// This value can be configured using the
+        /// "RequestRetryOnInternal500Count" key in the application
         /// configuration file.
         /// </remarks>
-        /// 
+        ///
         internal static int RetryOnInternal500Count
         {
             get { return _retryCount; }
@@ -86,16 +84,16 @@ namespace Microsoft.HealthVault
 
         /// <summary>
         /// Gets or sets the number of seconds that will be slept before the
-        /// request will be retried after encountering an Internal Error 
+        /// request will be retried after encountering an Internal Error
         /// 500.
         /// </summary>
-        /// 
+        ///
         /// <remarks>
-        /// This value can be configured using the 
-        /// "RequestRetryOnInternal500SleepSeconds" key in the application 
+        /// This value can be configured using the
+        /// "RequestRetryOnInternal500SleepSeconds" key in the application
         /// configuration file.
         /// </remarks>
-        /// 
+        ///
         internal static int RetryOnInternal500SleepSeconds
         {
             get { return _retrySleepSeconds; }
@@ -106,11 +104,11 @@ namespace Microsoft.HealthVault
 
         /// <summary>
         /// Sets the proxy to use with this instance of
-        /// EasyWebRequest. The default setting is to use 
+        /// EasyWebRequest. The default setting is to use
         /// <see cref="EasyWebRequest.DefaultWebProxy"/>.
         /// To disable proxy usage, set this property to null.
         /// </summary>
-        /// 
+        ///
         internal IWebProxy WebProxy
         {
             get { return _webProxy; }
@@ -121,7 +119,7 @@ namespace Microsoft.HealthVault
         /// <summary>
         /// Gets the dictionary of headers that will be added to the web request.
         /// </summary>
-        /// 
+        ///
         internal Dictionary<string, string> Headers
         {
             get { return _headers; }
@@ -129,11 +127,11 @@ namespace Microsoft.HealthVault
         private Dictionary<string, string> _headers = new Dictionary<string, string>();
 
         /// <summary>
-        /// If the <see cref="RequestCancelTrigger"/> is set by calling 
-        /// <see cref="EventWaitHandle.Set()"/> the pending request will be aborted and a 
+        /// If the <see cref="RequestCancelTrigger"/> is set by calling
+        /// <see cref="EventWaitHandle.Set()"/> the pending request will be aborted and a
         /// HealthServiceRequestCancelledException will be thrown.
         /// </summary>
-        /// 
+        ///
         internal ManualResetEvent RequestCancelTrigger
         {
             get { return _requestCancelTrigger; }
@@ -144,7 +142,7 @@ namespace Microsoft.HealthVault
         /// <summary>
         /// Cancels the request.
         /// </summary>
-        /// 
+        ///
         internal void CancelRequest()
         {
             if (_requestCancelTrigger != null)
@@ -156,7 +154,7 @@ namespace Microsoft.HealthVault
         /// <summary>
         /// Gets the request size in bytes.
         /// </summary>
-        /// 
+        ///
         internal Int64 RequestSize
         {
             get { return _requestSize; }
@@ -166,7 +164,7 @@ namespace Microsoft.HealthVault
         /// <summary>
         /// Gets the response size in bytes.
         /// </summary>
-        /// 
+        ///
         internal Int64 ResponseSize
         {
             get { return _xmlResponse.HasValue ? _xmlResponse.Value.Count + _xmlResponse.Value.Offset : 0; }
@@ -223,28 +221,28 @@ namespace Microsoft.HealthVault
                 retryCount >= 0);
         }
 
-        /// <summary> 
+        /// <summary>
         /// Do the dance --- custom handler
         /// </summary>
-        /// 
-        /// <param name="url"> 
-        /// url to request 
+        ///
+        /// <param name="url">
+        /// url to request
         /// </param>
-        /// 
+        ///
         /// <param name="customHandler">
         /// response handler (nullable)
         /// </param>
-        /// 
+        ///
         internal void Fetch(Uri url, IEasyWebResponseHandler customHandler)
         {
             _customHandler = customHandler;
             Fetch(url);
         }
 
-        /// <summary> 
-        /// approx request timeout value (default infinite) 
+        /// <summary>
+        /// approx request timeout value (default infinite)
         /// </summary>
-        /// 
+        ///
         internal int TimeoutMilliseconds
         {
             get { return (_timeoutMilliseconds); }
@@ -254,25 +252,25 @@ namespace Microsoft.HealthVault
         /// <summary>
         /// Transform the response stream depending on the content type.
         /// </summary>
-        /// 
+        ///
         /// <param name="outputStream">
         /// Output stream to be transformed
         /// </param>
-        /// 
+        ///
         /// <param name="contentEncoding">
         /// Http request/response content encoding
         /// </param>
-        /// 
+        ///
         /// <param name="leaveOpen">
         /// If true, leave the outputStream open
         /// when transform stream is closed
         /// </param>
-        /// 
+        ///
         /// <returns>
         /// Transformed stream. Closing this stream will
         /// close the input stream
         /// </returns>
-        /// 
+        ///
         internal static Stream CreateOutputCompressionStream(
             Stream outputStream,
             string contentEncoding,
@@ -314,25 +312,25 @@ namespace Microsoft.HealthVault
         /// <summary>
         /// Transforms the input stream depending on the content type
         /// </summary>
-        /// 
+        ///
         /// <param name="inputStream">
         /// Stream to be transformed
         /// </param>
-        /// 
+        ///
         /// <param name="contentEncoding">
         /// Http request/response content encoding
         /// </param>
-        /// 
+        ///
         /// <param name="leaveOpen">
         /// If true, leave the outputStream open
         /// when transform stream is closed
         /// </param>
-        /// 
+        ///
         /// <returns>
         /// Transformed stream. Closing this stream will
         /// close the input stream
         /// </returns>
-        /// 
+        ///
         internal static Stream CreateInputDecompressionStream(
             Stream inputStream, string contentEncoding, bool leaveOpen)
         {
@@ -452,7 +450,6 @@ namespace Microsoft.HealthVault
 
                     _customHandler?.HandleResponse(CreateResponseWrapper(), webResponse.Headers);
                 }
-
             }
             finally
             {
@@ -498,7 +495,7 @@ namespace Microsoft.HealthVault
         /// <summary>
         /// Creates a MemoryStream wrapper over the buffered response data.
         /// </summary>
-        /// 
+        ///
         internal MemoryStream CreateResponseWrapper()
         {
             if (!_xmlResponse.HasValue)
@@ -593,7 +590,6 @@ namespace Microsoft.HealthVault
 
         private void RequestCallback(IAsyncResult asyncResult)
         {
-
             try
             {
                 string contentEncoding = _webRequest.Headers["Content-Encoding"];
@@ -604,8 +600,6 @@ namespace Microsoft.HealthVault
                     contentEncoding,
                     false))
                 {
-                    
-
                     if (_xmlRequest != null)
                     {
                         this.WriteXmlToStream(requestStream);
@@ -646,12 +640,13 @@ namespace Microsoft.HealthVault
         }
 
         #endregion
+
         #region Response Handling
 
-        /// <summary> 
+        /// <summary>
         /// wait for request to complete
         /// </summary>
-        /// 
+        ///
         private void WaitForCompletion()
         {
             int timeoutMilliseconds;
@@ -661,7 +656,7 @@ namespace Microsoft.HealthVault
             _eventAsyncReady = new ManualResetEvent(false);
 
             // we do this with a callback because we have to --- according
-            // to MSDN you can't mix async and sync stream usage 
+            // to MSDN you can't mix async and sync stream usage
 
             _webRequest.BeginGetResponse(new AsyncCallback(ResponseCallback), _webRequest);
 
@@ -823,13 +818,13 @@ namespace Microsoft.HealthVault
         /// <summary>
         /// Gets or sets the request compression threshold in kilobytes.
         /// </summary>
-        /// 
+        ///
         /// <remarks>
         /// Only requests larger than the threshold are compressed. Note that
-        /// this setting is applicable only if the RequestCompressionMethod is 
+        /// this setting is applicable only if the RequestCompressionMethod is
         /// valid.
         /// </remarks>
-        /// 
+        ///
         internal int RequestCompressionThreshold
         {
             get { return _requestCompressionThreshold; }
@@ -841,7 +836,7 @@ namespace Microsoft.HealthVault
         /// <summary>
         /// Gets or sets the request compression method.
         /// </summary>
-        /// 
+        ///
         internal string RequestCompressionMethod
         {
             get { return _requestCompressionMethod; }
@@ -875,7 +870,7 @@ namespace Microsoft.HealthVault
         /// <summary>
         /// Gets or sets the comma separated response compression methods.
         /// </summary>
-        /// 
+        ///
         internal string ResponseCompressionMethods
         {
             get { return _responseCompressionMethods; }
@@ -924,7 +919,7 @@ namespace Microsoft.HealthVault
         /// <summary>
         /// If true will make Get requests asynchronous instead of the default synchronous.
         /// </summary>
-        /// 
+        ///
         internal bool ForceAsyncRequest
         {
             get { return _forceAsyncRequest; }
@@ -933,6 +928,7 @@ namespace Microsoft.HealthVault
         private bool _forceAsyncRequest;
 
         #region IDisposable
+
         ~EasyWebRequest()
         {
             Dispose(false);
@@ -941,7 +937,7 @@ namespace Microsoft.HealthVault
         /// <summary>
         /// Disposes the request.
         /// </summary>
-        /// 
+        ///
         public void Dispose()
         {
             Dispose(true);
@@ -951,9 +947,9 @@ namespace Microsoft.HealthVault
         /// <summary>
         /// Cleans up the cancel request trigger.
         /// </summary>
-        /// 
+        ///
         /// <param name="disposing"></param>
-        /// 
+        ///
         protected void Dispose(bool disposing)
         {
             if (disposing)
@@ -971,14 +967,14 @@ namespace Microsoft.HealthVault
             return Create(null);
         }
 
-        /// <summary> 
-        /// constructor for string POST 
+        /// <summary>
+        /// constructor for string POST
         /// </summary>
-        /// 
+        ///
         /// <param name="stringRequest">
-        /// text to send 
+        /// text to send
         /// </param>
-        /// 
+        ///
         internal static EasyWebRequest Create(string stringRequest)
         {
             EasyWebRequest instance;
@@ -997,18 +993,18 @@ namespace Microsoft.HealthVault
             return instance;
         }
 
-        /// <summary> 
-        /// constructor for Xml POST 
+        /// <summary>
+        /// constructor for Xml POST
         /// </summary>
-        /// 
+        ///
         /// <param name="utf8EncodedXml">
-        /// Utf8 encoded Xml to send 
+        /// Utf8 encoded Xml to send
         /// </param>
-        /// 
+        ///
         /// <param name="length">
         /// Significant byte count in the buffer.
         /// </param>
-        /// 
+        ///
         internal static EasyWebRequest Create(Byte[] utf8EncodedXml, int length)
         {
             EasyWebRequest instance = Create();
@@ -1018,7 +1014,7 @@ namespace Microsoft.HealthVault
             return instance;
         }
 
-        static EasyWebRequest _requestOverride;
+        private static EasyWebRequest _requestOverride;
 
         public static EasyWebRequest RequestOverride
         {
@@ -1027,4 +1023,3 @@ namespace Microsoft.HealthVault
         }
     }
 }
-

@@ -35,7 +35,7 @@ namespace Microsoft.HealthVault.Authentication
         /// <summary>
         /// Releases the unmanaged resources and optionally releases the managed resources.
         /// </summary>
-        /// <param name="disposing">true to release both managed and unmanaged resources; 
+        /// <param name="disposing">true to release both managed and unmanaged resources;
         /// false to release only unmanaged resources.
         /// </param>
         [SecuritySafeCritical]
@@ -64,15 +64,15 @@ namespace Microsoft.HealthVault.Authentication
         /// <summary>
         /// Core hashing function called by parent.
         /// </summary>
-        /// 
+        ///
         /// <param name="array">
         /// The data to hash.
         /// </param>
-        /// 
+        ///
         /// <param name="ibStart">
         /// The offset into the array.
         /// </param>
-        /// 
+        ///
         /// <param name="cbSize">
         /// The count of bytes to hash.
         /// </param>
@@ -84,7 +84,7 @@ namespace Microsoft.HealthVault.Authentication
         /// <summary>
         /// Finalizes the hash.
         /// </summary>
-        /// 
+        ///
         /// <returns>
         /// The final hash.
         /// </returns>

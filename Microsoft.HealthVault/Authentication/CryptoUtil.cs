@@ -6,7 +6,6 @@
 using System;
 using System.Runtime.InteropServices;
 using System.Security;
-using System.Security.Cryptography;
 
 namespace Microsoft.HealthVault.Authentication
 {
@@ -40,7 +39,7 @@ namespace Microsoft.HealthVault.Authentication
         /// Calls Dispose() given a non-null object and sets it to null.
         /// Does nothing if the object is null.
         /// </summary>
-        /// 
+        ///
         /// <param name="handle">
         /// Reference to a SafeHande.
         /// </param>
@@ -56,4 +55,3 @@ namespace Microsoft.HealthVault.Authentication
         }
     }
 }
-

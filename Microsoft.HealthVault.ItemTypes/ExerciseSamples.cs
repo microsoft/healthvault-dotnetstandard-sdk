@@ -16,22 +16,22 @@ namespace Microsoft.HealthVault.ItemTypes
     /// </summary>
     /// <remarks>
     /// Examples: Heart rate samples, speed samples, position samples.
-    /// 
-    /// Exercise samples are related to exercises through related items. 
-    /// 
+    ///
+    /// Exercise samples are related to exercises through related items.
+    ///
     /// The samples are stored in the other-data section of the object, and must
     /// be fetched by specifying HealthItemRecordSections.BlobPayload.
-    /// 
+    ///
     /// The format of the other-data section is the HealthVault comma-separated format. It should be accessed
-    /// using the ExerciseSamplesData property. 
+    /// using the ExerciseSamplesData property.
     /// </remarks>
-    /// 
+    ///
     public class ExerciseSamples : HealthRecordItem
     {
         /// <summary>
         /// Creates an instance of <see cref="ExerciseSamples"/> with default values.
         /// </summary>
-        /// 
+        ///
         public ExerciseSamples()
             : base(TypeId)
         {
@@ -39,18 +39,18 @@ namespace Microsoft.HealthVault.ItemTypes
         }
 
         /// <summary>
-        /// Creates an instance of <see cref="ExerciseSamples"/> with specified parameters. 
+        /// Creates an instance of <see cref="ExerciseSamples"/> with specified parameters.
         /// </summary>
-        /// 
+        ///
         /// <param name="when">The date and time the samples were recorded.</param>
         /// <param name="name">The kind of information that is stored in this set of samples.</param>
         /// <param name="unit">The unit of measure for the samples.</param>
         /// <param name="samplingInterval">The time interval between samples in seconds.</param>
-        /// 
+        ///
         /// <exception cref="ArgumentNullException">
-        /// If <paramref name="when"/> is <b>null</b>. 
+        /// If <paramref name="when"/> is <b>null</b>.
         /// </exception>
-        /// 
+        ///
         public ExerciseSamples(ApproximateDateTime when, CodableValue name, CodableValue unit, double samplingInterval)
             : base(TypeId)
         {
@@ -70,16 +70,16 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <summary>
         /// Populates this <see cref="ExerciseSamples"/> instance from the data in the XML.
         /// </summary>
-        /// 
+        ///
         /// <param name="typeSpecificXml">
         /// The XML to get the exercise samples data from.
         /// </param>
-        /// 
+        ///
         /// <exception cref="InvalidOperationException">
         /// If the first node in <paramref name="typeSpecificXml"/> is not
         /// an "exercise-samples" node.
         /// </exception>
-        /// 
+        ///
         protected override void ParseXml(IXPathNavigable typeSpecificXml)
         {
             XPathNavigator itemNav =
@@ -104,19 +104,19 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <summary>
         /// Writes the exercise samples data to the specified XmlWriter.
         /// </summary>
-        /// 
+        ///
         /// <param name="writer">
-        /// The XmlWriter to write the exericse samples data to. 
+        /// The XmlWriter to write the exericse samples data to.
         /// </param>
-        /// 
+        ///
         /// <exception cref="ArgumentNullException">
         /// If <paramref name="writer"/> is <b>null</b>.
         /// </exception>
-        /// 
+        ///
         /// <exception cref="HealthRecordItemSerializationException">
         /// If <see cref="When"/> is <b>null</b>.
         /// </exception>
-        /// 
+        ///
         [SuppressMessage("Microsoft.Usage", "CA2202:Do not dispose objects multiple times", Justification = "MemoryStream can be disposed multiple times. Usings block makes code more readable.")]
         public override void WriteXml(XmlWriter writer)
         {
@@ -172,22 +172,21 @@ namespace Microsoft.HealthVault.ItemTypes
 
             // </exercise-samples>
             writer.WriteEndElement();
-
         }
 
         /// <summary>
         /// Gets or sets the date and time when the samples were collected.
         /// </summary>
-        /// 
+        ///
         /// <value>
-        /// A <see cref="ApproximateDateTime"/> instance representing the date 
+        /// A <see cref="ApproximateDateTime"/> instance representing the date
         /// and time.
         /// </value>
-        /// 
+        ///
         /// <exception cref="ArgumentNullException">
         /// If the <paramref name="value"/> parameter is <b>null</b>.
         /// </exception>
-        /// 
+        ///
         public ApproximateDateTime When
         {
             get { return _when; }
@@ -200,15 +199,15 @@ namespace Microsoft.HealthVault.ItemTypes
         private ApproximateDateTime _when;
 
         /// <summary>
-        /// Gets or sets the kind of information that is stored in this sample set. 
+        /// Gets or sets the kind of information that is stored in this sample set.
         /// </summary>
-        /// 
+        ///
         /// <remarks>
-        /// The name encodes both the type of information that is stored and the units in 
-        /// which it is stored. 
-        /// 
+        /// The name encodes both the type of information that is stored and the units in
+        /// which it is stored.
+        ///
         /// The preferred vocabulary is exercise-sample-names.
-        /// 
+        ///
         /// Example sample types and units. See the preferred vocabulary for others.
         /// Heartrate_BPM
         /// Distance_meters
@@ -224,7 +223,7 @@ namespace Microsoft.HealthVault.ItemTypes
         /// Steps_count
         /// AerobicSteps_count
         /// </remarks>
-        /// 
+        ///
         /// <exception cref="ArgumentNullException">
         /// If the <paramref name="value"/> parameter is <b>null</b>.
         /// </exception>
@@ -239,49 +238,47 @@ namespace Microsoft.HealthVault.ItemTypes
         }
         private CodableValue _name;
 
-
         /// <summary>
-        /// Gets or sets the unit of measure for the samples. 
+        /// Gets or sets the unit of measure for the samples.
         /// </summary>
-        /// 
+        ///
         /// <remarks>
         /// The preferred vocabulary is exercise-units.
-        /// 
-        /// The appropriate units are defined by the code used for the Name property. For example, if the 
-        /// name property is set to the entry Power_watts, the Unit should be coded to watts. 
+        ///
+        /// The appropriate units are defined by the code used for the Name property. For example, if the
+        /// name property is set to the entry Power_watts, the Unit should be coded to watts.
         /// </remarks>
-        /// 
+        ///
         /// <exception cref="ArgumentNullException">
         /// If the <paramref name="value"/> parameter is <b>null</b>.
         /// </exception>
         public CodableValue Unit
         {
             get { return _unit; }
-            set 
+            set
             {
                 Validator.ThrowIfArgumentNull(value, "Unit", "ExerciseSampleUnitMandatory");
-                _unit = value; 
+                _unit = value;
             }
         }
         private CodableValue _unit;
 
-
         /// <summary>
-        /// Gets or sets the initial sampling interval between samples, in seconds.  
+        /// Gets or sets the initial sampling interval between samples, in seconds.
         /// </summary>
         /// <summary>
-        /// The samples data format supports modifying the sampling interval in the middle of a 
+        /// The samples data format supports modifying the sampling interval in the middle of a
         /// set of samples. See the <see cref="ExerciseSamplesData"/> class for more information.
         /// </summary>
-        /// 
+        ///
         /// <returns>
         /// An double representing the sampling interval in seconds.
         /// </returns>
-        /// 
+        ///
         /// <exception cref="ArgumentOutOfRangeException">
         /// If the <paramref name="Sampling"/> parameter is less than or equal to zero.
         /// </exception>
-        /// 
+        ///
         public double SamplingInterval
         {
             get { return _samplingInterval; }
@@ -296,15 +293,14 @@ namespace Microsoft.HealthVault.ItemTypes
         }
         private double _samplingInterval = double.NaN;
 
-
         /// <summary>
-        /// Gets the description of a exercise samples instance. 
+        /// Gets the description of a exercise samples instance.
         /// </summary>
-        /// 
+        ///
         /// <returns>
-        /// A string representation of the exercise samples item. 
+        /// A string representation of the exercise samples item.
         /// </returns>
-        /// 
+        ///
         public override string ToString()
         {
             return _name.Text;
@@ -314,8 +310,8 @@ namespace Microsoft.HealthVault.ItemTypes
         /// The sample data.
         /// </summary>
         /// <remarks>
-        /// The sample data is exposed as a <see cref="ExerciseSamplesData"/> instance. 
-        /// 
+        /// The sample data is exposed as a <see cref="ExerciseSamplesData"/> instance.
+        ///
         /// To get the sample data when fetching an instance of the ExerciseSamples thing type, you must specify that the other-data section
         /// be returned to access the ExerciseSamplesData.
         /// </remarks>
@@ -325,8 +321,8 @@ namespace Microsoft.HealthVault.ItemTypes
         public ExerciseSamplesData ExerciseSamplesData
         {
             // This property auto-creates when the user first accesses it. If there is no default Blob, we
-            // will create a new one. If there is existing default Blob (ie it was fetched with the instance), 
-            // we convert the Blob to an ExerciseSamplesData instance. 
+            // will create a new one. If there is existing default Blob (ie it was fetched with the instance),
+            // we convert the Blob to an ExerciseSamplesData instance.
             get
             {
                 if (_sampleData == null)
@@ -336,7 +332,6 @@ namespace Microsoft.HealthVault.ItemTypes
 
                 return _sampleData;
             }
-
         }
         private ExerciseSamplesData _sampleData;
 
@@ -434,4 +429,3 @@ namespace Microsoft.HealthVault.ItemTypes
         }
     }
 }
-

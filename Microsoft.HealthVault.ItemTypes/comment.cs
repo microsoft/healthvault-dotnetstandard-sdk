@@ -88,12 +88,12 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <exception cref="ArgumentNullException">
         /// If <paramref name="typeSpecificXml"/> parameter is <b>null</b>.
         /// </exception>
-        /// 
+        ///
         /// <exception cref="InvalidOperationException">
         /// If the first node in <paramref name="typeSpecificXml"/> is not
         /// a comment node.
         /// </exception>
-        /// 
+        ///
         protected override void ParseXml(IXPathNavigable typeSpecificXml)
         {
             Validator.ThrowIfArgumentNull(typeSpecificXml, "typeSpecificXml", "ParseXmlNavNull");
@@ -122,7 +122,7 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <exception cref="ArgumentNullException">
         /// If <paramref name="writer"/> parameter is <b>null</b>.
         /// </exception>
-        /// 
+        ///
         /// <exception cref="HealthRecordItemSerializationException">
         /// If <see cref="When"/> is <b>null</b>.
         /// If <see cref="Content"/> is <b>null</b> or empty or contains only whitespace.
@@ -153,7 +153,7 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <exception cref="ArgumentNullException">
         /// The <paramref name="value"/> parameter is <b>null</b>.
         /// </exception>
-        /// 
+        ///
         public ApproximateDateTime When
         {
             get
@@ -173,11 +173,11 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <summary>
         /// Gets or sets the text content of this comment.
         /// </summary>
-        /// 
+        ///
         /// <exception cref="ArgumentException">
         /// The <paramref name="value"/> parameter is null, empty or only whitespace.
         /// </exception>
-        /// 
+        ///
         public string Content
         {
             get
@@ -198,12 +198,12 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <summary>
         /// Gets or sets the category of the comment.
         /// </summary>
-        /// 
+        ///
         /// <remarks>
         /// The category can be used to group related comment entries together. For example, 'mental health'.
         /// If there is no information about category, the value should be set to <b>null</b>.
         /// </remarks>
-        /// 
+        ///
         public CodableValue Category
         {
             get { return _category; }
@@ -216,7 +216,7 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <summary>
         /// Gets a string representation of the comment.
         /// </summary>
-        /// 
+        ///
         /// <returns>
         /// A string representation of the comment.
         /// </returns>
