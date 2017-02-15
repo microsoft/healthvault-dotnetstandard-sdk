@@ -1,6 +1,5 @@
 using System;
 using System.Security;
-using Microsoft.Win32.SafeHandles;
 
 namespace Microsoft.HealthVault.Authentication
 {
@@ -26,10 +25,10 @@ namespace Microsoft.HealthVault.Authentication
         /// <summary>
         /// Executes the code required to free the handle.
         /// </summary>
-        /// 
+        ///
         /// <returns>
-        /// true if the handle is released successfully; otherwise, in the event 
-        /// of a catastrophic failure, false. In this case, it generates a ReleaseHandleFailed 
+        /// true if the handle is released successfully; otherwise, in the event
+        /// of a catastrophic failure, false. In this case, it generates a ReleaseHandleFailed
         /// Managed Debugging Assistant.
         /// </returns>
         [SecurityCritical]
@@ -49,4 +48,3 @@ namespace Microsoft.HealthVault.Authentication
         }
     }
 }
-

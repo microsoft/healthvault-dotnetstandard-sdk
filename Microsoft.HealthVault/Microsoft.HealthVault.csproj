@@ -71,6 +71,7 @@
     <Compile Include="Authentication\SafeCryptoContextHandle.cs" />
     <Compile Include="Authentication\SafeCryptoHashHandle.cs" />
     <Compile Include="Authentication\SafeCryptoKeyHandle.cs" />
+    <Compile Include="Authentication\SafeHandleZeroOrMinusOneIsInvalid.cs" />
     <Compile Include="Authentication\Sha256.cs" />
     <Compile Include="Authentication\Sha256Hmac.cs" />
     <Compile Include="Authentication\WebApplicationCredential.cs" />
@@ -95,7 +96,7 @@
     <Compile Include="Certificate\CertificateStore.cs" />
     <Compile Include="Certificate\CryptoApiBlob.cs" />
     <Compile Include="Certificate\Handles.cs" />
-    <Compile Include="Certificate\NativeMethods.cs" />
+    <Compile Include="Certificate\ICertificateUtilities.cs" />
     <Compile Include="Certificate\Util.cs" />
     <Compile Include="CommonItemData.cs" />
     <Compile Include="CultureSpecificDictionary.cs" />
@@ -252,10 +253,10 @@
     <Compile Include="VocabularySearchHelper.cs" />
     <Compile Include="VocabularySearchParameters.cs" />
     <Compile Include="VocabularySearchType.cs" />
-    <Compile Include="WebApplicationConnection.cs" />
     <Compile Include="XmlWriterHelper.cs" />
     <Compile Include="XPathHelper.cs" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

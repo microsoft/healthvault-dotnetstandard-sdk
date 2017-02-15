@@ -1,11 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Security;
 using System.Security.Cryptography;
 using System.Security.Cryptography.X509Certificates;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Microsoft.HealthVault
 {
@@ -40,13 +36,13 @@ namespace Microsoft.HealthVault
         /// <summary>
         /// Gets a certificate containing the application's private key.
         /// </summary>
-        /// 
+        ///
         /// <remarks>
         /// This property corresponds to the "SignatureCertStoreLocation", "AppCertSubject",
         /// "ApplicationCertificateFilename", and "ApplicationCertificatePassword" configuration
         /// values.
         /// </remarks>
-        /// 
+        ///
         public virtual X509Certificate2 ApplicationCertificate
         {
             get
@@ -117,7 +113,7 @@ namespace Microsoft.HealthVault
                         thumbprint = cert.Thumbprint;
 
                         HealthVaultPlatformTrace.LogCertLoading("Looking for private key");
-                        rsaProvider = (RSACryptoServiceProvider)cert.PrivateKey;
+                        rsaProvider = (RSACryptoServiceProvider)cert.GetRSAPrivateKey();
                         HealthVaultPlatformTrace.LogCertLoading("Private key found");
 
                         result = cert;
@@ -193,7 +189,7 @@ namespace Microsoft.HealthVault
             {
                 HealthVaultPlatformTrace.LogCertLoading("Looking for private key");
 
-                if (cert.PrivateKey == null)
+                if (!cert.HasPrivateKey)
                 {
                     HealthVaultPlatformTrace.LogCertLoading(
                         "Certificate did not contain a private key.");
@@ -206,7 +202,7 @@ namespace Microsoft.HealthVault
                     cert.Thumbprint);
 
                 thumbprint = cert.Thumbprint;
-                rsaProvider = (RSACryptoServiceProvider)cert.PrivateKey;
+                rsaProvider = (RSACryptoServiceProvider)cert.GetRSAPrivateKey();
                 HealthVaultPlatformTrace.LogCertLoading("Private key found");
             }
 
@@ -239,18 +235,18 @@ namespace Microsoft.HealthVault
         /// <summary>
         /// Gets the subject name of the certificate containing the applications private key.
         /// </summary>
-        /// 
+        ///
         /// <param name="applicationId">
         /// The application identifier to get the certificate subject name for. This is only used
         /// to default the name if the certificate subject is specified in the web.config. The default
         /// name is "WildcatApp-" + <paramref name="applicationId"/>.
         /// </param>
-        /// 
+        ///
         /// <remarks>
         /// This value is retrieved from the application configuration file using the configuration
         /// key named "AppCertSubject".
         /// </remarks>
-        /// 
+        ///
         private string GetApplicationCertificateSubject(Guid applicationId)
         {
             string result = HealthApplicationConfiguration.Current.CertSubject;

@@ -9,6 +9,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.IO.Compression;
 using System.Text;
+using Microsoft.HealthVault.Exceptions;
 
 namespace Microsoft.HealthVault
 {

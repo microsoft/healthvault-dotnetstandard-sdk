@@ -11,6 +11,7 @@ using System.IO;
 using System.Reflection;
 using System.Xml;
 using System.Xml.XPath;
+using Microsoft.HealthVault.Exceptions;
 using Microsoft.HealthVault.ItemTypes;
 
 namespace Microsoft.HealthVault
@@ -63,25 +64,17 @@ namespace Microsoft.HealthVault
                 Assembly itemTypeAssembly =
                     GetItemTypesAssembly("Microsoft.Health.ItemTypes");
 
-                if (itemTypeAssembly != null)
-                {
-                    Type registrarType =
-                        itemTypeAssembly.GetType("Microsoft.Health.ItemTypes.ItemTypeRegistrar");
+                Type registrarType =
+                    itemTypeAssembly?.GetType("Microsoft.Health.ItemTypes.ItemTypeRegistrar");
 
-                    if (registrarType != null)
-                    {
-                        MethodInfo registrarMethod =
-                            registrarType.GetMethod("RegisterAssemblyHealthRecordItemTypes");
+                MethodInfo registrarMethod =
+                    registrarType?.GetTypeInfo().GetDeclaredMethod("RegisterAssemblyHealthRecordItemTypes");
 
-                        if (registrarMethod != null)
-                        {
-                            registrarMethod.Invoke(null, null);
-                        }
-                    }
-                }
+                registrarMethod?.Invoke(null, null);
             }
-            catch (Exception) // Under no circumstances should this prevent us from proceeding
+            catch (Exception)
             {
+                // Under no circumstances should this prevent us from proceeding
             }
 
             // Look for the Microsoft.Health.ItemTypes.Old assembly. If loaded, then register 
@@ -92,31 +85,25 @@ namespace Microsoft.HealthVault
                 Assembly itemTypeAssembly =
                     GetItemTypesAssembly("Microsoft.Health.ItemTypes.Old");
 
-                if (itemTypeAssembly != null)
+                Type registrarType =
+                    itemTypeAssembly?.GetType("Microsoft.Health.ItemTypes.Old.ItemTypeOldRegistrar");
+
+                if (registrarType != null)
                 {
-                    Type registrarType =
-                        itemTypeAssembly.GetType("Microsoft.Health.ItemTypes.Old.ItemTypeOldRegistrar");
+                    MethodInfo registrarMethod =
+                        registrarType.GetTypeInfo().GetDeclaredMethod("RegisterAssemblyHealthRecordItemTypes");
 
-                    if (registrarType != null)
-                    {
-                        MethodInfo registrarMethod =
-                            registrarType.GetMethod("RegisterAssemblyHealthRecordItemTypes");
-
-                        if (registrarMethod != null)
-                        {
-                            registrarMethod.Invoke(null, null);
-                        }
-                    }
+                    registrarMethod?.Invoke(null, null);
                 }
             }
-            catch (Exception) // Under no circumstances should this prevent us from proceeding
+            catch (Exception)
             {
+                // Under no circumstances should this prevent us from proceeding
             }
 
         }
 
         private static DefaultTypeHandler[] _defaultTypeHandlers =
-            new DefaultTypeHandler[]
             {
                 new DefaultTypeHandler(PasswordProtectedPackage.TypeId, typeof(PasswordProtectedPackage)),
             };
@@ -130,10 +117,7 @@ namespace Microsoft.HealthVault
 
             internal Guid TypeId;
             internal Type Type;
-            internal String TypeName
-            {
-                get { return Type.Name; }
-            }
+            internal string TypeName => Type.Name;
         }
 
         /// <summary>
@@ -141,26 +125,17 @@ namespace Microsoft.HealthVault
         /// </summary>
         private static Assembly GetItemTypesAssembly(string name)
         {
-            // see if it's already loaded in the app domain
-            foreach (Assembly assembly in AppDomain.CurrentDomain.GetAssemblies())
-            {
-                if (String.Equals(assembly.GetName().Name, name, StringComparison.OrdinalIgnoreCase))
-                {
-                    return assembly;
-                }
-            }
-
             // otherwise, try loading it by name
-            var coreAssemblyName = Assembly.GetExecutingAssembly().GetName();
+            Assembly coreAssemblyName = typeof(ItemTypeManager).GetTypeInfo().Assembly;
 
-            var itemTypesAssemblyName = new AssemblyName()
+            var itemTypesAssemblyName = new AssemblyName
             {
                 Name = name,
-                Version = coreAssemblyName.Version,
-                CultureInfo = coreAssemblyName.CultureInfo,
+                Version = coreAssemblyName.GetName().Version,
+                CultureName = coreAssemblyName.GetName().CultureName,
             };
 
-            itemTypesAssemblyName.SetPublicKeyToken(coreAssemblyName.GetPublicKeyToken());
+            itemTypesAssemblyName.SetPublicKeyToken(coreAssemblyName.GetName().GetPublicKeyToken());
 
             HealthVaultPlatformTrace.Log(
                 TraceEventType.Information,
@@ -280,7 +255,7 @@ namespace Microsoft.HealthVault
             Validator.ThrowIfArgumentNull(itemTypeClass, "itemTypeClass", "ThingTypeClassNull");
 
             Validator.ThrowArgumentExceptionIf(
-                !itemTypeClass.IsSubclassOf(typeof(HealthRecordItem)),
+                !itemTypeClass.GetTypeInfo().IsSubclassOf(typeof(HealthRecordItem)),
                 "itemTypeClass",
                 "ThingTypeClassNotHealthRecordItem");
 
@@ -308,10 +283,7 @@ namespace Microsoft.HealthVault
         }
         private static Dictionary<Guid, HealthRecordItemTypeHandler> _typeHandlers;
 
-        internal static Dictionary<string, HealthRecordItemTypeHandler> TypeHandlersByClassName
-        {
-            get { return _typeHandlersByClassName; }
-        }
+        internal static Dictionary<string, HealthRecordItemTypeHandler> TypeHandlersByClassName => _typeHandlersByClassName;
         private static Dictionary<string, HealthRecordItemTypeHandler> _typeHandlersByClassName;
 
         /// <summary>
@@ -452,11 +424,6 @@ namespace Microsoft.HealthVault
         {
             Validator.ThrowIfStringNullOrEmpty(extensionSource, "extensionSource");
             Validator.ThrowIfArgumentNull(itemExtensionClass, "itemExtensionClass", "ItemExtensionClassNull");
-
-            Validator.ThrowArgumentExceptionIf(
-                !itemExtensionClass.IsSubclassOf(typeof(HealthRecordItemExtension)),
-                "itemExtensionClass",
-                "ThingExtensionClassNotThingExtension");
 
             if (_extensionHandlers.ContainsKey(extensionSource) &&
                 !overwriteExisting)
@@ -630,12 +597,11 @@ namespace Microsoft.HealthVault
             Validator.ThrowIfArgumentNull(applicationSpecificHandlerClass, "applicationSpecificHandlerClass", "AppDataHandlerClassMandatory");
 
             Validator.ThrowArgumentExceptionIf(
-                applicationSpecificHandlerClass.BaseType.Name != "ApplicationSpecific",
+                applicationSpecificHandlerClass.GetTypeInfo().BaseType.Name != "ApplicationSpecific",
                 "applicationSpecificHandlerClass",
                 "AppDataHandlerNotApplicationSpecific");
 
-            Dictionary<string, HealthRecordItemTypeHandler> handlerDictionary =
-                null;
+            Dictionary<string, HealthRecordItemTypeHandler> handlerDictionary;
 
             if (_appSpecificHandlers.ContainsKey(applicationId))
             {

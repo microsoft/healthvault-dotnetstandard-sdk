@@ -447,10 +447,7 @@ namespace Microsoft.HealthVault
         /// 
         public Blob NewBlob(string blobName, string contentType)
         {
-            Blob blob =
-                _connectPackageParameters != null ?
-                new Blob(blobName, contentType, null, null, null, _connectPackageParameters) :
-                new Blob(blobName, contentType, null, null, _record);
+            Blob blob = new Blob(blobName, contentType, null, null, _record);
             _blobs.Add(blobName, blob);
             _item.Sections |= HealthRecordItemSections.BlobPayload;
             return blob;
@@ -504,12 +501,8 @@ namespace Microsoft.HealthVault
             BlobHashInfo hashInfo,
             Uri blobUrl)
         {
-            Blob blob =
-                _connectPackageParameters != null ?
-                new Blob(blobName, contentType, null, null, hashInfo, _connectPackageParameters) :
-                new Blob(blobName, contentType, null, null, hashInfo, _record);
+            Blob blob = new Blob(blobName, contentType, null, null, hashInfo, _record) { Url = blobUrl };
 
-            blob.Url = blobUrl;
 
             _blobs.Add(blobName, blob);
             _item.Sections |= HealthRecordItemSections.BlobPayload;
