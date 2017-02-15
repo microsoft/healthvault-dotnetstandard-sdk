@@ -38,14 +38,14 @@ namespace Microsoft.HealthVault
             switch (algorithm)
             {
                 case BlobHashAlgorithm.SHA256Block:
-                    _baseHashAlgorithm = CryptoConfiguration.CreateHashAlgorithm("SHA256");
+                    _baseHashAlgorithm = ServiceLocator.Current.CryptoService.CreateHashAlgorithm("SHA256");
                     break;
                 default:
                     throw new ArgumentException(
                         ResourceRetriever.FormatResourceString(
                             "BlobHashAlgorithmUnsupported",
                              algorithm),
-                        "algorithm");
+                        nameof(algorithm));
             }
 
             Validator.ThrowArgumentOutOfRangeIf(blockSize < 1, "blockSize", "BlockSizeMustBePositive");

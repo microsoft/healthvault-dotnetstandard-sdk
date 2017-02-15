@@ -402,8 +402,8 @@ namespace Microsoft.HealthVault.Web.Authentication
             StoreLocation storeLocation,
             string certSubject)
         {
-            DigestMethod = CryptoConfiguration.SignatureHashAlgorithmName;
-            SignMethod = CryptoConfiguration.SignatureAlgorithmName;
+            DigestMethod = HealthApplicationConfiguration.Current.CryptoConfiguration.SignatureHashAlgorithmName;
+            SignMethod = HealthApplicationConfiguration.Current.CryptoConfiguration.SignatureAlgorithmName;
 
             _cert =
                 ApplicationCertificateStore.Current.GetApplicationCertificateFromStore(
@@ -803,7 +803,7 @@ namespace Microsoft.HealthVault.Web.Authentication
                 writer.WriteString(ApplicationId.ToString());
                 writer.WriteEndElement();
 
-                writer.WriteElementString("hmac", CryptoConfiguration.HmacAlgorithmName);
+                writer.WriteElementString("hmac", HealthApplicationConfiguration.Current.CryptoConfiguration.HmacAlgorithmName);
 
                 writer.WriteStartElement("signing-time");
                 writer.WriteValue(DateTime.Now.ToUniversalTime());

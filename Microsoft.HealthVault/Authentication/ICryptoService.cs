@@ -81,16 +81,14 @@ namespace Microsoft.HealthVault.Authentication
         /// </param>
         /// 
         /// <returns>
-        /// A new HMAC instance using <see cref="HmacAlgorithmName"/> 
-        /// and the provided <paramref name="keyMaterial"/>.  
+        /// A new HMAC instance using <see cref="ICryptoConfiguration.HmacAlgorithmName"/>
+        /// and the provided <paramref name="keyMaterial"/>.
         /// </returns>
         /// 
-        /// <seealso cref="HmacAlgorithmName"/>
-        /// 
+        /// <seealso cref="ICryptoConfiguration.HmacAlgorithmName"/>
         /// <exception cref="ArgumentException">
         /// The <paramref name="keyMaterial"/> parameter is <b>null</b> or empty.
         /// </exception>
-        /// 
         HMAC CreateHmac(byte[] keyMaterial);
 
         /// <summary>

@@ -6,6 +6,7 @@
 using System;
 using System.Collections.Generic;
 using System.Security.Cryptography.X509Certificates;
+using Microsoft.HealthVault.Authentication;
 
 namespace Microsoft.HealthVault
 {
@@ -123,180 +124,30 @@ namespace Microsoft.HealthVault
         private Guid _appId;
 
         /// <summary>
-        /// Gets the name of the algorithm used to ensure communication with HealthVault
-        /// isn't tampered with.
+        /// Gets or sets the crypto configuration.
         /// </summary>
-        /// 
+        /// <value>
+        /// The crypto configuration.
+        /// </value>
         /// <remarks>
-        /// This property corresponds to the "HmacAlgorithmName" configuration
-        /// value. The value defaults to "HMACSHA256".
+        /// This property needs to be set as part of app initialization
         /// </remarks>
-        /// 
-        public virtual string HmacAlgorithmName
+        public virtual ICryptoConfiguration CryptoConfiguration
         {
             get
             {
-                if (_hmacAlgorithmName == null)
-                {
-                    _hmacAlgorithmName = DefaultHmacAlgorithmName;
-                }
-
-                return _hmacAlgorithmName;
+                return _cryptoConfiguration ?? (_cryptoConfiguration = new CryptoConfiguration());
             }
 
             set
             {
                 this.EnsureAppNotInitialized();
-                _hmacAlgorithmName = value;
+                _cryptoConfiguration = value;
             }
         }
-        private volatile string _hmacAlgorithmName;
-        /// <summary>
-        /// The default HMAC algorithm name.
-        /// </summary>
-        protected const string DefaultHmacAlgorithmName = "HMACSHA256";
 
-        /// <summary>
-        /// Gets the name of the hashing algorithm to use when communicating with HealthVault.
-        /// </summary>
-        /// 
-        /// <remarks>
-        /// This property corresponds to the "HashAlgorithmName" configuration
-        /// value. The value defaults to "SHA256".
-        /// </remarks>
-        /// 
-        /// <summary>
-        /// Gets the name of the hashing algorithm to use when communicating with HealthVault.
-        /// </summary>
-        /// 
-        /// <remarks>
-        /// This property corresponds to the "HashAlgorithmName" configuration
-        /// value. The value defaults to "SHA256".
-        /// </remarks>
-        /// 
-        public virtual string HashAlgorithmName
-        {
-            get
-            {
-                if (_hashAlgorithmName == null)
-                {
-                    _hashAlgorithmName = DefaultHashAlgorithmName;
-                }
-
-                return _hashAlgorithmName;
-            }
-
-            set
-            {
-                this.EnsureAppNotInitialized();
-                _hashAlgorithmName = value;
-            }
-        }
-        private volatile string _hashAlgorithmName;
-        /// <summary>
-        /// The default hash algorithm name.
-        /// </summary>
-        protected const string DefaultHashAlgorithmName = "SHA256";
-
-        /// <summary>
-        /// Gets the name of the signature hash algorithm.
-        /// </summary>
-        /// 
-        /// <remarks>
-        /// This property corresponds to the "SignatureHashAlgorithmName" configuration
-        /// value. The value defaults to "SHA1".
-        /// </remarks>
-        /// 
-        public virtual string SignatureHashAlgorithmName
-        {
-            get
-            {
-                if (_signatureHashAlgorithmName == null)
-                {
-                    _signatureHashAlgorithmName = DefaultSignatureHashAlgorithmName;
-                }
-
-                return _signatureHashAlgorithmName;
-            }
-
-            set
-            {
-                this.EnsureAppNotInitialized();
-                _signatureAlgorithmName = value;
-            }
-        }
-        private volatile string _signatureHashAlgorithmName;
-        /// <summary>
-        /// The default signature hash algorithm name.
-        /// </summary>
-        protected const string DefaultSignatureHashAlgorithmName = "SHA1";
-
-        /// <summary>
-        /// Gets the name of the signature algorithm.
-        /// </summary>
-        /// 
-        /// <remarks>
-        /// This property corresponds to the "SignatureAlgorithmName" configuration
-        /// value. The value defaults to "RSA-SHA1".
-        /// </remarks>
-        /// 
-        public virtual string SignatureAlgorithmName
-        {
-            get
-            {
-                if (_signatureAlgorithmName == null)
-                {
-                    _signatureAlgorithmName = DefaultSignatureAlgorithmName;
-                }
-
-                return _signatureAlgorithmName;
-            }
-
-            set
-            {
-                this.EnsureAppNotInitialized();
-                _signatureAlgorithmName = value;
-            }
-        }
-        private volatile string _signatureAlgorithmName;
-        /// <summary>
-        /// The default signature algorithm name.
-        /// </summary>
-        protected const string DefaultSignatureAlgorithmName = "RSA-SHA1";
-
-        /// <summary>
-        /// Gets the name of the symmetric algorithm.
-        /// </summary>
-        /// 
-        /// <remarks>
-        /// This property corresponds to the "SymmetricAlgorithmName" configuration
-        /// value. The value defaults to "AES256".
-        /// </remarks>
-        /// 
-        public virtual string SymmetricAlgorithmName
-        {
-            get
-            {
-                if (_symmetricAlgorithmName == null)
-                {
-                    _symmetricAlgorithmName = DefaultSymmetricAlgorithmName;
-                }
-
-                return _symmetricAlgorithmName;
-            }
-
-            set
-            {
-                this.EnsureAppNotInitialized();
-                this._symmetricAlgorithmName = value;
-            }
-        }
-        private volatile string _symmetricAlgorithmName;
-        /// <summary>
-        /// The default symmetric algorithm name.
-        /// </summary>
-        protected const string DefaultSymmetricAlgorithmName = "AES256";
-
+        private ICryptoConfiguration _cryptoConfiguration;
+        
         /// <summary>
         /// Gets or sets the application certificate password.
         /// </summary>

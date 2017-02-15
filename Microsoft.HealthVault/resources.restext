@@ -1027,3 +1027,6 @@ ShellTargetRequired=A Shell redirect target location name must be specified.
 FilterNull=The filter cannot be null.
 SourceNull=The source cannot be null.
 MeaningfulUseReportsRetrievalNotSupported=Meaningful Use report retrieval not supported in current connection.
+
+#CryptoService.cs
+CryptoConfigurationNull=CryptoConfiguration cannot be null.

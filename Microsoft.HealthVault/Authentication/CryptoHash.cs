@@ -4,6 +4,7 @@
 // All other rights reserved.
 
 using System;
+using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 using System.Xml;
@@ -81,6 +82,17 @@ namespace Microsoft.HealthVault.Authentication
         /// 
         protected bool IsFinalized { get; set; }
 
+
+        /// <summary>
+        /// Gets or sets the computed hash.
+        /// </summary>
+        protected internal byte[] Hash
+        {
+            get { return _hash; }
+            set { _hash = value; }
+        }
+        private byte[] _hash;
+
         #endregion
 
         #region ctor
@@ -96,7 +108,7 @@ namespace Microsoft.HealthVault.Authentication
         /// </remarks>
         /// 
         public CryptoHash()
-            : this(CryptoConfiguration.HashAlgorithmName)
+            : this(HealthApplicationConfiguration.Current.CryptoConfiguration.HashAlgorithmName)
         {
         }
 
@@ -121,7 +133,7 @@ namespace Microsoft.HealthVault.Authentication
         public CryptoHash(string algorithmName)
         {
             AlgorithmName = algorithmName;
-            HashAlgorithm = CryptoConfiguration.CreateHashAlgorithm(AlgorithmName);
+            HashAlgorithm = ServiceLocator.Current.CryptoService.CreateHashAlgorithm(AlgorithmName);
         }
 
         #endregion
@@ -172,7 +184,8 @@ namespace Microsoft.HealthVault.Authentication
             {
                 throw Validator.InvalidOperationException("CryptoHashAlreadyFinalized");
             }
-            HashAlgorithm.ComputeHash(buffer, index, count);
+
+            _hash = HashAlgorithm.ComputeHash(buffer, index, count);
         }
 
         /// <summary>
@@ -189,7 +202,7 @@ namespace Microsoft.HealthVault.Authentication
         /// 
         internal virtual void ComputeHash(byte[] buffer)
         {
-            ComputeHash(buffer, 0, buffer.Length);
+           ComputeHash(buffer, 0, buffer.Length);
         }
 
         /// <summary>
@@ -236,7 +249,7 @@ namespace Microsoft.HealthVault.Authentication
 
             IsFinalized = true;
 
-            return new CryptoHashFinalized(AlgorithmName, HashAlgorithm.Hash);
+            return new CryptoHashFinalized(AlgorithmName, _hash);
         }
 
         /// <summary>

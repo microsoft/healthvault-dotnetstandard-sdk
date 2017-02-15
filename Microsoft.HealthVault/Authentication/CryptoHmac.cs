@@ -42,9 +42,9 @@ namespace Microsoft.HealthVault.Authentication
         /// 
         internal CryptoHmac()
         {
-            AlgorithmName = CryptoConfiguration.HmacAlgorithmName;
+            AlgorithmName = HealthApplicationConfiguration.Current.CryptoConfiguration.HmacAlgorithmName;
 
-            this.HashAlgorithm = CryptoConfiguration.CreateHashAlgorithm(AlgorithmName);
+            this.HashAlgorithm = ServiceLocator.Current.CryptoService.CreateHashAlgorithm(AlgorithmName);
 
             KeyMaterial = new byte[HMAC.Key.Length];
             CryptoUtil.GetRandomBytes(KeyMaterial);
@@ -56,7 +56,7 @@ namespace Microsoft.HealthVault.Authentication
             : base(algName)
         {
             this.HashAlgorithm =
-                CryptoConfiguration.CreateHmac(
+                ServiceLocator.Current.CryptoService.CreateHmac(
                     AlgorithmName,
                     keyMaterial);
             KeyMaterial = keyMaterial;
@@ -103,7 +103,7 @@ namespace Microsoft.HealthVault.Authentication
 
             return new CryptoHmacFinalized(
                 AlgorithmName,
-                this.HashAlgorithm.Hash);
+                this.Hash);
         }
 
         /// <summary>
