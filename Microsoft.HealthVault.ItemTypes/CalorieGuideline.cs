@@ -5,10 +5,6 @@
 
 
 using System;
-using System.Text;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Globalization;
 using System.Xml;
 using System.Xml.XPath;
 
@@ -249,7 +245,7 @@ namespace Microsoft.HealthVault.ItemTypes
         public override string ToString()
         {
             return
-                String.Format(
+                string.Format(
                     ResourceRetriever.GetResourceString(
                         "NameAndValue"),
                     _name.ToString(),

@@ -6,15 +6,15 @@
 using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
+using System.Net;
 using System.Security.Cryptography;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
-using System.Web;
 
 namespace Microsoft.HealthVault
 {
     /// <summary>
-    /// Represents an API set to create URLs that will handle HTTP GET queries for searches on 
+    /// Represents an API set to create URLs that will handle HTTP GET queries for searches on
     /// a specified vocabulary.
     /// </summary>
     /// <remarks>
@@ -24,14 +24,14 @@ namespace Microsoft.HealthVault
     public static class VocabularySearchHelper
     {
         /// <summary>
-        /// Creates a vocabulary search request URL in which the application is identified using 
+        /// Creates a vocabulary search request URL in which the application is identified using
         /// its service token.
         /// </summary>
         /// <remarks>
         /// 1. This is a fast access mechanism to publicly available vocabularies in HealthVault.
         /// 2. The service token is available at <see cref="ApplicationInfo.ClientServiceToken"/>
         /// 3. Searches to restricted vocabularies that an application has access to will not succeed
-        ///    with this method. For those searches please use 
+        ///    with this method. For those searches please use
         ///    <see cref="VocabularySearchHelper.CreateVocabularySearchRequestJsonAuthenticatedUrl"/>
         /// </remarks>
         /// <param name="searchParameters">
@@ -47,7 +47,7 @@ namespace Microsoft.HealthVault
         /// <returns>
         /// A URL which can be used in the browser to make AJAX calls to HealthVault vocabulary search.
         /// </returns>
-        /// 
+        ///
         [SuppressMessage(
             "Microsoft.Naming",
             "CA1704:IdentifiersShouldBeSpelledCorrectly",
@@ -77,13 +77,13 @@ namespace Microsoft.HealthVault
         }
 
         /// <summary>
-        /// Creates a vocabulary search request url in which the application is identified using 
+        /// Creates a vocabulary search request url in which the application is identified using
         /// the application certificate as the authentication parameter.
         /// </summary>
         /// <remarks>
-        /// 1. This is an authenticated access mechanism for public and restricted vocabularies in 
+        /// 1. This is an authenticated access mechanism for public and restricted vocabularies in
         ///    HealthVault.
-        /// 2. The call will require more processing on the HealthVault server and it is recommended, 
+        /// 2. The call will require more processing on the HealthVault server and it is recommended,
         ///    that this mechanism be used to mainly access restricted vocabularies in HealthVault that
         ///    require authenticated access.
         /// </remarks>
@@ -95,7 +95,7 @@ namespace Microsoft.HealthVault
         /// This is the name of the callback function that will be called to parse the JSON response.
         /// </param>
         /// <param name="timeToLiveMinutes">
-        /// The amount of time in minutes that the URL will be valid for. 
+        /// The amount of time in minutes that the URL will be valid for.
         /// </param>
         /// <returns>
         /// A URL which can be used in the browser to make AJAX calls to HealthVault vocabulary search.
@@ -129,7 +129,7 @@ namespace Microsoft.HealthVault
             string jsonCallbackName)
         {
             queryString.Append("service=searchVocab&searchMode=fulltext&output=JSON");
-            queryString.AppendFormat("&callback={0}", HttpUtility.UrlEncode(jsonCallbackName));
+            queryString.AppendFormat("&callback={0}", WebUtility.UrlEncode(jsonCallbackName));
         }
 
         private static void AppendClientServiceToken(
@@ -146,10 +146,10 @@ namespace Microsoft.HealthVault
                 HealthApplicationConfiguration.Current.ApplicationId);
 
             X509Certificate2 certificate
-                = HealthApplicationConfiguration.Current.ApplicationCertificate;
+                = ApplicationCertificateStore.Current.ApplicationCertificate;
             queryString.AppendFormat(
                 "&thumbprint={0}",
-                HttpUtility.UrlEncode(certificate.Thumbprint));
+                WebUtility.UrlEncode(certificate.Thumbprint));
 
             DateTime expirationTime = DateTime.UtcNow.AddMinutes(timeToLiveMinutes);
             String dateTimeStr =
@@ -160,15 +160,15 @@ namespace Microsoft.HealthVault
 
             queryString.AppendFormat(
                 "&raw={0}",
-                HttpUtility.UrlEncode(Convert.ToBase64String(raw)));
+                WebUtility.UrlEncode(Convert.ToBase64String(raw)));
 
             RSACryptoServiceProvider rsaProvider =
-                (RSACryptoServiceProvider)certificate.PrivateKey;
+                (RSACryptoServiceProvider)certificate.GetRSAPrivateKey();
             Byte[] signature = rsaProvider.SignData(raw, "SHA1");
 
             queryString.AppendFormat(
                 "&signature={0}",
-                HttpUtility.UrlEncode(Convert.ToBase64String(signature)));
+                WebUtility.UrlEncode(Convert.ToBase64String(signature)));
         }
 
         private static void AppendVocabularySearchParameters(
@@ -177,20 +177,20 @@ namespace Microsoft.HealthVault
         {
             queryString.AppendFormat(
                 "&vocabName={0}",
-                HttpUtility.UrlEncode(searchParameters.Vocabulary.Name));
+                WebUtility.UrlEncode(searchParameters.Vocabulary.Name));
 
             if (!String.IsNullOrEmpty(searchParameters.Vocabulary.Family))
             {
                 queryString.AppendFormat(
                     "&vocabFamily={0}",
-                    HttpUtility.UrlEncode(searchParameters.Vocabulary.Family));
+                    WebUtility.UrlEncode(searchParameters.Vocabulary.Family));
             }
 
             if (!String.IsNullOrEmpty(searchParameters.Vocabulary.Version))
             {
                 queryString.AppendFormat(
                     "&vocabVersion={0}",
-                    HttpUtility.UrlEncode(searchParameters.Vocabulary.Version));
+                    WebUtility.UrlEncode(searchParameters.Vocabulary.Version));
             }
 
             if (searchParameters.MaxResults.HasValue)
@@ -201,7 +201,7 @@ namespace Microsoft.HealthVault
             if (searchParameters.Culture != null)
             {
                 queryString.AppendFormat(
-                    "&culture={0}", HttpUtility.UrlEncode(searchParameters.Culture.Name));
+                    "&culture={0}", WebUtility.UrlEncode(searchParameters.Culture.Name));
             }
         }
     }

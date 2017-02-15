@@ -4,10 +4,8 @@
 // All other rights reserved.
 
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics.CodeAnalysis;
-using System.Globalization;
 using System.Text;
 using System.Xml;
 using System.Xml.XPath;
@@ -65,7 +63,7 @@ namespace Microsoft.HealthVault.ItemTypes
         /// A GUID.
         /// </value>
         /// 
-        public static new readonly Guid TypeId =
+        public new static readonly Guid TypeId =
             new Guid("a3d38add-b7b2-4ccd-856b-9b14bbc4e075");
 
         /// <summary>
@@ -122,12 +120,12 @@ namespace Microsoft.HealthVault.ItemTypes
 
             writer.WriteStartElement("defibrillator-episode");
             _when.WriteXml("when", writer);
-            XmlWriterHelper.WriteOpt<CodableValue>(writer, "episode-type-group", _episodeTypeGroup);
-            XmlWriterHelper.WriteOpt<CodableValue>(writer, "episode-type", _episodeType);
-            XmlWriterHelper.WriteOpt<CodableValue>(writer, "data-source", _dataSource);
+            XmlWriterHelper.WriteOpt(writer, "episode-type-group", _episodeTypeGroup);
+            XmlWriterHelper.WriteOpt(writer, "episode-type", _episodeType);
+            XmlWriterHelper.WriteOpt(writer, "data-source", _dataSource);
             XmlWriterHelper.WriteOptUInt(writer, "duration-in-seconds", _durationInSeconds);
             writer.WriteStartElement("episode-fields");
-            XmlWriterHelper.WriteXmlCollection<DefibrillatorEpisodeField>(writer, _episodeFields, "episode-field");
+            XmlWriterHelper.WriteXmlCollection(writer, _episodeFields, "episode-field");
             writer.WriteEndElement();
             writer.WriteEndElement();
         }
@@ -146,25 +144,25 @@ namespace Microsoft.HealthVault.ItemTypes
 
             if (EpisodeTypeGroup != null)
             {                
-                stringBuilder.Append(EpisodeTypeGroup.ToString());
+                stringBuilder.Append(EpisodeTypeGroup);
             }
 
             if (EpisodeType != null)
             {
                 AddListSeparator(stringBuilder);
-                stringBuilder.Append(EpisodeType.ToString());
+                stringBuilder.Append(EpisodeType);
             }
 
             if (DataSource != null)
             {
                 AddListSeparator(stringBuilder);
-                stringBuilder.Append(DataSource.ToString());
+                stringBuilder.Append(DataSource);
             }
 
             if (DurationInSeconds != null)
             {
                 AddListSeparator(stringBuilder);
-                stringBuilder.Append(DurationInSeconds.ToString());
+                stringBuilder.Append(DurationInSeconds);
             }
 
             return stringBuilder.ToString();
@@ -300,13 +298,7 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <remarks>
         /// Each episode field stores an episode property as a name/value pair.
         /// </remarks>
-        public Collection<DefibrillatorEpisodeField> EpisodeFields
-        {
-            get
-            {
-                return _episodeFields;
-            }
-        }
+        public Collection<DefibrillatorEpisodeField> EpisodeFields => _episodeFields;
 
         private Collection<DefibrillatorEpisodeField> _episodeFields =
             new Collection<DefibrillatorEpisodeField>();

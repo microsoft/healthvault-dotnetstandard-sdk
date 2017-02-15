@@ -5,9 +5,6 @@
 
 
 using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Globalization;
 using System.Xml;
 using System.Xml.XPath;
 
@@ -240,11 +237,11 @@ namespace Microsoft.HealthVault.ItemTypes
         /// 
         public override string ToString()
         {
-            string result = String.Empty;
+            string result = string.Empty;
             if (TotalCholesterol != null)
             {
                 result =
-                    String.Format(
+                    string.Format(
                         ResourceRetriever.GetResourceString(
                             "CholesterolProfileToStringFormatTotal"),
                         TotalCholesterol.Value);
@@ -252,7 +249,7 @@ namespace Microsoft.HealthVault.ItemTypes
             else if (LDL != null && HDL != null)
             {
                 result =
-                    String.Format(
+                    string.Format(
                         ResourceRetriever.GetResourceString(
                             "CholesterolProfileToStringFormatLDLAndHDL"),
                         LDL.Value,
@@ -261,7 +258,7 @@ namespace Microsoft.HealthVault.ItemTypes
             else if (LDL != null)
             {
                 result = 
-                    String.Format(
+                    string.Format(
                         ResourceRetriever.GetResourceString(
                             "CholesterolProfileToStringFormatLDL"),
                         LDL.Value);
@@ -269,7 +266,7 @@ namespace Microsoft.HealthVault.ItemTypes
             else if (HDL != null)
             {
                 result = 
-                    String.Format(
+                    string.Format(
                         ResourceRetriever.GetResourceString(
                             "CholesterolProfileToStringFormatHDL"),
                         HDL.Value);
@@ -277,7 +274,7 @@ namespace Microsoft.HealthVault.ItemTypes
             else if (Triglyceride != null)
             {
                 result = 
-                    String.Format(
+                    string.Format(
                         ResourceRetriever.GetResourceString(
                             "CholesterolProfileToStringFormatTriglyceride"),
                         Triglyceride.Value);

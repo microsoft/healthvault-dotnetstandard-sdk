@@ -10,7 +10,6 @@ using System.Globalization;
 using System.IO;
 using System.Xml;
 using System.Xml.XPath;
-using Microsoft.HealthVault.Package;
 
 namespace Microsoft.HealthVault
 {
@@ -34,13 +33,9 @@ namespace Microsoft.HealthVault
         }
 
         internal BlobStore(
-            HealthRecordItem item,
-            ConnectPackageCreationParameters connectPackageParameters)
+            HealthRecordItem item)
         {
-            Validator.ThrowIfArgumentNull(connectPackageParameters, "connectPackageParameters", "ArgumentNull");
-
             _item = item;
-            _connectPackageParameters = connectPackageParameters;
         }
 
         internal HealthRecordAccessor Record
@@ -49,13 +44,6 @@ namespace Microsoft.HealthVault
             set { _record = value; }
         }
         private HealthRecordAccessor _record;
-
-        internal ConnectPackageCreationParameters ConnectPackageParameters
-        {
-            get { return _connectPackageParameters; }
-            set { _connectPackageParameters = value; }
-        }
-        private ConnectPackageCreationParameters _connectPackageParameters;
 
         private HealthRecordItem _item;
 
@@ -459,10 +447,7 @@ namespace Microsoft.HealthVault
         /// 
         public Blob NewBlob(string blobName, string contentType)
         {
-            Blob blob =
-                _connectPackageParameters != null ?
-                new Blob(blobName, contentType, null, null, null, _connectPackageParameters) :
-                new Blob(blobName, contentType, null, null, _record);
+            Blob blob = new Blob(blobName, contentType, null, null, _record);
             _blobs.Add(blobName, blob);
             _item.Sections |= HealthRecordItemSections.BlobPayload;
             return blob;
@@ -516,12 +501,8 @@ namespace Microsoft.HealthVault
             BlobHashInfo hashInfo,
             Uri blobUrl)
         {
-            Blob blob =
-                _connectPackageParameters != null ?
-                new Blob(blobName, contentType, null, null, hashInfo, _connectPackageParameters) :
-                new Blob(blobName, contentType, null, null, hashInfo, _record);
+            Blob blob = new Blob(blobName, contentType, null, null, hashInfo, _record) { Url = blobUrl };
 
-            blob.Url = blobUrl;
 
             _blobs.Add(blobName, blob);
             _item.Sections |= HealthRecordItemSections.BlobPayload;

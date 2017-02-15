@@ -11,11 +11,10 @@ using System.IO;
 using System.Security;
 using System.Security.Cryptography;
 using System.Security.Cryptography.X509Certificates;
-using System.Security.Cryptography.Xml;
 using System.Text;
 using System.Xml;
 using System.Xml.XPath;
-using Microsoft.HealthVault.Package;
+using Microsoft.HealthVault.Exceptions;
 
 namespace Microsoft.HealthVault
 {
@@ -914,48 +913,6 @@ namespace Microsoft.HealthVault
             return _blobStore;
         }
 
-        /// <summary>
-        /// Gets the BLOB store for this health record item.
-        /// </summary>
-        /// 
-        /// <param name="connectPackageParameters">
-        /// The <see cref="ConnectPackageCreationParameters"/> that define 
-        /// the <see cref="Package.ConnectPackage"/> to which any BLOB data will be written to.
-        /// </param>
-        /// 
-        /// <remarks>
-        /// This method replaces the previous OtherData property. All binary data is now created,
-        /// updated, and retrieved through <see cref="BlobStore"/> instance associated with the
-        /// <see cref="HealthRecordItem"/>.<br/>
-        /// <br/>
-        /// GetBlobStore will return an empty store on an existing <see cref="HealthRecordItem"/>
-        /// if <see cref="HealthRecordItemSections.BlobPayload"/> is not specified when retrieving
-        /// the item. In this case it is possible to overwrite or remove existing Blobs in the
-        /// <see cref="HealthRecordItem"/> instance stored in HealthVault by using the same name
-        /// as the existing Blob. It is recommended that if you are going to be manipulating 
-        /// Blobs in the BlobStore, that you specify
-        /// <see cref="HealthRecordItemSections.BlobPayload"/> when retrieving the item.
-        /// </remarks>
-        /// 
-        /// <returns>
-        /// A <see cref="BlobStore"/> instance related to this health record item.
-        /// </returns>
-        /// <exception cref="ArgumentNullException">
-        /// If <paramref name="connectPackageParameters"/> is <b>null</b>.
-        /// </exception>
-        /// 
-        public BlobStore GetBlobStore(ConnectPackageCreationParameters connectPackageParameters)
-        {
-            if (_blobStore == null)
-            {
-                _blobStore = new BlobStore(this, connectPackageParameters);
-            }
-            else
-            {
-                _blobStore.ConnectPackageParameters = connectPackageParameters;
-            }
-            return _blobStore;
-        }
         private BlobStore _blobStore;
 
         #endregion Blobs

@@ -5,12 +5,10 @@
 
 
 using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Globalization;
-using System.Text;
 using System.Xml;
 using System.Xml.XPath;
+using Microsoft.HealthVault.Exceptions;
 
 namespace Microsoft.HealthVault.ItemTypes
 {
@@ -207,7 +205,7 @@ namespace Microsoft.HealthVault.ItemTypes
         /// 
         public override string ToString()
         {
-            return String.Format(
+            return string.Format(
                 ResourceRetriever.GetResourceString(
                     "AerobicWeeklyGoalToStringFormat"),
                 AerobicSession.ToString(),

@@ -5,9 +5,6 @@
 
 
 using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Globalization;
 using System.Xml;
 using System.Xml.XPath;
 
@@ -143,7 +140,7 @@ namespace Microsoft.HealthVault.ItemTypes
 
             writer.WriteStartElement(nodeName);
 
-            if (!String.IsNullOrEmpty(_description))
+            if (!string.IsNullOrEmpty(_description))
             {
                 writer.WriteElementString("description", _description);
             }
@@ -225,8 +222,8 @@ namespace Microsoft.HealthVault.ItemTypes
             get { return _address; }
             set
             {
-                Validator.ThrowIfStringNullOrEmpty(value, "Address");
-                Validator.ThrowIfStringIsWhitespace(value, "Address");
+                Validator.ThrowIfStringNullOrEmpty(value, "Addresses");
+                Validator.ThrowIfStringIsWhitespace(value, "Addresses");
                 _address = value;
             }
         }

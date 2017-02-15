@@ -8,7 +8,6 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
-using System.Text;
 using System.Xml;
 using System.Xml.XPath;
 
@@ -244,7 +243,7 @@ namespace Microsoft.HealthVault.ItemTypes
             
             _dateSubmitted.WriteXml("date-submitted", writer);
             _patient.WriteXml("patient", writer);
-            XmlWriterHelper.WriteOpt<CodableValue>(writer, "relationship-to-member", _relationshipToMember);
+            XmlWriterHelper.WriteOpt(writer, "relationship-to-member", _relationshipToMember);
             _plan.WriteXml("plan", writer);
             XmlWriterHelper.WriteOptString(writer, "group-id", _groupId);
             writer.WriteElementString("member-id", _memberId);                    
@@ -540,7 +539,7 @@ namespace Microsoft.HealthVault.ItemTypes
         public override string ToString()
         {
             string value =
-                String.Format(CultureInfo.CurrentCulture,
+                string.Format(CultureInfo.CurrentCulture,
                     ResourceRetriever.GetResourceString("ExplanationOfBenefitsToStringFormat"),
                     _provider.Name,
                     _claimType.Text, 

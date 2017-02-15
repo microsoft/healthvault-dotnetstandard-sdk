@@ -5,9 +5,6 @@
 
 
 using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Globalization;
 using System.Xml;
 using System.Xml.XPath;
 
@@ -140,7 +137,7 @@ namespace Microsoft.HealthVault.ItemTypes
             _description.WriteXml("description",writer);
 
             // status
-            XmlWriterHelper.WriteOpt<CodableValue>(
+            XmlWriterHelper.WriteOpt(
                 writer,
                 "status",
                 _status);

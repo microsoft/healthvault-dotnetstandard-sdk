@@ -5,10 +5,6 @@
 
 
 using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Text;
-using System.Globalization;
 using System.Xml;
 using System.Xml.XPath;
 
@@ -127,19 +123,19 @@ namespace Microsoft.HealthVault.ItemTypes
             _relativeName.WriteXml("relative-name", writer);
 
             // relationship
-            XmlWriterHelper.WriteOpt<CodableValue>( 
+            XmlWriterHelper.WriteOpt( 
                 writer,
                 "relationship",
                 _relationship);
 
             // date-of-birth
-            XmlWriterHelper.WriteOpt<ApproximateDate>(
+            XmlWriterHelper.WriteOpt(
                 writer,
                 "date-of-birth",
                 _dateOfBirth);
 
            // date-of-death
-            XmlWriterHelper.WriteOpt<ApproximateDate>( 
+            XmlWriterHelper.WriteOpt( 
                 writer,
                 "date-of-death",
                 _dateOfDeath);
@@ -229,7 +225,7 @@ namespace Microsoft.HealthVault.ItemTypes
             if (_relationship != null)
             {
                 result =
-                    String.Format(
+                    string.Format(
                         ResourceRetriever.GetResourceString(
                             "FamilyHistoryToStringFormat"),
                         _relativeName.ToString(),

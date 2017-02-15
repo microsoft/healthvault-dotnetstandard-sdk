@@ -121,7 +121,7 @@ namespace Microsoft.HealthVault.Web
                 credential =
                     new WebApplicationCredential(
                         ApplicationId,
-                        HealthApplicationConfiguration.Current.ApplicationCertificate);
+                        ApplicationCertificateStore.Current.ApplicationCertificate);
             }
             Credential = credential;
             if (offlinePersonId != Guid.Empty)

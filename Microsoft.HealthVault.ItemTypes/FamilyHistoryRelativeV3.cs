@@ -4,9 +4,6 @@
 // All other rights reserved.
 
 using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Text;
 using System.Globalization;
 using System.Xml;
 using System.Xml.XPath;
@@ -127,25 +124,25 @@ namespace Microsoft.HealthVault.ItemTypes
             _relationship.WriteXml("relationship", writer);
 
             // relative-name
-            XmlWriterHelper.WriteOpt<PersonItem>(
+            XmlWriterHelper.WriteOpt(
                 writer,
                 "relative-name",
                 _relativeName);
 
             // date-of-birth
-            XmlWriterHelper.WriteOpt<ApproximateDate>(
+            XmlWriterHelper.WriteOpt(
                 writer,
                 "date-of-birth",
                 _dateOfBirth);
 
             // date-of-death
-            XmlWriterHelper.WriteOpt<ApproximateDate>(
+            XmlWriterHelper.WriteOpt(
                 writer,
                 "date-of-death",
                 _dateOfDeath);
 
             // region-of-origin
-            XmlWriterHelper.WriteOpt<CodableValue>(
+            XmlWriterHelper.WriteOpt(
                 writer,
                 "region-of-origin",
                 _regionOfOrigin);
@@ -241,11 +238,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public override string ToString()
         {
-            string result = String.Empty;
+            string result = string.Empty;
             if (_relativeName != null && _relationship != null)
             {
                 result =
-                    String.Format(
+                    string.Format(
                         CultureInfo.InvariantCulture,
                         ResourceRetriever.GetResourceString(
                             "FamilyHistoryRelativeToStringFormatNameAndRelationship"),
@@ -255,11 +252,11 @@ namespace Microsoft.HealthVault.ItemTypes
             else if (_relationship != null)
             {
                 result =
-                    String.Format(
+                    string.Format(
                         CultureInfo.InvariantCulture,
                         ResourceRetriever.GetResourceString(
                             "FamilyHistoryRelativeToStringFormatNameAndRelationship"),
-                        String.Empty,
+                        string.Empty,
                         _relationship.ToString());
             }
             else if (_relativeName != null)

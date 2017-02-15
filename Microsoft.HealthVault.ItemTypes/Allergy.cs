@@ -5,8 +5,6 @@
 
 
 using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Xml;
 using System.Xml.XPath;
 
@@ -158,37 +156,37 @@ namespace Microsoft.HealthVault.ItemTypes
             _name.WriteXml("name", writer);
 
             // <reaction>
-            XmlWriterHelper.WriteOpt<CodableValue>(
+            XmlWriterHelper.WriteOpt(
                 writer, 
                 "reaction", 
                 Reaction);
 
             // <first-observed>
-            XmlWriterHelper.WriteOpt<ApproximateDateTime>(
+            XmlWriterHelper.WriteOpt(
                 writer,
                 "first-observed",
                 FirstObserved);
 
             // <allergen-type>
-            XmlWriterHelper.WriteOpt<CodableValue>(
+            XmlWriterHelper.WriteOpt(
                 writer, 
                 "allergen-type", 
                 AllergenType);
                 
             // <allergen-code>
-            XmlWriterHelper.WriteOpt<CodableValue>(
+            XmlWriterHelper.WriteOpt(
                 writer,
                 "allergen-code",
                 AllergenCode);
 
             // <treatment-provider>
-            XmlWriterHelper.WriteOpt<PersonItem>(
+            XmlWriterHelper.WriteOpt(
                 writer,
                 "treatment-provider",
                 TreatmentProvider);
          
             // <treatment>
-            XmlWriterHelper.WriteOpt<CodableValue>(
+            XmlWriterHelper.WriteOpt(
                 writer,
                 "treatment",
                 Treatment);

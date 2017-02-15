@@ -9,7 +9,7 @@ namespace Microsoft.HealthVault.ItemTypes.Csv
     /// <summary>
     /// Base class for CSV items
     /// </summary>
-    abstract public class OtherItemDataCsvItem
+    public abstract class OtherItemDataCsvItem
     {
     }
 }

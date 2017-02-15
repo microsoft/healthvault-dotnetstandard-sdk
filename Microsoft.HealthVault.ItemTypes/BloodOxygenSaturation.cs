@@ -5,8 +5,6 @@
 
 
 using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Globalization;
 using System.Xml;
 using System.Xml.XPath;
@@ -128,13 +126,13 @@ namespace Microsoft.HealthVault.ItemTypes
                 XmlConvert.ToString(_value));
 
             // <measurement-method>
-            XmlWriterHelper.WriteOpt<CodableValue>(
+            XmlWriterHelper.WriteOpt(
                 writer,
                 "measurement-method",
                 _measurementMethod);
 
             // <measurement-flags>
-            XmlWriterHelper.WriteOpt<CodableValue>(
+            XmlWriterHelper.WriteOpt(
                 writer,
                 "measurement-flags",
                 _measurementFlags);
@@ -246,7 +244,7 @@ namespace Microsoft.HealthVault.ItemTypes
         public override string ToString()
         {
             return 
-                String.Format(
+                string.Format(
                     ResourceRetriever.GetResourceString(
                         "Percent"),
                     (_value * 100.0).ToString(CultureInfo.CurrentCulture));

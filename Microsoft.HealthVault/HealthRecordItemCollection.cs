@@ -112,7 +112,7 @@ namespace Microsoft.HealthVault
 
                                 HealthRecordItem resultThing =
                                     ItemTypeManager.DeserializeItem(thingReader);
-                                thingReader.Close();
+                                thingReader.Dispose();
                                 // groupReader will normally be at the end element of 
                                 // the group at this point, and needs a read to get to
                                 // the next element. If the group was empty, groupReader
@@ -128,27 +128,27 @@ namespace Microsoft.HealthVault
                             }
                             else if (groupReader.Name == "unprocessed-thing-key-info")
                             {
-                                XmlReader unprocessedThingReader = groupReader.ReadSubtree();
-
-                                unprocessedThingReader.ReadToDescendant("thing-id");
-
-                                string versionStamp = String.Empty;
-                                if (unprocessedThingReader.MoveToAttribute("version-stamp"))
+                                using (XmlReader unprocessedThingReader = groupReader.ReadSubtree())
                                 {
-                                    versionStamp = unprocessedThingReader.Value;
-                                    unprocessedThingReader.MoveToElement();
+                                    unprocessedThingReader.ReadToDescendant("thing-id");
+
+                                    string versionStamp = String.Empty;
+                                    if (unprocessedThingReader.MoveToAttribute("version-stamp"))
+                                    {
+                                        versionStamp = unprocessedThingReader.Value;
+                                        unprocessedThingReader.MoveToElement();
+                                    }
+
+                                    Guid thingId =
+                                        new Guid(unprocessedThingReader.ReadElementContentAsString());
+
+                                    HealthRecordItemKey key =
+                                        new HealthRecordItemKey(thingId, new Guid(versionStamp));
+
+                                    result.AddResult(key);
+
+                                    groupReader.Read();
                                 }
-
-                                Guid thingId =
-                                    new Guid(unprocessedThingReader.ReadElementContentAsString());
-
-                                HealthRecordItemKey key =
-                                    new HealthRecordItemKey(thingId, new Guid(versionStamp));
-
-                                result.AddResult(key);
-
-                                unprocessedThingReader.Close();
-                                groupReader.Read();
                             }
                             else if (groupReader.Name == "filtered")
                             {
@@ -162,9 +162,10 @@ namespace Microsoft.HealthVault
                             {
                                 //Unrecognized element. There are no other elements allowed by
                                 // the xsd file, so should never get here. Just skip the element.
-                                XmlReader unknownElementReader = groupReader.ReadSubtree();
-                                unknownElementReader.Read();
-                                unknownElementReader.Close();
+                                using (XmlReader unknownElementReader = groupReader.ReadSubtree())
+                                {
+                                    unknownElementReader.Read();
+                                }
                                 groupReader.Read();
                             }
                             break;
@@ -1345,15 +1346,16 @@ namespace Microsoft.HealthVault
                 infoReader.ReadToDescendant("thing");
                 while (infoReader.Name == "thing")
                 {
-                    XmlReader thingReader = infoReader.ReadSubtree();
-                    thingReader.MoveToContent();
-                    HealthRecordItem resultThing = ItemTypeManager.DeserializeItem(thingReader);
-                    thingReader.Close();
-                    infoReader.Read();
-
-                    if (resultThing != null)
+                    using (XmlReader thingReader = infoReader.ReadSubtree())
                     {
-                        results.Add(resultThing);
+                        thingReader.MoveToContent();
+                        HealthRecordItem resultThing = ItemTypeManager.DeserializeItem(thingReader);
+                        infoReader.Read();
+
+                        if (resultThing != null)
+                        {
+                            results.Add(resultThing);
+                        }
                     }
                 }
             }

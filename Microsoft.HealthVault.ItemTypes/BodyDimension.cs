@@ -4,10 +4,6 @@
 // All other rights reserved.
 
 using System;
-using System.Text;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Globalization;
 using System.Xml;
 using System.Xml.XPath;
 
@@ -242,27 +238,23 @@ namespace Microsoft.HealthVault.ItemTypes
         /// 
         public override string ToString()
         {
-            string result = String.Empty;
-
-            // MeasurementName 
             if (_measurementName != null && _value != null)
             {
-                result =
-                    String.Format(
+                return string.Format(
                         ResourceRetriever.GetResourceString(
                             "NameAndValue"),
                         _measurementName.ToString(),
                         _value.ToString());
             }
-            else if (_measurementName != null)
+            if (_measurementName != null)
             {
-                result = _measurementName.ToString();
+                return _measurementName.ToString();
             }
-            else if (_value != null)
+            if (_value != null)
             {
-                result = _value.ToString();
+                return _value.ToString();
             }
-            return result.ToString();
+            return string.Empty;
         }
     }
 }

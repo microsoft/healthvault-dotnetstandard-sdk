@@ -6,9 +6,7 @@
 
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Globalization;
-using System.Text;
 using System.Xml;
 using System.Xml.XPath;
 
@@ -69,12 +67,10 @@ namespace Microsoft.HealthVault.ItemTypes
             XPathNavigator genderNav =
                 basicNav.SelectSingleNode("gender");
 
-            string genderString;
-
             if (genderNav != null)
             {
-                genderString = genderNav.Value;
-                if (String.Equals(
+                string genderString = genderNav.Value;
+                if (string.Equals(
                         genderString, 
                         "m", 
                         StringComparison.Ordinal))
@@ -82,7 +78,7 @@ namespace Microsoft.HealthVault.ItemTypes
                     _gender = ItemTypes.Gender.Male;
                 }
                 else if (
-                    String.Equals(
+                    string.Equals(
                         genderString,
                         "f",
                         StringComparison.Ordinal))
@@ -212,7 +208,7 @@ namespace Microsoft.HealthVault.ItemTypes
                 writer.WriteElementString("city", _city);
             }
 
-            if (!String.IsNullOrEmpty(_stateOrProvince))
+            if (!string.IsNullOrEmpty(_stateOrProvince))
             {
                 writer.WriteElementString("state", _stateOrProvince);
             }
@@ -408,11 +404,9 @@ namespace Microsoft.HealthVault.ItemTypes
         /// A list of the languages.
         /// </value>
         /// 
-        public IList<Language> Languages
-        {
-            get { return _languages; }
-        }
-        private List<Language> _languages = new List<Language>();
+        public IList<Language> Languages => _languages;
+
+        private readonly List<Language> _languages = new List<Language>();
 
         /// <summary>
         /// Gets a string representation of the basic item.
@@ -424,66 +418,56 @@ namespace Microsoft.HealthVault.ItemTypes
         /// 
         public override string ToString()
         {
-            string result = String.Empty;
             if (Gender != null || BirthYear != null)
             {
                 if (Gender != null && BirthYear != null)
                 {
-                    result =
-                        String.Format(
-                            ResourceRetriever.GetResourceString(
-                                "BasicToStringFormatGenderAndBirthYear"),
-                            ResourceRetriever.GetResourceString(
-                                Gender.ToString()),
-                            BirthYear);
-                }
-                else if (BirthYear != null)
-                {
-                    result =
-                        String.Format(
-                            ResourceRetriever.GetResourceString(
-                                "BasicToStringFormatBirthYear"),
-                            BirthYear);
-                }
-                else
-                {
-                    result =
+                    return string.Format(
                         ResourceRetriever.GetResourceString(
-                            Gender.ToString());
+                            "BasicToStringFormatGenderAndBirthYear"),
+                        ResourceRetriever.GetResourceString(
+                            Gender.ToString()),
+                        BirthYear);
                 }
+
+                if (BirthYear != null)
+                {
+                    return string.Format(
+                        ResourceRetriever.GetResourceString(
+                            "BasicToStringFormatBirthYear"),
+                        BirthYear);
+                }
+
+                return ResourceRetriever.GetResourceString(
+                    Gender.ToString());
             }
-            else if (PostalCode != null || Country != null)
+
+            if (PostalCode != null || Country != null)
             {
                 if (PostalCode != null && Country != null)
                 {
-                    result =
-                        String.Format(
-                            ResourceRetriever.GetResourceString(
-                                "BasicToStringFormatPostalCodeAndCountry"),
-                            PostalCode,
-                            Country);
+                    return string.Format(
+                        ResourceRetriever.GetResourceString(
+                            "BasicToStringFormatPostalCodeAndCountry"),
+                        PostalCode,
+                        Country);
                 }
-                else if (Country != null)
+
+                if (Country != null)
                 {
-                    result = Country;
+                    return Country;
                 }
-                else
-                {
-                    result = PostalCode;
-                } 
-            }
-            else if (CommonData.Note != null)
-            {
-                result = CommonData.Note;
-            }
-            else
-            {
-                result =
-                    ResourceRetriever.GetResourceString(
-                        "BasicToStringSeeDetails");
+
+                return PostalCode;
             }
 
-            return result;
+            if (CommonData.Note != null)
+            {
+                return CommonData.Note;
+            }
+
+            return ResourceRetriever.GetResourceString(
+                "BasicToStringSeeDetails");
         }
     }
 }

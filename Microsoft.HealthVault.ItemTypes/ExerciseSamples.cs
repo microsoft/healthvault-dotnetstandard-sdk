@@ -4,10 +4,7 @@
 // All other rights reserved.
 
 using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Diagnostics.CodeAnalysis;
-using System.Globalization;
 using System.IO;
 using System.Xml;
 using System.Xml.XPath;
@@ -129,7 +126,7 @@ namespace Microsoft.HealthVault.ItemTypes
             Validator.ThrowSerializationIfNull(_unit, "ExerciseSampleUnitNotSet");
 
             Validator.ThrowSerializationIf(
-                Double.IsNaN(_samplingInterval),
+                double.IsNaN(_samplingInterval),
                 "ExerciseSampleSamplingIntervalNotSet");
 
             if (_sampleData != null && _sampleData.SingleValuedSamples.Count > 0)
@@ -145,7 +142,7 @@ namespace Microsoft.HealthVault.ItemTypes
 
                 Blob blob =
                     GetBlobStore(default(HealthRecordAccessor)).NewBlob(
-                        String.Empty,
+                        string.Empty,
                         _sampleData.ContentType);
                 blob.WriteInline(_sampleData.Data);
             }
@@ -157,13 +154,13 @@ namespace Microsoft.HealthVault.ItemTypes
             _when.WriteXml("when", writer);
 
             // <name>
-            XmlWriterHelper.WriteOpt<CodableValue>(
+            XmlWriterHelper.WriteOpt(
                 writer,
                 "name",
                 _name);
 
             // <unit>
-            XmlWriterHelper.WriteOpt<CodableValue>(
+            XmlWriterHelper.WriteOpt(
                 writer,
                 "unit",
                 _unit);
@@ -297,7 +294,7 @@ namespace Microsoft.HealthVault.ItemTypes
                 _samplingInterval = value;
             }
         }
-        private double _samplingInterval = Double.NaN;
+        private double _samplingInterval = double.NaN;
 
 
         /// <summary>
@@ -411,13 +408,13 @@ namespace Microsoft.HealthVault.ItemTypes
         private ExerciseSamplesData CreateExerciseSampleData()
         {
             Validator.ThrowInvalidIf(
-                        Double.IsNaN(SamplingInterval),
+                        double.IsNaN(SamplingInterval),
                         "SamplingIntervalMustBeSet");
 
             ExerciseSamplesData sampleData;
 
             BlobStore store = GetBlobStore(default(HealthRecordAccessor));
-            Blob blob = store[String.Empty];
+            Blob blob = store[string.Empty];
 
             if (blob == null)
             {

@@ -359,7 +359,7 @@ namespace Microsoft.HealthVault.Rest
                     _response = new HealthServiceRestResponseData
                     {
                         StatusCode = response.StatusCode,
-                        ResponseBody = Encoding.UTF8.GetString(ms.GetBuffer()),
+                        ResponseBody = Encoding.UTF8.GetString(ms.ToArray()),
                         Headers = response.Headers
                     };
 

@@ -7,7 +7,7 @@ using System;
 using System.IO;
 using System.Net;
 using System.Text;
-using Microsoft.HealthVault.Package;
+using Microsoft.HealthVault.Exceptions;
 
 namespace Microsoft.HealthVault
 {
@@ -146,19 +146,16 @@ namespace Microsoft.HealthVault
             string contentType,
             string currentContentEncoding,
             string legacyContentEncoding,
-            BlobHashInfo hashInfo,
-            ConnectPackageCreationParameters connectPackageParameters)
+            BlobHashInfo hashInfo)
         {
             Validator.ThrowIfArgumentNull(name, "name", "StringNull");
             Validator.ThrowIfArgumentNull(contentType, "contentType", "StringNull");
-            Validator.ThrowIfArgumentNull(connectPackageParameters, "connectPackageParameters", "ArgumentNull");
 
             _name = name;
             _contentType = contentType;
             _contentEncoding = currentContentEncoding;
             _legacyContentEncoding = legacyContentEncoding;
             _blobHashInfo = hashInfo;
-            _connectPackageParameters = connectPackageParameters;
         }
 
         /// <summary>
@@ -190,8 +187,6 @@ namespace Microsoft.HealthVault
         private BlobHashInfo _blobHashInfo;
 
         private HealthRecordAccessor _record;
-
-        private ConnectPackageCreationParameters _connectPackageParameters;
 
         /// <summary>
         /// Gets the content encoding of the BLOB.
@@ -258,8 +253,7 @@ namespace Microsoft.HealthVault
             IsDirty = true;
 
             return _record != null ?
-                    new BlobStream(_record, this) :
-                    new BlobStream(_connectPackageParameters, this);
+                    new BlobStream(_record, this) : null;
         }
 
         /// <summary>
@@ -588,14 +582,13 @@ namespace Microsoft.HealthVault
         /// 
         public string ReadAsString(Encoding encoding)
         {
-            String result = null;
+            String result;
             using (MemoryStream memoryStream = new MemoryStream(1000))
             {
                 SaveToStream(memoryStream);
                 memoryStream.Flush();
 
-                result = encoding.GetString(memoryStream.GetBuffer(), 0, (int)memoryStream.Position);
-                memoryStream.Close();
+                result = encoding.GetString(memoryStream.ToArray(), 0, (int)memoryStream.Position);
             }
 
             return result;
@@ -629,7 +622,6 @@ namespace Microsoft.HealthVault
                 memoryStream.Flush();
 
                 result = memoryStream.ToArray();
-                memoryStream.Close();
             }
 
             return result;

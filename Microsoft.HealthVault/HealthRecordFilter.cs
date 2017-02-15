@@ -12,6 +12,7 @@ using System.Globalization;
 using System.Text;
 using System.Xml;
 using System.Xml.XPath;
+using Microsoft.HealthVault.Exceptions;
 
 namespace Microsoft.HealthVault
 {
@@ -160,11 +161,11 @@ namespace Microsoft.HealthVault
 
             if (!isValid)
             {
-                HealthServiceResponseError error
-                    = new HealthServiceResponseError();
-                error.Message =
-                    ResourceRetriever.GetResourceString(
-                        "HealthRecordSearcherInvalidFilter");
+                HealthServiceResponseError error = new HealthServiceResponseError
+                    {
+                        Message = ResourceRetriever.GetResourceString(
+                            "HealthRecordSearcherInvalidFilter")
+                    };
 
                 HealthServiceException e =
                     HealthServiceExceptionHelper.GetHealthServiceException(
@@ -182,14 +183,13 @@ namespace Microsoft.HealthVault
             // throw a specific error in this particular case
             if (idTypesSpecified > 1)
             {
-                HealthServiceResponseError error
-                    = new HealthServiceResponseError();
-                error.Message =
-                    ResourceRetriever.GetResourceString(
-                        "HealthRecordSearcherInvalidFilterIdsAndKeysSpecified");
+                HealthServiceResponseError error = new HealthServiceResponseError
+                    {
+                        Message = ResourceRetriever.GetResourceString(
+                            "HealthRecordSearcherInvalidFilterIdsAndKeysSpecified")
+                    };
 
-                HealthServiceException e =
-                    HealthServiceExceptionHelper.GetHealthServiceException(
+                HealthServiceException e = HealthServiceExceptionHelper.GetHealthServiceException(
                         HealthServiceStatusCode.InvalidFilter,
                         error);
                 throw e;
@@ -197,10 +197,11 @@ namespace Microsoft.HealthVault
 
             if (OrderByClauses.Count > 1)
             {
-                HealthServiceResponseError error = new HealthServiceResponseError();
-                error.Message =
-                    ResourceRetriever.GetResourceString(
-                        "HealthRecordSearcherInvalidOrderSpecified");
+                HealthServiceResponseError error = new HealthServiceResponseError
+                {
+                    Message = ResourceRetriever.GetResourceString(
+                        "HealthRecordSearcherInvalidOrderSpecified")
+                };
 
                 HealthServiceException e =
                     HealthServiceExceptionHelper.GetHealthServiceException(
@@ -335,11 +336,9 @@ namespace Microsoft.HealthVault
         /// filter.
         /// </remarks>
         /// 
-        public IList<Guid> ItemIds
-        {
-            get { return _thingIds; }
-        }
-        private List<Guid> _thingIds = new List<Guid>();
+        public IList<Guid> ItemIds => _thingIds;
+
+        private readonly List<Guid> _thingIds = new List<Guid>();
 
         /// <summary>
         /// Gets or sets the keys uniquely identifying health record items for 
@@ -353,11 +352,9 @@ namespace Microsoft.HealthVault
         /// single filter.
         /// </remarks>
         /// 
-        public IList<HealthRecordItemKey> ItemKeys
-        {
-            get { return _thingKeys; }
-        }
-        private List<HealthRecordItemKey> _thingKeys = new List<HealthRecordItemKey>();
+        public IList<HealthRecordItemKey> ItemKeys => _thingKeys;
+
+        private readonly List<HealthRecordItemKey> _thingKeys = new List<HealthRecordItemKey>();
 
         /// <summary>
         /// Gets or sets the client assigned IDs identifying health record items for 
@@ -371,11 +368,9 @@ namespace Microsoft.HealthVault
         /// single filter.
         /// </remarks>
         /// 
-        public IList<string> ClientItemIds
-        {
-            get { return _clientItemIds; }
-        }
-        private List<string> _clientItemIds = new List<string>();
+        public IList<string> ClientItemIds => _clientItemIds;
+
+        private readonly List<string> _clientItemIds = new List<string>();
 
         /// <summary>
         /// Gets a collection of the order by clauses which orders the data returned from GetThings request.
@@ -390,14 +385,9 @@ namespace Microsoft.HealthVault
         /// type IDs are listed in the filter spec.
         /// </remarks>
         /// 
-        public IList<HealthRecordItemsOrderByClause> OrderByClauses
-        {
-            get
-            {
-                return _orderByClauses;
-            }
-        }
-        private List<HealthRecordItemsOrderByClause> _orderByClauses = new List<HealthRecordItemsOrderByClause>();
+        public IList<HealthRecordItemsOrderByClause> OrderByClauses => _orderByClauses;
+
+        private readonly List<HealthRecordItemsOrderByClause> _orderByClauses = new List<HealthRecordItemsOrderByClause>();
 
         /// <summary>
         /// Gets a collection of the unique item type identifiers to search
@@ -414,11 +404,9 @@ namespace Microsoft.HealthVault
         /// To add a type ID, use the Add method of the returned collection.
         /// </remarks>
         /// 
-        public IList<Guid> TypeIds
-        {
-            get { return _typeIds; }
-        }
-        private TypeList _typeIds;
+        public IList<Guid> TypeIds => _typeIds;
+
+        private readonly TypeList _typeIds;
 
         /// <summary>
         /// Gets or sets a set of flags representing the health record item  
@@ -752,12 +740,7 @@ namespace Microsoft.HealthVault
         /// calculations or to return only specific values.
         /// </remarks>
         /// 
-        public string XPath
-        {
-            get { return _xpath; }
-            set { _xpath = value; }
-        }
-        private string _xpath;
+        public string XPath { get; set; }
 
         /// <summary>
         /// Gets or sets the minimum updated end date of the item.
@@ -826,18 +809,7 @@ namespace Microsoft.HealthVault
         /// <see cref="ItemRetrievalIntentions.Unspecified"/>.
         /// This property is reserved for future use.
         /// </remarks>
-        public ItemRetrievalIntentions Intentions
-        {
-            get
-            {
-                return _intentions;
-            }
-            set
-            {
-                _intentions = value;
-            }
-        }
-        private ItemRetrievalIntentions _intentions = ItemRetrievalIntentions.Unspecified;
+        public ItemRetrievalIntentions Intentions { get; set; } = ItemRetrievalIntentions.Unspecified;
 
         /// <summary>
         /// Gets a string representation of the instance.
@@ -1520,9 +1492,9 @@ namespace Microsoft.HealthVault
                 }
             }
 
-            public int Count { get { return _list.Count; } }
+            public int Count => _list.Count;
 
-            public bool IsReadOnly { get { return false; } }
+            public bool IsReadOnly => false;
 
             public Guid this[int index]
             {

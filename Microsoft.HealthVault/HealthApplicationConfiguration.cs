@@ -5,12 +5,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Diagnostics.CodeAnalysis;
-using System.Globalization;
-using System.Net;
-using System.Security;
-using System.Security.Cryptography;
 using System.Security.Cryptography.X509Certificates;
 
 namespace Microsoft.HealthVault
@@ -20,60 +14,39 @@ namespace Microsoft.HealthVault
     /// exposes some of the settings directly.
     /// </summary>
     /// 
-    public class HealthApplicationConfiguration
+    public class HealthApplicationConfiguration : IHealthApplicationConfiguration
     {
-        #region configuration key constants
-        // Url configuration keys
-        private const string ConfigKeyHealthServiceUrl = "HealthServiceUrl";
-        private const string ConfigKeyRestHealthServiceUrl = "RestHealthServiceUrl";
-        private const string ConfigKeyShellUrl = "ShellUrl";
-
-        // Application related configuration keys
-        private const string ConfigKeyAppId = "ApplicationId";
-        private const string ConfigKeyApplicationCertificateFileName = "ApplicationCertificateFilename";
-        private const string ConfigKeyApplicationCertificatePassword = "ApplicationCertificatePassword";
-        private const string ConfigKeyCertSubject = "AppCertSubject";
-        private const string ConfigKeySignatureCertStoreLocation = "SignatureCertStoreLocation";
-        private const string ConfigKeySupportedType = "SupportedTypeVersions";
-        private const string ConfigKeyUseLegacyTypeVersionSupport = "UseLegacyTypeVersionSupport";
-        private const string ConfigKeyMultiInstanceAware = "MultiInstanceAware";
-        private const string ConfigKeyServiceInfoDefaultCacheTtlMilliseconds = "ServiceInfoDefaultCacheTtlMilliseconds";
-
-        // Request/Response related configuration keys
-        private const string ConfigKeyDefaultRequestTimeout = "DefaultRequestTimeout";
-        private const string ConfigKeyDefaultRequestTimeToLive = "DefaultRequestTimeToLive";
-        private const string ConfigKeyRequestRetryOnInternal500Count = "RequestRetryOnInternal500Count";
-        private const string ConfigKeyRequestRetryOnInternal500SleepSeconds = "RequestRetryOnInternal500SleepSeconds";
-        private const string ConfigKeyRequestCompressionThreshold = "RequestCompressionThreshold";
-        private const string ConfigKeyRequestCompressionMethod = "RequestCompressionMethod";
-        private const string ConfigKeyResponseCompressionMethods = "ResponseCompressionMethods";
-        private const string ConfigKeyDefaultInlineBlobHashBlockSize = "DefaultInlineBlobHashBlockSize";
-
-        // Security related keys
-        private const string ConfigKeyHmacAlgorithmName = "HmacAlgorithmName";
-        private const string ConfigKeyHashAlgorithmName = "HashAlgorithmName";
-        private const string ConfigKeySignatureHashAlgorithmName = "SignatureHashAlgorithmName";
-        private const string ConfigKeySignatureAlgorithmName = "SignatureAlgorithmName";
-        private const string ConfigSymmetricAlgorithmName = "SymmetricAlgorithmName";
-
-        // Connection related keys
-        private const string ConfigKeyConnectionUseHttpKeepAlive = "ConnectionUseHttpKeepAlive";
-        private const string ConfigKeyConnectionLeaseTimeout = "ConnectionLeaseTimeout";
-        private const string ConfigKeyConnectionMaxIdleTime = "ConnectionMaxIdleTime";
-
-        #endregion
+        private static readonly object instanceLock = new object();
 
         /// <summary>
         /// Gets or sets the current configuration object for the app-domain.
         /// </summary>
         public static HealthApplicationConfiguration Current
         {
-            get { return _current; }
-            set { _current = value; }
+            get
+            {
+                lock (instanceLock)
+                {
+                    return _current ?? (_current = new HealthApplicationConfiguration()); 
+                }
+            }
+
+            internal set
+            {
+                lock (instanceLock)
+                {
+                    _current = value; 
+                }
+            }
         }
 
-        private static volatile HealthApplicationConfiguration _current =
-            new HealthApplicationConfiguration();
+        private static HealthApplicationConfiguration _current;
+
+        /// <summary>
+        /// True if the app has been initialized.
+        /// </summary>
+        /// <remarks>After the app is initialized, changes to these config values are not permitted.</remarks>
+        internal bool AppInitialized { get; set; }
 
         /// <summary>
         /// Gets the root URL for a default instance of the
@@ -89,61 +62,16 @@ namespace Microsoft.HealthVault
         {
             get
             {
-                if (_healthVaultRootUrl == null)
-                {
-                    _healthVaultRootUrl = GetConfigurationUrl(ConfigKeyHealthServiceUrl, true);
-                }
-
                 return _healthVaultRootUrl;
+            }
+
+            set
+            {
+                this.EnsureAppNotInitialized();
+                _healthVaultRootUrl = EnsureTrailingSlash(value);
             }
         }
         private volatile Uri _healthVaultRootUrl;
-
-        /// <summary>
-        /// Gets the HealthVault method request URL for
-        /// the configured default instance of the HealthVault web-service.
-        /// </summary>
-        /// 
-        /// <remarks>
-        /// This property corresponds to the "HealthServiceUrl" configuration
-        /// value.
-        /// </remarks>
-        /// 
-        public Uri HealthVaultMethodUrl
-        {
-            get
-            {
-                string newUri = HealthVaultUrl.AbsoluteUri;
-                if (!newUri.EndsWith("/", StringComparison.Ordinal))
-                {
-                    newUri = newUri + "/wildcat.ashx";
-                }
-                else
-                {
-                    newUri = newUri + "wildcat.ashx";
-                }
-
-                return new Uri(newUri);
-            }
-        }
-
-        /// <summary>
-        /// Gets the HealthVault type schema root URL for
-        /// the configured default instance of the HealthVault web-service.
-        /// </summary>
-        /// 
-        /// <remarks>
-        /// This property corresponds to the "HealthServiceUrl" configuration
-        /// value.
-        /// </remarks>
-        /// 
-        public Uri HealthVaultTypeSchemaUrl
-        {
-            get
-            {
-                return new Uri(HealthVaultUrl, "type-xsd/");
-            }
-        }
 
         /// <summary>
         /// Gets the HealthVault Shell URL for
@@ -159,324 +87,16 @@ namespace Microsoft.HealthVault
         {
             get
             {
-                if (_shellUrl == null)
-                {
-                    _shellUrl = GetConfigurationUrl(ConfigKeyShellUrl, true);
-                }
-
                 return _shellUrl;
+            }
+
+            set
+            {
+                this.EnsureAppNotInitialized();
+                _shellUrl = EnsureTrailingSlash(value);
             }
         }
         private volatile Uri _shellUrl;
-
-        /// <summary>
-        /// Gets the URL to/from which BLOBs get streamed, for
-        /// the configured default instance of the HealthVault web-service.
-        /// </summary>
-        /// 
-        /// <remarks>
-        /// This property corresponds to the "HealthVaultUrl" configuration
-        /// value with the path modified to the appropriate handler.
-        /// </remarks>
-        /// 
-        public virtual Uri BlobStreamUrl
-        {
-            get
-            {
-                if (HealthVaultUrl != null)
-                {
-                    return new Uri(
-                        HealthVaultUrl.GetComponents(UriComponents.Scheme | UriComponents.Host, UriFormat.Unescaped) + "/streaming/wildcatblob.ashx");
-                }
-
-                return null;
-            }
-        }
-
-        /// <summary>
-        /// Gets the HealthVault client service URL for
-        /// the configured default instance of the HealthVault web-service,
-        /// from the application or web configuration file.
-        /// </summary>
-        /// 
-        /// <remarks>
-        /// This property corresponds to the "HealthVaultUrl" configuration
-        /// value with the path modified to the appropriate handler.
-        /// </remarks> 
-        /// 
-        public virtual Uri HealthClientServiceUrl
-        {
-            get
-            {
-                if (HealthVaultUrl != null)
-                {
-                    return UrlPathAppend(HealthVaultUrl, "hvclientservice.ashx");
-                }
-
-                return null;
-            }
-        }
-
-        /// <summary>
-        /// Gets a certificate containing the application's private key.
-        /// </summary>
-        /// 
-        /// <remarks>
-        /// This property corresponds to the "SignatureCertStoreLocation", "AppCertSubject",
-        /// "ApplicationCertificateFilename", and "ApplicationCertificatePassword" configuration
-        /// values.
-        /// </remarks>
-        /// 
-        public virtual X509Certificate2 ApplicationCertificate
-        {
-            get
-            {
-                if (_applicationCertificate == null)
-                {
-                    _applicationCertificate = GetApplicationCertificate(ApplicationId);
-                }
-
-                return _applicationCertificate;
-            }
-        }
-        private volatile X509Certificate2 _applicationCertificate;
-
-        // This is here for compatibility with the previous relase and for testability.
-        internal X509Certificate2 GetApplicationCertificate(Guid applicationId)
-        {
-            Validator.ThrowArgumentExceptionIf(
-                applicationId == Guid.Empty,
-                "appId",
-                "GuidParameterEmpty");
-
-            return GetApplicationCertificate(
-                applicationId,
-                GetSignatureCertStoreLocation(),
-                "CN=" + GetApplicationCertificateSubject(applicationId));
-        }
-
-        internal X509Certificate2 GetApplicationCertificateFromStore(
-            Guid applicationId,
-            StoreLocation storeLocation,
-            string certSubject)
-        {
-            if (certSubject == null)
-            {
-                certSubject = "CN=" + GetApplicationCertificateSubject(applicationId);
-            }
-
-            HealthVaultPlatformTrace.LogCertLoading(
-                "Opening cert store (read-only): {0}",
-                storeLocation.ToString());
-
-            RSACryptoServiceProvider rsaProvider = null;
-            string thumbprint = null;
-
-            X509Certificate2 result = null;
-            X509Store store = new X509Store(storeLocation);
-
-            store.Open(OpenFlags.ReadOnly);
-
-            try
-            {
-                HealthVaultPlatformTrace.LogCertLoading(
-                    "Looking for matching cert with subject: {0}",
-                    certSubject);
-
-                foreach (X509Certificate2 cert in store.Certificates)
-                {
-                    if (String.Equals(
-                            cert.Subject,
-                            certSubject,
-                            StringComparison.OrdinalIgnoreCase))
-                    {
-                        HealthVaultPlatformTrace.LogCertLoading(
-                            "Found matching cert subject with thumbprint: {0}",
-                            cert.Thumbprint);
-
-                        thumbprint = cert.Thumbprint;
-
-                        HealthVaultPlatformTrace.LogCertLoading("Looking for private key");
-                        rsaProvider = (RSACryptoServiceProvider)cert.PrivateKey;
-                        HealthVaultPlatformTrace.LogCertLoading("Private key found");
-
-                        result = cert;
-                        break;
-                    }
-                }
-            }
-            catch (CryptographicException e)
-            {
-                HealthVaultPlatformTrace.LogCertLoading(
-                    "Failed to retrieve private key for certificate: {0}",
-                    e.ToString());
-            }
-            finally
-            {
-                store.Close();
-            }
-
-            if (rsaProvider == null || String.IsNullOrEmpty(thumbprint))
-            {
-                throw new SecurityException(
-                        ResourceRetriever.FormatResourceString(
-                            "CertificateNotFound",
-                            certSubject,
-                            storeLocation));
-            }
-
-            return result;
-        }
-
-        private X509Certificate2 GetApplicationCertificateFromFile(
-            string certFilename)
-        {
-            HealthVaultPlatformTrace.LogCertLoading(
-                "Attempting to load certificate from file: {0}",
-                certFilename);
-
-            RSACryptoServiceProvider rsaProvider = null;
-            string thumbprint = null;
-
-            certFilename = Environment.ExpandEnvironmentVariables(certFilename);
-
-            if (!System.IO.File.Exists(certFilename))
-            {
-                HealthVaultPlatformTrace.LogCertLoading(
-                    "Cert file not found: {0}",
-                    certFilename);
-
-                throw Validator.SecurityException("CertificateFileNotFound");
-            }
-
-            string password = GetConfigurationString(ConfigKeyApplicationCertificatePassword);
-            X509Certificate2 cert;
-
-            try
-            {
-                HealthVaultPlatformTrace.LogCertLoading(
-                    "Loading certificate from file {0}",
-                    String.IsNullOrEmpty(password) ? "without a password" : "with a password");
-
-                cert = new X509Certificate2(certFilename, password, X509KeyStorageFlags.MachineKeySet);
-            }
-            catch (CryptographicException e)
-            {
-                HealthVaultPlatformTrace.LogCertLoading(
-                    "Failed to load certificate: {0}",
-                    e.ToString());
-
-                throw Validator.SecurityException("ErrorLoadingCertificateFile", e);
-            }
-
-            if (cert != null)
-            {
-                HealthVaultPlatformTrace.LogCertLoading("Looking for private key");
-
-                if (cert.PrivateKey == null)
-                {
-                    HealthVaultPlatformTrace.LogCertLoading(
-                        "Certificate did not contain a private key.");
-
-                    throw Validator.SecurityException("CertificateMissingPrivateKey");
-                }
-
-                HealthVaultPlatformTrace.LogCertLoading(
-                    "Found cert with thumbprint: {0}",
-                    cert.Thumbprint);
-
-                thumbprint = cert.Thumbprint;
-                rsaProvider = (RSACryptoServiceProvider)cert.PrivateKey;
-                HealthVaultPlatformTrace.LogCertLoading("Private key found");
-            }
-
-            if (rsaProvider == null || String.IsNullOrEmpty(thumbprint))
-            {
-                throw Validator.SecurityException("CertificateNotFound");
-            }
-            return cert;
-        }
-
-        private X509Certificate2 GetApplicationCertificate(
-            Guid applicationId,
-            StoreLocation storeLocation,
-            string certSubject)
-        {
-            X509Certificate2 cert = null;
-
-            string applicationCertificateFilename = GetConfigurationString(ConfigKeyApplicationCertificateFileName);
-            if (applicationCertificateFilename != null)
-            {
-                cert = GetApplicationCertificateFromFile(applicationCertificateFilename);
-            }
-            else
-            {
-                cert = GetApplicationCertificateFromStore(applicationId, storeLocation, certSubject);
-            }
-            return cert;
-        }
-
-        /// <summary>
-        /// Gets the subject name of the certificate containing the applications private key.
-        /// </summary>
-        /// 
-        /// <param name="applicationId">
-        /// The application identifier to get the certificate subject name for. This is only used
-        /// to default the name if the certificate subject is specified in the web.config. The default
-        /// name is "WildcatApp-" + <paramref name="applicationId"/>.
-        /// </param>
-        /// 
-        /// <remarks>
-        /// This value is retrieved from the application configuration file using the configuration
-        /// key named "AppCertSubject".
-        /// </remarks>
-        /// 
-        private string GetApplicationCertificateSubject(Guid applicationId)
-        {
-            string result = GetConfigurationString(ConfigKeyCertSubject);
-
-            if (result == null)
-            {
-                result = "WildcatApp-" + applicationId.ToString();
-
-                HealthVaultPlatformTrace.LogCertLoading(
-                    "Using default cert subject: {0}",
-                    result);
-            }
-            else
-            {
-                HealthVaultPlatformTrace.LogCertLoading(
-                    "Cert subject retrieved from configuration file key '{0}': {1}",
-                    ConfigKeyCertSubject,
-                    result);
-            }
-
-            return result;
-        }
-
-        private StoreLocation GetSignatureCertStoreLocation()
-        {
-            string signatureCertStoreLocation = GetConfigurationString(ConfigKeySignatureCertStoreLocation, DefaultSignatureCertStoreLocation);
-
-            StoreLocation result = StoreLocation.LocalMachine;
-            try
-            {
-                result = (StoreLocation)Enum.Parse(
-                        typeof(StoreLocation),
-                        signatureCertStoreLocation,
-                        true);
-            }
-            catch (Exception)
-            {
-                if (String.IsNullOrEmpty(signatureCertStoreLocation))
-                {
-                    throw Validator.InvalidConfigurationException("SignatureCertStoreLocationMissing");
-                }
-            }
-
-            return result;
-        }
-        private const string DefaultSignatureCertStoreLocation = "LocalMachine";
 
         /// <summary>
         /// Gets the application's unique identifier.
@@ -491,12 +111,13 @@ namespace Microsoft.HealthVault
         {
             get
             {
-                if (_appId == Guid.Empty)
-                {
-                    _appId = GetConfigurationGuid(ConfigKeyAppId);
-                }
-
                 return _appId;
+            }
+
+            set
+            {
+                this.EnsureAppNotInitialized();
+                _appId = value;
             }
         }
         private Guid _appId;
@@ -517,10 +138,16 @@ namespace Microsoft.HealthVault
             {
                 if (_hmacAlgorithmName == null)
                 {
-                    _hmacAlgorithmName = GetConfigurationString(ConfigKeyHmacAlgorithmName, DefaultHmacAlgorithmName);
+                    _hmacAlgorithmName = DefaultHmacAlgorithmName;
                 }
 
                 return _hmacAlgorithmName;
+            }
+
+            set
+            {
+                this.EnsureAppNotInitialized();
+                _hmacAlgorithmName = value;
             }
         }
         private volatile string _hmacAlgorithmName;
@@ -553,10 +180,16 @@ namespace Microsoft.HealthVault
             {
                 if (_hashAlgorithmName == null)
                 {
-                    _hashAlgorithmName = GetConfigurationString(ConfigKeyHashAlgorithmName, DefaultHashAlgorithmName);
+                    _hashAlgorithmName = DefaultHashAlgorithmName;
                 }
 
                 return _hashAlgorithmName;
+            }
+
+            set
+            {
+                this.EnsureAppNotInitialized();
+                _hashAlgorithmName = value;
             }
         }
         private volatile string _hashAlgorithmName;
@@ -580,10 +213,16 @@ namespace Microsoft.HealthVault
             {
                 if (_signatureHashAlgorithmName == null)
                 {
-                    _signatureHashAlgorithmName = GetConfigurationString(ConfigKeySignatureHashAlgorithmName, DefaultSignatureHashAlgorithmName);
+                    _signatureHashAlgorithmName = DefaultSignatureHashAlgorithmName;
                 }
 
                 return _signatureHashAlgorithmName;
+            }
+
+            set
+            {
+                this.EnsureAppNotInitialized();
+                _signatureAlgorithmName = value;
             }
         }
         private volatile string _signatureHashAlgorithmName;
@@ -607,10 +246,16 @@ namespace Microsoft.HealthVault
             {
                 if (_signatureAlgorithmName == null)
                 {
-                    _signatureAlgorithmName = GetConfigurationString(ConfigKeySignatureAlgorithmName, DefaultSignatureAlgorithmName);
+                    _signatureAlgorithmName = DefaultSignatureAlgorithmName;
                 }
 
                 return _signatureAlgorithmName;
+            }
+
+            set
+            {
+                this.EnsureAppNotInitialized();
+                _signatureAlgorithmName = value;
             }
         }
         private volatile string _signatureAlgorithmName;
@@ -634,10 +279,16 @@ namespace Microsoft.HealthVault
             {
                 if (_symmetricAlgorithmName == null)
                 {
-                    _symmetricAlgorithmName = GetConfigurationString(ConfigSymmetricAlgorithmName, DefaultSymmetricAlgorithmName);
+                    _symmetricAlgorithmName = DefaultSymmetricAlgorithmName;
                 }
 
                 return _symmetricAlgorithmName;
+            }
+
+            set
+            {
+                this.EnsureAppNotInitialized();
+                this._symmetricAlgorithmName = value;
             }
         }
         private volatile string _symmetricAlgorithmName;
@@ -645,6 +296,73 @@ namespace Microsoft.HealthVault
         /// The default symmetric algorithm name.
         /// </summary>
         protected const string DefaultSymmetricAlgorithmName = "AES256";
+
+        /// <summary>
+        /// Gets or sets the application certificate password.
+        /// </summary>
+        public string ApplicationCertificatePassword
+        {
+            get { return this.applicationCertificatePassword; }
+
+            set
+            {
+                this.EnsureAppNotInitialized();
+                this.applicationCertificatePassword = value;
+            }
+        }
+
+        private string applicationCertificatePassword;
+
+        /// <summary>
+        /// Gets or sets the application certificate file name.
+        /// </summary>
+        public string ApplicationCertificateFileName
+        {
+            get { return this.applicationCertificateFileName; }
+
+            set
+            {
+                this.EnsureAppNotInitialized();
+                this.applicationCertificateFileName = value;
+            }
+        }
+
+        private string applicationCertificateFileName;
+
+        /// <summary>
+        /// Gets or sets the signature certificate store location.
+        /// </summary>
+        public StoreLocation SignatureCertStoreLocation
+        {
+            get
+            {
+                return this.signatureCertStoreLocation;
+            }
+
+            set
+            {
+                this.EnsureAppNotInitialized();
+                this.signatureCertStoreLocation = value;
+            }
+        }
+
+        private StoreLocation signatureCertStoreLocation = StoreLocation.LocalMachine;
+
+        /// <summary>
+        /// Gets or sets the certificate subject.
+        /// </summary>
+        public string CertSubject
+        {
+            get { return this.certSubject; }
+
+            set
+            {
+                this.EnsureAppNotInitialized();
+                this.certSubject = value;
+            }
+        }
+
+        private string certSubject;
 
         #region web request/response configuration
 
@@ -669,19 +387,27 @@ namespace Microsoft.HealthVault
             {
                 if (!_configurationRequestTimeoutInitialized)
                 {
-                    int tempRequestTimeout = GetConfigurationInt32(ConfigKeyDefaultRequestTimeout, DefaultDefaultRequestTimeout);
-
-                    // Note, -1 signifies an infinite timeout so that is OK.
-                    if (tempRequestTimeout < -1)
-                    {
-                        tempRequestTimeout = DefaultDefaultRequestTimeout;
-                    }
-
-                    _configuredRequestTimeout = tempRequestTimeout;
+                    _configuredRequestTimeout = DefaultDefaultRequestTimeout;
                     _configurationRequestTimeoutInitialized = true;
                 }
 
                 return _configuredRequestTimeout;
+            }
+
+            set
+            {
+                this.EnsureAppNotInitialized();
+
+                int tempRequestTimeout = value;
+
+                // Note, -1 signifies an infinite timeout so that is OK.
+                if (tempRequestTimeout < -1)
+                {
+                    tempRequestTimeout = DefaultDefaultRequestTimeout;
+                }
+
+                _configuredRequestTimeout = tempRequestTimeout;
+                _configurationRequestTimeoutInitialized = true;
             }
         }
         private volatile int _configuredRequestTimeout;
@@ -708,18 +434,26 @@ namespace Microsoft.HealthVault
             {
                 if (!_configuredRequestTimeToLiveInitialized)
                 {
-                    int tempRequestTimeToLive = GetConfigurationInt32(ConfigKeyDefaultRequestTimeToLive, DefaultDefaultRequestTimeToLive);
-
-                    if (tempRequestTimeToLive < -1)
-                    {
-                        tempRequestTimeToLive = DefaultDefaultRequestTimeToLive;
-                    }
-
-                    _configuredRequestTimeToLive = tempRequestTimeToLive;
+                    _configuredRequestTimeToLive = DefaultDefaultRequestTimeToLive;
                     _configuredRequestTimeToLiveInitialized = true;
                 }
 
                 return _configuredRequestTimeToLive;
+            }
+
+            set
+            {
+                this.EnsureAppNotInitialized();
+
+                int tempRequestTimeToLive = value;
+
+                if (tempRequestTimeToLive < -1)
+                {
+                    tempRequestTimeToLive = DefaultDefaultRequestTimeToLive;
+                }
+
+                _configuredRequestTimeToLive = tempRequestTimeToLive;
+                _configuredRequestTimeToLiveInitialized = true;
             }
         }
         private volatile int _configuredRequestTimeToLive;
@@ -745,11 +479,19 @@ namespace Microsoft.HealthVault
             {
                 if (!_retryOnInternal500CountInitialized)
                 {
-                    _retryOnInternal500Count = GetConfigurationInt32(ConfigKeyRequestRetryOnInternal500Count, DefaultRetryOnInternal500Count);
+                    _retryOnInternal500Count = DefaultRetryOnInternal500Count;
                     _retryOnInternal500CountInitialized = true;
                 }
 
                 return _retryOnInternal500Count;
+            }
+
+            set
+            {
+                this.EnsureAppNotInitialized();
+
+                _retryOnInternal500Count = value;
+                _retryOnInternal500CountInitialized = true;
             }
         }
         private volatile int _retryOnInternal500Count;
@@ -775,11 +517,19 @@ namespace Microsoft.HealthVault
             {
                 if (!_retryOnInternal500SleepSecondsInitialized)
                 {
-                    _retryOnInternal500SleepSeconds = GetConfigurationInt32(ConfigKeyRequestRetryOnInternal500SleepSeconds, DefaultRetryOnInternal500SleepSeconds);
+                    _retryOnInternal500SleepSeconds = DefaultRetryOnInternal500SleepSeconds;
                     _retryOnInternal500SleepSecondsInitialized = true;
                 }
 
                 return _retryOnInternal500SleepSeconds;
+            }
+
+            set
+            {
+                this.EnsureAppNotInitialized();
+
+                _retryOnInternal500SleepSeconds = value;
+                _retryOnInternal500SleepSecondsInitialized = true;
             }
         }
         private volatile int _retryOnInternal500SleepSeconds;
@@ -805,11 +555,19 @@ namespace Microsoft.HealthVault
             {
                 if (!_requestCompressionThresholdInitialized)
                 {
-                    _requestCompressionThreshold = GetConfigurationInt32(ConfigKeyRequestCompressionThreshold, DefaultRequestCompressionThreshold);
+                    _requestCompressionThreshold = DefaultRequestCompressionThreshold;
                     _requestCompressionThresholdInitialized = true;
                 }
 
                 return _requestCompressionThreshold;
+            }
+
+            set
+            {
+                this.EnsureAppNotInitialized();
+
+                _requestCompressionThreshold = value;
+                _requestCompressionThresholdInitialized = true;
             }
         }
         private volatile int _requestCompressionThreshold;
@@ -834,27 +592,34 @@ namespace Microsoft.HealthVault
             {
                 if (_requestCompressionMethod == null)
                 {
-                    string tempCompressionMethod = GetConfigurationString(ConfigKeyRequestCompressionMethod, String.Empty);
-
-                    if (!String.IsNullOrEmpty(tempCompressionMethod))
-                    {
-                        if (!String.Equals(
-                                tempCompressionMethod,
-                                "gzip",
-                                StringComparison.OrdinalIgnoreCase) &&
-                            !String.Equals(
-                                tempCompressionMethod,
-                                "deflate",
-                                StringComparison.OrdinalIgnoreCase))
-                        {
-                            throw Validator.InvalidConfigurationException("InvalidRequestCompressionMethod");
-                        }
-                    }
-
-                    _requestCompressionMethod = tempCompressionMethod;
+                    _requestCompressionMethod = string.Empty;
                 }
 
                 return _requestCompressionMethod;
+            }
+
+            set
+            {
+                this.EnsureAppNotInitialized();
+
+                string tempCompressionMethod = value;
+
+                if (!String.IsNullOrEmpty(tempCompressionMethod))
+                {
+                    if (!String.Equals(
+                            tempCompressionMethod,
+                            "gzip",
+                            StringComparison.OrdinalIgnoreCase) &&
+                        !String.Equals(
+                            tempCompressionMethod,
+                            "deflate",
+                            StringComparison.OrdinalIgnoreCase))
+                    {
+                        throw Validator.InvalidConfigurationException("InvalidRequestCompressionMethod");
+                    }
+                }
+
+                _requestCompressionMethod = tempCompressionMethod;
             }
         }
         private volatile string _requestCompressionMethod;
@@ -875,43 +640,44 @@ namespace Microsoft.HealthVault
             {
                 if (_responseCompressionMethods == null)
                 {
-                    GetResponseCompressionMethods();
+                    _responseCompressionMethods = string.Empty;
                 }
 
                 return _responseCompressionMethods;
             }
-        }
-        private volatile string _responseCompressionMethods;
 
-        [SuppressMessage("Microsoft.Globalization", "CA1308:NormalizeStringsToUppercase", Justification = "Need the lowercase for backward compat.")]
-        private void GetResponseCompressionMethods()
-        {
-            string tempCompressionMethods = GetConfigurationString(ConfigKeyResponseCompressionMethods, String.Empty);
-
-            if (!String.IsNullOrEmpty(tempCompressionMethods))
+            set
             {
-                string[] methods = SDKHelper.SplitAndTrim(tempCompressionMethods.ToLowerInvariant(), ',');
+                this.EnsureAppNotInitialized();
 
-                for (int i = 0; i < methods.Length; ++i)
+                string tempCompressionMethods = value;
+
+                if (!String.IsNullOrEmpty(tempCompressionMethods))
                 {
-                    if (!String.Equals(
-                            methods[i],
-                            "gzip",
-                            StringComparison.Ordinal) &&
-                        !String.Equals(
-                            methods[i],
-                            "deflate",
-                            StringComparison.Ordinal))
+                    string[] methods = SDKHelper.SplitAndTrim(tempCompressionMethods.ToLowerInvariant(), ',');
+
+                    for (int i = 0; i < methods.Length; ++i)
                     {
-                        throw Validator.HealthServiceException("InvalidResponseCompressionMethods");
+                        if (!String.Equals(
+                                methods[i],
+                                "gzip",
+                                StringComparison.Ordinal) &&
+                            !String.Equals(
+                                methods[i],
+                                "deflate",
+                                StringComparison.Ordinal))
+                        {
+                            throw Validator.HealthServiceException("InvalidResponseCompressionMethods");
+                        }
                     }
+
+                    tempCompressionMethods = String.Join(",", methods);
                 }
 
-                tempCompressionMethods = String.Join(",", methods);
+                _responseCompressionMethods = tempCompressionMethods;
             }
-
-            _responseCompressionMethods = tempCompressionMethods;
         }
+        private volatile string _responseCompressionMethods;
 
         #endregion web request/response configuration
 
@@ -930,21 +696,26 @@ namespace Microsoft.HealthVault
             {
                 if (!_configuredInlineBlobHashBlockSizeInitilialized)
                 {
-                    int tempBlobHashSize = GetConfigurationInt32(
-                        ConfigKeyDefaultInlineBlobHashBlockSize,
-                        BlobHasher.DefaultInlineBlobHashBlockSizeBytes);
-
-                    if (tempBlobHashSize < 1)
-                    {
-                        tempBlobHashSize =
-                            BlobHasher.DefaultInlineBlobHashBlockSizeBytes;
-                    }
-
-                    _configuredInlineBlobHashBlockSize = tempBlobHashSize;
+                    _configuredInlineBlobHashBlockSize = BlobHasher.DefaultInlineBlobHashBlockSizeBytes;
                     _configuredInlineBlobHashBlockSizeInitilialized = true;
                 }
 
                 return _configuredInlineBlobHashBlockSize;
+            }
+
+            set
+            {
+                this.EnsureAppNotInitialized();
+
+                int tempBlobHashSize = value;
+
+                if (tempBlobHashSize < 1)
+                {
+                    tempBlobHashSize = BlobHasher.DefaultInlineBlobHashBlockSizeBytes;
+                }
+
+                _configuredInlineBlobHashBlockSize = tempBlobHashSize;
+                _configuredInlineBlobHashBlockSizeInitilialized = true;
             }
         }
         private volatile int _configuredInlineBlobHashBlockSize;
@@ -982,36 +753,19 @@ namespace Microsoft.HealthVault
             {
                 if (_supportedTypeVersions == null)
                 {
-                    _supportedTypeVersions = GetSupportedTypeVersions();
+                    _supportedTypeVersions = new List<Guid>();
                 }
 
                 return _supportedTypeVersions;
             }
+
+            set
+            {
+                this.EnsureAppNotInitialized();
+                this._supportedTypeVersions = value;
+            }
         }
         private volatile IList<Guid> _supportedTypeVersions;
-
-        private IList<Guid> GetSupportedTypeVersions()
-        {
-            Collection<Guid> supportedTypeVersions = new Collection<Guid>();
-
-            string typeVersionsConfig = GetConfigurationString(ConfigKeySupportedType, String.Empty);
-            string[] typeVersions =
-                typeVersionsConfig.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
-
-            foreach (string typeVersionClassName in typeVersions)
-            {
-                if (ItemTypeManager.TypeHandlersByClassName.ContainsKey(typeVersionClassName))
-                {
-                    supportedTypeVersions.Add(ItemTypeManager.TypeHandlersByClassName[typeVersionClassName].TypeId);
-                }
-                else
-                {
-                    throw Validator.InvalidConfigurationException("InvalidSupportedTypeVersions");
-                }
-            }
-
-            return supportedTypeVersions;
-        }
 
         /// <summary>
         /// Gets a value indicating whether or not legacy type versioning support should be used.
@@ -1034,16 +788,16 @@ namespace Microsoft.HealthVault
         {
             get
             {
-                if (!_useLegacyTypeVersionSupportInitialized)
-                {
-                    _useLegacyTypeVersionSupport = GetConfigurationBoolean(ConfigKeyUseLegacyTypeVersionSupport, false);
-                    _useLegacyTypeVersionSupportInitialized = true;
-                }
                 return _useLegacyTypeVersionSupport;
+            }
+
+            set
+            {
+                this.EnsureAppNotInitialized();
+                this._useLegacyTypeVersionSupport = value;
             }
         }
         private volatile bool _useLegacyTypeVersionSupport;
-        private volatile bool _useLegacyTypeVersionSupportInitialized;
 
         /// <summary>
         /// Gets the value which indicates whether the application is able to handle connecting to multiple
@@ -1070,18 +824,17 @@ namespace Microsoft.HealthVault
         {
             get
             {
-                if (!_multiInstanceAwareInitialized)
-                {
-                    _multiInstanceAware = GetConfigurationBoolean(ConfigKeyMultiInstanceAware, true);
-                    _multiInstanceAwareInitialized = true;
-                }
-
                 return _multiInstanceAware;
+            }
+
+            set
+            {
+                this.EnsureAppNotInitialized();
+                this._multiInstanceAware = value;
             }
         }
 
-        private volatile bool _multiInstanceAware;
-        private volatile bool _multiInstanceAwareInitialized;
+        private volatile bool _multiInstanceAware = true;
 
         /// <summary>
         /// Gets the amount of time, in milliseconds, that the application's connection can 
@@ -1108,17 +861,24 @@ namespace Microsoft.HealthVault
             {
                 if (!_connectionMaxIdleTimeInitialized)
                 {
-                    _connectionMaxIdleTime = GetConfigurationInt32(ConfigKeyConnectionMaxIdleTime, 110 * 1000);
-
-                    if (_connectionMaxIdleTime < -1)
-                    {
-                        _connectionMaxIdleTime = -1;
-                    }
-
+                    _connectionMaxIdleTime = 110 * 1000;
                     _connectionMaxIdleTimeInitialized = true;
                 }
 
                 return _connectionMaxIdleTime;
+            }
+
+            set
+            {
+                this.EnsureAppNotInitialized();
+                _connectionMaxIdleTime = value;
+
+                if (_connectionMaxIdleTime < -1)
+                {
+                    _connectionMaxIdleTime = -1;
+                }
+
+                _connectionMaxIdleTimeInitialized = true;
             }
         }
 
@@ -1155,17 +915,24 @@ namespace Microsoft.HealthVault
             {
                 if (!_connectionLeaseTimeoutInitialized)
                 {
-                    _connectionLeaseTimeout = GetConfigurationInt32(ConfigKeyConnectionLeaseTimeout, 5 * 60 * 1000);
-
-                    if (_connectionLeaseTimeout < -1)
-                    {
-                        _connectionLeaseTimeout = -1;
-                    }
-
+                    _connectionLeaseTimeout = 5 * 60 * 1000;
                     _connectionLeaseTimeoutInitialized = true;
                 }
 
                 return _connectionLeaseTimeout;
+            }
+
+            set
+            {
+                this.EnsureAppNotInitialized();
+                _connectionLeaseTimeout = value;
+
+                if (_connectionLeaseTimeout < -1)
+                {
+                    _connectionLeaseTimeout = -1;
+                }
+
+                _connectionLeaseTimeoutInitialized = true;
             }
         }
 
@@ -1187,18 +954,17 @@ namespace Microsoft.HealthVault
         {
             get
             {
-                if (!_connectionUseHttpKeepAliveInitialized)
-                {
-                    _connectionUseHttpKeepAlive = GetConfigurationBoolean(ConfigKeyConnectionUseHttpKeepAlive, true);
-                    _connectionUseHttpKeepAliveInitialized = true;
-                }
-
                 return _connectionUseHttpKeepAlive;
+            }
+
+            set
+            {
+                this.EnsureAppNotInitialized();
+                this._connectionUseHttpKeepAlive = value;
             }
         }
 
-        private volatile bool _connectionUseHttpKeepAlive;
-        private volatile bool _connectionUseHttpKeepAliveInitialized;
+        private volatile bool _connectionUseHttpKeepAlive = true;
 
         /// <summary>
         /// Gets the value which specifies the period of time before the <see cref="P:ServiceInfo.Current"/> built-in cache is considered expired.
@@ -1234,20 +1000,29 @@ namespace Microsoft.HealthVault
                 {
                     if (!_serviceInfoDefaultCacheTtlInitialized)
                     {
-                        _serviceInfoDefaultCacheTtl =
-                            GetConfigurationTimeSpanMilliseconds(
-                                ConfigKeyServiceInfoDefaultCacheTtlMilliseconds,
-                                TimeSpan.FromDays(1));
-
+                        _serviceInfoDefaultCacheTtl = TimeSpan.FromDays(1);
                         _serviceInfoDefaultCacheTtlInitialized = true;
                     }
 
                     return _serviceInfoDefaultCacheTtl;
                 }
             }
+
+            set
+            {
+                this.EnsureAppNotInitialized();
+
+                lock (this._serviceInfoDefaultCacheTtlInitLock)
+                {
+                    this._serviceInfoDefaultCacheTtl = value;
+                    _serviceInfoDefaultCacheTtlInitialized = true;
+                }
+            }
         }
 
         private TimeSpan _serviceInfoDefaultCacheTtl;
+        private bool _serviceInfoDefaultCacheTtlInitialized;
+        private readonly object _serviceInfoDefaultCacheTtlInitLock = new object();
 
         /// <summary>
         /// Gets the root URL for a default instance of the
@@ -1262,168 +1037,33 @@ namespace Microsoft.HealthVault
         {
             get
             {
-                if (_restHealthVaultRootUrl == null)
-                {
-                    _restHealthVaultRootUrl = GetConfigurationUrl(ConfigKeyRestHealthServiceUrl, true /* appendSlash */);
-                }
-
                 return _restHealthVaultRootUrl;
+            }
+
+            set
+            {
+                this.EnsureAppNotInitialized();
+                this._restHealthVaultRootUrl = EnsureTrailingSlash(value);
             }
         }
         private volatile Uri _restHealthVaultRootUrl;
 
-        private bool _serviceInfoDefaultCacheTtlInitialized;
-        private readonly object _serviceInfoDefaultCacheTtlInitLock = new object();
-
-        #region configuration retrieval helpers
-        /// <summary>
-        /// Gets the string configuration value given the key
-        /// </summary>
-        /// <param name="configurationKey">Key to look up the configuration item.</param>
-        /// <returns>String value of the configuration item, should return null if key not found.</returns>
-        protected virtual string GetConfigurationString(string configurationKey)
+        private static Uri EnsureTrailingSlash(Uri uri)
         {
-            return ApplicationConfiguration.GetConfigurationValue(configurationKey);
+            string uriString = uri.AbsoluteUri;
+            return new Uri(uriString.EndsWith("/", StringComparison.Ordinal) ? uriString : uriString + "/");
         }
 
         /// <summary>
-        /// Retrieves the specified setting for strings.
+        /// Users are only allowed to change these values before app initialization.
         /// </summary>
-        /// 
-        /// <param name="key">
-        /// A string specifying the name of the setting.
-        /// </param>
-        /// 
-        /// <param name="defaultValue">
-        /// A string representing the default string value.
-        /// </param>
-        /// 
-        /// <returns>
-        /// A string representing the settings.
-        /// </returns>
-        /// 
-        private string GetConfigurationString(string key, string defaultValue)
+        private void EnsureAppNotInitialized()
         {
-            string result = GetConfigurationString(key);
-
-            if (result == null)
+            if (this.AppInitialized)
             {
-                result = defaultValue;
-            }
-            return result;
-        }
-
-        /// <summary>
-        /// Gets the bool value matching the configuration key.
-        /// </summary>
-        /// <param name="key">Key to use to find the value.</param>
-        /// <param name="defaultValue">Set the value to provided default value if no configuration value can be found for the key.</param>
-        /// <returns>Bool value from configuration if exists or the specified default value.</returns>
-        private bool GetConfigurationBoolean(string key, bool defaultValue)
-        {
-            bool result = defaultValue;
-            string resultString = GetConfigurationString(key);
-            if (!String.IsNullOrEmpty(resultString))
-            {
-                // Let the FormatException propagate out.
-                result = bool.Parse(resultString);
-            }
-
-            return result;
-        }
-
-        /// <summary>
-        /// Gets the bool value matching the configuration key.
-        /// </summary>
-        /// <param name="key">Key to use to find the value.</param>
-        /// <param name="defaultValue">Set the value to provided default value if no configuration value can be found for the key.</param>
-        /// <returns>Int value from configuration if exists or the specified default value.</returns>
-        private int GetConfigurationInt32(string key, int defaultValue)
-        {
-            int result = defaultValue;
-
-            string resultString = GetConfigurationString(key);
-            if (resultString != null)
-            {
-                if (!Int32.TryParse(resultString, out result))
-                {
-                    result = defaultValue;
-                }
-            }
-
-            return result;
-        }
-
-        /// <summary>
-        /// Gets the URL value matching the configuration key.
-        /// </summary>
-        /// <param name="key">Key to use to find the value.</param>
-        /// <param name="appendSlash">If set to true, append a '/' character at the end of URL.</param>
-        /// <returns>URL value from configuration if exists, null if not found.</returns>
-        private Uri GetConfigurationUrl(string key, bool appendSlash)
-        {
-            string resultString = GetConfigurationString(key);
-            if (String.IsNullOrEmpty(resultString))
-            {
-                return null;
-            }
-            else
-            {
-                if (appendSlash)
-                {
-                    return new Uri(resultString.EndsWith("/", StringComparison.Ordinal) ? resultString : (resultString + "/"));
-                }
-                else
-                {
-                    return new Uri(resultString);
-                }
+                throw new InvalidOperationException("Changing app configuration values after initialization is not permitted.");
             }
         }
-
-        /// <summary>
-        /// Retrieves the specified setting for GUIDs.
-        /// </summary>
-        /// 
-        /// <param name="key">
-        /// A string specifying the name of the setting.
-        /// </param>
-        /// 
-        /// <returns>
-        /// The GUID of the setting.
-        /// </returns>
-        /// 
-        private Guid GetConfigurationGuid(string key)
-        {
-            Guid result = Guid.Empty;
-            string resultString = GetConfigurationString(key);
-            if (!String.IsNullOrEmpty(resultString))
-            {
-                // Let the FormatException propagate out.
-                result = new Guid(resultString);
-            }
-
-            return result;
-        }
-
-        private TimeSpan GetConfigurationTimeSpanMilliseconds(string key, TimeSpan defaultValue)
-        {
-            int resultInMs = GetConfigurationInt32(key, (int)defaultValue.TotalMilliseconds);
-            return TimeSpan.FromMilliseconds(resultInMs);
-        }
-
-        /// <summary>
-        /// Appends the specified path to the URL after trimming the path.
-        /// </summary>
-        /// <param name="baseUrl">The base URL to trim and append the path to.
-        /// </param>
-        /// <param name="path">The path to append to the URL.</param>
-        /// <returns>The combined URL and path.</returns>
-        private static Uri UrlPathAppend(Uri baseUrl, string path)
-        {
-            return new Uri(baseUrl, path);
-        }
-
-        #endregion
     }
 }
 

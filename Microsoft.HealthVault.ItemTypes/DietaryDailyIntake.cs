@@ -5,8 +5,6 @@
 
 
 using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Globalization;
 using System.Text;
 using System.Xml;
@@ -213,58 +211,31 @@ namespace Microsoft.HealthVault.ItemTypes
             }
 
             // <total-fat>
-            if (_totalFat != null)
-            {
-                _totalFat.WriteXml("total-fat", writer);
-            }
+            _totalFat?.WriteXml("total-fat", writer);
 
             // <saturated-fat>
-            if (_saturatedFat != null)
-            {
-                _saturatedFat.WriteXml("saturated-fat", writer);
-            }
+            _saturatedFat?.WriteXml("saturated-fat", writer);
 
             // <trans-fat>
-            if (_transFat != null)
-            {
-                _transFat.WriteXml("trans-fat", writer);
-            }
+            _transFat?.WriteXml("trans-fat", writer);
 
             // <protein>
-            if (_protein != null)
-            {
-                _protein.WriteXml("protein", writer);
-            }
+            _protein?.WriteXml("protein", writer);
 
             // <total-carbohydrates>
-            if (_totalCarbs != null)
-            {
-                _totalCarbs.WriteXml("total-carbohydrates", writer);
-            }
+            _totalCarbs?.WriteXml("total-carbohydrates", writer);
 
             // <dietary-fiber>
-            if (_fiber != null)
-            {
-                _fiber.WriteXml("dietary-fiber", writer);
-            }
+            _fiber?.WriteXml("dietary-fiber", writer);
 
             // <sugars>
-            if (_sugars != null)
-            {
-                _sugars.WriteXml("sugars", writer);
-            }
+            _sugars?.WriteXml("sugars", writer);
 
             // <sodium>
-            if (_sodium != null)
-            {
-                _sodium.WriteXml("sodium", writer);
-            }
+            _sodium?.WriteXml("sodium", writer);
 
             // <cholesterol>
-            if (_cholesterol != null)
-            {
-                _cholesterol.WriteXml("cholesterol", writer);
-            }
+            _cholesterol?.WriteXml("cholesterol", writer);
 
             // </dietary-intake-daily>
             writer.WriteEndElement();
@@ -564,7 +535,7 @@ namespace Microsoft.HealthVault.ItemTypes
 
         private static void AppendWeightValue(StringBuilder result, WeightValue value, string labelStringId)
         {
-            string unitsString = String.Empty;
+            string unitsString = string.Empty;
             string valueString;
 
             if (value.DisplayValue != null)

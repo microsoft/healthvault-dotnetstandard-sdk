@@ -5,9 +5,7 @@
 
 
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Globalization;
 using System.Text;
 using System.Xml;
 using System.Xml.XPath;
@@ -136,13 +134,13 @@ namespace Microsoft.HealthVault.ItemTypes
             _groupName.WriteXml("group-name",writer);
 
             // laboratory-name
-            XmlWriterHelper.WriteOpt<Organization>( 
+            XmlWriterHelper.WriteOpt( 
                 writer,
                 "laboratory-name",
                 _laboratoryName);
 
             // status
-            XmlWriterHelper.WriteOpt<CodableValue>( 
+            XmlWriterHelper.WriteOpt( 
                 writer,
                 "status",
                 _status);
@@ -221,10 +219,8 @@ namespace Microsoft.HealthVault.ItemTypes
         /// Gets lab test result sub groups.  
         /// </summary>
         /// 
-        public Collection<LabTestResultGroup> SubGroups
-        {
-            get { return _subGroups; }
-        }
+        public Collection<LabTestResultGroup> SubGroups => _subGroups;
+
         private Collection<LabTestResultGroup> _subGroups =
             new Collection<LabTestResultGroup>();
 
@@ -249,7 +245,7 @@ namespace Microsoft.HealthVault.ItemTypes
         public override string ToString()
         {
             StringBuilder result = new StringBuilder(200);
-            result.Append(_groupName.ToString());
+            result.Append(_groupName);
             if (_laboratoryName != null)
             {
                 result.AppendFormat(

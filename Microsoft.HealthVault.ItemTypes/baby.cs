@@ -5,9 +5,6 @@
 
 
 using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Globalization;
 using System.Text;
 using System.Xml;
 using System.Xml.XPath;
@@ -20,14 +17,6 @@ namespace Microsoft.HealthVault.ItemTypes
     /// 
     public class Baby : HealthRecordItemData
     {
-        /// <summary>
-        /// Creates a new instance of the <see cref="Baby"/> class with default values.
-        /// </summary>
-        /// 
-        public Baby()
-        {
-        }
-
         /// <summary>
         /// Populates the data from the specified XML.
         /// </summary>
@@ -81,11 +70,11 @@ namespace Microsoft.HealthVault.ItemTypes
             
             writer.WriteStartElement(nodeName);
 
-            XmlWriterHelper.WriteOpt<Name>(writer, "name", _name);
-            XmlWriterHelper.WriteOpt<CodableValue>(writer, "gender", _gender);
-            XmlWriterHelper.WriteOpt<WeightValue>(writer, "weight", _weight);
-            XmlWriterHelper.WriteOpt<Length>(writer, "length", _length);
-            XmlWriterHelper.WriteOpt<Length>(writer, "head-circumference", _head);
+            XmlWriterHelper.WriteOpt(writer, "name", _name);
+            XmlWriterHelper.WriteOpt(writer, "gender", _gender);
+            XmlWriterHelper.WriteOpt(writer, "weight", _weight);
+            XmlWriterHelper.WriteOpt(writer, "length", _length);
+            XmlWriterHelper.WriteOpt(writer, "head-circumference", _head);
             XmlWriterHelper.WriteOptString(writer, "note", _note);
 
             writer.WriteEndElement();
@@ -179,7 +168,7 @@ namespace Microsoft.HealthVault.ItemTypes
         /// If <paramref name="value"/> contains only whitespace.
         /// </exception>
         /// 
-        public String Note
+        public string Note
         {
             get { return _note; }
             set 
@@ -188,7 +177,7 @@ namespace Microsoft.HealthVault.ItemTypes
                 _note = value;
             }
         }
-        private String _note;
+        private string _note;
 
 
         /// <summary>
@@ -205,7 +194,7 @@ namespace Microsoft.HealthVault.ItemTypes
 
             if (Name != null)
             {
-                result.Append(Name.ToString());
+                result.Append(Name);
             }
 
             if (Weight != null && Length != null)

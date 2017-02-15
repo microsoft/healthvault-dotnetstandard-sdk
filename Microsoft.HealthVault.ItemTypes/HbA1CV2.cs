@@ -68,7 +68,7 @@ namespace Microsoft.HealthVault.ItemTypes
         /// A GUID.
         /// </value>
         /// 
-        public static new readonly Guid TypeId =
+        public new static readonly Guid TypeId =
             new Guid("62160199-b80f-4905-a55a-ac4ba825ceae");
 
         /// <summary>
@@ -133,7 +133,7 @@ namespace Microsoft.HealthVault.ItemTypes
             _value.WriteXml("value", writer);
 
             // <HbA1C-assay-method>
-            XmlWriterHelper.WriteOpt<CodableValue>(writer, "HbA1C-assay-method", _assayMethod);
+            XmlWriterHelper.WriteOpt(writer, "HbA1C-assay-method", _assayMethod);
 
             // <device-id>
             XmlWriterHelper.WriteOptString(writer, "device-id", _deviceId);
@@ -264,7 +264,7 @@ namespace Microsoft.HealthVault.ItemTypes
         /// 
         public override string ToString()
         {
-            string result = String.Empty;
+            string result = string.Empty;
 
             if (Value != null)
             {

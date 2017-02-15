@@ -5,10 +5,7 @@
 
 
 using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Globalization;
-using System.Text;
 using System.Xml;
 using System.Xml.XPath;
 
@@ -170,28 +167,22 @@ namespace Microsoft.HealthVault.ItemTypes
             // <drug>
             _drug.WriteXml("drug", writer);
 
-            if (_strength != null)
-            {
-                // <strength>
-                _strength.WriteXml("strength", writer);
-            }
+            // <strength>
+            _strength?.WriteXml("strength", writer);
 
             // <dose-count>
             writer.WriteElementString(
                 "dose-count",
                 ((int)_doseCount).ToString(CultureInfo.InvariantCulture));
 
-            if (!String.IsNullOrEmpty(_deviceId))
+            if (!string.IsNullOrEmpty(_deviceId))
             {
                 // <device-id>
                 writer.WriteElementString("device-id", _deviceId);
             }
 
-            if (DosePurpose != null)
-            {
-                // <dose-purpose>
-                DosePurpose.WriteXml("dose-purpose", writer);
-            }
+            // <dose-purpose>
+            DosePurpose?.WriteXml("dose-purpose", writer);
 
             // </asthma-inhaler-use>
             writer.WriteEndElement();
@@ -280,7 +271,7 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             get 
             { 
-                return (_doseCount == null) ? 0 : (int)_doseCount; 
+                return _doseCount ?? 0; 
             }
             set { _doseCount = value; }
         }
@@ -352,25 +343,19 @@ namespace Microsoft.HealthVault.ItemTypes
         /// 
         public override string ToString()
         {
-            String result = String.Empty;
             if (Drug != null)
             {
-                result =
-                    String.Format(
+                return string.Format(
                         ResourceRetriever.GetResourceString(
                             "AsthmaInhalerUseToStringFormatWithDrug"),
                         Drug.Text,
                         DoseCount);
             }
-            else
-            {
-                result =
-                    String.Format(
+
+            return string.Format(
                         ResourceRetriever.GetResourceString(
                             "AsthmaInhalerUseToStringFormat"),
                         DoseCount);
-            }
-            return result;
         }
     }
 }

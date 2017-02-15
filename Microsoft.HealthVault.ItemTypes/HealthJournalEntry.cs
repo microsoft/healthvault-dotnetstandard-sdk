@@ -4,7 +4,6 @@
 // All other rights reserved.
 
 using System;
-using System.Collections.ObjectModel;
 using System.Text;
 using System.Xml;
 using System.Xml.XPath;
@@ -75,7 +74,7 @@ namespace Microsoft.HealthVault.ItemTypes
         /// A GUID.
         /// </value>
         ///
-        public static new readonly Guid TypeId =
+        public new static readonly Guid TypeId =
             new Guid("21d75546-8717-4deb-8b17-a57f48917790");
 
         /// <summary>
@@ -135,14 +134,14 @@ namespace Microsoft.HealthVault.ItemTypes
 
             Validator.ThrowSerializationIfNull(_when, "WhenNullValue");
             Validator.ThrowSerializationIf(
-                String.IsNullOrEmpty(_content) || String.IsNullOrEmpty(_content.Trim()),
+                string.IsNullOrEmpty(_content) || string.IsNullOrEmpty(_content.Trim()),
                 "HealthJournalEntryContentMandatory");
 
             writer.WriteStartElement("health-journal-entry");
 
             _when.WriteXml("when", writer);
             writer.WriteElementString("content", _content);
-            XmlWriterHelper.WriteOpt<CodableValue>(writer, "category", _category);
+            XmlWriterHelper.WriteOpt(writer, "category", _category);
 
             writer.WriteEndElement();
         }

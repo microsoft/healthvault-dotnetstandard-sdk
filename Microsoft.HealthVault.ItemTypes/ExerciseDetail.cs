@@ -5,9 +5,6 @@
 
 
 using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Globalization;
 using System.Xml;
 using System.Xml.XPath;
 
@@ -32,7 +29,6 @@ namespace Microsoft.HealthVault.ItemTypes
         /// </summary>
         /// 
         public ExerciseDetail()
-            : base()
         {
         }
 
@@ -47,7 +43,6 @@ namespace Microsoft.HealthVault.ItemTypes
         /// The <paramref name="name"/> or <paramref name="value"/> is <b>null</b>.
         /// </exception>
         public ExerciseDetail(CodedValue name, StructuredMeasurement value)
-            : base()
         {
             Name = name;
             Value = value;
@@ -95,14 +90,6 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <exception cref="ArgumentNullException">
         /// The <paramref name="writer"/> parameter is <b>null</b>.
         /// </exception>
-        /// 
-        /// <exception cref="HealthRecordItemSerializationException">
-        /// The <paramref name="name"/> is <b>null</b>.
-        /// </exception>
-        /// 
-        /// <exception cref="HealthRecordItemSerializationException">
-        /// The <paramref name="value"/> is <b>null</b>.
-        /// </exception>
         public override void WriteXml(string nodeName, XmlWriter writer)
         {
             Validator.ThrowIfStringNullOrEmpty(nodeName, "nodeName");
@@ -112,12 +99,12 @@ namespace Microsoft.HealthVault.ItemTypes
 
             writer.WriteStartElement(nodeName);
 
-            XmlWriterHelper.WriteOpt<CodedValue>(
+            XmlWriterHelper.WriteOpt(
                 writer,
                 "name",
                 _name);
 
-            XmlWriterHelper.WriteOpt<StructuredMeasurement>(
+            XmlWriterHelper.WriteOpt(
                 writer,
                 "value",
                 _value);
@@ -192,7 +179,7 @@ namespace Microsoft.HealthVault.ItemTypes
         public override string ToString()
         {
             return 
-                String.Format(
+                string.Format(
                     ResourceRetriever.GetResourceString(
                         "NameEqualsValue"),
                     _name.ToString(),

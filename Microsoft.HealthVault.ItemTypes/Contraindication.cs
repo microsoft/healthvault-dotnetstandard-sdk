@@ -5,10 +5,6 @@
 
 
 using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Globalization;
-using System.Text;
 using System.Xml;
 using System.Xml.XPath;
 
@@ -142,13 +138,13 @@ namespace Microsoft.HealthVault.ItemTypes
             _status.WriteXml("status", writer);
 
             // <source>
-            XmlWriterHelper.WriteOpt<CodableValue>(writer, "source", _source);
+            XmlWriterHelper.WriteOpt(writer, "source", _source);
 
             // <documenter>
-            XmlWriterHelper.WriteOpt<PersonItem>(writer, "documenter", _documenter);
+            XmlWriterHelper.WriteOpt(writer, "documenter", _documenter);
 
             // <documented-date>
-            XmlWriterHelper.WriteOpt<ApproximateDateTime>(writer, "documented-date", _documentedDate);
+            XmlWriterHelper.WriteOpt(writer, "documented-date", _documentedDate);
 
             // </contraindication>
             writer.WriteEndElement();
@@ -270,7 +266,7 @@ namespace Microsoft.HealthVault.ItemTypes
         public override string ToString()
         {
 
-            return Substance != null ? Substance.Text : String.Empty;
+            return Substance != null ? Substance.Text : string.Empty;
         }
 
     }

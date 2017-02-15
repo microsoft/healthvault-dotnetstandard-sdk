@@ -10,7 +10,6 @@ using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Runtime.Serialization;
 using System.Security;
-using System.Security.Permissions;
 using System.Xml;
 using System.Xml.XPath;
 
@@ -62,78 +61,6 @@ namespace Microsoft.HealthVault
             _filter = filter;
             _view = view;
         }
-
-        #region Serialization
-
-        /// <summary>
-        /// Creates a new instance of the <see cref="HealthRecordItemDataTable"/> 
-        /// class with the specified serialization information.
-        /// </summary>
-        /// 
-        /// <param name="info">
-        /// Serialized information about this data table.
-        /// </param>
-        /// 
-        /// <param name="context">
-        /// The stream context of the serialized information.
-        /// </param>
-        /// 
-        /// <exception cref="ArgumentNullException">
-        /// The <paramref name="info"/> parameter is <b>null</b>.
-        /// </exception>
-        protected HealthRecordItemDataTable(
-            SerializationInfo info,
-            StreamingContext context)
-            : base(info, context)
-        {
-            Validator.ThrowIfArgumentNull(info, "info", "ExceptionSerializationInfoNull");
-
-            string filterXml = info.GetString("filter");
-            if (!String.IsNullOrEmpty(filterXml))
-            {
-                using (XmlReader reader = SDKHelper.GetXmlReaderForXml(filterXml, SDKHelper.XmlReaderSettings))
-                {
-                    XPathDocument filterDoc = new XPathDocument(reader);
-                    _filter = HealthRecordFilter.CreateFromXml(filterDoc.CreateNavigator());
-                }
-            }
-
-            _view =
-                (HealthRecordItemDataTableView)
-                Enum.Parse(typeof(HealthRecordItemDataTableView), info.GetString("view"));
-        }
-
-        /// <summary>
-        /// Serializes the data table.
-        /// </summary>
-        /// 
-        /// <param name="info">
-        /// The serialization information.
-        /// </param>
-        /// 
-        /// <param name="context">
-        /// The serialization context.
-        /// </param>
-        /// 
-        /// <exception cref="ArgumentNullException">
-        /// The <paramref name="info"/> parameter is <b>null</b>.
-        /// </exception>
-        [SecurityCritical]
-        [SecurityPermissionAttribute(
-            SecurityAction.LinkDemand,
-            SerializationFormatter = true)]
-        public override void GetObjectData(
-            SerializationInfo info,
-            StreamingContext context)
-        {
-            Validator.ThrowIfArgumentNull(info, "info", "ExceptionSerializationInfoNull");
-
-            base.GetObjectData(info, context);
-            info.AddValue("filter", _filter.GetXml());
-            info.AddValue("view", _view.ToString());
-        }
-
-        #endregion Serialization
 
         /// <summary> 
         /// Fills in the data table with data from a list of HealthRecordItem.

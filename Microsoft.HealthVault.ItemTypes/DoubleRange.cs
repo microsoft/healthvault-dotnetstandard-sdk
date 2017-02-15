@@ -5,10 +5,6 @@
 
 
 using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Globalization;
-using System.Text;
 using System.Xml;
 using System.Xml.XPath;
 
@@ -106,7 +102,7 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <see cref="Double.MinValue"/>
         /// </returns>
         /// 
-        protected override double DefaultMinValue { get { return Double.MinValue; } }
+        protected override double DefaultMinValue { get { return double.MinValue; } }
 
         /// <summary>
         /// Gets the maximum range value to it's default value.
@@ -116,7 +112,7 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <see cref="Double.MaxValue"/>
         /// </returns>
         /// 
-        protected override double DefaultMaxValue { get { return Double.MaxValue; } }
+        protected override double DefaultMaxValue { get { return double.MaxValue; } }
 
         /// <summary>
         /// Returns the range as a string.
@@ -132,7 +128,7 @@ namespace Microsoft.HealthVault.ItemTypes
         /// 
         public override string ToString()
         {
-            return String.Format(
+            return string.Format(
                 ResourceRetriever.GetResourceString(
                     "Range"),
                 MinRange, 

@@ -4,11 +4,8 @@
 // All other rights reserved.
 
 using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
-using System.Text;
 using System.Xml;
 using System.Xml.XPath;
 
@@ -322,7 +319,7 @@ namespace Microsoft.HealthVault.ItemTypes
         public override string ToString()
         {
             string value =
-                String.Format(
+                string.Format(
                     CultureInfo.CurrentCulture,
                     ResourceRetriever.GetResourceString("ClaimAmountsToStringFormat"),
                 _chargedAmount,
@@ -331,7 +328,7 @@ namespace Microsoft.HealthVault.ItemTypes
                 _deductible,
                 _amountNotCovered,
                 _eligibleForBenefits,
-                (_percentageCovered != null) ? _percentageCovered.ToString() : String.Empty,
+                (_percentageCovered != null) ? _percentageCovered.ToString() : string.Empty,
                 _coinsurance,
                 _miscellaneousAdjustments,
                 _benefitsPaid,

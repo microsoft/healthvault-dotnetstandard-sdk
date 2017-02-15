@@ -55,7 +55,7 @@ namespace Microsoft.HealthVault
         /// frequently.
         /// </remarks>
         /// 
-        static private Dictionary<ResourceManager, Dictionary<string, Dictionary<string, string>>> _stringResources =
+        private static Dictionary<ResourceManager, Dictionary<string, Dictionary<string, string>>> _stringResources =
             new Dictionary<ResourceManager, Dictionary<string, Dictionary<string, string>>>();
 
         /// <summary>
@@ -82,7 +82,7 @@ namespace Microsoft.HealthVault
         /// were specified.
         /// </returns>
         /// 
-        static internal ResourceManager GetResourceManager(
+        internal static ResourceManager GetResourceManager(
             Assembly assembly,
             string baseName)
         {
@@ -199,12 +199,12 @@ namespace Microsoft.HealthVault
         /// neutral culture resources.
         /// </exception>
         /// 
-        static internal string GetResourceString(
+        internal static string GetResourceString(
             string resourceId)
         {
             return
                 GetResourceString(
-                    Assembly.GetCallingAssembly(),
+                    typeof(ResourceRetriever).GetTypeInfo().Assembly,
                     "resources",
                     resourceId);
         }
@@ -244,13 +244,13 @@ namespace Microsoft.HealthVault
         /// neutral culture resources.
         /// </exception>
         /// 
-        static internal string GetResourceString(
+        internal static string GetResourceString(
             string baseName,
             string resourceId)
         {
             return
                 GetResourceString(
-                    Assembly.GetCallingAssembly(),
+                    typeof(ResourceRetriever).GetTypeInfo().Assembly,
                     baseName,
                     resourceId);
         }
@@ -294,7 +294,7 @@ namespace Microsoft.HealthVault
         /// neutral culture resources.
         /// </exception>
         /// 
-        static internal string GetResourceString(
+        internal static string GetResourceString(
             Assembly assembly,
             string baseName,
             string resourceId)
@@ -393,7 +393,7 @@ namespace Microsoft.HealthVault
         /// resource string.
         /// </exception> 
         /// 
-        static internal string FormatResourceString(
+        internal static string FormatResourceString(
             string resourceId,
             params object[] args)
         {
@@ -406,7 +406,7 @@ namespace Microsoft.HealthVault
 
             string template =
                 GetResourceString(
-                    Assembly.GetCallingAssembly(),
+                    typeof(ResourceRetriever).GetTypeInfo().Assembly,
                     baseName,
                     resourceId);
 
@@ -451,7 +451,7 @@ namespace Microsoft.HealthVault
         internal static string GetSpace(string baseName)
         {
             string xSpace = GetResourceString(
-                                    Assembly.GetCallingAssembly(),
+                                    typeof(ResourceRetriever).GetTypeInfo().Assembly,
                                     baseName,
                                     "XSpace");
 
@@ -491,7 +491,7 @@ namespace Microsoft.HealthVault
         /// Thrown if the resource manager instance could not be created
         /// </exception>
         /// 
-        static private ResourceManager InitRMWithAssembly(
+        private static ResourceManager InitRMWithAssembly(
             string baseName,
             Assembly assemblyToUse,
             Type usingResourceSet)

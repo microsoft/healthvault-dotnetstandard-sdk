@@ -5,7 +5,6 @@
 
 
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Globalization;
 using System.Xml;
@@ -218,11 +217,9 @@ namespace Microsoft.HealthVault.ItemTypes
         /// returned collection.
         /// </remarks>
         /// 
-        public Collection<TargetGlucoseZoneGroup> TargetGlucoseZoneGroups
-        {
-            get { return _zoneGroups; }
-        }
-        private Collection<TargetGlucoseZoneGroup> _zoneGroups =
+        public Collection<TargetGlucoseZoneGroup> TargetGlucoseZoneGroups => _zoneGroups;
+
+        private readonly Collection<TargetGlucoseZoneGroup> _zoneGroups =
             new Collection<TargetGlucoseZoneGroup>();
 
         /// <summary>
@@ -235,11 +232,11 @@ namespace Microsoft.HealthVault.ItemTypes
         /// 
         public override string ToString()
         {
-            string result = String.Empty;
+            string result = string.Empty;
             if (MaximumHbA1C != null)
             {
                 result = 
-                    String.Format(
+                    string.Format(
                         ResourceRetriever.GetResourceString(
                             "DiabeticProfileToStringFormatPercent"),
                         (MaximumHbA1C.Value * 100.0).ToString(CultureInfo.CurrentCulture));

@@ -4,10 +4,7 @@
 // All other rights reserved.
 
 using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Globalization;
-using System.Text;
 using System.Xml;
 using System.Xml.XPath;
 
@@ -23,14 +20,6 @@ namespace Microsoft.HealthVault.ItemTypes
     ///
     public class CarePlanTaskRecurrence : HealthRecordItemData
     {
-        /// <summary>
-        /// Creates a new instance of the <see cref="CarePlanTaskRecurrence"/> class with default values.
-        /// </summary>
-        ///
-        public CarePlanTaskRecurrence()
-        {
-        }
-        
         /// <summary>
         /// Populates this <see cref="CarePlanTaskRecurrence"/> instance from the data in the specified XML.
         /// </summary>
@@ -87,7 +76,7 @@ namespace Microsoft.HealthVault.ItemTypes
             writer.WriteStartElement("recurrence");
             {
                 XmlWriterHelper.WriteOptString(writer, "ical-recurrence", _icalRecurrence);
-                XmlWriterHelper.WriteOpt<CodableValue>(writer, "interval", _interval);
+                XmlWriterHelper.WriteOpt(writer, "interval", _interval);
                 XmlWriterHelper.WriteOptInt(writer, "times-in-interval", _timesInInterval);
             }
 
@@ -189,7 +178,7 @@ namespace Microsoft.HealthVault.ItemTypes
             else if (_interval != null &&
                     _timesInInterval != null)
             {
-                return String.Format(
+                return string.Format(
                     CultureInfo.CurrentUICulture,
                     ResourceRetriever.GetResourceString("CarePlanTaskRecurrenceFormat"),
                     _timesInInterval,
@@ -197,7 +186,7 @@ namespace Microsoft.HealthVault.ItemTypes
             }
             else
             {
-                return String.Empty;
+                return string.Empty;
             }
         }
     }

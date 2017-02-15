@@ -102,7 +102,7 @@ namespace Microsoft.HealthVault
         /// 
         /// <returns></returns>
         /// 
-        static internal string XmlFromNow()
+        internal static string XmlFromNow()
         {
             return (XmlFromUtcDateTime(DateTime.UtcNow));
         }
@@ -115,7 +115,7 @@ namespace Microsoft.HealthVault
         /// 
         /// <returns></returns>
         /// 
-        static internal string XmlFromLocalDateTime(DateTime dateTime)
+        internal static string XmlFromLocalDateTime(DateTime dateTime)
         {
             return (XmlFromUtcDateTime(dateTime.ToUniversalTime()));
         }
@@ -132,7 +132,7 @@ namespace Microsoft.HealthVault
         /// If the date time value provided is not in UTC format.
         /// </exception>
         /// 
-        static internal string XmlFromUtcDateTime(DateTime dateTime)
+        internal static string XmlFromUtcDateTime(DateTime dateTime)
         {
             Validator.ThrowArgumentExceptionIf(
                 dateTime.Kind != DateTimeKind.Utc,
@@ -150,7 +150,7 @@ namespace Microsoft.HealthVault
         /// 
         /// <returns></returns>
         /// 
-        static internal string XmlFromDateTime(DateTime dateTime)
+        internal static string XmlFromDateTime(DateTime dateTime)
         {
             return dateTime.ToString("yyyy-MM-ddTHH:mm:ss.FFFZ",
                     CultureInfo.InvariantCulture);
@@ -164,7 +164,7 @@ namespace Microsoft.HealthVault
         /// 
         /// <param name="elementName"></param>
         /// 
-        static internal bool ReadUntil(XmlReader xmlReader,
+        internal static bool ReadUntil(XmlReader xmlReader,
                                     string elementName)
         {
             Validator.ThrowIfArgumentNull(xmlReader, "xmlReader", "ArgumentNull");
@@ -185,7 +185,7 @@ namespace Microsoft.HealthVault
         /// 
         /// <param name="xmlReader"></param>
         /// 
-        static internal bool SkipToElement(XmlReader xmlReader)
+        internal static bool SkipToElement(XmlReader xmlReader)
         {
             Validator.ThrowIfArgumentNull(xmlReader, "xmlReader", "ArgumentNull");
 
@@ -197,12 +197,12 @@ namespace Microsoft.HealthVault
             return true;
         }
 
-        static internal string XmlFromBool(bool value)
+        internal static string XmlFromBool(bool value)
         {
             return XmlConvert.ToString(value);
         }
 
-        static internal string[] SplitAndTrim(
+        internal static string[] SplitAndTrim(
                 string all,
                 Char separator)
         {

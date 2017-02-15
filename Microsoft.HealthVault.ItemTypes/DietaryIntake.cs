@@ -4,13 +4,11 @@
 // All other rights reserved.
 
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics.CodeAnalysis;
-using System.Globalization;
-using System.Text;
 using System.Xml;
 using System.Xml.XPath;
+using Microsoft.HealthVault.Exceptions;
 
 namespace Microsoft.HealthVault.ItemTypes
 {
@@ -68,7 +66,7 @@ namespace Microsoft.HealthVault.ItemTypes
         /// A GUID.
         /// </value>
         ///
-        public static new readonly Guid TypeId =
+        public new static readonly Guid TypeId =
             new Guid("089646a6-7e25-4495-ad15-3e28d4c1a71d");
         
         /// <summary>
@@ -93,7 +91,7 @@ namespace Microsoft.HealthVault.ItemTypes
             if (typeSpecificXml == null)
             {
                 throw new ArgumentNullException(
-                    "typeSpecificXml",
+                    nameof(typeSpecificXml),
                     ResourceRetriever.GetResourceString(
                         "errors", "ParseXmlNavNull"));
             }
@@ -134,7 +132,7 @@ namespace Microsoft.HealthVault.ItemTypes
             if (writer == null)
             {
                 throw new ArgumentNullException(
-                    "writer",
+                    nameof(writer),
                     ResourceRetriever.GetResourceString(
                         "errors", "WriteXmlNullWriter"));
             }
@@ -149,7 +147,7 @@ namespace Microsoft.HealthVault.ItemTypes
             _dietaryIntakeItem.WriteXml("dietary-intake", writer);
         }
 
-        private DietaryIntakeItem _dietaryIntakeItem = new DietaryIntakeItem();
+        private readonly DietaryIntakeItem _dietaryIntakeItem = new DietaryIntakeItem();
         
         /// <summary>
         /// Gets or sets the food item that was eaten.
@@ -176,7 +174,7 @@ namespace Microsoft.HealthVault.ItemTypes
                 if (value == null)
                 {
                     throw new ArgumentNullException(
-                        "value", 
+                        nameof(value), 
                         ResourceRetriever.GetResourceString("errors", "FoodItemNullValue"));
                 }
 
@@ -934,13 +932,7 @@ namespace Microsoft.HealthVault.ItemTypes
         /// If there is no information about additionalNutritionFacts the value should be set to <b>null</b>.
         /// </remarks>
         ///
-        public Collection<NutritionFact> AdditionalNutritionFacts
-        {
-            get
-            {
-                return _dietaryIntakeItem.AdditionalNutritionFacts;
-            }
-        }
+        public Collection<NutritionFact> AdditionalNutritionFacts => _dietaryIntakeItem.AdditionalNutritionFacts;
 
         /// <summary>
         /// Gets a string representation of the DietaryIntake.
@@ -957,7 +949,7 @@ namespace Microsoft.HealthVault.ItemTypes
                 return _dietaryIntakeItem.ToString();
             }
 
-            return String.Empty;
+            return string.Empty;
         }
     }
 }

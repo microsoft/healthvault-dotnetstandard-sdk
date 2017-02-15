@@ -7,7 +7,6 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics.CodeAnalysis;
-using System.Text;
 using System.IO;
 using System.IO.Compression;
 using Microsoft.HealthVault;
@@ -218,7 +217,7 @@ namespace Microsoft.HealthVault.ItemTypes
                 {
                     if (itemEscape.Name == "i")
                     {
-                        currentSampleInterval = Double.Parse(itemEscape.Value);
+                        currentSampleInterval = double.Parse(itemEscape.Value);
                     }
                 }
             }
@@ -289,7 +288,7 @@ namespace Microsoft.HealthVault.ItemTypes
                 {
                     if (itemEscape.Name == "i")
                     {
-                        currentSampleInterval = Double.Parse(itemEscape.Value);
+                        currentSampleInterval = double.Parse(itemEscape.Value);
                     }
                 }
             }

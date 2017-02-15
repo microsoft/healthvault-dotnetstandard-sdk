@@ -602,7 +602,7 @@ namespace Microsoft.HealthVault
                     writer.Flush();
 
                     // MemoryStream.Flush() does nothing, don't call
-                    _xmlRequest = requestXml.GetBuffer();
+                    _xmlRequest = requestXml.ToArray();
                     _xmlRequestLength = (int)requestXml.Length;
                 }
             }
@@ -626,7 +626,7 @@ namespace Microsoft.HealthVault
                     writer.WriteEndElement();
                     writer.Flush();
 
-                    infoSection = infoXml.GetBuffer();
+                    infoSection = infoXml.ToArray();
                     infoSectionLength = (int)infoXml.Length;
 
                     // if we are not using an auth connection,
@@ -744,7 +744,7 @@ namespace Microsoft.HealthVault
 
                     writer.Flush();
 
-                    headerXml = xmlHeader.GetBuffer();
+                    headerXml = xmlHeader.ToArray();
                     headerXmlLength = (int)xmlHeader.Length;
                 }
             }            
@@ -880,7 +880,6 @@ namespace Microsoft.HealthVault
             {
                 if (newStreamCreated && responseStream != null)
                 {
-                    responseStream.Close();
                     responseStream.Dispose();
                 }
             }
@@ -950,7 +949,7 @@ namespace Microsoft.HealthVault
                 {
                     result.InfoReader = reader;
 
-                    byte[] buff = responseStream.GetBuffer();
+                    byte[] buff = responseStream.ToArray();
                     int offset = 0;
                     int count = (int)responseStream.Length;
 
@@ -990,7 +989,6 @@ namespace Microsoft.HealthVault
             }
             finally
             {
-                stream.Close();
                 stream = null;
             }
 

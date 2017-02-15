@@ -5,10 +5,7 @@
 
 
 using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Globalization;
-using System.Text;
 using System.Xml;
 using System.Xml.XPath;
 
@@ -25,15 +22,6 @@ namespace Microsoft.HealthVault.ItemTypes
     /// 
     public class AerobicData : HealthRecordItemData
     {
-        /// <summary>
-        /// Creates a new instance of the <see cref="AerobicData"/> class with 
-        /// default values.
-        /// </summary>
-        /// 
-        public AerobicData() : base()
-        {
-        }
-
         /// <summary> 
         /// Populates the data for the length from the XML.
         /// </summary>
@@ -259,11 +247,8 @@ namespace Microsoft.HealthVault.ItemTypes
                 _mode.WriteXml("mode", writer);
             }
 
-            if (_distance != null)
-            {
-                // <distance>
-                _distance.WriteXml("distance", writer);
-            }
+            // <distance>
+            _distance?.WriteXml("distance", writer);
 
             if (_minutes != null)
             {
@@ -316,65 +301,29 @@ namespace Microsoft.HealthVault.ItemTypes
                 _energyFromFat);
 
 
-            if (_peakSpeed != null)
-            {
-                _peakSpeed.WriteXml("peak-speed", writer);
-            }
+            _peakSpeed?.WriteXml("peak-speed", writer);
 
-            if (_averageSpeed != null)
-            {
-                _averageSpeed.WriteXml("avg-speed", writer);
-            }
+            _averageSpeed?.WriteXml("avg-speed", writer);
 
-            if (_minSpeed != null)
-            {
-                _minSpeed.WriteXml("min-speed", writer);
-            }
+            _minSpeed?.WriteXml("min-speed", writer);
 
-            if (_peakPace != null)
-            {
-                _peakPace.WriteXml("peak-pace", writer);
-            }
+            _peakPace?.WriteXml("peak-pace", writer);
 
-            if (_averagePace != null)
-            {
-                _averagePace.WriteXml("avg-pace", writer);
-            }
+            _averagePace?.WriteXml("avg-pace", writer);
 
-            if (_minPace != null)
-            {
-                _minPace.WriteXml("min-pace", writer);
-            }
+            _minPace?.WriteXml("min-pace", writer);
 
-            if (_peakPower != null)
-            {
-                _peakPower.WriteXml("peak-power", writer);
-            }
+            _peakPower?.WriteXml("peak-power", writer);
 
-            if (_averagePower != null)
-            {
-                _averagePower.WriteXml("avg-power", writer);
-            }
+            _averagePower?.WriteXml("avg-power", writer);
 
-            if (_minPower != null)
-            {
-                _minPower.WriteXml("min-power", writer);
-            }
+            _minPower?.WriteXml("min-power", writer);
 
-            if (_peakTorque != null)
-            {
-                _peakTorque.WriteXml("peak-torque", writer);
-            }
+            _peakTorque?.WriteXml("peak-torque", writer);
 
-            if (_averageTorque != null)
-            {
-                _averageTorque.WriteXml("avg-torque", writer);
-            }
+            _averageTorque?.WriteXml("avg-torque", writer);
 
-            if (_minTorque != null)
-            {
-                _minTorque.WriteXml("min-torque", writer);
-            }
+            _minTorque?.WriteXml("min-torque", writer);
 
             XmlWriterHelper.WriteOptDouble(
                 writer,
@@ -396,38 +345,20 @@ namespace Microsoft.HealthVault.ItemTypes
                 "min-cadence",
                 _minCadence);
 
-            if (_peakTemperature != null)
-            {
-                _peakTemperature.WriteXml("peak-temperature", writer);
-            }
+            _peakTemperature?.WriteXml("peak-temperature", writer);
 
-            if (_averageTemperature != null)
-            {
-                _averageTemperature.WriteXml("avg-temperature", writer);
-            }
+            _averageTemperature?.WriteXml("avg-temperature", writer);
 
-            if (_minTemperature != null)
-            {
-                _minTemperature.WriteXml("min-temperature", writer);
-            }
+            _minTemperature?.WriteXml("min-temperature", writer);
 
-            if (_peakAltitude != null)
-            {
-                _peakAltitude.WriteXml("peak-altitude", writer);
-            }
+            _peakAltitude?.WriteXml("peak-altitude", writer);
 
-            if (_averageAltitude != null)
-            {
-                _averageAltitude.WriteXml("avg-altitude", writer);
-            }
+            _averageAltitude?.WriteXml("avg-altitude", writer);
 
-            if (_minAltitude != null)
-            {
-                _minAltitude.WriteXml("min-altitude", writer);
-            }
+            _minAltitude?.WriteXml("min-altitude", writer);
 
-            XmlWriterHelper.WriteOpt<Length>(writer, "elevation-gain", _elevationGain);
-            XmlWriterHelper.WriteOpt<Length>(writer, "elevation-loss", _elevationLoss);
+            XmlWriterHelper.WriteOpt(writer, "elevation-gain", _elevationGain);
+            XmlWriterHelper.WriteOpt(writer, "elevation-loss", _elevationLoss);
             XmlWriterHelper.WriteOptInt(writer, "number-of-steps", _numberOfSteps);
             XmlWriterHelper.WriteOptInt(writer, "number-of-aerobic-steps", _numberOfAerobicSteps);
             XmlWriterHelper.WriteOptDouble(writer, "aerobic-step-minutes", _aerobicStepMinutes);            
@@ -470,7 +401,7 @@ namespace Microsoft.HealthVault.ItemTypes
         }
         private Length _distance;
 
-        static private void ThrowIfValueIsNegative(double? value, string resourceId)
+        private static void ThrowIfValueIsNegative(double? value, string resourceId)
         {
             Validator.ThrowArgumentOutOfRangeIf(
                 (value != null && (double)value <= 0.0),
@@ -478,7 +409,7 @@ namespace Microsoft.HealthVault.ItemTypes
                 resourceId);
         }
 
-        static private void ThrowIfValueIsNegative(int? value, string resourceId)
+        private static void ThrowIfValueIsNegative(int? value, string resourceId)
         {
             Validator.ThrowArgumentOutOfRangeIf(
                 (value != null && (int)value <= 0),
@@ -1176,29 +1107,29 @@ namespace Microsoft.HealthVault.ItemTypes
         /// 
         public override string ToString()
         {
-            String result = String.Empty;
+            string result = string.Empty;
 
             if (Distance != null && Duration != null)
             {
                 result = 
-                    String.Format(
+                    string.Format(
                         ResourceRetriever.GetResourceString(
                             "AerobicDataToStringFormatDistanceAndDuration"),
                         Distance.ToString(),
-                        Duration.Value.ToString());
+                        Duration.Value.ToString(CultureInfo.CurrentCulture));
             }
             else if (Duration != null)
             {
                 result =
-                    String.Format(
+                    string.Format(
                         ResourceRetriever.GetResourceString(
                             "AerobicDataToStringFormatDuration"),
-                        Duration.Value.ToString());
+                        Duration.Value.ToString(CultureInfo.InvariantCulture));
             }
             else if (Distance != null)
             {
                 result =
-                    String.Format(
+                    string.Format(
                         ResourceRetriever.GetResourceString(
                             "AerobicDataToStringFormatDistance"),
                         Distance.ToString());

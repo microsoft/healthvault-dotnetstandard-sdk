@@ -5,8 +5,6 @@
 
 
 using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Xml;
 using System.Xml.XPath;
 
@@ -163,7 +161,7 @@ namespace Microsoft.HealthVault.ItemTypes
                 _stopDate.WriteXml("stop-date", writer);
             }
 
-            if (!String.IsNullOrEmpty(_stopReason))
+            if (!string.IsNullOrEmpty(_stopReason))
             {
                 writer.WriteElementString("stop-reason", _stopReason);
             }

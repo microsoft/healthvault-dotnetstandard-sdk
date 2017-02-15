@@ -6,19 +6,20 @@
 using System;
 using System.Collections.Generic;
 using System.Threading;
+using Microsoft.HealthVault.Web.Authentication;
 
-namespace Microsoft.HealthVault.Web.Authentication
+namespace Microsoft.HealthVault.Authentication
 {
     internal class AuthSessionKeySetPairs
     {
-        internal Dictionary<Guid, AuthenticationTokenKeySetPair> Pairs =
+        private readonly Dictionary<Guid, AuthenticationTokenKeySetPair> Pairs =
             new Dictionary<Guid, AuthenticationTokenKeySetPair>();
 
-        private ReaderWriterLock _lock = new ReaderWriterLock();
+        private readonly ReaderWriterLockSlim _lock = new ReaderWriterLockSlim();
 
         private void AcquireWriterLock()
         {
-            _lock.AcquireWriterLock(
+            _lock.TryEnterWriteLock(
                 EasyWebRequest.RetryOnInternal500SleepSeconds
                 * EasyWebRequest.RetryOnInternal500Count
                 * 1000);
@@ -26,24 +27,24 @@ namespace Microsoft.HealthVault.Web.Authentication
 
         private void ReleaseWriterLockIfHeld()
         {
-            if (_lock.IsWriterLockHeld)
+            if (_lock.IsWriteLockHeld)
             {
-                _lock.ReleaseWriterLock();
+                _lock.ExitWriteLock();
             }
         }
 
         private void AcquireReaderLock()
         {
-            _lock.AcquireReaderLock(
+            _lock.TryEnterReadLock(
                 EasyWebRequest.RetryOnInternal500SleepSeconds
                 * 1000);
         }
 
         private void ReleaseReaderLockIfHeld()
         {
-            if (_lock.IsReaderLockHeld)
+            if (_lock.IsReadLockHeld)
             {
-                _lock.ReleaseReaderLock();
+                _lock.ExitReadLock();
             }
         }
 
@@ -60,7 +61,7 @@ namespace Microsoft.HealthVault.Web.Authentication
 
                 return Pairs[applicationId];
             }
-            catch (ApplicationException)
+            catch (Exception)
             {
                 throw Validator.HealthServiceException(
                         "WebApplicationCredentialInternalTimeout");
@@ -101,7 +102,7 @@ namespace Microsoft.HealthVault.Web.Authentication
 
                 return pair;
             }
-            catch (ApplicationException)
+            catch (Exception)
             {
                 throw Validator.HealthServiceException("WebApplicationCredentialInternalTimeout");
             }

@@ -5,9 +5,7 @@
 
 
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Globalization;
 using System.Text;
 using System.Xml;
 using System.Xml.XPath;
@@ -134,7 +132,7 @@ namespace Microsoft.HealthVault.ItemTypes
             // ranges
             for (int index = 0; index < _ranges.Count; ++index)
             {
-                XmlWriterHelper.WriteOpt<TestResultRange>(
+                XmlWriterHelper.WriteOpt(
                     writer,
                     "ranges",
                     _ranges[index]);
@@ -143,7 +141,7 @@ namespace Microsoft.HealthVault.ItemTypes
             // flag
             for (int index = 0; index < _flag.Count; ++index)
             {
-                XmlWriterHelper.WriteOpt<CodableValue>(
+                XmlWriterHelper.WriteOpt(
                     writer,
                     "flag",
                     _flag[index]);
@@ -211,7 +209,7 @@ namespace Microsoft.HealthVault.ItemTypes
         public override string ToString()
         {
             StringBuilder result = new StringBuilder(200);
-            result.Append(_measurement.ToString());
+            result.Append(_measurement);
             if (_ranges != null)
             {
                 for (int index = 0; index < _ranges.Count; ++index)
@@ -232,7 +230,7 @@ namespace Microsoft.HealthVault.ItemTypes
                             ResourceRetriever.GetResourceString(
                                 "ListSeparator"));
                     }
-                    result.Append(_flag[index].ToString());
+                    result.Append(_flag[index]);
                 }
             }
             return result.ToString();

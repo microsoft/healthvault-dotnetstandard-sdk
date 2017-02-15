@@ -5,9 +5,6 @@
 
 
 using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Globalization;
 using System.Text;
 using System.Xml;
 using System.Xml.XPath;
@@ -109,7 +106,7 @@ namespace Microsoft.HealthVault.ItemTypes
             writer.WriteStartElement(nodeName);
 
             // when
-            XmlWriterHelper.WriteOpt<ApproximateDateTime>( 
+            XmlWriterHelper.WriteOpt( 
                 writer,
                 "when",
                 _when);
@@ -121,31 +118,31 @@ namespace Microsoft.HealthVault.ItemTypes
                 _name);
 
             // substance
-            XmlWriterHelper.WriteOpt<CodableValue>( 
+            XmlWriterHelper.WriteOpt( 
                 writer,
                 "substance",
                 _substance);
 
             // collection-method
-            XmlWriterHelper.WriteOpt<CodableValue>( 
+            XmlWriterHelper.WriteOpt( 
                 writer,
                 "collection-method",
                 _collectionMethod);
 
             // clinical-code
-            XmlWriterHelper.WriteOpt<CodableValue>( 
+            XmlWriterHelper.WriteOpt( 
                 writer,
                 "clinical-code",
                 _clinicalCode);
 
             // value
-            XmlWriterHelper.WriteOpt<LabTestResultValue>( 
+            XmlWriterHelper.WriteOpt( 
                 writer,
                 "value",
                 _value);
 
             // status
-            XmlWriterHelper.WriteOpt<CodableValue>( 
+            XmlWriterHelper.WriteOpt( 
                 writer,
                 "status",
                 _status);
@@ -323,19 +320,19 @@ namespace Microsoft.HealthVault.ItemTypes
             StringBuilder result = new StringBuilder(200);
             string space = ResourceRetriever.GetSpace("errors");
 
-            Boolean first = true;
+            bool first = true;
             if (_when != null)
             {
-                result.Append(_when.ToString());
+                result.Append(_when);
                 first = false;
             }
-            if (!String.IsNullOrEmpty(_name))
+            if (!string.IsNullOrEmpty(_name))
             {
                 if (!first)
                 {
                     result.Append(space);
                 }
-                result.Append(_name.ToString());
+                result.Append(_name);
                 first = false;
             }
             if (_substance != null)
@@ -344,7 +341,7 @@ namespace Microsoft.HealthVault.ItemTypes
                 {
                     result.Append(space);
                 }
-                result.Append(_substance.ToString());
+                result.Append(_substance);
                 first = false;
             }
             if (_collectionMethod != null)
@@ -353,7 +350,7 @@ namespace Microsoft.HealthVault.ItemTypes
                 {
                     result.Append(space);
                 }
-                result.Append(_collectionMethod.ToString());
+                result.Append(_collectionMethod);
                 first = false;
             }
             if (_clinicalCode != null)
@@ -362,7 +359,7 @@ namespace Microsoft.HealthVault.ItemTypes
                 {
                     result.Append(space);
                 }
-                result.Append(_clinicalCode.ToString());
+                result.Append(_clinicalCode);
                 first = false;
             }
             if (_value != null)
@@ -371,7 +368,7 @@ namespace Microsoft.HealthVault.ItemTypes
                 {
                     result.Append(space);
                 }
-                result.Append(_value.ToString());
+                result.Append(_value);
                 first = false;
             }
             if (_status != null)
@@ -380,10 +377,10 @@ namespace Microsoft.HealthVault.ItemTypes
                 {
                     result.Append(space);
                 }
-                result.Append(_status.ToString());
+                result.Append(_status);
                 first = false;
             }
-            if (!String.IsNullOrEmpty(_note))
+            if (!string.IsNullOrEmpty(_note))
             {
                 if (!first)
                 {

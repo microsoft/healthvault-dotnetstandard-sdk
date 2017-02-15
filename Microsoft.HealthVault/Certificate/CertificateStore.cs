@@ -8,6 +8,7 @@ using System.Security.Cryptography.X509Certificates;
 
 namespace Microsoft.HealthVault.Certificate
 {
+    // TODO: The cert store is currently created in StoreName.AuthRoot but we need to verify if this is correct.
 
     /// <summary>
     /// Wrapper around X509 Store for HealthVault.
@@ -49,7 +50,7 @@ namespace Microsoft.HealthVault.Certificate
         ///
         internal CertificateStore(StoreLocation storeType)
         {
-            this.m_store = new X509Store(storeType);
+            this.m_store = new X509Store(StoreName.AuthRoot, storeType);
             this.m_store.Open(OpenFlags.OpenExistingOnly | OpenFlags.ReadWrite);
         }
 
@@ -219,11 +220,7 @@ namespace Microsoft.HealthVault.Certificate
         {
             if (disposing)
             {
-                if (this.m_store != null)
-                {
-                    this.m_store.Close();
-                    this.m_store = null;
-                }
+                this.m_store = null;
             }
         }
 

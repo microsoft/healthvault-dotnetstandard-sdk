@@ -8,7 +8,6 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
-using System.Text;
 using System.Xml;
 using System.Xml.XPath;
 
@@ -124,7 +123,7 @@ namespace Microsoft.HealthVault.ItemTypes
                 _name.WriteXml("name", writer);
                 XmlWriterHelper.WriteOptString(writer, "description", _description);
 
-                XmlWriterHelper.WriteXmlCollection<CarePlanGoal>(writer, "goals", _goals, "goal");
+                XmlWriterHelper.WriteXmlCollection(writer, "goals", _goals, "goal");
             }
 
             writer.WriteEndElement();
@@ -222,7 +221,7 @@ namespace Microsoft.HealthVault.ItemTypes
                 }
                 else
                 {
-                    return String.Format(
+                    return string.Format(
                         CultureInfo.CurrentUICulture,
                         ResourceRetriever.GetResourceString("CarePlanGoalGroupFormat"),
                         _name.Text,
@@ -240,7 +239,7 @@ namespace Microsoft.HealthVault.ItemTypes
                     goalStrings.Add(goal.ToString());
                 }
 
-                return String.Join(listSeparator, goalStrings.ToArray());
+                return string.Join(listSeparator, goalStrings.ToArray());
             }
         }
     }

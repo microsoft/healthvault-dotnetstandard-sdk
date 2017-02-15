@@ -5,9 +5,6 @@
 
 
 using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Globalization;
 using System.Text;
 using System.Xml;
 using System.Xml.XPath;
@@ -168,40 +165,25 @@ namespace Microsoft.HealthVault.ItemTypes
             _when.WriteXml("when", writer);
 
             // <duration>
-            XmlWriterHelper.WriteOpt<DurationValue>(
+            XmlWriterHelper.WriteOpt(
                 writer,
                 "duration",
                 _duration);
 
             // <service>
-            if (Service != null)
-            {
-                Service.WriteXml("service", writer);
-            }
+            Service?.WriteXml("service", writer);
 
             // <clinic>
-            if (Clinic != null)
-            {
-                Clinic.WriteXml("clinic", writer);
-            }
+            Clinic?.WriteXml("clinic", writer);
 
             // <specialty>
-            if (Specialty != null)
-            {
-                Specialty.WriteXml("specialty", writer);
-            }
+            Specialty?.WriteXml("specialty", writer);
 
             // <status>
-            if (Status != null)
-            {
-                Status.WriteXml("status", writer);
-            }
+            Status?.WriteXml("status", writer);
 
             // <care-class>
-            if (CareClass != null)
-            {
-                CareClass.WriteXml("care-class", writer);
-            }
+            CareClass?.WriteXml("care-class", writer);
 
             // </appointment>
             writer.WriteEndElement();
@@ -362,7 +344,7 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             StringBuilder result = new StringBuilder(200);
 
-            result.Append(When.ToString());
+            result.Append(When);
 
             if (Duration != null)
             {

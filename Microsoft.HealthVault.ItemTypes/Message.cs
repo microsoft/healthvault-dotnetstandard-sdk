@@ -6,7 +6,6 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Collections.Specialized;
 using System.Globalization;
 using System.Text;
 using System.Xml;
@@ -82,7 +81,7 @@ namespace Microsoft.HealthVault.ItemTypes
         /// A GUID.
         /// </value>
         ///
-        public static new readonly Guid TypeId =
+        public new static readonly Guid TypeId =
             new Guid("72dc49e1-1486-4634-b651-ef560ed051e5");
         
         /// <summary>
@@ -439,7 +438,7 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             StringBuilder builder = new StringBuilder();
 
-            builder.Append(_when.ToString());
+            builder.Append(_when);
 
             if (From != null)
             {

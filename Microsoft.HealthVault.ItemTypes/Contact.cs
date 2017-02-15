@@ -5,9 +5,6 @@
 
 
 using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Globalization;
 using System.Xml;
 using System.Xml.XPath;
 
@@ -152,24 +149,20 @@ namespace Microsoft.HealthVault.ItemTypes
         /// 
         public override string ToString()
         {
-            string result = null;
             if (ContactInformation.Address.Count > 0 ||
                 ContactInformation.Email.Count > 0 ||
                 ContactInformation.Phone.Count > 0)
             {
-                result = ContactInformation.ToString();
+                return ContactInformation.ToString();
             }
-            else if (!String.IsNullOrEmpty(CommonData.Note))
+
+            if (!string.IsNullOrEmpty(CommonData.Note))
             {
-                result = CommonData.Note;
+                return CommonData.Note;
             }
-            else
-            {
-                result = 
-                    ResourceRetriever.GetResourceString(
-                        "ContactInformationToStringSeeDetails");
-            }
-            return result;
+
+            return ResourceRetriever.GetResourceString(
+                    "ContactInformationToStringSeeDetails");
         }
     }
 

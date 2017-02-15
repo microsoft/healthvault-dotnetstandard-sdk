@@ -12,6 +12,7 @@ using System.Text;
 using System.Web;
 using System.Xml;
 using System.Xml.Xsl;
+using Microsoft.HealthVault.Exceptions;
 
 namespace Microsoft.HealthVault
 {
@@ -152,12 +153,7 @@ namespace Microsoft.HealthVault
         /// returned collection.
         /// </remarks>
         /// 
-        public Collection<HealthRecordFilter> Filters
-        {
-            get { return _filters; }
-        }
-        private Collection<HealthRecordFilter> _filters =
-            new Collection<HealthRecordFilter>();
+        public Collection<HealthRecordFilter> Filters { get; } = new Collection<HealthRecordFilter>();
 
         /// <summary>
         /// 
@@ -261,7 +257,6 @@ namespace Microsoft.HealthVault
                 writer.WriteEndElement();
 
                 writer.Flush();
-                writer.Close();
             }
 
             return TransformItemXml(resultXml.ToString());
@@ -295,7 +290,6 @@ namespace Microsoft.HealthVault
                         _transform.Transform(reader, _transformArgumentList, writer, null);
 
                         writer.Flush();
-                        writer.Close();
                     }
 
                     result = resultXml.ToString();

@@ -5,11 +5,10 @@
 
 
 using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Globalization;
 using System.Xml;
 using System.Xml.XPath;
+using Microsoft.HealthVault.Exceptions;
 
 namespace Microsoft.HealthVault.ItemTypes
 {
@@ -192,7 +191,7 @@ namespace Microsoft.HealthVault.ItemTypes
                     ((int)_normalcy).ToString(CultureInfo.InvariantCulture));
             }
 
-            XmlWriterHelper.WriteOpt<CodableValue>(
+            XmlWriterHelper.WriteOpt(
                 writer,
                 "measurement-context",
                 _measurementContext);

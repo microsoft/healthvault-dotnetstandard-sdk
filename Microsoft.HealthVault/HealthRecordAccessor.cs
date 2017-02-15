@@ -9,6 +9,7 @@ using System.Collections.ObjectModel;
 using System.Text;
 using System.Xml;
 using System.Xml.XPath;
+using Microsoft.HealthVault.Exceptions;
 using Microsoft.HealthVault.Web;
 
 namespace Microsoft.HealthVault
@@ -129,92 +130,7 @@ namespace Microsoft.HealthVault
                 }
             }
         }
-
-        /// <summary>
-        /// Sends an insecure message originating from the application 
-        /// to custodians of the health record.
-        /// </summary>
-        /// 
-        /// <param name="addressMustBeValidated">
-        /// If true, HealthVault will only send the message to custodians with 
-        /// validated e-mail addresses. If false, the message will
-        /// be sent even if the custodians' addresses have not been validated.
-        /// </param>
-        /// 
-        /// <param name="senderMailboxName">
-        /// An application specified mailbox name that's sending the message.
-        /// The mailbox name is appended to the application's domain name to 
-        /// form the From email address of the message. This parameter should
-        /// only contain the characters before the @ symbol of the email 
-        /// address.
-        /// </param>
-        /// 
-        /// <param name="senderDisplayName">
-        /// The message sender's display name.
-        /// </param>
-        /// 
-        /// <param name="subject">
-        /// The subject of the message.
-        /// </param>
-        /// 
-        /// <param name="textBody">
-        /// The text body of the message.
-        /// </param>
-        /// 
-        /// <param name="htmlBody">
-        /// The HTML body of the message.
-        /// </param>
-        /// 
-        /// <remarks>
-        /// If both the <paramref name="textBody"/> and 
-        /// <paramref name="htmlBody"/> of the message is specified then a
-        /// multi-part message will be sent so that the html body will be used
-        /// and fallback to text if not supported by the client.
-        /// 
-        /// If the domain name of the application has not been previously 
-        /// set (usually through app registration), this method will throw 
-        /// a <see cref="HealthServiceException"/>.      
-        /// 
-        /// The calling application and the person through which authorization to the 
-        /// record was obtained must be authorized for the record. 
-        /// The person must be either authenticated, or if the person is offline,
-        /// their person Id specified as the offline person Id.
-        /// See <see cref="OfflineWebApplicationConnection" /> 
-        /// for more information.
-        /// </remarks>
-        /// 
-        /// <exception cref="ArgumentException"> 
-        /// if <paramref name="senderMailboxName"/> is null or empty,
-        /// -or-
-        /// if <paramref name="senderDisplayName"/> is null or empty,
-        /// -or-
-        /// if <paramref name="subject"/> is null or empty,
-        /// -or-
-        /// if <paramref name="textBody"/> and <paramref name="htmlBody"/>
-        /// are both null or empty.
-        /// </exception>
-        /// 
-        /// <exception cref="HealthServiceException">
-        /// If the server returned a failure when making the request.
-        /// </exception>
-        /// 
-        public void SendMessageToCustodiansFromApplication(
-            bool addressMustBeValidated,
-            string senderMailboxName,
-            string senderDisplayName,
-            string subject,
-            string textBody,
-            string htmlBody)
-        {
-            Connection.SendInsecureMessageToCustodiansFromApplication(
-                _recordId,
-                addressMustBeValidated,
-                senderMailboxName,
-                senderDisplayName,
-                subject,
-                textBody,
-                htmlBody);
-        }
+        
 
         /// <summary>
         /// Creates a new instance of the <see cref="HealthRecordAccessor"/>
@@ -1042,94 +958,6 @@ namespace Microsoft.HealthVault
         public Collection<HealthRecordItem> GetValidGroupMembership(IList<Guid> applicationIds)
         {
             return HealthVaultPlatform.GetValidGroupMembership(Connection, this, applicationIds);
-        }
-
-        /// <summary>
-        /// Associates an alternate ID with this record.
-        /// </summary>
-        /// 
-        /// <param name="alternateId">
-        /// The alternate ID.
-        /// </param>
-        /// 
-        /// <remarks>
-        /// An alternate ID can be used to store an association between an ID that the
-        /// application understands and the person and record IDs used by HealthVault.
-        /// 
-        /// The alternate id string must be from 1-255 characters in length. 
-        /// </remarks>
-        /// 
-        /// <exception cref="ArgumentNullException">
-        /// The alternateId parameter is null.
-        /// </exception>
-        /// 
-        /// <exception cref="ArgumentException">
-        /// The alternateId parameter is empty, all whitespace, or more than 255 characters in length.
-        /// </exception>
-        /// 
-        /// <exception cref="HealthServiceException">
-        /// The HealthVault service returned an error. 
-        /// The exception's Error property will contain the index of the
-        /// item on which the failure occurred in the ErrorInfo property. If any failures occur, 
-        /// no items will have been created.
-        /// </exception>
-        /// 
-        public void AssociateAlternateId(
-            string alternateId)
-        {
-            HealthVaultPlatform.AssociateAlternateId(Connection, this, alternateId);
-        }
-
-        /// <summary>
-        /// Disassociates an alternate ID with a record.
-        /// </summary>
-        /// 
-        /// <param name="alternateId">
-        /// The alternate ID.
-        /// </param>
-        /// 
-        /// <remarks>
-        /// Removes the association between the alternate ID and the record/person.
-        /// </remarks>
-        /// 
-        /// <exception cref="ArgumentNullException">
-        /// The alternateId parameter is null.
-        /// </exception>
-        /// 
-        /// <exception cref="ArgumentException">
-        /// The alternateId parameter is empty, all whitespace, or more than 255 characters in length.
-        /// </exception>
-        /// 
-        /// <exception cref="HealthServiceException">
-        /// The HealthVault service returned an error. 
-        /// If the alternate Id is not associated with a person and record id, the ErrorCode property
-        /// will be set to AlternateIdNotFound.
-        /// </exception>
-        /// 
-        public void DisassociateAlternateId(
-            string alternateId)
-        {
-            HealthVaultPlatform.DisassociateAlternateId(Connection, this, alternateId);
-        }
-
-        /// <summary>
-        /// Gets the list of alternate IDs that are associated with a record.
-        /// </summary>
-        /// 
-        /// <remarks>
-        /// If there are no associated alternate IDs, this method will return an
-        /// empty list. 
-        /// </remarks>
-        /// 
-        /// <exception cref="HealthServiceException">
-        /// The HealthVault service returned an error. 
-        /// If the alternate Id is not associated with a person and record id, the ErrorCode property
-        /// will be set to AlternateIdNotFound.
-        /// </exception>
-        /// 
-        public Collection<string> GetAlternateIds()
-        {
-            return HealthVaultPlatform.GetAlternateIds(Connection, this);
         }
     }
 }

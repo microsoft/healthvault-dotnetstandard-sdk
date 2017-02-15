@@ -5,10 +5,6 @@
 
 
 using System;
-using System.Text;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Globalization;
 using System.Xml;
 using System.Xml.XPath;
 
@@ -92,7 +88,7 @@ namespace Microsoft.HealthVault.ItemTypes
             writer.WriteStartElement(nodeName);
 
             // mass-value
-            XmlWriterHelper.WriteOpt<WeightValue>(
+            XmlWriterHelper.WriteOpt(
                 writer,
                 "mass-value",
                 _massValue);
@@ -155,29 +151,26 @@ namespace Microsoft.HealthVault.ItemTypes
         /// 
         public override string ToString()
         {
-            string result = String.Empty;
             if (_massValue != null && _percentValue != null)
             {
-                result =
-                    String.Format(
+                return string.Format(
                         ResourceRetriever.GetResourceString(
                             "BodyCompositionValueToStringFormatMassAndPercent"),
                         _massValue.ToString(),
                         _percentValue * 100);
             }
-            else if (_massValue != null)
+            if (_massValue != null)
             {
-                result = _massValue.ToString();
+                return _massValue.ToString();
             }
-            else if (_percentValue != null)
+            if (_percentValue != null)
             {
-                result = 
-                    String.Format(
-                        ResourceRetriever.GetResourceString(
-                            "Percent"),
-                        _percentValue * 100);
+                return string.Format(
+                    ResourceRetriever.GetResourceString(
+                        "Percent"),
+                    _percentValue * 100);
             }
-            return result.ToString();
+            return string.Empty;
         }
     }
 }

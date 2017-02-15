@@ -9,6 +9,7 @@ using System.Collections.ObjectModel;
 using System.Text;
 using System.Xml;
 using System.Xml.XPath;
+using Microsoft.HealthVault.Exceptions;
 using Microsoft.HealthVault.Web;
 
 namespace Microsoft.HealthVault
@@ -66,55 +67,6 @@ namespace Microsoft.HealthVault
         }
 
         /// <summary>
-        /// Look up the record that were
-        /// previously associated with this alternate id.
-        /// </summary>
-        /// 
-        /// <remarks>
-        /// To obtain the person and record info, use <see cref="PersonInfo.GetFromAlternateId"/>.
-        /// </remarks>
-        /// 
-        /// <returns>
-        /// A new instance of <see cref="HealthRecordInfo"/> that can be used to access the
-        /// record.
-        /// </returns>
-        ///
-        /// <param name="connection">The application connection to use.</param>
-        /// <param name="alternateId">The alternateId to look up.</param>
-        /// <returns>A HealthRecordInfo that can be used to access the record.</returns>
-        /// 
-        /// <exception cref="ArgumentNullException">
-        /// The alternateId parameter is null.
-        /// </exception>
-        /// 
-        /// <exception cref="ArgumentException">
-        /// The alternateId parameter is empty, all whitespace, or more than 255 characters in length.
-        /// </exception>
-        /// 
-        /// <exception cref="HealthServiceException">
-        /// The HealthVault service returned an error. 
-        /// If the alternate Id is not associated with a person and record id, the ErrorCode property
-        /// will be set to AlternateIdNotFound.
-        /// </exception>
-        /// /// 
-        public static HealthRecordInfo GetFromAlternateId(
-            ApplicationConnection connection,
-            string alternateId)
-        {
-            PersonInfo personInfo = HealthVaultPlatform.GetPersonAndRecordForAlternateId(connection, alternateId);
-
-            if (personInfo.AuthorizedRecords != null && personInfo.AuthorizedRecords.Count == 1)
-            {
-                List<HealthRecordInfo> infos = new List<HealthRecordInfo>(personInfo.AuthorizedRecords.Values);
-                return infos[0];
-            }
-            else
-            {
-                return null;
-            }
-        }
-
-        /// <summary>
         /// Parses HealthRecordInfo member data from the specified XPathNavigator.
         /// </summary>
         /// 
@@ -128,7 +80,7 @@ namespace Microsoft.HealthVault
 
             _custodian = XPathHelper.ParseAttributeAsBoolean(navigator, "record-custodian", false);
 
-            long? relationshipNumber = null;
+            long? relationshipNumber;
 
             relationshipNumber = XPathHelper.ParseAttributeAsLong(navigator, "rel-type", 0);
             if (relationshipNumber.HasValue &&
@@ -137,7 +89,7 @@ namespace Microsoft.HealthVault
                 _relationshipType = (RelationshipType)relationshipNumber;
             }
 
-            _relationshipName = navigator.GetAttribute("rel-name", String.Empty);
+            _relationshipName = navigator.GetAttribute("rel-name", string.Empty);
 
             _dateAuthorizationExpires = XPathHelper.ParseAttributeAsDateTime(navigator, "auth-expires", DateTime.MinValue);
 
@@ -145,9 +97,9 @@ namespace Microsoft.HealthVault
 
             _name = navigator.Value;
 
-            _displayName = navigator.GetAttribute("display-name", String.Empty);
+            _displayName = navigator.GetAttribute("display-name", string.Empty);
 
-            _state = XPathHelper.ParseAttributeAsEnum<HealthRecordState>(navigator, "state", HealthRecordState.Unknown);
+            _state = XPathHelper.ParseAttributeAsEnum(navigator, "state", HealthRecordState.Unknown);
             if (_state > HealthRecordState.Deleted)
             {
                 _state = HealthRecordState.Unknown;
@@ -159,12 +111,12 @@ namespace Microsoft.HealthVault
             _quotaInBytes = XPathHelper.ParseAttributeAsLong(navigator, "max-size-bytes", null);
             _quotaUsedInBytes = XPathHelper.ParseAttributeAsLong(navigator, "size-bytes", null);
 
-            _authorizationStatus = XPathHelper.ParseAttributeAsEnum<HealthRecordAuthorizationStatus>(
+            _authorizationStatus = XPathHelper.ParseAttributeAsEnum(
                     navigator,
                     "app-record-auth-action",
                     HealthRecordAuthorizationStatus.Unknown);
 
-            _applicationSpecificRecordId = navigator.GetAttribute("app-specific-record-id", String.Empty);
+            _applicationSpecificRecordId = navigator.GetAttribute("app-specific-record-id", string.Empty);
 
             LatestOperationSequenceNumber = XPathHelper.ParseAttributeAsLong(navigator, "latest-operation-sequence-number", 0).Value;
 
@@ -249,7 +201,7 @@ namespace Microsoft.HealthVault
                 "rel-type",
                 XmlConvert.ToString((int)_relationshipType));
 
-            if (!String.IsNullOrEmpty(_relationshipName))
+            if (!string.IsNullOrEmpty(_relationshipName))
             {
                 writer.WriteAttributeString(
                     "rel-name",
@@ -264,7 +216,7 @@ namespace Microsoft.HealthVault
                 "auth-expired",
                 SDKHelper.XmlFromBool(_authExpired));
 
-            if (!String.IsNullOrEmpty(_displayName))
+            if (!string.IsNullOrEmpty(_displayName))
             {
                 writer.WriteAttributeString(
                     "display-name",
@@ -655,7 +607,7 @@ namespace Microsoft.HealthVault
                 return _state;
             }
 
-            internal protected set
+            protected internal set
             {
                 _state = value;
             }

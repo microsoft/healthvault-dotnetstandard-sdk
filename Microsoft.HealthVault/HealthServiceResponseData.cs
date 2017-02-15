@@ -4,9 +4,7 @@
 // All other rights reserved.
 
 using System;
-using System.Diagnostics.CodeAnalysis;
 using System.IO;
-using System.Net;
 using System.Xml;
 using System.Xml.XPath;
 

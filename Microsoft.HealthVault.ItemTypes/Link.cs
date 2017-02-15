@@ -5,9 +5,6 @@
 
 
 using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Globalization;
 using System.Xml;
 using System.Xml.XPath;
 
@@ -127,7 +124,7 @@ namespace Microsoft.HealthVault.ItemTypes
 
             writer.WriteElementString("url", _url.OriginalString);
 
-            if (!String.IsNullOrEmpty(_title))
+            if (!string.IsNullOrEmpty(_title))
             {
                 writer.WriteElementString(
                     "title", _title);
@@ -207,7 +204,7 @@ namespace Microsoft.HealthVault.ItemTypes
             get
             {
                 string result = _url.ToString();
-                if (!String.IsNullOrEmpty(_title))
+                if (!string.IsNullOrEmpty(_title))
                 {
                     result = _title;
                 }

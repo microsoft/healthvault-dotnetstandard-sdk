@@ -5,10 +5,9 @@
 
 
 using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Xml;
 using System.Xml.XPath;
+using Microsoft.HealthVault.Exceptions;
 
 namespace Microsoft.HealthVault.ItemTypes
 {
@@ -143,15 +142,9 @@ namespace Microsoft.HealthVault.ItemTypes
             _when.WriteXml("when", writer);
             _name.WriteXml("name", writer);
 
-            if (Reaction != null)
-            {
-                Reaction.WriteXml("reaction", writer);
-            }
+            Reaction?.WriteXml("reaction", writer);
 
-            if (Treatment != null)
-            {
-                Treatment.WriteXml("treatment", writer);
-            }
+            Treatment?.WriteXml("treatment", writer);
 
             // </allergic-episode>
             writer.WriteEndElement();

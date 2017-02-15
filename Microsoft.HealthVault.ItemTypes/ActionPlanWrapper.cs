@@ -54,15 +54,12 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <value>
         /// A GUID.
         /// </value>
-        public static new readonly Guid TypeId =
+        public new static readonly Guid TypeId =
             new Guid("10291BCD-6C33-4297-86DF-167FEDEFD6D8");
 
         /// <summary>
         /// Root element name within thing-xml.
         /// </summary>
-        protected override string RootElementName
-        {
-            get { return "action-plan"; }
-        }
+        protected override string RootElementName => "action-plan";
     }
 }

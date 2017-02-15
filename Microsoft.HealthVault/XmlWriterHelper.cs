@@ -12,7 +12,7 @@ namespace Microsoft.HealthVault
 {
     internal static class XmlWriterHelper
     {
-        static internal void WriteOptString(
+        internal static void WriteOptString(
             XmlWriter writer,
             string elementName,
             string value)
@@ -25,7 +25,7 @@ namespace Microsoft.HealthVault
             }
         }
 
-        static internal void WriteOptBool(
+        internal static void WriteOptBool(
             XmlWriter writer,
             string elementName,
             bool? value)
@@ -38,7 +38,7 @@ namespace Microsoft.HealthVault
             }
         }
 
-        static internal void WriteOptInt(
+        internal static void WriteOptInt(
             XmlWriter writer,
             string elementName,
             int? value)
@@ -51,7 +51,7 @@ namespace Microsoft.HealthVault
             }
         }
 
-        static internal void WriteOptUInt(
+        internal static void WriteOptUInt(
             XmlWriter writer,
             string elementName,
             uint? value)
@@ -64,7 +64,7 @@ namespace Microsoft.HealthVault
             }
         }
 
-        static internal void WriteOptDouble(
+        internal static void WriteOptDouble(
             XmlWriter writer,
             string elementName,
             double? value)
@@ -77,11 +77,11 @@ namespace Microsoft.HealthVault
             }
         }
 
-        static internal void WriteOpt<DataType>(
+        internal static void WriteOpt<DataType>(
             XmlWriter writer,
             string elementName,
             DataType value)
-            where DataType : HealthRecordItemData, new()
+            where DataType : new()
         {
             if (value != null)
             {
@@ -89,7 +89,7 @@ namespace Microsoft.HealthVault
             }
         }
 
-        static internal void WriteOptUrl(
+        internal static void WriteOptUrl(
             XmlWriter writer,
             string elementName,
             Uri value)
@@ -100,7 +100,7 @@ namespace Microsoft.HealthVault
             }
         }
 
-        static internal void WriteOptGuid(
+        internal static void WriteOptGuid(
             XmlWriter writer,
             string elementName,
             Guid? value)
@@ -113,7 +113,7 @@ namespace Microsoft.HealthVault
             }
         }
 
-        static internal void WriteDecimal(
+        internal static void WriteDecimal(
             XmlWriter writer,
             string elementName,
             Decimal value)
@@ -134,7 +134,7 @@ namespace Microsoft.HealthVault
         /// <param name="collection">The collection to write.</param>
         /// <param name="enclosingElementName">The name of an element to enclose the items in the collection.</param>
         /// <param name="itemNodeName">The name of the item node element.</param>
-        static internal void WriteXmlCollection<T>(XmlWriter writer, string enclosingElementName, Collection<T> collection, string itemNodeName) where T : HealthRecordItemData
+        internal static void WriteXmlCollection<T>(XmlWriter writer, string enclosingElementName, Collection<T> collection, string itemNodeName) where T : HealthRecordItemData
         {
             if (collection == null || collection.Count == 0)
             {
@@ -155,7 +155,7 @@ namespace Microsoft.HealthVault
         /// <param name="writer">The writer to use.</param>
         /// <param name="collection">The collection to write.</param>
         /// <param name="itemNodeName">The name of the item node element.</param>
-        static internal void WriteXmlCollection<T>(XmlWriter writer, Collection<T> collection, string itemNodeName) where T : HealthRecordItemData
+        internal static void WriteXmlCollection<T>(XmlWriter writer, Collection<T> collection, string itemNodeName) where T : HealthRecordItemData
         {
             foreach (HealthRecordItemData item in collection)
             {

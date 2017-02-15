@@ -4,10 +4,7 @@
 // All other rights reserved.
 
 using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Diagnostics.CodeAnalysis;
-using System.Globalization;
 using System.Text;
 using System.Xml;
 using System.Xml.XPath;
@@ -81,7 +78,7 @@ namespace Microsoft.HealthVault.ItemTypes
         /// A GUID.
         /// </value>
         ///
-        public static new readonly Guid TypeId =
+        public new static readonly Guid TypeId =
             new Guid("1572af76-1653-4c39-9683-9f9ca6584ba3");
         
         /// <summary>
@@ -147,7 +144,7 @@ namespace Microsoft.HealthVault.ItemTypes
             
             _when.WriteXml("when", writer);
             _event.WriteXml("event", writer);
-            XmlWriterHelper.WriteOpt<CodableValue>(writer, "category", _category);
+            XmlWriterHelper.WriteOpt(writer, "category", _category);
             writer.WriteEndElement();
         }
         

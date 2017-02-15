@@ -9,8 +9,9 @@ using System.Collections.ObjectModel;
 using System.Text;
 using System.Xml;
 using System.Xml.XPath;
+using Microsoft.HealthVault.Exceptions;
 
-namespace Microsoft.HealthVault.PlatformPrimitives
+namespace Microsoft.HealthVault
 {
 
     /// <summary>
@@ -62,10 +63,7 @@ namespace Microsoft.HealthVault.PlatformPrimitives
             _saved = null;
         }
 
-        internal static HealthVaultPlatformItem Current
-        {
-            get { return _current; }
-        }
+        internal static HealthVaultPlatformItem Current => _current;
         private static HealthVaultPlatformItem _current = new HealthVaultPlatformItem();
         private static HealthVaultPlatformItem _saved;
 
@@ -226,10 +224,9 @@ namespace Microsoft.HealthVault.PlatformPrimitives
             if (somethingRequiresUpdate)
             {
                 HealthServiceRequest request =
-                    new HealthServiceRequest(connection, "PutThings", 2, accessor);
+                    new HealthServiceRequest(connection, "PutThings", 2, accessor) {Parameters = infoXml.ToString()};
 
                 // Add the XML to the request.
-                request.Parameters = infoXml.ToString();
 
                 // Call the web-service
                 request.Execute();
@@ -254,7 +251,7 @@ namespace Microsoft.HealthVault.PlatformPrimitives
             }
         }
 
-        private static XPathExpression _thingIdPath =
+        private static readonly XPathExpression _thingIdPath =
             XPathExpression.Compile("/wc:info/thing-id");
 
         /// <summary>
@@ -274,7 +271,7 @@ namespace Microsoft.HealthVault.PlatformPrimitives
                     "wc",
                     "urn:com.microsoft.wc.methods.response.PutThings");
 
-            XPathExpression infoThingIdPathClone = null;
+            XPathExpression infoThingIdPathClone;
             lock (_thingIdPath)
             {
                 infoThingIdPathClone = _thingIdPath.Clone();
@@ -341,9 +338,8 @@ namespace Microsoft.HealthVault.PlatformPrimitives
             }
 
             HealthServiceRequest request =
-                new HealthServiceRequest(connection, "RemoveThings", 1, accessor);
+                new HealthServiceRequest(connection, "RemoveThings", 1, accessor) {Parameters = parameters.ToString()};
 
-            request.Parameters = parameters.ToString();
             request.Execute();
         }
 
@@ -579,9 +575,8 @@ namespace Microsoft.HealthVault.PlatformPrimitives
             HealthRecordSearcher searcher)
         {
             HealthServiceRequest request =
-                new HealthServiceRequest(connection, "GetThings", 3, accessor);
+                new HealthServiceRequest(connection, "GetThings", 3, accessor) {Parameters = GetParametersXml(searcher)};
 
-            request.Parameters = GetParametersXml(searcher);
             return request;
         }
 
@@ -594,15 +589,16 @@ namespace Microsoft.HealthVault.PlatformPrimitives
         /// If no filter was specified or if any specified filter was invalid.
         /// </exception>
         /// 
-        static internal void ValidateFilters(HealthRecordSearcher searcher)
+        internal static void ValidateFilters(HealthRecordSearcher searcher)
         {
             if (searcher.Filters.Count == 0)
             {
-                HealthServiceResponseError error = new HealthServiceResponseError();
+                HealthServiceResponseError error = new HealthServiceResponseError
+                {
+                    Message = ResourceRetriever.GetResourceString(
+                        "HealthRecordSearcherInvalidFilter")
+                };
 
-                error.Message =
-                    ResourceRetriever.GetResourceString(
-                        "HealthRecordSearcherInvalidFilter");
 
                 HealthServiceException e =
                     HealthServiceExceptionHelper.GetHealthServiceException(
@@ -611,9 +607,9 @@ namespace Microsoft.HealthVault.PlatformPrimitives
                 throw e;
             }
 
-            for (int i = 0; i < searcher.Filters.Count; ++i)
+            foreach (HealthRecordFilter filter in searcher.Filters)
             {
-                searcher.Filters[i].ThrowIfNotValid();
+                filter.ThrowIfNotValid();
             }
         }
 
@@ -644,28 +640,28 @@ namespace Microsoft.HealthVault.PlatformPrimitives
             {
                 while (infoReader.Name == "group")
                 {
-                    XmlReader groupReader = infoReader.ReadSubtree();
-
-                    groupReader.MoveToContent();
-
-                    HealthRecordItemCollection resultGroup =
-                        HealthRecordItemCollection.CreateResultGroupFromResponse(
-                            accessor,
-                            groupReader,
-                            searcher.Filters);
-
-                    groupReader.Close();
-
-                    // infoReader will normally be at the end element of 
-                    // the group at this point, and needs a read to get to
-                    // the next element. If the group was empty, infoReader
-                    // will be at the beginning of the group, and a 
-                    // single read will still move to the next element.
-                    infoReader.Read();
-                    if (resultGroup != null)
+                    using (XmlReader groupReader = infoReader.ReadSubtree())
                     {
-                        result.Add(resultGroup);
+                        groupReader.MoveToContent();
+
+                        HealthRecordItemCollection resultGroup =
+                            HealthRecordItemCollection.CreateResultGroupFromResponse(
+                                accessor,
+                                groupReader,
+                                searcher.Filters);
+
+                        // infoReader will normally be at the end element of 
+                        // the group at this point, and needs a read to get to
+                        // the next element. If the group was empty, infoReader
+                        // will be at the beginning of the group, and a 
+                        // single read will still move to the next element.
+                        infoReader.Read();
+                        if (resultGroup != null)
+                        {
+                            result.Add(resultGroup);
+                        }
                     }
+
                 }
             }
 
@@ -688,10 +684,11 @@ namespace Microsoft.HealthVault.PlatformPrimitives
         {
             if (searcher.Filters.Count == 0)
             {
-                HealthServiceResponseError error = new HealthServiceResponseError();
-                error.Message =
-                    ResourceRetriever.GetResourceString(
-                        "HealthRecordSearcherNoFilters");
+                HealthServiceResponseError error = new HealthServiceResponseError
+                {
+                    Message = ResourceRetriever.GetResourceString(
+                        "HealthRecordSearcherNoFilters")
+                };
 
                 HealthServiceException e =
                     HealthServiceExceptionHelper.GetHealthServiceException(

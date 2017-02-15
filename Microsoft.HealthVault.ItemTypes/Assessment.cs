@@ -5,10 +5,6 @@
 
 
 using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Globalization;
-using System.Text;
 using System.Xml;
 using System.Xml.XPath;
 
@@ -126,7 +122,7 @@ namespace Microsoft.HealthVault.ItemTypes
             _value.WriteXml("value", writer);
 
             // <group>
-            XmlWriterHelper.WriteOpt<CodableValue>(writer, "group", _group);
+            XmlWriterHelper.WriteOpt(writer, "group", _group);
  
             writer.WriteEndElement();
         }
@@ -142,7 +138,7 @@ namespace Microsoft.HealthVault.ItemTypes
         /// </remarks>
         /// 
         /// <exception cref="ArgumentNullException">
-        /// If <paramref name="Name"/> is <b>null</b>. 
+        /// If setter value is <b>null</b>. 
         /// </exception>
         /// 
         public CodableValue Name
@@ -210,12 +206,12 @@ namespace Microsoft.HealthVault.ItemTypes
         /// 
         public override string ToString()
         {
-            string result = String.Empty;
+            string result = string.Empty;
 
             if (_name != null && _value != null)
             {
                 result =
-                    String.Format(
+                    string.Format(
                         ResourceRetriever.GetResourceString(
                             "AssessmentToStringFormat"),
                         _name.ToString(),

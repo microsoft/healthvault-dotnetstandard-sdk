@@ -5,9 +5,6 @@
 
 
 using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Globalization;
 using System.Text;
 using System.Xml;
 using System.Xml.XPath;
@@ -145,7 +142,7 @@ namespace Microsoft.HealthVault.ItemTypes
                 _deviceName);
 
             // <vendor>
-            XmlWriterHelper.WriteOpt<PersonItem>(
+            XmlWriterHelper.WriteOpt(
                 writer,
                 "vendor", 
                 _vendor);

@@ -5,9 +5,7 @@
 
 
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Globalization;
 using System.Text;
 using System.Xml;
 using System.Xml.XPath;
@@ -106,7 +104,7 @@ namespace Microsoft.HealthVault.ItemTypes
             }
 
             // <expires>
-            XmlWriterHelper.WriteOpt<HealthServiceDateTime>(writer, "expires", _expires);
+            XmlWriterHelper.WriteOpt(writer, "expires", _expires);
 
             // </group-membership>
             writer.WriteEndElement();
@@ -162,7 +160,7 @@ namespace Microsoft.HealthVault.ItemTypes
                 {
                     result.Append(ResourceRetriever.GetResourceString("ListSeparator"));
                 }
-                result.Append(GroupMemberships[index].ToString());
+                result.Append(GroupMemberships[index]);
             }
 
             return result.ToString();

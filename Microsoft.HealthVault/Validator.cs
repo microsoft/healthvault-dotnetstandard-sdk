@@ -7,9 +7,11 @@ using System;
 using System.IO;
 using System.Net;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 using System.Security;
 using System.Xml;
 using System.Xml.XPath;
+using Microsoft.HealthVault.Exceptions;
 
 namespace Microsoft.HealthVault
 {
@@ -78,29 +80,29 @@ namespace Microsoft.HealthVault
 
         public static ArgumentException ArgumentException(string parameterName, string resourceId)
         {
-            return ArgumentException(Assembly.GetCallingAssembly(), parameterName, resourceId);
+            return ArgumentException(typeof(Validator).GetTypeInfo().Assembly, parameterName, resourceId);
         }
 
         public static HealthRecordItemSerializationException HealthRecordItemSerializationException(string resourceId)
         {
-            return HealthRecordItemSerializationException(Assembly.GetCallingAssembly(), resourceId);
+            return HealthRecordItemSerializationException(typeof(Validator).GetTypeInfo().Assembly, resourceId);
         }
 
         public static InvalidOperationException InvalidOperationException(string resourceId)
         {
-            return InvalidOperationException(Assembly.GetCallingAssembly(), resourceId);
+            return InvalidOperationException(typeof(Validator).GetTypeInfo().Assembly, resourceId);
         }
 
         public static HealthServiceException HealthServiceException(string resourceId)
         {
-            return HealthServiceException(Assembly.GetCallingAssembly(), resourceId);
+            return HealthServiceException(typeof(Validator).GetTypeInfo().Assembly, resourceId);
         }
 
         public static InvalidConfigurationException InvalidConfigurationException(string resourceId)
         {
             return new InvalidConfigurationException(
                     GetResourceString(
-                        Assembly.GetCallingAssembly(),
+                        typeof(Validator).GetTypeInfo().Assembly,
                         resourceId));
         }
 
@@ -108,7 +110,7 @@ namespace Microsoft.HealthVault
         {
             return new SecurityException(
                     GetResourceString(
-                        Assembly.GetCallingAssembly(),
+                        typeof(Validator).GetTypeInfo().Assembly,
                         resourceId));
         }
 
@@ -116,7 +118,7 @@ namespace Microsoft.HealthVault
         {
             return new SecurityException(
                     GetResourceString(
-                        Assembly.GetCallingAssembly(),
+                        typeof(Validator).GetTypeInfo().Assembly,
                         resourceId),
                         innerException);
         }
@@ -125,7 +127,7 @@ namespace Microsoft.HealthVault
         {
             return new NotSupportedException(
                     GetResourceString(
-                        Assembly.GetCallingAssembly(),
+                        typeof(Validator).GetTypeInfo().Assembly,
                         resourceId));
         }
 
@@ -133,7 +135,7 @@ namespace Microsoft.HealthVault
         {
             return new IOException(
                     GetResourceString(
-                        Assembly.GetCallingAssembly(),
+                        typeof(Validator).GetTypeInfo().Assembly,
                         resourceId));
         }
 
@@ -141,7 +143,7 @@ namespace Microsoft.HealthVault
         {
             return new WebException(
                     GetResourceString(
-                        Assembly.GetCallingAssembly(),
+                        typeof(Validator).GetTypeInfo().Assembly,
                         resourceId),
                         webExceptionStatus);
         }
@@ -151,7 +153,7 @@ namespace Microsoft.HealthVault
             Exception innerException)
         {
             return new HealthRecordItemDeserializationException(
-                    GetResourceString(Assembly.GetCallingAssembly(), resourceId),
+                    GetResourceString(typeof(Validator).GetTypeInfo().Assembly, resourceId),
                     innerException);
         }
 
@@ -162,7 +164,7 @@ namespace Microsoft.HealthVault
         {
             if (!String.IsNullOrEmpty(value) && String.IsNullOrEmpty(value.Trim()))
             {
-                throw ArgumentException(Assembly.GetCallingAssembly(), parameterName, "WhitespaceOnlyValue");
+                throw ArgumentException(typeof(Validator).GetTypeInfo().Assembly, parameterName, "WhitespaceOnlyValue");
             }
         }
 
@@ -170,7 +172,7 @@ namespace Microsoft.HealthVault
         {
             if (value != null && String.IsNullOrEmpty(value.Trim()))
             {
-                throw ArgumentException(Assembly.GetCallingAssembly(), parameterName, "WhitespaceOnlyValue");
+                throw ArgumentException(typeof(Validator).GetTypeInfo().Assembly, parameterName, "WhitespaceOnlyValue");
             }
         }
 
@@ -178,7 +180,7 @@ namespace Microsoft.HealthVault
         {
             if (String.IsNullOrEmpty(value))
             {
-                throw ArgumentException(Assembly.GetCallingAssembly(), parameterName, "StringNullOrEmpty");
+                throw ArgumentException(typeof(Validator).GetTypeInfo().Assembly, parameterName, "StringNullOrEmpty");
             }
         }
 
@@ -186,7 +188,7 @@ namespace Microsoft.HealthVault
         {
             if (argument == null)
             {
-                throw ArgumentNullException(Assembly.GetCallingAssembly(), argumentName, resourceId);
+                throw ArgumentNullException(typeof(Validator).GetTypeInfo().Assembly, argumentName, resourceId);
             }
         }
 
@@ -194,7 +196,7 @@ namespace Microsoft.HealthVault
         {
             if (writer == null)
             {
-                throw ArgumentNullException(Assembly.GetCallingAssembly(), "writer", "WriteXmlNullWriter");
+                throw ArgumentNullException(typeof(Validator).GetTypeInfo().Assembly, "writer", "WriteXmlNullWriter");
             }
         }
 
@@ -202,7 +204,7 @@ namespace Microsoft.HealthVault
         {
             if (navigator == null)
             {
-                throw ArgumentNullException(Assembly.GetCallingAssembly(), "navigator", "ParseXmlNavNull");
+                throw ArgumentNullException(typeof(Validator).GetTypeInfo().Assembly, "navigator", "ParseXmlNavNull");
             }
         }
 
@@ -217,7 +219,7 @@ namespace Microsoft.HealthVault
         {
             if (condition)
             {
-                throw ArgumentException(Assembly.GetCallingAssembly(), argumentName, resourceId);
+                throw ArgumentException(typeof(Validator).GetTypeInfo().Assembly, argumentName, resourceId);
             }
         }
 
@@ -231,7 +233,7 @@ namespace Microsoft.HealthVault
                 throw new ArgumentOutOfRangeException(
                     argumentName,
                     GetResourceString(
-                        Assembly.GetCallingAssembly(),
+                        typeof(Validator).GetTypeInfo().Assembly,
                         resourceId));
             }
         }
@@ -240,7 +242,7 @@ namespace Microsoft.HealthVault
         {
             if (value == null)
             {
-                throw InvalidOperationException(Assembly.GetCallingAssembly(), resourceId);
+                throw InvalidOperationException(typeof(Validator).GetTypeInfo().Assembly, resourceId);
             }
         }
 
@@ -248,7 +250,7 @@ namespace Microsoft.HealthVault
         {
             if (condition)
             {
-                throw InvalidOperationException(Assembly.GetCallingAssembly(), resourceId);
+                throw InvalidOperationException(typeof(Validator).GetTypeInfo().Assembly, resourceId);
             }
         }
 
@@ -256,7 +258,7 @@ namespace Microsoft.HealthVault
         {
             if (value == null)
             {
-                throw HealthRecordItemSerializationException(Assembly.GetCallingAssembly(), resourceId);
+                throw HealthRecordItemSerializationException(typeof(Validator).GetTypeInfo().Assembly, resourceId);
             }
         }
 
@@ -264,7 +266,7 @@ namespace Microsoft.HealthVault
         {
             if (condition)
             {
-                throw HealthRecordItemSerializationException(Assembly.GetCallingAssembly(), resourceId);
+                throw HealthRecordItemSerializationException(typeof(Validator).GetTypeInfo().Assembly, resourceId);
             }
         }
 

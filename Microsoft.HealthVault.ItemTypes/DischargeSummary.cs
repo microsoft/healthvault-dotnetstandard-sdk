@@ -5,9 +5,6 @@
 
 
 using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Globalization;
 using System.Text;
 using System.Xml;
 using System.Xml.XPath;
@@ -198,19 +195,19 @@ namespace Microsoft.HealthVault.ItemTypes
             _when.WriteXml("when", writer);
 
             // <type>
-            XmlWriterHelper.WriteOpt<CodableValue>(
+            XmlWriterHelper.WriteOpt(
                 writer,
                 "type",
                 Type);
             
             // <category>
-            XmlWriterHelper.WriteOpt<CodableValue>(
+            XmlWriterHelper.WriteOpt(
                 writer,
                 "category",
                 Category);
             
             // <setting>
-            XmlWriterHelper.WriteOpt<CodableValue>(
+            XmlWriterHelper.WriteOpt(
                 writer,
                 "setting",
                 Setting);
@@ -228,67 +225,67 @@ namespace Microsoft.HealthVault.ItemTypes
                 _text); 
 
             // <primary-provider>
-            XmlWriterHelper.WriteOpt<PersonItem>(
+            XmlWriterHelper.WriteOpt(
                 writer,
                 "primary-provider",
                 PrimaryProvider); 
             
             // <primary-provider-endorsement>
-            XmlWriterHelper.WriteOpt<HealthServiceDateTime>(
+            XmlWriterHelper.WriteOpt(
                 writer,
                 "primary-provider-endorsement",
                 PrimaryProviderEndorsement);
 
             // <secondary-provider>
-            XmlWriterHelper.WriteOpt<PersonItem>(
+            XmlWriterHelper.WriteOpt(
                 writer,
                 "secondary-provider",
                 SecondaryProvider);
 
             // <secondary-provider-endorsement>
-            XmlWriterHelper.WriteOpt<HealthServiceDateTime>(
+            XmlWriterHelper.WriteOpt(
                 writer,
                 "secondary-provider-endorsement",
                 SecondaryProviderEndorsement);
             
             // <discharge-date-time>
-            XmlWriterHelper.WriteOpt<ApproximateDateTime>(
+            XmlWriterHelper.WriteOpt(
                 writer,
                 "discharge-date-time",
                 DischargeDateTime); 
             
             // <admitting-diagnosis>
-            XmlWriterHelper.WriteOpt<CodableValue>(
+            XmlWriterHelper.WriteOpt(
                 writer,
                 "admitting-diagnosis",
                 AdmittingDiagnosis); 
             
             // <principal-diagnosis>
-            XmlWriterHelper.WriteOpt<CodableValue>(
+            XmlWriterHelper.WriteOpt(
                 writer,
                 "principal-diagnosis",
                 PrincipalDiagnosis); 
             
             // <additional-diagnosis>
-            XmlWriterHelper.WriteOpt<CodableValue>(
+            XmlWriterHelper.WriteOpt(
                 writer,
                 "additional-diagnosis",
                 AdditionalDiagnosis); 
 
             // <principal-procedure-physician>
-            XmlWriterHelper.WriteOpt<PersonItem>(
+            XmlWriterHelper.WriteOpt(
                 writer,
                 "principal-procedure-physician",
                 _principalProcedurePhysician); 
 
             // <principal-procedure>
-            XmlWriterHelper.WriteOpt<CodableValue>(
+            XmlWriterHelper.WriteOpt(
                 writer,
                 "principal-procedure",
                 PrincipalProcedure); 
 
             // <additional-procedure>
-            XmlWriterHelper.WriteOpt<CodableValue>(
+            XmlWriterHelper.WriteOpt(
                 writer,
                 "additional-procedure",
                 AdditionalProcedure); 
@@ -672,7 +669,7 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             StringBuilder result = new StringBuilder(200);
 
-            result.Append(When.ToString());
+            result.Append(When);
 
             if (PrimaryProvider != null)
             {

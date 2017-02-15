@@ -5,8 +5,6 @@
 
 
 using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Globalization;
 using System.Xml;
 using System.Xml.XPath;
@@ -145,7 +143,7 @@ namespace Microsoft.HealthVault.ItemTypes
         /// 
         protected override string GetValueString(double value)
         {
-            return String.Format(
+            return string.Format(
                 ResourceRetriever.GetResourceString("LengthToStringFormatMeters"),
                 value.ToString(CultureInfo.CurrentCulture));
         }

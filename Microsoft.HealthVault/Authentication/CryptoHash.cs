@@ -261,10 +261,7 @@ namespace Microsoft.HealthVault.Authentication
         /// <see cref="WriteInfoXml"/>.
         /// </returns>
         /// 
-        protected string StartElementName
-        {
-            get { return (DigestAlgorithmName + "-alg"); }
-        }
+        protected string StartElementName => DigestAlgorithmName + "-alg";
 
         /// <summary>
         /// Writes the XML to use when authenticating with the HealthVault 
@@ -287,10 +284,10 @@ namespace Microsoft.HealthVault.Authentication
         {
             if (writer == null)
             {
-                throw new ArgumentNullException("writer");
+                throw new ArgumentNullException(nameof(writer));
             }
             writer.WriteStartElement(StartElementName);
-            writer.WriteAttributeString("algName", AlgorithmName.ToString());
+            writer.WriteAttributeString("algName", AlgorithmName);
             writer.WriteEndElement();
         }
 

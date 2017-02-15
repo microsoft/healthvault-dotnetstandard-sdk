@@ -4,10 +4,6 @@
 // All other rights reserved.
 
 using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Globalization;
-using System.Text;
 using System.Xml;
 using System.Xml.XPath;
 
@@ -112,11 +108,11 @@ namespace Microsoft.HealthVault.ItemTypes
             Validator.ThrowIfWriterNull(writer);
 
             Validator.ThrowSerializationIf(
-                String.IsNullOrEmpty(_name) || String.IsNullOrEmpty(_name.Trim()),
+                string.IsNullOrEmpty(_name) || string.IsNullOrEmpty(_name.Trim()),
                 "MessageNameMandatory");
 
             Validator.ThrowSerializationIf(
-                String.IsNullOrEmpty(_blobName) || String.IsNullOrEmpty(_blobName.Trim()),
+                string.IsNullOrEmpty(_blobName) || string.IsNullOrEmpty(_blobName.Trim()),
                 "BlobNameMandatory");
             
             writer.WriteStartElement("attachments");

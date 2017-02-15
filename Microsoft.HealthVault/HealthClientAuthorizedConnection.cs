@@ -5,7 +5,6 @@
 
 using System;
 using System.Collections.Generic;
-using Microsoft.HealthVault.MeaningfulUse;
 using Microsoft.HealthVault.Web;
 using Microsoft.HealthVault.Web.Authentication;
 
@@ -228,89 +227,6 @@ namespace Microsoft.HealthVault
         {
         }
 
-        #endregion
-
-        #region MeaningfulUse
-        /// <summary>
-        /// Retrieves the Meaningful Use View, Download, and Transmit (VDT) Report for the application.
-        /// </summary>
-        /// 
-        /// <param name="reportingPeriodFilter">
-        /// The UTC reporting period to be used to retrieve the VDT Report.
-        /// </param>
-        /// 
-        /// <returns>
-        /// An IEnumerable iterator of <see cref="PatientActivity"/> objects which contains the list of patients to which the
-        /// data source sent a CCDA document where the event date (visit or discharge date) is within the specified reporting period,
-        /// and additionally, the patient viewed, downloaded or transmitted to a 3rd party, health information in the record.
-        /// </returns>
-        /// 
-        /// <remarks>
-        /// Not supported for this connection.
-        /// </remarks>
-        /// 
-        /// <exception cref="InvalidOperationException">
-        /// Not supported.
-        /// </exception>
-        /// 
-        public override IEnumerable<PatientActivity> GetMeaningfulUseVDTReport(
-            DateRange reportingPeriodFilter)
-        {
-            throw Validator.InvalidOperationException("MeaningfulUseReportsRetrievalNotSupported");
-        }
-
-        /// <summary>
-        /// Retrieves the Meaningful Use Timely Access Report for the application.
-        /// </summary>
-        /// 
-        /// <param name="reportingPeriodFilter">
-        /// The UTC reporting period to be used to retrieve the Timely Access Report.
-        /// </param>
-        /// 
-        /// <returns>
-        /// An IEnumerable iterator of <see cref="DocumentReceipt"/> objects which contains the
-        /// list of document receipts having an event date (visit or discharge date) within the specified reporting period.
-        /// </returns>
-        /// 
-        /// <remarks>
-        /// Not supported for this connection.
-        /// </remarks>
-        /// 
-        /// <exception cref="InvalidOperationException">
-        /// Not supported.
-        /// </exception>
-        /// 
-        public override IEnumerable<DocumentReceipt> GetMeaningfulUseTimelyAccessDocumentReport(
-            DateRange reportingPeriodFilter)
-        {
-            throw Validator.InvalidOperationException("MeaningfulUseReportsRetrievalNotSupported");
-        }
-
-        /// <summary>
-        /// Retrieves the Meaningful Use Timely Access Report for applications that use DOPU to transfer CCDA documents to HealthVault.
-        /// </summary>
-        /// 
-        /// <param name="availableDateFilter">
-        /// The UTC date range used to filter the entries in the Timely Access Report by the date the CCDA document was made available to HealthVault.
-        /// </param>
-        /// 
-        /// <returns>
-        /// An IEnumerable iterator of <see cref="DOPUDocumentReceipt"/> objects which contains the list of CCDA document receipts sent to HealthVault using DOPU, filtered by the available date range. 
-        /// </returns>
-        /// 
-        /// <remarks>
-        /// Not supported for this connection.
-        /// </remarks>
-        /// 
-        /// <exception cref="InvalidOperationException">
-        /// Not supported.
-        /// </exception>
-        /// 
-        public override IEnumerable<DOPUDocumentReceipt> GetMeaningfulUseTimelyAccessDOPUDocumentReport(
-            DateRange availableDateFilter)
-        {
-            throw Validator.InvalidOperationException("MeaningfulUseReportsRetrievalNotSupported");
-        }
         #endregion
     }
 }

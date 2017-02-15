@@ -4,11 +4,9 @@
 // All other rights reserved.
 
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
-using System.Text;
 using System.Xml;
 using System.Xml.XPath;
 
@@ -72,7 +70,7 @@ namespace Microsoft.HealthVault.ItemTypes
         /// A GUID.
         /// </value>
         ///
-        public static new readonly Guid TypeId =
+        public new static readonly Guid TypeId =
             new Guid("415c95e0-0533-4d9c-ac73-91dc5031186c");
         
         /// <summary>
@@ -136,21 +134,21 @@ namespace Microsoft.HealthVault.ItemTypes
             Validator.ThrowIfArgumentNull(writer, "writer", "WriteXmlNullWriter");
 
             Validator.ThrowSerializationIf(
-                String.IsNullOrEmpty(_name) || String.IsNullOrEmpty(_name.Trim()),
+                string.IsNullOrEmpty(_name) || string.IsNullOrEmpty(_name.Trim()),
                 "CarePlanNameNullOrEmpty");
 
             writer.WriteStartElement("care-plan");
             {
                 writer.WriteElementString("name", _name);
-                XmlWriterHelper.WriteOpt<ApproximateDateTime>(writer, "start-date", _startDate);
-                XmlWriterHelper.WriteOpt<ApproximateDateTime>(writer, "end-date", _endDate);
-                XmlWriterHelper.WriteOpt<CodableValue>(writer, "status", _status);
+                XmlWriterHelper.WriteOpt(writer, "start-date", _startDate);
+                XmlWriterHelper.WriteOpt(writer, "end-date", _endDate);
+                XmlWriterHelper.WriteOpt(writer, "status", _status);
 
-                XmlWriterHelper.WriteXmlCollection<PersonItem>(writer, "care-team", _careTeam, "person");
+                XmlWriterHelper.WriteXmlCollection(writer, "care-team", _careTeam, "person");
                 
-                XmlWriterHelper.WriteOpt<PersonItem>(writer, "care-plan-manager", _carePlanManager);
-                XmlWriterHelper.WriteXmlCollection<CarePlanTask>(writer, "tasks", _tasks, "task");
-                XmlWriterHelper.WriteXmlCollection<CarePlanGoalGroup>(writer, "goal-groups", _goalGroups, "goal-group");
+                XmlWriterHelper.WriteOpt(writer, "care-plan-manager", _carePlanManager);
+                XmlWriterHelper.WriteXmlCollection(writer, "tasks", _tasks, "task");
+                XmlWriterHelper.WriteXmlCollection(writer, "goal-groups", _goalGroups, "goal-group");
             }
 
             writer.WriteEndElement();
@@ -265,14 +263,8 @@ namespace Microsoft.HealthVault.ItemTypes
         /// Gets or sets list of person contacts associated with the care plan.
         /// </summary>
         ///
-        public Collection<PersonItem> CareTeam
-        {
-            get
-            {
-                return _careTeam;
-            }
-        }
-        
+        public Collection<PersonItem> CareTeam => _careTeam;
+
         private Collection<PersonItem> _careTeam =
             new Collection<PersonItem>();        
         
@@ -303,13 +295,7 @@ namespace Microsoft.HealthVault.ItemTypes
         /// Gets or sets list of tasks associated with the care plan.
         /// </summary>
         /// 
-        public Collection<CarePlanTask> Tasks
-        {
-            get
-            {
-                return _tasks;
-            }
-        }
+        public Collection<CarePlanTask> Tasks => _tasks;
 
         private Collection<CarePlanTask> _tasks =
             new Collection<CarePlanTask>();        
@@ -318,13 +304,7 @@ namespace Microsoft.HealthVault.ItemTypes
         /// Gets or sets list of goals associated with the care plan.
         /// </summary>
         ///
-        public Collection<CarePlanGoalGroup> GoalGroups
-        {
-            get
-            {
-                return _goalGroups;
-            }
-        }
+        public Collection<CarePlanGoalGroup> GoalGroups => _goalGroups;
 
         private Collection<CarePlanGoalGroup> _goalGroups =
             new Collection<CarePlanGoalGroup>();
@@ -345,7 +325,7 @@ namespace Microsoft.HealthVault.ItemTypes
             }
             else
             {
-                return String.Format(
+                return string.Format(
                     CultureInfo.CurrentUICulture,
                     ResourceRetriever.GetResourceString("CarePlanFormat"),
                     _name,

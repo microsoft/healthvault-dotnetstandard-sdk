@@ -5,11 +5,9 @@
 
 
 using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Globalization;
 using System.Xml;
 using System.Xml.XPath;
+using Microsoft.Health.ItemTypes;
 
 namespace Microsoft.HealthVault.ItemTypes
 {
@@ -144,7 +142,7 @@ namespace Microsoft.HealthVault.ItemTypes
                 }
                 else
                 {
-                    if (!String.IsNullOrEmpty(_statusString))
+                    if (!string.IsNullOrEmpty(_statusString))
                     {
                         writer.WriteElementString(
                             "status",

@@ -125,17 +125,17 @@ namespace Microsoft.HealthVault.ItemTypes
 
             writer.WriteStartElement(nodeName);
 
-            XmlWriterHelper.WriteOpt<HealthServiceDateTime>(writer, "acquisition-datetime", _acquisitionDateTime);
+            XmlWriterHelper.WriteOpt(writer, "acquisition-datetime", _acquisitionDateTime);
             XmlWriterHelper.WriteOptString(writer, "description", _description);
 
             foreach (MedicalImageStudySeriesImage image in _images)
             {
-                XmlWriterHelper.WriteOpt<MedicalImageStudySeriesImage>(writer, "images", image);
+                XmlWriterHelper.WriteOpt(writer, "images", image);
             }
 
-            XmlWriterHelper.WriteOpt<Organization>(writer, "institution-name", _institutionName);
-            XmlWriterHelper.WriteOpt<CodableValue>(writer, "modality", _modality);
-            XmlWriterHelper.WriteOpt<CodableValue>(writer, "body-part", _bodyPart);
+            XmlWriterHelper.WriteOpt(writer, "institution-name", _institutionName);
+            XmlWriterHelper.WriteOpt(writer, "modality", _modality);
+            XmlWriterHelper.WriteOpt(writer, "body-part", _bodyPart);
             XmlWriterHelper.WriteOptString(writer, "preview-blob-name", _previewBlobName);
             XmlWriterHelper.WriteOptString(writer, "series-instance-uid", _seriesInstanceUID);
 
@@ -330,7 +330,7 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             StringBuilder result = new StringBuilder(200);
 
-            if (!String.IsNullOrEmpty(Description) && !String.IsNullOrEmpty(Description.Trim()))
+            if (!string.IsNullOrEmpty(Description) && !string.IsNullOrEmpty(Description.Trim()))
             {
                 result.Append(Description);
 
@@ -353,7 +353,7 @@ namespace Microsoft.HealthVault.ItemTypes
                         result.Append(ResourceRetriever.GetResourceString("errors", "ListSeparator"));
                     }
 
-                    result.Append(AcquisitionDateTime.ToString());
+                    result.Append(AcquisitionDateTime);
                 }
 
                 if (InstitutionName != null)
@@ -363,7 +363,7 @@ namespace Microsoft.HealthVault.ItemTypes
                         result.Append(ResourceRetriever.GetResourceString("errors", "ListSeparator"));
                     }
 
-                    result.Append(InstitutionName.Name.ToString());
+                    result.Append(InstitutionName.Name);
                 }
 
                 result.Append(ResourceRetriever.GetResourceString("errors", "CloseParen"));

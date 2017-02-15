@@ -10,6 +10,8 @@ using System.Diagnostics.CodeAnalysis;
 using System.Security;
 using System.Security.Cryptography.X509Certificates;
 using Microsoft.HealthVault.Certificate;
+using Microsoft.HealthVault.Exceptions;
+using Microsoft.HealthVault.Extensions;
 using Microsoft.HealthVault.Web.Authentication;
 
 namespace Microsoft.HealthVault
@@ -98,7 +100,7 @@ namespace Microsoft.HealthVault
                 throw Validator.InvalidConfigurationException("InvalidRequestUrlConfiguration");
             }
 
-            if (HealthApplicationConfiguration.Current.HealthVaultMethodUrl == null)
+            if (HealthApplicationConfiguration.Current.GetHealthVaultMethodUrl() == null)
             {
                 throw Validator.InvalidConfigurationException("InvalidRequestUrlConfiguration");
             }
@@ -106,7 +108,7 @@ namespace Microsoft.HealthVault
             return Create(applicationId,
                 masterApplicationId,
                 HealthApplicationConfiguration.Current.HealthVaultShellUrl,
-                HealthApplicationConfiguration.Current.HealthVaultMethodUrl);
+                HealthApplicationConfiguration.Current.GetHealthVaultMethodUrl());
         }
 
         /// <summary>
@@ -438,8 +440,8 @@ namespace Microsoft.HealthVault
         /// 
         public Uri GetApplicationCreationUrl()
         {
-            string clientName = Environment.MachineName;
-
+            string clientName = Environment.GetEnvironmentVariable("Machine");
+            
             return GetApplicationCreationUrl(clientName, String.Empty);
         }
 
@@ -721,7 +723,7 @@ namespace Microsoft.HealthVault
         [SecurityCritical]
         public void StartApplicationCreationProcess()
         {
-            string clientName = Environment.MachineName;
+            string clientName = Environment.GetEnvironmentVariable("Machine");
 
             StartApplicationCreationProcess(clientName);
         }
@@ -994,7 +996,6 @@ namespace Microsoft.HealthVault
             // The request is executed by launching it in the registered browser
             // The user then walks through the process of authorizing the application
             ProcessStartInfo startInfo = new ProcessStartInfo(uri.AbsoluteUri);
-            startInfo.ErrorDialog = true;
             startInfo.UseShellExecute = true;
             startInfo.CreateNoWindow = false; // create in a new window, which we can control
             Process process = Process.Start(startInfo);

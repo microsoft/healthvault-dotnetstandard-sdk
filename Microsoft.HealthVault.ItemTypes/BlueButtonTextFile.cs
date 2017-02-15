@@ -4,9 +4,6 @@
 // All other rights reserved.
 
 using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Globalization;
 using System.IO;
 using System.Xml;
 using System.Xml.XPath;
@@ -98,7 +95,7 @@ namespace Microsoft.HealthVault.ItemTypes
             // Content Type of Blob is set to "text/plain"
             CodableValue contentType = new CodableValue("text/plain");
 
-            return BlueButtonTextFile.CreateFromFilePath(record, path, sourceFormat, contentType);
+            return CreateFromFilePath(record, path, sourceFormat, contentType);
         }
 
         /// <summary>
@@ -232,7 +229,7 @@ namespace Microsoft.HealthVault.ItemTypes
             // Content Type of Blob is set to "text/plain"
             CodableValue contentType = new CodableValue("text/plain");
 
-            return BlueButtonTextFile.CreateFromStream(record, stream, name, sourceFormat, contentType);
+            return CreateFromStream(record, stream, name, sourceFormat, contentType);
         }
 
         /// <summary>
@@ -361,7 +358,7 @@ namespace Microsoft.HealthVault.ItemTypes
         /// A GUID.
         /// </value>
         /// 
-        public static new readonly Guid TypeId =
+        public new static readonly Guid TypeId =
             new Guid("2FA3D1C1-DB8C-4C0D-9873-FB01F0659360");
 
         /// <summary>
@@ -404,14 +401,14 @@ namespace Microsoft.HealthVault.ItemTypes
         public override void WriteXml(XmlWriter writer)
         {
             Validator.ThrowIfWriterNull(writer);
-            Validator.ThrowSerializationIf(String.IsNullOrEmpty(_name), "BlueButtonTextFileNameNotSet");
+            Validator.ThrowSerializationIf(string.IsNullOrEmpty(_name), "BlueButtonTextFileNameNotSet");
 
             // <blue-button-text-file>
             writer.WriteStartElement("blue-button-text-file");
 
             writer.WriteElementString("name", _name);
 
-            XmlWriterHelper.WriteOpt<CodableValue>(writer, "source-format", _sourceFormat);
+            XmlWriterHelper.WriteOpt(writer, "source-format", _sourceFormat);
 
             // </blue-button-text-file>
             writer.WriteEndElement();
@@ -477,9 +474,9 @@ namespace Microsoft.HealthVault.ItemTypes
             {
                 string result = null;
                 BlobStore store = GetBlobStore(default(HealthRecordAccessor));
-                if (store.Count > 0 && store[String.Empty] != null)
+                if (store.Count > 0 && store[string.Empty] != null)
                 {
-                    result = store[String.Empty].ReadAsString();
+                    result = store[string.Empty].ReadAsString();
                 }
 
                 return result;
@@ -496,9 +493,9 @@ namespace Microsoft.HealthVault.ItemTypes
             {
                 Stream result = null;
                 BlobStore store = GetBlobStore(default(HealthRecordAccessor));
-                if (store.Count > 0 && store[String.Empty] != null)
+                if (store.Count > 0 && store[string.Empty] != null)
                 {
-                    result = store[String.Empty].GetReaderStream();
+                    result = store[string.Empty].GetReaderStream();
                 }
 
                 return result;
@@ -777,7 +774,7 @@ namespace Microsoft.HealthVault.ItemTypes
             SourceFormat = sourceFormat;
 
             BlobStore store = GetBlobStore(record);
-            Blob blob = store.NewBlob(String.Empty, contentType.Text);
+            Blob blob = store.NewBlob(string.Empty, contentType.Text);
             blob.Write(stream);
         }
     }

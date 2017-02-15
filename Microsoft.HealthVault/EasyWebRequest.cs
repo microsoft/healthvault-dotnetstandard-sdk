@@ -12,6 +12,7 @@ using System.Text;
 using System.Threading;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using Microsoft.HealthVault.Exceptions;
 
 namespace Microsoft.HealthVault
 {
@@ -62,12 +63,7 @@ namespace Microsoft.HealthVault
         /// To disable proxy usage, set this property to null.
         /// </summary>
         /// 
-        internal static IWebProxy DefaultWebProxy
-        {
-            get { return _defaultWebProxy; }
-            set { _defaultWebProxy = value; }
-        }
-        private static IWebProxy _defaultWebProxy = WebRequest.DefaultWebProxy;
+        internal static IWebProxy DefaultWebProxy { get; set; } = WebRequest.DefaultWebProxy;
 
         /// <summary>
         /// Gets or sets the number of times the request will be retried if
@@ -110,7 +106,7 @@ namespace Microsoft.HealthVault
 
         /// <summary>
         /// Sets the proxy to use with this instance of
-        /// EasyWebRequest. The default setting is to use
+        /// EasyWebRequest. The default setting is to use 
         /// <see cref="EasyWebRequest.DefaultWebProxy"/>.
         /// To disable proxy usage, set this property to null.
         /// </summary>
@@ -436,7 +432,6 @@ namespace Microsoft.HealthVault
         private void StartGetRequest()
         {
             HttpWebResponse webResponse = null;
-            Stream responseStream = null;
 
             _webRequest.Timeout = _timeoutMilliseconds;
 
@@ -447,27 +442,20 @@ namespace Microsoft.HealthVault
                 string contentEncoding = webResponse.Headers["Content-Encoding"];
                 contentEncoding = contentEncoding ?? String.Empty;
 
-                responseStream =
+                using (Stream responseStream =
                     CreateInputDecompressionStream(
                         webResponse.GetResponseStream(),
                         contentEncoding,
-                        false);
-
-                SetResponse(responseStream);
-
-                if (_customHandler != null)
+                        false))
                 {
-                    _customHandler.HandleResponse(CreateResponseWrapper(), webResponse.Headers);
+                    SetResponse(responseStream);
+
+                    _customHandler?.HandleResponse(CreateResponseWrapper(), webResponse.Headers);
                 }
+
             }
             finally
             {
-                if (responseStream != null)
-                {
-                    responseStream.Close();
-                    responseStream.Dispose();
-                }
-
                 if (webResponse != null)
                 {
                     webResponse.Close();
@@ -493,7 +481,7 @@ namespace Microsoft.HealthVault
                 ms.Flush();
 
                 // Skip the preamble.
-                buff = ms.GetBuffer();
+                buff = ms.ToArray();
                 int offset = 0;
                 count = (int)ms.Length;
                 byte[] pre = Encoding.UTF8.GetPreamble();
@@ -598,34 +586,36 @@ namespace Microsoft.HealthVault
             }
             finally
             {
-                _eventAsyncReady.Close();
+                _eventAsyncReady.Dispose();
                 _eventAsyncReady = null;
             }
         }
 
         private void RequestCallback(IAsyncResult asyncResult)
         {
-            Stream requestStream = null;
 
             try
             {
                 string contentEncoding = _webRequest.Headers["Content-Encoding"];
                 contentEncoding = contentEncoding ?? String.Empty;
 
-                requestStream = CreateOutputCompressionStream(
+                using (Stream requestStream = CreateOutputCompressionStream(
                     _webRequest.EndGetRequestStream(asyncResult),
                     contentEncoding,
-                    false);
+                    false))
+                {
+                    
 
-                if (_xmlRequest != null)
-                {
-                    this.WriteXmlToStream(requestStream);
+                    if (_xmlRequest != null)
+                    {
+                        this.WriteXmlToStream(requestStream);
+                    }
+                    else if (_stringRequest != null)
+                    {
+                        this.WriteTextToStream(requestStream);
+                    }
+                    /* else GET request so do nothing on purpose */
                 }
-                else if (_stringRequest != null)
-                {
-                    this.WriteTextToStream(requestStream);
-                }
-                /* else GET request so do nothing on purpose */
             }
             catch (Exception e)
             {
@@ -633,10 +623,6 @@ namespace Microsoft.HealthVault
             }
             finally
             {
-                if (requestStream != null)
-                {
-                    requestStream.Close();
-                }
                 _eventAsyncReady.Set();
             }
         }
@@ -750,7 +736,7 @@ namespace Microsoft.HealthVault
             }
             finally
             {
-                _eventAsyncReady.Close();
+                _eventAsyncReady.Dispose();
                 _eventAsyncReady = null;
 
                 if (_requestCancelTrigger != null)
@@ -796,15 +782,8 @@ namespace Microsoft.HealthVault
             }
             finally
             {
-                if (_eventAsyncReady != null)
-                {
-                    _eventAsyncReady.Set();
-                }
-                if (responseStream != null)
-                {
-                    responseStream.Close();
-                    responseStream.Dispose();
-                }
+                _eventAsyncReady?.Set();
+                responseStream?.Dispose();
                 if (webResponse != null)
                 {
                     webResponse.Close();
@@ -979,11 +958,7 @@ namespace Microsoft.HealthVault
         {
             if (disposing)
             {
-                if (_requestCancelTrigger != null)
-                {
-                    _requestCancelTrigger.Close();
-                    _requestCancelTrigger = null;
-                }
+                _requestCancelTrigger = null;
             }
         }
 
@@ -991,7 +966,7 @@ namespace Microsoft.HealthVault
 
         // Factory for testing
         /// <summary> default constructor for GET </summary>
-        static internal EasyWebRequest Create()
+        internal static EasyWebRequest Create()
         {
             return Create(null);
         }
@@ -1004,7 +979,7 @@ namespace Microsoft.HealthVault
         /// text to send 
         /// </param>
         /// 
-        static internal EasyWebRequest Create(string stringRequest)
+        internal static EasyWebRequest Create(string stringRequest)
         {
             EasyWebRequest instance;
 
@@ -1034,7 +1009,7 @@ namespace Microsoft.HealthVault
         /// Significant byte count in the buffer.
         /// </param>
         /// 
-        static internal EasyWebRequest Create(Byte[] utf8EncodedXml, int length)
+        internal static EasyWebRequest Create(Byte[] utf8EncodedXml, int length)
         {
             EasyWebRequest instance = Create();
             instance._xmlRequest = utf8EncodedXml;
@@ -1045,7 +1020,7 @@ namespace Microsoft.HealthVault
 
         static EasyWebRequest _requestOverride;
 
-        static public EasyWebRequest RequestOverride
+        public static EasyWebRequest RequestOverride
         {
             get { return _requestOverride; }
             set { _requestOverride = value; }

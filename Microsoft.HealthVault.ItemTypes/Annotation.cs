@@ -5,9 +5,6 @@
 
 
 using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Globalization;
 using System.Xml;
 using System.Xml.XPath;
 
@@ -137,7 +134,7 @@ namespace Microsoft.HealthVault.ItemTypes
                 _content);
 
             // <author>
-            XmlWriterHelper.WriteOpt<PersonItem>(
+            XmlWriterHelper.WriteOpt(
                 writer, 
                 "author", 
                 Author);
@@ -329,7 +326,7 @@ namespace Microsoft.HealthVault.ItemTypes
         /// 
         public override string ToString()
         {
-            string result = null;
+            string result;
 
             if (Content != null)
             {
@@ -344,7 +341,7 @@ namespace Microsoft.HealthVault.ItemTypes
             else if (Author != null)
             {
                 result =
-                    String.Format(
+                    string.Format(
                         ResourceRetriever.GetResourceString(
                             "AnnotationAuthorFormat"),
                         Author.ToString());
@@ -352,7 +349,7 @@ namespace Microsoft.HealthVault.ItemTypes
             else
             {
                 result =
-                    String.Format(
+                    string.Format(
                         ResourceRetriever.GetResourceString(
                             "AnnotationDateFormat"),
                         When.ToString());

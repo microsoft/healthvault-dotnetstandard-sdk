@@ -5,7 +5,6 @@
 
 
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Globalization;
 using System.Text;
@@ -198,15 +197,22 @@ namespace Microsoft.HealthVault.ItemTypes
             {
                 writer.WriteStartElement("VO2-max");
 
-                XmlWriterHelper.WriteOptDouble(
-                    writer,
-                    "absolute",
-                    _vo2Absolute.Value);
+                if (_vo2Absolute != null)
+                {
+                    XmlWriterHelper.WriteOptDouble(
+                        writer,
+                        "absolute",
+                        _vo2Absolute.Value);
+                }
 
-                XmlWriterHelper.WriteOptDouble(
-                    writer,
-                    "relative",
-                    _vo2Relative.Value);
+                if (_vo2Relative != null)
+                {
+
+                    XmlWriterHelper.WriteOptDouble(
+                        writer,
+                        "relative",
+                        _vo2Relative.Value);
+                }
 
                 writer.WriteEndElement();
             }
@@ -360,11 +366,9 @@ namespace Microsoft.HealthVault.ItemTypes
         /// returned collection.
         /// </remarks>
         /// 
-        public Collection<HeartRateZoneGroup> TargetHeartRateZoneGroups
-        {
-            get { return _zoneGroups; }
-        }
-        private Collection<HeartRateZoneGroup> _zoneGroups =
+        public Collection<HeartRateZoneGroup> TargetHeartRateZoneGroups => _zoneGroups;
+
+        private readonly Collection<HeartRateZoneGroup> _zoneGroups =
             new Collection<HeartRateZoneGroup>();
 
         /// <summary>

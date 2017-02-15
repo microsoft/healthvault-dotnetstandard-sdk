@@ -5,9 +5,6 @@
 
 
 using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Globalization;
 using System.Text;
 using System.Xml;
 using System.Xml.XPath;
@@ -148,25 +145,25 @@ namespace Microsoft.HealthVault.ItemTypes
             _when.WriteXml("when", writer);
 
             // <proxy>
-            XmlWriterHelper.WriteOpt<PersonItem>(
+            XmlWriterHelper.WriteOpt(
                 writer,
                 "proxy",
                 _proxy);
 
             // <alternate>
-            XmlWriterHelper.WriteOpt<PersonItem>(
+            XmlWriterHelper.WriteOpt(
                 writer,
                 "alternate",
                 _alternate);
 
             // <primary-witness>
-            XmlWriterHelper.WriteOpt<PersonItem>(
+            XmlWriterHelper.WriteOpt(
                 writer,
                 "primary-witness",
                 _primaryWitness); 
 
             // <secondary-witness>
-            XmlWriterHelper.WriteOpt<PersonItem>(
+            XmlWriterHelper.WriteOpt(
                 writer,
                 "secondary-witness",
                 _secondaryWitness);
@@ -325,7 +322,7 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             StringBuilder result = new StringBuilder(200);
 
-            result.Append(When.ToString());
+            result.Append(When);
 
             if (Proxy != null)
             {

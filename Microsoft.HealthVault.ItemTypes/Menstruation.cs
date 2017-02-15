@@ -4,10 +4,6 @@
 // All other rights reserved.
 
 using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Globalization;
-using System.Text;
 using System.Xml;
 using System.Xml.XPath;
 
@@ -62,7 +58,7 @@ namespace Microsoft.HealthVault.ItemTypes
         /// A GUID.
         /// </value>
         /// 
-        public static new readonly Guid TypeId =
+        public new static readonly Guid TypeId =
             new Guid("caff3ff3-812f-44b1-9c9f-c1af13167705");
 
         /// <summary>
@@ -184,7 +180,7 @@ namespace Microsoft.HealthVault.ItemTypes
             XmlWriterHelper.WriteOptBool(writer, "is-new-cycle", _isNewCycle);
 
             // <amount>
-            XmlWriterHelper.WriteOpt<CodableValue>(writer, "amount", _amount);
+            XmlWriterHelper.WriteOpt(writer, "amount", _amount);
 
             // </menstrual-flow>
             writer.WriteEndElement();

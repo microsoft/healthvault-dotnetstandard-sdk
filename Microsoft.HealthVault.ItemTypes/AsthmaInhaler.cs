@@ -5,11 +5,12 @@
 
 
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Globalization;
 using System.Xml;
 using System.Xml.XPath;
+using Microsoft.Health.ItemTypes;
+using Microsoft.HealthVault.Exceptions;
 
 namespace Microsoft.HealthVault.ItemTypes
 {
@@ -234,11 +235,8 @@ namespace Microsoft.HealthVault.ItemTypes
             // <drug>
             _drug.WriteXml("drug", writer);
 
-            if (_strength != null)
-            {
-                // <strength>
-                _strength.WriteXml("strength", writer);
-            }
+            // <strength>
+            _strength?.WriteXml("strength", writer);
 
             if (_purpose != InhalerPurpose.None)
             {
@@ -247,7 +245,7 @@ namespace Microsoft.HealthVault.ItemTypes
             }
             else
             {
-                if (!String.IsNullOrEmpty(_purposeString))
+                if (!string.IsNullOrEmpty(_purposeString))
                 {
                     // <purpose>
                     writer.WriteElementString("purpose", _purposeString);
@@ -269,7 +267,7 @@ namespace Microsoft.HealthVault.ItemTypes
                 _expirationDate.WriteXml("expiration-date", writer);
             }
 
-            if (!String.IsNullOrEmpty(_deviceId))
+            if (!string.IsNullOrEmpty(_deviceId))
             {
                 // <device-id>
                 writer.WriteElementString("device-id", _deviceId);
@@ -579,11 +577,9 @@ namespace Microsoft.HealthVault.ItemTypes
         /// an instance of the <see cref="Alert"/> class.
         /// </remarks>
         /// 
-        public Collection<Alert> Alerts
-        {
-            get { return _alerts; }
-        }
-        private Collection<Alert> _alerts = new Collection<Alert>();
+        public Collection<Alert> Alerts => _alerts;
+
+        private readonly Collection<Alert> _alerts = new Collection<Alert>();
 
         /// <summary>
         /// Gets a string representation of the asthma inhaler item.
@@ -599,7 +595,7 @@ namespace Microsoft.HealthVault.ItemTypes
             {
                 return Drug.Text;
             }
-            return String.Empty;
+            return string.Empty;
         } 
     }
 }

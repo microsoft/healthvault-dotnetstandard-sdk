@@ -5,10 +5,6 @@
 
 
 using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Globalization;
-using System.Text;
 using System.Xml;
 using System.Xml.XPath;
 
@@ -137,7 +133,7 @@ namespace Microsoft.HealthVault.ItemTypes
 
             _startDate.WriteXml("start-date", writer);
 
-            XmlWriterHelper.WriteOpt<ApproximateDateTime>(
+            XmlWriterHelper.WriteOpt(
                 writer,
                 "end-date",
                 _endDate);
@@ -200,12 +196,12 @@ namespace Microsoft.HealthVault.ItemTypes
         /// 
         public override string ToString()
         {
-            String result = String.Empty;
+            string result = string.Empty;
 
             if (EndDate != null)
             {
                 result =
-                    String.Format(
+                    string.Format(
                         ResourceRetriever.GetResourceString(
                             "DateRange"),
                         StartDate.ToString(),

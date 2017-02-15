@@ -5,9 +5,6 @@
 
 
 using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Globalization;
 using System.IO;
 using System.Xml;
 using System.Xml.XPath;
@@ -134,7 +131,7 @@ namespace Microsoft.HealthVault.ItemTypes
         public static File CreateFromStream(
             HealthRecordAccessor record,
             Stream stream, 
-            String name,
+            string name,
             CodableValue contentType)
         {
             File file = new File();
@@ -179,7 +176,7 @@ namespace Microsoft.HealthVault.ItemTypes
         /// The <paramref name="size"/> parameter is negative or zero.
         /// </exception>
         /// 
-        public File(string name, Int64 size)
+        public File(string name, long size)
             : base(TypeId)
         {
             this.Name = name;
@@ -246,7 +243,7 @@ namespace Microsoft.HealthVault.ItemTypes
         public override void WriteXml(XmlWriter writer)
         {
             Validator.ThrowIfWriterNull(writer);
-            Validator.ThrowSerializationIf(String.IsNullOrEmpty(_name), "FileNameNotSet");
+            Validator.ThrowSerializationIf(string.IsNullOrEmpty(_name), "FileNameNotSet");
             Validator.ThrowSerializationIfNull(_size, "FileSizeNotSet");
 
             // <file>
@@ -304,11 +301,11 @@ namespace Microsoft.HealthVault.ItemTypes
         /// The <paramref name="value"/> parameter is less than or equal to zero.
         /// </exception>
         /// 
-        public Int64 Size
+        public long Size
         {
             get
             {
-                return _size.HasValue ? (Int64)_size : 0;
+                return _size.HasValue ? (long)_size : 0;
             }
             set
             {
@@ -316,7 +313,7 @@ namespace Microsoft.HealthVault.ItemTypes
                 _size = value;
             }
         }
-        private Int64? _size;
+        private long? _size;
 
         /// <summary>
         /// Gets or sets the type of content contained in the file.
@@ -347,9 +344,9 @@ namespace Microsoft.HealthVault.ItemTypes
             {
                 byte[] result = null;
                 BlobStore store = GetBlobStore(default(HealthRecordAccessor));
-                if (store.Count > 0 && store[String.Empty] != null)
+                if (store.Count > 0 && store[string.Empty] != null)
                 {
-                    result = store[String.Empty].ReadAllBytes();
+                    result = store[string.Empty].ReadAllBytes();
                 }
                 return result;
             }
@@ -365,9 +362,9 @@ namespace Microsoft.HealthVault.ItemTypes
             {
                 Stream result = null;
                 BlobStore store = GetBlobStore(default(HealthRecordAccessor));
-                if (store.Count > 0 && store[String.Empty] != null)
+                if (store.Count > 0 && store[string.Empty] != null)
                 {
-                    result = store[String.Empty].GetReaderStream();
+                    result = store[string.Empty].GetReaderStream();
                 }
                 return result;
             }
@@ -453,7 +450,7 @@ namespace Microsoft.HealthVault.ItemTypes
             ContentType = contentType;
 
             BlobStore store = GetBlobStore(default(HealthRecordAccessor));
-            Blob blob = store.NewBlob(String.Empty, ContentType.Text);
+            Blob blob = store.NewBlob(string.Empty, ContentType.Text);
                         
             byte[] content = System.IO.File.ReadAllBytes(path);
             blob.WriteInline(content);
@@ -495,7 +492,7 @@ namespace Microsoft.HealthVault.ItemTypes
         public void SetContent(
             HealthRecordAccessor record,
             Stream stream, 
-            String name,
+            string name,
             CodableValue contentType)
         {
             Validator.ThrowIfArgumentNull(record, "record", "FileRecordMustBeSpecified");
@@ -511,7 +508,7 @@ namespace Microsoft.HealthVault.ItemTypes
             ContentType = contentType;
 
             BlobStore store = GetBlobStore(record);
-            Blob blob = store.NewBlob(String.Empty, ContentType.Text);
+            Blob blob = store.NewBlob(string.Empty, ContentType.Text);
             blob.Write(stream);
         }
     }

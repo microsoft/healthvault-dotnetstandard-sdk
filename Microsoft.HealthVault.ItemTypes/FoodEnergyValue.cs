@@ -130,7 +130,7 @@ namespace Microsoft.HealthVault.ItemTypes
         /// 
         protected override string GetValueString(double value)
         {
-            return String.Format(
+            return string.Format(
                 CultureInfo.CurrentCulture,
                 ResourceRetriever.GetResourceString("FoodEnergyValueFormat"),
                 Calories.ToString(CultureInfo.CurrentCulture));

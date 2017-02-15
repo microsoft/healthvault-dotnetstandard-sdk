@@ -5,8 +5,6 @@
 
 
 using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Globalization;
 using System.Text;
 using System.Xml;
@@ -163,7 +161,7 @@ namespace Microsoft.HealthVault.ItemTypes
                 "number-doses-consumed-in-day",
                 _dosesConsumed.ToString(CultureInfo.InvariantCulture));
 
-            XmlWriterHelper.WriteOpt<CodableValue>(
+            XmlWriterHelper.WriteOpt(
                 writer, 
                 "purpose-of-use", 
                 _purposeOfUse);
@@ -173,22 +171,22 @@ namespace Microsoft.HealthVault.ItemTypes
                 "number-doses-intended-in-day",
                 _intendedDoses );
 
-            XmlWriterHelper.WriteOpt<CodableValue>(
+            XmlWriterHelper.WriteOpt(
                 writer,
                 "medication-usage-schedule",
                 _usageSchedule);
 
-            XmlWriterHelper.WriteOpt<CodableValue>(
+            XmlWriterHelper.WriteOpt(
                 writer,
                 "drug-form",
                 _drugForm);
 
-            XmlWriterHelper.WriteOpt<CodableValue>(
+            XmlWriterHelper.WriteOpt(
                 writer,
                 "prescription-type",
                 _prescriptionType);
 
-            XmlWriterHelper.WriteOpt<CodableValue>(
+            XmlWriterHelper.WriteOpt(
                 writer,
                 "single-dose-description",
                 _singleDoseDescription);

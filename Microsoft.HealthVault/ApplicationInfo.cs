@@ -9,6 +9,7 @@ using System.Collections.ObjectModel;
 using System.Text;
 using System.Xml;
 using System.Xml.XPath;
+using Microsoft.HealthVault.Exceptions;
 
 namespace Microsoft.HealthVault
 {
@@ -230,42 +231,7 @@ namespace Microsoft.HealthVault
                 ConfigurationOptions |= options;
             }
         }
-
-        /// <summary>
-        /// Updates the application's configuration in HealthVault.
-        /// </summary>
-        /// 
-        /// <param name="connection">
-        /// The connection to use to call HealthVault.
-        /// </param>
-        /// 
-        /// <remarks>
-        /// This method makes a remote call to the HealthVault service.
-        /// The calling application in the <paramref name="connection"/> must be the same as
-        /// the application specified by this ApplicationInfo instance or its master application.
-        /// Note, this update will replace all configuration elements for the application. It is 
-        /// advised that <see cref="ApplicationProvisioning.Provisioner.GetApplication"/> is 
-        /// called to retrieve the existing application configuration before changing values and 
-        /// calling Update.
-        /// </remarks>
-        /// 
-        /// <exception cref="ArgumentNullException">
-        /// If <paramref name="connection"/> is <b>null</b>.
-        /// </exception>
-        /// 
-        /// <exception cref="InvalidOperationException">
-        /// If <see cref="Id"/> is <see cref="Guid.Empty"/>.
-        /// </exception>
-        /// 
-        /// <exception cref="HealthServiceException">
-        /// The HealthVault service returned an error.
-        /// </exception>
-        /// 
-        public void Update(ApplicationConnection connection)
-        {
-            HealthVaultPlatform.UpdateChildApplication(connection, this);
-        }
-
+        
         internal string GetRequestParameters(Guid appId)
         {
             StringBuilder result = new StringBuilder();
@@ -343,15 +309,9 @@ namespace Microsoft.HealthVault
                     writer.WriteElementString("domain-name", DomainName);
                 }
 
-                if (LargeLogo != null)
-                {
-                    LargeLogo.AppendRequestParameters(writer, "large-logo", "logo");
-                }
+                LargeLogo?.AppendRequestParameters(writer, "large-logo", "logo");
 
-                if (SmallLogo != null)
-                {
-                    SmallLogo.AppendRequestParameters(writer, "small-logo", "logo");
-                }
+                SmallLogo?.AppendRequestParameters(writer, "small-logo", "logo");
 
                 if ((ConfigurationOptions & ApplicationOptions.PersistentTokensAllowed) ==
                         ApplicationOptions.PersistentTokensAllowed &&
