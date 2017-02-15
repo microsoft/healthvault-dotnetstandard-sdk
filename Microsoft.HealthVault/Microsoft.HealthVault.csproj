@@ -71,6 +71,7 @@
     <Compile Include="Authentication\SafeCryptoContextHandle.cs" />
     <Compile Include="Authentication\SafeCryptoHashHandle.cs" />
     <Compile Include="Authentication\SafeCryptoKeyHandle.cs" />
+    <Compile Include="Authentication\SafeHandleZeroOrMinusOneIsInvalid.cs" />
     <Compile Include="Authentication\Sha256.cs" />
     <Compile Include="Authentication\Sha256Hmac.cs" />
     <Compile Include="Authentication\WebApplicationCredential.cs" />

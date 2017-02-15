@@ -9,29 +9,28 @@ using System.Collections.ObjectModel;
 using System.Security;
 using System.Security.Cryptography;
 using System.Security.Cryptography.X509Certificates;
-using System.Security.Cryptography.Xml;
 using System.Xml;
 using System.Xml.XPath;
 
 namespace Microsoft.HealthVault
 {
     /// <summary>
-    /// Represents a digital signature of the HealthRecordItem. 
+    /// Represents a digital signature of the HealthRecordItem.
     /// </summary>
-    /// 
+    ///
     /// <remarks>
     /// A digital signature contains key information, which may be an X509 certificate,
     /// and a cryptographic hash. These may be used to verify the identity of the signer
     /// and the contents of the HealthRecordItem.
     /// </remarks>
-    /// 
+    ///
     public class HealthRecordItemSignature
     {
         /// <summary>
-        /// Creates a new instance of the <see cref="HealthRecordItemSignature"/> class 
+        /// Creates a new instance of the <see cref="HealthRecordItemSignature"/> class
         /// using default values.
         /// </summary>
-        /// 
+        ///
         public HealthRecordItemSignature()
         {
             _method = HealthRecordItemSignatureMethod.HV2;
@@ -42,7 +41,7 @@ namespace Microsoft.HealthVault
         /// <summary>
         /// The type of the certificate used to sign the signature.
         /// </summary>
-        /// 
+        ///
         public CertificateType CertType
         {
             get
@@ -74,11 +73,11 @@ namespace Microsoft.HealthVault
         /// <summary>
         /// Get's the X509Certificate2 used for the signature.
         /// </summary>
-        /// 
+        ///
         /// <remarks>
-        /// This method is deprecated. Please use <see cref="X509Certificate2" /> to 
+        /// This method is deprecated. Please use <see cref="X509Certificate2" /> to
         /// access the signing certificate information.
-        /// </remarks>                
+        /// </remarks>
         public T GetCertificate<T>() where T : X509Certificate2
         {
             T cert = X509Certificate2 as T;
@@ -88,7 +87,7 @@ namespace Microsoft.HealthVault
         /// <summary>
         /// Get's the X509Certificate2 used for the signature.
         /// </summary>
-        ///         
+        ///
         public X509Certificate2 X509Certificate2
         {
             get
@@ -125,47 +124,47 @@ namespace Microsoft.HealthVault
         /// <summary>
         /// Signs the XML document.
         /// </summary>
-        /// 
+        ///
         /// <param name="signingCertificate">
         /// The X509 certificate.
         /// </param>
-        /// 
+        ///
         /// <param name="thingDoc">
         /// The XML document to sign.
         /// </param>
-        ///         
+        ///
         /// <remarks>
         /// This method uses the .Net SignedXml class to sign the thing. It passes in
         /// an XSLT transform to select the data-xml section the value of the data-other
         /// section.
         /// </remarks>
-        /// 
+        ///
         /// <returns>
         /// An XmlElement containing the signature xml in the http://www.w3.org/2000/09/xmldsig
         /// namespace.
         /// </returns>
-        /// 
+        ///
         /// <exception cref="ArgumentNullException">
         /// The specified argument is null.
         /// </exception>
-        /// 
+        ///
         /// <exception cref="InvalidOperationException">
         /// The HealthRecordItem is already signed and may only have one signature.
         /// </exception>
-        /// 
+        ///
         /// <exception cref="SignatureFailureException">
         /// Signing failed. See the inner exception.
         /// The inner exception may be one of the following:
-        /// A <see cref="XmlException"/> is thrown because there is a load or parse error loading 
+        /// A <see cref="XmlException"/> is thrown because there is a load or parse error loading
         /// the xsl.
-        /// A <see cref="CryptographicException"/> is thrown because the nodelist from the xsl does 
+        /// A <see cref="CryptographicException"/> is thrown because the nodelist from the xsl does
         /// not contain an XmlDsigXsltTransform object.
-        /// A <see cref="CryptographicException"/> is thrown because signingCertificate.PrivateKey 
+        /// A <see cref="CryptographicException"/> is thrown because signingCertificate.PrivateKey
         /// is not an RSA or DSA key, or is unreadable.
-        /// A <see cref="CryptographicException"/> is thrown because signingCertificate.PrivateKey 
+        /// A <see cref="CryptographicException"/> is thrown because signingCertificate.PrivateKey
         /// is not a DSA or RSA object.
         /// </exception>
-        /// 
+        ///
         internal XmlElement Sign(
             X509Certificate2 signingCertificate,
             XmlDocument thingDoc)
@@ -177,7 +176,7 @@ namespace Microsoft.HealthVault
             try
             {
                 _signedXml = new SignedXml(thingDoc);
-                _signedXml.SigningKey = signingCertificate.PrivateKey;
+                _signedXml.SigningKey = signingCertificate.GetRSAPrivateKey();
                 KeyInfo ki = new KeyInfo();
                 KeyInfoX509Data kix509d = new KeyInfoX509Data(signingCertificate);
                 ki.AddClause(kix509d);
@@ -213,7 +212,7 @@ namespace Microsoft.HealthVault
         /// </summary>
         ///
         /// <remarks>
-        /// Calls 
+        /// Calls
         /// <see cref="System.Security.Cryptography.X509Certificates.X509Certificate2.Verify"/>.
         /// </remarks>
         ///
@@ -312,7 +311,7 @@ namespace Microsoft.HealthVault
         /// <summary>
         /// Checks the signature of the XML document.
         /// </summary>
-        ///        
+        ///
         /// <param name="thingDoc">
         /// The signed XML document.
         /// This is passed in so that the signature validation can take updates into account.
@@ -321,14 +320,14 @@ namespace Microsoft.HealthVault
         /// <remarks>
         /// Calls the <see cref="CheckSignature"/> method of <see cref="SignedXml"/>.
         /// </remarks>
-        /// 
+        ///
         /// <exception cref="SignatureFailureException">
         /// Signature validation failed. See the inner exception.
         /// The inner exception is <see cref="CryptographicException"/>, thrown because of one of:
-        /// The SignatureAlgorithm property of the public key in the signature does 
+        /// The SignatureAlgorithm property of the public key in the signature does
         /// not match the SignatureMethod property.
         /// The signature description could not be created.
-        /// The hash algorithm could not be created. 
+        /// The hash algorithm could not be created.
         /// </exception>
         ///
         /// <exception cref="InvalidOperationException">
@@ -365,7 +364,7 @@ namespace Microsoft.HealthVault
 
                 XmlNode node = thingDoc.SelectSingleNode(sigNodeXPath, nsManager);
 
-                // Load the signature node.            
+                // Load the signature node.
                 _signedXml.LoadXml((XmlElement)node);
             }
 
@@ -479,27 +478,27 @@ namespace Microsoft.HealthVault
         /// <summary>
         /// Parse the Signature xml from the thingReader.
         /// </summary>
-        /// 
+        ///
         /// <remarks>
-        /// Creates an instance <see cref="SignedXml"/> using a document created from thingReader 
+        /// Creates an instance <see cref="SignedXml"/> using a document created from thingReader
         /// and the signature section of that document.
         /// </remarks>
-        /// 
+        ///
         /// <exception cref="XmlException">
         /// There is a load or parse error in the XML.
         /// </exception>
-        /// 
+        ///
         /// <exception cref="ArgumentNullException">
         /// The <see cref="Signature"/> section of the document was not found.
         /// </exception>
-        /// 
+        ///
         /// <exception cref="CryptographicException">
-        /// The <see cref="Signature"/> section of the document does not contain a valid 
+        /// The <see cref="Signature"/> section of the document does not contain a valid
         /// SignatureValue property.
-        /// The <see cref="Signature"/>  section of the document does not contain a valid 
+        /// The <see cref="Signature"/>  section of the document does not contain a valid
         /// SignedInfo property.
         /// </exception>
-        /// 
+        ///
         internal void ParseSignatureXml(
             XPathNavigator sigInfoNav,
             string thingXml)
@@ -520,7 +519,7 @@ namespace Microsoft.HealthVault
                 "thing/signature-info/ds:Signature",
                 nsManager);
 
-            // Load the signature node.            
+            // Load the signature node.
             _signedXml.LoadXml((XmlElement)node);
         }
 
@@ -588,18 +587,18 @@ namespace Microsoft.HealthVault
                 xmlElement.WriteTo(writer);
             }
 
-            writer.WriteEndElement(); // </signature-info>                        
+            writer.WriteEndElement(); // </signature-info>
         }
 
         /// <summary>
         /// Create the XML that represents the transform.
         /// Copied from the sample in the docs.
         /// </summary>
-        /// 
+        ///
         /// <exception cref="XmlException">
         /// There is a load or parse error loading the xsl parameter.
         /// </exception>
-        /// 
+        ///
         /// <exception cref="CryptographicException">
         /// The nodelist from the xsl parameter does not contain an XmlDsigXsltTransform object.
         /// </exception>
@@ -628,7 +627,7 @@ namespace Microsoft.HealthVault
         private string _methodString;
 
         /// <summary>
-        /// Gets a <see cref="ReadOnlyCollection{BlobSignatureItem}" /> objects describing 
+        /// Gets a <see cref="ReadOnlyCollection{BlobSignatureItem}" /> objects describing
         /// the blobs that are part of this signature.
         /// </summary>
         public ReadOnlyCollection<BlobSignatureItem> BlobSignatureItems
@@ -644,7 +643,7 @@ namespace Microsoft.HealthVault
         }
 
         /// <summary>
-        /// Gets a string identifying the signature algorithm for this signature.         
+        /// Gets a string identifying the signature algorithm for this signature.
         /// </summary>
         /// <remarks>
         /// This value is currently <see cref="RsaSha1W3cAlgorithmName"/>.
@@ -685,4 +684,3 @@ namespace Microsoft.HealthVault
             "</xs:stylesheet>";
     }
 }
-

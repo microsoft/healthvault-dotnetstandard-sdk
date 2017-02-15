@@ -3,18 +3,18 @@
 // see http://www.microsoft.com/resources/sharedsource/licensingbasics/sharedsourcelicenses.mspx.
 // All other rights reserved.
 
+using Microsoft.HealthVault.Authentication;
+using Microsoft.HealthVault.Rest;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Net;
 using System.Security;
 using System.Security.Cryptography;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
-using System.Web;
 using System.Xml;
 using System.Xml.XPath;
-using Microsoft.HealthVault.Authentication;
-using Microsoft.HealthVault.Rest;
 
 namespace Microsoft.HealthVault.Web.Authentication
 {
@@ -22,26 +22,26 @@ namespace Microsoft.HealthVault.Web.Authentication
     /// Enables web applications to authenticate themselves,
     /// with or without the authentication context of a user.
     /// </summary>
-    /// 
+    ///
     /// <remarks>
     /// Web applications can authenticate in two modes:
-    /// 
-    /// First, an application can authenticate itself in the anonymous mode, 
-    /// that is, not in the context of a user. This mode enables application 
-    /// servers to communicate with the HealthVault Service as a trusted operation, 
-    /// but not explicitly on behalf of a user.  
-    /// 
+    ///
+    /// First, an application can authenticate itself in the anonymous mode,
+    /// that is, not in the context of a user. This mode enables application
+    /// servers to communicate with the HealthVault Service as a trusted operation,
+    /// but not explicitly on behalf of a user.
+    ///
     /// Secondly, an application can authenticate itself in the context of a user.
     /// This mode enables applications to communicate with the HealthVault
     /// Service both as a trusted operation and in the user context. The
     /// application can therefore explicitly perform operations as that user
     /// or as trusted operations as in the anonymous case.
-    /// 
+    ///
     /// The credential proves the application's identity by signing the
     /// authentication request with the application's private key.  The user's
     /// context is provided by the <cref name="SubCredential"/> property.
     /// </remarks>
-    /// 
+    ///
     public class WebApplicationCredential : Credential
     {
         #region properties
@@ -60,10 +60,10 @@ namespace Microsoft.HealthVault.Web.Authentication
         }
         private string _signMethod;
 
-        /// <summary> 
+        /// <summary>
         /// Gets the thumbprint of the signing cert.
         /// </summary>
-        /// 
+        ///
         internal string Thumbprint
         {
             get { return _cert.Thumbprint; }
@@ -72,15 +72,15 @@ namespace Microsoft.HealthVault.Web.Authentication
         /// <summary>
         /// Gets or sets the application identifier of the credential.
         /// </summary>
-        /// 
+        ///
         /// <returns>
         /// A GUID representing the application identifier.
         /// </returns>
-        /// 
+        ///
         /// <remarks>
         /// This property is set only internally.
         /// </remarks>
-        /// 
+        ///
         public Guid ApplicationId
         {
             get { return _applicationId; }
@@ -89,18 +89,18 @@ namespace Microsoft.HealthVault.Web.Authentication
         private Guid _applicationId;
 
         /// <summary>
-        /// Gets or sets the cached provider for signing binary large objects 
+        /// Gets or sets the cached provider for signing binary large objects
         /// (blobs).
         /// </summary>
-        /// 
+        ///
         /// <returns>
-        /// An instance of <see cref="RSACryptoServiceProvider"/> representing 
+        /// An instance of <see cref="RSACryptoServiceProvider"/> representing
         /// the cached provider.
         /// </returns>
-        /// 
+        ///
         internal RSACryptoServiceProvider RsaProvider
         {
-            get { return (RSACryptoServiceProvider)_cert.PrivateKey; }
+            get { return (RSACryptoServiceProvider)_cert.GetRSAPrivateKey(); }
         }
 
         private Int64 TokenIssuedRefreshCounter
@@ -120,17 +120,17 @@ namespace Microsoft.HealthVault.Web.Authentication
         /// <summary>
         /// Gets or sets the sub-credential.
         /// </summary>
-        /// 
+        ///
         /// <remarks>
-        /// This is the credential token retrieved from the HealthVault 
+        /// This is the credential token retrieved from the HealthVault
         /// platform.  By specifying a sub-credential, the web application
         /// credential can operate in the context of an authenticated user.
         /// </remarks>
-        /// 
+        ///
         /// <returns>
         /// A string representing the sub-credential token.
         /// </returns>
-        /// 
+        ///
         public string SubCredential
         {
             get { return _subCredential; }
@@ -149,34 +149,34 @@ namespace Microsoft.HealthVault.Web.Authentication
         #region ctor
 
         /// <summary>
-        /// Creates a new instance of the <see cref="WebApplicationCredential"/> 
+        /// Creates a new instance of the <see cref="WebApplicationCredential"/>
         /// class with default values.
         /// </summary>
-        /// 
+        ///
         /// <remarks>
-        /// This constructor is used only for Activator-based 
-        /// deserialization of the cookie XML. This constructor does not call 
+        /// This constructor is used only for Activator-based
+        /// deserialization of the cookie XML. This constructor does not call
         /// Initialize() here because it is expected to be initialized from
         /// a call to <cref name="ReadCookieXml"/>.
         /// </remarks>
-        /// 
+        ///
         public WebApplicationCredential()
         {
         }
 
         /// <summary>
-        /// Creates a new instance of the <see cref="WebApplicationCredential"/> 
+        /// Creates a new instance of the <see cref="WebApplicationCredential"/>
         /// class with the specified application certificate.
         /// </summary>
-        /// 
+        ///
         /// <param name="applicationId">
         /// The unique application identifier.
         /// </param>
-        /// 
+        ///
         /// <param name="certificate">
         /// The application certificate containing the application's private key.
         /// </param>
-        /// 
+        ///
         public WebApplicationCredential(
             Guid applicationId,
             X509Certificate2 certificate)
@@ -190,18 +190,18 @@ namespace Microsoft.HealthVault.Web.Authentication
         }
 
         /// <summary>
-        /// Creates a new instance of the <see cref="WebApplicationCredential"/> 
+        /// Creates a new instance of the <see cref="WebApplicationCredential"/>
         /// class with the default values and in the anonymous context.
         /// </summary>
         /// <param name="applicationId"/>
         /// <exception cref="ArgumentException">
         /// The <paramref name="applicationId"/> parameter is empty.
         /// </exception>
-        /// 
+        ///
         /// <exception cref="SecurityException">
         /// The required application-specific certificate is not found.
         /// </exception>
-        /// 
+        ///
         public WebApplicationCredential(
             Guid applicationId)
             : this(
@@ -212,18 +212,18 @@ namespace Microsoft.HealthVault.Web.Authentication
         }
 
         /// <summary>
-        /// Creates a new instance of the <see cref="WebApplicationCredential"/> 
+        /// Creates a new instance of the <see cref="WebApplicationCredential"/>
         /// class using the specified application identifier and sub-credential.
         /// </summary>
-        /// 
+        ///
         /// <remarks>
         /// In order to enable a web application to authenticate with the
-        /// HealthVault Service, the application must first create a 
-        /// <see cref="WebApplicationCredential"/>. The credential consists of 
-        /// two explicit parameters, and implicitly utilizes the web 
-        /// application's private key to sign the credential XML. The 
-        /// sub-credential is the token received from the browser, and it 
-        /// represents the approval for a user to run this application for the 
+        /// HealthVault Service, the application must first create a
+        /// <see cref="WebApplicationCredential"/>. The credential consists of
+        /// two explicit parameters, and implicitly utilizes the web
+        /// application's private key to sign the credential XML. The
+        /// sub-credential is the token received from the browser, and it
+        /// represents the approval for a user to run this application for the
         /// lifetime of the token.
         /// </remarks>
         /// <param name="applicationId"/>
@@ -231,15 +231,15 @@ namespace Microsoft.HealthVault.Web.Authentication
         /// <exception cref="ArgumentException">
         /// The <paramref name="applicationId"/> parameter is empty.
         /// </exception>
-        /// 
+        ///
         /// <exception cref="ArgumentNullException">
         /// The <paramref name="subCredential"/> parameter is <b>null</b>.
         /// </exception>
-        /// 
+        ///
         /// <exception cref="SecurityException">
         /// The required application-specific certificate is not found.
         /// </exception>
-        /// 
+        ///
         public WebApplicationCredential(
             Guid applicationId,
             string subCredential)
@@ -250,18 +250,18 @@ namespace Microsoft.HealthVault.Web.Authentication
         }
 
         /// <summary>
-        /// Creates a new instance of the <see cref="WebApplicationCredential"/> 
+        /// Creates a new instance of the <see cref="WebApplicationCredential"/>
         /// class using the specified application identifier and sub-credential.
         /// </summary>
-        /// 
+        ///
         /// <remarks>
         /// In order to enable a web application to authenticate with the
-        /// HealthVault Service, the application must first create a 
-        /// <see cref="WebApplicationCredential"/>. The credential consists of 
-        /// two explicit parameters, and implicitly utilizes the web 
-        /// application's private key to sign the credential XML. The 
-        /// sub-credential is the token received from the browser, and it 
-        /// represents the approval for a user to run this application for the 
+        /// HealthVault Service, the application must first create a
+        /// <see cref="WebApplicationCredential"/>. The credential consists of
+        /// two explicit parameters, and implicitly utilizes the web
+        /// application's private key to sign the credential XML. The
+        /// sub-credential is the token received from the browser, and it
+        /// represents the approval for a user to run this application for the
         /// lifetime of the token.
         /// </remarks>
         /// <param name="applicationId"/>
@@ -270,15 +270,15 @@ namespace Microsoft.HealthVault.Web.Authentication
         /// <exception cref="ArgumentException">
         /// The <paramref name="applicationId"/> parameter is empty.
         /// </exception>
-        /// 
+        ///
         /// <exception cref="ArgumentNullException">
         /// The <paramref name="subCredential"/> parameter is <b>null</b>.
         /// </exception>
-        /// 
+        ///
         /// <exception cref="SecurityException">
         /// The required application-specific certificate is not found.
         /// </exception>
-        /// 
+        ///
         public WebApplicationCredential(
             Guid applicationId,
             string subCredential,
@@ -290,31 +290,31 @@ namespace Microsoft.HealthVault.Web.Authentication
         }
 
         /// <summary>
-        /// Creates a new instance of the <see cref="WebApplicationCredential"/> 
+        /// Creates a new instance of the <see cref="WebApplicationCredential"/>
         /// class using the specified parameters
         /// </summary>
-        /// 
+        ///
         /// <remarks>
         /// In order to enable a web application to authenticate with the
-        /// HealthVault Service, the application must first create a 
-        /// <see cref="WebApplicationCredential"/>. The credential consists of 
+        /// HealthVault Service, the application must first create a
+        /// <see cref="WebApplicationCredential"/>. The credential consists of
         /// three explicit parameters. The store location is where the certificate
         /// is stored. The subject for the certificate is used to lookup
         /// the certificate from the store
         /// </remarks>
-        /// 
+        ///
         /// <param name="applicationId">
         /// Application Id.
         /// </param>
-        /// 
+        ///
         /// <param name="storeLocation">
         /// Location of store where the certificate is stored.
         /// </param>
-        /// 
+        ///
         /// <param name="certSubject">
         /// Subject of the certificate for the application.
         /// </param>
-        ///        
+        ///
         public WebApplicationCredential(
             Guid applicationId,
             StoreLocation storeLocation,
@@ -326,33 +326,33 @@ namespace Microsoft.HealthVault.Web.Authentication
         /// <summary>
         /// Initializes the credential.
         /// </summary>
-        /// 
+        ///
         /// <remarks>
-        /// This method is called during construction,is for internal use only, 
+        /// This method is called during construction,is for internal use only,
         /// and is subject to change.
         /// </remarks>
-        /// 
+        ///
         /// <param name="applicationId">
         /// The application identifier of the web application.
         /// </param>
-        /// 
+        ///
         /// <param name="storeLocation">
         /// Location of store where the certificate is stored.
         /// </param>
-        /// 
+        ///
         /// <param name="certSubject">
         /// Subject of the certificate for the application.
         /// </param>
-        ///  
+        ///
         /// <exception cref="ArgumentException">
         /// The <paramref name="applicationId"/> parameter is empty.
         /// </exception>
-        /// 
+        ///
         /// <exception cref="SecurityException">
         /// The application certificate could not be found in the
         /// specified certificate store.
         /// </exception>
-        /// 
+        ///
         private void Initialize(
             Guid applicationId,
             StoreLocation storeLocation,
@@ -396,7 +396,7 @@ namespace Microsoft.HealthVault.Web.Authentication
         /// Gets the application's private key using the specified
         /// certificate store.
         /// </summary>
-        /// 
+        ///
         private void SetupSignatureCertRsaProvider(
             Guid applicationId,
             StoreLocation storeLocation,
@@ -417,30 +417,30 @@ namespace Microsoft.HealthVault.Web.Authentication
         #region credential overrides
 
         /// <summary>
-        /// Retrieves a value indicating whether the specified 
+        /// Retrieves a value indicating whether the specified
         /// <paramref name="applicationId"/> requires authentication.
         /// </summary>
-        /// 
+        ///
         /// <remarks>
         /// This method verifies that the authentication token is valid
         /// for a limited timespan into the future, such that the token
         /// could be used to make a HealthVault Service method call
         /// within the validated timespan.
         /// </remarks>
-        /// 
+        ///
         /// <param name="connection">
         /// The client-side representation of the HealthVault service.
         /// </param>
-        /// 
+        ///
         /// <param name="applicationId">
         /// The application identifier to verify, if authentication is required.
         /// </param>
-        /// 
+        ///
         /// <returns>
         /// <b>true</b> if calling <cref name="Authenticate"/> is required;
-        /// otherwise, <b>false</b>. 
+        /// otherwise, <b>false</b>.
         /// </returns>
-        /// 
+        ///
         internal override void AuthenticateIfRequired(
             HealthServiceConnection connection,
             Guid applicationId)
@@ -458,26 +458,26 @@ namespace Microsoft.HealthVault.Web.Authentication
         /// <summary>
         /// Authenticates or re-authenticates the credential.
         /// </summary>
-        /// 
+        ///
         /// <param name="connection">
         /// The client-side representation of the HealthVault service.
         /// </param>
-        /// 
+        ///
         /// <param name="applicationId">
         /// The HealthVault application identifier.
         /// request is made for.
         /// </param>
-        /// 
+        ///
         /// <exception cref="ArgumentNullException">
         /// If <paramref name="connection"/> is null.
         /// </exception>
-        /// 
+        ///
         /// <seealso cref="HealthServiceConnection"/>
-        /// 
+        ///
         /// <returns>
         /// The credential to use for the request.
         /// </returns>
-        /// 
+        ///
         private void Authenticate(
             HealthServiceConnection connection,
             Guid applicationId)
@@ -491,14 +491,14 @@ namespace Microsoft.HealthVault.Web.Authentication
         }
 
         /// <summary>
-        /// Expire an authentication keyset pair so that 
+        /// Expire an authentication keyset pair so that
         /// <cref name="AuthenticationRequired"/> will return true.
         /// </summary>
-        /// 
+        ///
         /// <param name="applicationId">
         /// The application identifier of the web application.
         /// </param>
-        /// 
+        ///
         internal override bool ExpireAuthenticationResult(Guid applicationId)
         {
             // expire the instance authentication result as well
@@ -514,7 +514,7 @@ namespace Microsoft.HealthVault.Web.Authentication
         /// <summary>
         /// Gets if the credential currently is enabled to support retries.
         /// </summary>
-        /// 
+        ///
         internal bool IsAuthenticationRetryDisabled
         {
             get { return _isAuthenticationRetryDisabled; }
@@ -525,15 +525,15 @@ namespace Microsoft.HealthVault.Web.Authentication
         /// <summary>
         /// Derived classes can insert header section XML as appropriate.
         /// </summary>
-        /// 
+        ///
         /// <param name="applicationId">
         /// The application id context to write the header section for.
         /// </param>
-        /// 
+        ///
         /// <param name="writer">
         /// The XML writer that is constructing the header section.
         /// </param>
-        /// 
+        ///
         internal override void GetHeaderSection(
             Guid applicationId,
             XmlWriter writer)
@@ -551,14 +551,14 @@ namespace Microsoft.HealthVault.Web.Authentication
         }
 
         /// <summary>
-        /// Derived classes can return header section query string parameter 
+        /// Derived classes can return header section query string parameter
         /// as appropriate.
         /// </summary>
-        /// 
+        ///
         /// <return>
         /// The header section query string parameter.
         /// </return>
-        /// 
+        ///
         internal override string GetHeaderSection(
             Guid applicationId)
         {
@@ -566,7 +566,7 @@ namespace Microsoft.HealthVault.Web.Authentication
 
             if (!String.IsNullOrEmpty(SubCredential))
             {
-                result += HttpUtility.UrlEncode(
+                result += WebUtility.UrlEncode(
                     "<user-auth-token>"
                     + SubCredential
                     + "</user-auth-token>");
@@ -579,11 +579,11 @@ namespace Microsoft.HealthVault.Web.Authentication
         /// Adds the REST Authorization header tokens to the provided tokens collection for
         /// the given application ID.
         /// </summary>
-        /// 
+        ///
         /// <param name="tokens">
         /// The collection of Authorization tokens to add to.
         /// </param>
-        /// 
+        ///
         /// <param name="appId">
         /// The application ID context to write the token for.
         /// </param>
@@ -605,10 +605,10 @@ namespace Microsoft.HealthVault.Web.Authentication
         /// <summary>
         /// Inserts a dictionary of authentication results.
         /// </summary>
-        /// 
+        ///
         /// <remarks>
         /// This may be called from two primary code paths:
-        /// 
+        ///
         /// 1) WebApplicationCredential.AuthenticateKeySetPair
         ///     pair is already locked by calling thread.
         /// 2) and CreateAuthenticatedSessionToken
@@ -620,11 +620,11 @@ namespace Microsoft.HealthVault.Web.Authentication
         ///     b) the credential already has an existing token, including
         ///         the static credentials.  This call will update the credentials
         ///         so it's possible the pair is being used by another thread.
-        /// 
-        /// This method only update results for the application id for the web 
+        ///
+        /// This method only update results for the application id for the web
         /// app.
         /// </remarks>
-        /// 
+        ///
         /// <param name="result">
         /// The result of the authentication request.
         /// </param>
@@ -641,7 +641,7 @@ namespace Microsoft.HealthVault.Web.Authentication
                     if (pair == null)
                     {
                         // this should only be true for a call to
-                        // CreateAuthenticatedSessionToken on an 
+                        // CreateAuthenticatedSessionToken on an
                         // unitialized WebApplicationCredential state -
                         // both static and instance.
                         pair = _liveKeySetPairs.CreatePair(ApplicationId);
@@ -663,7 +663,7 @@ namespace Microsoft.HealthVault.Web.Authentication
         /// <summary>
         /// Parses any method specific elements in the response.
         /// </summary>
-        /// 
+        ///
         /// <param name="nav">
         /// The response XML path navigator.
         /// </param>
@@ -682,30 +682,30 @@ namespace Microsoft.HealthVault.Web.Authentication
         #region data authentication
 
         /// <summary>
-        /// Provides a mechanism for derived classes to override how this class 
+        /// Provides a mechanism for derived classes to override how this class
         /// authenticates data.
         /// </summary>
-        /// 
+        ///
         /// <remarks>
         /// This method is for internal use only and is subject to change.
         /// </remarks>
-        /// 
+        ///
         /// <param name="data">
         /// The data to be authenticated by the credential.
         /// </param>
-        /// 
+        ///
         /// <param name="index">
         /// The starting index into the data.
         /// </param>
-        /// 
+        ///
         /// <param name="count">
         /// The number of bytes from the start index to authenticate.
         /// </param>
-        /// 
+        ///
         /// <returns>
         /// A string representing the data that was authenticated by the credential.
         /// </returns>
-        /// 
+        ///
         protected virtual string AuthenticateWebApplicationData(
             byte[] data,
             int index,
@@ -725,37 +725,37 @@ namespace Microsoft.HealthVault.Web.Authentication
         /// <summary>
         /// Applies the shared secret to the specified data.
         /// </summary>
-        /// 
+        ///
         /// <remarks>
         /// After the initial authentication is made with the HealthVault Service,
         /// all subsequent calls to the HealthVault service must have
-        /// authenticated header sections. This method produces the 
+        /// authenticated header sections. This method produces the
         /// Hash Message Authentication Code (HMAC) data for the auth section.
-        /// 
+        ///
         /// This method implements its own shared secret,
         /// so the SharedSecret property is <b>null</b>.
         /// </remarks>
-        /// 
+        ///
         /// <param name="data">
         /// The data to authenticate.
         /// </param>
-        /// 
+        ///
         /// <param name="index">
         /// The starting index into the data.
         /// </param>
-        /// 
+        ///
         /// <param name="count">
         /// The number of bytes from the start index to authenticate.
         /// </param>
-        /// 
+        ///
         /// <returns>
         /// The authenticated data is returned.
         /// </returns>
-        /// 
+        ///
         /// <exception cref="ArgumentException">
-        /// The <paramref name="data"/> parameter is <b>null</b> or empty. 
+        /// The <paramref name="data"/> parameter is <b>null</b> or empty.
         /// </exception>
-        /// 
+        ///
         internal override string AuthenticateData(
             byte[] data,
             int index,
@@ -767,7 +767,7 @@ namespace Microsoft.HealthVault.Web.Authentication
         /// <summary>
         /// Compute and apply the signature to the request XML.
         /// </summary>
-        /// 
+        ///
         private string SignRequestXml(string requestXml)
         {
             UTF8Encoding encoding = new UTF8Encoding();
@@ -785,11 +785,11 @@ namespace Microsoft.HealthVault.Web.Authentication
         /// <summary>
         /// Generate the to-be signed content for the credential.
         /// </summary>
-        /// 
+        ///
         /// <returns>
         /// Raw XML representing the ContentSection of the info secttion.
         /// </returns>
-        /// 
+        ///
         internal string GetContentSection()
         {
             StringBuilder requestXml = new StringBuilder(2048);
@@ -819,17 +819,17 @@ namespace Microsoft.HealthVault.Web.Authentication
         /// Writes the XML that is used when authenticating with the
         /// HealthVault Service.
         /// </summary>
-        /// 
+        ///
         /// <remarks>
         /// This method is only called internally and is subject to change.
         /// </remarks>
-        /// 
+        ///
         /// <param name="writer">
         /// The XML writer that is written to.
         /// </param>
-        /// 
+        ///
         /// <exception cref="ArgumentNullException">
-        /// The <paramref name="writer"/> parameter is <b>null</b>. 
+        /// The <paramref name="writer"/> parameter is <b>null</b>.
         /// </exception>
         [SecuritySafeCritical]
         public override void WriteInfoXml(XmlWriter writer)
@@ -857,12 +857,12 @@ namespace Microsoft.HealthVault.Web.Authentication
         /// <summary>
         /// Write the browser cookie xml for this credential.
         /// </summary>
-        /// 
+        ///
         /// <remarks>
         /// Since this generates cookie xml, it does not reveal any secrets.
         /// Rather, we use secret id's so that we may look up the secret later.
         /// </remarks>
-        /// 
+        ///
         /// <param name="writer">
         /// The writer building the cookie XML.
         /// </param>
@@ -894,16 +894,16 @@ namespace Microsoft.HealthVault.Web.Authentication
         /// <summary>
         /// Reconstruct the credential using cookie xml.
         /// </summary>
-        /// 
+        ///
         /// <remarks>
         /// After enough configuration information is read from the cookie XML,
         /// the class instance is initialized via <cref name="Initialize"/>.
         /// </remarks>
-        /// 
+        ///
         /// <param name="reader">
         /// XML reader of the cookie XML.
         /// </param>
-        /// 
+        ///
         internal override void ReadCookieXml(XmlReader reader)
         {
             reader.ReadStartElement("appserver");
@@ -942,7 +942,6 @@ namespace Microsoft.HealthVault.Web.Authentication
             {
                 reader.ReadEndElement(); // appserver
             }
-
         }
 
         #endregion
@@ -955,17 +954,17 @@ namespace Microsoft.HealthVault.Web.Authentication
         /// Release lock of the pair so that the keyset pair after the request
         /// is complete.
         /// </summary>
-        /// 
+        ///
         /// <param name="applicationId">
         /// The application the request is for.
         /// </param>
-        /// 
+        ///
         /// <param name="refreshCounter">
-        /// The time stamp of the calling credential.  If this does not 
+        /// The time stamp of the calling credential.  If this does not
         /// match the keyset pair's timestamp, then we do not update the
         /// expired status.
         /// </param>
-        /// 
+        ///
         private static void ExpireKeySetPair(Guid applicationId, Int64 refreshCounter)
         {
             AuthenticationTokenKeySetPair pair =
@@ -990,26 +989,26 @@ namespace Microsoft.HealthVault.Web.Authentication
         /// <summary>
         /// Gets if a keyset is active or not.
         /// </summary>
-        /// 
+        ///
         /// <remarks>
         /// This method verifies that the authentication token is valid
         /// for a limited timespan into the future, such that the token
         /// could be used to make a Microsoft Health Service method call
         /// within the validated timespan.
         /// </remarks>
-        /// 
+        ///
         /// <param name="applicationId">
         /// The application id to verify if authentication is required.
         /// </param>
-        /// 
+        ///
         /// <param name="refreshCounter">
         /// The calling credential's refresh counter.
         /// </param>
-        /// 
+        ///
         /// <returns>
         /// True if <cref name="AuthenticateKeySetPair"/> needs to be called.
         /// </returns>
-        /// 
+        ///
         private static bool IsAuthenticationExpired(
             Guid applicationId,
             Int64 refreshCounter)
@@ -1031,12 +1030,12 @@ namespace Microsoft.HealthVault.Web.Authentication
         /// <summary>
         /// Gets the cached authentication keyset pair for the application id.
         /// </summary>
-        /// 
+        ///
         /// <param name="applicationId"></param>
         /// <param name="refreshCounter"></param>
         /// <param name="keySet"></param>
         /// <param name="result"></param>
-        /// 
+        ///
         private static bool GetAuthTokenPair(
             Guid applicationId,
             out Int64 refreshCounter,
@@ -1056,7 +1055,7 @@ namespace Microsoft.HealthVault.Web.Authentication
 
             if (pair == null)
             {
-                // create a new unauthenticated pair so that we at least 
+                // create a new unauthenticated pair so that we at least
                 // have the KeySet
                 pair = _liveKeySetPairs.CreatePair(applicationId);
 
@@ -1087,25 +1086,25 @@ namespace Microsoft.HealthVault.Web.Authentication
         /// <paramref name="applicationId"/> by calling to the Microsoft Health
         /// Service to create a new authentication token.
         /// </summary>
-        /// 
+        ///
         /// <remarks>
-        /// In order to avoid unnecessary authentication actions, it is 
-        /// expected that the caller will first call 
+        /// In order to avoid unnecessary authentication actions, it is
+        /// expected that the caller will first call
         /// <cref name="IsAuthenticationExpired"/> before calling this.
         /// </remarks>
-        /// 
+        ///
         /// <param name="connection">
         /// The connection used to perform the authentication.
         /// </param>
-        /// 
+        ///
         /// <param name="applicationId">
         /// The application id of the keyset pair that will be authenticated.
         /// </param>
-        /// 
+        ///
         /// <param name="certificate">
         /// The application's certificate containing the application's private key.
         /// </param>
-        /// 
+        ///
         private static void AuthenticateKeySetPair(
             HealthServiceConnection connection,
             Guid applicationId,
@@ -1123,30 +1122,30 @@ namespace Microsoft.HealthVault.Web.Authentication
         /// <paramref name="applicationId"/> by calling to the Microsoft Health
         /// Service to create a new authentication token.
         /// </summary>
-        /// 
+        ///
         /// <remarks>
-        /// In order to avoid unnecessary authentication actions, it is 
-        /// expected that the caller will first call 
+        /// In order to avoid unnecessary authentication actions, it is
+        /// expected that the caller will first call
         /// <cref name="IsAuthenticationExpired"/> before calling this.
         /// </remarks>
-        /// 
+        ///
         /// <param name="keySetPairs">
-        /// The keyset pairs collection that will contain the newly 
+        /// The keyset pairs collection that will contain the newly
         /// authenticated keyset pair.
         /// </param>
-        /// 
+        ///
         /// <param name="connection">
         /// The connection used to perform the authentication.
         /// </param>
-        /// 
+        ///
         /// <param name="applicationId">
         /// The application id of the keyset pair that will be authenticated.
         /// </param>
-        /// 
+        ///
         /// <param name="certificate">
         /// The application's certificate containing the application's private key.
         /// </param>
-        /// 
+        ///
         private static void AuthenticateKeySetPair(
             AuthSessionKeySetPairs keySetPairs,
             HealthServiceConnection connection,
@@ -1193,4 +1192,3 @@ namespace Microsoft.HealthVault.Web.Authentication
         #endregion
     }
 }
-
