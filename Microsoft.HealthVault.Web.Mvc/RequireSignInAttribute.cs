@@ -12,6 +12,7 @@
 using Microsoft.HealthVault.Exceptions;
 using System;
 using System.Diagnostics.CodeAnalysis;
+using System.Web.Mvc;
 
 namespace Microsoft.HealthVault.Web.Mvc
 {

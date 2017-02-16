@@ -6,6 +6,7 @@
 using Microsoft.HealthVault.Exceptions;
 using System;
 using System.IO;
+using System.Net;
 using System.Reflection;
 using System.Security;
 using System.Xml;
@@ -137,9 +138,9 @@ namespace Microsoft.HealthVault
                         resourceId));
         }
 
-        public static WebException WebException(string resourceId, WebExceptionStatus webExceptionStatus)
+        public static HealthHttpException HealthWebException(string resourceId, HttpStatusCode webExceptionStatus)
         {
-            return new WebException(
+            return new HealthHttpException(
                     GetResourceString(
                         typeof(Validator).GetTypeInfo().Assembly,
                         resourceId),

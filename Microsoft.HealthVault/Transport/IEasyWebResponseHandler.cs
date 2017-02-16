@@ -4,6 +4,7 @@
 // All other rights reserved.
 
 using System.IO;
+using System.Net.Http.Headers;
 
 namespace Microsoft.HealthVault
 {
@@ -20,6 +21,6 @@ namespace Microsoft.HealthVault
         /// <param name="stream">Response stream</param>
         /// <param name="responseHeaders">Response header collection</param>
         ///
-        void HandleResponse(Stream stream, WebHeaderCollection responseHeaders);
+        void HandleResponse(Stream stream, HttpResponseHeaders responseHeaders);
     }
 }

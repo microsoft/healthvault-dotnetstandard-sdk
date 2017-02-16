@@ -8,6 +8,8 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Net;
+using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Security.Cryptography;
 using System.Threading.Tasks;
 using System.Xml.XPath;
@@ -38,14 +40,6 @@ namespace Microsoft.HealthVault
             CanWrite = true;
         }
 
-        internal BlobStream(ConnectPackageCreationParameters connectPackageParameters, Blob blob)
-        {
-            _connectPackageParameters = connectPackageParameters;
-            _blob = blob;
-            _length = blob.ContentLength;
-            CanWrite = true;
-        }
-
         internal BlobStream(
             Blob blob,
             Uri blobReferenceUrl,
@@ -55,7 +49,7 @@ namespace Microsoft.HealthVault
             _url = blobReferenceUrl;
             _length = length;
 
-            _canRead = true;
+            CanRead = true;
         }
 
         internal BlobStream(
@@ -67,7 +61,7 @@ namespace Microsoft.HealthVault
             _inlineData = inlineData;
             _length = length;
 
-            _canRead = true;
+            CanRead = true;
         }
 
         private HealthRecordAccessor _record;
@@ -85,12 +79,8 @@ namespace Microsoft.HealthVault
         /// <summary>
         /// Gets a value indicating whether the current stream supports reading.
         /// </summary>
-        ///
-        public override bool CanRead
-        {
-            get { return _canRead; }
-        }
-        private bool _canRead;
+        /// 
+        public override bool CanRead { get; }
 
         /// <summary>
         /// Gets a value indicating whether the current stream supports seeking.
@@ -100,27 +90,13 @@ namespace Microsoft.HealthVault
         /// True if the length of the stream is known, or false otherwise.
         /// </value>
         ///
-        public override bool CanSeek
-        {
-            get
-            {
-                bool result = true;
-                if (_length == null)
-                {
-                    result = false;
-                }
-                return result;
-            }
-        }
+        public override bool CanSeek => _length != null;
 
         /// <summary>
         /// Gets a value that determines whether the current stream can time out.
         /// </summary>
-        ///
-        public override bool CanTimeout
-        {
-            get { return true; }
-        }
+        /// 
+        public override bool CanTimeout => true;
 
         /// <summary>
         /// Gets a value indicating whether the current stream supports writing.
@@ -300,17 +276,17 @@ namespace Microsoft.HealthVault
 
             if (buffer == null)
             {
-                throw new ArgumentNullException("buffer");
+                throw new ArgumentNullException(nameof(buffer));
             }
 
             if (offset < 0)
             {
-                throw new ArgumentOutOfRangeException("offset");
+                throw new ArgumentOutOfRangeException(nameof(offset));
             }
 
             if (count < 0)
             {
-                throw new ArgumentOutOfRangeException("count");
+                throw new ArgumentOutOfRangeException(nameof(count));
             }
 
             if (_disposed)
@@ -413,9 +389,9 @@ namespace Microsoft.HealthVault
             int bytesToRead = count;
             if (_length != null)
             {
-                bytesToRead = (int)Math.Min(_length.Value - (long)_position, (long)count);
+                bytesToRead = (int)Math.Min(_length.Value - _position, count);
             }
-            Array.Copy(_inlineData, _position, buffer, offset, bytesToRead);
+            Array.Copy(_inlineData, (int)_position, buffer, offset, bytesToRead);
             _position += bytesToRead;
             return bytesToRead;
         }
@@ -424,45 +400,16 @@ namespace Microsoft.HealthVault
         {
             int totalBytesRead = 0;
 
-            HttpWebRequest request = CreateGetRequest(_position, count);
-
-            try
+            HttpResponseMessage request = ExecuteGetRequest(_position, count);
+            if (request.IsSuccessStatusCode)
             {
-                using (HttpWebResponse response = (HttpWebResponse)request.GetResponse())
-                {
-                    using (Stream responseStream = response.GetResponseStream())
-                    {
-                        int bytesRead = 0;
-                        int bytesToRead = count - bytesRead;
-                        int position = offset;
-                        while (
-                            (0 < bytesToRead)
-                            &&
-                            (bytesRead =
-                                 responseStream.Read(
-                                    buffer,
-                                    position,
-                                    bytesToRead)) != 0)
-                        {
-                            _position += bytesRead;
-                            position += bytesRead;
-                            bytesToRead -= bytesRead;
-                            totalBytesRead += bytesRead;
-                        }
-                    }
-                }
+                HttpContent responseStream = request.Content;
+                var array = responseStream.ReadAsByteArrayAsync().Result;
+                array.CopyTo(buffer, offset);
             }
-            catch (WebException ex)
+            else
             {
-                HttpWebResponse response = (HttpWebResponse)ex.Response;
-
-                // RequestedRangeNotSatisfiable means that we have finished reading the blob,
-                // so ignore the error.
-                if (response == null ||
-                    response.StatusCode != HttpStatusCode.RequestedRangeNotSatisfiable)
-                {
-                    throw;
-                }
+                this.ThrowRequestFailedException(request);
             }
 
             return totalBytesRead;
@@ -622,17 +569,17 @@ namespace Microsoft.HealthVault
 
             if (buffer == null)
             {
-                throw new ArgumentNullException("buffer");
+                throw new ArgumentNullException(nameof(buffer));
             }
 
             if (offset < 0)
             {
-                throw new ArgumentOutOfRangeException("offset");
+                throw new ArgumentOutOfRangeException(nameof(offset));
             }
 
             if (count < 0)
             {
-                throw new ArgumentOutOfRangeException("count");
+                throw new ArgumentOutOfRangeException(nameof(count));
             }
 
             if (_disposed)
@@ -746,19 +693,29 @@ namespace Microsoft.HealthVault
                 }
             }
 
-            HttpWebRequest request = CreatePutRequest(start, bytesInWebRequest, uploadComplete);
-            using (Stream stream = request.GetRequestStream())
+            if (webRequestBuffer != null)
             {
-                if (webRequestBuffer != null)
+                HttpResponseMessage request = ExecutePutRequest(start, bytesInWebRequest, uploadComplete, webRequestBuffer);
+                if (!request.IsSuccessStatusCode)
                 {
-                    stream.Write(webRequestBuffer, 0, bytesInWebRequest);
-                    _bytesInBuffer -= chunkSizeToWrite;
-                    stream.Flush();
+                    this.ThrowRequestFailedException(request);
                 }
-            }
+                _bytesInBuffer -= chunkSizeToWrite;
 
-            request.GetResponse();
+            }
             _position += chunkSizeToWrite;
+        }
+
+        private void ThrowRequestFailedException(HttpResponseMessage request)
+        {
+            HttpStatusCode response = request.StatusCode;
+
+            // RequestedRangeNotSatisfiable means that we have finished reading the blob,
+            // so ignore the error.
+            if (response != HttpStatusCode.RequestedRangeNotSatisfiable)
+            {
+                throw new HttpRequestException($"Request failed with status code {response}");
+            }
         }
 
         private List<BufferRequest> _bufferList = new List<BufferRequest>();
@@ -770,37 +727,23 @@ namespace Microsoft.HealthVault
         {
             internal BufferRequest(byte[] buffer, int offset, int count)
             {
-                _buffer = new byte[count];
-                Array.Copy(buffer, offset, _buffer, 0, count);
-                _count = count;
+                Buffer = new byte[count];
+                Array.Copy(buffer, offset, Buffer, 0, count);
+                Count = count;
             }
 
             internal BufferRequest(byte buffer)
             {
-                _buffer = new byte[1];
-                _buffer[0] = buffer;
-                _count = 1;
+                Buffer = new byte[1];
+                Buffer[0] = buffer;
+                Count = 1;
             }
 
-            internal byte[] Buffer
-            {
-                get { return _buffer; }
-            }
-            private byte[] _buffer;
+            internal byte[] Buffer { get; }
 
-            internal int Offset
-            {
-                get { return _offset; }
-                set { _offset = value; }
-            }
-            private int _offset;
+            internal int Offset { get; set; }
 
-            internal int Count
-            {
-                get { return _count; }
-                set { _count = value; }
-            }
-            private int _count;
+            internal int Count { get; set; }
         }
 
         /// <summary>
@@ -857,54 +800,57 @@ namespace Microsoft.HealthVault
 
         #region Helpers
 
-        private HttpWebRequest CreateGetRequest(long position, int count)
+        private HttpResponseMessage ExecuteGetRequest(long position, int count)
         {
-            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(_url);
-            request.Method = "GET";
-            request.ServicePoint.Expect100Continue = false;
-            request.AddRange((int)position, (int)position + count);
+            HttpMessageHandler handler = new HttpClientHandler();
+            HttpRequestMessage message = new HttpRequestMessage(HttpMethod.Get, _blobPutParameters.Url);
+            HttpClient request = new HttpClient(handler);
+
+            message.Headers.Range = new RangeHeaderValue((int)position, (int)position + count);
 
             if (_readTimeout > 0)
             {
-                request.Timeout = _readTimeout;
+                request.Timeout = new TimeSpan(_writeTimeout);
             }
-            return request;
+            return request.SendAsync(message).Result;
         }
 
-        private HttpWebRequest CreatePutRequest(
+        private HttpResponseMessage ExecutePutRequest(
             long startPosition,
             int count,
-            bool uploadComplete)
+            bool uploadComplete,
+            byte[] webRequestBuffer)
         {
-            HttpWebRequest request =
-                (HttpWebRequest)WebRequest.Create(_blobPutParameters.Url);
-            request.Method = "POST";
-            request.AllowWriteStreamBuffering = false;
-            request.ServicePoint.Expect100Continue = false;
-            request.SendChunked = true;
+            HttpMessageHandler handler = new HttpClientHandler();
+            HttpRequestMessage message = new HttpRequestMessage(HttpMethod.Post, _blobPutParameters.Url);
+            HttpClient request = new HttpClient(handler);
+
+            message.Headers.TransferEncodingChunked = true;
 
             if (_writeTimeout > 0)
             {
-                request.Timeout = _writeTimeout;
+                request.Timeout = new TimeSpan(_writeTimeout);
             }
+
+            message.Content = new ByteArrayContent(webRequestBuffer);
 
             if (count > 0)
             {
-                request.Headers.Add(
+                message.Headers.Add(
                     "Content-Range",
-                    String.Format(
+                    string.Format(
                         CultureInfo.InvariantCulture,
                         "bytes {0}-{1}/*",
                         startPosition,
-                        startPosition + (long)count - 1));
+                        startPosition + count - 1));
             }
 
             if (uploadComplete)
             {
-                request.Headers.Add("x-hv-blob-complete", "1");
+                message.Headers.Add("x-hv-blob-complete", "1");
             }
 
-            return request;
+            return request.SendAsync(message).Result;
         }
 
         private void EnsureBeginPutBlob()
@@ -913,8 +859,8 @@ namespace Microsoft.HealthVault
             {
                 _blobPutParameters =
                     _record != null ?
-                    BeginPutBlob() :
-                    BeginPutConnectPackageBlob();
+                    BeginPutBlobAsync().Result :
+                    BeginPutConnectPackageBlobAsync().Result;
 
                 _blob.Url = _blobPutParameters.Url;
                 _chunkBuffer = new byte[_blobPutParameters.ChunkSize];
