@@ -93,7 +93,10 @@ namespace Microsoft.HealthVault
                     else
                     {
                         // If we have a non-500 error or have run out of retries, throw.
-                        response.EnsureSuccessStatusCode();
+                        if (!response.IsSuccessStatusCode)
+                        {
+                            throw new HealthHttpException("Http status code returned error", response.StatusCode);
+                        }
 
                         // If we have a successful response, return it.
                         return response;

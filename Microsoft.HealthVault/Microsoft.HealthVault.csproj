@@ -98,6 +98,7 @@
     <Compile Include="DateRange.cs" />
     <Compile Include="DateRangeSetDefinition.cs" />
     <Compile Include="EasyWebRequest.cs" />
+    <Compile Include="Exceptions\HealthHttpException.cs" />
     <Compile Include="Exceptions\CertificateValidationException.cs" />
     <Compile Include="Exceptions\ConversionFailureException.cs" />
     <Compile Include="Exceptions\HealthRecordAuthorizationRequiredException.cs" />

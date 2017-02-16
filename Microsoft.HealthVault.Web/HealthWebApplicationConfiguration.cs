@@ -474,7 +474,7 @@ namespace Microsoft.HealthVault.Web
         ///
         private string GetConfigurationString(string key, string defaultValue)
         {
-            string result = GetConfigurationString(key);
+            string result = GetConfigurationString(key, defaultValue);
 
             if (result == null)
             {

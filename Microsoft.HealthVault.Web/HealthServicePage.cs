@@ -99,8 +99,8 @@ namespace Microsoft.HealthVault.Web
         /// </param>
         ///
         /// <remarks>
-        /// The base implementation calls <see cref="WebApplicationUtilities.PageOnPreLoad(HttpContext,bool)"/>
-        /// and then calls the
+        /// The base implementation calls <see cref="WebApplicationUtilities.PageOnPreLoad(System.Web.HttpContext,bool)"/>
+        /// and then calls the 
         /// <see cref='System.Web.UI.Page.OnPreLoad(EventArgs)'/>.
         ///
         /// If a derived class overrides this method, it must call the base
@@ -198,46 +198,6 @@ namespace Microsoft.HealthVault.Web
             }
         }
         private ApplicationConnection _tier1AuthConnection;
-
-        /// <summary>
-        /// Gets a HealthVault connection authenticated at tier 3.
-        /// </summary>
-        ///
-        /// <returns>
-        /// A <see cref="WebApplicationConnection"/>
-        /// connection.
-        /// </returns>
-        ///
-        /// <remarks>
-        /// If a connection has already been made on the page, that connection
-        /// is returned. If no connection has been made, a new connection is
-        /// created and returned.
-        /// </remarks>
-        ///
-        /// <exception cref="System.Security.SecurityException">
-        /// If the application private key could not be found in the
-        /// certificate store to sign requests.
-        /// </exception>
-        ///
-        /// <exception cref="InvalidOperationException">
-        /// If a person has not been logged in.
-        /// </exception>
-        ///
-        public WebApplicationConnection AuthenticatedConnection
-        {
-            get
-            {
-                if (_tier3AuthConnection == null)
-                {
-                    Validator.ThrowInvalidIf(!IsLoggedIn, "PersonNotLoggedIn");
-
-                    _tier3AuthConnection =
-                        WebApplicationUtilities.GetAuthenticatedConnection(HttpContext.Current);
-                }
-                return _tier3AuthConnection;
-            }
-        }
-        private WebApplicationConnection _tier3AuthConnection;
 
         /// <summary>
         /// Gets a HealthVault connection without an authentication token.
@@ -387,7 +347,7 @@ namespace Microsoft.HealthVault.Web
             {
                 _personInfo = value;
                 WebApplicationUtilities.SavePersonInfoToCookie(
-                    HttpContext.Current,
+                    System.Web.HttpContext.Current,
                     _personInfo,
                     true);
             }
@@ -494,7 +454,7 @@ namespace Microsoft.HealthVault.Web
                 redirectParameters.ShellRedirectorUrl = PersonInfo.Connection.ServiceInstance.ShellUrl.OriginalString;
             }
 
-            WebApplicationUtilities.RedirectToShellUrl(HttpContext.Current, redirectParameters);
+            WebApplicationUtilities.RedirectToShellUrl(System.Web.HttpContext.Current, redirectParameters);
         }
 
         /// <summary>
@@ -555,7 +515,7 @@ namespace Microsoft.HealthVault.Web
                 string targetQuery)
         {
             return WebApplicationUtilities.ConstructShellTargetUrl(
-                HttpContext.Current,
+                System.Web.HttpContext.Current,
                 targetLocation,
                 targetQuery);
         }
@@ -605,7 +565,7 @@ namespace Microsoft.HealthVault.Web
             string actionUrlQueryString)
         {
             return WebApplicationUtilities.ConstructShellTargetUrl(
-                HttpContext.Current,
+                System.Web.HttpContext.Current,
                 targetLocation,
                 targetQuery,
                 actionUrlQueryString);
@@ -639,7 +599,7 @@ namespace Microsoft.HealthVault.Web
         public static Uri ConstructShellTargetUrl(string targetLocation)
         {
             return WebApplicationUtilities.ConstructShellTargetUrl(
-                HttpContext.Current,
+                System.Web.HttpContext.Current,
                 targetLocation);
         }
 
@@ -749,10 +709,10 @@ namespace Microsoft.HealthVault.Web
             {
                 ShellRedirectorUrl = shellUrl,
                 IsMultiRecordApplication = isMra,
-                ActionQueryString = HttpContext.Current.Request.Url.PathAndQuery,
+                ActionQueryString = System.Web.HttpContext.Current.Request.Url.PathAndQuery,
             };
 
-            WebApplicationUtilities.RedirectToLogOn(HttpContext.Current, redirectParameters);
+            WebApplicationUtilities.RedirectToLogOn(System.Web.HttpContext.Current, redirectParameters);
         }
 
         /// <summary>
@@ -811,7 +771,7 @@ namespace Microsoft.HealthVault.Web
             }
 
             WebApplicationUtilities.SignOut(
-                HttpContext.Current,
+                System.Web.HttpContext.Current,
                 actionUrlQueryString,
                 ApplicationId,
                 userCredentialToken,
@@ -828,7 +788,7 @@ namespace Microsoft.HealthVault.Web
         /// <remarks>
         /// This property can be used to retrieve an instance of the page from
         /// objects that don't have a reference to the page.
-        /// The property accesses the <see cref="HttpContext"/> to retrieve
+        /// The property accesses the <see cref="System.Web.HttpContext"/> to retrieve
         /// the page and casts it to a HealthServicePage. If the page is not
         /// a HealthServicePage or the page hasn't been instantiated, null
         /// is returned.
@@ -838,7 +798,7 @@ namespace Microsoft.HealthVault.Web
         {
             get
             {
-                return HttpContext.Current.Handler as HealthServicePage;
+                return System.Web.HttpContext.Current.Handler as HealthServicePage;
             }
         }
 

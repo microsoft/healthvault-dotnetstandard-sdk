@@ -21,7 +21,7 @@ namespace Microsoft.HealthVault.Web
     ///
     /// <remarks>
     /// The HealthRecordItemDataGrid works with the
-    /// <see cref="Microsoft.Health.HealthRecordItemDataTable"/> to show a
+    /// <see cref="HealthRecordItemDataTable"/> to show a
     /// paged list of the health record items matching the specified
     /// search criteria.<br/>
     /// <br/>

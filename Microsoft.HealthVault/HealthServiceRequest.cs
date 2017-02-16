@@ -23,6 +23,9 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Xml;
+using Microsoft.HealthVault.Authentication;
+using Microsoft.HealthVault.Exceptions;
+using Microsoft.HealthVault.Web;
 
 namespace Microsoft.HealthVault
 {
@@ -62,21 +65,22 @@ namespace Microsoft.HealthVault
             string fileVersion = "?";
             string systemInfo = "Unknown";
 
+            // TODO: this is not currently accessible in .Net Standard 1.4- we should revisit once 2.0 is released. 
             // safe attempt to obtain the assembly file version, and system information
-            try
-            {
-                fileVersion = FileVersionInfo.GetVersionInfo(Assembly.GetExecutingAssembly().Location).FileVersion;
-                systemInfo = String.Format(
-                    CultureInfo.InvariantCulture,
-                    "{0}; CLR {1}",
-                    Environment.OSVersion.VersionString,
-                    Environment.Version);
-            }
-            catch (Exception)
-            {
-                // failure in obtaining version or system info should not
-                // prevent the initialzation from continuing.
-            }
+//            try
+//            {
+//                fileVersion = FileVersionInfo.GetVersionInfo(Assembly.GetExecutingAssembly().Location).FileVersion;
+//                systemInfo = String.Format(
+//                    CultureInfo.InvariantCulture,
+//                    "{0}; CLR {1}",
+//                    Environment.OSVersion.VersionString,
+//                    Environment.Version);
+//            }
+//            catch (Exception)
+//            {
+//                // failure in obtaining version or system info should not
+//                // prevent the initialzation from continuing.
+//            }
 
             return String.Format(CultureInfo.InvariantCulture, "HV-NET/{0} ({1})", fileVersion, systemInfo);
         }
@@ -892,7 +896,7 @@ namespace Microsoft.HealthVault
             reader.NameTable.Add("wc");
 
             if (!SDKHelper.ReadUntil(reader, "code"))
-                throw new MissingFieldException("response", "code");
+                throw new MissingFieldException("code");
 
             result.CodeId = reader.ReadElementContentAsInt();
 
@@ -958,7 +962,7 @@ namespace Microsoft.HealthVault
                 // <message>
                 if (!SDKHelper.ReadUntil(reader, "message"))
                 {
-                    throw new MissingFieldException("response", "message");
+                    throw new MissingFieldException("message");
                 }
                 error.Message = reader.ReadElementString();
 
@@ -975,7 +979,7 @@ namespace Microsoft.HealthVault
                     }
                     else
                     {
-                        throw new MissingFieldException("context", "server-name");
+                        throw new MissingFieldException("server-name");
                     }
 
                     // <server-ip>
@@ -1002,7 +1006,7 @@ namespace Microsoft.HealthVault
                     }
                     else
                     {
-                        throw new MissingFieldException("context", "exception");
+                        throw new MissingFieldException("exception");
                     }
                     error.Context = errorContext;
                 }
