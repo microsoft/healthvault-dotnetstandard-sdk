@@ -184,8 +184,8 @@ namespace Microsoft.HealthVault.Web.Authentication
         {
             _applicationId = applicationId;
             _cert = certificate;
-            _digestMethod = HealthApplicationConfiguration.Current.SignatureHashAlgorithmName;
-            _signMethod = HealthApplicationConfiguration.Current.SignatureAlgorithmName;
+            _digestMethod = HealthApplicationConfiguration.Current.CryptoConfiguration.SignatureHashAlgorithmName;
+            _signMethod = HealthApplicationConfiguration.Current.CryptoConfiguration.SignatureAlgorithmName;
 
             LoadAuthTokenPair(applicationId);
         }
@@ -934,8 +934,8 @@ namespace Microsoft.HealthVault.Web.Authentication
             {
                 _applicationId = applicationId;
                 _cert = ApplicationCertificateStore.Current.ApplicationCertificate;
-                _digestMethod = HealthApplicationConfiguration.Current.SignatureHashAlgorithmName;
-                _signMethod = HealthApplicationConfiguration.Current.SignatureAlgorithmName;
+                _digestMethod = HealthApplicationConfiguration.Current.CryptoConfiguration.SignatureHashAlgorithmName;
+                _signMethod = HealthApplicationConfiguration.Current.CryptoConfiguration.SignatureAlgorithmName;
                 _certOriginFromStore = false;
 
                 LoadAuthTokenPair(applicationId);
@@ -1149,19 +1149,13 @@ namespace Microsoft.HealthVault.Web.Authentication
         /// The application's certificate containing the application's private key.
         /// </param>
         ///
-        private static void AuthenticateKeySetPair(
+        private static async Task AuthenticateKeySetPair(
             AuthSessionKeySetPairs keySetPairs,
             HealthServiceConnection connection,
             Guid applicationId,
             X509Certificate2 certificate)
         {
-            AuthenticationTokenKeySetPair pair =
-                keySetPairs.GetPair(applicationId);
-
-            if (pair == null)
-            {
-                pair = keySetPairs.CreatePair(applicationId);
-            }
+            AuthenticationTokenKeySetPair pair = keySetPairs.GetPair(applicationId) ?? keySetPairs.CreatePair(applicationId);
 
             if (!pair.IsAuthenticated())
             {
@@ -1175,20 +1169,18 @@ namespace Microsoft.HealthVault.Web.Authentication
                             // so create a new one with a fresh keyset
                             pair.RefreshSharedSecret();
                         }
-
-                        WebApplicationCredential cred =
-                            new WebApplicationCredential(applicationId, certificate);
-
-                        cred.KeySet = pair.KeySet.Clone();
-
-                        // create the new token
-                        // this will implicitly result in a call to
-                        // UpdateAuthenticationResults
-                        cred.CreateAuthenticatedSessionToken(
-                            connection,
-                            applicationId);
                     }
                 }
+
+                WebApplicationCredential cred =
+                            new WebApplicationCredential(applicationId, certificate) { KeySet = pair.KeySet.Clone() };
+
+                // create the new token
+                // this will implicitly result in a call to
+                // UpdateAuthenticationResults
+                await cred.CreateAuthenticatedSessionTokenAsync(
+                     connection,
+                     applicationId);
             }
         }
 
