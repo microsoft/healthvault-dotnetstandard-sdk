@@ -412,8 +412,8 @@ namespace Microsoft.HealthVault
             CancellationToken cancellationToken)
         {
             EasyWebRequest request = new EasyWebRequest();
-            
-            request.EnableRequestCompression = false;
+
+            request.RequestCompressionMethod = null;
 
             // Add the Authorization header for passport verification
             string ticketHeader =

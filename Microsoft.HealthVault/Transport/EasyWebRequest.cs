@@ -38,7 +38,38 @@ namespace Microsoft.HealthVault
         }
         private IWebProxy webProxy;
 
-        internal bool EnableRequestCompression { get; set; } = true;
+        /// <summary>
+        /// Gets or sets the request compression method.
+        /// </summary>
+        ///
+        internal string RequestCompressionMethod
+        {
+            get { return _requestCompressionMethod; }
+            set
+            {
+                _requestCompressionMethod = value;
+
+                if (string.IsNullOrEmpty(_requestCompressionMethod))
+                {
+                    _requestCompressionMethod = null;
+                }
+                else
+                {
+                    if (!string.Equals(
+                            _requestCompressionMethod,
+                            "gzip",
+                            StringComparison.OrdinalIgnoreCase) &&
+                        !string.Equals(
+                            _requestCompressionMethod,
+                            "deflate",
+                            StringComparison.OrdinalIgnoreCase))
+                    {
+                        throw Validator.HealthServiceException("InvalidRequestCompressionMethod");
+                    }
+                }
+            }
+        }
+        private string _requestCompressionMethod = "gzip";
 
         /// <summary>
         /// Gets the dictionary of headers that will be added to the web request.
@@ -69,9 +100,9 @@ namespace Microsoft.HealthVault
             }
 
             HttpContent content = new ByteArrayContent(this.xmlRequest, 0, this.xmlRequestLength);
-            if (this.EnableRequestCompression)
+            if (!string.IsNullOrEmpty(this.RequestCompressionMethod))
             {
-                content  = new CompressedContent(content, "gzip");
+                content  = new CompressedContent(content, this.RequestCompressionMethod);
             }
 
             message.Content = content;

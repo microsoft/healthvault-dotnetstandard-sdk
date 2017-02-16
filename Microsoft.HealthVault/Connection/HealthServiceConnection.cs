@@ -672,48 +672,7 @@ namespace Microsoft.HealthVault
                 }
             }
         }
-        private string _requestCompressionMethod =
-            HealthApplicationConfiguration.Current.RequestCompressionMethod;
-
-        /// <summary>
-        /// Gets or sets the comma-separated response compression methods.
-        /// </summary>
-        ///
-        /// <value>
-        /// A string representing the response compression methods.
-        /// </value>
-        ///
-        public string ResponseCompressionMethods
-        {
-            get { return _responseCompressionMethods; }
-            set
-            {
-                _responseCompressionMethods = value;
-
-                if (String.IsNullOrEmpty(_responseCompressionMethods))
-                {
-                    _responseCompressionMethods = String.Empty;
-                }
-                else
-                {
-                    string[] methods
-                        = SDKHelper.SplitAndTrim(_responseCompressionMethods.ToLowerInvariant(), ',');
-
-                    for (int i = 0; i < methods.Length; ++i)
-                    {
-                        if (!methods[i].Equals("gzip", StringComparison.Ordinal)
-                            && !methods[i].Equals("deflate", StringComparison.Ordinal))
-                        {
-                            throw Validator.HealthServiceException("InvalidResponseCompressionMethods");
-                        }
-                    }
-
-                    _responseCompressionMethods = String.Join(",", methods);
-                }
-            }
-        }
-        private string _responseCompressionMethods =
-            HealthApplicationConfiguration.Current.ResponseCompressionMethods;
+        private string _requestCompressionMethod = "gzip";
 
         #endregion public properties
 

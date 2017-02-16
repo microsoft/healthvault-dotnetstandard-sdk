@@ -317,6 +317,7 @@ namespace Microsoft.HealthVault
             try
             {
                 EasyWebRequest easyWeb = this.BuildWebRequest(null);
+                easyWeb.RequestCompressionMethod = this.RequestCompressionMethod;
                 HttpResponseMessage response;
 
                 try
@@ -454,6 +455,7 @@ namespace Microsoft.HealthVault
             try
             {
                 EasyWebRequest easyWeb = this.BuildWebRequest(transform);
+                easyWeb.RequestCompressionMethod = this.RequestCompressionMethod;
 
                 try
                 {
@@ -630,6 +632,20 @@ namespace Microsoft.HealthVault
         protected void BuildRequestXml()
         {
             BuildRequestXml(null);
+        }
+
+        /// <summary>
+        /// Gets or sets the request compression method used by the connection.
+        /// </summary>
+        ///
+        /// <returns>
+        /// A string representing the request compression method.
+        /// </returns>
+        ///
+        public string RequestCompressionMethod
+        {
+            get { return _connection.RequestCompressionMethod; }
+            set { _connection.RequestCompressionMethod = value; }
         }
 
         /// <summary>
