@@ -17,15 +17,11 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
-using System.Reflection;
 using System.Security;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Xml;
-using Microsoft.HealthVault.Authentication;
-using Microsoft.HealthVault.Exceptions;
-using Microsoft.HealthVault.Web;
 
 namespace Microsoft.HealthVault
 {

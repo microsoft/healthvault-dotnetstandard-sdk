@@ -118,15 +118,6 @@ namespace Microsoft.HealthVault
             Dictionary<string, HealthServiceInstance> instances =
                 GetServiceInstances(nav, out currentInstanceId);
 
-            HealthServiceMeaningfulUseInfo meaningfulUseInfo = null;
-            XPathNavigator meaningfulUseNav = nav.SelectSingleNode("meaningful-use");
-
-            if (meaningfulUseNav != null)
-            {
-                meaningfulUseInfo = HealthServiceMeaningfulUseInfo.CreateMeaningfulUseInfo(
-                    meaningfulUseNav);
-            }
-
             // updated-date is in UTC, but we have to say so explicitly or it's treated as local.
             DateTime lastUpdated = nav.SelectSingleNode("updated-date").ValueAsDateTime;
             lastUpdated = new DateTime(lastUpdated.Ticks, DateTimeKind.Utc);
@@ -141,7 +132,6 @@ namespace Microsoft.HealthVault
                     configValues,
                     instances,
                     currentInstanceId,
-                    meaningfulUseInfo,
                     lastUpdated);
 
             return serviceInfo;
@@ -180,8 +170,6 @@ namespace Microsoft.HealthVault
                 WriteIncludes(writer);
                 WriteServiceInstances(writer);
                 WriteUpdatedDate(writer);
-                WriteMeaningfulUseInfo(writer);
-
                 writer.WriteEndElement();
             }
         }
@@ -322,27 +310,6 @@ namespace Microsoft.HealthVault
             }
         }
 
-        private void WriteMeaningfulUseInfo(XmlWriter writer)
-        {
-            if (MeaningfulUseInfo == null)
-            {
-                return;
-            }
-
-            writer.WriteStartElement("meaningful-use");
-            {
-                writer.WriteStartElement("enabled");
-                {
-                    writer.WriteValue(MeaningfulUseInfo.Enabled);
-                    writer.WriteEndElement();
-                }
-
-                WriteConfigs(writer, MeaningfulUseInfo.ConfigurationValues);
-
-                writer.WriteEndElement();
-            }
-        }
-
         private void WriteUpdatedDate(XmlWriter writer)
         {
             writer.WriteElementString(
@@ -427,13 +394,11 @@ namespace Microsoft.HealthVault
             Dictionary<string, string> configurationValues,
             Dictionary<string, HealthServiceInstance> instances,
             string currentInstanceId,
-            HealthServiceMeaningfulUseInfo meaningfulUseInfo,
             DateTime lastUpdated)
         {
             _healthServiceUrl = healthServiceUrl;
             _healthVaultVersion = healthVaultVersion;
             _shellInfo = shellInfo;
-            _meaningfulUseInfo = meaningfulUseInfo;
 
             _methods =
                 new ReadOnlyCollection<HealthServiceMethodInfo>(methods);
@@ -636,16 +601,6 @@ namespace Microsoft.HealthVault
         /// that was used to get this ServiceInfo instance.
         /// </summary>
         public HealthServiceInstance CurrentInstance { get; private set; }
-
-        /// <summary>
-        /// Gets configuration information for Meaningful Use features.
-        /// </summary>
-        public HealthServiceMeaningfulUseInfo MeaningfulUseInfo
-        {
-            get { return _meaningfulUseInfo; }
-            protected set { _meaningfulUseInfo = value; }
-        }
-        private HealthServiceMeaningfulUseInfo _meaningfulUseInfo;
 
         /// <summary>
         /// Gets the timestamp of when the service definition was last modified on Platform.
