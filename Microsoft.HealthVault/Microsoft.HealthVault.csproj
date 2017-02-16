@@ -144,7 +144,6 @@
     <Compile Include="Thing\HealthRecordItemPermissions.cs" />
     <Compile Include="Thing\HealthRecordItemRelationship.cs" />
     <Compile Include="Thing\HealthRecordItemSections.cs" />
-    <Compile Include="Thing\HealthRecordItemSignature.cs" />
     <Compile Include="Thing\HealthRecordItemSignatureMethod.cs" />
     <Compile Include="Thing\HealthRecordItemsOrderByClause.cs" />
     <Compile Include="Thing\HealthRecordItemState.cs" />
@@ -189,7 +188,6 @@
     <Compile Include="Diagnostics\HealthVaultPlatformTrace.cs" />
     <Compile Include="Vocabulary\HealthVaultPlatformVocabulary.cs" />
     <Compile Include="Diagnostics\HealthVaultTraceSource.cs" />
-    <Compile Include="Thing\HealthVaultXmlResolver.cs" />
     <Compile Include="Transport\IEasyWebResponseHandler.cs" />
     <Compile Include="IHealthApplicationConfiguration.cs" />
     <Compile Include="Thing\IItemTypePropertyConversion.cs" />
