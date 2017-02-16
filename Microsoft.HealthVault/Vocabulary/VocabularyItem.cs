@@ -16,8 +16,7 @@ namespace Microsoft.HealthVault
     /// <summary>
     /// Represents an item in the HealthVault <see cref="Vocabulary"/>.
     /// </summary>
-    ///
-    [XmlRoot("item")]
+    /// 
     public class VocabularyItem : HealthRecordItemData, IXmlSerializable
     {
         /// <summary>

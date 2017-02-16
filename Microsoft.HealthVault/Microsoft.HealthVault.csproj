@@ -132,7 +132,6 @@
     <Compile Include="Thing\HealthRecordAccessor.cs" />
     <Compile Include="Exceptions\HealthRecordAuthorizationNotPossibleException.cs" />
     <Compile Include="Record\HealthRecordAuthorizationStatus.cs" />
-    <Compile Include="Record\HealthRecordExporter.cs" />
     <Compile Include="Thing\HealthRecordFilter.cs" />
     <Compile Include="Record\HealthRecordInfo.cs" />
     <Compile Include="Thing\HealthRecordItem.cs" />

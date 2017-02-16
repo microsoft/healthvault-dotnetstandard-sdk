@@ -5,6 +5,7 @@
 
 using System;
 using System.Xml;
+using System.Xml.Linq;
 using System.Xml.XPath;
 
 namespace Microsoft.HealthVault
@@ -59,8 +60,7 @@ namespace Microsoft.HealthVault
         ///
         public HealthRecordItemExtension()
         {
-            _extensionData = new XmlDocument();
-            _extensionData.XmlResolver = null;
+            _extensionData = new XDocument();
         }
 
         #endregion ctors
@@ -95,10 +95,10 @@ namespace Microsoft.HealthVault
             }
 
             // Save off the data in its entirety
-            _extensionData.SafeLoadXml(extensionNav.OuterXml);
+            _extensionData = SDKHelper.SafeLoadXml(extensionNav.OuterXml);
 
             // Call the derived class for parsing.
-            ParseXml(_extensionData);
+            ParseXml(this.ExtensionData);
         }
 
         /// <summary>
@@ -301,8 +301,8 @@ namespace Microsoft.HealthVault
         ///
         public IXPathNavigable ExtensionData
         {
-            get { return _extensionData; }
+            get { return _extensionData.CreateNavigator(); }
         }
-        private XmlDocument _extensionData;
+        private XDocument _extensionData;
     }
 }

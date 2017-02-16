@@ -9,6 +9,7 @@ using System.Globalization;
 using System.IO;
 using System.Text;
 using System.Xml;
+using System.Xml.Linq;
 using System.Xml.XPath;
 
 namespace Microsoft.HealthVault
@@ -32,7 +33,6 @@ namespace Microsoft.HealthVault
                 settings.IgnoreProcessingInstructions = true;
                 settings.IgnoreWhitespace = true;
                 settings.DtdProcessing = DtdProcessing.Prohibit;
-                settings.XmlResolver = null;
 
                 return settings;
             }
@@ -44,7 +44,6 @@ namespace Microsoft.HealthVault
             {
                 XmlReaderSettings settings = new XmlReaderSettings();
                 settings.DtdProcessing = DtdProcessing.Prohibit;
-                settings.XmlResolver = null;
 
                 return settings;
             }
@@ -241,13 +240,13 @@ namespace Microsoft.HealthVault
             return infoPathClone;
         }
 
-        public static void SafeLoadXml(this XmlDocument document, string text)
+        public static XDocument SafeLoadXml(string text)
         {
             using (var stringReader = new StringReader(text))
             {
                 using (var xmlReader = XmlReader.Create(stringReader, MinimumSafeXmlReaderSettings))
                 {
-                    document.Load(xmlReader);
+                    return XDocument.Load(xmlReader);
                 }
             }
         }

@@ -7,12 +7,10 @@ using Microsoft.HealthVault.Exceptions;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Security;
-using System.Security.Cryptography;
-using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Xml;
 using System.Xml.XPath;
+using System.Xml.Linq;
 
 namespace Microsoft.HealthVault
 {
@@ -110,7 +108,7 @@ namespace Microsoft.HealthVault
         ///
         public virtual void WriteXml(XmlWriter writer)
         {
-            writer.WriteNode(_typeSpecificData.CreateNavigator(), true);
+            writer.WriteNode(_typeSpecificData.CreateNavigator().ReadSubtree(), true);
         }
 
         /// <summary>
@@ -128,311 +126,8 @@ namespace Microsoft.HealthVault
             _areFlagsDirty = false;
         }
 
-        /// <summary>
-        /// Signs the <see cref="HealthRecordItem"/> with a digital signature.
-        /// </summary>
-        ///
-        /// <param name="signingCertificate">
-        /// An X509 certificate. The private key from the certificate is used to sign the
-        /// <see cref="HealthRecordItem"/>.
-        /// </param>
-        ///
-        /// <remarks>
-        /// Creates an instance of <see cref="HealthRecordItemSignature"/> and calls its Sign method.
-        /// </remarks>
-        ///
-        /// <exception cref="ArgumentNullException">
-        /// The specified argument is null.
-        /// </exception>
-        ///
-        /// <exception cref="InvalidOperationException">
-        /// The <see cref="HealthRecordItem"/> is already signed and may only have one signature.
-        /// </exception>
-        ///
-        /// <exception cref="XmlException">
-        /// There is a load or parse error in the XML.
-        /// </exception>
-        ///
-        /// <exception cref="SignatureFailureException">
-        /// Signing failed. See the inner exception.
-        /// The inner exception may be one of the following:
-        /// An <see cref="XmlException"/> is thrown because there is a load or parse error loading
-        /// the xsl.
-        /// A CryptographicException is thrown because the nodelist from the xsl does not contain
-        /// an <see cref="XmlDsigXsltTransform"/> object.
-        /// A <see cref="CryptographicException"/> is thrown because signingCertificate.PrivateKey
-        /// is not an RSA or DSA key, or is unreadable.
-        /// A <see cref="CryptographicException"/> is thrown because signingCertificate.PrivateKey
-        /// is not a DSA or RSA object.
-        /// </exception>
-        ///
-        public void Sign(X509Certificate2 signingCertificate)
-        {
-            XmlDocument thingDoc = new XmlDocument();
-            thingDoc.XmlResolver = null;
-            HealthRecordItemSignature thingSignature = null;
 
-            Validator.ThrowIfArgumentNull(signingCertificate, "signingCertificate", "SigningCertificateNull");
 
-            // Format using white spaces.
-            thingDoc.PreserveWhitespace = true;
-
-            Validator.ThrowInvalidIf(_signatures.Count > 0, "SignatureOnlyOneAllowed");
-
-            thingSignature = new HealthRecordItemSignature();
-
-            if (_blobStore != null && _blobStore.Count > 0)
-            {
-                foreach (Blob blob in _blobStore.Values)
-                {
-                    BlobSignatureItem bsi = new BlobSignatureItem(
-                            blob.Name,
-                            blob.ContentType,
-                            blob.HashInfo);
-
-                    thingSignature.AddBlobSignatureInfo(bsi);
-                }
-            }
-
-            _signatures.Add(thingSignature);
-
-            thingDoc.SafeLoadXml(GetItemXml(_sections | HealthRecordItemSections.Signature));
-
-            XmlElement signature = thingSignature.Sign(signingCertificate, thingDoc);
-            XmlNode sigNode = thingDoc.ImportNode(signature, true);
-            XmlNode sigInfoNode = thingDoc.SelectSingleNode("thing/signature-info");
-            XmlNode sigDataNode = sigInfoNode.FirstChild;
-            sigInfoNode.InsertAfter(sigNode, sigDataNode);
-
-            _signatures.Clear();
-            _signatures.Add(thingSignature);
-            _signedItemXml = thingDoc.OuterXml;
-            _sections |= HealthRecordItemSections.Signature;
-        }
-
-        /// <summary>
-        /// Checks if the health record item's signature is valid.
-        /// </summary>
-        ///
-        /// <remarks>
-        /// Verifies that the signature on the item is valid for the XML representation of the
-        /// item as retrieved from the HealthVault service.
-        /// <br/><br/>
-        /// This method will always verify against the underlying XML of this item as returned
-        /// from the service, even if local modifications are made to the item. In the case
-        /// of new items that have not yet been created in the HealthVault service, this method
-        /// validates the signature against the XML of the item at the time of signing.
-        /// <br /><br />
-        /// For more information about XML digital signatures see:
-        /// <see cref="System.Security.Cryptography.Xml"/>.
-        /// </remarks>
-        ///
-        /// <returns>
-        /// <b>true</b> if the signature is valid against the XML representation of the item
-        /// returned from the service, or for new items, if the signature is valid against
-        /// the XML of the item at the time the item was signed. Returns <b>false</b> if the
-        /// signature could not be validated.
-        /// </returns>
-        ///
-        /// <exception cref="InvalidOperationException">
-        /// The signature could not be validated because the <see cref="HealthRecordItem"/> is not
-        /// signed.
-        /// </exception>
-        ///
-        /// <exception cref="SignatureFailureException">
-        /// Signature validation failed becaue either the
-        /// <see cref="HealthRecordItemSignatureMethod"/> of this item is unknown and cannot be
-        /// validated, or the integrity of the signature could not be verified in which case the
-        /// inner exception contains details on the reasons why.
-        /// The inner exception is <see cref="CryptographicException"/>, thrown because of one of:
-        /// The SignatureAlgorithm property of the public key in the
-        /// signature does not match the SignatureMethod property.
-        /// The signature description could not be created.
-        /// The hash algorithm could not be created.
-        /// </exception>
-        ///
-        [SecurityCritical]
-        public bool IsSignatureValid()
-        {
-            bool returnValue = true;
-
-            Validator.ThrowInvalidIf(_signatures.Count < 1, "SignatureNoSignature");
-
-            HealthRecordItemSignature signature = _signatures[0];
-
-            if (signature.Method == HealthRecordItemSignatureMethod.Unknown)
-            {
-                throw new SignatureFailureException(
-                    ResourceRetriever.FormatResourceString(
-                        "SignatureMethodUnsupported",
-                        signature.Method));
-            }
-
-            XmlDocument thingDoc = new XmlDocument();
-            thingDoc.XmlResolver = null;
-            thingDoc.PreserveWhitespace = true;
-
-            string signedThingXml = GetSignedItemXml(signature);
-
-            if (String.IsNullOrEmpty(signedThingXml))
-            {
-                return false;
-            }
-
-            thingDoc.SafeLoadXml(signedThingXml);
-
-            if (!signature.CheckSignature(thingDoc))
-            {
-                returnValue = false;
-            }
-
-            return returnValue;
-        }
-
-        private string GetSignedItemXml(HealthRecordItemSignature signature)
-        {
-            String signedItemXml = null;
-
-            if (signature.Method == HealthRecordItemSignatureMethod.HV1)
-            {
-                signedItemXml = FetchV1SignedItemXml();
-            }
-            else if (signature.Method == HealthRecordItemSignatureMethod.HV2)
-            {
-                if (_signedItemXml != null)
-                {
-                    signedItemXml = _signedItemXml;
-                }
-                else
-                {
-                    signedItemXml = GetItemXml();
-                }
-            }
-
-            return signedItemXml;
-        }
-
-        /// <summary>
-        /// Fetches item xml in V1 signature format.
-        /// </summary>
-        /// <returns></returns>
-        internal string FetchV1SignedItemXml()
-        {
-            string itemXml;
-            if (_signedItemXml != null)
-            {
-                itemXml = _signedItemXml;
-            }
-            else
-            {
-                itemXml = GetItemXml();
-            }
-
-            XmlDocument doc = new XmlDocument();
-            doc.XmlResolver = null;
-            doc.PreserveWhitespace = true;
-            doc.SafeLoadXml(itemXml);
-
-            XPathNavigator thingNav = doc.CreateNavigator();
-
-            StringBuilder sb = new StringBuilder();
-            XmlWriterSettings settings = SDKHelper.XmlUtf8WriterSettings;
-            using (XmlWriter writer = XmlWriter.Create(sb, settings))
-            {
-                writer.WriteStartElement("thing");
-
-                XPathNavigator dxNav = thingNav.SelectSingleNode("thing/data-xml");
-                if (dxNav != null)
-                {
-                    dxNav.WriteSubtree(writer);
-                }
-
-                OtherItemData otherItemData = null;
-                XPathNavigator blobPayloadNav = thingNav.SelectSingleNode("thing/blob-payload");
-                if (blobPayloadNav != null)
-                {
-                    BlobStore blobStore = new BlobStore(this, default(HealthRecordAccessor));
-                    blobStore.ParseXml(blobPayloadNav);
-                    if (blobStore.Count == 1 && blobStore.ContainsKey(String.Empty))
-                    {
-                        Blob b = blobStore[String.Empty];
-                        otherItemData = GetEncodedBlob(b);
-                        otherItemData.WriteXml(writer);
-                    }
-                }
-
-                XmlNamespaceManager nsManager =
-                    HealthRecordItemSignature.GetSignatureInfoNamespaceManager(
-                        thingNav.NameTable);
-
-                XPathNavigator sigNav = thingNav.SelectSingleNode(
-                    "thing/signature-info/ds:Signature", nsManager);
-
-                if (sigNav != null)
-                {
-                    sigNav.WriteSubtree(writer);
-                }
-
-                writer.WriteEndElement(); // thing
-
-                writer.Flush();
-            }
-
-            return sb.ToString();
-        }
-
-        private static OtherItemData GetEncodedBlob(Blob b)
-        {
-            if (string.IsNullOrEmpty(b.ContentEncoding) &&
-                    !string.IsNullOrEmpty(b.LegacyContentEncoding))
-            {
-                // Convert blob data to original encoding.
-
-                byte[] blobData = b.ReadAllBytes();
-                byte[] encodedBlobData = BlobEncoder.Encode(blobData, b.LegacyContentEncoding);
-
-                string blobPayload = Encoding.UTF8.GetString(encodedBlobData);
-                return new OtherItemData(blobPayload, b.LegacyContentEncoding, b.ContentType);
-            }
-            else
-            {
-                string blobPayload = b.ReadAsString();
-                return new OtherItemData(blobPayload, b.ContentEncoding, b.ContentType);
-            }
-        }
-
-        /// <summary>
-        /// Checks if the certificates are valid.
-        /// </summary>
-        ///
-        /// <remarks>
-        /// Validates the certificates of each signature on the <see cref="HealthRecordItem"/>.
-        /// </remarks>
-        ///
-        /// <exception cref="CertificateValidationException">
-        /// Certificate validation failed.
-        /// There may be an inner exception is <see cref="CryptographicException"/>, thrown because
-        /// of:
-        /// The certificate is unreadable.
-        /// If there is no inner exception, there will be a string with info about the certificate
-        /// and the error.
-        /// </exception>
-        ///
-        /// <exception cref="InvalidOperationException">
-        /// The certificate could not be validated because the <see cref="HealthRecordItem"/> is
-        /// not signed.
-        /// </exception>
-        ///
-        [SecurityCritical]
-        public void ValidateCertificate()
-        {
-            Validator.ThrowInvalidIf(_signatures.Count < 1, "SignatureNoSignature");
-
-            for (int i = 0; i < _signatures.Count; i++)
-            {
-                _signatures[i].CheckCertificate();
-            }
-        }
 
         /// <summary>
         /// Gets the key of the health record item.
@@ -837,13 +532,13 @@ namespace Microsoft.HealthVault
         /// set though it will not contain data unless a transform was
         /// specified when getting the item.
         /// </remarks>
-        ///
-        public IDictionary<string, XmlDocument> TransformedXmlData
+        /// 
+        public IDictionary<string, XDocument> TransformedXmlData
         {
             get { return _transformedData; }
         }
-        private Dictionary<string, XmlDocument> _transformedData =
-            new Dictionary<string, XmlDocument>(StringComparer.OrdinalIgnoreCase);
+        private Dictionary<string, XDocument> _transformedData =
+            new Dictionary<string, XDocument>(StringComparer.OrdinalIgnoreCase);
 
         /// <summary>
         /// Gets the common data for the <see cref="HealthRecordItem"/>.
@@ -971,24 +666,6 @@ namespace Microsoft.HealthVault
         }
 
         #endregion Tags
-
-        #region Signatures
-
-        /// <summary>
-        /// Gets the signatures for the <see cref="HealthRecordItem"/>.
-        /// </summary>
-        ///
-        /// <value>
-        /// An collection of <see cref="HealthRecordItemSignature"/>.
-        /// </value>
-        ///
-        public Collection<HealthRecordItemSignature> HealthRecordItemSignatures
-        {
-            get { return _signatures; }
-        }
-        private Collection<HealthRecordItemSignature> _signatures = new Collection<HealthRecordItemSignature>();
-
-        #endregion Signatures
 
         /// <summary>
         /// Gets the data sections that this HealthRecordItem represents.
@@ -1218,12 +895,6 @@ namespace Microsoft.HealthVault
                 updateRequired = true;
             }
 
-            if ((sections & HealthRecordItemSections.Signature) != 0)
-            {
-                AddSignaturesPutThingsRequestParameters(infoXmlWriter);
-                updateRequired = true;
-            }
-
             if ((sections & HealthRecordItemSections.Core) == HealthRecordItemSections.Core)
             {
                 updateRequired |= AddUpdatedEndDate(infoXmlWriter, writeAllCore);
@@ -1264,20 +935,12 @@ namespace Microsoft.HealthVault
             {
                 // replace the data-xml node from the original xml with the data-xml node that contains the current
                 // state of the object...
-                XmlDocument fetchedDocument = new XmlDocument();
-                fetchedDocument.XmlResolver = null;
-                fetchedDocument.SafeLoadXml(_fetchedXml);
+                XDocument fetchedDocument = SDKHelper.SafeLoadXml(_fetchedXml);
+                XDocument newDocument = SDKHelper.SafeLoadXml(GetItemXml());
 
-                XmlDocument newDocument = new XmlDocument();
-                newDocument.XmlResolver = null;
-                newDocument.SafeLoadXml(GetItemXml());
-
-                XmlNode fetchedDataNode = fetchedDocument.SelectSingleNode("thing/data-xml");
-                XmlNode newDataNode = newDocument.SelectSingleNode("thing/data-xml");
-
-                fetchedDataNode.InnerXml = newDataNode.InnerXml;
-
-                return fetchedDocument.OuterXml;
+                string dataName = "thing/data-xml";
+                fetchedDocument.Element(dataName).ReplaceWith(newDocument.Element(dataName));
+                return fetchedDocument.ToString();
             }
         }
 
@@ -1339,29 +1002,6 @@ namespace Microsoft.HealthVault
             if (_blobStore != null && (_blobStore.Count > 0 || _blobStore.RemovedBlobs.Count > 0))
             {
                 _blobStore.WriteXml("blob-payload", writer);
-            }
-        }
-
-        /// <summary>
-        /// Adds the signature section to the thing XML.
-        /// </summary>
-        ///
-        /// <param name="writer">
-        /// The XML writer to use to write the signature section to the thing XML.
-        /// </param>
-        ///
-        /// <exception cref="InvalidOperationException">
-        /// Signing failed. The thing was already signed and another signature is not allowed.
-        /// </exception>
-        ///
-        private void AddSignaturesPutThingsRequestParameters(
-            XmlWriter writer)
-        {
-            Validator.ThrowInvalidIf(_signatures.Count > 1, "SignatureOnlyOneAllowed");
-
-            if (_signatures.Count > 0)
-            {
-                _signatures[0].WriteXml(writer);
             }
         }
 
@@ -1592,7 +1232,6 @@ namespace Microsoft.HealthVault
             AddXmlSectionValues(thingNavigator);
 
             AddTagsSectionValues(thingNavigator);
-            AddSignatureSectionValues(thingNavigator, thingXml);
         }
 
         /// <summary>
@@ -1770,12 +1409,10 @@ namespace Microsoft.HealthVault
                         }
                     }
 
-                    // The whole data-xml section is transformed data so
+                    // The whole data-xml section is transformed data so<healthrecorditem
                     // no elements need to be parsed by the common thing
                     // parser.
-                    XmlDocument newDoc = new XmlDocument();
-                    newDoc.XmlResolver = null;
-                    newDoc.SafeLoadXml(dataXml.OuterXml);
+                    XDocument newDoc = SDKHelper.SafeLoadXml(dataXml.OuterXml);
 
                     if (!TransformedXmlData.ContainsKey(transformName))
                     {
@@ -1850,88 +1487,7 @@ namespace Microsoft.HealthVault
             return signaturePathClone;
         }
 
-        /// <summary>
-        /// Adds the values from the Signature section of the health record item to
-        /// the specified HealthRecordItem and updates the Sections
-        /// appropriately.
-        /// </summary>
-        ///
-        /// <param name="thingNavigator">
-        /// The containing XPath navigator in which to find a child named
-        /// "Signature".
-        /// </param>
-        ///
-        /// <param name="thingXml">
-        /// The XML string of the thing used to create this health record item.
-        /// </param>
-        /// <exception cref="HealthRecordItemDeserializationException">
-        /// The signature xml could not be parsed. The inner exception may be:
-        /// <see cref="XmlException"/>: There is a load or parse error in the XML.
-        /// <see cref="ArgumentNullException"/>: The <see cref="Signature"/> section of the
-        /// document was not found.
-        /// <see cref="CryptographicException"/>: The <see cref="Signature"/> section of the
-        /// document does not contain a valid SignatureValue property.
-        /// The <see cref="Signature"/> section of the document does not contain a valid
-        /// <see cref="SignedInfo"/> property.
-        /// </exception>
-        ///
-        private void AddSignatureSectionValues(XPathNavigator thingNavigator, string thingXml)
-        {
-            // Check for the "Signature"
-
-            XPathNavigator signatureInfoNav = thingNavigator.SelectSingleNode("signature-info");
-
-            if (signatureInfoNav != null)
-            {
-                HealthRecordItemSignature hriSignature = new HealthRecordItemSignature();
-                try
-                {
-                    hriSignature.ParseXml(signatureInfoNav, thingXml);
-                }
-                catch (XmlException e)
-                {
-                    throw new HealthRecordItemDeserializationException(
-                        ResourceRetriever.FormatResourceString(
-                            "SignatureDeserializationFailed",
-                            e.Message),
-                        e);
-                }
-                catch (ArgumentNullException e)
-                {
-                    throw new HealthRecordItemDeserializationException(
-                        ResourceRetriever.FormatResourceString(
-                            "SignatureDeserializationFailed",
-                            e.Message),
-                        e);
-                }
-                catch (CryptographicException e)
-                {
-                    throw new HealthRecordItemDeserializationException(
-                        ResourceRetriever.FormatResourceString(
-                            "SignatureDeserializationFailed",
-                            e.Message),
-                        e);
-                }
-
-                _signatures.Add(hriSignature);
-                _signedItemXml = thingXml;
-
-                _sections |= HealthRecordItemSections.Signature;
-            }
-            else
-            {
-                XPathExpression signatureXPath = GetSignatureXPathExpression(thingNavigator);
-                XPathNavigator signatureNav = thingNavigator.SelectSingleNode(signatureXPath);
-                if (signatureNav != null)
-                {
-                    HealthRecordItemSignature hriSignature = new HealthRecordItemSignature();
-                    hriSignature.ParseV1SignatureXml(thingXml);
-                    _signatures.Add(hriSignature);
-                    _signedItemXml = thingXml;
-                    _sections |= HealthRecordItemSections.Signature;
-                }
-            }
-        }
+      
 
         /// <summary>
         /// Adds tags to the HealthRecordItem and updates the Sections if tags are present.

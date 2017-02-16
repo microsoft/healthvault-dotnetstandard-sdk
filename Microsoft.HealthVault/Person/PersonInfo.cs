@@ -11,6 +11,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Xml;
 using System.Xml.XPath;
+using System.Xml.Linq;
 
 namespace Microsoft.HealthVault
 {
@@ -189,9 +190,7 @@ namespace Microsoft.HealthVault
 
             if (navAppSettings != null)
             {
-                XmlDocument doc = new XmlDocument();
-                doc.SafeLoadXml(navAppSettings.OuterXml);
-
+                XDocument doc = SDKHelper.SafeLoadXml(navAppSettings.OuterXml);
                 _appSettings = doc;
             }
 
@@ -637,10 +636,10 @@ namespace Microsoft.HealthVault
                     FetchApplicationSettingsAndAuthorizedRecords();
                 }
 
-                return (IXPathNavigable)_appSettings;
+                return _appSettings.CreateNavigator();
             }
         }
-        private XmlDocument _appSettings;
+        private XDocument _appSettings;
 
         /// <summary>
         /// Gets or sets the underlying application settings document.
@@ -648,7 +647,7 @@ namespace Microsoft.HealthVault
         /// <remarks>
         /// This property should only be used for testing.
         /// </remarks>
-        protected XmlDocument ApplicationSettingsDocument
+        protected XDocument ApplicationSettingsDocument
         {
             get { return _appSettings; }
             set { _appSettings = value; }
@@ -678,8 +677,7 @@ namespace Microsoft.HealthVault
             string requestParameters
                 = HealthVaultPlatformPerson.GetSetApplicationSettingsParameters(applicationSettings);
             HealthVaultPlatformPerson.Current.SetApplicationSettings(ApplicationConnection, requestParameters);
-            _appSettings = new XmlDocument();
-            _appSettings.SafeLoadXml(requestParameters);
+            _appSettings = SDKHelper.SafeLoadXml(requestParameters);
 
             if (ApplicationSettingsChanged != null)
             {

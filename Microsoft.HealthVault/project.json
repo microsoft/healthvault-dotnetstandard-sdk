@@ -13,10 +13,9 @@
     "System.Security.Cryptography.Algorithms": "4.3.0",
     "System.Security.Cryptography.Csp": "4.3.0",
     "System.Security.Cryptography.X509Certificates": "4.3.0",
-    "System.Xml.XmlDocument": "4.3.0",
-    "System.Xml.XmlSerializer": "4.3.0",
+    "System.Xml.XDocument": "4.3.0",
     "System.Xml.XPath": "4.3.0",
-    "System.Xml.XPath.XmlDocument": "4.3.0"
+    "System.Xml.XPath.XDocument": "4.3.0"
   },
   "frameworks": {
     "netstandard1.4": {}
