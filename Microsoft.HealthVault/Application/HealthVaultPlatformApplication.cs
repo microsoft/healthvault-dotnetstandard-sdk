@@ -106,44 +106,54 @@ namespace Microsoft.HealthVault.PlatformPrimitives
         /// <paramref name="settings"/> is null.
         /// </exception>
         ///
-        public virtual async Task<IEnumerable<PersonInfo>> GetAuthorizedPeopleAsync(
+        public virtual IEnumerable<Task<PersonInfo>> GetAuthorizedPeopleAsync(
             ApplicationConnection connection,
             GetAuthorizedPeopleSettings settings)
         {
             Validator.ThrowIfArgumentNull(settings, "settings", "GetAuthorizedPeopleSettingsNull");
 
-            Boolean moreResults = true;
+            bool moreResults = true;
             Guid cursor = settings.StartingPersonId;
             DateTime authCreatedSinceDate = settings.AuthorizationsCreatedSince;
-            Int32 batchSize = settings.BatchSize;
+            int batchSize = settings.BatchSize;
 
             while (moreResults)
             {
-                Collection<PersonInfo> personInfos = await GetAuthorizedPeopleAsync(
-                    connection,
-                    cursor,
-                    authCreatedSinceDate,
-                    batchSize,
-                    out moreResults).ConfigureAwait(false);
+                Collection<PersonInfo> personInfos = null;
 
-                if (personInfos.Count > 0)
+                // For the first one in the batch we need to go out and get it, then return the first item
+                yield return Task.Run(async () =>
                 {
-                    cursor = personInfos[personInfos.Count - 1].PersonId;
-                }
+                    GetAuthorizedPeopleResult getPeopleResult = await GetAuthorizedPeopleAsync(
+                        connection,
+                        cursor,
+                        authCreatedSinceDate,
+                        batchSize).ConfigureAwait(false);
 
-                for (int i = 0; i < personInfos.Count; i++)
+                    personInfos = getPeopleResult.People;
+                    moreResults = getPeopleResult.MoreResults;
+
+                    if (personInfos.Count > 0)
+                    {
+                        cursor = personInfos[personInfos.Count - 1].PersonId;
+                    }
+
+                    return personInfos[0];
+                });
+
+                // For the rest in the batch, we can immediately return a result.
+                for (int i = 1; i < personInfos.Count; i++)
                 {
-                    yield return personInfos[i];
+                    yield return Task.FromResult(personInfos[i]);
                 }
             }
         }
 
-        internal static async Task<Collection<PersonInfo>> GetAuthorizedPeopleAsync(
+        internal static async Task<GetAuthorizedPeopleResult> GetAuthorizedPeopleAsync(
             ApplicationConnection connection,
             Guid personIdCursor,
             DateTime authCreatedSinceDate,
-            Int32 numResults,
-            out Boolean moreResults)
+            Int32 numResults)
         {
             Validator.ThrowArgumentOutOfRangeIf(
                 numResults < 0,
@@ -208,9 +218,7 @@ namespace Microsoft.HealthVault.PlatformPrimitives
                 nav = infoNav.SelectSingleNode("response-results/more-results");
             }
 
-            moreResults = nav.ValueAsBoolean;
-
-            return personInfos;
+            return new GetAuthorizedPeopleResult(personInfos, nav.ValueAsBoolean);
         }
 
         #endregion GetAuthorizedPeople
@@ -434,5 +442,18 @@ namespace Microsoft.HealthVault.PlatformPrimitives
         }
 
         #endregion
+
+        internal class GetAuthorizedPeopleResult
+        {
+            public GetAuthorizedPeopleResult(Collection<PersonInfo> people, bool moreResults)
+            {
+                this.People = people;
+                this.MoreResults = moreResults;
+            }
+
+            public Collection<PersonInfo> People { get; }
+
+            public bool MoreResults { get; }
+        }
     }
 }

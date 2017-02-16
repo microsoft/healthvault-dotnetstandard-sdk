@@ -40,6 +40,7 @@
     <!-- A reference to the entire .NET Framework is automatically included -->
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AsyncEnumerable.cs" />
     <Compile Include="Person\ActiveRecordAuthorization.cs" />
     <Compile Include="Connection\AnonymousConnection.cs" />
     <Compile Include="Application\ApplicationBinaryConfiguration.cs" />
