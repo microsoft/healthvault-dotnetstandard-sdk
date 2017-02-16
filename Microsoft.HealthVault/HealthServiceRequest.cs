@@ -4,6 +4,7 @@
 // All other rights reserved.
 
 using Microsoft.HealthVault.Authentication;
+using Microsoft.HealthVault.Exceptions;
 using Microsoft.HealthVault.Web;
 using System;
 using System.Collections.Generic;
@@ -12,10 +13,15 @@ using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.IO;
+using System.Linq;
 using System.Net;
+using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Reflection;
 using System.Security;
 using System.Text;
+using System.Threading;
+using System.Threading.Tasks;
 using System.Xml;
 
 namespace Microsoft.HealthVault
@@ -33,7 +39,7 @@ namespace Microsoft.HealthVault
     /// must execute concurrently.
     /// </remarks>
     ///
-    public class HealthServiceRequest : IEasyWebResponseHandler
+    public class HealthServiceRequest
     {
         private const string CorrelationIdContextKey = "WC_CorrelationId";
         private const string ResponseIdContextKey = "WC_ResponseId";
@@ -43,6 +49,9 @@ namespace Microsoft.HealthVault
 
         [ThreadStatic]
         private static Guid _lastResponseId;
+
+        private CancellationTokenSource cancellationTokenSource;
+        private readonly object cancelLock = new object();
 
         /// <summary>
         /// Constructs the version identifier for this version of the HealthVault .NET APIs.
@@ -273,40 +282,29 @@ namespace Microsoft.HealthVault
             return _lastResponseId;
         }
 
-        /// <summary>
-        /// Builds up the XML, makes the request and reads the response.
-        /// Connectivity failures will except out of the http client
-        /// </summary>
-        ///
-        /// <exception cref ="HealthServiceException">
-        /// The HealthVault returns an exception in the form of an
-        /// exception section in the response XML.
-        /// </exception>
-        ///
-        public virtual void Execute()
+        public async Task<HealthServiceResponseData> ExecuteAsync()
         {
             if (_connection.Credential != null)
             {
-                _connection.Credential.AuthenticateIfRequired(_connection, _connection.ApplicationId);
+                await _connection.Credential.AuthenticateIfRequiredAsync(_connection, _connection.ApplicationId).ConfigureAwait(false);
             }
 
             try
             {
-                ExecuteInternal();
+                return await this.ExecuteInternalAsync().ConfigureAwait(false);
             }
             catch (HealthServiceAuthenticatedSessionTokenExpiredException)
             {
                 if (_connection.Credential != null)
                 {
                     // Mark the credential's authentication result as expired,
-                    // so that in the following
+                    // so that in the following 
                     // Credential.AuthenticateIfRequired we fetch a new token.
                     if (_connection.Credential.ExpireAuthenticationResult(_connection.ApplicationId))
                     {
-                        _connection.Credential.AuthenticateIfRequired(_connection, _connection.ApplicationId);
+                        await _connection.Credential.AuthenticateIfRequiredAsync(_connection, _connection.ApplicationId).ConfigureAwait(false);
 
-                        ExecuteInternal();
-                        return;
+                        return await this.ExecuteInternalAsync().ConfigureAwait(false);
                     }
                 }
 
@@ -314,19 +312,54 @@ namespace Microsoft.HealthVault
             }
         }
 
-        internal virtual void ExecuteInternal()
+        private async Task<HealthServiceResponseData> ExecuteInternalAsync()
         {
             try
             {
-                _currentEasyWeb = this.BuildWebRequest(null);
-                _currentEasyWeb.RequestCompressionMethod = RequestCompressionMethod;
+                EasyWebRequest easyWeb = this.BuildWebRequest(null);
+                HttpResponseMessage response;
 
-                _currentEasyWeb.Fetch(_connection.RequestUrl, this);
+                try
+                {
+                    this.cancellationTokenSource = new CancellationTokenSource(TimeSpan.FromSeconds(this._timeoutSeconds));
+                    response = await easyWeb.FetchAsync(_connection.RequestUrl, this.cancellationTokenSource.Token).ConfigureAwait(false);
+                }
+                finally
+                {
+                    lock (this.cancelLock)
+                    {
+                        if (this.cancellationTokenSource != null)
+                        {
+                            this.cancellationTokenSource.Dispose();
+                            this.cancellationTokenSource = null;
+                        } 
+                    }
+                }
+
+                // Platform returns a platform request id with the responses. This allows 
+                // developers to have additional information if necessary for debugging/logging purposes.
+                Guid responseId;
+                if (response.Headers != null && Guid.TryParse(response.Headers.GetValues("WC_ResponseId")?.FirstOrDefault(), out responseId))
+                {
+                    ResponseId = responseId;
+
+                    if (HealthVaultPlatformTrace.LoggingEnabled)
+                    {
+                        HealthVaultPlatformTrace.Log(TraceEventType.Information, "Response Id: {0}", responseId);
+                    }
+                }
+
+                HealthServiceResponseData result = null;
+
+                Stream responseStream = await response.Content.ReadAsStreamAsync().ConfigureAwait(false);
+                result = HandleResponseStreamResult(responseStream);
 
                 if (ResponseId != Guid.Empty)
                 {
                     SetLastResponseId(ResponseId);
                 }
+
+                return result;
             }
             catch (XmlException xmlException)
             {
@@ -336,12 +369,6 @@ namespace Microsoft.HealthVault
             }
             finally
             {
-                if (_currentEasyWeb != null)
-                {
-                    _currentEasyWeb.Dispose();
-                    _currentEasyWeb = null;
-                }
-
                 List<HealthServiceRequest> pendingRequests = _connection.PendingRequests;
                 lock (pendingRequests)
                 {
@@ -354,23 +381,26 @@ namespace Microsoft.HealthVault
         /// Cancels any pending request to HealthVault that was initiated with the same connection
         /// as this request.
         /// </summary>
-        ///
+        /// 
         /// <remarks>
         /// Calling this method will cancel any requests that was started using the connection.
         /// It is up to the caller to start the request on another thread. Cancelling will cause
         /// a HealthServiceRequestCancelledException to be thrown on the thread the request was
         /// executed on.
         /// </remarks>
-        ///
+        /// 
         public void CancelRequest()
         {
-            if (_currentEasyWeb != null)
+            lock (this.cancelLock)
             {
-                _currentEasyWeb.CancelRequest();
-            }
-            else
-            {
-                _pendingCancel = true;
+                if (this.cancellationTokenSource != null)
+                {
+                    this.cancellationTokenSource.Cancel();
+                }
+                else
+                {
+                    _pendingCancel = true;
+                } 
             }
         }
 
@@ -380,23 +410,23 @@ namespace Microsoft.HealthVault
         /// response is no longer necessarily xml, it is returned as
         /// a string
         /// </summary>
-        ///
+        /// 
         /// <param name="transform">
         /// The public URL of the transform to apply to the results. If <b>null</b>,
         /// no transform is applied and the results are returned
         /// as a string.
         /// </param>
-        ///
-        public virtual string ExecuteForTransform(string transform)
+        /// 
+        public virtual async Task<string> ExecuteForTransformAsync(string transform)
         {
             if (_connection.Credential != null)
             {
-                _connection.Credential.AuthenticateIfRequired(_connection, _connection.ApplicationId);
+                await _connection.Credential.AuthenticateIfRequiredAsync(_connection, _connection.ApplicationId).ConfigureAwait(false);
             }
 
             try
             {
-                return ExecuteForTransformInternal(transform);
+                return await ExecuteForTransformInternalAsync(transform).ConfigureAwait(false);
             }
             catch (HealthServiceAuthenticatedSessionTokenExpiredException)
             {
@@ -407,9 +437,9 @@ namespace Microsoft.HealthVault
                     // Credential.AuthenticateIfRequired we fetch a new token.
                     if (_connection.Credential.ExpireAuthenticationResult(_connection.ApplicationId))
                     {
-                        _connection.Credential.AuthenticateIfRequired(_connection, _connection.ApplicationId);
+                        await _connection.Credential.AuthenticateIfRequiredAsync(_connection, _connection.ApplicationId).ConfigureAwait(false);
 
-                        return ExecuteForTransformInternal(transform);
+                        return await ExecuteForTransformInternalAsync(transform).ConfigureAwait(false);
                     }
                 }
 
@@ -417,39 +447,131 @@ namespace Microsoft.HealthVault
             }
         }
 
-        internal virtual string ExecuteForTransformInternal(string transform)
+        internal virtual async Task<string> ExecuteForTransformInternalAsync(string transform)
         {
+            HttpResponseMessage response = null;
             String result = null;
             try
             {
-                TransformResponseHandler responseHandler = new TransformResponseHandler(this);
-                _currentEasyWeb = this.BuildWebRequest(transform);
-                _currentEasyWeb.RequestCompressionMethod = RequestCompressionMethod;
-                _currentEasyWeb.Fetch(_connection.RequestUrl, responseHandler);
+                EasyWebRequest easyWeb = this.BuildWebRequest(transform);
 
-                if (ResponseId != Guid.Empty)
+                try
                 {
-                    SetLastResponseId(ResponseId);
+                    this.cancellationTokenSource = new CancellationTokenSource(TimeSpan.FromSeconds(this._timeoutSeconds));
+                    response = await easyWeb.FetchAsync(_connection.RequestUrl, this.cancellationTokenSource.Token).ConfigureAwait(false);
+                }
+                finally
+                {
+                    lock (this.cancelLock)
+                    {
+                        if (this.cancellationTokenSource != null)
+                        {
+                            this.cancellationTokenSource.Dispose();
+                            this.cancellationTokenSource = null;
+                        }
+                    }
+                }
+
+                using (Stream responseStream = await response.Content.ReadAsStreamAsync().ConfigureAwait(false))
+                using (MemoryStream responseMemoryStream = new MemoryStream())
+                {
+                    // Copy the response stream to a memory stream so we can go over it multiple times.
+                    await responseStream.CopyToAsync(responseMemoryStream).ConfigureAwait(false);
+
+                    // Look over the response to see if it's an error and extract response ID
+                    responseMemoryStream.Position = 0;
+                    this.HandleTransformResponse(responseMemoryStream, response.Headers);
+
+                    if (ResponseId != Guid.Empty)
+                    {
+                        SetLastResponseId(ResponseId);
+                    }
+
+                    // Reset stream position and read as string for result
+                    responseMemoryStream.Position = 0;
+
+                    using (StreamReader reader = new StreamReader(responseMemoryStream))
+                    {
+                        return await reader.ReadToEndAsync().ConfigureAwait(false);
+                    }
                 }
             }
             finally
             {
-                result = _currentEasyWeb.ResponseText;
-
-                if (_currentEasyWeb != null)
-                {
-                    _currentEasyWeb.Dispose();
-                    _currentEasyWeb = null;
-                }
-
                 List<HealthServiceRequest> pendingRequests = _connection.PendingRequests;
                 lock (pendingRequests)
                 {
                     _connection.PendingRequests.Remove(this);
                 }
             }
+        }
 
-            return result;
+        /// <summary>
+        /// Handles the response stream and headers from transform request.
+        /// </summary>
+        /// 
+        /// <param name="stream">The response stream.</param>
+        /// <param name="responseHeaders">The response header collection.</param>
+        /// 
+        public void HandleTransformResponse(MemoryStream stream, HttpResponseHeaders responseHeaders)
+        {
+            // Platform returns a platform request id with the responses. This allows 
+            // developers to have additional information if necessary for debugging/logging purposes.
+            Guid responseId;
+            if (responseHeaders != null && Guid.TryParse(responseHeaders.GetValues("WC_ResponseId").FirstOrDefault(), out responseId))
+            {
+                this.ResponseId = responseId;
+            }
+
+            ProcessTransformResponseForErrors(stream);
+        }
+
+        private static void ProcessTransformResponseForErrors(MemoryStream responseStream)
+        {
+            // Now look at the errors in the response before returning. If we see HV XML returned 
+            // containing a failure status code, throw an exception
+            XmlReaderSettings settings = SDKHelper.XmlReaderSettings;
+            settings.CloseInput = false;
+            settings.IgnoreWhitespace = false;
+
+            try
+            {
+                using (XmlReader reader = XmlReader.Create(responseStream, settings))
+                {
+                    reader.NameTable.Add("wc");
+
+                    if (SDKHelper.ReadUntil(reader, "response") &&
+                        SDKHelper.ReadUntil(reader, "status") &&
+                        SDKHelper.ReadUntil(reader, "code"))
+                    {
+                        HealthServiceResponseData responseData = new HealthServiceResponseData
+                        {
+                            CodeId = reader.ReadElementContentAsInt()
+                        };
+
+                        if (responseData.Code != HealthServiceStatusCode.Ok)
+                        {
+                            responseData.Error = HandleErrorResponse(reader);
+
+                            HealthServiceException e = HealthServiceExceptionHelper.GetHealthServiceException(responseData);
+
+                            throw e;
+                        }
+                    }
+                }
+            }
+            catch (FormatException)
+            {
+            }
+            catch (MissingFieldException)
+            {
+            }
+            catch (XmlException)
+            {
+            }
+            catch (InvalidOperationException)
+            {
+            }
         }
 
         #region helpers
@@ -465,13 +587,15 @@ namespace Microsoft.HealthVault
         /// <returns>
         /// An instance of <see cref="EasyWebRequest"/>.
         /// </returns>
-        ///
         private EasyWebRequest BuildWebRequest(string transform)
         {
-            if (_pendingCancel || _connection.CancelAllRequests)
+            lock (this.cancelLock)
             {
-                _pendingCancel = false;
-                throw new HealthServiceRequestCancelledException();
+                if (_pendingCancel || _connection.CancelAllRequests)
+                {
+                    _pendingCancel = false;
+                    throw new HealthServiceRequestCancelledException();
+                } 
             }
 
             this.BuildRequestXml(transform);
@@ -479,31 +603,15 @@ namespace Microsoft.HealthVault
 
             HealthVaultPlatformTrace.LogRequest(_xmlRequest, correlationId);
 
-            EasyWebRequest easyWeb = null;
+            EasyWebRequest easyWeb = new EasyWebRequest(_xmlRequest, _xmlRequestLength);
+            easyWeb.WebProxy = _connection.WebProxy;
 
-            try
+            if (correlationId != Guid.Empty)
             {
-                easyWeb = EasyWebRequest.Create(_xmlRequest, _xmlRequestLength);
-                easyWeb.WebProxy = _connection.WebProxy;
-                easyWeb.TimeoutMilliseconds = (_timeoutSeconds * 1000);
-                easyWeb.RequestCompressionMethod = RequestCompressionMethod;
-
-                if (correlationId != Guid.Empty)
-                {
-                    easyWeb.Headers.Add("WC_CorrelationId", correlationId.ToString());
-                }
-
-                return easyWeb;
+                easyWeb.Headers.Add("WC_CorrelationId", correlationId.ToString());
             }
-            catch
-            {
-                if (easyWeb != null)
-                {
-                    easyWeb.Dispose();
-                }
 
-                throw;
-            }
+            return easyWeb;
         }
 
         /// <summary>
@@ -522,20 +630,6 @@ namespace Microsoft.HealthVault
         protected void BuildRequestXml()
         {
             BuildRequestXml(null);
-        }
-
-        /// <summary>
-        /// Gets or sets the request compression method used by the connection.
-        /// </summary>
-        ///
-        /// <returns>
-        /// A string representing the request compression method.
-        /// </returns>
-        ///
-        public string RequestCompressionMethod
-        {
-            get { return _connection.RequestCompressionMethod; }
-            set { _connection.RequestCompressionMethod = value; }
         }
 
         /// <summary>
@@ -747,102 +841,6 @@ namespace Microsoft.HealthVault
         }
 
         /// <summary>
-        /// Represents the <see cref="IEasyWebResponseHandler"/> callback.
-        /// </summary>
-        ///
-        /// <param name="stream">
-        /// The response stream.
-        /// </param>
-        ///
-        /// <exception cref ="HealthServiceException">
-        /// HealthVault returns an exception in the form of an
-        /// exception section in the response XML.
-        /// </exception>
-        ///
-        public void HandleResponseStream(Stream stream)
-        {
-            if (_responseStreamHandler != null)
-            {
-                _responseStreamHandler(stream);
-            }
-            else
-            {
-                _response = HandleResponseStreamResult(stream);
-            }
-        }
-
-        /// <summary>
-        /// Represents the <see cref="IEasyWebResponseHandler"/> callback.
-        /// </summary>
-        ///
-        /// <param name="stream">
-        /// The response stream.
-        /// </param>
-        /// <param name="responseHeaders">
-        /// The response headers.
-        /// </param>
-        ///
-        /// <exception cref ="HealthServiceException">
-        /// HealthVault returns an exception in the form of an
-        /// exception section in the response XML.
-        /// </exception>
-        ///
-        public void HandleResponse(Stream stream, WebHeaderCollection responseHeaders)
-        {
-            // Platform returns a platform request id with the responses. This allows
-            // developers to have additional information if necessary for debugging/logging purposes.
-            Guid responseId;
-            if (responseHeaders != null && Guid.TryParse(responseHeaders["WC_ResponseId"], out responseId))
-            {
-                ResponseId = responseId;
-
-                if (HealthVaultPlatformTrace.LoggingEnabled)
-                {
-                    HealthVaultPlatformTrace.Log(TraceEventType.Information, "Response Id: {0}", responseId);
-                }
-            }
-
-            if (_responseStreamHandler != null)
-            {
-                _responseStreamHandler(stream);
-            }
-            else
-            {
-                _response = HandleResponseResult(stream, responseHeaders);
-            }
-        }
-
-        /// <summary>
-        /// Defines a delegate for handling the response stream for a request.
-        /// </summary>
-        ///
-        /// <param name="stream">
-        /// The response stream of the request.
-        /// </param>
-        ///
-        public delegate void WebResponseStreamHandler(Stream stream);
-
-        /// <summary>
-        /// Defines a delegate that gets or sets all responses for requests to the
-        /// HealthVault Service.
-        /// </summary>
-        ///
-        /// <remarks>
-        /// If this property is set, the specified method is called once
-        /// the response stream is retrieved for handling the result of the
-        /// request to the HealthVault Service. If the property is not
-        /// set, the response is processed and the results can be
-        /// retrieved using the <see cref="Response"/> property.
-        /// </remarks>
-        ///
-        public WebResponseStreamHandler ResponseStreamHandler
-        {
-            get { return _responseStreamHandler; }
-            set { _responseStreamHandler = value; }
-        }
-        private WebResponseStreamHandler _responseStreamHandler;
-
-        /// <summary>
         /// Handles the data retrieved by making the web request.
         /// </summary>
         ///
@@ -855,8 +853,7 @@ namespace Microsoft.HealthVault
         /// exception section in the response XML.
         /// </exception>
         ///
-        public static HealthServiceResponseData HandleResponseStreamResult(
-            Stream stream)
+        public static HealthServiceResponseData HandleResponseStreamResult(Stream stream)
         {
             HealthServiceResponseData result = new HealthServiceResponseData();
             bool newStreamCreated = false;
@@ -881,46 +878,7 @@ namespace Microsoft.HealthVault
             }
 
             return result;
-        }
 
-        /// <summary>
-        /// Handles the response data and headers retrieved from the web request.
-        /// </summary>
-        ///
-        /// <param name="stream">
-        /// The response stream from the web request.
-        /// </param>
-        /// <param name="responseHeaders">
-        /// The response headers from the web request.
-        /// </param>
-        ///
-        /// <exception cref ="HealthServiceException">
-        /// HealthVault returns an exception in the form of an
-        /// exception section in the response XML.
-        /// </exception>
-        ///
-        public static HealthServiceResponseData HandleResponseResult(Stream stream, WebHeaderCollection responseHeaders)
-        {
-            HealthServiceResponseData result = null;
-            try
-            {
-                result = HandleResponseStreamResult(stream);
-                if (responseHeaders != null)
-                {
-                    result.ResponseHeaders = responseHeaders;
-                }
-            }
-            catch (HealthServiceException ex)
-            {
-                if (responseHeaders != null)
-                {
-                    ex.Response.ResponseHeaders = responseHeaders;
-                }
-
-                throw;
-            }
-
-            return result;
         }
 
         private static HealthServiceResponseData ParseResponse(MemoryStream responseStream)
@@ -1216,25 +1174,6 @@ namespace Microsoft.HealthVault
             }
         }
 
-        /// <summary>
-        /// Gets the response after Execute is called.
-        /// </summary>
-        ///
-        /// <returns>
-        /// An instance of <see cref="HealthServiceResponseData"/>.
-        /// </returns>
-        ///
-        /// <private>
-        /// The setter is internal as a test hook so that the response can
-        /// be set by test code in derived classes.
-        /// </private>
-        ///
-        public HealthServiceResponseData Response
-        {
-            get { return _response; }
-            internal set { _response = value; }
-        }
-
         internal Guid ResponseId
         {
             get; set;
@@ -1276,7 +1215,6 @@ namespace Microsoft.HealthVault
         }
         private int _xmlRequestLength;
 
-        private EasyWebRequest _currentEasyWeb;
         private bool _pendingCancel;
         private HealthServiceConnection _connection;
         private HealthServiceResponseData _response;

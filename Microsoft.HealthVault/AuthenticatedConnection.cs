@@ -9,8 +9,10 @@ using Microsoft.HealthVault.Extensions;
 using System;
 using System.IO;
 using System.Net;
+using System.Net.Http;
 using System.Text;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.XPath;
 
@@ -69,9 +71,9 @@ namespace Microsoft.HealthVault
         /// in finding a HealthVault account for the specified <paramref name="liveIdTicket"/>.
         /// </exception>
         ///
-        public static AuthenticatedConnection LogOn(string liveIdTicket)
+        public static async Task<AuthenticatedConnection> LogOnAsync(string liveIdTicket)
         {
-            return LogOn(liveIdTicket, false);
+            return await LogOnAsync(liveIdTicket, false).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -107,11 +109,11 @@ namespace Microsoft.HealthVault
         /// in finding a HealthVault account for the specified <paramref name="liveIdTicket"/>.
         /// </exception>
         ///
-        public static AuthenticatedConnection LogOn(
+        public static async Task<AuthenticatedConnection> LogOnAsync(
             string liveIdTicket,
             bool isMra)
         {
-            return LogOn(liveIdTicket, isMra, null);
+            return await LogOnAsync(liveIdTicket, isMra, CancellationToken.None).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -127,12 +129,8 @@ namespace Microsoft.HealthVault
         /// applications can work with many user records at one time and does not rely on the
         /// selected record when performing operations.
         /// </param>
-        ///
-        /// <param name="cancelTrigger">
-        /// If the event gets triggered the log on request will be cancelled resulting in an
-        /// <see cref="HealthServiceRequestCancelledException"/>.
-        /// </param>
-        ///
+        /// <param name="cancellationToken">A token to cancel the operation.</param>
+        /// 
         /// <returns>
         /// An <see cref="AuthenticatedConnection"/> to HealthVault for the user specified in the
         /// <paramref name="liveIdTicket"/>.
@@ -162,10 +160,10 @@ namespace Microsoft.HealthVault
         /// missing from the configuration.
         /// </exception>
         ///
-        public static AuthenticatedConnection LogOn(
+        public static async Task<AuthenticatedConnection> LogOnAsync(
             string liveIdTicket,
             bool isMra,
-            ManualResetEvent cancelTrigger)
+            CancellationToken cancellationToken)
         {
             Guid appId = HealthApplicationConfiguration.Current.ApplicationId;
             Uri healthServiceUrl = HealthApplicationConfiguration.Current.GetHealthVaultMethodUrl();
@@ -186,7 +184,7 @@ namespace Microsoft.HealthVault
                 throw Validator.InvalidConfigurationException("InvalidShellUrlConfiguration");
             }
 
-            return LogOn(liveIdTicket, isMra, false, cancelTrigger, appId, shellUrl, healthServiceUrl);
+            return await LogOnAsync(liveIdTicket, isMra, false, appId, shellUrl, healthServiceUrl, cancellationToken).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -202,12 +200,7 @@ namespace Microsoft.HealthVault
         /// applications can work with many user records at one time and does not rely on the
         /// selected record when performing operations.
         /// </param>
-        ///
-        /// <param name="cancelTrigger">
-        /// If the event gets triggered the log on request will be cancelled resulting in an
-        /// <see cref="HealthServiceRequestCancelledException"/>.
-        /// </param>
-        ///
+        /// 
         /// <param name="applicationId">
         /// The unique HealthVault application identifier that the user is being logged into.
         /// </param>
@@ -221,7 +214,8 @@ namespace Microsoft.HealthVault
         /// The HealthVault Shell redirector URL. This is used to to verify the Live ID ticket before
         /// authenticating the user to HealthVault.
         /// </param>
-        ///
+        /// <param name="cancellationToken">A token to cancel the operation.</param>
+        /// 
         /// <returns>
         /// An <see cref="AuthenticatedConnection"/> to HealthVault for the user specified in the
         /// <paramref name="liveIdTicket"/>.
@@ -246,16 +240,22 @@ namespace Microsoft.HealthVault
         /// to HealthVault.
         /// </exception>
         ///
-        public static AuthenticatedConnection LogOn(
+        public static async Task<AuthenticatedConnection> LogOnAsync(
             string liveIdTicket,
             bool isMra,
-            ManualResetEvent cancelTrigger,
             Guid applicationId,
             Uri shellUrl,
-            Uri healthServiceUrl)
+            Uri healthServiceUrl,
+            CancellationToken cancellationToken)
         {
-            return LogOn(liveIdTicket, isMra, false, cancelTrigger, applicationId,
-                shellUrl, healthServiceUrl);
+            return await LogOnAsync(
+                liveIdTicket, 
+                isMra,
+                false, 
+                applicationId,
+                shellUrl,
+                healthServiceUrl, 
+                cancellationToken).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -277,12 +277,7 @@ namespace Microsoft.HealthVault
         /// remain valid for the duration specified in the application's configuration within
         /// HealthVault.  Typically, persistent tokens are valid for up to one year.
         /// </param>
-        ///
-        /// <param name="cancelTrigger">
-        /// If the event gets triggered the log on request will be cancelled resulting in an
-        /// <see cref="HealthServiceRequestCancelledException"/>.
-        /// </param>
-        ///
+        /// 
         /// <param name="applicationId">
         /// The unique HealthVault application identifier that the user is being logged into.
         /// </param>
@@ -296,7 +291,8 @@ namespace Microsoft.HealthVault
         /// The HealthVault Shell redirector URL. This is used to to verify the Live ID ticket before
         /// authenticating the user to HealthVault.
         /// </param>
-        ///
+        /// <param name="cancellationToken">A token to cancel the operation.</param>
+        /// 
         /// <returns>
         /// An <see cref="AuthenticatedConnection"/> to HealthVault for the user specified in the
         /// <paramref name="liveIdTicket"/>.
@@ -321,14 +317,14 @@ namespace Microsoft.HealthVault
         /// to HealthVault.
         /// </exception>
         ///
-        public static AuthenticatedConnection LogOn(
+        public static async Task<AuthenticatedConnection> LogOnAsync(
             string liveIdTicket,
             bool isMra,
             bool isPersistent,
-            ManualResetEvent cancelTrigger,
             Guid applicationId,
             Uri shellUrl,
-            Uri healthServiceUrl)
+            Uri healthServiceUrl,
+            CancellationToken cancellationToken)
         {
             Validator.ThrowIfStringNullOrEmpty(liveIdTicket, "liveIdTicket");
             Validator.ThrowArgumentExceptionIf(
@@ -343,15 +339,14 @@ namespace Microsoft.HealthVault
 
             // Verify with Shell to produce authToken
 
-            string authToken =
-                VerifyTicketWithShell(
-                    applicationId,
-                    liveIdTicket,
-                    cred.SharedSecret,
-                    isMra,
-                    isPersistent,
-                    cancelTrigger,
-                    shellUrl);
+            string authToken = await VerifyTicketWithShellAsync(
+                applicationId,
+                liveIdTicket,
+                cred.SharedSecret,
+                isMra,
+                isPersistent,
+                shellUrl,
+                cancellationToken).ConfigureAwait(false);
 
             cred.AuthenticationToken = authToken;
 
@@ -377,14 +372,14 @@ namespace Microsoft.HealthVault
         /// remain valid for the duration specified in the application's configuration within
         /// HealthVault.  Typically, persistent tokens are valid for up to one year.
         /// </param>
-        ///
-        /// <param name="cancelTrigger"></param>
+        /// 
         /// <param name="shellUrl"></param>
-        ///
+        /// <param name="cancellationToken">A token to cancel the operation.</param>
+        /// 
         /// <returns></returns>
-        ///
+        /// 
         /// <exception cref ="HealthServiceException">
-        /// If the request results in an error being returned from the Shell.  The
+        /// If the request results in an error being returned from the Shell.  The 
         /// <see cref="HealthServiceException.ErrorCode"/> can give more details about the error
         /// that occurred.
         /// </exception>
@@ -406,127 +401,111 @@ namespace Microsoft.HealthVault
         /// changed its required base authorizations such that the user must reauthorize the
         /// application. The application should direct the user to the APPAUTH target of the Shell.
         /// </exception>
-        ///
-        private static string VerifyTicketWithShell(
+        /// 
+        private static async Task<string> VerifyTicketWithShellAsync(
             Guid appId,
             string ticket,
             CryptoHash sharedSecret,
             bool isMra,
             bool isPersistent,
-            ManualResetEvent cancelTrigger,
-            Uri shellUrl)
+            Uri shellUrl,
+            CancellationToken cancellationToken)
         {
-            using (EasyWebRequest request = new EasyWebRequest())
-            {
-                ShellResponseHandler handler = new ShellResponseHandler();
-                request.ForceAsyncRequest = true;
-                request.RequestCompressionMethod = String.Empty;
+            EasyWebRequest request = new EasyWebRequest();
+            
+            request.EnableRequestCompression = false;
 
-                if (cancelTrigger != null)
+            // Add the Authorization header for passport verification
+            string ticketHeader =
+                Convert.ToBase64String(
+                    new UTF8Encoding().GetBytes("WLID1.0 t=" + ticket));
+            request.Headers.Add(
+                "LiveIdTicket",
+                ticketHeader);
+
+            // Add the shared secret header for creating the session token
+            string sharedSecretHeader =
+                Convert.ToBase64String(
+                    new UTF8Encoding().GetBytes(sharedSecret.GetInfoXml()));
+            request.Headers.Add(
+                "SharedSecret",
+                sharedSecretHeader);
+
+            string authToken = null;
+            try
+            {
+                Uri liveIdTicketVerifierUrl =
+                    new Uri(
+                        shellUrl,
+                        "redirect.aspx?target=verifyliveid&targetqs=" +
+                            HttpUtility.UrlEncode(
+                                "?appid=" + appId + "&ismra=" + SDKHelper.XmlFromBool(isMra) +
+                                "&persistwctoken=" + SDKHelper.XmlFromBool(isPersistent)));
+
+                HttpResponseMessage httpResponse = await request.FetchAsync(liveIdTicketVerifierUrl, cancellationToken).ConfigureAwait(false);
+                HealthServiceResponseData responseData;
+                using (Stream responseStream = await httpResponse.Content.ReadAsStreamAsync().ConfigureAwait(false))
                 {
-                    request.RequestCancelTrigger = cancelTrigger;
+                    responseData = HealthServiceRequest.HandleResponseStreamResult(responseStream);
                 }
 
-                // Add the Authorization header for passport verification
-                string ticketHeader =
-                    Convert.ToBase64String(
-                        new UTF8Encoding().GetBytes("WLID1.0 t=" + ticket));
-                request.Headers.Add(
-                    "LiveIdTicket",
-                    ticketHeader);
+                ApplicationRecordAuthorizationAction action =
+                    ApplicationRecordAuthorizationAction.Unknown;
 
-                // Add the shared secret header for creating the session token
-                string sharedSecretHeader =
-                    Convert.ToBase64String(
-                        new UTF8Encoding().GetBytes(sharedSecret.GetInfoXml()));
-                request.Headers.Add(
-                    "SharedSecret",
-                    sharedSecretHeader);
-
-                string authToken = null;
-                try
+                XmlReader infoReader = responseData.InfoReader;
+                if (SDKHelper.ReadUntil(infoReader, "token"))
                 {
-                    Uri liveIdTicketVerifierUrl =
-                        new Uri(
-                            shellUrl,
-                            "redirect.aspx?target=verifyliveid&targetqs=" +
-                                WebUtility.UrlEncode(
-                                    "?appid=" + appId + "&ismra=" + SDKHelper.XmlFromBool(isMra) +
-                                    "&persistwctoken=" + SDKHelper.XmlFromBool(isPersistent)));
-
-                    request.Fetch(liveIdTicketVerifierUrl, handler);
-
-                    ApplicationRecordAuthorizationAction action =
-                        ApplicationRecordAuthorizationAction.Unknown;
-
-                    XmlReader infoReader = handler.Response.InfoReader;
-                    if (SDKHelper.ReadUntil(infoReader, "token"))
+                    if (infoReader.MoveToAttribute("app-record-auth-action"))
                     {
-                        if (infoReader.MoveToAttribute("app-record-auth-action"))
+                        try
                         {
-                            try
-                            {
-                                action =
-                                    (ApplicationRecordAuthorizationAction)Enum.Parse(
-                                        typeof(ApplicationRecordAuthorizationAction),
-                                        infoReader.Value);
-                            }
-                            catch (ArgumentException)
-                            {
-                            }
+                            action =
+                                (ApplicationRecordAuthorizationAction)Enum.Parse(
+                                    typeof(ApplicationRecordAuthorizationAction),
+                                    infoReader.Value);
+                        }
+                        catch (ArgumentException)
+                        {
                         }
                     }
-
-                    switch (action)
-                    {
-                        case ApplicationRecordAuthorizationAction.NoActionRequired:
-                            break;
-
-                        case ApplicationRecordAuthorizationAction.AuthorizationRequired:
-                            throw new HealthRecordAuthorizationRequiredException();
-
-                        case ApplicationRecordAuthorizationAction.ReauthorizationNotPossible:
-                        case ApplicationRecordAuthorizationAction.RecordLocationNotSupported:
-                            throw new HealthRecordAuthorizationNotPossibleException();
-
-                        case ApplicationRecordAuthorizationAction.ReauthorizationRequired:
-                            throw new HealthRecordReauthorizationRequiredException();
-
-                        default:
-                            throw new HealthServiceException(
-                                HealthServiceStatusCode.RecordAuthorizationFailure);
-                    }
-
-                    infoReader.MoveToElement();
-                    authToken = infoReader.ReadElementContentAsString();
                 }
-                catch (WebException webException)
+
+                switch (action)
                 {
-                    if (((HttpWebResponse)webException.Response).StatusCode ==
-                        HttpStatusCode.Forbidden)
-                    {
-                        throw new HealthServiceAccessDeniedException(
-                            webException.Message,
-                            webException);
-                    }
-                    throw;
+                    case ApplicationRecordAuthorizationAction.NoActionRequired:
+                        break;
+
+                    case ApplicationRecordAuthorizationAction.AuthorizationRequired:
+                        throw new HealthRecordAuthorizationRequiredException();
+
+                    case ApplicationRecordAuthorizationAction.ReauthorizationNotPossible:
+                    case ApplicationRecordAuthorizationAction.RecordLocationNotSupported:
+                        throw new HealthRecordAuthorizationNotPossibleException();
+
+                    case ApplicationRecordAuthorizationAction.ReauthorizationRequired:
+                        throw new HealthRecordReauthorizationRequiredException();
+
+                    default:
+                        throw new HealthServiceException(
+                            HealthServiceStatusCode.RecordAuthorizationFailure);
                 }
-                return authToken;
-            }
-        }
 
-        private class ShellResponseHandler : IEasyWebResponseHandler
-        {
-            public void HandleResponse(Stream stream, WebHeaderCollection responseHeaders)
-            {
-                _response = HealthServiceRequest.HandleResponseResult(stream, responseHeaders);
+                infoReader.MoveToElement();
+                authToken = infoReader.ReadElementContentAsString();
             }
-
-            public HealthServiceResponseData Response
+            catch (WebException webException)
             {
-                get { return _response; }
-            }
-            private HealthServiceResponseData _response;
+                if (((HttpWebResponse)webException.Response).StatusCode ==
+                    HttpStatusCode.Forbidden)
+                {
+                    throw new HealthServiceAccessDeniedException(
+                        webException.Message,
+                        webException);
+                }
+                throw;
+            }        
+                    
+            return authToken;
         }
 
         internal AuthenticatedConnection()
@@ -757,12 +736,12 @@ namespace Microsoft.HealthVault
         /// The authorization was not returned in the response from the
         /// server.
         /// </exception>
-        ///
-        public void Authenticate()
+        /// 
+        public async Task AuthenticateAsync()
         {
-            Credential.AuthenticateIfRequired(
+            await Credential.AuthenticateIfRequiredAsync(
                 this,
-                this.ApplicationId);
+                this.ApplicationId).ConfigureAwait(false);
         }
 
         #region Impersonation

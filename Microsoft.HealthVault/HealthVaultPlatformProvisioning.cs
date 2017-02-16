@@ -3,9 +3,11 @@
 // see http://www.microsoft.com/resources/sharedsource/licensingbasics/sharedsourcelicenses.mspx.
 // All other rights reserved.
 
+using Microsoft.HealthVault.Exceptions;
 using Microsoft.HealthVault.Web;
 using System;
 using System.Globalization;
+using System.Threading.Tasks;
 using System.Xml.XPath;
 
 namespace Microsoft.HealthVault.PlatformPrimitives
@@ -96,7 +98,7 @@ namespace Microsoft.HealthVault.PlatformPrimitives
         /// The HealthVault service returned an error.
         /// </exception>
         ///
-        public virtual void UpdateChildApplication(
+        public virtual async Task UpdateChildApplicationAsync(
             ApplicationConnection connection,
             ApplicationInfo applicationInfo)
         {
@@ -107,7 +109,7 @@ namespace Microsoft.HealthVault.PlatformPrimitives
                 new HealthServiceRequest(connection, "UpdateApplication", 2);
 
             request.Parameters = applicationInfo.GetRequestParameters(applicationInfo.Id);
-            request.Execute();
+            await request.ExecuteAsync().ConfigureAwait(false);
         }
 
         /// <summary>
@@ -145,7 +147,7 @@ namespace Microsoft.HealthVault.PlatformPrimitives
         /// If there is an error when the HealthVault service is called.
         /// </exception>
         ///
-        public virtual ApplicationInfo GetChildApplication(
+        public virtual async Task<ApplicationInfo> GetChildApplicationAsync(
             OfflineWebApplicationConnection connection,
             Guid childApplicationId)
         {
@@ -165,15 +167,14 @@ namespace Microsoft.HealthVault.PlatformPrimitives
                     "<all-languages>true</all-languages><child-app-id>{0}</child-app-id>",
                     childApplicationId);
 
-            request.Execute();
+            HealthServiceResponseData responseData = await request.ExecuteAsync().ConfigureAwait(false);
 
             XPathExpression infoPath =
                 SDKHelper.GetInfoXPathExpressionForMethod(
-                    request.Response.InfoNavigator,
+                    responseData.InfoNavigator,
                     "GetApplicationInfo");
 
-            XPathNavigator infoNav =
-                request.Response.InfoNavigator.SelectSingleNode(infoPath);
+            XPathNavigator infoNav = responseData.InfoNavigator.SelectSingleNode(infoPath);
 
             XPathNavigator appInfoNav = infoNav.SelectSingleNode("application");
 
@@ -219,7 +220,7 @@ namespace Microsoft.HealthVault.PlatformPrimitives
         /// If there is an error when the HealthVault service is called.
         /// </exception>
         ///
-        public virtual Guid AddChildApplication(
+        public virtual async Task<Guid> AddChildApplicationAsync(
             OfflineWebApplicationConnection connection,
             ApplicationInfo applicationConfigurationInformation)
         {
@@ -259,14 +260,14 @@ namespace Microsoft.HealthVault.PlatformPrimitives
 
             request.Parameters = applicationConfigurationInformation.GetRequestParameters(Guid.Empty);
 
-            request.Execute();
+            HealthServiceResponseData responseData = await request.ExecuteAsync().ConfigureAwait(false);
 
             XPathExpression infoPath =
                 SDKHelper.GetInfoXPathExpressionForMethod(
-                    request.Response.InfoNavigator,
+                    responseData.InfoNavigator,
                     "AddApplication");
 
-            XPathNavigator infoNav = request.Response.InfoNavigator.SelectSingleNode(infoPath);
+            XPathNavigator infoNav = responseData.InfoNavigator.SelectSingleNode(infoPath);
             return new Guid(infoNav.SelectSingleNode("id").Value);
         }
     }

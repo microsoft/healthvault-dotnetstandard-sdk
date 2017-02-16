@@ -6,7 +6,9 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 using System.Xml;
+using Microsoft.HealthVault.Exceptions;
 
 namespace Microsoft.HealthVault.PlatformPrimitives
 {
@@ -126,7 +128,7 @@ namespace Microsoft.HealthVault.PlatformPrimitives
         /// The server returned a failure when making the request.
         /// </exception>
         ///
-        public virtual void SendInsecureMessage(
+        public virtual async Task SendInsecureMessageAsync(
             HealthServiceConnection connection,
             IList<MailRecipient> mailRecipient,
             IList<Guid> personIds,
@@ -153,7 +155,7 @@ namespace Microsoft.HealthVault.PlatformPrimitives
                 request.RecordId = recordId.Value;
             }
 
-            request.Execute();
+            await request.ExecuteAsync().ConfigureAwait(false);
         }
 
         private static string GetSendInsecureMessageParameters(
@@ -248,7 +250,7 @@ namespace Microsoft.HealthVault.PlatformPrimitives
         /// The server returned a failure when making the request.
         /// </exception>
         ///
-        public virtual void SendInsecureMessageFromApplication(
+        public virtual async Task SendInsecureMessageFromApplicationAsync(
             HealthServiceConnection connection,
             IList<MailRecipient> mailRecipient,
             IList<Guid> personIds,
@@ -277,7 +279,7 @@ namespace Microsoft.HealthVault.PlatformPrimitives
                 request.RecordId = recordId.Value;
             }
 
-            request.Execute();
+            await request.ExecuteAsync().ConfigureAwait(false);
         }
 
         private static string GetSendInsecureMessageFromApplicationParameters(

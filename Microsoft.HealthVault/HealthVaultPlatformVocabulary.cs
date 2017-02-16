@@ -8,8 +8,10 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Globalization;
 using System.Text;
+using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.XPath;
+using Microsoft.HealthVault.Exceptions;
 
 namespace Microsoft.HealthVault.PlatformPrimitives
 {
@@ -124,7 +126,7 @@ namespace Microsoft.HealthVault.PlatformPrimitives
         /// There is an error loading the vocabulary.
         /// </exception>
         ///
-        public virtual ReadOnlyCollection<Vocabulary> GetVocabulary(
+        public virtual async Task<ReadOnlyCollection<Vocabulary>> GetVocabularyAsync(
             HealthServiceConnection connection,
             IList<VocabularyKey> vocabularyKeys,
             bool cultureIsFixed)
@@ -164,10 +166,10 @@ namespace Microsoft.HealthVault.PlatformPrimitives
             }
             request.Parameters = requestParameters.ToString();
 
-            request.Execute();
+            HealthServiceResponseData responseData = await request.ExecuteAsync().ConfigureAwait(false);
 
             ReadOnlyCollection<Vocabulary> vocabularies
-                = CreateVocabulariesFromResponse(methodName, request.Response);
+                = CreateVocabulariesFromResponse(methodName, responseData);
 
             return vocabularies;
         }
@@ -209,15 +211,14 @@ namespace Microsoft.HealthVault.PlatformPrimitives
         /// A collection of keys identifying the vocabularies in the system.
         /// </returns>
         ///
-        public virtual ReadOnlyCollection<VocabularyKey> GetVocabularyKeys(HealthServiceConnection connection)
+        public virtual async Task<ReadOnlyCollection<VocabularyKey>> GetVocabularyKeys(HealthServiceConnection connection)
         {
             string methodName = "GetVocabulary";
             HealthServiceRequest request = new HealthServiceRequest(connection, methodName, 1);
 
-            request.Execute();
+            HealthServiceResponseData responseData = await request.ExecuteAsync().ConfigureAwait(false);
 
-            ReadOnlyCollection<VocabularyKey> keys
-                = CreateVocabularyKeysFromResponse(methodName, request.Response);
+            ReadOnlyCollection<VocabularyKey> keys = CreateVocabularyKeysFromResponse(methodName, responseData);
             return keys;
         }
 
@@ -319,14 +320,12 @@ namespace Microsoft.HealthVault.PlatformPrimitives
         /// The requested search culture is not supported.
         /// </exception>
         ///
-        public virtual void SearchVocabulary(
+        public virtual async Task<VocabularySearchResult> SearchVocabularyAsync(
             HealthServiceConnection connection,
             VocabularyKey vocabularyKey,
             string searchValue,
             VocabularySearchType searchType,
-            int? maxResults,
-            out VocabularyItemCollection matchingVocabulary,
-            out ReadOnlyCollection<VocabularyKey> matchingKeys)
+            int? maxResults)
         {
             Validator.ThrowArgumentExceptionIf(
                 String.IsNullOrEmpty(searchValue) || searchValue.Length > 255,
@@ -342,9 +341,6 @@ namespace Microsoft.HealthVault.PlatformPrimitives
                 maxResults.HasValue && maxResults.Value < 1,
                 "maxResults",
                 "SearchMaxResultsInvalid");
-
-            matchingVocabulary = null;
-            matchingKeys = null;
 
             string methodName = "SearchVocabulary";
             HealthServiceRequest request = new HealthServiceRequest(connection, methodName, 1);
@@ -377,16 +373,15 @@ namespace Microsoft.HealthVault.PlatformPrimitives
             }
             request.Parameters = requestParameters.ToString();
 
-            request.Execute();
+            HealthServiceResponseData responseData = await request.ExecuteAsync().ConfigureAwait(false);
 
             if (vocabularyKey != null)
             {
-                matchingVocabulary = CreateVocabularyItemCollectionFromResponse(
-                                        methodName, request.Response);
+                return new VocabularySearchResult(CreateVocabularyItemCollectionFromResponse(methodName, responseData));
             }
             else
             {
-                matchingKeys = CreateVocabularyKeysFromResponse(methodName, request.Response);
+                return new VocabularySearchResult(CreateVocabularyKeysFromResponse(methodName, responseData));
             }
         }
 
@@ -404,6 +399,23 @@ namespace Microsoft.HealthVault.PlatformPrimitives
             VocabularyItemCollection itemCollection = new VocabularyItemCollection();
             itemCollection.PopulateFromXml(vocabNav);
             return itemCollection;
+        }
+
+        public class VocabularySearchResult
+        {
+            public VocabularySearchResult(VocabularyItemCollection matchingVocabulary)
+            {
+                this.MatchingVocabulary = matchingVocabulary;
+            }
+
+            public VocabularySearchResult(ReadOnlyCollection<VocabularyKey> matchingKeys)
+            {
+                this.MatchingKeys = matchingKeys;
+            }
+
+            public VocabularyItemCollection MatchingVocabulary { get; }
+
+            public ReadOnlyCollection<VocabularyKey> MatchingKeys { get; }
         }
     }
 }

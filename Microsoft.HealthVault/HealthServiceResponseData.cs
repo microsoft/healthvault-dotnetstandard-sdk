@@ -5,6 +5,7 @@
 
 using System;
 using System.IO;
+using System.Net.Http.Headers;
 using System.Xml;
 using System.Xml.XPath;
 
@@ -125,25 +126,6 @@ namespace Microsoft.HealthVault
             internal set { _infoReader = value; }
         }
         private XmlReader _infoReader;
-
-        /// <summary>
-        /// Gets the headers of the response.
-        /// </summary>
-        ///
-        /// <value>
-        /// A WebHeaderCollection representing the the response headers.
-        /// </value>
-        ///
-        /// <remarks>
-        /// Use this property to examine HealthVault response headers which include information such as request proxy'ing.
-        /// </remarks>
-        ///
-        public WebHeaderCollection ResponseHeaders
-        {
-            get { return _responseHeaders; }
-            internal set { _responseHeaders = value; }
-        }
-        private WebHeaderCollection _responseHeaders = new WebHeaderCollection();
 
         internal XmlReader NewInfoReader
         {

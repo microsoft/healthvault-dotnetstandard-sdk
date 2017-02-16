@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Security.Cryptography.X509Certificates;
+using System.Threading;
+using Microsoft.HealthVault.Exceptions;
 
 namespace Microsoft.HealthVault
 {
@@ -44,14 +46,14 @@ namespace Microsoft.HealthVault
         /// <summary>
         /// Gets the request timeout in seconds.
         /// </summary>
-        ///
+        /// 
         /// <remarks>
-        /// This value is used to set the <see cref="HttpWebRequest.Timeout"/> property
-        /// when making the request to HealthVault. The timeout is the number of seconds that a
+        /// This value is used to set the <see cref="Timeout"/> property 
+        /// when making the request to HealthVault. The timeout is the number of seconds that a 
         /// request will wait for a response from HealtVault. If the method response is not
         /// returned within the time-out period the request will throw a <see cref="System.Net.WebException"/>
         /// with the <see cref="System.Net.WebException.Status">Status</see> property set to
-        /// <see cref="System.Net.WebExceptionStatus.Timeout"/>.
+        /// <see cref="Timeout"/>.
         /// This property corresponds to the "defaultRequestTimeout" configuration
         /// value. The value defaults to 30 seconds.
         /// </remarks>
@@ -92,42 +94,8 @@ namespace Microsoft.HealthVault
         /// This property corresponds to the "RequestRetryOnInternal500SleepSeconds" configuration
         /// value. The value defaults to 1 second.
         /// </remarks>
-        ///
+        /// 
         int RetryOnInternal500SleepSeconds { get; }
-
-        /// <summary>
-        /// Gets the size in kilobytes above which requests will be compressed.
-        /// </summary>
-        ///
-        /// <remarks>
-        /// This property corresponds to the "requestCompressionThreshold" configuration
-        /// value. The value defaults to 1KB.
-        /// </remarks>
-        ///
-        int RequestCompressionThreshold { get; }
-
-        /// <summary>
-        /// Gets the method used to compress requests.
-        /// </summary>
-        ///
-        /// <remarks>
-        /// This property corresponds to the "requestCompressionMethod" configuration
-        /// value. The value defaults is to not compress requests.
-        /// </remarks>
-        ///
-        string RequestCompressionMethod { get; }
-
-        /// <summary>
-        /// Gets the application's supported compression methods that can be sent back
-        /// from HealtVault during a method response.
-        /// </summary>
-        ///
-        /// <remarks>
-        /// This property corresponds to the "responseCompressionMethods" configuration
-        /// value. The value defaults to not compress responses.
-        /// </remarks>
-        ///
-        string ResponseCompressionMethods { get; }
 
         /// <summary>
         /// Gets the size in bytes of the block used to hash inlined BLOB data.

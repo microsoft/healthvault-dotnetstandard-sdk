@@ -13,6 +13,7 @@ using System.Security;
 using System.Security.Cryptography;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
+using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.XPath;
 
@@ -441,7 +442,7 @@ namespace Microsoft.HealthVault.Web.Authentication
         /// otherwise, <b>false</b>.
         /// </returns>
         ///
-        internal override void AuthenticateIfRequired(
+        internal override Task AuthenticateIfRequiredAsync(
             HealthServiceConnection connection,
             Guid applicationId)
         {
@@ -453,6 +454,8 @@ namespace Microsoft.HealthVault.Web.Authentication
                     connection,
                     applicationId);
             }
+
+            return Task.FromResult(true);
         }
 
         /// <summary>

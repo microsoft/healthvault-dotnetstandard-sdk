@@ -478,7 +478,7 @@ namespace Microsoft.HealthVault
                 _defaultWebProxy = value;
             }
         }
-        private static IWebProxy _defaultWebProxy = WebRequest.DefaultWebProxy;
+        private static IWebProxy _defaultWebProxy;
 
         /// <summary>
         /// Gets or sets the proxy to use with this instance of

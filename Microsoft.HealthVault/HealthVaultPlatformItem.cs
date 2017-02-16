@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Text;
+using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.XPath;
 
@@ -97,7 +98,7 @@ namespace Microsoft.HealthVault
         /// At least one HealthRecordItem in the supplied list was null.
         /// </exception>
         ///
-        public virtual void NewItems(
+        public virtual async Task NewItemsAsync(
             ApplicationConnection connection,
             HealthRecordAccessor accessor,
             IList<HealthRecordItem> items)
@@ -126,12 +127,12 @@ namespace Microsoft.HealthVault
             request.Parameters = infoXml.ToString();
 
             // Call the web-service
-            request.Execute();
+            HealthServiceResponseData responseData = await request.ExecuteAsync().ConfigureAwait(false);
 
             // Now update the Id for the new item
             XPathNodeIterator thingIds =
-                request.Response.InfoNavigator.Select(
-                    GetThingIdXPathExpression(request.Response.InfoNavigator));
+                responseData.InfoNavigator.Select(
+                    GetThingIdXPathExpression(responseData.InfoNavigator));
 
             int thingIndex = 0;
             foreach (XPathNavigator thingIdNav in thingIds)
@@ -188,7 +189,7 @@ namespace Microsoft.HealthVault
         /// no items will have been updated.
         /// </exception>
         ///
-        public virtual void UpdateItems(
+        public virtual async Task UpdateItemsAsync(
             ApplicationConnection connection,
             HealthRecordAccessor accessor,
             IList<HealthRecordItem> itemsToUpdate)
@@ -228,11 +229,11 @@ namespace Microsoft.HealthVault
                 // Add the XML to the request.
 
                 // Call the web-service
-                request.Execute();
+                HealthServiceResponseData responseData = await request.ExecuteAsync().ConfigureAwait(false);
 
                 XPathNodeIterator thingIds =
-                    request.Response.InfoNavigator.Select(
-                        GetThingIdXPathExpression(request.Response.InfoNavigator));
+                    responseData.InfoNavigator.Select(
+                        GetThingIdXPathExpression(responseData.InfoNavigator));
 
                 int index = 0;
 
@@ -315,7 +316,7 @@ namespace Microsoft.HealthVault
         /// no items will have been removed.
         /// </exception>
         ///
-        public virtual void RemoveItems(
+        public virtual async Task RemoveItemsAsync(
             ApplicationConnection connection,
             HealthRecordAccessor accessor,
             IList<HealthRecordItemKey> itemsToRemove)
@@ -338,7 +339,7 @@ namespace Microsoft.HealthVault
             HealthServiceRequest request =
                 new HealthServiceRequest(connection, "RemoveThings", 1, accessor) { Parameters = parameters.ToString() };
 
-            request.Execute();
+            await request.ExecuteAsync().ConfigureAwait(false);
         }
 
         #region GetThings
@@ -376,14 +377,14 @@ namespace Microsoft.HealthVault
         /// or contains invalid filters.
         /// </exception>
         ///
-        public virtual ReadOnlyCollection<HealthRecordItemCollection> GetMatchingItems(
+        public virtual async Task<ReadOnlyCollection<HealthRecordItemCollection>> GetMatchingItemsAsync(
             ApplicationConnection connection,
             HealthRecordAccessor accessor,
             HealthRecordSearcher searcher)
         {
             ValidateFilters(searcher);
 
-            return Execute(connection, accessor, searcher);
+            return await ExecuteAsync(connection, accessor, searcher).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -415,15 +416,15 @@ namespace Microsoft.HealthVault
         /// object model.
         /// </remarks>
         ///
-        public virtual XmlReader GetMatchingItemsReader(
+        public virtual async Task<XmlReader> GetMatchingItemsReaderAsync(
             ApplicationConnection connection,
             HealthRecordAccessor accessor,
             HealthRecordSearcher searcher)
         {
             HealthServiceRequest request = PrepareRequest(connection, accessor, searcher);
-            request.Execute();
+            HealthServiceResponseData responseData = await request.ExecuteAsync().ConfigureAwait(false);
 
-            return request.Response.InfoReader;
+            return responseData.InfoReader;
         }
 
         /// <summary>
@@ -455,15 +456,15 @@ namespace Microsoft.HealthVault
         /// object model.
         /// </remarks>
         ///
-        public virtual XPathNavigator GetMatchingItemsRaw(
+        public virtual async Task<XPathNavigator> GetMatchingItemsRawAsync(
             ApplicationConnection connection,
             HealthRecordAccessor accessor,
             HealthRecordSearcher searcher)
         {
             HealthServiceRequest request = PrepareRequest(connection, accessor, searcher);
-            request.Execute();
+            HealthServiceResponseData responseData = await request.ExecuteAsync().ConfigureAwait(false);
 
-            return request.Response.InfoNavigator;
+            return responseData.InfoNavigator;
         }
 
         /// <summary>
@@ -540,7 +541,7 @@ namespace Microsoft.HealthVault
         /// No filters have been specified.
         /// </exception>
         ///
-        public virtual string GetTransformedItems(
+        public virtual async Task<string> GetTransformedItemsAsync(
             ApplicationConnection connection,
             HealthRecordAccessor accessor,
             HealthRecordSearcher searcher,
@@ -550,7 +551,7 @@ namespace Microsoft.HealthVault
 
             HealthServiceRequest request = PrepareRequest(connection, accessor, searcher);
 
-            return request.ExecuteForTransform(transform);
+            return await request.ExecuteForTransformAsync(transform).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -619,16 +620,16 @@ namespace Microsoft.HealthVault
         /// HealthServiceStatusCode.OK, or no filters have been specified.
         /// </exception>
         ///
-        private static ReadOnlyCollection<HealthRecordItemCollection> Execute(
+        private static async Task<ReadOnlyCollection<HealthRecordItemCollection>> ExecuteAsync(
             ApplicationConnection connection,
             HealthRecordAccessor accessor,
             HealthRecordSearcher searcher)
         {
             HealthServiceRequest request = PrepareRequest(connection, accessor, searcher);
 
-            request.Execute();
+            HealthServiceResponseData responseData = await request.ExecuteAsync().ConfigureAwait(false);
 
-            XmlReader infoReader = request.Response.InfoReader;
+            XmlReader infoReader = responseData.InfoReader;
 
             Collection<HealthRecordItemCollection> result =
                 new Collection<HealthRecordItemCollection>();

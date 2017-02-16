@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Net;
 using System.Text;
+using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.XPath;
 
@@ -163,22 +164,22 @@ namespace Microsoft.HealthVault.Authentication
         /// <param name="applicationId">
         /// The application ID to verify if authentication is required.
         /// </param>
-        ///
-        internal virtual void AuthenticateIfRequired(
+        /// 
+        internal virtual async Task AuthenticateIfRequiredAsync(
             HealthServiceConnection connection,
             Guid applicationId)
         {
             if (GetAuthenticationResult(applicationId) == null)
             {
-                Authenticate(connection, applicationId);
+                await AuthenticateAsync(connection, applicationId).ConfigureAwait(false);
             }
         }
 
         /// <summary>
         /// Authenticates or re-authenticates the credential.
         /// </summary>
-        ///
-        private void Authenticate(
+        /// 
+        private async Task AuthenticateAsync(
             HealthServiceConnection connection,
             Guid appId)
         {
@@ -187,7 +188,7 @@ namespace Microsoft.HealthVault.Authentication
                 AuthenticationResults.Remove(appId);
             }
 
-            CreateAuthenticatedSessionToken(connection, appId);
+            await CreateAuthenticatedSessionTokenAsync(connection, appId).ConfigureAwait(false);
         }
 
         #endregion
@@ -362,10 +363,10 @@ namespace Microsoft.HealthVault.Authentication
         /// <exception cref="ArgumentException">
         /// The <paramref name="appId"/> parameter is <b>null</b> or empty.
         /// </exception>
-        ///
+        /// 
         /// <seealso cref="HealthServiceConnection"/>
-        ///
-        public void CreateAuthenticatedSessionToken(
+        /// 
+        public async Task CreateAuthenticatedSessionTokenAsync(
             HealthServiceConnection connection,
             Guid appId)
         {
@@ -383,12 +384,12 @@ namespace Microsoft.HealthVault.Authentication
                 anonConn.WebProxy = connection.WebProxy;
             }
 
-            MakeCreateTokenCall(
+            await MakeCreateTokenCallAsync(
                 "CreateAuthenticatedSessionToken",
                 2,
                 anonConn,
                 appId,
-                false);
+                false).ConfigureAwait(false);
         }
 
         #region create token web service helpers
@@ -425,20 +426,20 @@ namespace Microsoft.HealthVault.Authentication
         /// The <paramref name="methodName"/>
         /// parameter is <b>null</b> or empty.
         /// </exception>
-        ///
-        internal void MakeCreateTokenCall(
+        /// 
+        internal async Task MakeCreateTokenCallAsync(
             string methodName,
             int version,
             HealthServiceConnection connection,
             Guid appId,
             bool isMra)
         {
-            MakeCreateTokenCall(
+            await MakeCreateTokenCallAsync(
                 methodName,
                 version,
                 connection,
                 new ApplicationTokenCreationInfo(appId, isMra),
-                null);
+                null).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -477,8 +478,8 @@ namespace Microsoft.HealthVault.Authentication
         /// The <paramref name="methodName"/>
         /// parameter is <b>null</b> or empty.
         /// </exception>
-        ///
-        internal void MakeCreateTokenCall(
+        /// 
+        internal async Task MakeCreateTokenCallAsync(
             string methodName,
             int version,
             HealthServiceConnection connection,
@@ -486,12 +487,12 @@ namespace Microsoft.HealthVault.Authentication
             bool isMra,
             string stsOriginalUrl)
         {
-            MakeCreateTokenCall(
+            await MakeCreateTokenCallAsync(
                 methodName,
                 version,
                 connection,
                 new ApplicationTokenCreationInfo(appId, isMra),
-                stsOriginalUrl);
+                stsOriginalUrl).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -515,16 +516,16 @@ namespace Microsoft.HealthVault.Authentication
         /// The <paramref name="methodName"/>
         /// parameter is <b>null</b> or empty.
         /// </exception>
-        ///
-        internal void MakeCreateTokenCall(
+        /// 
+        internal async Task MakeCreateTokenCallAsync(
             string methodName,
             int version,
             HealthServiceConnection connection)
         {
-            MakeCreateTokenCallImpl(
+            await MakeCreateTokenCallImplAsync(
                 methodName,
                 version,
-                connection);
+                connection).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -563,8 +564,8 @@ namespace Microsoft.HealthVault.Authentication
         /// The <paramref name="methodName"/>
         /// parameter is <b>null</b> or empty.
         /// </exception>
-        ///
-        internal void MakeCreateTokenCall(
+        /// 
+        internal async Task MakeCreateTokenCallAsync(
             string methodName,
             int version,
             HealthServiceConnection connection,
@@ -583,10 +584,10 @@ namespace Microsoft.HealthVault.Authentication
                 return;
             }
 
-            MakeCreateTokenCallImpl(methodName, version, connection, applicationTokenCreationInfo, stsOriginalUrl);
+            await MakeCreateTokenCallImplAsync(methodName, version, connection, applicationTokenCreationInfo, stsOriginalUrl).ConfigureAwait(false);
         }
 
-        private void MakeCreateTokenCallImpl(
+        private async Task MakeCreateTokenCallImplAsync(
             string methodName,
             int version,
             HealthServiceConnection connection,
@@ -603,13 +604,11 @@ namespace Microsoft.HealthVault.Authentication
             request.Parameters =
                 ConstructCreateTokenInfoXml(applicationTokenCreationInfo, stsOriginalUrl);
 
-            request.Execute();
+            HealthServiceResponseData responseData = await request.ExecuteAsync().ConfigureAwait(false);
 
-            CreateAuthenticationTokenResult createAuthTokenResult =
-                GetAuthTokenAndAbsenceReasons(
-                    request.Response.InfoNavigator);
+            CreateAuthenticationTokenResult createAuthTokenResult = GetAuthTokenAndAbsenceReasons(responseData.InfoNavigator);
 
-            ParseExtendedElements(request.Response.InfoNavigator);
+            ParseExtendedElements(responseData.InfoNavigator);
 
             UpdateAuthenticationResults(createAuthTokenResult);
         }

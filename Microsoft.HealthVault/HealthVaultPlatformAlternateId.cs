@@ -3,7 +3,9 @@
 // see http://www.microsoft.com/resources/sharedsource/licensingbasics/sharedsourcelicenses.mspx.
 // All other rights reserved.
 
+using Microsoft.HealthVault.Exceptions;
 using System.Collections.ObjectModel;
+using System.Threading.Tasks;
 using System.Xml.XPath;
 
 namespace Microsoft.HealthVault.PlatformPrimitives
@@ -99,8 +101,8 @@ namespace Microsoft.HealthVault.PlatformPrimitives
         /// If the number of alternate IDs associated with a record exceeds the limit, the ErrorCode
         /// property will be set to AlternateIdsLimitExceeded.
         /// </exception>
-        ///
-        public virtual void AssociateAlternateId(
+        /// 
+        public virtual async Task AssociateAlternateIdAsync(
             ApplicationConnection connection,
             HealthRecordAccessor accessor,
             string alternateId)
@@ -116,7 +118,7 @@ namespace Microsoft.HealthVault.PlatformPrimitives
                 new HealthServiceRequest(connection, "AssociateAlternateId", 1, accessor);
 
             request.Parameters = "<alternate-id>" + alternateId + "</alternate-id>";
-            request.Execute();
+            await request.ExecuteAsync().ConfigureAwait(false);
         }
 
         /// <summary>
@@ -152,8 +154,8 @@ namespace Microsoft.HealthVault.PlatformPrimitives
         /// If the alternate Id is not associated with a person and record id, the ErrorCode property
         /// will be set to AlternateIdNotFound.
         /// </exception>
-        ///
-        public virtual void DisassociateAlternateId(
+        /// 
+        public virtual async Task DisassociateAlternateIdAsync(
             ApplicationConnection connection,
             HealthRecordAccessor accessor,
             string alternateId)
@@ -169,7 +171,7 @@ namespace Microsoft.HealthVault.PlatformPrimitives
                 new HealthServiceRequest(connection, "DisassociateAlternateId", 1, accessor);
 
             request.Parameters = "<alternate-id>" + alternateId + "</alternate-id>";
-            request.Execute();
+            await request.ExecuteAsync().ConfigureAwait(false);
         }
 
         /// <summary>
@@ -201,8 +203,8 @@ namespace Microsoft.HealthVault.PlatformPrimitives
         /// If the alternate Id is not associated with a person and record id, the ErrorCode property
         /// will be set to AlternateIdNotFound.
         /// </exception>
-        ///
-        public virtual void DisassociateAlternateId(
+        /// 
+        public virtual async Task DisassociateAlternateIdAsync(
             ApplicationConnection connection,
             string alternateId)
         {
@@ -212,11 +214,10 @@ namespace Microsoft.HealthVault.PlatformPrimitives
             Validator.ThrowIfStringIsEmptyOrWhitespace(alternateId, "alternateId");
             Validator.ThrowArgumentExceptionIf(alternateId.Length > 255, "alternateId", "AlternateIdTooLong");
 
-            HealthServiceRequest request =
-                new HealthServiceRequest(connection, "DisassociateAlternateId", 1);
+            HealthServiceRequest request = new HealthServiceRequest(connection, "DisassociateAlternateId", 1);
 
             request.Parameters = "<alternate-id>" + alternateId + "</alternate-id>";
-            request.Execute();
+            await request.ExecuteAsync().ConfigureAwait(false);
         }
 
         /// <summary>
@@ -241,20 +242,20 @@ namespace Microsoft.HealthVault.PlatformPrimitives
         /// will be set to AlternateIdNotFound.
         /// </exception>
         ///
-        public virtual Collection<string> GetAlternateIds(
+        public virtual async Task<Collection<string>> GetAlternateIdsAsync(
             ApplicationConnection connection,
             HealthRecordAccessor accessor)
         {
             HealthServiceRequest request =
                 new HealthServiceRequest(connection, "GetAlternateIds", 1, accessor);
 
-            request.Execute();
+            HealthServiceResponseData responseData = await request.ExecuteAsync().ConfigureAwait(false);
 
             Collection<string> alternateIds = new Collection<string>();
 
-            XPathNavigator infoNav = request.Response.InfoNavigator.SelectSingleNode(
+            XPathNavigator infoNav = responseData.InfoNavigator.SelectSingleNode(
                         SDKHelper.GetInfoXPathExpressionForMethod(
-                                request.Response.InfoNavigator,
+                                responseData.InfoNavigator,
                                 "GetAlternateIds"));
 
             // Get the alternate ids that came back
@@ -298,8 +299,8 @@ namespace Microsoft.HealthVault.PlatformPrimitives
         /// If the alternate Id is not associated with a person and record id, the ErrorCode property
         /// will be set to AlternateIdNotFound.
         /// </exception>
-        ///
-        public virtual PersonInfo GetPersonAndRecordForAlternateId(
+        /// 
+        public virtual async Task<PersonInfo> GetPersonAndRecordForAlternateIdAsync(
             ApplicationConnection connection,
             string alternateId)
         {
@@ -314,11 +315,11 @@ namespace Microsoft.HealthVault.PlatformPrimitives
 
             request.Parameters = "<alternate-id>" + alternateId + "</alternate-id>";
 
-            request.Execute();
+            HealthServiceResponseData responseData = await request.ExecuteAsync().ConfigureAwait(false);
 
-            XPathNavigator infoNav = request.Response.InfoNavigator.SelectSingleNode(
+            XPathNavigator infoNav = responseData.InfoNavigator.SelectSingleNode(
                         SDKHelper.GetInfoXPathExpressionForMethod(
-                                request.Response.InfoNavigator,
+                                responseData.InfoNavigator,
                                 "GetPersonAndRecordForAlternateId"));
 
             XPathNavigator personInfoNav = infoNav.SelectSingleNode("person-info");

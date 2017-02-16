@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Text;
+using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.XPath;
 
@@ -89,14 +90,14 @@ namespace Microsoft.HealthVault.PlatformPrimitives
         /// calling any methods of this <see cref="HealthRecordAccessor"/> will result
         /// in a <see cref="HealthServiceAccessDeniedException"/>."
         /// </remarks>
-        public virtual void RemoveApplicationAuthorization(
+        public virtual async Task RemoveApplicationAuthorizationAsync(
             ApplicationConnection connection,
             HealthRecordAccessor accessor)
         {
             HealthServiceRequest request =
                 new HealthServiceRequest(connection, "RemoveApplicationRecordAuthorization", 1, accessor);
 
-            request.Execute();
+            await request.ExecuteAsync().ConfigureAwait(false);
         }
 
         /// <summary>
@@ -138,13 +139,13 @@ namespace Microsoft.HealthVault.PlatformPrimitives
         /// If there is an exception during executing the request to HealthVault.
         /// </exception>
         ///
-        public virtual IDictionary<Guid, HealthRecordItemTypePermission> QueryPermissionsByTypes(
+        public virtual async Task<IDictionary<Guid, HealthRecordItemTypePermission>> QueryPermissionsByTypesAsync(
             ApplicationConnection connection,
             HealthRecordAccessor accessor,
             IList<Guid> healthRecordItemTypeIds)
         {
-            Collection<HealthRecordItemTypePermission> typePermissions =
-                QueryRecordPermissions(connection, accessor, healthRecordItemTypeIds).ItemTypePermissions;
+            HealthRecordPermissions recordPermissions = await QueryRecordPermissionsAsync(connection, accessor, healthRecordItemTypeIds).ConfigureAwait(false);
+            Collection<HealthRecordItemTypePermission> typePermissions = recordPermissions.ItemTypePermissions;
 
             Dictionary<Guid, HealthRecordItemTypePermission> permissions = new Dictionary<Guid, HealthRecordItemTypePermission>();
 
@@ -206,12 +207,13 @@ namespace Microsoft.HealthVault.PlatformPrimitives
         /// If there is an exception during executing the request to HealthVault.
         /// </exception>
         ///
-        public virtual Collection<HealthRecordItemTypePermission> QueryPermissions(
+        public virtual async Task<Collection<HealthRecordItemTypePermission>> QueryPermissionsAsync(
             ApplicationConnection connection,
             HealthRecordAccessor accessor,
             IList<Guid> healthRecordItemTypeIds)
         {
-            return QueryRecordPermissions(connection, accessor, healthRecordItemTypeIds).ItemTypePermissions;
+            HealthRecordPermissions permissions = await QueryRecordPermissionsAsync(connection, accessor, healthRecordItemTypeIds).ConfigureAwait(false);
+            return permissions.ItemTypePermissions;
         }
 
         /// <summary>
@@ -256,7 +258,7 @@ namespace Microsoft.HealthVault.PlatformPrimitives
         /// There is an error in the server request.
         /// </exception>
         ///
-        public virtual HealthRecordPermissions QueryRecordPermissions(
+        public virtual async Task<HealthRecordPermissions> QueryRecordPermissionsAsync(
             ApplicationConnection connection,
             HealthRecordAccessor accessor,
             IList<Guid> healthRecordItemTypeIds)
@@ -269,12 +271,12 @@ namespace Microsoft.HealthVault.PlatformPrimitives
             request.Parameters =
                 GetQueryPermissionsParametersXml(healthRecordItemTypeIds);
 
-            request.Execute();
+            HealthServiceResponseData responseData = await request.ExecuteAsync().ConfigureAwait(false);
 
             XPathNavigator infoNav =
-                request.Response.InfoNavigator.SelectSingleNode(
+                responseData.InfoNavigator.SelectSingleNode(
                     GetQueryPermissionsInfoXPathExpression(
-                        request.Response.InfoNavigator));
+                        responseData.InfoNavigator));
 
             HealthRecordPermissions recordPermissions = new HealthRecordPermissions();
             XPathNodeIterator thingTypePermissionsNodes =
@@ -381,7 +383,7 @@ namespace Microsoft.HealthVault.PlatformPrimitives
         /// <exception cref="HealthServiceException">
         /// If an error occurs while contacting the HealthVault service.
         /// </exception>
-        public virtual Collection<HealthRecordItem> GetValidGroupMembership(
+        public virtual async Task<Collection<HealthRecordItem>> GetValidGroupMembershipAsync(
             ApplicationConnection connection,
             HealthRecordAccessor accessor,
             IList<Guid> applicationIds)
@@ -407,15 +409,14 @@ namespace Microsoft.HealthVault.PlatformPrimitives
                     Parameters = parameters.ToString()
                 };
 
-            request.Execute();
+            HealthServiceResponseData responseData = await request.ExecuteAsync().ConfigureAwait(false);
 
             XPathExpression infoPath =
                 SDKHelper.GetInfoXPathExpressionForMethod(
-                    request.Response.InfoNavigator,
+                    responseData.InfoNavigator,
                     "GetValidGroupMembership");
 
-            XPathNavigator infoNav =
-                request.Response.InfoNavigator.SelectSingleNode(infoPath);
+            XPathNavigator infoNav = responseData.InfoNavigator.SelectSingleNode(infoPath);
 
             Collection<HealthRecordItem> memberships = new Collection<HealthRecordItem>();
 

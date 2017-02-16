@@ -7,8 +7,10 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Text;
+using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.XPath;
+using Microsoft.HealthVault.Exceptions;
 
 namespace Microsoft.HealthVault.PlatformPrimitives
 {
@@ -81,20 +83,16 @@ namespace Microsoft.HealthVault.PlatformPrimitives
         /// The complete set application settings including the XML settings, selected record ID, etc.
         /// </returns>
         ///
-        public virtual ApplicationSettings GetApplicationSettings(HealthServiceConnection connection)
+        public virtual async Task<ApplicationSettings> GetApplicationSettingsAsync(HealthServiceConnection connection)
         {
             HealthServiceRequest request =
                 new HealthServiceRequest(connection, "GetApplicationSettings", 1);
 
-            request.Execute();
+            HealthServiceResponseData responseData = await request.ExecuteAsync().ConfigureAwait(false);
 
-            XPathExpression xPathExpression
-                = GetPersonAppSettingsXPathExpression(
-                            request.Response.InfoNavigator);
+            XPathExpression xPathExpression = GetPersonAppSettingsXPathExpression(responseData.InfoNavigator);
 
-            XPathNavigator appSettingsNav
-                = request.Response.InfoNavigator
-                    .SelectSingleNode(xPathExpression);
+            XPathNavigator appSettingsNav = responseData.InfoNavigator.SelectSingleNode(xPathExpression);
 
             ApplicationSettings settings = null;
             if (appSettingsNav != null)
@@ -123,14 +121,14 @@ namespace Microsoft.HealthVault.PlatformPrimitives
         /// stored for the application or user.
         /// </remarks>
         ///
-        public virtual void SetApplicationSettings(
+        public virtual async Task SetApplicationSettingsAsync(
             HealthServiceConnection connection,
             IXPathNavigable applicationSettings)
         {
             string requestParameters =
                 GetSetApplicationSettingsParameters(applicationSettings);
 
-            SetApplicationSettings(connection, requestParameters);
+            await SetApplicationSettingsAsync(connection, requestParameters).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -150,15 +148,14 @@ namespace Microsoft.HealthVault.PlatformPrimitives
         /// stored for the application or user.
         /// </remarks>
         ///
-        public virtual void SetApplicationSettings(
+        public virtual async Task SetApplicationSettingsAsync(
             HealthServiceConnection connection,
             string requestParameters)
         {
-            HealthServiceRequest request =
-                new HealthServiceRequest(connection, "SetApplicationSettings", 1);
+            HealthServiceRequest request = new HealthServiceRequest(connection, "SetApplicationSettings", 1);
 
             request.Parameters = requestParameters;
-            request.Execute();
+            await request.ExecuteAsync().ConfigureAwait(false);
         }
 
         internal static string GetSetApplicationSettingsParameters(
@@ -227,19 +224,16 @@ namespace Microsoft.HealthVault.PlatformPrimitives
         /// <exception cref="HealthServiceException">
         /// The HealthVault service returned an error.
         /// </exception>
-        ///
-        public virtual PersonInfo GetPersonInfo(ApplicationConnection connection)
+        /// 
+        public virtual async Task<PersonInfo> GetPersonInfoAsync(ApplicationConnection connection)
         {
-            HealthServiceRequest request =
-                new HealthServiceRequest(connection, "GetPersonInfo", 1);
+            HealthServiceRequest request = new HealthServiceRequest(connection, "GetPersonInfo", 1);
 
-            request.Execute();
+            HealthServiceResponseData responseData = await request.ExecuteAsync().ConfigureAwait(false);
 
-            XPathExpression personPath =
-                GetPersonXPathExpression(request.Response.InfoNavigator);
+            XPathExpression personPath = GetPersonXPathExpression(responseData.InfoNavigator);
 
-            XPathNavigator infoNav =
-                request.Response.InfoNavigator.SelectSingleNode(personPath);
+            XPathNavigator infoNav = responseData.InfoNavigator.SelectSingleNode(personPath);
 
             return PersonInfo.CreateFromXml(connection, infoNav);
         }
@@ -295,7 +289,7 @@ namespace Microsoft.HealthVault.PlatformPrimitives
         /// by the object model.
         /// </remarks>
         ///
-        public virtual Collection<HealthRecordInfo> GetAuthorizedRecords(
+        public virtual async Task<Collection<HealthRecordInfo>> GetAuthorizedRecordsAsync(
             ApplicationConnection connection,
             IList<Guid> recordIds)
         {
@@ -310,14 +304,14 @@ namespace Microsoft.HealthVault.PlatformPrimitives
             }
             request.Parameters = parameters.ToString();
 
-            request.Execute();
+            HealthServiceResponseData responseData = await request.ExecuteAsync().ConfigureAwait(false);
 
             Collection<HealthRecordInfo> results =
                 new Collection<HealthRecordInfo>();
 
             XPathNodeIterator records =
-                request.Response.InfoNavigator.Select(
-                    GetRecordXPathExpression(request.Response.InfoNavigator));
+                responseData.InfoNavigator.Select(
+                    GetRecordXPathExpression(responseData.InfoNavigator));
 
             foreach (XPathNavigator recordNav in records)
             {

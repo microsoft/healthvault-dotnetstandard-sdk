@@ -8,8 +8,10 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Globalization;
 using System.Text;
+using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.XPath;
+using Microsoft.HealthVault.Exceptions;
 
 namespace Microsoft.HealthVault.PlatformPrimitives
 {
@@ -104,7 +106,7 @@ namespace Microsoft.HealthVault.PlatformPrimitives
         /// <paramref name="settings"/> is null.
         /// </exception>
         ///
-        public virtual IEnumerable<PersonInfo> GetAuthorizedPeople(
+        public virtual async Task<IEnumerable<PersonInfo>> GetAuthorizedPeopleAsync(
             ApplicationConnection connection,
             GetAuthorizedPeopleSettings settings)
         {
@@ -117,13 +119,12 @@ namespace Microsoft.HealthVault.PlatformPrimitives
 
             while (moreResults)
             {
-                Collection<PersonInfo> personInfos =
-                    GetAuthorizedPeople(
-                        connection,
-                        cursor,
-                        authCreatedSinceDate,
-                        batchSize,
-                        out moreResults);
+                Collection<PersonInfo> personInfos = await GetAuthorizedPeopleAsync(
+                    connection,
+                    cursor,
+                    authCreatedSinceDate,
+                    batchSize,
+                    out moreResults).ConfigureAwait(false);
 
                 if (personInfos.Count > 0)
                 {
@@ -137,7 +138,7 @@ namespace Microsoft.HealthVault.PlatformPrimitives
             }
         }
 
-        internal static Collection<PersonInfo> GetAuthorizedPeople(
+        internal static async Task<Collection<PersonInfo>> GetAuthorizedPeopleAsync(
             ApplicationConnection connection,
             Guid personIdCursor,
             DateTime authCreatedSinceDate,
@@ -182,14 +183,14 @@ namespace Microsoft.HealthVault.PlatformPrimitives
             }
             request.Parameters = requestParameters.ToString();
 
-            request.Execute();
+            HealthServiceResponseData responseData = await request.ExecuteAsync().ConfigureAwait(false);
 
             Collection<PersonInfo> personInfos = new Collection<PersonInfo>();
 
             XPathExpression navExp =
                  SDKHelper.GetInfoXPathExpressionForMethod(
-                     request.Response.InfoNavigator, "GetAuthorizedPeople");
-            XPathNavigator infoNav = request.Response.InfoNavigator.SelectSingleNode(navExp);
+                     responseData.InfoNavigator, "GetAuthorizedPeople");
+            XPathNavigator infoNav = responseData.InfoNavigator.SelectSingleNode(navExp);
             XPathNavigator nav = infoNav.SelectSingleNode("response-results/person-info");
 
             if (nav != null)
@@ -250,7 +251,7 @@ namespace Microsoft.HealthVault.PlatformPrimitives
         /// The HealthVault service returned an error.
         /// </exception>
         ///
-        public virtual ApplicationInfo GetApplicationInfo(
+        public virtual async Task<ApplicationInfo> GetApplicationInfoAsync(
             HealthServiceConnection connection,
             Boolean allLanguages)
         {
@@ -262,14 +263,12 @@ namespace Microsoft.HealthVault.PlatformPrimitives
                 request.Parameters += "<all-languages>true</all-languages>";
             }
 
-            request.Execute();
+            HealthServiceResponseData responseData = await request.ExecuteAsync().ConfigureAwait(false);
 
             XPathExpression xPathExpression = SDKHelper.GetInfoXPathExpressionForMethod(
-                    request.Response.InfoNavigator, "GetApplicationInfo");
+                    responseData.InfoNavigator, "GetApplicationInfo");
 
-            XPathNavigator infoNav
-                = request.Response.InfoNavigator
-                    .SelectSingleNode(xPathExpression);
+            XPathNavigator infoNav = responseData.InfoNavigator.SelectSingleNode(xPathExpression);
 
             XPathNavigator appInfoNav = infoNav.SelectSingleNode("application");
 
@@ -303,15 +302,15 @@ namespace Microsoft.HealthVault.PlatformPrimitives
         /// List of health record IDs filtered by any specified input parameters.
         /// </returns>
         ///
-        public virtual IList<Guid> GetUpdatedRecordsForApplication(
+        public virtual async Task<IList<Guid>> GetUpdatedRecordsForApplicationAsync(
             HealthServiceConnection connection,
             DateTime? updatedDate)
         {
             HealthServiceRequest request =
                 CreateGetUpdateRecordsForApplicationRequest(connection, updatedDate, 2);
 
-            request.Execute();
-            IList<Guid> results = ParseGetUpdatedRecordsForApplicationResponseRecordIds(request.Response);
+            HealthServiceResponseData responseData = await request.ExecuteAsync().ConfigureAwait(false);
+            IList<Guid> results = ParseGetUpdatedRecordsForApplicationResponseRecordIds(responseData);
             return results;
         }
 
@@ -332,16 +331,16 @@ namespace Microsoft.HealthVault.PlatformPrimitives
         /// List of <see cref="HealthRecordUpdateInfo"/> objects filtered by any specified input parameters.
         /// </returns>
         ///
-        public virtual IList<HealthRecordUpdateInfo> GetUpdatedRecordInfoForApplication(
+        public virtual async Task<IList<HealthRecordUpdateInfo>> GetUpdatedRecordInfoForApplicationAsync(
             HealthServiceConnection connection,
             DateTime? updatedDate)
         {
             HealthServiceRequest request =
                 CreateGetUpdateRecordsForApplicationRequest(connection, updatedDate, 2);
 
-            request.Execute();
+            HealthServiceResponseData responseData = await request.ExecuteAsync().ConfigureAwait(false);
             IList<HealthRecordUpdateInfo> results =
-                ParseGetUpdatedRecordsForApplicationResponseHealthRecordUpdateInfos(request.Response);
+                ParseGetUpdatedRecordsForApplicationResponseHealthRecordUpdateInfos(responseData);
             return results;
         }
 
@@ -422,18 +421,15 @@ namespace Microsoft.HealthVault.PlatformPrimitives
         /// A signup code that can be used to create an account.
         /// </returns>
         ///
-        public virtual string NewSignupCode(HealthServiceConnection connection)
+        public virtual async Task<string> NewSignupCodeAsync(HealthServiceConnection connection)
         {
             HealthServiceRequest request =
                 new HealthServiceRequest(connection, "NewSignupCode", 1);
-            request.Execute();
+            HealthServiceResponseData responseData = await request.ExecuteAsync().ConfigureAwait(false);
 
-            XPathExpression infoPath =
-                SDKHelper.GetInfoXPathExpressionForMethod(
-                    request.Response.InfoNavigator,
-                    "NewSignupCode");
+            XPathExpression infoPath = SDKHelper.GetInfoXPathExpressionForMethod(responseData.InfoNavigator, "NewSignupCode");
 
-            XPathNavigator infoNav = request.Response.InfoNavigator.SelectSingleNode(infoPath);
+            XPathNavigator infoNav = responseData.InfoNavigator.SelectSingleNode(infoPath);
             return infoNav.SelectSingleNode("signup-code").Value;
         }
 

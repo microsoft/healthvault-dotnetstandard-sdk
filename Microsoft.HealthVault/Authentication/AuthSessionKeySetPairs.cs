@@ -20,8 +20,8 @@ namespace Microsoft.HealthVault.Authentication
         private void AcquireWriterLock()
         {
             _lock.TryEnterWriteLock(
-                EasyWebRequest.RetryOnInternal500SleepSeconds
-                * EasyWebRequest.RetryOnInternal500Count
+                OldEasyWebRequest.RetryOnInternal500SleepSeconds
+                * OldEasyWebRequest.RetryOnInternal500Count
                 * 1000);
         }
 
@@ -36,7 +36,7 @@ namespace Microsoft.HealthVault.Authentication
         private void AcquireReaderLock()
         {
             _lock.TryEnterReadLock(
-                EasyWebRequest.RetryOnInternal500SleepSeconds
+                OldEasyWebRequest.RetryOnInternal500SleepSeconds
                 * 1000);
         }
 

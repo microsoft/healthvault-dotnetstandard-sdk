@@ -9,7 +9,9 @@ using System.Globalization;
 using System.IO;
 using System.Net;
 using System.Security.Cryptography;
+using System.Threading.Tasks;
 using System.Xml.XPath;
+using Microsoft.HealthVault.Exceptions;
 
 namespace Microsoft.HealthVault
 {
@@ -935,20 +937,20 @@ namespace Microsoft.HealthVault
         /// <exception cref="HealthServiceException">
         /// If the call to HealthVault fails in some way.
         /// </exception>
-        ///
-        private BlobPutParameters BeginPutBlob()
+        /// 
+        private async Task<BlobPutParameters> BeginPutBlobAsync()
         {
             HealthServiceRequest request =
                 new HealthServiceRequest(_record.Connection, "BeginPutBlob", 1, _record);
-            request.Execute();
+            HealthServiceResponseData responseData = await request.ExecuteAsync().ConfigureAwait(false);
 
             XPathExpression infoPath =
                 SDKHelper.GetInfoXPathExpressionForMethod(
-                    request.Response.InfoNavigator,
+                    responseData.InfoNavigator,
                     "BeginPutBlob");
 
             XPathNavigator infoNav =
-                request.Response.InfoNavigator.SelectSingleNode(infoPath);
+                responseData.InfoNavigator.SelectSingleNode(infoPath);
 
             Uri blobReferenceUrl = new Uri(infoNav.SelectSingleNode("blob-ref-url").Value);
             int chunkSize = infoNav.SelectSingleNode("blob-chunk-size").ValueAsInt;
@@ -993,21 +995,21 @@ namespace Microsoft.HealthVault
         /// <exception cref="HealthServiceException">
         /// If the call to HealthVault fails in some way.
         /// </exception>
-        ///
-        private BlobPutParameters BeginPutConnectPackageBlob()
+        /// 
+        private async Task<BlobPutParameters> BeginPutConnectPackageBlobAsync()
         {
             HealthServiceRequest request =
                 new HealthServiceRequest(_connectPackageParameters.Connection, "BeginPutConnectPackageBlob", 1);
 
-            request.Execute();
+            HealthServiceResponseData responseData = await request.ExecuteAsync().ConfigureAwait(false);
 
             XPathExpression infoPath =
                 SDKHelper.GetInfoXPathExpressionForMethod(
-                    request.Response.InfoNavigator,
+                    responseData.InfoNavigator,
                     "BeginPutConnectPackageBlob");
 
             XPathNavigator infoNav =
-                request.Response.InfoNavigator.SelectSingleNode(infoPath);
+                responseData.InfoNavigator.SelectSingleNode(infoPath);
 
             Uri blobReferenceUrl = new Uri(infoNav.SelectSingleNode("blob-ref-url").Value);
             int chunkSize = infoNav.SelectSingleNode("blob-pre-encryption-chunk-size").ValueAsInt;

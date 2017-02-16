@@ -6,8 +6,10 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.XPath;
+using Microsoft.HealthVault.Exceptions;
 
 namespace Microsoft.HealthVault.PlatformPrimitives
 {
@@ -107,10 +109,10 @@ namespace Microsoft.HealthVault.PlatformPrimitives
         /// One or more URL strings returned by HealthVault is invalid.
         /// </exception>
         ///
-        public virtual ServiceInfo GetServiceDefinition(HealthServiceConnection connection)
+        public virtual async Task<ServiceInfo> GetServiceDefinitionAsync(HealthServiceConnection connection)
         {
             Validator.ThrowIfArgumentNull(connection, "connection", "ConnectionNull");
-            return GetServiceDefinition(connection, null);
+            return await GetServiceDefinitionAsync(connection, null).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -160,7 +162,7 @@ namespace Microsoft.HealthVault.PlatformPrimitives
         /// One or more URL strings returned by HealthVault is invalid.
         /// </exception>
         ///
-        public virtual ServiceInfo GetServiceDefinition(HealthServiceConnection connection, DateTime lastUpdatedTime)
+        public virtual async Task<ServiceInfo> GetServiceDefinitionAsync(HealthServiceConnection connection, DateTime lastUpdatedTime)
         {
             Validator.ThrowIfArgumentNull(connection, "connection", "ConnectionNull");
 
@@ -175,7 +177,7 @@ namespace Microsoft.HealthVault.PlatformPrimitives
             }
 
             string requestParams = requestBuilder.ToString();
-            return GetServiceDefinition(connection, requestParams);
+            return await GetServiceDefinitionAsync(connection, requestParams).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -224,15 +226,15 @@ namespace Microsoft.HealthVault.PlatformPrimitives
         ///
         /// <exception cref="UriFormatException">
         /// One or more URL strings returned by HealthVault is invalid.
-        /// </exception>
+        /// </exception> 
         ///
-        public virtual ServiceInfo GetServiceDefinition(
+        public virtual async Task<ServiceInfo> GetServiceDefinitionAsync(
             HealthServiceConnection connection,
             ServiceInfoSections responseSections)
         {
             Validator.ThrowIfArgumentNull(connection, "connection", "ConnectionNull");
             string requestParams = CreateServiceDefinitionRequestParameters(responseSections, null);
-            return GetServiceDefinition(connection, requestParams);
+            return await GetServiceDefinitionAsync(connection, requestParams).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -293,14 +295,14 @@ namespace Microsoft.HealthVault.PlatformPrimitives
         /// One or more URL strings returned by HealthVault is invalid.
         /// </exception>
         ///
-        public virtual ServiceInfo GetServiceDefinition(
+        public virtual async Task<ServiceInfo> GetServiceDefinitionAsync(
             HealthServiceConnection connection,
             ServiceInfoSections responseSections,
             DateTime lastUpdatedTime)
         {
             Validator.ThrowIfArgumentNull(connection, "connection", "ConnectionNull");
             string requestParams = CreateServiceDefinitionRequestParameters(responseSections, lastUpdatedTime);
-            return GetServiceDefinition(connection, requestParams);
+            return await GetServiceDefinitionAsync(connection, requestParams).ConfigureAwait(false);
         }
 
         private static string CreateServiceDefinitionRequestParameters(
@@ -352,20 +354,20 @@ namespace Microsoft.HealthVault.PlatformPrimitives
             return requestBuilder.ToString();
         }
 
-        private static ServiceInfo GetServiceDefinition(HealthServiceConnection connection, string parameters)
+        private static async Task<ServiceInfo> GetServiceDefinitionAsync(HealthServiceConnection connection, string parameters)
         {
             HealthServiceRequest request =
                 new HealthServiceRequest(connection, "GetServiceDefinition", 2);
             request.Parameters = parameters;
-            request.Execute();
+            HealthServiceResponseData responseData = await request.ExecuteAsync().ConfigureAwait(false);
 
-            if (request.Response.InfoNavigator.HasChildren)
+            if (responseData.InfoNavigator.HasChildren)
             {
                 XPathExpression infoPath = SDKHelper.GetInfoXPathExpressionForMethod(
-                    request.Response.InfoNavigator,
+                    responseData.InfoNavigator,
                     "GetServiceDefinition2");
 
-                XPathNavigator infoNav = request.Response.InfoNavigator.SelectSingleNode(infoPath);
+                XPathNavigator infoNav = responseData.InfoNavigator.SelectSingleNode(infoPath);
 
                 return ServiceInfo.CreateServiceInfo(infoNav);
             }
@@ -451,7 +453,7 @@ namespace Microsoft.HealthVault.PlatformPrimitives
         /// If <paramref name="connection"/> parameter is <b>null</b>.
         /// </exception>
         ///
-        public virtual IDictionary<Guid, HealthRecordItemTypeDefinition> GetHealthRecordItemTypeDefinition(
+        public virtual async Task<IDictionary<Guid, HealthRecordItemTypeDefinition>> GetHealthRecordItemTypeDefinitionAsync(
             IList<Guid> typeIds,
             HealthRecordItemTypeSections sections,
             IList<String> imageTypes,
@@ -468,27 +470,28 @@ namespace Microsoft.HealthVault.PlatformPrimitives
 
             if (lastClientRefreshDate != null)
             {
-                return GetHealthRecordItemTypeDefinitionByDate(typeIds,
-                                                               sections,
-                                                               imageTypes,
-                                                               lastClientRefreshDate.Value,
-                                                               connection);
+                return await GetHealthRecordItemTypeDefinitionByDateAsync(
+                    typeIds,
+                    sections,
+                    imageTypes,
+                    lastClientRefreshDate.Value,
+                    connection).ConfigureAwait(false);
             }
             else
             {
-                return GetHealthRecordItemTypeDefinitionNoDate(typeIds,
-                                                               sections,
-                                                               imageTypes,
-                                                               connection);
+                return await GetHealthRecordItemTypeDefinitionNoDateAsync(
+                    typeIds,
+                    sections,
+                    imageTypes,
+                    connection).ConfigureAwait(false);
             }
         }
 
-        private IDictionary<Guid, HealthRecordItemTypeDefinition>
-            GetHealthRecordItemTypeDefinitionNoDate(
-                IList<Guid> typeIds,
-                HealthRecordItemTypeSections sections,
-                IList<String> imageTypes,
-                HealthServiceConnection connection)
+        private async Task<IDictionary<Guid, HealthRecordItemTypeDefinition>> GetHealthRecordItemTypeDefinitionNoDateAsync(
+            IList<Guid> typeIds,
+            HealthRecordItemTypeSections sections,
+            IList<String> imageTypes,
+            HealthServiceConnection connection)
         {
             HealthServiceRequest request =
                 new HealthServiceRequest(connection, "GetThingType", 1);
@@ -592,12 +595,12 @@ namespace Microsoft.HealthVault.PlatformPrimitives
                 }
                 request.Parameters = requestParameters.ToString();
 
-                request.Execute();
+                HealthServiceResponseData responseData = await request.ExecuteAsync().ConfigureAwait(false);
 
                 Dictionary<Guid, HealthRecordItemTypeDefinition> result =
                     CreateThingTypesFromResponse(
                         cultureName,
-                        request.Response,
+                        responseData,
                         sections,
                         cachedThingTypes);
 
@@ -613,13 +616,12 @@ namespace Microsoft.HealthVault.PlatformPrimitives
             }
         }
 
-        private IDictionary<Guid, HealthRecordItemTypeDefinition>
-            GetHealthRecordItemTypeDefinitionByDate(
-                IList<Guid> typeIds,
-                HealthRecordItemTypeSections sections,
-                IList<String> imageTypes,
-                DateTime lastClientRefreshDate,
-                HealthServiceConnection connection)
+        private async Task<IDictionary<Guid, HealthRecordItemTypeDefinition>> GetHealthRecordItemTypeDefinitionByDateAsync(
+            IList<Guid> typeIds,
+            HealthRecordItemTypeSections sections,
+            IList<String> imageTypes,
+            DateTime lastClientRefreshDate,
+            HealthServiceConnection connection)
         {
             HealthServiceRequest request =
                 new HealthServiceRequest(connection, "GetThingType", 1);
@@ -664,12 +666,12 @@ namespace Microsoft.HealthVault.PlatformPrimitives
 
                 request.Parameters = requestParameters.ToString();
 
-                request.Execute();
+                HealthServiceResponseData responseData = await request.ExecuteAsync().ConfigureAwait(false);
 
                 Dictionary<Guid, HealthRecordItemTypeDefinition> result =
                     CreateThingTypesFromResponse(
                         connection.Culture.Name,
-                        request.Response,
+                        responseData,
                         sections,
                         null);
 
@@ -824,7 +826,7 @@ namespace Microsoft.HealthVault.PlatformPrimitives
         /// <exception cref="ArgumentNullException">
         /// If <paramref name="connection"/> parameter is <b>null</b>.
         /// </exception>
-        public virtual HealthServiceInstance SelectInstance(
+        public virtual async Task<HealthServiceInstance> SelectInstanceAsync(
             HealthServiceConnection connection,
             Location preferredLocation)
         {
@@ -844,12 +846,12 @@ namespace Microsoft.HealthVault.PlatformPrimitives
                 new HealthServiceRequest(connection, "SelectInstance", 1);
 
             request.Parameters = requestParameters.ToString();
-            request.Execute();
+            HealthServiceResponseData responseData = await request.ExecuteAsync().ConfigureAwait(false);
 
             XPathExpression infoPath = SDKHelper.GetInfoXPathExpressionForMethod(
-                request.Response.InfoNavigator,
+                responseData.InfoNavigator,
                 "SelectInstance");
-            XPathNavigator infoNav = request.Response.InfoNavigator.SelectSingleNode(infoPath);
+            XPathNavigator infoNav = responseData.InfoNavigator.SelectSingleNode(infoPath);
 
             XPathNavigator instanceNav = infoNav.SelectSingleNode("selected-instance");
 

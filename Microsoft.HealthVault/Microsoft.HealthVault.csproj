@@ -93,6 +93,7 @@
     <Compile Include="Certificate\ICertificateUtilities.cs" />
     <Compile Include="Certificate\Util.cs" />
     <Compile Include="CommonItemData.cs" />
+    <Compile Include="CompressedContent.cs" />
     <Compile Include="CultureSpecificDictionary.cs" />
     <Compile Include="DateRange.cs" />
     <Compile Include="DateRangeSetDefinition.cs" />
@@ -227,8 +228,6 @@
     <Compile Include="RecordAuthorization.cs" />
     <Compile Include="RelationshipType.cs" />
     <Compile Include="ResourceRetriever.cs" />
-    <Compile Include="Rest\HealthServiceRestRequest.cs" />
-    <Compile Include="Rest\HealthServiceRestResponseData.cs" />
     <Compile Include="Rest\RestConstants.cs" />
     <Compile Include="SDKHelper.cs" />
     <Compile Include="ServiceInfo.cs" />
@@ -236,7 +235,6 @@
     <Compile Include="ServiceLocator.cs" />
     <Compile Include="settype.cs" />
     <Compile Include="ShellRedirectParameters.cs" />
-    <Compile Include="TransformResponseHandler.cs" />
     <Compile Include="TypeIdSetDefinition.cs" />
     <Compile Include="UserTagSetDefinition.cs" />
     <Compile Include="Validator.cs" />
