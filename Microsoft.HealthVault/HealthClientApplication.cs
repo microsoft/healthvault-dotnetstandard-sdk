@@ -8,10 +8,12 @@ using Microsoft.HealthVault.Exceptions;
 using Microsoft.HealthVault.Extensions;
 using Microsoft.HealthVault.Web.Authentication;
 using System;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Security;
 using System.Security.Cryptography.X509Certificates;
+using System.Threading.Tasks;
 
 namespace Microsoft.HealthVault
 {
@@ -396,13 +398,13 @@ namespace Microsoft.HealthVault
         /// in that case and no exception is thrown.
         /// </exception>
         ///
-        public ApplicationInfo GetApplicationInfo()
+        public async Task<ApplicationInfo> GetApplicationInfoAsync()
         {
             ApplicationInfo applicationInfo = null;
 
             try
             {
-                applicationInfo = HealthVaultPlatform.GetApplicationInfo(ApplicationConnection);
+                applicationInfo = await HealthVaultPlatform.GetApplicationInfo(ApplicationConnection).ConfigureAwait(false);
             }
             catch (HealthServiceException e)
             {

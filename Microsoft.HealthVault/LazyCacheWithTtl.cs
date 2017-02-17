@@ -4,6 +4,7 @@
 // All other rights reserved.
 
 using System;
+using System.Threading.Tasks;
 
 namespace Microsoft.HealthVault
 {
@@ -17,8 +18,8 @@ namespace Microsoft.HealthVault
     /// <typeparam name="T">The type of the cache object.</typeparam>
     internal class LazyCacheWithTtl<T>
     {
-        private readonly Func<T> _loadValue;
-        private readonly Func<T, T> _reloadValue;
+        private readonly Func<Task<T>> _loadValue;
+        private readonly Func<T, Task<T>> _reloadValue;
         private readonly TimeSpan _ttl;
         private readonly object _padlock = new object();
         private DateTime _timeOfExpiration;
@@ -46,7 +47,7 @@ namespace Microsoft.HealthVault
         /// <param name="timeToLive">
         /// Period of time before the value is considered expired.
         /// </param>
-        public LazyCacheWithTtl(Func<T> loadValue, Func<T, T> reloadValue, TimeSpan timeToLive)
+        public LazyCacheWithTtl(Func<Task<T>> loadValue, Func<T, Task<T>> reloadValue, TimeSpan timeToLive)
         {
             _loadValue = loadValue;
             _reloadValue = reloadValue;
@@ -63,28 +64,25 @@ namespace Microsoft.HealthVault
         ///
         /// This is thread-safe.
         /// </remarks>
-        public T Value
+        public T Value()
         {
-            get
-            {
                 lock (_padlock)
                 {
                     if (!IsValueCreated)
                     {
-                        // first load
-                        _value = _loadValue();
+                        // first load- running synchronously to avoid potential deadlock
+                        _value = _loadValue().Result;
                         ValueUpdated();
                     }
                     else if (DateTime.Now > _timeOfExpiration)
                     {
-                        // expired
-                        _value = _reloadValue(_value);
+                        // expired- running synchronously to avoid potential deadlock
+                        _value = _reloadValue(_value).Result;
                         ValueUpdated();
                     }
 
                     return _value;
                 }
-            }
         }
 
         private void ValueUpdated()

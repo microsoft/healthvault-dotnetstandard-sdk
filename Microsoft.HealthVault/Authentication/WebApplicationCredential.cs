@@ -1180,7 +1180,7 @@ namespace Microsoft.HealthVault.Web.Authentication
                 // UpdateAuthenticationResults
                 await cred.CreateAuthenticatedSessionTokenAsync(
                      connection,
-                     applicationId);
+                     applicationId).ConfigureAwait(false);
             }
         }
 

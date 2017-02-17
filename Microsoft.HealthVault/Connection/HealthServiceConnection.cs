@@ -9,6 +9,8 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Net;
+using System.Threading.Tasks;
+using Microsoft.HealthVault.Exceptions;
 
 namespace Microsoft.HealthVault
 {
@@ -256,7 +258,7 @@ namespace Microsoft.HealthVault
         }
         private List<HealthServiceRequest> _pendingRequests = new List<HealthServiceRequest>();
 
-        #region GetServiceDefinition
+        #region GetServiceDefinitionAsync
 
         /// <summary>
         /// Gets information about the HealthVault service.
@@ -290,9 +292,9 @@ namespace Microsoft.HealthVault
         /// One or more URL strings returned by HealthVault is invalid.
         /// </exception>
         ///
-        public ServiceInfo GetServiceDefinition()
+        public async Task<ServiceInfo> GetServiceDefinitionAsync()
         {
-            return HealthVaultPlatform.GetServiceDefinition(this);
+            return await HealthVaultPlatform.GetServiceDefinitionAsync(this).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -336,9 +338,9 @@ namespace Microsoft.HealthVault
         /// One or more URL strings returned by HealthVault is invalid.
         /// </exception>
         ///
-        public ServiceInfo GetServiceDefinition(DateTime lastUpdatedTime)
+        public async Task<ServiceInfo> GetServiceDefinitionAsync(DateTime lastUpdatedTime)
         {
-            return HealthVaultPlatform.GetServiceDefinition(this, lastUpdatedTime);
+            return await HealthVaultPlatform.GetServiceDefinitionAsync(this, lastUpdatedTime).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -383,9 +385,9 @@ namespace Microsoft.HealthVault
         /// One or more URL strings returned by HealthVault is invalid.
         /// </exception>
         ///
-        public ServiceInfo GetServiceDefinition(ServiceInfoSections responseSections)
+        public async Task<ServiceInfo> GetServiceDefinitionAsync(ServiceInfoSections responseSections)
         {
-            return HealthVaultPlatform.GetServiceDefinition(this, responseSections);
+            return await HealthVaultPlatform.GetServiceDefinitionAsync(this, responseSections).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -440,13 +442,13 @@ namespace Microsoft.HealthVault
         /// One or more URL strings returned by HealthVault is invalid.
         /// </exception>
         ///
-        public ServiceInfo GetServiceDefinition(ServiceInfoSections responseSections,
+        public async Task<ServiceInfo> GetServiceDefinitionAsync(ServiceInfoSections responseSections,
             DateTime lastUpdatedTime)
         {
-            return HealthVaultPlatform.GetServiceDefinition(this, responseSections, lastUpdatedTime);
+            return await HealthVaultPlatform.GetServiceDefinitionAsync(this, responseSections, lastUpdatedTime).ConfigureAwait(false);
         }
 
-        #endregion GetServiceDefinition
+        #endregion GetServiceDefinitionAsync
 
         #endregion public methods
 

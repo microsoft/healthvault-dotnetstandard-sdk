@@ -493,9 +493,9 @@ namespace Microsoft.HealthVault
                 infoReader.MoveToElement();
                 authToken = infoReader.ReadElementContentAsString();
             }
-            catch (WebException webException)
+            catch (HealthHttpException webException)
             {
-                if (((HttpWebResponse)webException.Response).StatusCode ==
+                if (webException.StatusCode ==
                     HttpStatusCode.Forbidden)
                 {
                     throw new HealthServiceAccessDeniedException(
@@ -876,65 +876,6 @@ namespace Microsoft.HealthVault
         }
 
         #endregion Impersonation
-
-        #region ApplicationSettings
-
-        /// <summary>
-        /// Gets the application settings for the current application and person.
-        /// </summary>
-        ///
-        /// <returns>
-        /// A complete set of application settings including the XML, selected record ID, etc.
-        /// </returns>
-        ///
-        ////[Obsolete("Use HealthServicePlatform.GetApplicationSettings() instead.")]
-        public ApplicationSettings GetAllApplicationSettings()
-        {
-            return HealthVaultPlatform.GetApplicationSettings(this);
-        }
-
-        /// <summary>
-        /// Gets the application settings for the current application and
-        /// person.
-        /// </summary>
-        ///
-        /// <returns>
-        /// The application settings XML.
-        /// </returns>
-        ///
-        /// <remarks>
-        /// This might be <b>null</b> if no application settings have been
-        /// stored for the application or user.
-        /// </remarks>
-        ///
-        ////[Obsolete("Use HealthServicePlatform.GetApplicationSettingsAsXml() instead.")]
-        public IXPathNavigable GetApplicationSettings()
-        {
-            return HealthVaultPlatform.GetApplicationSettingsAsXml(this);
-        }
-
-        /// <summary>
-        /// Sets the application settings for the current application and
-        /// person.
-        /// </summary>
-        ///
-        /// <param name="applicationSettings">
-        /// The application settings XML.
-        /// </param>
-        ///
-        /// <remarks>
-        /// This might be <b>null</b> if no application settings have been stored
-        /// for the application or user.
-        /// </remarks>
-        ///
-        ////[Obsolete("Use HealthServicePlatform.SetApplicationSettings() instead.")]
-        public void SetApplicationSettings(
-                IXPathNavigable applicationSettings)
-        {
-            HealthVaultPlatform.SetApplicationSettings(this, applicationSettings);
-        }
-
-        #endregion ApplicationSettings
 
         #endregion public methods
 

@@ -6,7 +6,10 @@
 using Microsoft.HealthVault.Authentication;
 using Microsoft.HealthVault.Web.Authentication;
 using System;
+using System.Security;
+using System.Threading.Tasks;
 using System.Xml.XPath;
+using Microsoft.HealthVault.Exceptions;
 
 namespace Microsoft.HealthVault.Web
 {
@@ -445,11 +448,11 @@ namespace Microsoft.HealthVault.Web
         /// The authorization was not returned in the response from the server.
         /// </exception>
         ///
-        public void Authenticate()
+        public async void AuthenticateAsync()
         {
-            Credential.AuthenticateIfRequired(
+            await Credential.AuthenticateIfRequiredAsync(
                 this,
-                this.ApplicationId);
+                this.ApplicationId).ConfigureAwait(false);
         }
 
         #endregion App Authentication
@@ -464,9 +467,9 @@ namespace Microsoft.HealthVault.Web
         /// A complete set of application settings including the XML, selected record ID, etc.
         /// </returns>
         ///
-        public ApplicationSettings GetAllApplicationSettings()
+        public async Task<ApplicationSettings> GetAllApplicationSettingsAsync()
         {
-            return HealthVaultPlatform.GetApplicationSettings(this);
+            return await HealthVaultPlatform.GetApplicationSettingsTask(this).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -483,9 +486,9 @@ namespace Microsoft.HealthVault.Web
         /// stored for the application or user.
         /// </remarks>
         ///
-        public IXPathNavigable GetApplicationSettings()
+        public async Task<IXPathNavigable> GetApplicationSettingsAsync()
         {
-            return HealthVaultPlatform.GetApplicationSettingsAsXml(this);
+            return await HealthVaultPlatform.GetApplicationSettingsAsXmlAsync(this);
         }
 
         /// <summary>
@@ -502,10 +505,10 @@ namespace Microsoft.HealthVault.Web
         /// for the application or user.
         /// </remarks>
         ///
-        public void SetApplicationSettings(
+        public async Task SetApplicationSettings(
                 IXPathNavigable applicationSettings)
         {
-            HealthVaultPlatform.SetApplicationSettings(this, applicationSettings);
+            await HealthVaultPlatform.SetApplicationSettingsAsync(this, applicationSettings).ConfigureAwait(false);
         }
 
         #endregion ApplicationSettings

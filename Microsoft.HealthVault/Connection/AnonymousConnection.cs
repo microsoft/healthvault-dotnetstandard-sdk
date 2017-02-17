@@ -22,7 +22,7 @@ namespace Microsoft.HealthVault
     /// <br/><br/>
     /// Use an anonymous connection to access HealthVault methods that
     /// require only a valid application identifier, such as
-    /// <see cref="HealthServiceConnection.GetServiceDefinition()"/>.
+    /// <see cref="HealthServiceConnection.GetServiceDefinitionAsync()"/>.
     /// <br/><br/>
     /// For operations that require authentication, use the
     /// <see cref="AuthenticatedConnection"/> class and its derived classes.

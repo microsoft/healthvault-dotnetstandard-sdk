@@ -9,9 +9,12 @@ using Microsoft.HealthVault.PlatformPrimitives;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.XPath;
 using System.Xml.Linq;
+using Microsoft.HealthVault.Exceptions;
+using Microsoft.HealthVault.Web;
 
 namespace Microsoft.HealthVault
 {
@@ -502,7 +505,7 @@ namespace Microsoft.HealthVault
             // If we are removing records because they make the cookie too big, we remove all except
             // the currently-selected record...
             bool skippedRecords = false;
-            foreach (HealthRecordInfo record in AuthorizedRecords.Values)
+            foreach (HealthRecordInfo record in _authorizedRecords.Values)
             {
                 if ((cookieOptions & CookieOptions.MinimizeRecords) == 0)
                 {
@@ -607,9 +610,9 @@ namespace Microsoft.HealthVault
         }
         private string _name;
 
-        private void FetchApplicationSettingsAndAuthorizedRecords()
+        private async Task FetchApplicationSettingsAndAuthorizedRecordsAsync()
         {
-            PersonInfo personInfo = HealthVaultPlatform.GetPersonInfo(_connection);
+            PersonInfo personInfo = await HealthVaultPlatform.GetPersonInfo(_connection);
             _appSettings = personInfo._appSettings;
             _authorizedRecords = personInfo._authorizedRecords;
 
@@ -627,17 +630,14 @@ namespace Microsoft.HealthVault
         /// for the application or user.
         /// </remarks>
         ///
-        public IXPathNavigable ApplicationSettings
+        public async Task<IXPathNavigable> GetApplicationSettings()
         {
-            get
-            {
                 if (_moreAppSettings)
                 {
-                    FetchApplicationSettingsAndAuthorizedRecords();
+                    await FetchApplicationSettingsAndAuthorizedRecordsAsync().ConfigureAwait(false);
                 }
 
                 return _appSettings.CreateNavigator();
-            }
         }
         private XDocument _appSettings;
 
@@ -672,11 +672,10 @@ namespace Microsoft.HealthVault
         /// <exception cref="HealthServiceException">
         /// An error is returned from the server when making the request.
         /// </exception>
-        public void SetApplicationSettings(IXPathNavigable applicationSettings)
+        public async void SetApplicationSettings(IXPathNavigable applicationSettings)
         {
-            string requestParameters
-                = HealthVaultPlatformPerson.GetSetApplicationSettingsParameters(applicationSettings);
-            HealthVaultPlatformPerson.Current.SetApplicationSettings(ApplicationConnection, requestParameters);
+            string requestParameters = HealthVaultPlatformPerson.GetSetApplicationSettingsParameters(applicationSettings);
+            await HealthVaultPlatformPerson.Current.SetApplicationSettingsAsync(ApplicationConnection, requestParameters).ConfigureAwait(false);
             _appSettings = SDKHelper.SafeLoadXml(requestParameters);
 
             if (ApplicationSettingsChanged != null)
@@ -793,20 +792,17 @@ namespace Microsoft.HealthVault
         /// ID.
         /// </remarks>
         ///
-        public Dictionary<Guid, HealthRecordInfo> AuthorizedRecords
-        {
-            get
-            {
-                if (_moreRecords)
-                {
-                    FetchApplicationSettingsAndAuthorizedRecords();
-                }
-                return _authorizedRecords;
-            }
-            protected set { _authorizedRecords = value; }
-        }
         private Dictionary<Guid, HealthRecordInfo> _authorizedRecords =
             new Dictionary<Guid, HealthRecordInfo>();
+
+        public async Task<Dictionary<Guid, HealthRecordInfo>> GetAuthorizedRecordsAsync()
+        {
+            if (_moreRecords)
+            {
+                await FetchApplicationSettingsAndAuthorizedRecordsAsync().ConfigureAwait(false);
+            }
+            return _authorizedRecords;
+        }
 
         /// <summary>
         /// Gets or sets the user's preferred culture.
@@ -905,7 +901,7 @@ namespace Microsoft.HealthVault
         {
             HealthRecordInfo selfRecord = null;
 
-            foreach (HealthRecordInfo authRecord in AuthorizedRecords.Values)
+            foreach (HealthRecordInfo authRecord in _authorizedRecords.Values)
             {
                 if (authRecord.RelationshipType == RelationshipType.Self
                     && authRecord.DateAuthorizationExpires > DateTime.UtcNow)

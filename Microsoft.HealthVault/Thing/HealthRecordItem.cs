@@ -163,7 +163,7 @@ namespace Microsoft.HealthVault
         /// <remarks>
         /// The types available can be queried using
         /// <see
-        /// cref="ItemTypeManager.GetHealthRecordItemTypeDefinition(Guid,HealthServiceConnection)"/>
+        /// cref="ItemTypeManager.GetHealthRecordItemTypeDefinitionAsync(System.Guid,Microsoft.HealthVault.HealthServiceConnection)"/>
         /// .
         /// </remarks>
         ///
@@ -181,7 +181,7 @@ namespace Microsoft.HealthVault
         /// <remarks>
         /// The types and names of types available can be queried using
         /// <see
-        /// cref="ItemTypeManager.GetHealthRecordItemTypeDefinition(Guid,HealthServiceConnection)"/>
+        /// cref="ItemTypeManager.GetHealthRecordItemTypeDefinitionAsync(System.Guid,Microsoft.HealthVault.HealthServiceConnection)"/>
         /// .
         /// </remarks>
         ///

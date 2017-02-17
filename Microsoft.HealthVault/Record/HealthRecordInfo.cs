@@ -8,6 +8,7 @@ using Microsoft.HealthVault.Web;
 using System;
 using System.Collections.ObjectModel;
 using System.Text;
+using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.XPath;
 
@@ -753,7 +754,7 @@ namespace Microsoft.HealthVault
         /// <see cref="AuthenticatedConnection"/>.
         /// </exception>
         ///
-        public void Refresh()
+        public async Task Refresh()
         {
             AuthenticatedConnection connection =
                 Connection as AuthenticatedConnection;
@@ -766,7 +767,7 @@ namespace Microsoft.HealthVault
             }
 
             Collection<HealthRecordInfo> records =
-                HealthVaultPlatform.GetAuthorizedRecords(Connection, new Guid[] { this.Id });
+                await HealthVaultPlatform.GetAuthorizedRecordsAsync(Connection, new Guid[] { this.Id }).ConfigureAwait(false);
 
             if (records.Count == 0)
             {

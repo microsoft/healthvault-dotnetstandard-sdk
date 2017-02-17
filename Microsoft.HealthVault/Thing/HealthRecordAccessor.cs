@@ -7,8 +7,10 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Text;
+using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.XPath;
+using Microsoft.HealthVault.Exceptions;
 
 namespace Microsoft.HealthVault
 {
@@ -309,12 +311,12 @@ namespace Microsoft.HealthVault
         /// The HealthVault service returned an error.
         /// </exception>
         ///
-        public HealthRecordItem GetItem(
+        public async Task<HealthRecordItem> GetItemAsync(
             Guid itemId,
             HealthRecordItemSections sections)
         {
             HealthRecordSearcher searcher = CreateSearcher();
-            return searcher.GetSingleItem(itemId, sections);
+            return await searcher.GetSingleItem(itemId, sections).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -338,10 +340,10 @@ namespace Microsoft.HealthVault
         /// The HealthVault service returned an error.
         /// </exception>
         ///
-        public HealthRecordItem GetItem(
+        public async Task<HealthRecordItem> GetItemAsync(
             Guid itemId)
         {
-            return GetItem(itemId, HealthRecordItemSections.Default);
+            return await GetItemAsync(itemId, HealthRecordItemSections.Default).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -371,7 +373,7 @@ namespace Microsoft.HealthVault
         /// The HealthVault service returned an error.
         /// </exception>
         ///
-        public HealthRecordItemCollection GetItemsByType(
+        public async Task<HealthRecordItemCollection> GetItemsByTypeAsync(
             Guid typeId,
             HealthRecordItemSections sections)
         {
@@ -379,7 +381,7 @@ namespace Microsoft.HealthVault
             searcher.Filters[0].View.Sections = sections;
 
             ReadOnlyCollection<HealthRecordItemCollection> results =
-                searcher.GetMatchingItems();
+                await searcher.GetMatchingItems().ConfigureAwait(false);
 
             // Since we only applied a single filter we should
             // only have a single group
@@ -414,7 +416,7 @@ namespace Microsoft.HealthVault
         /// The HealthVault service returned an error.
         /// </exception>
         ///
-        public HealthRecordItemCollection GetItemsByType(
+        public async Task<HealthRecordItemCollection> GetItemsByTypeTask(
             Guid typeId,
             HealthRecordView view)
         {
@@ -422,7 +424,7 @@ namespace Microsoft.HealthVault
             searcher.Filters[0].View = view;
 
             ReadOnlyCollection<HealthRecordItemCollection> results =
-                searcher.GetMatchingItems();
+                await searcher.GetMatchingItems().ConfigureAwait(false);
 
             // Since we only applied a single filter we should
             // only have a single group
@@ -453,10 +455,10 @@ namespace Microsoft.HealthVault
         /// The HealthVault service returned an error.
         /// </exception>
         ///
-        public HealthRecordItemCollection GetItemsByType(
+        public async Task<HealthRecordItemCollection> GetItemsByTypeAsync(
             Guid typeId)
         {
-            return GetItemsByType(typeId, HealthRecordItemSections.Default);
+            return await GetItemsByTypeAsync(typeId, HealthRecordItemSections.Default).ConfigureAwait(false);
         }
 
         #endregion Health Record Item search methods
@@ -484,11 +486,11 @@ namespace Microsoft.HealthVault
         /// The HealthRecordItem supplied was null.
         /// </exception>
         ///
-        public void NewItem(HealthRecordItem item)
+        public async Task NewItemAsync(HealthRecordItem item)
         {
             Validator.ThrowIfArgumentNull(item, "item", "NewItemNullItem");
 
-            NewItems(new HealthRecordItem[] { item });
+            await NewItemsAsync(new HealthRecordItem[] { item }).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -514,9 +516,9 @@ namespace Microsoft.HealthVault
         /// At least one HealthRecordItem in the supplied list was null.
         /// </exception>
         ///
-        public void NewItems(IList<HealthRecordItem> items)
+        public async Task NewItemsAsync(IList<HealthRecordItem> items)
         {
-            HealthVaultPlatform.NewItems(Connection, this, items);
+            await HealthVaultPlatform.NewItemsAsync(Connection, this, items).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -585,10 +587,10 @@ namespace Microsoft.HealthVault
         /// no items will have been updated.
         /// </exception>
         ///
-        public void UpdateItems(
+        public async Task UpdateItems(
             IList<HealthRecordItem> itemsToUpdate)
         {
-            HealthVaultPlatform.UpdateItems(Connection, this, itemsToUpdate);
+            await HealthVaultPlatform.UpdateItemsAsync(Connection, this, itemsToUpdate).ConfigureAwait(false);
         }
 
         #endregion Item Create/Update methods
@@ -703,9 +705,9 @@ namespace Microsoft.HealthVault
         /// no items will have been removed.
         /// </exception>
         ///
-        public void RemoveItems(IList<HealthRecordItemKey> itemsToRemove)
+        public async Task RemoveItems(IList<HealthRecordItemKey> itemsToRemove)
         {
-            HealthVaultPlatform.RemoveItems(Connection, this, itemsToRemove);
+            await HealthVaultPlatform.RemoveItemsAsync(Connection, this, itemsToRemove).ConfigureAwait(false);
         }
 
         ///
@@ -792,7 +794,7 @@ namespace Microsoft.HealthVault
         /// health record item type.
         /// </remarks>
         ///
-        public Collection<HealthRecordItemTypePermission> QueryPermissions(
+        public async Task<Collection<HealthRecordItemTypePermission>> QueryPermissions(
             IList<HealthRecordItemTypeDefinition> healthRecordItemTypes)
         {
             Validator.ThrowIfArgumentNull(healthRecordItemTypes, "healthRecordItemTypes", "CtorhealthRecordItemTypesArgumentNull");
@@ -802,7 +804,7 @@ namespace Microsoft.HealthVault
             {
                 thingTypeIds.Add(healthRecordItemTypes[i].TypeId);
             }
-            return QueryPermissions(thingTypeIds);
+            return await QueryPermissions(thingTypeIds).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -836,10 +838,10 @@ namespace Microsoft.HealthVault
         /// If there is an exception during executing the request to HealthVault.
         /// </exception>
         ///
-        public IDictionary<Guid, HealthRecordItemTypePermission> QueryPermissionsByTypes(
+        public async Task<IDictionary<Guid, HealthRecordItemTypePermission>> QueryPermissionsByTypes(
             IList<Guid> healthRecordItemTypeIds)
         {
-            return HealthVaultPlatform.QueryPermissionsByTypes(Connection, this, healthRecordItemTypeIds);
+            return await HealthVaultPlatform.QueryPermissionsByTypes(Connection, this, healthRecordItemTypeIds).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -876,10 +878,10 @@ namespace Microsoft.HealthVault
         /// If there is an exception during executing the request to HealthVault.
         /// </exception>
         ///
-        public Collection<HealthRecordItemTypePermission> QueryPermissions(
+        public async Task<Collection<HealthRecordItemTypePermission>> QueryPermissions(
             IList<Guid> healthRecordItemTypeIds)
         {
-            return HealthVaultPlatform.QueryPermissions(Connection, this, healthRecordItemTypeIds);
+            return await HealthVaultPlatform.QueryPermissions(Connection, this, healthRecordItemTypeIds).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -916,10 +918,10 @@ namespace Microsoft.HealthVault
         /// There is an error in the server request.
         /// </exception>
         ///
-        public HealthRecordPermissions QueryRecordPermissions(
+        public async Task<HealthRecordPermissions> QueryRecordPermissions(
             IList<Guid> healthRecordItemTypeIds)
         {
-            return HealthVaultPlatform.QueryRecordPermissions(Connection, this, healthRecordItemTypeIds);
+            return await HealthVaultPlatform.QueryRecordPermissionsAsync(Connection, this, healthRecordItemTypeIds).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -951,9 +953,9 @@ namespace Microsoft.HealthVault
         /// <exception cref="HealthServiceException">
         /// If an error occurs while contacting the HealthVault service.
         /// </exception>
-        public Collection<HealthRecordItem> GetValidGroupMembership(IList<Guid> applicationIds)
+        public async Task<Collection<HealthRecordItem>> GetValidGroupMembership(IList<Guid> applicationIds)
         {
-            return HealthVaultPlatform.GetValidGroupMembership(Connection, this, applicationIds);
+            return await HealthVaultPlatform.GetValidGroupMembershipAsync(Connection, this, applicationIds).ConfigureAwait(false);
         }
     }
 }
