@@ -10,6 +10,7 @@ using System.Net;
 using System.Security.Cryptography;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
+using Microsoft.HealthVault.Extensions;
 
 namespace Microsoft.HealthVault
 {
@@ -71,7 +72,7 @@ namespace Microsoft.HealthVault
             AppendVocabularySearchParameters(queryString, searchParameters);
             return
                 new Uri(
-                    HealthApplicationConfiguration.Current.HealthClientServiceUrl.OriginalString +
+                    HealthApplicationConfiguration.Current.GetHealthClientServiceUrl().OriginalString +
                     "?" +
                     queryString.ToString());
         }
@@ -119,7 +120,7 @@ namespace Microsoft.HealthVault
             AppendVocabularySearchParameters(queryString, searchParameters);
             return
                 new Uri(
-                    HealthApplicationConfiguration.Current.HealthClientServiceUrl.OriginalString +
+                    HealthApplicationConfiguration.Current.GetHealthClientServiceUrl().OriginalString +
                     "?" +
                     queryString.ToString());
         }

@@ -317,6 +317,7 @@ namespace Microsoft.HealthVault
             try
             {
                 EasyWebRequest easyWeb = this.BuildWebRequest(null);
+                easyWeb.RequestCompressionMethod = this.RequestCompressionMethod;
                 HttpResponseMessage response;
 
                 try
@@ -454,6 +455,7 @@ namespace Microsoft.HealthVault
             try
             {
                 EasyWebRequest easyWeb = this.BuildWebRequest(transform);
+                easyWeb.RequestCompressionMethod = this.RequestCompressionMethod;
 
                 try
                 {
@@ -630,6 +632,20 @@ namespace Microsoft.HealthVault
         protected void BuildRequestXml()
         {
             BuildRequestXml(null);
+        }
+
+        /// <summary>
+        /// Gets or sets the request compression method used by the connection.
+        /// </summary>
+        ///
+        /// <returns>
+        /// A string representing the request compression method.
+        /// </returns>
+        ///
+        public string RequestCompressionMethod
+        {
+            get { return _connection.RequestCompressionMethod; }
+            set { _connection.RequestCompressionMethod = value; }
         }
 
         /// <summary>
@@ -960,7 +976,7 @@ namespace Microsoft.HealthVault
                 {
                     throw new MissingFieldException("message");
                 }
-                error.Message = reader.ReadElementString();
+                error.Message = reader.ReadContentAsString();
 
                 // <context>
                 SDKHelper.SkipToElement(reader);
@@ -971,7 +987,7 @@ namespace Microsoft.HealthVault
                     // <server-name>
                     if (SDKHelper.ReadUntil(reader, "server-name"))
                     {
-                        errorContext.ServerName = reader.ReadElementString();
+                        errorContext.ServerName = reader.ReadContentAsString();
                     }
                     else
                     {
@@ -984,7 +1000,7 @@ namespace Microsoft.HealthVault
                     SDKHelper.SkipToElement(reader);
                     while (reader.Name.Equals("server-ip", StringComparison.Ordinal))
                     {
-                        string ipAddressString = reader.ReadElementString();
+                        string ipAddressString = reader.ReadContentAsString();
                         IPAddress ipAddress = null;
                         if (IPAddress.TryParse(ipAddressString, out ipAddress))
                         {
@@ -997,7 +1013,7 @@ namespace Microsoft.HealthVault
                     // <exception>
                     if (reader.Name.Equals("exception", StringComparison.Ordinal))
                     {
-                        errorContext.InnerException = reader.ReadElementString();
+                        errorContext.InnerException = reader.ReadContentAsString();
                         SDKHelper.SkipToElement(reader);
                     }
                     else
@@ -1010,7 +1026,7 @@ namespace Microsoft.HealthVault
                 // <error-info>
                 if (SDKHelper.ReadUntil(reader, "error-info"))
                 {
-                    error.ErrorInfo = reader.ReadElementString();
+                    error.ErrorInfo = reader.ReadContentAsString();
                     SDKHelper.SkipToElement(reader);
                 }
             }

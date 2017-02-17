@@ -39,7 +39,7 @@ namespace Microsoft.HealthVault
         /// The <paramref name="typeId"/> must be the identifier for a health
         /// record item type. See
         /// <see
-        /// cref="ItemTypeManager.GetHealthRecordItemTypeDefinition(Guid,HealthServiceConnection)"/>
+        /// cref="ItemTypeManager.GetHealthRecordItemTypeDefinitionAsync(System.Guid,Microsoft.HealthVault.HealthServiceConnection)"/>
         /// for information on getting the value health record item types.
         /// </remarks>
         ///
@@ -71,7 +71,7 @@ namespace Microsoft.HealthVault
         /// The value must be the identifier for a health record item
         /// type.
         /// <see
-        /// cref="ItemTypeManager.GetHealthRecordItemTypeDefinition(Guid,HealthServiceConnection)"/>
+        /// cref="ItemTypeManager.GetHealthRecordItemTypeDefinitionAsync(System.Guid,Microsoft.HealthVault.HealthServiceConnection)"/>
         /// for information on getting the value health record item types.
         /// </remarks>
         ///

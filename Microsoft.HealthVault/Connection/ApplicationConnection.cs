@@ -6,6 +6,8 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Threading.Tasks;
+using Microsoft.HealthVault.Exceptions;
 
 namespace Microsoft.HealthVault
 {
@@ -406,10 +408,10 @@ namespace Microsoft.HealthVault
         /// </exception>
         ///
         //[Obsolete("Use HealthServicePlatform.GetVocabulary() instead.")]
-        public ReadOnlyCollection<Vocabulary> GetVocabulary(
+        public async Task<ReadOnlyCollection<Vocabulary>> GetVocabulary(
             IList<VocabularyKey> vocabularyKeys, bool cultureIsFixed)
         {
-            return HealthVaultPlatform.GetVocabulary(this, vocabularyKeys, cultureIsFixed);
+            return await HealthVaultPlatform.GetVocabularyAsync(this, vocabularyKeys, cultureIsFixed).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -422,9 +424,9 @@ namespace Microsoft.HealthVault
         /// </returns>
         ///
         //[Obsolete("Use HealthServicePlatform.GetVocabularyKeys() instead.")]
-        public ReadOnlyCollection<VocabularyKey> GetVocabularyKeys()
+        public async Task<ReadOnlyCollection<VocabularyKey>> GetVocabularyKeys()
         {
-            return HealthVaultPlatform.GetVocabularyKeys(this);
+            return await HealthVaultPlatform.GetVocabularyKeysAsync(this).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -473,12 +475,12 @@ namespace Microsoft.HealthVault
         /// </exception>
         ///
         //[Obsolete("Use HealthServicePlatform.SearchVocabularyKeys() instead.")]
-        public ReadOnlyCollection<VocabularyKey> SearchVocabularyKeys(
+        public async Task<ReadOnlyCollection<VocabularyKey>> SearchVocabularyKeys(
             string searchString,
             VocabularySearchType searchType,
             int? maxResults)
         {
-            return HealthVaultPlatform.SearchVocabularyKeys(this, searchString, searchType, maxResults);
+            return await HealthVaultPlatform.SearchVocabularyKeysAsync(this, searchString, searchType, maxResults).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -548,13 +550,13 @@ namespace Microsoft.HealthVault
         /// </exception>
         ///
         //[Obsolete("Use HealthServicePlatform.SearchVocabulary() instead.")]
-        public VocabularyItemCollection SearchVocabulary(
+        public async Task<VocabularyItemCollection> SearchVocabulary(
             VocabularyKey vocabularyKey,
             string searchString,
             VocabularySearchType searchType,
             int? maxResults)
         {
-            return HealthVaultPlatform.SearchVocabulary(this, vocabularyKey, searchString, searchType, maxResults);
+            return await HealthVaultPlatform.SearchVocabulary(this, vocabularyKey, searchString, searchType, maxResults).ConfigureAwait(false);
         }
 
         #endregion Health Lexicon
@@ -581,9 +583,9 @@ namespace Microsoft.HealthVault
         /// </exception>
         ///
         //[Obsolete("Use HealthServicePlatform.GetPersonInfo() instead.")]
-        public PersonInfo GetPersonInfo()
+        public async Task<PersonInfo> GetPersonInfo()
         {
-            return HealthVaultPlatform.GetPersonInfo(this);
+            return await HealthVaultPlatform.GetPersonInfo(this).ConfigureAwait(false);
         }
 
         #endregion GetPersonInfo
@@ -609,7 +611,7 @@ namespace Microsoft.HealthVault
         /// The HealthVault service returned an error.
         /// </exception>
         //[Obsolete("Use HealthServicePlatform.GetAuthorizedPeople() instead.")]
-        public IEnumerable<PersonInfo> GetAuthorizedPeople()
+        public IEnumerable<Task<PersonInfo>> GetAuthorizedPeople()
         {
             return GetAuthorizedPeople(new GetAuthorizedPeopleSettings());
         }
@@ -645,9 +647,9 @@ namespace Microsoft.HealthVault
         /// </exception>
         ///
         //[Obsolete("Use HealthServicePlatform.GetAuthorizedPeople() instead.")]
-        public IEnumerable<PersonInfo> GetAuthorizedPeople(GetAuthorizedPeopleSettings settings)
+        public IEnumerable<Task<PersonInfo>> GetAuthorizedPeople(GetAuthorizedPeopleSettings settings)
         {
-            return HealthVaultPlatform.GetAuthorizedPeople(this, settings);
+            return HealthVaultPlatform.GetAuthorizedPeopleAsync(this, settings);
         }
 
         #endregion GetAuthorizedPeople
@@ -675,10 +677,10 @@ namespace Microsoft.HealthVault
         /// </remarks>
         ///
         //[Obsolete("Use HealthServicePlatform.GetAuthorizedRecords() instead.")]
-        public Collection<HealthRecordInfo> GetAuthorizedRecords(
+        public async Task<Collection<HealthRecordInfo>> GetAuthorizedRecords(
             IList<Guid> recordIds)
         {
-            return HealthVaultPlatform.GetAuthorizedRecords(this, recordIds);
+            return await HealthVaultPlatform.GetAuthorizedRecordsAsync(this, recordIds).ConfigureAwait(false);
         }
 
         #endregion GetAuthorizedRecords
@@ -704,9 +706,9 @@ namespace Microsoft.HealthVault
         /// </exception>
         ///
         //[Obsolete("Use HealthServicePlatform.GetApplicationInfo() instead.")]
-        public ApplicationInfo GetApplicationInfo()
+        public async Task<ApplicationInfo> GetApplicationInfoAsync()
         {
-            return HealthVaultPlatform.GetApplicationInfo(this);
+            return await HealthVaultPlatform.GetApplicationInfo(this).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -741,10 +743,10 @@ namespace Microsoft.HealthVault
         /// </exception>
         ///
         //[Obsolete("Use HealthServicePlatform.GetApplicationInfo() instead.")]
-        public ApplicationInfo GetApplicationInfo(
+        public async Task<ApplicationInfo> GetApplicationInfo(
             Boolean allLanguages)
         {
-            return HealthVaultPlatform.GetApplicationInfo(this, allLanguages);
+            return await HealthVaultPlatform.GetApplicationInfoAsync(this, allLanguages).ConfigureAwait(false);
         }
 
         #endregion
@@ -766,9 +768,9 @@ namespace Microsoft.HealthVault
         /// </returns>
         ///
         //[Obsolete("Use HealthServicePlatform.GetUpdatedRecordsForApplication() instead.")]
-        public IList<Guid> GetUpdatedRecordsForApplication(DateTime? updatedDate)
+        public async Task<IList<Guid>> GetUpdatedRecordsForApplication(DateTime? updatedDate)
         {
-            return HealthVaultPlatform.GetUpdatedRecordsForApplication(this, updatedDate);
+            return await HealthVaultPlatform.GetUpdatedRecordsForApplicationAsync(this, updatedDate).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -786,10 +788,10 @@ namespace Microsoft.HealthVault
         /// </returns>
         ///
         //[Obsolete("Use HealthServicePlatform.GetUpdatedRecordInfoForApplication() instead.")]
-        public IList<HealthRecordUpdateInfo> GetUpdatedRecordInfoForApplication(
+        public async Task<IList<HealthRecordUpdateInfo>> GetUpdatedRecordInfoForApplication(
             DateTime? updatedDate)
         {
-            return HealthVaultPlatform.GetUpdatedRecordInfoForApplication(this, updatedDate);
+            return await HealthVaultPlatform.GetUpdatedRecordInfoForApplicationAsync(this, updatedDate).ConfigureAwait(false);
         }
 
         #endregion
@@ -806,9 +808,9 @@ namespace Microsoft.HealthVault
         /// </returns>
         ///
         //[Obsolete("Use HealthServicePlatform.NewSignupCode() instead.")]
-        public string NewSignupCode()
+        public async Task<string >NewSignupCode()
         {
-            return HealthVaultPlatform.NewSignupCode(this);
+            return await HealthVaultPlatform.NewSignupCodeAsync(this).ConfigureAwait(false);
         }
 
         #endregion
@@ -847,9 +849,9 @@ namespace Microsoft.HealthVault
         /// <exception cref="ArgumentException">
         /// If <paramref name="preferredLocation"/> is <b>null</b>.
         /// </exception>
-        public HealthServiceInstance SelectInstance(Location preferredLocation)
+        public async Task<HealthServiceInstance> SelectInstance(Location preferredLocation)
         {
-            return HealthVaultPlatform.SelectInstance(this, preferredLocation);
+            return await HealthVaultPlatform.SelectInstanceAsync(this, preferredLocation).ConfigureAwait(false);
         }
 
         #endregion

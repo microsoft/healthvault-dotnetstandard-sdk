@@ -69,7 +69,7 @@ namespace Microsoft.HealthVault.PlatformPrimitives
         private static HealthVaultPlatformInformation _current = new HealthVaultPlatformInformation();
         private static HealthVaultPlatformInformation _saved;
 
-        #region GetServiceDefinition
+        #region GetServiceDefinitionAsync
 
         /// <summary>
         /// Gets information about the HealthVault service.
@@ -357,7 +357,7 @@ namespace Microsoft.HealthVault.PlatformPrimitives
         private static async Task<ServiceInfo> GetServiceDefinitionAsync(HealthServiceConnection connection, string parameters)
         {
             HealthServiceRequest request =
-                new HealthServiceRequest(connection, "GetServiceDefinition", 2);
+                new HealthServiceRequest(connection, "GetServiceDefinitionAsync", 2);
             request.Parameters = parameters;
             HealthServiceResponseData responseData = await request.ExecuteAsync().ConfigureAwait(false);
 
@@ -377,7 +377,7 @@ namespace Microsoft.HealthVault.PlatformPrimitives
             }
         }
 
-        #endregion GetServiceDefinition
+        #endregion GetServiceDefinitionAsync
 
         #region GetHealthRecordItemType
 

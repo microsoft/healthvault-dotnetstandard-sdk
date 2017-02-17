@@ -26,7 +26,7 @@ namespace Microsoft.HealthVault
         }
 
         /// <summary>
-        /// Initialize a <see cref="HealthServiceInstance"/> from GetServiceDefinition response XML.
+        /// Initialize a <see cref="HealthServiceInstance"/> from GetServiceDefinitionAsync response XML.
         /// </summary>
         public void ParseXml(XPathNavigator navigator)
         {

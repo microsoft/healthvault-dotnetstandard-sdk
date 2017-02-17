@@ -11,6 +11,7 @@ using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Reflection;
+using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.XPath;
 
@@ -295,7 +296,7 @@ namespace Microsoft.HealthVault
         /// types that are available through the HealthVault service.
         ///
         /// To retrieve information about the types from the HealthVault service,
-        /// use the <see cref="GetHealthRecordItemTypeDefinition(HealthServiceConnection)"/> method.
+        /// use the <see cref="GetHealthRecordItemTypeDefinitionAsync(Microsoft.HealthVault.HealthServiceConnection)"/> method.
         /// </remarks>
         /// <returns>A dictionary of <see cref="Type"/> instances.</returns>
         public static IDictionary<Guid, Type> RegisteredTypes
@@ -323,7 +324,7 @@ namespace Microsoft.HealthVault
         /// released, this method will not return them.
         ///
         /// To retrieve information about the types from the HealthVault service,
-        /// use the <see cref="GetHealthRecordItemTypeDefinition(HealthServiceConnection)"/> method.
+        /// use the <see cref="GetHealthRecordItemTypeDefinitionAsync(Microsoft.HealthVault.HealthServiceConnection)"/> method.
         /// </remarks>
         /// <param name="typeId"></param>
         /// <returns>The typeId.</returns>
@@ -832,14 +833,14 @@ namespace Microsoft.HealthVault
         /// If <paramref name="connection"/> parameter is <b>null</b>.
         /// </exception>
         ///
-        public static IDictionary<Guid, HealthRecordItemTypeDefinition> GetHealthRecordItemTypeDefinition(
+        public static async Task<IDictionary<Guid, HealthRecordItemTypeDefinition>> GetHealthRecordItemTypeDefinitionAsync(
             HealthServiceConnection connection)
         {
-            return GetHealthRecordItemTypeDefinition(null,
+            return await GetHealthRecordItemTypeDefinitionAsync(null,
                                                      HealthRecordItemTypeSections.All,
                                                      null,
                                                      null,
-                                                     connection);
+                                                     connection).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -883,16 +884,16 @@ namespace Microsoft.HealthVault
         /// If <paramref name="connection"/> parameter is <b>null</b>.
         /// </exception>
         ///
-        public static IDictionary<Guid, HealthRecordItemTypeDefinition> GetHealthRecordItemTypeDefinition(
+        public static async Task<IDictionary<Guid, HealthRecordItemTypeDefinition>> GetHealthRecordItemTypeDefinitionAsync(
             IList<Guid> typeIds,
             DateTime? lastClientRefreshDate,
             HealthServiceConnection connection)
         {
-            return GetHealthRecordItemTypeDefinition(typeIds,
+            return await GetHealthRecordItemTypeDefinitionAsync(typeIds,
                                                      HealthRecordItemTypeSections.All,
                                                      null,
                                                      lastClientRefreshDate,
-                                                     connection);
+                                                     connection).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -935,16 +936,16 @@ namespace Microsoft.HealthVault
         /// If <paramref name="connection"/> parameter is <b>null</b>.
         /// </exception>
         ///
-        public static IDictionary<Guid, HealthRecordItemTypeDefinition> GetHealthRecordItemTypeDefinition(
+        public static async Task<IDictionary<Guid, HealthRecordItemTypeDefinition>> GetHealthRecordItemTypeDefinitionAsync(
             IList<Guid> typeIds,
             HealthRecordItemTypeSections sections,
             HealthServiceConnection connection)
         {
-            return GetHealthRecordItemTypeDefinition(typeIds,
+            return await GetHealthRecordItemTypeDefinitionAsync(typeIds,
                                                      sections,
                                                      null,
                                                      null,
-                                                     connection);
+                                                     connection).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -992,17 +993,17 @@ namespace Microsoft.HealthVault
         /// If <paramref name="connection"/> parameter is <b>null</b>.
         /// </exception>
         ///
-        public static IDictionary<Guid, HealthRecordItemTypeDefinition> GetHealthRecordItemTypeDefinition(
+        public static async Task<IDictionary<Guid, HealthRecordItemTypeDefinition>> GetHealthRecordItemTypeDefinitionAsync(
             IList<Guid> typeIds,
             HealthRecordItemTypeSections sections,
             DateTime? lastClientRefreshDate,
             HealthServiceConnection connection)
         {
-            return GetHealthRecordItemTypeDefinition(typeIds,
+            return await GetHealthRecordItemTypeDefinitionAsync(typeIds,
                                                      sections,
                                                      null,
                                                      lastClientRefreshDate,
-                                                     connection);
+                                                     connection).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -1033,11 +1034,11 @@ namespace Microsoft.HealthVault
         /// If <paramref name="connection"/> parameter is <b>null</b>.
         /// </exception>
         ///
-        public static IDictionary<Guid, HealthRecordItemTypeDefinition> GetHealthRecordItemTypeDefinition(
+        public static async Task<IDictionary<Guid, HealthRecordItemTypeDefinition>> GetHealthRecordItemTypeDefinitionAsync(
             HealthRecordItemTypeSections sections,
             HealthServiceConnection connection)
         {
-            return GetHealthRecordItemTypeDefinition(null, sections, null, null, connection);
+            return await GetHealthRecordItemTypeDefinitionAsync(null, sections, null, null, connection).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -1097,19 +1098,19 @@ namespace Microsoft.HealthVault
         /// If <paramref name="connection"/> parameter is <b>null</b>.
         /// </exception>
         ///
-        public static IDictionary<Guid, HealthRecordItemTypeDefinition> GetHealthRecordItemTypeDefinition(
+        public static async Task<IDictionary<Guid, HealthRecordItemTypeDefinition>> GetHealthRecordItemTypeDefinitionAsync(
             IList<Guid> typeIds,
             HealthRecordItemTypeSections sections,
             IList<String> imageTypes,
             DateTime? lastClientRefreshDate,
             HealthServiceConnection connection)
         {
-            return HealthVaultPlatform.GetHealthRecordItemTypeDefinition(
+            return await HealthVaultPlatform.GetHealthRecordItemTypeDefinitionAsync(
                 typeIds,
                 sections,
                 imageTypes,
                 lastClientRefreshDate,
-                connection);
+                connection).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -1143,12 +1144,12 @@ namespace Microsoft.HealthVault
         /// The <paramref name="connection"/> parameter is <b>null</b>.
         /// </exception>
         ///
-        public static HealthRecordItemTypeDefinition GetHealthRecordItemTypeDefinition(
+        public static async Task<HealthRecordItemTypeDefinition> GetHealthRecordItemTypeDefinitionAsync(
             Guid typeId,
             HealthServiceConnection connection)
         {
             IDictionary<Guid, HealthRecordItemTypeDefinition> typeDefs =
-                GetHealthRecordItemTypeDefinition(new Guid[] { typeId }, connection);
+                await GetHealthRecordItemTypeDefinitionAsync(new Guid[] { typeId }, connection).ConfigureAwait(false);
             return typeDefs[typeId];
         }
 
@@ -1186,13 +1187,13 @@ namespace Microsoft.HealthVault
         /// If <paramref name="connection"/> parameter is <b>null</b>.
         /// </exception>
         ///
-        public static IDictionary<Guid, HealthRecordItemTypeDefinition> GetHealthRecordItemTypeDefinition(
+        public static async Task<IDictionary<Guid, HealthRecordItemTypeDefinition>> GetHealthRecordItemTypeDefinitionAsync(
             IList<Guid> typeIds,
             HealthServiceConnection connection)
         {
-            return GetHealthRecordItemTypeDefinition(typeIds,
+            return await GetHealthRecordItemTypeDefinitionAsync(typeIds,
                                                      HealthRecordItemTypeSections.All,
-                                                     connection);
+                                                     connection).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -1218,10 +1219,10 @@ namespace Microsoft.HealthVault
         /// The <paramref name="connection"/> parameter is <b>null</b>.
         /// </exception>
         ///
-        public static HealthRecordItemTypeDefinition GetBaseHealthRecordItemTypeDefinition(
+        public static async Task<HealthRecordItemTypeDefinition> GetBaseHealthRecordItemTypeDefinitionAsync(
             HealthServiceConnection connection)
         {
-            return GetHealthRecordItemTypeDefinition(_baseTypeId, connection);
+            return await GetHealthRecordItemTypeDefinitionAsync(_baseTypeId, connection).ConfigureAwait(false);
         }
 
         /// <summary>

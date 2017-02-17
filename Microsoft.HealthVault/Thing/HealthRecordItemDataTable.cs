@@ -7,8 +7,11 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.IO;
+using System.Threading.Tasks;
 using System.Xml;
+using System.Xml.Linq;
 using System.Xml.XPath;
+using Microsoft.HealthVault.Exceptions;
 
 namespace Microsoft.HealthVault
 {
@@ -66,14 +69,14 @@ namespace Microsoft.HealthVault
         /// <param name="items"/>
         /// <param name="startIndex"/>
         /// <param name="count"/>
-        public void GetData(HealthRecordAccessor record, IList<HealthRecordItem> items, int startIndex, int count)
+        public async Task GetDataAsync(HealthRecordAccessor record, IList<HealthRecordItem> items, int startIndex, int count)
         {
             HealthRecordItemDataTableView effectiveView =
-                this.ApplyEffectiveView(record.Connection);
+                await this.ApplyEffectiveViewAsync(record.Connection).ConfigureAwait(false);
 
             IDictionary<Guid, HealthRecordItemTypeDefinition> typeDefDict =
-                ItemTypeManager.GetHealthRecordItemTypeDefinition(_filter.TypeIds,
-                    record.Connection);
+                await ItemTypeManager.GetHealthRecordItemTypeDefinitionAsync(_filter.TypeIds,
+                    record.Connection).ConfigureAwait(false);
             HealthRecordItemTypeDefinition sttTypeDef =
                 typeDefDict.Count == 1 ? typeDefDict[_filter.TypeIds[0]] : null;
 
@@ -86,7 +89,7 @@ namespace Microsoft.HealthVault
                 HealthRecordItem item = items[i];
 
                 XPathNavigator itemTransformNav;
-                IDictionary<string, XmlDocument> transformedXmlData = item.TransformedXmlData;
+                IDictionary<string, XDocument> transformedXmlData = item.TransformedXmlData;
                 if (transformedXmlData.ContainsKey(transformName))
                 {
                     itemTransformNav =
@@ -211,13 +214,13 @@ namespace Microsoft.HealthVault
         /// An error occurred while accessing the HealthVault service.
         /// </exception>
         ///
-        public void GetData(
+        public async Task GetData(
             HealthRecordAccessor record,
             int startIndex,
             int count)
         {
             HealthRecordItemDataTableView effectiveView =
-                this.ApplyEffectiveView(record.Connection);
+                await this.ApplyEffectiveViewAsync(record.Connection).ConfigureAwait(false);
 
             // Need to specify the type version to ensure that the columns match when the app
             // supports multiple versions.
@@ -232,7 +235,7 @@ namespace Microsoft.HealthVault
             HealthRecordSearcher searcher = record.CreateSearcher();
             searcher.Filters.Add(this.Filter);
 
-            XPathNavigator nav = searcher.GetMatchingItemsRaw();
+            XPathNavigator nav = await searcher.GetMatchingItemsRaw().ConfigureAwait(false);
 
             _hasData = true;
 
@@ -263,11 +266,11 @@ namespace Microsoft.HealthVault
                    partialThingsCurrentIndex < partialThingKeys.Count)
             {
                 nav =
-                    GetPartialThings(
+                    await GetPartialThings(
                         record,
                         partialThingKeys,
                         partialThingsCurrentIndex,
-                        numberOfFullThingsToRetrieve);
+                        numberOfFullThingsToRetrieve).ConfigureAwait(false);
 
                 // Note, not all partial things may still exist when doing
                 // the next query so AddRows may return less than
@@ -398,7 +401,7 @@ namespace Microsoft.HealthVault
             }
         }
 
-        private HealthRecordItemDataTableView ApplyEffectiveView(
+        private async Task<HealthRecordItemDataTableView> ApplyEffectiveViewAsync(
             ApplicationConnection connection)
         {
             HealthRecordItemDataTableView effectiveView =
@@ -410,9 +413,9 @@ namespace Microsoft.HealthVault
                 View != HealthRecordItemDataTableView.MultipleTypeTable)
             {
                 typeDefinition =
-                    ItemTypeManager.GetHealthRecordItemTypeDefinition(
+                    await ItemTypeManager.GetHealthRecordItemTypeDefinitionAsync(
                         this.Filter.TypeIds[0],
-                        connection);
+                        connection).ConfigureAwait(false);
 
                 if (typeDefinition != null &&
                     typeDefinition.ColumnDefinitions.Count > 0)
@@ -437,8 +440,8 @@ namespace Microsoft.HealthVault
             if (_singleTypeDefinition == null)
             {
                 typeDefinition =
-                    ItemTypeManager.GetBaseHealthRecordItemTypeDefinition(
-                        connection);
+                    await ItemTypeManager.GetBaseHealthRecordItemTypeDefinitionAsync(
+                        connection).ConfigureAwait(false);
 
                 effectiveView
                     = HealthRecordItemDataTableView.MultipleTypeTable;
@@ -479,7 +482,7 @@ namespace Microsoft.HealthVault
             return partialThingKeys;
         }
 
-        private XPathNavigator GetPartialThings(
+        private async Task<XPathNavigator> GetPartialThings(
             HealthRecordAccessor record,
             IList<HealthRecordItemKey> thingKeys,
             int currentThingKeyIndex,
@@ -508,7 +511,7 @@ namespace Microsoft.HealthVault
 
             searcher.Filters.Add(filter);
 
-            return searcher.GetMatchingItemsRaw();
+            return await searcher.GetMatchingItemsRaw().ConfigureAwait(false);
         }
 
         /// <summary>

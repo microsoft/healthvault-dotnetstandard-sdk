@@ -81,7 +81,7 @@ namespace Microsoft.HealthVault
             XmlWriter writer,
             string elementName,
             DataType value)
-            where DataType : new()
+            where DataType : HealthRecordItemData, new()
         {
             if (value != null)
             {

@@ -5,6 +5,8 @@
 
 using Microsoft.HealthVault.PlatformPrimitives;
 using System;
+using System.Runtime.CompilerServices;
+using System.Threading.Tasks;
 
 namespace Microsoft.HealthVault
 {
@@ -137,24 +139,23 @@ namespace Microsoft.HealthVault
         {
             _healthServiceUrl = healthServiceUrl;
             _responseSections = responseSections;
-            _serviceInfo = new LazyCacheWithTtl<ServiceInfo>(GetFromService, RefreshFromService, timeToLive);
+            _serviceInfo = new LazyCacheWithTtl<ServiceInfo>(GetFromServiceAsync, RefreshFromServiceAsync, timeToLive);
         }
 
-        /// <summary>
-        /// Returns the service information retrieved from the HealthVault web-service.
-        /// </summary>
-        ///
-        /// <returns>
-        /// Service information retrieved from the HealthVault web-service.
-        /// </returns>
-        ///
-        /// <remarks>
-        /// Calls to this method are thread-safe.
-        /// </remarks>
-        ///
+        ///  <summary>
+        ///  Returns the service information retrieved from the HealthVault web-service.
+        ///  </summary>
+        /// 
+        ///  <returns>
+        ///  Service information retrieved from the HealthVault web-service.
+        ///  </returns>
+        /// 
+        ///  <remarks>
+        ///  Calls to this method are thread-safe.
+        ///  </remarks>
         public ServiceInfo GetServiceInfo()
         {
-            return _serviceInfo.Value;
+            return _serviceInfo.Value();
         }
 
         /// <summary>
@@ -165,13 +166,13 @@ namespace Microsoft.HealthVault
         /// LazyCacheWithTtl enforces that only one thread is executed here at a time, and puts a lock
         /// around this load.
         /// </remarks>
-        private ServiceInfo GetFromService()
+        private async Task<ServiceInfo> GetFromServiceAsync()
         {
             var connection = _healthServiceUrl != null
                 ? new AnonymousConnection(HealthApplicationConfiguration.Current.ApplicationId, _healthServiceUrl)
                 : new AnonymousConnection();
 
-            var serviceInfo = HealthVaultPlatformInformation.Current.GetServiceDefinition(connection, _responseSections);
+            var serviceInfo = await HealthVaultPlatformInformation.Current.GetServiceDefinitionAsync(connection, _responseSections);
             _lastCheckTime = serviceInfo.LastUpdated;
             return serviceInfo;
         }
@@ -181,13 +182,13 @@ namespace Microsoft.HealthVault
         ///
         /// Returns the current service info if Platform returns no service updates.
         /// </summary>
-        private ServiceInfo RefreshFromService(ServiceInfo currentServiceInfo)
+        private async Task<ServiceInfo> RefreshFromServiceAsync(ServiceInfo currentServiceInfo)
         {
             var connection = _healthServiceUrl != null
                 ? new AnonymousConnection(HealthApplicationConfiguration.Current.ApplicationId, _healthServiceUrl)
                 : new AnonymousConnection();
 
-            var serviceInfo = HealthVaultPlatformInformation.Current.GetServiceDefinition(connection, _responseSections, _lastCheckTime);
+            ServiceInfo serviceInfo = await HealthVaultPlatformInformation.Current.GetServiceDefinitionAsync(connection, _responseSections, _lastCheckTime).ConfigureAwait(false);
             _lastCheckTime = DateTime.Now;
 
             return serviceInfo ?? currentServiceInfo;
