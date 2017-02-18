@@ -3,7 +3,6 @@
 // see http://www.microsoft.com/resources/sharedsource/licensingbasics/sharedsourcelicenses.mspx.
 // All other rights reserved.
 
-using Microsoft.HealthVault.Authentication;
 using Microsoft.HealthVault.Web.Authentication;
 using System;
 using System.Security;

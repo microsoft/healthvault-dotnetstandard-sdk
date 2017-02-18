@@ -126,7 +126,7 @@ namespace Microsoft.HealthVault
             // If it's not in the cache, create it an add it.
             if (manager == null)
             {
-                manager = InitRMWithAssembly(baseName, assembly, null);
+                manager = new ResourceManager(baseName, assembly);
 
                 // Add the new resource manager to the hash
 
@@ -400,7 +400,7 @@ namespace Microsoft.HealthVault
 
             if (String.IsNullOrEmpty(resourceId))
             {
-                throw new ArgumentException("resourceId cannot be null", "resourceId");
+                throw new ArgumentException("resourceId cannot be null", nameof(resourceId));
             }
 
             string template =
@@ -414,7 +414,7 @@ namespace Microsoft.HealthVault
             {
                 result =
                     String.Format(
-                        Thread.CurrentThread.CurrentCulture,
+                        CultureInfo.CurrentCulture,
                         template,
                         args);
             }
@@ -460,71 +460,6 @@ namespace Microsoft.HealthVault
             }
 
             return xSpace;
-        }
-
-        /// <summary>
-        /// Creates a Resource manager instance based on the assembly
-        /// specified.
-        /// </summary>
-        ///
-        /// <param name="baseName">
-        /// The root name of the resources.
-        /// For example, the root name for the resource file
-        /// named "MyResource.en-US.resources" is "MyResource".
-        /// </param>
-        ///
-        /// <param name="assemblyToUse">
-        /// The main Assembly for the resources
-        /// </param>
-        ///
-        /// <param name="usingResourceSet">
-        /// The Type of the custom ResourceSet to use.
-        /// If a null reference, the default runtime ResourceSet is used
-        /// </param>
-        ///
-        /// <returns>
-        /// Resource Manager instance
-        /// </returns>
-        ///
-        /// <exception cref="ArgumentException">
-        /// Thrown if the resource manager instance could not be created
-        /// </exception>
-        ///
-        private static ResourceManager InitRMWithAssembly(
-            string baseName,
-            Assembly assemblyToUse,
-            Type usingResourceSet)
-        {
-            ResourceManager rm = null;
-
-            if (usingResourceSet != null &&
-                baseName != null &&
-                assemblyToUse != null)
-            {
-                rm =
-                    new ResourceManager(
-                        baseName,
-                        assemblyToUse,
-                        usingResourceSet);
-            }
-            else if (usingResourceSet != null &&
-                baseName == null &&
-                assemblyToUse == null)
-            {
-                rm = new ResourceManager(usingResourceSet);
-            }
-            else if (usingResourceSet == null &&
-                baseName != null &&
-                assemblyToUse != null)
-            {
-                rm = new ResourceManager(baseName, assemblyToUse);
-            }
-            else
-            {
-                throw new ArgumentException("assemblyToUse cannot be null", "assemblyToUse");
-            }
-
-            return rm;
         }
     } // class ResourceRetriever
 } // namespace Microsoft.Health.Utility

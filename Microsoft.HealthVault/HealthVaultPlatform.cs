@@ -133,14 +133,14 @@ namespace Microsoft.HealthVault
         /// There is an error loading the vocabulary.
         /// </exception>
         ///
-        public static Vocabulary GetVocabulary(
+        public static async Task<Vocabulary> GetVocabulary(
             HealthServiceConnection connection,
             string name)
         {
             Validator.ThrowIfStringNullOrEmpty(name, "name");
 
             VocabularyKey key = new VocabularyKey(name);
-            return GetVocabulary(connection, key, false);
+            return await GetVocabularyAsync(connection, key, false).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -194,17 +194,19 @@ namespace Microsoft.HealthVault
         /// There is an error loading the vocabulary.
         /// </exception>
         ///
-        public static Vocabulary GetVocabulary(
+        public static async Task<Vocabulary> GetVocabularyAsync(
             HealthServiceConnection connection,
             VocabularyKey vocabularyKey,
             bool cultureIsFixed)
         {
-            Vocabulary vocabularies =
-                GetVocabulary(
+            ReadOnlyCollection<Vocabulary> vocabularies =
+                await GetVocabularyAsync(
                     connection,
-                    vocabularyKey,
-                    cultureIsFixed);
-            return vocabularies;
+                    new VocabularyKey[] { vocabularyKey },
+                    cultureIsFixed)
+                    .ConfigureAwait(false);
+
+            return vocabularies[0];
         }
 
         /// <summary>
@@ -290,7 +292,7 @@ namespace Microsoft.HealthVault
         ///
         public static async Task<ReadOnlyCollection<VocabularyKey>> GetVocabularyKeysAsync(HealthServiceConnection connection)
         {
-            return await HealthVaultPlatformVocabulary.Current.GetVocabularyKeys(connection).ConfigureAwait(false);
+            return await HealthVaultPlatformVocabulary.Current.GetVocabularyKeys(connection);
         }
 
         /// <summary>

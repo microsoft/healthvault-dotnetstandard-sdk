@@ -88,13 +88,7 @@ namespace Microsoft.HealthVault
         /// <p>
         /// This is required for applications in locations with limited access to HealthVault.
         /// Signup codes may be obtained from
-        /// <see cref="ApplicationConnection.NewSignupCode" />,
-        /// <see cref="Microsoft.HealthVault.PatientConnect.PatientConnection.Create" />,
-        /// <see cref="Microsoft.HealthVault.Package.ConnectPackage.Create(OfflineWebApplicationConnection, string, string, string, string, System.Collections.Generic.IList&lt;Microsoft.Health.HealthRecordItem&gt;)" />,
-        /// <see cref="Microsoft.HealthVault.Package.ConnectPackage.Create(OfflineWebApplicationConnection, string, string, string, PasswordProtectedPackage)" />,
-        /// <see cref="Microsoft.HealthVault.Package.ConnectPackage.Create(OfflineWebApplicationConnection, string, string, string, string, PasswordProtectedPackage)" />,
-        /// <see cref="Microsoft.HealthVault.Package.ConnectPackage.CreatePackage" />,
-        /// and <see cref="Microsoft.HealthVault.Package.ConnectPackage.AllocatePackageId" />.
+        /// <see cref="ApplicationConnection.NewSignupCode" />
         /// </p>
         ///
         /// <p>
@@ -500,9 +494,9 @@ namespace Microsoft.HealthVault
                 string key = parameters.GetKey(i);
                 string value = parameters[i];
 
-                qs.Append(HttpUtility.UrlEncodeUnicode(key));
+                qs.Append(Uri.EscapeDataString(key));
                 qs.Append("=");
-                qs.Append(HttpUtility.UrlEncodeUnicode(value));
+                qs.Append(Uri.EscapeDataString(value));
             }
 
             return qs.ToString();

@@ -672,7 +672,7 @@ namespace Microsoft.HealthVault
         /// <exception cref="HealthServiceException">
         /// An error is returned from the server when making the request.
         /// </exception>
-        public async void SetApplicationSettings(IXPathNavigable applicationSettings)
+        public async Task SetApplicationSettings(IXPathNavigable applicationSettings)
         {
             string requestParameters = HealthVaultPlatformPerson.GetSetApplicationSettingsParameters(applicationSettings);
             await HealthVaultPlatformPerson.Current.SetApplicationSettingsAsync(ApplicationConnection, requestParameters).ConfigureAwait(false);
