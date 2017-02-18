@@ -7,16 +7,14 @@ using System;
 using System.Runtime.InteropServices;
 using System.Security;
 
-namespace Microsoft.Health.Certificate
+namespace Microsoft.HealthVault.Certificate
 {
     /// <summary>
     /// Safe handle for a PCERT_CONTEXT
     /// </summary>
-    [SuppressUnmanagedCodeSecurity]
     [SecurityCritical]
     internal sealed class CertificateHandle : SafeHandle
     {
-
         /// <summary>
         /// Creates an instance of CertificateHandle
         /// </summary>
