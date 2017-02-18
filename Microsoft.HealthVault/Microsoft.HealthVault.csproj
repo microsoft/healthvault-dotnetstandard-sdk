@@ -41,7 +41,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AsyncEnumerable.cs" />
-    <Compile Include="Certificate\NativeMethods.cs" />
     <Compile Include="Person\ActiveRecordAuthorization.cs" />
     <Compile Include="Connection\AnonymousConnection.cs" />
     <Compile Include="Application\ApplicationBinaryConfiguration.cs" />
@@ -71,6 +70,8 @@
     <Compile Include="Authentication\ICryptoService.cs" />
     <Compile Include="Authentication\PassportCredential.cs" />
     <Compile Include="Authentication\WebApplicationCredential.cs" />
+    <Compile Include="Rest\HealthServiceRestRequest.cs" />
+    <Compile Include="Rest\HealthServiceRestResponseData.cs" />
     <Compile Include="Thing\AuthorizationRule.cs" />
     <Compile Include="Thing\AuthorizationRuleDisplayFlags.cs" />
     <Compile Include="Thing\AuthorizationSetDefinition.cs" />
@@ -91,7 +92,6 @@
     <Compile Include="Certificate\CertificateName.cs" />
     <Compile Include="Certificate\CertificateStore.cs" />
     <Compile Include="Certificate\CryptoApiBlob.cs" />
-    <Compile Include="Certificate\Handles.cs" />
     <Compile Include="Certificate\ICertificateUtilities.cs" />
     <Compile Include="Certificate\Util.cs" />
     <Compile Include="Thing\CommonItemData.cs" />
