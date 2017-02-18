@@ -448,7 +448,7 @@ namespace Microsoft.HealthVault.Web
         /// The authorization was not returned in the response from the server.
         /// </exception>
         ///
-        public async void AuthenticateAsync()
+        public async Task AuthenticateAsync()
         {
             await Credential.AuthenticateIfRequiredAsync(
                 this,

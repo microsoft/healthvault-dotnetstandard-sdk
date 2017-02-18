@@ -357,7 +357,7 @@ namespace Microsoft.HealthVault.PlatformPrimitives
         private static async Task<ServiceInfo> GetServiceDefinitionAsync(HealthServiceConnection connection, string parameters)
         {
             HealthServiceRequest request =
-                new HealthServiceRequest(connection, "GetServiceDefinitionAsync", 2);
+                new HealthServiceRequest(connection, "GetServiceDefinition", 2);
             request.Parameters = parameters;
             HealthServiceResponseData responseData = await request.ExecuteAsync().ConfigureAwait(false);
 

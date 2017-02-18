@@ -879,6 +879,65 @@ namespace Microsoft.HealthVault
 
         #endregion public methods
 
+        #region ApplicationSettings
+
+        /// <summary>
+        /// Gets the application settings for the current application and person.
+        /// </summary>
+        /// 
+        /// <returns>
+        /// A complete set of application settings including the XML, selected record ID, etc.
+        /// </returns>
+        /// 
+        ////[Obsolete("Use HealthServicePlatform.GetApplicationSettings() instead.")]
+        public async Task<ApplicationSettings> GetAllApplicationSettingsAsync()
+        {
+            return await HealthVaultPlatform.GetApplicationSettingsAsync(this);
+        }
+
+        /// <summary>
+        /// Gets the application settings for the current application and
+        /// person.
+        /// </summary>
+        /// 
+        /// <returns>
+        /// The application settings XML.
+        /// </returns>
+        /// 
+        /// <remarks>
+        /// This might be <b>null</b> if no application settings have been 
+        /// stored for the application or user.
+        /// </remarks>
+        /// 
+        ////[Obsolete("Use HealthServicePlatform.GetApplicationSettingsAsXml() instead.")]
+        public async Task<IXPathNavigable> GetApplicationSettingsAsync()
+        {
+            return await HealthVaultPlatform.GetApplicationSettingsAsXmlAsync(this).ConfigureAwait(false);
+        }
+
+        /// <summary>
+        /// Sets the application settings for the current application and
+        /// person.
+        /// </summary>
+        /// 
+        /// <param name="applicationSettings">
+        /// The application settings XML.
+        /// </param>
+        /// 
+        /// <remarks>
+        /// This might be <b>null</b> if no application settings have been stored
+        /// for the application or user.
+        /// </remarks>
+        /// 
+        ////[Obsolete("Use HealthServicePlatform.SetApplicationSettings() instead.")]
+        public async Task SetApplicationSettingsAsync(
+                IXPathNavigable applicationSettings)
+        {
+            await HealthVaultPlatform.SetApplicationSettingsAsync(this, applicationSettings).ConfigureAwait(false);
+        }
+
+        #endregion ApplicationSettings
+
         #region CreateRequest
 
         internal override HealthServiceRequest CreateRequest(

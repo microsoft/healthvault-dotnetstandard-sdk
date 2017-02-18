@@ -407,7 +407,7 @@ namespace Microsoft.HealthVault
         /// There is an error loading the vocabulary.
         /// </exception>
         ///
-        //[Obsolete("Use HealthServicePlatform.GetVocabulary() instead.")]
+        // [Obsolete("Use HealthServicePlatform.GetVocabulary() instead.")]
         public async Task<ReadOnlyCollection<Vocabulary>> GetVocabulary(
             IList<VocabularyKey> vocabularyKeys, bool cultureIsFixed)
         {

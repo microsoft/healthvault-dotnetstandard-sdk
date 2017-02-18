@@ -62,7 +62,7 @@ namespace Microsoft.HealthVault
         /// The complete set application settings including the XML settings, selected record ID, etc.
         /// </returns>
         ///
-        public static async Task<ApplicationSettings> GetApplicationSettingsTask(HealthServiceConnection connection)
+        public static async Task<ApplicationSettings> GetApplicationSettingsAsync(HealthServiceConnection connection)
         {
             return await HealthVaultPlatformPerson.Current.GetApplicationSettingsAsync(connection).ConfigureAwait(false);
         }
@@ -349,9 +349,6 @@ namespace Microsoft.HealthVault
             VocabularySearchType searchType,
             int? maxResults)
         {
-            ReadOnlyCollection<VocabularyKey> matchingKeys;
-            VocabularyItemCollection matchingVocabulary;
-
             return (await HealthVaultPlatformVocabulary.Current.SearchVocabularyAsync(
                 connection,
                 null,
@@ -439,9 +436,6 @@ namespace Microsoft.HealthVault
             int? maxResults)
         {
             Validator.ThrowIfArgumentNull(vocabularyKey, nameof(vocabularyKey), "VocabularyKeyNullOrEmpty");
-
-            VocabularyItemCollection matchingVocabulary;
-            ReadOnlyCollection<VocabularyKey> matchingKeys;
 
             return (await HealthVaultPlatformVocabulary.Current.SearchVocabularyAsync(
                 connection,

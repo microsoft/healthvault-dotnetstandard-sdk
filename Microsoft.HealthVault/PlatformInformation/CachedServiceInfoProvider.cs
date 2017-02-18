@@ -5,7 +5,6 @@
 
 using Microsoft.HealthVault.PlatformPrimitives;
 using System;
-using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 
 namespace Microsoft.HealthVault
