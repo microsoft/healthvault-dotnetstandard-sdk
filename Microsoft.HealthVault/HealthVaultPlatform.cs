@@ -1102,7 +1102,7 @@ namespace Microsoft.HealthVault
         /// calling any methods of this <see cref="HealthRecordAccessor"/> will result
         /// in a <see cref="HealthServiceAccessDeniedException"/>."
         /// </remarks>
-        public static async Task RemoveApplicationAuthorization(
+        public static async Task RemoveApplicationAuthorizationAsync(
             ApplicationConnection connection,
             HealthRecordAccessor accessor)
         {
@@ -1148,7 +1148,7 @@ namespace Microsoft.HealthVault
         /// If there is an exception during executing the request to HealthVault.
         /// </exception>
         ///
-        public static async Task<IDictionary<Guid, HealthRecordItemTypePermission>> QueryPermissionsByTypes(
+        public static async Task<IDictionary<Guid, HealthRecordItemTypePermission>> QueryPermissionsByTypesAsync(
             ApplicationConnection connection,
             HealthRecordAccessor accessor,
             IList<Guid> healthRecordItemTypeIds)
@@ -1198,7 +1198,7 @@ namespace Microsoft.HealthVault
         /// If there is an exception during executing the request to HealthVault.
         /// </exception>
         ///
-        public static async Task<Collection<HealthRecordItemTypePermission>> QueryPermissions(
+        public static async Task<Collection<HealthRecordItemTypePermission>> QueryPermissionsAsync(
             ApplicationConnection connection,
             HealthRecordAccessor accessor,
             IList<Guid> healthRecordItemTypeIds)
