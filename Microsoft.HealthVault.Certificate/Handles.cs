@@ -65,11 +65,9 @@ namespace Microsoft.HealthVault.Certificate
     /// <summary>
     /// Safe handle for a HCERTSTORE
     /// </summary>
-    [SuppressUnmanagedCodeSecurity]
     [SecurityCritical]
     internal sealed class CertificateStoreHandle : SafeHandle
     {
-
         /// <summary>
         /// Constructor for CertificateStoreHandle.
         /// </summary>
@@ -102,17 +100,14 @@ namespace Microsoft.HealthVault.Certificate
     /// Safe handle for a HCRYPTPROV
     /// </summary>
     [SecurityCritical]
-    [SuppressUnmanagedCodeSecurity]
     internal sealed class KeyContainerHandle : SafeHandle
     {
-
         /// <summary>
         /// Constructor.
         /// </summary>
         private KeyContainerHandle()
             : base(IntPtr.Zero, true)
         {
-            return;
         }
 
         /// <summary>
