@@ -52,6 +52,7 @@ namespace Microsoft.HealthVault.Web.Authentication
             get { return _digestMethod; }
             set { _digestMethod = value; }
         }
+
         private string _digestMethod;
 
         internal string SignMethod
@@ -59,6 +60,7 @@ namespace Microsoft.HealthVault.Web.Authentication
             get { return _signMethod; }
             set { _signMethod = value; }
         }
+
         private string _signMethod;
 
         /// <summary>
@@ -87,6 +89,7 @@ namespace Microsoft.HealthVault.Web.Authentication
             get { return _applicationId; }
             internal set { _applicationId = value; }
         }
+
         private Guid _applicationId;
 
         /// <summary>
@@ -109,6 +112,7 @@ namespace Microsoft.HealthVault.Web.Authentication
             get { return _tokenIssuedRefreshCounter; }
             set { _tokenIssuedRefreshCounter = value; }
         }
+
         private Int64 _tokenIssuedRefreshCounter;
 
         private AuthenticatedSessionKeySet KeySet
@@ -116,6 +120,7 @@ namespace Microsoft.HealthVault.Web.Authentication
             get { return _keySet; }
             set { _keySet = value; }
         }
+
         private AuthenticatedSessionKeySet _keySet;
 
         /// <summary>
@@ -137,6 +142,7 @@ namespace Microsoft.HealthVault.Web.Authentication
             get { return _subCredential; }
             set { _subCredential = value; }
         }
+
         private string _subCredential;
 
         private string _certSubject;
@@ -437,25 +443,14 @@ namespace Microsoft.HealthVault.Web.Authentication
         /// The application identifier to verify, if authentication is required.
         /// </param>
         ///
-        /// <returns>
-        /// <b>true</b> if calling <cref name="Authenticate"/> is required;
-        /// otherwise, <b>false</b>.
-        /// </returns>
-        ///
-        internal override Task AuthenticateIfRequiredAsync(
+        internal override async Task AuthenticateIfRequiredAsync(
             HealthServiceConnection connection,
             Guid applicationId)
         {
-            if (WebApplicationCredential.IsAuthenticationExpired(
-                    applicationId,
-                    this.TokenIssuedRefreshCounter))
+            if (WebApplicationCredential.IsAuthenticationExpired(applicationId, this.TokenIssuedRefreshCounter))
             {
-                Authenticate(
-                    connection,
-                    applicationId);
+                await AuthenticateAsync(connection, applicationId).ConfigureAwait(false);
             }
-
-            return Task.FromResult(true);
         }
 
         /// <summary>
@@ -481,14 +476,11 @@ namespace Microsoft.HealthVault.Web.Authentication
         /// The credential to use for the request.
         /// </returns>
         ///
-        private void Authenticate(
+        private async Task AuthenticateAsync(
             HealthServiceConnection connection,
             Guid applicationId)
         {
-            WebApplicationCredential.AuthenticateKeySetPair(
-                connection,
-                applicationId,
-                this._cert);
+            await WebApplicationCredential.AuthenticateKeySetPairAsync(connection, applicationId, this._cert).ConfigureAwait(false);
 
             LoadAuthTokenPair(applicationId);
         }
@@ -523,6 +515,7 @@ namespace Microsoft.HealthVault.Web.Authentication
             get { return _isAuthenticationRetryDisabled; }
             set { _isAuthenticationRetryDisabled = value; }
         }
+
         private bool _isAuthenticationRetryDisabled;
 
         /// <summary>
@@ -612,7 +605,7 @@ namespace Microsoft.HealthVault.Web.Authentication
         /// <remarks>
         /// This may be called from two primary code paths:
         ///
-        /// 1) WebApplicationCredential.AuthenticateKeySetPair
+        /// 1) WebApplicationCredential.AuthenticateKeySetPairAsync
         ///     pair is already locked by calling thread.
         /// 2) and CreateAuthenticatedSessionToken
         ///     a) the credential could be totally unintialized, including the
@@ -1009,7 +1002,7 @@ namespace Microsoft.HealthVault.Web.Authentication
         /// </param>
         ///
         /// <returns>
-        /// True if <cref name="AuthenticateKeySetPair"/> needs to be called.
+        /// True if <cref name="AuthenticateKeySetPairAsync"/> needs to be called.
         /// </returns>
         ///
         private static bool IsAuthenticationExpired(
@@ -1108,16 +1101,12 @@ namespace Microsoft.HealthVault.Web.Authentication
         /// The application's certificate containing the application's private key.
         /// </param>
         ///
-        private static void AuthenticateKeySetPair(
+        private static async Task AuthenticateKeySetPairAsync(
             HealthServiceConnection connection,
             Guid applicationId,
             X509Certificate2 certificate)
         {
-            AuthenticateKeySetPair(
-                _liveKeySetPairs,
-                connection,
-                applicationId,
-                certificate);
+            await AuthenticateKeySetPairAsync(_liveKeySetPairs, connection, applicationId, certificate).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -1149,7 +1138,7 @@ namespace Microsoft.HealthVault.Web.Authentication
         /// The application's certificate containing the application's private key.
         /// </param>
         ///
-        private static async Task AuthenticateKeySetPair(
+        private static async Task AuthenticateKeySetPairAsync(
             AuthSessionKeySetPairs keySetPairs,
             HealthServiceConnection connection,
             Guid applicationId,
@@ -1178,9 +1167,7 @@ namespace Microsoft.HealthVault.Web.Authentication
                 // create the new token
                 // this will implicitly result in a call to
                 // UpdateAuthenticationResults
-                await cred.CreateAuthenticatedSessionTokenAsync(
-                     connection,
-                     applicationId).ConfigureAwait(false);
+                await cred.CreateAuthenticatedSessionTokenAsync(connection, applicationId).ConfigureAwait(false);
             }
         }
 

@@ -6,6 +6,7 @@
 using System;
 using System.Runtime.InteropServices;
 using System.Security;
+using System.Security.Cryptography;
 
 namespace Microsoft.HealthVault.Authentication
 {
@@ -17,10 +18,11 @@ namespace Microsoft.HealthVault.Authentication
 
         internal static void GetRandomBytes(byte[] buffer)
         {
-            using (RNGCryptoServiceProvider Gen = new RNGCryptoServiceProvider())
-            {
-                Gen.GetBytes(buffer);
-            }
+            // TODO: RNGCryptoServiceProvider is not available in .NetStandard until 2.0
+            // using (RNGCryptoServiceProvider Gen = new RNGCryptoServiceProvider())
+            // {
+            //     Gen.GetBytes(buffer);
+            // }
         }
 
         internal static int GetInt32(byte[] aData, int Offset)

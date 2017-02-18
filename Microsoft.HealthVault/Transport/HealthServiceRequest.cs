@@ -21,6 +21,7 @@ using System.Security;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Web;
 using System.Xml;
 
 namespace Microsoft.HealthVault
@@ -61,22 +62,22 @@ namespace Microsoft.HealthVault
             string fileVersion = "?";
             string systemInfo = "Unknown";
 
-            // TODO: this is not currently accessible in .Net Standard 1.4- we should revisit once 2.0 is released. 
+            // TODO: this is not currently accessible in .Net Standard 1.4- we should revisit once 2.0 is released.
             // safe attempt to obtain the assembly file version, and system information
-//            try
-//            {
-//                fileVersion = FileVersionInfo.GetVersionInfo(Assembly.GetExecutingAssembly().Location).FileVersion;
-//                systemInfo = String.Format(
-//                    CultureInfo.InvariantCulture,
-//                    "{0}; CLR {1}",
-//                    Environment.OSVersion.VersionString,
-//                    Environment.Version);
-//            }
-//            catch (Exception)
-//            {
-//                // failure in obtaining version or system info should not
-//                // prevent the initialzation from continuing.
-//            }
+            //            try
+            //            {
+            //                fileVersion = FileVersionInfo.GetVersionInfo(Assembly.GetExecutingAssembly().Location).FileVersion;
+            //                systemInfo = String.Format(
+            //                    CultureInfo.InvariantCulture,
+            //                    "{0}; CLR {1}",
+            //                    Environment.OSVersion.VersionString,
+            //                    Environment.Version);
+            //            }
+            //            catch (Exception)
+            //            {
+            //                // failure in obtaining version or system info should not
+            //                // prevent the initialzation from continuing.
+            //            }
 
             return String.Format(CultureInfo.InvariantCulture, "HV-NET/{0} ({1})", fileVersion, systemInfo);
         }
@@ -298,7 +299,7 @@ namespace Microsoft.HealthVault
                 if (_connection.Credential != null)
                 {
                     // Mark the credential's authentication result as expired,
-                    // so that in the following 
+                    // so that in the following
                     // Credential.AuthenticateIfRequired we fetch a new token.
                     if (_connection.Credential.ExpireAuthenticationResult(_connection.ApplicationId))
                     {
@@ -333,11 +334,11 @@ namespace Microsoft.HealthVault
                         {
                             this.cancellationTokenSource.Dispose();
                             this.cancellationTokenSource = null;
-                        } 
+                        }
                     }
                 }
 
-                // Platform returns a platform request id with the responses. This allows 
+                // Platform returns a platform request id with the responses. This allows
                 // developers to have additional information if necessary for debugging/logging purposes.
                 Guid responseId;
                 if (response.Headers != null && Guid.TryParse(response.Headers.GetValues("WC_ResponseId")?.FirstOrDefault(), out responseId))
@@ -382,14 +383,14 @@ namespace Microsoft.HealthVault
         /// Cancels any pending request to HealthVault that was initiated with the same connection
         /// as this request.
         /// </summary>
-        /// 
+        ///
         /// <remarks>
         /// Calling this method will cancel any requests that was started using the connection.
         /// It is up to the caller to start the request on another thread. Cancelling will cause
         /// a HealthServiceRequestCancelledException to be thrown on the thread the request was
         /// executed on.
         /// </remarks>
-        /// 
+        ///
         public void CancelRequest()
         {
             lock (this.cancelLock)
@@ -401,7 +402,7 @@ namespace Microsoft.HealthVault
                 else
                 {
                     _pendingCancel = true;
-                } 
+                }
             }
         }
 
@@ -411,13 +412,13 @@ namespace Microsoft.HealthVault
         /// response is no longer necessarily xml, it is returned as
         /// a string
         /// </summary>
-        /// 
+        ///
         /// <param name="transform">
         /// The public URL of the transform to apply to the results. If <b>null</b>,
         /// no transform is applied and the results are returned
         /// as a string.
         /// </param>
-        /// 
+        ///
         public virtual async Task<string> ExecuteForTransformAsync(string transform)
         {
             if (_connection.Credential != null)
@@ -451,7 +452,6 @@ namespace Microsoft.HealthVault
         internal virtual async Task<string> ExecuteForTransformInternalAsync(string transform)
         {
             HttpResponseMessage response = null;
-            String result = null;
             try
             {
                 EasyWebRequest easyWeb = this.BuildWebRequest(transform);
@@ -511,13 +511,13 @@ namespace Microsoft.HealthVault
         /// <summary>
         /// Handles the response stream and headers from transform request.
         /// </summary>
-        /// 
+        ///
         /// <param name="stream">The response stream.</param>
         /// <param name="responseHeaders">The response header collection.</param>
-        /// 
+        ///
         public void HandleTransformResponse(MemoryStream stream, HttpResponseHeaders responseHeaders)
         {
-            // Platform returns a platform request id with the responses. This allows 
+            // Platform returns a platform request id with the responses. This allows
             // developers to have additional information if necessary for debugging/logging purposes.
             Guid responseId;
             if (responseHeaders != null && Guid.TryParse(responseHeaders.GetValues("WC_ResponseId").FirstOrDefault(), out responseId))
@@ -530,7 +530,7 @@ namespace Microsoft.HealthVault
 
         private static void ProcessTransformResponseForErrors(MemoryStream responseStream)
         {
-            // Now look at the errors in the response before returning. If we see HV XML returned 
+            // Now look at the errors in the response before returning. If we see HV XML returned
             // containing a failure status code, throw an exception
             XmlReaderSettings settings = SDKHelper.XmlReaderSettings;
             settings.CloseInput = false;
@@ -976,7 +976,7 @@ namespace Microsoft.HealthVault
                 {
                     throw new MissingFieldException("message");
                 }
-                error.Message = reader.ReadContentAsString();
+                error.Message = reader.ReadElementContentAsString();
 
                 // <context>
                 SDKHelper.SkipToElement(reader);
@@ -987,7 +987,7 @@ namespace Microsoft.HealthVault
                     // <server-name>
                     if (SDKHelper.ReadUntil(reader, "server-name"))
                     {
-                        errorContext.ServerName = reader.ReadContentAsString();
+                        errorContext.ServerName = reader.ReadElementContentAsString();
                     }
                     else
                     {
@@ -1000,7 +1000,7 @@ namespace Microsoft.HealthVault
                     SDKHelper.SkipToElement(reader);
                     while (reader.Name.Equals("server-ip", StringComparison.Ordinal))
                     {
-                        string ipAddressString = reader.ReadContentAsString();
+                        string ipAddressString = reader.ReadElementContentAsString();
                         IPAddress ipAddress = null;
                         if (IPAddress.TryParse(ipAddressString, out ipAddress))
                         {
@@ -1013,7 +1013,7 @@ namespace Microsoft.HealthVault
                     // <exception>
                     if (reader.Name.Equals("exception", StringComparison.Ordinal))
                     {
-                        errorContext.InnerException = reader.ReadContentAsString();
+                        errorContext.InnerException = reader.ReadElementContentAsString();
                         SDKHelper.SkipToElement(reader);
                     }
                     else
@@ -1026,7 +1026,7 @@ namespace Microsoft.HealthVault
                 // <error-info>
                 if (SDKHelper.ReadUntil(reader, "error-info"))
                 {
-                    error.ErrorInfo = reader.ReadContentAsString();
+                    error.ErrorInfo = reader.ReadElementContentAsString();
                     SDKHelper.SkipToElement(reader);
                 }
             }
@@ -1233,6 +1233,5 @@ namespace Microsoft.HealthVault
 
         private bool _pendingCancel;
         private HealthServiceConnection _connection;
-        private HealthServiceResponseData _response;
     }
 }
