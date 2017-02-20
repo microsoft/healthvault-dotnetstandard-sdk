@@ -47,7 +47,13 @@ namespace Microsoft.HealthVault
         ///
         public static async Task<IXPathNavigable> GetApplicationSettingsAsXmlAsync(HealthServiceConnection connection)
         {
-            return (await HealthVaultPlatformPerson.Current.GetApplicationSettingsAsync(connection)).XmlSettings;
+            ApplicationSettings applicationSettings =
+                await HealthVaultPlatformPerson
+                    .Current
+                    .GetApplicationSettingsAsync(connection)
+                    .ConfigureAwait(false);
+
+            return applicationSettings.XmlSettings;
         }
 
         /// <summary>
@@ -91,7 +97,10 @@ namespace Microsoft.HealthVault
             string requestParameters =
                 HealthVaultPlatformPerson.GetSetApplicationSettingsParameters(applicationSettings);
 
-            await HealthVaultPlatformPerson.Current.SetApplicationSettingsAsync(connection, requestParameters).ConfigureAwait(false);
+            await HealthVaultPlatformPerson
+                .Current
+                .SetApplicationSettingsAsync(connection, requestParameters)
+                .ConfigureAwait(false);
         }
 
         #endregion

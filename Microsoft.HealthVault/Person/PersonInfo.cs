@@ -674,8 +674,14 @@ namespace Microsoft.HealthVault
         /// </exception>
         public async Task SetApplicationSettings(IXPathNavigable applicationSettings)
         {
-            string requestParameters = HealthVaultPlatformPerson.GetSetApplicationSettingsParameters(applicationSettings);
-            await HealthVaultPlatformPerson.Current.SetApplicationSettingsAsync(ApplicationConnection, requestParameters).ConfigureAwait(false);
+            string requestParameters
+                = HealthVaultPlatformPerson.GetSetApplicationSettingsParameters(applicationSettings);
+
+            await HealthVaultPlatformPerson
+                .Current
+                .SetApplicationSettingsAsync(ApplicationConnection, requestParameters)
+                .ConfigureAwait(false);
+
             _appSettings = SDKHelper.SafeLoadXml(requestParameters);
 
             if (ApplicationSettingsChanged != null)
