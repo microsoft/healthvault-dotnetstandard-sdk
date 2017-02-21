@@ -154,7 +154,7 @@ namespace Microsoft.HealthVault.Certificate
         }
 
         /// <summary>
-        /// Releases
+        /// Releases 
         /// </summary>
         /// <returns>Releases the handle associated with the public key </returns>
         [SecurityCritical]
