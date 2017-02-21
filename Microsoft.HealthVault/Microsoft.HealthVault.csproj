@@ -41,7 +41,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AsyncEnumerable.cs" />
-    <Compile Include="Certificate\NativeMethods.cs" />
     <Compile Include="Person\ActiveRecordAuthorization.cs" />
     <Compile Include="Connection\AnonymousConnection.cs" />
     <Compile Include="Application\ApplicationBinaryConfiguration.cs" />
@@ -138,8 +137,6 @@
     <Compile Include="Record\HealthRecordInfo.cs" />
     <Compile Include="Thing\HealthRecordItem.cs" />
     <Compile Include="Thing\HealthRecordItemCollection.cs" />
-    <Compile Include="Thing\HealthRecordItemDataTable.cs" />
-    <Compile Include="Thing\HealthRecordItemDataTableView.cs" />
     <Compile Include="Thing\HealthRecordItemExtension.cs" />
     <Compile Include="Thing\HealthRecordItemFlags.cs" />
     <Compile Include="Thing\HealthRecordItemKey.cs" />
@@ -198,7 +195,6 @@
     <Compile Include="IServiceInfoProvider.cs" />
     <Compile Include="IServiceLocator.cs" />
     <Compile Include="Thing\ItemRetrievalIntentions.cs" />
-    <Compile Include="Thing\ItemTypeDataColumn.cs" />
     <Compile Include="Thing\ItemTypeManager.cs" />
     <Compile Include="ItemTypes\HealthRecordItemData.cs" />
     <Compile Include="ItemTypes\PasswordProtectAlgorithm.cs" />

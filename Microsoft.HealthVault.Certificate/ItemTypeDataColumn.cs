@@ -4,7 +4,7 @@
 // All other rights reserved.
 
 using System;
-using System.Data.Common;
+using System.Data;
 using System.Xml;
 using System.Xml.XPath;
 
@@ -16,7 +16,7 @@ namespace Microsoft.HealthVault
     /// transform.
     /// </summary>
     /// 
-    public class ItemTypeDataColumn : DbColumn
+    public class ItemTypeDataColumn : DataColumn
     {
         internal static ItemTypeDataColumn CreateFromXml(
             XPathNavigator columnNavigator)
@@ -102,7 +102,9 @@ namespace Microsoft.HealthVault
             }
 
             ColumnName = tag;
-            BaseColumnName = label;
+
+            base.Caption = label;
+
             _typeName = type.ToString();
             _width = width;
             _visible = visible;
@@ -118,7 +120,9 @@ namespace Microsoft.HealthVault
             string orderBy)
         {
             ColumnName = tag;
-            BaseColumnName = label;
+
+            base.Caption = label;
+
             _typeName = type;
             _width = width;
             _visible = visible;
@@ -197,7 +201,7 @@ namespace Microsoft.HealthVault
             return
                 new ItemTypeDataColumn(
                     ColumnName,
-                    BaseColumnName,
+                    Caption,
                     _typeName,
                     _width,
                     _visible,
@@ -289,7 +293,7 @@ namespace Microsoft.HealthVault
                     new string[] 
                     { 
                         ColumnName, 
-                        BaseColumnName, 
+                        Caption, 
                         ColumnTypeName, 
                         ColumnWidth.ToString(), 
                         VisibleByDefault.ToString(),

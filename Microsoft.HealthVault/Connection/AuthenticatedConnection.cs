@@ -438,7 +438,7 @@ namespace Microsoft.HealthVault
                     new Uri(
                         shellUrl,
                         "redirect.aspx?target=verifyliveid&targetqs=" +
-                            HttpUtility.UrlEncode(
+                            WebUtility.UrlEncode(
                                 "?appid=" + appId + "&ismra=" + SDKHelper.XmlFromBool(isMra) +
                                 "&persistwctoken=" + SDKHelper.XmlFromBool(isPersistent)));
 

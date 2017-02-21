@@ -142,7 +142,7 @@ namespace Microsoft.HealthVault
         /// There is an error loading the vocabulary.
         /// </exception>
         ///
-        public static async Task<Vocabulary> GetVocabulary(
+        public static async Task<Vocabulary> GetVocabularyAsync(
             HealthServiceConnection connection,
             string name)
         {

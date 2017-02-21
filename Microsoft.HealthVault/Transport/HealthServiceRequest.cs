@@ -43,12 +43,6 @@ namespace Microsoft.HealthVault
         private const string CorrelationIdContextKey = "WC_CorrelationId";
         private const string ResponseIdContextKey = "WC_ResponseId";
 
-        [ThreadStatic]
-        private static Guid _correlationId;
-
-        [ThreadStatic]
-        private static Guid _lastResponseId;
-
         private CancellationTokenSource cancellationTokenSource;
         private readonly object cancelLock = new object();
 
@@ -79,45 +73,6 @@ namespace Microsoft.HealthVault
             //            }
 
             return String.Format(CultureInfo.InvariantCulture, "HV-NET/{0} ({1})", fileVersion, systemInfo);
-        }
-
-        /// <summary>
-        /// Creates a new instance of the <see cref="HealthServiceRequest"/>
-        /// class for the specified method.
-        /// </summary>
-        ///
-        /// <param name="connection">
-        /// The client-side representation of the HealthVault service.
-        /// </param>
-        ///
-        /// <param name="methodName">
-        /// The name of the method to invoke on the service.
-        /// </param>
-        ///
-        /// <param name="methodVersion">
-        /// The version of the method to invoke on the service.
-        /// </param>
-        ///
-        /// <param name="record">
-        /// The record to use.
-        /// </param>
-        ///
-        /// <exception cref="ArgumentNullException">
-        /// The <paramref name="connection"/> parameter is <b>null</b>.
-        /// </exception>
-        ///
-        /// <exception cref="ArgumentException">
-        /// The <paramref name="methodName"/> parameter is <b>null</b> or empty.
-        /// </exception>
-        ///
-        public HealthServiceRequest(
-            HealthServiceConnection connection,
-            string methodName,
-            int methodVersion,
-            HealthRecordAccessor record) :
-            this(connection, methodName, methodVersion)
-        {
-            _recordId = record.Id;
         }
 
         /// <summary>
@@ -175,112 +130,71 @@ namespace Microsoft.HealthVault
         }
 
         /// <summary>
+        /// Creates a new instance of the <see cref="HealthServiceRequest"/>
+        /// class for the specified method.
+        /// </summary>
+        ///
+        /// <param name="connection">
+        /// The client-side representation of the HealthVault service.
+        /// </param>
+        ///
+        /// <param name="methodName">
+        /// The name of the method to invoke on the service.
+        /// </param>
+        ///
+        /// <param name="methodVersion">
+        /// The version of the method to invoke on the service.
+        /// </param>
+        ///
+        /// <param name="record">
+        /// The record to use.
+        /// </param>
+        ///
+        /// <exception cref="ArgumentNullException">
+        /// The <paramref name="connection"/> parameter is <b>null</b>.
+        /// </exception>
+        ///
+        /// <exception cref="ArgumentException">
+        /// The <paramref name="methodName"/> parameter is <b>null</b> or empty.
+        /// </exception>
+        ///
+        public HealthServiceRequest(
+            HealthServiceConnection connection,
+            string methodName,
+            int methodVersion,
+            HealthRecordAccessor record) :
+            this(connection, methodName, methodVersion)
+        {
+            _recordId = record.Id;
+        }
+
+        public HealthServiceRequest(
+            HealthServiceConnection connection,
+            string methodName,
+            int methodVersion,
+            HealthRecordAccessor record,
+            Guid correlationId) :
+            this(connection, methodName, methodVersion, record)
+        {
+            this.CorrelationId = correlationId;
+        }
+
+        /// <summary>
         /// To allow applications to keep track of calls to platform, the application
         /// can optionally set a correlation id. This will be passed up in web requests to
         /// HealthVault and used when HealthVault writes to its logs. If issues occur, this
         /// id can be used by the HealthVault team to help debug the issue.
-        ///
-        /// For asp.net applications, we want to avoid the use of thread local for setting
-        /// the request id since a single web request is not guaranteed to fully execute on the
-        /// same thread - using HttpContext.Items is the recommended way.
-        ///
-        /// For non web applications, this method sets a [ThreadStatic] variable which stores the
-        /// id in thread local storage. All HealthVault requests made on this thread will re-use this
-        /// variable
         /// </summary>
-        public static void SetCorrelationId(Guid correlationId)
-        {
-            HttpContext httpContext = HttpContext.Current;
-
-            if (httpContext != null)
-            {
-                httpContext.Items[CorrelationIdContextKey] = correlationId;
-            }
-            else
-            {
-                // _correlationId is a ThreadStatic variable so it is stored in thread local and used
-                // by all health service requests in this thread. This is the primary usage for
-                // non web applications to set the request id
-                _correlationId = correlationId;
-            }
-        }
+        public Guid CorrelationId { get; set; }
 
         /// <summary>
-        /// Gets the correlation id that was set by the user. For web applications, the correlation id
-        /// was set inside of HttpContext.Current.Items, so GetCorrelationId will retrieve from the
-        /// HttpContext
-        ///
-        /// For non web applications, it will return whatever was set in the [ThreadStatic] variable.
-        /// </summary>
-        /// <returns></returns>
-        public static Guid GetCorrelationId()
-        {
-            HttpContext httpContext = HttpContext.Current;
-
-            if (httpContext != null)
-            {
-                if (httpContext.Items[CorrelationIdContextKey] != null)
-                {
-                    return (Guid)httpContext.Items[CorrelationIdContextKey];
-                }
-
-                return Guid.Empty;
-            }
-
-            return _correlationId;
-        }
-
-        /// <summary>
-        /// Sets the last response id into thread local storage (for client applications) or into
-        /// HttpContext.Current.Items for web applications. This is set whenever a response from
-        /// platform is received and uses the response id in the response headers
-        /// </summary>
-        internal static void SetLastResponseId(Guid responseId)
-        {
-            HttpContext httpContext = HttpContext.Current;
-
-            if (httpContext != null)
-            {
-                httpContext.Items[ResponseIdContextKey] = responseId;
-            }
-            else
-            {
-                // _lastResponseId is a ThreadStatic variable so it is stored in thread local storage
-                // so that it only exists in the calling thread
-                _lastResponseId = responseId;
-            }
-        }
-
-        /// <summary>
-        /// Gets the last response id that was returned by the HealthVault platform. The response id
+        /// Gets the response id that was returned by the HealthVault platform. The response id
         /// is found in the response headers and is set when a request finishes executing.
-        ///
-        /// For web applications, the response id is stored in the HttpContext items to be shared across
-        /// the web request.
-        ///
-        /// For non web applications, the response id is stored in thread local storage so the last response
-        /// in the current thread will be returned.
-        ///
+        /// 
         /// If an error occurs / exception thrown, the caller can call GetLastResponseId to get that response
         /// id which can be used to look up error information in the HealthVault logs.
         /// </summary>
-        /// <returns></returns>
-        public static Guid GetLastResponseId()
-        {
-            HttpContext httpContext = HttpContext.Current;
-
-            if (httpContext != null)
-            {
-                if (httpContext.Items[ResponseIdContextKey] != null)
-                {
-                    return (Guid)httpContext.Items[ResponseIdContextKey];
-                }
-
-                return Guid.Empty;
-            }
-
-            return _lastResponseId;
-        }
+        public Guid ResposeId { get; set; }
 
         public async Task<HealthServiceResponseData> ExecuteAsync()
         {
@@ -340,7 +254,7 @@ namespace Microsoft.HealthVault
                 // Platform returns a platform request id with the responses. This allows
                 // developers to have additional information if necessary for debugging/logging purposes.
                 Guid responseId;
-                if (response.Headers != null && Guid.TryParse(response.Headers.GetValues("WC_ResponseId")?.FirstOrDefault(), out responseId))
+                if (response.Headers != null && Guid.TryParse(response.Headers.GetValues(ResponseIdContextKey)?.FirstOrDefault(), out responseId))
                 {
                     ResponseId = responseId;
 
@@ -354,11 +268,6 @@ namespace Microsoft.HealthVault
 
                 Stream responseStream = await response.Content.ReadAsStreamAsync().ConfigureAwait(false);
                 result = HandleResponseStreamResult(responseStream);
-
-                if (ResponseId != Guid.Empty)
-                {
-                    SetLastResponseId(ResponseId);
-                }
 
                 return result;
             }
@@ -483,11 +392,6 @@ namespace Microsoft.HealthVault
                     responseMemoryStream.Position = 0;
                     this.HandleTransformResponse(responseMemoryStream, response.Headers);
 
-                    if (ResponseId != Guid.Empty)
-                    {
-                        SetLastResponseId(ResponseId);
-                    }
-
                     // Reset stream position and read as string for result
                     responseMemoryStream.Position = 0;
 
@@ -600,16 +504,15 @@ namespace Microsoft.HealthVault
             }
 
             this.BuildRequestXml(transform);
-            Guid correlationId = GetCorrelationId();
 
-            HealthVaultPlatformTrace.LogRequest(_xmlRequest, correlationId);
+            HealthVaultPlatformTrace.LogRequest(_xmlRequest, CorrelationId);
 
             EasyWebRequest easyWeb = new EasyWebRequest(_xmlRequest, _xmlRequestLength);
             easyWeb.WebProxy = _connection.WebProxy;
 
-            if (correlationId != Guid.Empty)
+            if (CorrelationId != Guid.Empty)
             {
-                easyWeb.Headers.Add("WC_CorrelationId", correlationId.ToString());
+                easyWeb.Headers.Add(CorrelationIdContextKey, CorrelationId.ToString());
             }
 
             return easyWeb;

@@ -39,6 +39,8 @@ namespace Microsoft.HealthVault
             HealthRecordItemTypeDefinition typeDefinition =
                 new HealthRecordItemTypeDefinition();
 
+            typeDefinition.TypeNavigator = typeNavigator;
+
             typeDefinition.ParseXml(typeNavigator);
             return typeDefinition;
         }
@@ -50,7 +52,7 @@ namespace Microsoft.HealthVault
         {
         }
 
-        private void ParseXml(XPathNavigator typeNavigator)
+        protected virtual void ParseXml(XPathNavigator typeNavigator)
         {
             string typeIdString = typeNavigator.SelectSingleNode("id").Value;
             _id = new Guid(typeIdString);
@@ -91,16 +93,6 @@ namespace Microsoft.HealthVault
                 _xsd = String.Empty;
             }
 
-            _columns = GetThingTypeColumns(typeNavigator);
-
-            var transforms = new List<string>();
-            XPathNodeIterator transformsIterator = typeNavigator.Select("transforms/tag");
-
-            foreach (XPathNavigator transformsNav in transformsIterator)
-            {
-                transforms.Add(transformsNav.Value);
-            }
-
             _versions = GetThingTypeVersions(typeNavigator);
 
             XPathNavigator effectiveDateXPath = typeNavigator.SelectSingleNode("effective-date-xpath");
@@ -116,15 +108,6 @@ namespace Microsoft.HealthVault
             {
                 UpdatedEndDateXPath = updatedEndDateNavigator.Value;
             }
-        }
-
-        private static ReadOnlyCollection<ItemTypeDataColumn> GetThingTypeColumns(XPathNavigator typeNavigator)
-        {
-            XPathNodeIterator columnIterator = typeNavigator.Select("columns/column");
-
-            var columns = (from XPathNavigator columnNav in columnIterator select ItemTypeDataColumn.CreateFromXml(columnNav)).ToList();
-
-            return new ReadOnlyCollection<ItemTypeDataColumn>(columns);
         }
 
         private static ReadOnlyCollection<HealthRecordItemTypeVersionInfo> GetThingTypeVersions(XPathNavigator typeNavigator)
@@ -269,39 +252,6 @@ namespace Microsoft.HealthVault
         }
 
         /// <summary>
-        /// Gets or sets the column definitions when dealing with the type as a
-        /// single type table.
-        /// </summary>
-        ///
-        /// <value>
-        /// A read-only collection containing the defintions.
-        /// </value>
-        ///
-        public ReadOnlyCollection<ItemTypeDataColumn> ColumnDefinitions
-        {
-            get { return _columns; }
-            protected set { _columns = value; }
-        }
-        private ReadOnlyCollection<ItemTypeDataColumn> _columns =
-            new ReadOnlyCollection<ItemTypeDataColumn>(new ItemTypeDataColumn[0]);
-
-        /// <summary>
-        /// Gets or sets the HealthVault transform names supported by the type.
-        /// </summary>
-        ///
-        /// <value>
-        /// A read-only collection containing the transforms.
-        /// </value>
-        ///
-        public ReadOnlyCollection<string> SupportedTransformNames
-        {
-            get { return _supportedTransformNames; }
-            protected set { _supportedTransformNames = value; }
-        }
-        private ReadOnlyCollection<string> _supportedTransformNames =
-            new ReadOnlyCollection<string>(new string[0]);
-
-        /// <summary>
         /// Gets or sets a collection of the version information for the type.
         /// </summary>
         public ReadOnlyCollection<HealthRecordItemTypeVersionInfo> Versions
@@ -339,5 +289,7 @@ namespace Microsoft.HealthVault
             get;
             protected set;
         }
+
+        public XPathNavigator TypeNavigator { get; protected set; }
     }
 }

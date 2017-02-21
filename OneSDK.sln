@@ -7,7 +7,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.HealthVault", "Mi
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.HealthVault.ItemTypes", "Microsoft.HealthVault.ItemTypes\Microsoft.HealthVault.ItemTypes.csproj", "{105AC0FB-6FE4-475D-A4A6-6EF660337E5E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.HealthVault.Certificate", "Microsoft.HealthVault.Certificate\Microsoft.HealthVault.Certificate.csproj", "{F269F61A-5CB2-4F81-BC24-E6825F261061}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.HealthVault.DesktopWeb.Common", "Microsoft.HealthVault.Certificate\Microsoft.HealthVault.DesktopWeb.Common.csproj", "{F269F61A-5CB2-4F81-BC24-E6825F261061}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.HealthVault.Web", "Microsoft.HealthVault.Web\Microsoft.HealthVault.Web.csproj", "{05961EF8-AFF3-4F65-B71A-65176224BE9D}"
 EndProject

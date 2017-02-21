@@ -468,7 +468,7 @@ namespace Microsoft.HealthVault.Web
         ///
         public async Task<ApplicationSettings> GetAllApplicationSettingsAsync()
         {
-            return await HealthVaultPlatform.GetApplicationSettingsTask(this).ConfigureAwait(false);
+            return await HealthVaultPlatform.GetApplicationSettingsAsync(this).ConfigureAwait(false);
         }
 
         /// <summary>

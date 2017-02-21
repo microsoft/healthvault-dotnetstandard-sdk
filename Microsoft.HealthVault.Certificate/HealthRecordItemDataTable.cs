@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.Linq;
 using System.Xml.XPath;
+using Microsoft.HealthVault.DesktopWeb.Common;
 using Microsoft.HealthVault.Exceptions;
 
 namespace Microsoft.HealthVault
@@ -99,8 +100,8 @@ namespace Microsoft.HealthVault
                 else
                 {
                     string transform = (sttTypeDef == null) ?
-                        typeDefDict[item.TypeId].TransformItem(transformName, item) :
-                        sttTypeDef.TransformItem(transformName, item);
+                        HealthRecordItemTypeDefinitionHelper.Create(typeDefDict[item.TypeId]).TransformItem(transformName, item) :
+                        HealthRecordItemTypeDefinitionHelper.Create(sttTypeDef).TransformItem(transformName, item);
 
                     XmlReaderSettings settings = new XmlReaderSettings()
                     {
@@ -417,8 +418,15 @@ namespace Microsoft.HealthVault
                         this.Filter.TypeIds[0],
                         connection).ConfigureAwait(false);
 
-                if (typeDefinition != null &&
-                    typeDefinition.ColumnDefinitions.Count > 0)
+                HealthRecordItemTypeDefinitionHelper healthRecordItemTypeDefinitionHelper = null;
+
+                if (typeDefinition != null)
+                {
+                   healthRecordItemTypeDefinitionHelper = HealthRecordItemTypeDefinitionHelper.Create(typeDefinition);
+                }
+
+                if (healthRecordItemTypeDefinitionHelper != null &&
+                    healthRecordItemTypeDefinitionHelper.ColumnDefinitions.Count > 0)
                 {
                     effectiveView
                         = HealthRecordItemDataTableView.SingleTypeTable;
@@ -426,7 +434,7 @@ namespace Microsoft.HealthVault
 
                     foreach (
                         ItemTypeDataColumn column in
-                        typeDefinition.ColumnDefinitions)
+                        healthRecordItemTypeDefinitionHelper.ColumnDefinitions)
                     {
                         _displayColumns.Add(
                             column.ColumnName, column.Clone());
@@ -446,15 +454,20 @@ namespace Microsoft.HealthVault
                 effectiveView
                     = HealthRecordItemDataTableView.MultipleTypeTable;
 
-                foreach (
-                    ItemTypeDataColumn column in
-                    typeDefinition.ColumnDefinitions)
+                if (typeDefinition != null)
                 {
-                    _displayColumns.Add(column.ColumnName, column.Clone());
-                }
+                    var healthRecordItemTypeDefinitionHelper = HealthRecordItemTypeDefinitionHelper.Create(typeDefinition);
 
-                this.Filter.View.TransformsToApply.Clear();
-                this.Filter.View.TransformsToApply.Add("mtt");
+                    foreach (
+                        ItemTypeDataColumn column in
+                        healthRecordItemTypeDefinitionHelper.ColumnDefinitions)
+                    {
+                        _displayColumns.Add(column.ColumnName, column.Clone());
+                    }
+
+                    this.Filter.View.TransformsToApply.Clear();
+                    this.Filter.View.TransformsToApply.Add("mtt");
+                }
             }
 
             return effectiveView;

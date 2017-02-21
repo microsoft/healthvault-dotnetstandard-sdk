@@ -89,7 +89,12 @@ namespace Microsoft.HealthVault
             string thumbprint = null;
 
             X509Certificate2 result = null;
-            X509Store store = new X509Store(storeLocation);
+
+            // Note- .NET SDK invokes X509Store(storeLocation),
+            // as .NET standard doesn't have similar method yet (tho, available in 2.0) 
+            // we will create the store with store name "MY" which is similar
+            // to .NET SDK version
+            X509Store store = new X509Store(StoreName.My, storeLocation);
 
             store.Open(OpenFlags.ReadOnly);
 

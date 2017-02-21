@@ -4,6 +4,7 @@
 // All other rights reserved.
 
 using System;
+using System.Globalization;
 using System.Xml;
 using System.Xml.XPath;
 
@@ -298,7 +299,7 @@ namespace Microsoft.HealthVault
         {
             return
                 String.Format(
-                    System.Threading.Thread.CurrentThread.CurrentCulture,
+                    CultureInfo.CurrentCulture,
                     toStringFormat,
                     _timestamp,
                     _applicationId,

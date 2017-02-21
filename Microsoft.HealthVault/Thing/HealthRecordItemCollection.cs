@@ -8,6 +8,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
+using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.XPath;
 
@@ -1234,7 +1235,7 @@ namespace Microsoft.HealthVault
 
         #region helpers
 
-        private void GetPartialThings(int index)
+        private async Task GetPartialThings(int index)
         {
             // We must have a partial thing at this index. Get
             // the next MaxResultsPerRequest number of partial
@@ -1266,7 +1267,7 @@ namespace Microsoft.HealthVault
                 }
             }
 
-            Collection<HealthRecordItem> things = GetPartialThings(partialThings);
+            Collection<HealthRecordItem> things = await GetPartialThingsAsync(partialThings).ConfigureAwait(false);
 
             bool atEndOfPartialThings = false;
             int newThingIndex = index;
@@ -1310,7 +1311,7 @@ namespace Microsoft.HealthVault
             }
         }
 
-        private Collection<HealthRecordItem> GetPartialThings(
+        private async Task<Collection<HealthRecordItem>> GetPartialThingsAsync(
             IList<HealthRecordItemKey> partialThings)
         {
             Collection<HealthRecordItem> results = new Collection<HealthRecordItem>();
@@ -1339,7 +1340,7 @@ namespace Microsoft.HealthVault
             searcher.Filters.Add(filter);
 
             // Get the partial things
-            XmlReader infoReader = searcher.GetMatchingItemsReader();
+            XmlReader infoReader = await searcher.GetMatchingItemsReader().ConfigureAwait(false);
 
             if (infoReader != null)
             {

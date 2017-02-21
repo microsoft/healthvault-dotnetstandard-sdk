@@ -759,9 +759,9 @@ namespace Microsoft.HealthVault
         /// calling any methods of this <see cref="HealthRecordAccessor"/> will result
         /// in a <see cref="HealthServiceAccessDeniedException"/>."
         /// </remarks>
-        public void RemoveApplicationAuthorization()
+        public async Task RemoveApplicationAuthorizationAsync()
         {
-            HealthVaultPlatform.RemoveApplicationAuthorization(Connection, this);
+            await HealthVaultPlatform.RemoveApplicationAuthorizationAsync(Connection, this).ConfigureAwait(false);
         }
 
         #endregion Authorization methods
@@ -841,7 +841,7 @@ namespace Microsoft.HealthVault
         public async Task<IDictionary<Guid, HealthRecordItemTypePermission>> QueryPermissionsByTypes(
             IList<Guid> healthRecordItemTypeIds)
         {
-            return await HealthVaultPlatform.QueryPermissionsByTypes(Connection, this, healthRecordItemTypeIds).ConfigureAwait(false);
+            return await HealthVaultPlatform.QueryPermissionsByTypesAsync(Connection, this, healthRecordItemTypeIds).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -881,7 +881,7 @@ namespace Microsoft.HealthVault
         public async Task<Collection<HealthRecordItemTypePermission>> QueryPermissions(
             IList<Guid> healthRecordItemTypeIds)
         {
-            return await HealthVaultPlatform.QueryPermissions(Connection, this, healthRecordItemTypeIds).ConfigureAwait(false);
+            return await HealthVaultPlatform.QueryPermissionsAsync(Connection, this, healthRecordItemTypeIds).ConfigureAwait(false);
         }
 
         /// <summary>

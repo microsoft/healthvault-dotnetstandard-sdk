@@ -299,9 +299,9 @@ namespace Microsoft.HealthVault
         /// There is an error loading the vocabulary.
         /// </exception>
         ///
-        public Vocabulary GetVocabulary(string name)
+        public async Task<Vocabulary> GetVocabularyAsync(string name)
         {
-            return HealthVaultPlatform.GetVocabulary(this, name);
+            return await HealthVaultPlatform.GetVocabularyAsync(this, name).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -351,9 +351,9 @@ namespace Microsoft.HealthVault
         /// </exception>
         ///
         //[Obsolete("Use HealthServicePlatform.GetVocabulary() instead.")]
-        public Vocabulary GetVocabulary(VocabularyKey vocabularyKey, bool cultureIsFixed)
+        public async Task<Vocabulary> GetVocabulary(VocabularyKey vocabularyKey, bool cultureIsFixed)
         {
-            return HealthVaultPlatform.GetVocabulary(this, vocabularyKey, cultureIsFixed);
+            return await HealthVaultPlatform.GetVocabularyAsync(this, vocabularyKey, cultureIsFixed).ConfigureAwait(false);
         }
 
         /// <summary>

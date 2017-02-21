@@ -587,6 +587,11 @@ namespace Microsoft.HealthVault
                 throw new ObjectDisposedException("BlobStream");
             }
 
+            if (_record == null)
+            {
+                throw new NotSupportedException("Currently blobs for records are only supported");
+            }
+
             Validator.ThrowArgumentExceptionIf(
                 buffer.Length - offset < count,
                 "buffer",
@@ -676,21 +681,6 @@ namespace Microsoft.HealthVault
                 bytesInWebRequest = chunkSizeToWrite;
                 start = _position;
                 webRequestBuffer = _chunkBuffer;
-
-                if (_connectPackageParameters != null)
-                {
-                    long startChunkSequenceNumber = _position / _blobPutParameters.ChunkSize;
-                    start = startChunkSequenceNumber * _blobPutParameters.PostEncryptionChunkSize;
-
-                    using (ICryptoTransform transform =
-                        _connectPackageParameters.BlobChunkEncryptionAlgorithm.CreateEncryptor())
-                    {
-                        webRequestBuffer =
-                            transform.TransformFinalBlock(webRequestBuffer, 0, chunkSizeToWrite);
-                    }
-
-                    bytesInWebRequest = webRequestBuffer.Length;
-                }
             }
 
             if (webRequestBuffer != null)
@@ -857,10 +847,7 @@ namespace Microsoft.HealthVault
         {
             if (_blobPutParameters == null)
             {
-                _blobPutParameters =
-                    _record != null ?
-                    BeginPutBlobAsync().Result :
-                    BeginPutConnectPackageBlobAsync().Result;
+                _blobPutParameters = BeginPutBlobAsync().Result;
 
                 _blob.Url = _blobPutParameters.Url;
                 _chunkBuffer = new byte[_blobPutParameters.ChunkSize];
@@ -924,68 +911,6 @@ namespace Microsoft.HealthVault
             return new BlobPutParameters(
                 blobReferenceUrl,
                 chunkSize,
-                maxBlobSize,
-                blobHashAlg,
-                blocksize);
-        }
-
-        /// <summary>
-        /// Calls the BeginPutBlob HealthVault method.
-        /// </summary>
-        ///
-        /// <returns>
-        /// The result of the BeginPutConnectPackageBlob method call as a
-        /// BlobPutParameters instance.
-        /// </returns>
-        ///
-        /// <exception cref="HealthServiceException">
-        /// If the call to HealthVault fails in some way.
-        /// </exception>
-        /// 
-        private async Task<BlobPutParameters> BeginPutConnectPackageBlobAsync()
-        {
-            HealthServiceRequest request =
-                new HealthServiceRequest(_connectPackageParameters.Connection, "BeginPutConnectPackageBlob", 1);
-
-            HealthServiceResponseData responseData = await request.ExecuteAsync().ConfigureAwait(false);
-
-            XPathExpression infoPath =
-                SDKHelper.GetInfoXPathExpressionForMethod(
-                    responseData.InfoNavigator,
-                    "BeginPutConnectPackageBlob");
-
-            XPathNavigator infoNav =
-                responseData.InfoNavigator.SelectSingleNode(infoPath);
-
-            Uri blobReferenceUrl = new Uri(infoNav.SelectSingleNode("blob-ref-url").Value);
-            int chunkSize = infoNav.SelectSingleNode("blob-pre-encryption-chunk-size").ValueAsInt;
-            int postEncryptionChunkSize =
-                infoNav.SelectSingleNode("blob-post-encryption-chunk-size").ValueAsInt;
-            long maxBlobSize = infoNav.SelectSingleNode("max-blob-size").ValueAsLong;
-            String blobHashAlgString = infoNav.SelectSingleNode("blob-hash-algorithm").Value;
-            BlobHashAlgorithm blobHashAlg;
-            try
-            {
-                blobHashAlg =
-                    (BlobHashAlgorithm)Enum.Parse(
-                        typeof(BlobHashAlgorithm), blobHashAlgString);
-            }
-            catch (ArgumentException)
-            {
-                blobHashAlg = BlobHashAlgorithm.Unknown;
-            }
-
-            int blocksize = 0;
-            XPathNavigator blockNav = infoNav.SelectSingleNode("blob-hash-parameters/block-size");
-            if (blockNav != null)
-            {
-                blocksize = blockNav.ValueAsInt;
-            }
-
-            return new BlobPutParameters(
-                blobReferenceUrl,
-                chunkSize,
-                postEncryptionChunkSize,
                 maxBlobSize,
                 blobHashAlg,
                 blocksize);

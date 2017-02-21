@@ -55,10 +55,10 @@ namespace Microsoft.HealthVault.Certificate
         {
             if (deleteOnRelease)
             {
-                NativeMethods.CertDeleteCertificateFromStore(handle);
+                // NativeMethods.CertDeleteCertificateFromStore(handle);
             }
 
-            return NativeMethods.CertFreeCertificateContext(handle);
+            return false; // NativeMethods.CertFreeCertificateContext(handle);
         }
     }
 
@@ -92,7 +92,7 @@ namespace Microsoft.HealthVault.Certificate
         [SecurityCritical]
         protected override bool ReleaseHandle()
         {
-            return NativeMethods.CertCloseStore(handle, 0);
+            return false;  // NativeMethods.CertCloseStore(handle, 0);
         }
     }
 
@@ -126,7 +126,7 @@ namespace Microsoft.HealthVault.Certificate
         [SecurityCritical]
         protected override bool ReleaseHandle()
         {
-            return NativeMethods.CryptReleaseContext(handle, 0);
+            return false; //NativeMethods.CryptReleaseContext(handle, 0);
         }
     }
 
@@ -160,7 +160,7 @@ namespace Microsoft.HealthVault.Certificate
         [SecurityCritical]
         protected override bool ReleaseHandle()
         {
-            return NativeMethods.CryptDestroyKey(handle);
+            return false; // NativeMethods.CryptDestroyKey(handle);
         }
     }
 }

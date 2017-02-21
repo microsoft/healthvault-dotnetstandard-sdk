@@ -14,7 +14,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 [assembly: NeutralResourcesLanguage("en")]
-[assembly: InternalsVisibleTo("Microsoft.HealthVault.Certificate"),
+[assembly: InternalsVisibleTo("Microsoft.HealthVault.DesktopWeb.Common"),
            InternalsVisibleTo("Microsoft.HealthVault.ItemTypes"),
            InternalsVisibleTo("Microsoft.HealthVault.Web")]
 
