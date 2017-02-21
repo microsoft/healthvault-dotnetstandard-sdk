@@ -21,6 +21,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.HealthVault.Exceptions;
+using Microsoft.HealthVault.Extensions;
 
 namespace Microsoft.HealthVault.Rest
 {
@@ -97,7 +98,14 @@ namespace Microsoft.HealthVault.Rest
             var fullUri = new UriBuilder(apiRoot ?? HealthApplicationConfiguration.Current.RestHealthVaultUrl ?? new Uri(RestConstants.DefaultMshhvRoot));
             fullUri.Path = path;
 
-            var query = HttpUtility.ParseQueryString(fullUri.Query);
+            IDictionary<string, string> queryAsDictionary = fullUri.Uri.ParseQuery();
+
+            NameValueCollection query = new NameValueCollection();
+            foreach (var key in queryAsDictionary.Keys)
+            {
+                query.Add(key, queryAsDictionary[key]);
+            }
+
             if (queryStringParameters != null)
             {
                 query.Add(queryStringParameters);
@@ -203,35 +211,6 @@ namespace Microsoft.HealthVault.Rest
         }
 
         private HealthServiceRestResponseData _response;
-
-        /// <summary>
-        /// To allow applications to keep track of calls to platform, the application
-        /// can optionally set a correlation id. This will be passed up in web requests to
-        /// HealthVault and used when HealthVault writes to its logs. If issues occur, this
-        /// id can be used by the HealthVault team to help debug the issue.
-        /// 
-        /// For asp.net applications, we want to avoid the use of thread local for setting
-        /// the request id since a single web request is not guaranteed to fully execute on the
-        /// same thread - using HttpContext.Items is the recommended way.
-        /// 
-        /// For non web applications, this method sets a [ThreadStatic] variable which stores the 
-        /// id in thread local storage. All HealthVault requests made on this thread will re-use this
-        /// variable
-        /// </summary>
-        public static void SetCorrelationId(Guid correlationId)
-        {
-            HttpContext httpContext = HttpContext.Current;
-
-            if (httpContext != null)
-            {
-                httpContext.Items[RestConstants.CorrelationIdContextKey] = correlationId;
-            }
-
-            // _correlationId is a ThreadStatic variable so it is stored in thread local and used
-            // by all health service requests in this thread. This is the primary usage for
-            // non web applications to set the request id
-            _correlationId = correlationId;
-        }
 
         /// <summary>
         /// Builds up the request and reads the response.        

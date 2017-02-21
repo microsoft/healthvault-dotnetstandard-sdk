@@ -12,9 +12,7 @@ using System.Xml.Xsl;
 namespace Microsoft.HealthVault.DesktopWeb.Common
 {
     /// <summary>
-    /// HealthRecordItemTypeDefinition exist in .NET Standard, which doesn't
-    /// doesn't have support for XSL transformation API. HealthRecordItemTypeDefintionHelper
-    /// supports XSL transform
+    //  Supports XSL transform for HealthRecordItemTypeDefintion
     /// </summary>
     public class HealthRecordItemTypeDefinitionHelper
     {
