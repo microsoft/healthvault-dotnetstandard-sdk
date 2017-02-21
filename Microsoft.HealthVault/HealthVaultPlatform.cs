@@ -483,7 +483,7 @@ namespace Microsoft.HealthVault
         /// The HealthVault service returned an error.
         /// </exception>
         ///
-        public static async Task<PersonInfo> GetPersonInfo(ApplicationConnection connection)
+        public static async Task<PersonInfo> GetPersonInfoAsync(ApplicationConnection connection)
         {
             return await HealthVaultPlatformPerson.Current.GetPersonInfoAsync(connection).ConfigureAwait(false);
         }

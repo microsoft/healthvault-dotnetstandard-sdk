@@ -37,10 +37,30 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
+    <Reference Include="System.Collections.Specialized">
+      <HintPath>..\..\..\packages\System.Collections.Specialized.4.3.0\lib\net46\System.Collections.Specialized.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System.Core" />
     <Reference Include="System.Data" />
     <Reference Include="System.Data.Common">
       <HintPath>..\..\..\packages\System.Data.Common.4.3.0\lib\net451\System.Data.Common.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Security.Cryptography.Algorithms">
+      <HintPath>..\..\..\packages\System.Security.Cryptography.Algorithms.4.3.0\lib\net461\System.Security.Cryptography.Algorithms.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Security.Cryptography.Encoding">
+      <HintPath>..\..\..\packages\System.Security.Cryptography.Encoding.4.3.0\lib\net46\System.Security.Cryptography.Encoding.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Security.Cryptography.Primitives">
+      <HintPath>..\..\..\packages\System.Security.Cryptography.Primitives.4.3.0\lib\net46\System.Security.Cryptography.Primitives.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Security.Cryptography.X509Certificates">
+      <HintPath>..\..\..\packages\System.Security.Cryptography.X509Certificates.4.3.0\lib\net461\System.Security.Cryptography.X509Certificates.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System.Xml" />
@@ -48,8 +68,16 @@
     <Reference Include="System.Web" />
     <Reference Include="System.Xml" />
     <Reference Include="System" />
+    <Reference Include="System.Xml.XPath">
+      <HintPath>..\..\..\packages\System.Xml.XPath.4.3.0\lib\net46\System.Xml.XPath.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Microsoft.HealthVault.Certificate\Microsoft.HealthVault.DesktopWeb.Common.csproj">
+      <Project>{f269f61a-5cb2-4f81-bc24-e6825f261061}</Project>
+      <Name>Microsoft.HealthVault.DesktopWeb.Common</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Microsoft.HealthVault\Microsoft.HealthVault.csproj">
       <Project>{dbe2ba67-dbc3-479e-a374-1ce5ee33c453}</Project>
       <Name>Microsoft.HealthVault</Name>

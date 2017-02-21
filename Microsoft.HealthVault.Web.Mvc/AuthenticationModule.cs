@@ -12,6 +12,7 @@
 using System;
 using System.Collections.Specialized;
 using System.Diagnostics.CodeAnalysis;
+using System.Threading.Tasks;
 using System.Web;
 
 namespace Microsoft.HealthVault.Web.Mvc
@@ -43,7 +44,10 @@ namespace Microsoft.HealthVault.Web.Mvc
         {
             var context = new HttpContextWrapper(app.Context);
             var manager = new PersonInfoManager(context);
-            if (!ProcessAuthToken(context, manager))
+
+            bool processAuthToken = ProcessAuthTokenAsync(context, manager).Result;
+
+            if (!processAuthToken)
             {
                 // Try the cookie
                 var personInfo = manager.Load();
@@ -54,7 +58,7 @@ namespace Microsoft.HealthVault.Web.Mvc
             }
         }
 
-        private static bool ProcessAuthToken(HttpContextBase context, PersonInfoManager manager)
+        private static async Task<bool> ProcessAuthTokenAsync(HttpContextBase context, PersonInfoManager manager)
         {
             string authToken = context.Request.Params["wctoken"];
             string instanceId = context.Request.Params["instanceid"];
@@ -64,7 +68,7 @@ namespace Microsoft.HealthVault.Web.Mvc
             }
 
             // Use the authToken issued by HealthVault to retrieve a PersonInfo object
-            PersonInfo personInfo = RequestPersonInfo(authToken, instanceId);
+            PersonInfo personInfo = await RequestPersonInfoAsync(authToken, instanceId).ConfigureAwait(false);
             manager.Save(personInfo);
 
             // Then redirect to the original Url. The user's identity etc will be written to a cookie.
@@ -91,11 +95,16 @@ namespace Microsoft.HealthVault.Web.Mvc
             context.Response.Redirect(newUrl.Uri.OriginalString);
         }
 
-        private static PersonInfo RequestPersonInfo(string token, string instanceId)
+        private static async Task<PersonInfo> RequestPersonInfoAsync(string token, string instanceId)
         {
             var serviceInstance = ServiceInfo.Current.ServiceInstances[instanceId];
 
-            return WebApplicationUtilities.GetPersonInfo(token, HealthVault.Config.ApplicationId, serviceInstance);
+            return await WebApplicationUtilities
+                .GetPersonInfoAsync(
+                    token,
+                    HealthVault.Config.ApplicationId,
+                    serviceInstance)
+                .ConfigureAwait(false);
         }
     }
 }

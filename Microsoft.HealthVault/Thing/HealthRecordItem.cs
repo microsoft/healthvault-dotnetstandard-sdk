@@ -112,11 +112,6 @@ namespace Microsoft.HealthVault
         }
 
         /// <summary>
-        /// The item XML used to generate the signature on this health record item.
-        /// </summary>
-        private string _signedItemXml;
-
-        /// <summary>
         /// Called after an update to indicate that the instance is in sync with the platform
         /// instance.
         /// </summary>

@@ -629,7 +629,7 @@ namespace Microsoft.HealthVault
                     HealthRecordItem result = _abstractResults[index] as HealthRecordItem;
                     if (result == null)
                     {
-                        GetPartialThings(index);
+                        GetPartialThingsAsync(index).Wait();
                         result = _abstractResults[index] as HealthRecordItem;
                     }
                     return result;
@@ -1235,7 +1235,7 @@ namespace Microsoft.HealthVault
 
         #region helpers
 
-        private async Task GetPartialThings(int index)
+        private async Task GetPartialThingsAsync(int index)
         {
             // We must have a partial thing at this index. Get
             // the next MaxResultsPerRequest number of partial

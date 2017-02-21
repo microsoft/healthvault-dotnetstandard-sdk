@@ -9,6 +9,7 @@ using System;
 using System.Security;
 using System.Security.Permissions;
 using System.Text;
+using System.Threading.Tasks;
 using System.Web;
 
 namespace Microsoft.HealthVault.Web
@@ -99,7 +100,7 @@ namespace Microsoft.HealthVault.Web
         /// </param>
         ///
         /// <remarks>
-        /// The base implementation calls <see cref="WebApplicationUtilities.PageOnPreLoad(System.Web.HttpContext,bool)"/>
+        /// The base implementation calls <see cref="WebApplicationUtilities.PageOnPreLoadAsync(System.Web.HttpContext,bool)"/>
         /// and then calls the 
         /// <see cref='System.Web.UI.Page.OnPreLoad(EventArgs)'/>.
         ///
@@ -110,11 +111,11 @@ namespace Microsoft.HealthVault.Web
         protected override void OnPreLoad(EventArgs e)
         {
             _personInfo =
-                WebApplicationUtilities.PageOnPreLoad(
+               WebApplicationUtilities.PageOnPreLoad(
                     Context,
                     LogOnRequired,
                     IsMra,
-                    ApplicationId);
+                    ApplicationId).Result;
             base.OnPreLoad(e);
         }
 
@@ -136,14 +137,15 @@ namespace Microsoft.HealthVault.Web
         /// been loaded.
         /// </remarks>
         ///
-        protected void InitializeUserData(bool logOnRequired)
+        protected void InitializeUserDataAsync(bool logOnRequired)
         {
             _personInfo =
                 WebApplicationUtilities.PageOnPreLoad(
-                    Context,
-                    logOnRequired,
-                    IsMra,
-                    ApplicationId);
+                        Context,
+                        logOnRequired,
+                        IsMra,
+                        ApplicationId)
+                    .Result;
         }
 
         /// <summary>
@@ -278,11 +280,6 @@ namespace Microsoft.HealthVault.Web
         public void SetSelectedRecord(HealthRecordInfo activeRecord)
         {
             _personInfo.SelectedRecord = activeRecord;
-
-            if (!_personInfo.AuthorizedRecords.ContainsKey(activeRecord.Id))
-            {
-                _personInfo.AuthorizedRecords.Add(activeRecord.Id, activeRecord);
-            }
             WebApplicationUtilities.SavePersonInfoToCookie(Context, _personInfo);
         }
 
@@ -299,7 +296,7 @@ namespace Microsoft.HealthVault.Web
         public void RefreshAndPersist()
         {
             _personInfo =
-                WebApplicationUtilities.RefreshAndSavePersonInfoToCookie(Context, _personInfo);
+                WebApplicationUtilities.RefreshAndSavePersonInfoToCookieAsync(Context, _personInfo).Result;
         }
 
         /// <summary>
@@ -320,7 +317,10 @@ namespace Microsoft.HealthVault.Web
         public void RefreshAndPersist(string authToken)
         {
             _personInfo =
-                WebApplicationUtilities.RefreshAndSavePersonInfoToCookie(Context, authToken, _personInfo.Connection.ServiceInstance);
+                WebApplicationUtilities.RefreshAndSavePersonInfoToCookieAsync(Context, 
+                    authToken,
+                    _personInfo.Connection.ServiceInstance)
+                    .Result;
         }
 
         /// <summary>

@@ -11,6 +11,7 @@ using System.IO;
 using System.IO.Compression;
 using System.Security.Cryptography;
 using System.Text;
+using System.Threading.Tasks;
 using System.Web;
 using System.Xml;
 using System.Xml.XPath;
@@ -33,7 +34,7 @@ namespace Microsoft.HealthVault.Web
     /// that is available in the <see cref="HealthServicePage"/>.
     /// <br/><br/>
     /// Methods like <see cref="PageOnInit"/> and 
-    /// <see cref="PageOnPreLoad(System.Web.HttpContext, bool, bool)"/> should be called from
+    /// <see cref="PageOnPreLoadAsync(System.Web.HttpContext,bool,bool)"/> should be called from
     /// the application's page <see cref="System.Web.UI.Page.OnInit"/> and 
     /// <see cref="System.Web.UI.Page.OnPreLoad"/> methods respectively.
     /// <br/><br/>
@@ -43,7 +44,7 @@ namespace Microsoft.HealthVault.Web
     /// methods like <see cref="LoadPersonInfoFromCookie(System.Web.HttpContext)"/> require another method be called first
     /// to handle the user's authentication token. Methods like 
     /// <see cref="SavePersonInfoToCookie(System.Web.HttpContext, PersonInfo)"/> and 
-    /// <see cref="RefreshAndSavePersonInfoToCookie(System.Web.HttpContext, PersonInfo)"/> deal with storing the HealthVault user information in a 
+    /// <see cref="RefreshAndSavePersonInfoToCookieAsync(System.Web.HttpContext,Microsoft.HealthVault.PersonInfo)"/> deal with storing the HealthVault user information in a 
     /// cookie or session.
     /// </remarks>
     /// 
@@ -165,13 +166,14 @@ namespace Microsoft.HealthVault.Web
         /// requests until they log off.
         /// </remarks>
         /// 
-        public static PersonInfo PageOnPreLoad(System.Web.HttpContext context, bool logOnRequired)
+        public static async Task<PersonInfo> PageOnPreLoadAsync(System.Web.HttpContext context, bool logOnRequired)
         {
-            return PageOnPreLoad(
-                context, 
-                logOnRequired, 
-                false,
-                HealthWebApplicationConfiguration.Current.ApplicationId);
+            return await PageOnPreLoad(
+                    context, 
+                    logOnRequired, 
+                    false,
+                    HealthWebApplicationConfiguration.Current.ApplicationId)
+                .ConfigureAwait(false);
         }
 
 
@@ -202,9 +204,9 @@ namespace Microsoft.HealthVault.Web
         /// requests until they log off.
         /// </remarks>
         /// 
-        public static PersonInfo PageOnPreLoad(System.Web.HttpContext context, bool logOnRequired, Guid appId)
+        public static async Task<PersonInfo> PageOnPreLoad(System.Web.HttpContext context, bool logOnRequired, Guid appId)
         {
-            return PageOnPreLoad(context, logOnRequired, false /* isMra */, appId);
+            return await PageOnPreLoad(context, logOnRequired, false /* isMra */, appId).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -235,13 +237,14 @@ namespace Microsoft.HealthVault.Web
         /// requests until they log off.
         /// </remarks>
         /// 
-        public static PersonInfo PageOnPreLoad(System.Web.HttpContext context, bool logOnRequired, bool isMra)
+        public static async Task<PersonInfo> PageOnPreLoadAsync(System.Web.HttpContext context, bool logOnRequired, bool isMra)
         {
-            return PageOnPreLoad(
-                context, 
-                logOnRequired, 
-                isMra,
-                HealthWebApplicationConfiguration.Current.ApplicationId);
+            return await PageOnPreLoad(
+                    context, 
+                    logOnRequired, 
+                    isMra,
+                    HealthWebApplicationConfiguration.Current.ApplicationId)
+                .ConfigureAwait(false);
         }
 
 
@@ -277,8 +280,8 @@ namespace Microsoft.HealthVault.Web
         /// requests until they log off.
         /// </remarks>
         /// 
-        public static PersonInfo PageOnPreLoad(
-            System.Web.HttpContext context,
+        public static async Task<PersonInfo> PageOnPreLoad(
+            HttpContext context,
             bool logOnRequired,
             bool isMra,
             Guid appId)
@@ -286,7 +289,7 @@ namespace Microsoft.HealthVault.Web
             // this will redirect if needed 
             // NOTE: I reverted this code because it was spreading query
             // string info around as it was previously.
-            HandleTokenOnUrl(context, logOnRequired, appId);
+            await HandleTokenOnUrl(context, logOnRequired, appId).ConfigureAwait(false);
 
             // Get whatever's in the cookie...
             PersonInfo personInfo = LoadPersonInfoFromCookie(context);
@@ -300,7 +303,7 @@ namespace Microsoft.HealthVault.Web
                 string signupCode = null;
                 if (HealthWebApplicationConfiguration.Current.IsSignupCodeRequired)
                 {
-                    signupCode = HealthVaultPlatform.NewSignupCode(ApplicationConnection);
+                    signupCode = HealthVaultPlatform.NewSignupCodeAsync(ApplicationConnection).Result;
                 }
 
                 RedirectToLogOn(context, isMra, context.Request.Url.PathAndQuery, signupCode);
@@ -343,7 +346,7 @@ namespace Microsoft.HealthVault.Web
             return 
                 new WebApplicationCredential(
                     appId, 
-                    HealthApplicationConfiguration.Current.ApplicationCertificate);
+                    ApplicationCertificateStore.Current.ApplicationCertificate);
         }
 
         /// <summary>
@@ -591,13 +594,13 @@ namespace Microsoft.HealthVault.Web
         /// the person's authorization for the application or changing the selected record.
         /// </remarks>
         /// 
-        public static PersonInfo RefreshAndSavePersonInfoToCookie(
-            System.Web.HttpContext context, 
+        public static async Task<PersonInfo> RefreshAndSavePersonInfoToCookieAsync(
+            HttpContext context, 
             PersonInfo personInfo)
         {
             Validator.ThrowInvalidIfNull(personInfo, "PersonNotLoggedIn");
 
-            personInfo = HealthVaultPlatform.GetPersonInfo(personInfo.ApplicationConnection);
+            personInfo = await HealthVaultPlatform.GetPersonInfoAsync(personInfo.ApplicationConnection).ConfigureAwait(false);
 
             SavePersonInfoToCookie(context, personInfo);
             return personInfo;
@@ -656,14 +659,14 @@ namespace Microsoft.HealthVault.Web
         /// <remarks>
         /// This method should be called anytime the application takes a redirect from the 
         /// HealthVault shell and there is a WCToken on the query string. Note, if you are calling
-        /// <see cref="PageOnPreLoad(System.Web.HttpContext, bool, bool)"/> or 
-        /// <see cref="PageOnPreLoad(System.Web.HttpContext, bool)"/> this is handled for you.
+        /// <see cref="PageOnPreLoadAsync(System.Web.HttpContext, bool, bool)"/> or 
+        /// <see cref="PageOnPreLoadAsync(System.Web.HttpContext, bool)"/> this is handled for you.
         /// </remarks>
-        public static PersonInfo RefreshAndSavePersonInfoToCookie(
+        public static async Task<PersonInfo> RefreshAndSavePersonInfoToCookieAsync(
             System.Web.HttpContext context,
             string authToken)
         {
-            PersonInfo personInfo = GetPersonInfo(authToken);
+            PersonInfo personInfo = await GetPersonInfoAsync(authToken).ConfigureAwait(false);
             SavePersonInfoToCookie(context, personInfo);
             return personInfo;
         }
@@ -696,15 +699,15 @@ namespace Microsoft.HealthVault.Web
         /// <remarks>
         /// This method should be called anytime the application takes a redirect from the 
         /// HealthVault shell and there is a WCToken on the query string. Note, if you are calling
-        /// <see cref="PageOnPreLoad(System.Web.HttpContext, bool, bool)"/> or 
-        /// <see cref="PageOnPreLoad(System.Web.HttpContext, bool)"/> this is handled for you.
+        /// <see cref="PageOnPreLoadAsync(System.Web.HttpContext, bool, bool)"/> or 
+        /// <see cref="PageOnPreLoadAsync(System.Web.HttpContext, bool)"/> this is handled for you.
         /// </remarks>
-        public static PersonInfo RefreshAndSavePersonInfoToCookie(
+        public static async Task<PersonInfo> RefreshAndSavePersonInfoToCookieAsync(
             System.Web.HttpContext context, 
             string authToken,
             HealthServiceInstance serviceInstance)
         {
-            PersonInfo personInfo = GetPersonInfo(authToken, serviceInstance);
+            PersonInfo personInfo = await GetPersonInfoAsync(authToken, serviceInstance).ConfigureAwait(false);
             SavePersonInfoToCookie(context, personInfo);
             return personInfo;
         }
@@ -1038,11 +1041,12 @@ namespace Microsoft.HealthVault.Web
         /// HealthVault instance where the session auth token was created.
         /// </remarks>
         /// 
-        public static PersonInfo GetPersonInfo(string authToken)
+        public static async Task<PersonInfo> GetPersonInfoAsync(string authToken)
         {
-            return GetPersonInfo(
+            return await GetPersonInfoAsync(
                 authToken,
-                HealthApplicationConfiguration.Current.ApplicationId);
+                HealthApplicationConfiguration.Current.ApplicationId)
+                .ConfigureAwait(false);
         }
 
         /// <summary>
@@ -1063,12 +1067,13 @@ namespace Microsoft.HealthVault.Web
         /// <returns>
         /// The information about the logged in person.
         /// </returns>
-        public static PersonInfo GetPersonInfo(string authToken, HealthServiceInstance serviceInstance)
+        public static async Task<PersonInfo> GetPersonInfoAsync(string authToken, HealthServiceInstance serviceInstance)
         {
-            return GetPersonInfo(
+            return await GetPersonInfoAsync(
                 authToken,
                 HealthApplicationConfiguration.Current.ApplicationId,
-                serviceInstance);
+                serviceInstance)
+                .ConfigureAwait(false);
         }
 
         /// <summary>
@@ -1096,9 +1101,9 @@ namespace Microsoft.HealthVault.Web
         /// HealthVault instance where the session auth token was created.
         /// </remarks>
         /// 
-        public static PersonInfo GetPersonInfo(string authToken, Guid appId)
+        public static async Task<PersonInfo> GetPersonInfoAsync(string authToken, Guid appId)
         {
-            return GetPersonInfo(authToken, appId, null);
+            return await GetPersonInfoAsync(authToken, appId, null).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -1130,13 +1135,13 @@ namespace Microsoft.HealthVault.Web
         /// HealthVault instance where the session auth token was created.
         /// </remarks>
         /// 
-        public static PersonInfo GetPersonInfo(string authToken, Guid appId, HealthServiceInstance serviceInstance)
+        public static async Task<PersonInfo> GetPersonInfoAsync(string authToken, Guid appId, HealthServiceInstance serviceInstance)
         {
             WebApplicationCredential cred =
                 new WebApplicationCredential(
                     appId,
                     authToken,
-                    HealthApplicationConfiguration.Current.ApplicationCertificate);
+                    ApplicationCertificateStore.Current.ApplicationCertificate);
 
             // set up our cookie
             WebApplicationConnection connection =
@@ -1144,14 +1149,14 @@ namespace Microsoft.HealthVault.Web
                     ? new WebApplicationConnection(appId, serviceInstance, cred)
                     : new WebApplicationConnection(appId, cred);
 
-            PersonInfo personInfo = HealthVaultPlatform.GetPersonInfo(connection);
+            PersonInfo personInfo = await HealthVaultPlatform.GetPersonInfoAsync(connection).ConfigureAwait(false);
             personInfo.ApplicationSettingsChanged += new EventHandler(OnPersonInfoChanged);
             personInfo.SelectedRecordChanged += new EventHandler(OnPersonInfoChanged);
 
             return personInfo;
         }
 
-        private static void HandleTokenOnUrl(System.Web.HttpContext context, bool isLoginRequired, Guid appId)
+        private static async Task HandleTokenOnUrl(System.Web.HttpContext context, bool isLoginRequired, Guid appId)
         {
             string authToken = context.Request.Params[QueryStringToken];
             string instanceId = context.Request.Params[QueryStringInstanceId];
@@ -1165,7 +1170,7 @@ namespace Microsoft.HealthVault.Web
                 }
                 HealthServiceInstance serviceInstance = ServiceInfo.Current.ServiceInstances[instanceId];
 
-                PersonInfo personInfo = GetPersonInfo(authToken, appId, serviceInstance);
+                PersonInfo personInfo = await GetPersonInfoAsync(authToken, appId, serviceInstance).ConfigureAwait(false);
 
                 int tokenTtl = -1;
                 string tokenTtlString =
@@ -2054,12 +2059,6 @@ namespace Microsoft.HealthVault.Web
         /// for applications in locations with limited access to HealthVault.
         /// Signup codes may be obtained from
         /// <see cref="HealthVault.ApplicationConnection.NewSignupCode" />,
-        /// <see cref="Microsoft.Health.PatientConnect.PatientConnection.Create" />,
-        /// <see cref="Microsoft.Health.Package.ConnectPackage.Create(OfflineWebApplicationConnection, string, string, string, string, System.Collections.Generic.IList&lt;HealthRecordItem&gt;)" />,
-        /// <see cref="Microsoft.Health.Package.ConnectPackage.Create(OfflineWebApplicationConnection, string, string, string, PasswordProtectedPackage)" />,
-        /// <see cref="Microsoft.Health.Package.ConnectPackage.Create(OfflineWebApplicationConnection, string, string, string, string, PasswordProtectedPackage)" />,
-        /// <see cref="Microsoft.Health.Package.ConnectPackage.CreatePackage" />,
-        /// and <see cref="Microsoft.Health.Package.ConnectPackage.AllocatePackageId" />
         /// </param>
         /// 
         /// <remarks>

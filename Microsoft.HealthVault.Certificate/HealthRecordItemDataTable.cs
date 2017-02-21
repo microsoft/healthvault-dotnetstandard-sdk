@@ -149,13 +149,13 @@ namespace Microsoft.HealthVault
         /// An error occurred while accessing the HealthVault service.
         /// </exception>
         ///
-        public void GetData(
+        public async Task GetData(
             Guid recordId,
             ApplicationConnection connection)
         {
             HealthRecordAccessor record =
                 new HealthRecordAccessor(connection, recordId);
-            GetData(record);
+            await GetDataAsync(record).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -174,9 +174,9 @@ namespace Microsoft.HealthVault
         /// An error occurred while accessing the HealthVault service.
         /// </exception>
         ///
-        public void GetData(HealthRecordAccessor record)
+        public async Task GetDataAsync(HealthRecordAccessor record)
         {
-            GetData(record, 0, Int32.MaxValue);
+            await GetData(record, 0, Int32.MaxValue).ConfigureAwait(false);
         }
 
         /// <summary>

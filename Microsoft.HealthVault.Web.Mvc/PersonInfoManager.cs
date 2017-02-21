@@ -11,8 +11,10 @@
 
 using Microsoft.HealthVault.Web.Authentication;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Security.Principal;
+using System.Threading.Tasks;
 using System.Web;
 
 namespace Microsoft.HealthVault.Web.Mvc
@@ -82,21 +84,21 @@ namespace Microsoft.HealthVault.Web.Mvc
         /// <summary>
         /// Attempts to reload the <see cref="PersonInfo"/> object from the HealthVault service.
         /// </summary>
-        public void Refresh()
+        public async Task Refresh()
         {
             if (PersonInfo == null)
             {
-                return;
+                await Task.FromResult<object>(null);
             }
 
             PersonInfo freshPersonInfo =
-                HealthVaultPlatform.GetPersonInfo(PersonInfo.ApplicationConnection);
+                await HealthVaultPlatform.GetPersonInfoAsync(PersonInfo.ApplicationConnection).ConfigureAwait(false);
             if (freshPersonInfo == null)
             {
                 return;
             }
 
-            SetSelectedRecord(freshPersonInfo);
+            await SetSelectedRecordAsync(freshPersonInfo).ConfigureAwait(false);
             Save(freshPersonInfo);
         }
 
@@ -164,13 +166,18 @@ namespace Microsoft.HealthVault.Web.Mvc
             SetUser(personInfo);
         }
 
-        private void SetSelectedRecord(PersonInfo newPersonInfo)
+        private async Task SetSelectedRecordAsync(PersonInfo newPersonInfo)
         {
-            if (PersonInfo.SelectedRecord != null &&
-                newPersonInfo.AuthorizedRecords.ContainsKey(PersonInfo.SelectedRecord.Id))
+            Dictionary<Guid, HealthRecordInfo> authorizedRecords = null;
+
+            if (PersonInfo.SelectedRecord != null)
             {
-                newPersonInfo.SelectedRecord =
-                    newPersonInfo.AuthorizedRecords[PersonInfo.SelectedRecord.Id];
+                authorizedRecords = await newPersonInfo.GetAuthorizedRecordsAsync().ConfigureAwait(false);
+            }
+
+            if (authorizedRecords != null && authorizedRecords.ContainsKey(PersonInfo.SelectedRecord.Id))
+            {
+                newPersonInfo.SelectedRecord = authorizedRecords[PersonInfo.SelectedRecord.Id];
             }
         }
 

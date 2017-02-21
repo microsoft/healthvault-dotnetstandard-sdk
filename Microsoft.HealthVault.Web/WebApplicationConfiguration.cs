@@ -6,6 +6,7 @@
 using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Web;
+using Microsoft.HealthVault.Extensions;
 
 namespace Microsoft.HealthVault.Web
 {
@@ -151,7 +152,7 @@ namespace Microsoft.HealthVault.Web
         /// HealthVault handler url, derived from web config.
         /// </summary>
         ///
-        public static Uri HealthServiceHandlerUrl => HealthWebApplicationConfiguration.Current.HealthVaultMethodUrl;
+        public static Uri HealthServiceHandlerUrl => HealthWebApplicationConfiguration.Current.GetHealthVaultMethodUrl();
 
         /// <summary>
         /// Gets the URL for the specified application action.

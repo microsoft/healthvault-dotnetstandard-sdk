@@ -612,7 +612,7 @@ namespace Microsoft.HealthVault
 
         private async Task FetchApplicationSettingsAndAuthorizedRecordsAsync()
         {
-            PersonInfo personInfo = await HealthVaultPlatform.GetPersonInfo(_connection);
+            PersonInfo personInfo = await HealthVaultPlatform.GetPersonInfoAsync(_connection);
             _appSettings = personInfo._appSettings;
             _authorizedRecords = personInfo._authorizedRecords;
 

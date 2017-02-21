@@ -583,9 +583,9 @@ namespace Microsoft.HealthVault
         /// </exception>
         ///
         //[Obsolete("Use HealthServicePlatform.GetPersonInfo() instead.")]
-        public async Task<PersonInfo> GetPersonInfo()
+        public async Task<PersonInfo> GetPersonInfoAsync()
         {
-            return await HealthVaultPlatform.GetPersonInfo(this).ConfigureAwait(false);
+            return await HealthVaultPlatform.GetPersonInfoAsync(this).ConfigureAwait(false);
         }
 
         #endregion GetPersonInfo

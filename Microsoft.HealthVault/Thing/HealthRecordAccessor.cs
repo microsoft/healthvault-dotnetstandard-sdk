@@ -548,11 +548,11 @@ namespace Microsoft.HealthVault
         /// The HealthVault service returned an error.
         /// </exception>
         ///
-        public void UpdateItem(HealthRecordItem item)
+        public async Task UpdateItemAsync(HealthRecordItem item)
         {
             Validator.ThrowIfArgumentNull(item, "item", "UpdateItemNull");
 
-            UpdateItems(new HealthRecordItem[] { item });
+            await UpdateItemsAsync(new HealthRecordItem[] { item }).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -587,7 +587,7 @@ namespace Microsoft.HealthVault
         /// no items will have been updated.
         /// </exception>
         ///
-        public async Task UpdateItems(
+        public async Task UpdateItemsAsync(
             IList<HealthRecordItem> itemsToUpdate)
         {
             await HealthVaultPlatform.UpdateItemsAsync(Connection, this, itemsToUpdate).ConfigureAwait(false);
@@ -622,11 +622,11 @@ namespace Microsoft.HealthVault
         /// the server.
         /// </exception>
         ///
-        public void RemoveItem(HealthRecordItem item)
+        public async Task RemoveItem(HealthRecordItem item)
         {
             Validator.ThrowIfArgumentNull(item, "item", "RemoveItemNull");
 
-            RemoveItems(new HealthRecordItem[] { item });
+            await RemoveItemsAsync(new HealthRecordItem[] { item }).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -656,7 +656,7 @@ namespace Microsoft.HealthVault
         /// no items will have been removed.
         /// </exception>
         ///
-        public void RemoveItems(IList<HealthRecordItem> itemsToRemove)
+        public async Task RemoveItemsAsync(IList<HealthRecordItem> itemsToRemove)
         {
             Validator.ThrowArgumentExceptionIf(
                 itemsToRemove == null || itemsToRemove.Count == 0,
@@ -675,7 +675,7 @@ namespace Microsoft.HealthVault
                 keys.Add(item.Key);
             }
 
-            RemoveItems(keys);
+            await RemoveItemsAsync(keys).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -705,7 +705,7 @@ namespace Microsoft.HealthVault
         /// no items will have been removed.
         /// </exception>
         ///
-        public async Task RemoveItems(IList<HealthRecordItemKey> itemsToRemove)
+        public async Task RemoveItemsAsync(IList<HealthRecordItemKey> itemsToRemove)
         {
             await HealthVaultPlatform.RemoveItemsAsync(Connection, this, itemsToRemove).ConfigureAwait(false);
         }
@@ -735,11 +735,11 @@ namespace Microsoft.HealthVault
         /// Errors removed the health record items from the server.
         /// </exception>
         ///
-        public void RemoveItem(HealthRecordItemKey itemId)
+        public async Task RemoveItem(HealthRecordItemKey itemId)
         {
             Validator.ThrowIfArgumentNull(itemId, "itemId", "RemoveItemNull");
 
-            RemoveItems(new HealthRecordItemKey[] { itemId });
+            await RemoveItemsAsync(new HealthRecordItemKey[] { itemId }).ConfigureAwait(false);
         }
 
         #endregion Item Removal methods
