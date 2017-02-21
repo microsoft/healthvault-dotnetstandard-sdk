@@ -12,6 +12,7 @@ using System.Security.Permissions;
 using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
+using Microsoft.HealthVault.DesktopWeb.Common;
 
 namespace Microsoft.HealthVault.Web
 {
@@ -915,7 +916,7 @@ namespace Microsoft.HealthVault.Web
         /// <returns>
         /// A <see cref="Microsoft.HealthVault.HealthRecordFilter"/> that is used
         /// by the underlying
-        /// <see cref="Microsoft.HealthVault.HealthRecordItemDataTable"/>
+        /// <see cref="HealthRecordItemDataTable"/>
         /// to retrieve data for the data grid.
         /// </returns>
         ///

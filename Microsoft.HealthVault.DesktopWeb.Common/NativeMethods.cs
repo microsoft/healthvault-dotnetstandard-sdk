@@ -7,8 +7,9 @@ using System;
 using System.Runtime.InteropServices;
 using System.Security;
 using System.Text;
+using Microsoft.HealthVault.Certificate;
 
-namespace Microsoft.HealthVault.Certificate
+namespace Microsoft.HealthVault.DesktopWeb.Common
 {
     /// <summary>
     /// Wrapper class for all native methods

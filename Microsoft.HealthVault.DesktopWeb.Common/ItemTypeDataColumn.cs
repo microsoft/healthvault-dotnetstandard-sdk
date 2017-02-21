@@ -8,7 +8,7 @@ using System.Data;
 using System.Xml;
 using System.Xml.XPath;
 
-namespace Microsoft.HealthVault
+namespace Microsoft.HealthVault.DesktopWeb.Common
 {
     /// <summary>
     /// Describes the schema of a column of health record item data when 

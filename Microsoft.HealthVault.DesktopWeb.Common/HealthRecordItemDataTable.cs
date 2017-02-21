@@ -11,10 +11,8 @@ using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.Linq;
 using System.Xml.XPath;
-using Microsoft.HealthVault.DesktopWeb.Common;
-using Microsoft.HealthVault.Exceptions;
 
-namespace Microsoft.HealthVault
+namespace Microsoft.HealthVault.DesktopWeb.Common
 {
     /// <summary>
     /// Represents a data table that populates itself with HealthVault data.
