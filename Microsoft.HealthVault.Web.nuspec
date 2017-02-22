@@ -15,18 +15,20 @@
     <copyright>Copyright 2017</copyright>
     <tags>HealthVault</tags>
     <dependencies>
-      <dependency id="Microsoft.AspNet.Mvc" version="4.0.40804" />
-      <dependency id="Microsoft.AspNet.Razor" version="2.0.20710" />
-      <dependency id="Microsoft.AspNet.WebPages" version="2.0.20710" />
-      <dependency id="Microsoft.HealthVault.Core" version="$version$" />
-      <dependency id="Microsoft.Web.Infrastructure" version="1.0.0" />
-      <dependency id="System.Collections.Specialized" version="4.3.0" />
-      <dependency id="System.Data.Common" version="4.3.0" />
-      <dependency id="System.Security.Cryptography.Algorithms" version="4.3.0" />
-      <dependency id="System.Security.Cryptography.Encoding" version="4.3.0" />
-      <dependency id="System.Security.Cryptography.Primitives" version="4.3.0" />
-      <dependency id="System.Security.Cryptography.X509Certificates" version="4.3.0" />
-      <dependency id="System.Xml.XPath" version="4.3.0" />
+      <group targetFramework="net461">
+        <dependency id="Microsoft.AspNet.Mvc" version="4.0.40804" />
+        <dependency id="Microsoft.AspNet.Razor" version="2.0.20710" />
+        <dependency id="Microsoft.AspNet.WebPages" version="2.0.20710" />
+        <dependency id="Microsoft.HealthVault.Core" version="$version$" />
+        <dependency id="Microsoft.Web.Infrastructure" version="1.0.0" />
+        <dependency id="System.Collections.Specialized" version="4.3.0" />
+        <dependency id="System.Data.Common" version="4.3.0" />
+        <dependency id="System.Security.Cryptography.Algorithms" version="4.3.0" />
+        <dependency id="System.Security.Cryptography.Encoding" version="4.3.0" />
+        <dependency id="System.Security.Cryptography.Primitives" version="4.3.0" />
+        <dependency id="System.Security.Cryptography.X509Certificates" version="4.3.0" />
+        <dependency id="System.Xml.XPath" version="4.3.0" />
+      </group>
     </dependencies>
   </metadata>
   <files>

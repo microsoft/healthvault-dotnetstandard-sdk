@@ -15,19 +15,21 @@
     <copyright>Copyright 2017</copyright>
     <tags>HealthVault</tags>
     <dependencies>
-      <dependency id="System.Collections.Specialized" version="4.3.0" />
-      <dependency id="System.Data.Common" version="4.3.0" />
-      <dependency id="System.Diagnostics.Process" version="4.3.0" />
-      <dependency id="System.Diagnostics.TraceSource" version="4.3.0" />
-      <dependency id="System.Net.Http" version="4.3.0" />
-      <dependency id="System.Reflection" version="4.3.0" />
-      <dependency id="System.Runtime.Serialization.Formatters" version="4.3.0" />
-      <dependency id="System.Security.Cryptography.Algorithms" version="4.3.0" />
-      <dependency id="System.Security.Cryptography.Csp" version="4.3.0" />
-      <dependency id="System.Security.Cryptography.X509Certificates" version="4.3.0" />
-      <dependency id="System.Xml.XDocument" version="4.3.0" />
-      <dependency id="System.Xml.XPath" version="4.3.0" />
-      <dependency id="System.Xml.XPath.XDocument" version="4.3.0" />
+      <group targetFramework="netstandard1.4">
+        <dependency id="System.Collections.Specialized" version="4.3.0" />
+        <dependency id="System.Data.Common" version="4.3.0" />
+        <dependency id="System.Diagnostics.Process" version="4.3.0" />
+        <dependency id="System.Diagnostics.TraceSource" version="4.3.0" />
+        <dependency id="System.Net.Http" version="4.3.0" />
+        <dependency id="System.Reflection" version="4.3.0" />
+        <dependency id="System.Runtime.Serialization.Formatters" version="4.3.0" />
+        <dependency id="System.Security.Cryptography.Algorithms" version="4.3.0" />
+        <dependency id="System.Security.Cryptography.Csp" version="4.3.0" />
+        <dependency id="System.Security.Cryptography.X509Certificates" version="4.3.0" />
+        <dependency id="System.Xml.XDocument" version="4.3.0" />
+        <dependency id="System.Xml.XPath" version="4.3.0" />
+        <dependency id="System.Xml.XPath.XDocument" version="4.3.0" />
+      </group>
     </dependencies>
   </metadata>
   <files>
