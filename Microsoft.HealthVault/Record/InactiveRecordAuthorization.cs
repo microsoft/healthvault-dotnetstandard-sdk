@@ -4,8 +4,9 @@
 // All other rights reserved.
 
 using System.Xml.XPath;
+using Microsoft.HealthVault.Helpers;
 
-namespace Microsoft.HealthVault
+namespace Microsoft.HealthVault.Record
 {
     /// <summary>
     /// Provides information about a person who has not yet accepted an invitation to share a
@@ -14,14 +15,6 @@ namespace Microsoft.HealthVault
     ///
     public class InactiveRecordAuthorization : RecordAuthorization
     {
-        /// <summary>
-        /// Constructs an instance of <see cref="InactiveRecordAuthorization"/> with default values.
-        /// </summary>
-        ///
-        public InactiveRecordAuthorization()
-        {
-        }
-
         /// <summary>
         /// Populates the class members with data from the specified
         /// active person information XML.
@@ -35,16 +28,16 @@ namespace Microsoft.HealthVault
         {
             base.ParseXml(navigator);
 
-            Email = navigator.SelectSingleNode("email-address").Value;
+            this.Email = navigator.SelectSingleNode("email-address").Value;
 
-            RecordAuthorizationState =
-                XPathHelper.GetEnumByName<AuthorizedRecordState>(
+            this.RecordAuthorizationState =
+                XPathHelper.GetEnumByName(
                     navigator,
                     "authorized-record-state",
                     AuthorizedRecordState.ActivationPending);
 
-            _grantorName = navigator.SelectSingleNode("grantor-name").Value;
-            _granteeName = navigator.SelectSingleNode("grantee-name").Value;
+            this.GrantorName = navigator.SelectSingleNode("grantor-name").Value;
+            this.GranteeName = navigator.SelectSingleNode("grantee-name").Value;
         }
 
         #region public properties
@@ -53,20 +46,12 @@ namespace Microsoft.HealthVault
         /// Gets the name of the person that sent the invitation to share their HealthVault record.
         /// </summary>
         ///
-        public string GrantorName
-        {
-            get { return _grantorName; }
-        }
-        private string _grantorName;
+        public string GrantorName { get; private set; }
 
         /// <summary>
         /// Gets the name of the person that was invited to share the HealthVault record.
         /// </summary>
-        public string GranteeName
-        {
-            get { return _granteeName; }
-        }
-        private string _granteeName;
+        public string GranteeName { get; private set; }
 
         #endregion public properties
     }

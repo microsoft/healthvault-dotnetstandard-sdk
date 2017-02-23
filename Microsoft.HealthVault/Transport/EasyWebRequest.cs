@@ -1,20 +1,18 @@
-﻿using Microsoft.HealthVault.Exceptions;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Net;
 using System.Net.Http;
-using System.Runtime.CompilerServices;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.HealthVault.Exceptions;
+using Microsoft.HealthVault.Helpers;
 
-namespace Microsoft.HealthVault
+namespace Microsoft.HealthVault.Transport
 {
     internal class EasyWebRequest
     {
-        protected byte[] xmlRequest; // utf8Encoded
-        protected int xmlRequestLength;
+        private readonly byte[] xmlRequest; // utf8Encoded
+        private readonly int xmlRequestLength;
 
         internal EasyWebRequest()
         {
@@ -31,12 +29,7 @@ namespace Microsoft.HealthVault
         /// EasyWebRequest. To disable proxy usage, set this property to null.
         /// </summary>
         /// 
-        internal IWebProxy WebProxy
-        {
-            get { return this.webProxy; }
-            set { this.webProxy = value; }
-        }
-        private IWebProxy webProxy;
+        internal IWebProxy WebProxy { get; set; }
 
         /// <summary>
         /// Gets or sets the request compression method.
@@ -44,23 +37,24 @@ namespace Microsoft.HealthVault
         ///
         internal string RequestCompressionMethod
         {
-            get { return _requestCompressionMethod; }
+            get { return this.requestCompressionMethod; }
+
             set
             {
-                _requestCompressionMethod = value;
+                this.requestCompressionMethod = value;
 
-                if (string.IsNullOrEmpty(_requestCompressionMethod))
+                if (string.IsNullOrEmpty(this.requestCompressionMethod))
                 {
-                    _requestCompressionMethod = null;
+                    this.requestCompressionMethod = null;
                 }
                 else
                 {
                     if (!string.Equals(
-                            _requestCompressionMethod,
+                            this.requestCompressionMethod,
                             "gzip",
                             StringComparison.OrdinalIgnoreCase) &&
                         !string.Equals(
-                            _requestCompressionMethod,
+                            this.requestCompressionMethod,
                             "deflate",
                             StringComparison.OrdinalIgnoreCase))
                     {
@@ -69,17 +63,14 @@ namespace Microsoft.HealthVault
                 }
             }
         }
-        private string _requestCompressionMethod = "gzip";
+
+        private string requestCompressionMethod = "gzip";
 
         /// <summary>
         /// Gets the dictionary of headers that will be added to the web request.
         /// </summary>
         ///
-        internal Dictionary<string, string> Headers
-        {
-            get { return this.headers; }
-        }
-        private Dictionary<string, string> headers = new Dictionary<string, string>();
+        internal Dictionary<string, string> Headers { get; } = new Dictionary<string, string>();
 
         internal async Task<HttpResponseMessage> FetchAsync(Uri url, CancellationToken token)
         {
@@ -102,7 +93,7 @@ namespace Microsoft.HealthVault
             HttpContent content = new ByteArrayContent(this.xmlRequest, 0, this.xmlRequestLength);
             if (!string.IsNullOrEmpty(this.RequestCompressionMethod))
             {
-                content  = new CompressedContent(content, this.RequestCompressionMethod);
+                content = new CompressedContent(content, this.RequestCompressionMethod);
             }
 
             message.Content = content;
@@ -134,7 +125,8 @@ namespace Microsoft.HealthVault
                     }
 
                     retryCount--;
-                } while (retryCount >= 0);
+                }
+                while (retryCount >= 0);
             }
 
             // We should never get here but we need to make the compiler happy.
@@ -145,7 +137,7 @@ namespace Microsoft.HealthVault
         {
             var handler = new HttpClientHandler
             {
-                AutomaticDecompression = DecompressionMethods.GZip | DecompressionMethods.Deflate,
+                AutomaticDecompression = DecompressionMethods.GZip | DecompressionMethods.Deflate
             };
 
             if (this.WebProxy != null)

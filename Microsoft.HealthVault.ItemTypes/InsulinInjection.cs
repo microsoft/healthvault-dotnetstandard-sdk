@@ -6,6 +6,8 @@
 using System;
 using System.Xml;
 using System.Xml.XPath;
+using Microsoft.HealthVault.Helpers;
+using Microsoft.HealthVault.Thing;
 
 namespace Microsoft.HealthVault.ItemTypes
 {
@@ -71,7 +73,7 @@ namespace Microsoft.HealthVault.ItemTypes
         /// A GUID.
         /// </value>
         ///
-        public new static readonly Guid TypeId =
+        public static new readonly Guid TypeId =
             new Guid("3B3C053B-B1FE-4E11-9E22-D4B480DE74E8");
 
         /// <summary>
@@ -95,18 +97,18 @@ namespace Microsoft.HealthVault.ItemTypes
 
             Validator.ThrowInvalidIfNull(itemNav, "InsulinInjectionUnexpectedNode");
 
-            _insulinType = new CodableValue();
-            _insulinType.ParseXml(itemNav.SelectSingleNode("type"));
+            this.insulinType = new CodableValue();
+            this.insulinType.ParseXml(itemNav.SelectSingleNode("type"));
 
-            _amount = new InsulinInjectionMeasurement();
-            _amount.ParseXml(itemNav.SelectSingleNode("amount"));
+            this.amount = new InsulinInjectionMeasurement();
+            this.amount.ParseXml(itemNav.SelectSingleNode("amount"));
 
             XPathNavigator deviceIdNav =
                 itemNav.SelectSingleNode("device-id");
 
             if (deviceIdNav != null)
             {
-                _deviceId = deviceIdNav.Value;
+                this.deviceId = deviceIdNav.Value;
             }
         }
 
@@ -130,22 +132,22 @@ namespace Microsoft.HealthVault.ItemTypes
         public override void WriteXml(XmlWriter writer)
         {
             Validator.ThrowIfWriterNull(writer);
-            Validator.ThrowSerializationIfNull(_insulinType, "InsulinInjectionTypeNotSet");
-            Validator.ThrowSerializationIfNull(_amount, "InsulinInjectionAmountNotSet");
+            Validator.ThrowSerializationIfNull(this.insulinType, "InsulinInjectionTypeNotSet");
+            Validator.ThrowSerializationIfNull(this.amount, "InsulinInjectionAmountNotSet");
 
             // <insulin-injection>
             writer.WriteStartElement("insulin-injection");
 
             // <type>
-            _insulinType.WriteXml("type", writer);
+            this.insulinType.WriteXml("type", writer);
 
             // <amount>
-            _amount.WriteXml("amount", writer);
+            this.amount.WriteXml("amount", writer);
 
-            if (!string.IsNullOrEmpty(_deviceId))
+            if (!string.IsNullOrEmpty(this.deviceId))
             {
                 // <device-id>
-                writer.WriteElementString("device-id", _deviceId);
+                writer.WriteElementString("device-id", this.deviceId);
             }
 
             // </insulin-injection>
@@ -170,14 +172,16 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public CodableValue InsulinType
         {
-            get { return _insulinType; }
+            get { return this.insulinType; }
+
             set
             {
                 Validator.ThrowIfArgumentNull(value, "InsulinType", "InsulinInjectionTypeMandatory");
-                _insulinType = value;
+                this.insulinType = value;
             }
         }
-        private CodableValue _insulinType;
+
+        private CodableValue insulinType;
 
         /// <summary>
         /// Gets or sets the amount of insulin.
@@ -194,14 +198,16 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public InsulinInjectionMeasurement Amount
         {
-            get { return _amount; }
+            get { return this.amount; }
+
             set
             {
                 Validator.ThrowIfArgumentNull(value, "Amount", "InsulinInjectionAmountMandatory");
-                _amount = value;
+                this.amount = value;
             }
         }
-        private InsulinInjectionMeasurement _amount;
+
+        private InsulinInjectionMeasurement amount;
 
         /// <summary>
         /// Gets or sets the identifier for the device.
@@ -222,14 +228,16 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public string DeviceId
         {
-            get { return _deviceId; }
+            get { return this.deviceId; }
+
             set
             {
                 Validator.ThrowIfStringIsWhitespace(value, "DeviceId");
-                _deviceId = value;
+                this.deviceId = value;
             }
         }
-        private string _deviceId;
+
+        private string deviceId;
 
         /// <summary>
         /// Gets a string representation of the insulin injection item.
@@ -245,8 +253,8 @@ namespace Microsoft.HealthVault.ItemTypes
                 string.Format(
                     ResourceRetriever.GetResourceString(
                         "InsulinInjectionToStringFormat"),
-                    InsulinType.Text,
-                    Amount.ToString());
+                    this.InsulinType.Text,
+                    this.Amount.ToString());
         }
     }
 }

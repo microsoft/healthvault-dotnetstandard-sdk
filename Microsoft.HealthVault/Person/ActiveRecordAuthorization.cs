@@ -5,8 +5,9 @@
 
 using System.Security;
 using System.Xml.XPath;
+using Microsoft.HealthVault.Record;
 
-namespace Microsoft.HealthVault
+namespace Microsoft.HealthVault.Person
 {
     /// <summary>
     /// Provides information about a person who has access to a HealthVault record.
@@ -14,14 +15,6 @@ namespace Microsoft.HealthVault
     ///
     public class ActiveRecordAuthorization : RecordAuthorization
     {
-        /// <summary>
-        /// Constructs an instance of <see cref="ActiveRecordAuthorization"/> with default values.
-        /// </summary>
-        ///
-        public ActiveRecordAuthorization()
-        {
-        }
-
         /// <summary>
         /// Populates the class members with data from the specified
         /// active person information XML.
@@ -35,11 +28,11 @@ namespace Microsoft.HealthVault
         {
             base.ParseXml(navigator);
 
-            Email = navigator.SelectSingleNode("contact-email").Value;
+            this.Email = navigator.SelectSingleNode("contact-email").Value;
 
-            RecordAuthorizationState = AuthorizedRecordState.Active;
+            this.RecordAuthorizationState = AuthorizedRecordState.Active;
 
-            _name = navigator.SelectSingleNode("name").Value;
+            this.Name = navigator.SelectSingleNode("name").Value;
         }
 
         #region public properties
@@ -52,14 +45,7 @@ namespace Microsoft.HealthVault
         /// The person's full name as it was entered into HealthVault.
         /// </value>
         ///
-        public string Name
-        {
-            get
-            {
-                return _name;
-            }
-        }
-        private string _name;
+        public string Name { get; private set; }
 
         #endregion public properties
     }

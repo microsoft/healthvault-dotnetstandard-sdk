@@ -6,11 +6,13 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Text;
 using System.Xml;
 using System.Xml.XPath;
+using Microsoft.HealthVault.Helpers;
 
-namespace Microsoft.HealthVault
+namespace Microsoft.HealthVault.Thing
 {
     /// <summary>
     /// This class defines an authorization rule in the HealthVault service.
@@ -29,26 +31,6 @@ namespace Microsoft.HealthVault
     ///
     public class AuthorizationRule
     {
-        /// <summary>
-        /// Creates a new instance of the <see cref="AuthorizationRule"/> class
-        /// with the specified permissions.
-        /// </summary>
-        ///
-        /// <param name="permissions">
-        /// The permissions granted.
-        /// </param>
-        ///
-        /// <exception cref="ArgumentException">
-        /// The <paramref name="permissions"/> parameter is
-        /// <see cref="HealthRecordItemPermissions.None"/>.
-        /// </exception>
-        ///
-        public AuthorizationRule(
-            HealthRecordItemPermissions permissions)
-            : this(permissions, null, null)
-        {
-        }
-
         /// <summary>
         /// Creates a new instance of the <see cref="AuthorizationRule"/> class
         /// with the specified permissions, target and exception sets.
@@ -75,10 +57,9 @@ namespace Microsoft.HealthVault
         ///
         public AuthorizationRule(
             HealthRecordItemPermissions permissions,
-            IList<AuthorizationSetDefinition> targetSets,
-            IList<AuthorizationSetDefinition> exceptionSets)
-            : this(null, null, permissions, targetSets, exceptionSets, false,
-                AuthorizationRuleDisplayFlags.None)
+            IList<AuthorizationSetDefinition> targetSets = null,
+            IList<AuthorizationSetDefinition> exceptionSets = null)
+            : this(null, null, permissions, targetSets, exceptionSets, false, AuthorizationRuleDisplayFlags.None)
         {
         }
 
@@ -132,13 +113,13 @@ namespace Microsoft.HealthVault
             bool isOptional,
             AuthorizationRuleDisplayFlags displayFlags)
         {
-            _name = name;
-            _isOptional = isOptional;
-            _displayFlags = displayFlags;
+            this.Name = name;
+            this.IsOptional = isOptional;
+            this.DisplayFlags = displayFlags;
 
-            if (!String.IsNullOrEmpty(reason))
+            if (!string.IsNullOrEmpty(reason))
             {
-                CultureSpecificReasons.DefaultValue = reason;
+                this.CultureSpecificReasons.DefaultValue = reason;
             }
 
             Validator.ThrowArgumentExceptionIf(
@@ -146,30 +127,30 @@ namespace Microsoft.HealthVault
                 "permissions",
                 "AuthorizationRuleBadPermissions");
 
-            _permissions = permissions;
+            this.Permissions = permissions;
 
             if (targetSets != null)
             {
-                _targetSets =
+                this.TargetSets =
                     new ReadOnlyCollection<AuthorizationSetDefinition>(
                         targetSets);
             }
             else
             {
-                _targetSets =
+                this.TargetSets =
                     new ReadOnlyCollection<AuthorizationSetDefinition>(
                         new AuthorizationSetDefinition[0]);
             }
 
             if (exceptionSets != null)
             {
-                _exceptionSets =
+                this.ExceptionSets =
                     new ReadOnlyCollection<AuthorizationSetDefinition>(
                         exceptionSets);
             }
             else
             {
-                _exceptionSets =
+                this.ExceptionSets =
                     new ReadOnlyCollection<AuthorizationSetDefinition>(
                         new AuthorizationSetDefinition[0]);
             }
@@ -179,11 +160,7 @@ namespace Microsoft.HealthVault
         /// Gets the name uniquely identifying the rule within the rule set.
         /// </summary>
         ///
-        public string Name
-        {
-            get { return _name; }
-        }
-        private string _name;
+        public string Name { get; }
 
         /// <summary>
         /// Gets a value indicating whether the authorization rule is optional
@@ -193,23 +170,13 @@ namespace Microsoft.HealthVault
         /// Optional rules are not required for application authorization.
         /// </remarks>
         ///
-        public bool IsOptional
-        {
-            get { return _isOptional; }
-        }
-        private bool _isOptional;
+        public bool IsOptional { get; }
 
         /// <summary>
         /// Gets the reason the application wants the access represented by this rule.
         /// </summary>
         ///
-        public string Reason
-        {
-            get
-            {
-                return CultureSpecificReasons.BestValue;
-            }
-        }
+        public string Reason => this.CultureSpecificReasons.BestValue;
 
         /// <summary>
         /// Gets a dictionary of language specifiers and reasons.
@@ -218,23 +185,13 @@ namespace Microsoft.HealthVault
         ///  Each entry is a localized version of the same reason.
         /// </remarks>
         ///
-        public CultureSpecificStringDictionary CultureSpecificReasons
-        {
-            get { return _cultureSpecificReasons; }
-        }
-        private CultureSpecificStringDictionary _cultureSpecificReasons =
-            new CultureSpecificStringDictionary();
+        public CultureSpecificStringDictionary CultureSpecificReasons { get; } = new CultureSpecificStringDictionary();
 
         /// <summary>
         /// Gets flags controlling display behavior of rules.
         /// </summary>
         ///
-        public AuthorizationRuleDisplayFlags DisplayFlags
-        {
-            get { return _displayFlags; }
-        }
-        private AuthorizationRuleDisplayFlags _displayFlags
-            = AuthorizationRuleDisplayFlags.None;
+        public AuthorizationRuleDisplayFlags DisplayFlags { get; }
 
         /// <summary>
         /// Gets the permissions that the rule grants.
@@ -244,12 +201,7 @@ namespace Microsoft.HealthVault
         /// An instance of <see cref="HealthRecordItemPermissions"/>.
         /// </value>
         ///
-        public HealthRecordItemPermissions Permissions
-        {
-            get { return _permissions; }
-        }
-        private HealthRecordItemPermissions _permissions
-            = HealthRecordItemPermissions.None;
+        public HealthRecordItemPermissions Permissions { get; }
 
         /// <summary>
         /// Gets the sets of health record items to which this rule
@@ -261,11 +213,7 @@ namespace Microsoft.HealthVault
         /// representing the items.
         /// </value>
         ///
-        public ReadOnlyCollection<AuthorizationSetDefinition> TargetSets
-        {
-            get { return _targetSets; }
-        }
-        private ReadOnlyCollection<AuthorizationSetDefinition> _targetSets;
+        public ReadOnlyCollection<AuthorizationSetDefinition> TargetSets { get; }
 
         /// <summary>
         /// Gets the sets of health record items that are excluded by this
@@ -277,11 +225,7 @@ namespace Microsoft.HealthVault
         /// representing the items.
         /// </value>
         ///
-        public ReadOnlyCollection<AuthorizationSetDefinition> ExceptionSets
-        {
-            get { return _exceptionSets; }
-        }
-        private ReadOnlyCollection<AuthorizationSetDefinition> _exceptionSets;
+        public ReadOnlyCollection<AuthorizationSetDefinition> ExceptionSets { get; }
 
         /// <summary>
         /// Gets the XML representation of the <see cref="AuthorizationRule"/>.
@@ -293,7 +237,7 @@ namespace Microsoft.HealthVault
         ///
         public override string ToString()
         {
-            return GetXml();
+            return this.GetXml();
         }
 
         /// <summary>
@@ -333,6 +277,7 @@ namespace Microsoft.HealthVault
 
                     writer.WriteEndElement();
                 }
+
                 writer.WriteEndElement();
             }
 
@@ -370,7 +315,7 @@ namespace Microsoft.HealthVault
         {
             string authXml = GetRulesXml(rules);
             UTF8Encoding utf8 = new UTF8Encoding(false, true);
-            Byte[] encodedBytes = utf8.GetBytes(authXml);
+            byte[] encodedBytes = utf8.GetBytes(authXml);
             string base64AuthXml = Convert.ToBase64String(encodedBytes);
             return base64AuthXml;
         }
@@ -392,19 +337,19 @@ namespace Microsoft.HealthVault
             {
                 writer.WriteStartElement("rule");
 
-                if (IsOptional)
+                if (this.IsOptional)
                 {
                     writer.WriteAttributeString("is-optional", "true");
                 }
 
-                if (!String.IsNullOrEmpty(Name))
+                if (!string.IsNullOrEmpty(this.Name))
                 {
-                    writer.WriteAttributeString("name", Name);
+                    writer.WriteAttributeString("name", this.Name);
                 }
 
-                AppendReasons(writer);
-                AppendDisplayFlags(writer);
-                AppendPermissions(writer);
+                this.AppendReasons(writer);
+                this.AppendDisplayFlags(writer);
+                this.AppendPermissions(writer);
                 AppendSets(writer, "target-set", this.TargetSets);
                 AppendSets(writer, "exception-set", this.ExceptionSets);
 
@@ -416,17 +361,17 @@ namespace Microsoft.HealthVault
 
         private void AppendReasons(XmlWriter writer)
         {
-            CultureSpecificReasons.AppendLocalizedElements(
+            this.CultureSpecificReasons.AppendLocalizedElements(
                 writer,
                 "reason");
         }
 
         private void AppendDisplayFlags(XmlWriter writer)
         {
-            if (_displayFlags != AuthorizationRuleDisplayFlags.None)
+            if (this.DisplayFlags != AuthorizationRuleDisplayFlags.None)
             {
                 writer.WriteStartElement("display-flags");
-                writer.WriteValue((uint)_displayFlags);
+                writer.WriteValue((uint)this.DisplayFlags);
                 writer.WriteEndElement();
             }
         }
@@ -475,7 +420,7 @@ namespace Microsoft.HealthVault
 
                             default:
                                 // For forwards compatibility.
-                                System.Diagnostics.Debug.Assert(
+                                Debug.Assert(
                                     false,
                                     "Got an AuthorizationSetDefinition type" +
                                     "that wasn't expected.");
@@ -489,6 +434,7 @@ namespace Microsoft.HealthVault
                                 writer.WriteStartElement(elementName);
                                 wroteStartElement = true;
                             }
+
                             writer.WriteRaw(set.GetXml());
                         }
                     }
@@ -511,7 +457,7 @@ namespace Microsoft.HealthVault
         {
             DateRange = 0,
             TypeId = 1,
-            UserTag = 2,
+            UserTag = 2
         }
 
         private void AppendPermissions(XmlWriter writer)
@@ -524,7 +470,8 @@ namespace Microsoft.HealthVault
                 {
                     if ((permissionValue & this.Permissions) != 0)
                     {
-                        writer.WriteElementString("permission",
+                        writer.WriteElementString(
+                            "permission",
                             permissionValue.ToString());
                     }
                 }
@@ -555,7 +502,7 @@ namespace Microsoft.HealthVault
             if (authNav == null)
             {
                 throw new ArgumentNullException(
-                    "authNav",
+                    nameof(authNav),
                     "The authNav can't be null.");
             }
 
@@ -566,14 +513,8 @@ namespace Microsoft.HealthVault
         }
 
         internal static Collection<AuthorizationRule> CreateRules(
-            XPathNodeIterator rulesNav)
-        {
-            return CreateRules(rulesNav, false);
-        }
-
-        internal static Collection<AuthorizationRule> CreateRules(
             XPathNodeIterator rulesNav,
-            bool onlyAllowTypeIdSets)
+            bool onlyAllowTypeIdSets = false)
         {
             Collection<AuthorizationRule> result =
                 new Collection<AuthorizationRule>();
@@ -587,6 +528,7 @@ namespace Microsoft.HealthVault
                     result.Add(rule);
                 }
             }
+
             return result;
         }
 
@@ -597,8 +539,8 @@ namespace Microsoft.HealthVault
             bool isOptional = false;
 
             string isOptionalStr
-                = ruleNav.GetAttribute("is-optional", String.Empty);
-            if (!String.IsNullOrEmpty(isOptionalStr))
+                = ruleNav.GetAttribute("is-optional", string.Empty);
+            if (!string.IsNullOrEmpty(isOptionalStr))
             {
                 try
                 {
@@ -608,7 +550,8 @@ namespace Microsoft.HealthVault
                 {
                 }
             }
-            string ruleName = ruleNav.GetAttribute("name", String.Empty);
+
+            string ruleName = ruleNav.GetAttribute("name", string.Empty);
 
             // <displayflags>
             AuthorizationRuleDisplayFlags displayFlags = AuthorizationRuleDisplayFlags.None;
@@ -617,7 +560,7 @@ namespace Microsoft.HealthVault
             {
                 try
                 {
-                    UInt32 flags = XmlConvert.ToUInt32(displayFlagsNav.Value);
+                    uint flags = XmlConvert.ToUInt32(displayFlagsNav.Value);
                     displayFlags = (AuthorizationRuleDisplayFlags)flags;
                 }
                 catch (FormatException)
@@ -657,18 +600,32 @@ namespace Microsoft.HealthVault
                 && (targetSets != null || exceptionSets != null))
             {
                 if (targetSets != null)
+                {
                     for (int i = targetSets.Count - 1; i >= 0; --i)
+                    {
                         if (!(targetSets[i] is TypeIdSetDefinition))
+                        {
                             targetSets.RemoveAt(i);
+                        }
+                    }
+                }
 
                 if (exceptionSets != null)
+                {
                     for (int i = exceptionSets.Count - 1; i >= 0; --i)
+                    {
                         if (!(exceptionSets[i] is TypeIdSetDefinition))
+                        {
                             exceptionSets.RemoveAt(i);
+                        }
+                    }
+                }
 
                 if ((targetSets == null || targetSets.Count == 0)
                     && (exceptionSets == null || exceptionSets.Count == 0))
+                {
                     return null;
+                }
             }
 
             AuthorizationRule rule = new AuthorizationRule(
@@ -702,8 +659,10 @@ namespace Microsoft.HealthVault
                 {
                     result = new List<AuthorizationSetDefinition>();
                 }
+
                 result.AddRange(CreateSets(set));
             }
+
             return result;
         }
 

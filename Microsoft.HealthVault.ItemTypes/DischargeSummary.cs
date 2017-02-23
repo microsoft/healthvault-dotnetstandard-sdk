@@ -7,6 +7,8 @@ using System;
 using System.Text;
 using System.Xml;
 using System.Xml.XPath;
+using Microsoft.HealthVault.Helpers;
+using Microsoft.HealthVault.Thing;
 
 namespace Microsoft.HealthVault.ItemTypes
 {
@@ -55,7 +57,7 @@ namespace Microsoft.HealthVault.ItemTypes
         /// Retrieves the unique identifier for the item type.
         /// </summary>
         ///
-        public new static readonly Guid TypeId =
+        public static new readonly Guid TypeId =
             new Guid("02EF57A2-A620-425A-8E92-A301542CCA54");
 
         /// <summary>
@@ -79,91 +81,91 @@ namespace Microsoft.HealthVault.ItemTypes
             Validator.ThrowInvalidIfNull(itemNav, "DischargeSummaryUnexpectedNode");
 
             // <when>
-            _when = new HealthServiceDateTime();
-            _when.ParseXml(itemNav.SelectSingleNode("when"));
+            this.when = new HealthServiceDateTime();
+            this.when.ParseXml(itemNav.SelectSingleNode("when"));
 
             // <type>
-            _type =
+            this.type =
                 XPathHelper.GetOptNavValue<CodableValue>(itemNav, "type");
 
             // <category>
-            _category =
+            this.category =
                 XPathHelper.GetOptNavValue<CodableValue>(itemNav, "category");
 
             // <setting>
-            _setting =
+            this.setting =
                 XPathHelper.GetOptNavValue<CodableValue>(itemNav, "setting");
 
             // <specialty>
-            _specialty =
+            this.specialty =
                 XPathHelper.GetOptNavValue(itemNav, "specialty");
 
             // <text>
-            _text =
+            this.text =
                 XPathHelper.GetOptNavValue(itemNav, "text");
 
             // <primary-provider>
-            _primaryProvider =
+            this.primaryProvider =
                 XPathHelper.GetOptNavValue<PersonItem>(
                     itemNav,
                     "primary-provider");
 
             // <primary-provider-endorsement>
-            _primaryProviderEndorsement =
+            this.primaryProviderEndorsement =
                 XPathHelper.GetOptNavValue<HealthServiceDateTime>(
                     itemNav,
                     "primary-provider-endorsement");
 
             // <secondary-provider>
-            _secondaryProvider =
+            this.secondaryProvider =
                 XPathHelper.GetOptNavValue<PersonItem>(
                     itemNav,
                     "secondary-provider");
 
             // <secondary-provider-endorsement>
-            _secondaryProviderEndorsement =
+            this.secondaryProviderEndorsement =
                 XPathHelper.GetOptNavValue<HealthServiceDateTime>(
                     itemNav,
                     "secondary-provider-endorsement");
 
             // <discharge-date-time>
-            _dischargeDateTime =
+            this.dischargeDateTime =
                 XPathHelper.GetOptNavValue<ApproximateDateTime>(
                     itemNav,
                     "discharge-date-time");
 
             // <admitting-diagnosis>
-            _admittingDiagnosis =
+            this.admittingDiagnosis =
                 XPathHelper.GetOptNavValue<CodableValue>(
                     itemNav,
                     "admitting-diagnosis");
 
             // <principal-diagnosis>
-            _principalDiagnosis =
+            this.principalDiagnosis =
                 XPathHelper.GetOptNavValue<CodableValue>(
                     itemNav,
                     "principal-diagnosis");
 
             // <additional-diagnosis>
-            _additionalDiagnosis =
+            this.additionalDiagnosis =
                 XPathHelper.GetOptNavValue<CodableValue>(
                     itemNav,
                     "additional-diagnosis");
 
             // <principal-procedure-physician>
-            _principalProcedurePhysician =
+            this.principalProcedurePhysician =
                 XPathHelper.GetOptNavValue<PersonItem>(
                     itemNav,
                     "principal-procedure-physician");
 
             // <principal-procedure>
-            _principalProcedure =
+            this.principalProcedure =
                 XPathHelper.GetOptNavValue<CodableValue>(
                     itemNav,
                     "principal-procedure");
 
             // <additional-procedure>
-            _additionalProcedure =
+            this.additionalProcedure =
                 XPathHelper.GetOptNavValue<CodableValue>(
                     itemNav,
                     "additional-procedure");
@@ -184,109 +186,109 @@ namespace Microsoft.HealthVault.ItemTypes
         public override void WriteXml(XmlWriter writer)
         {
             Validator.ThrowIfWriterNull(writer);
-            Validator.ThrowSerializationIfNull(_when, "DischargeSummaryWhenNotSet");
+            Validator.ThrowSerializationIfNull(this.when, "DischargeSummaryWhenNotSet");
 
             // <discharge-summary>
             writer.WriteStartElement("discharge-summary");
 
             // <when>
-            _when.WriteXml("when", writer);
+            this.when.WriteXml("when", writer);
 
             // <type>
             XmlWriterHelper.WriteOpt(
                 writer,
                 "type",
-                Type);
+                this.Type);
 
             // <category>
             XmlWriterHelper.WriteOpt(
                 writer,
                 "category",
-                Category);
+                this.Category);
 
             // <setting>
             XmlWriterHelper.WriteOpt(
                 writer,
                 "setting",
-                Setting);
+                this.Setting);
 
             // <specialty>
             XmlWriterHelper.WriteOptString(
                 writer,
                 "specialty",
-                _specialty);
+                this.specialty);
 
             // <text>
             XmlWriterHelper.WriteOptString(
                 writer,
                 "text",
-                _text);
+                this.text);
 
             // <primary-provider>
             XmlWriterHelper.WriteOpt(
                 writer,
                 "primary-provider",
-                PrimaryProvider);
+                this.PrimaryProvider);
 
             // <primary-provider-endorsement>
             XmlWriterHelper.WriteOpt(
                 writer,
                 "primary-provider-endorsement",
-                PrimaryProviderEndorsement);
+                this.PrimaryProviderEndorsement);
 
             // <secondary-provider>
             XmlWriterHelper.WriteOpt(
                 writer,
                 "secondary-provider",
-                SecondaryProvider);
+                this.SecondaryProvider);
 
             // <secondary-provider-endorsement>
             XmlWriterHelper.WriteOpt(
                 writer,
                 "secondary-provider-endorsement",
-                SecondaryProviderEndorsement);
+                this.SecondaryProviderEndorsement);
 
             // <discharge-date-time>
             XmlWriterHelper.WriteOpt(
                 writer,
                 "discharge-date-time",
-                DischargeDateTime);
+                this.DischargeDateTime);
 
             // <admitting-diagnosis>
             XmlWriterHelper.WriteOpt(
                 writer,
                 "admitting-diagnosis",
-                AdmittingDiagnosis);
+                this.AdmittingDiagnosis);
 
             // <principal-diagnosis>
             XmlWriterHelper.WriteOpt(
                 writer,
                 "principal-diagnosis",
-                PrincipalDiagnosis);
+                this.PrincipalDiagnosis);
 
             // <additional-diagnosis>
             XmlWriterHelper.WriteOpt(
                 writer,
                 "additional-diagnosis",
-                AdditionalDiagnosis);
+                this.AdditionalDiagnosis);
 
             // <principal-procedure-physician>
             XmlWriterHelper.WriteOpt(
                 writer,
                 "principal-procedure-physician",
-                _principalProcedurePhysician);
+                this.principalProcedurePhysician);
 
             // <principal-procedure>
             XmlWriterHelper.WriteOpt(
                 writer,
                 "principal-procedure",
-                PrincipalProcedure);
+                this.PrincipalProcedure);
 
             // <additional-procedure>
             XmlWriterHelper.WriteOpt(
                 writer,
                 "additional-procedure",
-                AdditionalProcedure);
+                this.AdditionalProcedure);
 
             // </discharge-summary>
             writer.WriteEndElement();
@@ -311,14 +313,16 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public HealthServiceDateTime When
         {
-            get { return _when; }
+            get { return this.when; }
+
             set
             {
                 Validator.ThrowIfArgumentNull(value, "When", "WhenNullValue");
-                _when = value;
+                this.when = value;
             }
         }
-        private HealthServiceDateTime _when = new HealthServiceDateTime();
+
+        private HealthServiceDateTime when = new HealthServiceDateTime();
 
         /// <summary>
         /// Gets or sets the type for the discharge summary.
@@ -335,10 +339,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public CodableValue Type
         {
-            get { return _type; }
-            set { _type = value; }
+            get { return this.type; }
+            set { this.type = value; }
         }
-        private CodableValue _type;
+
+        private CodableValue type;
 
         /// <summary>
         /// Gets or sets the category for the discharge summary.
@@ -355,10 +360,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public CodableValue Category
         {
-            get { return _category; }
-            set { _category = value; }
+            get { return this.category; }
+            set { this.category = value; }
         }
-        private CodableValue _category;
+
+        private CodableValue category;
 
         /// <summary>
         /// Gets or sets the setting for the discharge summary.
@@ -375,10 +381,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public CodableValue Setting
         {
-            get { return _setting; }
-            set { _setting = value; }
+            get { return this.setting; }
+            set { this.setting = value; }
         }
-        private CodableValue _setting;
+
+        private CodableValue setting;
 
         /// <summary>
         /// Gets or sets the medical specialty for the discharge summary.
@@ -399,14 +406,16 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public string Specialty
         {
-            get { return _specialty; }
+            get { return this.specialty; }
+
             set
             {
                 Validator.ThrowIfStringIsWhitespace(value, "Specialty");
-                _specialty = value;
+                this.specialty = value;
             }
         }
-        private string _specialty;
+
+        private string specialty;
 
         /// <summary>
         /// Gets or sets the textual content for the discharge summary.
@@ -427,14 +436,16 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public string Text
         {
-            get { return _text; }
+            get { return this.text; }
+
             set
             {
                 Validator.ThrowIfStringIsWhitespace(value, "Text");
-                _text = value;
+                this.text = value;
             }
         }
-        private string _text;
+
+        private string text;
 
         /// <summary>
         /// Gets or sets the primary provider contact information.
@@ -451,10 +462,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public PersonItem PrimaryProvider
         {
-            get { return _primaryProvider; }
-            set { _primaryProvider = value; }
+            get { return this.primaryProvider; }
+            set { this.primaryProvider = value; }
         }
-        private PersonItem _primaryProvider;
+
+        private PersonItem primaryProvider;
 
         /// <summary>
         /// Gets or sets the date and time for the primary provider endorsement details.
@@ -470,10 +482,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public HealthServiceDateTime PrimaryProviderEndorsement
         {
-            get { return _primaryProviderEndorsement; }
-            set { _primaryProviderEndorsement = value; }
+            get { return this.primaryProviderEndorsement; }
+            set { this.primaryProviderEndorsement = value; }
         }
-        private HealthServiceDateTime _primaryProviderEndorsement;
+
+        private HealthServiceDateTime primaryProviderEndorsement;
 
         /// <summary>
         /// Gets or sets the secondary provider contact information.
@@ -490,10 +503,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public PersonItem SecondaryProvider
         {
-            get { return _secondaryProvider; }
-            set { _secondaryProvider = value; }
+            get { return this.secondaryProvider; }
+            set { this.secondaryProvider = value; }
         }
-        private PersonItem _secondaryProvider;
+
+        private PersonItem secondaryProvider;
 
         /// <summary>
         /// Gets or sets the date and time for the secondary provider endorsement details.
@@ -509,10 +523,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public HealthServiceDateTime SecondaryProviderEndorsement
         {
-            get { return _secondaryProviderEndorsement; }
-            set { _secondaryProviderEndorsement = value; }
+            get { return this.secondaryProviderEndorsement; }
+            set { this.secondaryProviderEndorsement = value; }
         }
-        private HealthServiceDateTime _secondaryProviderEndorsement;
+
+        private HealthServiceDateTime secondaryProviderEndorsement;
 
         /// <summary>
         /// Gets or sets the approximate date and time discharged.
@@ -529,10 +544,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public ApproximateDateTime DischargeDateTime
         {
-            get { return _dischargeDateTime; }
-            set { _dischargeDateTime = value; }
+            get { return this.dischargeDateTime; }
+            set { this.dischargeDateTime = value; }
         }
-        private ApproximateDateTime _dischargeDateTime;
+
+        private ApproximateDateTime dischargeDateTime;
 
         /// <summary>
         /// Gets or sets the admitting diagnosis for the discharge summary.
@@ -549,10 +565,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public CodableValue AdmittingDiagnosis
         {
-            get { return _admittingDiagnosis; }
-            set { _admittingDiagnosis = value; }
+            get { return this.admittingDiagnosis; }
+            set { this.admittingDiagnosis = value; }
         }
-        private CodableValue _admittingDiagnosis;
+
+        private CodableValue admittingDiagnosis;
 
         /// <summary>
         /// Gets or sets the principal diagnosis for the discharge summary.
@@ -569,10 +586,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public CodableValue PrincipalDiagnosis
         {
-            get { return _principalDiagnosis; }
-            set { _principalDiagnosis = value; }
+            get { return this.principalDiagnosis; }
+            set { this.principalDiagnosis = value; }
         }
-        private CodableValue _principalDiagnosis;
+
+        private CodableValue principalDiagnosis;
 
         /// <summary>
         /// Gets or sets the additional diagnosis for the discharge summary.
@@ -589,10 +607,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public CodableValue AdditionalDiagnosis
         {
-            get { return _additionalDiagnosis; }
-            set { _additionalDiagnosis = value; }
+            get { return this.additionalDiagnosis; }
+            set { this.additionalDiagnosis = value; }
         }
-        private CodableValue _additionalDiagnosis;
+
+        private CodableValue additionalDiagnosis;
 
         /// <summary>
         /// Gets or sets the principal procedure physician contact information.
@@ -609,10 +628,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public PersonItem PrincipalProcedurePhysician
         {
-            get { return _principalProcedurePhysician; }
-            set { _principalProcedurePhysician = value; }
+            get { return this.principalProcedurePhysician; }
+            set { this.principalProcedurePhysician = value; }
         }
-        private PersonItem _principalProcedurePhysician;
+
+        private PersonItem principalProcedurePhysician;
 
         /// <summary>
         /// Gets or sets the principal procedure for the discharge summary.
@@ -629,10 +649,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public CodableValue PrincipalProcedure
         {
-            get { return _principalProcedure; }
-            set { _principalProcedure = value; }
+            get { return this.principalProcedure; }
+            set { this.principalProcedure = value; }
         }
-        private CodableValue _principalProcedure;
+
+        private CodableValue principalProcedure;
 
         /// <summary>
         /// Gets or sets the additional procedure for the discharge summary.
@@ -650,10 +671,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public CodableValue AdditionalProcedure
         {
-            get { return _additionalProcedure; }
-            set { _additionalProcedure = value; }
+            get { return this.additionalProcedure; }
+            set { this.additionalProcedure = value; }
         }
-        private CodableValue _additionalProcedure;
+
+        private CodableValue additionalProcedure;
 
         /// <summary>
         /// Gets a string representation of the discharge summary.
@@ -667,30 +689,30 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             StringBuilder result = new StringBuilder(200);
 
-            result.Append(When);
+            result.Append(this.When);
 
-            if (PrimaryProvider != null)
+            if (this.PrimaryProvider != null)
             {
                 result.AppendFormat(
                     ResourceRetriever.GetResourceString(
                         "ListFormat"),
-                    PrimaryProvider.ToString());
+                    this.PrimaryProvider.ToString());
             }
 
-            if (PrincipalDiagnosis != null)
+            if (this.PrincipalDiagnosis != null)
             {
                 result.AppendFormat(
                     ResourceRetriever.GetResourceString(
                         "ListFormat"),
-                    PrincipalDiagnosis.Text);
+                    this.PrincipalDiagnosis.Text);
             }
 
-            if (Text != null)
+            if (this.Text != null)
             {
                 result.AppendFormat(
                     ResourceRetriever.GetResourceString(
                         "ListFormat"),
-                    Text);
+                    this.Text);
             }
 
             return result.ToString();

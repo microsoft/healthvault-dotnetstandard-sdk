@@ -3,11 +3,11 @@
 // see http://www.microsoft.com/resources/sharedsource/licensingbasics/sharedsourcelicenses.mspx.
 // All other rights reserved.
 
-using Microsoft.HealthVault.PlatformPrimitives;
 using System;
 using System.Threading.Tasks;
+using Microsoft.HealthVault.Connection;
 
-namespace Microsoft.HealthVault
+namespace Microsoft.HealthVault.PlatformInformation
 {
     /// <summary>
     /// A cached provider for service info retrieved from the HealthVault web-service.
@@ -19,10 +19,10 @@ namespace Microsoft.HealthVault
     /// </remarks>
     public class CachedServiceInfoProvider : IServiceInfoProvider
     {
-        private LazyCacheWithTtl<ServiceInfo> _serviceInfo;
-        private DateTime _lastCheckTime;
-        private ServiceInfoSections _responseSections;
-        private Uri _healthServiceUrl;
+        private LazyCacheWithTtl<ServiceInfo> serviceInfo;
+        private DateTime lastCheckTime;
+        private ServiceInfoSections responseSections;
+        private Uri healthServiceUrl;
 
         /// <summary>
         /// Initializes a new instance of the provider using the expiration period
@@ -92,27 +92,6 @@ namespace Microsoft.HealthVault
 
         /// <summary>
         /// Initializes a new instance of the provider with a specified expiration period and
-        /// retrieving the service information for the specified response sections.
-        /// </summary>
-        ///
-        /// <param name="responseSections">
-        /// The categories of information to be populated in the
-        /// <see cref="ServiceInfo"/> instance, represented as the result of XOR'ing the
-        /// desired categories.
-        /// </param>
-        ///
-        /// <param name="timeToLive">
-        /// Period of time before the cached instance of service info is considered expired, and a new copy is obtained
-        /// from the HealthVault web-service.
-        /// </param>
-        ///
-        public CachedServiceInfoProvider(ServiceInfoSections responseSections, TimeSpan timeToLive)
-            : this(responseSections, timeToLive, null)
-        {
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the provider with a specified expiration period and
         /// retrieving the service information for the specified response sections using the
         /// specified HealthVault web-service URL.
         /// </summary>
@@ -134,27 +113,27 @@ namespace Microsoft.HealthVault
         public CachedServiceInfoProvider(
             ServiceInfoSections responseSections,
             TimeSpan timeToLive,
-            Uri healthServiceUrl)
+            Uri healthServiceUrl = null)
         {
-            _healthServiceUrl = healthServiceUrl;
-            _responseSections = responseSections;
-            _serviceInfo = new LazyCacheWithTtl<ServiceInfo>(GetFromServiceAsync, RefreshFromServiceAsync, timeToLive);
+            this.healthServiceUrl = healthServiceUrl;
+            this.responseSections = responseSections;
+            this.serviceInfo = new LazyCacheWithTtl<ServiceInfo>(this.GetFromServiceAsync, this.RefreshFromServiceAsync, timeToLive);
         }
 
-        ///  <summary>
-        ///  Returns the service information retrieved from the HealthVault web-service.
-        ///  </summary>
+        /// <summary>
+        /// Returns the service information retrieved from the HealthVault web-service.
+        /// </summary>
         /// 
-        ///  <returns>
-        ///  Service information retrieved from the HealthVault web-service.
-        ///  </returns>
+        /// <returns>
+        /// Service information retrieved from the HealthVault web-service.
+        /// </returns>
         /// 
-        ///  <remarks>
-        ///  Calls to this method are thread-safe.
-        ///  </remarks>
+        /// <remarks>
+        /// Calls to this method are thread-safe.
+        /// </remarks>
         public ServiceInfo GetServiceInfo()
         {
-            return _serviceInfo.Value();
+            return this.serviceInfo.Value();
         }
 
         /// <summary>
@@ -167,12 +146,12 @@ namespace Microsoft.HealthVault
         /// </remarks>
         private async Task<ServiceInfo> GetFromServiceAsync()
         {
-            var connection = _healthServiceUrl != null
-                ? new AnonymousConnection(HealthApplicationConfiguration.Current.ApplicationId, _healthServiceUrl)
+            var connection = this.healthServiceUrl != null
+                ? new AnonymousConnection(HealthApplicationConfiguration.Current.ApplicationId, this.healthServiceUrl)
                 : new AnonymousConnection();
 
-            var serviceInfo = await HealthVaultPlatformInformation.Current.GetServiceDefinitionAsync(connection, _responseSections);
-            _lastCheckTime = serviceInfo.LastUpdated;
+            var serviceInfo = await HealthVaultPlatformInformation.Current.GetServiceDefinitionAsync(connection, this.responseSections);
+            this.lastCheckTime = serviceInfo.LastUpdated;
             return serviceInfo;
         }
 
@@ -183,12 +162,12 @@ namespace Microsoft.HealthVault
         /// </summary>
         private async Task<ServiceInfo> RefreshFromServiceAsync(ServiceInfo currentServiceInfo)
         {
-            var connection = _healthServiceUrl != null
-                ? new AnonymousConnection(HealthApplicationConfiguration.Current.ApplicationId, _healthServiceUrl)
+            var connection = this.healthServiceUrl != null
+                ? new AnonymousConnection(HealthApplicationConfiguration.Current.ApplicationId, this.healthServiceUrl)
                 : new AnonymousConnection();
 
-            ServiceInfo serviceInfo = await HealthVaultPlatformInformation.Current.GetServiceDefinitionAsync(connection, _responseSections, _lastCheckTime).ConfigureAwait(false);
-            _lastCheckTime = DateTime.Now;
+            ServiceInfo serviceInfo = await HealthVaultPlatformInformation.Current.GetServiceDefinitionAsync(connection, this.responseSections, this.lastCheckTime).ConfigureAwait(false);
+            this.lastCheckTime = DateTime.Now;
 
             return serviceInfo ?? currentServiceInfo;
         }

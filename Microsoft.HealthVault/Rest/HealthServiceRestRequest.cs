@@ -3,25 +3,26 @@
 // see http://www.microsoft.com/resources/sharedsource/licensingbasics/sharedsourcelicenses.mspx.
 // All other rights reserved.
 
-using Microsoft.HealthVault;
-using Microsoft.HealthVault.Authentication;
-using Microsoft.HealthVault.Web;
 using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
+using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
-using System.Reflection;
+using System.Security;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.HealthVault.Connection;
 using Microsoft.HealthVault.Exceptions;
 using Microsoft.HealthVault.Extensions;
+using Microsoft.HealthVault.Helpers;
+using Microsoft.HealthVault.Transport;
 
 namespace Microsoft.HealthVault.Rest
 {
@@ -41,6 +42,7 @@ namespace Microsoft.HealthVault.Rest
         private const string ResponseIdContextKey = "WC_ResponseId";
         private const string Optional = "Optional Headers";
         private CancellationTokenSource cancellationTokenSource;
+        
         /// <summary>
         /// Creates a new instance of the <see cref="HealthServiceRestRequest"/> 
         /// class for the specified parameters.
@@ -95,8 +97,10 @@ namespace Microsoft.HealthVault.Rest
             Uri apiRoot = null,
             IEnumerable<string> optionalHeaders = null)
         {
-            var fullUri = new UriBuilder(apiRoot ?? HealthApplicationConfiguration.Current.RestHealthVaultUrl ?? new Uri(RestConstants.DefaultMshhvRoot));
-            fullUri.Path = path;
+            var fullUri =
+                new UriBuilder(apiRoot ??
+                               HealthApplicationConfiguration.Current.RestHealthVaultUrl ??
+                               new Uri(RestConstants.DefaultMshhvRoot)) { Path = path };
 
             IDictionary<string, string> queryAsDictionary = fullUri.Uri.ParseQuery();
 
@@ -113,7 +117,7 @@ namespace Microsoft.HealthVault.Rest
 
             fullUri.Query = query.ToString();
 
-            Initialize(connection, httpVerb, fullUri.Uri, requestBody, optionalHeaders);
+            this.Initialize(connection, httpVerb, fullUri.Uri, requestBody, optionalHeaders);
         }
 
         /// <summary>
@@ -160,21 +164,15 @@ namespace Microsoft.HealthVault.Rest
             string requestBody = null,
             IEnumerable<string> optionalHeaders = null)
         {
-            Initialize(connection, httpVerb, fullUri, requestBody, optionalHeaders);
+            this.Initialize(connection, httpVerb, fullUri, requestBody, optionalHeaders);
         }
 
         /// <summary>
         /// Optional parameter to specify what record to access.
         /// </summary>
-        public Guid RecordId
-        {
-            get { return _recordId; }
-            set { _recordId = value; }
-        }
+        public Guid RecordId { get; set; }
 
-        private Guid _recordId;
-
-        private int _timeoutSeconds;
+        private int timeoutSeconds;
 
         /// <summary>
         /// Gets or sets the timeout for the request, in seconds.
@@ -190,7 +188,8 @@ namespace Microsoft.HealthVault.Rest
         ///
         public int TimeoutSeconds
         {
-            get { return _timeoutSeconds; }
+            get { return this.timeoutSeconds; }
+
             set
             {
                 Validator.ThrowArgumentOutOfRangeIf(
@@ -198,19 +197,14 @@ namespace Microsoft.HealthVault.Rest
                     "TimeoutSeconds",
                     "TimeoutMustBePositive");
 
-                _timeoutSeconds = value;
+                this.timeoutSeconds = value;
             }
         }
 
         /// <summary>
         /// The response details from the server
         /// </summary>
-        public HealthServiceRestResponseData Response
-        {
-            get { return _response; }
-        }
-
-        private HealthServiceRestResponseData _response;
+        public HealthServiceRestResponseData Response { get; private set; }
 
         /// <summary>
         /// Builds up the request and reads the response.        
@@ -223,7 +217,7 @@ namespace Microsoft.HealthVault.Rest
             {
                 try
                 {
-                    FetchAsync();
+                    this.FetchAsync();
 
                     // Completed successfully, break the do-while loop
                     break;
@@ -258,20 +252,20 @@ namespace Microsoft.HealthVault.Rest
             Validator.ThrowIfStringNullOrEmpty(httpVerb.Method, "httpVerb");
             Validator.ThrowIfArgumentNull(fullUri, "fullUri", "CtorServiceUrlNull");
 
-            _isContentRequest = IsContentVerb(httpVerb);
-            _connection = connection;
-            _verb = httpVerb;
-            _uri = fullUri;
-            _body = _isContentRequest ? requestBody ?? string.Empty : null;
-            _optionalheaders = optionalHeaders;
-            _timeoutSeconds = connection.RequestTimeoutSeconds;
+            this.isContentRequest = IsContentVerb(httpVerb);
+            this.connection = connection;
+            this.verb = httpVerb;
+            this.uri = fullUri;
+            this.body = this.isContentRequest ? requestBody ?? string.Empty : null;
+            this.optionalheaders = optionalHeaders;
+            this.timeoutSeconds = connection.RequestTimeoutSeconds;
         }
 
         private async void FetchAsync()
         {
             try
             {
-               await FetchInternalAsync(_uri);
+               await this.FetchInternalAsync(this.uri);
             }
             catch (HealthHttpException we)
             {
@@ -280,9 +274,9 @@ namespace Microsoft.HealthVault.Rest
                 var response = we.InnerException as HealthHttpException;
                 if (response != null &&
                     response.StatusCode == HttpStatusCode.Unauthorized &&
-                    _connection.Credential.ExpireAuthenticationResult(_connection.ApplicationId))
+                    this.connection.Credential.ExpireAuthenticationResult(this.connection.ApplicationId))
                 {
-                    await FetchInternalAsync(_uri);
+                    await this.FetchInternalAsync(this.uri);
                 }
                 else
                 {
@@ -293,34 +287,34 @@ namespace Microsoft.HealthVault.Rest
 
         private async Task FetchInternalAsync(Uri uri)
         {
-            var httpRequest = CreateRequest(uri);
+            var httpRequest = this.CreateRequest(uri);
             HttpResponseMessage response = null;
-            this.cancellationTokenSource = new CancellationTokenSource(TimeSpan.FromSeconds(this._timeoutSeconds));
+            this.cancellationTokenSource = new CancellationTokenSource(TimeSpan.FromSeconds(this.timeoutSeconds));
 
-            SetHeaders(httpRequest);
+            this.SetHeaders(httpRequest);
 
-            if (_isContentRequest)
+            if (this.isContentRequest)
             {
                 using (Stream requestStream = await httpRequest.Content.ReadAsStreamAsync().ConfigureAwait(false))
                 {
-                    var data = Encoding.UTF8.GetBytes(_body);
+                    var data = Encoding.UTF8.GetBytes(this.body);
                     requestStream.Write(data, 0, data.Length);
                 }
             }
 
-            using (HttpClient client = CreateHttpClient())
+            using (HttpClient client = this.CreateHttpClient())
             {
                 response = await client.SendAsync(httpRequest, this.cancellationTokenSource.Token).ConfigureAwait(false);
             }
 
-            await SetResponseAsync(response);
+            await this.SetResponseAsync(response);
         }
 
         private HttpClient CreateHttpClient()
         {
             var handler = new HttpClientHandler
             {
-                AutomaticDecompression = DecompressionMethods.GZip | DecompressionMethods.Deflate,
+                AutomaticDecompression = DecompressionMethods.GZip | DecompressionMethods.Deflate
             };
 
             return new HttpClient(handler);
@@ -331,37 +325,37 @@ namespace Microsoft.HealthVault.Rest
             var httpRequest = new HttpRequestMessage(); 
             httpRequest.RequestUri = uri;
 
-            httpRequest.Method = _verb;
+            httpRequest.Method = this.verb;
 
             return httpRequest;
         }
 
         private void SetHeaders(HttpRequestMessage request)
         {
-            //request.Headers = new HttpRequestHeaders();
-            var authHeader = GetAuthorizationHeader();
+            // request.Headers = new HttpRequestHeaders();
+            var authHeader = this.GetAuthorizationHeader();
             request.Headers.Add(RestConstants.AuthorizationHeaderName, authHeader.Result);
 
-            if (_isContentRequest)
+            if (this.isContentRequest)
             {
                 request.Content.Headers.ContentType = new MediaTypeHeaderValue(RestConstants.JsonContentType);
-                request.Headers.Add(RestConstants.Sha256HeaderName, GetContentSHA256Header());
-                request.Content.Headers.ContentLength = _body.Length;
+                request.Headers.Add(RestConstants.Sha256HeaderName, this.GetContentSHA256Header());
+                request.Content.Headers.ContentLength = this.body.Length;
             }
 
             request.Headers.Date = DateTime.UtcNow;
             request.Headers.UserAgent.ParseAdd(GetUserAgent());
 
-            if (_correlationId != Guid.Empty)
+            if (correlationId != Guid.Empty)
             {
-                request.Headers.Add(RestConstants.CorrelationIdHeaderName, _correlationId.ToString());
+                request.Headers.Add(RestConstants.CorrelationIdHeaderName, correlationId.ToString());
             }
 
-            request.Headers.Add(RestConstants.HmacHeaderName, String.Format(CultureInfo.InvariantCulture, RestConstants.V1HMACSHA256Format, GetHmacHeader(request)));
+            request.Headers.Add(RestConstants.HmacHeaderName, string.Format(CultureInfo.InvariantCulture, RestConstants.V1HMACSHA256Format, this.GetHmacHeader(request)));
 
-            if (_optionalheaders != null)
+            if (this.optionalheaders != null)
             {
-                request.Headers.Add(Optional, _optionalheaders);
+                request.Headers.Add(Optional, this.optionalheaders);
             }
         }
         
@@ -379,7 +373,7 @@ namespace Microsoft.HealthVault.Rest
                         ms.Write(buffer, 0, count);
                     }
 
-                    _response = new HealthServiceRestResponseData
+                    this.Response = new HealthServiceRestResponseData
                     {
                         StatusCode = response.StatusCode,
                         ResponseBody = Encoding.UTF8.GetString(buffer),
@@ -390,14 +384,14 @@ namespace Microsoft.HealthVault.Rest
 
                     if (response.Headers != null)
                     {
-                        _response.Headers = response.Headers; 
+                        this.Response.Headers = response.Headers; 
                     }
                 }
             }
         }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes", Justification = "Any exception when getting the version shouldn't stop execution")]
-        [System.Security.SecuritySafeCritical]
+        [SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes", Justification = "Any exception when getting the version shouldn't stop execution")]
+        [SecuritySafeCritical]
         private static string GetUserAgent()
         {
             string fileVersion = "Unknown";
@@ -405,32 +399,32 @@ namespace Microsoft.HealthVault.Rest
 
             // TODO: this is not currently accessible in .Net Standard 1.4- we should revisit once 2.0 is released. 
             // safe attempt to obtain the assembly file version, and system information
-            //try
-            //{
+            // try
+            // {
             //    fileVersion = FileVersionInfo.GetVersionInfo(Assembly.GetExecutingAssembly().Location).FileVersion;
             //    systemInfo = String.Format(
             //        CultureInfo.InvariantCulture,
             //        "{0}; CLR {1}",
             //        Environment.OSVersion.VersionString,
             //        Environment.Version);
-            //}
-            //catch (Exception)
-            //{
+            // }
+            // catch (Exception)
+            // {
             //    // failure in obtaining version or system info should not
             //    // prevent the initialization from continuing.
-            //}
+            // }
 
-            return String.Format(CultureInfo.InvariantCulture, RestConstants.MSHSDKVersion, fileVersion, systemInfo);
+            return string.Format(CultureInfo.InvariantCulture, RestConstants.MSHSDKVersion, fileVersion, systemInfo);
         }
 
         private string GetContentSHA256Header()
         {
-            var result = String.Empty;
-            if (_isContentRequest)
+            var result = string.Empty;
+            if (this.isContentRequest)
             {
                 using (var sha256 = SHA256.Create())
                 {
-                    var hash = sha256.ComputeHash(Encoding.UTF8.GetBytes(_body));
+                    var hash = sha256.ComputeHash(Encoding.UTF8.GetBytes(this.body));
                     result = Convert.ToBase64String(hash);
                 }
             }
@@ -442,42 +436,42 @@ namespace Microsoft.HealthVault.Rest
         {
             List<string> tokens = new List<string>();
 
-            if (_connection.Credential != null)
+            if (this.connection.Credential != null)
             {
-               await _connection.Credential.AuthenticateIfRequiredAsync(_connection, _connection.ApplicationId).ConfigureAwait(false); ;
+               await this.connection.Credential.AuthenticateIfRequiredAsync(this.connection, this.connection.ApplicationId).ConfigureAwait(false);
             }
 
-            if (_connection.Credential != null && !String.IsNullOrEmpty(_connection.AuthenticationToken))
+            if (this.connection.Credential != null && !string.IsNullOrEmpty(this.connection.AuthenticationToken))
             {
-                _connection.Credential.AddRestAuthorizationHeaderToken(tokens, _connection.ApplicationId);
+                this.connection.Credential.AddRestAuthorizationHeaderToken(tokens, this.connection.ApplicationId);
 
-                OfflineWebApplicationConnection offlineConnection = _connection as OfflineWebApplicationConnection;
+                OfflineWebApplicationConnection offlineConnection = this.connection as OfflineWebApplicationConnection;
                 if (offlineConnection != null)
                 {
                     if (offlineConnection.OfflinePersonId != Guid.Empty)
                     {
-                        tokens.Add(String.Format(CultureInfo.InvariantCulture, RestConstants.AuthorizationHeaderElement, RestConstants.OfflinePersonId, offlineConnection.OfflinePersonId.ToString()));
+                        tokens.Add(string.Format(CultureInfo.InvariantCulture, RestConstants.AuthorizationHeaderElement, RestConstants.OfflinePersonId, offlineConnection.OfflinePersonId.ToString()));
                     }
                 }
             }
 
-            if (RecordId != Guid.Empty)
+            if (this.RecordId != Guid.Empty)
             {
-                tokens.Add(String.Format(CultureInfo.InvariantCulture, RestConstants.AuthorizationHeaderElement, RestConstants.RecordId, RecordId));
+                tokens.Add(string.Format(CultureInfo.InvariantCulture, RestConstants.AuthorizationHeaderElement, RestConstants.RecordId, this.RecordId));
             }
 
-            return string.Format(CultureInfo.InvariantCulture, RestConstants.MSHV1HeaderFormat, String.Join(",", tokens.ToArray<string>()));
+            return string.Format(CultureInfo.InvariantCulture, RestConstants.MSHV1HeaderFormat, string.Join(",", tokens.ToArray<string>()));
         }
 
         private string GetHmacHeader(HttpRequestMessage request)
         {
             AuthenticationHeaderValue authHeader = request.Headers.Authorization;
-            string contentSha256Header = _isContentRequest ? request.Headers.GetValues(RestConstants.Sha256HeaderName).FirstOrDefault() : string.Empty;
-            string contentTypeHeader = _isContentRequest ? request.Headers.GetType().ToString() : string.Empty;
+            string contentSha256Header = this.isContentRequest ? request.Headers.GetValues(RestConstants.Sha256HeaderName).FirstOrDefault() : string.Empty;
+            string contentTypeHeader = this.isContentRequest ? request.Headers.GetType().ToString() : string.Empty;
             string dateHeader = request.Headers.Date?.ToString("u", CultureInfo.InvariantCulture);
 
-            UriBuilder uriBuilder = new UriBuilder(_uri);
-            var data = String.Format(CultureInfo.InvariantCulture, RestConstants.HmacFormat, _verb, uriBuilder.Path, authHeader.ToString(), contentSha256Header, contentTypeHeader, dateHeader);
+            UriBuilder uriBuilder = new UriBuilder(this.uri);
+            var data = string.Format(CultureInfo.InvariantCulture, RestConstants.HmacFormat, this.verb, uriBuilder.Path, authHeader, contentSha256Header, contentTypeHeader, dateHeader);
 
             //// TODO: GCORVERA Does this use the app's private key to generate the hmac?  See Credential.AuthenticateData() for reference.  Not a check-in blocker -- we can figure this out later.?
             using (var hmacsha256 = new HMACSHA256())
@@ -518,14 +512,13 @@ namespace Microsoft.HealthVault.Rest
         }
 
         [ThreadStatic]
-        private static Guid _correlationId;
+        private static Guid correlationId;
 
-        private HealthServiceConnection _connection;
-        private HttpMethod _verb;
-        private string _body;
-        private Uri _uri;
-        private IEnumerable<string> _optionalheaders;
-        private bool _isContentRequest;
+        private HealthServiceConnection connection;
+        private HttpMethod verb;
+        private string body;
+        private Uri uri;
+        private IEnumerable<string> optionalheaders;
+        private bool isContentRequest;
     }
-
 }

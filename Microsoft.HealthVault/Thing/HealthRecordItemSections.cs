@@ -5,7 +5,7 @@
 
 using System;
 
-namespace Microsoft.HealthVault
+namespace Microsoft.HealthVault.Thing
 {
     /// <summary>
     /// The section that will be or were retrieved when accessing
@@ -19,7 +19,7 @@ namespace Microsoft.HealthVault
     /// These sections are identified in the <see cref="HealthRecordView"/>
     /// when performing a search, and are specified on a <see cref="HealthRecordItem"/>
     /// when the item is retrieved.
-    /// When <see cref="HealthRecordAccessor.UpdateItems"/> is called,
+    /// When <see cref="HealthRecordAccessor.UpdateItemsAsync"/> is called,
     /// only specified sections are updated.
     /// </remarks>
     ///
@@ -98,6 +98,6 @@ namespace Microsoft.HealthVault
         /// are retrieved.
         /// </summary>
         ///
-        Default = Core | Xml,
+        Default = Core | Xml
     }
 }

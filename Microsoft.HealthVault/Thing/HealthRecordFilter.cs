@@ -3,7 +3,6 @@
 // see http://www.microsoft.com/resources/sharedsource/licensingbasics/sharedsourcelicenses.mspx.
 // All other rights reserved.
 
-using Microsoft.HealthVault.Exceptions;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -13,8 +12,11 @@ using System.Globalization;
 using System.Text;
 using System.Xml;
 using System.Xml.XPath;
+using Microsoft.HealthVault.Exceptions;
+using Microsoft.HealthVault.Helpers;
+using Microsoft.HealthVault.Transport;
 
-namespace Microsoft.HealthVault
+namespace Microsoft.HealthVault.Thing
 {
     /// <summary>
     /// Defines a filter for use with <see cref="HealthRecordSearcher"/>
@@ -36,7 +38,7 @@ namespace Microsoft.HealthVault
         ///
         public HealthRecordFilter()
         {
-            _typeIds = new TypeList(View);
+            this.typeIds = new TypeList(this.View);
         }
 
         /// <summary>
@@ -61,7 +63,7 @@ namespace Microsoft.HealthVault
         public HealthRecordFilter(string name)
             : this()
         {
-            Name = name;
+            this.Name = name;
         }
 
         /// <summary>
@@ -80,7 +82,7 @@ namespace Microsoft.HealthVault
         public HealthRecordFilter(int maxItemsReturned)
             : this()
         {
-            MaxItemsReturned = maxItemsReturned;
+            this.MaxItemsReturned = maxItemsReturned;
         }
 
         /// <summary>
@@ -113,8 +115,8 @@ namespace Microsoft.HealthVault
         public HealthRecordFilter(string name, int maxItemsReturned)
             : this()
         {
-            Name = name;
-            MaxItemsReturned = maxItemsReturned;
+            this.Name = name;
+            this.MaxItemsReturned = maxItemsReturned;
         }
 
         /// <summary>
@@ -132,7 +134,7 @@ namespace Microsoft.HealthVault
         {
             foreach (Guid typeId in typeIds)
             {
-                _typeIds.Add(typeId);
+                this.typeIds.Add(typeId);
             }
         }
 
@@ -149,7 +151,7 @@ namespace Microsoft.HealthVault
         ///
         internal void ThrowIfNotValid()
         {
-            bool isValid = AreFiltersPresent();
+            bool isValid = this.AreFiltersPresent();
 
             // if no filters are present,
             // at least one of ItemKeys or ItemIds should be non-empty
@@ -173,10 +175,10 @@ namespace Microsoft.HealthVault
                 throw e;
             }
 
-            Int32 idTypesSpecified =
-                ItemKeys.Count > 0 ? 1 : 0 +
-                ItemIds.Count > 0 ? 1 : 0 +
-                ClientItemIds.Count > 0 ? 1 : 0;
+            int idTypesSpecified =
+                this.ItemKeys.Count > 0 ? 1 : 0 +
+                this.ItemIds.Count > 0 ? 1 : 0 +
+                this.ClientItemIds.Count > 0 ? 1 : 0;
 
             // only one of ItemKeys or ItemIds can be non-empty
             // throw a specific error in this particular case
@@ -194,7 +196,7 @@ namespace Microsoft.HealthVault
                 throw e;
             }
 
-            if (OrderByClauses.Count > 1)
+            if (this.OrderByClauses.Count > 1)
             {
                 HealthServiceResponseError error = new HealthServiceResponseError
                 {
@@ -226,14 +228,16 @@ namespace Microsoft.HealthVault
         ///
         public string Name
         {
-            get { return _name; }
+            get { return this.name; }
+
             set
             {
                 Validator.ThrowIfStringNullOrEmpty(value, "Name");
-                _name = value;
+                this.name = value;
             }
         }
-        private string _name;
+
+        private string name;
 
         /// <summary>
         /// Gets or sets the maximum number of health record items to return.
@@ -249,7 +253,8 @@ namespace Microsoft.HealthVault
         ///
         public int MaxItemsReturned
         {
-            get { return _maxItemsReturned; }
+            get { return this.maxItemsReturned; }
+
             set
             {
                 Validator.ThrowArgumentOutOfRangeIf(
@@ -257,10 +262,11 @@ namespace Microsoft.HealthVault
                     "MaxItemsReturned",
                     "HealthRecordFilterMaxReturnsNegative");
 
-                _maxItemsReturned = value;
+                this.maxItemsReturned = value;
             }
         }
-        private int _maxItemsReturned = int.MinValue;
+
+        private int maxItemsReturned = int.MinValue;
 
         /// <summary>
         /// Gets or sets the maximum number of full health record items returned per request to
@@ -286,7 +292,8 @@ namespace Microsoft.HealthVault
         ///
         public int MaxFullItemsReturnedPerRequest
         {
-            get { return _maxFullItemsReturnedPerRequest; }
+            get { return this.maxFullItemsReturnedPerRequest; }
+
             set
             {
                 Validator.ThrowArgumentOutOfRangeIf(
@@ -294,10 +301,11 @@ namespace Microsoft.HealthVault
                     "MaxFullItemsReturnedPerRequest",
                     "HealthRecordFilterMaxFullItemsReturnedNegative");
 
-                _maxFullItemsReturnedPerRequest = value;
+                this.maxFullItemsReturnedPerRequest = value;
             }
         }
-        private int _maxFullItemsReturnedPerRequest = int.MinValue;
+
+        private int maxFullItemsReturnedPerRequest = int.MinValue;
 
         /// <summary>
         /// Gets or sets the view for the filter group.
@@ -314,14 +322,16 @@ namespace Microsoft.HealthVault
         ///
         public HealthRecordView View
         {
-            get { return _view; }
+            get { return this.view; }
+
             set
             {
                 Validator.ThrowIfArgumentNull(value, "View", "HealthRecordFilterViewNull");
-                _view = value;
+                this.view = value;
             }
         }
-        private HealthRecordView _view = new HealthRecordView();
+
+        private HealthRecordView view = new HealthRecordView();
 
         /// <summary>
         /// Gets or sets the ids identifying health record items for
@@ -335,9 +345,9 @@ namespace Microsoft.HealthVault
         /// filter.
         /// </remarks>
         ///
-        public IList<Guid> ItemIds => _thingIds;
+        public IList<Guid> ItemIds => this.thingIds;
 
-        private readonly List<Guid> _thingIds = new List<Guid>();
+        private readonly List<Guid> thingIds = new List<Guid>();
 
         /// <summary>
         /// Gets or sets the keys uniquely identifying health record items for
@@ -351,9 +361,9 @@ namespace Microsoft.HealthVault
         /// single filter.
         /// </remarks>
         ///
-        public IList<HealthRecordItemKey> ItemKeys => _thingKeys;
+        public IList<HealthRecordItemKey> ItemKeys => this.thingKeys;
 
-        private readonly List<HealthRecordItemKey> _thingKeys = new List<HealthRecordItemKey>();
+        private readonly List<HealthRecordItemKey> thingKeys = new List<HealthRecordItemKey>();
 
         /// <summary>
         /// Gets or sets the client assigned IDs identifying health record items for
@@ -367,9 +377,9 @@ namespace Microsoft.HealthVault
         /// single filter.
         /// </remarks>
         ///
-        public IList<string> ClientItemIds => _clientItemIds;
+        public IList<string> ClientItemIds => this.clientItemIds;
 
-        private readonly List<string> _clientItemIds = new List<string>();
+        private readonly List<string> clientItemIds = new List<string>();
 
         /// <summary>
         /// Gets a collection of the order by clauses which orders the data returned from GetThings request.
@@ -384,9 +394,9 @@ namespace Microsoft.HealthVault
         /// type IDs are listed in the filter spec.
         /// </remarks>
         ///
-        public IList<HealthRecordItemsOrderByClause> OrderByClauses => _orderByClauses;
+        public IList<HealthRecordItemsOrderByClause> OrderByClauses => this.orderByClauses;
 
-        private readonly List<HealthRecordItemsOrderByClause> _orderByClauses = new List<HealthRecordItemsOrderByClause>();
+        private readonly List<HealthRecordItemsOrderByClause> orderByClauses = new List<HealthRecordItemsOrderByClause>();
 
         /// <summary>
         /// Gets a collection of the unique item type identifiers to search
@@ -403,9 +413,9 @@ namespace Microsoft.HealthVault
         /// To add a type ID, use the Add method of the returned collection.
         /// </remarks>
         ///
-        public IList<Guid> TypeIds => _typeIds;
+        public IList<Guid> TypeIds => this.typeIds;
 
-        private readonly TypeList _typeIds;
+        private readonly TypeList typeIds;
 
         /// <summary>
         /// Gets or sets a set of flags representing the health record item
@@ -418,12 +428,7 @@ namespace Microsoft.HealthVault
         /// are returned.
         /// </value>
         ///
-        public HealthRecordItemStates States
-        {
-            get { return _states; }
-            set { _states = value; }
-        }
-        private HealthRecordItemStates _states = HealthRecordItemStates.Default;
+        public HealthRecordItemStates States { get; set; } = HealthRecordItemStates.Default;
 
         /// <summary>
         /// Gets or sets a value indicating whether to return only the flag
@@ -441,18 +446,18 @@ namespace Microsoft.HealthVault
         {
             get
             {
-                if (_currentVersionOnly.HasValue)
+                if (this.currentVersionOnly.HasValue)
                 {
-                    return _currentVersionOnly.Value;
+                    return this.currentVersionOnly.Value;
                 }
-                else
-                {
-                    return true;
-                }
+
+                return true;
             }
-            set { _currentVersionOnly = value; }
+
+            set { this.currentVersionOnly = value; }
         }
-        private bool? _currentVersionOnly;
+
+        private bool? currentVersionOnly;
 
         /// <summary>
         /// Gets or sets the minimum date of an updated item to return.
@@ -474,15 +479,18 @@ namespace Microsoft.HealthVault
         {
             get
             {
-                if (_updatedDateMin == null)
+                if (this.updatedDateMin == null)
                 {
                     return DateTime.MaxValue;
                 }
-                return (DateTime)_updatedDateMin;
+
+                return (DateTime)this.updatedDateMin;
             }
-            set { _updatedDateMin = value; }
+
+            set { this.updatedDateMin = value; }
         }
-        private DateTime? _updatedDateMin;
+
+        private DateTime? updatedDateMin;
 
         /// <summary>
         /// Gets or sets the maximum date of a returned updated item to return.
@@ -504,15 +512,18 @@ namespace Microsoft.HealthVault
         {
             get
             {
-                if (_updatedDateMax == null)
+                if (this.updatedDateMax == null)
                 {
                     return DateTime.MinValue;
                 }
-                return (DateTime)_updatedDateMax;
+
+                return (DateTime)this.updatedDateMax;
             }
-            set { _updatedDateMax = value; }
+
+            set { this.updatedDateMax = value; }
         }
-        private DateTime? _updatedDateMax;
+
+        private DateTime? updatedDateMax;
 
         /// <summary>
         /// Gets or sets the search filter to filter on the person who
@@ -527,15 +538,18 @@ namespace Microsoft.HealthVault
         {
             get
             {
-                if (_updatedPerson == null)
+                if (this.updatedPerson == null)
                 {
                     return Guid.Empty;
                 }
-                return (Guid)_updatedPerson;
+
+                return (Guid)this.updatedPerson;
             }
-            set { _updatedPerson = value; }
+
+            set { this.updatedPerson = value; }
         }
-        private Guid? _updatedPerson;
+
+        private Guid? updatedPerson;
 
         /// <summary>
         /// Gets or sets the search filter to filter on the application that
@@ -550,15 +564,18 @@ namespace Microsoft.HealthVault
         {
             get
             {
-                if (_updatedApplication == null)
+                if (this.updatedApplication == null)
                 {
                     return Guid.Empty;
                 }
-                return (Guid)_updatedApplication;
+
+                return (Guid)this.updatedApplication;
             }
-            set { _updatedApplication = value; }
+
+            set { this.updatedApplication = value; }
         }
-        private Guid? _updatedApplication;
+
+        private Guid? updatedApplication;
 
         /// <summary>
         /// Gets or sets the minimum date the item was created.
@@ -579,15 +596,18 @@ namespace Microsoft.HealthVault
         {
             get
             {
-                if (_createdDateMin == null)
+                if (this.createdDateMin == null)
                 {
                     return DateTime.MaxValue;
                 }
-                return (DateTime)_createdDateMin;
+
+                return (DateTime)this.createdDateMin;
             }
-            set { _createdDateMin = value; }
+
+            set { this.createdDateMin = value; }
         }
-        private DateTime? _createdDateMin;
+
+        private DateTime? createdDateMin;
 
         /// <summary>
         /// Gets or sets the maximum date the item was created.
@@ -608,15 +628,18 @@ namespace Microsoft.HealthVault
         {
             get
             {
-                if (_createdDateMax == null)
+                if (this.createdDateMax == null)
                 {
                     return DateTime.MinValue;
                 }
-                return (DateTime)_createdDateMax;
+
+                return (DateTime)this.createdDateMax;
             }
-            set { _createdDateMax = value; }
+
+            set { this.createdDateMax = value; }
         }
-        private DateTime? _createdDateMax;
+
+        private DateTime? createdDateMax;
 
         /// <summary>
         /// Gets or sets the search filter to filter on the person who
@@ -631,15 +654,18 @@ namespace Microsoft.HealthVault
         {
             get
             {
-                if (_createdPerson == null)
+                if (this.createdPerson == null)
                 {
                     return Guid.Empty;
                 }
-                return (Guid)_createdPerson;
+
+                return (Guid)this.createdPerson;
             }
-            set { _createdPerson = value; }
+
+            set { this.createdPerson = value; }
         }
-        private Guid? _createdPerson;
+
+        private Guid? createdPerson;
 
         /// <summary>
         /// Gets or sets the search filter to filter on the application that
@@ -654,15 +680,18 @@ namespace Microsoft.HealthVault
         {
             get
             {
-                if (_createdApplication == null)
+                if (this.createdApplication == null)
                 {
                     return Guid.Empty;
                 }
-                return (Guid)_createdApplication;
+
+                return (Guid)this.createdApplication;
             }
-            set { _createdApplication = value; }
+
+            set { this.createdApplication = value; }
         }
-        private Guid? _createdApplication;
+
+        private Guid? createdApplication;
 
         /// <summary>
         /// Gets or sets the minimum date the item pertains to.
@@ -683,15 +712,18 @@ namespace Microsoft.HealthVault
         {
             get
             {
-                if (_effectiveDateMin == null)
+                if (this.effectiveDateMin == null)
                 {
                     return DateTime.MaxValue;
                 }
-                return (DateTime)_effectiveDateMin;
+
+                return (DateTime)this.effectiveDateMin;
             }
-            set { _effectiveDateMin = value; }
+
+            set { this.effectiveDateMin = value; }
         }
-        private DateTime? _effectiveDateMin;
+
+        private DateTime? effectiveDateMin;
 
         /// <summary>
         /// Gets or sets the maximum date the item was pertains to.
@@ -712,15 +744,18 @@ namespace Microsoft.HealthVault
         {
             get
             {
-                if (_effectiveDateMax == null)
+                if (this.effectiveDateMax == null)
                 {
                     return DateTime.MinValue;
                 }
-                return (DateTime)_effectiveDateMax;
+
+                return (DateTime)this.effectiveDateMax;
             }
-            set { _effectiveDateMax = value; }
+
+            set { this.effectiveDateMax = value; }
         }
-        private DateTime? _effectiveDateMax;
+
+        private DateTime? effectiveDateMax;
 
         /// <summary>
         /// Gets or sets the search filter to filter on the existence
@@ -760,15 +795,18 @@ namespace Microsoft.HealthVault
         {
             get
             {
-                if (_updatedEndDateMin == null)
+                if (this.updatedEndDateMin == null)
                 {
                     return DateTime.MaxValue;
                 }
-                return (DateTime)_updatedEndDateMin;
+
+                return (DateTime)this.updatedEndDateMin;
             }
-            set { _updatedEndDateMin = value; }
+
+            set { this.updatedEndDateMin = value; }
         }
-        private DateTime? _updatedEndDateMin;
+
+        private DateTime? updatedEndDateMin;
 
         /// <summary>
         /// Gets or sets the maximum updated end date of the item.
@@ -789,15 +827,18 @@ namespace Microsoft.HealthVault
         {
             get
             {
-                if (_updatedEndDateMax == null)
+                if (this.updatedEndDateMax == null)
                 {
                     return DateTime.MinValue;
                 }
-                return (DateTime)_updatedEndDateMax;
+
+                return (DateTime)this.updatedEndDateMax;
             }
-            set { _updatedEndDateMax = value; }
+
+            set { this.updatedEndDateMax = value; }
         }
-        private DateTime? _updatedEndDateMax;
+
+        private DateTime? updatedEndDateMax;
 
         /// <summary>
         /// The usage intentions for items that will be retrieved in
@@ -808,7 +849,7 @@ namespace Microsoft.HealthVault
         /// <see cref="ItemRetrievalIntentions.Unspecified"/>.
         /// This property is reserved for future use.
         /// </remarks>
-        public ItemRetrievalIntentions Intentions { get; set; } = ItemRetrievalIntentions.Unspecified;
+        public ItemRetrievalIntentions Intentions { get; } = ItemRetrievalIntentions.Unspecified;
 
         /// <summary>
         /// Gets a string representation of the instance.
@@ -827,7 +868,7 @@ namespace Microsoft.HealthVault
 
             using (XmlWriter writer = XmlWriter.Create(result, settings))
             {
-                AddFilterXml(writer);
+                this.AddFilterXml(writer);
                 writer.Flush();
             }
 
@@ -841,50 +882,24 @@ namespace Microsoft.HealthVault
             HealthRecordFilter filter = new HealthRecordFilter();
 
             XPathNavigator groupNav = nav.SelectSingleNode("group");
-            string name = groupNav.GetAttribute("name", String.Empty);
+            string name = groupNav.GetAttribute("name", string.Empty);
 
-            if (!String.IsNullOrEmpty(name))
+            if (!string.IsNullOrEmpty(name))
             {
                 filter.Name = name;
             }
 
-            string maxString = groupNav.GetAttribute("max", String.Empty);
-            if (!String.IsNullOrEmpty(maxString))
-            {
-                try
-                {
-                    int max = XmlConvert.ToInt32(maxString);
-                    filter.MaxItemsReturned = max;
-                }
-                catch (FormatException)
-                {
-                }
-                catch (OverflowException)
-                {
-                }
-            }
+            string maxString = groupNav.GetAttribute("max", string.Empty);
+            filter.MaxItemsReturned = TryGetXmlInt32Value(maxString);
 
-            string maxFullString = groupNav.GetAttribute("max-full", String.Empty);
-            if (!String.IsNullOrEmpty(maxFullString))
-            {
-                try
-                {
-                    int max = XmlConvert.ToInt32(maxFullString);
-                    filter.MaxFullItemsReturnedPerRequest = max;
-                }
-                catch (FormatException)
-                {
-                }
-                catch (OverflowException)
-                {
-                }
-            }
+            string maxFullString = groupNav.GetAttribute("max-full", string.Empty);
+            filter.MaxFullItemsReturnedPerRequest = TryGetXmlInt32Value(maxFullString);
 
             XPathNodeIterator thingIdIterator = groupNav.Select("id");
             foreach (XPathNavigator thingIdNav in thingIdIterator)
             {
                 string versionStamp
-                    = thingIdNav.GetAttribute("version-stamp", String.Empty);
+                    = thingIdNav.GetAttribute("version-stamp", string.Empty);
                 filter.ItemKeys.Add(
                     new HealthRecordItemKey(
                         new Guid(thingIdNav.Value),
@@ -900,6 +915,21 @@ namespace Microsoft.HealthVault
             ParseOrderByClauses(groupNav, filter);
 
             XPathNavigator filterNav = groupNav.SelectSingleNode("filter");
+            ParseFilterNavValue(filterNav, filter);
+
+            XPathNavigator currentVersionNav = groupNav.SelectSingleNode("current-version-only");
+            if (currentVersionNav != null)
+            {
+                filter.CurrentVersionOnly = currentVersionNav.ValueAsBoolean;
+            }
+
+            XPathNavigator viewNav = groupNav.SelectSingleNode("format");
+            filter.View = HealthRecordView.CreateFromXml(viewNav);
+            return filter;
+        }
+
+        private static void ParseFilterNavValue(XPathNavigator filterNav, HealthRecordFilter filter)
+        {
             if (filterNav != null)
             {
                 XPathNodeIterator typeIdIterator = filterNav.Select("type-id");
@@ -999,16 +1029,26 @@ namespace Microsoft.HealthVault
                     filter.XPath = xpathNav.Value;
                 }
             }
+        }
 
-            XPathNavigator currentVersionNav = groupNav.SelectSingleNode("current-version-only");
-            if (currentVersionNav != null)
+        private static int TryGetXmlInt32Value(string maxFullString)
+        {
+            if (!string.IsNullOrEmpty(maxFullString))
             {
-                filter.CurrentVersionOnly = currentVersionNav.ValueAsBoolean;
+                try
+                {
+                    return XmlConvert.ToInt32(maxFullString);
+                }
+                catch (FormatException)
+                {
+                }
+                catch (OverflowException)
+                {
+                }
             }
 
-            XPathNavigator viewNav = groupNav.SelectSingleNode("format");
-            filter.View = HealthRecordView.CreateFromXml(viewNav);
-            return filter;
+            // Value was not present, so return default
+            return 0;
         }
 
         private static void ParseOrderByClauses(XPathNavigator groupNav, HealthRecordFilter filter)
@@ -1019,12 +1059,14 @@ namespace Microsoft.HealthVault
                 XPathNodeIterator orderByIterator = orderByNav.Select("order-by-property");
                 foreach (XPathNavigator orderByPropertyNav in orderByIterator)
                 {
-                    var orderByClause = new HealthRecordItemsOrderByClause();
-                    orderByClause.ThingTypeId = new Guid(orderByPropertyNav.GetAttribute("type-id", String.Empty));
-                    orderByClause.Name = orderByPropertyNav.GetAttribute("property-name", String.Empty);
+                    var orderByClause = new HealthRecordItemsOrderByClause
+                    {
+                        ThingTypeId = new Guid(orderByPropertyNav.GetAttribute("type-id", string.Empty)),
+                        Name = orderByPropertyNav.GetAttribute("property-name", string.Empty)
+                    };
 
-                    string direction = orderByPropertyNav.GetAttribute("direction", String.Empty);
-                    if (!String.IsNullOrEmpty(direction))
+                    string direction = orderByPropertyNav.GetAttribute("direction", string.Empty);
+                    if (!string.IsNullOrEmpty(direction))
                     {
                         orderByClause.Direction = (OrderByDirection)Enum.Parse(typeof(OrderByDirection), direction);
                     }
@@ -1046,9 +1088,10 @@ namespace Microsoft.HealthVault
 
             using (XmlWriter writer = XmlWriter.Create(filterXml, settings))
             {
-                AddFilterXml(writer);
+                this.AddFilterXml(writer);
                 writer.Flush();
             }
+
             return filterXml.ToString();
         }
 
@@ -1066,79 +1109,79 @@ namespace Microsoft.HealthVault
             // Open with a group tag
             writer.WriteStartElement("group");
 
-            if (!String.IsNullOrEmpty(Name))
+            if (!string.IsNullOrEmpty(this.Name))
             {
                 // Add the name attribute to the group tag
-                writer.WriteAttributeString("name", Name);
+                writer.WriteAttributeString("name", this.Name);
             }
 
-            if (MaxItemsReturned > 0)
+            if (this.MaxItemsReturned > 0)
             {
                 // Add the max attribute to the group tag
                 writer.WriteAttributeString(
                     "max",
-                    MaxItemsReturned.ToString(CultureInfo.InvariantCulture));
+                    this.MaxItemsReturned.ToString(CultureInfo.InvariantCulture));
             }
 
-            if (MaxFullItemsReturnedPerRequest >= 0)
+            if (this.MaxFullItemsReturnedPerRequest >= 0)
             {
                 // Add the max-full attribute to the group tag
                 writer.WriteAttributeString(
                     "max-full",
-                    MaxFullItemsReturnedPerRequest.ToString(CultureInfo.InvariantCulture));
+                    this.MaxFullItemsReturnedPerRequest.ToString(CultureInfo.InvariantCulture));
             }
 
-            for (int i = 0; i < ItemIds.Count; i++)
+            foreach (Guid id in this.ItemIds)
             {
                 // Add the <id> tag to the filter group
-                writer.WriteElementString("id", ItemIds[i].ToString());
+                writer.WriteElementString("id", id.ToString());
             }
 
-            for (int i = 0; i < ItemKeys.Count; i++)
+            foreach (HealthRecordItemKey key in this.ItemKeys)
             {
                 // Add the <key> tag to the filter group
                 writer.WriteStartElement("key");
                 writer.WriteAttributeString(
-                    "version-stamp", ItemKeys[i].VersionStamp.ToString());
-                writer.WriteValue(ItemKeys[i].Id.ToString());
+                    "version-stamp", key.VersionStamp.ToString());
+                writer.WriteValue(key.Id.ToString());
                 writer.WriteEndElement();
             }
 
-            for (int i = 0; i < ClientItemIds.Count; i++)
+            foreach (string thingId in this.ClientItemIds)
             {
                 // Add the <id> tag to the filter group
-                writer.WriteElementString("client-thing-id", ClientItemIds[i]);
+                writer.WriteElementString("client-thing-id", thingId);
             }
 
-            AddFilterSection(writer);
+            this.AddFilterSection(writer);
 
-            View.AddViewXml(writer);
+            this.View.AddViewXml(writer);
 
-            if (_currentVersionOnly.HasValue)
+            if (this.currentVersionOnly.HasValue)
             {
                 writer.WriteElementString(
                     "current-version-only",
-                    SDKHelper.XmlFromBool(_currentVersionOnly.Value));
+                    SDKHelper.XmlFromBool(this.currentVersionOnly.Value));
             }
 
-            if (Intentions != ItemRetrievalIntentions.Unspecified)
+            if (this.Intentions != ItemRetrievalIntentions.Unspecified)
             {
                 writer.WriteStartElement("intents");
 
                 // view
-                if (Intentions.HasFlag(ItemRetrievalIntentions.View))
+                if (this.Intentions.HasFlag(ItemRetrievalIntentions.View))
                 {
                     writer.WriteElementString("intent", "view");
                 }
 
                 // download
-                if (Intentions.HasFlag(ItemRetrievalIntentions.Download))
+                if (this.Intentions.HasFlag(ItemRetrievalIntentions.Download))
                 {
                     writer.WriteElementString("intent", "download");
                 }
 
                 // transmit
-                if (Intentions.HasFlag(ItemRetrievalIntentions.Transmit))
+                if (this.Intentions.HasFlag(ItemRetrievalIntentions.Transmit))
                 {
                     writer.WriteElementString("intent", "transmit");
                 }
@@ -1146,10 +1189,10 @@ namespace Microsoft.HealthVault
                 writer.WriteEndElement();
             }
 
-            if (OrderByClauses.Count > 0)
+            if (this.OrderByClauses.Count > 0)
             {
                 writer.WriteStartElement("order-by");
-                foreach (var orderByClause in OrderByClauses)
+                foreach (var orderByClause in this.OrderByClauses)
                 {
                     writer.WriteStartElement("order-by-property");
                     writer.WriteAttributeString("type-id", orderByClause.ThingTypeId.ToString());
@@ -1167,29 +1210,30 @@ namespace Microsoft.HealthVault
 
         private void AddFilterSection(XmlWriter writer)
         {
-            if (AreFiltersPresent())
+            if (this.AreFiltersPresent())
             {
                 // <filter>
                 writer.WriteStartElement("filter");
 
-                if (_typeIds.Count > 0)
+                if (this.typeIds.Count > 0)
                 {
                     // <type-id>
-                    foreach (Guid typeId in _typeIds)
+                    foreach (Guid typeId in this.typeIds)
                     {
                         writer.WriteElementString(
                             "type-id", typeId.ToString());
                     }
                 }
 
-                if ((_states & HealthRecordItemStates.Active) != 0)
+                if ((this.States & HealthRecordItemStates.Active) != 0)
                 {
                     // <thing-state>
                     writer.WriteElementString(
                         "thing-state",
                         HealthRecordItemState.Active.ToString());
                 }
-                if ((_states & HealthRecordItemStates.Deleted) != 0)
+
+                if ((this.States & HealthRecordItemStates.Deleted) != 0)
                 {
                     // <thing-state>
                     writer.WriteElementString(
@@ -1197,107 +1241,107 @@ namespace Microsoft.HealthVault
                         HealthRecordItemState.Deleted.ToString());
                 }
 
-                if (_effectiveDateMin != null)
+                if (this.effectiveDateMin != null)
                 {
                     // <eff-date-min>
                     writer.WriteStartElement("eff-date-min");
-                    writer.WriteValue(SDKHelper.XmlFromDateTime(EffectiveDateMin));
+                    writer.WriteValue(SDKHelper.XmlFromDateTime(this.EffectiveDateMin));
                     writer.WriteEndElement();
                 }
 
-                if (_effectiveDateMax != null)
+                if (this.effectiveDateMax != null)
                 {
                     // <eff-date-max>
                     writer.WriteStartElement("eff-date-max");
-                    writer.WriteValue(SDKHelper.XmlFromDateTime(EffectiveDateMax));
+                    writer.WriteValue(SDKHelper.XmlFromDateTime(this.EffectiveDateMax));
                     writer.WriteEndElement();
                 }
 
-                if (_createdApplication != null)
+                if (this.createdApplication != null)
                 {
                     // <created-application>
                     writer.WriteStartElement("created-app-id");
-                    writer.WriteValue(CreatedApplication.ToString());
+                    writer.WriteValue(this.CreatedApplication.ToString());
                     writer.WriteEndElement();
                 }
 
-                if (_createdPerson != null)
+                if (this.createdPerson != null)
                 {
                     // <created-person>
                     writer.WriteStartElement("created-person-id");
-                    writer.WriteValue(CreatedPerson.ToString());
+                    writer.WriteValue(this.CreatedPerson.ToString());
                     writer.WriteEndElement();
                 }
 
-                if (_updatedApplication != null)
+                if (this.updatedApplication != null)
                 {
                     // <updated-application>
                     writer.WriteStartElement("updated-app-id");
-                    writer.WriteValue(UpdatedApplication.ToString());
+                    writer.WriteValue(this.UpdatedApplication.ToString());
                     writer.WriteEndElement();
                 }
 
-                if (_updatedPerson != null)
+                if (this.updatedPerson != null)
                 {
                     // <updated-person>
                     writer.WriteStartElement("updated-person-id");
-                    writer.WriteValue(UpdatedPerson.ToString());
+                    writer.WriteValue(this.UpdatedPerson.ToString());
                     writer.WriteEndElement();
                 }
 
-                if (_createdDateMin != null)
+                if (this.createdDateMin != null)
                 {
                     // <created-date-min>
                     writer.WriteStartElement("created-date-min");
-                    writer.WriteValue(CreatedDateMin);
+                    writer.WriteValue(this.CreatedDateMin);
                     writer.WriteEndElement();
                 }
 
-                if (_createdDateMax != null)
+                if (this.createdDateMax != null)
                 {
                     // <created-date-max>
                     writer.WriteStartElement("created-date-max");
-                    writer.WriteValue(CreatedDateMax);
+                    writer.WriteValue(this.CreatedDateMax);
                     writer.WriteEndElement();
                 }
 
-                if (_updatedDateMin != null)
+                if (this.updatedDateMin != null)
                 {
                     // <updated-date-min>
                     writer.WriteStartElement("updated-date-min");
-                    writer.WriteValue(UpdatedDateMin);
+                    writer.WriteValue(this.UpdatedDateMin);
                     writer.WriteEndElement();
                 }
 
-                if (_updatedDateMax != null)
+                if (this.updatedDateMax != null)
                 {
                     // <updated-date-max>
                     writer.WriteStartElement("updated-date-max");
-                    writer.WriteValue(UpdatedDateMax);
+                    writer.WriteValue(this.UpdatedDateMax);
                     writer.WriteEndElement();
                 }
 
-                if (!String.IsNullOrEmpty(XPath))
+                if (!string.IsNullOrEmpty(this.XPath))
                 {
                     // <xpath>
                     writer.WriteStartElement("xpath");
-                    writer.WriteValue(XPath);
+                    writer.WriteValue(this.XPath);
                     writer.WriteEndElement();
                 }
 
-                if (_updatedEndDateMax != null)
+                if (this.updatedEndDateMax != null)
                 {
                     // <updated-end-date-max>
                     writer.WriteStartElement("updated-end-date-max");
-                    writer.WriteValue(UpdatedEndDateMax);
+                    writer.WriteValue(this.UpdatedEndDateMax);
                     writer.WriteEndElement();
                 }
 
-                if (_updatedEndDateMin != null)
+                if (this.updatedEndDateMin != null)
                 {
                     // <updated-end-date-min>
                     writer.WriteStartElement("updated-end-date-min");
-                    writer.WriteValue(UpdatedEndDateMin);
+                    writer.WriteValue(this.UpdatedEndDateMin);
                     writer.WriteEndElement();
                 }
 
@@ -1308,197 +1352,117 @@ namespace Microsoft.HealthVault
 
         private bool AreFiltersPresent()
         {
-            bool result = false;
-
-            do // false loop
-            {
-                if (_typeIds.Count > 0)
-                {
-                    result = true;
-                    break;
-                }
-
-                if ((_states & HealthRecordItemStates.Default) != _states)
-                {
-                    result = true;
-                    break;
-                }
-
-                if (_effectiveDateMin != null)
-                {
-                    result = true;
-                    break;
-                }
-
-                if (_effectiveDateMax != null)
-                {
-                    result = true;
-                    break;
-                }
-
-                if (_updatedDateMin != null)
-                {
-                    result = true;
-                    break;
-                }
-
-                if (_updatedDateMax != null)
-                {
-                    result = true;
-                    break;
-                }
-
-                if (_updatedPerson != null)
-                {
-                    result = true;
-                    break;
-                }
-
-                if (_updatedApplication != null)
-                {
-                    result = true;
-                    break;
-                }
-
-                if (_createdDateMin != null)
-                {
-                    result = true;
-                    break;
-                }
-
-                if (_createdDateMax != null)
-                {
-                    result = true;
-                    break;
-                }
-
-                if (_createdPerson != null)
-                {
-                    result = true;
-                    break;
-                }
-
-                if (_createdApplication != null)
-                {
-                    result = true;
-                    break;
-                }
-
-                if (_updatedEndDateMin != null)
-                {
-                    result = true;
-                    break;
-                }
-
-                if (_updatedEndDateMax != null)
-                {
-                    result = true;
-                    break;
-                }
-
-                if (!String.IsNullOrEmpty(XPath))
-                {
-                    result = true;
-                    break;
-                }
-            } while (false);
-
-            return result;
+            return (this.typeIds.Count > 0)
+                   || (this.States & HealthRecordItemStates.Default) != this.States
+                   || (this.effectiveDateMin != null)
+                   || (this.effectiveDateMax != null)
+                   || (this.updatedDateMin != null)
+                   || (this.updatedDateMax != null)
+                   || (this.updatedPerson != null)
+                   || (this.updatedApplication != null)
+                   || (this.createdDateMin != null)
+                   || (this.createdDateMax != null)
+                   || (this.createdPerson != null)
+                   || (this.createdApplication != null)
+                   || (this.updatedEndDateMin != null)
+                   || (this.updatedEndDateMax != null)
+                   || !string.IsNullOrEmpty(this.XPath);
         }
 
         #endregion internal helpers
 
         private class TypeList : IList<Guid>
         {
-            private HealthRecordView _view;
-            private Collection<Guid> _list = new Collection<Guid>();
+            private readonly HealthRecordView view;
+            private readonly Collection<Guid> list = new Collection<Guid>();
 
             public TypeList(HealthRecordView view)
             {
-                _view = view;
+                this.view = view;
             }
 
             public void Add(Guid item)
             {
-                _list.Add(item);
+                this.list.Add(item);
 
                 if (!HealthApplicationConfiguration.Current.UseLegacyTypeVersionSupport)
                 {
-                    _view.TypeVersionFormat.Add(item);
+                    this.view.TypeVersionFormat.Add(item);
                 }
             }
 
             public void Clear()
             {
-                _list.Clear();
+                this.list.Clear();
                 if (!HealthApplicationConfiguration.Current.UseLegacyTypeVersionSupport)
                 {
-                    _view.TypeVersionFormat.Clear();
+                    this.view.TypeVersionFormat.Clear();
                 }
             }
 
             public bool Contains(Guid item)
             {
-                return _list.Contains(item);
+                return this.list.Contains(item);
             }
 
             public void CopyTo(Guid[] array, int arrayIndex)
             {
-                _list.CopyTo(array, arrayIndex);
+                this.list.CopyTo(array, arrayIndex);
             }
 
             public IEnumerator<Guid> GetEnumerator()
             {
-                return _list.GetEnumerator();
+                return this.list.GetEnumerator();
             }
 
             IEnumerator IEnumerable.GetEnumerator()
             {
-                return ((IEnumerable)_list).GetEnumerator();
+                return ((IEnumerable)this.list).GetEnumerator();
             }
 
             public int IndexOf(Guid item)
             {
-                return _list.IndexOf(item);
+                return this.list.IndexOf(item);
             }
 
             public void Insert(int index, Guid item)
             {
-                _list.Insert(index, item);
+                this.list.Insert(index, item);
                 if (!HealthApplicationConfiguration.Current.UseLegacyTypeVersionSupport)
                 {
-                    _view.TypeVersionFormat.Add(item);
+                    this.view.TypeVersionFormat.Add(item);
                 }
             }
 
             public bool Remove(Guid item)
             {
-                bool result = _list.Remove(item);
+                bool result = this.list.Remove(item);
                 if (result && !HealthApplicationConfiguration.Current.UseLegacyTypeVersionSupport)
                 {
-                    _view.TypeVersionFormat.Remove(item);
+                    this.view.TypeVersionFormat.Remove(item);
                 }
+
                 return result;
             }
 
             public void RemoveAt(int index)
             {
-                Guid item = _list[index];
-                _list.RemoveAt(index);
+                Guid item = this.list[index];
+                this.list.RemoveAt(index);
                 if (!HealthApplicationConfiguration.Current.UseLegacyTypeVersionSupport)
                 {
-                    _view.TypeVersionFormat.Remove(item);
+                    this.view.TypeVersionFormat.Remove(item);
                 }
             }
 
-            public int Count => _list.Count;
+            public int Count => this.list.Count;
 
             public bool IsReadOnly => false;
 
             public Guid this[int index]
             {
-                get { return _list[index]; }
-                set { _list[index] = value; }
+                get { return this.list[index]; }
+                set { this.list[index] = value; }
             }
         }
     }

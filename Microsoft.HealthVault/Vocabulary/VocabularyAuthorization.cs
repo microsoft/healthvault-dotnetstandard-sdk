@@ -8,8 +8,9 @@ using System.Collections.ObjectModel;
 using System.Text;
 using System.Xml;
 using System.Xml.XPath;
+using Microsoft.HealthVault.Helpers;
 
-namespace Microsoft.HealthVault
+namespace Microsoft.HealthVault.Vocabulary
 {
     /// <summary>
     /// This class defines an authorization to use a single <see cref="Vocabulary"/> or a family of
@@ -28,13 +29,13 @@ namespace Microsoft.HealthVault
         /// </param>
         ///
         /// <exception cref="ArgumentException">
-        /// The <paramref name="vocabularyFamily"/> parameter is <b>null</b> or <see cref="String.Empty"/>
+        /// The <paramref name="vocabularyFamily"/> parameter is <b>null</b> or <see cref="string.Empty"/>
         /// </exception>
         ///
         public VocabularyAuthorization(string vocabularyFamily)
         {
             Validator.ThrowIfStringNullOrEmpty(vocabularyFamily, "vocabularyFamily");
-            _vocabularyFamily = vocabularyFamily;
+            this.VocabularyFamily = vocabularyFamily;
         }
 
         /// <summary>
@@ -51,9 +52,9 @@ namespace Microsoft.HealthVault
         /// </param>
         ///
         /// <exception cref="ArgumentException">
-        /// If the <paramref name="vocabularyFamily"/> parameter is <b>null</b> or <see cref="String.Empty"/>
+        /// If the <paramref name="vocabularyFamily"/> parameter is <b>null</b> or <see cref="string.Empty"/>
         /// --OR--
-        /// if the <paramref name="vocabularyName"/> parameter is <b>null</b> or <see cref="String.Empty"/>
+        /// if the <paramref name="vocabularyName"/> parameter is <b>null</b> or <see cref="string.Empty"/>
         /// </exception>
         ///
         public VocabularyAuthorization(string vocabularyFamily, string vocabularyName)
@@ -61,18 +62,14 @@ namespace Microsoft.HealthVault
             Validator.ThrowIfStringNullOrEmpty(vocabularyFamily, "vocabularyFamily");
             Validator.ThrowIfStringNullOrEmpty(vocabularyName, "vocabularyName");
 
-            _vocabularyFamily = vocabularyFamily;
-            _vocabularyName = vocabularyName;
+            this.VocabularyFamily = vocabularyFamily;
+            this.VocabularyName = vocabularyName;
         }
 
         /// <summary>
         /// Gets the family of the HealthVault <see cref="Vocabulary"/> being represented.
         /// </summary>
-        public string VocabularyFamily
-        {
-            get { return _vocabularyFamily; }
-        }
-        private string _vocabularyFamily;
+        public string VocabularyFamily { get; }
 
         /// <summary>
         /// Gets the name of the HealthVault <see cref="Vocabulary"/> being represented.
@@ -81,11 +78,7 @@ namespace Microsoft.HealthVault
         /// The absence of a name, i.e. the name set to null, indicates that the Authorization
         /// covers all the vocabularies in the HealthVault vocabulary family.
         /// </remarks>
-        public string VocabularyName
-        {
-            get { return _vocabularyName; }
-        }
-        private string _vocabularyName;
+        public string VocabularyName { get; }
 
         /// <summary>
         /// Gets the string representation of the <see cref="VocabularyAuthorization"/>.
@@ -98,12 +91,13 @@ namespace Microsoft.HealthVault
         public override string ToString()
         {
             StringBuilder result = new StringBuilder();
-            result.Append(VocabularyFamily);
-            if (!String.IsNullOrEmpty(VocabularyName))
+            result.Append(this.VocabularyFamily);
+            if (!string.IsNullOrEmpty(this.VocabularyName))
             {
                 result.Append(":");
-                result.Append(VocabularyName);
+                result.Append(this.VocabularyName);
             }
+
             return result.ToString();
         }
 
@@ -124,11 +118,12 @@ namespace Microsoft.HealthVault
             Validator.ThrowIfWriterNull(writer);
 
             writer.WriteStartElement("vocabulary-authorization");
-            writer.WriteElementString("family", VocabularyFamily);
-            if (!String.IsNullOrEmpty(VocabularyName))
+            writer.WriteElementString("family", this.VocabularyFamily);
+            if (!string.IsNullOrEmpty(this.VocabularyName))
             {
-                writer.WriteElementString("name", VocabularyName);
+                writer.WriteElementString("name", this.VocabularyName);
             }
+
             writer.WriteEndElement();
         }
 
@@ -150,9 +145,9 @@ namespace Microsoft.HealthVault
             string vocabularyFamily = vocabularyAuthorizationXml.SelectSingleNode("family").Value;
             XPathNavigator vocabularyNameNav =
                 vocabularyAuthorizationXml.SelectSingleNode("name");
-            string vocabularyName = vocabularyNameNav != null ? vocabularyNameNav.Value : null;
+            string vocabularyName = vocabularyNameNav?.Value;
             return
-                !String.IsNullOrEmpty(vocabularyName) ?
+                !string.IsNullOrEmpty(vocabularyName) ?
                 new VocabularyAuthorization(vocabularyFamily, vocabularyName) :
                 new VocabularyAuthorization(vocabularyFamily);
         }
@@ -177,6 +172,7 @@ namespace Microsoft.HealthVault
                 VocabularyAuthorization auth = ParseXml(vocabularyAuthorizationNav);
                 result.Add(auth);
             }
+
             return result;
         }
 
@@ -196,13 +192,13 @@ namespace Microsoft.HealthVault
                 return false;
             }
 
-            if (Object.ReferenceEquals(this, other))
+            if (ReferenceEquals(this, other))
             {
                 return true;
             }
 
-            return String.Equals(VocabularyFamily, other.VocabularyFamily, StringComparison.OrdinalIgnoreCase)
-                && String.Equals(VocabularyName, other.VocabularyName, StringComparison.OrdinalIgnoreCase);
+            return string.Equals(this.VocabularyFamily, other.VocabularyFamily, StringComparison.OrdinalIgnoreCase)
+                && string.Equals(this.VocabularyName, other.VocabularyName, StringComparison.OrdinalIgnoreCase);
         }
 
         /// <summary>
@@ -211,10 +207,10 @@ namespace Microsoft.HealthVault
         /// (Overrides Object.Equals(Object).
         /// </summary>
         ///
-        public override bool Equals(Object obj)
+        public override bool Equals(object obj)
         {
             VocabularyAuthorization vocabularyAuthorization = obj as VocabularyAuthorization;
-            return Equals(vocabularyAuthorization);
+            return this.Equals(vocabularyAuthorization);
         }
 
         /// <summary>
@@ -223,11 +219,11 @@ namespace Microsoft.HealthVault
         ///
         public override int GetHashCode()
         {
-            int hashCode = VocabularyFamily.ToUpperInvariant().GetHashCode();
+            int hashCode = this.VocabularyFamily.ToUpperInvariant().GetHashCode();
 
-            if (!String.IsNullOrEmpty(VocabularyName))
+            if (!string.IsNullOrEmpty(this.VocabularyName))
             {
-                hashCode ^= VocabularyName.ToUpperInvariant().GetHashCode();
+                hashCode ^= this.VocabularyName.ToUpperInvariant().GetHashCode();
             }
 
             return hashCode;

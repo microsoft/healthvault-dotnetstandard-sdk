@@ -5,10 +5,10 @@
 
 using System;
 using Microsoft.HealthVault.Authentication;
+using Microsoft.HealthVault.PlatformInformation;
 
-namespace Microsoft.HealthVault
+namespace Microsoft.HealthVault.Connection
 {
-
     /// <summary>
     /// Represents an authenticated interface to HealthVault. 
     /// </summary>
@@ -219,4 +219,3 @@ namespace Microsoft.HealthVault
         #endregion ctors
     }
 }
-

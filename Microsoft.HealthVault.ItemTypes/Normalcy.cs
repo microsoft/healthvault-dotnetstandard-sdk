@@ -56,6 +56,6 @@ namespace Microsoft.HealthVault.ItemTypes
         /// the same type.
         /// </summary>
         ///
-        WellAboveNormal = 5,
+        WellAboveNormal = 5
     }
 }

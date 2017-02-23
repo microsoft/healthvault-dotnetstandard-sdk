@@ -6,6 +6,7 @@
 using System;
 using System.Text;
 using System.Xml;
+using Microsoft.HealthVault.Helpers;
 
 namespace Microsoft.HealthVault.Authentication
 {
@@ -21,31 +22,13 @@ namespace Microsoft.HealthVault.Authentication
     {
         #region properties
 
-        internal string Digest
-        {
-            get { return _digest; }
-            private set { _digest = value; }
-        }
-        private string _digest;
+        internal string Digest { get; private set; }
 
-        internal string AlgorithmName
-        {
-            get { return _algName; }
-            private set { _algName = value; }
-        }
-        private string _algName;
+        internal string AlgorithmName { get; private set; }
 
-        internal string DigestAlgorithmName
-        {
-            get { return _digestAlgorithmName; }
-            set { _digestAlgorithmName = value; }
-        }
-        private string _digestAlgorithmName = "hash";
+        internal string DigestAlgorithmName { get; set; } = "hash";
 
-        internal string StartElementName
-        {
-            get { return DigestAlgorithmName + "-data"; }
-        }
+        internal string StartElementName => this.DigestAlgorithmName + "-data";
 
         #endregion
 
@@ -83,8 +66,8 @@ namespace Microsoft.HealthVault.Authentication
             string algorithmName,
             byte[] digest)
         {
-            Digest = Convert.ToBase64String(digest);
-            AlgorithmName = algorithmName;
+            this.Digest = Convert.ToBase64String(digest);
+            this.AlgorithmName = algorithmName;
         }
 
         #endregion
@@ -100,7 +83,7 @@ namespace Microsoft.HealthVault.Authentication
 
             using (XmlWriter writer = XmlWriter.Create(builder, settings))
             {
-                WriteInfoXml(writer);
+                this.WriteInfoXml(writer);
             }
 
             return builder.ToString();
@@ -129,9 +112,10 @@ namespace Microsoft.HealthVault.Authentication
             {
                 throw new ArgumentNullException("writer");
             }
-            writer.WriteStartElement(StartElementName);
-            writer.WriteAttributeString("algName", AlgorithmName);
-            writer.WriteString(Digest);
+
+            writer.WriteStartElement(this.StartElementName);
+            writer.WriteAttributeString("algName", this.AlgorithmName);
+            writer.WriteString(this.Digest);
             writer.WriteEndElement();
         }
     }

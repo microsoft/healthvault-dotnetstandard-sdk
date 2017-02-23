@@ -3,8 +3,6 @@
 // see http://www.microsoft.com/resources/sharedsource/licensingbasics/sharedsourcelicenses.mspx.
 // All other rights reserved.
 
-using Microsoft.HealthVault.Rest;
-using Microsoft.HealthVault.Web.Authentication;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -13,6 +11,11 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.XPath;
+using Microsoft.HealthVault.Connection;
+using Microsoft.HealthVault.Exceptions;
+using Microsoft.HealthVault.Helpers;
+using Microsoft.HealthVault.Rest;
+using Microsoft.HealthVault.Transport;
 
 namespace Microsoft.HealthVault.Authentication
 {
@@ -56,23 +59,24 @@ namespace Microsoft.HealthVault.Authentication
         ///
         public CryptoHash SharedSecret
         {
-            get { return _sharedSecret; }
+            get { return this.sharedSecret; }
+
             set
             {
                 if (value == null)
                 {
                     throw new ArgumentException("value");
                 }
-                _sharedSecret = value;
+
+                this.sharedSecret = value;
             }
         }
-        private CryptoHash _sharedSecret;
 
-        private IDictionary<Guid, CreateAuthenticationTokenResult> AuthenticationResults
-        {
-            get { return _authResults; }
-        }
-        private Dictionary<Guid, CreateAuthenticationTokenResult> _authResults;
+        private CryptoHash sharedSecret;
+
+        private IDictionary<Guid, CreateAuthenticationTokenResult> AuthenticationResults => this.authResults;
+
+        private Dictionary<Guid, CreateAuthenticationTokenResult> authResults;
 
         /// <summary>
         /// Gets the credential's authentication results from prior successful
@@ -97,14 +101,14 @@ namespace Microsoft.HealthVault.Authentication
         ///
         public virtual CreateAuthenticationTokenResult GetAuthenticationResult(Guid applicationId)
         {
-            if (AuthenticationResults == null
-                || AuthenticationResults.Count == 0
-                || !AuthenticationResults.ContainsKey(applicationId))
+            if (this.AuthenticationResults == null
+                || this.AuthenticationResults.Count == 0
+                || !this.AuthenticationResults.ContainsKey(applicationId))
             {
                 return null;
             }
 
-            return AuthenticationResults[applicationId];
+            return this.AuthenticationResults[applicationId];
         }
 
         /// <summary>
@@ -124,10 +128,7 @@ namespace Microsoft.HealthVault.Authentication
         ///
         internal virtual bool ExpireAuthenticationResult(Guid applicationId)
         {
-            if (AuthenticationResults != null)
-            {
-                AuthenticationResults.Remove(applicationId);
-            }
+            this.AuthenticationResults?.Remove(applicationId);
 
             return false;
         }
@@ -146,12 +147,7 @@ namespace Microsoft.HealthVault.Authentication
         /// by the shell.
         /// </remarks>
         ///
-        internal string AuthenticationMethodName
-        {
-            get { return _authMethodName; }
-            set { _authMethodName = value; }
-        }
-        private string _authMethodName = "CreateAuthenticatedSessionToken";
+        internal string AuthenticationMethodName { get; set; } = "CreateAuthenticatedSessionToken";
 
         /// <summary>
         /// Authenticates an <paramref name="applicationId"/> if none exists.
@@ -169,9 +165,9 @@ namespace Microsoft.HealthVault.Authentication
             HealthServiceConnection connection,
             Guid applicationId)
         {
-            if (GetAuthenticationResult(applicationId) == null)
+            if (this.GetAuthenticationResult(applicationId) == null)
             {
-                await AuthenticateAsync(connection, applicationId).ConfigureAwait(false);
+                await this.AuthenticateAsync(connection, applicationId).ConfigureAwait(false);
             }
         }
 
@@ -183,12 +179,9 @@ namespace Microsoft.HealthVault.Authentication
             HealthServiceConnection connection,
             Guid appId)
         {
-            if (AuthenticationResults != null)
-            {
-                AuthenticationResults.Remove(appId);
-            }
+            this.AuthenticationResults?.Remove(appId);
 
-            await CreateAuthenticatedSessionTokenAsync(connection, appId).ConfigureAwait(false);
+            await this.CreateAuthenticatedSessionTokenAsync(connection, appId).ConfigureAwait(false);
         }
 
         #endregion
@@ -218,7 +211,7 @@ namespace Microsoft.HealthVault.Authentication
             Guid appId,
             XmlWriter writer)
         {
-            CreateAuthenticationTokenResult result = GetAuthenticationResult(appId);
+            CreateAuthenticationTokenResult result = this.GetAuthenticationResult(appId);
 
             if (result == null)
             {
@@ -254,7 +247,7 @@ namespace Microsoft.HealthVault.Authentication
         ///
         internal virtual string GetHeaderSection(Guid appId)
         {
-            CreateAuthenticationTokenResult result = GetAuthenticationResult(appId);
+            CreateAuthenticationTokenResult result = this.GetAuthenticationResult(appId);
 
             if (result == null)
             {
@@ -281,7 +274,7 @@ namespace Microsoft.HealthVault.Authentication
         /// </param>
         internal virtual void AddRestAuthorizationHeaderToken(IList<string> tokens, Guid appId)
         {
-            CreateAuthenticationTokenResult result = GetAuthenticationResult(appId);
+            CreateAuthenticationTokenResult result = this.GetAuthenticationResult(appId);
 
             if (result == null)
             {
@@ -289,7 +282,7 @@ namespace Microsoft.HealthVault.Authentication
             }
 
             tokens.Add(
-                String.Format(
+                string.Format(
                     CultureInfo.InvariantCulture,
                     RestConstants.AuthorizationHeaderElement,
                     RestConstants.AppToken,
@@ -309,15 +302,17 @@ namespace Microsoft.HealthVault.Authentication
         internal virtual void AddAuthenticationResult(
             CreateAuthenticationTokenResult result)
         {
-            if (_authResults == null)
+            if (this.authResults == null)
             {
-                _authResults = new Dictionary<Guid, CreateAuthenticationTokenResult>();
+                this.authResults = new Dictionary<Guid, CreateAuthenticationTokenResult>();
             }
-            if (_authResults.ContainsKey(result.ApplicationId))
+
+            if (this.authResults.ContainsKey(result.ApplicationId))
             {
-                _authResults.Remove(result.ApplicationId);
+                this.authResults.Remove(result.ApplicationId);
             }
-            _authResults.Add(result.ApplicationId, result);
+
+            this.authResults.Add(result.ApplicationId, result);
         }
 
         /// <summary>
@@ -331,7 +326,7 @@ namespace Microsoft.HealthVault.Authentication
         internal virtual void UpdateAuthenticationResults(
             CreateAuthenticationTokenResult result)
         {
-            AddAuthenticationResult(result);
+            this.AddAuthenticationResult(result);
         }
 
         /// <summary>
@@ -373,7 +368,7 @@ namespace Microsoft.HealthVault.Authentication
             Validator.ThrowIfArgumentNull(connection, "connection", "AuthenticatedConnectionNull");
 
             Validator.ThrowArgumentExceptionIf(
-                appId == null || appId == Guid.Empty,
+                appId == Guid.Empty,
                 "appId",
                 "AuthenticationAppIDNullOrEmpty");
 
@@ -384,7 +379,7 @@ namespace Microsoft.HealthVault.Authentication
                 anonConn.WebProxy = connection.WebProxy;
             }
 
-            await MakeCreateTokenCallAsync(
+            await this.MakeCreateTokenCallAsync(
                 "CreateAuthenticatedSessionToken",
                 2,
                 anonConn,
@@ -434,7 +429,7 @@ namespace Microsoft.HealthVault.Authentication
             Guid appId,
             bool isMra)
         {
-            await MakeCreateTokenCallAsync(
+            await this.MakeCreateTokenCallAsync(
                 methodName,
                 version,
                 connection,
@@ -487,7 +482,7 @@ namespace Microsoft.HealthVault.Authentication
             bool isMra,
             string stsOriginalUrl)
         {
-            await MakeCreateTokenCallAsync(
+            await this.MakeCreateTokenCallAsync(
                 methodName,
                 version,
                 connection,
@@ -522,7 +517,7 @@ namespace Microsoft.HealthVault.Authentication
             int version,
             HealthServiceConnection connection)
         {
-            await MakeCreateTokenCallImplAsync(
+            await this.MakeCreateTokenCallImplAsync(
                 methodName,
                 version,
                 connection).ConfigureAwait(false);
@@ -579,12 +574,12 @@ namespace Microsoft.HealthVault.Authentication
                 "appTokenCreationInfo",
                 "AuthenticationAppIDCollectionNullOrEmpty");
 
-            if (IsTokenCached(applicationTokenCreationInfo))
+            if (this.IsTokenCached(applicationTokenCreationInfo))
             {
                 return;
             }
 
-            await MakeCreateTokenCallImplAsync(methodName, version, connection, applicationTokenCreationInfo, stsOriginalUrl).ConfigureAwait(false);
+            await this.MakeCreateTokenCallImplAsync(methodName, version, connection, applicationTokenCreationInfo, stsOriginalUrl).ConfigureAwait(false);
         }
 
         private async Task MakeCreateTokenCallImplAsync(
@@ -596,21 +591,21 @@ namespace Microsoft.HealthVault.Authentication
         {
             Validator.ThrowIfStringNullOrEmpty(methodName, "CreateTokenMethodNameIsNullOrEmpty");
 
-            AuthenticationMethodName = methodName;
+            this.AuthenticationMethodName = methodName;
 
             HealthServiceRequest request =
-                new HealthServiceRequest(connection, AuthenticationMethodName, version);
-
-            request.Parameters =
-                ConstructCreateTokenInfoXml(applicationTokenCreationInfo, stsOriginalUrl);
+                new HealthServiceRequest(connection, this.AuthenticationMethodName, version)
+                {
+                    Parameters = this.ConstructCreateTokenInfoXml(applicationTokenCreationInfo, stsOriginalUrl)
+                };
 
             HealthServiceResponseData responseData = await request.ExecuteAsync().ConfigureAwait(false);
 
-            CreateAuthenticationTokenResult createAuthTokenResult = GetAuthTokenAndAbsenceReasons(responseData.InfoNavigator);
+            CreateAuthenticationTokenResult createAuthTokenResult = this.GetAuthTokenAndAbsenceReasons(responseData.InfoNavigator);
 
-            ParseExtendedElements(responseData.InfoNavigator);
+            this.ParseExtendedElements(responseData.InfoNavigator);
 
-            UpdateAuthenticationResults(createAuthTokenResult);
+            this.UpdateAuthenticationResults(createAuthTokenResult);
         }
 
         /// <summary>
@@ -639,13 +634,13 @@ namespace Microsoft.HealthVault.Authentication
         internal virtual bool IsTokenCached(
             ApplicationTokenCreationInfo applicationTokenCreationInfo)
         {
-            if (AuthenticationResults == null ||
-                AuthenticationResults.Count == 0)
+            if (this.AuthenticationResults == null ||
+                this.AuthenticationResults.Count == 0)
             {
                 return false;
             }
 
-            if (AuthenticationResults.ContainsKey(applicationTokenCreationInfo.ApplicationId))
+            if (this.AuthenticationResults.ContainsKey(applicationTokenCreationInfo.ApplicationId))
             {
                 return true;
             }
@@ -681,7 +676,6 @@ namespace Microsoft.HealthVault.Authentication
                 // Add the PersonInfo elements
                 writer.WriteStartElement("auth-info");
 
-                //app-id
                 if (applicationTokenCreationInfo != null)
                 {
                     ConstructCreateTokenInfoXmlAppIdPart(
@@ -689,12 +683,10 @@ namespace Microsoft.HealthVault.Authentication
                         applicationTokenCreationInfo);
                 }
 
-                // <credentials>
                 writer.WriteStartElement("credential");
-                WriteInfoXml(writer);
+                this.WriteInfoXml(writer);
                 writer.WriteEndElement();
 
-                // <sts-info>
                 if (stsOriginalRequestUrl != null)
                 {
                     writer.WriteStartElement("sts-info");
@@ -702,12 +694,10 @@ namespace Microsoft.HealthVault.Authentication
                     writer.WriteEndElement();
                 }
 
-                // <second factor credential>
-
-                // Close the auth-info tag
                 writer.WriteEndElement();
                 writer.Flush();
             }
+
             return infoXml.ToString();
         }
 
@@ -740,6 +730,7 @@ namespace Microsoft.HealthVault.Authentication
             {
                 writer.WriteAttributeString("is-multi-record-app", "true");
             }
+
             writer.WriteValue(applicationTokenCreationInfo.ApplicationId.ToString());
             writer.WriteEndElement();
         }
@@ -761,17 +752,17 @@ namespace Microsoft.HealthVault.Authentication
         {
             CreateAuthenticationTokenResult createAuthTokenResult = new CreateAuthenticationTokenResult();
 
-            GetAuthenticationToken(createAuthTokenResult, nav);
+            this.GetAuthenticationToken(createAuthTokenResult, nav);
 
             if (createAuthTokenResult.AuthenticationToken == null)
             {
-                GetStsPayload(createAuthTokenResult, nav);
+                this.GetStsPayload(createAuthTokenResult, nav);
             }
 
             if (createAuthTokenResult.AuthenticationToken == null &&
                 createAuthTokenResult.StsTokenPayload == null)
             {
-                GetAbsenceReasons(createAuthTokenResult, nav);
+                this.GetAbsenceReasons(createAuthTokenResult, nav);
             }
 
             return createAuthTokenResult;
@@ -793,7 +784,7 @@ namespace Microsoft.HealthVault.Authentication
             CreateAuthenticationTokenResult createAuthTokenResult,
             XPathNavigator nav)
         {
-            XPathExpression authTokenPath = GetAuthTokenXPath(nav);
+            XPathExpression authTokenPath = this.GetAuthTokenXPath(nav);
             XPathNodeIterator navTokenIterator = nav.Select(authTokenPath);
 
             GetTokenByParseResponse(navTokenIterator, createAuthTokenResult);
@@ -807,7 +798,7 @@ namespace Microsoft.HealthVault.Authentication
             CreateAuthenticationTokenResult createAuthTokenResult,
             XPathNavigator nav)
         {
-            XPathExpression absenceReasonPath = GetAbsenceReasonXPath(nav);
+            XPathExpression absenceReasonPath = this.GetAbsenceReasonXPath(nav);
             XPathNodeIterator navTokenIterator = nav.Select(absenceReasonPath);
 
             GetAbsenceReasonByParseResponse(
@@ -823,12 +814,12 @@ namespace Microsoft.HealthVault.Authentication
             CreateAuthenticationTokenResult createAuthTokenResult,
             XPathNavigator nav)
         {
-            XPathExpression stsPayloadPath = GetStsPayloadPath(nav);
+            XPathExpression stsPayloadPath = this.GetStsPayloadPath(nav);
             XPathNavigator stsNav = nav.SelectSingleNode(stsPayloadPath);
 
             if (stsNav != null)
             {
-                Guid applicationId = new Guid(stsNav.GetAttribute("app-id", String.Empty));
+                Guid applicationId = new Guid(stsNav.GetAttribute("app-id", string.Empty));
 
                 ApplicationRecordAuthorizationAction action =
                     ApplicationRecordAuthorizationAction.Unknown;
@@ -837,8 +828,9 @@ namespace Microsoft.HealthVault.Authentication
                     action =
                         (ApplicationRecordAuthorizationAction)Enum.Parse(
                             typeof(ApplicationRecordAuthorizationAction),
-                            stsNav.GetAttribute("app-record-auth-action",
-                                String.Empty));
+                            stsNav.GetAttribute(
+                                "app-record-auth-action",
+                                string.Empty));
                 }
                 catch (ArgumentException)
                 {
@@ -869,8 +861,9 @@ namespace Microsoft.HealthVault.Authentication
         {
             foreach (XPathNavigator tokenNav in navTokenIterator)
             {
-                Guid applicationId = new Guid(tokenNav.GetAttribute("app-id",
-                            String.Empty));
+                Guid applicationId = new Guid(tokenNav.GetAttribute(
+                    "app-id",
+                    string.Empty));
 
                 ApplicationRecordAuthorizationAction action =
                     ApplicationRecordAuthorizationAction.Unknown;
@@ -879,8 +872,9 @@ namespace Microsoft.HealthVault.Authentication
                     action =
                         (ApplicationRecordAuthorizationAction)Enum.Parse(
                             typeof(ApplicationRecordAuthorizationAction),
-                            tokenNav.GetAttribute("app-record-auth-action",
-                                String.Empty));
+                            tokenNav.GetAttribute(
+                                "app-record-auth-action",
+                                string.Empty));
                 }
                 catch (ArgumentException)
                 {
@@ -912,8 +906,9 @@ namespace Microsoft.HealthVault.Authentication
         {
             foreach (XPathNavigator tokenNav in navTokenIterator)
             {
-                Guid applicationId = new Guid(tokenNav.GetAttribute("app-id",
-                            String.Empty));
+                Guid applicationId = new Guid(tokenNav.GetAttribute(
+                    "app-id",
+                    string.Empty));
 
                 try
                 {
@@ -934,17 +929,17 @@ namespace Microsoft.HealthVault.Authentication
 
         private XPathExpression GetAuthTokenXPath(XPathNavigator infoNav)
         {
-            return GetTokenXPathExpression(infoNav, "/wc:info/token");
+            return this.GetTokenXPathExpression(infoNav, "/wc:info/token");
         }
 
         private XPathExpression GetAbsenceReasonXPath(XPathNavigator infoNav)
         {
-            return GetTokenXPathExpression(infoNav, "/wc:info/token-absence-reason");
+            return this.GetTokenXPathExpression(infoNav, "/wc:info/token-absence-reason");
         }
 
         private XPathExpression GetStsPayloadPath(XPathNavigator infoNav)
         {
-            return GetTokenXPathExpression(infoNav, "//wc:info/sts-token-payload/payload");
+            return this.GetTokenXPathExpression(infoNav, "//wc:info/sts-token-payload/payload");
         }
 
         private XPathExpression GetTokenXPathExpression(
@@ -956,7 +951,7 @@ namespace Microsoft.HealthVault.Authentication
             XmlNamespaceManager infoXmlNamespaceManager =
                 new XmlNamespaceManager(infoNav.NameTable);
 
-            String nsName = AuthenticationMethodName;
+            string nsName = this.AuthenticationMethodName;
             if (nsName == "CreateAuthenticatedSessionToken")
             {
                 nsName = "CreateAuthenticatedSessionToken2";
@@ -978,7 +973,7 @@ namespace Microsoft.HealthVault.Authentication
         /// calls <see cref="ReadCookieXml"/> to initialize the object.
         /// </summary>
         ///
-        /// <param name="credNav"></param>
+        /// <param name="credNav">The XML navigator used to initialize the object</param>
         ///
         /// <returns>
         /// An instance of <see cref="Credential"/>.
@@ -1144,12 +1139,12 @@ namespace Microsoft.HealthVault.Authentication
                 "count",
                 "CountInvalid");
 
-            Validator.ThrowInvalidIfNull(SharedSecret, "SharedSecretMissing");
+            Validator.ThrowInvalidIfNull(this.SharedSecret, "SharedSecretMissing");
 
-            SharedSecret.Reset();
-            SharedSecret.ComputeHash(data, index, count);
+            this.SharedSecret.Reset();
+            this.SharedSecret.ComputeHash(data, index, count);
 
-            string hashXml = SharedSecret.Finalize().GetXml();
+            string hashXml = this.SharedSecret.Finalize().GetXml();
 
             return hashXml;
         }

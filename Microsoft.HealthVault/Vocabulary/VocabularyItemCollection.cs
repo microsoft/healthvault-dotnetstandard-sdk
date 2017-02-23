@@ -6,7 +6,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 
-namespace Microsoft.HealthVault
+namespace Microsoft.HealthVault.Vocabulary
 {
     /// <summary>
     /// A collection of vocabulary items belonging to a particular vocabulary.
@@ -16,38 +16,32 @@ namespace Microsoft.HealthVault
     {
         internal VocabularyItemCollection()
         {
-            _orderedItemsList = new List<VocabularyItem>(10);
+            this.orderedItemsList = new List<VocabularyItem>(10);
         }
 
         /// <summary>
         /// Retrieves the vocabulary items in the intended order for this instance.
         /// </summary>
         ///
-        public ReadOnlyCollection<VocabularyItem> OrderedValues
-        {
-            get { return new ReadOnlyCollection<VocabularyItem>(_orderedItemsList); }
-        }
+        public ReadOnlyCollection<VocabularyItem> OrderedValues => new ReadOnlyCollection<VocabularyItem>(this.orderedItemsList);
 
         /// <summary>
         /// Retrieves the vocabulary item at the specified index based on the intended order
         /// for this instance.
         /// </summary>
         ///
-        /// <param name="index"></param>
+        /// <param name="index">The index of the vocabulary item to retrieve</param>
         ///
-        /// <returns></returns>
+        /// <returns>The vocabulary item at the requested index</returns>
         ///
-        public VocabularyItem this[int index]
-        {
-            get { return _orderedItemsList[index]; }
-        }
+        public VocabularyItem this[int index] => this.orderedItemsList[index];
 
         internal override void AddVocabularyItem(string key, VocabularyItem item)
         {
             base.AddVocabularyItem(key, item);
-            _orderedItemsList.Add(item);
+            this.orderedItemsList.Add(item);
         }
 
-        private List<VocabularyItem> _orderedItemsList;
+        private readonly List<VocabularyItem> orderedItemsList;
     }
 }

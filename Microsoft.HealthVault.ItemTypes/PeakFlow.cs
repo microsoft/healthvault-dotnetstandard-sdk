@@ -7,6 +7,8 @@ using System;
 using System.Collections.ObjectModel;
 using System.Xml;
 using System.Xml.XPath;
+using Microsoft.HealthVault.Helpers;
+using Microsoft.HealthVault.Thing;
 
 namespace Microsoft.HealthVault.ItemTypes
 {
@@ -49,7 +51,8 @@ namespace Microsoft.HealthVault.ItemTypes
         /// The <paramref name="when"/> parameter is <b>null</b>.
         /// </exception>
         ///
-        public PeakFlow(ApproximateDateTime when) : base(TypeId)
+        public PeakFlow(ApproximateDateTime when)
+            : base(TypeId)
         {
             this.When = when;
         }
@@ -58,7 +61,7 @@ namespace Microsoft.HealthVault.ItemTypes
         /// Retrieves the unique identifier for the item type.
         /// </summary>
         ///
-        public new static readonly Guid TypeId =
+        public static new readonly Guid TypeId =
             new Guid("5d8419af-90f0-4875-a370-0f881c18f6b3");
 
         /// <summary>
@@ -82,32 +85,32 @@ namespace Microsoft.HealthVault.ItemTypes
 
             Validator.ThrowInvalidIfNull(itemNav, "PeakFlowUnexpectedNode");
 
-            _when = new ApproximateDateTime();
-            _when.ParseXml(itemNav.SelectSingleNode("when"));
+            this.when = new ApproximateDateTime();
+            this.when.ParseXml(itemNav.SelectSingleNode("when"));
 
-            _peakExpiratoryFlow =
+            this.peakExpiratoryFlow =
                 XPathHelper.GetOptNavValue<FlowMeasurement>(
                     itemNav,
                     "pef");
 
-            _fev1 =
+            this.fev1 =
                 XPathHelper.GetOptNavValue<VolumeMeasurement>(
                     itemNav,
                     "fev1");
 
-            _fev6 =
+            this.fev6 =
                 XPathHelper.GetOptNavValue<VolumeMeasurement>(
                     itemNav,
                     "fev6");
 
-            _measurementFlags.Clear();
+            this.measurementFlags.Clear();
             XPathNodeIterator measurementFlagsIterator = itemNav.Select("measurement-flags");
             foreach (XPathNavigator flagNav in measurementFlagsIterator)
             {
                 CodableValue flag = new CodableValue();
                 flag.ParseXml(flagNav);
 
-                _measurementFlags.Add(flag);
+                this.measurementFlags.Add(flag);
             }
         }
 
@@ -130,30 +133,30 @@ namespace Microsoft.HealthVault.ItemTypes
         public override void WriteXml(XmlWriter writer)
         {
             Validator.ThrowIfWriterNull(writer);
-            Validator.ThrowSerializationIfNull(_when, "PeakFlowWhenNotSet");
+            Validator.ThrowSerializationIfNull(this.when, "PeakFlowWhenNotSet");
 
             // <peak-flow>
             writer.WriteStartElement("peak-flow");
 
             // <when>
-            _when.WriteXml("when", writer);
+            this.when.WriteXml("when", writer);
 
-            XmlWriterHelper.WriteOpt<FlowMeasurement>(
+            XmlWriterHelper.WriteOpt(
                 writer,
                 "pef",
-                _peakExpiratoryFlow);
+                this.peakExpiratoryFlow);
 
-            XmlWriterHelper.WriteOpt<VolumeMeasurement>(
+            XmlWriterHelper.WriteOpt(
                 writer,
                 "fev1",
-                _fev1);
+                this.fev1);
 
-            XmlWriterHelper.WriteOpt<VolumeMeasurement>(
+            XmlWriterHelper.WriteOpt(
                 writer,
                 "fev6",
-                _fev6);
+                this.fev6);
 
-            foreach (CodableValue flag in _measurementFlags)
+            foreach (CodableValue flag in this.measurementFlags)
             {
                 flag.WriteXml("measurement-flags", writer);
             }
@@ -181,14 +184,16 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public ApproximateDateTime When
         {
-            get { return _when; }
+            get { return this.when; }
+
             set
             {
                 Validator.ThrowIfArgumentNull(value, "When", "WhenNullValue");
-                _when = value;
+                this.when = value;
             }
         }
-        private ApproximateDateTime _when = new ApproximateDateTime();
+
+        private ApproximateDateTime when = new ApproximateDateTime();
 
         /// <summary>
         /// Gets or sets the peak expiratory flow measured in liters per
@@ -206,10 +211,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public FlowMeasurement Pef
         {
-            get { return _peakExpiratoryFlow; }
-            set { _peakExpiratoryFlow = value; }
+            get { return this.peakExpiratoryFlow; }
+            set { this.peakExpiratoryFlow = value; }
         }
-        private FlowMeasurement _peakExpiratoryFlow;
+
+        private FlowMeasurement peakExpiratoryFlow;
 
         /// <summary>
         /// Gets or sets the forced expiratory volume in one second, measured in
@@ -227,10 +233,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public VolumeMeasurement Fev1
         {
-            get { return _fev1; }
-            set { _fev1 = value; }
+            get { return this.fev1; }
+            set { this.fev1 = value; }
         }
-        private VolumeMeasurement _fev1;
+
+        private VolumeMeasurement fev1;
 
         /// <summary>
         /// Gets or sets the forced expiratory volume in six seconds, measured in
@@ -248,10 +255,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public VolumeMeasurement Fev6
         {
-            get { return _fev6; }
-            set { _fev6 = value; }
+            get { return this.fev6; }
+            set { this.fev6 = value; }
         }
-        private VolumeMeasurement _fev6;
+
+        private VolumeMeasurement fev6;
 
         /// <summary>
         /// Gets a collection of additional information about the measurement.
@@ -265,11 +273,9 @@ namespace Microsoft.HealthVault.ItemTypes
         /// Examples: incomplete measurement.
         /// </remarks>
         ///
-        public Collection<CodableValue> MeasurementFlags
-        {
-            get { return _measurementFlags; }
-        }
-        private Collection<CodableValue> _measurementFlags = new Collection<CodableValue>();
+        public Collection<CodableValue> MeasurementFlags => this.measurementFlags;
+
+        private readonly Collection<CodableValue> measurementFlags = new Collection<CodableValue>();
 
         /// <summary>
         /// Gets a string representation of the peak flow reading.
@@ -281,68 +287,68 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public override string ToString()
         {
-            string result = String.Empty;
+            string result = string.Empty;
 
-            if (Pef != null && Fev1 != null && Fev6 != null)
+            if (this.Pef != null && this.Fev1 != null && this.Fev6 != null)
             {
                 result =
-                    String.Format(
+                    string.Format(
                         ResourceRetriever.GetResourceString(
                             "PeakFlowToStringFormatPefFev1Fev6"),
-                        Pef.ToString(),
-                        Fev1.ToString(),
-                        Fev6.ToString());
+                        this.Pef.ToString(),
+                        this.Fev1.ToString(),
+                        this.Fev6.ToString());
             }
-            else if (Pef != null && Fev1 != null)
+            else if (this.Pef != null && this.Fev1 != null)
             {
                 result =
-                    String.Format(
+                    string.Format(
                         ResourceRetriever.GetResourceString(
                             "PeakFlowToStringFormatPefFev1"),
-                        Pef.ToString(),
-                        Fev1.ToString());
+                        this.Pef.ToString(),
+                        this.Fev1.ToString());
             }
-            else if (Pef != null && Fev6 != null)
+            else if (this.Pef != null && this.Fev6 != null)
             {
                 result =
-                    String.Format(
+                    string.Format(
                         ResourceRetriever.GetResourceString(
                             "PeakFlowToStringFormatPefFev6"),
-                        Pef.ToString(),
-                        Fev6.ToString());
+                        this.Pef.ToString(),
+                        this.Fev6.ToString());
             }
-            else if (Fev1 != null && Fev6 != null)
+            else if (this.Fev1 != null && this.Fev6 != null)
             {
                 result =
-                    String.Format(
+                    string.Format(
                         ResourceRetriever.GetResourceString(
                             "PeakFlowToStringFormatFev1Fev6"),
-                        Fev1.ToString(),
-                        Fev6.ToString());
+                        this.Fev1.ToString(),
+                        this.Fev6.ToString());
             }
-            else if (Pef != null)
+            else if (this.Pef != null)
             {
                 result =
-                    String.Format(
+                    string.Format(
                         ResourceRetriever.GetResourceString(
                             "PeakFlowToStringFormatPef"),
-                        Pef.ToString());
+                        this.Pef.ToString());
             }
-            else if (Fev1 != null)
+            else if (this.Fev1 != null)
             {
                 result =
-                    String.Format(
+                    string.Format(
                         ResourceRetriever.GetResourceString(
                             "PeakFlowToStringFormatFev1"),
-                        Fev1.ToString());
+                        this.Fev1.ToString());
             }
-            else if (Fev6 != null)
+            else if (this.Fev6 != null)
             {
                 result =
-                    String.Format(
+                    string.Format(
                         ResourceRetriever.GetResourceString(
                             "PeakFlowToStringFormatFev6"),
-                        Fev6.ToString());
+                        this.Fev6.ToString());
             }
 
             return result;

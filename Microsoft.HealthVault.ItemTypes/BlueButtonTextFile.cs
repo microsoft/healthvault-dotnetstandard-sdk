@@ -7,6 +7,8 @@ using System;
 using System.IO;
 using System.Xml;
 using System.Xml.XPath;
+using Microsoft.HealthVault.Helpers;
+using Microsoft.HealthVault.Thing;
 
 namespace Microsoft.HealthVault.ItemTypes
 {
@@ -326,8 +328,8 @@ namespace Microsoft.HealthVault.ItemTypes
         public BlueButtonTextFile(string name, CodableValue sourceFormat)
             : base(TypeId)
         {
-            Name = name;
-            SourceFormat = sourceFormat;
+            this.Name = name;
+            this.SourceFormat = sourceFormat;
         }
 
         /// <summary>
@@ -347,7 +349,7 @@ namespace Microsoft.HealthVault.ItemTypes
         public BlueButtonTextFile(string name)
             : base(TypeId)
         {
-            Name = name;
+            this.Name = name;
         }
 
         /// <summary>
@@ -358,7 +360,7 @@ namespace Microsoft.HealthVault.ItemTypes
         /// A GUID.
         /// </value>
         ///
-        public new static readonly Guid TypeId =
+        public static new readonly Guid TypeId =
             new Guid("2FA3D1C1-DB8C-4C0D-9873-FB01F0659360");
 
         /// <summary>
@@ -381,9 +383,9 @@ namespace Microsoft.HealthVault.ItemTypes
 
             Validator.ThrowInvalidIfNull(itemNav, "BlueButtonTextFileUnexpectedNode");
 
-            _name = itemNav.SelectSingleNode("name").Value;
+            this.name = itemNav.SelectSingleNode("name").Value;
 
-            _sourceFormat = XPathHelper.GetOptNavValue<CodableValue>(itemNav, "source-format");
+            this.sourceFormat = XPathHelper.GetOptNavValue<CodableValue>(itemNav, "source-format");
         }
 
         /// <summary>
@@ -401,14 +403,14 @@ namespace Microsoft.HealthVault.ItemTypes
         public override void WriteXml(XmlWriter writer)
         {
             Validator.ThrowIfWriterNull(writer);
-            Validator.ThrowSerializationIf(string.IsNullOrEmpty(_name), "BlueButtonTextFileNameNotSet");
+            Validator.ThrowSerializationIf(string.IsNullOrEmpty(this.name), "BlueButtonTextFileNameNotSet");
 
             // <blue-button-text-file>
             writer.WriteStartElement("blue-button-text-file");
 
-            writer.WriteElementString("name", _name);
+            writer.WriteElementString("name", this.name);
 
-            XmlWriterHelper.WriteOpt(writer, "source-format", _sourceFormat);
+            XmlWriterHelper.WriteOpt(writer, "source-format", this.sourceFormat);
 
             // </blue-button-text-file>
             writer.WriteEndElement();
@@ -431,17 +433,17 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             get
             {
-                return _name;
+                return this.name;
             }
 
             set
             {
                 Validator.ThrowIfStringNullOrEmpty(value, "Name");
-                _name = value;
+                this.name = value;
             }
         }
 
-        private string _name;
+        private string name;
 
         /// <summary>
         /// Gets or sets the source format of the Blue Button text file like 'VA' or 'CMS'.
@@ -458,11 +460,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public CodableValue SourceFormat
         {
-            get { return _sourceFormat; }
-            set { _sourceFormat = value; }
+            get { return this.sourceFormat; }
+            set { this.sourceFormat = value; }
         }
 
-        private CodableValue _sourceFormat;
+        private CodableValue sourceFormat;
 
         /// <summary>
         /// Gets the content of the Blue Button text file item.
@@ -473,7 +475,7 @@ namespace Microsoft.HealthVault.ItemTypes
             get
             {
                 string result = null;
-                BlobStore store = GetBlobStore(default(HealthRecordAccessor));
+                BlobStore store = this.GetBlobStore(default(HealthRecordAccessor));
                 if (store.Count > 0 && store[string.Empty] != null)
                 {
                     result = store[string.Empty].ReadAsString();
@@ -492,7 +494,7 @@ namespace Microsoft.HealthVault.ItemTypes
             get
             {
                 Stream result = null;
-                BlobStore store = GetBlobStore(default(HealthRecordAccessor));
+                BlobStore store = this.GetBlobStore(default(HealthRecordAccessor));
                 if (store.Count > 0 && store[string.Empty] != null)
                 {
                     result = store[string.Empty].GetReaderStream();
@@ -512,7 +514,7 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public override string ToString()
         {
-            return Name;
+            return this.Name;
         }
 
         /// <summary>
@@ -584,7 +586,7 @@ namespace Microsoft.HealthVault.ItemTypes
             // Content Type of the Blob is set to "text/plain"
             CodableValue contentType = new CodableValue("text/plain");
 
-            SetContent(record, path, sourceFormat, contentType);
+            this.SetContent(record, path, sourceFormat, contentType);
         }
 
         /// <summary>
@@ -662,7 +664,7 @@ namespace Microsoft.HealthVault.ItemTypes
 
             using (FileStream fileStream = new FileStream(path, FileMode.Open))
             {
-                SetContent(record, fileStream, fileInfo.Name, sourceFormat, contentType);
+                this.SetContent(record, fileStream, fileInfo.Name, sourceFormat, contentType);
             }
         }
 
@@ -715,7 +717,7 @@ namespace Microsoft.HealthVault.ItemTypes
             // Content Type of the Blob is set to "text/plain"
             CodableValue contentType = new CodableValue("text/plain");
 
-            SetContent(record, stream, name, sourceFormat, contentType);
+            this.SetContent(record, stream, name, sourceFormat, contentType);
         }
 
         /// <summary>
@@ -770,10 +772,10 @@ namespace Microsoft.HealthVault.ItemTypes
             Validator.ThrowIfStringNullOrEmpty(name, "name");
             Validator.ThrowIfArgumentNull(contentType, "contentType", "BlueButtonStreamContentTypeNotSet");
 
-            Name = name;
-            SourceFormat = sourceFormat;
+            this.Name = name;
+            this.SourceFormat = sourceFormat;
 
-            BlobStore store = GetBlobStore(record);
+            BlobStore store = this.GetBlobStore(record);
             Blob blob = store.NewBlob(string.Empty, contentType.Text);
             blob.Write(stream);
         }

@@ -6,6 +6,7 @@
 using System.Collections.Generic;
 using System.Xml;
 using System.Xml.XPath;
+using Microsoft.HealthVault.Helpers;
 
 namespace Microsoft.HealthVault.ItemTypes
 {
@@ -26,7 +27,6 @@ namespace Microsoft.HealthVault.ItemTypes
         /// </summary>
         ///
         public ExerciseSegment()
-            : base()
         {
         }
 
@@ -40,9 +40,8 @@ namespace Microsoft.HealthVault.ItemTypes
         /// If <paramref name="activity"/> is <b>null</b>.
         /// </exception>
         public ExerciseSegment(CodableValue activity)
-            : base()
         {
-            Activity = activity;
+            this.Activity = activity;
         }
 
         /// <summary>
@@ -62,33 +61,33 @@ namespace Microsoft.HealthVault.ItemTypes
             Validator.ThrowIfNavigatorNull(navigator);
 
             // activity
-            _activity = XPathHelper.GetOptNavValue<CodableValue>(navigator, "activity");
+            this.activity = XPathHelper.GetOptNavValue<CodableValue>(navigator, "activity");
 
             // title
-            _title =
+            this.title =
                 XPathHelper.GetOptNavValue(navigator, "title");
 
             // distance
-            _distance = XPathHelper.GetOptNavValue<Length>(navigator, "distance");
+            this.distance = XPathHelper.GetOptNavValue<Length>(navigator, "distance");
 
             // duration
-            _duration =
+            this.duration =
                 XPathHelper.GetOptNavValueAsDouble(navigator, "duration");
 
             // offset
-            _offset =
+            this.offset =
                 XPathHelper.GetOptNavValueAsDouble(navigator, "offset");
 
             // details
             XPathNodeIterator detailsIterator = navigator.Select("detail");
 
-            _details.Clear();
+            this.details.Clear();
             foreach (XPathNavigator detailsNavigator in detailsIterator)
             {
                 ExerciseDetail exerciseDetail = new ExerciseDetail();
                 exerciseDetail.ParseXml(detailsNavigator);
 
-                _details.Add(exerciseDetail.Name.Value, exerciseDetail);
+                this.details.Add(exerciseDetail.Name.Value, exerciseDetail);
             }
         }
 
@@ -120,7 +119,7 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             Validator.ThrowIfStringNullOrEmpty(nodeName, "nodeName");
             Validator.ThrowIfWriterNull(writer);
-            Validator.ThrowSerializationIfNull(_activity, "ExerciseSegmentActivityNotSet");
+            Validator.ThrowSerializationIfNull(this.activity, "ExerciseSegmentActivityNotSet");
 
             writer.WriteStartElement(nodeName);
 
@@ -128,34 +127,34 @@ namespace Microsoft.HealthVault.ItemTypes
             XmlWriterHelper.WriteOpt(
                 writer,
                 "activity",
-                _activity);
+                this.activity);
 
             // <title>
             XmlWriterHelper.WriteOptString(
                 writer,
                 "title",
-                _title);
+                this.title);
 
             // <distance>
-            if (_distance != null)
+            if (this.distance != null)
             {
-                _distance.WriteXml("distance", writer);
+                this.distance.WriteXml("distance", writer);
             }
 
             // <duration>
-            if (_duration != null)
+            if (this.duration != null)
             {
-                XmlWriterHelper.WriteOptDouble(writer, "duration", _duration);
+                XmlWriterHelper.WriteOptDouble(writer, "duration", this.duration);
             }
 
             // <offset>
-            if (_offset != null)
+            if (this.offset != null)
             {
-                XmlWriterHelper.WriteOptDouble(writer, "offset", _offset);
+                XmlWriterHelper.WriteOptDouble(writer, "offset", this.offset);
             }
 
             // <details>
-            foreach (ExerciseDetail exerciseDetail in _details.Values)
+            foreach (ExerciseDetail exerciseDetail in this.details.Values)
             {
                 exerciseDetail.WriteXml("detail", writer);
             }
@@ -178,14 +177,16 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public CodableValue Activity
         {
-            get { return _activity; }
+            get { return this.activity; }
+
             set
             {
                 Validator.ThrowIfArgumentNull(value, "Activity", "ExerciseActivityMandatory");
-                _activity = value;
+                this.activity = value;
             }
         }
-        private CodableValue _activity;
+
+        private CodableValue activity;
 
         /// <summary>
         /// Gets or sets a descriptive title for this segment.
@@ -205,14 +206,16 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public string Title
         {
-            get { return _title; }
+            get { return this.title; }
+
             set
             {
                 Validator.ThrowIfStringIsWhitespace(value, "Title");
-                _title = value;
+                this.title = value;
             }
         }
-        private string _title;
+
+        private string title;
 
         /// <summary>
         /// Gets or sets the distance covered in the segment.
@@ -235,10 +238,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public Length Distance
         {
-            get { return _distance; }
-            set { _distance = value; }
+            get { return this.distance; }
+            set { this.distance = value; }
         }
-        private Length _distance;
+
+        private Length distance;
 
         /// <summary>
         /// Gets or sets the duration of the segment in minutes.
@@ -254,17 +258,19 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public double? Duration
         {
-            get { return _duration; }
+            get { return this.duration; }
+
             set
             {
                 Validator.ThrowArgumentOutOfRangeIf(
                     value != null && (double)value <= 0.0,
                     "Duration",
                     "ExerciseDurationNotPositive");
-                _duration = value;
+                this.duration = value;
             }
         }
-        private double? _duration;
+
+        private double? duration;
 
         /// <summary>
         /// Gets or sets the offset in minutes of the segment from the start of exercise.
@@ -280,17 +286,19 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public double? Offset
         {
-            get { return _offset; }
+            get { return this.offset; }
+
             set
             {
                 Validator.ThrowArgumentOutOfRangeIf(
                     value != null && (double)value <= 0.0,
                     "Offset",
                     "ExerciseOffsetNotPositive");
-                _offset = value;
+                this.offset = value;
             }
         }
-        private double? _offset;
+
+        private double? offset;
 
         /// <summary>
         /// Gets additional information about the segment.
@@ -305,11 +313,9 @@ namespace Microsoft.HealthVault.ItemTypes
         /// A dictionary of <see cref="ExerciseDetail" /> items.
         /// </value>
         ///
-        public IDictionary<string, ExerciseDetail> Details
-        {
-            get { return _details; }
-        }
-        private Dictionary<string, ExerciseDetail> _details = new Dictionary<string, ExerciseDetail>();
+        public IDictionary<string, ExerciseDetail> Details => this.details;
+
+        private readonly Dictionary<string, ExerciseDetail> details = new Dictionary<string, ExerciseDetail>();
 
         /// <summary>
         /// Gets a string representation of the ExerciseSegment item.
@@ -321,19 +327,17 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public override string ToString()
         {
-            if (_title != null)
+            if (this.title != null)
             {
                 return
                     string.Format(
                         ResourceRetriever.GetResourceString(
                             "ExerciseSegmentToStringFormat"),
-                        _title,
-                        _activity.Text);
+                        this.title,
+                        this.activity.Text);
             }
-            else
-            {
-                return _activity.Text;
-            }
+
+            return this.activity.Text;
         }
     }
 }

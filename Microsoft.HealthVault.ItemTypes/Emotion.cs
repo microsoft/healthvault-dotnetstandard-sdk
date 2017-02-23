@@ -8,6 +8,8 @@ using System.Globalization;
 using System.Text;
 using System.Xml;
 using System.Xml.XPath;
+using Microsoft.HealthVault.Helpers;
+using Microsoft.HealthVault.Thing;
 
 namespace Microsoft.HealthVault.ItemTypes
 {
@@ -59,7 +61,7 @@ namespace Microsoft.HealthVault.ItemTypes
         /// A GUID.
         /// </value>
         ///
-        public new static readonly Guid TypeId =
+        public static new readonly Guid TypeId =
             new Guid("4b7971d6-e427-427d-bf2c-2fbcf76606b3");
 
         /// <summary>
@@ -82,15 +84,15 @@ namespace Microsoft.HealthVault.ItemTypes
 
             Validator.ThrowInvalidIfNull(emotionNav, "EmotionUnexpectedNode");
 
-            _when = new HealthServiceDateTime();
-            _when.ParseXml(emotionNav.SelectSingleNode("when"));
+            this.when = new HealthServiceDateTime();
+            this.when.ParseXml(emotionNav.SelectSingleNode("when"));
 
             XPathNavigator moodNav =
                 emotionNav.SelectSingleNode("mood");
 
             if (moodNav != null)
             {
-                _mood = (Mood)moodNav.ValueAsInt;
+                this.mood = (Mood)moodNav.ValueAsInt;
             }
 
             XPathNavigator stressNav =
@@ -98,7 +100,7 @@ namespace Microsoft.HealthVault.ItemTypes
 
             if (stressNav != null)
             {
-                _stress = (RelativeRating)stressNav.ValueAsInt;
+                this.stress = (RelativeRating)stressNav.ValueAsInt;
             }
 
             XPathNavigator wellbeingNav =
@@ -106,7 +108,7 @@ namespace Microsoft.HealthVault.ItemTypes
 
             if (wellbeingNav != null)
             {
-                _wellbeing = (Wellbeing)wellbeingNav.ValueAsInt;
+                this.wellbeing = (Wellbeing)wellbeingNav.ValueAsInt;
             }
         }
 
@@ -130,27 +132,27 @@ namespace Microsoft.HealthVault.ItemTypes
             writer.WriteStartElement("emotion");
 
             // <when>
-            _when.WriteXml("when", writer);
+            this.when.WriteXml("when", writer);
 
-            if (_mood != Mood.None)
+            if (this.mood != Mood.None)
             {
                 writer.WriteElementString(
                     "mood",
-                    ((int)_mood).ToString(CultureInfo.InvariantCulture));
+                    ((int)this.mood).ToString(CultureInfo.InvariantCulture));
             }
 
-            if (_stress != RelativeRating.None)
+            if (this.stress != RelativeRating.None)
             {
                 writer.WriteElementString(
                     "stress",
-                    ((int)_stress).ToString(CultureInfo.InvariantCulture));
+                    ((int)this.stress).ToString(CultureInfo.InvariantCulture));
             }
 
-            if (_wellbeing != Wellbeing.None)
+            if (this.wellbeing != Wellbeing.None)
             {
                 writer.WriteElementString(
                     "wellbeing",
-                    ((int)_wellbeing).ToString(CultureInfo.InvariantCulture));
+                    ((int)this.wellbeing).ToString(CultureInfo.InvariantCulture));
             }
 
             // </emotion>
@@ -172,14 +174,16 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public HealthServiceDateTime When
         {
-            get { return _when; }
+            get { return this.when; }
+
             set
             {
                 Validator.ThrowIfArgumentNull(value, "When", "WhenNullValue");
-                _when = value;
+                this.when = value;
             }
         }
-        private HealthServiceDateTime _when = new HealthServiceDateTime();
+
+        private HealthServiceDateTime when = new HealthServiceDateTime();
 
         /// <summary>
         /// Gets or sets the mood of the person.
@@ -196,10 +200,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public Mood Mood
         {
-            get { return _mood; }
-            set { _mood = value; }
+            get { return this.mood; }
+            set { this.mood = value; }
         }
-        private Mood _mood;
+
+        private Mood mood;
 
         /// <summary>
         /// Gets or sets the stress level of the person.
@@ -216,10 +221,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public RelativeRating Stress
         {
-            get { return _stress; }
-            set { _stress = value; }
+            get { return this.stress; }
+            set { this.stress = value; }
         }
-        private RelativeRating _stress;
+
+        private RelativeRating stress;
 
         /// <summary>
         /// Gets or sets the wellbeing of the person.
@@ -236,10 +242,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public Wellbeing Wellbeing
         {
-            get { return _wellbeing; }
-            set { _wellbeing = value; }
+            get { return this.wellbeing; }
+            set { this.wellbeing = value; }
         }
-        private Wellbeing _wellbeing;
+
+        private Wellbeing wellbeing;
 
         /// <summary>
         /// Gets a string representation of the emotion item.
@@ -253,29 +260,30 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             StringBuilder result = new StringBuilder(100);
 
-            if (Mood != Mood.None)
+            if (this.Mood != Mood.None)
             {
                 result.AppendFormat(
                     ResourceRetriever.GetResourceString(
                         "EmotionToStringFormatMood"),
-                    (int)Mood);
+                    (int)this.Mood);
             }
 
-            if (Stress != RelativeRating.None)
+            if (this.Stress != RelativeRating.None)
             {
                 result.AppendFormat(
                     ResourceRetriever.GetResourceString(
                         "EmotionToStringFormatStress"),
-                    (int)Stress);
+                    (int)this.Stress);
             }
 
-            if (Wellbeing != Wellbeing.None)
+            if (this.Wellbeing != Wellbeing.None)
             {
                 result.AppendFormat(
                     ResourceRetriever.GetResourceString(
                         "EmotionToStringFormatWellbeing"),
-                    (int)Wellbeing);
+                    (int)this.Wellbeing);
             }
+
             return result.ToString();
         }
     }

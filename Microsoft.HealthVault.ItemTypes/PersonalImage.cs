@@ -7,6 +7,8 @@ using System;
 using System.IO;
 using System.Xml;
 using System.Xml.XPath;
+using Microsoft.HealthVault.Helpers;
+using Microsoft.HealthVault.Thing;
 
 namespace Microsoft.HealthVault.ItemTypes
 {
@@ -44,7 +46,7 @@ namespace Microsoft.HealthVault.ItemTypes
         /// A GUID.
         /// </value>
         ///
-        public new static readonly Guid TypeId =
+        public static new readonly Guid TypeId =
             new Guid("a5294488-f865-4ce3-92fa-187cd3b58930");
 
         /// <summary>
@@ -98,7 +100,7 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         /// <exception cref="ArgumentOutOfRangeException">
         /// The <paramref name="imageStream"/> parameter length is greater than
-        /// <see cref="Int32.MaxValue"/>.
+        /// <see cref="int.MaxValue"/>.
         /// </exception>
         ///
         public void WriteImage(Stream imageStream, string mimeType)
@@ -106,7 +108,7 @@ namespace Microsoft.HealthVault.ItemTypes
             Validator.ThrowIfArgumentNull(imageStream, "imageStream", "ImageStreamNull");
 
             Validator.ThrowArgumentOutOfRangeIf(
-                imageStream.Length > (long)Int32.MaxValue,
+                imageStream.Length > int.MaxValue,
                 "imageStream",
                 "ImageStreamToLarge");
 
@@ -133,10 +135,11 @@ namespace Microsoft.HealthVault.ItemTypes
                 }
 
                 bytesToRead -= bytesRead;
-            } while (bytesRead > 0);
+            }
+            while (bytesRead > 0);
 
             Blob blob =
-                GetBlobStore(default(HealthRecordAccessor)).NewBlob(String.Empty, mimeType);
+                this.GetBlobStore(default(HealthRecordAccessor)).NewBlob(string.Empty, mimeType);
             blob.WriteInline(imageBytes);
         }
 
@@ -160,8 +163,8 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public Stream ReadImage()
         {
-            BlobStore store = GetBlobStore(default(HealthRecordAccessor));
-            Blob blob = store[String.Empty];
+            BlobStore store = this.GetBlobStore(default(HealthRecordAccessor));
+            Blob blob = store[string.Empty];
 
             if (blob == null)
             {

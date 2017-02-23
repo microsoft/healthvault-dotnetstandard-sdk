@@ -22,19 +22,19 @@
         /// </returns>
         string HmacAlgorithmName { get; set; }
 
-        ///  <summary>
-        ///  Gets the preferred application-wide hash algorithm name.
-        ///  </summary>
-        ///  
-        ///  <returns>
-        ///  A string representing the algorithm name.
-        ///  </returns>
-        ///  
-        ///  <remarks>
-        ///  The application-wide algorithm name can be specified in the 
-        ///  configuration, but if it is not, then a default value is used.  
-        ///  This algorithm name can be used to construct a hash primitive using
-        ///  <see cref="ICryptoService.CreateHashAlgorithm(string)"/>
+        /// <summary>
+        /// Gets the preferred application-wide hash algorithm name.
+        /// </summary>
+        ///
+        /// <returns>
+        /// A string representing the algorithm name.
+        /// </returns>
+        /// 
+        /// <remarks>
+        /// The application-wide algorithm name can be specified in the 
+        /// configuration, but if it is not, then a default value is used.  
+        /// This algorithm name can be used to construct a hash primitive using
+        /// <see cref="ICryptoService.CreateHashAlgorithm(string)"/>
         ///      .
         ///  </remarks>
         string HashAlgorithmName { get; set; }

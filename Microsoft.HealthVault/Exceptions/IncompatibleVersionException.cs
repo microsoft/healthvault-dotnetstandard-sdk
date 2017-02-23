@@ -5,6 +5,7 @@
 
 using System;
 using System.Globalization;
+using Microsoft.HealthVault.Helpers;
 
 namespace Microsoft.HealthVault.Exceptions
 {
@@ -31,38 +32,15 @@ namespace Microsoft.HealthVault.Exceptions
         public IncompatibleVersionException(
             string compatibleVersions,
             string incompatibleVersion)
-            : this(compatibleVersions,
-                    incompatibleVersion,
-                    string.Format(
-                        CultureInfo.CurrentUICulture,
-                        ResourceRetriever.GetResourceString(
-                            "IncompatibleVersionExceptionMessageFormatString"),
-                        compatibleVersions ?? string.Empty,
-                        incompatibleVersion ?? string.Empty))
-        {
-        }
-
-        /// <summary>
-        /// Creates a new instance of the <see cref="IncompatibleVersionException"/>
-        /// class with an error message.
-        /// </summary>
-        ///
-        /// <param name="compatibleVersions">
-        /// The compatible versions supported.
-        /// </param>
-        ///
-        /// <param name="incompatibleVersion">The incompatible version
-        /// encountered.</param>
-        ///
-        /// <param name="message">
-        /// The error message.
-        /// </param>
-        ///
-        public IncompatibleVersionException(
-            string compatibleVersions,
-            string incompatibleVersion,
-            string message)
-            : this(compatibleVersions, incompatibleVersion, message, null)
+            : this(
+                compatibleVersions,
+                incompatibleVersion,
+                string.Format(
+                    CultureInfo.CurrentUICulture,
+                    ResourceRetriever.GetResourceString(
+                        "IncompatibleVersionExceptionMessageFormatString"),
+                    compatibleVersions ?? string.Empty,
+                    incompatibleVersion ?? string.Empty))
         {
         }
 
@@ -91,28 +69,24 @@ namespace Microsoft.HealthVault.Exceptions
             string compatibleVersions,
             string incompatibleVersion,
             string message,
-            Exception innerException)
+            Exception innerException = null)
             : base(message, innerException)
         {
-            _compatibleVersions = compatibleVersions;
-            _incompatibleVersion = incompatibleVersion;
+            this.CompatibleVersions = compatibleVersions;
+            this.IncompatibleVersion = incompatibleVersion;
         }
 
         /// <summary>
         /// Gets the compatible versions.
         /// </summary>
         ///
-        public string CompatibleVersions => _compatibleVersions;
-
-        private readonly string _compatibleVersions;
+        public string CompatibleVersions { get; }
 
         /// <summary>
         /// Gets the incompatible version.
         /// </summary>
         ///
-        public string IncompatibleVersion => _incompatibleVersion;
-
-        private readonly string _incompatibleVersion;
+        public string IncompatibleVersion { get; }
 
         #region FxCop required ctors
 
@@ -174,7 +148,7 @@ namespace Microsoft.HealthVault.Exceptions
         public override string ToString()
         {
             string result =
-                string.Join(" ", base.ToString(), GetType().ToString(), ":CompatibleVersions =", CompatibleVersions ?? string.Empty, ":IncompatibleVersion =", IncompatibleVersion ?? string.Empty);
+                string.Join(" ", base.ToString(), this.GetType().ToString(), ":CompatibleVersions =", this.CompatibleVersions ?? string.Empty, ":IncompatibleVersion =", this.IncompatibleVersion ?? string.Empty);
             return result;
         }
     }

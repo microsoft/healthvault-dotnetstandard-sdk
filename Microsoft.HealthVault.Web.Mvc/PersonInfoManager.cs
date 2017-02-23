@@ -9,13 +9,15 @@
 //
 // ********************************************************
 
-using Microsoft.HealthVault.Web.Authentication;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Security.Principal;
 using System.Threading.Tasks;
 using System.Web;
+using Microsoft.HealthVault.Authentication;
+using Microsoft.HealthVault.Person;
+using Microsoft.HealthVault.Record;
 
 namespace Microsoft.HealthVault.Web.Mvc
 {

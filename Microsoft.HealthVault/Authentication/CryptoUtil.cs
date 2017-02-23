@@ -6,7 +6,6 @@
 using System;
 using System.Runtime.InteropServices;
 using System.Security;
-using System.Security.Cryptography;
 
 namespace Microsoft.HealthVault.Authentication
 {
@@ -25,15 +24,15 @@ namespace Microsoft.HealthVault.Authentication
             // }
         }
 
-        internal static int GetInt32(byte[] aData, int Offset)
+        internal static int GetInt32(byte[] aData, int offset)
         {
-            return BitConverter.ToInt32(aData, Offset);
+            return BitConverter.ToInt32(aData, offset);
         }
 
-        internal static int SetInt32(byte[] aData, int Offset, int Value)
+        internal static int SetInt32(byte[] aData, int offset, int value)
         {
-            byte[] bushort = BitConverter.GetBytes((int)Value);
-            Buffer.BlockCopy(bushort, 0, aData, Offset, bushort.Length);
+            byte[] bushort = BitConverter.GetBytes(value);
+            Buffer.BlockCopy(bushort, 0, aData, offset, bushort.Length);
             return bushort.Length;
         }
 

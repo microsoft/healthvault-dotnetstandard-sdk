@@ -6,6 +6,7 @@
 using System.Collections.ObjectModel;
 using System.Xml;
 using System.Xml.XPath;
+using Microsoft.HealthVault.Helpers;
 
 namespace Microsoft.HealthVault.ItemTypes
 {
@@ -43,7 +44,7 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public GeneralMeasurement(string display)
         {
-            Display = display;
+            this.Display = display;
         }
 
         /// <summary>
@@ -63,17 +64,17 @@ namespace Microsoft.HealthVault.ItemTypes
             Validator.ThrowIfNavigatorNull(navigator);
 
             // display
-            _display = navigator.SelectSingleNode("display").Value;
+            this.display = navigator.SelectSingleNode("display").Value;
 
             // structured
             XPathNodeIterator structuredIterator = navigator.Select("structured");
 
-            _structured = new Collection<StructuredMeasurement>();
+            this.structured = new Collection<StructuredMeasurement>();
             foreach (XPathNavigator structuredNav in structuredIterator)
             {
-                StructuredMeasurement _structuredMeasurement = new StructuredMeasurement();
-                _structuredMeasurement.ParseXml(structuredNav);
-                _structured.Add(_structuredMeasurement);
+                StructuredMeasurement structuredMeasurement = new StructuredMeasurement();
+                structuredMeasurement.ParseXml(structuredNav);
+                this.structured.Add(structuredMeasurement);
             }
         }
 
@@ -105,18 +106,18 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             Validator.ThrowIfStringNullOrEmpty(nodeName, "nodeName");
             Validator.ThrowIfWriterNull(writer);
-            Validator.ThrowSerializationIfNull(_display, "GeneralMeasurementDisplayNotSet");
+            Validator.ThrowSerializationIfNull(this.display, "GeneralMeasurementDisplayNotSet");
 
             // <general-measurement>
             writer.WriteStartElement(nodeName);
 
             // display
-            writer.WriteElementString("display", _display);
+            writer.WriteElementString("display", this.display);
 
             // structured
-            for (int index = 0; index < _structured.Count; ++index)
+            for (int index = 0; index < this.structured.Count; ++index)
             {
-                _structured[index].WriteXml("structured", writer);
+                this.structured[index].WriteXml("structured", writer);
             }
 
             // </general-measurement>
@@ -135,15 +136,17 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public string Display
         {
-            get { return _display; }
+            get { return this.display; }
+
             set
             {
                 Validator.ThrowIfStringNullOrEmpty(value, "Display");
                 Validator.ThrowIfStringIsWhitespace(value, "Display");
-                _display = value;
+                this.display = value;
             }
         }
-        private string _display;
+
+        private string display;
 
         /// <summary>
         /// Gets the coded values of the measurements.
@@ -153,11 +156,9 @@ namespace Microsoft.HealthVault.ItemTypes
         /// Applications typically use this for calculations, charting, or graphing.
         /// </remarks>
         ///
-        public Collection<StructuredMeasurement> Structured
-        {
-            get { return _structured; }
-        }
-        private Collection<StructuredMeasurement> _structured =
+        public Collection<StructuredMeasurement> Structured => this.structured;
+
+        private Collection<StructuredMeasurement> structured =
             new Collection<StructuredMeasurement>();
 
         /// <summary>
@@ -170,7 +171,7 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public override string ToString()
         {
-            return _display;
+            return this.display;
         }
     }
 }

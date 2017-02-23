@@ -6,6 +6,8 @@
 using System;
 using System.Xml;
 using System.Xml.XPath;
+using Microsoft.HealthVault.Helpers;
+using Microsoft.HealthVault.Thing;
 
 namespace Microsoft.HealthVault.ItemTypes
 {
@@ -40,7 +42,7 @@ namespace Microsoft.HealthVault.ItemTypes
         /// A GUID.
         /// </value>
         ///
-        public new static readonly Guid TypeId =
+        public static new readonly Guid TypeId =
             new Guid("92ba621e-66b3-4a01-bd73-74844aed4f5b");
 
         /// <summary>
@@ -63,69 +65,69 @@ namespace Microsoft.HealthVault.ItemTypes
 
             Validator.ThrowInvalidIfNull(itemNav, "PersonalUnexpectedNode");
 
-            _name =
+            this.name =
                 XPathHelper.GetOptNavValue<Name>(itemNav, "name");
 
-            _birthDate =
+            this.birthDate =
                 XPathHelper.GetOptNavValue<HealthServiceDateTime>(
                     itemNav,
                     "birthdate");
 
-            _bloodtype =
+            this.bloodtype =
                 XPathHelper.GetOptNavValue<CodableValue>(
                     itemNav,
                     "blood-type");
 
-            _ethnicity =
+            this.ethnicity =
                 XPathHelper.GetOptNavValue<CodableValue>(
                     itemNav,
                     "ethnicity");
 
-            _ssn =
+            this.ssn =
                 XPathHelper.GetOptNavValue(itemNav, "ssn");
 
-            _maritalStatus =
+            this.maritalStatus =
                 XPathHelper.GetOptNavValue<CodableValue>(
                     itemNav,
                     "marital-status");
 
-            _employmentStatus =
+            this.employmentStatus =
                 XPathHelper.GetOptNavValue(itemNav, "employment-status");
 
             // <is-deceased>
-            _isDeceased =
+            this.isDeceased =
                 XPathHelper.GetOptNavValueAsBool(
                     itemNav,
                     "is-deceased");
 
             // <date-of-death>
-            _dateOfDeath =
+            this.dateOfDeath =
                 XPathHelper.GetOptNavValue<ApproximateDateTime>(
                     itemNav,
                     "date-of-death");
 
             // <religion>
-            _religion =
+            this.religion =
                 XPathHelper.GetOptNavValue<CodableValue>(
                     itemNav,
                     "religion");
 
             // <is-veteran>
-            _isVeteran =
+            this.isVeteran =
                 XPathHelper.GetOptNavValueAsBool(itemNav, "is-veteran");
 
             // <highest-education-level>
-            _highestEducationLevel =
+            this.highestEducationLevel =
                 XPathHelper.GetOptNavValue<CodableValue>(
                     itemNav,
                     "highest-education-level");
 
             // <is-disabled>
-            _isDisabled =
+            this.isDisabled =
                 XPathHelper.GetOptNavValueAsBool(itemNav, "is-disabled");
 
             // <organ-donor>
-            _organDonor =
+            this.organDonor =
                 XPathHelper.GetOptNavValue(itemNav, "organ-donor");
         }
 
@@ -148,82 +150,82 @@ namespace Microsoft.HealthVault.ItemTypes
             // <personal>
             writer.WriteStartElement("personal");
 
-            XmlWriterHelper.WriteOpt<Name>(
+            XmlWriterHelper.WriteOpt(
                 writer,
                 "name",
-                _name);
+                this.name);
 
-            XmlWriterHelper.WriteOpt<HealthServiceDateTime>(
+            XmlWriterHelper.WriteOpt(
                 writer,
                 "birthdate",
-                _birthDate);
+                this.birthDate);
 
-            XmlWriterHelper.WriteOpt<CodableValue>(
+            XmlWriterHelper.WriteOpt(
                 writer,
                 "blood-type",
-                _bloodtype);
+                this.bloodtype);
 
-            XmlWriterHelper.WriteOpt<CodableValue>(
+            XmlWriterHelper.WriteOpt(
                 writer,
                 "ethnicity",
-                _ethnicity);
+                this.ethnicity);
 
             XmlWriterHelper.WriteOptString(
                 writer,
                 "ssn",
-                _ssn);
+                this.ssn);
 
-            XmlWriterHelper.WriteOpt<CodableValue>(
+            XmlWriterHelper.WriteOpt(
                 writer,
                 "marital-status",
-                _maritalStatus);
+                this.maritalStatus);
 
             XmlWriterHelper.WriteOptString(
                 writer,
                 "employment-status",
-                _employmentStatus);
+                this.employmentStatus);
 
             // <is-deceased>
             XmlWriterHelper.WriteOptBool(
                 writer,
                 "is-deceased",
-                _isDeceased);
+                this.isDeceased);
 
             // <date-of-death>
-            XmlWriterHelper.WriteOpt<ApproximateDateTime>(
+            XmlWriterHelper.WriteOpt(
                 writer,
                 "date-of-death",
-                _dateOfDeath);
+                this.dateOfDeath);
 
             // <religion>
-            XmlWriterHelper.WriteOpt<CodableValue>(
+            XmlWriterHelper.WriteOpt(
                 writer,
                 "religion",
-                _religion);
+                this.religion);
 
             // <is-veteran>
             XmlWriterHelper.WriteOptBool(
                 writer,
                 "is-veteran",
-                _isVeteran);
+                this.isVeteran);
 
             // <highest-education-level>
-            XmlWriterHelper.WriteOpt<CodableValue>(
+            XmlWriterHelper.WriteOpt(
                 writer,
                 "highest-education-level",
-                _highestEducationLevel);
+                this.highestEducationLevel);
 
             // <is-disabled>
             XmlWriterHelper.WriteOptBool(
                 writer,
                 "is-disabled",
-                _isDisabled);
+                this.isDisabled);
 
             // <organ-donor>
             XmlWriterHelper.WriteOptString(
                 writer,
                 "organ-donor",
-                _organDonor);
+                this.organDonor);
 
             // </personal>
             writer.WriteEndElement();
@@ -243,10 +245,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public Name Name
         {
-            get { return _name; }
-            set { _name = value; }
+            get { return this.name; }
+            set { this.name = value; }
         }
-        private Name _name;
+
+        private Name name;
 
         /// <summary>
         /// Gets or sets the birth date.
@@ -262,10 +265,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public HealthServiceDateTime BirthDate
         {
-            get { return _birthDate; }
-            set { _birthDate = value; }
+            get { return this.birthDate; }
+            set { this.birthDate = value; }
         }
-        private HealthServiceDateTime _birthDate;
+
+        private HealthServiceDateTime birthDate;
 
         /// <summary>
         /// Gets or sets the ABO and Rhesus +/- blood type for the person.
@@ -281,10 +285,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public CodableValue BloodType
         {
-            get { return _bloodtype; }
-            set { _bloodtype = value; }
+            get { return this.bloodtype; }
+            set { this.bloodtype = value; }
         }
-        private CodableValue _bloodtype;
+
+        private CodableValue bloodtype;
 
         /// <summary>
         /// Gets or sets the ethnicity of the person.
@@ -300,10 +305,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public CodableValue Ethnicity
         {
-            get { return _ethnicity; }
-            set { _ethnicity = value; }
+            get { return this.ethnicity; }
+            set { this.ethnicity = value; }
         }
-        private CodableValue _ethnicity;
+
+        private CodableValue ethnicity;
 
         /// <summary>
         /// Gets or sets the deployment-specific national identifier for
@@ -326,14 +332,16 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public string SocialSecurityNumber
         {
-            get { return _ssn; }
+            get { return this.ssn; }
+
             set
             {
                 Validator.ThrowIfStringIsWhitespace(value, "SocialSecurityNumber");
-                _ssn = value;
+                this.ssn = value;
             }
         }
-        private string _ssn;
+
+        private string ssn;
 
         /// <summary>
         /// Gets or sets the marital status of the person.
@@ -349,10 +357,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public CodableValue MaritalStatus
         {
-            get { return _maritalStatus; }
-            set { _maritalStatus = value; }
+            get { return this.maritalStatus; }
+            set { this.maritalStatus = value; }
         }
-        private CodableValue _maritalStatus;
+
+        private CodableValue maritalStatus;
 
         /// <summary>
         /// Gets or sets the employment status of the person.
@@ -374,14 +383,16 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public string EmploymentStatus
         {
-            get { return _employmentStatus; }
+            get { return this.employmentStatus; }
+
             set
             {
                 Validator.ThrowIfStringIsWhitespace(value, "EmploymentStatus");
-                _employmentStatus = value;
+                this.employmentStatus = value;
             }
         }
-        private string _employmentStatus;
+
+        private string employmentStatus;
 
         /// <summary>
         /// Gets or sets a value indicating whether the person is deceased.
@@ -393,10 +404,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public bool? IsDeceased
         {
-            get { return _isDeceased; }
-            set { _isDeceased = value; }
+            get { return this.isDeceased; }
+            set { this.isDeceased = value; }
         }
-        private bool? _isDeceased;
+
+        private bool? isDeceased;
 
         /// <summary>
         /// Gets or sets the date of death for the person.
@@ -408,10 +420,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public ApproximateDateTime DateOfDeath
         {
-            get { return _dateOfDeath; }
-            set { _dateOfDeath = value; }
+            get { return this.dateOfDeath; }
+            set { this.dateOfDeath = value; }
         }
-        private ApproximateDateTime _dateOfDeath;
+
+        private ApproximateDateTime dateOfDeath;
 
         /// <summary>
         /// Gets or sets the religion of the person.
@@ -427,10 +440,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public CodableValue Religion
         {
-            get { return _religion; }
-            set { _religion = value; }
+            get { return this.religion; }
+            set { this.religion = value; }
         }
-        private CodableValue _religion;
+
+        private CodableValue religion;
 
         /// <summary>
         /// Gets or sets a value indicating whether the person is a veteran.
@@ -442,10 +456,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public bool? IsVeteran
         {
-            get { return _isVeteran; }
-            set { _isVeteran = value; }
+            get { return this.isVeteran; }
+            set { this.isVeteran = value; }
         }
-        private bool? _isVeteran;
+
+        private bool? isVeteran;
 
         /// <summary>
         /// Gets or sets the highest education level of the person.
@@ -461,10 +476,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public CodableValue HighestEducationLevel
         {
-            get { return _highestEducationLevel; }
-            set { _highestEducationLevel = value; }
+            get { return this.highestEducationLevel; }
+            set { this.highestEducationLevel = value; }
         }
-        private CodableValue _highestEducationLevel;
+
+        private CodableValue highestEducationLevel;
 
         /// <summary>
         /// Gets or sets a value indicating whether the person has a disability.
@@ -476,10 +492,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public bool? IsDisabled
         {
-            get { return _isDisabled; }
-            set { _isDisabled = value; }
+            get { return this.isDisabled; }
+            set { this.isDisabled = value; }
         }
-        private bool? _isDisabled;
+
+        private bool? isDisabled;
 
         /// <summary>
         /// Gets or sets the organ donor status of the person.
@@ -500,14 +517,16 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public string OrganDonor
         {
-            get { return _organDonor; }
+            get { return this.organDonor; }
+
             set
             {
                 Validator.ThrowIfStringIsWhitespace(value, "OrganDonor");
-                _organDonor = value;
+                this.organDonor = value;
             }
         }
-        private string _organDonor;
+
+        private string organDonor;
 
         /// <summary>
         /// Gets a string representation of the personal item.
@@ -519,35 +538,35 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public override string ToString()
         {
-            string result = String.Empty;
+            string result = string.Empty;
 
-            if (Name != null)
+            if (this.Name != null)
             {
-                result = Name.ToString();
+                result = this.Name.ToString();
             }
-            else if (BirthDate != null || Ethnicity != null)
+            else if (this.BirthDate != null || this.Ethnicity != null)
             {
-                if (BirthDate != null && Ethnicity != null)
+                if (this.BirthDate != null && this.Ethnicity != null)
                 {
                     result =
-                        String.Format(
+                        string.Format(
                             ResourceRetriever.GetResourceString(
                                 "PersonalToStringFormatBirthDateAndEthnicity"),
-                            BirthDate.ToString(),
-                            Ethnicity.Text);
+                            this.BirthDate.ToString(),
+                            this.Ethnicity.Text);
                 }
-                else if (BirthDate != null)
+                else if (this.BirthDate != null)
                 {
-                    result = BirthDate.ToString();
+                    result = this.BirthDate.ToString();
                 }
                 else
                 {
-                    result = Ethnicity.Text;
+                    result = this.Ethnicity.Text;
                 }
             }
-            else if (CommonData.Note != null)
+            else if (this.CommonData.Note != null)
             {
-                result = CommonData.Note;
+                result = this.CommonData.Note;
             }
             else
             {
@@ -555,6 +574,7 @@ namespace Microsoft.HealthVault.ItemTypes
                     ResourceRetriever.GetResourceString(
                         "PersonalToStringFormatSeeDetails");
             }
+
             return result;
         }
     }

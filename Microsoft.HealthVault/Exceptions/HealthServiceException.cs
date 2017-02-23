@@ -5,6 +5,8 @@
 
 using System;
 using System.Globalization;
+using Microsoft.HealthVault.Helpers;
+using Microsoft.HealthVault.Transport;
 
 namespace Microsoft.HealthVault.Exceptions
 {
@@ -29,7 +31,7 @@ namespace Microsoft.HealthVault.Exceptions
         ///
         /// <param name="errorCode">
         /// The status code representing the error that occurred.
-        ///</param>
+        /// </param>
         ///
         internal HealthServiceException(HealthServiceStatusCode errorCode)
             : this((int)errorCode, null)
@@ -49,14 +51,15 @@ namespace Microsoft.HealthVault.Exceptions
         ///
         /// <param name="errorCode">
         /// The status code representing the error.
-        ///</param>
+        /// </param>
         ///
         /// <param name="error">
         /// Information about an error that occurred while processing
         /// the request.
         /// </param>
         ///
-        internal HealthServiceException(HealthServiceStatusCode errorCode,
+        internal HealthServiceException(
+            HealthServiceStatusCode errorCode,
             HealthServiceResponseError error)
             : this((int)errorCode, error)
         {
@@ -76,19 +79,20 @@ namespace Microsoft.HealthVault.Exceptions
         /// <param name="errorCodeId">
         /// An integer representing the identifier of the status code
         /// of the error.
-        ///</param>
+        /// </param>
         ///
         /// <param name="error">
         /// Information about an error that occurred while processing
         /// the request.
         /// </param>
         ///
-        internal HealthServiceException(int errorCodeId,
+        internal HealthServiceException(
+            int errorCodeId,
             HealthServiceResponseError error)
             : base(GetMessage(errorCodeId, error))
         {
-            _error = error;
-            _errorCodeId = errorCodeId;
+            this.Error = error;
+            this.ErrorCodeId = errorCodeId;
         }
 
         private static string GetMessage(
@@ -153,7 +157,7 @@ namespace Microsoft.HealthVault.Exceptions
         /// </summary>
         ///
         public HealthServiceStatusCode ErrorCode => HealthServiceStatusCodeManager.GetStatusCode(
-            _errorCodeId);
+            this.ErrorCodeId);
 
         /// <summary>
         /// Gets the identifier of the status code in the HealthVault response.
@@ -169,12 +173,7 @@ namespace Microsoft.HealthVault.Exceptions
         /// status code can be looked up for further investigation.
         /// </remarks>
         ///
-        public int ErrorCodeId
-        {
-            get { return _errorCodeId; }
-        }
-
-        private int _errorCodeId = 1; // general failure
+        public int ErrorCodeId { get; } = 1;
 
         /// <summary>
         /// Gets the information about an error that occurred while processing
@@ -191,14 +190,7 @@ namespace Microsoft.HealthVault.Exceptions
         /// occurred in the SDK rather than in HealthVault.
         /// </remarks>
         ///
-        public HealthServiceResponseError Error
-        {
-            get
-            {
-                return _error;
-            }
-        }
-        private HealthServiceResponseError _error;
+        public HealthServiceResponseError Error { get; }
 
         /// <summary>
         /// Contains the response information from the HealthVault service after
@@ -208,14 +200,16 @@ namespace Microsoft.HealthVault.Exceptions
         {
             get
             {
-                return _response;
+                return this.response;
             }
+
             internal set
             {
-                _response = value;
+                this.response = value;
             }
         }
-        private HealthServiceResponseData _response;
+
+        private HealthServiceResponseData response;
 
         #endregion public properties
 
@@ -232,15 +226,7 @@ namespace Microsoft.HealthVault.Exceptions
         public override string ToString()
         {
             string result =
-                String.Join(" ",
-                new string[] {
-                    base.ToString(),
-                    GetType().ToString(),
-                    ":StatusCode =",
-                    ErrorCode.ToString(),
-                    ":StatusCodeId =",
-                    _errorCodeId.ToString(CultureInfo.InvariantCulture)
-                });
+                string.Join(" ", base.ToString(), this.GetType().ToString(), ":StatusCode =", this.ErrorCode.ToString(), ":StatusCodeId =", this.ErrorCodeId.ToString(CultureInfo.InvariantCulture));
             return result;
         }
     }

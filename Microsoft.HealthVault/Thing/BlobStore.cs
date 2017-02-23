@@ -10,8 +10,10 @@ using System.Globalization;
 using System.IO;
 using System.Xml;
 using System.Xml.XPath;
+using Microsoft.HealthVault.Exceptions;
+using Microsoft.HealthVault.ItemTypes;
 
-namespace Microsoft.HealthVault
+namespace Microsoft.HealthVault.Thing
 {
     /// <summary>
     /// A collection of the BLOBs associated with a health record item.
@@ -28,34 +30,27 @@ namespace Microsoft.HealthVault
     {
         internal BlobStore(HealthRecordItem item, HealthRecordAccessor record)
         {
-            _item = item;
-            _record = record;
+            this.item = item;
+            this.Record = record;
         }
 
         internal BlobStore(
             HealthRecordItem item)
         {
-            _item = item;
+            this.item = item;
         }
 
-        internal HealthRecordAccessor Record
-        {
-            get { return _record; }
-            set { _record = value; }
-        }
-        private HealthRecordAccessor _record;
+        internal HealthRecordAccessor Record { get; set; }
 
-        private HealthRecordItem _item;
+        private HealthRecordItem item;
 
         #region IDictionary implementation
+
         /// <summary>
         /// Gets the count of BLOBs associated with the health record item.
         /// </summary>
         ///
-        public int Count
-        {
-            get { return _blobs.Count; }
-        }
+        public int Count => this.blobs.Count;
 
         /// <summary>
         /// Not supported.
@@ -89,7 +84,7 @@ namespace Microsoft.HealthVault
         ///
         public void Clear()
         {
-            _blobs.Clear();
+            this.blobs.Clear();
         }
 
         /// <summary>
@@ -111,7 +106,7 @@ namespace Microsoft.HealthVault
         ///
         public bool Contains(Blob blob)
         {
-            return _blobs.ContainsValue(blob);
+            return this.blobs.ContainsValue(blob);
         }
 
         /// <summary>
@@ -132,8 +127,8 @@ namespace Microsoft.HealthVault
         ///
         public bool ContainsKey(string key)
         {
-            key = MapNullKey(key);
-            return _blobs.ContainsKey(key);
+            key = this.MapNullKey(key);
+            return this.blobs.ContainsKey(key);
         }
 
         /// <summary>
@@ -146,7 +141,7 @@ namespace Microsoft.HealthVault
         ///
         IEnumerator IEnumerable.GetEnumerator()
         {
-            return _blobs.GetEnumerator();
+            return this.blobs.GetEnumerator();
         }
 
         /// <summary>
@@ -159,7 +154,7 @@ namespace Microsoft.HealthVault
         ///
         IEnumerator<KeyValuePair<string, Blob>> IEnumerable<KeyValuePair<string, Blob>>.GetEnumerator()
         {
-            return _blobs.GetEnumerator();
+            return this.blobs.GetEnumerator();
         }
 
         /// <summary>
@@ -171,10 +166,7 @@ namespace Microsoft.HealthVault
         /// <see cref="NewBlob(string, string)"/> method must be used. However, the <see cref="Clear"/> and
         /// <see cref="Remove"/> methods are available.
         /// </remarks>
-        bool ICollection<KeyValuePair<string, Blob>>.IsReadOnly
-        {
-            get { return false; }
-        }
+        bool ICollection<KeyValuePair<string, Blob>>.IsReadOnly => false;
 
         /// <summary>
         /// Removes the first occurrence of a specific Blob from the BlobStore.
@@ -186,11 +178,12 @@ namespace Microsoft.HealthVault
         ///
         bool ICollection<KeyValuePair<string, Blob>>.Remove(KeyValuePair<string, Blob> item)
         {
-            bool result = _blobs.Remove(item.Key);
+            bool result = this.blobs.Remove(item.Key);
             if (result)
             {
-                _removedBlobs[item.Key] = item.Value;
+                this.RemovedBlobs[item.Key] = item.Value;
             }
+
             return result;
         }
 
@@ -212,7 +205,7 @@ namespace Microsoft.HealthVault
             KeyValuePair<string, Blob>[] array,
             int arrayIndex)
         {
-            ((ICollection<KeyValuePair<string, Blob>>)_blobs).CopyTo(array, arrayIndex);
+            ((ICollection<KeyValuePair<string, Blob>>)this.blobs).CopyTo(array, arrayIndex);
         }
 
         /// <summary>
@@ -229,13 +222,13 @@ namespace Microsoft.HealthVault
         ///
         bool ICollection<KeyValuePair<string, Blob>>.Contains(KeyValuePair<string, Blob> item)
         {
-            return _blobs.ContainsKey(item.Key);
+            return this.blobs.ContainsKey(item.Key);
         }
 
         /// <summary>
         /// Not supported.
         /// </summary>
-        /// <param name="item"></param>
+        /// <param name="item">The item to consider adding before throwing the NotSupportedException</param>
         void ICollection<KeyValuePair<string, Blob>>.Add(KeyValuePair<string, Blob> item)
         {
             throw new NotSupportedException();
@@ -245,19 +238,13 @@ namespace Microsoft.HealthVault
         /// Gets an ICollection&lt;Blob&gt; containing the values in the BlobStore.
         /// </summary>
         ///
-        public ICollection<Blob> Values
-        {
-            get { return _blobs.Values; }
-        }
+        public ICollection<Blob> Values => this.blobs.Values;
 
         /// <summary>
         /// Gets an ICollection&lt;string&gt; containing the Blob names in the BlobStore.
         /// </summary>
         ///
-        public ICollection<string> Keys
-        {
-            get { return _blobs.Keys; }
-        }
+        public ICollection<string> Keys => this.blobs.Keys;
 
         /// <summary>
         /// Gets the value associated with the specified key.
@@ -279,8 +266,8 @@ namespace Microsoft.HealthVault
         ///
         public bool TryGetValue(string key, out Blob value)
         {
-            key = MapNullKey(key);
-            return _blobs.TryGetValue(key, out value);
+            key = this.MapNullKey(key);
+            return this.blobs.TryGetValue(key, out value);
         }
 
         /// <summary>
@@ -297,13 +284,14 @@ namespace Microsoft.HealthVault
         ///
         public bool Remove(string key)
         {
-            key = MapNullKey(key);
+            key = this.MapNullKey(key);
 
-            if (_blobs.ContainsKey(key))
+            if (this.blobs.ContainsKey(key))
             {
-                _removedBlobs[key] = _blobs[key];
+                this.RemovedBlobs[key] = this.blobs[key];
             }
-            return _blobs.Remove(key);
+
+            return this.blobs.Remove(key);
         }
 
         #endregion IDictionary implementation
@@ -325,34 +313,33 @@ namespace Microsoft.HealthVault
         {
             get
             {
-                name = MapNullKey(name);
+                name = this.MapNullKey(name);
 
                 Blob result = null;
-                if (_blobs.ContainsKey(name))
+                if (this.blobs.ContainsKey(name))
                 {
-                    result = _blobs[name];
+                    result = this.blobs[name];
                 }
+
                 return result;
             }
+
             set
             {
                 throw new NotSupportedException();
             }
         }
-        private Dictionary<string, Blob> _blobs = new Dictionary<string, Blob>();
 
-        internal Dictionary<string, Blob> RemovedBlobs
-        {
-            get { return _removedBlobs; }
-        }
-        private Dictionary<string, Blob> _removedBlobs = new Dictionary<string, Blob>();
+        private Dictionary<string, Blob> blobs = new Dictionary<string, Blob>();
+
+        internal Dictionary<string, Blob> RemovedBlobs { get; } = new Dictionary<string, Blob>();
 
         /// <summary>
         /// Writes the specified bytes to the blob.
         /// </summary>
         ///
         /// <param name="blobName">
-        /// The name of the BLOB. It can be <see cref="String.Empty"/> but cannot be <b>null</b>.
+        /// The name of the BLOB. It can be <see cref="string.Empty"/> but cannot be <b>null</b>.
         /// </param>
         ///
         /// <param name="contentType">
@@ -378,7 +365,7 @@ namespace Microsoft.HealthVault
         ///
         public void WriteInline(string blobName, string contentType, byte[] bytes)
         {
-            Blob blob = NewBlob(blobName, contentType);
+            Blob blob = this.NewBlob(blobName, contentType);
             blob.WriteInline(bytes);
         }
 
@@ -387,7 +374,7 @@ namespace Microsoft.HealthVault
         /// </summary>
         ///
         /// <param name="blobName">
-        /// The name of the BLOB. It can be <see cref="String.Empty"/> but cannot be <b>null</b>.
+        /// The name of the BLOB. It can be <see cref="string.Empty"/> but cannot be <b>null</b>.
         /// </param>
         ///
         /// <param name="contentType">
@@ -416,7 +403,7 @@ namespace Microsoft.HealthVault
             string contentType,
             Stream stream)
         {
-            Blob blob = NewBlob(blobName, contentType);
+            Blob blob = this.NewBlob(blobName, contentType);
             blob.Write(stream);
         }
 
@@ -425,7 +412,7 @@ namespace Microsoft.HealthVault
         /// </summary>
         ///
         /// <param name="blobName">
-        /// The name of the BLOB. It can be <see cref="String.Empty"/> but cannot be <b>null</b>.
+        /// The name of the BLOB. It can be <see cref="string.Empty"/> but cannot be <b>null</b>.
         /// </param>
         ///
         /// <param name="contentType">
@@ -447,9 +434,9 @@ namespace Microsoft.HealthVault
         ///
         public Blob NewBlob(string blobName, string contentType)
         {
-            Blob blob = new Blob(blobName, contentType, null, null, _record);
-            _blobs.Add(blobName, blob);
-            _item.Sections |= HealthRecordItemSections.BlobPayload;
+            Blob blob = new Blob(blobName, contentType, null, null, this.Record);
+            this.blobs.Add(blobName, blob);
+            this.item.Sections |= HealthRecordItemSections.BlobPayload;
             return blob;
         }
 
@@ -459,7 +446,7 @@ namespace Microsoft.HealthVault
         /// </summary>
         ///
         /// <param name="blobName">
-        /// The name of the BLOB. It can be <see cref="String.Empty"/> but cannot be <b>null</b>.
+        /// The name of the BLOB. It can be <see cref="string.Empty"/> but cannot be <b>null</b>.
         /// </param>
         ///
         /// <param name="contentType">
@@ -501,10 +488,10 @@ namespace Microsoft.HealthVault
             BlobHashInfo hashInfo,
             Uri blobUrl)
         {
-            Blob blob = new Blob(blobName, contentType, null, null, hashInfo, _record) { Url = blobUrl };
+            Blob blob = new Blob(blobName, contentType, null, null, hashInfo, this.Record) { Url = blobUrl };
 
-            _blobs.Add(blobName, blob);
-            _item.Sections |= HealthRecordItemSections.BlobPayload;
+            this.blobs.Add(blobName, blob);
+            this.item.Sections |= HealthRecordItemSections.BlobPayload;
             return blob;
         }
 
@@ -547,7 +534,7 @@ namespace Microsoft.HealthVault
                     currentContentEncoding,
                     legacyContentEncoding,
                     hashInfo,
-                    _record);
+                    this.Record);
 
                 XPathNavigator lengthNav = blobNav.SelectSingleNode("content-length");
                 if (lengthNav != null)
@@ -566,7 +553,8 @@ namespace Microsoft.HealthVault
                 {
                     blob.Url = new Uri(urlNav.Value);
                 }
-                _blobs[blob.Name] = blob;
+
+                this.blobs[blob.Name] = blob;
             }
         }
 
@@ -574,7 +562,7 @@ namespace Microsoft.HealthVault
         {
             bool containingNodeWritten = false;
 
-            foreach (Blob blob in _blobs.Values)
+            foreach (Blob blob in this.blobs.Values)
             {
                 if (blob.IsDirty)
                 {
@@ -594,6 +582,7 @@ namespace Microsoft.HealthVault
                     {
                         blob.HashInfo.Write(writer);
                     }
+
                     writer.WriteEndElement();
 
                     if (blob.ContentLength != null && blob.ContentLength.Value != 0)
@@ -621,9 +610,9 @@ namespace Microsoft.HealthVault
                 }
             }
 
-            foreach (Blob blob in _removedBlobs.Values)
+            foreach (Blob blob in this.RemovedBlobs.Values)
             {
-                if (!_blobs.ContainsKey(blob.Name))
+                if (!this.blobs.ContainsKey(blob.Name))
                 {
                     if (!containingNodeWritten)
                     {
@@ -652,7 +641,7 @@ namespace Microsoft.HealthVault
 
         private string MapNullKey(string key)
         {
-            return key ?? String.Empty;
+            return key ?? string.Empty;
         }
     }
 }

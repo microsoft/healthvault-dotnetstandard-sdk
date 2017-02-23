@@ -7,7 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Xml.XPath;
 
-namespace Microsoft.HealthVault
+namespace Microsoft.HealthVault.Thing
 {
     /// <summary>
     /// The set of properties that the thing-type can be
@@ -20,19 +20,16 @@ namespace Microsoft.HealthVault
         /// </summary>
         public HealthRecordItemTypeOrderByProperties(List<HealthRecordItemTypeProperty> properties)
         {
-            _properties = properties;
+            this.properties = properties;
         }
 
         /// <summary>
         /// The set of properties that the thing-type can be
         /// ordered by in the result..
         /// </summary>
-        public List<HealthRecordItemTypeProperty> Properties
-        {
-            get { return _properties ?? new List<HealthRecordItemTypeProperty>(); }
-        }
+        public List<HealthRecordItemTypeProperty> Properties => this.properties ?? new List<HealthRecordItemTypeProperty>();
 
-        private readonly List<HealthRecordItemTypeProperty> _properties;
+        private readonly List<HealthRecordItemTypeProperty> properties;
 
         /// <summary>
         /// This method converts the OrderByProperties xml to the

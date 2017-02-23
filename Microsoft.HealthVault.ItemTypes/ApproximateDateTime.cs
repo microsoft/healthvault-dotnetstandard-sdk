@@ -7,6 +7,7 @@ using System;
 using System.Text;
 using System.Xml;
 using System.Xml.XPath;
+using Microsoft.HealthVault.Helpers;
 
 namespace Microsoft.HealthVault.ItemTypes
 {
@@ -51,8 +52,8 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             Validator.ThrowIfArgumentNull(approximateDate, "approximateDate", "ApproximateDateTimeDateNull");
 
-            _approximateDate = approximateDate;
-            _approximateTime = null;
+            this.approximateDate = approximateDate;
+            this.approximateTime = null;
         }
 
         /// <summary>
@@ -77,7 +78,7 @@ namespace Microsoft.HealthVault.ItemTypes
             ApproximateTime approximateTime)
             : this(approximateDate)
         {
-            _approximateTime = approximateTime;
+            this.approximateTime = approximateTime;
         }
 
         /// <summary>
@@ -107,7 +108,7 @@ namespace Microsoft.HealthVault.ItemTypes
             CodableValue timeZone)
             : this(approximateDate, approximateTime)
         {
-            _timeZone = timeZone;
+            this.timeZone = timeZone;
         }
 
         /// <summary>
@@ -132,8 +133,8 @@ namespace Microsoft.HealthVault.ItemTypes
         public ApproximateDateTime(string description)
         {
             Validator.ThrowIfStringNullOrEmpty(description, "description");
-            _description = description;
-            _approximateDate = null;
+            this.description = description;
+            this.approximateDate = null;
         }
 
         /// <summary>
@@ -151,8 +152,8 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public ApproximateDateTime(DateTime dateTime)
         {
-            _approximateDate = new ApproximateDate(dateTime.Year, dateTime.Month, dateTime.Day);
-            _approximateTime = new ApproximateTime(dateTime.Hour, dateTime.Minute, dateTime.Second, dateTime.Millisecond);
+            this.approximateDate = new ApproximateDate(dateTime.Year, dateTime.Month, dateTime.Day);
+            this.approximateTime = new ApproximateTime(dateTime.Hour, dateTime.Minute, dateTime.Second, dateTime.Millisecond);
         }
 
         /// <summary>
@@ -176,20 +177,20 @@ namespace Microsoft.HealthVault.ItemTypes
 
             if (structuredNav != null)
             {
-                _approximateDate = new ApproximateDate();
-                _approximateDate.ParseXml(
+                this.approximateDate = new ApproximateDate();
+                this.approximateDate.ParseXml(
                     structuredNav.SelectSingleNode("date"));
 
                 XPathNavigator timeNav =
                     structuredNav.SelectSingleNode("time");
                 if (timeNav != null)
                 {
-                    _approximateTime = new ApproximateTime();
-                    _approximateTime.ParseXml(timeNav);
+                    this.approximateTime = new ApproximateTime();
+                    this.approximateTime.ParseXml(timeNav);
                 }
                 else
                 {
-                    _approximateTime = null;
+                    this.approximateTime = null;
                 }
 
                 XPathNavigator tzNav =
@@ -197,15 +198,15 @@ namespace Microsoft.HealthVault.ItemTypes
 
                 if (tzNav != null)
                 {
-                    _timeZone = new CodableValue();
-                    _timeZone.ParseXml(tzNav);
+                    this.timeZone = new CodableValue();
+                    this.timeZone.ParseXml(tzNav);
                 }
             }
             else
             {
-                _description =
+                this.description =
                     navigator.SelectSingleNode("descriptive").Value;
-                _approximateDate = null;
+                this.approximateDate = null;
             }
         }
 
@@ -239,33 +240,33 @@ namespace Microsoft.HealthVault.ItemTypes
             Validator.ThrowIfStringNullOrEmpty(nodeName, "nodeName");
             Validator.ThrowIfArgumentNull(writer, "writer", "WriteXmlNullWriter");
 
-            if (_approximateDate == null && string.IsNullOrEmpty(_description))
+            if (this.approximateDate == null && string.IsNullOrEmpty(this.description))
             {
                 throw Validator.HealthRecordItemSerializationException("ApproximateDateTimeMissingMandatory");
             }
 
             writer.WriteStartElement(nodeName);
 
-            if (_approximateDate != null)
+            if (this.approximateDate != null)
             {
                 // <structured>
                 writer.WriteStartElement("structured");
 
-                _approximateDate.WriteXml("date", writer);
+                this.approximateDate.WriteXml("date", writer);
 
-                if (_approximateTime != null)
+                if (this.approximateTime != null)
                 {
-                    _approximateTime.WriteXml("time", writer);
+                    this.approximateTime.WriteXml("time", writer);
                 }
 
-                _timeZone?.WriteXml("tz", writer);
+                this.timeZone?.WriteXml("tz", writer);
 
                 // </structured>
                 writer.WriteEndElement();
             }
             else
             {
-                writer.WriteElementString("descriptive", _description);
+                writer.WriteElementString("descriptive", this.description);
             }
 
             writer.WriteEndElement();
@@ -285,17 +286,19 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public ApproximateDate ApproximateDate
         {
-            get { return _approximateDate; }
+            get { return this.approximateDate; }
+
             set
             {
-                _approximateDate = value;
+                this.approximateDate = value;
                 if (value != null)
                 {
-                    _description = null;
+                    this.description = null;
                 }
             }
         }
-        private ApproximateDate _approximateDate = new ApproximateDate();
+
+        private ApproximateDate approximateDate = new ApproximateDate();
 
         /// <summary>
         /// Gets or sets the approximate time.
@@ -308,10 +311,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public ApproximateTime ApproximateTime
         {
-            get { return _approximateTime; }
-            set { _approximateTime = value; }
+            get { return this.approximateTime; }
+            set { this.approximateTime = value; }
         }
-        private ApproximateTime _approximateTime = new ApproximateTime();
+
+        private ApproximateTime approximateTime = new ApproximateTime();
 
         /// <summary>
         /// Gets or sets the time zone.
@@ -326,10 +330,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public CodableValue TimeZone
         {
-            get { return _timeZone; }
-            set { _timeZone = value; }
+            get { return this.timeZone; }
+            set { this.timeZone = value; }
         }
-        private CodableValue _timeZone;
+
+        private CodableValue timeZone;
 
         /// <summary>
         /// Gets or sets the descriptive form of the approximate date.
@@ -352,21 +357,23 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public string Description
         {
-            get { return _description; }
+            get { return this.description; }
+
             set
             {
                 Validator.ThrowIfStringIsWhitespace(value, "Description");
 
-                _description = value;
+                this.description = value;
                 if (!string.IsNullOrEmpty(value))
                 {
-                    _approximateDate = null;
-                    _approximateTime = null;
-                    _timeZone = null;
+                    this.approximateDate = null;
+                    this.approximateTime = null;
+                    this.timeZone = null;
                 }
             }
         }
-        private string _description;
+
+        private string description;
 
         #region IComparable
 
@@ -394,34 +401,26 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public int CompareTo(object obj)
         {
-            int result = 0;
-
-            do // false loop
+            if (obj == null)
             {
-                if (obj == null)
-                {
-                    result = 1;
-                    break;
-                }
+                return 1;
+            }
 
-                ApproximateDateTime hsDate = obj as ApproximateDateTime;
-                if (hsDate == null)
+            ApproximateDateTime hsDate = obj as ApproximateDateTime;
+            if (hsDate == null)
+            {
+                try
                 {
-                    try
-                    {
-                        DateTime dt = (DateTime)obj;
-                        result = CompareTo(dt);
-                        break;
-                    }
-                    catch (InvalidCastException)
-                    {
-                        throw Validator.ArgumentException("obj", "ApproximateDateTimeCompareToInvalidType");
-                    }
+                    DateTime dt = (DateTime)obj;
+                    return this.CompareTo(dt);
                 }
+                catch (InvalidCastException)
+                {
+                    throw Validator.ArgumentException("obj", "ApproximateDateTimeCompareToInvalidType");
+                }
+            }
 
-                result = CompareTo(hsDate);
-            } while (false);
-            return result;
+            return this.CompareTo(hsDate);
         }
 
         /// <summary>
@@ -444,49 +443,38 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public int CompareTo(ApproximateDateTime other)
         {
-            int result = 0;
-
-            do // false loop
+            if (other == null)
             {
-                if (other == null)
+                return 1;
+            }
+
+            if (this.ApproximateDate == null)
+            {
+                if (other.ApproximateDate != null)
                 {
-                    result = 1;
-                    break;
+                    return -1;
                 }
 
-                if (this.ApproximateDate == null)
-                {
-                    if (other.ApproximateDate != null)
-                    {
-                        result = -1;
-                        break;
-                    }
+                return this.Description.CompareTo(other.Description);
+            }
 
-                    result = this.Description.CompareTo(other.Description);
-                    break;
-                }
+            int result = this.ApproximateDate.CompareTo(other.ApproximateDate);
+            if (result != 0)
+            {
+                return result;
+            }
 
-                result = this.ApproximateDate.CompareTo(other.ApproximateDate);
-                if (result != 0)
+            if (this.ApproximateTime == null)
+            {
+                if (other.ApproximateTime != null)
                 {
-                    break;
+                    return -1;
                 }
 
-                if (this.ApproximateTime == null)
-                {
-                    if (other.ApproximateTime != null)
-                    {
-                        result = -1;
-                        break;
-                    }
-                }
-                else
-                {
-                    result =
-                        this.ApproximateTime.CompareTo(other.ApproximateTime);
-                }
-            } while (false);
-            return result;
+                return 0;
+            }
+
+            return this.ApproximateTime.CompareTo(other.ApproximateTime);
         }
 
         /// <summary>
@@ -509,34 +497,23 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public int CompareTo(DateTime other)
         {
-            int result = 0;
-
-            do // false loop
+            if (this.ApproximateDate == null)
             {
-                if (this.ApproximateDate == null)
-                {
-                    result = -1;
-                    break;
-                }
+                return -1;
+            }
 
-                result = this.ApproximateDate.CompareTo(other);
-                if (result != 0)
-                {
-                    break;
-                }
+            int result = this.ApproximateDate.CompareTo(other);
+            if (result != 0)
+            {
+                return result;
+            }
 
-                if (this.ApproximateTime == null)
-                {
-                    result = -1;
-                    break;
-                }
-                else
-                {
-                    result =
-                        this.ApproximateTime.CompareTo(other);
-                }
-            } while (false);
-            return result;
+            if (this.ApproximateTime == null)
+            {
+                return -1;
+            }
+
+            return this.ApproximateTime.CompareTo(other);
         }
 
         #endregion IComparable
@@ -571,10 +548,6 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <summary>
         /// See the base class documentation.
         /// </summary>
-        ///
-        /// <returns>
-        /// See the base class documentation.
-        /// </returns>
         ///
         public override int GetHashCode()
         {
@@ -612,24 +585,12 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public static bool operator ==(ApproximateDateTime date, object secondInstance)
         {
-            bool result = true;
-
-            do // false loop
+            if ((object)date == null)
             {
-                if ((object)date == null)
-                {
-                    if (secondInstance == null)
-                    {
-                        break;
-                    }
-                    result = false;
-                    break;
-                }
+                return secondInstance == null;
+            }
 
-                result = date.Equals(secondInstance);
-            } while (false);
-
-            return result;
+            return date.Equals(secondInstance);
         }
 
         /// <summary>
@@ -660,24 +621,12 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public static bool operator !=(ApproximateDateTime date, object secondInstance)
         {
-            bool result = false;
-
-            do // false loop
+            if (date == null)
             {
-                if (date == null)
-                {
-                    if (secondInstance == null)
-                    {
-                        break;
-                    }
-                    result = true;
-                    break;
-                }
+                return secondInstance != null;
+            }
 
-                result = !date.Equals(secondInstance);
-            } while (false);
-
-            return result;
+            return !date.Equals(secondInstance);
         }
 
         /// <summary>
@@ -707,24 +656,12 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public static bool operator >(ApproximateDateTime date, object secondInstance)
         {
-            bool result = false;
-
-            do // false loop
+            if (date == null)
             {
-                if (date == null)
-                {
-                    if (secondInstance == null)
-                    {
-                        break;
-                    }
-                    result = true;
-                    break;
-                }
+                return secondInstance != null;
+            }
 
-                result = date.CompareTo(secondInstance) > 0;
-            } while (false);
-
-            return result;
+            return date.CompareTo(secondInstance) > 0;
         }
 
         /// <summary>
@@ -754,24 +691,12 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public static bool operator <(ApproximateDateTime date, object secondInstance)
         {
-            bool result = false;
-
-            do // false loop
+            if (date == null)
             {
-                if (date == null)
-                {
-                    if (secondInstance == null)
-                    {
-                        break;
-                    }
-                    result = true;
-                    break;
-                }
+                return secondInstance != null;
+            }
 
-                result = date.CompareTo(secondInstance) < 0;
-            } while (false);
-
-            return result;
+            return date.CompareTo(secondInstance) < 0;
         }
 
         #endregion Operators
@@ -781,14 +706,14 @@ namespace Microsoft.HealthVault.ItemTypes
             StringBuilder result = new StringBuilder(50);
             string space = ResourceRetriever.GetSpace("sdkerrors");
 
-            if (string.IsNullOrEmpty(Description))
+            if (string.IsNullOrEmpty(this.Description))
             {
-                result.Append(ApproximateDate.ToString(formatProvider));
+                result.Append(this.ApproximateDate.ToString(formatProvider));
 
-                if (ApproximateTime != null &&
-                    ApproximateTime.HasValue)
+                if (this.ApproximateTime != null &&
+                    this.ApproximateTime.HasValue)
                 {
-                    string time = ApproximateTime.ToString(formatProvider);
+                    string time = this.ApproximateTime.ToString(formatProvider);
 
                     if (!string.IsNullOrEmpty(time))
                     {
@@ -797,16 +722,17 @@ namespace Microsoft.HealthVault.ItemTypes
                     }
                 }
 
-                if (TimeZone != null)
+                if (this.TimeZone != null)
                 {
                     result.Append(space);
-                    result.Append(TimeZone.Text);
+                    result.Append(this.TimeZone.Text);
                 }
             }
             else
             {
-                result.Append(Description);
+                result.Append(this.Description);
             }
+
             return result.ToString();
         }
     }

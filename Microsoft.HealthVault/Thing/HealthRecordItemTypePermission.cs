@@ -5,8 +5,9 @@
 
 using System;
 using System.Xml.XPath;
+using Microsoft.HealthVault.Helpers;
 
-namespace Microsoft.HealthVault
+namespace Microsoft.HealthVault.Thing
 {
     /// <summary>
     /// Provides online and offline access permissions to persons for a health
@@ -16,14 +17,6 @@ namespace Microsoft.HealthVault
     ///
     public class HealthRecordItemTypePermission
     {
-        /// <summary>
-        /// Creates an instance of
-        /// <see cref="HealthRecordItemTypePermission"/> with default values.
-        /// </summary>
-        public HealthRecordItemTypePermission()
-        {
-        }
-
         /// <summary>
         /// Creates an instance of
         /// <see cref="HealthRecordItemTypePermission"/> from XML.
@@ -64,12 +57,7 @@ namespace Microsoft.HealthVault
         /// The GUID of the health record item type.
         /// </returns>
         ///
-        public Guid TypeId
-        {
-            get { return _typeId; }
-            set { _typeId = value; }
-        }
-        private Guid _typeId;
+        public Guid TypeId { get; set; }
 
         /// <summary>
         /// Gets or sets the permissions for online access for the person, for the
@@ -81,12 +69,7 @@ namespace Microsoft.HealthVault
         /// The <see cref="HealthRecordItemPermissions"/> for online access.
         /// </returns>
         ///
-        public HealthRecordItemPermissions OnlineAccessPermissions
-        {
-            get { return _onlineAccessPermissions; }
-            set { _onlineAccessPermissions = value; }
-        }
-        private HealthRecordItemPermissions _onlineAccessPermissions;
+        public HealthRecordItemPermissions OnlineAccessPermissions { get; set; }
 
         /// <summary>
         /// Gets or sets the permissions for offline access for the person, for the
@@ -98,21 +81,16 @@ namespace Microsoft.HealthVault
         /// The <see cref="HealthRecordItemPermissions"/> for offline access.
         /// </returns>
         ///
-        public HealthRecordItemPermissions OfflineAccessPermissions
-        {
-            get { return _offlineAccessPermissions; }
-            set { _offlineAccessPermissions = value; }
-        }
-        private HealthRecordItemPermissions _offlineAccessPermissions;
+        public HealthRecordItemPermissions OfflineAccessPermissions { get; set; }
 
         internal void ParseXml(XPathNavigator navigator)
         {
-            _typeId = new Guid(navigator.SelectSingleNode(
+            this.TypeId = new Guid(navigator.SelectSingleNode(
                             "thing-type-id").Value);
 
             XPathNavigator onlinePermissions
                 = navigator.SelectSingleNode("online-access-permissions");
-            _onlineAccessPermissions = HealthRecordItemPermissions.None;
+            this.OnlineAccessPermissions = HealthRecordItemPermissions.None;
 
             if (onlinePermissions != null)
             {
@@ -122,7 +100,7 @@ namespace Microsoft.HealthVault
                 {
                     foreach (XPathNavigator navPerms in nodes)
                     {
-                        _onlineAccessPermissions
+                        this.OnlineAccessPermissions
                             |= (HealthRecordItemPermissions)Enum.Parse(
                                     typeof(HealthRecordItemPermissions),
                                     navPerms.Value);
@@ -130,14 +108,14 @@ namespace Microsoft.HealthVault
                 }
                 catch (ArgumentException)
                 {
-                    _onlineAccessPermissions
+                    this.OnlineAccessPermissions
                         = HealthRecordItemPermissions.None;
                 }
             }
 
             XPathNavigator offlinePermissions
                 = navigator.SelectSingleNode("offline-access-permissions");
-            _offlineAccessPermissions = HealthRecordItemPermissions.None;
+            this.OfflineAccessPermissions = HealthRecordItemPermissions.None;
 
             if (offlinePermissions != null)
             {
@@ -147,7 +125,7 @@ namespace Microsoft.HealthVault
                 {
                     foreach (XPathNavigator navPerms in nodes)
                     {
-                        _offlineAccessPermissions
+                        this.OfflineAccessPermissions
                             |= (HealthRecordItemPermissions)Enum.Parse(
                                     typeof(HealthRecordItemPermissions),
                                     navPerms.Value);
@@ -155,7 +133,7 @@ namespace Microsoft.HealthVault
                 }
                 catch (ArgumentException)
                 {
-                    _offlineAccessPermissions
+                    this.OfflineAccessPermissions
                         = HealthRecordItemPermissions.None;
                 }
             }

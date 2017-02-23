@@ -6,6 +6,7 @@
 using System;
 using System.Xml;
 using System.Xml.XPath;
+using Microsoft.HealthVault.Helpers;
 
 namespace Microsoft.HealthVault.ItemTypes
 {
@@ -25,15 +26,6 @@ namespace Microsoft.HealthVault.ItemTypes
     public class TestResultRangeValue : HealthRecordItemData
     {
         /// <summary>
-        /// Creates a new instance of the LabTestResultRangeValue class with
-        /// default values.
-        /// </summary>
-        ///
-        public TestResultRangeValue()
-        {
-        }
-
-        /// <summary>
         /// Populates the data for the range from the XML.
         /// </summary>
         ///
@@ -49,8 +41,8 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             Validator.ThrowIfNavigatorNull(navigator);
 
-            _minimum = XPathHelper.GetOptNavValueAsDouble(navigator, "minimum-range");
-            _maximum = XPathHelper.GetOptNavValueAsDouble(navigator, "maximum-range");
+            this.minimum = XPathHelper.GetOptNavValueAsDouble(navigator, "minimum-range");
+            this.maximum = XPathHelper.GetOptNavValueAsDouble(navigator, "maximum-range");
         }
 
         /// <summary>
@@ -84,13 +76,13 @@ namespace Microsoft.HealthVault.ItemTypes
             XmlWriterHelper.WriteOptDouble(
                 writer,
                 "minimum-range",
-                _minimum);
+                this.minimum);
 
             // maximum
             XmlWriterHelper.WriteOptDouble(
                 writer,
                 "maximum-range",
-                _maximum);
+                this.maximum);
 
             writer.WriteEndElement();
         }
@@ -104,10 +96,11 @@ namespace Microsoft.HealthVault.ItemTypes
         /// </value>
         public double? Minimum
         {
-            get { return _minimum; }
-            set { _minimum = value; }
+            get { return this.minimum; }
+            set { this.minimum = value; }
         }
-        private double? _minimum;
+
+        private double? minimum;
 
         /// <summary>
         /// Gets or sets the maximum value of the range.
@@ -118,10 +111,11 @@ namespace Microsoft.HealthVault.ItemTypes
         /// </value>
         public double? Maximum
         {
-            get { return _maximum; }
-            set { _maximum = value; }
+            get { return this.maximum; }
+            set { this.maximum = value; }
         }
-        private double? _maximum;
+
+        private double? maximum;
 
         /// <summary>
         /// Gets a string representation of the test result range value.
@@ -133,10 +127,10 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public override string ToString()
         {
-            string minimumString = _minimum != null ? _minimum.ToString() : String.Empty;
-            string maximumString = _maximum != null ? _maximum.ToString() : String.Empty;
+            string minimumString = this.minimum != null ? this.minimum.ToString() : string.Empty;
+            string maximumString = this.maximum != null ? this.maximum.ToString() : string.Empty;
 
-            return String.Format(
+            return string.Format(
                 ResourceRetriever.GetResourceString(
                         "TestResultRangeValueToStringFormat"),
                 minimumString,

@@ -3,7 +3,7 @@
 // see http://www.microsoft.com/resources/sharedsource/licensingbasics/sharedsourcelicenses.mspx.
 // All other rights reserved.
 
-namespace Microsoft.HealthVault.ItemTypes.Csv
+namespace Microsoft.HealthVault.Thing
 {
     /// <summary>
     /// Represents a floating-point number entry in the CSV list
@@ -16,18 +16,12 @@ namespace Microsoft.HealthVault.ItemTypes.Csv
         /// <param name="value">The value to store in the instance.</param>
         internal OtherItemDataCsvDouble(double value)
         {
-            Value = value;
+            this.Value = value;
         }
-
-        private double _value;
 
         /// <summary>
         /// Gets or sets the value of the double entry.
         /// </summary>
-        internal double Value
-        {
-            get { return _value; }
-            set { _value = value; }
-        }
+        internal double Value { get; set; }
     }
 }

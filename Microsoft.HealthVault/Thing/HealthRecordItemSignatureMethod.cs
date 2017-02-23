@@ -3,7 +3,7 @@
 // see http://www.microsoft.com/resources/sharedsource/licensingbasics/sharedsourcelicenses.mspx.
 // All other rights reserved.
 
-namespace Microsoft.HealthVault
+namespace Microsoft.HealthVault.Thing
 {
     /// <summary>
     /// Defines the HealthRecordItem digital signature methods.
@@ -23,6 +23,6 @@ namespace Microsoft.HealthVault
         /// <summary>
         ///
         /// </summary>
-        HV2 = 2,
+        HV2 = 2
     }
 }

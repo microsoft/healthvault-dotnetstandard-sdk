@@ -6,6 +6,8 @@
 using System;
 using System.Xml;
 using System.Xml.XPath;
+using Microsoft.HealthVault.Helpers;
+using Microsoft.HealthVault.Thing;
 
 namespace Microsoft.HealthVault.ItemTypes
 {
@@ -66,7 +68,7 @@ namespace Microsoft.HealthVault.ItemTypes
         /// Retrieves the unique identifier for the item type.
         /// </summary>
         ///
-        public new static readonly Guid TypeId =
+        public static new readonly Guid TypeId =
             new Guid("822a5e5a-14f1-4d06-b92f-8f3f1b05218f");
 
         /// <summary>
@@ -90,87 +92,87 @@ namespace Microsoft.HealthVault.ItemTypes
             Validator.ThrowInvalidIfNull(itemNav, "DirectiveUnexpectedNode");
 
             // <start-date>
-            _startDate = new ApproximateDateTime();
-            _startDate.ParseXml(itemNav.SelectSingleNode("start-date"));
+            this.startDate = new ApproximateDateTime();
+            this.startDate.ParseXml(itemNav.SelectSingleNode("start-date"));
 
             // <stop-date>
-            _stopDate = new ApproximateDateTime();
-            _stopDate.ParseXml(itemNav.SelectSingleNode("stop-date"));
+            this.stopDate = new ApproximateDateTime();
+            this.stopDate.ParseXml(itemNav.SelectSingleNode("stop-date"));
 
             // <description>
-            _description =
+            this.description =
                 XPathHelper.GetOptNavValue(itemNav, "description");
 
             // <full-resuscitation>
-            _fullResuscitation =
+            this.fullResuscitation =
                 XPathHelper.GetOptNavValueAsBool(itemNav, "full-resuscitation");
 
             // <prohibited-interventions>
-            _prohibitedInterventions =
+            this.prohibitedInterventions =
                 XPathHelper.GetOptNavValue<CodableValue>(
                     itemNav,
                     "prohibited-interventions");
 
             // <additional-instructions>
-            _additionalInstructions =
+            this.additionalInstructions =
                 XPathHelper.GetOptNavValue(itemNav, "additional-instructions");
 
             // <attending-physician>
-            _attendingPhysician =
+            this.attendingPhysician =
                 XPathHelper.GetOptNavValue<PersonItem>(
                     itemNav,
                     "attending-physician");
 
             // <attending-physician-endorsement>
-            _attendingPhysicianEndorsement =
+            this.attendingPhysicianEndorsement =
                 XPathHelper.GetOptNavValue<HealthServiceDateTime>(
                     itemNav,
                     "attending-physician-endorsement");
 
             // <attending-nurse>
-            _attendingNurse =
+            this.attendingNurse =
                 XPathHelper.GetOptNavValue<PersonItem>(
                     itemNav,
                     "attending-nurse");
 
             // <attending-nurse-endorsement" type="d:date-time">
-            _attendingNurseEndorsement =
+            this.attendingNurseEndorsement =
                 XPathHelper.GetOptNavValue<HealthServiceDateTime>(
                     itemNav,
                     "attending-nurse-endorsement");
 
             // <expiration-date>
-            _expirationDate =
+            this.expirationDate =
                 XPathHelper.GetOptNavValue<HealthServiceDateTime>(
                     itemNav,
                     "expiration-date");
 
             // <discontinuation-date>
-            _discontinuationDate =
+            this.discontinuationDate =
                 XPathHelper.GetOptNavValue<ApproximateDateTime>(
                     itemNav,
                     "discontinuation-date");
 
             // <discontinuation-physician>
-            _discontinuationPhysician =
+            this.discontinuationPhysician =
                 XPathHelper.GetOptNavValue<PersonItem>(
                     itemNav,
                     "discontinuation-physician");
 
             // <discontinuation-physician-endorsement>
-            _discontinuationPhysicianEndorsement =
+            this.discontinuationPhysicianEndorsement =
                 XPathHelper.GetOptNavValue<HealthServiceDateTime>(
                     itemNav,
                     "discontinuation-physician-endorsement");
 
             // <discontinuation-nurse>
-            _discontinuationNurse =
+            this.discontinuationNurse =
                 XPathHelper.GetOptNavValue<PersonItem>(
                     itemNav,
                     "discontinuation-nurse");
 
             // <discontinuation-nurse-endorsement>
-            _discontinuationNurseEndorsement =
+            this.discontinuationNurseEndorsement =
                 XPathHelper.GetOptNavValue<HealthServiceDateTime>(
                     itemNav,
                     "discontinuation-nurse-endorsement");
@@ -195,8 +197,8 @@ namespace Microsoft.HealthVault.ItemTypes
         public override void WriteXml(XmlWriter writer)
         {
             Validator.ThrowIfWriterNull(writer);
-            Validator.ThrowSerializationIfNull(_startDate, "DirectiveStartDateNotSet");
-            Validator.ThrowSerializationIfNull(_stopDate, "DirectiveStopDateNotSet");
+            Validator.ThrowSerializationIfNull(this.startDate, "DirectiveStartDateNotSet");
+            Validator.ThrowSerializationIfNull(this.stopDate, "DirectiveStopDateNotSet");
 
             // <directive>
             writer.WriteStartElement("directive");
@@ -204,95 +206,95 @@ namespace Microsoft.HealthVault.ItemTypes
             XmlWriterHelper.WriteOpt(
                 writer,
                 "start-date",
-                _startDate);
+                this.startDate);
 
             XmlWriterHelper.WriteOpt(
                 writer,
                 "stop-date",
-                _stopDate);
+                this.stopDate);
 
             XmlWriterHelper.WriteOptString(
                 writer,
                 "description",
-                _description);
+                this.description);
 
             // <full-resuscitation>
             XmlWriterHelper.WriteOptBool(
                 writer,
                 "full-resuscitation",
-                _fullResuscitation);
+                this.fullResuscitation);
 
             // <prohibited-interventions>
             XmlWriterHelper.WriteOpt(
                 writer,
                 "prohibited-interventions",
-                _prohibitedInterventions);
+                this.prohibitedInterventions);
 
             // <additional-instructions>
             XmlWriterHelper.WriteOptString(
                 writer,
                 "additional-instructions",
-                _additionalInstructions);
+                this.additionalInstructions);
 
             // <attending-physician>
             XmlWriterHelper.WriteOpt(
                 writer,
                 "attending-physician",
-                _attendingPhysician);
+                this.attendingPhysician);
 
             // <attending-physician-endorsement>
             XmlWriterHelper.WriteOpt(
                 writer,
                 "attending-physician-endorsement",
-                _attendingPhysicianEndorsement);
+                this.attendingPhysicianEndorsement);
 
             // <attending-nurse>
             XmlWriterHelper.WriteOpt(
                 writer,
                 "attending-nurse",
-                _attendingNurse);
+                this.attendingNurse);
 
             // <attending-nurse-endorsement>
             XmlWriterHelper.WriteOpt(
                 writer,
                 "attending-nurse-endorsement",
-                _attendingNurseEndorsement);
+                this.attendingNurseEndorsement);
 
             // <expiration-date>
             XmlWriterHelper.WriteOpt(
                 writer,
                 "expiration-date",
-                _expirationDate);
+                this.expirationDate);
 
             // <discontinuation-date>
             XmlWriterHelper.WriteOpt(
                 writer,
                 "discontinuation-date",
-                _discontinuationDate);
+                this.discontinuationDate);
 
             // <discontinuation-physician>
             XmlWriterHelper.WriteOpt(
                 writer,
                 "discontinuation-physician",
-                _discontinuationPhysician);
+                this.discontinuationPhysician);
 
             // <discontinuation-physician-endorsement>
             XmlWriterHelper.WriteOpt(
                 writer,
                 "discontinuation-physician-endorsement",
-                _discontinuationPhysicianEndorsement);
+                this.discontinuationPhysicianEndorsement);
 
             // <discontinuation-nurse>
             XmlWriterHelper.WriteOpt(
                 writer,
                 "discontinuation-nurse",
-                _discontinuationNurse);
+                this.discontinuationNurse);
 
             // <discontinuation-nurse-endorsement>
             XmlWriterHelper.WriteOpt(
                 writer,
                 "discontinuation-nurse-endorsement",
-                _discontinuationNurseEndorsement);
+                this.discontinuationNurseEndorsement);
 
             // </directive>
             writer.WriteEndElement();
@@ -313,14 +315,16 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public string Description
         {
-            get { return _description; }
+            get { return this.description; }
+
             set
             {
                 Validator.ThrowIfStringIsWhitespace(value, "Description");
-                _description = value;
+                this.description = value;
             }
         }
-        private string _description;
+
+        private string description;
 
         /// <summary>
         /// Gets or sets the approximate date of the directive is effective.
@@ -337,14 +341,16 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public ApproximateDateTime StartDate
         {
-            get { return _startDate; }
+            get { return this.startDate; }
+
             set
             {
                 Validator.ThrowIfArgumentNull(value, "StartDate", "DirectiveStartDateMandatory");
-                _startDate = value;
+                this.startDate = value;
             }
         }
-        private ApproximateDateTime _startDate;
+
+        private ApproximateDateTime startDate;
 
         /// <summary>
         /// Gets or sets the approximate date the directive is no longer to
@@ -362,14 +368,16 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public ApproximateDateTime StopDate
         {
-            get { return _stopDate; }
+            get { return this.stopDate; }
+
             set
             {
                 Validator.ThrowIfArgumentNull(value, "StopDate", "DirectiveStopDateMandatory");
-                _stopDate = value;
+                this.stopDate = value;
             }
         }
-        private ApproximateDateTime _stopDate;
+
+        private ApproximateDateTime stopDate;
 
         /// <summary>
         /// Gets or sets a value indicating the resuscitation status.
@@ -381,10 +389,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public bool? FullResuscitation
         {
-            get { return _fullResuscitation; }
-            set { _fullResuscitation = value; }
+            get { return this.fullResuscitation; }
+            set { this.fullResuscitation = value; }
         }
-        private bool? _fullResuscitation;
+
+        private bool? fullResuscitation;
 
         /// <summary>
         /// Gets or sets the list of prohibited interventions in this directive.
@@ -396,10 +405,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public CodableValue ProhibitedInterventions
         {
-            get { return _prohibitedInterventions; }
-            set { _prohibitedInterventions = value; }
+            get { return this.prohibitedInterventions; }
+            set { this.prohibitedInterventions = value; }
         }
-        private CodableValue _prohibitedInterventions;
+
+        private CodableValue prohibitedInterventions;
 
         /// <summary>
         /// Gets or sets additional directive instructions.
@@ -419,14 +429,16 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public string AdditionalInstructions
         {
-            get { return _additionalInstructions; }
+            get { return this.additionalInstructions; }
+
             set
             {
                 Validator.ThrowIfStringIsWhitespace(value, "AdditionalInstructions");
-                _additionalInstructions = value;
+                this.additionalInstructions = value;
             }
         }
-        private string _additionalInstructions;
+
+        private string additionalInstructions;
 
         /// <summary>
         /// Gets or sets the attending physician endorsement details.
@@ -434,10 +446,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public PersonItem AttendingPhysician
         {
-            get { return _attendingPhysician; }
-            set { _attendingPhysician = value; }
+            get { return this.attendingPhysician; }
+            set { this.attendingPhysician = value; }
         }
-        private PersonItem _attendingPhysician;
+
+        private PersonItem attendingPhysician;
 
         /// <summary>
         /// Gets or sets the date and time for the attending physician
@@ -454,10 +467,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public HealthServiceDateTime AttendingPhysicianEndorsement
         {
-            get { return _attendingPhysicianEndorsement; }
-            set { _attendingPhysicianEndorsement = value; }
+            get { return this.attendingPhysicianEndorsement; }
+            set { this.attendingPhysicianEndorsement = value; }
         }
-        private HealthServiceDateTime _attendingPhysicianEndorsement;
+
+        private HealthServiceDateTime attendingPhysicianEndorsement;
 
         /// <summary>
         /// Gets or sets the attending nurse endorsement details.
@@ -470,10 +484,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public PersonItem AttendingNurse
         {
-            get { return _attendingNurse; }
-            set { _attendingNurse = value; }
+            get { return this.attendingNurse; }
+            set { this.attendingNurse = value; }
         }
-        private PersonItem _attendingNurse;
+
+        private PersonItem attendingNurse;
 
         /// <summary>
         /// Gets or sets the date and time for the attending nurse endorsement details.
@@ -489,10 +504,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public HealthServiceDateTime AttendingNurseEndorsement
         {
-            get { return _attendingNurseEndorsement; }
-            set { _attendingNurseEndorsement = value; }
+            get { return this.attendingNurseEndorsement; }
+            set { this.attendingNurseEndorsement = value; }
         }
-        private HealthServiceDateTime _attendingNurseEndorsement;
+
+        private HealthServiceDateTime attendingNurseEndorsement;
 
         /// <summary>
         /// Gets or sets the date and time when the patient expired.
@@ -508,10 +524,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public HealthServiceDateTime ExpirationDate
         {
-            get { return _expirationDate; }
-            set { _expirationDate = value; }
+            get { return this.expirationDate; }
+            set { this.expirationDate = value; }
         }
-        private HealthServiceDateTime _expirationDate;
+
+        private HealthServiceDateTime expirationDate;
 
         /// <summary>
         /// Gets or sets the date/time when clinical support was discontinued.
@@ -523,10 +540,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public ApproximateDateTime DiscontinuationDate
         {
-            get { return _discontinuationDate; }
-            set { _discontinuationDate = value; }
+            get { return this.discontinuationDate; }
+            set { this.discontinuationDate = value; }
         }
-        private ApproximateDateTime _discontinuationDate;
+
+        private ApproximateDateTime discontinuationDate;
 
         /// <summary>
         /// Gets or sets the attending physician discontinuation details.
@@ -543,10 +561,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public PersonItem DiscontinuationPhysician
         {
-            get { return _discontinuationPhysician; }
-            set { _discontinuationPhysician = value; }
+            get { return this.discontinuationPhysician; }
+            set { this.discontinuationPhysician = value; }
         }
-        private PersonItem _discontinuationPhysician;
+
+        private PersonItem discontinuationPhysician;
 
         /// <summary>
         /// Gets or sets the date and time for the attending physician
@@ -564,10 +583,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public HealthServiceDateTime DiscontinuationPhysicianEndorsement
         {
-            get { return _discontinuationPhysicianEndorsement; }
-            set { _discontinuationPhysicianEndorsement = value; }
+            get { return this.discontinuationPhysicianEndorsement; }
+            set { this.discontinuationPhysicianEndorsement = value; }
         }
-        private HealthServiceDateTime _discontinuationPhysicianEndorsement;
+
+        private HealthServiceDateTime discontinuationPhysicianEndorsement;
 
         /// <summary>
         /// Gets or sets the attending nurse discontinuation details.
@@ -584,10 +604,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public PersonItem DiscontinuationNurse
         {
-            get { return _discontinuationNurse; }
-            set { _discontinuationNurse = value; }
+            get { return this.discontinuationNurse; }
+            set { this.discontinuationNurse = value; }
         }
-        private PersonItem _discontinuationNurse;
+
+        private PersonItem discontinuationNurse;
 
         /// <summary>
         /// Gets or sets the date and time for the attending nurse
@@ -604,10 +625,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public HealthServiceDateTime DiscontinuationNurseEndorsement
         {
-            get { return _discontinuationNurseEndorsement; }
-            set { _discontinuationNurseEndorsement = value; }
+            get { return this.discontinuationNurseEndorsement; }
+            set { this.discontinuationNurseEndorsement = value; }
         }
-        private HealthServiceDateTime _discontinuationNurseEndorsement;
+
+        private HealthServiceDateTime discontinuationNurseEndorsement;
 
         /// <summary>
         /// Gets a string representation of the directive item.
@@ -619,7 +641,7 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public override string ToString()
         {
-            return Description ?? string.Empty;
+            return this.Description ?? string.Empty;
         }
     }
 }

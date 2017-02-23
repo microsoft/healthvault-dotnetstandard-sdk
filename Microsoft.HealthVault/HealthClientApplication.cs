@@ -3,10 +3,6 @@
 // see http://www.microsoft.com/resources/sharedsource/licensingbasics/sharedsourcelicenses.mspx.
 // All other rights reserved.
 
-using Microsoft.HealthVault.Certificate;
-using Microsoft.HealthVault.Exceptions;
-using Microsoft.HealthVault.Extensions;
-using Microsoft.HealthVault.Web.Authentication;
 using System;
 using System.ComponentModel;
 using System.Diagnostics;
@@ -14,6 +10,15 @@ using System.Diagnostics.CodeAnalysis;
 using System.Security;
 using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
+using Microsoft.HealthVault.Application;
+using Microsoft.HealthVault.Authentication;
+using Microsoft.HealthVault.Certificate;
+using Microsoft.HealthVault.Connection;
+using Microsoft.HealthVault.Exceptions;
+using Microsoft.HealthVault.Extensions;
+using Microsoft.HealthVault.Helpers;
+using Microsoft.HealthVault.PlatformInformation;
+using Microsoft.HealthVault.Transport;
 
 namespace Microsoft.HealthVault
 {
@@ -33,7 +38,7 @@ namespace Microsoft.HealthVault
         /// <summary>
         /// Certificate for the child application
         /// </summary>
-        private ApplicationCertificate _childCert;
+        private ApplicationCertificate childCert;
         #endregion
 
         #region Constructors
@@ -106,7 +111,8 @@ namespace Microsoft.HealthVault
                 throw Validator.InvalidConfigurationException("InvalidRequestUrlConfiguration");
             }
 
-            return Create(applicationId,
+            return Create(
+                applicationId,
                 masterApplicationId,
                 HealthApplicationConfiguration.Current.HealthVaultShellUrl,
                 HealthApplicationConfiguration.Current.GetHealthVaultMethodUrl());
@@ -167,28 +173,28 @@ namespace Microsoft.HealthVault
                     "applicationId",
                     "InvalidApplicationIdConfiguration");
 
-                healthClientApplication._applicationId = applicationId;
+                healthClientApplication.applicationId = applicationId;
 
                 Validator.ThrowArgumentExceptionIf(
                     masterApplicationId == Guid.Empty,
                     "masterApplicationId",
                     "InvalidMasterApplicationIdConfiguration");
 
-                healthClientApplication._masterApplicationId = masterApplicationId;
+                healthClientApplication.MasterApplicationId = masterApplicationId;
 
                 Validator.ThrowArgumentExceptionIf(
                     shellUrl == null,
                     "shellUrl",
                     "InvalidRequestUrlConfiguration");
 
-                healthClientApplication._shellUrl = shellUrl;
+                healthClientApplication.ShellUrl = shellUrl;
 
                 Validator.ThrowArgumentExceptionIf(
                     healthServiceUrl == null,
                     "healthServiceUrl",
                     "InvalidRequestUrlConfiguration");
 
-                healthClientApplication._healthServiceUrl = healthServiceUrl;
+                healthClientApplication.HealthServiceUrl = healthServiceUrl;
 
                 healthClientApplication.CreateApplication();
 
@@ -196,10 +202,7 @@ namespace Microsoft.HealthVault
             }
             catch
             {
-                if (healthClientApplication != null)
-                {
-                    healthClientApplication.Dispose();
-                }
+                healthClientApplication.Dispose();
 
                 throw;
             }
@@ -264,7 +267,7 @@ namespace Microsoft.HealthVault
             }
 
             HealthClientApplication healthClientApplication = Create(applicationId, masterApplicationId, serviceInstance.ShellUrl, serviceInstance.HealthServiceUrl);
-            healthClientApplication._serviceInstance = serviceInstance;
+            healthClientApplication.ServiceInstance = serviceInstance;
 
             return healthClientApplication;
         }
@@ -276,65 +279,34 @@ namespace Microsoft.HealthVault
         /// <summary>
         /// Gets the ID of the local client application.
         /// </summary>
-        public Guid ApplicationId
-        {
-            get { return _applicationId; }
-        }
+        public Guid ApplicationId => this.applicationId;
+
         /// <summary>
         /// ApplicationId for the child application
         /// </summary>
-        private Guid _applicationId;
+        private Guid applicationId;
 
         /// <summary>
         /// Gets the URL of the HealthVault shell service.
         /// </summary>
-        public Uri ShellUrl
-        {
-            get { return _shellUrl; }
-        }
-
-        private Uri _shellUrl;
+        public Uri ShellUrl { get; private set; }
 
         /// <summary>
         /// Gets the URL of the HealthVault platform service.
         /// </summary>
-        public Uri HealthServiceUrl
-        {
-            get
-            {
-                return _healthServiceUrl;
-            }
-        }
-
-        private Uri _healthServiceUrl;
+        public Uri HealthServiceUrl { get; private set; }
 
         /// <summary>
         /// Gets the HealthVault web-service instance that this
         /// client application instance connects to, if it is specified
         /// during construction.
         /// </summary>
-        public HealthServiceInstance ServiceInstance
-        {
-            get
-            {
-                return _serviceInstance;
-            }
-        }
-
-        private HealthServiceInstance _serviceInstance;
+        public HealthServiceInstance ServiceInstance { get; private set; }
 
         /// <summary>
         /// Gets the ID of the master application.
         /// </summary>
-        public Guid MasterApplicationId
-        {
-            get
-            {
-                return _masterApplicationId;
-            }
-        }
-
-        private Guid _masterApplicationId;
+        public Guid MasterApplicationId { get; private set; }
 
         /// <summary>
         /// Gets an <see cref="ApplicationConnection"/> that represents the connection to HealthVault.
@@ -356,19 +328,9 @@ namespace Microsoft.HealthVault
         /// a domain, resolving or retrieving the cryptographic object
         /// identifier could result in an LDAP query.
         /// </remarks>
-        public ApplicationConnection ApplicationConnection
-        {
-            get
-            {
-                if (_connection == null)
-                {
-                    _connection = Connect();
-                }
-                return _connection;
-            }
-        }
+        public ApplicationConnection ApplicationConnection => this.connection ?? (this.connection = this.Connect());
 
-        private ApplicationConnection _connection;
+        private ApplicationConnection connection;
 
         #endregion
 
@@ -404,13 +366,12 @@ namespace Microsoft.HealthVault
 
             try
             {
-                applicationInfo = await HealthVaultPlatform.GetApplicationInfo(ApplicationConnection).ConfigureAwait(false);
+                applicationInfo = await HealthVaultPlatform.GetApplicationInfo(this.ApplicationConnection).ConfigureAwait(false);
             }
             catch (HealthServiceException e)
             {
                 // If the exception's error code is not InvalidApp
                 // then rethrow the exception.
-                //
                 if (e.ErrorCode != HealthServiceStatusCode.InvalidApp)
                 {
                     throw;
@@ -443,7 +404,7 @@ namespace Microsoft.HealthVault
         {
             string clientName = Environment.GetEnvironmentVariable("Machine");
 
-            return GetApplicationCreationUrl(clientName, String.Empty);
+            return this.GetApplicationCreationUrl(clientName, string.Empty);
         }
 
         /// <summary>
@@ -472,7 +433,7 @@ namespace Microsoft.HealthVault
         /// </returns>
         public Uri GetApplicationCreationUrl(string clientName)
         {
-            return GetApplicationCreationUrl(clientName, String.Empty);
+            return this.GetApplicationCreationUrl(clientName, string.Empty);
         }
 
         /// <summary>
@@ -517,41 +478,41 @@ namespace Microsoft.HealthVault
         {
             Validator.ThrowIfStringNullOrEmpty(clientName, "clientName");
 
-            if (this._shellUrl == null)
+            if (this.ShellUrl == null)
             {
                 throw Validator.InvalidConfigurationException("InvalidRequestUrlConfiguration");
             }
 
-            if (this._healthServiceUrl == null)
+            if (this.HealthServiceUrl == null)
             {
                 throw Validator.InvalidConfigurationException("InvalidRequestUrlConfiguration");
             }
 
-            if (this._masterApplicationId == Guid.Empty)
+            if (this.MasterApplicationId == Guid.Empty)
             {
                 throw Validator.InvalidConfigurationException("InvalidMasterApplicationIdConfiguration");
             }
 
-            if (this._applicationId == Guid.Empty)
+            if (this.applicationId == Guid.Empty)
             {
                 throw Validator.InvalidConfigurationException("InvalidApplicationIdConfiguration");
             }
 
-            if (this._childCert == null)
+            if (this.childCert == null)
             {
                 throw Validator.InvalidConfigurationException("InvalidCertificate");
             }
 
             // Create the query string that passes the master app id, the app id, the client name, and
             // the certificate public key to shell.
-            var redirect = new ShellRedirectParameters(_shellUrl.OriginalString)
+            var redirect = new ShellRedirectParameters(this.ShellUrl.OriginalString)
             {
                 TargetLocation = "CreateApplication",
-                ApplicationId = _masterApplicationId,
+                ApplicationId = this.MasterApplicationId,
                 TargetQueryString = optionalQueryParameters
             };
 
-            redirect.TargetParameters.Add("instanceId", _applicationId.ToString());
+            redirect.TargetParameters.Add("instanceId", this.applicationId.ToString());
             redirect.TargetParameters.Add("instanceName", clientName);
             redirect.TargetParameters.Add("publicKey", Convert.ToBase64String(this.Certificate.Export(X509ContentType.Cert)));
 
@@ -574,10 +535,9 @@ namespace Microsoft.HealthVault
         /// <returns>
         /// The URL of the application authorization web page.
         /// </returns>
-
         public Uri GetUserAuthorizationUrl()
         {
-            return GetUserAuthorizationUrl(string.Empty);
+            return this.GetUserAuthorizationUrl(string.Empty);
         }
 
         /// <summary>
@@ -611,23 +571,22 @@ namespace Microsoft.HealthVault
         /// <returns>
         /// The URL of the application authorization web page.
         /// </returns>
-
         public Uri GetUserAuthorizationUrl(string optionalQueryParameters)
         {
-            if (_shellUrl == null)
+            if (this.ShellUrl == null)
             {
                 throw Validator.InvalidConfigurationException("InvalidRequestUrlConfiguration");
             }
 
-            if (_applicationId == Guid.Empty)
+            if (this.applicationId == Guid.Empty)
             {
                 throw Validator.InvalidConfigurationException("InvalidApplicationIdConfiguration");
             }
 
-            var redirect = new ShellRedirectParameters(_shellUrl.OriginalString)
+            var redirect = new ShellRedirectParameters(this.ShellUrl.OriginalString)
             {
                 TargetLocation = "APPAUTH",
-                ApplicationId = _applicationId,
+                ApplicationId = this.applicationId,
                 TargetQueryString = optionalQueryParameters,
                 AllowInstanceBounce = false
             };
@@ -654,7 +613,7 @@ namespace Microsoft.HealthVault
         [SecurityCritical]
         public void StartUserAuthorizationProcess()
         {
-            Uri uri = GetUserAuthorizationUrl();
+            Uri uri = this.GetUserAuthorizationUrl();
 
             LaunchBrowser(uri);
         }
@@ -692,7 +651,7 @@ namespace Microsoft.HealthVault
         [SecurityCritical]
         public void StartUserAuthorizationProcess(string optionalQueryParameters)
         {
-            Uri uri = GetUserAuthorizationUrl(optionalQueryParameters);
+            Uri uri = this.GetUserAuthorizationUrl(optionalQueryParameters);
 
             LaunchBrowser(uri);
         }
@@ -726,7 +685,7 @@ namespace Microsoft.HealthVault
         {
             string clientName = Environment.GetEnvironmentVariable("Machine");
 
-            StartApplicationCreationProcess(clientName);
+            this.StartApplicationCreationProcess(clientName);
         }
 
         /// <summary>
@@ -763,7 +722,7 @@ namespace Microsoft.HealthVault
         {
             Validator.ThrowIfStringNullOrEmpty(clientName, "clientName");
 
-            Uri uri = GetApplicationCreationUrl(clientName);
+            Uri uri = this.GetApplicationCreationUrl(clientName);
             LaunchBrowser(uri);
         }
 
@@ -801,29 +760,30 @@ namespace Microsoft.HealthVault
                 "personId",
                 "InvalidPersonId");
 
-            if (_applicationId == Guid.Empty)
+            if (this.applicationId == Guid.Empty)
             {
                 throw Validator.InvalidConfigurationException("InvalidApplicationIdConfiguration");
             }
 
-            if (Certificate == null)
+            if (this.Certificate == null)
             {
                 throw Validator.InvalidConfigurationException("InvalidApplicationCertificate");
             }
 
-            if (_healthServiceUrl == null)
+            if (this.HealthServiceUrl == null)
             {
                 throw Validator.InvalidConfigurationException("InvalidRequestUrlConfiguration");
             }
 
             WebApplicationCredential webApplicationCredential =
-                new WebApplicationCredential(ApplicationId,
+                new WebApplicationCredential(
+                    this.ApplicationId,
                     StoreLocation.CurrentUser,
-                    Certificate.Subject);
+                    this.Certificate.Subject);
 
-            return ServiceInstance == null
-                ? new HealthClientAuthorizedConnection(webApplicationCredential, ApplicationId, HealthServiceUrl, personId)
-                : new HealthClientAuthorizedConnection(webApplicationCredential, ApplicationId, ServiceInstance, personId);
+            return this.ServiceInstance == null
+                ? new HealthClientAuthorizedConnection(webApplicationCredential, this.ApplicationId, this.HealthServiceUrl, personId)
+                : new HealthClientAuthorizedConnection(webApplicationCredential, this.ApplicationId, this.ServiceInstance, personId);
         }
 
         /// <summary>
@@ -836,17 +796,17 @@ namespace Microsoft.HealthVault
         [SecuritySafeCritical]
         public void DeleteCertificate()
         {
-            if (_childCert == null)
+            if (this.childCert == null)
             {
                 throw Validator.InvalidConfigurationException("InvalidApplicationCertificate");
             }
 
             using (CertificateStore store = new CertificateStore(StoreLocation.CurrentUser))
             {
-                store.RemoveCert(_childCert.Certificate);
+                store.RemoveCert(this.childCert.Certificate);
             }
 
-            ApplicationCertificate.DeleteKeyContainer(_applicationId);
+            ApplicationCertificate.DeleteKeyContainer(this.applicationId);
         }
 
         #endregion
@@ -859,7 +819,7 @@ namespace Microsoft.HealthVault
         ///
         public void Dispose()
         {
-            Dispose(true);
+            this.Dispose(true);
             GC.SuppressFinalize(this);
         }
 
@@ -867,7 +827,7 @@ namespace Microsoft.HealthVault
         /// Cleans up the cancel request trigger.
         /// </summary>
         ///
-        /// <param name="disposing"></param>
+        /// <param name="disposing">indicates if it is being disposed</param>
         ///
         protected virtual void Dispose(bool disposing)
         {
@@ -885,9 +845,8 @@ namespace Microsoft.HealthVault
         {
             get
             {
-                Debug.Assert(_childCert != null);
-
-                X509Certificate2 x509Certificate2 = _childCert.Certificate;
+                Debug.Assert(this.childCert != null, $"{nameof(this.childCert)} must not be null");
+                X509Certificate2 x509Certificate2 = this.childCert.Certificate;
                 return x509Certificate2;
             }
         }
@@ -911,9 +870,9 @@ namespace Microsoft.HealthVault
             // If no child certificate exists, create a new ApplicationCertificate
             // ApplicationCertificate will find the certificate name HVClient-appId
             // in the local user store. If one does not exist, a new certificate will be created
-            if (_childCert == null)
+            if (this.childCert == null)
             {
-                _childCert = ApplicationCertificate.CreatePersistedCertificate(_applicationId);
+                this.childCert = ApplicationCertificate.CreatePersistedCertificate(this.applicationId);
             }
         }
 
@@ -949,7 +908,7 @@ namespace Microsoft.HealthVault
         /// </returns>
         private HealthClientAuthorizedConnection Connect()
         {
-            if (this._applicationId == Guid.Empty)
+            if (this.applicationId == Guid.Empty)
             {
                 throw Validator.InvalidConfigurationException("InvalidApplicationIdConfiguration");
             }
@@ -959,20 +918,21 @@ namespace Microsoft.HealthVault
                 throw Validator.InvalidConfigurationException("InvalidApplicationCertificate");
             }
 
-            if (_healthServiceUrl == null)
+            if (this.HealthServiceUrl == null)
             {
                 throw Validator.InvalidConfigurationException("InvalidRequestUrlConfiguration");
             }
 
             WebApplicationCredential webApplicationCredential =
-                new WebApplicationCredential(ApplicationId,
+                new WebApplicationCredential(
+                    this.ApplicationId,
                     StoreLocation.CurrentUser,
                     this.Certificate.Subject);
 
             // create a connection based on the app-id and certificate...
-            return ServiceInstance == null
-                ? new HealthClientAuthorizedConnection(webApplicationCredential, ApplicationId, HealthServiceUrl)
-                : new HealthClientAuthorizedConnection(webApplicationCredential, ApplicationId, ServiceInstance);
+            return this.ServiceInstance == null
+                ? new HealthClientAuthorizedConnection(webApplicationCredential, this.ApplicationId, this.HealthServiceUrl)
+                : new HealthClientAuthorizedConnection(webApplicationCredential, this.ApplicationId, this.ServiceInstance);
         }
 
         #endregion
@@ -989,19 +949,19 @@ namespace Microsoft.HealthVault
         /// There was an error opening the uri.
         /// </exception>
         [SecurityCritical]
-        [SuppressMessage("Microsoft.Security", "CA2122:DoNotIndirectlyExposeMethodsWithLinkDemands", Scope = "member")]
         private static void LaunchBrowser(Uri uri)
         {
             // The request is executed by launching it in the registered browser
             // The user then walks through the process of authorizing the application
-            ProcessStartInfo startInfo = new ProcessStartInfo(uri.AbsoluteUri);
-            startInfo.UseShellExecute = true;
-            startInfo.CreateNoWindow = false; // create in a new window, which we can control
-            Process process = Process.Start(startInfo);
-            if (process != null)
+            ProcessStartInfo startInfo = new ProcessStartInfo(uri.AbsoluteUri)
             {
-                process.Dispose();
-            }
+                UseShellExecute = true,
+                CreateNoWindow = false
+            };
+
+            // create in a new window, which we can control
+            Process process = Process.Start(startInfo);
+            process?.Dispose();
         }
 
         #endregion

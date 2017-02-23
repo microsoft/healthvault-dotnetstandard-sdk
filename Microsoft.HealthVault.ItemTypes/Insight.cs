@@ -8,6 +8,8 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Xml;
 using System.Xml.XPath;
+using Microsoft.HealthVault.Helpers;
+using Microsoft.HealthVault.Thing;
 
 namespace Microsoft.HealthVault.ItemTypes
 {
@@ -26,7 +28,8 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <see cref="HealthRecordAccessor.NewItem(HealthRecordItem)"/>
         /// method is called.
         /// </remarks>
-        public Insight() : base(TypeId)
+        public Insight()
+            : base(TypeId)
         {
         }
 
@@ -66,10 +69,10 @@ namespace Microsoft.HealthVault.ItemTypes
             HealthServiceDateTime expirationDate)
             : base(TypeId)
         {
-            RaisedInsightId = raisedInsightId;
-            CatalogId = catalogId;
-            When = when;
-            ExpirationDate = expirationDate;
+            this.RaisedInsightId = raisedInsightId;
+            this.CatalogId = catalogId;
+            this.When = when;
+            this.ExpirationDate = expirationDate;
         }
 
         /// <summary>
@@ -80,7 +83,7 @@ namespace Microsoft.HealthVault.ItemTypes
         /// A GUID.
         /// </value>
         ///
-        public new static readonly Guid TypeId =
+        public static new readonly Guid TypeId =
             new Guid("5D15B7BC-0499-4DC4-8DF7-EF1A2332CFB5");
 
         /// <summary>
@@ -104,39 +107,39 @@ namespace Microsoft.HealthVault.ItemTypes
 
             Validator.ThrowInvalidIfNull(itemNav, "InsightUnexpectedNode");
 
-            _when = new HealthServiceDateTime();
-            _when.ParseXml(itemNav.SelectSingleNode("when"));
+            this.when = new HealthServiceDateTime();
+            this.when.ParseXml(itemNav.SelectSingleNode("when"));
 
-            _raisedInsightId = itemNav.SelectSingleNode("raised-insight-id").Value;
-            _catalogId = itemNav.SelectSingleNode("catalog-id").Value;
+            this.raisedInsightId = itemNav.SelectSingleNode("raised-insight-id").Value;
+            this.catalogId = itemNav.SelectSingleNode("catalog-id").Value;
 
-            _expirationDate = new HealthServiceDateTime();
-            _expirationDate.ParseXml(itemNav.SelectSingleNode("expiration-date"));
+            this.expirationDate = new HealthServiceDateTime();
+            this.expirationDate.ParseXml(itemNav.SelectSingleNode("expiration-date"));
 
-            _channel = XPathHelper.GetOptNavValue(itemNav, "channel");
-            _algoClass = XPathHelper.GetOptNavValue(itemNav, "algo-class");
-            _directionality = XPathHelper.GetOptNavValue(itemNav, "directionality");
-            _timespanPivot = XPathHelper.GetOptNavValue(itemNav, "time-span-pivot");
-            _comparisonPivot = XPathHelper.GetOptNavValue(itemNav, "comparison-pivot");
-            _tonePivot = XPathHelper.GetOptNavValue(itemNav, "tone-pivot");
-            _scopePivot = XPathHelper.GetOptNavValue(itemNav, "scope-pivot");
+            this.channel = XPathHelper.GetOptNavValue(itemNav, "channel");
+            this.algoClass = XPathHelper.GetOptNavValue(itemNav, "algo-class");
+            this.directionality = XPathHelper.GetOptNavValue(itemNav, "directionality");
+            this.timespanPivot = XPathHelper.GetOptNavValue(itemNav, "time-span-pivot");
+            this.comparisonPivot = XPathHelper.GetOptNavValue(itemNav, "comparison-pivot");
+            this.tonePivot = XPathHelper.GetOptNavValue(itemNav, "tone-pivot");
+            this.scopePivot = XPathHelper.GetOptNavValue(itemNav, "scope-pivot");
 
             XPathNavigator dataUsedNav = itemNav.SelectSingleNode("data-used-pivot");
-            _dataUsedPivot = GetStringList(dataUsedNav, "data-used");
+            this.dataUsedPivot = GetStringList(dataUsedNav, "data-used");
 
-            _annotation = XPathHelper.GetOptNavValue(itemNav, "annotation");
-            _strength = XPathHelper.GetOptNavValueAsDouble(itemNav, "strength");
-            _confidence = XPathHelper.GetOptNavValueAsDouble(itemNav, "confidence");
-            _origin = XPathHelper.GetOptNavValue(itemNav, "origin");
+            this.annotation = XPathHelper.GetOptNavValue(itemNav, "annotation");
+            this.strength = XPathHelper.GetOptNavValueAsDouble(itemNav, "strength");
+            this.confidence = XPathHelper.GetOptNavValueAsDouble(itemNav, "confidence");
+            this.origin = XPathHelper.GetOptNavValue(itemNav, "origin");
 
             XPathNavigator tagsNav = itemNav.SelectSingleNode("tags");
-            _insightTags = GetStringList(tagsNav, "tag");
+            this.insightTags = GetStringList(tagsNav, "tag");
 
             XPathNavigator valueNav = itemNav.SelectSingleNode("values");
-            _values = GetDictionary(valueNav, "value");
+            this.values = GetDictionary(valueNav, "value");
 
             XPathNavigator callToActionNav = itemNav.SelectSingleNode("links");
-            _links = GetDictionary(callToActionNav, "value");
+            this.links = GetDictionary(callToActionNav, "value");
         }
 
         /// <summary>
@@ -154,70 +157,70 @@ namespace Microsoft.HealthVault.ItemTypes
         public override void WriteXml(XmlWriter writer)
         {
             Validator.ThrowIfWriterNull(writer);
-            Validator.ThrowSerializationIfNull(_raisedInsightId, "InsightIdNullValue");
-            Validator.ThrowSerializationIfNull(_catalogId, "InsightCatalogIdNullValue");
-            Validator.ThrowSerializationIfNull(_when, "WhenNullValue");
-            Validator.ThrowSerializationIfNull(_expirationDate, "InsightExpirationDateNullValue");
+            Validator.ThrowSerializationIfNull(this.raisedInsightId, "InsightIdNullValue");
+            Validator.ThrowSerializationIfNull(this.catalogId, "InsightCatalogIdNullValue");
+            Validator.ThrowSerializationIfNull(this.when, "WhenNullValue");
+            Validator.ThrowSerializationIfNull(this.expirationDate, "InsightExpirationDateNullValue");
 
             // <insight>
             writer.WriteStartElement("insight");
 
             // <raised-insight-id>
-            writer.WriteElementString("raised-insight-id", _raisedInsightId);
+            writer.WriteElementString("raised-insight-id", this.raisedInsightId);
 
             // <catalog-id>
-            writer.WriteElementString("catalog-id", _catalogId);
+            writer.WriteElementString("catalog-id", this.catalogId);
 
             // <when>
-            _when.WriteXml("when", writer);
+            this.when.WriteXml("when", writer);
 
             // <expiration-date>
-            _expirationDate.WriteXml("expiration-date", writer);
+            this.expirationDate.WriteXml("expiration-date", writer);
 
             // <channel>
-            XmlWriterHelper.WriteOptString(writer, "channel", _channel);
+            XmlWriterHelper.WriteOptString(writer, "channel", this.channel);
 
             // <algo-class>
-            XmlWriterHelper.WriteOptString(writer, "algo-class", _algoClass);
+            XmlWriterHelper.WriteOptString(writer, "algo-class", this.algoClass);
 
             // <directionality>
-            XmlWriterHelper.WriteOptString(writer, "directionality", _directionality);
+            XmlWriterHelper.WriteOptString(writer, "directionality", this.directionality);
 
             // <time-span-pivot>
-            XmlWriterHelper.WriteOptString(writer, "time-span-pivot", _timespanPivot);
+            XmlWriterHelper.WriteOptString(writer, "time-span-pivot", this.timespanPivot);
 
             // <comparison-pivot>
-            XmlWriterHelper.WriteOptString(writer, "comparison-pivot", _comparisonPivot);
+            XmlWriterHelper.WriteOptString(writer, "comparison-pivot", this.comparisonPivot);
 
             // <tone-pivot>
-            XmlWriterHelper.WriteOptString(writer, "tone-pivot", _tonePivot);
+            XmlWriterHelper.WriteOptString(writer, "tone-pivot", this.tonePivot);
 
             // <scope-pivot>
-            XmlWriterHelper.WriteOptString(writer, "scope-pivot", _scopePivot);
+            XmlWriterHelper.WriteOptString(writer, "scope-pivot", this.scopePivot);
 
             // <data-used-pivot>
-            WriteStringList(_dataUsedPivot, writer, "data-used-pivot", "data-used");
+            WriteStringList(this.dataUsedPivot, writer, "data-used-pivot", "data-used");
 
             // <annotation>
-            XmlWriterHelper.WriteOptString(writer, "annotation", _annotation);
+            XmlWriterHelper.WriteOptString(writer, "annotation", this.annotation);
 
             // <strength>
-            XmlWriterHelper.WriteOptDouble(writer, "strength", _strength);
+            XmlWriterHelper.WriteOptDouble(writer, "strength", this.strength);
 
             // <confidence>
-            XmlWriterHelper.WriteOptDouble(writer, "confidence", _confidence);
+            XmlWriterHelper.WriteOptDouble(writer, "confidence", this.confidence);
 
             // <origin>
-            XmlWriterHelper.WriteOptString(writer, "origin", _origin);
+            XmlWriterHelper.WriteOptString(writer, "origin", this.origin);
 
             // <tags>
-            WriteStringList(_insightTags, writer, "tags", "tag");
+            WriteStringList(this.insightTags, writer, "tags", "tag");
 
             // <values>
-            WriteDictionary(_values, writer, "values", "value");
+            WriteDictionary(this.values, writer, "values", "value");
 
             // <links>
-            WriteDictionary(_links, writer, "links", "value");
+            WriteDictionary(this.links, writer, "links", "value");
 
             // </insight>
             writer.WriteEndElement();
@@ -237,8 +240,8 @@ namespace Microsoft.HealthVault.ItemTypes
                 string.Format(
                 CultureInfo.CurrentCulture,
                 ResourceRetriever.GetResourceString("InsightSummaryText"),
-                _raisedInsightId,
-                _catalogId);
+                this.raisedInsightId,
+                this.catalogId);
 
             return value;
         }
@@ -254,18 +257,18 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             get
             {
-                return _raisedInsightId;
+                return this.raisedInsightId;
             }
 
             set
             {
                 Validator.ThrowIfArgumentNull(value, "RaisedInsightId", "InsightIdNullValue");
                 Validator.ThrowIfStringIsEmptyOrWhitespace(value, "RaisedInsightId");
-                _raisedInsightId = value;
+                this.raisedInsightId = value;
             }
         }
 
-        private string _raisedInsightId;
+        private string raisedInsightId;
 
         /// <summary>
         /// Unique identity of the catalog item used to create this Insight.
@@ -278,18 +281,18 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             get
             {
-                return _catalogId;
+                return this.catalogId;
             }
 
             set
             {
                 Validator.ThrowIfArgumentNull(value, "CatalogId", "InsightCatalogIdNullValue");
                 Validator.ThrowIfStringIsEmptyOrWhitespace(value, "CatalogId");
-                _catalogId = value;
+                this.catalogId = value;
             }
         }
 
-        private string _catalogId;
+        private string catalogId;
 
         /// <summary>
         /// Gets or sets the date when the insight was created.
@@ -308,17 +311,17 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             get
             {
-                return _when;
+                return this.when;
             }
 
             set
             {
                 Validator.ThrowIfArgumentNull(value, "When", "WhenNullValue");
-                _when = value;
+                this.when = value;
             }
         }
 
-        private HealthServiceDateTime _when;
+        private HealthServiceDateTime when;
 
         /// <summary>
         /// Date and time when this Insight instance expires.
@@ -331,17 +334,17 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             get
             {
-                return _expirationDate;
+                return this.expirationDate;
             }
 
             set
             {
                 Validator.ThrowIfArgumentNull(value, "ExpirationDate", "InsightExpirationDateNullValue");
-                _expirationDate = value;
+                this.expirationDate = value;
             }
         }
 
-        private HealthServiceDateTime _expirationDate;
+        private HealthServiceDateTime expirationDate;
 
         /// <summary>
         /// Shows what does this Insight impact. For example sleep or activity etc.
@@ -352,11 +355,11 @@ namespace Microsoft.HealthVault.ItemTypes
         /// </value>
         public string Channel
         {
-            get { return _channel; }
-            set { _channel = value; }
+            get { return this.channel; }
+            set { this.channel = value; }
         }
 
-        private string _channel;
+        private string channel;
 
         /// <summary>
         /// Represents the algorithm class used to create this Insight.
@@ -367,11 +370,11 @@ namespace Microsoft.HealthVault.ItemTypes
         /// </value>
         public string AlgoClass
         {
-            get { return _algoClass; }
-            set { _algoClass = value; }
+            get { return this.algoClass; }
+            set { this.algoClass = value; }
         }
 
-        private string _algoClass;
+        private string algoClass;
 
         /// <summary>
         /// Represents which way the Insight is trending. For example positive, negative or neutral.
@@ -382,11 +385,11 @@ namespace Microsoft.HealthVault.ItemTypes
         /// </value>
         public string Directionality
         {
-            get { return _directionality; }
-            set { _directionality = value; }
+            get { return this.directionality; }
+            set { this.directionality = value; }
         }
 
-        private string _directionality;
+        private string directionality;
 
         /// <summary>
         /// Represents the aggregation time span of the data. Example, data is aggregated weekly or daily.
@@ -397,11 +400,11 @@ namespace Microsoft.HealthVault.ItemTypes
         /// </value>
         public string TimespanPivot
         {
-            get { return _timespanPivot; }
-            set { _timespanPivot = value; }
+            get { return this.timespanPivot; }
+            set { this.timespanPivot = value; }
         }
 
-        private string _timespanPivot;
+        private string timespanPivot;
 
         /// <summary>
         /// Represents how the user was compared for deriving this Insight. Example with themselves or people similar to the user.
@@ -412,11 +415,11 @@ namespace Microsoft.HealthVault.ItemTypes
         /// </value>
         public string ComparisonPivot
         {
-            get { return _comparisonPivot; }
-            set { _comparisonPivot = value; }
+            get { return this.comparisonPivot; }
+            set { this.comparisonPivot = value; }
         }
 
-        private string _comparisonPivot;
+        private string comparisonPivot;
 
         /// <summary>
         /// Represents the tone of the Insight, like better or worse.
@@ -427,11 +430,11 @@ namespace Microsoft.HealthVault.ItemTypes
         /// </value>
         public string TonePivot
         {
-            get { return _tonePivot; }
-            set { _tonePivot = value; }
+            get { return this.tonePivot; }
+            set { this.tonePivot = value; }
         }
 
-        private string _tonePivot;
+        private string tonePivot;
 
         /// <summary>
         /// Represents the scope of the Insight like for a specific event or event types.
@@ -442,11 +445,11 @@ namespace Microsoft.HealthVault.ItemTypes
         /// </value>
         public string ScopePivot
         {
-            get { return _scopePivot; }
-            set { _scopePivot = value; }
+            get { return this.scopePivot; }
+            set { this.scopePivot = value; }
         }
 
-        private string _scopePivot;
+        private string scopePivot;
 
         /// <summary>
         /// Represents a list of data types used as input to the insight calculation.
@@ -457,11 +460,11 @@ namespace Microsoft.HealthVault.ItemTypes
         /// </value>
         public List<string> DataUsedPivot
         {
-            get { return _dataUsedPivot; }
-            set { _dataUsedPivot = value; }
+            get { return this.dataUsedPivot; }
+            set { this.dataUsedPivot = value; }
         }
 
-        private List<string> _dataUsedPivot;
+        private List<string> dataUsedPivot;
 
         /// <summary>
         /// Describes how we got to this conclusion and why this Insight is relevant to the user.
@@ -472,11 +475,11 @@ namespace Microsoft.HealthVault.ItemTypes
         /// </value>
         public string Annotation
         {
-            get { return _annotation; }
-            set { _annotation = value; }
+            get { return this.annotation; }
+            set { this.annotation = value; }
         }
 
-        private string _annotation;
+        private string annotation;
 
         /// <summary>
         /// Represents the strength of the data used for calculating the Insights.
@@ -487,11 +490,11 @@ namespace Microsoft.HealthVault.ItemTypes
         /// </value>
         public double? Strength
         {
-            get { return _strength; }
-            set { _strength = value; }
+            get { return this.strength; }
+            set { this.strength = value; }
         }
 
-        private double? _strength;
+        private double? strength;
 
         /// <summary>
         /// Confidence level of the insight process that generated the insight.
@@ -502,11 +505,11 @@ namespace Microsoft.HealthVault.ItemTypes
         /// </value>
         public double? Confidence
         {
-            get { return _confidence; }
-            set { _confidence = value; }
+            get { return this.confidence; }
+            set { this.confidence = value; }
         }
 
-        private double? _confidence;
+        private double? confidence;
 
         /// <summary>
         /// Where was this insight generated.
@@ -517,11 +520,11 @@ namespace Microsoft.HealthVault.ItemTypes
         /// </value>
         public string Origin
         {
-            get { return _origin; }
-            set { _origin = value; }
+            get { return this.origin; }
+            set { this.origin = value; }
         }
 
-        private string _origin;
+        private string origin;
 
         /// <summary>
         /// Tags associated with this insight. Can be used by clients for grouping, filtering etc.
@@ -532,11 +535,11 @@ namespace Microsoft.HealthVault.ItemTypes
         /// </value>
         public List<string> InsightTags
         {
-            get { return _insightTags; }
-            set { _insightTags = value; }
+            get { return this.insightTags; }
+            set { this.insightTags = value; }
         }
 
-        private List<string> _insightTags;
+        private List<string> insightTags;
 
         /// <summary>
         /// Contains the key-value collection associated with the Insight. Keys and their description is included
@@ -548,11 +551,11 @@ namespace Microsoft.HealthVault.ItemTypes
         /// </value>
         public Dictionary<string, object> Values
         {
-            get { return _values; }
-            set { _values = value; }
+            get { return this.values; }
+            set { this.values = value; }
         }
 
-        private Dictionary<string, object> _values;
+        private Dictionary<string, object> values;
 
         /// <summary>
         /// Gets or sets links for Insights.
@@ -563,11 +566,11 @@ namespace Microsoft.HealthVault.ItemTypes
         /// </value>
         public Dictionary<string, object> Links
         {
-            get { return _links; }
-            set { _links = value; }
+            get { return this.links; }
+            set { this.links = value; }
         }
 
-        private Dictionary<string, object> _links;
+        private Dictionary<string, object> links;
 
         /// <summary>
         /// Gets or sets insight messages.
@@ -578,11 +581,11 @@ namespace Microsoft.HealthVault.ItemTypes
         /// </value>
         public InsightMessages Messages
         {
-            get { return _insightMessages; }
-            set { _insightMessages = value; }
+            get { return this.insightMessages; }
+            set { this.insightMessages = value; }
         }
 
-        private InsightMessages _insightMessages;
+        private InsightMessages insightMessages;
 
         /// <summary>
         /// Gets or sets insight attribution
@@ -593,11 +596,11 @@ namespace Microsoft.HealthVault.ItemTypes
         /// </value>
         public InsightAttribution Attribution
         {
-            get { return _insightAttribution; }
-            set { _insightAttribution = value; }
+            get { return this.insightAttribution; }
+            set { this.insightAttribution = value; }
         }
 
-        private InsightAttribution _insightAttribution;
+        private InsightAttribution insightAttribution;
 
         private static List<string> GetStringList(XPathNavigator subItemNav, string subItemName)
         {

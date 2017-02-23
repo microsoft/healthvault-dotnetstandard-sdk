@@ -7,6 +7,8 @@ using System;
 using System.Text;
 using System.Xml;
 using System.Xml.XPath;
+using Microsoft.HealthVault.Helpers;
+using Microsoft.HealthVault.Thing;
 
 namespace Microsoft.HealthVault.ItemTypes
 {
@@ -54,7 +56,7 @@ namespace Microsoft.HealthVault.ItemTypes
         /// The unique identifier for the item type.
         /// </summary>
         ///
-        public new static readonly Guid TypeId =
+        public static new readonly Guid TypeId =
             new Guid("30cafccc-047d-4288-94ef-643571f7919d");
 
         /// <summary>
@@ -77,37 +79,37 @@ namespace Microsoft.HealthVault.ItemTypes
 
             Validator.ThrowInvalidIfNull(itemNav, "MedicationUnexpectedNode");
 
-            _name = new CodableValue();
-            _name.ParseXml(itemNav.SelectSingleNode("name"));
+            this.name = new CodableValue();
+            this.name.ParseXml(itemNav.SelectSingleNode("name"));
 
-            _genericName =
+            this.genericName =
                 XPathHelper.GetOptNavValue<CodableValue>(itemNav, "generic-name");
 
-            _dose =
+            this.dose =
                 XPathHelper.GetOptNavValue<GeneralMeasurement>(itemNav, "dose");
 
-            _strength =
+            this.strength =
                 XPathHelper.GetOptNavValue<GeneralMeasurement>(itemNav, "strength");
 
-            _frequency =
+            this.frequency =
                 XPathHelper.GetOptNavValue<GeneralMeasurement>(itemNav, "frequency");
 
-            _route =
+            this.route =
                 XPathHelper.GetOptNavValue<CodableValue>(itemNav, "route");
 
-            _indication =
+            this.indication =
                 XPathHelper.GetOptNavValue<CodableValue>(itemNav, "indication");
 
-            _dateStarted =
+            this.dateStarted =
                 XPathHelper.GetOptNavValue<ApproximateDateTime>(itemNav, "date-started");
 
-            _dateDiscontinued =
+            this.dateDiscontinued =
                 XPathHelper.GetOptNavValue<ApproximateDateTime>(itemNav, "date-discontinued");
 
-            _prescribed =
+            this.prescribed =
                 XPathHelper.GetOptNavValue<CodableValue>(itemNav, "prescribed");
 
-            _prescription =
+            this.prescription =
                 XPathHelper.GetOptNavValue<Prescription>(itemNav, "prescription");
         }
 
@@ -130,73 +132,73 @@ namespace Microsoft.HealthVault.ItemTypes
         public override void WriteXml(XmlWriter writer)
         {
             Validator.ThrowIfWriterNull(writer);
-            Validator.ThrowSerializationIfNull(_name, "MedicationNameNotSet");
+            Validator.ThrowSerializationIfNull(this.name, "MedicationNameNotSet");
 
             // <medication>
             writer.WriteStartElement("medication");
 
             // <name>
-            _name.WriteXml("name", writer);
+            this.name.WriteXml("name", writer);
 
             // <generic-name>
             XmlWriterHelper.WriteOpt(
                 writer,
                 "generic-name",
-                _genericName);
+                this.genericName);
 
             // <dose>
             XmlWriterHelper.WriteOpt(
                 writer,
                 "dose",
-                _dose);
+                this.dose);
 
             // <strength>
             XmlWriterHelper.WriteOpt(
                 writer,
                 "strength",
-                _strength);
+                this.strength);
 
             // <frequency>
             XmlWriterHelper.WriteOpt(
                 writer,
                 "frequency",
-                _frequency);
+                this.frequency);
 
             // <route>
             XmlWriterHelper.WriteOpt(
                 writer,
                 "route",
-                _route);
+                this.route);
 
             // <indication>
             XmlWriterHelper.WriteOpt(
                 writer,
                 "indication",
-                _indication);
+                this.indication);
 
             // <date-started>
             XmlWriterHelper.WriteOpt(
                 writer,
                 "date-started",
-                _dateStarted);
+                this.dateStarted);
 
             // <date-discontinued>
             XmlWriterHelper.WriteOpt(
                 writer,
                 "date-discontinued",
-                _dateDiscontinued);
+                this.dateDiscontinued);
 
             // <prescribed>
             XmlWriterHelper.WriteOpt(
                 writer,
                 "prescribed",
-                _prescribed);
+                this.prescribed);
 
             // <prescription>
             XmlWriterHelper.WriteOpt(
                 writer,
                 "prescription",
-                _prescription);
+                this.prescription);
 
             // </medication>
             writer.WriteEndElement();
@@ -212,14 +214,16 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public CodableValue Name
         {
-            get { return _name; }
+            get { return this.name; }
+
             set
             {
                 Validator.ThrowIfArgumentNull(value, "Name", "MedicationNameMandatory");
-                _name = value;
+                this.name = value;
             }
         }
-        private CodableValue _name;
+
+        private CodableValue name;
 
         /// <summary>
         /// Gets or sets the generic name of the medication.
@@ -231,10 +235,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public CodableValue GenericName
         {
-            get { return _genericName; }
-            set { _genericName = value; }
+            get { return this.genericName; }
+            set { this.genericName = value; }
         }
-        private CodableValue _genericName;
+
+        private CodableValue genericName;
 
         /// <summary>
         /// Gets or sets the dose of the medication.
@@ -247,10 +252,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public GeneralMeasurement Dose
         {
-            get { return _dose; }
-            set { _dose = value; }
+            get { return this.dose; }
+            set { this.dose = value; }
         }
-        private GeneralMeasurement _dose;
+
+        private GeneralMeasurement dose;
 
         /// <summary>
         /// Gets or sets the strength of the medication.
@@ -263,10 +269,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public GeneralMeasurement Strength
         {
-            get { return _strength; }
-            set { _strength = value; }
+            get { return this.strength; }
+            set { this.strength = value; }
         }
-        private GeneralMeasurement _strength;
+
+        private GeneralMeasurement strength;
 
         /// <summary>
         /// Gets or sets how often the medication is taken.
@@ -279,10 +286,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public GeneralMeasurement Frequency
         {
-            get { return _frequency; }
-            set { _frequency = value; }
+            get { return this.frequency; }
+            set { this.frequency = value; }
         }
-        private GeneralMeasurement _frequency;
+
+        private GeneralMeasurement frequency;
 
         /// <summary>
         /// Gets or sets the route by which the medication is administered.
@@ -295,10 +303,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public CodableValue Route
         {
-            get { return _route; }
-            set { _route = value; }
+            get { return this.route; }
+            set { this.route = value; }
         }
-        private CodableValue _route;
+
+        private CodableValue route;
 
         /// <summary>
         /// Gets or sets the indication for the medication.
@@ -310,10 +319,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public CodableValue Indication
         {
-            get { return _indication; }
-            set { _indication = value; }
+            get { return this.indication; }
+            set { this.indication = value; }
         }
-        private CodableValue _indication;
+
+        private CodableValue indication;
 
         /// <summary>
         /// Gets or sets the date on which the person started taken the medication.
@@ -325,10 +335,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public ApproximateDateTime DateStarted
         {
-            get { return _dateStarted; }
-            set { _dateStarted = value; }
+            get { return this.dateStarted; }
+            set { this.dateStarted = value; }
         }
-        private ApproximateDateTime _dateStarted;
+
+        private ApproximateDateTime dateStarted;
 
         /// <summary>
         /// Gets or sets the date on which the medication was discontinued.
@@ -340,10 +351,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public ApproximateDateTime DateDiscontinued
         {
-            get { return _dateDiscontinued; }
-            set { _dateDiscontinued = value; }
+            get { return this.dateDiscontinued; }
+            set { this.dateDiscontinued = value; }
         }
-        private ApproximateDateTime _dateDiscontinued;
+
+        private ApproximateDateTime dateDiscontinued;
 
         /// <summary>
         /// Gets or sets the source of the prescription.
@@ -358,10 +370,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public CodableValue Prescribed
         {
-            get { return _prescribed; }
-            set { _prescribed = value; }
+            get { return this.prescribed; }
+            set { this.prescribed = value; }
         }
-        private CodableValue _prescribed;
+
+        private CodableValue prescribed;
 
         /// <summary>
         /// Gets or sets the prescription for the medication.
@@ -373,10 +386,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public Prescription Prescription
         {
-            get { return _prescription; }
-            set { _prescription = value; }
+            get { return this.prescription; }
+            set { this.prescription = value; }
         }
-        private Prescription _prescription;
+
+        private Prescription prescription;
 
         /// <summary>
         /// Gets a string representation of the medication.
@@ -391,38 +405,39 @@ namespace Microsoft.HealthVault.ItemTypes
             StringBuilder result = new StringBuilder(200);
             string space = ResourceRetriever.GetSpace("errors");
 
-            result.Append(Name);
+            result.Append(this.Name);
 
-            if (GenericName != null)
+            if (this.GenericName != null)
             {
                 result.Append(space);
                 result.AppendFormat(
                     ResourceRetriever.GetResourceString(
                         "MedicationToStringFormatGenericName"),
-                    GenericName.ToString());
+                    this.GenericName.ToString());
             }
 
-            if (Strength != null)
+            if (this.Strength != null)
             {
                 result.AppendFormat(
                     ResourceRetriever.GetResourceString(
                         "ListFormat"),
-                    Strength.ToString());
+                    this.Strength.ToString());
             }
 
-            if (Dose != null)
+            if (this.Dose != null)
             {
                 result.AppendFormat(
                     ResourceRetriever.GetResourceString(
                         "ListFormat"),
-                    Dose.ToString());
+                    this.Dose.ToString());
             }
 
-            if (Frequency != null)
+            if (this.Frequency != null)
             {
                 result.Append(space);
-                result.Append(Frequency);
+                result.Append(this.Frequency);
             }
+
             return result.ToString();
         }
     }

@@ -11,9 +11,12 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.XPath;
+using Microsoft.HealthVault.Connection;
 using Microsoft.HealthVault.Exceptions;
+using Microsoft.HealthVault.Helpers;
+using Microsoft.HealthVault.Transport;
 
-namespace Microsoft.HealthVault.PlatformPrimitives
+namespace Microsoft.HealthVault.Vocabulary
 {
     /// <summary>
     /// Provides low-level access to the HealthVault vocabulary operations.
@@ -41,10 +44,10 @@ namespace Microsoft.HealthVault.PlatformPrimitives
         ///
         public static void EnableMock(HealthVaultPlatformVocabulary mock)
         {
-            Validator.ThrowInvalidIf(_saved != null, "ClassAlreadyMocked");
+            Validator.ThrowInvalidIf(saved != null, "ClassAlreadyMocked");
 
-            _saved = _current;
-            _current = mock;
+            saved = Current;
+            Current = mock;
         }
 
         /// <summary>
@@ -57,18 +60,15 @@ namespace Microsoft.HealthVault.PlatformPrimitives
         ///
         public static void DisableMock()
         {
-            Validator.ThrowInvalidIfNull(_saved, "ClassIsntMocked");
+            Validator.ThrowInvalidIfNull(saved, "ClassIsntMocked");
 
-            _current = _saved;
-            _saved = null;
+            Current = saved;
+            saved = null;
         }
 
-        internal static HealthVaultPlatformVocabulary Current
-        {
-            get { return _current; }
-        }
-        private static HealthVaultPlatformVocabulary _current = new HealthVaultPlatformVocabulary();
-        private static HealthVaultPlatformVocabulary _saved;
+        internal static HealthVaultPlatformVocabulary Current { get; private set; } = new HealthVaultPlatformVocabulary();
+
+        private static HealthVaultPlatformVocabulary saved;
 
         /// <summary>
         /// Retrieves lists of vocabulary items for the specified
@@ -161,9 +161,10 @@ namespace Microsoft.HealthVault.PlatformPrimitives
                     "fixed-culture",
                     SDKHelper.XmlFromBool(cultureIsFixed));
 
-                writer.WriteEndElement(); //<vocabulary-parameters>
+                writer.WriteEndElement();
                 writer.Flush();
             }
+
             request.Parameters = requestParameters.ToString();
 
             HealthServiceResponseData responseData = await request.ExecuteAsync().ConfigureAwait(false);
@@ -194,6 +195,7 @@ namespace Microsoft.HealthVault.PlatformPrimitives
                 vocabulary.PopulateFromXml(vocabNav);
                 vocabularies.Add(vocabulary);
             }
+
             return new ReadOnlyCollection<Vocabulary>(vocabularies);
         }
 
@@ -241,6 +243,7 @@ namespace Microsoft.HealthVault.PlatformPrimitives
                 vocabularyKey.ParseXml(vocabKeyNav);
                 vocabularyKeys.Add(vocabularyKey);
             }
+
             return new ReadOnlyCollection<VocabularyKey>(vocabularyKeys);
         }
 
@@ -281,16 +284,6 @@ namespace Microsoft.HealthVault.PlatformPrimitives
         /// value with key maxResultsPerVocabularyRetrieval.
         /// </param>
         ///
-        /// <param name="matchingVocabulary">
-        /// A <see cref="VocabularyItemCollection"/> populated with entries matching
-        /// the search criteria.
-        /// </param>
-        ///
-        /// <param name="matchingKeys">
-        /// A <b>ReadOnlyCollection</b> of <see cref="VocabularyKey"/> with entries
-        /// matching the search criteria.
-        /// </param>
-        ///
         /// <exception cref="ArgumentException">
         /// If <paramref name="vocabularyKey"/> is <b>null</b>.
         /// <br></br>
@@ -328,7 +321,7 @@ namespace Microsoft.HealthVault.PlatformPrimitives
             int? maxResults)
         {
             Validator.ThrowArgumentExceptionIf(
-                String.IsNullOrEmpty(searchValue) || searchValue.Length > 255,
+                string.IsNullOrEmpty(searchValue) || searchValue.Length > 255,
                 "searchString",
                 "VocabularySearchStringInvalid");
 
@@ -351,10 +344,7 @@ namespace Microsoft.HealthVault.PlatformPrimitives
 
             using (XmlWriter writer = XmlWriter.Create(requestParameters, settings))
             {
-                if (vocabularyKey != null)
-                {
-                    vocabularyKey.WriteXml(writer);
-                }
+                vocabularyKey?.WriteXml(writer);
 
                 writer.WriteStartElement("text-search-parameters");
 
@@ -368,9 +358,10 @@ namespace Microsoft.HealthVault.PlatformPrimitives
                     writer.WriteElementString("max-results", maxResults.Value.ToString(CultureInfo.InvariantCulture));
                 }
 
-                writer.WriteEndElement(); //<text-search-parameters>
+                writer.WriteEndElement();
                 writer.Flush();
             }
+
             request.Parameters = requestParameters.ToString();
 
             HealthServiceResponseData responseData = await request.ExecuteAsync().ConfigureAwait(false);
@@ -379,10 +370,8 @@ namespace Microsoft.HealthVault.PlatformPrimitives
             {
                 return new VocabularySearchResult(CreateVocabularyItemCollectionFromResponse(methodName, responseData));
             }
-            else
-            {
-                return new VocabularySearchResult(CreateVocabularyKeysFromResponse(methodName, responseData));
-            }
+
+            return new VocabularySearchResult(CreateVocabularyKeysFromResponse(methodName, responseData));
         }
 
         private static VocabularyItemCollection CreateVocabularyItemCollectionFromResponse(

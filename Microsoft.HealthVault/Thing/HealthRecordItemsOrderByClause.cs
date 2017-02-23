@@ -5,7 +5,7 @@
 
 using System;
 
-namespace Microsoft.HealthVault
+namespace Microsoft.HealthVault.Thing
 {
     /// <summary>
     /// Specifies if the order should be sorted in ascending or descending order.
@@ -23,7 +23,7 @@ namespace Microsoft.HealthVault
         /// DESC sorts from highest value to lowest value.
         /// </summary>
         ///
-        Desc = 1,
+        Desc = 1
     }
 
     /// <summary>

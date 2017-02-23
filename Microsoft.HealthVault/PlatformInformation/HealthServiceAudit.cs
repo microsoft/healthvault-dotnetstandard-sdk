@@ -7,8 +7,10 @@ using System;
 using System.Globalization;
 using System.Xml;
 using System.Xml.XPath;
+using Microsoft.HealthVault.Helpers;
+using Microsoft.HealthVault.Thing;
 
-namespace Microsoft.HealthVault
+namespace Microsoft.HealthVault.PlatformInformation
 {
     /// <summary>
     /// Represents an audit trail of creations or updates to
@@ -22,33 +24,24 @@ namespace Microsoft.HealthVault
     ///
     public class HealthServiceAudit
     {
-        /// <summary>
-        /// Creates a new instance of the <see cref="HealthServiceAudit"/>
-        /// class using default values.
-        /// </summary>
-        ///
-        public HealthServiceAudit()
-        {
-        }
-
         internal void ParseXml(XPathNavigator auditNav)
         {
-            _timestamp =
+            this.Timestamp =
                 auditNav.SelectSingleNode("timestamp").ValueAsDateTime;
 
             XPathNavigator nav = auditNav.SelectSingleNode("app-id");
-            _applicationId = new Guid(nav.Value);
-            _applicationName = nav.GetAttribute("name", String.Empty);
+            this.applicationId = new Guid(nav.Value);
+            this.ApplicationName = nav.GetAttribute("name", string.Empty);
 
             nav = auditNav.SelectSingleNode("person-id");
-            _personId = new Guid(nav.Value);
-            _personName = nav.GetAttribute("name", String.Empty);
+            this.personId = new Guid(nav.Value);
+            this.PersonName = nav.GetAttribute("name", string.Empty);
 
             nav = auditNav.SelectSingleNode("impersonator-id");
             if (nav != null)
             {
-                _impersonatorId = new Guid(nav.Value);
-                _impersonatorName = nav.GetAttribute("name", String.Empty);
+                this.ImpersonatorId = new Guid(nav.Value);
+                this.ImpersonatorName = nav.GetAttribute("name", string.Empty);
             }
 
             nav = auditNav.SelectSingleNode("access-avenue");
@@ -56,13 +49,13 @@ namespace Microsoft.HealthVault
             {
                 try
                 {
-                    _accessAvenue =
+                    this.AccessAvenue =
                         (HealthServiceAuditAccessAvenue)Enum.Parse(
                             typeof(HealthServiceAuditAccessAvenue), nav.Value);
                 }
                 catch (ArgumentException)
                 {
-                    _accessAvenue = HealthServiceAuditAccessAvenue.Unknown;
+                    this.AccessAvenue = HealthServiceAuditAccessAvenue.Unknown;
                 }
             }
 
@@ -70,60 +63,61 @@ namespace Microsoft.HealthVault
 
             try
             {
-                _auditAction =
+                this.AuditAction =
                     (HealthServiceAuditAction)Enum.Parse(
                         typeof(HealthServiceAuditAction), nav.Value);
             }
             catch (ArgumentException)
             {
-                _auditAction = HealthServiceAuditAction.Unknown;
+                this.AuditAction = HealthServiceAuditAction.Unknown;
             }
 
             nav = auditNav.SelectSingleNode("master-app-id");
             if (nav != null)
             {
-                _masterAppId = new Guid(nav.Value);
+                this.masterAppId = new Guid(nav.Value);
             }
         }
 
         internal void WriteXml(XmlWriter writer)
         {
-            writer.WriteElementString("timestamp", SDKHelper.XmlFromDateTime(_timestamp));
+            writer.WriteElementString("timestamp", SDKHelper.XmlFromDateTime(this.Timestamp));
 
             writer.WriteStartElement("app-id");
-            writer.WriteAttributeString("name", _applicationName);
-            writer.WriteValue(_applicationId.ToString());
+            writer.WriteAttributeString("name", this.ApplicationName);
+            writer.WriteValue(this.applicationId.ToString());
             writer.WriteEndElement();
 
             writer.WriteStartElement("person-id");
-            writer.WriteAttributeString("name", _personName);
-            writer.WriteValue(_personId.ToString());
+            writer.WriteAttributeString("name", this.PersonName);
+            writer.WriteValue(this.personId.ToString());
             writer.WriteEndElement();
 
-            if (_impersonatorId != null)
+            if (this.ImpersonatorId != null)
             {
                 writer.WriteStartElement("impersonator-id");
-                if (!String.IsNullOrEmpty(_impersonatorName))
+                if (!string.IsNullOrEmpty(this.ImpersonatorName))
                 {
-                    writer.WriteAttributeString("name", _impersonatorName);
+                    writer.WriteAttributeString("name", this.ImpersonatorName);
                 }
-                writer.WriteValue(_impersonatorId.ToString());
+
+                writer.WriteValue(this.ImpersonatorId.ToString());
                 writer.WriteEndElement();
             }
 
-            if (_accessAvenue != HealthServiceAuditAccessAvenue.Unknown)
+            if (this.AccessAvenue != HealthServiceAuditAccessAvenue.Unknown)
             {
-                writer.WriteElementString("access-avenue", _accessAvenue.ToString());
+                writer.WriteElementString("access-avenue", this.AccessAvenue.ToString());
             }
 
-            if (_auditAction != HealthServiceAuditAction.Unknown)
+            if (this.AuditAction != HealthServiceAuditAction.Unknown)
             {
-                writer.WriteElementString("audit-action", _auditAction.ToString());
+                writer.WriteElementString("audit-action", this.AuditAction.ToString());
             }
 
-            if (_masterAppId != Guid.Empty)
+            if (this.masterAppId != Guid.Empty)
             {
-                writer.WriteElementString("master-app-id", _masterAppId.ToString());
+                writer.WriteElementString("master-app-id", this.masterAppId.ToString());
             }
         }
 
@@ -140,11 +134,7 @@ namespace Microsoft.HealthVault
         /// if needed.
         /// </remarks>
         ///
-        public DateTime Timestamp
-        {
-            get { return _timestamp; }
-        }
-        private DateTime _timestamp = DateTime.Now;
+        public DateTime Timestamp { get; private set; } = DateTime.Now;
 
         /// <summary>
         /// Gets the unique identifier of the application.
@@ -154,11 +144,9 @@ namespace Microsoft.HealthVault
         /// A Guid representing the unique identifier of the application.
         /// </value>
         ///
-        public Guid ApplicationId
-        {
-            get { return _applicationId; }
-        }
-        private Guid _applicationId;
+        public Guid ApplicationId => this.applicationId;
+
+        private Guid applicationId;
 
         /// <summary>
         /// Gets the name of the application.
@@ -168,11 +156,7 @@ namespace Microsoft.HealthVault
         /// A string representing the name of the application.
         /// </value>
         ///
-        public string ApplicationName
-        {
-            get { return _applicationName; }
-        }
-        private string _applicationName;
+        public string ApplicationName { get; private set; }
 
         /// <summary>
         /// Gets the unique identifier of the person.
@@ -182,21 +166,15 @@ namespace Microsoft.HealthVault
         /// A Guid representing the unique identifier of the person.
         /// </value>
         ///
-        public Guid PersonId
-        {
-            get { return _personId; }
-        }
-        private Guid _personId;
+        public Guid PersonId => this.personId;
+
+        private Guid personId;
 
         /// <summary>
         /// Gets the name of the person.
         /// </summary>
         ///
-        public string PersonName
-        {
-            get { return _personName; }
-        }
-        private string _personName;
+        public string PersonName { get; private set; }
 
         /// <summary>
         /// Gets the unique identifier of the impersonator.
@@ -211,11 +189,7 @@ namespace Microsoft.HealthVault
         /// change, or delete the <see cref="HealthRecordItem"/>.
         /// </remarks>
         ///
-        public Guid? ImpersonatorId
-        {
-            get { return _impersonatorId; }
-        }
-        private Guid? _impersonatorId;
+        public Guid? ImpersonatorId { get; private set; }
 
         /// <summary>
         /// Gets the name of the impersonator.
@@ -230,11 +204,7 @@ namespace Microsoft.HealthVault
         /// change, or delete the <see cref="HealthRecordItem"/>.
         /// </remarks>
         ///
-        public string ImpersonatorName
-        {
-            get { return _impersonatorName; }
-        }
-        private string _impersonatorName;
+        public string ImpersonatorName { get; private set; }
 
         /// <summary>
         /// Gets the access avenue used to create, change, or delete the
@@ -245,22 +215,13 @@ namespace Microsoft.HealthVault
         /// A <see cref="HealthServiceAuditAccessAvenue"/>.
         /// </value>
         ///
-        public HealthServiceAuditAccessAvenue AccessAvenue
-        {
-            get { return _accessAvenue; }
-        }
-        private HealthServiceAuditAccessAvenue _accessAvenue =
-            HealthServiceAuditAccessAvenue.Online;
+        public HealthServiceAuditAccessAvenue AccessAvenue { get; private set; } = HealthServiceAuditAccessAvenue.Online;
 
         /// <summary>
         /// Gets the action performed.
         /// </summary>
         ///
-        public HealthServiceAuditAction AuditAction
-        {
-            get { return _auditAction; }
-        }
-        private HealthServiceAuditAction _auditAction;
+        public HealthServiceAuditAction AuditAction { get; private set; }
 
         /// <summary>
         /// The unique application identifier for the code base of the
@@ -279,11 +240,9 @@ namespace Microsoft.HealthVault
         /// configuration of the application.
         /// </remarks>
         ///
-        public Guid MasterApplicationId
-        {
-            get { return _masterAppId; }
-        }
-        private Guid _masterAppId;
+        public Guid MasterApplicationId => this.masterAppId;
+
+        private Guid masterAppId;
 
         /// <summary>
         /// Gets a string representation of the object.
@@ -297,21 +256,7 @@ namespace Microsoft.HealthVault
         ///
         public override string ToString()
         {
-            return
-                String.Format(
-                    CultureInfo.CurrentCulture,
-                    toStringFormat,
-                    _timestamp,
-                    _applicationId,
-                    _personId,
-                    _auditAction);
+            return $"{this.Timestamp}, {this.applicationId}, {this.personId}, {this.AuditAction}";
         }
-
-        // {0} - timestamp
-        // {1} - app-id
-        // {2} - person-id
-        // {3} - audit-action
-        //
-        private const string toStringFormat = "{0}, {1}, {2}, {3}";
     }
 }

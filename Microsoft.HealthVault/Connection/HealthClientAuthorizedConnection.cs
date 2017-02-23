@@ -3,11 +3,12 @@
 // see http://www.microsoft.com/resources/sharedsource/licensingbasics/sharedsourcelicenses.mspx.
 // All other rights reserved.
 
-using Microsoft.HealthVault.Web;
-using Microsoft.HealthVault.Web.Authentication;
 using System;
+using Microsoft.HealthVault.Authentication;
+using Microsoft.HealthVault.Exceptions;
+using Microsoft.HealthVault.PlatformInformation;
 
-namespace Microsoft.HealthVault
+namespace Microsoft.HealthVault.Connection
 {
     /// <summary>
     /// Represents an authorized connection between a HealthVault client application

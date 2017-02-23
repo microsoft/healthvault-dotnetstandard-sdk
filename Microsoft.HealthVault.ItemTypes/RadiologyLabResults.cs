@@ -6,6 +6,8 @@
 using System;
 using System.Xml;
 using System.Xml.XPath;
+using Microsoft.HealthVault.Helpers;
+using Microsoft.HealthVault.Thing;
 
 namespace Microsoft.HealthVault.ItemTypes
 {
@@ -59,7 +61,7 @@ namespace Microsoft.HealthVault.ItemTypes
         /// A GUID.
         /// </value>
         ///
-        public new static readonly Guid TypeId =
+        public static new readonly Guid TypeId =
             new Guid("E4911BD3-61BF-4E10-AE78-9C574B888B8F");
 
         /// <summary>
@@ -82,19 +84,19 @@ namespace Microsoft.HealthVault.ItemTypes
 
             Validator.ThrowInvalidIfNull(itemNav, "RadiologyLabResultsUnexpectedNode");
 
-            _when = new HealthServiceDateTime();
-            _when.ParseXml(itemNav.SelectSingleNode("when"));
+            this.when = new HealthServiceDateTime();
+            this.when.ParseXml(itemNav.SelectSingleNode("when"));
 
             // <title>
-            _title =
+            this.title =
                 XPathHelper.GetOptNavValue(itemNav, "title");
 
             // <anatomic-site>
-            _anatomicSite =
+            this.anatomicSite =
                 XPathHelper.GetOptNavValue(itemNav, "anatomic-site");
 
             // <result-text>
-            _resultText =
+            this.resultText =
                 XPathHelper.GetOptNavValue(itemNav, "result-text");
         }
 
@@ -117,31 +119,31 @@ namespace Microsoft.HealthVault.ItemTypes
         public override void WriteXml(XmlWriter writer)
         {
             Validator.ThrowIfWriterNull(writer);
-            Validator.ThrowSerializationIfNull(_when, "RadiologyLabResultsWhenNotSet");
+            Validator.ThrowSerializationIfNull(this.when, "RadiologyLabResultsWhenNotSet");
 
             // <radiology-lab-results>
             writer.WriteStartElement("radiology-lab-results");
 
             // <when>
-            _when.WriteXml("when", writer);
+            this.when.WriteXml("when", writer);
 
             // <title>
             XmlWriterHelper.WriteOptString(
                 writer,
                 "title",
-                _title);
+                this.title);
 
             // <anatomic-site>
             XmlWriterHelper.WriteOptString(
                 writer,
                 "anatomic-site",
-                _anatomicSite);
+                this.anatomicSite);
 
             // <result-text>
             XmlWriterHelper.WriteOptString(
                 writer,
                 "result-text",
-                _resultText);
+                this.resultText);
 
             // </radiology-lab-result>
             writer.WriteEndElement();
@@ -162,14 +164,16 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public HealthServiceDateTime When
         {
-            get { return _when; }
+            get { return this.when; }
+
             set
             {
                 Validator.ThrowIfArgumentNull(value, "When", "WhenNullValue");
-                _when = value;
+                this.when = value;
             }
         }
-        private HealthServiceDateTime _when = new HealthServiceDateTime();
+
+        private HealthServiceDateTime when = new HealthServiceDateTime();
 
         /// <summary>
         /// Gets or sets the title for the radiology laboratory results.
@@ -190,14 +194,16 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public string Title
         {
-            get { return _title; }
+            get { return this.title; }
+
             set
             {
                 Validator.ThrowIfStringIsWhitespace(value, "Title");
-                _title = value;
+                this.title = value;
             }
         }
-        private string _title;
+
+        private string title;
 
         /// <summary>
         /// Gets or sets the anatomic site for the radiology laboratory results.
@@ -218,14 +224,16 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public string AnatomicSite
         {
-            get { return _anatomicSite; }
+            get { return this.anatomicSite; }
+
             set
             {
                 Validator.ThrowIfStringIsWhitespace(value, "AnatomicSite");
-                _anatomicSite = value;
+                this.anatomicSite = value;
             }
         }
-        private string _anatomicSite;
+
+        private string anatomicSite;
 
         /// <summary>
         /// Gets or sets the result text for the radiology laboratory results.
@@ -246,14 +254,16 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public string ResultText
         {
-            get { return _resultText; }
+            get { return this.resultText; }
+
             set
             {
                 Validator.ThrowIfStringIsWhitespace(value, "ResultText");
-                _resultText = value;
+                this.resultText = value;
             }
         }
-        private string _resultText;
+
+        private string resultText;
 
         /// <summary>
         /// Gets a string representation of the radiology lab results.
@@ -265,12 +275,13 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public override string ToString()
         {
-            string result = String.Empty;
+            string result = string.Empty;
 
-            if (Title != null)
+            if (this.Title != null)
             {
-                result = Title;
+                result = this.Title;
             }
+
             return result;
         }
     }

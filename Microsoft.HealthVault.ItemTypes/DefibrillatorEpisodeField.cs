@@ -6,6 +6,7 @@
 using System.Diagnostics.CodeAnalysis;
 using System.Xml;
 using System.Xml.XPath;
+using Microsoft.HealthVault.Helpers;
 
 namespace Microsoft.HealthVault.ItemTypes
 {
@@ -45,8 +46,8 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public DefibrillatorEpisodeField(CodableValue name, CodableValue value)
         {
-            Name = name;
-            Value = value;
+            this.Name = name;
+            this.Value = value;
         }
 
         /// <summary>
@@ -65,11 +66,11 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             Validator.ThrowIfNavigatorNull(navigator);
 
-            _name = new CodableValue();
-            _name.ParseXml(navigator.SelectSingleNode("field-name"));
+            this.name = new CodableValue();
+            this.name.ParseXml(navigator.SelectSingleNode("field-name"));
 
-            _value = new CodableValue();
-            _value.ParseXml(navigator.SelectSingleNode("field-value"));
+            this.value = new CodableValue();
+            this.value.ParseXml(navigator.SelectSingleNode("field-value"));
         }
 
         /// <summary>
@@ -98,12 +99,12 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             Validator.ThrowIfStringNullOrEmpty(nodeName, "WriteXmlEmptyNodeName");
             Validator.ThrowIfWriterNull(writer);
-            Validator.ThrowSerializationIfNull(_name, "DefibrillatorEpisodeFieldNameNullValue");
-            Validator.ThrowSerializationIfNull(_value, "DefibrillatorEpisodeFieldValueNullValue");
+            Validator.ThrowSerializationIfNull(this.name, "DefibrillatorEpisodeFieldNameNullValue");
+            Validator.ThrowSerializationIfNull(this.value, "DefibrillatorEpisodeFieldValueNullValue");
 
             writer.WriteStartElement(nodeName);
-            _name.WriteXml("field-name", writer);
-            _value.WriteXml("field-value", writer);
+            this.name.WriteXml("field-name", writer);
+            this.value.WriteXml("field-value", writer);
             writer.WriteEndElement();
         }
 
@@ -115,17 +116,17 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             get
             {
-                return _name;
+                return this.name;
             }
 
             set
             {
                 Validator.ThrowIfArgumentNull(value, "Name", "DefibrillatorEpisodeFieldNameNullValue");
-                _name = value;
+                this.name = value;
             }
         }
 
-        private CodableValue _name;
+        private CodableValue name;
 
         /// <summary>
         /// Value of the defibrillator episode property.
@@ -135,16 +136,16 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             get
             {
-                return _value;
+                return this.value;
             }
 
             set
             {
                 Validator.ThrowIfArgumentNull(value, "Value", "DefibrillatorEpisodeFieldValueNullValue");
-                _value = value;
+                this.value = value;
             }
         }
 
-        private CodableValue _value;
+        private CodableValue value;
     }
 }

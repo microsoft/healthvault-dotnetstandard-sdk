@@ -6,6 +6,8 @@
 using System;
 using System.Xml;
 using System.Xml.XPath;
+using Microsoft.HealthVault.Helpers;
+using Microsoft.HealthVault.Thing;
 
 namespace Microsoft.HealthVault.ItemTypes
 {
@@ -48,7 +50,7 @@ namespace Microsoft.HealthVault.ItemTypes
         public Height(double meters)
             : base(TypeId)
         {
-            _value.Value = meters;
+            this.value.Value = meters;
         }
 
         /// <summary>
@@ -75,8 +77,8 @@ namespace Microsoft.HealthVault.ItemTypes
             Validator.ThrowIfArgumentNull(when, "when", "WhenNullValue");
             Validator.ThrowIfArgumentNull(height, "height", "HeightValueMandatory");
 
-            _when = when;
-            _value = height;
+            this.when = when;
+            this.value = height;
         }
 
         /// <summary>
@@ -102,8 +104,8 @@ namespace Microsoft.HealthVault.ItemTypes
         public Height(double meters, DisplayValue displayValue)
             : base(TypeId)
         {
-            _value.Value = meters;
-            _value.DisplayValue = displayValue;
+            this.value.Value = meters;
+            this.value.DisplayValue = displayValue;
         }
 
         /// <summary>
@@ -114,7 +116,7 @@ namespace Microsoft.HealthVault.ItemTypes
         /// A GUID.
         /// </value>
         ///
-        public new static readonly Guid TypeId =
+        public static new readonly Guid TypeId =
             new Guid("40750a6a-89b2-455c-bd8d-b420a4cb500b");
 
         /// <summary>
@@ -137,11 +139,11 @@ namespace Microsoft.HealthVault.ItemTypes
 
             Validator.ThrowInvalidIfNull(heightNav, "HeightUnexpectedNode");
 
-            _when = new HealthServiceDateTime();
-            _when.ParseXml(heightNav.SelectSingleNode("when"));
+            this.when = new HealthServiceDateTime();
+            this.when.ParseXml(heightNav.SelectSingleNode("when"));
 
-            _value = new Length();
-            _value.ParseXml(heightNav.SelectSingleNode("value"));
+            this.value = new Length();
+            this.value.ParseXml(heightNav.SelectSingleNode("value"));
         }
 
         /// <summary>
@@ -163,15 +165,15 @@ namespace Microsoft.HealthVault.ItemTypes
         public override void WriteXml(XmlWriter writer)
         {
             Validator.ThrowIfWriterNull(writer);
-            Validator.ThrowSerializationIfNull(_value, "HeightValueNotSet");
+            Validator.ThrowSerializationIfNull(this.value, "HeightValueNotSet");
 
             // <height>
             writer.WriteStartElement("height");
 
             // <when>
-            _when.WriteXml("when", writer);
+            this.when.WriteXml("when", writer);
 
-            _value.WriteXml("value", writer);
+            this.value.WriteXml("value", writer);
 
             // </height>
             writer.WriteEndElement();
@@ -193,14 +195,16 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public HealthServiceDateTime When
         {
-            get { return _when; }
+            get { return this.when; }
+
             set
             {
                 Validator.ThrowIfArgumentNull(value, "When", "WhenNullValue");
-                _when = value;
+                this.when = value;
             }
         }
-        private HealthServiceDateTime _when = new HealthServiceDateTime();
+
+        private HealthServiceDateTime when = new HealthServiceDateTime();
 
         /// <summary>
         /// Gets or sets the person's height.
@@ -216,14 +220,16 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public Length Value
         {
-            get { return _value; }
+            get { return this.value; }
+
             set
             {
                 Validator.ThrowIfArgumentNull(value, "Value", "HeightValueMandatory");
-                _value = value;
+                this.value = value;
             }
         }
-        private Length _value = new Length();
+
+        private Length value = new Length();
 
         /// <summary>
         /// Gets a string representation of the height item.
@@ -235,7 +241,7 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public override string ToString()
         {
-            return Value.ToString();
+            return this.Value.ToString();
         }
     }
 }

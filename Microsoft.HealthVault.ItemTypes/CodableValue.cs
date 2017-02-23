@@ -8,6 +8,9 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Xml;
 using System.Xml.XPath;
+using Microsoft.HealthVault.Exceptions;
+using Microsoft.HealthVault.Helpers;
+using Microsoft.HealthVault.Vocabulary;
 
 namespace Microsoft.HealthVault.ItemTypes
 {
@@ -67,7 +70,7 @@ namespace Microsoft.HealthVault.ItemTypes
 
             if (code != null)
             {
-                _codes.Add(code);
+                this.codes.Add(code);
             }
         }
 
@@ -94,7 +97,7 @@ namespace Microsoft.HealthVault.ItemTypes
 
             if (item != null)
             {
-                Add(item);
+                this.Add(item);
             }
         }
 
@@ -136,7 +139,7 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             CodedValue codedValue = new CodedValue(code, vocabularyName, family, version);
             this.Text = text;
-            _codes.Add(codedValue);
+            this.codes.Add(codedValue);
         }
 
         /// <summary>
@@ -169,7 +172,7 @@ namespace Microsoft.HealthVault.ItemTypes
 
             CodedValue codedValue = new CodedValue(code, key);
             this.Text = text;
-            _codes.Add(codedValue);
+            this.codes.Add(codedValue);
         }
 
         #region Interface methods
@@ -192,8 +195,8 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public CodedValue this[int index]
         {
-            get { return Codes[index]; }
-            set { Codes[index] = value; }
+            get { return this.Codes[index]; }
+            set { this.Codes[index] = value; }
         }
 
         /// <summary>
@@ -210,7 +213,7 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public int IndexOf(CodedValue item)
         {
-            return Codes.IndexOf(item);
+            return this.Codes.IndexOf(item);
         }
 
         /// <summary>
@@ -231,7 +234,7 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public void Insert(int index, CodedValue item)
         {
-            Codes.Insert(index, item);
+            this.Codes.Insert(index, item);
         }
 
         /// <summary>
@@ -248,14 +251,14 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public void RemoveAt(int index)
         {
-            Codes.RemoveAt(index);
+            this.Codes.RemoveAt(index);
         }
 
         /// <summary>
         /// Gets the number of code items
         /// </summary>
         ///
-        public int Count => Codes.Count;
+        public int Count => this.Codes.Count;
 
         /// <summary>
         /// Gets a value indicating whether the code item list is read-only.
@@ -277,7 +280,7 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public void Add(CodedValue item)
         {
-            Codes.Add(item);
+            this.Codes.Add(item);
         }
 
         /// <summary>
@@ -292,16 +295,18 @@ namespace Microsoft.HealthVault.ItemTypes
         public void Add(VocabularyItem item)
         {
             CodedValue codedValue =
-                new CodedValue(item.Value,
-                               item.VocabularyName,
-                               item.Family,
-                               item.Version);
+                new CodedValue(
+                    item.Value,
+                    item.VocabularyName,
+                    item.Family,
+                    item.Version);
 
-            if (_text == null)
+            if (this.text == null)
             {
-                _text = item.DisplayText;
+                this.text = item.DisplayText;
             }
-            Codes.Add(codedValue);
+
+            this.Codes.Add(codedValue);
         }
 
         /// <summary>
@@ -310,8 +315,8 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public void Clear()
         {
-            this._text = null;
-            Codes.Clear();
+            this.text = null;
+            this.Codes.Clear();
         }
 
         /// <summary>
@@ -329,7 +334,7 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public bool Contains(CodedValue item)
         {
-            return Codes.Contains(item);
+            return this.Codes.Contains(item);
         }
 
         /// <summary>
@@ -364,7 +369,7 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public void CopyTo(CodedValue[] array, int arrayIndex)
         {
-            Codes.CopyTo(array, arrayIndex);
+            this.Codes.CopyTo(array, arrayIndex);
         }
 
         /// <summary>
@@ -382,7 +387,7 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public bool Remove(CodedValue item)
         {
-            return Codes.Remove(item);
+            return this.Codes.Remove(item);
         }
 
         /// <summary>
@@ -395,7 +400,7 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         IEnumerator IEnumerable.GetEnumerator()
         {
-            return Codes.GetEnumerator();
+            return this.Codes.GetEnumerator();
         }
 
         /// <summary>
@@ -408,7 +413,7 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public IEnumerator<CodedValue> GetEnumerator()
         {
-            return Codes.GetEnumerator();
+            return this.Codes.GetEnumerator();
         }
 
         #endregion
@@ -429,8 +434,8 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             Validator.ThrowIfNavigatorNull(navigator);
 
-            Clear();
-            _text = navigator.SelectSingleNode("text").Value;
+            this.Clear();
+            this.text = navigator.SelectSingleNode("text").Value;
 
             // optional code
             try
@@ -441,7 +446,7 @@ namespace Microsoft.HealthVault.ItemTypes
                 {
                     CodedValue codedValue = new CodedValue();
                     codedValue.ParseXml(code);
-                    _codes.Add(codedValue);
+                    this.codes.Add(codedValue);
                 }
             }
             catch (ArgumentException)
@@ -481,9 +486,9 @@ namespace Microsoft.HealthVault.ItemTypes
 
             writer.WriteStartElement(nodeName);
 
-            writer.WriteElementString("text", _text);
+            writer.WriteElementString("text", this.text);
 
-            foreach (CodedValue codedValue in _codes)
+            foreach (CodedValue codedValue in this.codes)
             {
                 codedValue?.WriteXml("code", writer);
             }
@@ -506,15 +511,17 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public string Text
         {
-            get { return _text; }
+            get { return this.text; }
+
             set
             {
                 Validator.ThrowIfStringNullOrEmpty(value, "Text");
                 Validator.ThrowIfStringIsWhitespace(value, "Text");
-                _text = value;
+                this.text = value;
             }
         }
-        private string _text;
+
+        private string text;
 
         /// <summary>
         /// Gets the string representation of a codable value.
@@ -526,15 +533,13 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public override string ToString()
         {
-            if (_text == null)
+            if (this.text == null)
             {
                 // not initialized
                 return string.Empty;
             }
-            else
-            {
-                return this.Text;
-            }
+
+            return this.Text;
         }
 
         /// <summary>
@@ -551,8 +556,8 @@ namespace Microsoft.HealthVault.ItemTypes
         /// add <see cref="CodedValue"/> instances to the returned collection.
         /// </remarks>
         ///
-        internal IList<CodedValue> Codes => _codes;
+        internal IList<CodedValue> Codes => this.codes;
 
-        private readonly List<CodedValue> _codes = new List<CodedValue>();
+        private readonly List<CodedValue> codes = new List<CodedValue>();
     }
 }

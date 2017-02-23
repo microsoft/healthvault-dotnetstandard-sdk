@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Xml;
 using System.Xml.XPath;
+using Microsoft.HealthVault.Helpers;
 
 namespace Microsoft.HealthVault.ItemTypes
 {
@@ -64,7 +65,7 @@ namespace Microsoft.HealthVault.ItemTypes
                 {
                     if (zone != null)
                     {
-                        _zones.Add(zone);
+                        this.zones.Add(zone);
                     }
                 }
             }
@@ -89,7 +90,7 @@ namespace Microsoft.HealthVault.ItemTypes
             string name = navigator.GetAttribute("name", string.Empty);
             if (name.Length != 0)
             {
-                _name = name;
+                this.name = name;
             }
 
             XPathNodeIterator zoneIterator =
@@ -98,7 +99,7 @@ namespace Microsoft.HealthVault.ItemTypes
             {
                 HeartRateZone zone = new HeartRateZone();
                 zone.ParseXml(zoneNav);
-                _zones.Add(zone);
+                this.zones.Add(zone);
             }
         }
 
@@ -134,20 +135,21 @@ namespace Microsoft.HealthVault.ItemTypes
             Validator.ThrowIfWriterNull(writer);
 
             Validator.ThrowSerializationIf(
-                _zones.Count < 1,
+                this.zones.Count < 1,
                 "HeartRateZoneGroupNoZones");
 
             writer.WriteStartElement(nodeName);
 
-            if (!string.IsNullOrEmpty(_name))
+            if (!string.IsNullOrEmpty(this.name))
             {
-                writer.WriteAttributeString("name", _name);
+                writer.WriteAttributeString("name", this.name);
             }
 
-            foreach (HeartRateZone zone in _zones)
+            foreach (HeartRateZone zone in this.zones)
             {
                 zone.WriteXml("heartrate-zone", writer);
             }
+
             writer.WriteEndElement();
         }
 
@@ -169,14 +171,16 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public string Name
         {
-            get { return _name; }
+            get { return this.name; }
+
             set
             {
                 Validator.ThrowIfStringIsWhitespace(value, "Name");
-                _name = value;
+                this.name = value;
             }
         }
-        private string _name;
+
+        private string name;
 
         /// <summary>
         /// Gets the target heart rate zones for the zone group.
@@ -190,11 +194,9 @@ namespace Microsoft.HealthVault.ItemTypes
         /// To add a zone to the group, call Add on the returned collection.
         /// </remarks>
         ///
-        public Collection<HeartRateZone> TargetZones
-        {
-            get { return _zones; }
-        }
-        private Collection<HeartRateZone> _zones =
+        public Collection<HeartRateZone> TargetZones => this.zones;
+
+        private readonly Collection<HeartRateZone> zones =
             new Collection<HeartRateZone>();
     }
 }

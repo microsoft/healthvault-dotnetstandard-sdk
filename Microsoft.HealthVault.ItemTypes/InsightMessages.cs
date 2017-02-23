@@ -5,6 +5,7 @@
 
 using System.Xml;
 using System.Xml.XPath;
+using Microsoft.HealthVault.Helpers;
 
 namespace Microsoft.HealthVault.ItemTypes
 {
@@ -13,16 +14,6 @@ namespace Microsoft.HealthVault.ItemTypes
     /// </summary>
     public class InsightMessages : HealthRecordItemData
     {
-        /// <summary>
-        /// Constructs a new instance of the <see cref="InsightMessages"/> class with
-        /// default values.
-        /// </summary>
-        ///
-        public InsightMessages()
-            : base()
-        {
-        }
-
         /// <summary>
         /// Populates the data for insight messages from the XML.
         /// </summary>
@@ -39,8 +30,8 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             Validator.ThrowIfNavigatorNull(navigator);
 
-            _regular = XPathHelper.GetOptNavValue(navigator, "regular");
-            _short = XPathHelper.GetOptNavValue(navigator, "short");
+            this.regular = XPathHelper.GetOptNavValue(navigator, "regular");
+            this.@short = XPathHelper.GetOptNavValue(navigator, "short");
         }
 
         /// <summary>
@@ -71,10 +62,10 @@ namespace Microsoft.HealthVault.ItemTypes
             writer.WriteStartElement(nodeName);
 
             // <regular>
-            XmlWriterHelper.WriteOptString(writer, "regular", _regular);
+            XmlWriterHelper.WriteOptString(writer, "regular", this.regular);
 
             // <short>
-            XmlWriterHelper.WriteOptString(writer, "short", _short);
+            XmlWriterHelper.WriteOptString(writer, "short", this.@short);
 
             writer.WriteEndElement();
         }
@@ -89,7 +80,7 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public override string ToString()
         {
-            return _regular;
+            return this.regular;
         }
 
         /// <summary>
@@ -97,23 +88,23 @@ namespace Microsoft.HealthVault.ItemTypes
         /// </summary>
         public string Regular
         {
-            get { return _regular; }
+            get { return this.regular; }
 
-            set { _regular = value; }
+            set { this.regular = value; }
         }
 
-        private string _regular;
+        private string regular;
 
         /// <summary>
         /// Gets or sets the short message for this insight.
         /// </summary>
         public string Short
         {
-            get { return _short; }
+            get { return this.@short; }
 
-            set { _short = value; }
+            set { this.@short = value; }
         }
 
-        private string _short;
+        private string @short;
     }
 }

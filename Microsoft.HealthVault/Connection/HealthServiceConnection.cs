@@ -3,16 +3,19 @@
 // see http://www.microsoft.com/resources/sharedsource/licensingbasics/sharedsourcelicenses.mspx.
 // All other rights reserved.
 
-using Microsoft.HealthVault.Authentication;
-using Microsoft.HealthVault.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Net;
 using System.Threading.Tasks;
+using Microsoft.HealthVault.Authentication;
 using Microsoft.HealthVault.Exceptions;
+using Microsoft.HealthVault.Extensions;
+using Microsoft.HealthVault.Helpers;
+using Microsoft.HealthVault.PlatformInformation;
+using Microsoft.HealthVault.Transport;
 
-namespace Microsoft.HealthVault
+namespace Microsoft.HealthVault.Connection
 {
     /// <summary>
     /// Simplifies access to the HealthVault service. This class is
@@ -104,11 +107,12 @@ namespace Microsoft.HealthVault
                 {
                     newUri = newUri + "wildcat.ashx";
                 }
+
                 healthServiceUrl = new Uri(newUri);
             }
 
-            _applicationId = callingApplicationId;
-            _requestUrl = healthServiceUrl;
+            this.ApplicationId = callingApplicationId;
+            this.requestUrl = healthServiceUrl;
         }
 
         /// <summary>
@@ -134,8 +138,8 @@ namespace Microsoft.HealthVault
                     throw Validator.ArgumentException("serviceInstance", "ServiceInstanceMustHaveServiceUrl");
                 }
 
-                ServiceInstance = serviceInstance;
-                _requestUrl = serviceInstance.HealthServiceUrl;
+                this.ServiceInstance = serviceInstance;
+                this.requestUrl = serviceInstance.HealthServiceUrl;
             }
         }
 
@@ -158,24 +162,10 @@ namespace Microsoft.HealthVault
         /// default HealthVault web-service instance is used.
         /// </remarks>
         ///
-        internal HealthServiceConnection(Guid callingApplicationId, HealthServiceInstance serviceInstance)
+        internal HealthServiceConnection(Guid callingApplicationId, HealthServiceInstance serviceInstance = null)
             : this(serviceInstance)
         {
-            _applicationId = callingApplicationId;
-        }
-
-        /// <summary>
-        /// Creates a new instance of the <see cref="HealthServiceConnection"/>
-        /// class with the specified application identifier.
-        /// </summary>
-        ///
-        /// <param name="callingApplicationId">
-        /// The HealthVault application identifier.
-        /// </param>
-        ///
-        internal HealthServiceConnection(Guid callingApplicationId)
-            : this(callingApplicationId, serviceInstance: null)
-        {
+            this.ApplicationId = callingApplicationId;
         }
 
         #endregion constructors
@@ -213,7 +203,7 @@ namespace Microsoft.HealthVault
         ///
         public virtual HealthServiceRequest CreateRequest(string methodName, int methodVersion)
         {
-            return CreateRequest(methodName, methodVersion, false);
+            return this.CreateRequest(methodName, methodVersion, false);
         }
 
         /// <summary>
@@ -233,30 +223,29 @@ namespace Microsoft.HealthVault
         ///
         public bool CancelAllRequests
         {
-            get { return _cancelAllRequests; }
+            get { return this.cancelAllRequests; }
+
             set
             {
                 if (value)
                 {
-                    lock (_pendingRequests)
+                    lock (this.PendingRequests)
                     {
-                        for (int index = _pendingRequests.Count - 1; index >= 0; --index)
+                        for (int index = this.PendingRequests.Count - 1; index >= 0; --index)
                         {
-                            _pendingRequests[index].CancelRequest();
-                            _pendingRequests.RemoveAt(index);
+                            this.PendingRequests[index].CancelRequest();
+                            this.PendingRequests.RemoveAt(index);
                         }
                     }
                 }
-                _cancelAllRequests = value;
+
+                this.cancelAllRequests = value;
             }
         }
-        private bool _cancelAllRequests;
 
-        internal List<HealthServiceRequest> PendingRequests
-        {
-            get { return _pendingRequests; }
-        }
-        private List<HealthServiceRequest> _pendingRequests = new List<HealthServiceRequest>();
+        private bool cancelAllRequests;
+
+        internal List<HealthServiceRequest> PendingRequests { get; } = new List<HealthServiceRequest>();
 
         #region GetServiceDefinitionAsync
 
@@ -442,7 +431,8 @@ namespace Microsoft.HealthVault
         /// One or more URL strings returned by HealthVault is invalid.
         /// </exception>
         ///
-        public async Task<ServiceInfo> GetServiceDefinitionAsync(ServiceInfoSections responseSections,
+        public async Task<ServiceInfo> GetServiceDefinitionAsync(
+            ServiceInfoSections responseSections,
             DateTime lastUpdatedTime)
         {
             return await HealthVaultPlatform.GetServiceDefinitionAsync(this, responseSections, lastUpdatedTime).ConfigureAwait(false);
@@ -469,18 +459,7 @@ namespace Microsoft.HealthVault
         /// which is the value returned by System.Net.WebRequest.DefaultWebProxy.
         /// </remarks>
         ///
-        internal static IWebProxy DefaultWebProxy
-        {
-            get
-            {
-                return _defaultWebProxy;
-            }
-            set
-            {
-                _defaultWebProxy = value;
-            }
-        }
-        private static IWebProxy _defaultWebProxy;
+        internal static IWebProxy DefaultWebProxy { get; set; }
 
         /// <summary>
         /// Gets or sets the proxy to use with this instance of
@@ -488,7 +467,7 @@ namespace Microsoft.HealthVault
         /// </summary>
         ///
         /// <remarks>
-        /// The default setting is to use <see cref="WebRequest.DefaultWebProxy"/>.
+        /// The default setting is to use.
         /// To disable proxy usage, set this property to <b>null</b>.
         /// </remarks>
         ///
@@ -496,32 +475,13 @@ namespace Microsoft.HealthVault
         /// An instance of <see cref="IWebProxy"/>.
         /// </value>
         ///
-        public IWebProxy WebProxy
-        {
-            get
-            {
-                return _webProxy;
-            }
-            set
-            {
-                _webProxy = value;
-            }
-        }
-        private IWebProxy _webProxy = DefaultWebProxy;
+        public IWebProxy WebProxy { get; set; } = DefaultWebProxy;
 
         /// <summary>
         /// Gets the calling application's ID.
         /// </summary>
         ///
-        public Guid ApplicationId
-        {
-            get
-            {
-                return _applicationId;
-            }
-        }
-        private Guid _applicationId =
-            HealthApplicationConfiguration.Current.ApplicationId;
+        public Guid ApplicationId { get; } = HealthApplicationConfiguration.Current.ApplicationId;
 
         /// <summary>
         /// Gets the HealthVault web-service URL.
@@ -535,14 +495,16 @@ namespace Microsoft.HealthVault
         {
             get
             {
-                if (_requestUrl == null)
+                if (this.requestUrl == null)
                 {
                     return HealthApplicationConfiguration.Current.GetHealthVaultMethodUrl();
                 }
-                return _requestUrl;
+
+                return this.requestUrl;
             }
         }
-        private Uri _requestUrl;
+
+        private readonly Uri requestUrl;
 
         /// <summary>
         /// Gets the HealthVault web-service instance associated with this connection.
@@ -562,61 +524,20 @@ namespace Microsoft.HealthVault
         /// An instance of Uri representing the HealthVault web-service URL.
         /// </value>
         ///
-        internal Uri OtherDataStreamUrl
-        {
-            get
-            {
-                return _otherDataStreamUrl;
-            }
-        }
-        private Uri _otherDataStreamUrl =
-            HealthApplicationConfiguration.Current.GetBlobStreamUrl();
+        internal Uri OtherDataStreamUrl { get; } = HealthApplicationConfiguration.Current.GetBlobStreamUrl();
 
         /// <summary>
         /// Gets or sets the request timeout in seconds.
         /// </summary>
         ///
-        public int RequestTimeoutSeconds
-        {
-            get
-            {
-                return _requestTimeoutSeconds;
-            }
-            set
-            {
-                _requestTimeoutSeconds = value;
-            }
-        }
-        private int _requestTimeoutSeconds =
-            HealthApplicationConfiguration.Current.DefaultRequestTimeout;
+        public int RequestTimeoutSeconds { get; set; } = HealthApplicationConfiguration.Current.DefaultRequestTimeout;
 
         /// <summary>
         /// Gets or sets the request time-to-live in seconds.
         /// </summary>
         ///
-        public int RequestTimeToLive
-        {
-            get
-            {
-                return _requestTimeToLive;
-            }
-            set
-            {
-                _requestTimeToLive = value;
-            }
-        }
-        private int _requestTimeToLive =
-            HealthApplicationConfiguration.Current.DefaultRequestTimeToLive;
+        public int RequestTimeToLive { get; set; } = HealthApplicationConfiguration.Current.DefaultRequestTimeToLive;
 
-        /// <summary>
-        /// Gets or sets the language to be sent to the server when making
-        /// requests.
-        /// </summary>
-        ///
-        /// <value>
-        /// A CultureInfo representing the language.
-        /// </value>
-        ///
         /// <summary>
         /// Gets or sets the language to be sent to the server when making
         /// requests.
@@ -630,14 +551,16 @@ namespace Microsoft.HealthVault
         {
             get
             {
-                return _culture != null ? _culture : CultureInfo.CurrentUICulture;
+                return this.culture ?? CultureInfo.CurrentUICulture;
             }
+
             set
             {
-                _culture = value;
+                this.culture = value;
             }
         }
-        private CultureInfo _culture;
+
+        private CultureInfo culture;
 
         /// <summary>
         /// Gets or sets the request compression method for this connection.
@@ -651,30 +574,31 @@ namespace Microsoft.HealthVault
         {
             get
             {
-                return _requestCompressionMethod;
+                return this.requestCompressionMethod;
             }
+
             set
             {
-                _requestCompressionMethod = value;
+                this.requestCompressionMethod = value;
 
-                if (String.IsNullOrEmpty(_requestCompressionMethod))
+                if (string.IsNullOrEmpty(this.requestCompressionMethod))
                 {
-                    _requestCompressionMethod = String.Empty;
+                    this.requestCompressionMethod = string.Empty;
                 }
                 else
                 {
-                    if (!String.Equals(
-                            _requestCompressionMethod, "gzip", StringComparison.OrdinalIgnoreCase)
-                        && !String.Equals(
-                            _requestCompressionMethod, "deflate",
-                            StringComparison.OrdinalIgnoreCase))
+                    if (!string.Equals(
+                            this.requestCompressionMethod, "gzip", StringComparison.OrdinalIgnoreCase)
+                        && !string.Equals(
+                            this.requestCompressionMethod, "deflate", StringComparison.OrdinalIgnoreCase))
                     {
                         throw Validator.HealthServiceException("InvalidRequestCompressionMethod");
                     }
                 }
             }
         }
-        private string _requestCompressionMethod = "gzip";
+
+        private string requestCompressionMethod = "gzip";
 
         #endregion public properties
 
@@ -722,7 +646,7 @@ namespace Microsoft.HealthVault
         ///
         /// <remarks>
         /// The authorization token can be retrieved using the
-        /// <see cref="Authentication.Credential.CreateAuthenticatedSessionToken"/> web method from
+        /// <see cref="Authentication.Credential.CreateAuthenticatedSessionTokenAsync"/> web method from
         /// HealthVault or by calling the HealthVault Shell authentication web page.
         /// <br/><br/>
         /// </remarks>
@@ -731,18 +655,19 @@ namespace Microsoft.HealthVault
         {
             get
             {
-                if (_credential == null)
+                if (this.credentialValue == null)
                 {
                     return null;
                 }
 
                 CreateAuthenticationTokenResult result =
-                    Credential.GetAuthenticationResult(ApplicationId);
+                    this.Credential.GetAuthenticationResult(this.ApplicationId);
 
                 if (result == null)
                 {
                     throw Validator.HealthServiceException("ConnectionNotAuthenticated");
                 }
+
                 return result.AuthenticationToken;
             }
         }
@@ -758,13 +683,15 @@ namespace Microsoft.HealthVault
         ///
         public Credential Credential
         {
-            get { return _credential; }
+            get { return this.credentialValue; }
+
             set
             {
                 Validator.ThrowIfArgumentNull(value, "Credential", "CredentialMustBeSpecified");
-                _credential = value;
+                this.credentialValue = value;
             }
         }
-        internal Credential _credential;
+
+        private Credential credentialValue;
     }
 }

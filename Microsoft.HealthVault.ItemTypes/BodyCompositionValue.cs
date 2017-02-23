@@ -5,6 +5,7 @@
 
 using System.Xml;
 using System.Xml.XPath;
+using Microsoft.HealthVault.Helpers;
 
 namespace Microsoft.HealthVault.ItemTypes
 {
@@ -14,21 +15,6 @@ namespace Microsoft.HealthVault.ItemTypes
     ///
     public class BodyCompositionValue : HealthRecordItemData
     {
-        /// <summary>
-        /// Constructs a new instance of the <see cref="BodyCompositionValue"/> class
-        /// with default values.
-        /// </summary>
-        ///
-        /// <remarks>
-        /// The mass-value element is used to store mass values, and the percentage-value is
-        /// used to store precentages. An application should set one or the other. When both
-        /// values are available, they should be stored in separate instance.
-        /// </remarks>
-        ///
-        public BodyCompositionValue()
-        {
-        }
-
         /// <summary>
         /// Populates this <see cref="BodyCompositionValue"/> instance from the data in the XML.
         /// </summary>
@@ -46,13 +32,13 @@ namespace Microsoft.HealthVault.ItemTypes
             Validator.ThrowIfNavigatorNull(navigator);
 
             // mass-value (t:weigth-value)
-            _massValue = XPathHelper.GetOptNavValue<WeightValue>(navigator, "mass-value");
+            this.massValue = XPathHelper.GetOptNavValue<WeightValue>(navigator, "mass-value");
 
             // percent-value (t:percentage)
             XPathNavigator percentValueNav = navigator.SelectSingleNode("percent-value");
             if (percentValueNav != null)
             {
-                _percentValue = percentValueNav.ValueAsDouble;
+                this.percentValue = percentValueNav.ValueAsDouble;
             }
         }
 
@@ -88,13 +74,13 @@ namespace Microsoft.HealthVault.ItemTypes
             XmlWriterHelper.WriteOpt(
                 writer,
                 "mass-value",
-                _massValue);
+                this.massValue);
 
             // percent-value
             XmlWriterHelper.WriteOptDouble(
                 writer,
                 "percent-value",
-                _percentValue);
+                this.percentValue);
 
             // </body-composition-value>
             writer.WriteEndElement();
@@ -110,10 +96,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public WeightValue MassValue
         {
-            get { return _massValue; }
-            set { _massValue = value; }
+            get { return this.massValue; }
+            set { this.massValue = value; }
         }
-        private WeightValue _massValue;
+
+        private WeightValue massValue;
 
         /// <summary>
         /// Gets or sets a body composition measurement stored as a percentage.
@@ -125,17 +112,19 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public double? PercentValue
         {
-            get { return _percentValue; }
+            get { return this.percentValue; }
+
             set
             {
                 Validator.ThrowArgumentOutOfRangeIf(
                     (value > 1.0) || (value < 0.0),
                     "PercentValue",
                     "BodyCompositionValuePercentValueOutOfRange");
-                _percentValue = value;
+                this.percentValue = value;
             }
         }
-        private double? _percentValue;
+
+        private double? percentValue;
 
         /// <summary>
         /// Gets a string representation of BodyCompositionValue.
@@ -147,25 +136,28 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public override string ToString()
         {
-            if (_massValue != null && _percentValue != null)
+            if (this.massValue != null && this.percentValue != null)
             {
                 return string.Format(
                         ResourceRetriever.GetResourceString(
                             "BodyCompositionValueToStringFormatMassAndPercent"),
-                        _massValue.ToString(),
-                        _percentValue * 100);
+                        this.massValue.ToString(),
+                        this.percentValue * 100);
             }
-            if (_massValue != null)
+
+            if (this.massValue != null)
             {
-                return _massValue.ToString();
+                return this.massValue.ToString();
             }
-            if (_percentValue != null)
+
+            if (this.percentValue != null)
             {
                 return string.Format(
                     ResourceRetriever.GetResourceString(
                         "Percent"),
-                    _percentValue * 100);
+                    this.percentValue * 100);
             }
+
             return string.Empty;
         }
     }

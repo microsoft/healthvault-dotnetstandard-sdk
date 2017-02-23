@@ -3,6 +3,8 @@
 // see http://www.microsoft.com/resources/sharedsource/licensingbasics/sharedsourcelicenses.mspx.
 // All other rights reserved.
 
+using Microsoft.HealthVault.Helpers;
+
 namespace Microsoft.HealthVault.ItemTypes
 {
     /// <summary>
@@ -18,12 +20,12 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <param name="value2">The second data value of this sample.</param>
         public ExerciseSampleTwoValue(double offsetInSeconds, double value1, double value2)
         {
-            OffsetInSeconds = offsetInSeconds;
-            Value1 = value1;
-            Value2 = value2;
+            this.OffsetInSeconds = offsetInSeconds;
+            this.Value1 = value1;
+            this.Value2 = value2;
         }
 
-        private double _offsetInSeconds;
+        private double offsetInSeconds;
 
         /// <summary>
         /// Gets or sets the offset in seconds of this data sample from the beginning of the sample set.
@@ -38,37 +40,38 @@ namespace Microsoft.HealthVault.ItemTypes
         /// </exception>
         public double OffsetInSeconds
         {
-            get { return _offsetInSeconds; }
+            get { return this.offsetInSeconds; }
+
             set
             {
                 Validator.ThrowArgumentOutOfRangeIf(
                     value < 0,
                     "OffsetInSeconds",
                     "OffsetMustBePositive");
-                _offsetInSeconds = value;
+                this.offsetInSeconds = value;
             }
         }
 
-        private double _value1;
+        private double value1;
 
         /// <summary>
         /// Gets or sets the first data value stored in the sample.
         /// </summary>
         public double Value1
         {
-            get { return _value1; }
-            set { _value1 = value; }
+            get { return this.value1; }
+            set { this.value1 = value; }
         }
 
-        private double _value2;
+        private double value2;
 
         /// <summary>
         /// Gets or sets the second data value stored in the sample.
         /// </summary>
         public double Value2
         {
-            get { return _value2; }
-            set { _value2 = value; }
+            get { return this.value2; }
+            set { this.value2 = value; }
         }
 
         /// <summary>
@@ -80,9 +83,9 @@ namespace Microsoft.HealthVault.ItemTypes
                 string.Format(
                     ResourceRetriever.GetResourceString(
                         "ExerciseSampleTwoValueToStringFormat"),
-                    OffsetInSeconds.ToString(),
-                    Value1.ToString(),
-                    Value2.ToString());
+                    this.OffsetInSeconds.ToString(),
+                    this.Value1.ToString(),
+                    this.Value2.ToString());
         }
     }
 }

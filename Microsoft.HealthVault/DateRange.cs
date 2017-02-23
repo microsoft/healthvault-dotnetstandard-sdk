@@ -4,6 +4,7 @@
 // All other rights reserved.
 
 using System;
+using Microsoft.HealthVault.Helpers;
 
 namespace Microsoft.HealthVault
 {
@@ -37,8 +38,8 @@ namespace Microsoft.HealthVault
                 "dateMin",
                 "DateRangeMinLessThanMax");
 
-            _start = start;
-            _end = end;
+            this.Start = start;
+            this.End = end;
         }
 
         /// <summary>
@@ -49,12 +50,7 @@ namespace Microsoft.HealthVault
         /// A DateTime value.
         /// </value>
         ///
-        public DateTime Start
-        {
-            get { return _start; }
-        }
-
-        private DateTime _start = DateTime.MinValue;
+        public DateTime Start { get; } = DateTime.MinValue;
 
         /// <summary>
         /// Gets the maximum date of the range.
@@ -64,11 +60,6 @@ namespace Microsoft.HealthVault
         /// A DateTime value.
         /// </value>
         ///
-        public DateTime End
-        {
-            get { return _end; }
-        }
-
-        private DateTime _end = DateTime.MaxValue;
+        public DateTime End { get; } = DateTime.MaxValue;
     }
 }

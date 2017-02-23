@@ -4,8 +4,9 @@
 // All other rights reserved.
 
 using System;
+using Microsoft.HealthVault.Helpers;
 
-namespace Microsoft.HealthVault
+namespace Microsoft.HealthVault.Thing
 {
     /// <summary>
     /// Uniquely identifies a health record item in the system.
@@ -46,8 +47,8 @@ namespace Microsoft.HealthVault
                 "versionStamp",
                 "ThingVersionInvalid");
 
-            _thingId = id;
-            _versionStamp = versionStamp;
+            this.thingId = id;
+            this.versionStamp = versionStamp;
         }
 
         /// <summary>
@@ -72,7 +73,7 @@ namespace Microsoft.HealthVault
                 "id",
                 "ThingIdInvalid");
 
-            _thingId = id;
+            this.thingId = id;
         }
 
         /// <summary>
@@ -84,32 +85,28 @@ namespace Microsoft.HealthVault
         /// issued when the item is created.
         /// </value>
         ///
-        public Guid Id
-        {
-            get { return _thingId; }
-        }
-        private Guid _thingId;
+        public Guid Id => this.thingId;
+
+        private Guid thingId;
 
         /// <summary>
         /// Gets the unique version stamp of the <see cref="HealthRecordItem"/>.
         /// </summary>
         ///
-        ///<value>
+        /// <value>
         /// A globally unique identifier that represents the version of the
         /// <see cref="HealthRecordItem"/>. A new version stamp is issued each
         /// time the item is changed.
-        ///</value>
+        /// </value>
         ///
-        ///<remarks>
+        /// <remarks>
         /// The version stamp of the current version of a <see cref="HealthRecordItem"/>
         /// is always equal to the <see cref="Id"/> of that item.
-        ///</remarks>
+        /// </remarks>
         ///
-        public Guid VersionStamp
-        {
-            get { return _versionStamp; }
-        }
-        private Guid _versionStamp;
+        public Guid VersionStamp => this.versionStamp;
+
+        private Guid versionStamp;
 
         /// <summary>
         /// Gets a string representation of the key.
@@ -121,11 +118,12 @@ namespace Microsoft.HealthVault
         ///
         public override string ToString()
         {
-            if (_versionStamp != Guid.Empty)
+            if (this.versionStamp != Guid.Empty)
             {
-                return _thingId.ToString() + "," + _versionStamp.ToString();
+                return this.thingId + "," + this.versionStamp;
             }
-            return _thingId.ToString();
+
+            return this.thingId.ToString();
         }
 
         /// <summary>
@@ -141,16 +139,17 @@ namespace Microsoft.HealthVault
         /// the same ID and version stamp; otherwise, <b>false</b>.
         /// </returns>
         ///
-        public override bool Equals(Object obj)
+        public override bool Equals(object obj)
         {
             bool result = false;
             HealthRecordItemKey rVal = obj as HealthRecordItemKey;
 
             if (rVal != null)
             {
-                result = (_versionStamp == rVal.VersionStamp)
-                       && (_thingId == rVal.Id);
+                result = (this.versionStamp == rVal.VersionStamp)
+                       && (this.thingId == rVal.Id);
             }
+
             return result;
         }
 
@@ -164,7 +163,7 @@ namespace Microsoft.HealthVault
         ///
         public override int GetHashCode()
         {
-            return _versionStamp.GetHashCode();
+            return this.versionStamp.GetHashCode();
         }
     }
 }

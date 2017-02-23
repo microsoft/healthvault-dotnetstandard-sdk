@@ -12,7 +12,7 @@ using System.Xml;
 using System.Xml.Linq;
 using System.Xml.XPath;
 
-namespace Microsoft.HealthVault
+namespace Microsoft.HealthVault.Helpers
 {
     /// <summary>
     /// HealthVault XML Helper Class
@@ -24,15 +24,16 @@ namespace Microsoft.HealthVault
         {
             get
             {
-                XmlReaderSettings settings = new XmlReaderSettings();
-
-                settings.CheckCharacters = true;
-                settings.CloseInput = true;
-                settings.ConformanceLevel = ConformanceLevel.Fragment;
-                settings.IgnoreComments = true;
-                settings.IgnoreProcessingInstructions = true;
-                settings.IgnoreWhitespace = true;
-                settings.DtdProcessing = DtdProcessing.Prohibit;
+                XmlReaderSettings settings = new XmlReaderSettings
+                {
+                    CheckCharacters = true,
+                    CloseInput = true,
+                    ConformanceLevel = ConformanceLevel.Fragment,
+                    IgnoreComments = true,
+                    IgnoreProcessingInstructions = true,
+                    IgnoreWhitespace = true,
+                    DtdProcessing = DtdProcessing.Prohibit
+                };
 
                 return settings;
             }
@@ -42,8 +43,7 @@ namespace Microsoft.HealthVault
         {
             get
             {
-                XmlReaderSettings settings = new XmlReaderSettings();
-                settings.DtdProcessing = DtdProcessing.Prohibit;
+                XmlReaderSettings settings = new XmlReaderSettings { DtdProcessing = DtdProcessing.Prohibit };
 
                 return settings;
             }
@@ -77,13 +77,14 @@ namespace Microsoft.HealthVault
         {
             get
             {
-                XmlWriterSettings settings = new XmlWriterSettings();
-
-                settings.CheckCharacters = true;
-                settings.CloseOutput = true;
-                settings.ConformanceLevel = ConformanceLevel.Fragment;
-                settings.Indent = false;
-                settings.OmitXmlDeclaration = true;
+                XmlWriterSettings settings = new XmlWriterSettings
+                {
+                    CheckCharacters = true,
+                    CloseOutput = true,
+                    ConformanceLevel = ConformanceLevel.Fragment,
+                    Indent = false,
+                    OmitXmlDeclaration = true
+                };
 
                 return settings;
             }
@@ -99,33 +100,33 @@ namespace Microsoft.HealthVault
         /// XML-formatted date time value
         /// </summary>
         ///
-        /// <returns></returns>
+        /// <returns>Xml formatted time from now</returns>
         ///
         internal static string XmlFromNow()
         {
-            return (XmlFromUtcDateTime(DateTime.UtcNow));
+            return XmlFromUtcDateTime(DateTime.UtcNow);
         }
 
         /// <summary>
         /// XML-formatted date time value
         /// </summary>
         ///
-        /// <param name="dateTime"></param>
+        /// <param name="dateTime">The date to format to XML</param>
         ///
-        /// <returns></returns>
+        /// <returns>Xml formatted time from the date</returns>
         ///
         internal static string XmlFromLocalDateTime(DateTime dateTime)
         {
-            return (XmlFromUtcDateTime(dateTime.ToUniversalTime()));
+            return XmlFromUtcDateTime(dateTime.ToUniversalTime());
         }
 
         /// <summary>
         /// XML Formatted date time value
         /// </summary>
         ///
-        /// <param name="dateTime"></param>
+        /// <param name="dateTime">The date to format to XML</param>
         ///
-        /// <returns></returns>
+        /// <returns>The date formatted to XML</returns>
         ///
         /// <exception cref="ArgumentException">
         /// If the date time value provided is not in UTC format.
@@ -138,20 +139,21 @@ namespace Microsoft.HealthVault
                 "dateTime",
                 "NonUTCDateTime");
 
-            return (XmlFromDateTime(dateTime));
+            return XmlFromDateTime(dateTime);
         }
 
         /// <summary>
         /// XML-formatted date time value
         /// </summary>
         ///
-        /// <param name="dateTime"></param>
+        /// <param name="dateTime">The date to format to XML</param>
         ///
-        /// <returns></returns>
+        /// <returns>The date formatted to XML</returns>
         ///
         internal static string XmlFromDateTime(DateTime dateTime)
         {
-            return dateTime.ToString("yyyy-MM-ddTHH:mm:ss.FFFZ",
+            return dateTime.ToString(
+                "yyyy-MM-ddTHH:mm:ss.FFFZ",
                     CultureInfo.InvariantCulture);
         }
 
@@ -159,12 +161,13 @@ namespace Microsoft.HealthVault
         /// Read until we find a node with the name
         /// </summary>
         ///
-        /// <param name="xmlReader"></param>
+        /// <param name="xmlReader">The XML to read</param>
         ///
-        /// <param name="elementName"></param>
+        /// <param name="elementName">The element to look for</param>
         ///
-        internal static bool ReadUntil(XmlReader xmlReader,
-                                    string elementName)
+        internal static bool ReadUntil(
+            XmlReader xmlReader,
+            string elementName)
         {
             Validator.ThrowIfArgumentNull(xmlReader, "xmlReader", "ArgumentNull");
             Validator.ThrowIfStringNullOrEmpty(elementName, "elementName");
@@ -173,8 +176,11 @@ namespace Microsoft.HealthVault
                 xmlReader.Name != elementName)
             {
                 if (!xmlReader.ReadToFollowing(elementName))
+                {
                     return false;
+                }
             }
+
             return true;
         }
 
@@ -182,7 +188,7 @@ namespace Microsoft.HealthVault
         /// Read until we get to the next element
         /// </summary>
         ///
-        /// <param name="xmlReader"></param>
+        /// <param name="xmlReader">The xml element to skip within</param>
         ///
         internal static bool SkipToElement(XmlReader xmlReader)
         {
@@ -191,8 +197,11 @@ namespace Microsoft.HealthVault
             while (xmlReader.NodeType != XmlNodeType.Element)
             {
                 if (!xmlReader.Read())
+                {
                     return false;
+                }
             }
+
             return true;
         }
 
@@ -203,10 +212,10 @@ namespace Microsoft.HealthVault
 
         internal static string[] SplitAndTrim(
                 string all,
-                Char separator)
+                char separator)
         {
             string[] parts = all.Split(
-                    new Char[] { separator },
+                    new[] { separator },
                     StringSplitOptions.RemoveEmptyEntries);
 
             for (int i = 0; i < parts.Length; ++i)
@@ -217,7 +226,7 @@ namespace Microsoft.HealthVault
             return parts;
         }
 
-        private static XPathExpression _infoPath = XPathExpression.Compile("/wc:info");
+        private static XPathExpression infoPath = XPathExpression.Compile("/wc:info");
 
         internal static XPathExpression GetInfoXPathExpressionForMethod(
             XPathNavigator infoNav,
@@ -229,10 +238,10 @@ namespace Microsoft.HealthVault
                 "wc",
                 "urn:com.microsoft.wc.methods.response." + methodName);
 
-            XPathExpression infoPathClone = null;
-            lock (_infoPath)
+            XPathExpression infoPathClone;
+            lock (infoPath)
             {
-                infoPathClone = _infoPath.Clone();
+                infoPathClone = infoPath.Clone();
             }
 
             infoPathClone.SetContext(infoXmlNamespaceManager);
@@ -242,12 +251,9 @@ namespace Microsoft.HealthVault
 
         public static XDocument SafeLoadXml(string text)
         {
-            using (var stringReader = new StringReader(text))
+            using (var xmlReader = XmlReader.Create(new StringReader(text), MinimumSafeXmlReaderSettings))
             {
-                using (var xmlReader = XmlReader.Create(stringReader, MinimumSafeXmlReaderSettings))
-                {
-                    return XDocument.Load(xmlReader);
-                }
+                return XDocument.Load(xmlReader);
             }
         }
 

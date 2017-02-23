@@ -10,7 +10,7 @@ using System.Globalization;
 using System.Reflection;
 using System.Resources;
 
-namespace Microsoft.HealthVault
+namespace Microsoft.HealthVault.Helpers
 {
     /// <summary>
     /// Helps manage ResourceManager instances.
@@ -32,10 +32,7 @@ namespace Microsoft.HealthVault
         /// name for the resource that is being retrieved. The value for this
         /// dictionary is the ResourceManager.
         /// </summary>
-        static
-        private
-        Dictionary<string, Dictionary<string, ResourceManager>>
-            _resourceRetriever =
+        private static readonly Dictionary<string, Dictionary<string, ResourceManager>> ResourceRetrieverValue =
             new Dictionary<string, Dictionary<string, ResourceManager>>(
                 StringComparer.OrdinalIgnoreCase);
 
@@ -54,13 +51,13 @@ namespace Microsoft.HealthVault
         /// frequently.
         /// </remarks>
         ///
-        private static Dictionary<ResourceManager, Dictionary<string, Dictionary<string, string>>> _stringResources =
+        private static readonly Dictionary<ResourceManager, Dictionary<string, Dictionary<string, string>>> StringResources =
             new Dictionary<ResourceManager, Dictionary<string, Dictionary<string, string>>>();
 
         /// <summary>
         /// Used to synchronize access to the ResourceRetriever
         /// </summary>
-        private static object syncRoot = new Object();
+        private static readonly object SyncRoot = new object();
 
         /// <summary>
         /// Gets the ResourceManager from the cache or gets an instance of
@@ -85,16 +82,11 @@ namespace Microsoft.HealthVault
             Assembly assembly,
             string baseName)
         {
-            baseName = "resources";
+            baseName = baseName ?? "resources";
 
             if (assembly == null)
             {
-                throw new ArgumentNullException("assembly");
-            }
-
-            if (String.IsNullOrEmpty(baseName))
-            {
-                throw new ArgumentException("baseName cannot be null", "baseName");
+                throw new ArgumentNullException(nameof(assembly));
             }
 
             // Check to see if the manager is already in the cache
@@ -102,14 +94,14 @@ namespace Microsoft.HealthVault
             ResourceManager manager = null;
             Dictionary<string, ResourceManager> baseNameCache = null;
 
-            lock (syncRoot)
+            lock (SyncRoot)
             {
                 // First do the lookup based on the assembly location
 
-                if (_resourceRetriever.ContainsKey(assembly.FullName))
+                if (ResourceRetrieverValue.ContainsKey(assembly.FullName))
                 {
                     baseNameCache =
-                        _resourceRetriever[assembly.FullName];
+                        ResourceRetrieverValue[assembly.FullName];
 
                     if (baseNameCache != null)
                     {
@@ -132,7 +124,7 @@ namespace Microsoft.HealthVault
 
                 if (baseNameCache != null)
                 {
-                    lock (syncRoot)
+                    lock (SyncRoot)
                     {
                         // Since the assembly is already cached, we just have
                         // to cache the base name entry
@@ -147,13 +139,11 @@ namespace Microsoft.HealthVault
                     // keyed by the assembly location
 
                     Dictionary<string, ResourceManager> baseNameCacheEntry =
-                        new Dictionary<string, ResourceManager>();
+                        new Dictionary<string, ResourceManager> { [baseName] = manager };
 
-                    baseNameCacheEntry[baseName] = manager;
-
-                    lock (syncRoot)
+                    lock (SyncRoot)
                     {
-                        _resourceRetriever[assembly.FullName] =
+                        ResourceRetrieverValue[assembly.FullName] =
                             baseNameCacheEntry;
                     }
                 }
@@ -300,17 +290,17 @@ namespace Microsoft.HealthVault
         {
             if (assembly == null)
             {
-                throw new ArgumentNullException("assembly");
+                throw new ArgumentNullException(nameof(assembly));
             }
 
-            if (String.IsNullOrEmpty(baseName))
+            if (string.IsNullOrEmpty(baseName))
             {
-                throw new ArgumentException("baseName cannot be null", "baseName");
+                throw new ArgumentException("baseName cannot be null", nameof(baseName));
             }
 
-            if (String.IsNullOrEmpty(resourceId))
+            if (string.IsNullOrEmpty(resourceId))
             {
-                throw new ArgumentException("resourceId cannot be null", "resourceId");
+                throw new ArgumentException("resourceId cannot be null", nameof(resourceId));
             }
 
             ResourceManager resourceManager =
@@ -321,37 +311,39 @@ namespace Microsoft.HealthVault
             string text = null;
             string currentCulture = CultureInfo.CurrentUICulture.Name;
 
-            if (_stringResources.ContainsKey(resourceManager) &&
-                _stringResources[resourceManager].ContainsKey(currentCulture) &&
-                _stringResources[resourceManager][currentCulture].ContainsKey(resourceId))
+            if (StringResources.ContainsKey(resourceManager) &&
+                StringResources[resourceManager].ContainsKey(currentCulture) &&
+                StringResources[resourceManager][currentCulture].ContainsKey(resourceId))
             {
-                text = _stringResources[resourceManager][currentCulture][resourceId];
+                text = StringResources[resourceManager][currentCulture][resourceId];
             }
             else
             {
                 text = resourceManager.GetString(resourceId);
 
-                if (!_stringResources.ContainsKey(resourceManager))
+                if (!StringResources.ContainsKey(resourceManager))
                 {
-                    _stringResources.Add(resourceManager, new Dictionary<string, Dictionary<string, string>>());
+                    StringResources.Add(resourceManager, new Dictionary<string, Dictionary<string, string>>());
                 }
 
-                if (!_stringResources[resourceManager].ContainsKey(currentCulture))
+                if (!StringResources[resourceManager].ContainsKey(currentCulture))
                 {
-                    _stringResources[resourceManager].Add(currentCulture, new Dictionary<string, string>());
+                    StringResources[resourceManager].Add(currentCulture, new Dictionary<string, string>());
                 }
 
-                _stringResources[resourceManager][currentCulture].Add(resourceId, text);
+                StringResources[resourceManager][currentCulture].Add(resourceId, text);
             }
 
-            if (String.IsNullOrEmpty(text))
+            if (string.IsNullOrEmpty(text))
             {
-                Debug.Assert(false,
+                Debug.Assert(
+                    false,
                     "Lookup failure: baseName " +
                     baseName +
                     " resourceId " +
                     resourceId);
             }
+
             return text;
         }
 
@@ -398,7 +390,7 @@ namespace Microsoft.HealthVault
         {
             string baseName = "resources";
 
-            if (String.IsNullOrEmpty(resourceId))
+            if (string.IsNullOrEmpty(resourceId))
             {
                 throw new ArgumentException("resourceId cannot be null", nameof(resourceId));
             }
@@ -410,14 +402,15 @@ namespace Microsoft.HealthVault
                     resourceId);
 
             string result = null;
-            if (null != template)
+            if (template != null)
             {
                 result =
-                    String.Format(
+                    string.Format(
                         CultureInfo.CurrentCulture,
                         template,
                         args);
             }
+
             return result;
         }
 
@@ -454,10 +447,7 @@ namespace Microsoft.HealthVault
                                     baseName,
                                     "XSpace");
 
-            if (xSpace != null)
-            {
-                xSpace = xSpace.Substring(1);
-            }
+            xSpace = xSpace?.Substring(1);
 
             return xSpace;
         }

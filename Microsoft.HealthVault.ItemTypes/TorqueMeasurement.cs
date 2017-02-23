@@ -6,6 +6,7 @@
 using System.Globalization;
 using System.Xml;
 using System.Xml.XPath;
+using Microsoft.HealthVault.Helpers;
 
 namespace Microsoft.HealthVault.ItemTypes
 {
@@ -29,7 +30,7 @@ namespace Microsoft.HealthVault.ItemTypes
         /// class with empty values.
         /// </summary>
         ///
-        public TorqueMeasurement() : base()
+        public TorqueMeasurement()
         {
         }
 
@@ -99,7 +100,7 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         protected override void ParseValueXml(XPathNavigator navigator)
         {
-            Value = navigator.SelectSingleNode("newton-meters").ValueAsDouble;
+            this.Value = navigator.SelectSingleNode("newton-meters").ValueAsDouble;
         }
 
         /// <summary>
@@ -114,7 +115,7 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             writer.WriteElementString(
                 "newton-meters",
-                XmlConvert.ToString(Value));
+                XmlConvert.ToString(this.Value));
         }
 
         /// <summary>

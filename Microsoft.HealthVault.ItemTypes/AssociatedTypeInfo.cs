@@ -6,6 +6,7 @@
 using System;
 using System.Xml;
 using System.Xml.XPath;
+using Microsoft.HealthVault.Helpers;
 
 namespace Microsoft.HealthVault.ItemTypes
 {
@@ -34,7 +35,7 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public AssociatedTypeInfo(Guid thingTypeVersionId)
         {
-            ThingTypeVersionId = thingTypeVersionId;
+            this.ThingTypeVersionId = thingTypeVersionId;
         }
 
         /// <summary>
@@ -64,9 +65,9 @@ namespace Microsoft.HealthVault.ItemTypes
             Validator.ThrowInvalidIfNull(thingTypeVersionId, "AssociatedThingTypeVersionIdNullorEmpty");
             Validator.ThrowInvalidIf(thingTypeVersionId.Equals(Guid.Empty), "AssociatedThingTypeVersionIdNullorEmpty");
 
-            _thingTypeVersionId = thingTypeVersionId.Value;
-            _thingTypeValueXPath = XPathHelper.GetOptNavValue(navigator, "thing-type-value-xpath");
-            _thingTypeDisplayXPath = XPathHelper.GetOptNavValue(navigator, "thing-type-display-xpath");
+            this.thingTypeVersionId = thingTypeVersionId.Value;
+            this.thingTypeValueXPath = XPathHelper.GetOptNavValue(navigator, "thing-type-value-xpath");
+            this.thingTypeDisplayXPath = XPathHelper.GetOptNavValue(navigator, "thing-type-display-xpath");
         }
 
         /// <summary>
@@ -111,11 +112,11 @@ namespace Microsoft.HealthVault.ItemTypes
 
             writer.WriteStartElement(nodeName);
 
-            Validator.ThrowInvalidIf(_thingTypeVersionId.Equals(Guid.Empty), "AssociatedThingTypeVersionIdNullorEmpty");
+            Validator.ThrowInvalidIf(this.thingTypeVersionId.Equals(Guid.Empty), "AssociatedThingTypeVersionIdNullorEmpty");
 
-            XmlWriterHelper.WriteOptGuid(writer, "thing-type-version-id", _thingTypeVersionId);
-            XmlWriterHelper.WriteOptString(writer, "thing-type-value-xpath", _thingTypeValueXPath);
-            XmlWriterHelper.WriteOptString(writer, "thing-type-display-xpath", _thingTypeDisplayXPath);
+            XmlWriterHelper.WriteOptGuid(writer, "thing-type-version-id", this.thingTypeVersionId);
+            XmlWriterHelper.WriteOptString(writer, "thing-type-value-xpath", this.thingTypeValueXPath);
+            XmlWriterHelper.WriteOptString(writer, "thing-type-display-xpath", this.thingTypeDisplayXPath);
             writer.WriteEndElement();
         }
 
@@ -131,17 +132,17 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             get
             {
-                return _thingTypeVersionId;
+                return this.thingTypeVersionId;
             }
 
             set
             {
                 Validator.ThrowArgumentExceptionIf(value.Equals(Guid.Empty), "thingTypeVersionId", "AssociatedThingTypeVersionIdNullorEmpty");
-                _thingTypeVersionId = value;
+                this.thingTypeVersionId = value;
             }
         }
 
-        private Guid _thingTypeVersionId;
+        private Guid thingTypeVersionId;
 
         /// <summary>
         /// Gets or sets xPath expression for the value field associated with this goal or task in the thing type.
@@ -160,7 +161,7 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             get
             {
-                return _thingTypeValueXPath;
+                return this.thingTypeValueXPath;
             }
 
             set
@@ -171,11 +172,11 @@ namespace Microsoft.HealthVault.ItemTypes
                         ResourceRetriever.GetResourceString("errors", "WhitespaceOnlyValue"), nameof(value));
                 }
 
-                _thingTypeValueXPath = value;
+                this.thingTypeValueXPath = value;
             }
         }
 
-        private string _thingTypeValueXPath;
+        private string thingTypeValueXPath;
 
         /// <summary>
         /// Gets or sets xPath expression for the display field associated with this goal or task in the thing type.
@@ -194,7 +195,7 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             get
             {
-                return _thingTypeDisplayXPath;
+                return this.thingTypeDisplayXPath;
             }
 
             set
@@ -205,10 +206,10 @@ namespace Microsoft.HealthVault.ItemTypes
                         ResourceRetriever.GetResourceString("errors", "WhitespaceOnlyValue"), nameof(value));
                 }
 
-                _thingTypeDisplayXPath = value;
+                this.thingTypeDisplayXPath = value;
             }
         }
 
-        private string _thingTypeDisplayXPath;
+        private string thingTypeDisplayXPath;
     }
 }

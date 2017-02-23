@@ -5,7 +5,7 @@
 
 using System;
 
-namespace Microsoft.HealthVault
+namespace Microsoft.HealthVault.Thing
 {
     /// <summary>
     /// Provides values that indicate the rights associated with access to a

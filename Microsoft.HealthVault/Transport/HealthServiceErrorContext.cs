@@ -3,12 +3,11 @@
 // see http://www.microsoft.com/resources/sharedsource/licensingbasics/sharedsourcelicenses.mspx.
 // All other rights reserved.
 
-using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Net;
 
-namespace Microsoft.HealthVault
+namespace Microsoft.HealthVault.Transport
 {
     /// <summary>
     /// Contains the error context of the service when the error occurred.
@@ -25,12 +24,7 @@ namespace Microsoft.HealthVault
         /// A string representing the server name.
         /// </value>
         ///
-        public string ServerName
-        {
-            get { return _serverName; }
-            internal set { _serverName = value; }
-        }
-        private string _serverName;
+        public string ServerName { get; internal set; }
 
         /// <summary>
         /// Gets the IP addresses of the server that was handling the request
@@ -41,15 +35,11 @@ namespace Microsoft.HealthVault
         /// A read-only collection of IP addresses.
         /// </value>
         ///
-        public ReadOnlyCollection<IPAddress> ServerIPAddresses
-        {
-            get { return _serverIPAddresses; }
-        }
-        private ReadOnlyCollection<IPAddress> _serverIPAddresses;
+        public ReadOnlyCollection<IPAddress> ServerIPAddresses { get; private set; }
 
         internal void SetServerIpAddresses(IList<IPAddress> ipAddresses)
         {
-            _serverIPAddresses =
+            this.ServerIPAddresses =
                 new ReadOnlyCollection<IPAddress>(ipAddresses);
         }
 
@@ -67,12 +57,7 @@ namespace Microsoft.HealthVault
         /// handling the request.
         /// </remarks>
         ///
-        public string InnerException
-        {
-            get { return _innerException; }
-            internal set { _innerException = value; }
-        }
-        private string _innerException;
+        public string InnerException { get; internal set; }
 
         /// <summary>
         /// Retrieves the string representation of the <see cref="HealthServiceErrorContext"/>
@@ -86,16 +71,14 @@ namespace Microsoft.HealthVault
         ///
         public override string ToString()
         {
-            string result = _serverName;
+            string result = this.ServerName;
 
-            foreach (IPAddress serverIP in _serverIPAddresses)
+            foreach (IPAddress serverIP in this.ServerIPAddresses)
             {
-                result = String.Join(" ",
-                    new string[] { result, serverIP.ToString() });
+                result = string.Join(" ", result, serverIP.ToString());
             }
 
-            result = String.Join(" ",
-                new string[] { result, _innerException });
+            result = string.Join(" ", result, this.InnerException);
 
             return result;
         }

@@ -5,6 +5,7 @@
 
 using System.Xml;
 using System.Xml.XPath;
+using Microsoft.HealthVault.Helpers;
 
 namespace Microsoft.HealthVault.ItemTypes
 {
@@ -22,15 +23,6 @@ namespace Microsoft.HealthVault.ItemTypes
     public class FamilyHistoryRelative : HealthRecordItemData
     {
         /// <summary>
-        /// Initialize a new instance of the <see cref="FamilyHistoryRelative"/>
-        /// class with default values.
-        /// </summary>
-        ///
-        public FamilyHistoryRelative()
-        {
-        }
-
-        /// <summary>
         /// Populates this <see cref="FamilyHistoryRelative"/> instance from the data in the XML.
         /// </summary>
         ///
@@ -46,16 +38,16 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             Validator.ThrowIfNavigatorNull(navigator);
 
-            _relativeName =
+            this.relativeName =
                 XPathHelper.GetOptNavValue<PersonItem>(navigator, "relative-name");
 
-            _relationship =
+            this.relationship =
                 XPathHelper.GetOptNavValue<CodableValue>(navigator, "relationship");
 
-            _dateOfBirth =
+            this.dateOfBirth =
                 XPathHelper.GetOptNavValue<ApproximateDate>(navigator, "date-of-birth");
 
-            _dateOfDeath =
+            this.dateOfDeath =
                 XPathHelper.GetOptNavValue<ApproximateDate>(navigator, "date-of-death");
         }
 
@@ -95,25 +87,25 @@ namespace Microsoft.HealthVault.ItemTypes
             XmlWriterHelper.WriteOpt(
                 writer,
                 "relative-name",
-                _relativeName);
+                this.relativeName);
 
             // relationship
             XmlWriterHelper.WriteOpt(
                 writer,
                 "relationship",
-                _relationship);
+                this.relationship);
 
             // date-of-birth
             XmlWriterHelper.WriteOpt(
                 writer,
                 "date-of-birth",
-                _dateOfBirth);
+                this.dateOfBirth);
 
             // date-of-death
             XmlWriterHelper.WriteOpt(
                 writer,
                 "date-of-death",
-                _dateOfDeath);
+                this.dateOfDeath);
 
             // </family-history-relative>
             writer.WriteEndElement();
@@ -125,10 +117,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public PersonItem RelativeName
         {
-            get { return _relativeName; }
-            set { _relativeName = value; }
+            get { return this.relativeName; }
+            set { this.relativeName = value; }
         }
-        private PersonItem _relativeName;
+
+        private PersonItem relativeName;
 
         /// <summary>
         /// Gets or sets the relationship between the relative and the record owner.
@@ -140,10 +133,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public CodableValue Relationship
         {
-            get { return _relationship; }
-            set { _relationship = value; }
+            get { return this.relationship; }
+            set { this.relationship = value; }
         }
-        private CodableValue _relationship;
+
+        private CodableValue relationship;
 
         /// <summary>
         /// Gets or sets the date of birth of the relative.
@@ -155,10 +149,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public ApproximateDate DateOfBirth
         {
-            get { return _dateOfBirth; }
-            set { _dateOfBirth = value; }
+            get { return this.dateOfBirth; }
+            set { this.dateOfBirth = value; }
         }
-        private ApproximateDate _dateOfBirth;
+
+        private ApproximateDate dateOfBirth;
 
         /// <summary>
         /// Gets or sets the date of death of the relative.
@@ -170,10 +165,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public ApproximateDate DateOfDeath
         {
-            get { return _dateOfDeath; }
-            set { _dateOfDeath = value; }
+            get { return this.dateOfDeath; }
+            set { this.dateOfDeath = value; }
         }
-        private ApproximateDate _dateOfDeath;
+
+        private ApproximateDate dateOfDeath;
 
         /// <summary>
         /// Gets a string representation of the family history person item.
@@ -186,28 +182,29 @@ namespace Microsoft.HealthVault.ItemTypes
         public override string ToString()
         {
             string result = string.Empty;
-            if (_relativeName != null && _relationship != null)
+            if (this.relativeName != null && this.relationship != null)
             {
                 result =
                     string.Format(
                         ResourceRetriever.GetResourceString(
                             "FamilyHistoryRelativeToStringFormatNameAndRelationship"),
-                        _relativeName.ToString(),
-                        _relationship.ToString());
+                        this.relativeName.ToString(),
+                        this.relationship.ToString());
             }
-            else if (_relationship != null)
+            else if (this.relationship != null)
             {
                 result =
                     string.Format(
                         ResourceRetriever.GetResourceString(
                             "FamilyHistoryRelativeToStringFormatNameAndRelationship"),
                         string.Empty,
-                        _relationship.ToString());
+                        this.relationship.ToString());
             }
-            else if (_relativeName != null)
+            else if (this.relativeName != null)
             {
-                result = _relativeName.ToString();
+                result = this.relativeName.ToString();
             }
+
             return result;
         }
     }

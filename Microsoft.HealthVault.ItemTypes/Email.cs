@@ -5,6 +5,7 @@
 
 using System.Xml;
 using System.Xml.XPath;
+using Microsoft.HealthVault.Helpers;
 
 namespace Microsoft.HealthVault.ItemTypes
 {
@@ -90,7 +91,7 @@ namespace Microsoft.HealthVault.ItemTypes
 
             if (descNav != null)
             {
-                _description = descNav.Value;
+                this.description = descNav.Value;
             }
 
             XPathNavigator isPrimaryNav =
@@ -98,10 +99,10 @@ namespace Microsoft.HealthVault.ItemTypes
 
             if (isPrimaryNav != null)
             {
-                _isPrimary = isPrimaryNav.ValueAsBoolean;
+                this.isPrimary = isPrimaryNav.ValueAsBoolean;
             }
 
-            _address = navigator.SelectSingleNode("address").Value;
+            this.address = navigator.SelectSingleNode("address").Value;
         }
 
         /// <summary>
@@ -134,23 +135,23 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             Validator.ThrowIfStringNullOrEmpty(nodeName, "nodeName");
             Validator.ThrowIfWriterNull(writer);
-            Validator.ThrowSerializationIfNull(_address, "EmailAddressNotSet");
+            Validator.ThrowSerializationIfNull(this.address, "EmailAddressNotSet");
 
             writer.WriteStartElement(nodeName);
 
-            if (!string.IsNullOrEmpty(_description))
+            if (!string.IsNullOrEmpty(this.description))
             {
-                writer.WriteElementString("description", _description);
+                writer.WriteElementString("description", this.description);
             }
 
-            if (_isPrimary != null)
+            if (this.isPrimary != null)
             {
                 writer.WriteElementString(
                     "is-primary",
-                    SDKHelper.XmlFromBool((bool)_isPrimary));
+                    SDKHelper.XmlFromBool((bool)this.isPrimary));
             }
 
-            writer.WriteElementString("address", _address);
+            writer.WriteElementString("address", this.address);
 
             writer.WriteEndElement();
         }
@@ -173,14 +174,16 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public string Description
         {
-            get { return _description; }
+            get { return this.description; }
+
             set
             {
                 Validator.ThrowIfStringIsWhitespace(value, "Description");
-                _description = value;
+                this.description = value;
             }
         }
-        private string _description;
+
+        private string description;
 
         /// <summary>
         /// Gets or sets a value indicating whether the email address is the
@@ -197,10 +200,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public bool? IsPrimary
         {
-            get { return _isPrimary; }
-            set { _isPrimary = value; }
+            get { return this.isPrimary; }
+            set { this.isPrimary = value; }
         }
-        private bool? _isPrimary;
+
+        private bool? isPrimary;
 
         /// <summary>
         /// Gets or sets the email address.
@@ -217,14 +221,16 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public string Address
         {
-            get { return _address; }
+            get { return this.address; }
+
             set
             {
                 Validator.ThrowIfStringNullOrEmpty(value, "Addresses");
                 Validator.ThrowIfStringIsWhitespace(value, "Addresses");
-                _address = value;
+                this.address = value;
             }
         }
-        private string _address;
+
+        private string address;
     }
 }

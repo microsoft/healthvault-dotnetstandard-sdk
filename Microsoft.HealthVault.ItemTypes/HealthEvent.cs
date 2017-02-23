@@ -8,6 +8,8 @@ using System.Diagnostics.CodeAnalysis;
 using System.Text;
 using System.Xml;
 using System.Xml.XPath;
+using Microsoft.HealthVault.Helpers;
+using Microsoft.HealthVault.Thing;
 
 namespace Microsoft.HealthVault.ItemTypes
 {
@@ -66,8 +68,8 @@ namespace Microsoft.HealthVault.ItemTypes
             CodableValue eventValue)
         : base(TypeId)
         {
-            When = when;
-            Event = eventValue;
+            this.When = when;
+            this.Event = eventValue;
         }
 
         /// <summary>
@@ -78,7 +80,7 @@ namespace Microsoft.HealthVault.ItemTypes
         /// A GUID.
         /// </value>
         ///
-        public new static readonly Guid TypeId =
+        public static new readonly Guid TypeId =
             new Guid("1572af76-1653-4c39-9683-9f9ca6584ba3");
 
         /// <summary>
@@ -107,11 +109,11 @@ namespace Microsoft.HealthVault.ItemTypes
 
             Validator.ThrowInvalidIfNull(itemNav, "HealthEventUnexpectedNode");
 
-            _when = new ApproximateDateTime();
-            _when.ParseXml(itemNav.SelectSingleNode("when"));
-            _event = new CodableValue();
-            _event.ParseXml(itemNav.SelectSingleNode("event"));
-            _category = XPathHelper.GetOptNavValue<CodableValue>(itemNav, "category");
+            this.when = new ApproximateDateTime();
+            this.when.ParseXml(itemNav.SelectSingleNode("when"));
+            this.@event = new CodableValue();
+            this.@event.ParseXml(itemNav.SelectSingleNode("event"));
+            this.category = XPathHelper.GetOptNavValue<CodableValue>(itemNav, "category");
         }
 
         /// <summary>
@@ -137,14 +139,14 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             Validator.ThrowIfWriterNull(writer);
 
-            Validator.ThrowSerializationIfNull(_when, "WhenNullValue");
-            Validator.ThrowSerializationIfNull(_event, "EventNullValue");
+            Validator.ThrowSerializationIfNull(this.when, "WhenNullValue");
+            Validator.ThrowSerializationIfNull(this.@event, "EventNullValue");
 
             writer.WriteStartElement("health-event");
 
-            _when.WriteXml("when", writer);
-            _event.WriteXml("event", writer);
-            XmlWriterHelper.WriteOpt(writer, "category", _category);
+            this.when.WriteXml("when", writer);
+            this.@event.WriteXml("event", writer);
+            XmlWriterHelper.WriteOpt(writer, "category", this.category);
             writer.WriteEndElement();
         }
 
@@ -160,18 +162,18 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             get
             {
-                return _when;
+                return this.when;
             }
 
             set
             {
                 Validator.ThrowIfArgumentNull(value, "value", "WhenNullValue");
 
-                _when = value;
+                this.when = value;
             }
         }
 
-        private ApproximateDateTime _when;
+        private ApproximateDateTime when;
 
         /// <summary>
         /// Gets or sets the name of the health event.
@@ -186,18 +188,18 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             get
             {
-                return _event;
+                return this.@event;
             }
 
             set
             {
                 Validator.ThrowIfArgumentNull(value, "value", "EventNullValue");
 
-                _event = value;
+                this.@event = value;
             }
         }
 
-        private CodableValue _event;
+        private CodableValue @event;
 
         /// <summary>
         /// Gets or sets the category of the health event.
@@ -213,16 +215,16 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             get
             {
-                return _category;
+                return this.category;
             }
 
             set
             {
-                _category = value;
+                this.category = value;
             }
         }
 
-        private CodableValue _category;
+        private CodableValue category;
 
         /// <summary>
         /// Gets a string representation of the HealthEvent.
@@ -236,13 +238,13 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             StringBuilder result = new StringBuilder();
 
-            result.Append(_event.Text);
+            result.Append(this.@event.Text);
 
-            if (_category != null)
+            if (this.category != null)
             {
                 result.Append(ResourceRetriever.GetSpace("resources"));
                 result.Append(ResourceRetriever.GetResourceString("OpenParen"));
-                result.Append(_category.Text);
+                result.Append(this.category.Text);
                 result.Append(ResourceRetriever.GetResourceString("CloseParen"));
             }
 

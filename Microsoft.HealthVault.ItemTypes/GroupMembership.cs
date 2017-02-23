@@ -8,6 +8,8 @@ using System.Collections.ObjectModel;
 using System.Text;
 using System.Xml;
 using System.Xml.XPath;
+using Microsoft.HealthVault.Helpers;
+using Microsoft.HealthVault.Thing;
 
 namespace Microsoft.HealthVault.ItemTypes
 {
@@ -42,7 +44,7 @@ namespace Microsoft.HealthVault.ItemTypes
         /// A GUID.
         /// </value>
         ///
-        public new static readonly Guid TypeId =
+        public static new readonly Guid TypeId =
             new Guid("66ac44c7-1d60-4e95-bb5b-d21490e91057");
 
         /// <summary>
@@ -66,14 +68,15 @@ namespace Microsoft.HealthVault.ItemTypes
             Validator.ThrowInvalidIfNull(itemNav, "GroupMembershipUnexpectedNode");
 
             XPathNodeIterator membershipIterator = itemNav.Select("membership");
-            _groupMemberships.Clear();
+            this.groupMemberships.Clear();
             foreach (XPathNavigator membershipNav in membershipIterator)
             {
                 GroupMembershipType groupMembership = new GroupMembershipType();
                 groupMembership.ParseXml(membershipNav);
-                _groupMemberships.Add(groupMembership);
+                this.groupMemberships.Add(groupMembership);
             }
-            _expires = XPathHelper.GetOptNavValue<HealthServiceDateTime>(itemNav, "expires");
+
+            this.expires = XPathHelper.GetOptNavValue<HealthServiceDateTime>(itemNav, "expires");
         }
 
         /// <summary>
@@ -96,13 +99,13 @@ namespace Microsoft.HealthVault.ItemTypes
             writer.WriteStartElement("group-membership");
 
             // <membership>
-            for (int index = 0; index < _groupMemberships.Count; ++index)
+            for (int index = 0; index < this.groupMemberships.Count; ++index)
             {
-                _groupMemberships[index].WriteXml("membership", writer);
+                this.groupMemberships[index].WriteXml("membership", writer);
             }
 
             // <expires>
-            XmlWriterHelper.WriteOpt(writer, "expires", _expires);
+            XmlWriterHelper.WriteOpt(writer, "expires", this.expires);
 
             // </group-membership>
             writer.WriteEndElement();
@@ -112,11 +115,9 @@ namespace Microsoft.HealthVault.ItemTypes
         /// Gets a collection of group memberships of the record owner.
         /// </summary>
         ///
-        public Collection<GroupMembershipType> GroupMemberships
-        {
-            get { return _groupMemberships; }
-        }
-        private Collection<GroupMembershipType> _groupMemberships =
+        public Collection<GroupMembershipType> GroupMemberships => this.groupMemberships;
+
+        private readonly Collection<GroupMembershipType> groupMemberships =
             new Collection<GroupMembershipType>();
 
         /// <summary>
@@ -131,13 +132,15 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public HealthServiceDateTime Expires
         {
-            get { return _expires; }
+            get { return this.expires; }
+
             set
             {
-                _expires = value;
+                this.expires = value;
             }
         }
-        private HealthServiceDateTime _expires;
+
+        private HealthServiceDateTime expires;
 
         /// <summary>
         /// Gets a string representation of the group membership.
@@ -151,13 +154,14 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             StringBuilder result = new StringBuilder(200);
 
-            for (int index = 0; index < GroupMemberships.Count; ++index)
+            for (int index = 0; index < this.GroupMemberships.Count; ++index)
             {
                 if (index > 0)
                 {
                     result.Append(ResourceRetriever.GetResourceString("ListSeparator"));
                 }
-                result.Append(GroupMemberships[index]);
+
+                result.Append(this.GroupMemberships[index]);
             }
 
             return result.ToString();

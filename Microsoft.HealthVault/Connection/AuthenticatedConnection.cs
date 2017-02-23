@@ -3,9 +3,6 @@
 // see http://www.microsoft.com/resources/sharedsource/licensingbasics/sharedsourcelicenses.mspx.
 // All other rights reserved.
 
-using Microsoft.HealthVault.Authentication;
-using Microsoft.HealthVault.Exceptions;
-using Microsoft.HealthVault.Extensions;
 using System;
 using System.IO;
 using System.Net;
@@ -16,8 +13,15 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.XPath;
+using Microsoft.HealthVault.Authentication;
+using Microsoft.HealthVault.Exceptions;
+using Microsoft.HealthVault.Extensions;
+using Microsoft.HealthVault.Helpers;
+using Microsoft.HealthVault.Person;
+using Microsoft.HealthVault.PlatformInformation;
+using Microsoft.HealthVault.Transport;
 
-namespace Microsoft.HealthVault
+namespace Microsoft.HealthVault.Connection
 {
     /// <summary>
     /// Represents an authenticated interface to the HealthVault service. Most
@@ -146,7 +150,7 @@ namespace Microsoft.HealthVault
         /// If <paramref name="liveIdTicket"/> or is <b>null</b> or empty.
         /// </exception>
         ///
-        /// <exception cref="WebException">
+        /// <exception cref="HealthHttpException">
         /// If the request to the HealthVault Shell to verify the <paramref name="liveIdTicket"/>
         /// fails.
         /// </exception>
@@ -180,7 +184,7 @@ namespace Microsoft.HealthVault
                 throw Validator.InvalidConfigurationException("InvalidRequestUrlConfiguration");
             }
 
-            if ((shellUrl == null) || (String.IsNullOrEmpty(shellUrl.ToString())))
+            if (string.IsNullOrEmpty(shellUrl?.ToString()))
             {
                 throw Validator.InvalidConfigurationException("InvalidShellUrlConfiguration");
             }
@@ -206,15 +210,16 @@ namespace Microsoft.HealthVault
         /// The unique HealthVault application identifier that the user is being logged into.
         /// </param>
         ///
+        /// <param name="shellUrl">
+        /// The HealthVault Shell redirector URL. This is used to to verify the Live ID ticket before
+        /// authenticating the user to HealthVault.
+        /// </param>
+        /// 
         /// <param name="healthServiceUrl">
         /// The URL of the HealthVault service. Note, this must include the web service handler,
         /// "wildcat.ashx".
         /// </param>
         ///
-        /// <param name="shellUrl">
-        /// The HealthVault Shell redirector URL. This is used to to verify the Live ID ticket before
-        /// authenticating the user to HealthVault.
-        /// </param>
         /// <param name="cancellationToken">A token to cancel the operation.</param>
         /// 
         /// <returns>
@@ -231,7 +236,7 @@ namespace Microsoft.HealthVault
         /// If <paramref name="shellUrl"/> or <paramref name="healthServiceUrl"/> is <b>null</b>.
         /// </exception>
         ///
-        /// <exception cref="WebException">
+        /// <exception cref="HealthHttpException">
         /// If the request to the HealthVault Shell to verify the <paramref name="liveIdTicket"/>
         /// fails.
         /// </exception>
@@ -283,15 +288,16 @@ namespace Microsoft.HealthVault
         /// The unique HealthVault application identifier that the user is being logged into.
         /// </param>
         ///
+        /// <param name="shellUrl">
+        /// The HealthVault Shell redirector URL. This is used to to verify the Live ID ticket before
+        /// authenticating the user to HealthVault.
+        /// </param>
+        /// 
         /// <param name="healthServiceUrl">
         /// The URL of the HealthVault service. Note, this must include the web service handler,
         /// "wildcat.ashx".
         /// </param>
         ///
-        /// <param name="shellUrl">
-        /// The HealthVault Shell redirector URL. This is used to to verify the Live ID ticket before
-        /// authenticating the user to HealthVault.
-        /// </param>
         /// <param name="cancellationToken">A token to cancel the operation.</param>
         /// 
         /// <returns>
@@ -308,7 +314,7 @@ namespace Microsoft.HealthVault
         /// If <paramref name="shellUrl"/> or <paramref name="healthServiceUrl"/> is <b>null</b>.
         /// </exception>
         ///
-        /// <exception cref="WebException">
+        /// <exception cref="HealthHttpException">
         /// If the request to the HealthVault Shell to verify the <paramref name="liveIdTicket"/>
         /// fails.
         /// </exception>
@@ -355,12 +361,14 @@ namespace Microsoft.HealthVault
         }
 
         /// <summary>
-        ///
+        /// Verify the 
         /// </summary>
         ///
-        /// <param name="appId"></param>
-        /// <param name="ticket"></param>
-        /// <param name="sharedSecret"></param>
+        /// <param name="appId">The ID of the sending app</param>
+        /// <param name="ticket">
+        /// An <see cref="AuthenticatedConnection"/> to HealthVault for the user specified in the
+        /// </param>
+        /// <param name="sharedSecret">The shared secret</param>
         ///
         /// <param name="isMra">
         /// True if the application is a multi-record application, or false otherwise. Multi-record
@@ -374,10 +382,10 @@ namespace Microsoft.HealthVault
         /// HealthVault.  Typically, persistent tokens are valid for up to one year.
         /// </param>
         /// 
-        /// <param name="shellUrl"></param>
+        /// <param name="shellUrl">The HealthVault service URL </param>
         /// <param name="cancellationToken">A token to cancel the operation.</param>
         /// 
-        /// <returns></returns>
+        /// <returns>the authentication token</returns>
         /// 
         /// <exception cref ="HealthServiceException">
         /// If the request results in an error being returned from the Shell.  The 
@@ -412,14 +420,11 @@ namespace Microsoft.HealthVault
             Uri shellUrl,
             CancellationToken cancellationToken)
         {
-            EasyWebRequest request = new EasyWebRequest();
-
-            request.RequestCompressionMethod = null;
+            EasyWebRequest request = new EasyWebRequest { RequestCompressionMethod = null };
 
             // Add the Authorization header for passport verification
-            string ticketHeader =
-                Convert.ToBase64String(
-                    new UTF8Encoding().GetBytes("WLID1.0 t=" + ticket));
+            string ticketHeader = Convert.ToBase64String(
+                new UTF8Encoding().GetBytes("WLID1.0 t=" + ticket));
             request.Headers.Add(
                 "LiveIdTicket",
                 ticketHeader);
@@ -432,7 +437,7 @@ namespace Microsoft.HealthVault
                 "SharedSecret",
                 sharedSecretHeader);
 
-            string authToken = null;
+            string authToken;
             try
             {
                 Uri liveIdTicketVerifierUrl =
@@ -503,6 +508,7 @@ namespace Microsoft.HealthVault
                         webException.Message,
                         webException);
                 }
+
                 throw;
             }        
                     
@@ -536,10 +542,9 @@ namespace Microsoft.HealthVault
         ///
         public AuthenticatedConnection(
             Credential credential)
-            : base()
         {
             Validator.ThrowIfArgumentNull(credential, "credential", "CtorUsernameNullOrEmpty");
-            Credential = credential;
+            this.Credential = credential;
         }
 
         /// <summary>
@@ -566,7 +571,7 @@ namespace Microsoft.HealthVault
             : base(callingApplicationId)
         {
             Validator.ThrowIfArgumentNull(credential, "credential", "CtorUsernameNullOrEmpty");
-            Credential = credential;
+            this.Credential = credential;
         }
 
         /// <summary>
@@ -597,7 +602,7 @@ namespace Microsoft.HealthVault
             : base(serviceInstance)
         {
             Validator.ThrowIfArgumentNull(credential, "credential", "CtorUsernameNullOrEmpty");
-            Credential = credential;
+            this.Credential = credential;
         }
 
         /// <summary>
@@ -635,7 +640,7 @@ namespace Microsoft.HealthVault
                 serviceInstance)
         {
             Validator.ThrowIfArgumentNull(credential, "credential", "CtorUsernameNullOrEmpty");
-            Credential = credential;
+            this.Credential = credential;
         }
 
         /// <summary>
@@ -670,7 +675,7 @@ namespace Microsoft.HealthVault
                 healthServiceUrl)
         {
             Validator.ThrowIfArgumentNull(credential, "credential", "CtorUsernameNullOrEmpty");
-            Credential = credential;
+            this.Credential = credential;
         }
 
         /// <summary>
@@ -740,7 +745,7 @@ namespace Microsoft.HealthVault
         /// 
         public async Task AuthenticateAsync()
         {
-            await Credential.AuthenticateIfRequiredAsync(
+            await this.Credential.AuthenticateIfRequiredAsync(
                 this,
                 this.ApplicationId).ConfigureAwait(false);
         }
@@ -785,10 +790,8 @@ namespace Microsoft.HealthVault
                 targetPersonId == Guid.Empty,
                 "targetPersonId",
                 "ImpersonateEmptyGuid");
-            _targetPersonId = targetPersonId;
+            this.ImpersonatedPersonId = targetPersonId;
         }
-
-        private Guid _targetPersonId = Guid.Empty;
 
         /// <summary>
         /// Unsets the target person identifier for all requests.
@@ -823,7 +826,7 @@ namespace Microsoft.HealthVault
         ///
         public void StopImpersonating()
         {
-            _targetPersonId = Guid.Empty;
+            this.ImpersonatedPersonId = Guid.Empty;
         }
 
         /// <summary>
@@ -857,10 +860,7 @@ namespace Microsoft.HealthVault
         /// <seealso cref="Impersonate"/>
         /// <seealso cref="StopImpersonating"/>
         ///
-        public bool IsImpersonating
-        {
-            get { return _targetPersonId != Guid.Empty; }
-        }
+        public bool IsImpersonating => this.ImpersonatedPersonId != Guid.Empty;
 
         /// <summary>
         /// Gets the ID of the person being impersonated.
@@ -871,10 +871,7 @@ namespace Microsoft.HealthVault
         /// called.
         /// </remarks>
         ///
-        internal Guid ImpersonatedPersonId
-        {
-            get { return _targetPersonId; }
-        }
+        internal Guid ImpersonatedPersonId { get; private set; } = Guid.Empty;
 
         #endregion Impersonation
 
@@ -954,9 +951,9 @@ namespace Microsoft.HealthVault
                     methodName,
                     methodVersion);
 
-            if (IsImpersonating)
+            if (this.IsImpersonating)
             {
-                request.ImpersonatedPersonId = _targetPersonId;
+                request.ImpersonatedPersonId = this.ImpersonatedPersonId;
             }
 
             return request;

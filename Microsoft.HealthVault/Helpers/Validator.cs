@@ -3,7 +3,6 @@
 // see http://www.microsoft.com/resources/sharedsource/licensingbasics/sharedsourcelicenses.mspx.
 // All other rights reserved.
 
-using Microsoft.HealthVault.Exceptions;
 using System;
 using System.IO;
 using System.Net;
@@ -11,8 +10,9 @@ using System.Reflection;
 using System.Security;
 using System.Xml;
 using System.Xml.XPath;
+using Microsoft.HealthVault.Exceptions;
 
-namespace Microsoft.HealthVault
+namespace Microsoft.HealthVault.Helpers
 {
     /// <summary>
     /// Helps perform validation of parameters and throw appropriate exceptions.
@@ -162,7 +162,7 @@ namespace Microsoft.HealthVault
 
         public static void ThrowIfStringIsWhitespace(string value, string parameterName)
         {
-            if (!String.IsNullOrEmpty(value) && String.IsNullOrEmpty(value.Trim()))
+            if (!string.IsNullOrEmpty(value) && string.IsNullOrEmpty(value.Trim()))
             {
                 throw ArgumentException(typeof(Validator).GetTypeInfo().Assembly, parameterName, "WhitespaceOnlyValue");
             }
@@ -170,7 +170,7 @@ namespace Microsoft.HealthVault
 
         public static void ThrowIfStringIsEmptyOrWhitespace(string value, string parameterName)
         {
-            if (value != null && String.IsNullOrEmpty(value.Trim()))
+            if (value != null && string.IsNullOrEmpty(value.Trim()))
             {
                 throw ArgumentException(typeof(Validator).GetTypeInfo().Assembly, parameterName, "WhitespaceOnlyValue");
             }
@@ -178,7 +178,7 @@ namespace Microsoft.HealthVault
 
         public static void ThrowIfStringNullOrEmpty(string value, string parameterName)
         {
-            if (String.IsNullOrEmpty(value))
+            if (string.IsNullOrEmpty(value))
             {
                 throw ArgumentException(typeof(Validator).GetTypeInfo().Assembly, parameterName, "StringNullOrEmpty");
             }

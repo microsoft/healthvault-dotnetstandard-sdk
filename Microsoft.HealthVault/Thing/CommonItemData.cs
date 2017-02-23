@@ -8,7 +8,7 @@ using System.Collections.ObjectModel;
 using System.Xml;
 using System.Xml.XPath;
 
-namespace Microsoft.HealthVault
+namespace Microsoft.HealthVault.Thing
 {
     /// <summary>
     /// Represents data that is common for all types of health record items.
@@ -21,33 +21,25 @@ namespace Microsoft.HealthVault
     ///
     public class CommonItemData
     {
-        /// <summary>
-        /// Creates an empty instance of the CommonItemData class.
-        /// </summary>
-        ///
-        public CommonItemData()
-        {
-        }
-
         internal void ParseXml(XPathNavigator commonNav)
         {
             XPathNavigator sourceNav = commonNav.SelectSingleNode("source");
             if (sourceNav != null)
             {
-                _source = sourceNav.Value;
+                this.Source = sourceNav.Value;
             }
 
             XPathNavigator noteNav = commonNav.SelectSingleNode("note");
             if (noteNav != null)
             {
-                _note = noteNav.Value;
+                this.Note = noteNav.Value;
             }
 
             // Please leave this code until the data-xml/common/tags gets removed.
             XPathNavigator tagsNav = commonNav.SelectSingleNode("tags");
             if (tagsNav != null)
             {
-                _tags = tagsNav.Value;
+                this.Tags = tagsNav.Value;
             }
 
             XPathNodeIterator extensionIterator = commonNav.Select("extension");
@@ -59,7 +51,7 @@ namespace Microsoft.HealthVault
 
                 if (extension != null)
                 {
-                    _extensions.Add(extension);
+                    this.Extensions.Add(extension);
                 }
             }
 
@@ -73,19 +65,19 @@ namespace Microsoft.HealthVault
 
                 relationship.ParseXml(relationshipNav);
 
-                _relatedItems.Add(relationship);
+                this.RelatedItems.Add(relationship);
             }
 
             XPathNavigator clientIdNav = commonNav.SelectSingleNode("client-thing-id");
             if (clientIdNav != null)
             {
-                _clientId = clientIdNav.Value;
+                this.ClientId = clientIdNav.Value;
             }
         }
 
         internal void ParseRelatedAttribute(string value)
         {
-            if (!String.IsNullOrEmpty(value))
+            if (!string.IsNullOrEmpty(value))
             {
                 var relThings = value.Split(';');
                 foreach (var relThing in relThings)
@@ -93,7 +85,7 @@ namespace Microsoft.HealthVault
                     Guid thingId;
                     if (Guid.TryParse(relThing.Split(',')[0], out thingId))
                     {
-                        _relatedItems.Add(new HealthRecordItemRelationship(thingId));
+                        this.RelatedItems.Add(new HealthRecordItemRelationship(thingId));
                     }
                 }
             }
@@ -104,35 +96,35 @@ namespace Microsoft.HealthVault
             // <common>
             writer.WriteStartElement("common");
 
-            if (!String.IsNullOrEmpty(_source))
+            if (!string.IsNullOrEmpty(this.Source))
             {
-                writer.WriteElementString("source", _source);
+                writer.WriteElementString("source", this.Source);
             }
 
-            if (!String.IsNullOrEmpty(_note))
+            if (!string.IsNullOrEmpty(this.Note))
             {
-                writer.WriteElementString("note", _note);
+                writer.WriteElementString("note", this.Note);
             }
 
             // Please leave this code until the data-xml/common/tags gets removed.
-            if (!String.IsNullOrEmpty(_tags))
+            if (!string.IsNullOrEmpty(this.Tags))
             {
-                writer.WriteElementString("tags", _tags);
+                writer.WriteElementString("tags", this.Tags);
             }
 
-            foreach (HealthRecordItemExtension extension in _extensions)
+            foreach (HealthRecordItemExtension extension in this.Extensions)
             {
                 extension.WriteExtensionXml(writer);
             }
 
-            foreach (HealthRecordItemRelationship relationship in _relatedItems)
+            foreach (HealthRecordItemRelationship relationship in this.RelatedItems)
             {
                 relationship.WriteXml("related-thing", writer);
             }
 
-            if (!String.IsNullOrEmpty(_clientId))
+            if (!string.IsNullOrEmpty(this.ClientId))
             {
-                writer.WriteElementString("client-thing-id", _clientId);
+                writer.WriteElementString("client-thing-id", this.ClientId);
             }
 
             // </common>
@@ -153,12 +145,7 @@ namespace Microsoft.HealthVault
         /// from which the health record item came.
         /// </remarks>
         ///
-        public string Source
-        {
-            get { return _source; }
-            set { _source = value; }
-        }
-        private string _source;
+        public string Source { get; set; }
 
         /// <summary>
         /// Gets or sets a note on the health record item.
@@ -172,12 +159,7 @@ namespace Microsoft.HealthVault
         /// Notes are general annotations about the health record item.
         /// </remarks>
         ///
-        public string Note
-        {
-            get { return _note; }
-            set { _note = value; }
-        }
-        private string _note;
+        public string Note { get; set; }
 
         /// <summary>
         /// Gets or sets a comma-separated list of tags on
@@ -194,12 +176,7 @@ namespace Microsoft.HealthVault
         /// </remarks>
         ///
         [Obsolete("This property will be soon removed. Please use HealthRecordItem.Tags instead.")]
-        public string Tags
-        {
-            get { return _tags; }
-            set { _tags = value; }
-        }
-        private string _tags;
+        public string Tags { get; set; }
 
         /// <summary>
         /// Gets the collection representing the extension data of the
@@ -216,12 +193,7 @@ namespace Microsoft.HealthVault
         /// collection.
         /// </remarks>
         ///
-        public Collection<HealthRecordItemExtension> Extensions
-        {
-            get { return _extensions; }
-        }
-        private Collection<HealthRecordItemExtension> _extensions =
-            new Collection<HealthRecordItemExtension>();
+        public Collection<HealthRecordItemExtension> Extensions { get; } = new Collection<HealthRecordItemExtension>();
 
         /// <summary>
         /// Gets the collection representing the health record items related to this one.
@@ -237,21 +209,11 @@ namespace Microsoft.HealthVault
         /// ensure that the referenced items exist and are in the same health record.
         /// </remarks>
         ///
-        public Collection<HealthRecordItemRelationship> RelatedItems
-        {
-            get { return _relatedItems; }
-        }
-        private Collection<HealthRecordItemRelationship> _relatedItems =
-            new Collection<HealthRecordItemRelationship>();
+        public Collection<HealthRecordItemRelationship> RelatedItems { get; } = new Collection<HealthRecordItemRelationship>();
 
         /// <summary>
         /// Gets and sets a client assigned identifier to be associated with the <see cref="HealthRecordItem" />.
         /// </summary>
-        public string ClientId
-        {
-            get { return _clientId; }
-            set { _clientId = value; }
-        }
-        private string _clientId;
+        public string ClientId { get; set; }
     }
 }

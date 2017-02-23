@@ -8,6 +8,8 @@ using System.Collections.ObjectModel;
 using System.Diagnostics.CodeAnalysis;
 using System.Xml;
 using System.Xml.XPath;
+using Microsoft.HealthVault.Helpers;
+using Microsoft.HealthVault.Thing;
 
 namespace Microsoft.HealthVault.ItemTypes
 {
@@ -61,9 +63,9 @@ namespace Microsoft.HealthVault.ItemTypes
             DurationValue serviceDates,
             ClaimAmounts claimAmounts)
         {
-            ServiceType = serviceType;
-            ServiceDates = serviceDates;
-            ClaimAmounts = claimAmounts;
+            this.ServiceType = serviceType;
+            this.ServiceDates = serviceDates;
+            this.ClaimAmounts = claimAmounts;
         }
 
         /// <summary>
@@ -82,18 +84,18 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             Validator.ThrowIfNavigatorNull(navigator);
 
-            _serviceType = XPathHelper.GetOptNavValue<CodableValue>(navigator, "service-type");
-            _diagnosis = XPathHelper.GetOptNavValue<CodableValue>(navigator, "diagnosis");
-            _billingCode = XPathHelper.GetOptNavValue<CodableValue>(navigator, "billing-code");
-            _serviceDates = XPathHelper.GetOptNavValue<DurationValue>(navigator, "service-dates");
+            this.serviceType = XPathHelper.GetOptNavValue<CodableValue>(navigator, "service-type");
+            this.diagnosis = XPathHelper.GetOptNavValue<CodableValue>(navigator, "diagnosis");
+            this.billingCode = XPathHelper.GetOptNavValue<CodableValue>(navigator, "billing-code");
+            this.serviceDates = XPathHelper.GetOptNavValue<DurationValue>(navigator, "service-dates");
 
-            _claimAmounts = new ClaimAmounts();
-            _claimAmounts.ParseXml(navigator.SelectSingleNode("claim-amounts"));
+            this.claimAmounts = new ClaimAmounts();
+            this.claimAmounts.ParseXml(navigator.SelectSingleNode("claim-amounts"));
 
-            _notes.Clear();
+            this.notes.Clear();
             foreach (XPathNavigator notesNav in navigator.Select("notes"))
             {
-                _notes.Add(notesNav.Value);
+                this.notes.Add(notesNav.Value);
             }
         }
 
@@ -125,25 +127,25 @@ namespace Microsoft.HealthVault.ItemTypes
         /// If <see cref="ClaimAmounts"/> is <b>null</b>.
         /// </exception>
         ///
-        public override void WriteXml(String nodeName, XmlWriter writer)
+        public override void WriteXml(string nodeName, XmlWriter writer)
         {
             Validator.ThrowIfStringNullOrEmpty(nodeName, "nodeName");
             Validator.ThrowIfWriterNull(writer);
-            Validator.ThrowSerializationIfNull(_serviceType, "ServiceTypeNullValue");
-            Validator.ThrowSerializationIfNull(_serviceDates, "ServiceDatesNullValue");
-            Validator.ThrowSerializationIfNull(_claimAmounts, "ClaimAmountsNullValue");
+            Validator.ThrowSerializationIfNull(this.serviceType, "ServiceTypeNullValue");
+            Validator.ThrowSerializationIfNull(this.serviceDates, "ServiceDatesNullValue");
+            Validator.ThrowSerializationIfNull(this.claimAmounts, "ClaimAmountsNullValue");
 
             writer.WriteStartElement(nodeName);
 
-            _serviceType.WriteXml("service-type", writer);
+            this.serviceType.WriteXml("service-type", writer);
 
-            XmlWriterHelper.WriteOpt<CodableValue>(writer, "diagnosis", _diagnosis);
-            XmlWriterHelper.WriteOpt<CodableValue>(writer, "billing-code", _billingCode);
+            XmlWriterHelper.WriteOpt(writer, "diagnosis", this.diagnosis);
+            XmlWriterHelper.WriteOpt(writer, "billing-code", this.billingCode);
 
-            _serviceDates.WriteXml("service-dates", writer);
-            _claimAmounts.WriteXml("claim-amounts", writer);
+            this.serviceDates.WriteXml("service-dates", writer);
+            this.claimAmounts.WriteXml("claim-amounts", writer);
 
-            foreach (string note in _notes)
+            foreach (string note in this.notes)
             {
                 writer.WriteElementString("notes", note);
             }
@@ -159,18 +161,18 @@ namespace Microsoft.HealthVault.ItemTypes
         /// The <paramref name="value"/> parameter is <b> null </b>.
         /// </exception>
         ///
-        [SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public CodableValue ServiceType
         {
-            get { return _serviceType; }
+            get { return this.serviceType; }
+
             set
             {
                 Validator.ThrowIfArgumentNull(value, "ServiceType", "ServiceTypeNullValue");
-                _serviceType = value;
+                this.serviceType = value;
             }
         }
 
-        private CodableValue _serviceType;
+        private CodableValue serviceType;
 
         /// <summary>
         /// Gets or sets the diagnosis.
@@ -180,14 +182,13 @@ namespace Microsoft.HealthVault.ItemTypes
         /// If there is no information about the diagnosis the value should be set to <b>null</b>.
         /// </remarks>
         ///
-        [SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public CodableValue Diagnosis
         {
-            get { return _diagnosis; }
-            set { _diagnosis = value; }
+            get { return this.diagnosis; }
+            set { this.diagnosis = value; }
         }
 
-        private CodableValue _diagnosis;
+        private CodableValue diagnosis;
 
         /// <summary>
         /// Gets or sets the billing code.
@@ -197,14 +198,13 @@ namespace Microsoft.HealthVault.ItemTypes
         /// If there is no information about the billing code the value should be set to <b>null</b>.
         /// </remarks>
         ///
-        [SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public CodableValue BillingCode
         {
-            get { return _billingCode; }
-            set { _billingCode = value; }
+            get { return this.billingCode; }
+            set { this.billingCode = value; }
         }
 
-        private CodableValue _billingCode;
+        private CodableValue billingCode;
 
         /// <summary>
         /// Gets or sets the dates for this service.
@@ -216,15 +216,16 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public DurationValue ServiceDates
         {
-            get { return _serviceDates; }
+            get { return this.serviceDates; }
+
             set
             {
                 Validator.ThrowIfArgumentNull(value, "ServiceDates", "ServiceDatesNullValue");
-                _serviceDates = value;
+                this.serviceDates = value;
             }
         }
 
-        private DurationValue _serviceDates;
+        private DurationValue serviceDates;
 
         /// <summary>
         /// Gets or sets the financial information for this service.
@@ -236,15 +237,16 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public ClaimAmounts ClaimAmounts
         {
-            get { return _claimAmounts; }
+            get { return this.claimAmounts; }
+
             set
             {
                 Validator.ThrowIfArgumentNull(value, "ClaimAmounts", "ClaimAmountsNullValue");
-                _claimAmounts = value;
+                this.claimAmounts = value;
             }
         }
 
-        private ClaimAmounts _claimAmounts;
+        private ClaimAmounts claimAmounts;
 
         /// <summary>
         /// Gets a collection of additional information about this service.
@@ -254,12 +256,9 @@ namespace Microsoft.HealthVault.ItemTypes
         /// If there is no information about the notes the collection should be empty.
         /// </remarks>
         ///
-        public Collection<string> Notes
-        {
-            get { return _notes; }
-        }
+        public Collection<string> Notes => this.notes;
 
-        private Collection<string> _notes = new Collection<string>();
+        private readonly Collection<string> notes = new Collection<string>();
 
         /// <summary>
         /// Gets a string representation of the Service.
@@ -271,7 +270,7 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public override string ToString()
         {
-            return ServiceType.Text;
+            return this.ServiceType.Text;
         }
     }
 }

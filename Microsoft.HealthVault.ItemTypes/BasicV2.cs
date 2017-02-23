@@ -5,10 +5,11 @@
 
 using System;
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Xml;
 using System.Xml.XPath;
+using Microsoft.HealthVault.Helpers;
+using Microsoft.HealthVault.Thing;
 
 namespace Microsoft.HealthVault.ItemTypes
 {
@@ -41,7 +42,7 @@ namespace Microsoft.HealthVault.ItemTypes
         /// A GUID.
         /// </value>
         ///
-        public new static readonly Guid TypeId =
+        public static new readonly Guid TypeId =
             new Guid("3b3e6b16-eb69-483c-8d7e-dfe116ae6092");
 
         /// <summary>
@@ -75,7 +76,7 @@ namespace Microsoft.HealthVault.ItemTypes
                         "m",
                         StringComparison.Ordinal))
                 {
-                    _gender = ItemTypes.Gender.Male;
+                    this.gender = ItemTypes.Gender.Male;
                 }
                 else if (
                     string.Equals(
@@ -83,27 +84,27 @@ namespace Microsoft.HealthVault.ItemTypes
                         "f",
                         StringComparison.Ordinal))
                 {
-                    _gender = ItemTypes.Gender.Female;
+                    this.gender = ItemTypes.Gender.Female;
                 }
                 else
                 {
-                    _gender = ItemTypes.Gender.Unknown;
+                    this.gender = ItemTypes.Gender.Unknown;
                 }
             }
 
-            _birthYear = XPathHelper.GetOptNavValueAsInt(basicNav, "birthyear");
-            _country = XPathHelper.GetOptNavValue<CodableValue>(basicNav, "country");
-            _postalCode = XPathHelper.GetOptNavValue(basicNav, "postcode");
-            _city = XPathHelper.GetOptNavValue(basicNav, "city");
+            this.birthYear = XPathHelper.GetOptNavValueAsInt(basicNav, "birthyear");
+            this.country = XPathHelper.GetOptNavValue<CodableValue>(basicNav, "country");
+            this.postalCode = XPathHelper.GetOptNavValue(basicNav, "postcode");
+            this.city = XPathHelper.GetOptNavValue(basicNav, "city");
 
-            _stateOrProvince =
+            this.stateOrProvince =
                 XPathHelper.GetOptNavValue<CodableValue>(basicNav, "state");
 
             XPathNavigator dayOfWeekNav =
                 basicNav.SelectSingleNode("firstdow");
             if (dayOfWeekNav != null)
             {
-                _firstDayOfWeek = (DayOfWeek)(dayOfWeekNav.ValueAsInt - 1);
+                this.firstDayOfWeek = (DayOfWeek)(dayOfWeekNav.ValueAsInt - 1);
             }
 
             XPathNodeIterator languageIterator =
@@ -116,7 +117,7 @@ namespace Microsoft.HealthVault.ItemTypes
                     Language newLanguage = new Language();
                     newLanguage.ParseXml(languageNav);
 
-                    _languages.Add(newLanguage);
+                    this.languages.Add(newLanguage);
                 }
             }
         }
@@ -140,38 +141,35 @@ namespace Microsoft.HealthVault.ItemTypes
             // <basic>
             writer.WriteStartElement("basic");
 
-            if (_gender != null)
+            if (this.gender != null)
             {
-                if (_gender == ItemTypes.Gender.Male)
+                if (this.gender == ItemTypes.Gender.Male)
                 {
                     writer.WriteElementString("gender", "m");
                 }
-                else if (_gender == ItemTypes.Gender.Female)
+                else if (this.gender == ItemTypes.Gender.Female)
                 {
                     writer.WriteElementString("gender", "f");
                 }
             }
 
-            XmlWriterHelper.WriteOptInt(writer, "birthyear", _birthYear);
-            XmlWriterHelper.WriteOpt(writer, "country", _country);
-            XmlWriterHelper.WriteOptString(writer, "postcode", _postalCode);
-            XmlWriterHelper.WriteOptString(writer, "city", _city);
+            XmlWriterHelper.WriteOptInt(writer, "birthyear", this.birthYear);
+            XmlWriterHelper.WriteOpt(writer, "country", this.country);
+            XmlWriterHelper.WriteOptString(writer, "postcode", this.postalCode);
+            XmlWriterHelper.WriteOptString(writer, "city", this.city);
+            XmlWriterHelper.WriteOpt(writer, "state", this.stateOrProvince);
 
-            XmlWriterHelper.WriteOpt(writer,
-                                                   "state",
-                                                   _stateOrProvince);
-
-            if (_firstDayOfWeek != null)
+            if (this.firstDayOfWeek != null)
             {
                 // The DayOfWeek enum starts at 0 whereas the XSD starts at
                 // 1.
 
                 writer.WriteElementString(
                     "firstdow",
-                    (((int)_firstDayOfWeek) + 1).ToString(CultureInfo.InvariantCulture));
+                    ((int)this.firstDayOfWeek + 1).ToString(CultureInfo.InvariantCulture));
             }
 
-            foreach (Language language in _languages)
+            foreach (Language language in this.languages)
             {
                 language.WriteXml("language", writer);
             }
@@ -194,10 +192,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public Gender? Gender
         {
-            get { return _gender; }
-            set { _gender = value; }
+            get { return this.gender; }
+            set { this.gender = value; }
         }
-        private Gender? _gender;
+
+        private Gender? gender;
 
         /// <summary>
         /// Gets or sets the birth year of the person.
@@ -218,17 +217,19 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public int? BirthYear
         {
-            get { return _birthYear; }
+            get { return this.birthYear; }
+
             set
             {
                 Validator.ThrowArgumentOutOfRangeIf(
                     value != null && ((int)value < 1000 || (int)value > 3000),
                     "BirthYear",
                     "BasicBirthYearOutOfRange");
-                _birthYear = value;
+                this.birthYear = value;
             }
         }
-        private int? _birthYear;
+
+        private int? birthYear;
 
         /// <summary>
         /// Gets or sets the country of residence.
@@ -242,14 +243,13 @@ namespace Microsoft.HealthVault.ItemTypes
         /// A codable value representing the country.
         /// </value>
         ///
-        // FXCop thinks that CodableValue is a collection, so it throws this error.
-        [SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public CodableValue Country
         {
-            get { return _country; }
-            set { _country = value; }
+            get { return this.country; }
+            set { this.country = value; }
         }
-        private CodableValue _country;
+
+        private CodableValue country;
 
         /// <summary>
         /// Gets or sets the postal code of the country of residence.
@@ -265,14 +265,16 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public string PostalCode
         {
-            get { return _postalCode; }
+            get { return this.postalCode; }
+
             set
             {
                 Validator.ThrowIfStringIsWhitespace(value, "PostalCode");
-                _postalCode = value;
+                this.postalCode = value;
             }
         }
-        private string _postalCode;
+
+        private string postalCode;
 
         /// <summary>
         /// Gets or sets the city of residence.
@@ -288,14 +290,16 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public string City
         {
-            get { return _city; }
+            get { return this.city; }
+
             set
             {
                 Validator.ThrowIfStringIsWhitespace(value, "City");
-                _city = value;
+                this.city = value;
             }
         }
-        private string _city;
+
+        private string city;
 
         /// <summary>
         /// Gets or sets the state or province of residence.
@@ -310,14 +314,13 @@ namespace Microsoft.HealthVault.ItemTypes
         /// should not be stored.
         /// </remarks>
         ///
-        // FXCop thinks that CodableValue is a collection, so it throws this error.
-        [SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public CodableValue StateOrProvince
         {
-            get { return _stateOrProvince; }
-            set { _stateOrProvince = value; }
+            get { return this.stateOrProvince; }
+            set { this.stateOrProvince = value; }
         }
-        private CodableValue _stateOrProvince;
+
+        private CodableValue stateOrProvince;
 
         /// <summary>
         /// Gets or sets the preferred first day of the week.
@@ -334,10 +337,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public DayOfWeek? FirstDayOfWeek
         {
-            get { return _firstDayOfWeek; }
-            set { _firstDayOfWeek = value; }
+            get { return this.firstDayOfWeek; }
+            set { this.firstDayOfWeek = value; }
         }
-        private DayOfWeek? _firstDayOfWeek;
+
+        private DayOfWeek? firstDayOfWeek;
 
         /// <summary>
         /// Gets the language(s) the person speaks.
@@ -347,9 +351,9 @@ namespace Microsoft.HealthVault.ItemTypes
         /// A list of the languages.
         /// </value>
         ///
-        public IList<Language> Languages => _languages;
+        public IList<Language> Languages => this.languages;
 
-        private readonly List<Language> _languages = new List<Language>();
+        private readonly List<Language> languages = new List<Language>();
 
         /// <summary>
         /// Gets a string representation of the basic item.
@@ -361,49 +365,55 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public override string ToString()
         {
-            if (Gender != null || BirthYear != null)
+            if (this.Gender != null || this.BirthYear != null)
             {
-                if (Gender != null && BirthYear != null)
+                if (this.Gender != null && this.BirthYear != null)
                 {
                     return string.Format(
                             CultureInfo.CurrentCulture,
                             ResourceRetriever.GetResourceString(
                                 "BasicToStringFormatGenderAndBirthYear"),
                             ResourceRetriever.GetResourceString(
-                                Gender.ToString()),
-                            BirthYear);
+                                this.Gender.ToString()),
+                            this.BirthYear);
                 }
-                if (BirthYear != null)
+
+                if (this.BirthYear != null)
                 {
                     return string.Format(
                         CultureInfo.CurrentCulture,
                         ResourceRetriever.GetResourceString(
                             "BasicToStringFormatBirthYear"),
-                        BirthYear);
+                        this.BirthYear);
                 }
+
                 return ResourceRetriever.GetResourceString(
-                    Gender.ToString());
+                    this.Gender.ToString());
             }
-            if (PostalCode != null || Country != null)
+
+            if (this.PostalCode != null || this.Country != null)
             {
-                if (PostalCode != null && Country != null)
+                if (this.PostalCode != null && this.Country != null)
                 {
                     return string.Format(
                         CultureInfo.CurrentCulture,
                         ResourceRetriever.GetResourceString(
                             "BasicToStringFormatPostalCodeAndCountry"),
-                        PostalCode,
-                        Country);
+                        this.PostalCode,
+                        this.Country);
                 }
-                if (Country != null)
+
+                if (this.Country != null)
                 {
-                    return Country.Text;
+                    return this.Country.Text;
                 }
-                return PostalCode;
+
+                return this.PostalCode;
             }
-            if (CommonData.Note != null)
+
+            if (this.CommonData.Note != null)
             {
-                return CommonData.Note;
+                return this.CommonData.Note;
             }
 
             return ResourceRetriever.GetResourceString(

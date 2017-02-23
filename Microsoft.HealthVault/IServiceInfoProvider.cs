@@ -3,8 +3,7 @@
 // see http://www.microsoft.com/resources/sharedsource/licensingbasics/sharedsourcelicenses.mspx.
 // All other rights reserved.
 
-using System.Runtime.CompilerServices;
-using System.Threading.Tasks;
+using Microsoft.HealthVault.PlatformInformation;
 
 namespace Microsoft.HealthVault
 {
@@ -14,13 +13,13 @@ namespace Microsoft.HealthVault
     /// </summary>
     public interface IServiceInfoProvider
     {
-        ///  <summary>
-        ///  Returns the service information retrieved from the HealthVault web-service.
-        ///  </summary>
+        /// <summary>
+        /// Returns the service information retrieved from the HealthVault web-service.
+        /// </summary>
         /// 
-        ///  <returns>
-        ///  Service information retrieved from the HealthVault web-service.
-        ///  </returns>
+        /// <returns>
+        /// Service information retrieved from the HealthVault web-service.
+        /// </returns>
         ServiceInfo GetServiceInfo();
     }
 }

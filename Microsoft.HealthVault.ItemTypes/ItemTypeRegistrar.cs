@@ -3,6 +3,8 @@
 // see http://www.microsoft.com/resources/sharedsource/licensingbasics/sharedsourcelicenses.mspx.
 // All other rights reserved.
 
+using Microsoft.HealthVault.Thing;
+
 namespace Microsoft.HealthVault.ItemTypes
 {
     /// <summary>
@@ -19,14 +21,13 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public static void RegisterAssemblyHealthRecordItemTypes()
         {
-            foreach (ItemTypeManager.DefaultTypeHandler typeHandler in _defaultTypeHandlers)
+            foreach (ItemTypeManager.DefaultTypeHandler typeHandler in DefaultTypeHandlers)
             {
                 ItemTypeManager.RegisterTypeHandler(typeHandler.TypeId, typeHandler.Type, true);
             }
         }
 
-        private static ItemTypeManager.DefaultTypeHandler[] _defaultTypeHandlers =
-            new ItemTypeManager.DefaultTypeHandler[]
+        private static readonly ItemTypeManager.DefaultTypeHandler[] DefaultTypeHandlers =
             {
                 new ItemTypeManager.DefaultTypeHandler(ApplicationDataReference.TypeId, typeof(ApplicationDataReference)),
                 new ItemTypeManager.DefaultTypeHandler(BasicV2.TypeId, typeof(BasicV2)),
@@ -107,7 +108,7 @@ namespace Microsoft.HealthVault.ItemTypes
                 new ItemTypeManager.DefaultTypeHandler(InsulinInjectionUse.TypeId, typeof(InsulinInjectionUse)),
                 new ItemTypeManager.DefaultTypeHandler(LifeGoal.TypeId, typeof(LifeGoal)),
                 new ItemTypeManager.DefaultTypeHandler(Link.TypeId, typeof(Link)),
-                new ItemTypeManager.DefaultTypeHandler(MicrobiologyLabResults.TypeId,typeof(MicrobiologyLabResults)),
+                new ItemTypeManager.DefaultTypeHandler(MicrobiologyLabResults.TypeId, typeof(MicrobiologyLabResults)),
                 new ItemTypeManager.DefaultTypeHandler(PasswordProtectedPackage.TypeId, typeof(PasswordProtectedPackage)),
                 new ItemTypeManager.DefaultTypeHandler(Payer.TypeId, typeof(Payer)),
                 new ItemTypeManager.DefaultTypeHandler(Person.TypeId, typeof(Person)),

@@ -4,6 +4,8 @@
 // All other rights reserved.
 
 using System;
+using Microsoft.HealthVault.Helpers;
+using Microsoft.HealthVault.Thing;
 
 namespace Microsoft.HealthVault
 {
@@ -59,8 +61,8 @@ namespace Microsoft.HealthVault
                 "dateMin",
                 "DateRangeMinLessThanMax");
 
-            _dateMin = dateMin;
-            _dateMax = dateMax;
+            this.DateMin = dateMin;
+            this.DateMax = dateMax;
         }
 
         /// <summary>
@@ -77,11 +79,7 @@ namespace Microsoft.HealthVault
         /// times to UTC.
         /// </remarks>
         ///
-        public DateTime DateMin
-        {
-            get { return _dateMin; }
-        }
-        private DateTime _dateMin = DateTime.MinValue;
+        public DateTime DateMin { get; } = DateTime.MinValue;
 
         /// <summary>
         /// Gets the maximum effective date of the health record items in
@@ -97,11 +95,7 @@ namespace Microsoft.HealthVault
         /// times to UTC time.
         /// </remarks>
         ///
-        public DateTime DateMax
-        {
-            get { return _dateMax; }
-        }
-        private DateTime _dateMax = DateTime.MaxValue;
+        public DateTime DateMax { get; } = DateTime.MaxValue;
 
         /// <summary>
         /// Gets the XML representation of the set.
@@ -121,10 +115,10 @@ namespace Microsoft.HealthVault
             return
                 "<date-range>" +
                 "<date-min>" +
-                SDKHelper.XmlFromDateTime(DateMin) +
+                SDKHelper.XmlFromDateTime(this.DateMin) +
                 "</date-min>" +
                 "<date-max>" +
-                SDKHelper.XmlFromDateTime(DateMax) +
+                SDKHelper.XmlFromDateTime(this.DateMax) +
                 "</date-max>" +
                 "</date-range>";
         }

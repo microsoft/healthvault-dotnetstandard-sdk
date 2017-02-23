@@ -28,5 +28,5 @@ namespace Microsoft.HealthVault
         /// </summary>
         ///
         X509Certificate = 2
-    };
+    }
 }

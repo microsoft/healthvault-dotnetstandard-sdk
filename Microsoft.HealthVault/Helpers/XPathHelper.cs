@@ -3,15 +3,15 @@
 // see http://www.microsoft.com/resources/sharedsource/licensingbasics/sharedsourcelicenses.mspx.
 // All other rights reserved.
 
-using Microsoft.HealthVault.ItemTypes;
 using System;
 using System.Collections;
 using System.Collections.ObjectModel;
 using System.Globalization;
 using System.Xml;
 using System.Xml.XPath;
+using Microsoft.HealthVault.ItemTypes;
 
-namespace Microsoft.HealthVault
+namespace Microsoft.HealthVault.Helpers
 {
     internal static class XPathHelper
     {
@@ -33,6 +33,7 @@ namespace Microsoft.HealthVault
             catch (FormatException)
             {
             }
+
             return result;
         }
 
@@ -52,6 +53,7 @@ namespace Microsoft.HealthVault
             catch (FormatException)
             {
             }
+
             return result;
         }
 
@@ -85,20 +87,18 @@ namespace Microsoft.HealthVault
             return result;
         }
 
-        internal static Decimal GetDecimal(XPathNavigator nav, string elementName)
+        internal static decimal GetDecimal(XPathNavigator nav, string elementName)
         {
             string navValue = nav.SelectSingleNode(elementName).Value;
 
-            Decimal result;
+            decimal result;
 
-            if (Decimal.TryParse(navValue, NumberStyles.Number, CultureInfo.InvariantCulture, out result))
+            if (decimal.TryParse(navValue, NumberStyles.Number, CultureInfo.InvariantCulture, out result))
             {
                 return result;
             }
-            else
-            {
-                return Decimal.MaxValue;
-            }
+
+            return decimal.MaxValue;
         }
 
         #endregion mandatory
@@ -117,6 +117,7 @@ namespace Microsoft.HealthVault
             {
                 result = valueNav.ValueAsBoolean;
             }
+
             return result;
         }
 
@@ -141,6 +142,7 @@ namespace Microsoft.HealthVault
                 {
                 }
             }
+
             return result;
         }
 
@@ -156,6 +158,7 @@ namespace Microsoft.HealthVault
             {
                 result = valueNav.ValueAsInt;
             }
+
             return result;
         }
 
@@ -164,13 +167,13 @@ namespace Microsoft.HealthVault
             string elementName)
         {
             uint? result = null;
-            uint parsedResult;
 
             XPathNavigator valueNav =
                 nav.SelectSingleNode(elementName);
             if (valueNav != null)
             {
-                if (!UInt32.TryParse(valueNav.Value, out parsedResult))
+                uint parsedResult;
+                if (!uint.TryParse(valueNav.Value, out parsedResult))
                 {
                     return null;
                 }
@@ -193,6 +196,7 @@ namespace Microsoft.HealthVault
             {
                 result = valueNav.ValueAsLong;
             }
+
             return result;
         }
 
@@ -208,6 +212,7 @@ namespace Microsoft.HealthVault
             {
                 result = valueNav.ValueAsDouble;
             }
+
             return result;
         }
 
@@ -223,6 +228,7 @@ namespace Microsoft.HealthVault
             {
                 result = valueNav.Value;
             }
+
             return result;
         }
 
@@ -244,6 +250,7 @@ namespace Microsoft.HealthVault
                 {
                 }
             }
+
             return result;
         }
 
@@ -261,6 +268,7 @@ namespace Microsoft.HealthVault
                 result = new DataType();
                 result.ParseXml(valueNav);
             }
+
             return result;
         }
 
@@ -284,9 +292,9 @@ namespace Microsoft.HealthVault
             bool result = defaultValue;
 
             string attributeString =
-                navigator.GetAttribute(attributeName, String.Empty);
+                navigator.GetAttribute(attributeName, string.Empty);
 
-            if (attributeString != String.Empty)
+            if (attributeString != string.Empty)
             {
                 try
                 {
@@ -296,6 +304,7 @@ namespace Microsoft.HealthVault
                 {
                 }
             }
+
             return result;
         }
 
@@ -317,9 +326,9 @@ namespace Microsoft.HealthVault
             long? result = defaultValue;
 
             string attributeString =
-                navigator.GetAttribute(attributeName, String.Empty);
+                navigator.GetAttribute(attributeName, string.Empty);
 
-            if (attributeString != String.Empty)
+            if (attributeString != string.Empty)
             {
                 try
                 {
@@ -354,9 +363,9 @@ namespace Microsoft.HealthVault
             DateTime result = defaultValue;
 
             string attributeString =
-                navigator.GetAttribute(attributeName, String.Empty);
+                navigator.GetAttribute(attributeName, string.Empty);
 
-            if (attributeString != String.Empty)
+            if (attributeString != string.Empty)
             {
                 DateTime.TryParse(
                     attributeString,
@@ -386,9 +395,9 @@ namespace Microsoft.HealthVault
             T result = defaultValue;
 
             string attributeString =
-                navigator.GetAttribute(attributeName, String.Empty);
+                navigator.GetAttribute(attributeName, string.Empty);
 
-            if (attributeString != String.Empty)
+            if (attributeString != string.Empty)
             {
                 try
                 {
@@ -411,8 +420,9 @@ namespace Microsoft.HealthVault
         /// <typeparam name="T">The HealthRecordItemData-derived class</typeparam>
         /// <param name="nav">The navigator</param>
         /// <param name="itemPath">The xpath for the item</param>
-        /// <returns></returns>
-        internal static Collection<T> ParseXmlCollection<T>(XPathNavigator nav, string itemPath) where T : HealthRecordItemData, new()
+        /// <returns>Returns a collection of parsed data types</returns>
+        internal static Collection<T> ParseXmlCollection<T>(XPathNavigator nav, string itemPath)
+            where T : HealthRecordItemData, new()
         {
             XPathNodeIterator itemIterator = nav.Select(itemPath);
 

@@ -6,6 +6,7 @@
 using System.Globalization;
 using System.Xml;
 using System.Xml.XPath;
+using Microsoft.HealthVault.Helpers;
 
 namespace Microsoft.HealthVault.ItemTypes
 {
@@ -29,7 +30,7 @@ namespace Microsoft.HealthVault.ItemTypes
         /// class with empty values.
         /// </summary>
         ///
-        public PaceMeasurement() : base()
+        public PaceMeasurement()
         {
         }
 
@@ -98,7 +99,7 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         protected override void ParseValueXml(XPathNavigator navigator)
         {
-            Value = navigator.SelectSingleNode("seconds-per-hundred-meters").ValueAsDouble;
+            this.Value = navigator.SelectSingleNode("seconds-per-hundred-meters").ValueAsDouble;
         }
 
         /// <summary>
@@ -113,7 +114,7 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             writer.WriteElementString(
                 "seconds-per-hundred-meters",
-                XmlConvert.ToString(Value));
+                XmlConvert.ToString(this.Value));
         }
 
         /// <summary>

@@ -5,6 +5,7 @@
 
 using System.Xml;
 using System.Xml.XPath;
+using Microsoft.HealthVault.Helpers;
 
 namespace Microsoft.HealthVault.ItemTypes
 {
@@ -46,8 +47,8 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public Assessment(CodableValue name, CodableValue value)
         {
-            Name = name;
-            Value = value;
+            this.Name = name;
+            this.Value = value;
         }
 
         /// <summary>
@@ -67,15 +68,15 @@ namespace Microsoft.HealthVault.ItemTypes
             Validator.ThrowIfNavigatorNull(navigator);
 
             // <name>
-            _name = new CodableValue();
-            _name.ParseXml(navigator.SelectSingleNode("name"));
+            this.name = new CodableValue();
+            this.name.ParseXml(navigator.SelectSingleNode("name"));
 
             // <value>
-            _value = new CodableValue();
-            _value.ParseXml(navigator.SelectSingleNode("value"));
+            this.value = new CodableValue();
+            this.value.ParseXml(navigator.SelectSingleNode("value"));
 
             // <group>
-            _group = XPathHelper.GetOptNavValue<CodableValue>(navigator, "group");
+            this.group = XPathHelper.GetOptNavValue<CodableValue>(navigator, "group");
         }
 
         /// <summary>
@@ -106,19 +107,19 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             Validator.ThrowIfStringNullOrEmpty(nodeName, "nodeName");
             Validator.ThrowIfWriterNull(writer);
-            Validator.ThrowSerializationIfNull(_name, "AssessmentNameNotSet");
-            Validator.ThrowSerializationIfNull(_value, "AssessmentValueNotSet");
+            Validator.ThrowSerializationIfNull(this.name, "AssessmentNameNotSet");
+            Validator.ThrowSerializationIfNull(this.value, "AssessmentValueNotSet");
 
             writer.WriteStartElement(nodeName);
 
             // <name>
-            _name.WriteXml("name", writer);
+            this.name.WriteXml("name", writer);
 
             // <value>
-            _value.WriteXml("value", writer);
+            this.value.WriteXml("value", writer);
 
             // <group>
-            XmlWriterHelper.WriteOpt(writer, "group", _group);
+            XmlWriterHelper.WriteOpt(writer, "group", this.group);
 
             writer.WriteEndElement();
         }
@@ -139,14 +140,16 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public CodableValue Name
         {
-            get { return _name; }
+            get { return this.name; }
+
             set
             {
                 Validator.ThrowIfArgumentNull(value, "Name", "AssessmentNameMandatory");
-                _name = value;
+                this.name = value;
             }
         }
-        private CodableValue _name;
+
+        private CodableValue name;
 
         /// <summary>
         /// Gets or sets the calculated value of the assessed area.
@@ -166,14 +169,16 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public CodableValue Value
         {
-            get { return _value; }
+            get { return this.value; }
+
             set
             {
                 Validator.ThrowIfArgumentNull(value, "Value", "AssessmentValueMandatory");
-                _value = value;
+                this.value = value;
             }
         }
-        private CodableValue _value;
+
+        private CodableValue value;
 
         /// <summary>
         /// Gets or sets the additional information that can be used to help organize the
@@ -190,10 +195,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public CodableValue Group
         {
-            get { return _group; }
-            set { _group = value; }
+            get { return this.group; }
+            set { this.group = value; }
         }
-        private CodableValue _group;
+
+        private CodableValue group;
 
         /// <summary>
         /// Gets a string of the name or description of the assessment.
@@ -203,23 +209,24 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             string result = string.Empty;
 
-            if (_name != null && _value != null)
+            if (this.name != null && this.value != null)
             {
                 result =
                     string.Format(
                         ResourceRetriever.GetResourceString(
                             "AssessmentToStringFormat"),
-                        _name.ToString(),
-                        _value.ToString());
+                        this.name.ToString(),
+                        this.value.ToString());
             }
-            else if (_name != null)
+            else if (this.name != null)
             {
-                result = _name.ToString();
+                result = this.name.ToString();
             }
-            else if (_value != null)
+            else if (this.value != null)
             {
-                result = _value.ToString();
+                result = this.value.ToString();
             }
+
             return result;
         }
     }

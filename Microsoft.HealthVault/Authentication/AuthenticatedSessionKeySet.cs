@@ -3,9 +3,9 @@
 // see http://www.microsoft.com/resources/sharedsource/licensingbasics/sharedsourcelicenses.mspx.
 // All other rights reserved.
 
-using Microsoft.HealthVault.Authentication;
+using System;
 
-namespace Microsoft.HealthVault.Web.Authentication
+namespace Microsoft.HealthVault.Authentication
 {
     /// <summary>
     /// A keyset used to create authenticated sessions with the
@@ -16,23 +16,11 @@ namespace Microsoft.HealthVault.Web.Authentication
     {
         #region properties
 
-        internal CryptoHmac HMAC
-        {
-            get { return _hmac; }
-        }
-        private CryptoHmac _hmac;
+        internal CryptoHmac HMAC { get; }
 
-        private string HmacAlgorithmName
-        {
-            get { return _hmacAlgorithmName; }
-            set { _hmacAlgorithmName = value; }
-        }
-        private string _hmacAlgorithmName;
+        private string HmacAlgorithmName { get; set; }
 
-        private byte[] HmacKeyMaterial
-        {
-            get { return _hmac.KeyMaterial; }
-        }
+        private byte[] HmacKeyMaterial => this.HMAC.KeyMaterial;
 
         #endregion
 
@@ -63,9 +51,9 @@ namespace Microsoft.HealthVault.Web.Authentication
             string hmacAlgorithmName,
             byte[] hmacKeyMaterial)
         {
-            HmacAlgorithmName = hmacAlgorithmName;
+            this.HmacAlgorithmName = hmacAlgorithmName;
 
-            _hmac = new CryptoHmac(HmacAlgorithmName, hmacKeyMaterial);
+            this.HMAC = new CryptoHmac(this.HmacAlgorithmName, hmacKeyMaterial);
         }
 
         #endregion

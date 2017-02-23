@@ -7,6 +7,8 @@ using System;
 using System.Text;
 using System.Xml;
 using System.Xml.XPath;
+using Microsoft.HealthVault.Helpers;
+using Microsoft.HealthVault.Thing;
 
 namespace Microsoft.HealthVault.ItemTypes
 {
@@ -43,7 +45,7 @@ namespace Microsoft.HealthVault.ItemTypes
         /// A GUID.
         /// </value>
         ///
-        public new static readonly Guid TypeId =
+        public static new readonly Guid TypeId =
             new Guid("464083cc-13de-4f3e-a189-da8e47d5651b");
 
         /// <summary>
@@ -67,27 +69,27 @@ namespace Microsoft.HealthVault.ItemTypes
             Validator.ThrowInvalidIfNull(itemNav, "EncounterUnexpectedNode");
 
             // when
-            _when =
+            this.when =
                 XPathHelper.GetOptNavValue<HealthServiceDateTime>(itemNav, "when");
 
             // type
-            _type =
+            this.type =
                 XPathHelper.GetOptNavValue<CodableValue>(itemNav, "type");
 
             // reason
-            _reason =
+            this.reason =
                 XPathHelper.GetOptNavValue(itemNav, "reason");
 
             // duration
-            _duration =
+            this.duration =
                 XPathHelper.GetOptNavValue<DurationValue>(itemNav, "duration");
 
             // consent-granted
-            _consentGranted =
+            this.consentGranted =
                 XPathHelper.GetOptNavValueAsBool(itemNav, "consent-granted");
 
             // facility
-            _facility =
+            this.facility =
                 XPathHelper.GetOptNavValue<Organization>(itemNav, "facility");
         }
 
@@ -114,37 +116,37 @@ namespace Microsoft.HealthVault.ItemTypes
             XmlWriterHelper.WriteOpt(
                 writer,
                 "when",
-                _when);
+                this.when);
 
             // <type>
             XmlWriterHelper.WriteOpt(
                 writer,
                 "type",
-                _type);
+                this.type);
 
             // <reason>
             XmlWriterHelper.WriteOptString(
                 writer,
                 "reason",
-                _reason);
+                this.reason);
 
             // <duration>
             XmlWriterHelper.WriteOpt(
                 writer,
                 "duration",
-                _duration);
+                this.duration);
 
             // <consent-granted>
             XmlWriterHelper.WriteOptBool(
                 writer,
                 "consent-granted",
-                _consentGranted);
+                this.consentGranted);
 
             // <facility>
             XmlWriterHelper.WriteOpt(
                 writer,
                 "facility",
-                _facility);
+                this.facility);
 
             // </encounter>
             writer.WriteEndElement();
@@ -161,10 +163,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public HealthServiceDateTime When
         {
-            get { return _when; }
-            set { _when = value; }
+            get { return this.when; }
+            set { this.when = value; }
         }
-        private HealthServiceDateTime _when;
+
+        private HealthServiceDateTime when;
 
         /// <summary>
         /// Gets or sets the reason of the medical encounter. The description
@@ -185,14 +188,16 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public string Reason
         {
-            get { return _reason; }
+            get { return this.reason; }
+
             set
             {
                 Validator.ThrowIfStringIsWhitespace(value, "Reason");
-                _reason = value;
+                this.reason = value;
             }
         }
-        private string _reason;
+
+        private string reason;
 
         /// <summary>
         /// Gets or sets the type of medical encounter.
@@ -204,10 +209,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public CodableValue Type
         {
-            get { return _type; }
-            set { _type = value; }
+            get { return this.type; }
+            set { this.type = value; }
         }
-        private CodableValue _type;
+
+        private CodableValue type;
 
         /// <summary>
         /// Gets or sets the encounter duration.
@@ -220,10 +226,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public DurationValue Duration
         {
-            get { return _duration; }
-            set { _duration = value; }
+            get { return this.duration; }
+            set { this.duration = value; }
         }
-        private DurationValue _duration;
+
+        private DurationValue duration;
 
         /// <summary>
         /// Gets and sets a value indicating whether consent
@@ -237,10 +244,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public bool? ConsentGranted
         {
-            get { return _consentGranted; }
-            set { _consentGranted = value; }
+            get { return this.consentGranted; }
+            set { this.consentGranted = value; }
         }
-        private bool? _consentGranted;
+
+        private bool? consentGranted;
 
         /// <summary>
         /// The facility where the encounter occurred.
@@ -248,13 +256,15 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public Organization Facility
         {
-            get { return _facility; }
+            get { return this.facility; }
+
             set
             {
-                _facility = value;
+                this.facility = value;
             }
         }
-        private Organization _facility;
+
+        private Organization facility;
 
         /// <summary>
         /// Gets a string representation of the encounter item.
@@ -268,21 +278,23 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             StringBuilder result = new StringBuilder(200);
 
-            if (Type != null)
+            if (this.Type != null)
             {
-                result.Append(Type);
+                result.Append(this.Type);
             }
 
-            if (!string.IsNullOrEmpty(Reason))
+            if (!string.IsNullOrEmpty(this.Reason))
             {
-                if (Type != null)
+                if (this.Type != null)
                 {
                     result.Append(
                         ResourceRetriever.GetResourceString(
                             "ListSeparator"));
                 }
-                result.Append(Reason);
+
+                result.Append(this.Reason);
             }
+
             return result.ToString();
         }
     }

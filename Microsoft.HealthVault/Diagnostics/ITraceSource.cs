@@ -5,7 +5,7 @@
 
 using System.Diagnostics;
 
-namespace Microsoft.HealthVault
+namespace Microsoft.HealthVault.Diagnostics
 {
     /// <summary>
     /// Interface for trace source used by <see cref="HealthVaultPlatformTrace"/>.

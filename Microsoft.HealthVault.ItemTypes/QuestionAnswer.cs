@@ -9,6 +9,8 @@ using System.Collections.ObjectModel;
 using System.Text;
 using System.Xml;
 using System.Xml.XPath;
+using Microsoft.HealthVault.Helpers;
+using Microsoft.HealthVault.Thing;
 
 namespace Microsoft.HealthVault.ItemTypes
 {
@@ -95,7 +97,7 @@ namespace Microsoft.HealthVault.ItemTypes
             {
                 foreach (CodableValue choice in answerChoice)
                 {
-                    _answerChoice.Add(choice);
+                    this.answerChoice.Add(choice);
                 }
             }
 
@@ -103,7 +105,7 @@ namespace Microsoft.HealthVault.ItemTypes
             {
                 foreach (CodableValue answerValue in answer)
                 {
-                    _answer.Add(answerValue);
+                    this.answer.Add(answerValue);
                 }
             }
         }
@@ -112,7 +114,7 @@ namespace Microsoft.HealthVault.ItemTypes
         /// The unique identifier for the item type.
         /// </summary>
         ///
-        public new static readonly Guid TypeId =
+        public static new readonly Guid TypeId =
             new Guid("55d33791-58de-4cae-8c78-819e12ba5059");
 
         /// <summary>
@@ -136,33 +138,33 @@ namespace Microsoft.HealthVault.ItemTypes
             Validator.ThrowInvalidIfNull(itemNav, "QuestionAnswerUnexpectedNode");
 
             // <when>
-            _when = new HealthServiceDateTime();
-            _when.ParseXml(itemNav.SelectSingleNode("when"));
+            this.when = new HealthServiceDateTime();
+            this.when.ParseXml(itemNav.SelectSingleNode("when"));
 
             // <question>
-            _question = new CodableValue();
-            _question.ParseXml(itemNav.SelectSingleNode("question"));
+            this.question = new CodableValue();
+            this.question.ParseXml(itemNav.SelectSingleNode("question"));
 
             // <answer-choice>
-            _answerChoice.Clear();
+            this.answerChoice.Clear();
 
             XPathNodeIterator choiceIterator = itemNav.Select("answer-choice");
             foreach (XPathNavigator choiceNav in choiceIterator)
             {
                 CodableValue choice = new CodableValue();
                 choice.ParseXml(choiceNav);
-                _answerChoice.Add(choice);
+                this.answerChoice.Add(choice);
             }
 
             // <answer>
-            _answer.Clear();
+            this.answer.Clear();
 
             XPathNodeIterator answerIterator = itemNav.Select("answer");
             foreach (XPathNavigator answerNav in answerIterator)
             {
                 CodableValue answer = new CodableValue();
                 answer.ParseXml(answerNav);
-                _answer.Add(answer);
+                this.answer.Add(answer);
             }
         }
 
@@ -185,21 +187,21 @@ namespace Microsoft.HealthVault.ItemTypes
         public override void WriteXml(XmlWriter writer)
         {
             Validator.ThrowIfWriterNull(writer);
-            Validator.ThrowSerializationIfNull(_when, "WhenNullValue");
-            Validator.ThrowSerializationIfNull(_question, "QuestionAnswerQuestionNotSet");
+            Validator.ThrowSerializationIfNull(this.when, "WhenNullValue");
+            Validator.ThrowSerializationIfNull(this.question, "QuestionAnswerQuestionNotSet");
 
             writer.WriteStartElement("question-answer");
 
-            _when.WriteXml("when", writer);
+            this.when.WriteXml("when", writer);
 
-            _question.WriteXml("question", writer);
+            this.question.WriteXml("question", writer);
 
-            foreach (CodableValue choice in _answerChoice)
+            foreach (CodableValue choice in this.answerChoice)
             {
                 choice.WriteXml("answer-choice", writer);
             }
 
-            foreach (CodableValue answer in _answer)
+            foreach (CodableValue answer in this.answer)
             {
                 answer.WriteXml("answer", writer);
             }
@@ -222,14 +224,16 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public HealthServiceDateTime When
         {
-            get { return _when; }
+            get { return this.when; }
+
             set
             {
                 Validator.ThrowIfArgumentNull(value, "When", "WhenNullValue");
-                _when = value;
+                this.when = value;
             }
         }
-        private HealthServiceDateTime _when;
+
+        private HealthServiceDateTime when;
 
         /// <summary>
         /// Gets or sets the question that was asked.
@@ -246,14 +250,16 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public CodableValue Question
         {
-            get { return _question; }
+            get { return this.question; }
+
             set
             {
                 Validator.ThrowIfArgumentNull(value, "Question", "QuestionAnswerQuestionMandatory");
-                _question = value;
+                this.question = value;
             }
         }
-        private CodableValue _question;
+
+        private CodableValue question;
 
         /// <summary>
         /// Gets a collection of the possible answers to the question.
@@ -267,11 +273,9 @@ namespace Microsoft.HealthVault.ItemTypes
         /// "answer-choice-sets".
         /// </remarks>
         ///
-        public Collection<CodableValue> AnswerChoice
-        {
-            get { return _answerChoice; }
-        }
-        private Collection<CodableValue> _answerChoice = new Collection<CodableValue>();
+        public Collection<CodableValue> AnswerChoice => this.answerChoice;
+
+        private readonly Collection<CodableValue> answerChoice = new Collection<CodableValue>();
 
         /// <summary>
         /// Gets a collection of the recorded answer(s) to the question.
@@ -282,11 +286,9 @@ namespace Microsoft.HealthVault.ItemTypes
         /// selected <see cref="AnswerChoice"/>.
         /// </remarks>
         ///
-        public Collection<CodableValue> Answer
-        {
-            get { return _answer; }
-        }
-        private Collection<CodableValue> _answer = new Collection<CodableValue>();
+        public Collection<CodableValue> Answer => this.answer;
+
+        private readonly Collection<CodableValue> answer = new Collection<CodableValue>();
 
         /// <summary>
         /// Gets a string representation of the question/answer.
@@ -300,13 +302,13 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             StringBuilder result = new StringBuilder(200);
 
-            if (_question != null)
+            if (this.question != null)
             {
-                result.Append(_question.ToString());
+                result.Append(this.question);
             }
 
             string space = ResourceRetriever.GetSpace("errors");
-            for (int index = 0; index < _answer.Count; ++index)
+            for (int index = 0; index < this.answer.Count; ++index)
             {
                 if (index > 0)
                 {
@@ -319,8 +321,8 @@ namespace Microsoft.HealthVault.ItemTypes
                     result.Append(space);
                 }
 
-                CodableValue answer = _answer[index];
-                result.Append(answer.ToString());
+                CodableValue answer = this.answer[index];
+                result.Append(answer);
             }
 
             return result.ToString();

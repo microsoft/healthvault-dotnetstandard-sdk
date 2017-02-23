@@ -5,7 +5,7 @@
 
 using System;
 
-namespace Microsoft.HealthVault
+namespace Microsoft.HealthVault.Thing
 {
     /// <summary>
     /// A class representing the display strategies for optional rules

@@ -3,7 +3,7 @@
 // see http://www.microsoft.com/resources/sharedsource/licensingbasics/sharedsourcelicenses.mspx.
 // All other rights reserved.
 
-namespace Microsoft.HealthVault
+namespace Microsoft.HealthVault.PlatformInformation
 {
     /// <summary>
     /// The avenue used to perform the operation.

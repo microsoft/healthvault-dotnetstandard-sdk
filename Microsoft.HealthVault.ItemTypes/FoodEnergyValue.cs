@@ -6,6 +6,7 @@
 using System.Globalization;
 using System.Xml;
 using System.Xml.XPath;
+using Microsoft.HealthVault.Helpers;
 
 namespace Microsoft.HealthVault.ItemTypes
 {
@@ -32,7 +33,8 @@ namespace Microsoft.HealthVault.ItemTypes
         /// The amount of calories consumed.
         /// </param>
         ///
-        public FoodEnergyValue(double calories) : base(calories)
+        public FoodEnergyValue(double calories)
+            : base(calories)
         {
         }
 
@@ -85,7 +87,7 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         protected override void ParseValueXml(XPathNavigator navigator)
         {
-            Value = navigator.SelectSingleNode("calories").ValueAsDouble;
+            this.Value = navigator.SelectSingleNode("calories").ValueAsDouble;
         }
 
         /// <summary>
@@ -98,7 +100,7 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         protected override void WriteValueXml(XmlWriter writer)
         {
-            writer.WriteElementString("calories", XmlConvert.ToString(Value));
+            writer.WriteElementString("calories", XmlConvert.ToString(this.Value));
         }
 
         /// <summary>
@@ -111,8 +113,8 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public double Calories
         {
-            get { return Value; }
-            set { Value = value; }
+            get { return this.Value; }
+            set { this.Value = value; }
         }
 
         /// <summary>
@@ -132,7 +134,7 @@ namespace Microsoft.HealthVault.ItemTypes
             return string.Format(
                 CultureInfo.CurrentCulture,
                 ResourceRetriever.GetResourceString("FoodEnergyValueFormat"),
-                Calories.ToString(CultureInfo.CurrentCulture));
+                this.Calories.ToString(CultureInfo.CurrentCulture));
         }
     }
 }

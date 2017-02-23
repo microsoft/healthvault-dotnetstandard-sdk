@@ -10,9 +10,11 @@ using System.Net;
 using System.Security.Cryptography;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
+using Microsoft.HealthVault.Application;
 using Microsoft.HealthVault.Extensions;
+using Microsoft.HealthVault.Helpers;
 
-namespace Microsoft.HealthVault
+namespace Microsoft.HealthVault.Vocabulary
 {
     /// <summary>
     /// Represents an API set to create URLs that will handle HTTP GET queries for searches on
@@ -74,7 +76,7 @@ namespace Microsoft.HealthVault
                 new Uri(
                     HealthApplicationConfiguration.Current.GetHealthClientServiceUrl().OriginalString +
                     "?" +
-                    queryString.ToString());
+                    queryString);
         }
 
         /// <summary>
@@ -122,7 +124,7 @@ namespace Microsoft.HealthVault
                 new Uri(
                     HealthApplicationConfiguration.Current.GetHealthClientServiceUrl().OriginalString +
                     "?" +
-                    queryString.ToString());
+                    queryString);
         }
 
         private static void AppendVocabularySearchServiceParameters(
@@ -153,9 +155,9 @@ namespace Microsoft.HealthVault
                 WebUtility.UrlEncode(certificate.Thumbprint));
 
             DateTime expirationTime = DateTime.UtcNow.AddMinutes(timeToLiveMinutes);
-            String dateTimeStr =
+            string dateTimeStr =
                 expirationTime.ToString("yyyy-MM-ddTHH:mm:ss.FFFZ", CultureInfo.InvariantCulture);
-            Byte[] raw = new Byte[Encoding.UTF8.GetByteCount(dateTimeStr) + 1];
+            byte[] raw = new byte[Encoding.UTF8.GetByteCount(dateTimeStr) + 1];
             raw[0] = 1;
             Encoding.UTF8.GetBytes(dateTimeStr, 0, dateTimeStr.Length, raw, 1);
 
@@ -165,7 +167,7 @@ namespace Microsoft.HealthVault
 
             RSACryptoServiceProvider rsaProvider =
                 (RSACryptoServiceProvider)certificate.GetRSAPrivateKey();
-            Byte[] signature = rsaProvider.SignData(raw, "SHA1");
+            byte[] signature = rsaProvider.SignData(raw, "SHA1");
 
             queryString.AppendFormat(
                 "&signature={0}",
@@ -180,14 +182,14 @@ namespace Microsoft.HealthVault
                 "&vocabName={0}",
                 WebUtility.UrlEncode(searchParameters.Vocabulary.Name));
 
-            if (!String.IsNullOrEmpty(searchParameters.Vocabulary.Family))
+            if (!string.IsNullOrEmpty(searchParameters.Vocabulary.Family))
             {
                 queryString.AppendFormat(
                     "&vocabFamily={0}",
                     WebUtility.UrlEncode(searchParameters.Vocabulary.Family));
             }
 
-            if (!String.IsNullOrEmpty(searchParameters.Vocabulary.Version))
+            if (!string.IsNullOrEmpty(searchParameters.Vocabulary.Version))
             {
                 queryString.AppendFormat(
                     "&vocabVersion={0}",

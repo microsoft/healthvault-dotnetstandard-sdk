@@ -6,6 +6,7 @@
 using System.Globalization;
 using System.Xml;
 using System.Xml.XPath;
+using Microsoft.HealthVault.Helpers;
 
 namespace Microsoft.HealthVault.ItemTypes
 {
@@ -27,7 +28,7 @@ namespace Microsoft.HealthVault.ItemTypes
         /// Creates a new instance of the <see cref="Length"/> class with empty values.
         /// </summary>
         ///
-        public Length() : base()
+        public Length()
         {
         }
 
@@ -40,7 +41,8 @@ namespace Microsoft.HealthVault.ItemTypes
         /// The length in meters.
         /// </param>
         ///
-        public Length(double meters) : base(meters)
+        public Length(double meters)
+            : base(meters)
         {
         }
 
@@ -83,8 +85,8 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public double Meters
         {
-            get { return Value; }
-            set { Value = value; }
+            get { return this.Value; }
+            set { this.Value = value; }
         }
 
         /// <summary>
@@ -114,7 +116,7 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         protected override void ParseValueXml(XPathNavigator navigator)
         {
-            Value = navigator.SelectSingleNode("m").ValueAsDouble;
+            this.Value = navigator.SelectSingleNode("m").ValueAsDouble;
         }
 
         /// <summary>
@@ -128,7 +130,7 @@ namespace Microsoft.HealthVault.ItemTypes
         protected override void WriteValueXml(XmlWriter writer)
         {
             writer.WriteElementString(
-                "m", XmlConvert.ToString(Value));
+                "m", XmlConvert.ToString(this.Value));
         }
 
         /// <summary>

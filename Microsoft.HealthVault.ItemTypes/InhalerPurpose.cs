@@ -37,6 +37,6 @@ namespace Microsoft.Health.ItemTypes
         /// The intended purpose combines both control and rescue.
         /// </summary>
         ///
-        Combination,
+        Combination
     }
 }

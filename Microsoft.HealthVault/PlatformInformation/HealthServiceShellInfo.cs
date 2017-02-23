@@ -8,7 +8,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Xml.XPath;
 
-namespace Microsoft.HealthVault
+namespace Microsoft.HealthVault.PlatformInformation
 {
     /// <summary>
     /// Provides information about the HealthVault Shell.
@@ -57,7 +57,7 @@ namespace Microsoft.HealthVault
                     "querystring-parameters").Value;
 
                 string[] queryStringParameters =
-                    queryParams.Split(new Char[] { ',' });
+                    queryParams.Split(',');
 
                 HealthServiceShellRedirectToken redirectToken =
                     new HealthServiceShellRedirectToken(token, description, queryStringParameters);
@@ -82,9 +82,9 @@ namespace Microsoft.HealthVault
             Uri redirectUrl,
             IList<HealthServiceShellRedirectToken> redirectTokens)
         {
-            _baseUrl = baseUrl;
-            _redirectUrl = redirectUrl;
-            _redirectTokens = redirectTokens;
+            this.BaseUrl = baseUrl;
+            this.RedirectUrl = redirectUrl;
+            this.redirectTokens = redirectTokens;
         }
 
         /// <summary>
@@ -99,11 +99,7 @@ namespace Microsoft.HealthVault
         /// The URL used to access the HealthVault Shell.
         /// </remarks>
         ///
-        public Uri BaseUrl
-        {
-            get { return _baseUrl; }
-        }
-        private Uri _baseUrl;
+        public Uri BaseUrl { get; }
 
         /// <summary>
         /// Gets the Shell redirect URL.
@@ -118,11 +114,7 @@ namespace Microsoft.HealthVault
         /// HealthVault Shell.
         /// </remarks>
         ///
-        public Uri RedirectUrl
-        {
-            get { return _redirectUrl; }
-        }
-        private Uri _redirectUrl;
+        public Uri RedirectUrl { get; }
 
         /// <summary>
         /// Gets a collection of the possible redirect information that can be
@@ -134,13 +126,8 @@ namespace Microsoft.HealthVault
         /// A read-only collection containing the redirect information.
         /// </returns>
         ///
-        public ReadOnlyCollection<HealthServiceShellRedirectToken> RedirectTokens
-        {
-            get
-            {
-                return new ReadOnlyCollection<HealthServiceShellRedirectToken>(_redirectTokens);
-            }
-        }
-        private IList<HealthServiceShellRedirectToken> _redirectTokens;
+        public ReadOnlyCollection<HealthServiceShellRedirectToken> RedirectTokens => new ReadOnlyCollection<HealthServiceShellRedirectToken>(this.redirectTokens);
+
+        private IList<HealthServiceShellRedirectToken> redirectTokens;
     }
 }

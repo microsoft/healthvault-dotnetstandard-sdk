@@ -8,6 +8,8 @@ using System.Collections.ObjectModel;
 using System.Text;
 using System.Xml;
 using System.Xml.XPath;
+using Microsoft.HealthVault.Helpers;
+using Microsoft.HealthVault.Thing;
 
 namespace Microsoft.HealthVault.ItemTypes
 {
@@ -47,7 +49,7 @@ namespace Microsoft.HealthVault.ItemTypes
         /// Retrieves the unique identifier for the item type.
         /// </summary>
         ///
-        public new static readonly Guid TypeId =
+        public static new readonly Guid TypeId =
             new Guid("4a04fcc8-19c1-4d59-a8c7-2031a03f21de");
 
         /// <summary>
@@ -70,15 +72,15 @@ namespace Microsoft.HealthVault.ItemTypes
 
             Validator.ThrowInvalidIfNull(itemNav, "FamilyHistoryUnexpectedNode");
 
-            _conditions.Clear();
+            this.conditions.Clear();
             foreach (XPathNavigator conditionNav in itemNav.Select("condition"))
             {
                 ConditionEntry condition = new ConditionEntry();
                 condition.ParseXml(conditionNav);
-                _conditions.Add(condition);
+                this.conditions.Add(condition);
             }
 
-            _relative =
+            this.relative =
                 XPathHelper.GetOptNavValue<FamilyHistoryRelativeV3>(itemNav, "relative");
         }
 
@@ -102,7 +104,7 @@ namespace Microsoft.HealthVault.ItemTypes
             writer.WriteStartElement("family-history");
 
             // <condition>
-            foreach (ConditionEntry condition in _conditions)
+            foreach (ConditionEntry condition in this.conditions)
             {
                 condition.WriteXml("condition", writer);
             }
@@ -111,7 +113,7 @@ namespace Microsoft.HealthVault.ItemTypes
             XmlWriterHelper.WriteOpt(
                 writer,
                 "relative",
-                _relative);
+                this.relative);
 
             // </familty-history>
             writer.WriteEndElement();
@@ -125,11 +127,9 @@ namespace Microsoft.HealthVault.ItemTypes
         /// If there is no information about the condition of the relative the collection should be empty.
         /// </remarks>
         ///
-        public Collection<ConditionEntry> Conditions
-        {
-            get { return _conditions; }
-        }
-        private Collection<ConditionEntry> _conditions = new Collection<ConditionEntry>();
+        public Collection<ConditionEntry> Conditions => this.conditions;
+
+        private readonly Collection<ConditionEntry> conditions = new Collection<ConditionEntry>();
 
         /// <summary>
         /// Gets or sets information about the relative with this condition.
@@ -141,10 +141,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public FamilyHistoryRelativeV3 Relative
         {
-            get { return _relative; }
-            set { _relative = value; }
+            get { return this.relative; }
+            set { this.relative = value; }
         }
-        private FamilyHistoryRelativeV3 _relative;
+
+        private FamilyHistoryRelativeV3 relative;
 
         /// <summary>
         /// Gets a string representation of the family history item.
@@ -158,23 +159,25 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             StringBuilder sb = new StringBuilder(200);
 
-            foreach (ConditionEntry condition in Conditions)
+            foreach (ConditionEntry condition in this.Conditions)
             {
                 if (sb.Length > 0)
                 {
                     sb.Append(ResourceRetriever.GetResourceString("ListSeparator"));
                 }
+
                 sb.Append(condition.Name);
             }
 
             string result = sb.ToString();
-            if (_relative != null && _relative.Relationship != null)
+            if (this.relative != null && this.relative.Relationship != null)
             {
                 result = string.Format(
                         ResourceRetriever.GetResourceString("FamilyHistoryToStringFormat"),
                         result,
-                        _relative.Relationship.Text);
+                        this.relative.Relationship.Text);
             }
+
             return result;
         }
     }

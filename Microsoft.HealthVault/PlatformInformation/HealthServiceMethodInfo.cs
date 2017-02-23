@@ -6,7 +6,7 @@
 using System.Collections.ObjectModel;
 using System.Xml.XPath;
 
-namespace Microsoft.HealthVault
+namespace Microsoft.HealthVault.PlatformInformation
 {
     /// <summary>
     /// Provides information about the HealthVault methods.
@@ -26,7 +26,7 @@ namespace Microsoft.HealthVault
 
         internal void ParseXml(XPathNavigator nav)
         {
-            _name = nav.SelectSingleNode("name").Value;
+            this.Name = nav.SelectSingleNode("name").Value;
 
             XPathNodeIterator versionIterator =
                 nav.Select("version");
@@ -40,7 +40,8 @@ namespace Microsoft.HealthVault
                 methodVersion.ParseXml(versionNav);
                 versions.Add(methodVersion);
             }
-            _versions =
+
+            this.Versions =
                 new ReadOnlyCollection<HealthServiceMethodVersionInfo>(
                     versions);
         }
@@ -62,8 +63,8 @@ namespace Microsoft.HealthVault
             string name,
             ReadOnlyCollection<HealthServiceMethodVersionInfo> versions)
         {
-            _name = name;
-            _versions = versions;
+            this.Name = name;
+            this.Versions = versions;
         }
 
         /// <summary>
@@ -74,11 +75,7 @@ namespace Microsoft.HealthVault
         /// A string representing the method name.
         /// </value>
         ///
-        public string Name
-        {
-            get { return _name; }
-        }
-        private string _name;
+        public string Name { get; private set; }
 
         /// <summary>
         /// Gets the information about the supported versions of the method.
@@ -88,10 +85,6 @@ namespace Microsoft.HealthVault
         /// A read-only collection containing version information.
         /// </value>
         ///
-        public ReadOnlyCollection<HealthServiceMethodVersionInfo> Versions
-        {
-            get { return _versions; }
-        }
-        private ReadOnlyCollection<HealthServiceMethodVersionInfo> _versions;
+        public ReadOnlyCollection<HealthServiceMethodVersionInfo> Versions { get; private set; }
     }
 }

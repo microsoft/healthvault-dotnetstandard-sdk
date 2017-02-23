@@ -10,6 +10,8 @@ using System.Globalization;
 using System.Text;
 using System.Xml;
 using System.Xml.XPath;
+using Microsoft.HealthVault.Helpers;
+using Microsoft.HealthVault.Thing;
 
 namespace Microsoft.HealthVault.ItemTypes
 {
@@ -69,8 +71,8 @@ namespace Microsoft.HealthVault.ItemTypes
             long size)
         : base(TypeId)
         {
-            When = when;
-            Size = size;
+            this.When = when;
+            this.Size = size;
         }
 
         /// <summary>
@@ -81,7 +83,7 @@ namespace Microsoft.HealthVault.ItemTypes
         /// A GUID.
         /// </value>
         ///
-        public new static readonly Guid TypeId =
+        public static new readonly Guid TypeId =
             new Guid("72dc49e1-1486-4634-b651-ef560ed051e5");
 
         /// <summary>
@@ -110,34 +112,34 @@ namespace Microsoft.HealthVault.ItemTypes
 
             Validator.ThrowInvalidIfNull(itemNav, "MessageUnexpectedNode");
 
-            _when = new HealthServiceDateTime();
-            _when.ParseXml(itemNav.SelectSingleNode("when"));
+            this.when = new HealthServiceDateTime();
+            this.when.ParseXml(itemNav.SelectSingleNode("when"));
 
-            _headers.Clear();
+            this.headers.Clear();
             foreach (XPathNavigator nav in itemNav.Select("headers"))
             {
                 string name = nav.SelectSingleNode("name").Value;
                 string value = nav.SelectSingleNode("value").Value;
 
-                if (!_headers.ContainsKey(name))
+                if (!this.headers.ContainsKey(name))
                 {
-                    _headers.Add(name, new Collection<string>());
+                    this.headers.Add(name, new Collection<string>());
                 }
 
-                _headers[name].Add(value);
+                this.headers[name].Add(value);
             }
 
-            _size = itemNav.SelectSingleNode("size").ValueAsLong;
-            _summary = XPathHelper.GetOptNavValue(itemNav, "summary");
-            _htmlBlobName = XPathHelper.GetOptNavValue(itemNav, "html-blob-name");
-            _textBlobName = XPathHelper.GetOptNavValue(itemNav, "text-blob-name");
+            this.size = itemNav.SelectSingleNode("size").ValueAsLong;
+            this.summary = XPathHelper.GetOptNavValue(itemNav, "summary");
+            this.htmlBlobName = XPathHelper.GetOptNavValue(itemNav, "html-blob-name");
+            this.textBlobName = XPathHelper.GetOptNavValue(itemNav, "text-blob-name");
 
-            _attachments.Clear();
+            this.attachments.Clear();
             foreach (XPathNavigator nav in itemNav.Select("attachments"))
             {
                 MessageAttachment messageAttachment = new MessageAttachment();
                 messageAttachment.ParseXml(nav);
-                _attachments.Add(messageAttachment);
+                this.attachments.Add(messageAttachment);
             }
         }
 
@@ -162,15 +164,15 @@ namespace Microsoft.HealthVault.ItemTypes
         public override void WriteXml(XmlWriter writer)
         {
             Validator.ThrowIfWriterNull(writer);
-            Validator.ThrowSerializationIfNull(_when, "WhenNullValue");
+            Validator.ThrowSerializationIfNull(this.when, "WhenNullValue");
 
             writer.WriteStartElement("message");
 
-            _when.WriteXml("when", writer);
+            this.when.WriteXml("when", writer);
 
-            foreach (string key in _headers.Keys)
+            foreach (string key in this.headers.Keys)
             {
-                Collection<string> values = _headers[key];
+                Collection<string> values = this.headers[key];
                 if (values != null)
                 {
                     foreach (string value in values)
@@ -186,12 +188,12 @@ namespace Microsoft.HealthVault.ItemTypes
                 }
             }
 
-            writer.WriteElementString("size", _size.ToString(CultureInfo.InvariantCulture));
-            XmlWriterHelper.WriteOptString(writer, "summary", _summary);
-            XmlWriterHelper.WriteOptString(writer, "html-blob-name", _htmlBlobName);
-            XmlWriterHelper.WriteOptString(writer, "text-blob-name", _textBlobName);
+            writer.WriteElementString("size", this.size.ToString(CultureInfo.InvariantCulture));
+            XmlWriterHelper.WriteOptString(writer, "summary", this.summary);
+            XmlWriterHelper.WriteOptString(writer, "html-blob-name", this.htmlBlobName);
+            XmlWriterHelper.WriteOptString(writer, "text-blob-name", this.textBlobName);
 
-            foreach (MessageAttachment messageAttachment in _attachments)
+            foreach (MessageAttachment messageAttachment in this.attachments)
             {
                 messageAttachment.WriteXml("attachments", writer);
             }
@@ -211,18 +213,18 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             get
             {
-                return _when;
+                return this.when;
             }
 
             set
             {
                 Validator.ThrowIfArgumentNull(value, "When", "WhenNullValue");
 
-                _when = value;
+                this.when = value;
             }
         }
 
-        private HealthServiceDateTime _when;
+        private HealthServiceDateTime when;
 
         /// <summary>
         /// Gets the header information associated with this message.
@@ -234,12 +236,9 @@ namespace Microsoft.HealthVault.ItemTypes
         /// if there were not such headers associated with the message.
         /// </remarks>
         ///
-        public Dictionary<string, Collection<string>> Headers
-        {
-            get { return _headers; }
-        }
+        public Dictionary<string, Collection<string>> Headers => this.headers;
 
-        private Dictionary<string, Collection<string>> _headers = new Dictionary<string, Collection<string>>(StringComparer.OrdinalIgnoreCase);
+        private readonly Dictionary<string, Collection<string>> headers = new Dictionary<string, Collection<string>>(StringComparer.OrdinalIgnoreCase);
 
         /// <summary>
         /// Gets or sets the size of the message in bytes.
@@ -249,7 +248,7 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             get
             {
-                return _size;
+                return this.size;
             }
 
             set
@@ -259,11 +258,11 @@ namespace Microsoft.HealthVault.ItemTypes
                     "Size",
                     "MessageSizeOutOfRange");
 
-                _size = value;
+                this.size = value;
             }
         }
 
-        private long _size;
+        private long size;
 
         /// <summary>
         /// Gets or sets a summary of the message.
@@ -283,18 +282,18 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             get
             {
-                return _summary;
+                return this.summary;
             }
 
             set
             {
                 Validator.ThrowIfStringIsWhitespace(value, "Summary");
 
-                _summary = value;
+                this.summary = value;
             }
         }
 
-        private string _summary;
+        private string summary;
 
         /// <summary>
         /// Gets or sets the name of the blob that stores the message in HTML format.
@@ -308,18 +307,18 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             get
             {
-                return _htmlBlobName;
+                return this.htmlBlobName;
             }
 
             set
             {
                 Validator.ThrowIfStringIsWhitespace(value, "HtmlBlobName");
 
-                _htmlBlobName = value;
+                this.htmlBlobName = value;
             }
         }
 
-        private string _htmlBlobName;
+        private string htmlBlobName;
 
         /// <summary>
         /// Gets or sets the name of the blob that stores the message in text format.
@@ -333,47 +332,45 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             get
             {
-                return _textBlobName;
+                return this.textBlobName;
             }
 
             set
             {
                 Validator.ThrowIfStringIsWhitespace(value, "TextBlobName");
 
-                _textBlobName = value;
+                this.textBlobName = value;
             }
         }
 
-        private string _textBlobName;
+        private string textBlobName;
 
         private string GetHeaderProperty(string headerKeyName)
         {
-            if (!_headers.ContainsKey(headerKeyName) ||
-                _headers[headerKeyName].Count == 0)
+            if (!this.headers.ContainsKey(headerKeyName) ||
+                this.headers[headerKeyName].Count == 0)
             {
                 return null;
             }
-            else
-            {
-                return _headers[headerKeyName][0];
-            }
+
+            return this.headers[headerKeyName][0];
         }
 
         private void SetHeaderProperty(string headerKeyName, string value)
         {
             if (value == null)
             {
-                _headers.Remove(headerKeyName);
+                this.headers.Remove(headerKeyName);
             }
             else
             {
-                if (!_headers.ContainsKey(headerKeyName))
+                if (!this.headers.ContainsKey(headerKeyName))
                 {
-                    _headers.Add(headerKeyName, new Collection<string>());
+                    this.headers.Add(headerKeyName, new Collection<string>());
                 }
 
-                _headers[headerKeyName].Clear();
-                _headers[headerKeyName].Add(value);
+                this.headers[headerKeyName].Clear();
+                this.headers[headerKeyName].Add(value);
             }
         }
 
@@ -390,8 +387,8 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public string Subject
         {
-            get { return GetHeaderProperty("Subject"); }
-            set { SetHeaderProperty("Subject", value); }
+            get { return this.GetHeaderProperty("Subject"); }
+            set { this.SetHeaderProperty("Subject", value); }
         }
 
         /// <summary>
@@ -407,8 +404,8 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public string From
         {
-            get { return GetHeaderProperty("From"); }
-            set { SetHeaderProperty("From", value); }
+            get { return this.GetHeaderProperty("From"); }
+            set { this.SetHeaderProperty("From", value); }
         }
 
         /// <summary>
@@ -419,12 +416,9 @@ namespace Microsoft.HealthVault.ItemTypes
         /// If there are no attachments the collection will be empty.
         /// </remarks>
         ///
-        public Collection<MessageAttachment> Attachments
-        {
-            get { return _attachments; }
-        }
+        public Collection<MessageAttachment> Attachments => this.attachments;
 
-        private Collection<MessageAttachment> _attachments = new Collection<MessageAttachment>();
+        private readonly Collection<MessageAttachment> attachments = new Collection<MessageAttachment>();
 
         /// <summary>
         /// Gets a string representation of the Message.
@@ -438,18 +432,18 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             StringBuilder builder = new StringBuilder();
 
-            builder.Append(_when);
+            builder.Append(this.when);
 
-            if (From != null)
+            if (this.From != null)
             {
                 builder.Append(ResourceRetriever.GetResourceString("ListSeparator"));
-                builder.Append(From);
+                builder.Append(this.From);
             }
 
-            if (Subject != null)
+            if (this.Subject != null)
             {
                 builder.Append(ResourceRetriever.GetResourceString("ListSeparator"));
-                builder.Append(Subject);
+                builder.Append(this.Subject);
             }
 
             return builder.ToString();

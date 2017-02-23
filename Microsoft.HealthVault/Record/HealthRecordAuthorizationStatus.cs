@@ -3,7 +3,7 @@
 // see http://www.microsoft.com/resources/sharedsource/licensingbasics/sharedsourcelicenses.mspx.
 // All other rights reserved.
 
-namespace Microsoft.HealthVault
+namespace Microsoft.HealthVault.Record
 {
     /// <summary>
     /// The record's current authorization status.
@@ -40,6 +40,6 @@ namespace Microsoft.HealthVault
         /// <summary>
         /// The user must reauthorize this application.
         /// </summary>
-        ReauthorizationRequired = 4,
+        ReauthorizationRequired = 4
     }
 }

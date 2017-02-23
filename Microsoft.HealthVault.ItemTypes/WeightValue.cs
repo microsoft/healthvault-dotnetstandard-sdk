@@ -6,6 +6,7 @@
 using System.Globalization;
 using System.Xml;
 using System.Xml.XPath;
+using Microsoft.HealthVault.Helpers;
 
 namespace Microsoft.HealthVault.ItemTypes
 {
@@ -28,7 +29,7 @@ namespace Microsoft.HealthVault.ItemTypes
         /// with empty values.
         /// </summary>
         ///
-        public WeightValue() : base()
+        public WeightValue()
         {
         }
 
@@ -41,7 +42,8 @@ namespace Microsoft.HealthVault.ItemTypes
         /// The weight value in kilograms.
         /// </param>
         ///
-        public WeightValue(double kilograms) : base(kilograms)
+        public WeightValue(double kilograms)
+            : base(kilograms)
         {
         }
 
@@ -95,7 +97,7 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         protected override void ParseValueXml(XPathNavigator navigator)
         {
-            Value = navigator.SelectSingleNode("kg").ValueAsDouble;
+            this.Value = navigator.SelectSingleNode("kg").ValueAsDouble;
         }
 
         /// <summary>
@@ -109,7 +111,7 @@ namespace Microsoft.HealthVault.ItemTypes
         protected override void WriteValueXml(XmlWriter writer)
         {
             writer.WriteElementString(
-                "kg", XmlConvert.ToString(Value));
+                "kg", XmlConvert.ToString(this.Value));
         }
 
         /// <summary>
@@ -145,8 +147,8 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public double Kilograms
         {
-            get { return Value; }
-            set { Value = value; }
+            get { return this.Value; }
+            set { this.Value = value; }
         }
 
         /// <summary>
@@ -200,6 +202,7 @@ namespace Microsoft.HealthVault.ItemTypes
                     newValue.DisplayValue.Units = value1.DisplayValue.Units;
                 }
             }
+
             return newValue;
         }
     }

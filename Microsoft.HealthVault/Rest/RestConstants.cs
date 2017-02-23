@@ -51,6 +51,7 @@ namespace Microsoft.HealthVault.Rest
         // Headers
 
         #region Header constants
+        
         /// <summary>
         /// Hmac Custom Header Name
         /// </summary>
@@ -71,7 +72,6 @@ namespace Microsoft.HealthVault.Rest
         /// </summary>
         public const string AuthorizationHeaderName = "Authorization";
         #endregion
-
 
         /// <summary>
         /// Content Type for Json

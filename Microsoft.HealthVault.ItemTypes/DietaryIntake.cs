@@ -3,12 +3,14 @@
 // see http://www.microsoft.com/resources/sharedsource/licensingbasics/sharedsourcelicenses.mspx.
 // All other rights reserved.
 
-using Microsoft.HealthVault.Exceptions;
 using System;
 using System.Collections.ObjectModel;
 using System.Diagnostics.CodeAnalysis;
 using System.Xml;
 using System.Xml.XPath;
+using Microsoft.HealthVault.Exceptions;
+using Microsoft.HealthVault.Helpers;
+using Microsoft.HealthVault.Thing;
 
 namespace Microsoft.HealthVault.ItemTypes
 {
@@ -55,7 +57,7 @@ namespace Microsoft.HealthVault.ItemTypes
         public DietaryIntake(CodableValue foodItem)
         : base(TypeId)
         {
-            FoodItem = foodItem;
+            this.FoodItem = foodItem;
         }
 
         /// <summary>
@@ -66,7 +68,7 @@ namespace Microsoft.HealthVault.ItemTypes
         /// A GUID.
         /// </value>
         ///
-        public new static readonly Guid TypeId =
+        public static new readonly Guid TypeId =
             new Guid("089646a6-7e25-4495-ad15-3e28d4c1a71d");
 
         /// <summary>
@@ -106,7 +108,7 @@ namespace Microsoft.HealthVault.ItemTypes
                         "errors", "DietaryIntakeUnexpectedNode"));
             }
 
-            _dietaryIntakeItem.ParseXml(itemNav);
+            this.dietaryIntakeItem.ParseXml(itemNav);
         }
 
         /// <summary>
@@ -137,17 +139,17 @@ namespace Microsoft.HealthVault.ItemTypes
                         "errors", "WriteXmlNullWriter"));
             }
 
-            if (_dietaryIntakeItem.FoodItem == null)
+            if (this.dietaryIntakeItem.FoodItem == null)
             {
                 throw new HealthRecordItemSerializationException(
                     ResourceRetriever.GetResourceString(
                         "errors", "FoodItemNullValue"));
             }
 
-            _dietaryIntakeItem.WriteXml("dietary-intake", writer);
+            this.dietaryIntakeItem.WriteXml("dietary-intake", writer);
         }
 
-        private readonly DietaryIntakeItem _dietaryIntakeItem = new DietaryIntakeItem();
+        private readonly DietaryIntakeItem dietaryIntakeItem = new DietaryIntakeItem();
 
         /// <summary>
         /// Gets or sets the food item that was eaten.
@@ -166,7 +168,7 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             get
             {
-                return _dietaryIntakeItem.FoodItem;
+                return this.dietaryIntakeItem.FoodItem;
             }
 
             set
@@ -178,7 +180,7 @@ namespace Microsoft.HealthVault.ItemTypes
                         ResourceRetriever.GetResourceString("errors", "FoodItemNullValue"));
                 }
 
-                _dietaryIntakeItem.FoodItem = value;
+                this.dietaryIntakeItem.FoodItem = value;
             }
         }
 
@@ -196,12 +198,12 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             get
             {
-                return _dietaryIntakeItem.ServingSize;
+                return this.dietaryIntakeItem.ServingSize;
             }
 
             set
             {
-                _dietaryIntakeItem.ServingSize = value;
+                this.dietaryIntakeItem.ServingSize = value;
             }
         }
 
@@ -213,12 +215,12 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             get
             {
-                return _dietaryIntakeItem.ServingsConsumed;
+                return this.dietaryIntakeItem.ServingsConsumed;
             }
 
             set
             {
-                _dietaryIntakeItem.ServingsConsumed = value;
+                this.dietaryIntakeItem.ServingsConsumed = value;
             }
         }
 
@@ -235,12 +237,12 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             get
             {
-                return _dietaryIntakeItem.Meal;
+                return this.dietaryIntakeItem.Meal;
             }
 
             set
             {
-                _dietaryIntakeItem.Meal = value;
+                this.dietaryIntakeItem.Meal = value;
             }
         }
 
@@ -256,12 +258,12 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             get
             {
-                return _dietaryIntakeItem.When;
+                return this.dietaryIntakeItem.When;
             }
 
             set
             {
-                _dietaryIntakeItem.When = value;
+                this.dietaryIntakeItem.When = value;
             }
         }
 
@@ -277,12 +279,12 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             get
             {
-                return _dietaryIntakeItem.Energy;
+                return this.dietaryIntakeItem.Energy;
             }
 
             set
             {
-                _dietaryIntakeItem.Energy = value;
+                this.dietaryIntakeItem.Energy = value;
             }
         }
 
@@ -298,12 +300,12 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             get
             {
-                return _dietaryIntakeItem.EnergyFromFat;
+                return this.dietaryIntakeItem.EnergyFromFat;
             }
 
             set
             {
-                _dietaryIntakeItem.EnergyFromFat = value;
+                this.dietaryIntakeItem.EnergyFromFat = value;
             }
         }
 
@@ -320,12 +322,12 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             get
             {
-                return _dietaryIntakeItem.TotalFat;
+                return this.dietaryIntakeItem.TotalFat;
             }
 
             set
             {
-                _dietaryIntakeItem.TotalFat = value;
+                this.dietaryIntakeItem.TotalFat = value;
             }
         }
 
@@ -342,12 +344,12 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             get
             {
-                return _dietaryIntakeItem.SaturatedFat;
+                return this.dietaryIntakeItem.SaturatedFat;
             }
 
             set
             {
-                _dietaryIntakeItem.SaturatedFat = value;
+                this.dietaryIntakeItem.SaturatedFat = value;
             }
         }
 
@@ -364,12 +366,12 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             get
             {
-                return _dietaryIntakeItem.TransFat;
+                return this.dietaryIntakeItem.TransFat;
             }
 
             set
             {
-                _dietaryIntakeItem.TransFat = value;
+                this.dietaryIntakeItem.TransFat = value;
             }
         }
 
@@ -386,12 +388,12 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             get
             {
-                return _dietaryIntakeItem.MonounsaturatedFat;
+                return this.dietaryIntakeItem.MonounsaturatedFat;
             }
 
             set
             {
-                _dietaryIntakeItem.MonounsaturatedFat = value;
+                this.dietaryIntakeItem.MonounsaturatedFat = value;
             }
         }
 
@@ -408,12 +410,12 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             get
             {
-                return _dietaryIntakeItem.PolyunsaturatedFat;
+                return this.dietaryIntakeItem.PolyunsaturatedFat;
             }
 
             set
             {
-                _dietaryIntakeItem.PolyunsaturatedFat = value;
+                this.dietaryIntakeItem.PolyunsaturatedFat = value;
             }
         }
 
@@ -430,12 +432,12 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             get
             {
-                return _dietaryIntakeItem.Protein;
+                return this.dietaryIntakeItem.Protein;
             }
 
             set
             {
-                _dietaryIntakeItem.Protein = value;
+                this.dietaryIntakeItem.Protein = value;
             }
         }
 
@@ -452,12 +454,12 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             get
             {
-                return _dietaryIntakeItem.Carbohydrates;
+                return this.dietaryIntakeItem.Carbohydrates;
             }
 
             set
             {
-                _dietaryIntakeItem.Carbohydrates = value;
+                this.dietaryIntakeItem.Carbohydrates = value;
             }
         }
 
@@ -474,12 +476,12 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             get
             {
-                return _dietaryIntakeItem.DietaryFiber;
+                return this.dietaryIntakeItem.DietaryFiber;
             }
 
             set
             {
-                _dietaryIntakeItem.DietaryFiber = value;
+                this.dietaryIntakeItem.DietaryFiber = value;
             }
         }
 
@@ -496,12 +498,12 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             get
             {
-                return _dietaryIntakeItem.Sugars;
+                return this.dietaryIntakeItem.Sugars;
             }
 
             set
             {
-                _dietaryIntakeItem.Sugars = value;
+                this.dietaryIntakeItem.Sugars = value;
             }
         }
 
@@ -518,12 +520,12 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             get
             {
-                return _dietaryIntakeItem.Sodium;
+                return this.dietaryIntakeItem.Sodium;
             }
 
             set
             {
-                _dietaryIntakeItem.Sodium = value;
+                this.dietaryIntakeItem.Sodium = value;
             }
         }
 
@@ -540,12 +542,12 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             get
             {
-                return _dietaryIntakeItem.Cholesterol;
+                return this.dietaryIntakeItem.Cholesterol;
             }
 
             set
             {
-                _dietaryIntakeItem.Cholesterol = value;
+                this.dietaryIntakeItem.Cholesterol = value;
             }
         }
 
@@ -562,12 +564,12 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             get
             {
-                return _dietaryIntakeItem.Calcium;
+                return this.dietaryIntakeItem.Calcium;
             }
 
             set
             {
-                _dietaryIntakeItem.Calcium = value;
+                this.dietaryIntakeItem.Calcium = value;
             }
         }
 
@@ -584,12 +586,12 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             get
             {
-                return _dietaryIntakeItem.Iron;
+                return this.dietaryIntakeItem.Iron;
             }
 
             set
             {
-                _dietaryIntakeItem.Iron = value;
+                this.dietaryIntakeItem.Iron = value;
             }
         }
 
@@ -606,12 +608,12 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             get
             {
-                return _dietaryIntakeItem.Magnesium;
+                return this.dietaryIntakeItem.Magnesium;
             }
 
             set
             {
-                _dietaryIntakeItem.Magnesium = value;
+                this.dietaryIntakeItem.Magnesium = value;
             }
         }
 
@@ -628,12 +630,12 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             get
             {
-                return _dietaryIntakeItem.Phosphorus;
+                return this.dietaryIntakeItem.Phosphorus;
             }
 
             set
             {
-                _dietaryIntakeItem.Phosphorus = value;
+                this.dietaryIntakeItem.Phosphorus = value;
             }
         }
 
@@ -650,12 +652,12 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             get
             {
-                return _dietaryIntakeItem.Potassium;
+                return this.dietaryIntakeItem.Potassium;
             }
 
             set
             {
-                _dietaryIntakeItem.Potassium = value;
+                this.dietaryIntakeItem.Potassium = value;
             }
         }
 
@@ -672,12 +674,12 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             get
             {
-                return _dietaryIntakeItem.Zinc;
+                return this.dietaryIntakeItem.Zinc;
             }
 
             set
             {
-                _dietaryIntakeItem.Zinc = value;
+                this.dietaryIntakeItem.Zinc = value;
             }
         }
 
@@ -694,12 +696,12 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             get
             {
-                return _dietaryIntakeItem.VitaminARAE;
+                return this.dietaryIntakeItem.VitaminARAE;
             }
 
             set
             {
-                _dietaryIntakeItem.VitaminARAE = value;
+                this.dietaryIntakeItem.VitaminARAE = value;
             }
         }
 
@@ -716,12 +718,12 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             get
             {
-                return _dietaryIntakeItem.VitaminE;
+                return this.dietaryIntakeItem.VitaminE;
             }
 
             set
             {
-                _dietaryIntakeItem.VitaminE = value;
+                this.dietaryIntakeItem.VitaminE = value;
             }
         }
 
@@ -738,12 +740,12 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             get
             {
-                return _dietaryIntakeItem.VitaminD;
+                return this.dietaryIntakeItem.VitaminD;
             }
 
             set
             {
-                _dietaryIntakeItem.VitaminD = value;
+                this.dietaryIntakeItem.VitaminD = value;
             }
         }
 
@@ -760,12 +762,12 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             get
             {
-                return _dietaryIntakeItem.VitaminC;
+                return this.dietaryIntakeItem.VitaminC;
             }
 
             set
             {
-                _dietaryIntakeItem.VitaminC = value;
+                this.dietaryIntakeItem.VitaminC = value;
             }
         }
 
@@ -782,12 +784,12 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             get
             {
-                return _dietaryIntakeItem.Thiamin;
+                return this.dietaryIntakeItem.Thiamin;
             }
 
             set
             {
-                _dietaryIntakeItem.Thiamin = value;
+                this.dietaryIntakeItem.Thiamin = value;
             }
         }
 
@@ -804,12 +806,12 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             get
             {
-                return _dietaryIntakeItem.Riboflavin;
+                return this.dietaryIntakeItem.Riboflavin;
             }
 
             set
             {
-                _dietaryIntakeItem.Riboflavin = value;
+                this.dietaryIntakeItem.Riboflavin = value;
             }
         }
 
@@ -826,12 +828,12 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             get
             {
-                return _dietaryIntakeItem.Niacin;
+                return this.dietaryIntakeItem.Niacin;
             }
 
             set
             {
-                _dietaryIntakeItem.Niacin = value;
+                this.dietaryIntakeItem.Niacin = value;
             }
         }
 
@@ -848,12 +850,12 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             get
             {
-                return _dietaryIntakeItem.VitaminB6;
+                return this.dietaryIntakeItem.VitaminB6;
             }
 
             set
             {
-                _dietaryIntakeItem.VitaminB6 = value;
+                this.dietaryIntakeItem.VitaminB6 = value;
             }
         }
 
@@ -870,12 +872,12 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             get
             {
-                return _dietaryIntakeItem.FolateDFE;
+                return this.dietaryIntakeItem.FolateDFE;
             }
 
             set
             {
-                _dietaryIntakeItem.FolateDFE = value;
+                this.dietaryIntakeItem.FolateDFE = value;
             }
         }
 
@@ -892,12 +894,12 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             get
             {
-                return _dietaryIntakeItem.VitaminB12;
+                return this.dietaryIntakeItem.VitaminB12;
             }
 
             set
             {
-                _dietaryIntakeItem.VitaminB12 = value;
+                this.dietaryIntakeItem.VitaminB12 = value;
             }
         }
 
@@ -914,12 +916,12 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             get
             {
-                return _dietaryIntakeItem.VitaminK;
+                return this.dietaryIntakeItem.VitaminK;
             }
 
             set
             {
-                _dietaryIntakeItem.VitaminK = value;
+                this.dietaryIntakeItem.VitaminK = value;
             }
         }
 
@@ -932,7 +934,7 @@ namespace Microsoft.HealthVault.ItemTypes
         /// If there is no information about additionalNutritionFacts the value should be set to <b>null</b>.
         /// </remarks>
         ///
-        public Collection<NutritionFact> AdditionalNutritionFacts => _dietaryIntakeItem.AdditionalNutritionFacts;
+        public Collection<NutritionFact> AdditionalNutritionFacts => this.dietaryIntakeItem.AdditionalNutritionFacts;
 
         /// <summary>
         /// Gets a string representation of the DietaryIntake.
@@ -944,9 +946,9 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public override string ToString()
         {
-            if (_dietaryIntakeItem != null)
+            if (this.dietaryIntakeItem != null)
             {
-                return _dietaryIntakeItem.ToString();
+                return this.dietaryIntakeItem.ToString();
             }
 
             return string.Empty;

@@ -8,6 +8,8 @@ using System.Collections.ObjectModel;
 using System.Diagnostics.CodeAnalysis;
 using System.Xml;
 using System.Xml.XPath;
+using Microsoft.HealthVault.Helpers;
+using Microsoft.HealthVault.Thing;
 
 namespace Microsoft.HealthVault.ItemTypes
 {
@@ -53,7 +55,7 @@ namespace Microsoft.HealthVault.ItemTypes
         public MealDefinition(CodableValue name)
         : base(TypeId)
         {
-            Name = name;
+            this.Name = name;
         }
 
         /// <summary>
@@ -64,7 +66,7 @@ namespace Microsoft.HealthVault.ItemTypes
         /// A GUID.
         /// </value>
         ///
-        public new static readonly Guid TypeId =
+        public static new readonly Guid TypeId =
             new Guid("074e122a-335a-4a47-a63d-00a8f3e79e60");
 
         /// <summary>
@@ -104,19 +106,19 @@ namespace Microsoft.HealthVault.ItemTypes
                         "errors", "MealDefinitionUnexpectedNode"));
             }
 
-            _name = new CodableValue();
-            _name.ParseXml(itemNav.SelectSingleNode("name"));
+            this.name = new CodableValue();
+            this.name.ParseXml(itemNav.SelectSingleNode("name"));
 
-            _mealType = new CodableValue();
-            _mealType = XPathHelper.GetOptNavValue<CodableValue>(itemNav, "meal-type");
+            this.mealType = new CodableValue();
+            this.mealType = XPathHelper.GetOptNavValue<CodableValue>(itemNav, "meal-type");
 
             XPathNavigator descriptionValueNav = itemNav.SelectSingleNode("description");
             if (descriptionValueNav != null)
             {
-                _description = descriptionValueNav.Value;
+                this.description = descriptionValueNav.Value;
             }
 
-            _dietaryIntakeItems = XPathHelper.ParseXmlCollection<DietaryIntakeItem>(itemNav, "dietary-items/dietary-item");
+            this.dietaryIntakeItems = XPathHelper.ParseXmlCollection<DietaryIntakeItem>(itemNav, "dietary-items/dietary-item");
         }
 
         /// <summary>
@@ -140,13 +142,13 @@ namespace Microsoft.HealthVault.ItemTypes
         public override void WriteXml(XmlWriter writer)
         {
             Validator.ThrowIfWriterNull(writer);
-            Validator.ThrowSerializationIfNull(_name, "MealDefinitionNameNullValue");
+            Validator.ThrowSerializationIfNull(this.name, "MealDefinitionNameNullValue");
 
             writer.WriteStartElement("meal-definition");
-            _name.WriteXml("name", writer);
-            XmlWriterHelper.WriteOpt(writer, "meal-type", _mealType);
-            XmlWriterHelper.WriteOptString(writer, "description", _description);
-            XmlWriterHelper.WriteXmlCollection(writer, "dietary-items", _dietaryIntakeItems, "dietary-item");
+            this.name.WriteXml("name", writer);
+            XmlWriterHelper.WriteOpt(writer, "meal-type", this.mealType);
+            XmlWriterHelper.WriteOptString(writer, "description", this.description);
+            XmlWriterHelper.WriteXmlCollection(writer, "dietary-items", this.dietaryIntakeItems, "dietary-item");
             writer.WriteEndElement();
         }
 
@@ -167,7 +169,7 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             get
             {
-                return _name;
+                return this.name;
             }
 
             set
@@ -179,11 +181,11 @@ namespace Microsoft.HealthVault.ItemTypes
                         ResourceRetriever.GetResourceString("errors", "MealDefinitionNameNullValue"));
                 }
 
-                _name = value;
+                this.name = value;
             }
         }
 
-        private CodableValue _name;
+        private CodableValue name;
 
         /// <summary>
         /// Represents the type of meal, such as breakfast or lunch.
@@ -196,16 +198,16 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             get
             {
-                return _mealType;
+                return this.mealType;
             }
 
             set
             {
-                _mealType = value;
+                this.mealType = value;
             }
         }
 
-        private CodableValue _mealType;
+        private CodableValue mealType;
 
         /// <summary>
         /// Textual description of the meal.
@@ -214,16 +216,16 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             get
             {
-                return _description;
+                return this.description;
             }
 
             set
             {
-                _description = value;
+                this.description = value;
             }
         }
 
-        private string _description;
+        private string description;
 
         /// <summary>
         /// Gets the collection of Dietary Intake items included in the meal definition.
@@ -231,15 +233,9 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <remarks>
         /// This section does not contain consumption information. To record meal consumption, an application should store DietaryIntake on the record for each item included in this section.
         /// </remarks>
-        public Collection<DietaryIntakeItem> DietaryIntakeItems
-        {
-            get
-            {
-                return _dietaryIntakeItems;
-            }
-        }
+        public Collection<DietaryIntakeItem> DietaryIntakeItems => this.dietaryIntakeItems;
 
-        private Collection<DietaryIntakeItem> _dietaryIntakeItems =
+        private Collection<DietaryIntakeItem> dietaryIntakeItems =
             new Collection<DietaryIntakeItem>();
 
         /// <summary>
@@ -252,7 +248,7 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public override string ToString()
         {
-            return Name.Text;
+            return this.Name.Text;
         }
     }
 }

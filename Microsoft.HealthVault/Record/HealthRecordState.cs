@@ -3,7 +3,7 @@
 // see http://www.microsoft.com/resources/sharedsource/licensingbasics/sharedsourcelicenses.mspx.
 // All other rights reserved.
 
-namespace Microsoft.HealthVault
+namespace Microsoft.HealthVault.Record
 {
     /// <summary>
     /// The state of a record.
@@ -39,6 +39,6 @@ namespace Microsoft.HealthVault
         /// The record is inaccessible and was deleted by the user.
         /// </summary>
         ///
-        Deleted,
+        Deleted
     }
 }

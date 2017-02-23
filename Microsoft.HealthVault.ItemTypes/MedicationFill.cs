@@ -6,6 +6,8 @@
 using System;
 using System.Xml;
 using System.Xml.XPath;
+using Microsoft.HealthVault.Helpers;
+using Microsoft.HealthVault.Thing;
 
 namespace Microsoft.HealthVault.ItemTypes
 {
@@ -53,7 +55,7 @@ namespace Microsoft.HealthVault.ItemTypes
         /// The unique identifier for the item type.
         /// </summary>
         ///
-        public new static readonly Guid TypeId =
+        public static new readonly Guid TypeId =
             new Guid("167ecf6b-bb54-43f9-a473-507b334907e0");
 
         /// <summary>
@@ -76,28 +78,28 @@ namespace Microsoft.HealthVault.ItemTypes
 
             Validator.ThrowInvalidIfNull(itemNav, "MedicationFillUnexpectedNode");
 
-            _name = new CodableValue();
-            _name.ParseXml(itemNav.SelectSingleNode("name"));
+            this.name = new CodableValue();
+            this.name.ParseXml(itemNav.SelectSingleNode("name"));
 
-            _dateFilled =
+            this.dateFilled =
                 XPathHelper.GetOptNavValue<ApproximateDateTime>(itemNav, "date-filled");
 
-            _daysSupply =
+            this.daysSupply =
                 XPathHelper.GetOptNavValueAsInt(itemNav, "days-supply");
 
-            _nextRefillDate =
+            this.nextRefillDate =
                 XPathHelper.GetOptNavValue<HealthServiceDate>(itemNav, "next-refill-date");
 
-            _refillsLeft =
+            this.refillsLeft =
                 XPathHelper.GetOptNavValueAsInt(itemNav, "refills-left");
 
-            _pharmacy =
+            this.pharmacy =
                 XPathHelper.GetOptNavValue<Organization>(itemNav, "pharmacy");
 
-            _prescriptionNumber =
+            this.prescriptionNumber =
                 XPathHelper.GetOptNavValue(itemNav, "prescription-number");
 
-            _lotNumber =
+            this.lotNumber =
                 XPathHelper.GetOptNavValue(itemNav, "lot-number");
         }
 
@@ -120,19 +122,19 @@ namespace Microsoft.HealthVault.ItemTypes
         public override void WriteXml(XmlWriter writer)
         {
             Validator.ThrowIfWriterNull(writer);
-            Validator.ThrowSerializationIfNull(_name, "MedicationFillNameNotSet");
+            Validator.ThrowSerializationIfNull(this.name, "MedicationFillNameNotSet");
 
             writer.WriteStartElement("medication-fill");
 
-            _name.WriteXml("name", writer);
+            this.name.WriteXml("name", writer);
 
-            XmlWriterHelper.WriteOpt(writer, "date-filled", _dateFilled);
-            XmlWriterHelper.WriteOptInt(writer, "days-supply", _daysSupply);
-            XmlWriterHelper.WriteOpt(writer, "next-refill-date", _nextRefillDate);
-            XmlWriterHelper.WriteOptInt(writer, "refills-left", _refillsLeft);
-            XmlWriterHelper.WriteOpt(writer, "pharmacy", _pharmacy);
-            XmlWriterHelper.WriteOptString(writer, "prescription-number", _prescriptionNumber);
-            XmlWriterHelper.WriteOptString(writer, "lot-number", _lotNumber);
+            XmlWriterHelper.WriteOpt(writer, "date-filled", this.dateFilled);
+            XmlWriterHelper.WriteOptInt(writer, "days-supply", this.daysSupply);
+            XmlWriterHelper.WriteOpt(writer, "next-refill-date", this.nextRefillDate);
+            XmlWriterHelper.WriteOptInt(writer, "refills-left", this.refillsLeft);
+            XmlWriterHelper.WriteOpt(writer, "pharmacy", this.pharmacy);
+            XmlWriterHelper.WriteOptString(writer, "prescription-number", this.prescriptionNumber);
+            XmlWriterHelper.WriteOptString(writer, "lot-number", this.lotNumber);
 
             writer.WriteEndElement();
         }
@@ -153,14 +155,16 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public CodableValue Name
         {
-            get { return _name; }
+            get { return this.name; }
+
             set
             {
                 Validator.ThrowIfArgumentNull(value, "Name", "MedicationFillNameMandatory");
-                _name = value;
+                this.name = value;
             }
         }
-        private CodableValue _name;
+
+        private CodableValue name;
 
         /// <summary>
         /// Gets or sets the date the prescription was filled.
@@ -172,10 +176,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public ApproximateDateTime DateFilled
         {
-            get { return _dateFilled; }
-            set { _dateFilled = value; }
+            get { return this.dateFilled; }
+            set { this.dateFilled = value; }
         }
-        private ApproximateDateTime _dateFilled;
+
+        private ApproximateDateTime dateFilled;
 
         /// <summary>
         /// Gets or sets the number of days supply of the medication.
@@ -187,10 +192,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public int? DaysSupply
         {
-            get { return _daysSupply; }
-            set { _daysSupply = value; }
+            get { return this.daysSupply; }
+            set { this.daysSupply = value; }
         }
-        private int? _daysSupply;
+
+        private int? daysSupply;
 
         /// <summary>
         /// Gets or sets the date on which the prescription can be refilled.
@@ -202,10 +208,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public HealthServiceDate NextRefillDate
         {
-            get { return _nextRefillDate; }
-            set { _nextRefillDate = value; }
+            get { return this.nextRefillDate; }
+            set { this.nextRefillDate = value; }
         }
-        private HealthServiceDate _nextRefillDate;
+
+        private HealthServiceDate nextRefillDate;
 
         /// <summary>
         /// Gets or sets the number of medication refills left.
@@ -217,10 +224,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public int? RefillsLeft
         {
-            get { return _refillsLeft; }
-            set { _refillsLeft = value; }
+            get { return this.refillsLeft; }
+            set { this.refillsLeft = value; }
         }
-        private int? _refillsLeft;
+
+        private int? refillsLeft;
 
         /// <summary>
         /// Gets or sets the pharmacy.
@@ -232,10 +240,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public Organization Pharmacy
         {
-            get { return _pharmacy; }
-            set { _pharmacy = value; }
+            get { return this.pharmacy; }
+            set { this.pharmacy = value; }
         }
-        private Organization _pharmacy;
+
+        private Organization pharmacy;
 
         /// <summary>
         /// Gets or sets the free form prescription number.
@@ -251,14 +260,16 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public string PrescriptionNumber
         {
-            get { return _prescriptionNumber; }
+            get { return this.prescriptionNumber; }
+
             set
             {
                 Validator.ThrowIfStringIsWhitespace(value, "PrescriptionNumber");
-                _prescriptionNumber = value;
+                this.prescriptionNumber = value;
             }
         }
-        private string _prescriptionNumber;
+
+        private string prescriptionNumber;
 
         /// <summary>
         /// Gets or sets the lot number for the medication.
@@ -274,14 +285,16 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public string LotNumber
         {
-            get { return _lotNumber; }
+            get { return this.lotNumber; }
+
             set
             {
                 Validator.ThrowIfStringIsWhitespace(value, "LotNumber");
-                _lotNumber = value;
+                this.lotNumber = value;
             }
         }
-        private string _lotNumber;
+
+        private string lotNumber;
 
         /// <summary>
         /// Gets a string representation of the medication fill.
@@ -293,17 +306,18 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public override string ToString()
         {
-            string result = Name.ToString();
+            string result = this.Name.ToString();
 
-            if (_dateFilled != null)
+            if (this.dateFilled != null)
             {
                 result =
                     string.Format(
                         ResourceRetriever.GetResourceString(
                             "MedicationFillToStringFormat"),
-                        Name.ToString(),
-                        _dateFilled.ToString());
+                        this.Name.ToString(),
+                        this.dateFilled.ToString());
             }
+
             return result;
         }
     }

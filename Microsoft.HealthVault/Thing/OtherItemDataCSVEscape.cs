@@ -3,7 +3,10 @@
 // see http://www.microsoft.com/resources/sharedsource/licensingbasics/sharedsourcelicenses.mspx.
 // All other rights reserved.
 
-namespace Microsoft.HealthVault.ItemTypes.Csv
+using System;
+using Microsoft.HealthVault.Helpers;
+
+namespace Microsoft.HealthVault.Thing
 {
     /// <summary>
     /// Information about a single escape entity from an OtherDataHelper object.
@@ -20,11 +23,11 @@ namespace Microsoft.HealthVault.ItemTypes.Csv
         /// <param name="value">The value.</param>
         internal OtherItemDataCsvEscape(string name, string value)
         {
-            Name = name;
-            Value = value;
+            this.Name = name;
+            this.Value = value;
         }
 
-        private string _name;
+        private string name;
 
         /// <summary>
         /// Gets or sets the name of the escape.
@@ -37,7 +40,8 @@ namespace Microsoft.HealthVault.ItemTypes.Csv
         /// </exception>
         internal string Name
         {
-            get { return _name; }
+            get { return this.name; }
+
             set
             {
                 Validator.ThrowIfArgumentNull(value, "Name", "CSVNameNull");
@@ -47,11 +51,11 @@ namespace Microsoft.HealthVault.ItemTypes.Csv
                     "Name",
                     "CSVNameInvalid");
 
-                _name = value;
+                this.name = value;
             }
         }
 
-        private string _value;
+        private string value;
 
         /// <summary>
         /// Gets or sets the value of the escape.
@@ -64,7 +68,8 @@ namespace Microsoft.HealthVault.ItemTypes.Csv
         /// </exception>
         internal string Value
         {
-            get { return _value; }
+            get { return this.value; }
+
             set
             {
                 Validator.ThrowIfArgumentNull(value, "Value", "CSVValueNull");
@@ -74,16 +79,13 @@ namespace Microsoft.HealthVault.ItemTypes.Csv
                     "Name",
                     "CSVValueInvalid");
 
-                _value = value;
+                this.value = value;
             }
         }
 
         /// <summary>
         /// Gets the escape in "Name=value" format.
         /// </summary>
-        internal string NameEqualsValue
-        {
-            get { return _name + "=" + _value; }
-        }
+        internal string NameEqualsValue => this.name + "=" + this.value;
     }
 }

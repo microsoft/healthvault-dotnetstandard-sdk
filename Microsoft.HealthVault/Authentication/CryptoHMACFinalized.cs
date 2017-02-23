@@ -43,7 +43,7 @@ namespace Microsoft.HealthVault.Authentication
         public CryptoHmacFinalized(string algorithmName, byte[] digest)
             : base(algorithmName, digest)
         {
-            DigestAlgorithmName = "hmac";
+            this.DigestAlgorithmName = "hmac";
         }
 
         #endregion

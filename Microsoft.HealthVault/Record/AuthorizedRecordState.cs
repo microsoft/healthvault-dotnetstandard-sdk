@@ -3,7 +3,7 @@
 // see http://www.microsoft.com/resources/sharedsource/licensingbasics/sharedsourcelicenses.mspx.
 // All other rights reserved.
 
-namespace Microsoft.HealthVault
+namespace Microsoft.HealthVault.Record
 {
     /// <summary>
     /// Defines the state of a HealthVault record authorization.
@@ -24,6 +24,6 @@ namespace Microsoft.HealthVault
         /// <summary>
         /// The record authorization is rejected for activation.
         /// </summary>
-        ActivationRejected = 300,
+        ActivationRejected = 300
     }
 }

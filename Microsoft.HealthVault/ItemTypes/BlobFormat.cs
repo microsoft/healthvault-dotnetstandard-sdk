@@ -3,7 +3,9 @@
 // see http://www.microsoft.com/resources/sharedsource/licensingbasics/sharedsourcelicenses.mspx.
 // All other rights reserved.
 
-namespace Microsoft.HealthVault
+using Microsoft.HealthVault.Thing;
+
+namespace Microsoft.HealthVault.ItemTypes
 {
     /// <summary>
     /// Determines how BLOB information will be returned when fetching a
@@ -39,6 +41,6 @@ namespace Microsoft.HealthVault
         /// <summary>
         /// The default format is Streamed.
         /// </summary>
-        Default = Streamed,
+        Default = Streamed
     }
 }

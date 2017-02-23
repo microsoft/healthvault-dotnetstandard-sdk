@@ -6,6 +6,8 @@
 using System.Text;
 using System.Xml;
 using System.Xml.XPath;
+using Microsoft.HealthVault.Helpers;
+using Microsoft.HealthVault.Vocabulary;
 
 namespace Microsoft.HealthVault.ItemTypes
 {
@@ -126,22 +128,22 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             Validator.ThrowIfNavigatorNull(navigator);
 
-            _value = navigator.SelectSingleNode("value").Value;
+            this.value = navigator.SelectSingleNode("value").Value;
 
             XPathNavigator famNav = navigator.SelectSingleNode("family");
             if (famNav != null)
             {
-                _family = famNav.Value;
+                this.family = famNav.Value;
             }
 
-            _vocabName = navigator.SelectSingleNode("type").Value;
+            this.vocabName = navigator.SelectSingleNode("type").Value;
 
             XPathNavigator versionNav =
                 navigator.SelectSingleNode("version");
 
             if (versionNav != null)
             {
-                _version = versionNav.Value;
+                this.version = versionNav.Value;
             }
         }
 
@@ -175,24 +177,25 @@ namespace Microsoft.HealthVault.ItemTypes
             Validator.ThrowIfStringNullOrEmpty(nodeName, "nodeName");
             Validator.ThrowIfWriterNull(writer);
 
-            Validator.ThrowSerializationIf(_value == null, "ValueNotSet");
-            Validator.ThrowSerializationIf(_vocabName == null, "NameNotSet");
+            Validator.ThrowSerializationIf(this.value == null, "ValueNotSet");
+            Validator.ThrowSerializationIf(this.vocabName == null, "NameNotSet");
 
             writer.WriteStartElement(nodeName);
 
-            writer.WriteElementString("value", _value);
+            writer.WriteElementString("value", this.value);
 
-            if (!string.IsNullOrEmpty(_family))
+            if (!string.IsNullOrEmpty(this.family))
             {
-                writer.WriteElementString("family", _family);
+                writer.WriteElementString("family", this.family);
             }
 
-            writer.WriteElementString("type", _vocabName);
+            writer.WriteElementString("type", this.vocabName);
 
-            if (!string.IsNullOrEmpty(_version))
+            if (!string.IsNullOrEmpty(this.version))
             {
-                writer.WriteElementString("version", _version);
+                writer.WriteElementString("version", this.version);
             }
+
             writer.WriteEndElement();
         }
 
@@ -216,15 +219,17 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public string Value
         {
-            get { return _value; }
+            get { return this.value; }
+
             set
             {
                 Validator.ThrowIfStringNullOrEmpty(value, "Value");
                 Validator.ThrowIfStringIsWhitespace(value, "Value");
-                _value = value;
+                this.value = value;
             }
         }
-        private string _value;
+
+        private string value;
 
         /// <summary>
         /// Gets or sets the code family.
@@ -246,17 +251,20 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public string Family
         {
-            get { return _family; }
+            get { return this.family; }
+
             set
             {
                 if (!string.IsNullOrEmpty(value) && string.IsNullOrEmpty(value.Trim()))
                 {
                     throw Validator.ArgumentException("Family", "WhitespaceOnlyValue");
                 }
-                _family = value;
+
+                this.family = value;
             }
         }
-        private string _family;
+
+        private string family;
 
         /// <summary>
         /// Gets or sets the vocabulary name.
@@ -273,15 +281,17 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public string VocabularyName
         {
-            get { return _vocabName; }
+            get { return this.vocabName; }
+
             set
             {
                 Validator.ThrowIfStringNullOrEmpty(value, "VocabularyName");
                 Validator.ThrowIfStringIsWhitespace(value, "VocabularyName");
-                _vocabName = value;
+                this.vocabName = value;
             }
         }
-        private string _vocabName;
+
+        private string vocabName;
 
         /// <summary>
         /// Gets or sets the code version.
@@ -301,17 +311,20 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public string Version
         {
-            get { return _version; }
+            get { return this.version; }
+
             set
             {
                 if (!string.IsNullOrEmpty(value) && string.IsNullOrEmpty(value.Trim()))
                 {
                     throw Validator.ArgumentException("Version", "WhitespaceOnlyValue");
                 }
-                _version = value;
+
+                this.version = value;
             }
         }
-        private string _version;
+
+        private string version;
 
         /// <summary>
         /// Gets a string representation of the vocabulary item reference.
@@ -325,12 +338,12 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             StringBuilder result = new StringBuilder(30);
 
-            if (Family != null)
+            if (this.Family != null)
             {
-                result.Append(Family);
+                result.Append(this.Family);
             }
 
-            if (VocabularyName != null)
+            if (this.VocabularyName != null)
             {
                 if (result.Length > 0)
                 {
@@ -338,10 +351,11 @@ namespace Microsoft.HealthVault.ItemTypes
                         ResourceRetriever.GetResourceString(
                             "ListSeparator"));
                 }
-                result.Append(VocabularyName);
+
+                result.Append(this.VocabularyName);
             }
 
-            if (Version != null)
+            if (this.Version != null)
             {
                 if (result.Length > 0)
                 {
@@ -349,10 +363,11 @@ namespace Microsoft.HealthVault.ItemTypes
                         ResourceRetriever.GetResourceString(
                             "ListSeparator"));
                 }
-                result.Append(Version);
+
+                result.Append(this.Version);
             }
 
-            if (Value != null)
+            if (this.Value != null)
             {
                 if (result.Length > 0)
                 {
@@ -360,7 +375,8 @@ namespace Microsoft.HealthVault.ItemTypes
                         ResourceRetriever.GetResourceString(
                             "ListSeparator"));
                 }
-                result.Append(Value);
+
+                result.Append(this.Value);
             }
 
             return result.ToString();

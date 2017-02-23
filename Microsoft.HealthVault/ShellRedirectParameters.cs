@@ -6,6 +6,9 @@
 using System;
 using System.Collections.Specialized;
 using System.Text;
+using Microsoft.HealthVault.Connection;
+using Microsoft.HealthVault.Exceptions;
+using Microsoft.HealthVault.Helpers;
 
 namespace Microsoft.HealthVault
 {
@@ -26,8 +29,8 @@ namespace Microsoft.HealthVault
         /// </summary>
         public ShellRedirectParameters()
         {
-            ActionParameters = new NameValueCollection();
-            TargetParameters = new NameValueCollection();
+            this.ActionParameters = new NameValueCollection();
+            this.TargetParameters = new NameValueCollection();
         }
 
         /// <summary>
@@ -38,7 +41,7 @@ namespace Microsoft.HealthVault
         public ShellRedirectParameters(string shellRedirectorUrl)
             : this()
         {
-            ShellRedirectorUrl = shellRedirectorUrl;
+            this.ShellRedirectorUrl = shellRedirectorUrl;
         }
 
         /// <summary>
@@ -264,18 +267,18 @@ namespace Microsoft.HealthVault
         {
             var result = new ShellRedirectParameters
             {
-                ActionParameters = CloneParams(ActionParameters),
-                ActionQueryString = ActionQueryString,
-                AllowInstanceBounce = AllowInstanceBounce,
-                ApplicationId = ApplicationId,
-                IsMultiRecordApplication = IsMultiRecordApplication,
-                ReturnUrl = ReturnUrl,
-                ShellRedirectorUrl = ShellRedirectorUrl,
-                SignupCode = SignupCode,
-                TargetLocation = TargetLocation,
-                TargetParameters = CloneParams(TargetParameters),
-                TargetQueryString = TargetQueryString,
-                TokenRedirectionMethod = TokenRedirectionMethod
+                ActionParameters = CloneParams(this.ActionParameters),
+                ActionQueryString = this.ActionQueryString,
+                AllowInstanceBounce = this.AllowInstanceBounce,
+                ApplicationId = this.ApplicationId,
+                IsMultiRecordApplication = this.IsMultiRecordApplication,
+                ReturnUrl = this.ReturnUrl,
+                ShellRedirectorUrl = this.ShellRedirectorUrl,
+                SignupCode = this.SignupCode,
+                TargetLocation = this.TargetLocation,
+                TargetParameters = CloneParams(this.TargetParameters),
+                TargetQueryString = this.TargetQueryString,
+                TokenRedirectionMethod = this.TokenRedirectionMethod
             };
 
             return result;
@@ -308,7 +311,7 @@ namespace Microsoft.HealthVault
         /// No <see cref="TargetLocation"/> is specified.
         /// </exception>
         ///
-        /// <exception cref="ConfigurationException">
+        /// <exception cref="InvalidConfigurationException">
         /// No <see cref="ShellRedirectorUrl"/> specified or
         /// Shell URL configured for the application
         /// (<see cref="HealthApplicationConfiguration.HealthVaultShellUrl"/>).
@@ -321,18 +324,16 @@ namespace Microsoft.HealthVault
         public Uri ConstructRedirectUrl()
         {
             // figure out Shell redirector URL
-            string shellRedirectorUrl = ShellRedirectorUrl;
-            if (String.IsNullOrEmpty(shellRedirectorUrl))
+            string shellRedirectorUrl = this.ShellRedirectorUrl;
+            if (string.IsNullOrEmpty(shellRedirectorUrl))
             {
                 if (HealthApplicationConfiguration.Current.HealthVaultShellUrl == null)
                 {
                     throw Validator.InvalidConfigurationException("ShellUrlRequired");
                 }
-                else
-                {
-                    // get from config
-                    shellRedirectorUrl = HealthApplicationConfiguration.Current.HealthVaultShellUrl.OriginalString;
-                }
+
+                // get from config
+                shellRedirectorUrl = HealthApplicationConfiguration.Current.HealthVaultShellUrl.OriginalString;
             }
 
             if (!shellRedirectorUrl.EndsWith(ShellRedirectPage, StringComparison.OrdinalIgnoreCase))
@@ -348,7 +349,7 @@ namespace Microsoft.HealthVault
                 }
             }
 
-            return new Uri(shellRedirectorUrl + "?" + ConstructRedirectorQueryString());
+            return new Uri(shellRedirectorUrl + "?" + this.ConstructRedirectorQueryString());
         }
 
         /// <summary>
@@ -365,13 +366,13 @@ namespace Microsoft.HealthVault
         ///
         public string ConstructRedirectorQueryString()
         {
-            Validator.ThrowInvalidIf(String.IsNullOrEmpty(TargetLocation), "ShellTargetRequired");
+            Validator.ThrowInvalidIf(string.IsNullOrEmpty(this.TargetLocation), "ShellTargetRequired");
 
             var qs = new NameValueCollection();
-            var targetQs = ConstructTargetQueryString();
+            var targetQs = this.ConstructTargetQueryString();
 
-            qs.Add("target", TargetLocation);
-            if (!String.IsNullOrEmpty(targetQs))
+            qs.Add("target", this.TargetLocation);
+            if (!string.IsNullOrEmpty(targetQs))
             {
                 qs.Add("targetqs", "?" + targetQs);
             }
@@ -390,7 +391,7 @@ namespace Microsoft.HealthVault
         public string ConstructTargetQueryString()
         {
             // fold properties back into target params
-            return CombineQueryStrings(TargetQueryString, FlattenTargetParameters());
+            return CombineQueryStrings(this.TargetQueryString, this.FlattenTargetParameters());
         }
 
         /// <summary>
@@ -407,19 +408,19 @@ namespace Microsoft.HealthVault
             // if second query string has nothing, just return query1
             if (query2.Count == 0)
             {
-                return query1 ?? String.Empty;
+                return query1 ?? string.Empty;
             }
 
             string query2Str = CollectionToQueryString(query2);
 
             // if first query string has nothing, just return query2
-            if (String.IsNullOrEmpty(query1))
+            if (string.IsNullOrEmpty(query1))
             {
                 return query2Str;
             }
 
             // otherwise combine
-            return String.Join("&", new string[] { query1, query2Str });
+            return string.Join("&", query1, query2Str);
         }
 
         /// <summary>
@@ -428,50 +429,50 @@ namespace Microsoft.HealthVault
         private NameValueCollection FlattenTargetParameters()
         {
             // combine action query string and action parameters
-            var actionQueryString = CombineQueryStrings(ActionQueryString, ActionParameters);
+            var actionQueryString = CombineQueryStrings(this.ActionQueryString, this.ActionParameters);
 
-            NameValueCollection targetParameters = CloneParams(TargetParameters);
+            NameValueCollection targetParameters = CloneParams(this.TargetParameters);
 
             // app id
-            if (ApplicationId != null)
+            if (this.ApplicationId != null)
             {
-                targetParameters["appid"] = ApplicationId.Value.ToString();
+                targetParameters["appid"] = this.ApplicationId.Value.ToString();
             }
 
             // return URL
-            if (!String.IsNullOrEmpty(ReturnUrl))
+            if (!string.IsNullOrEmpty(this.ReturnUrl))
             {
-                targetParameters["redirect"] = ReturnUrl;
+                targetParameters["redirect"] = this.ReturnUrl;
             }
 
             // signup code
-            if (!String.IsNullOrEmpty(SignupCode))
+            if (!string.IsNullOrEmpty(this.SignupCode))
             {
-                targetParameters["signupcode"] = SignupCode;
+                targetParameters["signupcode"] = this.SignupCode;
             }
 
             // action query string
-            if (!String.IsNullOrEmpty(ActionQueryString))
+            if (!string.IsNullOrEmpty(this.ActionQueryString))
             {
                 targetParameters["actionqs"] = actionQueryString;
             }
 
             // ismra
-            if (IsMultiRecordApplication != null && IsMultiRecordApplication.Value)
+            if (this.IsMultiRecordApplication != null && this.IsMultiRecordApplication.Value)
             {
                 targetParameters["ismra"] = "true";
             }
 
             // aib
-            if (AllowInstanceBounce != null && AllowInstanceBounce.Value)
+            if (this.AllowInstanceBounce != null && this.AllowInstanceBounce.Value)
             {
                 targetParameters["aib"] = "true";
             }
 
             // trm
-            if (!String.IsNullOrEmpty(TokenRedirectionMethod))
+            if (!string.IsNullOrEmpty(this.TokenRedirectionMethod))
             {
-                targetParameters["trm"] = TokenRedirectionMethod;
+                targetParameters["trm"] = this.TokenRedirectionMethod;
             }
 
             return targetParameters;

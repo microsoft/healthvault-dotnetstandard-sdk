@@ -5,14 +5,14 @@
 
 using System.Diagnostics;
 
-namespace Microsoft.HealthVault
+namespace Microsoft.HealthVault.Diagnostics
 {
     /// <summary>
     /// HealthVault's default trace source.
     /// </summary>
     internal class HealthVaultTraceSource : ITraceSource
     {
-        private TraceSource _traceSource = new TraceSource("HealthVaultTraceSource");
+        private TraceSource traceSource = new TraceSource("HealthVaultTraceSource");
 
         /// <summary>
         /// Logs the message as information.
@@ -20,7 +20,7 @@ namespace Microsoft.HealthVault
         /// <param name="message">The message to log.</param>
         public void TraceInformation(string message)
         {
-            _traceSource.TraceInformation(message);
+            this.traceSource.TraceInformation(message);
         }
 
         /// <summary>
@@ -30,7 +30,7 @@ namespace Microsoft.HealthVault
         /// <param name="args">String.Format insertion parameters</param>
         public void TraceInformation(string format, params object[] args)
         {
-            _traceSource.TraceInformation(format, args);
+            this.traceSource.TraceInformation(format, args);
         }
 
         /// <summary>
@@ -40,7 +40,7 @@ namespace Microsoft.HealthVault
         /// <returns>True if the given event type should be logged, or false.</returns>
         public bool ShouldTrace(TraceEventType eventType)
         {
-            return _traceSource.Switch.ShouldTrace(eventType);
+            return this.traceSource.Switch.ShouldTrace(eventType);
         }
     }
 }

@@ -29,28 +29,20 @@ namespace Microsoft.HealthVault.Authentication
         ///
         public ApplicationTokenCreationInfo(Guid appId, bool isMra)
         {
-            _appId = appId;
-            _isMra = isMra;
+            this.ApplicationId = appId;
+            this.IsMRA = isMra;
         }
 
         /// <summary>
         /// Gets the unique application identifier.
         /// </summary>
         ///
-        public Guid ApplicationId
-        {
-            get { return _appId; }
-        }
-        private Guid _appId;
+        public Guid ApplicationId { get; }
 
         /// <summary>
         /// Gets whether the application supports multiple records.
         /// </summary>
         ///
-        public bool IsMRA
-        {
-            get { return _isMra; }
-        }
-        private bool _isMra;
+        public bool IsMRA { get; }
     }
 }

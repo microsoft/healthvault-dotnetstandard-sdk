@@ -3,10 +3,9 @@
 // see http://www.microsoft.com/resources/sharedsource/licensingbasics/sharedsourcelicenses.mspx.
 // All other rights reserved.
 
-using Microsoft.HealthVault.Authentication;
 using System;
 
-namespace Microsoft.HealthVault.Web.Authentication
+namespace Microsoft.HealthVault.Authentication
 {
     /// <summary>
     /// A keyset token pair is an explicit binding between an authentication
@@ -30,15 +29,10 @@ namespace Microsoft.HealthVault.Web.Authentication
     {
         internal AuthenticationTokenKeySetPair()
         {
-            RefreshSharedSecret();
+            this.RefreshSharedSecret();
         }
 
-        internal AuthenticatedSessionKeySet KeySet
-        {
-            get { return _keySet; }
-            set { _keySet = value; }
-        }
-        private AuthenticatedSessionKeySet _keySet;
+        internal AuthenticatedSessionKeySet KeySet { get; set; }
 
         internal void RefreshSharedSecret()
         {
@@ -48,27 +42,23 @@ namespace Microsoft.HealthVault.Web.Authentication
                     ServiceLocator.Current.CryptoService.GenerateHmacSharedSecret());
         }
 
-        internal CreateAuthenticationTokenResult AuthenticationResult
-        {
-            get { return _authenticationResult; }
-            set { _authenticationResult = value; }
-        }
-        private CreateAuthenticationTokenResult _authenticationResult;
+        internal CreateAuthenticationTokenResult AuthenticationResult { get; set; }
 
         internal bool IsAuthenticated()
         {
             return
                 !(
-                _isAuthenticationResultExpired
-                || _authenticationResult == null);
+                this.IsAuthenticationResultExpired
+                || this.AuthenticationResult == null);
         }
 
-        internal bool IsAuthenticationExpired(Int64 refreshCounter)
+        internal bool IsAuthenticationExpired(long refreshCounter)
         {
-            return !IsAuthenticated() || refreshCounter != this.RefreshCounter;
+            return !this.IsAuthenticated() || refreshCounter != this.RefreshCounter;
         }
 
         /// <summary>
+        /// Update the authentication key set pair
         /// </summary>
         ///
         /// <remarks>
@@ -81,36 +71,20 @@ namespace Microsoft.HealthVault.Web.Authentication
         /// The authenticated session token.
         /// </param>
         ///
-        internal void Update(
-            CreateAuthenticationTokenResult result)
+        internal void Update(CreateAuthenticationTokenResult result)
         {
-            LastRefreshed = DateTime.UtcNow;
-            RefreshCounter++;
+            this.LastRefreshed = DateTime.UtcNow;
+            this.RefreshCounter++;
 
-            AuthenticationResult = result;
+            this.AuthenticationResult = result;
 
-            IsAuthenticationResultExpired = false;
+            this.IsAuthenticationResultExpired = false;
         }
 
-        internal bool IsAuthenticationResultExpired
-        {
-            get { return _isAuthenticationResultExpired; }
-            set { _isAuthenticationResultExpired = value; }
-        }
-        private bool _isAuthenticationResultExpired;
+        internal bool IsAuthenticationResultExpired { get; set; }
 
-        internal DateTime LastRefreshed
-        {
-            get { return _lastRefreshed; }
-            set { _lastRefreshed = value; }
-        }
-        private DateTime _lastRefreshed;
+        internal DateTime LastRefreshed { get; set; }
 
-        internal Int64 RefreshCounter
-        {
-            get { return _refreshCounter; }
-            set { _refreshCounter = value; }
-        }
-        private Int64 _refreshCounter;
+        internal long RefreshCounter { get; set; }
     }
 }

@@ -6,6 +6,7 @@
 using System.Text;
 using System.Xml;
 using System.Xml.XPath;
+using Microsoft.HealthVault.Helpers;
 
 namespace Microsoft.HealthVault.ItemTypes
 {
@@ -15,15 +16,6 @@ namespace Microsoft.HealthVault.ItemTypes
     ///
     public class LabTestResultDetails : HealthRecordItemData
     {
-        /// <summary>
-        /// Initialize a new instance of the <see cref="LabTestResultDetails"/>
-        /// class with default values.
-        /// </summary>
-        ///
-        public LabTestResultDetails()
-        {
-        }
-
         /// <summary>
         /// Populates this <see cref="LabTestResultDetails"/> instance from the data in the XML.
         /// </summary>
@@ -42,35 +34,35 @@ namespace Microsoft.HealthVault.ItemTypes
             Validator.ThrowIfNavigatorNull(navigator);
 
             // when
-            _when =
+            this.when =
                 XPathHelper.GetOptNavValue<ApproximateDateTime>(navigator, "when");
 
             // name
-            _name =
+            this.name =
                 XPathHelper.GetOptNavValue(navigator, "name");
 
             // substance
-            _substance =
+            this.substance =
                 XPathHelper.GetOptNavValue<CodableValue>(navigator, "substance");
 
             // collection-method
-            _collectionMethod =
+            this.collectionMethod =
                 XPathHelper.GetOptNavValue<CodableValue>(navigator, "collection-method");
 
             // clinical-code
-            _clinicalCode =
+            this.clinicalCode =
                 XPathHelper.GetOptNavValue<CodableValue>(navigator, "clinical-code");
 
             // value
-            _value =
+            this.value =
                 XPathHelper.GetOptNavValue<LabTestResultValue>(navigator, "value");
 
             // status
-            _status =
+            this.status =
                 XPathHelper.GetOptNavValue<CodableValue>(navigator, "status");
 
             // note
-            _note =
+            this.note =
                 XPathHelper.GetOptNavValue(navigator, "note");
         }
 
@@ -106,49 +98,49 @@ namespace Microsoft.HealthVault.ItemTypes
             XmlWriterHelper.WriteOpt(
                 writer,
                 "when",
-                _when);
+                this.when);
 
             // name
             XmlWriterHelper.WriteOptString(
                 writer,
                 "name",
-                _name);
+                this.name);
 
             // substance
             XmlWriterHelper.WriteOpt(
                 writer,
                 "substance",
-                _substance);
+                this.substance);
 
             // collection-method
             XmlWriterHelper.WriteOpt(
                 writer,
                 "collection-method",
-                _collectionMethod);
+                this.collectionMethod);
 
             // clinical-code
             XmlWriterHelper.WriteOpt(
                 writer,
                 "clinical-code",
-                _clinicalCode);
+                this.clinicalCode);
 
             // value
             XmlWriterHelper.WriteOpt(
                 writer,
                 "value",
-                _value);
+                this.value);
 
             // status
             XmlWriterHelper.WriteOpt(
                 writer,
                 "status",
-                _status);
+                this.status);
 
             // note
             XmlWriterHelper.WriteOptString(
                 writer,
                 "note",
-                _note);
+                this.note);
 
             // </lab-test-result-type>
             writer.WriteEndElement();
@@ -164,10 +156,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public ApproximateDateTime When
         {
-            get { return _when; }
-            set { _when = value; }
+            get { return this.when; }
+            set { this.when = value; }
         }
-        private ApproximateDateTime _when;
+
+        private ApproximateDateTime when;
 
         /// <summary>
         /// Gets or sets name of the laboratory test.
@@ -183,14 +176,16 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public string Name
         {
-            get { return _name; }
+            get { return this.name; }
+
             set
             {
                 Validator.ThrowIfStringIsWhitespace(value, "Name");
-                _name = value;
+                this.name = value;
             }
         }
-        private string _name;
+
+        private string name;
 
         /// <summary>
         /// Gets or sets substance that is tested.
@@ -202,10 +197,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public CodableValue Substance
         {
-            get { return _substance; }
-            set { _substance = value; }
+            get { return this.substance; }
+            set { this.substance = value; }
         }
-        private CodableValue _substance;
+
+        private CodableValue substance;
 
         /// <summary>
         /// Gets or sets the collection method for the laboratory test.
@@ -217,10 +213,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public CodableValue CollectionMethod
         {
-            get { return _collectionMethod; }
-            set { _collectionMethod = value; }
+            get { return this.collectionMethod; }
+            set { this.collectionMethod = value; }
         }
-        private CodableValue _collectionMethod;
+
+        private CodableValue collectionMethod;
 
         /// <summary>
         /// Gets or sets the clinical code for the lab tests.
@@ -232,10 +229,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public CodableValue ClinicalCode
         {
-            get { return _clinicalCode; }
-            set { _clinicalCode = value; }
+            get { return this.clinicalCode; }
+            set { this.clinicalCode = value; }
         }
-        private CodableValue _clinicalCode;
+
+        private CodableValue clinicalCode;
 
         /// <summary>
         /// Gets or sets the clinical value within a laboratory result.
@@ -249,10 +247,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public LabTestResultValue Value
         {
-            get { return _value; }
-            set { _value = value; }
+            get { return this.value; }
+            set { this.value = value; }
         }
-        private LabTestResultValue _value;
+
+        private LabTestResultValue value;
 
         /// <summary>
         /// Gets or sets the status of the laboratory results.
@@ -265,10 +264,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public CodableValue Status
         {
-            get { return _status; }
-            set { _status = value; }
+            get { return this.status; }
+            set { this.status = value; }
         }
-        private CodableValue _status;
+
+        private CodableValue status;
 
         /// <summary>
         /// Gets or sets a note that augments the laboratory result.
@@ -294,14 +294,16 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public string Note
         {
-            get { return _note; }
+            get { return this.note; }
+
             set
             {
                 Validator.ThrowIfStringIsWhitespace(value, "Note");
-                _note = value;
+                this.note = value;
             }
         }
-        private string _note;
+
+        private string note;
 
         /// <summary>
         /// Gets a string representation of the lab test result type item.
@@ -317,74 +319,89 @@ namespace Microsoft.HealthVault.ItemTypes
             string space = ResourceRetriever.GetSpace("errors");
 
             bool first = true;
-            if (_when != null)
+            if (this.when != null)
             {
-                result.Append(_when);
+                result.Append(this.when);
                 first = false;
             }
-            if (!string.IsNullOrEmpty(_name))
-            {
-                if (!first)
-                {
-                    result.Append(space);
-                }
-                result.Append(_name);
-                first = false;
-            }
-            if (_substance != null)
+
+            if (!string.IsNullOrEmpty(this.name))
             {
                 if (!first)
                 {
                     result.Append(space);
                 }
-                result.Append(_substance);
+
+                result.Append(this.name);
                 first = false;
             }
-            if (_collectionMethod != null)
+
+            if (this.substance != null)
             {
                 if (!first)
                 {
                     result.Append(space);
                 }
-                result.Append(_collectionMethod);
+
+                result.Append(this.substance);
                 first = false;
             }
-            if (_clinicalCode != null)
+
+            if (this.collectionMethod != null)
             {
                 if (!first)
                 {
                     result.Append(space);
                 }
-                result.Append(_clinicalCode);
+
+                result.Append(this.collectionMethod);
                 first = false;
             }
-            if (_value != null)
+
+            if (this.clinicalCode != null)
             {
                 if (!first)
                 {
                     result.Append(space);
                 }
-                result.Append(_value);
+
+                result.Append(this.clinicalCode);
                 first = false;
             }
-            if (_status != null)
+
+            if (this.value != null)
             {
                 if (!first)
                 {
                     result.Append(space);
                 }
-                result.Append(_status);
+
+                result.Append(this.value);
                 first = false;
             }
-            if (!string.IsNullOrEmpty(_note))
+
+            if (this.status != null)
             {
                 if (!first)
                 {
                     result.Append(space);
                 }
-                result.Append(_note);
+
+                result.Append(this.status);
                 first = false;
             }
+
+            if (!string.IsNullOrEmpty(this.note))
+            {
+                if (!first)
+                {
+                    result.Append(space);
+                }
+
+                result.Append(this.note);
+                first = false;
+            }
+
             return result.ToString();
         }
     }

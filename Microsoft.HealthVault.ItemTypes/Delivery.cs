@@ -7,6 +7,7 @@ using System.Collections.ObjectModel;
 using System.Text;
 using System.Xml;
 using System.Xml.XPath;
+using Microsoft.HealthVault.Helpers;
 
 namespace Microsoft.HealthVault.ItemTypes
 {
@@ -32,30 +33,30 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             Validator.ThrowIfNavigatorNull(navigator);
 
-            _location = XPathHelper.GetOptNavValue<Organization>(navigator, "location");
-            _timeOfDelivery = XPathHelper.GetOptNavValue<ApproximateDateTime>(navigator, "time-of-delivery");
-            _laborDuration = XPathHelper.GetOptNavValueAsDouble(navigator, "labor-duration");
+            this.location = XPathHelper.GetOptNavValue<Organization>(navigator, "location");
+            this.timeOfDelivery = XPathHelper.GetOptNavValue<ApproximateDateTime>(navigator, "time-of-delivery");
+            this.laborDuration = XPathHelper.GetOptNavValueAsDouble(navigator, "labor-duration");
 
-            _complications.Clear();
+            this.complications.Clear();
             foreach (XPathNavigator complicationNav in navigator.Select("complications"))
             {
                 CodableValue complication = new CodableValue();
                 complication.ParseXml(complicationNav);
-                _complications.Add(complication);
+                this.complications.Add(complication);
             }
 
-            _anesthesia.Clear();
+            this.anesthesia.Clear();
             foreach (XPathNavigator anesthesiaNav in navigator.Select("anesthesia"))
             {
                 CodableValue anesthesia = new CodableValue();
                 anesthesia.ParseXml(anesthesiaNav);
-                _anesthesia.Add(anesthesia);
+                this.anesthesia.Add(anesthesia);
             }
 
-            _deliveryMethod = XPathHelper.GetOptNavValue<CodableValue>(navigator, "delivery-method");
-            _outcome = XPathHelper.GetOptNavValue<CodableValue>(navigator, "outcome");
-            _baby = XPathHelper.GetOptNavValue<Baby>(navigator, "baby");
-            _note = XPathHelper.GetOptNavValue(navigator, "note");
+            this.deliveryMethod = XPathHelper.GetOptNavValue<CodableValue>(navigator, "delivery-method");
+            this.outcome = XPathHelper.GetOptNavValue<CodableValue>(navigator, "outcome");
+            this.baby = XPathHelper.GetOptNavValue<Baby>(navigator, "baby");
+            this.note = XPathHelper.GetOptNavValue(navigator, "note");
         }
 
         /// <summary>
@@ -87,24 +88,24 @@ namespace Microsoft.HealthVault.ItemTypes
 
             writer.WriteStartElement(nodeName);
 
-            XmlWriterHelper.WriteOpt(writer, "location", _location);
-            XmlWriterHelper.WriteOpt(writer, "time-of-delivery", _timeOfDelivery);
-            XmlWriterHelper.WriteOptDouble(writer, "labor-duration", _laborDuration);
+            XmlWriterHelper.WriteOpt(writer, "location", this.location);
+            XmlWriterHelper.WriteOpt(writer, "time-of-delivery", this.timeOfDelivery);
+            XmlWriterHelper.WriteOptDouble(writer, "labor-duration", this.laborDuration);
 
-            foreach (CodableValue complication in _complications)
+            foreach (CodableValue complication in this.complications)
             {
                 complication.WriteXml("complications", writer);
             }
 
-            foreach (CodableValue anesthesia in _anesthesia)
+            foreach (CodableValue anesthesia in this.anesthesia)
             {
                 anesthesia.WriteXml("anesthesia", writer);
             }
 
-            XmlWriterHelper.WriteOpt(writer, "delivery-method", _deliveryMethod);
-            XmlWriterHelper.WriteOpt(writer, "outcome", _outcome);
-            XmlWriterHelper.WriteOpt(writer, "baby", _baby);
-            XmlWriterHelper.WriteOptString(writer, "note", _note);
+            XmlWriterHelper.WriteOpt(writer, "delivery-method", this.deliveryMethod);
+            XmlWriterHelper.WriteOpt(writer, "outcome", this.outcome);
+            XmlWriterHelper.WriteOpt(writer, "baby", this.baby);
+            XmlWriterHelper.WriteOptString(writer, "note", this.note);
 
             writer.WriteEndElement();
         }
@@ -120,10 +121,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public Organization Location
         {
-            get { return _location; }
-            set { _location = value; }
+            get { return this.location; }
+            set { this.location = value; }
         }
-        private Organization _location;
+
+        private Organization location;
 
         /// <summary>
         /// Gets or sets the date/time of the delivery.
@@ -136,10 +138,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public ApproximateDateTime TimeOfDelivery
         {
-            get { return _timeOfDelivery; }
-            set { _timeOfDelivery = value; }
+            get { return this.timeOfDelivery; }
+            set { this.timeOfDelivery = value; }
         }
-        private ApproximateDateTime _timeOfDelivery;
+
+        private ApproximateDateTime timeOfDelivery;
 
         /// <summary>
         /// Gets or sets the duration of labor in minutes.
@@ -155,17 +158,19 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public double? LaborDuration
         {
-            get { return _laborDuration; }
+            get { return this.laborDuration; }
+
             set
             {
                 Validator.ThrowArgumentOutOfRangeIf(
                     value != null && value <= 0.0,
                     "LaborDuration",
                     "DeliveryLaborDurationMustBePositive");
-                _laborDuration = value;
+                this.laborDuration = value;
             }
         }
-        private double? _laborDuration;
+
+        private double? laborDuration;
 
         /// <summary>
         /// Gets a collection containing any complications that occurred during labor and delivery.
@@ -176,9 +181,9 @@ namespace Microsoft.HealthVault.ItemTypes
         /// The preferred vocabulary for this value is "delivery-complications".
         /// </remarks>
         ///
-        public Collection<CodableValue> Complications => _complications;
+        public Collection<CodableValue> Complications => this.complications;
 
-        private readonly Collection<CodableValue> _complications = new Collection<CodableValue>();
+        private readonly Collection<CodableValue> complications = new Collection<CodableValue>();
 
         /// <summary>
         /// Gets a collection containing any anesthesia used during labor and delivery.
@@ -189,9 +194,9 @@ namespace Microsoft.HealthVault.ItemTypes
         /// The preferred vocabulary for this value is "anesthesia-methods".
         /// </remarks>
         ///
-        public Collection<CodableValue> Anesthesia => _anesthesia;
+        public Collection<CodableValue> Anesthesia => this.anesthesia;
 
-        private readonly Collection<CodableValue> _anesthesia = new Collection<CodableValue>();
+        private readonly Collection<CodableValue> anesthesia = new Collection<CodableValue>();
 
         /// <summary>
         /// Gets or sets the method of delivery.
@@ -204,10 +209,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public CodableValue DeliveryMethod
         {
-            get { return _deliveryMethod; }
-            set { _deliveryMethod = value; }
+            get { return this.deliveryMethod; }
+            set { this.deliveryMethod = value; }
         }
-        private CodableValue _deliveryMethod;
+
+        private CodableValue deliveryMethod;
 
         /// <summary>
         /// Gets or sets the outcome for a fetus.
@@ -220,10 +226,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public CodableValue Outcome
         {
-            get { return _outcome; }
-            set { _outcome = value; }
+            get { return this.outcome; }
+            set { this.outcome = value; }
         }
-        private CodableValue _outcome;
+
+        private CodableValue outcome;
 
         /// <summary>
         /// Gets or sets details about a baby.
@@ -235,10 +242,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public Baby Baby
         {
-            get { return _baby; }
-            set { _baby = value; }
+            get { return this.baby; }
+            set { this.baby = value; }
         }
-        private Baby _baby;
+
+        private Baby baby;
 
         /// <summary>
         /// Gets or sets additional information about the delivery.
@@ -254,14 +262,16 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public string Note
         {
-            get { return _note; }
+            get { return this.note; }
+
             set
             {
                 Validator.ThrowIfStringIsWhitespace(value, "Note");
-                _note = value;
+                this.note = value;
             }
         }
-        private string _note;
+
+        private string note;
 
         /// <summary>
         /// Gets a string representation of the delivery.
@@ -275,51 +285,55 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             StringBuilder result = new StringBuilder(200);
 
-            if (Baby?.Name != null)
+            if (this.Baby?.Name != null)
             {
-                result.Append(Baby.Name);
+                result.Append(this.Baby.Name);
             }
 
-            if (TimeOfDelivery != null ||
-                (Baby != null && (Baby.Weight != null || Baby.Length != null)))
+            if (this.TimeOfDelivery != null ||
+                (this.Baby != null && (this.Baby.Weight != null || this.Baby.Length != null)))
             {
                 if (result.Length > 0)
                 {
                     result.Append(ResourceRetriever.GetSpace("errors"));
                 }
+
                 result.Append(
                     ResourceRetriever.GetResourceString("OpenParen"));
 
-                if (TimeOfDelivery != null)
+                if (this.TimeOfDelivery != null)
                 {
-                    result.Append(TimeOfDelivery);
+                    result.Append(this.TimeOfDelivery);
                 }
 
-                if (Baby?.Weight != null)
+                if (this.Baby?.Weight != null)
                 {
-                    if (TimeOfDelivery != null)
+                    if (this.TimeOfDelivery != null)
                     {
                         result.Append(
                             ResourceRetriever.GetResourceString(
                                 "ListSeparator"));
                     }
-                    result.Append(Baby.Weight);
+
+                    result.Append(this.Baby.Weight);
                 }
 
-                if (Baby?.Length != null)
+                if (this.Baby?.Length != null)
                 {
-                    if (TimeOfDelivery != null || (Baby?.Weight != null))
+                    if (this.TimeOfDelivery != null || (this.Baby?.Weight != null))
                     {
                         result.Append(
                             ResourceRetriever.GetResourceString(
                                 "ListSeparator"));
                     }
-                    result.Append(Baby.Length);
+
+                    result.Append(this.Baby.Length);
                 }
 
                 result.Append(
                     ResourceRetriever.GetResourceString("CloseParen"));
             }
+
             return result.ToString();
         }
     }

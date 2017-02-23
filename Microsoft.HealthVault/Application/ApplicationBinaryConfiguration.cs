@@ -7,8 +7,9 @@ using System;
 using System.IO;
 using System.Xml;
 using System.Xml.XPath;
+using Microsoft.HealthVault.Helpers;
 
-namespace Microsoft.HealthVault
+namespace Microsoft.HealthVault.Application
 {
     /// <summary>
     /// Represents configuration data for an application which can be read from a file or stream
@@ -48,8 +49,7 @@ namespace Microsoft.HealthVault
         /// <exception cref="ArgumentException">
         /// If <paramref name="binaryConfigurationFilePath"/> or <paramref name="contentType"/> is
         /// <b>null</b> or empty,<br/>
-        /// or <paramref name="binaryConfigurationFilePath"/> contains one or more invalid
-        /// characters as defined by <see cref="System.IO.Path.InvalidPathChars"/>.
+        /// or <paramref name="binaryConfigurationFilePath"/> contains one or more invalid characters.
         /// </exception>
         ///
         /// <exception cref="PathTooLongException">
@@ -88,8 +88,8 @@ namespace Microsoft.HealthVault
             Validator.ThrowIfStringNullOrEmpty(binaryConfigurationFilePath, "binaryConfigurationFilePath");
             Validator.ThrowIfStringNullOrEmpty(contentType, "contentType");
 
-            BinaryConfigurationContent = File.ReadAllBytes(binaryConfigurationFilePath);
-            _contentType = contentType;
+            this.BinaryConfigurationContent = File.ReadAllBytes(binaryConfigurationFilePath);
+            this.ContentType = contentType;
         }
 
         /// <summary>
@@ -124,7 +124,7 @@ namespace Microsoft.HealthVault
 
             Validator.ThrowIfStringNullOrEmpty(contentType, "contentType");
 
-            BinaryConfigurationContent = new Byte[binaryConfigurationContent.Length];
+            this.BinaryConfigurationContent = new byte[binaryConfigurationContent.Length];
             int numberOfBytesToRead = (int)binaryConfigurationContent.Length;
             int bytesRead = 0;
 
@@ -132,14 +132,14 @@ namespace Microsoft.HealthVault
             {
                 int bytesReceived =
                     binaryConfigurationContent.Read(
-                        BinaryConfigurationContent,
-                        (int)bytesRead,
+                        this.BinaryConfigurationContent,
+                        bytesRead,
                         numberOfBytesToRead);
                 bytesRead += bytesReceived;
                 numberOfBytesToRead -= bytesReceived;
-            };
+            }
 
-            _contentType = contentType;
+            this.ContentType = contentType;
         }
 
         /// <summary>
@@ -163,6 +163,8 @@ namespace Microsoft.HealthVault
         /// </param>
         ///
         /// <returns>
+        /// Configuration data for an application which can be read from a file or stream
+        /// and has an associated content type.
         /// </returns>
         ///
         internal static ApplicationBinaryConfiguration CreateFromXml(
@@ -181,6 +183,7 @@ namespace Microsoft.HealthVault
                     dataElement);
                 binaryConfig.ContentType = outerNav.SelectSingleNode(contentTypeElement).Value;
             }
+
             return binaryConfig;
         }
 
@@ -191,11 +194,11 @@ namespace Microsoft.HealthVault
         {
             writer.WriteStartElement(outerElementName);
 
-            CultureSpecificBinaryConfigurationContents.AppendLocalizedElements(
+            this.CultureSpecificBinaryConfigurationContents.AppendLocalizedElements(
                 writer,
                 dataElementName);
 
-            writer.WriteElementString("content-type", ContentType);
+            writer.WriteElementString("content-type", this.ContentType);
 
             writer.WriteEndElement();
         }
@@ -204,31 +207,21 @@ namespace Microsoft.HealthVault
         /// Gets or sets the binary content.
         /// </summary>
         ///
-        public Byte[] BinaryConfigurationContent
+        public byte[] BinaryConfigurationContent
         {
-            get { return CultureSpecificBinaryConfigurationContents.BestValue; }
-            set { CultureSpecificBinaryConfigurationContents.DefaultValue = value; }
+            get { return this.CultureSpecificBinaryConfigurationContents.BestValue; }
+            set { this.CultureSpecificBinaryConfigurationContents.DefaultValue = value; }
         }
 
         /// <summary>
         ///     Gets a dictionary of language specifiers and localized content.
         /// </summary>
-        public CultureSpecificByteArrayDictionary CultureSpecificBinaryConfigurationContents
-        {
-            get { return _cultureSpecificbinaryConfigurationContents; }
-        }
-        private CultureSpecificByteArrayDictionary _cultureSpecificbinaryConfigurationContents =
-            new CultureSpecificByteArrayDictionary();
+        public CultureSpecificByteArrayDictionary CultureSpecificBinaryConfigurationContents { get; } = new CultureSpecificByteArrayDictionary();
 
         /// <summary>
         /// Gets or sets the MIME type of the content.
         /// </summary>
         ///
-        public string ContentType
-        {
-            get { return _contentType; }
-            set { _contentType = value; }
-        }
-        private string _contentType;
+        public string ContentType { get; set; }
     }
 }

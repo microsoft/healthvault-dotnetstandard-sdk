@@ -6,6 +6,8 @@
 using System;
 using System.Xml;
 using System.Xml.XPath;
+using Microsoft.HealthVault.Helpers;
+using Microsoft.HealthVault.Thing;
 
 namespace Microsoft.HealthVault.ItemTypes
 {
@@ -47,7 +49,7 @@ namespace Microsoft.HealthVault.ItemTypes
             : base(TypeId)
         {
             Validator.ThrowIfArgumentNull(when, "When", "WhenNullValue");
-            _when = when;
+            this.when = when;
         }
 
         /// <summary>
@@ -58,7 +60,7 @@ namespace Microsoft.HealthVault.ItemTypes
         /// A GUID.
         /// </value>
         ///
-        public new static readonly Guid TypeId =
+        public static new readonly Guid TypeId =
             new Guid("caff3ff3-812f-44b1-9c9f-c1af13167705");
 
         /// <summary>
@@ -80,17 +82,17 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             get
             {
-                return _when;
+                return this.when;
             }
 
             set
             {
                 Validator.ThrowIfArgumentNull(value, "When", "WhenNullValue");
-                _when = value;
+                this.when = value;
             }
         }
 
-        private HealthServiceDateTime _when = new HealthServiceDateTime();
+        private HealthServiceDateTime when = new HealthServiceDateTime();
 
         /// <summary>
         /// Gets or sets the amount of discharged fluid (e.g., light, medium, heavy or spotting).
@@ -100,11 +102,11 @@ namespace Microsoft.HealthVault.ItemTypes
         /// </remarks>
         public CodableValue Amount
         {
-            get { return _amount; }
-            set { _amount = value; }
+            get { return this.amount; }
+            set { this.amount = value; }
         }
 
-        private CodableValue _amount;
+        private CodableValue amount;
 
         /// <summary>
         /// Gets or sets the bool which indicates whether this instance represents the start of
@@ -112,11 +114,11 @@ namespace Microsoft.HealthVault.ItemTypes
         /// </summary>
         public bool? IsNewCycle
         {
-            get { return _isNewCycle; }
-            set { _isNewCycle = value; }
+            get { return this.isNewCycle; }
+            set { this.isNewCycle = value; }
         }
 
-        private bool? _isNewCycle;
+        private bool? isNewCycle;
 
         /// <summary>
         /// Populates this <see cref="Menstruation"/> instance from the data in the XML.
@@ -139,14 +141,14 @@ namespace Microsoft.HealthVault.ItemTypes
             Validator.ThrowInvalidIfNull(itemNav, "MenstruationUnexpectedNode");
 
             // when
-            _when = new HealthServiceDateTime();
-            _when.ParseXml(itemNav.SelectSingleNode("when"));
+            this.when = new HealthServiceDateTime();
+            this.when.ParseXml(itemNav.SelectSingleNode("when"));
 
             // isNewCycle
-            _isNewCycle = XPathHelper.GetOptNavValueAsBool(itemNav, "is-new-cycle");
+            this.isNewCycle = XPathHelper.GetOptNavValueAsBool(itemNav, "is-new-cycle");
 
             // amount
-            _amount = XPathHelper.GetOptNavValue<CodableValue>(itemNav, "amount");
+            this.amount = XPathHelper.GetOptNavValue<CodableValue>(itemNav, "amount");
         }
 
         /// <summary>
@@ -168,19 +170,19 @@ namespace Microsoft.HealthVault.ItemTypes
         public override void WriteXml(XmlWriter writer)
         {
             Validator.ThrowIfWriterNull(writer);
-            Validator.ThrowSerializationIfNull(_when, "WhenNullValue");
+            Validator.ThrowSerializationIfNull(this.when, "WhenNullValue");
 
             // <menstrual-flow>
             writer.WriteStartElement("menstruation");
 
             // <when>
-            _when.WriteXml("when", writer);
+            this.when.WriteXml("when", writer);
 
             // <is-new-cycle>
-            XmlWriterHelper.WriteOptBool(writer, "is-new-cycle", _isNewCycle);
+            XmlWriterHelper.WriteOptBool(writer, "is-new-cycle", this.isNewCycle);
 
             // <amount>
-            XmlWriterHelper.WriteOpt(writer, "amount", _amount);
+            XmlWriterHelper.WriteOpt(writer, "amount", this.amount);
 
             // </menstrual-flow>
             writer.WriteEndElement();
@@ -196,12 +198,12 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public override string ToString()
         {
-            if (_amount == null)
+            if (this.amount == null)
             {
                 return null;
             }
 
-            return _amount.Text;
+            return this.amount.Text;
         }
     }
 }

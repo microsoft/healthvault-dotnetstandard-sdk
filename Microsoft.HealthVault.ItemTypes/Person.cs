@@ -6,6 +6,8 @@
 using System;
 using System.Xml;
 using System.Xml.XPath;
+using Microsoft.HealthVault.Helpers;
+using Microsoft.HealthVault.Thing;
 
 namespace Microsoft.HealthVault.ItemTypes
 {
@@ -85,7 +87,7 @@ namespace Microsoft.HealthVault.ItemTypes
         /// A GUID.
         /// </value>
         ///
-        public new static readonly Guid TypeId =
+        public static new readonly Guid TypeId =
             new Guid("25c94a9f-9d3d-4576-96dc-6791178a8143");
 
         /// <summary>
@@ -109,7 +111,7 @@ namespace Microsoft.HealthVault.ItemTypes
             Validator.ThrowInvalidIfNull(personNav, "PersonUnexpectedNode");
 
             // <person>
-            _item.ParseXml(personNav);
+            this.item.ParseXml(personNav);
         }
 
         /// <summary>
@@ -123,7 +125,7 @@ namespace Microsoft.HealthVault.ItemTypes
         public override void WriteXml(XmlWriter writer)
         {
             // <person>
-            _item.WriteXml("person", writer);
+            this.item.WriteXml("person", writer);
         }
 
         /// <summary>
@@ -140,8 +142,8 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public Name Name
         {
-            get { return Item.Name; }
-            set { Item.Name = value; }
+            get { return this.Item.Name; }
+            set { this.Item.Name = value; }
         }
 
         /// <summary>
@@ -162,11 +164,12 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public string Organization
         {
-            get { return Item.Organization; }
+            get { return this.Item.Organization; }
+
             set
             {
                 Validator.ThrowIfStringIsWhitespace(value, "Organization");
-                Item.Organization = value;
+                this.Item.Organization = value;
             }
         }
 
@@ -184,11 +187,12 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public string ProfessionalTraining
         {
-            get { return Item.ProfessionalTraining; }
+            get { return this.Item.ProfessionalTraining; }
+
             set
             {
                 Validator.ThrowIfStringIsWhitespace(value, "ProfessionalTraining");
-                Item.ProfessionalTraining = value;
+                this.Item.ProfessionalTraining = value;
             }
         }
 
@@ -210,11 +214,12 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public string PersonId
         {
-            get { return Item.PersonId; }
+            get { return this.Item.PersonId; }
+
             set
             {
                 Validator.ThrowIfStringIsWhitespace(value, "PersonId");
-                Item.PersonId = value;
+                this.Item.PersonId = value;
             }
         }
 
@@ -233,8 +238,8 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public ContactInfo ContactInformation
         {
-            get { return Item.ContactInformation; }
-            set { Item.ContactInformation = value; }
+            get { return this.Item.ContactInformation; }
+            set { this.Item.ContactInformation = value; }
         }
 
         /// <summary>
@@ -248,8 +253,8 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public CodableValue PersonType
         {
-            get { return Item.PersonType; }
-            set { Item.PersonType = value; }
+            get { return this.Item.PersonType; }
+            set { this.Item.PersonType = value; }
         }
 
         /// <summary>
@@ -262,10 +267,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         private PersonItem Item
         {
-            get { return _item; }
-            set { _item = value; }
+            get { return this.item; }
+            set { this.item = value; }
         }
-        private PersonItem _item = new PersonItem();
+
+        private PersonItem item = new PersonItem();
 
         /// <summary>
         /// Gets a string representation of the person item.
@@ -277,17 +283,18 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public override string ToString()
         {
-            string result = Name.ToString();
+            string result = this.Name.ToString();
 
-            if (PersonType != null)
+            if (this.PersonType != null)
             {
                 result =
-                    String.Format(
+                    string.Format(
                         ResourceRetriever.GetResourceString(
                             "PersonToStringFormat"),
-                        Name.ToString(),
-                        PersonType.Text);
+                        this.Name.ToString(),
+                        this.PersonType.Text);
             }
+
             return result;
         }
     }

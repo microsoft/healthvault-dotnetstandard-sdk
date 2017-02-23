@@ -6,6 +6,7 @@
 using System.Globalization;
 using System.Xml;
 using System.Xml.XPath;
+using Microsoft.HealthVault.Helpers;
 
 namespace Microsoft.HealthVault.ItemTypes
 {
@@ -28,7 +29,7 @@ namespace Microsoft.HealthVault.ItemTypes
         /// class with empty values.
         /// </summary>
         ///
-        public InsulinInjectionMeasurement() : base()
+        public InsulinInjectionMeasurement()
         {
         }
 
@@ -97,7 +98,7 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         protected override void ParseValueXml(XPathNavigator navigator)
         {
-            Value = navigator.SelectSingleNode("IE").ValueAsDouble;
+            this.Value = navigator.SelectSingleNode("IE").ValueAsDouble;
         }
 
         /// <summary>
@@ -111,7 +112,7 @@ namespace Microsoft.HealthVault.ItemTypes
         protected override void WriteValueXml(XmlWriter writer)
         {
             writer.WriteElementString(
-                "IE", XmlConvert.ToString(Value));
+                "IE", XmlConvert.ToString(this.Value));
         }
 
         /// <summary>

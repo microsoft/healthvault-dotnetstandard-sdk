@@ -6,6 +6,8 @@
 using System;
 using System.Xml;
 using System.Xml.XPath;
+using Microsoft.HealthVault.Helpers;
+using Microsoft.HealthVault.Thing;
 
 namespace Microsoft.HealthVault.ItemTypes
 {
@@ -39,7 +41,7 @@ namespace Microsoft.HealthVault.ItemTypes
         /// A GUID.
         /// </value>
         ///
-        public new static readonly Guid TypeId =
+        public static new readonly Guid TypeId =
             new Guid("b7925180-d69e-48fa-ae1d-cb3748ca170e");
 
         /// <summary>
@@ -67,8 +69,8 @@ namespace Microsoft.HealthVault.ItemTypes
 
             if (initialNav != null)
             {
-                _initialWeight = new WeightValue();
-                _initialWeight.ParseXml(initialNav);
+                this.initialWeight = new WeightValue();
+                this.initialWeight.ParseXml(initialNav);
             }
 
             XPathNavigator minNav =
@@ -76,8 +78,8 @@ namespace Microsoft.HealthVault.ItemTypes
 
             if (minNav != null)
             {
-                _minWeight = new WeightValue();
-                _minWeight.ParseXml(minNav);
+                this.minWeight = new WeightValue();
+                this.minWeight.ParseXml(minNav);
             }
 
             XPathNavigator maxNav =
@@ -85,8 +87,8 @@ namespace Microsoft.HealthVault.ItemTypes
 
             if (maxNav != null)
             {
-                _maxWeight = new WeightValue();
-                _maxWeight.ParseXml(maxNav);
+                this.maxWeight = new WeightValue();
+                this.maxWeight.ParseXml(maxNav);
             }
 
             XPathNavigator goalNav =
@@ -94,8 +96,8 @@ namespace Microsoft.HealthVault.ItemTypes
 
             if (goalNav != null)
             {
-                _goal = new Goal();
-                _goal.ParseXml(goalNav);
+                this.goal = new Goal();
+                this.goal.ParseXml(goalNav);
             }
         }
 
@@ -118,24 +120,24 @@ namespace Microsoft.HealthVault.ItemTypes
             // <weight-goal>
             writer.WriteStartElement("weight-goal");
 
-            if (_initialWeight != null)
+            if (this.initialWeight != null)
             {
-                _initialWeight.WriteXml("initial", writer);
+                this.initialWeight.WriteXml("initial", writer);
             }
 
-            if (_minWeight != null)
+            if (this.minWeight != null)
             {
-                _minWeight.WriteXml("minimum", writer);
+                this.minWeight.WriteXml("minimum", writer);
             }
 
-            if (_maxWeight != null)
+            if (this.maxWeight != null)
             {
-                _maxWeight.WriteXml("maximum", writer);
+                this.maxWeight.WriteXml("maximum", writer);
             }
 
-            if (_goal != null)
+            if (this.goal != null)
             {
-                _goal.WriteXml("goal-info", writer);
+                this.goal.WriteXml("goal-info", writer);
             }
 
             // </weight-goal>
@@ -156,10 +158,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public WeightValue InitialWeight
         {
-            get { return _initialWeight; }
-            set { _initialWeight = value; }
+            get { return this.initialWeight; }
+            set { this.initialWeight = value; }
         }
-        private WeightValue _initialWeight;
+
+        private WeightValue initialWeight;
 
         /// <summary>
         /// Gets or sets the person's minimum weight.
@@ -175,10 +178,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public WeightValue MinimumWeight
         {
-            get { return _minWeight; }
-            set { _minWeight = value; }
+            get { return this.minWeight; }
+            set { this.minWeight = value; }
         }
-        private WeightValue _minWeight;
+
+        private WeightValue minWeight;
 
         /// <summary>
         /// Gets or sets the person's maximum weight.
@@ -194,10 +198,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public WeightValue MaximumWeight
         {
-            get { return _maxWeight; }
-            set { _maxWeight = value; }
+            get { return this.maxWeight; }
+            set { this.maxWeight = value; }
         }
-        private WeightValue _maxWeight;
+
+        private WeightValue maxWeight;
 
         /// <summary>
         /// Gets or sets the goal information.
@@ -213,10 +218,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public Goal Goal
         {
-            get { return _goal; }
-            set { _goal = value; }
+            get { return this.goal; }
+            set { this.goal = value; }
         }
-        private Goal _goal;
+
+        private Goal goal;
 
         /// <summary>
         /// Gets a string representation of the weight goal.
@@ -228,84 +234,85 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public override string ToString()
         {
-            string result = String.Empty;
+            string result = string.Empty;
 
-            if (Goal == null || Goal.TargetDate == null)
+            if (this.Goal == null || this.Goal.TargetDate == null)
             {
-                if (MinimumWeight != null)
+                if (this.MinimumWeight != null)
                 {
-                    if (MaximumWeight != null)
+                    if (this.MaximumWeight != null)
                     {
                         result =
-                            String.Format(
+                            string.Format(
                                 ResourceRetriever.GetResourceString(
                                     "MeasurementRange"),
-                                MinimumWeight.ToString(),
-                                MaximumWeight.ToString());
+                                this.MinimumWeight.ToString(),
+                                this.MaximumWeight.ToString());
                     }
                     else
                     {
                         result =
-                            String.Format(
+                            string.Format(
                                 ResourceRetriever.GetResourceString(
                                     "WeightGoalToStringFormatMin"),
-                                MinimumWeight.ToString());
+                                this.MinimumWeight.ToString());
                     }
                 }
                 else
                 {
-                    if (MaximumWeight != null)
+                    if (this.MaximumWeight != null)
                     {
-                        result = MaximumWeight.ToString();
+                        result = this.MaximumWeight.ToString();
                     }
                 }
             }
             else
             {
-                if (MinimumWeight != null)
+                if (this.MinimumWeight != null)
                 {
-                    if (MaximumWeight != null)
+                    if (this.MaximumWeight != null)
                     {
                         result =
-                            String.Format(
+                            string.Format(
                                 ResourceRetriever.GetResourceString(
                                     "MeasurementRangeWithDate"),
-                                MinimumWeight.ToString(),
-                                MaximumWeight.ToString(),
-                                Goal.TargetDate.ToString());
+                                this.MinimumWeight.ToString(),
+                                this.MaximumWeight.ToString(),
+                                this.Goal.TargetDate.ToString());
                     }
                     else
                     {
                         result =
-                            String.Format(
+                            string.Format(
                                 ResourceRetriever.GetResourceString(
                                     "WeightGoalToStringFormatMinWithDate"),
-                                MinimumWeight.ToString(),
-                                Goal.TargetDate.ToString());
+                                this.MinimumWeight.ToString(),
+                                this.Goal.TargetDate.ToString());
                     }
                 }
                 else
                 {
-                    if (MaximumWeight != null)
+                    if (this.MaximumWeight != null)
                     {
                         result =
-                            String.Format(
+                            string.Format(
                                 ResourceRetriever.GetResourceString(
                                     "WeightGoalToStringFormatMaxWithDate"),
-                                MaximumWeight.ToString(),
-                                Goal.TargetDate.ToString());
+                                this.MaximumWeight.ToString(),
+                                this.Goal.TargetDate.ToString());
                     }
                     else
                     {
                         result =
-                            String.Format(
+                            string.Format(
                                 ResourceRetriever.GetResourceString(
                                     "WeightGoalToStringFormatMaxWithDate"),
-                                String.Empty,
-                                Goal.TargetDate.ToString());
+                                string.Empty,
+                                this.Goal.TargetDate.ToString());
                     }
                 }
             }
+
             return result;
         }
     }

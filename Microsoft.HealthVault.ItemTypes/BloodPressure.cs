@@ -6,6 +6,8 @@
 using System;
 using System.Xml;
 using System.Xml.XPath;
+using Microsoft.HealthVault.Helpers;
+using Microsoft.HealthVault.Thing;
 
 namespace Microsoft.HealthVault.ItemTypes
 {
@@ -76,7 +78,7 @@ namespace Microsoft.HealthVault.ItemTypes
         /// >A GUID.
         /// </value>
         ///
-        public new static readonly Guid TypeId =
+        public static new readonly Guid TypeId =
             new Guid("ca3c57f4-f4c1-4e15-be67-0a3caf5414ed");
 
         /// <summary>
@@ -100,17 +102,17 @@ namespace Microsoft.HealthVault.ItemTypes
 
             Validator.ThrowInvalidIfNull(bpNav, "BPUnexpectedNode");
 
-            _when = new HealthServiceDateTime();
-            _when.ParseXml(bpNav.SelectSingleNode("when"));
+            this.when = new HealthServiceDateTime();
+            this.when.ParseXml(bpNav.SelectSingleNode("when"));
 
-            _systolic = bpNav.SelectSingleNode("systolic").ValueAsInt;
-            _diastolic = bpNav.SelectSingleNode("diastolic").ValueAsInt;
+            this.systolic = bpNav.SelectSingleNode("systolic").ValueAsInt;
+            this.diastolic = bpNav.SelectSingleNode("diastolic").ValueAsInt;
 
             XPathNavigator pulseNav = bpNav.SelectSingleNode("pulse");
 
             if (pulseNav != null)
             {
-                _pulse = pulseNav.ValueAsInt;
+                this.pulse = pulseNav.ValueAsInt;
             }
 
             XPathNavigator irregularHeartbeatNav =
@@ -118,7 +120,7 @@ namespace Microsoft.HealthVault.ItemTypes
 
             if (irregularHeartbeatNav != null)
             {
-                _irregularHeartbeatDetected =
+                this.irregularHeartbeatDetected =
                     irregularHeartbeatNav.ValueAsBoolean;
             }
         }
@@ -143,29 +145,29 @@ namespace Microsoft.HealthVault.ItemTypes
         public override void WriteXml(XmlWriter writer)
         {
             Validator.ThrowIfWriterNull(writer);
-            Validator.ThrowSerializationIfNull(_systolic, "BPSystolicNotSet");
-            Validator.ThrowSerializationIfNull(_diastolic, "BPDiastolicNotSet");
+            Validator.ThrowSerializationIfNull(this.systolic, "BPSystolicNotSet");
+            Validator.ThrowSerializationIfNull(this.diastolic, "BPDiastolicNotSet");
 
             // <blood-pressure>
             writer.WriteStartElement("blood-pressure");
 
             // <when>
-            _when.WriteXml("when", writer);
+            this.when.WriteXml("when", writer);
 
-            writer.WriteElementString("systolic", _systolic.ToString());
+            writer.WriteElementString("systolic", this.systolic.ToString());
 
-            writer.WriteElementString("diastolic", _diastolic.ToString());
+            writer.WriteElementString("diastolic", this.diastolic.ToString());
 
-            if (_pulse != null)
+            if (this.pulse != null)
             {
-                writer.WriteElementString("pulse", _pulse.ToString());
+                writer.WriteElementString("pulse", this.pulse.ToString());
             }
 
-            if (_irregularHeartbeatDetected != null)
+            if (this.irregularHeartbeatDetected != null)
             {
                 writer.WriteElementString(
                     "irregular-heartbeat",
-                    SDKHelper.XmlFromBool((bool)_irregularHeartbeatDetected));
+                    SDKHelper.XmlFromBool((bool)this.irregularHeartbeatDetected));
             }
 
             // </bp>
@@ -188,14 +190,16 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public HealthServiceDateTime When
         {
-            get { return _when; }
+            get { return this.when; }
+
             set
             {
                 Validator.ThrowIfArgumentNull(value, "When", "WhenNullValue");
-                _when = value;
+                this.when = value;
             }
         }
-        private HealthServiceDateTime _when = new HealthServiceDateTime();
+
+        private HealthServiceDateTime when = new HealthServiceDateTime();
 
         /// <summary>
         /// Gets or sets the systolic pressure of the reading.
@@ -217,15 +221,17 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             get
             {
-                return _systolic ?? 0;
+                return this.systolic ?? 0;
             }
+
             set
             {
                 Validator.ThrowArgumentOutOfRangeIf(value < 0, "Systolic", "BPSystolicNegative");
-                _systolic = value;
+                this.systolic = value;
             }
         }
-        private int? _systolic;
+
+        private int? systolic;
 
         /// <summary>
         /// Gets or sets the diastolic pressure of the reading.
@@ -247,15 +253,17 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             get
             {
-                return _diastolic ?? 0;
+                return this.diastolic ?? 0;
             }
+
             set
             {
                 Validator.ThrowArgumentOutOfRangeIf(value < 0, "Diastolic", "BPDiastolicNegative");
-                _diastolic = value;
+                this.diastolic = value;
             }
         }
-        private int? _diastolic;
+
+        private int? diastolic;
 
         /// <summary>
         /// Gets or sets the pulse during the reading.
@@ -275,17 +283,19 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public int? Pulse
         {
-            get { return _pulse; }
+            get { return this.pulse; }
+
             set
             {
                 Validator.ThrowArgumentOutOfRangeIf(
                     value != null && value < 0,
                     "Pulse",
                     "BPPulseNegative");
-                _pulse = value;
+                this.pulse = value;
             }
         }
-        private int? _pulse;
+
+        private int? pulse;
 
         /// <summary>
         /// Gets or sets a value indicating whether an irregular heartbeat was
@@ -303,10 +313,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public bool? IrregularHeartbeatDetected
         {
-            get { return _irregularHeartbeatDetected; }
-            set { _irregularHeartbeatDetected = value; }
+            get { return this.irregularHeartbeatDetected; }
+            set { this.irregularHeartbeatDetected = value; }
         }
-        private bool? _irregularHeartbeatDetected;
+
+        private bool? irregularHeartbeatDetected;
 
         /// <summary>
         /// Gets a string representation of the blood pressure item.
@@ -322,8 +333,8 @@ namespace Microsoft.HealthVault.ItemTypes
                 string.Format(
                     ResourceRetriever.GetResourceString(
                         "BPToStringFormat"),
-                    Systolic,
-                    Diastolic);
+                    this.Systolic,
+                    this.Diastolic);
         }
     }
 }

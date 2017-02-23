@@ -6,6 +6,8 @@
 using System;
 using System.Xml;
 using System.Xml.XPath;
+using Microsoft.HealthVault.Helpers;
+using Microsoft.HealthVault.Thing;
 
 namespace Microsoft.HealthVault.ItemTypes
 {
@@ -55,7 +57,7 @@ namespace Microsoft.HealthVault.ItemTypes
         /// Retrieves the unique identifier for the item type.
         /// </summary>
         ///
-        public new static readonly Guid TypeId =
+        public static new readonly Guid TypeId =
             new Guid("22826e13-41e1-4ba3-8447-37dadd208fd8");
 
         /// <summary>
@@ -78,10 +80,10 @@ namespace Microsoft.HealthVault.ItemTypes
 
             Validator.ThrowInvalidIfNull(itemNav, "FamilyHistoryUnexpectedNode");
 
-            _relativeCondition = new ConditionEntry();
-            _relativeCondition.ParseXml(itemNav.SelectSingleNode("condition"));
+            this.relativeCondition = new ConditionEntry();
+            this.relativeCondition.ParseXml(itemNav.SelectSingleNode("condition"));
 
-            _relative =
+            this.relative =
                 XPathHelper.GetOptNavValue<FamilyHistoryRelative>(itemNav, "relative");
         }
 
@@ -104,19 +106,19 @@ namespace Microsoft.HealthVault.ItemTypes
         public override void WriteXml(XmlWriter writer)
         {
             Validator.ThrowIfWriterNull(writer);
-            Validator.ThrowSerializationIfNull(_relativeCondition, "FamilyHistoryConditionNotSet");
+            Validator.ThrowSerializationIfNull(this.relativeCondition, "FamilyHistoryConditionNotSet");
 
             // <family-history>
             writer.WriteStartElement("family-history");
 
             // <condition>
-            _relativeCondition.WriteXml("condition", writer);
+            this.relativeCondition.WriteXml("condition", writer);
 
             // <relative>
             XmlWriterHelper.WriteOpt(
                 writer,
                 "relative",
-                _relative);
+                this.relative);
 
             // </familty-history>
             writer.WriteEndElement();
@@ -132,14 +134,16 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public ConditionEntry Condition
         {
-            get { return _relativeCondition; }
+            get { return this.relativeCondition; }
+
             set
             {
                 Validator.ThrowIfArgumentNull(value, "Condition", "FamilyHistoryConditionMandatory");
-                _relativeCondition = value;
+                this.relativeCondition = value;
             }
         }
-        private ConditionEntry _relativeCondition;
+
+        private ConditionEntry relativeCondition;
 
         /// <summary>
         /// Gets or sets information about the relative with this condition.
@@ -151,10 +155,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public FamilyHistoryRelative Relative
         {
-            get { return _relative; }
-            set { _relative = value; }
+            get { return this.relative; }
+            set { this.relative = value; }
         }
-        private FamilyHistoryRelative _relative;
+
+        private FamilyHistoryRelative relative;
 
         /// <summary>
         /// Gets a string representation of the family history item.
@@ -166,17 +171,18 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public override string ToString()
         {
-            string result = _relativeCondition.Name.ToString();
+            string result = this.relativeCondition.Name.ToString();
 
-            if (_relative != null && _relative.Relationship != null)
+            if (this.relative != null && this.relative.Relationship != null)
             {
                 result =
                     string.Format(
                         ResourceRetriever.GetResourceString(
                             "FamilyHistoryToStringFormat"),
-                        _relativeCondition.Name.ToString(),
-                        _relative.Relationship.ToString());
+                        this.relativeCondition.Name.ToString(),
+                        this.relative.Relationship.ToString());
             }
+
             return result;
         }
     }

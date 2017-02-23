@@ -5,7 +5,7 @@
 
 using System;
 
-namespace Microsoft.HealthVault
+namespace Microsoft.HealthVault.Application
 {
     /// <summary>
     /// Optional configuration settings for HealthVault applications.

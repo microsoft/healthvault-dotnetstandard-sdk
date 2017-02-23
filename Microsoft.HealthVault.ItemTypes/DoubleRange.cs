@@ -5,6 +5,7 @@
 
 using System.Xml;
 using System.Xml.XPath;
+using Microsoft.HealthVault.Helpers;
 
 namespace Microsoft.HealthVault.ItemTypes
 {
@@ -25,7 +26,6 @@ namespace Microsoft.HealthVault.ItemTypes
         /// </summary>
         ///
         public DoubleRange()
-            : base()
         {
         }
 
@@ -99,7 +99,7 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <see cref="Double.MinValue"/>
         /// </returns>
         ///
-        protected override double DefaultMinValue { get { return double.MinValue; } }
+        protected override double DefaultMinValue => double.MinValue;
 
         /// <summary>
         /// Gets the maximum range value to it's default value.
@@ -109,7 +109,7 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <see cref="Double.MaxValue"/>
         /// </returns>
         ///
-        protected override double DefaultMaxValue { get { return double.MaxValue; } }
+        protected override double DefaultMaxValue => double.MaxValue;
 
         /// <summary>
         /// Returns the range as a string.
@@ -128,8 +128,8 @@ namespace Microsoft.HealthVault.ItemTypes
             return string.Format(
                 ResourceRetriever.GetResourceString(
                     "Range"),
-                MinRange,
-                MaxRange);
+                this.MinRange,
+                this.MaxRange);
         }
     }
 }

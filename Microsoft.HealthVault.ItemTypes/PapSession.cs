@@ -8,6 +8,8 @@ using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Xml;
 using System.Xml.XPath;
+using Microsoft.HealthVault.Helpers;
+using Microsoft.HealthVault.Thing;
 
 namespace Microsoft.HealthVault.ItemTypes
 {
@@ -69,9 +71,9 @@ namespace Microsoft.HealthVault.ItemTypes
             double apneaHypopneaIndex)
                 : base(TypeId)
         {
-            When = when;
-            DurationMinutes = durationMinutes;
-            ApneaHypopneaIndex = apneaHypopneaIndex;
+            this.When = when;
+            this.DurationMinutes = durationMinutes;
+            this.ApneaHypopneaIndex = apneaHypopneaIndex;
         }
 
         /// <summary>
@@ -111,21 +113,21 @@ namespace Microsoft.HealthVault.ItemTypes
 
             Validator.ThrowInvalidIfNull(itemNav, "PapSessionUnexpectedNode");
 
-            _when = new HealthServiceDateTime();
-            _when.ParseXml(itemNav.SelectSingleNode("when"));
+            this.when = new HealthServiceDateTime();
+            this.when.ParseXml(itemNav.SelectSingleNode("when"));
 
-            _durationMinutes = itemNav.SelectSingleNode("duration-minutes").ValueAsDouble;
-            _apneaHypopneaIndex = itemNav.SelectSingleNode("apnea-hypopnea-index").ValueAsDouble;
+            this.durationMinutes = itemNav.SelectSingleNode("duration-minutes").ValueAsDouble;
+            this.apneaHypopneaIndex = itemNav.SelectSingleNode("apnea-hypopnea-index").ValueAsDouble;
 
-            _apneaIndex = XPathHelper.GetOptNavValueAsDouble(itemNav, "apnea-index");
-            _hypopneaIndex = XPathHelper.GetOptNavValueAsDouble(itemNav, "hypopnea-index");
-            _oxygenDesaturationIndex = XPathHelper.GetOptNavValueAsDouble(itemNav, "oxygen-desaturation-index");
+            this.apneaIndex = XPathHelper.GetOptNavValueAsDouble(itemNav, "apnea-index");
+            this.hypopneaIndex = XPathHelper.GetOptNavValueAsDouble(itemNav, "hypopnea-index");
+            this.oxygenDesaturationIndex = XPathHelper.GetOptNavValueAsDouble(itemNav, "oxygen-desaturation-index");
 
-            _pressure = XPathHelper.GetOptNavValue<PapSessionMeasurements<PressureMeasurement>>(itemNav, "pressure");
-            _leakRate = XPathHelper.GetOptNavValue<PapSessionMeasurements<FlowMeasurement>>(itemNav, "leak-rate");
-            _tidalVolume = XPathHelper.GetOptNavValue<PapSessionMeasurements<VolumeMeasurement>>(itemNav, "tidal-volume");
-            _minuteVentilation = XPathHelper.GetOptNavValue<PapSessionMeasurements<VolumeMeasurement>>(itemNav, "minute-ventilation");
-            _respiratoryRate = XPathHelper.GetOptNavValue<PapSessionMeasurements<RespiratoryRateMeasurement>>(itemNav, "respiratory-rate");
+            this.pressure = XPathHelper.GetOptNavValue<PapSessionMeasurements<PressureMeasurement>>(itemNav, "pressure");
+            this.leakRate = XPathHelper.GetOptNavValue<PapSessionMeasurements<FlowMeasurement>>(itemNav, "leak-rate");
+            this.tidalVolume = XPathHelper.GetOptNavValue<PapSessionMeasurements<VolumeMeasurement>>(itemNav, "tidal-volume");
+            this.minuteVentilation = XPathHelper.GetOptNavValue<PapSessionMeasurements<VolumeMeasurement>>(itemNav, "minute-ventilation");
+            this.respiratoryRate = XPathHelper.GetOptNavValue<PapSessionMeasurements<RespiratoryRateMeasurement>>(itemNav, "respiratory-rate");
         }
 
         /// <summary>
@@ -149,23 +151,23 @@ namespace Microsoft.HealthVault.ItemTypes
         public override void WriteXml(XmlWriter writer)
         {
             Validator.ThrowIfWriterNull(writer);
-            Validator.ThrowSerializationIfNull(_when, "WhenNullValue");
+            Validator.ThrowSerializationIfNull(this.when, "WhenNullValue");
 
             writer.WriteStartElement("pap-session");
 
-            _when.WriteXml("when", writer);
+            this.when.WriteXml("when", writer);
 
-            XmlWriterHelper.WriteOptDouble(writer, "duration-minutes", _durationMinutes);
-            XmlWriterHelper.WriteOptDouble(writer, "apnea-hypopnea-index", _apneaHypopneaIndex);
-            XmlWriterHelper.WriteOptDouble(writer, "apnea-index", _apneaIndex);
-            XmlWriterHelper.WriteOptDouble(writer, "hypopnea-index", _hypopneaIndex);
-            XmlWriterHelper.WriteOptDouble(writer, "oxygen-desaturation-index", _oxygenDesaturationIndex);
+            XmlWriterHelper.WriteOptDouble(writer, "duration-minutes", this.durationMinutes);
+            XmlWriterHelper.WriteOptDouble(writer, "apnea-hypopnea-index", this.apneaHypopneaIndex);
+            XmlWriterHelper.WriteOptDouble(writer, "apnea-index", this.apneaIndex);
+            XmlWriterHelper.WriteOptDouble(writer, "hypopnea-index", this.hypopneaIndex);
+            XmlWriterHelper.WriteOptDouble(writer, "oxygen-desaturation-index", this.oxygenDesaturationIndex);
 
-            XmlWriterHelper.WriteOpt<PapSessionMeasurements<PressureMeasurement>>(writer, "pressure", _pressure);
-            XmlWriterHelper.WriteOpt<PapSessionMeasurements<FlowMeasurement>>(writer, "leak-rate", _leakRate);
-            XmlWriterHelper.WriteOpt<PapSessionMeasurements<VolumeMeasurement>>(writer, "tidal-volume", _tidalVolume);
-            XmlWriterHelper.WriteOpt<PapSessionMeasurements<VolumeMeasurement>>(writer, "minute-ventilation", _minuteVentilation);
-            XmlWriterHelper.WriteOpt<PapSessionMeasurements<RespiratoryRateMeasurement>>(writer, "respiratory-rate", _respiratoryRate);
+            XmlWriterHelper.WriteOpt(writer, "pressure", this.pressure);
+            XmlWriterHelper.WriteOpt(writer, "leak-rate", this.leakRate);
+            XmlWriterHelper.WriteOpt(writer, "tidal-volume", this.tidalVolume);
+            XmlWriterHelper.WriteOpt(writer, "minute-ventilation", this.minuteVentilation);
+            XmlWriterHelper.WriteOpt(writer, "respiratory-rate", this.respiratoryRate);
 
             writer.WriteEndElement();
         }
@@ -182,17 +184,17 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             get
             {
-                return _when;
+                return this.when;
             }
 
             set
             {
                 Validator.ThrowIfArgumentNull(value, "When", "WhenNullValue");
-                _when = value;
+                this.when = value;
             }
         }
 
-        private HealthServiceDateTime _when;
+        private HealthServiceDateTime when;
 
         /// <summary>
         /// Gets or sets the number of minutes in the session.
@@ -206,7 +208,7 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             get
             {
-                return _durationMinutes;
+                return this.durationMinutes;
             }
 
             set
@@ -215,11 +217,11 @@ namespace Microsoft.HealthVault.ItemTypes
                     value < 0.0,
                     "DurationMinutes",
                     "DurationMinutesNegative");
-                _durationMinutes = value;
+                this.durationMinutes = value;
             }
         }
 
-        private double _durationMinutes;
+        private double durationMinutes;
 
         /// <summary>
         /// Gets or sets the number of Apnea and Hypopnea events per hour.
@@ -234,7 +236,7 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             get
             {
-                return _apneaHypopneaIndex;
+                return this.apneaHypopneaIndex;
             }
 
             set
@@ -243,11 +245,11 @@ namespace Microsoft.HealthVault.ItemTypes
                     value < 0.0,
                     "ApneaHypopneaIndex",
                     "ApneaHypopneaIndexNegative");
-                _apneaHypopneaIndex = value;
+                this.apneaHypopneaIndex = value;
             }
         }
 
-        private double _apneaHypopneaIndex;
+        private double apneaHypopneaIndex;
 
         /// <summary>
         /// Gets or sets the number of Apnea events per hour.
@@ -265,7 +267,7 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             get
             {
-                return _apneaIndex;
+                return this.apneaIndex;
             }
 
             set
@@ -274,11 +276,11 @@ namespace Microsoft.HealthVault.ItemTypes
                     value != null && value < 0.0,
                     "ApneaIndex",
                     "ApneaIndexNegative");
-                _apneaIndex = value;
+                this.apneaIndex = value;
             }
         }
 
-        private double? _apneaIndex;
+        private double? apneaIndex;
 
         /// <summary>
         /// Gets or sets the number of Hypopnea events per hour.
@@ -297,7 +299,7 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             get
             {
-                return _hypopneaIndex;
+                return this.hypopneaIndex;
             }
 
             set
@@ -306,11 +308,11 @@ namespace Microsoft.HealthVault.ItemTypes
                     value != null && value < 0.0,
                     "HypopneaIndex",
                     "HypopneaIndexNegative");
-                _hypopneaIndex = value;
+                this.hypopneaIndex = value;
             }
         }
 
-        private double? _hypopneaIndex;
+        private double? hypopneaIndex;
 
         /// <summary>
         /// Gets or sets the number of oxygen desaturation events per hour.
@@ -329,7 +331,7 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             get
             {
-                return _oxygenDesaturationIndex;
+                return this.oxygenDesaturationIndex;
             }
 
             set
@@ -338,11 +340,11 @@ namespace Microsoft.HealthVault.ItemTypes
                     value != null && value < 0.0,
                     "OxygenDesaturationIndex",
                     "OxygenDesaturationIndexNegative");
-                _oxygenDesaturationIndex = value;
+                this.oxygenDesaturationIndex = value;
             }
         }
 
-        private double? _oxygenDesaturationIndex;
+        private double? oxygenDesaturationIndex;
 
         /// <summary>
         /// Gets or sets the pressure measurements during the session.
@@ -354,11 +356,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public PapSessionMeasurements<PressureMeasurement> Pressure
         {
-            get { return _pressure; }
-            set { _pressure = value; }
+            get { return this.pressure; }
+            set { this.pressure = value; }
         }
 
-        private PapSessionMeasurements<PressureMeasurement> _pressure;
+        private PapSessionMeasurements<PressureMeasurement> pressure;
 
         /// <summary>
         /// Gets or sets the leak rate measurements during the session.
@@ -370,11 +372,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public PapSessionMeasurements<FlowMeasurement> LeakRate
         {
-            get { return _leakRate; }
-            set { _leakRate = value; }
+            get { return this.leakRate; }
+            set { this.leakRate = value; }
         }
 
-        private PapSessionMeasurements<FlowMeasurement> _leakRate;
+        private PapSessionMeasurements<FlowMeasurement> leakRate;
 
         /// <summary>
         /// Gets or sets the tidal volume measurements during the session.
@@ -386,11 +388,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public PapSessionMeasurements<VolumeMeasurement> TidalVolume
         {
-            get { return _tidalVolume; }
-            set { _tidalVolume = value; }
+            get { return this.tidalVolume; }
+            set { this.tidalVolume = value; }
         }
 
-        private PapSessionMeasurements<VolumeMeasurement> _tidalVolume;
+        private PapSessionMeasurements<VolumeMeasurement> tidalVolume;
 
         /// <summary>
         /// Gets or sets the minute ventilation measurements during the session.
@@ -402,11 +404,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public PapSessionMeasurements<VolumeMeasurement> MinuteVentilation
         {
-            get { return _minuteVentilation; }
-            set { _minuteVentilation = value; }
+            get { return this.minuteVentilation; }
+            set { this.minuteVentilation = value; }
         }
 
-        private PapSessionMeasurements<VolumeMeasurement> _minuteVentilation;
+        private PapSessionMeasurements<VolumeMeasurement> minuteVentilation;
 
         /// <summary>
         /// Gets or sets the respiratory rate measurements during the session.
@@ -418,11 +420,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public PapSessionMeasurements<RespiratoryRateMeasurement> RespiratoryRate
         {
-            get { return _respiratoryRate; }
-            set { _respiratoryRate = value; }
+            get { return this.respiratoryRate; }
+            set { this.respiratoryRate = value; }
         }
 
-        private PapSessionMeasurements<RespiratoryRateMeasurement> _respiratoryRate;
+        private PapSessionMeasurements<RespiratoryRateMeasurement> respiratoryRate;
 
         /// <summary>
         /// Gets a string representation of the PAP session.
@@ -434,10 +436,10 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public override string ToString()
         {
-            return String.Format(
+            return string.Format(
                 CultureInfo.CurrentCulture,
                 ResourceRetriever.GetResourceString("PapSessionToStringFormat"),
-                ApneaHypopneaIndex.ToString(CultureInfo.CurrentCulture));
+                this.ApneaHypopneaIndex.ToString(CultureInfo.CurrentCulture));
         }
     }
 }

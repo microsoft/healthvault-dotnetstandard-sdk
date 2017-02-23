@@ -6,6 +6,9 @@
 using System;
 using System.Xml;
 using System.Xml.XPath;
+using Microsoft.HealthVault.Exceptions;
+using Microsoft.HealthVault.Helpers;
+using Microsoft.HealthVault.Thing;
 
 namespace Microsoft.HealthVault.ItemTypes
 {
@@ -21,7 +24,7 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         /// <remarks>
         /// The item is not added to the health record until the
-        /// <see cref="HealthRecordAccessor.NewItem(HealthRecordItem)"/> method
+        /// <see cref="HealthRecordAccessor.NewItemAsync(HealthRecordItem)"/> method
         /// is called.
         /// </remarks>
         ///
@@ -57,7 +60,7 @@ namespace Microsoft.HealthVault.ItemTypes
         /// A GUID.
         /// </value>
         ///
-        public new static readonly Guid TypeId =
+        public static new readonly Guid TypeId =
             new Guid("7AB3E662-CC5B-4BE2-BF38-78F8AAD5B161");
 
         /// <summary>
@@ -80,22 +83,22 @@ namespace Microsoft.HealthVault.ItemTypes
 
             Validator.ThrowInvalidIfNull(itemNav, "AnnotationUnexpectedNode");
 
-            _when = new HealthServiceDateTime();
-            _when.ParseXml(itemNav.SelectSingleNode("when"));
+            this.when = new HealthServiceDateTime();
+            this.when.ParseXml(itemNav.SelectSingleNode("when"));
 
-            _content =
+            this.content =
                 XPathHelper.GetOptNavValue(itemNav, "content");
 
-            _author =
+            this.author =
                 XPathHelper.GetOptNavValue<PersonItem>(itemNav, "author");
 
-            _classification =
+            this.classification =
                 XPathHelper.GetOptNavValue(itemNav, "classification");
 
-            _index =
+            this.index =
                 XPathHelper.GetOptNavValue(itemNav, "index");
 
-            _version =
+            this.version =
                 XPathHelper.GetOptNavValue(itemNav, "version");
         }
 
@@ -118,43 +121,43 @@ namespace Microsoft.HealthVault.ItemTypes
         public override void WriteXml(XmlWriter writer)
         {
             Validator.ThrowIfArgumentNull(writer, "writer", "WriteXmlNullWriter");
-            Validator.ThrowSerializationIfNull(_when, "AnnotationWhenNotSet");
+            Validator.ThrowSerializationIfNull(this.when, "AnnotationWhenNotSet");
 
             // <annotation>
             writer.WriteStartElement("annotation");
 
             // <when>
-            _when.WriteXml("when", writer);
+            this.when.WriteXml("when", writer);
 
             // <content>
             XmlWriterHelper.WriteOptString(
                 writer,
                 "content",
-                _content);
+                this.content);
 
             // <author>
             XmlWriterHelper.WriteOpt(
                 writer,
                 "author",
-                Author);
+                this.Author);
 
             // <classification>
             XmlWriterHelper.WriteOptString(
                 writer,
                 "classification",
-                _classification);
+                this.classification);
 
             // <index>
             XmlWriterHelper.WriteOptString(
                 writer,
                 "index",
-                _index);
+                this.index);
 
             // <version>
             XmlWriterHelper.WriteOptString(
                 writer,
                 "version",
-                _version);
+                this.version);
 
             // </annotation>
             writer.WriteEndElement();
@@ -175,14 +178,16 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public HealthServiceDateTime When
         {
-            get { return _when; }
+            get { return this.when; }
+
             set
             {
                 Validator.ThrowIfArgumentNull(value, "When", "WhenNullValue");
-                _when = value;
+                this.when = value;
             }
         }
-        private HealthServiceDateTime _when = new HealthServiceDateTime();
+
+        private HealthServiceDateTime when = new HealthServiceDateTime();
 
         /// <summary>
         /// Gets or sets the content for the annotation.
@@ -203,14 +208,16 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public string Content
         {
-            get { return _content; }
+            get { return this.content; }
+
             set
             {
                 Validator.ThrowIfStringIsWhitespace(value, "Content");
-                _content = value;
+                this.content = value;
             }
         }
-        private string _content;
+
+        private string content;
 
         /// <summary>
         /// Gets or sets the author contact information.
@@ -227,10 +234,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public PersonItem Author
         {
-            get { return _author; }
-            set { _author = value; }
+            get { return this.author; }
+            set { this.author = value; }
         }
-        private PersonItem _author;
+
+        private PersonItem author;
 
         /// <summary>
         /// Gets or sets the classification for the annotation.
@@ -250,14 +258,16 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public string Classification
         {
-            get { return _classification; }
+            get { return this.classification; }
+
             set
             {
                 Validator.ThrowIfStringIsWhitespace(value, "Classification");
-                _classification = value;
+                this.classification = value;
             }
         }
-        private string _classification;
+
+        private string classification;
 
         /// <summary>
         /// Gets or sets the index for the annotation.
@@ -278,14 +288,16 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public string Index
         {
-            get { return _index; }
+            get { return this.index; }
+
             set
             {
                 Validator.ThrowIfStringIsWhitespace(value, "Index");
-                _index = value;
+                this.index = value;
             }
         }
-        private string _index;
+
+        private string index;
 
         /// <summary>
         /// Gets or sets the version for the annotation.
@@ -306,14 +318,16 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public string Version
         {
-            get { return _version; }
+            get { return this.version; }
+
             set
             {
                 Validator.ThrowIfStringIsWhitespace(value, "Version");
-                _version = value;
+                this.version = value;
             }
         }
-        private string _version;
+
+        private string version;
 
         /// <summary>
         /// Gets a string representation of the annotation item.
@@ -327,23 +341,23 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             string result;
 
-            if (Content != null)
+            if (this.Content != null)
             {
-                result = Content;
+                result = this.Content;
 
-                if (Content.Length > 50)
+                if (this.Content.Length > 50)
                 {
-                    result = Content.Substring(0, 50) +
+                    result = this.Content.Substring(0, 50) +
                              ResourceRetriever.GetResourceString("Ellipsis");
                 }
             }
-            else if (Author != null)
+            else if (this.Author != null)
             {
                 result =
                     string.Format(
                         ResourceRetriever.GetResourceString(
                             "AnnotationAuthorFormat"),
-                        Author.ToString());
+                        this.Author.ToString());
             }
             else
             {
@@ -351,8 +365,9 @@ namespace Microsoft.HealthVault.ItemTypes
                     string.Format(
                         ResourceRetriever.GetResourceString(
                             "AnnotationDateFormat"),
-                        When.ToString());
+                        this.When.ToString());
             }
+
             return result;
         }
     }

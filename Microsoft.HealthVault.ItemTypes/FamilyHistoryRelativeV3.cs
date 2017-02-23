@@ -3,9 +3,12 @@
 // see http://www.microsoft.com/resources/sharedsource/licensingbasics/sharedsourcelicenses.mspx.
 // All other rights reserved.
 
+using System;
 using System.Globalization;
 using System.Xml;
 using System.Xml.XPath;
+using Microsoft.HealthVault.Exceptions;
+using Microsoft.HealthVault.Helpers;
 
 namespace Microsoft.HealthVault.ItemTypes
 {
@@ -46,7 +49,7 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public FamilyHistoryRelativeV3(CodableValue relationship)
         {
-            Relationship = relationship;
+            this.Relationship = relationship;
         }
 
         /// <summary>
@@ -66,23 +69,23 @@ namespace Microsoft.HealthVault.ItemTypes
             Validator.ThrowIfNavigatorNull(navigator);
 
             // relationship
-            _relationship = new CodableValue();
-            _relationship.ParseXml(navigator.SelectSingleNode("relationship"));
+            this.relationship = new CodableValue();
+            this.relationship.ParseXml(navigator.SelectSingleNode("relationship"));
 
             // relative-name
-            _relativeName =
+            this.relativeName =
                 XPathHelper.GetOptNavValue<PersonItem>(navigator, "relative-name");
 
             // date-of-birth
-            _dateOfBirth =
+            this.dateOfBirth =
                 XPathHelper.GetOptNavValue<ApproximateDate>(navigator, "date-of-birth");
 
             // date-of-death
-            _dateOfDeath =
+            this.dateOfDeath =
                 XPathHelper.GetOptNavValue<ApproximateDate>(navigator, "date-of-death");
 
-            //region-of-origin
-            _regionOfOrigin =
+            // region-of-origin
+            this.regionOfOrigin =
                 XPathHelper.GetOptNavValue<CodableValue>(navigator, "region-of-origin");
         }
 
@@ -114,37 +117,37 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             Validator.ThrowIfStringNullOrEmpty(nodeName, "nodeName");
             Validator.ThrowIfWriterNull(writer);
-            Validator.ThrowSerializationIfNull(_relationship, "RelationshipNullValue");
+            Validator.ThrowSerializationIfNull(this.relationship, "RelationshipNullValue");
 
             // <family-history-relative>
             writer.WriteStartElement(nodeName);
 
             // relationship
-            _relationship.WriteXml("relationship", writer);
+            this.relationship.WriteXml("relationship", writer);
 
             // relative-name
             XmlWriterHelper.WriteOpt(
                 writer,
                 "relative-name",
-                _relativeName);
+                this.relativeName);
 
             // date-of-birth
             XmlWriterHelper.WriteOpt(
                 writer,
                 "date-of-birth",
-                _dateOfBirth);
+                this.dateOfBirth);
 
             // date-of-death
             XmlWriterHelper.WriteOpt(
                 writer,
                 "date-of-death",
-                _dateOfDeath);
+                this.dateOfDeath);
 
             // region-of-origin
             XmlWriterHelper.WriteOpt(
                 writer,
                 "region-of-origin",
-                _regionOfOrigin);
+                this.regionOfOrigin);
 
             // </family-history-relative>
             writer.WriteEndElement();
@@ -160,14 +163,16 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public CodableValue Relationship
         {
-            get { return _relationship; }
+            get { return this.relationship; }
+
             set
             {
                 Validator.ThrowIfArgumentNull(value, "Relationship", "RelationshipNullValue");
-                _relationship = value;
+                this.relationship = value;
             }
         }
-        private CodableValue _relationship;
+
+        private CodableValue relationship;
 
         /// <summary>
         /// Gets or sets the name and other information of a relative.
@@ -175,10 +180,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public PersonItem RelativeName
         {
-            get { return _relativeName; }
-            set { _relativeName = value; }
+            get { return this.relativeName; }
+            set { this.relativeName = value; }
         }
-        private PersonItem _relativeName;
+
+        private PersonItem relativeName;
 
         /// <summary>
         /// Gets or sets the date of birth of the relative.
@@ -190,10 +196,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public ApproximateDate DateOfBirth
         {
-            get { return _dateOfBirth; }
-            set { _dateOfBirth = value; }
+            get { return this.dateOfBirth; }
+            set { this.dateOfBirth = value; }
         }
-        private ApproximateDate _dateOfBirth;
+
+        private ApproximateDate dateOfBirth;
 
         /// <summary>
         /// Gets or sets the date of death of the relative.
@@ -205,10 +212,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public ApproximateDate DateOfDeath
         {
-            get { return _dateOfDeath; }
-            set { _dateOfDeath = value; }
+            get { return this.dateOfDeath; }
+            set { this.dateOfDeath = value; }
         }
-        private ApproximateDate _dateOfDeath;
+
+        private ApproximateDate dateOfDeath;
 
         /// <summary>
         /// Gets or sets the region of origin the relative.
@@ -220,10 +228,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public CodableValue RegionOfOrigin
         {
-            get { return _regionOfOrigin; }
-            set { _regionOfOrigin = value; }
+            get { return this.regionOfOrigin; }
+            set { this.regionOfOrigin = value; }
         }
-        private CodableValue _regionOfOrigin;
+
+        private CodableValue regionOfOrigin;
 
         /// <summary>
         /// Gets a string representation of the family history relative item.
@@ -236,17 +245,17 @@ namespace Microsoft.HealthVault.ItemTypes
         public override string ToString()
         {
             string result = string.Empty;
-            if (_relativeName != null && _relationship != null)
+            if (this.relativeName != null && this.relationship != null)
             {
                 result =
                     string.Format(
                         CultureInfo.InvariantCulture,
                         ResourceRetriever.GetResourceString(
                             "FamilyHistoryRelativeToStringFormatNameAndRelationship"),
-                        _relativeName.ToString(),
-                        _relationship.ToString());
+                        this.relativeName.ToString(),
+                        this.relationship.ToString());
             }
-            else if (_relationship != null)
+            else if (this.relationship != null)
             {
                 result =
                     string.Format(
@@ -254,12 +263,13 @@ namespace Microsoft.HealthVault.ItemTypes
                         ResourceRetriever.GetResourceString(
                             "FamilyHistoryRelativeToStringFormatNameAndRelationship"),
                         string.Empty,
-                        _relationship.ToString());
+                        this.relationship.ToString());
             }
-            else if (_relativeName != null)
+            else if (this.relativeName != null)
             {
-                result = _relativeName.ToString();
+                result = this.relativeName.ToString();
             }
+
             return result;
         }
     }

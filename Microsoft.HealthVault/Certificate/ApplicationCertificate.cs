@@ -7,6 +7,7 @@ using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Security;
 using System.Security.Cryptography.X509Certificates;
+using Microsoft.HealthVault.Helpers;
 
 namespace Microsoft.HealthVault.Certificate
 {
@@ -21,6 +22,7 @@ namespace Microsoft.HealthVault.Certificate
     public class ApplicationCertificate
     {
         #region constants
+        
         /// <summary>
         /// Client application certificates will be prefixed by HVClient
         /// </summary>
@@ -45,7 +47,7 @@ namespace Microsoft.HealthVault.Certificate
         ///
         private ApplicationCertificate(X509Certificate2 certificate)
         {
-            Certificate = new X509Certificate2(certificate.Export(X509ContentType.Pfx));
+            this.Certificate = new X509Certificate2(certificate.Export(X509ContentType.Pfx));
         }
 
         /// <summary>
@@ -103,30 +105,6 @@ namespace Microsoft.HealthVault.Certificate
         /// The unique identifier of the application to create the certificate for.
         /// </param>
         ///
-        /// <returns>
-        /// An ApplicationCertificate instance containing the certificate for the
-        /// specified application.
-        /// </returns>
-        ///
-        /// <exception cref="ArgumentException">
-        /// If <paramref name="applicationId"/> is Guid.Empty.
-        /// </exception>
-        [SecurityCritical]
-        public static ApplicationCertificate CreatePersistedCertificate(Guid applicationId)
-        {
-            return CreatePersistedCertificate(
-                applicationId,
-                StoreLocation.CurrentUser);
-        }
-
-        /// <summary>
-        /// Generate or fetch a persisted certificate in the specified certificate store.
-        /// </summary>
-        ///
-        /// <param name="applicationId">
-        /// The unique identifier of the application to create the certificate for.
-        /// </param>
-        ///
         /// <param name="storeLocation">
         /// The store location to fetch or create the certificate in.
         /// </param>
@@ -142,7 +120,7 @@ namespace Microsoft.HealthVault.Certificate
         [SecurityCritical]
         public static ApplicationCertificate CreatePersistedCertificate(
             Guid applicationId,
-            StoreLocation storeLocation)
+            StoreLocation storeLocation = StoreLocation.CurrentUser)
         {
             Validator.ThrowArgumentExceptionIf(
                 applicationId == Guid.Empty,
@@ -247,9 +225,7 @@ namespace Microsoft.HealthVault.Certificate
                 X509Certificate2 certificate = null;
                 if (!alwaysCreate)
                 {
-                    //
                     // Use an existing cert, if any
-                    //
                     certificate = store[certificateSubject];
                 }
 
@@ -334,7 +310,7 @@ namespace Microsoft.HealthVault.Certificate
         ///
         internal static string MakeCertName(Guid appId)
         {
-            return ApplicationCertificate.DefaultCertSubjectPrefix + appId.ToString("D");
+            return DefaultCertSubjectPrefix + appId.ToString("D");
         }
 
         #endregion
@@ -365,21 +341,6 @@ namespace Microsoft.HealthVault.Certificate
         /// </summary>
         ///
         /// <param name="applicationId">
-        /// The unique identifier of the application for which to remove the certificate from the current
-        /// user store.
-        /// </param>
-        [SecurityCritical]
-        public static void DeleteCertificate(Guid applicationId)
-        {
-            DeleteCertificate(applicationId, StoreLocation.CurrentUser);
-        }
-
-        /// <summary>
-        /// Removes the certificate for the specified application identifier
-        /// from the certificate store and deletes the key container.
-        /// </summary>
-        ///
-        /// <param name="applicationId">
         /// The unique identifier of the application for which to remove the certificate from the
         /// specified store.
         /// </param>
@@ -388,7 +349,7 @@ namespace Microsoft.HealthVault.Certificate
         /// The certificate store from which to remove the certificate.
         /// </param>
         [SecurityCritical]
-        public static void DeleteCertificate(Guid applicationId, StoreLocation storeLocation)
+        public static void DeleteCertificate(Guid applicationId, StoreLocation storeLocation = StoreLocation.CurrentUser)
         {
             using (CertificateStore store = new CertificateStore(storeLocation))
             {
@@ -406,26 +367,12 @@ namespace Microsoft.HealthVault.Certificate
         /// <param name="certificateName">
         /// The name of the certificate to delete.
         /// </param>
-        [SecurityCritical]
-        public static void DeleteCertificate(string certificateName)
-        {
-            DeleteCertificate(certificateName, StoreLocation.CurrentUser);
-        }
-
-        /// <summary>
-        /// Removes the certificate with the specified certificate name
-        /// from the certificate store and deletes the key container.
-        /// </summary>
-        ///
-        /// <param name="certificateName">
-        /// The name of the certificate to delete.
-        /// </param>
         ///
         /// <param name="storeLocation">
         /// The certificate store from which to remove the certificate.
         /// </param>
         [SecurityCritical]
-        public static void DeleteCertificate(string certificateName, StoreLocation storeLocation)
+        public static void DeleteCertificate(string certificateName, StoreLocation storeLocation = StoreLocation.CurrentUser)
         {
             using (CertificateStore store = new CertificateStore(storeLocation))
             {

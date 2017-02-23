@@ -6,6 +6,7 @@
 using System.Globalization;
 using System.Xml;
 using System.Xml.XPath;
+using Microsoft.HealthVault.Helpers;
 
 namespace Microsoft.HealthVault.ItemTypes
 {
@@ -29,7 +30,7 @@ namespace Microsoft.HealthVault.ItemTypes
         /// with empty values.
         /// </summary>
         ///
-        public VolumeMeasurement() : base()
+        public VolumeMeasurement()
         {
         }
 
@@ -46,7 +47,8 @@ namespace Microsoft.HealthVault.ItemTypes
         /// If <paramref name="liters"/> is less than zero.
         /// </exception>
         ///
-        public VolumeMeasurement(double liters) : base(liters)
+        public VolumeMeasurement(double liters)
+            : base(liters)
         {
         }
 
@@ -104,7 +106,7 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         protected override void ParseValueXml(XPathNavigator navigator)
         {
-            Value = navigator.SelectSingleNode("liters").ValueAsDouble;
+            this.Value = navigator.SelectSingleNode("liters").ValueAsDouble;
         }
 
         /// <summary>
@@ -119,7 +121,7 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             writer.WriteElementString(
                 "liters",
-                XmlConvert.ToString(Value));
+                XmlConvert.ToString(this.Value));
         }
 
         /// <summary>

@@ -5,6 +5,7 @@
 
 using System;
 using System.Xml.XPath;
+using Microsoft.HealthVault.Thing;
 
 namespace Microsoft.HealthVault.ItemTypes
 {
@@ -42,7 +43,7 @@ namespace Microsoft.HealthVault.ItemTypes
         /// Retrieves the unique identifier for the item type.
         /// </summary>
         ///
-        public new static readonly Guid TypeId =
+        public static new readonly Guid TypeId =
             new Guid("1ed1cba6-9530-44a3-b7b5-e8219690ebcf");
     }
 }

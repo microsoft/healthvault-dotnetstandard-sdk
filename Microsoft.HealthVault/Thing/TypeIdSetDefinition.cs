@@ -4,8 +4,10 @@
 // All other rights reserved.
 
 using System;
+using Microsoft.HealthVault.Connection;
+using Microsoft.HealthVault.Helpers;
 
-namespace Microsoft.HealthVault
+namespace Microsoft.HealthVault.Thing
 {
     /// <summary>
     /// Defines a set of health record items of the specified type
@@ -39,7 +41,7 @@ namespace Microsoft.HealthVault
         /// The <paramref name="typeId"/> must be the identifier for a health
         /// record item type. See
         /// <see
-        /// cref="ItemTypeManager.GetHealthRecordItemTypeDefinitionAsync(System.Guid,Microsoft.HealthVault.HealthServiceConnection)"/>
+        /// cref="ItemTypeManager.GetHealthRecordItemTypeDefinitionAsync(System.Guid,HealthServiceConnection)"/>
         /// for information on getting the value health record item types.
         /// </remarks>
         ///
@@ -55,7 +57,7 @@ namespace Microsoft.HealthVault
                 "typeId",
                 "TypeIdSetGuidEmpty");
 
-            _typeId = typeId;
+            this.TypeId = typeId;
         }
 
         /// <summary>
@@ -71,15 +73,11 @@ namespace Microsoft.HealthVault
         /// The value must be the identifier for a health record item
         /// type.
         /// <see
-        /// cref="ItemTypeManager.GetHealthRecordItemTypeDefinitionAsync(System.Guid,Microsoft.HealthVault.HealthServiceConnection)"/>
+        /// cref="ItemTypeManager.GetHealthRecordItemTypeDefinitionAsync(System.Guid,HealthServiceConnection)"/>
         /// for information on getting the value health record item types.
         /// </remarks>
         ///
-        public Guid TypeId
-        {
-            get { return _typeId; }
-        }
-        private Guid _typeId = Guid.Empty;
+        public Guid TypeId { get; } = Guid.Empty;
 
         /// <summary>
         /// Gets the XML representation of the set.
@@ -97,7 +95,7 @@ namespace Microsoft.HealthVault
         public override string GetXml()
         {
             return
-                "<type-id>" + this.TypeId.ToString() + "</type-id>";
+                "<type-id>" + this.TypeId + "</type-id>";
         }
     }
 }

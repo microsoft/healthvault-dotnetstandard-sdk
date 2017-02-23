@@ -4,8 +4,12 @@
 // All other rights reserved.
 
 using System;
+using Microsoft.HealthVault.Exceptions;
+using Microsoft.HealthVault.Helpers;
+using Microsoft.HealthVault.PlatformInformation;
+using Microsoft.HealthVault.Transport;
 
-namespace Microsoft.HealthVault
+namespace Microsoft.HealthVault.Connection
 {
     /// <summary>
     /// Represents a connection for an application to the HealthVault service
@@ -52,7 +56,6 @@ namespace Microsoft.HealthVault
         /// </exception>
         ///
         public AnonymousConnection()
-            : base()
         {
         }
 

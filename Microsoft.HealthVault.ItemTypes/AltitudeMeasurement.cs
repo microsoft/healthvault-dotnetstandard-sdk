@@ -92,7 +92,7 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         protected override void ParseValueXml(XPathNavigator navigator)
         {
-            Value = navigator.SelectSingleNode("m").ValueAsDouble;
+            this.Value = navigator.SelectSingleNode("m").ValueAsDouble;
         }
 
         /// <summary>
@@ -107,7 +107,7 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             writer.WriteElementString(
                 "m",
-                XmlConvert.ToString(Value));
+                XmlConvert.ToString(this.Value));
         }
 
         /// <summary>

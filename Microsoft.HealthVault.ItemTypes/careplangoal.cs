@@ -8,6 +8,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Xml;
 using System.Xml.XPath;
+using Microsoft.HealthVault.Helpers;
 
 namespace Microsoft.HealthVault.ItemTypes
 {
@@ -40,7 +41,7 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public CarePlanGoal(CodableValue name)
         {
-            Name = name;
+            this.Name = name;
         }
 
         /// <summary>
@@ -59,24 +60,24 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             Validator.ThrowIfNavigatorNull(navigator);
 
-            _name = XPathHelper.GetOptNavValue<CodableValue>(navigator, "name");
-            _description = XPathHelper.GetOptNavValue(navigator, "description");
-            _startDate = XPathHelper.GetOptNavValue<ApproximateDateTime>(navigator, "start-date");
-            _endDate = XPathHelper.GetOptNavValue<ApproximateDateTime>(navigator, "end-date");
-            _targetCompletionDate = XPathHelper.GetOptNavValue<ApproximateDateTime>(navigator, "target-completion-date");
-            _goalAssociatedTypeInfo = XPathHelper.GetOptNavValue<AssociatedTypeInfo>(navigator, "associated-type-info");
-            _targetRange = XPathHelper.GetOptNavValue<GoalRange>(navigator, "target-range");
+            this.name = XPathHelper.GetOptNavValue<CodableValue>(navigator, "name");
+            this.description = XPathHelper.GetOptNavValue(navigator, "description");
+            this.startDate = XPathHelper.GetOptNavValue<ApproximateDateTime>(navigator, "start-date");
+            this.endDate = XPathHelper.GetOptNavValue<ApproximateDateTime>(navigator, "end-date");
+            this.targetCompletionDate = XPathHelper.GetOptNavValue<ApproximateDateTime>(navigator, "target-completion-date");
+            this.goalAssociatedTypeInfo = XPathHelper.GetOptNavValue<AssociatedTypeInfo>(navigator, "associated-type-info");
+            this.targetRange = XPathHelper.GetOptNavValue<GoalRange>(navigator, "target-range");
 
-            _goalAdditionalRanges.Clear();
+            this.goalAdditionalRanges.Clear();
             foreach (XPathNavigator nav in navigator.Select("goal-additional-ranges"))
             {
                 GoalRange goalRange = new GoalRange();
                 goalRange.ParseXml(nav);
-                _goalAdditionalRanges.Add(goalRange);
+                this.goalAdditionalRanges.Add(goalRange);
             }
 
-            _recurrence = XPathHelper.GetOptNavValue<GoalRecurrence>(navigator, "recurrence");
-            _referenceId = XPathHelper.GetOptNavValue(navigator, "reference-id");
+            this.recurrence = XPathHelper.GetOptNavValue<GoalRecurrence>(navigator, "recurrence");
+            this.referenceId = XPathHelper.GetOptNavValue(navigator, "reference-id");
         }
 
         /// <summary>
@@ -110,28 +111,28 @@ namespace Microsoft.HealthVault.ItemTypes
             Validator.ThrowIfStringNullOrEmpty(nodeName, "nodeName");
             Validator.ThrowIfArgumentNull(writer, "writer", "WriteXmlNullWriter");
 
-            Validator.ThrowSerializationIfNull(_name, "CarePlanGoalNameNull");
+            Validator.ThrowSerializationIfNull(this.name, "CarePlanGoalNameNull");
 
             writer.WriteStartElement("goal");
             {
-                _name.WriteXml("name", writer);
-                XmlWriterHelper.WriteOptString(writer, "description", _description);
-                XmlWriterHelper.WriteOpt(writer, "start-date", _startDate);
-                XmlWriterHelper.WriteOpt(writer, "end-date", _endDate);
-                XmlWriterHelper.WriteOpt(writer, "target-completion-date", _targetCompletionDate);
-                XmlWriterHelper.WriteOpt(writer, "associated-type-info", _goalAssociatedTypeInfo);
-                XmlWriterHelper.WriteOpt(writer, "target-range", _targetRange);
+                this.name.WriteXml("name", writer);
+                XmlWriterHelper.WriteOptString(writer, "description", this.description);
+                XmlWriterHelper.WriteOpt(writer, "start-date", this.startDate);
+                XmlWriterHelper.WriteOpt(writer, "end-date", this.endDate);
+                XmlWriterHelper.WriteOpt(writer, "target-completion-date", this.targetCompletionDate);
+                XmlWriterHelper.WriteOpt(writer, "associated-type-info", this.goalAssociatedTypeInfo);
+                XmlWriterHelper.WriteOpt(writer, "target-range", this.targetRange);
 
-                if (_goalAdditionalRanges != null && _goalAdditionalRanges.Count != 0)
+                if (this.goalAdditionalRanges != null && this.goalAdditionalRanges.Count != 0)
                 {
-                    foreach (GoalRange goalRange in _goalAdditionalRanges)
+                    foreach (GoalRange goalRange in this.goalAdditionalRanges)
                     {
                         goalRange.WriteXml("goal-additional-ranges", writer);
                     }
                 }
 
-                XmlWriterHelper.WriteOpt(writer, "recurrence", _recurrence);
-                XmlWriterHelper.WriteOptString(writer, "reference-id", _referenceId);
+                XmlWriterHelper.WriteOpt(writer, "recurrence", this.recurrence);
+                XmlWriterHelper.WriteOptString(writer, "reference-id", this.referenceId);
             }
 
             writer.WriteEndElement();
@@ -154,17 +155,17 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             get
             {
-                return _name;
+                return this.name;
             }
 
             set
             {
                 Validator.ThrowIfArgumentNull(value, "Name", "CarePlanGoalNameNull");
-                _name = value;
+                this.name = value;
             }
         }
 
-        private CodableValue _name;
+        private CodableValue name;
 
         /// <summary>
         /// Gets or sets description of the goal.
@@ -182,17 +183,17 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             get
             {
-                return _description;
+                return this.description;
             }
 
             set
             {
                 Validator.ThrowIfStringIsEmptyOrWhitespace(value, "Description");
-                _description = value;
+                this.description = value;
             }
         }
 
-        private string _description;
+        private string description;
 
         private static void ValidateDates(
             ApproximateDateTime startDate,
@@ -222,18 +223,18 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             get
             {
-                return _startDate;
+                return this.startDate;
             }
 
             set
             {
-                ValidateDates(value, _endDate);
+                ValidateDates(value, this.endDate);
 
-                _startDate = value;
+                this.startDate = value;
             }
         }
 
-        private ApproximateDateTime _startDate;
+        private ApproximateDateTime startDate;
 
         /// <summary>
         /// Gets or sets the end date of the goal.
@@ -247,18 +248,18 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             get
             {
-                return _endDate;
+                return this.endDate;
             }
 
             set
             {
-                ValidateDates(_startDate, value);
+                ValidateDates(this.startDate, value);
 
-                _endDate = value;
+                this.endDate = value;
             }
         }
 
-        private ApproximateDateTime _endDate;
+        private ApproximateDateTime endDate;
 
         /// <summary>
         /// Gets or sets the date user intends to complete the goal.
@@ -272,16 +273,16 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             get
             {
-                return _targetCompletionDate;
+                return this.targetCompletionDate;
             }
 
             set
             {
-                _targetCompletionDate = value;
+                this.targetCompletionDate = value;
             }
         }
 
-        private ApproximateDateTime _targetCompletionDate;
+        private ApproximateDateTime targetCompletionDate;
 
         /// <summary>
         /// Gets or sets HealthVault type information related to this goal.
@@ -295,16 +296,16 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             get
             {
-                return _goalAssociatedTypeInfo;
+                return this.goalAssociatedTypeInfo;
             }
 
             set
             {
-                _goalAssociatedTypeInfo = value;
+                this.goalAssociatedTypeInfo = value;
             }
         }
 
-        private AssociatedTypeInfo _goalAssociatedTypeInfo;
+        private AssociatedTypeInfo goalAssociatedTypeInfo;
 
         /// <summary>
         /// Gets or sets the target range for the goal.
@@ -319,16 +320,16 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             get
             {
-                return _targetRange;
+                return this.targetRange;
             }
 
             set
             {
-                _targetRange = value;
+                this.targetRange = value;
             }
         }
 
-        private GoalRange _targetRange;
+        private GoalRange targetRange;
 
         /// <summary>
         /// Gets or sets additional ranges for the goal.
@@ -339,9 +340,9 @@ namespace Microsoft.HealthVault.ItemTypes
         /// If there is no information about goalAdditionalRanges the collection should be empty.
         /// </remarks>
         ///
-        public Collection<GoalRange> GoalAdditionalRanges => _goalAdditionalRanges;
+        public Collection<GoalRange> GoalAdditionalRanges => this.goalAdditionalRanges;
 
-        private readonly Collection<GoalRange> _goalAdditionalRanges = new Collection<GoalRange>();
+        private readonly Collection<GoalRange> goalAdditionalRanges = new Collection<GoalRange>();
 
         /// <summary>
         /// Gets or sets recurrence for goals.
@@ -356,16 +357,16 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             get
             {
-                return _recurrence;
+                return this.recurrence;
             }
 
             set
             {
-                _recurrence = value;
+                this.recurrence = value;
             }
         }
 
-        private GoalRecurrence _recurrence;
+        private GoalRecurrence recurrence;
 
         /// <summary>
         /// Gets or sets an unique id to distinguish one goal from another.
@@ -383,17 +384,17 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             get
             {
-                return _referenceId;
+                return this.referenceId;
             }
 
             set
             {
                 Validator.ThrowIfStringIsEmptyOrWhitespace(value, "ReferenceId");
-                _referenceId = value;
+                this.referenceId = value;
             }
         }
 
-        private string _referenceId;
+        private string referenceId;
 
         /// <summary>
         /// Gets a string representation of the CarePlanGoal.
@@ -407,17 +408,17 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             string result;
 
-            if (_description == null)
+            if (this.description == null)
             {
-                result = _name.Text;
+                result = this.name.Text;
             }
             else
             {
                 result = string.Format(
                     CultureInfo.CurrentUICulture,
                     ResourceRetriever.GetResourceString("CarePlanGoalFormat"),
-                    _name.Text,
-                    _description);
+                    this.name.Text,
+                    this.description);
             }
 
             return result;

@@ -8,6 +8,8 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Xml;
 using System.Xml.XPath;
+using Microsoft.HealthVault.Helpers;
+using Microsoft.HealthVault.Thing;
 
 namespace Microsoft.HealthVault.ItemTypes
 {
@@ -122,7 +124,7 @@ namespace Microsoft.HealthVault.ItemTypes
         /// A GUID.
         /// </value>
         ///
-        public new static readonly Guid TypeId =
+        public static new readonly Guid TypeId =
             new Guid("a5033c9d-08cf-4204-9bd3-cb412ce39fc0");
 
         /// <summary>
@@ -152,28 +154,29 @@ namespace Microsoft.HealthVault.ItemTypes
                 switch (childNav.Name)
                 {
                     case "format-appid":
-                        _appId = childNav.Value;
+                        this.appId = childNav.Value;
                         break;
 
                     case "format-tag":
-                        _subtypeTag = childNav.Value;
+                        this.subtypeTag = childNav.Value;
                         break;
 
                     case "summary":
-                        _description = childNav.Value;
+                        this.description = childNav.Value;
                         break;
 
                     case "when":
-                        _when = new HealthServiceDateTime();
-                        _when.ParseXml(childNav);
+                        this.when = new HealthServiceDateTime();
+                        this.when.ParseXml(childNav);
                         break;
 
                     default:
-                        _appSpecificXml.Add(childNav);
+                        this.appSpecificXml.Add(childNav);
                         break;
                 }
             }
-            ParseApplicationSpecificXml(_appSpecificXml);
+
+            this.ParseApplicationSpecificXml(this.appSpecificXml);
         }
 
         /// <summary>
@@ -223,37 +226,37 @@ namespace Microsoft.HealthVault.ItemTypes
             Validator.ThrowIfArgumentNull(writer, "writer", "WriteXmlNullWriter");
 
             Validator.ThrowSerializationIfNull(
-                ApplicationId,
+                this.ApplicationId,
                 "AppSpecificAppIdMandatory");
 
             Validator.ThrowSerializationIfNull(
-                SubtypeTag,
+                this.SubtypeTag,
                 "AppSpecificTagMandatory");
 
             Validator.ThrowSerializationIfNull(
-                Description,
+                this.Description,
                 "AppSpecificDescriptionMandatory");
 
             // <app-specific>
             writer.WriteStartElement("app-specific");
 
             // <format-appid>
-            writer.WriteElementString("format-appid", ApplicationId);
+            writer.WriteElementString("format-appid", this.ApplicationId);
 
             // <format-tag>
-            writer.WriteElementString("format-tag", SubtypeTag);
+            writer.WriteElementString("format-tag", this.SubtypeTag);
 
             // <when>
             XmlWriterHelper.WriteOpt(
                 writer,
                 "when",
-                _when);
+                this.when);
 
             // <summary>
-            writer.WriteElementString("summary", Description);
+            writer.WriteElementString("summary", this.Description);
 
             // the any node
-            WriteApplicationSpecificXml(writer);
+            this.WriteApplicationSpecificXml(writer);
 
             // </app-specific>
             writer.WriteEndElement();
@@ -276,7 +279,7 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         protected virtual void WriteApplicationSpecificXml(XmlWriter writer)
         {
-            foreach (IXPathNavigable xPathNavigable in _appSpecificXml)
+            foreach (IXPathNavigable xPathNavigable in this.appSpecificXml)
             {
                 writer.WriteRaw(xPathNavigable.CreateNavigator().OuterXml);
             }
@@ -297,14 +300,16 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public string ApplicationId
         {
-            get { return _appId; }
+            get { return this.appId; }
+
             set
             {
                 Validator.ThrowIfStringNullOrEmpty(value, "ApplicationId");
-                _appId = value;
+                this.appId = value;
             }
         }
-        private string _appId;
+
+        private string appId;
 
         /// <summary>
         /// Gets or sets a tag that uniquely identifies the schema for the application specific
@@ -317,15 +322,17 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public string SubtypeTag
         {
-            get { return _subtypeTag; }
+            get { return this.subtypeTag; }
+
             set
             {
                 Validator.ThrowIfStringNullOrEmpty(value, "SubtypeTag");
                 Validator.ThrowIfStringIsWhitespace(value, "SubtypeTag");
-                _subtypeTag = value;
+                this.subtypeTag = value;
             }
         }
-        private string _subtypeTag;
+
+        private string subtypeTag;
 
         /// <summary>
         /// Gets or sets the date/time when the application specific item was created.
@@ -338,10 +345,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public HealthServiceDateTime When
         {
-            get { return _when; }
-            set { _when = value; }
+            get { return this.when; }
+            set { this.when = value; }
         }
-        private HealthServiceDateTime _when;
+
+        private HealthServiceDateTime when;
 
         /// <summary>
         /// Gets or sets the description of the item for display purposes.
@@ -353,15 +361,17 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public string Description
         {
-            get { return _description; }
+            get { return this.description; }
+
             set
             {
                 Validator.ThrowIfStringNullOrEmpty(value, "Description");
                 Validator.ThrowIfStringIsWhitespace(value, "Description");
-                _description = value;
+                this.description = value;
             }
         }
-        private string _description;
+
+        private string description;
 
         /// <summary>
         /// Gets a collection of the application specific XML.
@@ -373,9 +383,9 @@ namespace Microsoft.HealthVault.ItemTypes
         /// Derived classes can ignore this member.
         /// </remarks>
         ///
-        public Collection<IXPathNavigable> ApplicationSpecificXml => _appSpecificXml;
+        public Collection<IXPathNavigable> ApplicationSpecificXml => this.appSpecificXml;
 
-        private readonly Collection<IXPathNavigable> _appSpecificXml =
+        private readonly Collection<IXPathNavigable> appSpecificXml =
             new Collection<IXPathNavigable>();
 
         /// <summary>
@@ -388,7 +398,7 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public override string ToString()
         {
-            return Description;
+            return this.Description;
         }
     }
 }

@@ -4,14 +4,15 @@
 // All other rights reserved.
 
 using System;
+using Microsoft.HealthVault.Connection;
 
-namespace Microsoft.HealthVault
+namespace Microsoft.HealthVault.PlatformInformation
 {
     /// <summary>
     /// Represents the categories of information that can be specified when creating a
     /// <see cref="ServiceInfo"/> object via
-    /// <see cref="PlatformPrimitives.HealthVaultPlatformInformation.GetServiceDefinition(HealthServiceConnection, ServiceInfoSections)"/> or
-    /// <see cref="PlatformPrimitives.HealthVaultPlatformInformation.GetServiceDefinition(HealthServiceConnection, ServiceInfoSections, DateTime)"/>.
+    /// <see cref="HealthVaultPlatformInformation.GetServiceDefinitionAsync(HealthServiceConnection, ServiceInfoSections)"/> or
+    /// <see cref="HealthVaultPlatformInformation.GetServiceDefinitionAsync(HealthServiceConnection, ServiceInfoSections, DateTime)"/>.
     /// If any categories are specified, only the information corresponding to those categories
     /// will be filled out in the <see cref="ServiceInfo"/> object; otherwise, all information
     /// will be filled out.
@@ -44,7 +45,7 @@ namespace Microsoft.HealthVault
         XmlOverHttpMethods = 0x8,
 
         /// <summary>
-        /// Corresponds to <see cref="ServiceInfo.MeaningfulUseInfo"/>.
+        /// Not currently used.
         /// </summary>
         MeaningfulUse = 0x10,
 

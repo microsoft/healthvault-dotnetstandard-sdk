@@ -10,9 +10,13 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.XPath;
+using Microsoft.HealthVault.Connection;
 using Microsoft.HealthVault.Exceptions;
+using Microsoft.HealthVault.Helpers;
+using Microsoft.HealthVault.Record;
+using Microsoft.HealthVault.Transport;
 
-namespace Microsoft.HealthVault.PlatformPrimitives
+namespace Microsoft.HealthVault.Person
 {
     /// <summary>
     /// Provides low-level access to the HealthVault message operations.
@@ -40,10 +44,10 @@ namespace Microsoft.HealthVault.PlatformPrimitives
         ///
         public static void EnableMock(HealthVaultPlatformPerson mock)
         {
-            Validator.ThrowInvalidIf(_saved != null, "ClassAlreadyMocked");
+            Validator.ThrowInvalidIf(saved != null, "ClassAlreadyMocked");
 
-            _saved = _current;
-            _current = mock;
+            saved = Current;
+            Current = mock;
         }
 
         /// <summary>
@@ -56,18 +60,15 @@ namespace Microsoft.HealthVault.PlatformPrimitives
         ///
         public static void DisableMock()
         {
-            Validator.ThrowInvalidIfNull(_saved, "ClassIsntMocked");
+            Validator.ThrowInvalidIfNull(saved, "ClassIsntMocked");
 
-            _current = _saved;
-            _saved = null;
+            Current = saved;
+            saved = null;
         }
 
-        internal static HealthVaultPlatformPerson Current
-        {
-            get { return _current; }
-        }
-        private static HealthVaultPlatformPerson _current = new HealthVaultPlatformPerson();
-        private static HealthVaultPlatformPerson _saved;
+        internal static HealthVaultPlatformPerson Current { get; private set; } = new HealthVaultPlatformPerson();
+
+        private static HealthVaultPlatformPerson saved;
 
         #region ApplicationSettings
 
@@ -128,7 +129,7 @@ namespace Microsoft.HealthVault.PlatformPrimitives
             string requestParameters =
                 GetSetApplicationSettingsParameters(applicationSettings);
 
-            await SetApplicationSettingsAsync(connection, requestParameters).ConfigureAwait(false);
+            await this.SetApplicationSettingsAsync(connection, requestParameters).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -174,7 +175,7 @@ namespace Microsoft.HealthVault.PlatformPrimitives
             return result;
         }
 
-        private static XPathExpression _infoPersonAppSettingsPath =
+        private static XPathExpression infoPersonAppSettingsPath =
             XPathExpression.Compile("/wc:info");
 
         private static XPathExpression GetPersonAppSettingsXPathExpression(
@@ -188,10 +189,10 @@ namespace Microsoft.HealthVault.PlatformPrimitives
                 "urn:com.microsoft.wc.methods.response.GetApplicationSettings");
 
             XPathExpression infoPersonAppSettingsPathClone = null;
-            lock (_infoPersonAppSettingsPath)
+            lock (infoPersonAppSettingsPath)
             {
                 infoPersonAppSettingsPathClone
-                    = _infoPersonAppSettingsPath.Clone();
+                    = infoPersonAppSettingsPath.Clone();
             }
 
             infoPersonAppSettingsPathClone.SetContext(infoXmlNamespaceManager);
@@ -238,7 +239,7 @@ namespace Microsoft.HealthVault.PlatformPrimitives
             return PersonInfo.CreateFromXml(connection, infoNav);
         }
 
-        private static XPathExpression _infoPersonPath =
+        private static XPathExpression infoPersonPath =
             XPathExpression.Compile("/wc:info/person-info");
 
         private static XPathExpression GetPersonXPathExpression(
@@ -252,9 +253,9 @@ namespace Microsoft.HealthVault.PlatformPrimitives
                 "urn:com.microsoft.wc.methods.response.GetPersonInfo");
 
             XPathExpression infoPersonPathClone = null;
-            lock (_infoPersonPath)
+            lock (infoPersonPath)
             {
-                infoPersonPathClone = _infoPersonPath.Clone();
+                infoPersonPathClone = infoPersonPath.Clone();
             }
 
             infoPersonPathClone.SetContext(infoXmlNamespaceManager);
@@ -300,8 +301,9 @@ namespace Microsoft.HealthVault.PlatformPrimitives
             foreach (Guid id in recordIds)
             {
                 parameters.Append(
-                    "<id>" + id.ToString() + "</id>");
+                    "<id>" + id + "</id>");
             }
+
             request.Parameters = parameters.ToString();
 
             HealthServiceResponseData responseData = await request.ExecuteAsync().ConfigureAwait(false);
@@ -317,10 +319,11 @@ namespace Microsoft.HealthVault.PlatformPrimitives
             {
                 results.Add(HealthRecordInfo.CreateFromXml(connection, recordNav));
             }
+
             return results;
         }
 
-        private static XPathExpression _infoRecordPath =
+        private static XPathExpression infoRecordPath =
             XPathExpression.Compile("/wc:info/record");
 
         private static XPathExpression GetRecordXPathExpression(
@@ -333,9 +336,9 @@ namespace Microsoft.HealthVault.PlatformPrimitives
                 "urn:com.microsoft.wc.methods.response.GetAuthorizedRecords");
 
             XPathExpression infoRecordPathClone = null;
-            lock (_infoRecordPath)
+            lock (infoRecordPath)
             {
-                infoRecordPathClone = _infoRecordPath.Clone();
+                infoRecordPathClone = infoRecordPath.Clone();
             }
 
             infoRecordPathClone.SetContext(infoXmlNamespaceManager);

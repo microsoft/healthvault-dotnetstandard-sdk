@@ -7,6 +7,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Text;
 using System.Xml;
 using System.Xml.XPath;
+using Microsoft.HealthVault.Helpers;
 
 namespace Microsoft.HealthVault.ItemTypes
 {
@@ -18,16 +19,6 @@ namespace Microsoft.HealthVault.ItemTypes
     public class PapSessionMeasurements<T> : HealthRecordItemData
         where T : HealthRecordItemData, new()
     {
-        /// <summary>
-        /// Creates a new instance of the <see cref="PapSessionMeasurements{T}"/> class with default values.
-        /// </summary>
-        /// <remarks>
-        /// Specialized types of the <see cref="PapSessionMeasurements{T}"/> class are used in PAP session.
-        /// </remarks>
-        public PapSessionMeasurements()
-        {
-        }
-
         /// <summary>
         /// Populates this <see cref="PapSessionMeasurements{T}"/> instance from the data in the specified XML.
         /// </summary>
@@ -44,11 +35,11 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             Validator.ThrowIfNavigatorNull(navigator);
 
-            _mean = XPathHelper.GetOptNavValue<T>(navigator, "mean");
-            _median = XPathHelper.GetOptNavValue<T>(navigator, "median");
-            _maximum = XPathHelper.GetOptNavValue<T>(navigator, "maximum");
-            _percentile95th = XPathHelper.GetOptNavValue<T>(navigator, "percentile-95th");
-            _percentile90th = XPathHelper.GetOptNavValue<T>(navigator, "percentile-90th");
+            this.mean = XPathHelper.GetOptNavValue<T>(navigator, "mean");
+            this.median = XPathHelper.GetOptNavValue<T>(navigator, "median");
+            this.maximum = XPathHelper.GetOptNavValue<T>(navigator, "maximum");
+            this.percentile95th = XPathHelper.GetOptNavValue<T>(navigator, "percentile-95th");
+            this.percentile90th = XPathHelper.GetOptNavValue<T>(navigator, "percentile-90th");
         }
 
         /// <summary>
@@ -80,11 +71,11 @@ namespace Microsoft.HealthVault.ItemTypes
 
             writer.WriteStartElement(nodeName);
 
-            XmlWriterHelper.WriteOpt<T>(writer, "mean", _mean);
-            XmlWriterHelper.WriteOpt<T>(writer, "median", _median);
-            XmlWriterHelper.WriteOpt<T>(writer, "maximum", _maximum);
-            XmlWriterHelper.WriteOpt<T>(writer, "percentile-95th", _percentile95th);
-            XmlWriterHelper.WriteOpt<T>(writer, "percentile-90th", _percentile90th);
+            XmlWriterHelper.WriteOpt(writer, "mean", this.mean);
+            XmlWriterHelper.WriteOpt(writer, "median", this.median);
+            XmlWriterHelper.WriteOpt(writer, "maximum", this.maximum);
+            XmlWriterHelper.WriteOpt(writer, "percentile-95th", this.percentile95th);
+            XmlWriterHelper.WriteOpt(writer, "percentile-90th", this.percentile90th);
 
             writer.WriteEndElement();
         }
@@ -99,11 +90,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public T Mean
         {
-            get { return _mean; }
-            set { _mean = value; }
+            get { return this.mean; }
+            set { this.mean = value; }
         }
 
-        private T _mean;
+        private T mean;
 
         /// <summary>
         /// Gets or sets the median value that occurred during the session.
@@ -115,11 +106,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public T Median
         {
-            get { return _median; }
-            set { _median = value; }
+            get { return this.median; }
+            set { this.median = value; }
         }
 
-        private T _median;
+        private T median;
 
         /// <summary>
         /// Gets or sets the greatest value that occured during the session.
@@ -131,11 +122,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public T Maximum
         {
-            get { return _maximum; }
-            set { _maximum = value; }
+            get { return this.maximum; }
+            set { this.maximum = value; }
         }
 
-        private T _maximum;
+        private T maximum;
 
         /// <summary>
         /// Gets or sets the value that was at or below this value 95% of the time.
@@ -148,11 +139,11 @@ namespace Microsoft.HealthVault.ItemTypes
         [SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly", Justification = "A valid element name in PAP session.")]
         public T Percentile95th
         {
-            get { return _percentile95th; }
-            set { _percentile95th = value; }
+            get { return this.percentile95th; }
+            set { this.percentile95th = value; }
         }
 
-        private T _percentile95th;
+        private T percentile95th;
 
         /// <summary>
         /// Gets or sets the value that was at or below this value 90% of the time.
@@ -165,11 +156,11 @@ namespace Microsoft.HealthVault.ItemTypes
         [SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly", Justification = "A valid element name in PAP session.")]
         public T Percentile90th
         {
-            get { return _percentile90th; }
-            set { _percentile90th = value; }
+            get { return this.percentile90th; }
+            set { this.percentile90th = value; }
         }
 
-        private T _percentile90th;
+        private T percentile90th;
 
         /// <summary>
         /// Gets a string representation of the PAP session measurements.
@@ -183,11 +174,11 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             StringBuilder result = new StringBuilder(200);
 
-            AddStringRepresentationOfMeasurement(result, Mean, ResourceRetriever.GetResourceString("MeanToStringFormat"));
-            AddStringRepresentationOfMeasurement(result, Median, ResourceRetriever.GetResourceString("MedianToStringFormat"));
-            AddStringRepresentationOfMeasurement(result, Maximum, ResourceRetriever.GetResourceString("MaximumToStringFormat"));
-            AddStringRepresentationOfMeasurement(result, Percentile95th, ResourceRetriever.GetResourceString("Percentile95thToStringFormat"));
-            AddStringRepresentationOfMeasurement(result, Percentile90th, ResourceRetriever.GetResourceString("Percentile90thToStringFormat"));
+            AddStringRepresentationOfMeasurement(result, this.Mean, ResourceRetriever.GetResourceString("MeanToStringFormat"));
+            AddStringRepresentationOfMeasurement(result, this.Median, ResourceRetriever.GetResourceString("MedianToStringFormat"));
+            AddStringRepresentationOfMeasurement(result, this.Maximum, ResourceRetriever.GetResourceString("MaximumToStringFormat"));
+            AddStringRepresentationOfMeasurement(result, this.Percentile95th, ResourceRetriever.GetResourceString("Percentile95thToStringFormat"));
+            AddStringRepresentationOfMeasurement(result, this.Percentile90th, ResourceRetriever.GetResourceString("Percentile90thToStringFormat"));
 
             return result.ToString();
         }

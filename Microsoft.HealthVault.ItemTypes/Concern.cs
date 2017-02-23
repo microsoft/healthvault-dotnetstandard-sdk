@@ -6,6 +6,8 @@
 using System;
 using System.Xml;
 using System.Xml.XPath;
+using Microsoft.HealthVault.Helpers;
+using Microsoft.HealthVault.Thing;
 
 namespace Microsoft.HealthVault.ItemTypes
 {
@@ -48,7 +50,7 @@ namespace Microsoft.HealthVault.ItemTypes
         public Concern(CodableValue description)
             : base(TypeId)
         {
-            Description = description;
+            this.Description = description;
         }
 
         /// <summary>
@@ -67,14 +69,14 @@ namespace Microsoft.HealthVault.ItemTypes
         public Concern(string description)
             : base(TypeId)
         {
-            _description = new CodableValue(description);
+            this.description = new CodableValue(description);
         }
 
         /// <summary>
         /// Retrieves the unique identifier for the item type.
         /// </summary>
         ///
-        public new static readonly Guid TypeId =
+        public static new readonly Guid TypeId =
             new Guid("AEA2E8F2-11DD-4A7D-AB43-1D58764EBC19");
 
         /// <summary>
@@ -98,11 +100,11 @@ namespace Microsoft.HealthVault.ItemTypes
             Validator.ThrowInvalidIfNull(itemNav, "ConcernUnexpectedNode");
 
             // description
-            _description = new CodableValue();
-            _description.ParseXml(itemNav.SelectSingleNode("description"));
+            this.description = new CodableValue();
+            this.description.ParseXml(itemNav.SelectSingleNode("description"));
 
             // status
-            _status =
+            this.status =
                 XPathHelper.GetOptNavValue<CodableValue>(itemNav, "status");
         }
 
@@ -125,20 +127,20 @@ namespace Microsoft.HealthVault.ItemTypes
         public override void WriteXml(XmlWriter writer)
         {
             Validator.ThrowIfWriterNull(writer);
-            Validator.ThrowSerializationIfNull(_description, "ConcernDescriptionNotSet");
-            Validator.ThrowSerializationIfNull(_description.Text, "CodableValueNullText");
+            Validator.ThrowSerializationIfNull(this.description, "ConcernDescriptionNotSet");
+            Validator.ThrowSerializationIfNull(this.description.Text, "CodableValueNullText");
 
             // <concern>
             writer.WriteStartElement("concern");
 
             // description
-            _description.WriteXml("description", writer);
+            this.description.WriteXml("description", writer);
 
             // status
             XmlWriterHelper.WriteOpt(
                 writer,
                 "status",
-                _status);
+                this.status);
 
             // </concern>
             writer.WriteEndElement();
@@ -154,14 +156,16 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public CodableValue Description
         {
-            get { return _description; }
+            get { return this.description; }
+
             set
             {
                 Validator.ThrowIfArgumentNull(value, "Description", "ConcernDescriptionMandatory");
-                _description = value;
+                this.description = value;
             }
         }
-        private CodableValue _description = new CodableValue();
+
+        private CodableValue description = new CodableValue();
 
         /// <summary>
         /// Gets or sets the status of the concern.
@@ -174,10 +178,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public CodableValue Status
         {
-            get { return _status; }
-            set { _status = value; }
+            get { return this.status; }
+            set { this.status = value; }
         }
-        private CodableValue _status;
+
+        private CodableValue status;
 
         /// <summary>
         /// Gets the description of a concern instance.
@@ -189,7 +194,7 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public override string ToString()
         {
-            return _description.ToString();
+            return this.description.ToString();
         }
     }
 }

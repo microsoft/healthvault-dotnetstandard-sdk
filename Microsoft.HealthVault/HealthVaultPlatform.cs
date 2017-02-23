@@ -3,14 +3,22 @@
 // see http://www.microsoft.com/resources/sharedsource/licensingbasics/sharedsourcelicenses.mspx.
 // All other rights reserved.
 
-using Microsoft.HealthVault.PlatformPrimitives;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.XPath;
+using Microsoft.HealthVault.Application;
+using Microsoft.HealthVault.Connection;
 using Microsoft.HealthVault.Exceptions;
+using Microsoft.HealthVault.Helpers;
+using Microsoft.HealthVault.Person;
+using Microsoft.HealthVault.PlatformInformation;
+using Microsoft.HealthVault.Record;
+using Microsoft.HealthVault.Thing;
+using Microsoft.HealthVault.Transport;
+using Microsoft.HealthVault.Vocabulary;
 
 namespace Microsoft.HealthVault
 {
@@ -142,7 +150,7 @@ namespace Microsoft.HealthVault
         /// There is an error loading the vocabulary.
         /// </exception>
         ///
-        public static async Task<Vocabulary> GetVocabularyAsync(
+        public static async Task<Vocabulary.Vocabulary> GetVocabularyAsync(
             HealthServiceConnection connection,
             string name)
         {
@@ -203,15 +211,15 @@ namespace Microsoft.HealthVault
         /// There is an error loading the vocabulary.
         /// </exception>
         ///
-        public static async Task<Vocabulary> GetVocabularyAsync(
+        public static async Task<Vocabulary.Vocabulary> GetVocabularyAsync(
             HealthServiceConnection connection,
             VocabularyKey vocabularyKey,
             bool cultureIsFixed)
         {
-            ReadOnlyCollection<Vocabulary> vocabularies =
+            ReadOnlyCollection<Vocabulary.Vocabulary> vocabularies =
                 await GetVocabularyAsync(
                     connection,
-                    new VocabularyKey[] { vocabularyKey },
+                    new[] { vocabularyKey },
                     cultureIsFixed)
                     .ConfigureAwait(false);
 
@@ -274,7 +282,7 @@ namespace Microsoft.HealthVault
         /// There is an error loading the vocabulary.
         /// </exception>
         ///
-        public static async Task<ReadOnlyCollection<Vocabulary>> GetVocabularyAsync(
+        public static async Task<ReadOnlyCollection<Vocabulary.Vocabulary>> GetVocabularyAsync(
             HealthServiceConnection connection,
             IList<VocabularyKey> vocabularyKeys,
             bool cultureIsFixed)
@@ -454,7 +462,6 @@ namespace Microsoft.HealthVault
                 searchValue,
                 searchType,
                 maxResults).ConfigureAwait(false)).MatchingVocabulary;
-
         }
 
         #endregion Vocabulary
@@ -1576,7 +1583,7 @@ namespace Microsoft.HealthVault
         public static async Task<IDictionary<Guid, HealthRecordItemTypeDefinition>> GetHealthRecordItemTypeDefinitionAsync(
             IList<Guid> typeIds,
             HealthRecordItemTypeSections sections,
-            IList<String> imageTypes,
+            IList<string> imageTypes,
             DateTime? lastClientRefreshDate,
             HealthServiceConnection connection)
         {
@@ -1597,15 +1604,15 @@ namespace Microsoft.HealthVault
         /// for the specified account location.
         /// </summary>
         ///
+        /// <param name="connection">
+        /// The connection to use to perform the operation.
+        /// </param>
+        ///
         /// <param name="preferredLocation">
         /// A user's preferred geographical location, used to select the best instance
         /// in which to create a new HealthVault account. If there is a location associated
         /// with the credential that will be used to log into the account, that location
         /// should be used.
-        /// </param>
-        ///
-        /// <param name="connection">
-        /// The connection to use to perform the operation.
         /// </param>
         ///
         /// <remarks>

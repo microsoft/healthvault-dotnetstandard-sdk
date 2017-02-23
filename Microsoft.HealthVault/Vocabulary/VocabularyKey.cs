@@ -7,8 +7,10 @@ using System;
 using System.Text;
 using System.Xml;
 using System.Xml.XPath;
+using Microsoft.HealthVault.Connection;
+using Microsoft.HealthVault.Helpers;
 
-namespace Microsoft.HealthVault
+namespace Microsoft.HealthVault.Vocabulary
 {
     /// <summary>
     /// Represents a key for identifying a Vocabulary in the HealthLexicon.
@@ -39,7 +41,7 @@ namespace Microsoft.HealthVault
         public VocabularyKey(string name)
         {
             Validator.ThrowIfStringNullOrEmpty(name, "name");
-            _name = name;
+            this.name = name;
         }
 
         /// <summary>
@@ -66,9 +68,9 @@ namespace Microsoft.HealthVault
         public VocabularyKey(string name, string family)
             : this(name)
         {
-            if (!String.IsNullOrEmpty(family))
+            if (!string.IsNullOrEmpty(family))
             {
-                _family = family;
+                this.Family = family;
             }
         }
 
@@ -95,9 +97,9 @@ namespace Microsoft.HealthVault
         public VocabularyKey(string name, string family, string version)
             : this(name, family)
         {
-            if (!String.IsNullOrEmpty(version))
+            if (!string.IsNullOrEmpty(version))
             {
-                _version = version;
+                this.Version = version;
             }
         }
 
@@ -132,9 +134,9 @@ namespace Microsoft.HealthVault
         public VocabularyKey(string name, string family, string version, string codeValue)
             : this(name, family, version)
         {
-            if (!String.IsNullOrEmpty(codeValue))
+            if (!string.IsNullOrEmpty(codeValue))
             {
-                _codeValue = codeValue;
+                this.CodeValue = codeValue;
             }
         }
 
@@ -152,14 +154,16 @@ namespace Microsoft.HealthVault
         ///
         public string Name
         {
-            get { return _name; }
+            get { return this.name; }
+
             set
             {
                 Validator.ThrowIfStringNullOrEmpty("value", "Name");
-                _name = value;
+                this.name = value;
             }
         }
-        private string _name;
+
+        private string name;
 
         /// <summary>
         /// Gets or sets the name of the family the <see cref="Vocabulary"/> belongs to.
@@ -174,12 +178,7 @@ namespace Microsoft.HealthVault
         /// vocabulary belongs to the HealthService family of vocabularies.
         /// </remarks>
         ///
-        public string Family
-        {
-            get { return _family; }
-            set { _family = value; }
-        }
-        private string _family;
+        public string Family { get; set; }
 
         /// <summary>
         /// Gets or sets the version of the <see cref="Vocabulary"/>.
@@ -194,12 +193,7 @@ namespace Microsoft.HealthVault
         /// vocabulary is returned.
         /// </remarks>
         ///
-        public string Version
-        {
-            get { return _version; }
-            set { _version = value; }
-        }
-        private string _version;
+        public string Version { get; set; }
 
         /// <summary>
         /// Gets or sets the code value of the vocabulary key.
@@ -210,7 +204,7 @@ namespace Microsoft.HealthVault
         /// </value>
         ///
         /// <remarks>
-        /// Use the <see cref="HealthVaultPlatform.GetVocabulary(Microsoft.Health.HealthServiceConnection, Microsoft.Health.VocabularyKey, bool)"/>
+        /// Use the <see cref="HealthVaultPlatform.GetVocabularyAsync(HealthServiceConnection, VocabularyKey, bool)"/>
         /// method and a
         /// <see cref="VocabularyKey"/> to retrieve <see cref="VocabularyItem"/>
         /// objects. The GetVocabulary method returns a
@@ -227,16 +221,11 @@ namespace Microsoft.HealthVault
         /// use a vocabulary key that has a code value equal to the code value of
         /// the last vocabulary item returned from the previous call.
         /// </remarks>
-        /// <seealso cref="HealthVaultPlatform.GetVocabulary(Microsoft.Health.HealthServiceConnection, Microsoft.Health.VocabularyKey, bool)">
+        /// <seealso cref="HealthVaultPlatform.GetVocabularyAsync(HealthServiceConnection, VocabularyKey, bool)">
         /// HealthVaultPlatform.GetVocabulary Method</seealso>
         /// <seealso cref="Vocabulary">Vocabulary Class</seealso>
         /// <seealso cref="VocabularyItem">VocabularyItem Class</seealso>
-        public string CodeValue
-        {
-            get { return _codeValue; }
-            set { _codeValue = value; }
-        }
-        private string _codeValue;
+        public string CodeValue { get; set; }
 
         /// <summary>
         /// Gets or sets a text description of the <see cref="Vocabulary"/>.
@@ -252,12 +241,7 @@ namespace Microsoft.HealthVault
         /// a whole.
         /// </remarks>
         ///
-        public string Description
-        {
-            get { return _description; }
-            set { _description = value; }
-        }
-        private string _description = String.Empty;
+        public string Description { get; set; } = string.Empty;
 
         /// <summary>
         /// Returns a String that represents the current <see cref="Vocabulary"/>.
@@ -266,22 +250,25 @@ namespace Microsoft.HealthVault
         public override string ToString()
         {
             StringBuilder sb = new StringBuilder(56);
-            sb.Append(_name);
-            if (!String.IsNullOrEmpty(_family))
+            sb.Append(this.name);
+            if (!string.IsNullOrEmpty(this.Family))
             {
                 sb.Append("_");
-                sb.Append(_family);
+                sb.Append(this.Family);
             }
-            if (!String.IsNullOrEmpty(_version))
+
+            if (!string.IsNullOrEmpty(this.Version))
             {
                 sb.Append("_");
-                sb.Append(_version);
+                sb.Append(this.Version);
             }
-            if (!String.IsNullOrEmpty(_codeValue))
+
+            if (!string.IsNullOrEmpty(this.CodeValue))
             {
                 sb.Append("_");
-                sb.Append(_codeValue);
+                sb.Append(this.CodeValue);
             }
+
             return sb.ToString();
         }
 
@@ -296,35 +283,38 @@ namespace Microsoft.HealthVault
         public void WriteXml(XmlWriter writer)
         {
             writer.WriteStartElement("vocabulary-key");
-            writer.WriteElementString("name", _name);
-            if (!String.IsNullOrEmpty(_family))
+            writer.WriteElementString("name", this.name);
+            if (!string.IsNullOrEmpty(this.Family))
             {
-                writer.WriteElementString("family", _family);
+                writer.WriteElementString("family", this.Family);
             }
-            if (!String.IsNullOrEmpty(_version))
+
+            if (!string.IsNullOrEmpty(this.Version))
             {
-                writer.WriteElementString("version", _version);
+                writer.WriteElementString("version", this.Version);
             }
-            if (!String.IsNullOrEmpty(_codeValue))
+
+            if (!string.IsNullOrEmpty(this.CodeValue))
             {
-                writer.WriteElementString("code-value", _codeValue);
+                writer.WriteElementString("code-value", this.CodeValue);
             }
-            writer.WriteEndElement(); //</vocabulary-key>
+
+            writer.WriteEndElement(); 
         }
 
         internal void ParseXml(XPathNavigator vocabularyKeyNav)
         {
-            _name = vocabularyKeyNav.SelectSingleNode("name").Value;
-            _family = vocabularyKeyNav.SelectSingleNode("family").Value;
-            _version = vocabularyKeyNav.SelectSingleNode("version").Value;
+            this.name = vocabularyKeyNav.SelectSingleNode("name").Value;
+            this.Family = vocabularyKeyNav.SelectSingleNode("family").Value;
+            this.Version = vocabularyKeyNav.SelectSingleNode("version").Value;
 
             XPathNavigator codeValueNav
                 = vocabularyKeyNav.SelectSingleNode("code-value");
-            _codeValue = (codeValueNav != null) ? codeValueNav.Value : null;
+            this.CodeValue = (codeValueNav != null) ? codeValueNav.Value : null;
 
             XPathNavigator descNav
                 = vocabularyKeyNav.SelectSingleNode("description");
-            _description = (descNav != null) ? descNav.Value : String.Empty;
+            this.Description = (descNav != null) ? descNav.Value : string.Empty;
         }
     }
 }

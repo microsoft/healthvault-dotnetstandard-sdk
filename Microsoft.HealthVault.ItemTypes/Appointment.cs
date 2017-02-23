@@ -7,6 +7,8 @@ using System;
 using System.Text;
 using System.Xml;
 using System.Xml.XPath;
+using Microsoft.HealthVault.Helpers;
+using Microsoft.HealthVault.Thing;
 
 namespace Microsoft.HealthVault.ItemTypes
 {
@@ -59,7 +61,7 @@ namespace Microsoft.HealthVault.ItemTypes
         /// A GUID.
         /// </value>
         ///
-        public new static readonly Guid TypeId =
+        public static new readonly Guid TypeId =
             new Guid("4B18AEB6-5F01-444C-8C70-DBF13A2F510B");
 
         /// <summary>
@@ -83,11 +85,11 @@ namespace Microsoft.HealthVault.ItemTypes
             Validator.ThrowInvalidIfNull(appointmentNav, "AppointmentUnexpectedNode");
 
             // <when>
-            _when = new HealthServiceDateTime();
-            _when.ParseXml(appointmentNav.SelectSingleNode("when"));
+            this.when = new HealthServiceDateTime();
+            this.when.ParseXml(appointmentNav.SelectSingleNode("when"));
 
             // <duration>
-            _duration =
+            this.duration =
                 XPathHelper.GetOptNavValue<DurationValue>(
                     appointmentNav,
                     "duration");
@@ -97,8 +99,8 @@ namespace Microsoft.HealthVault.ItemTypes
                 appointmentNav.SelectSingleNode("service");
             if (serviceNav != null)
             {
-                _service = new CodableValue();
-                _service.ParseXml(serviceNav);
+                this.service = new CodableValue();
+                this.service.ParseXml(serviceNav);
             }
 
             // <clinic>
@@ -107,8 +109,8 @@ namespace Microsoft.HealthVault.ItemTypes
 
             if (clinicNav != null)
             {
-                _clinic = new PersonItem();
-                _clinic.ParseXml(clinicNav);
+                this.clinic = new PersonItem();
+                this.clinic.ParseXml(clinicNav);
             }
 
             // <specialty>
@@ -116,8 +118,8 @@ namespace Microsoft.HealthVault.ItemTypes
                 appointmentNav.SelectSingleNode("specialty");
             if (specialtyNav != null)
             {
-                _specialty = new CodableValue();
-                _specialty.ParseXml(specialtyNav);
+                this.specialty = new CodableValue();
+                this.specialty.ParseXml(specialtyNav);
             }
 
             // <status>
@@ -125,8 +127,8 @@ namespace Microsoft.HealthVault.ItemTypes
                 appointmentNav.SelectSingleNode("status");
             if (statusNav != null)
             {
-                _status = new CodableValue();
-                _status.ParseXml(statusNav);
+                this.status = new CodableValue();
+                this.status.ParseXml(statusNav);
             }
 
             // <care-class>
@@ -134,8 +136,8 @@ namespace Microsoft.HealthVault.ItemTypes
                 appointmentNav.SelectSingleNode("care-class");
             if (careClassNav != null)
             {
-                _careClass = new CodableValue();
-                _careClass.ParseXml(careClassNav);
+                this.careClass = new CodableValue();
+                this.careClass.ParseXml(careClassNav);
             }
         }
 
@@ -154,34 +156,34 @@ namespace Microsoft.HealthVault.ItemTypes
         public override void WriteXml(XmlWriter writer)
         {
             Validator.ThrowIfArgumentNull(writer, "writer", "WriteXmlNullWriter");
-            Validator.ThrowSerializationIfNull(_when, "AppointmentWhenNotSet");
+            Validator.ThrowSerializationIfNull(this.when, "AppointmentWhenNotSet");
 
             // <appointment>
             writer.WriteStartElement("appointment");
 
             // <when>
-            _when.WriteXml("when", writer);
+            this.when.WriteXml("when", writer);
 
             // <duration>
             XmlWriterHelper.WriteOpt(
                 writer,
                 "duration",
-                _duration);
+                this.duration);
 
             // <service>
-            Service?.WriteXml("service", writer);
+            this.Service?.WriteXml("service", writer);
 
             // <clinic>
-            Clinic?.WriteXml("clinic", writer);
+            this.Clinic?.WriteXml("clinic", writer);
 
             // <specialty>
-            Specialty?.WriteXml("specialty", writer);
+            this.Specialty?.WriteXml("specialty", writer);
 
             // <status>
-            Status?.WriteXml("status", writer);
+            this.Status?.WriteXml("status", writer);
 
             // <care-class>
-            CareClass?.WriteXml("care-class", writer);
+            this.CareClass?.WriteXml("care-class", writer);
 
             // </appointment>
             writer.WriteEndElement();
@@ -202,14 +204,16 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public HealthServiceDateTime When
         {
-            get { return _when; }
+            get { return this.when; }
+
             set
             {
                 Validator.ThrowIfArgumentNull(value, "When", "WhenNullValue");
-                _when = value;
+                this.when = value;
             }
         }
-        private HealthServiceDateTime _when = new HealthServiceDateTime();
+
+        private HealthServiceDateTime when = new HealthServiceDateTime();
 
         /// <summary>
         /// Gets or sets the duration of the appointment.
@@ -225,10 +229,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public DurationValue Duration
         {
-            get { return _duration; }
-            set { _duration = value; }
+            get { return this.duration; }
+            set { this.duration = value; }
         }
-        private DurationValue _duration;
+
+        private DurationValue duration;
 
         /// <summary>
         /// Gets or sets the service for the appointment.
@@ -245,10 +250,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public CodableValue Service
         {
-            get { return _service; }
-            set { _service = value; }
+            get { return this.service; }
+            set { this.service = value; }
         }
-        private CodableValue _service;
+
+        private CodableValue service;
 
         /// <summary>
         /// Gets or sets the clinic information.
@@ -265,10 +271,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public PersonItem Clinic
         {
-            get { return _clinic; }
-            set { _clinic = value; }
+            get { return this.clinic; }
+            set { this.clinic = value; }
         }
-        private PersonItem _clinic;
+
+        private PersonItem clinic;
 
         /// <summary>
         /// Gets or sets the specialty for the appointment.
@@ -285,10 +292,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public CodableValue Specialty
         {
-            get { return _specialty; }
-            set { _specialty = value; }
+            get { return this.specialty; }
+            set { this.specialty = value; }
         }
-        private CodableValue _specialty;
+
+        private CodableValue specialty;
 
         /// <summary>
         /// Gets or sets the status for the appointment.
@@ -305,10 +313,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public CodableValue Status
         {
-            get { return _status; }
-            set { _status = value; }
+            get { return this.status; }
+            set { this.status = value; }
         }
-        private CodableValue _status;
+
+        private CodableValue status;
 
         /// <summary>
         /// Gets or sets the care class for the appointment.
@@ -325,10 +334,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public CodableValue CareClass
         {
-            get { return _careClass; }
-            set { _careClass = value; }
+            get { return this.careClass; }
+            set { this.careClass = value; }
         }
-        private CodableValue _careClass;
+
+        private CodableValue careClass;
 
         /// <summary>
         /// Gets a string representation of the appointment item.
@@ -342,39 +352,40 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             StringBuilder result = new StringBuilder(200);
 
-            result.Append(When);
+            result.Append(this.When);
 
-            if (Duration != null)
+            if (this.Duration != null)
             {
                 result.AppendFormat(
                     ResourceRetriever.GetResourceString(
                         "ListFormat"),
-                    Duration.ToString());
+                    this.Duration.ToString());
             }
 
-            if (Clinic != null)
+            if (this.Clinic != null)
             {
                 result.AppendFormat(
                     ResourceRetriever.GetResourceString(
                         "ListFormat"),
-                    Clinic.ToString());
+                    this.Clinic.ToString());
             }
 
-            if (Status != null)
+            if (this.Status != null)
             {
                 result.AppendFormat(
                     ResourceRetriever.GetResourceString(
                         "ListFormat"),
-                    Status.Text);
+                    this.Status.Text);
             }
 
-            if (Service != null)
+            if (this.Service != null)
             {
                 result.AppendFormat(
                     ResourceRetriever.GetResourceString(
                         "ListFormat"),
-                    Service.Text);
+                    this.Service.Text);
             }
+
             return result.ToString();
         }
     }

@@ -3,8 +3,6 @@
 // see http://www.microsoft.com/resources/sharedsource/licensingbasics/sharedsourcelicenses.mspx.
 // All other rights reserved.
 
-using Microsoft.HealthVault.Exceptions;
-using Microsoft.HealthVault.ItemTypes;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -14,8 +12,13 @@ using System.Reflection;
 using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.XPath;
+using Microsoft.HealthVault.Connection;
+using Microsoft.HealthVault.Diagnostics;
+using Microsoft.HealthVault.Exceptions;
+using Microsoft.HealthVault.Helpers;
+using Microsoft.HealthVault.ItemTypes;
 
-namespace Microsoft.HealthVault
+namespace Microsoft.HealthVault.Thing
 {
     /// <summary>
     /// Manages the mapping of a health record item type ID to a class
@@ -39,7 +42,7 @@ namespace Microsoft.HealthVault
                 new Dictionary<string, HealthRecordItemTypeHandler>(
                     StringComparer.OrdinalIgnoreCase);
 
-            foreach (DefaultTypeHandler typeHandler in _defaultTypeHandlers)
+            foreach (DefaultTypeHandler typeHandler in DefaultTypeHandlers)
             {
                 HealthRecordItemTypeHandler handler =
                     new HealthRecordItemTypeHandler(typeHandler.TypeId, typeHandler.Type);
@@ -52,6 +55,7 @@ namespace Microsoft.HealthVault
                     typeHandler.TypeName,
                     handler);
             }
+
             return typeHandlers;
         }
 
@@ -103,10 +107,10 @@ namespace Microsoft.HealthVault
             }
         }
 
-        private static DefaultTypeHandler[] _defaultTypeHandlers =
-            {
-                new DefaultTypeHandler(PasswordProtectedPackage.TypeId, typeof(PasswordProtectedPackage)),
-            };
+        private static readonly DefaultTypeHandler[] DefaultTypeHandlers =
+        {
+            new DefaultTypeHandler(PasswordProtectedPackage.TypeId, typeof(PasswordProtectedPackage))
+        };
 
         internal class DefaultTypeHandler
         {
@@ -116,9 +120,11 @@ namespace Microsoft.HealthVault
                 this.Type = implementingType;
             }
 
-            internal Guid TypeId;
-            internal Type Type;
-            internal string TypeName => Type.Name;
+            public Guid TypeId { get; }
+
+            public Type Type { get; }
+
+            internal string TypeName => this.Type.Name;
         }
 
         /// <summary>
@@ -133,7 +139,7 @@ namespace Microsoft.HealthVault
             {
                 Name = name,
                 Version = coreAssemblyName.GetName().Version,
-                CultureName = coreAssemblyName.GetName().CultureName,
+                CultureName = coreAssemblyName.GetName().CultureName
             };
 
             itemTypesAssemblyName.SetPublicKeyToken(coreAssemblyName.GetName().GetPublicKeyToken());
@@ -200,28 +206,6 @@ namespace Microsoft.HealthVault
         /// have a default constructor.
         /// </param>
         ///
-        public static void RegisterTypeHandler(
-            Guid typeId,
-            Type itemTypeClass)
-        {
-            RegisterTypeHandler(typeId, itemTypeClass, false);
-        }
-
-        /// <summary>
-        /// Registers a deserializer for item type-specific data.
-        /// </summary>
-        ///
-        /// <param name="typeId">
-        /// The unique identifier for the item type-specific data as defined
-        /// by the HealthVault service.
-        /// </param>
-        ///
-        /// <param name="itemTypeClass">
-        /// The class that implements the item type-specific data. It must
-        /// be public, derive from <see cref="HealthRecordItem"/>, and
-        /// have a default constructor.
-        /// </param>
-        ///
         /// <param name="overwriteExisting">
         /// <b>true</b> to register the new deserializer even if the type
         /// already has a deserializer registered; <b>false</b> to throw an
@@ -246,7 +230,7 @@ namespace Microsoft.HealthVault
         public static void RegisterTypeHandler(
             Guid typeId,
             Type itemTypeClass,
-            bool overwriteExisting)
+            bool overwriteExisting = false)
         {
             Validator.ThrowArgumentExceptionIf(
                 typeId == Guid.Empty,
@@ -267,25 +251,28 @@ namespace Microsoft.HealthVault
             }
 
             TypeHandlers[typeId] = new HealthRecordItemTypeHandler(typeId, itemTypeClass);
-            _typeHandlersByClassName[itemTypeClass.Name] = TypeHandlers[typeId];
+            typeHandlersByClassName[itemTypeClass.Name] = TypeHandlers[typeId];
         }
 
         private static Dictionary<Guid, HealthRecordItemTypeHandler> TypeHandlers
         {
             get
             {
-                if (_typeHandlers == null)
+                if (typeHandlers == null)
                 {
-                    _typeHandlers = RegisterDefaultTypeHandlers(out _typeHandlersByClassName);
+                    typeHandlers = RegisterDefaultTypeHandlers(out typeHandlersByClassName);
                     RegisterExternalTypeHandlers();
                 }
-                return _typeHandlers;
+
+                return typeHandlers;
             }
         }
-        private static Dictionary<Guid, HealthRecordItemTypeHandler> _typeHandlers;
 
-        internal static Dictionary<string, HealthRecordItemTypeHandler> TypeHandlersByClassName => _typeHandlersByClassName;
-        private static Dictionary<string, HealthRecordItemTypeHandler> _typeHandlersByClassName;
+        private static Dictionary<Guid, HealthRecordItemTypeHandler> typeHandlers;
+
+        internal static Dictionary<string, HealthRecordItemTypeHandler> TypeHandlersByClassName => typeHandlersByClassName;
+
+        private static Dictionary<string, HealthRecordItemTypeHandler> typeHandlersByClassName;
 
         /// <summary>
         /// Get a collection of all the HealthRecordItem-derived types that are registered.
@@ -296,7 +283,7 @@ namespace Microsoft.HealthVault
         /// types that are available through the HealthVault service.
         ///
         /// To retrieve information about the types from the HealthVault service,
-        /// use the <see cref="GetHealthRecordItemTypeDefinitionAsync(Microsoft.HealthVault.HealthServiceConnection)"/> method.
+        /// use the <see cref="GetHealthRecordItemTypeDefinitionAsync(HealthServiceConnection)"/> method.
         /// </remarks>
         /// <returns>A dictionary of <see cref="Type"/> instances.</returns>
         public static IDictionary<Guid, Type> RegisteredTypes
@@ -324,9 +311,9 @@ namespace Microsoft.HealthVault
         /// released, this method will not return them.
         ///
         /// To retrieve information about the types from the HealthVault service,
-        /// use the <see cref="GetHealthRecordItemTypeDefinitionAsync(Microsoft.HealthVault.HealthServiceConnection)"/> method.
+        /// use the <see cref="GetHealthRecordItemTypeDefinitionAsync(HealthServiceConnection)"/> method.
         /// </remarks>
-        /// <param name="typeId"></param>
+        /// <param name="typeId">The ID of the associated type</param>
         /// <returns>The typeId.</returns>
         public static Type GetRegisteredTypeForTypeId(Guid typeId)
         {
@@ -427,18 +414,18 @@ namespace Microsoft.HealthVault
             Validator.ThrowIfStringNullOrEmpty(extensionSource, "extensionSource");
             Validator.ThrowIfArgumentNull(itemExtensionClass, "itemExtensionClass", "ItemExtensionClassNull");
 
-            if (_extensionHandlers.ContainsKey(extensionSource) &&
+            if (extensionHandlers.ContainsKey(extensionSource) &&
                 !overwriteExisting)
             {
                 throw new TypeHandlerAlreadyRegisteredException(
                     ResourceRetriever.GetResourceString("ExtensionHandlerAlreadyRegistered"));
             }
 
-            _extensionHandlers[extensionSource] =
+            extensionHandlers[extensionSource] =
                 new HealthRecordItemTypeHandler(itemExtensionClass);
         }
 
-        private static Dictionary<string, HealthRecordItemTypeHandler> _extensionHandlers =
+        private static Dictionary<string, HealthRecordItemTypeHandler> extensionHandlers =
             new Dictionary<string, HealthRecordItemTypeHandler>();
 
         #endregion RegisterExtensionHandler
@@ -605,9 +592,9 @@ namespace Microsoft.HealthVault
 
             Dictionary<string, HealthRecordItemTypeHandler> handlerDictionary;
 
-            if (_appSpecificHandlers.ContainsKey(applicationId))
+            if (appSpecificHandlers.ContainsKey(applicationId))
             {
-                handlerDictionary = _appSpecificHandlers[applicationId];
+                handlerDictionary = appSpecificHandlers[applicationId];
 
                 if (handlerDictionary.ContainsKey(subtypeTag) &&
                     !overwriteExisting)
@@ -619,7 +606,7 @@ namespace Microsoft.HealthVault
             else
             {
                 handlerDictionary = new Dictionary<string, HealthRecordItemTypeHandler>();
-                _appSpecificHandlers.Add(applicationId, handlerDictionary);
+                appSpecificHandlers.Add(applicationId, handlerDictionary);
             }
 
             HealthRecordItemTypeHandler handler =
@@ -628,7 +615,7 @@ namespace Microsoft.HealthVault
             handlerDictionary[subtypeTag] = handler;
         }
 
-        private static Dictionary<string, Dictionary<string, HealthRecordItemTypeHandler>> _appSpecificHandlers =
+        private static Dictionary<string, Dictionary<string, HealthRecordItemTypeHandler>> appSpecificHandlers =
             new Dictionary<string, Dictionary<string, HealthRecordItemTypeHandler>>();
 
         #endregion RegisterApplicationSpecificTypeHandler
@@ -660,7 +647,7 @@ namespace Microsoft.HealthVault
             }
         }
 
-        private static Guid _applicationSpecificId = new Guid("a5033c9d-08cf-4204-9bd3-cb412ce39fc0");
+        private static Guid applicationSpecificId = new Guid("a5033c9d-08cf-4204-9bd3-cb412ce39fc0");
 
         /// <summary>
         /// Deserializes the response XML into a <see cref="HealthRecordItem"/> or derived type
@@ -692,7 +679,7 @@ namespace Microsoft.HealthVault
         [SuppressMessage("Microsoft.Usage", "CA2202:Do not dispose objects multiple times", Justification = "StringReader can be disposed multiple times. Usings block makes the code more readable")]
         internal static HealthRecordItem DeserializeItem(XmlReader thingReader)
         {
-            HealthRecordItem result = null;
+            HealthRecordItem result;
 
             string thingString = thingReader.ReadOuterXml();
 
@@ -714,7 +701,7 @@ namespace Microsoft.HealthVault
             Guid typeId = GetTypeId(thingNav);
 
             HealthRecordItemTypeHandler handler = null;
-            if (typeId == _applicationSpecificId)
+            if (typeId == applicationSpecificId)
             {
                 // Handle application specific health item records by checking for handlers
                 // for the application ID and subtype tag. If the handler doesn't exist
@@ -724,12 +711,12 @@ namespace Microsoft.HealthVault
 
                 if (appDataKey != null)
                 {
-                    if (_appSpecificHandlers.ContainsKey(appDataKey.AppId))
+                    if (appSpecificHandlers.ContainsKey(appDataKey.AppId))
                     {
-                        if (_appSpecificHandlers[appDataKey.AppId].ContainsKey(appDataKey.SubtypeTag))
+                        if (appSpecificHandlers[appDataKey.AppId].ContainsKey(appDataKey.SubtypeTag))
                         {
                             handler =
-                                _appSpecificHandlers[appDataKey.AppId][appDataKey.SubtypeTag];
+                                appSpecificHandlers[appDataKey.AppId][appDataKey.SubtypeTag];
                         }
                     }
                 }
@@ -749,6 +736,7 @@ namespace Microsoft.HealthVault
             {
                 result = new HealthRecordItem(typeId);
             }
+
             result.ParseXml(thingNav, thingString);
             return result;
         }
@@ -788,12 +776,12 @@ namespace Microsoft.HealthVault
         internal static HealthRecordItemExtension DeserializeExtension(
             XPathNavigator extensionNav)
         {
-            HealthRecordItemExtension result = null;
+            HealthRecordItemExtension result;
 
-            string source = extensionNav.GetAttribute("source", String.Empty);
-            if (_extensionHandlers.ContainsKey(source))
+            string source = extensionNav.GetAttribute("source", string.Empty);
+            if (extensionHandlers.ContainsKey(source))
             {
-                HealthRecordItemTypeHandler handler = _extensionHandlers[source];
+                HealthRecordItemTypeHandler handler = extensionHandlers[source];
                 result =
                     (HealthRecordItemExtension)Activator.CreateInstance(
                         handler.ItemTypeClass);
@@ -802,6 +790,7 @@ namespace Microsoft.HealthVault
             {
                 result = new HealthRecordItemExtension(source);
             }
+
             result.ParseXml(extensionNav);
             return result;
         }
@@ -836,11 +825,12 @@ namespace Microsoft.HealthVault
         public static async Task<IDictionary<Guid, HealthRecordItemTypeDefinition>> GetHealthRecordItemTypeDefinitionAsync(
             HealthServiceConnection connection)
         {
-            return await GetHealthRecordItemTypeDefinitionAsync(null,
-                                                     HealthRecordItemTypeSections.All,
-                                                     null,
-                                                     null,
-                                                     connection).ConfigureAwait(false);
+            return await GetHealthRecordItemTypeDefinitionAsync(
+                null,
+                HealthRecordItemTypeSections.All,
+                null,
+                null,
+                connection).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -889,11 +879,12 @@ namespace Microsoft.HealthVault
             DateTime? lastClientRefreshDate,
             HealthServiceConnection connection)
         {
-            return await GetHealthRecordItemTypeDefinitionAsync(typeIds,
-                                                     HealthRecordItemTypeSections.All,
-                                                     null,
-                                                     lastClientRefreshDate,
-                                                     connection).ConfigureAwait(false);
+            return await GetHealthRecordItemTypeDefinitionAsync(
+                typeIds,
+                HealthRecordItemTypeSections.All,
+                null,
+                lastClientRefreshDate,
+                connection).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -941,11 +932,12 @@ namespace Microsoft.HealthVault
             HealthRecordItemTypeSections sections,
             HealthServiceConnection connection)
         {
-            return await GetHealthRecordItemTypeDefinitionAsync(typeIds,
-                                                     sections,
-                                                     null,
-                                                     null,
-                                                     connection).ConfigureAwait(false);
+            return await GetHealthRecordItemTypeDefinitionAsync(
+                typeIds,
+                sections,
+                null,
+                null,
+                connection).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -999,11 +991,12 @@ namespace Microsoft.HealthVault
             DateTime? lastClientRefreshDate,
             HealthServiceConnection connection)
         {
-            return await GetHealthRecordItemTypeDefinitionAsync(typeIds,
-                                                     sections,
-                                                     null,
-                                                     lastClientRefreshDate,
-                                                     connection).ConfigureAwait(false);
+            return await GetHealthRecordItemTypeDefinitionAsync(
+                typeIds,
+                sections,
+                null,
+                lastClientRefreshDate,
+                connection).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -1101,7 +1094,7 @@ namespace Microsoft.HealthVault
         public static async Task<IDictionary<Guid, HealthRecordItemTypeDefinition>> GetHealthRecordItemTypeDefinitionAsync(
             IList<Guid> typeIds,
             HealthRecordItemTypeSections sections,
-            IList<String> imageTypes,
+            IList<string> imageTypes,
             DateTime? lastClientRefreshDate,
             HealthServiceConnection connection)
         {
@@ -1149,7 +1142,7 @@ namespace Microsoft.HealthVault
             HealthServiceConnection connection)
         {
             IDictionary<Guid, HealthRecordItemTypeDefinition> typeDefs =
-                await GetHealthRecordItemTypeDefinitionAsync(new Guid[] { typeId }, connection).ConfigureAwait(false);
+                await GetHealthRecordItemTypeDefinitionAsync(new[] { typeId }, connection).ConfigureAwait(false);
             return typeDefs[typeId];
         }
 
@@ -1191,9 +1184,10 @@ namespace Microsoft.HealthVault
             IList<Guid> typeIds,
             HealthServiceConnection connection)
         {
-            return await GetHealthRecordItemTypeDefinitionAsync(typeIds,
-                                                     HealthRecordItemTypeSections.All,
-                                                     connection).ConfigureAwait(false);
+            return await GetHealthRecordItemTypeDefinitionAsync(
+                typeIds,
+                HealthRecordItemTypeSections.All,
+                connection).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -1222,7 +1216,7 @@ namespace Microsoft.HealthVault
         public static async Task<HealthRecordItemTypeDefinition> GetBaseHealthRecordItemTypeDefinitionAsync(
             HealthServiceConnection connection)
         {
-            return await GetHealthRecordItemTypeDefinitionAsync(_baseTypeId, connection).ConfigureAwait(false);
+            return await GetHealthRecordItemTypeDefinitionAsync(BaseTypeId, connection).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -1234,7 +1228,7 @@ namespace Microsoft.HealthVault
             HealthVaultPlatform.ClearItemTypeCache();
         }
 
-        private static readonly Guid _baseTypeId =
+        private static readonly Guid BaseTypeId =
             new Guid("3e730686-781f-4616-aa0d-817bba8eb141");
 
         #endregion Thing Type Definitions
@@ -1258,17 +1252,21 @@ namespace Microsoft.HealthVault
 
             if (appIdNav != null && subtypeNav != null)
             {
-                result = new AppDataKey();
-                result.AppId = appIdNav.Value;
-                result.SubtypeTag = subtypeNav.Value;
+                result = new AppDataKey
+                {
+                    AppId = appIdNav.Value,
+                    SubtypeTag = subtypeNav.Value
+                };
             }
+
             return result;
         }
 
         private class AppDataKey
         {
-            internal string AppId;
-            internal string SubtypeTag;
+            public string AppId { get; set; }
+
+            public string SubtypeTag { get; set; }
         }
 
         #endregion private helpers

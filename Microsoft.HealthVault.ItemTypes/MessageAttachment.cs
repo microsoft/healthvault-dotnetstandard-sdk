@@ -5,6 +5,7 @@
 
 using System.Xml;
 using System.Xml.XPath;
+using Microsoft.HealthVault.Helpers;
 
 namespace Microsoft.HealthVault.ItemTypes
 {
@@ -47,9 +48,9 @@ namespace Microsoft.HealthVault.ItemTypes
             string blobName,
             bool inlineDisplay)
         {
-            Name = name;
-            BlobName = blobName;
-            InlineDisplay = inlineDisplay;
+            this.Name = name;
+            this.BlobName = blobName;
+            this.InlineDisplay = inlineDisplay;
         }
 
         /// <summary>
@@ -68,10 +69,10 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             Validator.ThrowIfArgumentNull(navigator, "navigator", "ParseXmlNavNull");
 
-            _name = navigator.SelectSingleNode("name").Value;
-            _blobName = navigator.SelectSingleNode("blob-name").Value;
-            _inlineDisplay = navigator.SelectSingleNode("inline-display").ValueAsBoolean;
-            _contentId = XPathHelper.GetOptNavValue(navigator, "content-id");
+            this.name = navigator.SelectSingleNode("name").Value;
+            this.blobName = navigator.SelectSingleNode("blob-name").Value;
+            this.inlineDisplay = navigator.SelectSingleNode("inline-display").ValueAsBoolean;
+            this.contentId = XPathHelper.GetOptNavValue(navigator, "content-id");
         }
 
         /// <summary>
@@ -107,19 +108,19 @@ namespace Microsoft.HealthVault.ItemTypes
             Validator.ThrowIfWriterNull(writer);
 
             Validator.ThrowSerializationIf(
-                string.IsNullOrEmpty(_name) || string.IsNullOrEmpty(_name.Trim()),
+                string.IsNullOrEmpty(this.name) || string.IsNullOrEmpty(this.name.Trim()),
                 "MessageNameMandatory");
 
             Validator.ThrowSerializationIf(
-                string.IsNullOrEmpty(_blobName) || string.IsNullOrEmpty(_blobName.Trim()),
+                string.IsNullOrEmpty(this.blobName) || string.IsNullOrEmpty(this.blobName.Trim()),
                 "BlobNameMandatory");
 
             writer.WriteStartElement("attachments");
 
-            writer.WriteElementString("name", _name);
-            writer.WriteElementString("blob-name", _blobName);
-            writer.WriteElementString("inline-display", SDKHelper.XmlFromBool(_inlineDisplay));
-            XmlWriterHelper.WriteOptString(writer, "content-id", _contentId);
+            writer.WriteElementString("name", this.name);
+            writer.WriteElementString("blob-name", this.blobName);
+            writer.WriteElementString("inline-display", SDKHelper.XmlFromBool(this.inlineDisplay));
+            XmlWriterHelper.WriteOptString(writer, "content-id", this.contentId);
             writer.WriteEndElement();
         }
 
@@ -143,7 +144,7 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             get
             {
-                return _name;
+                return this.name;
             }
 
             set
@@ -151,11 +152,11 @@ namespace Microsoft.HealthVault.ItemTypes
                 Validator.ThrowIfStringIsWhitespace(value, "Name");
                 Validator.ThrowIfStringNullOrEmpty(value, "Name");
 
-                _name = value;
+                this.name = value;
             }
         }
 
-        private string _name;
+        private string name;
 
         /// <summary>
         /// Gets or sets the name of the blob storing the attachment.
@@ -177,7 +178,7 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             get
             {
-                return _blobName;
+                return this.blobName;
             }
 
             set
@@ -185,11 +186,11 @@ namespace Microsoft.HealthVault.ItemTypes
                 Validator.ThrowIfStringIsWhitespace(value, "BlobName");
                 Validator.ThrowIfStringNullOrEmpty(value, "BlobName");
 
-                _blobName = value;
+                this.blobName = value;
             }
         }
 
-        private string _blobName;
+        private string blobName;
 
         /// <summary>
         /// Gets or sets whether the attachment is intended to be displayed inline with the text.
@@ -204,16 +205,16 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             get
             {
-                return _inlineDisplay;
+                return this.inlineDisplay;
             }
 
             set
             {
-                _inlineDisplay = value;
+                this.inlineDisplay = value;
             }
         }
 
-        private bool _inlineDisplay;
+        private bool inlineDisplay;
 
         /// <summary>
         /// Gets or sets the content identifier for attachments that will be displayed inline with the text.
@@ -233,18 +234,18 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             get
             {
-                return _contentId;
+                return this.contentId;
             }
 
             set
             {
                 Validator.ThrowIfStringIsWhitespace(value, "ContentId");
 
-                _contentId = value;
+                this.contentId = value;
             }
         }
 
-        private string _contentId;
+        private string contentId;
 
         /// <summary>
         /// Gets a string representation of the MessageAttachment.
@@ -256,7 +257,7 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public override string ToString()
         {
-            return _name;
+            return this.name;
         }
     }
 }

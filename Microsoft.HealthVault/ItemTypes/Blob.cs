@@ -6,8 +6,11 @@
 using System;
 using System.IO;
 using System.Text;
+using Microsoft.HealthVault.Exceptions;
+using Microsoft.HealthVault.Helpers;
+using Microsoft.HealthVault.Thing;
 
-namespace Microsoft.HealthVault
+namespace Microsoft.HealthVault.ItemTypes
 {
     /// <summary>
     /// Represents binary data that can be associated with a person's health record.
@@ -15,12 +18,14 @@ namespace Microsoft.HealthVault
     ///
     public class Blob
     {
+        private const int DefaultStreamBufferSize = 1 << 20; // 1MB
+
         /// <summary>
         /// Constructs an instance of the Blob class with the specified values.
         /// </summary>
         ///
         /// <param name="name">
-        /// The name of the BLOB. It can be <see cref="String.Empty"/> but cannot be <b>null</b>.
+        /// The name of the BLOB. It can be <see cref="string.Empty"/> but cannot be <b>null</b>.
         /// </param>
         ///
         /// <param name="contentType">
@@ -58,7 +63,7 @@ namespace Microsoft.HealthVault
         /// </summary>
         ///
         /// <param name="name">
-        /// The name of the BLOB. It can be <see cref="String.Empty"/> but cannot be <b>null</b>.
+        /// The name of the BLOB. It can be <see cref="string.Empty"/> but cannot be <b>null</b>.
         /// </param>
         ///
         /// <param name="contentType">
@@ -96,12 +101,12 @@ namespace Microsoft.HealthVault
             Validator.ThrowIfArgumentNull(name, "name", "StringNull");
             Validator.ThrowIfArgumentNull(contentType, "contentType", "StringNull");
 
-            _name = name;
-            _contentType = contentType;
-            _contentEncoding = currentContentEncoding;
-            _legacyContentEncoding = legacyContentEncoding;
-            _blobHashInfo = hashInfo;
-            _record = record;
+            this.Name = name;
+            this.ContentType = contentType;
+            this.ContentEncoding = currentContentEncoding;
+            this.LegacyContentEncoding = legacyContentEncoding;
+            this.HashInfo = hashInfo;
+            this.record = record;
         }
 
         /// <summary>
@@ -109,7 +114,7 @@ namespace Microsoft.HealthVault
         /// </summary>
         ///
         /// <param name="name">
-        /// The name of the BLOB. It can be <see cref="String.Empty"/> but cannot be <b>null</b>.
+        /// The name of the BLOB. It can be <see cref="string.Empty"/> but cannot be <b>null</b>.
         /// </param>
         ///
         /// <param name="contentType">
@@ -128,14 +133,8 @@ namespace Microsoft.HealthVault
         /// The hash information for the BLOB.
         /// </param>
         ///
-        /// <param name="connectPackageParameters">
-        /// The creation parameters for the <see cref="ConnectPackage"/> that will host the
-        /// <see cref="HealthRecordItem"/> that contains this blob.
-        /// </param>
-        ///
         /// <exception cref="ArgumentNullException">
-        /// If <paramref name="name"/> or <paramref name="contentType"/>
-        /// or <paramref name="connectPackageParameters"/> is <b>null</b>.
+        /// If <paramref name="name"/> or <paramref name="contentType"/> is <b>null</b>.
         /// </exception>
         ///
         internal Blob(
@@ -148,42 +147,29 @@ namespace Microsoft.HealthVault
             Validator.ThrowIfArgumentNull(name, "name", "StringNull");
             Validator.ThrowIfArgumentNull(contentType, "contentType", "StringNull");
 
-            _name = name;
-            _contentType = contentType;
-            _contentEncoding = currentContentEncoding;
-            _legacyContentEncoding = legacyContentEncoding;
-            _blobHashInfo = hashInfo;
+            this.Name = name;
+            this.ContentType = contentType;
+            this.ContentEncoding = currentContentEncoding;
+            this.LegacyContentEncoding = legacyContentEncoding;
+            this.HashInfo = hashInfo;
         }
 
         /// <summary>
         /// Gets the name of the BLOB.
         /// </summary>
-        public string Name
-        {
-            get { return _name; }
-        }
-        private string _name;
+        public string Name { get; }
 
         /// <summary>
         /// Gets the content type of the BLOB.
         /// </summary>
-        public string ContentType
-        {
-            get { return _contentType; }
-        }
-        private string _contentType;
+        public string ContentType { get; }
 
         /// <summary>
         /// Gets the hash information for the BLOB.
         /// </summary>
-        public BlobHashInfo HashInfo
-        {
-            get { return _blobHashInfo; }
-            internal set { _blobHashInfo = value; }
-        }
-        private BlobHashInfo _blobHashInfo;
+        public BlobHashInfo HashInfo { get; internal set; }
 
-        private HealthRecordAccessor _record;
+        private readonly HealthRecordAccessor record;
 
         /// <summary>
         /// Gets the content encoding of the BLOB.
@@ -194,18 +180,9 @@ namespace Microsoft.HealthVault
         /// support being added.
         /// </remarks>
         ///
-        public string ContentEncoding
-        {
-            get { return _contentEncoding; }
-            internal set { _contentEncoding = value; }
-        }
-        private string _contentEncoding;
+        public string ContentEncoding { get; internal set; }
 
-        internal string LegacyContentEncoding
-        {
-            get { return _legacyContentEncoding; }
-        }
-        private string _legacyContentEncoding;
+        internal string LegacyContentEncoding { get; }
 
         /// <summary>
         /// Gets the length of the content of the BLOB.
@@ -214,17 +191,10 @@ namespace Microsoft.HealthVault
         /// <remarks>
         /// In some cases the content length can't be determined by
         /// HealthVault until the data is retrieved. In this case, the property
-        /// will be null. For instance, when the Blob represents data that was
-        /// streamed to HealthVault for a <see cref="Package.ConnectPackage"/>
-        /// the data is encrypted so the true size of the Blob is not known.
+        /// will be null. 
         /// </remarks>
         ///
-        public long? ContentLength
-        {
-            get { return _length; }
-            internal set { _length = value; }
-        }
-        private long? _length;
+        public long? ContentLength { get; internal set; }
 
         #region Write
 
@@ -242,15 +212,15 @@ namespace Microsoft.HealthVault
         ///
         public BlobStream GetWriterStream()
         {
-            if (_inlineData != null || _url != null)
+            if (this.InlineData != null || this.Url != null)
             {
                 throw new NotSupportedException();
             }
 
-            IsDirty = true;
+            this.IsDirty = true;
 
-            return _record != null ?
-                    new BlobStream(_record, this) : null;
+            return this.record != null ?
+                    new BlobStream(this.record, this) : null;
         }
 
         /// <summary>
@@ -263,7 +233,7 @@ namespace Microsoft.HealthVault
         ///
         /// <remarks>
         /// The BLOB data is written into the XML request during the
-        /// <see cref="HealthRecordAccessor.NewItem"/> or <see cref="HealthRecordAccessor.UpdateItem"/>
+        /// <see cref="HealthRecordAccessor.NewItemAsync"/> or <see cref="HealthRecordAccessor.UpdateItemAsync"/>
         /// rather than being streamed to HealthVault. This is limited to about 3.5MB of data.
         /// Use <see cref="GetWriterStream"/> to write more data.
         /// </remarks>
@@ -274,7 +244,7 @@ namespace Microsoft.HealthVault
         ///
         public void WriteInline(string data)
         {
-            WriteInline(data, Encoding.UTF8);
+            this.WriteInline(data, Encoding.UTF8);
         }
 
         /// <summary>
@@ -291,7 +261,7 @@ namespace Microsoft.HealthVault
         ///
         /// <remarks>
         /// The BLOB data is written into the XML request during the
-        /// <see cref="HealthRecordAccessor.NewItem"/> or <see cref="HealthRecordAccessor.UpdateItem"/>
+        /// <see cref="HealthRecordAccessor.NewItemAsync"/> or <see cref="HealthRecordAccessor.UpdateItemAsync"/>
         /// rather than being streamed to HealthVault. This is limited to about 3.5MB of data.
         /// Use <see cref="GetWriterStream"/> to write more data.
         /// </remarks>
@@ -307,7 +277,7 @@ namespace Microsoft.HealthVault
             Validator.ThrowIfArgumentNull(data, "data", "StringNull");
             Validator.ThrowIfArgumentNull(encoding, "encoding", "ArgumentNull");
 
-            WriteNewInlineData(encoding.GetBytes(data));
+            this.WriteNewInlineData(encoding.GetBytes(data));
         }
 
         /// <summary>
@@ -320,7 +290,7 @@ namespace Microsoft.HealthVault
         ///
         /// <remarks>
         /// The BLOB data is written into the XML request during the
-        /// <see cref="HealthRecordAccessor.NewItem"/> or <see cref="HealthRecordAccessor.UpdateItem"/>
+        /// <see cref="HealthRecordAccessor.NewItemAsync"/> or <see cref="HealthRecordAccessor.UpdateItemAsync"/>
         /// rather than being streamed to HealthVault. This is limited to about 3.5MB of data.
         /// Use <see cref="GetWriterStream"/> to write more data.
         /// </remarks>
@@ -333,7 +303,7 @@ namespace Microsoft.HealthVault
         {
             Validator.ThrowIfArgumentNull(bytes, "bytes", "ArgumentNull");
 
-            WriteNewInlineData(bytes);
+            this.WriteNewInlineData(bytes);
         }
 
         private void WriteNewInlineData(byte[] bytes)
@@ -341,16 +311,16 @@ namespace Microsoft.HealthVault
             BlobHasher inlineHasher = BlobHasher.InlineBlobHasher;
             byte[] blobHash = inlineHasher.CalculateBlobHash(bytes, 0, bytes.Length);
 
-            _url = null;
-            _inlineData = bytes;
-            _length = bytes.Length;
+            this.Url = null;
+            this.InlineData = bytes;
+            this.ContentLength = bytes.Length;
 
-            _blobHashInfo = new BlobHashInfo(
+            this.HashInfo = new BlobHashInfo(
                 inlineHasher.BlobHashAlgorithm,
                 inlineHasher.BlockSize,
                 blobHash);
 
-            IsDirty = true;
+            this.IsDirty = true;
         }
 
         /// <summary>
@@ -365,7 +335,7 @@ namespace Microsoft.HealthVault
         /// If <paramref name="stream"/> is <b>null</b>.
         /// </exception>
         ///
-        /// <exception cref="WebException">
+        /// <exception cref="HealthHttpException">
         /// If there is an error writing the data to HealthVault.
         /// </exception>
         ///
@@ -373,23 +343,24 @@ namespace Microsoft.HealthVault
         {
             Validator.ThrowIfArgumentNull(stream, "stream", "ArgumentNull");
 
-            int bufferSize = _defaultStreamBufferSize;
+            int bufferSize = DefaultStreamBufferSize;
             if (stream.CanSeek)
             {
-                bufferSize = (int)Math.Min(stream.Length, (long)_defaultStreamBufferSize);
+                bufferSize = (int)Math.Min(stream.Length, DefaultStreamBufferSize);
             }
 
-            int bytesRead = 0;
             byte[] bytes = new byte[bufferSize];
 
-            using (BlobStream blobStream = GetWriterStream())
+            using (BlobStream blobStream = this.GetWriterStream())
             {
+                int bytesRead;
                 while ((bytesRead = stream.Read(bytes, 0, bufferSize)) > 0)
                 {
                     blobStream.Write(bytes, 0, bytesRead);
                 }
             }
-            IsDirty = true;
+
+            this.IsDirty = true;
         }
 
         #endregion Write
@@ -410,51 +381,21 @@ namespace Microsoft.HealthVault
         ///
         public BlobStream GetReaderStream()
         {
-            BlobStream stream = null;
-            if (_url != null)
+            BlobStream stream;
+            if (this.Url != null)
             {
-                stream = new BlobStream(this, _url, _length);
+                stream = new BlobStream(this, this.Url, this.ContentLength);
             }
-            else if (_inlineData != null)
+            else if (this.InlineData != null)
             {
-                stream = new BlobStream(this, _inlineData, _length);
+                stream = new BlobStream(this, this.InlineData, this.ContentLength);
             }
             else
             {
                 throw new NotSupportedException();
             }
-            return stream;
-        }
 
-        /// <summary>
-        /// Saves the BLOB data to the specified file.
-        /// </summary>
-        ///
-        /// <param name="fileName">
-        /// The path to the file to save the data to.
-        /// </param>
-        ///
-        /// <remarks>
-        /// This method will not overwrite an existing file.
-        /// Exceptions that can occur by calling <see cref="System.IO.File.Open(string, FileMode, FileAccess)"/> may also be
-        /// thrown by this method.
-        /// </remarks>
-        ///
-        /// <exception cref="ArgumentException">
-        /// <paramref name="fileName"/> is <b>null</b> or empty.
-        /// </exception>
-        ///
-        /// <exception cref="NotSupportedException">
-        /// If the Blob doesn't have data that was retrieved from HealthVault.
-        /// </exception>
-        ///
-        /// <exception cref="HealthServiceException">
-        /// If there is a failure reading the data from HealthVault.
-        /// </exception>
-        ///
-        public void SaveToFile(string fileName)
-        {
-            SaveToFile(fileName, FileMode.CreateNew);
+            return stream;
         }
 
         /// <summary>
@@ -487,13 +428,13 @@ namespace Microsoft.HealthVault
         /// If there is a failure reading the data from HealthVault.
         /// </exception>
         ///
-        public void SaveToFile(string fileName, FileMode mode)
+        public void SaveToFile(string fileName, FileMode mode = FileMode.CreateNew)
         {
             Validator.ThrowIfStringNullOrEmpty(fileName, "filename");
 
             using (FileStream file = File.Open(fileName, mode, FileAccess.Write))
             {
-                SaveToStream(file);
+                this.SaveToStream(file);
             }
         }
 
@@ -525,13 +466,13 @@ namespace Microsoft.HealthVault
         {
             Validator.ThrowIfArgumentNull(stream, "stream", "ArgumentNull");
 
-            using (BlobStream blob = GetReaderStream())
+            using (BlobStream blob = this.GetReaderStream())
             {
-                int bufferSize = (int)(ContentLength ?? Int32.MaxValue);
-                bufferSize = Math.Min(bufferSize, _defaultStreamBufferSize);
+                int bufferSize = (int)(this.ContentLength ?? int.MaxValue);
+                bufferSize = Math.Min(bufferSize, DefaultStreamBufferSize);
 
                 byte[] buffer = new byte[bufferSize];
-                int bytesRead = 0;
+                int bytesRead;
                 while ((bytesRead = blob.Read(buffer, 0, bufferSize)) > 0)
                 {
                     stream.Write(buffer, 0, bytesRead);
@@ -553,7 +494,7 @@ namespace Microsoft.HealthVault
         ///
         public string ReadAsString()
         {
-            return ReadAsString(Encoding.UTF8);
+            return this.ReadAsString(Encoding.UTF8);
         }
 
         /// <summary>
@@ -578,10 +519,10 @@ namespace Microsoft.HealthVault
         ///
         public string ReadAsString(Encoding encoding)
         {
-            String result;
+            string result;
             using (MemoryStream memoryStream = new MemoryStream(1000))
             {
-                SaveToStream(memoryStream);
+                this.SaveToStream(memoryStream);
                 memoryStream.Flush();
 
                 result = encoding.GetString(memoryStream.ToArray(), 0, (int)memoryStream.Position);
@@ -608,13 +549,13 @@ namespace Microsoft.HealthVault
         ///
         public byte[] ReadAllBytes()
         {
-            byte[] result = null;
-            int bufferSize = (int)(ContentLength ?? Int32.MaxValue);
-            bufferSize = Math.Min(bufferSize, _defaultStreamBufferSize);
+            byte[] result;
+            int bufferSize = (int)(this.ContentLength ?? int.MaxValue);
+            bufferSize = Math.Min(bufferSize, DefaultStreamBufferSize);
 
             using (MemoryStream memoryStream = new MemoryStream(bufferSize))
             {
-                SaveToStream(memoryStream);
+                this.SaveToStream(memoryStream);
                 memoryStream.Flush();
 
                 result = memoryStream.ToArray();
@@ -644,21 +585,9 @@ namespace Microsoft.HealthVault
         /// If the Blob was retieved inline or the Blob was created for writing.
         /// </exception>
         ///
-        public Uri Url
-        {
-            get { return _url; }
-            internal set { _url = value; }
-        }
-        private Uri _url;
+        public Uri Url { get; internal set; }
 
-        internal byte[] InlineData
-        {
-            get { return _inlineData; }
-            set { _inlineData = value; }
-        }
-        private byte[] _inlineData;
-
-        private const int _defaultStreamBufferSize = 1 << 20; // 1MB
+        internal byte[] InlineData { get; set; }
 
         /// <summary>
         /// Gets or sets if the Blob instance has been modified.
@@ -666,16 +595,11 @@ namespace Microsoft.HealthVault
         ///
         /// <remarks>
         /// Normally this property is maintained by the members of the class, however,
-        /// if <see cref="HealthRecordItem.GetItemXml()"/> is used to serialize an item
+        /// if <see cref="HealthRecordItem.GetItemXml(string)"/> is used to serialize an item
         /// that contains this Blob before the item is committed to HealthVault, you will
         /// need to mark the Blob as dirty before trying to commit the item to HealthVault.
         /// </remarks>
         ///
-        public bool IsDirty
-        {
-            get { return _isDirty; }
-            set { _isDirty = value; }
-        }
-        private bool _isDirty;
+        public bool IsDirty { get; set; }
     }
 }

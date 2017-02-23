@@ -10,8 +10,9 @@ using System.Globalization;
 using System.Text;
 using System.Xml;
 using System.Xml.XPath;
+using Microsoft.HealthVault.Helpers;
 
-namespace Microsoft.HealthVault
+namespace Microsoft.HealthVault.PlatformInformation
 {
     /// <summary>
     /// Provides information about the HealthVault service to which you are
@@ -20,7 +21,7 @@ namespace Microsoft.HealthVault
     ///
     public class ServiceInfo
     {
-        private static IServiceInfoProvider _defaultServiceInfoProvider = new CachedServiceInfoProvider();
+        private static IServiceInfoProvider defaultServiceInfoProvider = new CachedServiceInfoProvider();
 
         /// <summary>
         /// Gets the HealthVault service information.
@@ -41,13 +42,7 @@ namespace Microsoft.HealthVault
         /// </p>
         /// </remarks>
         ///
-        public static ServiceInfo Current
-        {
-            get
-            {
-                return _defaultServiceInfoProvider.GetServiceInfo();
-            }
-        }
+        public static ServiceInfo Current => defaultServiceInfoProvider.GetServiceInfo();
 
         /// <summary>
         /// Sets the provider to be used for the <see cref="P:CurrentInfo"/> singleton.
@@ -59,7 +54,7 @@ namespace Microsoft.HealthVault
         ///
         public static void SetSingletonProvider(IServiceInfoProvider defaultProvider)
         {
-            _defaultServiceInfoProvider = defaultProvider;
+            defaultServiceInfoProvider = defaultProvider;
         }
 
         /// <summary>
@@ -153,7 +148,7 @@ namespace Microsoft.HealthVault
 
             using (XmlWriter writer = XmlWriter.Create(result, settings))
             {
-                WriteXml("service-info", writer);
+                this.WriteXml("service-info", writer);
                 writer.Flush();
             }
 
@@ -164,29 +159,29 @@ namespace Microsoft.HealthVault
         {
             writer.WriteStartElement(elementName);
             {
-                WritePlatformInfo(writer);
-                WriteShellInfo(writer);
-                WriteMethods(writer);
-                WriteIncludes(writer);
-                WriteServiceInstances(writer);
-                WriteUpdatedDate(writer);
+                this.WritePlatformInfo(writer);
+                this.WriteShellInfo(writer);
+                this.WriteMethods(writer);
+                this.WriteIncludes(writer);
+                this.WriteServiceInstances(writer);
+                this.WriteUpdatedDate(writer);
                 writer.WriteEndElement();
             }
         }
 
         private void WritePlatformInfo(XmlWriter writer)
         {
-            if (HealthServiceUrl == null || String.IsNullOrEmpty(Version))
+            if (this.HealthServiceUrl == null || string.IsNullOrEmpty(this.Version))
             {
                 return;
             }
 
             writer.WriteStartElement("platform");
             {
-                writer.WriteElementString("url", HealthServiceUrl.OriginalString);
-                writer.WriteElementString("version", Version);
+                writer.WriteElementString("url", this.HealthServiceUrl.OriginalString);
+                writer.WriteElementString("version", this.Version);
 
-                WriteConfigs(writer, ConfigurationValues);
+                WriteConfigs(writer, this.ConfigurationValues);
 
                 writer.WriteEndElement();
             }
@@ -194,12 +189,12 @@ namespace Microsoft.HealthVault
 
         private void WriteIncludes(XmlWriter writer)
         {
-            if (IncludedSchemaUrls == null)
+            if (this.IncludedSchemaUrls == null)
             {
                 return;
             }
 
-            foreach (Uri include in IncludedSchemaUrls)
+            foreach (Uri include in this.IncludedSchemaUrls)
             {
                 writer.WriteElementString("common-schema", include.OriginalString);
             }
@@ -207,12 +202,12 @@ namespace Microsoft.HealthVault
 
         private void WriteMethods(XmlWriter writer)
         {
-            if (Methods == null)
+            if (this.Methods == null)
             {
                 return;
             }
 
-            foreach (HealthServiceMethodInfo method in Methods)
+            foreach (HealthServiceMethodInfo method in this.Methods)
             {
                 writer.WriteStartElement("xml-method");
                 {
@@ -245,17 +240,17 @@ namespace Microsoft.HealthVault
 
         private void WriteShellInfo(XmlWriter writer)
         {
-            if (HealthServiceShellInfo == null)
+            if (this.HealthServiceShellInfo == null)
             {
                 return;
             }
 
             writer.WriteStartElement("shell");
             {
-                writer.WriteElementString("url", HealthServiceShellInfo.BaseUrl.OriginalString);
-                writer.WriteElementString("redirect-url", HealthServiceShellInfo.RedirectUrl.OriginalString);
+                writer.WriteElementString("url", this.HealthServiceShellInfo.BaseUrl.OriginalString);
+                writer.WriteElementString("redirect-url", this.HealthServiceShellInfo.RedirectUrl.OriginalString);
 
-                foreach (HealthServiceShellRedirectToken token in HealthServiceShellInfo.RedirectTokens)
+                foreach (HealthServiceShellRedirectToken token in this.HealthServiceShellInfo.RedirectTokens)
                 {
                     writer.WriteStartElement("redirect-token");
                     {
@@ -263,7 +258,7 @@ namespace Microsoft.HealthVault
                         writer.WriteElementString("description", token.Description);
 
                         string queryStringParameters =
-                            String.Join(
+                            string.Join(
                                 ",",
                                 token.QueryStringParameters);
                         writer.WriteElementString("querystring-parameters", queryStringParameters);
@@ -292,16 +287,16 @@ namespace Microsoft.HealthVault
 
         private void WriteServiceInstances(XmlWriter writer)
         {
-            if (ServiceInstances == null || CurrentInstance == null)
+            if (this.ServiceInstances == null || this.CurrentInstance == null)
             {
                 return;
             }
 
             writer.WriteStartElement("instances");
             {
-                writer.WriteAttributeString("current-instance-id", CurrentInstance.Id);
+                writer.WriteAttributeString("current-instance-id", this.CurrentInstance.Id);
 
-                foreach (HealthServiceInstance instance in ServiceInstances.Values)
+                foreach (HealthServiceInstance instance in this.ServiceInstances.Values)
                 {
                     instance.WriteXml(writer);
                 }
@@ -314,7 +309,7 @@ namespace Microsoft.HealthVault
         {
             writer.WriteElementString(
                 "updated-date",
-                SDKHelper.XmlFromDateTime(LastUpdated.ToUniversalTime()));
+                SDKHelper.XmlFromDateTime(this.LastUpdated.ToUniversalTime()));
         }
 
         private static Dictionary<string, string> GetConfigurationValues(
@@ -324,8 +319,9 @@ namespace Microsoft.HealthVault
 
             foreach (XPathNavigator configNav in configIterator)
             {
-                result.Add(configNav.GetAttribute("key", String.Empty), configNav.Value);
+                result.Add(configNav.GetAttribute("key", string.Empty), configNav.Value);
             }
+
             return result;
         }
 
@@ -340,6 +336,7 @@ namespace Microsoft.HealthVault
             {
                 methods.Add(HealthServiceMethodInfo.CreateMethodInfo(methodNav));
             }
+
             return methods;
         }
 
@@ -368,7 +365,7 @@ namespace Microsoft.HealthVault
 
             if (instancesNav != null)
             {
-                currentInstanceId = instancesNav.GetAttribute("current-instance-id", String.Empty);
+                currentInstanceId = instancesNav.GetAttribute("current-instance-id", string.Empty);
 
                 XPathNodeIterator instanceNavs = instancesNav.Select("instance");
 
@@ -396,28 +393,28 @@ namespace Microsoft.HealthVault
             string currentInstanceId,
             DateTime lastUpdated)
         {
-            _healthServiceUrl = healthServiceUrl;
-            _healthVaultVersion = healthVaultVersion;
-            _shellInfo = shellInfo;
+            this.HealthServiceUrl = healthServiceUrl;
+            this.Version = healthVaultVersion;
+            this.HealthServiceShellInfo = shellInfo;
 
-            _methods =
+            this.Methods =
                 new ReadOnlyCollection<HealthServiceMethodInfo>(methods);
-            _includes =
+            this.IncludedSchemaUrls =
                 new ReadOnlyCollection<Uri>(includes);
 
             if (configurationValues != null)
             {
-                _configurationValues = configurationValues;
+                this.ConfigurationValues = configurationValues;
             }
 
             if (instances != null)
             {
-                _instances = instances;
+                this.ServiceInstances = instances;
 
-                CurrentInstance = _instances[currentInstanceId];
+                this.CurrentInstance = this.ServiceInstances[currentInstanceId];
             }
 
-            LastUpdated = lastUpdated;
+            this.LastUpdated = lastUpdated;
         }
 
         /// <summary>
@@ -440,12 +437,7 @@ namespace Microsoft.HealthVault
         /// HealthVault XML methods.
         /// </remarks>
         ///
-        public Uri HealthServiceUrl
-        {
-            get { return _healthServiceUrl; }
-            protected set { _healthServiceUrl = value; }
-        }
-        private Uri _healthServiceUrl;
+        public Uri HealthServiceUrl { get; protected set; }
 
         /// <summary>
         /// Gets or sets the version of the HealthVault service.
@@ -461,23 +453,13 @@ namespace Microsoft.HealthVault
         /// HealthVault service provider.
         /// </remarks>
         ///
-        public string Version
-        {
-            get { return _healthVaultVersion; }
-            protected set { _healthVaultVersion = value; }
-        }
-        private string _healthVaultVersion;
+        public string Version { get; protected set; }
 
         /// <summary>
         /// Gets or sets the latest information about the HealthVault Shell.
         /// </summary>
         ///
-        public HealthServiceShellInfo HealthServiceShellInfo
-        {
-            get { return _shellInfo; }
-            protected set { _shellInfo = value; }
-        }
-        private HealthServiceShellInfo _shellInfo;
+        public HealthServiceShellInfo HealthServiceShellInfo { get; protected set; }
 
         /// <summary>
         /// Gets the latest information about the assemblies that represent
@@ -495,15 +477,8 @@ namespace Microsoft.HealthVault
         /// </remarks>
         ///
         [Obsolete("No longer supported - remove references to this property.")]
-        public ReadOnlyCollection<HealthServiceAssemblyInfo> Assemblies
-        {
-            get
-            {
-                return
-                    new ReadOnlyCollection<HealthServiceAssemblyInfo>(
-                        new HealthServiceAssemblyInfo[] { });
-            }
-        }
+        public ReadOnlyCollection<HealthServiceAssemblyInfo> Assemblies => new ReadOnlyCollection<HealthServiceAssemblyInfo>(
+            new HealthServiceAssemblyInfo[] { });
 
         /// <summary>
         /// Gets or sets information about the methods that the HealthVault service
@@ -522,12 +497,7 @@ namespace Microsoft.HealthVault
         /// method.
         /// </remarks>
         ///
-        public ReadOnlyCollection<HealthServiceMethodInfo> Methods
-        {
-            get { return _methods; }
-            protected set { _methods = value; }
-        }
-        private ReadOnlyCollection<HealthServiceMethodInfo> _methods;
+        public ReadOnlyCollection<HealthServiceMethodInfo> Methods { get; protected set; }
 
         /// <summary>
         /// Gets or sets the URLs of the common schemas that are included in the
@@ -547,12 +517,7 @@ namespace Microsoft.HealthVault
         /// by each of the methods as needed.
         /// </remarks>
         ///
-        public ReadOnlyCollection<Uri> IncludedSchemaUrls
-        {
-            get { return _includes; }
-            protected set { _includes = value; }
-        }
-        private ReadOnlyCollection<Uri> _includes;
+        public ReadOnlyCollection<Uri> IncludedSchemaUrls { get; protected set; }
 
         /// <summary>
         /// Gets or sets the public configuration values for the HealthVault service.
@@ -564,12 +529,7 @@ namespace Microsoft.HealthVault
         /// HealthVault applications. Values can be used to throttle health record item queries, etc.
         /// </value>
         ///
-        public Dictionary<string, string> ConfigurationValues
-        {
-            get { return _configurationValues; }
-            protected set { _configurationValues = value; }
-        }
-        private Dictionary<string, string> _configurationValues = new Dictionary<string, string>();
+        public Dictionary<string, string> ConfigurationValues { get; protected set; } = new Dictionary<string, string>();
 
         /// <summary>
         /// Gets the set of available HealthVault instances.
@@ -589,12 +549,7 @@ namespace Microsoft.HealthVault
         /// of the instance in which that user's data is stored.
         /// </remarks>
         ///
-        public Dictionary<string, HealthServiceInstance> ServiceInstances
-        {
-            get { return _instances; }
-        }
-        private Dictionary<string, HealthServiceInstance> _instances =
-            new Dictionary<string, HealthServiceInstance>(StringComparer.OrdinalIgnoreCase);
+        public Dictionary<string, HealthServiceInstance> ServiceInstances { get; } = new Dictionary<string, HealthServiceInstance>(StringComparer.OrdinalIgnoreCase);
 
         /// <summary>
         /// Gets a reference to the information for the HealthVault instance

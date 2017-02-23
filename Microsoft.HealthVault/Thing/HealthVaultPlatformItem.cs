@@ -3,7 +3,6 @@
 // see http://www.microsoft.com/resources/sharedsource/licensingbasics/sharedsourcelicenses.mspx.
 // All other rights reserved.
 
-using Microsoft.HealthVault.Exceptions;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -11,8 +10,12 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.XPath;
+using Microsoft.HealthVault.Connection;
+using Microsoft.HealthVault.Exceptions;
+using Microsoft.HealthVault.Helpers;
+using Microsoft.HealthVault.Transport;
 
-namespace Microsoft.HealthVault
+namespace Microsoft.HealthVault.Thing
 {
     /// <summary>
     /// Provides low-level access to the HealthVault item operations.
@@ -21,9 +24,11 @@ namespace Microsoft.HealthVault
     /// <see cref="HealthVaultPlatform"/> uses this class to perform operations. Set
     /// HealthVaultPlatformItem.Current to a derived class to intercept all calls.
     /// </remarks>
-
     public class HealthVaultPlatformItem
     {
+        private static readonly XPathExpression ThingIdPath =
+            XPathExpression.Compile("/wc:info/thing-id");
+
         /// <summary>
         /// Enables mocking of calls to this class.
         /// </summary>
@@ -41,10 +46,10 @@ namespace Microsoft.HealthVault
         ///
         public static void EnableMock(HealthVaultPlatformItem mock)
         {
-            Validator.ThrowInvalidIf(_saved != null, "ClassAlreadyMocked");
+            Validator.ThrowInvalidIf(saved != null, "ClassAlreadyMocked");
 
-            _saved = _current;
-            _current = mock;
+            saved = Current;
+            Current = mock;
         }
 
         /// <summary>
@@ -57,15 +62,15 @@ namespace Microsoft.HealthVault
         ///
         public static void DisableMock()
         {
-            Validator.ThrowInvalidIfNull(_saved, "ClassIsntMocked");
+            Validator.ThrowInvalidIfNull(saved, "ClassIsntMocked");
 
-            _current = _saved;
-            _saved = null;
+            Current = saved;
+            saved = null;
         }
 
-        internal static HealthVaultPlatformItem Current => _current;
-        private static HealthVaultPlatformItem _current = new HealthVaultPlatformItem();
-        private static HealthVaultPlatformItem _saved;
+        internal static HealthVaultPlatformItem Current { get; private set; } = new HealthVaultPlatformItem();
+
+        private static HealthVaultPlatformItem saved;
 
         /// <summary>
         /// Creates new health record items associated with the record.
@@ -120,6 +125,7 @@ namespace Microsoft.HealthVault
 
                     item.WriteItemXml(infoXmlWriter);
                 }
+
                 infoXmlWriter.Flush();
             }
 
@@ -143,8 +149,9 @@ namespace Microsoft.HealthVault
                         new HealthRecordItemKey(
                             new Guid(thingIdNav.Value),
                             new Guid(thingIdNav.GetAttribute(
-                                    "version-stamp", String.Empty)));
+                                    "version-stamp", string.Empty)));
                 }
+
                 thingIndex++;
             }
         }
@@ -218,6 +225,7 @@ namespace Microsoft.HealthVault
                         somethingRequiresUpdate = true;
                     }
                 }
+
                 infoXmlWriter.Flush();
             }
 
@@ -243,23 +251,18 @@ namespace Microsoft.HealthVault
                     thing.Key = new HealthRecordItemKey(
                         new Guid(thingIdNav.Value),
                         new Guid(thingIdNav.GetAttribute(
-                            "version-stamp", String.Empty)));
+                            "version-stamp", string.Empty)));
                     thing.ClearDirtyFlags();
                     ++index;
                 }
             }
         }
 
-        private static readonly XPathExpression _thingIdPath =
-            XPathExpression.Compile("/wc:info/thing-id");
-
         /// <summary>
         /// Returns the XPathExpression for the ThingId from the supplied XPathNavigator
         /// </summary>
-        ///
-        /// <param name="infoNav"></param>
-        ///
-        /// <returns></returns>
+        /// <param name="infoNav">the XPathNavigator for the associated thing</param>
+        /// <returns>The XPathExpression</returns>
         ///
         internal static XPathExpression GetThingIdXPathExpression(XPathNavigator infoNav)
         {
@@ -271,9 +274,9 @@ namespace Microsoft.HealthVault
                     "urn:com.microsoft.wc.methods.response.PutThings");
 
             XPathExpression infoThingIdPathClone;
-            lock (_thingIdPath)
+            lock (ThingIdPath)
             {
-                infoThingIdPathClone = _thingIdPath.Clone();
+                infoThingIdPathClone = ThingIdPath.Clone();
             }
 
             infoThingIdPathClone.SetContext(infoXmlNamespaceManager);
@@ -634,7 +637,7 @@ namespace Microsoft.HealthVault
             Collection<HealthRecordItemCollection> result =
                 new Collection<HealthRecordItemCollection>();
 
-            if ((infoReader != null) && (infoReader.ReadToDescendant("group")))
+            if ((infoReader != null) && infoReader.ReadToDescendant("group"))
             {
                 while (infoReader.Name == "group")
                 {
@@ -704,8 +707,10 @@ namespace Microsoft.HealthVault
                     // Add all filters
                     filter.AddFilterXml(writer);
                 }
+
                 writer.Flush();
             }
+
             return parameters.ToString();
         }
 

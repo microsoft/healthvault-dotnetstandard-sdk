@@ -4,8 +4,9 @@
 // All other rights reserved.
 
 using System;
+using Microsoft.HealthVault.Thing;
 
-namespace Microsoft.HealthVault
+namespace Microsoft.HealthVault.Record
 {
     /// <summary>
     /// Encapsulates information about an updated record and the person associated with that record.
@@ -25,42 +26,27 @@ namespace Microsoft.HealthVault
             Guid personId,
             long latestOperationSequenceNumber)
         {
-            _recordId = recordId;
-            _lastUpdateDate = lastUpdateDate;
-            _personId = personId;
-            LatestOperationSequenceNumber = latestOperationSequenceNumber;
+            this.RecordId = recordId;
+            this.LastUpdateDate = lastUpdateDate;
+            this.PersonId = personId;
+            this.LatestOperationSequenceNumber = latestOperationSequenceNumber;
         }
 
         /// <summary>
         /// Gets or sets the ID of the <see cref="HealthRecordAccessor"/> updated.
         /// </summary>
-        public Guid RecordId
-        {
-            get { return _recordId; }
-            protected set { _recordId = value; }
-        }
-        private Guid _recordId;
+        public Guid RecordId { get; protected set; }
 
         /// <summary>
         /// Gets or sets the timestamp when an addition, deletion or update occured to the
         /// <see cref="HealthRecordItem"/>s in the <see cref="HealthRecordAccessor"/>
         /// </summary>
-        public DateTime LastUpdateDate
-        {
-            get { return _lastUpdateDate; }
-            protected set { _lastUpdateDate = value; }
-        }
-        private DateTime _lastUpdateDate;
+        public DateTime LastUpdateDate { get; protected set; }
 
         /// <summary>
         /// Gets or sets the person ID of the updated record.
         /// </summary>
-        public Guid PersonId
-        {
-            get { return _personId; }
-            protected set { _personId = value; }
-        }
-        private Guid _personId;
+        public Guid PersonId { get; protected set; }
 
         /// <summary>
         /// Gets the record's latest operation sequence number.

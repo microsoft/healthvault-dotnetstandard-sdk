@@ -7,6 +7,8 @@ using Microsoft.HealthVault.Exceptions;
 using System;
 using System.Globalization;
 using System.Web;
+using Microsoft.HealthVault.Helpers;
+using Microsoft.HealthVault.Transport;
 
 namespace Microsoft.HealthVault.Web
 {

@@ -8,6 +8,8 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Xml;
 using System.Xml.XPath;
+using Microsoft.HealthVault.Helpers;
+using Microsoft.HealthVault.Thing;
 
 namespace Microsoft.HealthVault.ItemTypes
 {
@@ -29,15 +31,15 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             if (wrappedInstance != null)
             {
-                WrappedTypeName = wrappedInstance.WrappedTypeName;
-                WrappedInstanceJson = wrappedInstance.Base64EncodedJson;
+                this.WrappedTypeName = wrappedInstance.WrappedTypeName;
+                this.WrappedInstanceJson = wrappedInstance.Base64EncodedJson;
                 if (wrappedInstance.ThingId != Guid.Empty && wrappedInstance.VersionStamp != Guid.Empty)
                 {
-                    Key = new HealthRecordItemKey(wrappedInstance.ThingId, wrappedInstance.VersionStamp);
+                    this.Key = new HealthRecordItemKey(wrappedInstance.ThingId, wrappedInstance.VersionStamp);
                 }
             }
 
-            Headers = new Dictionary<string, string>();
+            this.Headers = new Dictionary<string, string>();
         }
 
         /// <summary>
@@ -57,14 +59,14 @@ namespace Microsoft.HealthVault.ItemTypes
             Guid versionStamp)
             : base(typeId)
         {
-            WrappedTypeName = wrappedTypeName;
-            WrappedInstanceJson = base64EncodedJson;
+            this.WrappedTypeName = wrappedTypeName;
+            this.WrappedInstanceJson = base64EncodedJson;
             if (thingId != Guid.Empty && versionStamp != Guid.Empty)
             {
-                Key = new HealthRecordItemKey(thingId, versionStamp);
+                this.Key = new HealthRecordItemKey(thingId, versionStamp);
             }
 
-            Headers = new Dictionary<string, string>();
+            this.Headers = new Dictionary<string, string>();
         }
 
         #endregion
@@ -78,6 +80,7 @@ namespace Microsoft.HealthVault.ItemTypes
         #endregion
 
         #region props
+        
         /// <summary>
         /// Gets the header information associated with this item.
         /// </summary>
@@ -90,18 +93,18 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             get
             {
-                return _wrappedTypeName;
+                return this.wrappedTypeName;
             }
 
             set
             {
                 Validator.ThrowIfArgumentNull(value, "WrappedTypeName", "WrappedTypeNameNullValue");
                 Validator.ThrowIfStringIsEmptyOrWhitespace(value, "WrappedTypeName");
-                _wrappedTypeName = value;
+                this.wrappedTypeName = value;
             }
         }
 
-        private string _wrappedTypeName;
+        private string wrappedTypeName;
 
         /// <summary>
         /// Wrapped instance in base64 encoded json format
@@ -110,18 +113,18 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             get
             {
-                return _wrappedInstanceJson;
+                return this.wrappedInstanceJson;
             }
 
             set
             {
                 Validator.ThrowIfArgumentNull(value, "WrappedInstanceJson", "WrappedInstanceJsonNullValue");
                 Validator.ThrowIfStringIsEmptyOrWhitespace(value, "WrappedInstanceJson");
-                _wrappedInstanceJson = value;
+                this.wrappedInstanceJson = value;
             }
         }
 
-        private string _wrappedInstanceJson;
+        private string wrappedInstanceJson;
         #endregion
 
         #region Overrides of HealthRecordItem
@@ -140,11 +143,11 @@ namespace Microsoft.HealthVault.ItemTypes
             XPathNavigator navigator = typeSpecificXml.CreateNavigator();
             Validator.ThrowInvalidIfNull(navigator, "MshRecordUnexpectedNode");
 
-            navigator = navigator.SelectSingleNode(RootElementName);
+            navigator = navigator.SelectSingleNode(this.RootElementName);
             Validator.ThrowInvalidIfNull(navigator, "MshRecordUnexpectedNode");
 
             // headers
-            Headers.Clear();
+            this.Headers.Clear();
             var headersNav = navigator.SelectSingleNode("headers");
             if (headersNav != null)
             {
@@ -156,9 +159,9 @@ namespace Microsoft.HealthVault.ItemTypes
                     {
                         string name = nameNode.Value;
                         string value = valueNode.Value;
-                        if (!Headers.ContainsKey(name))
+                        if (!this.Headers.ContainsKey(name))
                         {
-                            Headers.Add(name, value);
+                            this.Headers.Add(name, value);
                         }
                     }
                 }
@@ -168,14 +171,14 @@ namespace Microsoft.HealthVault.ItemTypes
             var typeNode = navigator.SelectSingleNode("type");
             if (typeNode != null)
             {
-                _wrappedTypeName = typeNode.Value;
+                this.wrappedTypeName = typeNode.Value;
             }
 
             // wrapped instance
             var jsonNode = navigator.SelectSingleNode("value");
             if (jsonNode != null)
             {
-                _wrappedInstanceJson = jsonNode.Value;
+                this.wrappedInstanceJson = jsonNode.Value;
             }
         }
 
@@ -190,20 +193,20 @@ namespace Microsoft.HealthVault.ItemTypes
         public override void WriteXml(XmlWriter writer)
         {
             Validator.ThrowIfWriterNull(writer);
-            Validator.ThrowSerializationIfNull(_wrappedTypeName, "WrappedTypeNameNullValue");
-            Validator.ThrowSerializationIfNull(_wrappedInstanceJson, "WrappedInstanceJsonNullValue");
+            Validator.ThrowSerializationIfNull(this.wrappedTypeName, "WrappedTypeNameNullValue");
+            Validator.ThrowSerializationIfNull(this.wrappedInstanceJson, "WrappedInstanceJsonNullValue");
 
-            writer.WriteStartElement(RootElementName);
+            writer.WriteStartElement(this.RootElementName);
 
             // headers
-            if (Headers != null && Headers.Count > 0)
+            if (this.Headers != null && this.Headers.Count > 0)
             {
                 writer.WriteStartElement("headers");
                 {
-                    foreach (var key in Headers.Keys)
+                    foreach (var key in this.Headers.Keys)
                     {
                         writer.WriteElementString("name", key);
-                        writer.WriteElementString("value", Headers[key]);
+                        writer.WriteElementString("value", this.Headers[key]);
                     }
                 }
 
@@ -211,11 +214,11 @@ namespace Microsoft.HealthVault.ItemTypes
             }
 
             // type
-            writer.WriteElementString("type", WrappedTypeName);
+            writer.WriteElementString("type", this.WrappedTypeName);
 
             // value: json base64 encoded
             writer.WriteStartElement("value");
-            writer.WriteValue(WrappedInstanceJson);
+            writer.WriteValue(this.WrappedInstanceJson);
             writer.WriteEndElement();
 
             writer.WriteEndElement(); // action-plan
@@ -232,11 +235,11 @@ namespace Microsoft.HealthVault.ItemTypes
         public override string ToString()
         {
             string value =
-                String.Format(
+                string.Format(
                 CultureInfo.CurrentCulture,
                 ResourceRetriever.GetResourceString("MshItemSummaryText"),
-                _wrappedTypeName,
-                _wrappedInstanceJson);
+                this.wrappedTypeName,
+                this.wrappedInstanceJson);
 
             return value;
         }

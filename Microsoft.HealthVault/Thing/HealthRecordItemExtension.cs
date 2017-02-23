@@ -7,8 +7,10 @@ using System;
 using System.Xml;
 using System.Xml.Linq;
 using System.Xml.XPath;
+using Microsoft.HealthVault.Exceptions;
+using Microsoft.HealthVault.Helpers;
 
-namespace Microsoft.HealthVault
+namespace Microsoft.HealthVault.Thing
 {
     /// <summary>
     /// Represents an extension to a health record item.
@@ -48,10 +50,11 @@ namespace Microsoft.HealthVault
         /// If <paramref name="source"/> is null or empty.
         /// </exception>
         ///
-        public HealthRecordItemExtension(string source) : this()
+        public HealthRecordItemExtension(string source)
+            : this()
         {
             Validator.ThrowIfStringNullOrEmpty(source, "source");
-            _source = source;
+            this.source = source;
         }
 
         /// <summary>
@@ -60,7 +63,7 @@ namespace Microsoft.HealthVault
         ///
         public HealthRecordItemExtension()
         {
-            _extensionData = new XDocument();
+            this.extensionData = new XDocument();
         }
 
         #endregion ctors
@@ -75,30 +78,30 @@ namespace Microsoft.HealthVault
         ///
         internal void ParseXml(XPathNavigator extensionNav)
         {
-            _source = extensionNav.GetAttribute("source", String.Empty);
-            _version = extensionNav.GetAttribute("ver", String.Empty);
+            this.source = extensionNav.GetAttribute("source", string.Empty);
+            this.Version = extensionNav.GetAttribute("ver", string.Empty);
 
             string logoString =
-                extensionNav.GetAttribute("logo", String.Empty);
+                extensionNav.GetAttribute("logo", string.Empty);
 
-            if (!String.IsNullOrEmpty(logoString))
+            if (!string.IsNullOrEmpty(logoString))
             {
-                _logo = new Uri(logoString);
+                this.Logo = new Uri(logoString);
             }
 
             string transformString =
-                extensionNav.GetAttribute("xsl", String.Empty);
+                extensionNav.GetAttribute("xsl", string.Empty);
 
-            if (!String.IsNullOrEmpty(transformString))
+            if (!string.IsNullOrEmpty(transformString))
             {
-                _transform = new Uri(transformString);
+                this.Transform = new Uri(transformString);
             }
 
             // Save off the data in its entirety
-            _extensionData = SDKHelper.SafeLoadXml(extensionNav.OuterXml);
+            this.extensionData = SDKHelper.SafeLoadXml(extensionNav.OuterXml);
 
             // Call the derived class for parsing.
-            ParseXml(this.ExtensionData);
+            this.ParseXml(this.ExtensionData);
         }
 
         /// <summary>
@@ -107,7 +110,7 @@ namespace Microsoft.HealthVault
         ///
         /// <param name="extensionData">
         /// The XML to retrieve the extension data from. Note, this may be
-        /// an <see cref="XmlDocument"/>.
+        /// an <see cref="XDocument"/>.
         /// </param>
         ///
         /// <remarks>
@@ -138,29 +141,29 @@ namespace Microsoft.HealthVault
         internal void WriteExtensionXml(XmlWriter writer)
         {
             Validator.ThrowSerializationIf(
-                String.IsNullOrEmpty(_source),
+                string.IsNullOrEmpty(this.source),
                 "ExtensionSerializationSourceMissing");
 
             // <extension>
             writer.WriteStartElement("extension");
-            writer.WriteAttributeString("source", _source);
+            writer.WriteAttributeString("source", this.source);
 
-            if (!String.IsNullOrEmpty(_version))
+            if (!string.IsNullOrEmpty(this.Version))
             {
-                writer.WriteAttributeString("ver", _version);
+                writer.WriteAttributeString("ver", this.Version);
             }
 
-            if (_logo != null)
+            if (this.Logo != null)
             {
-                writer.WriteAttributeString("logo", _logo.ToString());
+                writer.WriteAttributeString("logo", this.Logo.ToString());
             }
 
-            if (_transform != null)
+            if (this.Transform != null)
             {
-                writer.WriteAttributeString("xsl", _transform.ToString());
+                writer.WriteAttributeString("xsl", this.Transform.ToString());
             }
 
-            WriteXml(writer);
+            this.WriteXml(writer);
 
             // </extension>
             writer.WriteEndElement();
@@ -190,7 +193,7 @@ namespace Microsoft.HealthVault
         protected virtual void WriteXml(XmlWriter writer)
         {
             XPathNavigator extensionDocumentNav =
-                _extensionData.CreateNavigator();
+                this.extensionData.CreateNavigator();
 
             XPathNavigator extensionNodeNav =
                 extensionDocumentNav.SelectSingleNode("extension");
@@ -217,14 +220,16 @@ namespace Microsoft.HealthVault
         ///
         public string Source
         {
-            get { return _source; }
+            get { return this.source; }
+
             set
             {
                 Validator.ThrowIfStringNullOrEmpty(value, "Source");
-                _source = value;
+                this.source = value;
             }
         }
-        private string _source;
+
+        private string source;
 
         /// <summary>
         /// Gets or sets the version of the extension.
@@ -234,12 +239,7 @@ namespace Microsoft.HealthVault
         /// The version is optional and will be ignored if set to null.
         /// </remarks>
         ///
-        public string Version
-        {
-            get { return _version; }
-            set { _version = value; }
-        }
-        private string _version;
+        public string Version { get; set; }
 
         /// <summary>
         /// Gets or sets the URL to a logo for display use with the extension.
@@ -255,12 +255,7 @@ namespace Microsoft.HealthVault
         /// <see cref="Transform"/> to provide a link to the extension data.
         /// </remarks>
         ///
-        public Uri Logo
-        {
-            get { return _logo; }
-            set { _logo = value; }
-        }
-        private Uri _logo;
+        public Uri Logo { get; set; }
 
         /// <summary>
         /// Gets or sets the URL to an XSL transform which can transform the
@@ -279,12 +274,7 @@ namespace Microsoft.HealthVault
         /// HealthVault Shell does not render extensions using this transform.
         /// </remarks>
         ///
-        public Uri Transform
-        {
-            get { return _transform; }
-            set { _transform = value; }
-        }
-        private Uri _transform;
+        public Uri Transform { get; set; }
 
         /// <summary>
         /// Gets the extension data for the extension.
@@ -299,10 +289,8 @@ namespace Microsoft.HealthVault
         /// <br/><br/>
         /// </remarks>
         ///
-        public IXPathNavigable ExtensionData
-        {
-            get { return _extensionData.CreateNavigator(); }
-        }
-        private XDocument _extensionData;
+        public IXPathNavigable ExtensionData => this.extensionData.CreateNavigator();
+
+        private XDocument extensionData;
     }
 }

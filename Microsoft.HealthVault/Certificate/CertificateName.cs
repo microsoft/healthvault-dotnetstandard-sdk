@@ -6,6 +6,8 @@
 using System;
 using System.Diagnostics;
 using System.Security;
+using System.Security.Cryptography;
+using Microsoft.HealthVault.Helpers;
 
 namespace Microsoft.HealthVault.Certificate
 {
@@ -23,7 +25,7 @@ namespace Microsoft.HealthVault.Certificate
 
         #region private variables
 
-        private string distinguishedName = null;
+        private readonly string distinguishedName;
 
         #endregion
 
@@ -40,7 +42,6 @@ namespace Microsoft.HealthVault.Certificate
         {
             Validator.ThrowIfStringNullOrEmpty(distinguishedName, "distinguishedName");
             this.distinguishedName = distinguishedName;
-            return;
         }
 
         /// <summary>
@@ -49,7 +50,7 @@ namespace Microsoft.HealthVault.Certificate
         [SecurityCritical]
         internal CryptoApiBlob GetCryptoApiBlob()
         {
-            byte[] encodedName = GetEncodedName();
+            byte[] encodedName = this.GetEncodedName();
             return new CryptoApiBlob(encodedName);
         }
 
@@ -61,13 +62,14 @@ namespace Microsoft.HealthVault.Certificate
         [SecuritySafeCritical]
         private byte[] GetEncodedName()
         {
-            Debug.Assert(!String.IsNullOrEmpty(distinguishedName));
-            return certificateUtilities.GetEncodedName(distinguishedName);
+            Debug.Assert(!string.IsNullOrEmpty(this.distinguishedName), "Cannot get encoded name without distinguished name");
+            return certificateUtilities.GetEncodedName(this.distinguishedName);
         }
 
         #endregion
 
         #region public properties
+        
         /// <summary>
         /// Gets the distinguished name of the certificate.
         /// </summary>
@@ -75,8 +77,8 @@ namespace Microsoft.HealthVault.Certificate
         {
             get
             {
-                Debug.Assert(!String.IsNullOrEmpty(distinguishedName));
-                return distinguishedName;
+                Debug.Assert(!string.IsNullOrEmpty(this.distinguishedName), "Distinguished name is null or empty");
+                return this.distinguishedName;
             }
         }
         #endregion

@@ -5,6 +5,7 @@
 
 using System.Xml;
 using System.Xml.XPath;
+using Microsoft.HealthVault.Helpers;
 
 namespace Microsoft.HealthVault.ItemTypes
 {
@@ -86,11 +87,11 @@ namespace Microsoft.HealthVault.ItemTypes
             Validator.ThrowIfNavigatorNull(navigator);
 
             // <start-date>
-            _startDate = new ApproximateDateTime();
-            _startDate.ParseXml(navigator.SelectSingleNode("start-date"));
+            this.startDate = new ApproximateDateTime();
+            this.startDate.ParseXml(navigator.SelectSingleNode("start-date"));
 
             // <end-date>
-            _endDate =
+            this.endDate =
                 XPathHelper.GetOptNavValue<ApproximateDateTime>(
                     navigator,
                     "end-date");
@@ -124,17 +125,17 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             Validator.ThrowIfStringNullOrEmpty(nodeName, "nodeName");
             Validator.ThrowIfWriterNull(writer);
-            Validator.ThrowSerializationIfNull(_startDate, "DurationValueStartDateNotSet");
+            Validator.ThrowSerializationIfNull(this.startDate, "DurationValueStartDateNotSet");
 
             // <duration-value>
             writer.WriteStartElement(nodeName);
 
-            _startDate.WriteXml("start-date", writer);
+            this.startDate.WriteXml("start-date", writer);
 
             XmlWriterHelper.WriteOpt(
                 writer,
                 "end-date",
-                _endDate);
+                this.endDate);
 
             // </duration-value>
             writer.WriteEndElement();
@@ -155,14 +156,16 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public ApproximateDateTime StartDate
         {
-            get { return _startDate; }
+            get { return this.startDate; }
+
             set
             {
                 Validator.ThrowIfArgumentNull(value, "StartDate", "DurationValueStartDateMandatory");
-                _startDate = value;
+                this.startDate = value;
             }
         }
-        private ApproximateDateTime _startDate = new ApproximateDateTime();
+
+        private ApproximateDateTime startDate = new ApproximateDateTime();
 
         /// <summary>
         /// Gets or sets the approximate date of the end of the duration.
@@ -179,10 +182,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public ApproximateDateTime EndDate
         {
-            get { return _endDate; }
-            set { _endDate = value; }
+            get { return this.endDate; }
+            set { this.endDate = value; }
         }
-        private ApproximateDateTime _endDate;
+
+        private ApproximateDateTime endDate;
 
         /// <summary>
         /// Gets a string representation of the duration value.
@@ -196,19 +200,20 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             string result = string.Empty;
 
-            if (EndDate != null)
+            if (this.EndDate != null)
             {
                 result =
                     string.Format(
                         ResourceRetriever.GetResourceString(
                             "DateRange"),
-                        StartDate.ToString(),
-                        EndDate.ToString());
+                        this.StartDate.ToString(),
+                        this.EndDate.ToString());
             }
             else
             {
-                result = StartDate.ToString();
+                result = this.StartDate.ToString();
             }
+
             return result;
         }
     }

@@ -10,12 +10,14 @@ using System.IO;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
-using System.Security.Cryptography;
 using System.Threading.Tasks;
 using System.Xml.XPath;
 using Microsoft.HealthVault.Exceptions;
+using Microsoft.HealthVault.Helpers;
+using Microsoft.HealthVault.ItemTypes;
+using Microsoft.HealthVault.Transport;
 
-namespace Microsoft.HealthVault
+namespace Microsoft.HealthVault.Thing
 {
     /// <summary>
     /// A stream for sending and receiving binary data associated with a health record item.
@@ -32,12 +34,14 @@ namespace Microsoft.HealthVault
     ///
     public class BlobStream : Stream
     {
+        private const int DefaultStreamBufferSize = 1 << 20; // 1MB
+
         internal BlobStream(HealthRecordAccessor record, Blob blob)
         {
-            _record = record;
-            _blob = blob;
-            _length = blob.ContentLength;
-            CanWrite = true;
+            this.record = record;
+            this.blob = blob;
+            this.length = blob.ContentLength;
+            this.CanWrite = true;
         }
 
         internal BlobStream(
@@ -45,11 +49,11 @@ namespace Microsoft.HealthVault
             Uri blobReferenceUrl,
             long? length)
         {
-            _blob = blob;
-            _url = blobReferenceUrl;
-            _length = length;
+            this.blob = blob;
+            this.url = blobReferenceUrl;
+            this.length = length;
 
-            CanRead = true;
+            this.CanRead = true;
         }
 
         internal BlobStream(
@@ -57,24 +61,24 @@ namespace Microsoft.HealthVault
             byte[] inlineData,
             long? length)
         {
-            _blob = blob;
-            _inlineData = inlineData;
-            _length = length;
+            this.blob = blob;
+            this.inlineData = inlineData;
+            this.length = length;
 
-            CanRead = true;
+            this.CanRead = true;
         }
 
-        private HealthRecordAccessor _record;
-        private Blob _blob;
-        private byte[] _inlineData;
-        private long? _length;
-        private Uri _url;
+        private readonly HealthRecordAccessor record;
+        private readonly Blob blob;
+        private readonly byte[] inlineData;
+        private long? length;
+        private readonly Uri url;
 
-        private int _currentBufferRequestIndex;
-        private byte[] _chunkBuffer;
+        private int currentBufferRequestIndex;
+        private byte[] chunkBuffer;
 
-        private List<byte[]> _blockHashes = new List<byte[]>();
-        private BlobHasher _blobHasher;
+        private readonly List<byte[]> blockHashes = new List<byte[]>();
+        private BlobHasher blobHasher;
 
         /// <summary>
         /// Gets a value indicating whether the current stream supports reading.
@@ -90,7 +94,7 @@ namespace Microsoft.HealthVault
         /// True if the length of the stream is known, or false otherwise.
         /// </value>
         ///
-        public override bool CanSeek => _length != null;
+        public override bool CanSeek => this.length != null;
 
         /// <summary>
         /// Gets a value that determines whether the current stream can time out.
@@ -105,12 +109,13 @@ namespace Microsoft.HealthVault
         public override bool CanWrite { get; }
 
         /// <summary>
+        /// Finalizes an instance of the <see cref="BlobStream"/> class.
         /// Releases all resources held by the <see cref="BlobStream"/>.
         /// </summary>
         ///
         ~BlobStream()
         {
-            Dispose(false);
+            this.Dispose(false);
         }
 
         /// <summary>
@@ -128,20 +133,22 @@ namespace Microsoft.HealthVault
         /// </exception>
         protected override void Dispose(bool disposing)
         {
-            if (!_disposed && disposing && CanWrite)
+            if (!this.disposed && disposing && this.CanWrite)
             {
                 // if we haven't written anything and we don't have anything to write, throw
                 // an exception...
-                if (!_triedToWrite)
+                if (!this.triedToWrite)
                 {
                     throw Validator.InvalidOperationException("BlobStreamNoData");
                 }
-                SendChunks(true);
+
+                this.SendChunks(true);
             }
-            _disposed = true;
+
+            this.disposed = true;
         }
 
-        private bool _disposed;
+        private bool disposed;
 
         /// <summary>
         /// Releases all resources used by the stream.
@@ -149,7 +156,7 @@ namespace Microsoft.HealthVault
         ///
         public new void Dispose()
         {
-            Dispose(true);
+            this.Dispose(true);
             GC.SuppressFinalize(this);
         }
 
@@ -178,16 +185,17 @@ namespace Microsoft.HealthVault
         {
             get
             {
-                if (!CanSeek)
+                if (!this.CanSeek)
                 {
                     throw new NotSupportedException();
                 }
 
-                if (_length == null)
+                if (this.length == null)
                 {
                     throw Validator.NotSupportedException("BlobStreamLengthNotSupported");
                 }
-                return _length.Value;
+
+                return this.length.Value;
             }
         }
 
@@ -207,14 +215,16 @@ namespace Microsoft.HealthVault
         {
             get
             {
-                return _position;
+                return this.position;
             }
+
             set
             {
-                Seek(value, SeekOrigin.Begin);
+                this.Seek(value, SeekOrigin.Begin);
             }
         }
-        private long _position;
+
+        private long position;
 
         /// <summary>
         /// Reads a sequence of bytes from the current stream and advances the position within the
@@ -269,7 +279,7 @@ namespace Microsoft.HealthVault
         ///
         public override int Read(byte[] buffer, int offset, int count)
         {
-            if (!CanRead)
+            if (!this.CanRead)
             {
                 throw new NotSupportedException();
             }
@@ -289,7 +299,7 @@ namespace Microsoft.HealthVault
                 throw new ArgumentOutOfRangeException(nameof(count));
             }
 
-            if (_disposed)
+            if (this.disposed)
             {
                 throw new ObjectDisposedException("BlobStream");
             }
@@ -300,13 +310,13 @@ namespace Microsoft.HealthVault
                 "BlobStreamBufferLengthTooSmall");
 
             int result = 0;
-            if (_inlineData != null)
+            if (this.inlineData != null)
             {
-                result = ReadInlineData(buffer, offset, count);
+                result = this.ReadInlineData(buffer, offset, count);
             }
-            else if (_url != null)
+            else if (this.url != null)
             {
-                result = ReadStreamedData(buffer, offset, count);
+                result = this.ReadStreamedData(buffer, offset, count);
             }
 
             return result;
@@ -318,7 +328,7 @@ namespace Microsoft.HealthVault
         /// </summary>
         ///
         /// <returns>
-        /// The unsigned byte cast to an <see cref="Int32"/>, or -1 if at the end of the stream.
+        /// The unsigned byte cast to an <see cref="int"/>, or -1 if at the end of the stream.
         /// </returns>
         ///
         /// <exception cref="NotSupportedException">
@@ -335,12 +345,12 @@ namespace Microsoft.HealthVault
         ///
         public override int ReadByte()
         {
-            if (!CanRead)
+            if (!this.CanRead)
             {
                 throw new NotSupportedException();
             }
 
-            if (_disposed)
+            if (this.disposed)
             {
                 throw new ObjectDisposedException("BlobStream");
             }
@@ -348,51 +358,51 @@ namespace Microsoft.HealthVault
             int result = -1;
 
             // Check to see if there is still something in the buffer
-            if (_bufferList.Count > 0)
+            if (this.bufferList.Count > 0)
             {
-                BufferRequest buffer = _bufferList[0];
+                BufferRequest buffer = this.bufferList[0];
                 result = buffer.Buffer[buffer.Offset];
                 buffer.Count--;
                 buffer.Offset++;
 
                 if (buffer.Count == 0)
                 {
-                    _bufferList.RemoveAt(0);
+                    this.bufferList.RemoveAt(0);
                 }
             }
             else
             {
                 // Get a new chunk
 
-                int bufferSize = (int)(_length ?? _defaultStreamBufferSize);
+                int bufferSize = (int)(this.length ?? DefaultStreamBufferSize);
                 byte[] newBuffer = new byte[bufferSize];
-                int count = Read(newBuffer, 0, bufferSize);
+                int count = this.Read(newBuffer, 0, bufferSize);
 
                 if (count > 0)
                 {
                     result = newBuffer[0];
 
                     // Note, this makes a copy of the buffer.
-                    _bufferList.Add(
+                    this.bufferList.Add(
                         new BufferRequest(newBuffer, 1, count - 1));
                 }
             }
+
             return result;
         }
-
-        private const int _defaultStreamBufferSize = 1 << 20; // 1MB
 
         #region Read helpers
 
         private int ReadInlineData(byte[] buffer, int offset, int count)
         {
             int bytesToRead = count;
-            if (_length != null)
+            if (this.length != null)
             {
-                bytesToRead = (int)Math.Min(_length.Value - _position, count);
+                bytesToRead = (int)Math.Min(this.length.Value - this.position, count);
             }
-            Array.Copy(_inlineData, (int)_position, buffer, offset, bytesToRead);
-            _position += bytesToRead;
+
+            Array.Copy(this.inlineData, (int)this.position, buffer, offset, bytesToRead);
+            this.position += bytesToRead;
             return bytesToRead;
         }
 
@@ -400,7 +410,7 @@ namespace Microsoft.HealthVault
         {
             int totalBytesRead = 0;
 
-            HttpResponseMessage request = ExecuteGetRequest(_position, count);
+            HttpResponseMessage request = this.ExecuteGetRequest(this.position, count);
             if (request.IsSuccessStatusCode)
             {
                 HttpContent responseStream = request.Content;
@@ -433,10 +443,11 @@ namespace Microsoft.HealthVault
         ///
         public override int ReadTimeout
         {
-            get { return _readTimeout; }
-            set { _readTimeout = value; }
+            get { return this.readTimeout; }
+            set { this.readTimeout = value; }
         }
-        private int _readTimeout;
+
+        private int readTimeout;
 
         /// <summary>
         /// Sets the position within the current stream.
@@ -467,12 +478,12 @@ namespace Microsoft.HealthVault
         ///
         public override long Seek(long offset, SeekOrigin origin)
         {
-            if (!CanSeek)
+            if (!this.CanSeek)
             {
                 throw new NotSupportedException();
             }
 
-            long newPosition = _position;
+            long newPosition = this.position;
             switch (origin)
             {
                 case SeekOrigin.Begin:
@@ -480,15 +491,16 @@ namespace Microsoft.HealthVault
                     break;
 
                 case SeekOrigin.Current:
-                    newPosition = _position + offset;
+                    newPosition = this.position + offset;
                     break;
 
                 case SeekOrigin.End:
-                    if (_length == null)
+                    if (this.length == null)
                     {
                         throw Validator.NotSupportedException("BlobStreamSeekFromEndNullLength");
                     }
-                    newPosition = (_length.Value - 1) + offset;
+
+                    newPosition = (this.length.Value - 1) + offset;
                     break;
             }
 
@@ -497,20 +509,19 @@ namespace Microsoft.HealthVault
                 throw Validator.IOException("BlobStreamPositionIsNegative");
             }
 
-            if (_length != null && newPosition > _length - 1)
+            if (this.length != null && newPosition > this.length - 1)
             {
                 throw Validator.IOException("BlobStreamPositionPastEnd");
             }
-            _position = newPosition;
 
-            return _position;
+            this.position = newPosition;
+
+            return this.position;
         }
 
         /// <summary>
         /// Not supported.
         /// </summary>
-        ///
-        /// <exception cref="NotSupportedException"/>
         ///
         public override void SetLength(long value)
         {
@@ -562,7 +573,7 @@ namespace Microsoft.HealthVault
         ///
         public override void Write(byte[] buffer, int offset, int count)
         {
-            if (!CanWrite)
+            if (!this.CanWrite)
             {
                 throw new NotSupportedException();
             }
@@ -582,12 +593,12 @@ namespace Microsoft.HealthVault
                 throw new ArgumentOutOfRangeException(nameof(count));
             }
 
-            if (_disposed)
+            if (this.disposed)
             {
                 throw new ObjectDisposedException("BlobStream");
             }
 
-            if (_record == null)
+            if (this.record == null)
             {
                 throw new NotSupportedException("Currently blobs for records are only supported");
             }
@@ -597,36 +608,36 @@ namespace Microsoft.HealthVault
                 "buffer",
                 "BlobStreamBufferLengthTooSmall");
 
-            _triedToWrite = true;
+            this.triedToWrite = true;
 
-            EnsureBeginPutBlob();
-            AugmentBufferList(new BufferRequest(buffer, offset, count));
-            SendChunks(false);
+            this.EnsureBeginPutBlob();
+            this.AugmentBufferList(new BufferRequest(buffer, offset, count));
+            this.SendChunks(false);
         }
 
         private void AugmentBufferList(BufferRequest buffer)
         {
-            _bufferList.Add(buffer);
-            _bytesInBuffer += buffer.Count;
+            this.bufferList.Add(buffer);
+            this.bytesInBuffer += buffer.Count;
         }
 
-        private void SendChunks(Boolean sendPartialChunk)
+        private void SendChunks(bool sendPartialChunk)
         {
-            if (_bytesInBuffer > 0)
+            if (this.bytesInBuffer > 0)
             {
-                EnsureBeginPutBlob();
-                while (_bytesInBuffer >= _blobPutParameters.ChunkSize)
+                this.EnsureBeginPutBlob();
+                while (this.bytesInBuffer >= this.blobPutParameters.ChunkSize)
                 {
-                    WriteChunk(_blobPutParameters.ChunkSize, false);
+                    this.WriteChunk(this.blobPutParameters.ChunkSize, false);
                 }
             }
 
             if (sendPartialChunk)
             {
-                EnsureBeginPutBlob();
+                this.EnsureBeginPutBlob();
 
-                WriteChunk(_bytesInBuffer, true);
-                CalculateBlobHash();
+                this.WriteChunk(this.bytesInBuffer, true);
+                this.CalculateBlobHash();
             }
         }
 
@@ -640,20 +651,21 @@ namespace Microsoft.HealthVault
                 int writeBufferOffset = 0;
                 while (writeBufferOffset < chunkSizeToWrite)
                 {
-                    BufferRequest curRequestBuffer = _bufferList[_currentBufferRequestIndex];
+                    BufferRequest curRequestBuffer = this.bufferList[this.currentBufferRequestIndex];
+                    
                     // Get the number of bytes in the current request buffer up to a chunk.
                     int numBytesToCopy = Math.Min(curRequestBuffer.Count, chunkSizeToWrite);
 
                     // Ensure we don't write past the end of the chunk buffer.
                     numBytesToCopy = Math.Min(
                         numBytesToCopy,
-                        _chunkBuffer.Length - writeBufferOffset);
+                        this.chunkBuffer.Length - writeBufferOffset);
 
                     // Copy the bytes to be sent over in to the chunk buffer;
                     Array.Copy(
                         curRequestBuffer.Buffer,
                         curRequestBuffer.Offset,
-                        _chunkBuffer,
+                        this.chunkBuffer,
                         writeBufferOffset,
                         numBytesToCopy);
 
@@ -663,37 +675,38 @@ namespace Microsoft.HealthVault
 
                     if (curRequestBuffer.Count < 1)
                     {
-                        _currentBufferRequestIndex++;
+                        this.currentBufferRequestIndex++;
                     }
                 }
 
-                if (_currentBufferRequestIndex > 0)
+                if (this.currentBufferRequestIndex > 0)
                 {
-                    _bufferList.RemoveRange(0, _currentBufferRequestIndex);
-                    _currentBufferRequestIndex = 0;
+                    this.bufferList.RemoveRange(0, this.currentBufferRequestIndex);
+                    this.currentBufferRequestIndex = 0;
                 }
 
                 IList<byte[]> blockHashes =
-                    _blobHasher.CalculateBlockHashes(_chunkBuffer, 0, chunkSizeToWrite);
+                    this.blobHasher.CalculateBlockHashes(this.chunkBuffer, 0, chunkSizeToWrite);
 
-                _blockHashes.AddRange(blockHashes);
+                this.blockHashes.AddRange(blockHashes);
 
                 bytesInWebRequest = chunkSizeToWrite;
-                start = _position;
-                webRequestBuffer = _chunkBuffer;
+                start = this.position;
+                webRequestBuffer = this.chunkBuffer;
             }
 
             if (webRequestBuffer != null)
             {
-                HttpResponseMessage request = ExecutePutRequest(start, bytesInWebRequest, uploadComplete, webRequestBuffer);
+                HttpResponseMessage request = this.ExecutePutRequest(start, bytesInWebRequest, uploadComplete, webRequestBuffer);
                 if (!request.IsSuccessStatusCode)
                 {
                     this.ThrowRequestFailedException(request);
                 }
-                _bytesInBuffer -= chunkSizeToWrite;
 
+                this.bytesInBuffer -= chunkSizeToWrite;
             }
-            _position += chunkSizeToWrite;
+
+            this.position += chunkSizeToWrite;
         }
 
         private void ThrowRequestFailedException(HttpResponseMessage request)
@@ -708,25 +721,25 @@ namespace Microsoft.HealthVault
             }
         }
 
-        private List<BufferRequest> _bufferList = new List<BufferRequest>();
-        private int _bytesInBuffer;
+        private List<BufferRequest> bufferList = new List<BufferRequest>();
+        private int bytesInBuffer;
 
-        private bool _triedToWrite;
+        private bool triedToWrite;
 
         private class BufferRequest
         {
             internal BufferRequest(byte[] buffer, int offset, int count)
             {
-                Buffer = new byte[count];
-                Array.Copy(buffer, offset, Buffer, 0, count);
-                Count = count;
+                this.Buffer = new byte[count];
+                Array.Copy(buffer, offset, this.Buffer, 0, count);
+                this.Count = count;
             }
 
             internal BufferRequest(byte buffer)
             {
-                Buffer = new byte[1];
-                Buffer[0] = buffer;
-                Count = 1;
+                this.Buffer = new byte[1];
+                this.Buffer[0] = buffer;
+                this.Count = 1;
             }
 
             internal byte[] Buffer { get; }
@@ -759,18 +772,18 @@ namespace Microsoft.HealthVault
         ///
         public override void WriteByte(byte value)
         {
-            if (!CanWrite)
+            if (!this.CanWrite)
             {
                 throw new NotSupportedException();
             }
 
-            if (_disposed)
+            if (this.disposed)
             {
                 throw new ObjectDisposedException("BlobStream");
             }
 
-            AugmentBufferList(new BufferRequest(value));
-            SendChunks(false);
+            this.AugmentBufferList(new BufferRequest(value));
+            this.SendChunks(false);
         }
 
         /// <summary>
@@ -783,25 +796,27 @@ namespace Microsoft.HealthVault
         ///
         public override int WriteTimeout
         {
-            get { return _writeTimeout; }
-            set { _writeTimeout = value; }
+            get { return this.writeTimeout; }
+            set { this.writeTimeout = value; }
         }
-        private int _writeTimeout;
+
+        private int writeTimeout;
 
         #region Helpers
 
         private HttpResponseMessage ExecuteGetRequest(long position, int count)
         {
             HttpMessageHandler handler = new HttpClientHandler();
-            HttpRequestMessage message = new HttpRequestMessage(HttpMethod.Get, _blobPutParameters.Url);
+            HttpRequestMessage message = new HttpRequestMessage(HttpMethod.Get, this.blobPutParameters.Url);
             HttpClient request = new HttpClient(handler);
 
             message.Headers.Range = new RangeHeaderValue((int)position, (int)position + count);
 
-            if (_readTimeout > 0)
+            if (this.readTimeout > 0)
             {
-                request.Timeout = new TimeSpan(_writeTimeout);
+                request.Timeout = new TimeSpan(this.writeTimeout);
             }
+
             return request.SendAsync(message).Result;
         }
 
@@ -812,14 +827,14 @@ namespace Microsoft.HealthVault
             byte[] webRequestBuffer)
         {
             HttpMessageHandler handler = new HttpClientHandler();
-            HttpRequestMessage message = new HttpRequestMessage(HttpMethod.Post, _blobPutParameters.Url);
+            HttpRequestMessage message = new HttpRequestMessage(HttpMethod.Post, this.blobPutParameters.Url);
             HttpClient request = new HttpClient(handler);
 
             message.Headers.TransferEncodingChunked = true;
 
-            if (_writeTimeout > 0)
+            if (this.writeTimeout > 0)
             {
-                request.Timeout = new TimeSpan(_writeTimeout);
+                request.Timeout = new TimeSpan(this.writeTimeout);
             }
 
             message.Content = new ByteArrayContent(webRequestBuffer);
@@ -845,19 +860,19 @@ namespace Microsoft.HealthVault
 
         private void EnsureBeginPutBlob()
         {
-            if (_blobPutParameters == null)
+            if (this.blobPutParameters == null)
             {
-                _blobPutParameters = BeginPutBlobAsync().Result;
+                this.blobPutParameters = this.BeginPutBlobAsync().Result;
 
-                _blob.Url = _blobPutParameters.Url;
-                _chunkBuffer = new byte[_blobPutParameters.ChunkSize];
-                _blobHasher = new BlobHasher(
-                    _blobPutParameters.BlobHashAlgorithm,
-                    _blobPutParameters.HashBlockSize);
+                this.blob.Url = this.blobPutParameters.Url;
+                this.chunkBuffer = new byte[this.blobPutParameters.ChunkSize];
+                this.blobHasher = new BlobHasher(
+                    this.blobPutParameters.BlobHashAlgorithm,
+                    this.blobPutParameters.HashBlockSize);
             }
         }
 
-        private BlobPutParameters _blobPutParameters;
+        private BlobPutParameters blobPutParameters;
 
         /// <summary>
         /// Calls the BeginPutBlob HealthVault method.
@@ -874,7 +889,7 @@ namespace Microsoft.HealthVault
         private async Task<BlobPutParameters> BeginPutBlobAsync()
         {
             HealthServiceRequest request =
-                new HealthServiceRequest(_record.Connection, "BeginPutBlob", 1, _record);
+                new HealthServiceRequest(this.record.Connection, "BeginPutBlob", 1, this.record);
             HealthServiceResponseData responseData = await request.ExecuteAsync().ConfigureAwait(false);
 
             XPathExpression infoPath =
@@ -888,7 +903,7 @@ namespace Microsoft.HealthVault
             Uri blobReferenceUrl = new Uri(infoNav.SelectSingleNode("blob-ref-url").Value);
             int chunkSize = infoNav.SelectSingleNode("blob-chunk-size").ValueAsInt;
             long maxBlobSize = infoNav.SelectSingleNode("max-blob-size").ValueAsLong;
-            String blobHashAlgString = infoNav.SelectSingleNode("blob-hash-algorithm").Value;
+            string blobHashAlgString = infoNav.SelectSingleNode("blob-hash-algorithm").Value;
             BlobHashAlgorithm blobHashAlg;
             try
             {
@@ -918,11 +933,11 @@ namespace Microsoft.HealthVault
 
         private void CalculateBlobHash()
         {
-            Byte[] blobHash = _blobHasher.CalculateBlobHash(_blockHashes);
+            byte[] blobHash = this.blobHasher.CalculateBlobHash(this.blockHashes);
 
-            _blob.HashInfo = new BlobHashInfo(
-                _blobHasher.BlobHashAlgorithm,
-                _blobHasher.BlockSize,
+            this.blob.HashInfo = new BlobHashInfo(
+                this.blobHasher.BlobHashAlgorithm,
+                this.blobHasher.BlockSize,
                 blobHash);
         }
 

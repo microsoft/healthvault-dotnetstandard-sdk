@@ -3,7 +3,7 @@
 // see http://www.microsoft.com/resources/sharedsource/licensingbasics/sharedsourcelicenses.mspx.
 // All other rights reserved.
 
-namespace Microsoft.HealthVault
+namespace Microsoft.HealthVault.Thing
 {
     /// <summary>
     /// Defines the interface for interacting with sets of health record items
@@ -27,14 +27,10 @@ namespace Microsoft.HealthVault
     {
         internal AuthorizationSetDefinition(SetType setType)
         {
-            _setType = setType;
+            this.SetType = setType;
         }
 
-        internal SetType SetType
-        {
-            get { return _setType; }
-        }
-        private SetType _setType;
+        internal SetType SetType { get; }
 
         /// <summary>
         /// Retrieves the XML representation of the set. This method is abstract.
@@ -66,7 +62,7 @@ namespace Microsoft.HealthVault
         ///
         public override string ToString()
         {
-            return GetXml();
+            return this.GetXml();
         }
     }
 }

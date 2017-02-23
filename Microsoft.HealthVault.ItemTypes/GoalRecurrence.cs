@@ -3,12 +3,13 @@
 // see http://www.microsoft.com/resources/sharedsource/licensingbasics/sharedsourcelicenses.mspx.
 // All other rights reserved.
 
-using Microsoft.HealthVault.Exceptions;
 using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Xml;
 using System.Xml.XPath;
+using Microsoft.HealthVault.Exceptions;
+using Microsoft.HealthVault.Helpers;
 
 namespace Microsoft.HealthVault.ItemTypes
 {
@@ -46,8 +47,8 @@ namespace Microsoft.HealthVault.ItemTypes
             CodableValue interval,
             int timesInInterval)
         {
-            Interval = interval;
-            TimesInInterval = timesInInterval;
+            this.Interval = interval;
+            this.TimesInInterval = timesInInterval;
         }
 
         /// <summary>
@@ -72,11 +73,11 @@ namespace Microsoft.HealthVault.ItemTypes
                         "errors", "ParseXmlNavNull"));
             }
 
-            _interval = new CodableValue();
-            _interval.ParseXml(navigator.SelectSingleNode("interval"));
+            this.interval = new CodableValue();
+            this.interval.ParseXml(navigator.SelectSingleNode("interval"));
             int? timesInInterval = XPathHelper.GetOptNavValueAsInt(navigator, "times-in-interval");
             Validator.ThrowInvalidIfNull(timesInInterval, "timesInInterval");
-            _timesInInterval = timesInInterval.Value;
+            this.timesInInterval = timesInInterval.Value;
         }
 
         /// <summary>
@@ -123,7 +124,7 @@ namespace Microsoft.HealthVault.ItemTypes
                         "errors", "WriteXmlNullWriter"));
             }
 
-            if (_interval == null)
+            if (this.interval == null)
             {
                 throw new HealthRecordItemSerializationException(
                     ResourceRetriever.GetResourceString(
@@ -132,8 +133,8 @@ namespace Microsoft.HealthVault.ItemTypes
 
             writer.WriteStartElement(nodeName);
 
-            _interval.WriteXml("interval", writer);
-            XmlWriterHelper.WriteOptInt(writer, "times-in-interval", _timesInInterval);
+            this.interval.WriteXml("interval", writer);
+            XmlWriterHelper.WriteOptInt(writer, "times-in-interval", this.timesInInterval);
             writer.WriteEndElement();
         }
 
@@ -154,7 +155,7 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             get
             {
-                return _interval;
+                return this.interval;
             }
 
             set
@@ -166,11 +167,11 @@ namespace Microsoft.HealthVault.ItemTypes
                         ResourceRetriever.GetResourceString("errors", "GoalRecurrenceIntervalNullValue"));
                 }
 
-                _interval = value;
+                this.interval = value;
             }
         }
 
-        private CodableValue _interval;
+        private CodableValue interval;
 
         /// <summary>
         /// Gets or sets specifies the number of times the goal's target is intended to be achieved during the interval.
@@ -184,16 +185,16 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             get
             {
-                return _timesInInterval;
+                return this.timesInInterval;
             }
 
             set
             {
-                _timesInInterval = value;
+                this.timesInInterval = value;
             }
         }
 
-        private int _timesInInterval;
+        private int timesInInterval;
 
         /// <summary>
         /// Gets a string representation of the GoalRecurrence.
@@ -208,8 +209,8 @@ namespace Microsoft.HealthVault.ItemTypes
             return string.Format(
                         CultureInfo.CurrentUICulture,
                         ResourceRetriever.GetResourceString("GoalRecurrenceFormat"),
-                        TimesInInterval.ToString(CultureInfo.CurrentCulture),
-                        Interval.Text);
+                        this.TimesInInterval.ToString(CultureInfo.CurrentCulture),
+                        this.Interval.Text);
         }
     }
 }

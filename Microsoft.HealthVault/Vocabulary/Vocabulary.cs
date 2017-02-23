@@ -7,10 +7,12 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Xml;
+using System.Xml.Schema;
 using System.Xml.Serialization;
 using System.Xml.XPath;
+using Microsoft.HealthVault.Helpers;
 
-namespace Microsoft.HealthVault
+namespace Microsoft.HealthVault.Vocabulary
 {
     /// <summary>
     /// Vocabulary list
@@ -31,7 +33,7 @@ namespace Microsoft.HealthVault
         public Vocabulary(string name)
             : this()
         {
-            _name = name;
+            this.Name = name;
         }
 
         /// <summary>
@@ -44,9 +46,9 @@ namespace Microsoft.HealthVault
         public Vocabulary(string name, string family, string version)
             : this()
         {
-            _name = name;
-            _family = family;
-            _version = version;
+            this.Name = name;
+            this.Family = family;
+            this.Version = version;
         }
 
         /// <summary>
@@ -54,12 +56,7 @@ namespace Microsoft.HealthVault
         /// vocabulary items are represented.
         /// </summary>
         ///
-        public CultureInfo Culture
-        {
-            get { return _culture; }
-            set { _culture = value; }
-        }
-        private CultureInfo _culture;
+        public CultureInfo Culture { get; set; }
 
         /// <summary>
         /// Gets the name of the <see cref="Vocabulary"/>.
@@ -69,11 +66,7 @@ namespace Microsoft.HealthVault
         /// A string representing the <see cref="Vocabulary"/> name.
         /// </value>
         ///
-        public string Name
-        {
-            get { return _name; }
-        }
-        private string _name;
+        public string Name { get; private set; }
 
         /// <summary>
         /// Gets the family of the vocabulary.
@@ -90,11 +83,7 @@ namespace Microsoft.HealthVault
         /// internal standards such as HealthVault Vocabulary.
         /// </remarks>
         ///
-        public string Family
-        {
-            get { return _family; }
-        }
-        private string _family;
+        public string Family { get; private set; }
 
         /// <summary>
         /// Gets the version of the <see cref="Vocabulary"/>.
@@ -104,11 +93,7 @@ namespace Microsoft.HealthVault
         /// A string representing the <see cref="Vocabulary"/> version.
         /// </value>
         ///
-        public string Version
-        {
-            get { return _version; }
-        }
-        private string _version;
+        public string Version { get; private set; }
 
         /// <summary>
         /// Gets if the vocabulary contains none empty member.
@@ -119,17 +104,19 @@ namespace Microsoft.HealthVault
             {
                 foreach (KeyValuePair<string, VocabularyItem> kvp in this)
                 {
-                    if ((!String.IsNullOrEmpty(kvp.Value.AbbreviationText))
-                        || (!String.IsNullOrEmpty(kvp.Value.DisplayText)))
+                    if ((!string.IsNullOrEmpty(kvp.Value.AbbreviationText))
+                        || (!string.IsNullOrEmpty(kvp.Value.DisplayText)))
                     {
-                        _isNotEmpty = true;
+                        this.isNotEmpty = true;
                         break;
                     }
                 }
-                return _isNotEmpty;
+
+                return this.isNotEmpty;
             }
         }
-        private bool _isNotEmpty;
+
+        private bool isNotEmpty;
 
         /// <summary>
         /// Gets if the set vocabulary items in the <see cref="Vocabulary"/> has been truncated i.e.
@@ -137,10 +124,7 @@ namespace Microsoft.HealthVault
         /// </summary>
         ///
         [Obsolete("Use Vocabulary.IsTruncated instead.")]
-        public bool IsTruncted
-        {
-            get { return _isTruncated; }
-        }
+        public bool IsTruncted { get; private set; }
 
         /// <summary>
         /// Gets if the set vocabulary items in the <see cref="Vocabulary"/> has been truncated i.e.
@@ -149,10 +133,9 @@ namespace Microsoft.HealthVault
         ///
         public bool IsTruncated
         {
-            get { return _isTruncated; }
-            set { _isTruncated = value; }
+            get { return this.IsTruncted; }
+            set { this.IsTruncted = value; }
         }
-        private bool _isTruncated;
 
         /// <summary>
         /// Adds a vocabulary item to the vocabulary.
@@ -161,22 +144,22 @@ namespace Microsoft.HealthVault
         public void Add(VocabularyItem item)
         {
             item.Vocabulary = this;
-            base.Add(item.Value, item);
+            this.Add(item.Value, item);
         }
 
         internal virtual void AddVocabularyItem(string key, VocabularyItem item)
         {
             item.Vocabulary = this;
-            base.Add(key, item);
+            this.Add(key, item);
         }
 
         internal void PopulateFromXml(
             XPathNavigator vocabularyNav)
         {
-            _name = vocabularyNav.SelectSingleNode("name").Value;
-            _family = vocabularyNav.SelectSingleNode("family").Value;
-            _version = vocabularyNav.SelectSingleNode("version").Value;
-            _culture = new CultureInfo(vocabularyNav.XmlLang);
+            this.Name = vocabularyNav.SelectSingleNode("name").Value;
+            this.Family = vocabularyNav.SelectSingleNode("family").Value;
+            this.Version = vocabularyNav.SelectSingleNode("version").Value;
+            this.Culture = new CultureInfo(vocabularyNav.XmlLang);
 
             XPathNodeIterator vocabularyItemsNav = vocabularyNav.Select("code-item");
 
@@ -191,14 +174,14 @@ namespace Microsoft.HealthVault
                 VocabularyItem code = new VocabularyItem();
                 code.Vocabulary = this;
                 code.ParseXml(vocabularyItemNav);
-                AddVocabularyItem(code.Value, code);
+                this.AddVocabularyItem(code.Value, code);
             }
 
             XPathNavigator isTruncatedNav = vocabularyNav.SelectSingleNode("is-vocab-truncated");
-            _isTruncated = isTruncatedNav != null ? isTruncatedNav.ValueAsBoolean : false;
+            this.IsTruncted = isTruncatedNav != null ? isTruncatedNav.ValueAsBoolean : false;
         }
 
-        private static XPathExpression _infoPath = XPathExpression.Compile("/wc:info");
+        private static XPathExpression infoPath = XPathExpression.Compile("/wc:info");
 
         internal static XPathExpression GetInfoXPathExpression(
             string methodNSSuffix, XPathNavigator infoNav)
@@ -211,9 +194,9 @@ namespace Microsoft.HealthVault
                 "urn:com.microsoft.wc.methods.response." + methodNSSuffix);
 
             XPathExpression infoPathClone = null;
-            lock (_infoPath)
+            lock (infoPath)
             {
-                infoPathClone = _infoPath.Clone();
+                infoPathClone = infoPath.Clone();
             }
 
             infoPathClone.SetContext(infoXmlNamespaceManager);
@@ -227,7 +210,7 @@ namespace Microsoft.HealthVault
         /// GetSchema method for serialization
         /// </summary>
         /// <returns>Schema</returns>
-        public System.Xml.Schema.XmlSchema GetSchema()
+        public XmlSchema GetSchema()
         {
             return null;
         }
@@ -243,10 +226,10 @@ namespace Microsoft.HealthVault
 
             XPathNavigator vocabularyNode = navigator.SelectSingleNode("Vocabulary");
 
-            _name = vocabularyNode.SelectSingleNode("name").Value;
+            this.Name = vocabularyNode.SelectSingleNode("name").Value;
 
-            _family = XPathHelper.GetOptNavValue(vocabularyNode, "family");
-            _version = XPathHelper.GetOptNavValue(vocabularyNode, "version");
+            this.Family = XPathHelper.GetOptNavValue(vocabularyNode, "family");
+            this.Version = XPathHelper.GetOptNavValue(vocabularyNode, "version");
 
             XPathNavigator itemsNode = vocabularyNode.SelectSingleNode("items");
             if (itemsNode != null)
@@ -255,7 +238,7 @@ namespace Microsoft.HealthVault
                 {
                     VocabularyItem vocabItem = new VocabularyItem();
                     vocabItem.ParseXml(itemNode);
-                    Add(vocabItem);
+                    this.Add(vocabItem);
                 }
             }
         }
@@ -269,17 +252,17 @@ namespace Microsoft.HealthVault
             Validator.ThrowIfWriterNull(writer);
 
             Validator.ThrowInvalidIf(
-                String.IsNullOrEmpty(_name),
+                string.IsNullOrEmpty(this.Name),
                 "VocabularyNameNullOrEmpty");
 
             writer.WriteElementString("vocabulary-format-version", "1");
 
-            writer.WriteElementString("name", _name);
+            writer.WriteElementString("name", this.Name);
 
-            XmlWriterHelper.WriteOptString(writer, "family", _family);
-            XmlWriterHelper.WriteOptString(writer, "version", _version);
+            XmlWriterHelper.WriteOptString(writer, "family", this.Family);
+            XmlWriterHelper.WriteOptString(writer, "version", this.Version);
 
-            if (Count == 0)
+            if (this.Count == 0)
             {
                 return;
             }
@@ -291,6 +274,7 @@ namespace Microsoft.HealthVault
                     item.Value.WriteXmlInternal("item", writer);
                 }
             }
+
             writer.WriteEndElement();
         }
 

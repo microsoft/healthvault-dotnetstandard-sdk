@@ -9,6 +9,7 @@ using System.Security.Permissions;
 using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
+using Microsoft.HealthVault.Helpers;
 
 namespace Microsoft.HealthVault.Web
 {

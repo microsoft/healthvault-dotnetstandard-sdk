@@ -4,9 +4,11 @@
 // All other rights reserved.
 
 using System;
-using System.Diagnostics.CodeAnalysis;
 using System.Xml;
 using System.Xml.XPath;
+using Microsoft.HealthVault.Exceptions;
+using Microsoft.HealthVault.Helpers;
+using Microsoft.HealthVault.Thing;
 
 namespace Microsoft.HealthVault.ItemTypes
 {
@@ -49,14 +51,14 @@ namespace Microsoft.HealthVault.ItemTypes
         public Status(CodableValue statusType)
             : base(TypeId)
         {
-            StatusType = statusType;
+            this.StatusType = statusType;
         }
 
         /// <summary>
         /// Retrieves the unique identifier for the item type.
         /// </summary>
         ///
-        public new static readonly Guid TypeId =
+        public static new readonly Guid TypeId =
             new Guid("d33a32b2-00de-43b8-9f2a-c4c7e9f580ec");
 
         /// <summary>
@@ -79,10 +81,10 @@ namespace Microsoft.HealthVault.ItemTypes
 
             Validator.ThrowInvalidIfNull(itemNav, "StatusUnexpectedNode");
 
-            _statusType = new CodableValue();
-            _statusType.ParseXml(itemNav.SelectSingleNode("status-type"));
+            this.statusType = new CodableValue();
+            this.statusType.ParseXml(itemNav.SelectSingleNode("status-type"));
 
-            _text =
+            this.text =
                 XPathHelper.GetOptNavValue(itemNav, "text");
         }
 
@@ -105,17 +107,17 @@ namespace Microsoft.HealthVault.ItemTypes
         public override void WriteXml(XmlWriter writer)
         {
             Validator.ThrowIfWriterNull(writer);
-            Validator.ThrowSerializationIfNull(_statusType, "StatusTypeNotSet");
-            Validator.ThrowSerializationIfNull(_statusType.Text, "CodableValueNullText");
+            Validator.ThrowSerializationIfNull(this.statusType, "StatusTypeNotSet");
+            Validator.ThrowSerializationIfNull(this.statusType.Text, "CodableValueNullText");
 
             writer.WriteStartElement("status");
 
-            _statusType.WriteXml("status-type", writer);
+            this.statusType.WriteXml("status-type", writer);
 
             XmlWriterHelper.WriteOptString(
                 writer,
                 "text",
-                _text);
+                this.text);
 
             writer.WriteEndElement();
         }
@@ -128,18 +130,18 @@ namespace Microsoft.HealthVault.ItemTypes
         /// If <paramref name="value"/> is <b>null</b> on set.
         /// </exception>
         ///
-        // FXCop thinks that CodableValue is a collection, so it throws this error.
-        [SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public CodableValue StatusType
         {
-            get { return _statusType; }
+            get { return this.statusType; }
+
             set
             {
                 Validator.ThrowIfArgumentNull(value, "StatusType", "StatusTypeMandatory");
-                _statusType = value;
+                this.statusType = value;
             }
         }
-        private CodableValue _statusType = new CodableValue();
+
+        private CodableValue statusType = new CodableValue();
 
         /// <summary>
         /// Gets or sets additional information about the status.
@@ -147,14 +149,16 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public string Text
         {
-            get { return _text; }
+            get { return this.text; }
+
             set
             {
                 Validator.ThrowIfStringIsEmptyOrWhitespace(value, "Text");
-                _text = value;
+                this.text = value;
             }
         }
-        private string _text;
+
+        private string text;
 
         /// <summary>
         /// Gets a string representation of the status instance.
@@ -166,13 +170,13 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public override string ToString()
         {
-            string value = _statusType.Text;
+            string value = this.statusType.Text;
 
-            if (_text != null)
+            if (this.text != null)
             {
                 value +=
                    ResourceRetriever.GetResourceString("ListSeparator") +
-                   _text;
+                   this.text;
             }
 
             return value;

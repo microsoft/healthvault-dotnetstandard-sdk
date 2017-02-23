@@ -3,8 +3,6 @@
 // see http://www.microsoft.com/resources/sharedsource/licensingbasics/sharedsourcelicenses.mspx.
 // All other rights reserved.
 
-using Microsoft.HealthVault.Authentication;
-using Microsoft.HealthVault.Rest;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -16,8 +14,12 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.XPath;
+using Microsoft.HealthVault.Application;
+using Microsoft.HealthVault.Connection;
+using Microsoft.HealthVault.Helpers;
+using Microsoft.HealthVault.Rest;
 
-namespace Microsoft.HealthVault.Web.Authentication
+namespace Microsoft.HealthVault.Authentication
 {
     /// <summary>
     /// Enables web applications to authenticate themselves,
@@ -47,33 +49,18 @@ namespace Microsoft.HealthVault.Web.Authentication
     {
         #region properties
 
-        internal string DigestMethod
-        {
-            get { return _digestMethod; }
-            set { _digestMethod = value; }
-        }
+        internal string DigestMethod { get; set; }
 
-        private string _digestMethod;
-
-        internal string SignMethod
-        {
-            get { return _signMethod; }
-            set { _signMethod = value; }
-        }
-
-        private string _signMethod;
+        internal string SignMethod { get; set; }
 
         /// <summary>
         /// Gets the thumbprint of the signing cert.
         /// </summary>
         ///
-        internal string Thumbprint
-        {
-            get { return _cert.Thumbprint; }
-        }
+        internal string Thumbprint => this.cert.Thumbprint;
 
         /// <summary>
-        /// Gets or sets the application identifier of the credential.
+        /// Gets the application identifier of the credential.
         /// </summary>
         ///
         /// <returns>
@@ -84,13 +71,7 @@ namespace Microsoft.HealthVault.Web.Authentication
         /// This property is set only internally.
         /// </remarks>
         ///
-        public Guid ApplicationId
-        {
-            get { return _applicationId; }
-            internal set { _applicationId = value; }
-        }
-
-        private Guid _applicationId;
+        public Guid ApplicationId { get; internal set; }
 
         /// <summary>
         /// Gets or sets the cached provider for signing binary large objects
@@ -102,26 +83,23 @@ namespace Microsoft.HealthVault.Web.Authentication
         /// the cached provider.
         /// </returns>
         ///
-        internal RSACryptoServiceProvider RsaProvider
+        internal RSACryptoServiceProvider RsaProvider => (RSACryptoServiceProvider)this.cert.GetRSAPrivateKey();
+
+        private long TokenIssuedRefreshCounter
         {
-            get { return (RSACryptoServiceProvider)_cert.GetRSAPrivateKey(); }
+            get { return this.tokenIssuedRefreshCounter; }
+            set { this.tokenIssuedRefreshCounter = value; }
         }
 
-        private Int64 TokenIssuedRefreshCounter
-        {
-            get { return _tokenIssuedRefreshCounter; }
-            set { _tokenIssuedRefreshCounter = value; }
-        }
-
-        private Int64 _tokenIssuedRefreshCounter;
+        private long tokenIssuedRefreshCounter;
 
         private AuthenticatedSessionKeySet KeySet
         {
-            get { return _keySet; }
-            set { _keySet = value; }
+            get { return this.keySet; }
+            set { this.keySet = value; }
         }
 
-        private AuthenticatedSessionKeySet _keySet;
+        private AuthenticatedSessionKeySet keySet;
 
         /// <summary>
         /// Gets or sets the sub-credential.
@@ -137,19 +115,13 @@ namespace Microsoft.HealthVault.Web.Authentication
         /// A string representing the sub-credential token.
         /// </returns>
         ///
-        public string SubCredential
-        {
-            get { return _subCredential; }
-            set { _subCredential = value; }
-        }
+        public string SubCredential { get; set; }
 
-        private string _subCredential;
+        private string certSubject;
 
-        private string _certSubject;
-
-        private StoreLocation _storeLocation = StoreLocation.LocalMachine;
-        private X509Certificate2 _cert;
-        private bool _certOriginFromStore;
+        private StoreLocation storeLocation = StoreLocation.LocalMachine;
+        private X509Certificate2 cert;
+        private bool certOriginFromStore;
 
         #endregion
 
@@ -188,19 +160,19 @@ namespace Microsoft.HealthVault.Web.Authentication
             Guid applicationId,
             X509Certificate2 certificate)
         {
-            _applicationId = applicationId;
-            _cert = certificate;
-            _digestMethod = HealthApplicationConfiguration.Current.CryptoConfiguration.SignatureHashAlgorithmName;
-            _signMethod = HealthApplicationConfiguration.Current.CryptoConfiguration.SignatureAlgorithmName;
+            this.ApplicationId = applicationId;
+            this.cert = certificate;
+            this.DigestMethod = HealthApplicationConfiguration.Current.CryptoConfiguration.SignatureHashAlgorithmName;
+            this.SignMethod = HealthApplicationConfiguration.Current.CryptoConfiguration.SignatureAlgorithmName;
 
-            LoadAuthTokenPair(applicationId);
+            this.LoadAuthTokenPair(applicationId);
         }
 
         /// <summary>
         /// Creates a new instance of the <see cref="WebApplicationCredential"/>
         /// class with the default values and in the anonymous context.
         /// </summary>
-        /// <param name="applicationId"/>
+        /// <param name="applicationId"> The guid associated with this instance of HealthVault</param>
         /// <exception cref="ArgumentException">
         /// The <paramref name="applicationId"/> parameter is empty.
         /// </exception>
@@ -215,7 +187,7 @@ namespace Microsoft.HealthVault.Web.Authentication
                 applicationId,
                 ApplicationCertificateStore.Current.GetApplicationCertificate(applicationId))
         {
-            _certOriginFromStore = true;
+            this.certOriginFromStore = true;
         }
 
         /// <summary>
@@ -233,8 +205,8 @@ namespace Microsoft.HealthVault.Web.Authentication
         /// represents the approval for a user to run this application for the
         /// lifetime of the token.
         /// </remarks>
-        /// <param name="applicationId"/>
-        /// <param name="subCredential"/>
+        /// <param name="applicationId"> The guid associated with this instance of HealthVault</param>
+        /// <param name="subCredential"> The sub-credential of the current instance </param>
         /// <exception cref="ArgumentException">
         /// The <paramref name="applicationId"/> parameter is empty.
         /// </exception>
@@ -253,7 +225,7 @@ namespace Microsoft.HealthVault.Web.Authentication
             : this(applicationId)
         {
             Validator.ThrowIfStringNullOrEmpty(subCredential, "subCredential");
-            SubCredential = subCredential;
+            this.SubCredential = subCredential;
         }
 
         /// <summary>
@@ -271,9 +243,9 @@ namespace Microsoft.HealthVault.Web.Authentication
         /// represents the approval for a user to run this application for the
         /// lifetime of the token.
         /// </remarks>
-        /// <param name="applicationId"/>
-        /// <param name="subCredential"/>
-        /// <param name="certificate"/>
+        /// <param name="applicationId"> The application ID </param>
+        /// <param name="subCredential"> The sub-credential associated with the application ID</param>
+        /// <param name="certificate"> The security certificate associated with this application ID</param>
         /// <exception cref="ArgumentException">
         /// The <paramref name="applicationId"/> parameter is empty.
         /// </exception>
@@ -293,7 +265,7 @@ namespace Microsoft.HealthVault.Web.Authentication
             : this(applicationId, certificate)
         {
             Validator.ThrowIfStringNullOrEmpty(subCredential, "subCredential");
-            SubCredential = subCredential;
+            this.SubCredential = subCredential;
         }
 
         /// <summary>
@@ -327,7 +299,7 @@ namespace Microsoft.HealthVault.Web.Authentication
             StoreLocation storeLocation,
             string certSubject)
         {
-            Initialize(applicationId, storeLocation, certSubject);
+            this.Initialize(applicationId, storeLocation, certSubject);
         }
 
         /// <summary>
@@ -370,14 +342,14 @@ namespace Microsoft.HealthVault.Web.Authentication
                 "applicationId",
                 "WebApplicationCredentialAppIdEmpty");
 
-            ApplicationId = applicationId;
-            _storeLocation = storeLocation;
-            _certSubject = certSubject;
-            _certOriginFromStore = true;
+            this.ApplicationId = applicationId;
+            this.storeLocation = storeLocation;
+            this.certSubject = certSubject;
+            this.certOriginFromStore = true;
 
-            SetupSignatureCertRsaProvider(applicationId, storeLocation, certSubject);
+            this.SetupSignatureCertRsaProvider(applicationId, storeLocation, certSubject);
 
-            LoadAuthTokenPair(applicationId);
+            this.LoadAuthTokenPair(applicationId);
         }
 
         private void LoadAuthTokenPair(
@@ -386,10 +358,10 @@ namespace Microsoft.HealthVault.Web.Authentication
             CreateAuthenticationTokenResult newResult;
 
             bool haveResults =
-                WebApplicationCredential.GetAuthTokenPair(
+                GetAuthTokenPair(
                     applicationId,
-                    out this._tokenIssuedRefreshCounter,
-                    out this._keySet,
+                    out this.tokenIssuedRefreshCounter,
+                    out this.keySet,
                     out newResult);
 
             if (haveResults)
@@ -409,10 +381,10 @@ namespace Microsoft.HealthVault.Web.Authentication
             StoreLocation storeLocation,
             string certSubject)
         {
-            DigestMethod = HealthApplicationConfiguration.Current.CryptoConfiguration.SignatureHashAlgorithmName;
-            SignMethod = HealthApplicationConfiguration.Current.CryptoConfiguration.SignatureAlgorithmName;
+            this.DigestMethod = HealthApplicationConfiguration.Current.CryptoConfiguration.SignatureHashAlgorithmName;
+            this.SignMethod = HealthApplicationConfiguration.Current.CryptoConfiguration.SignatureAlgorithmName;
 
-            _cert =
+            this.cert =
                 ApplicationCertificateStore.Current.GetApplicationCertificateFromStore(
                     applicationId,
                     storeLocation,
@@ -447,9 +419,9 @@ namespace Microsoft.HealthVault.Web.Authentication
             HealthServiceConnection connection,
             Guid applicationId)
         {
-            if (WebApplicationCredential.IsAuthenticationExpired(applicationId, this.TokenIssuedRefreshCounter))
+            if (IsAuthenticationExpired(applicationId, this.TokenIssuedRefreshCounter))
             {
-                await AuthenticateAsync(connection, applicationId).ConfigureAwait(false);
+                await this.AuthenticateAsync(connection, applicationId).ConfigureAwait(false);
             }
         }
 
@@ -480,9 +452,9 @@ namespace Microsoft.HealthVault.Web.Authentication
             HealthServiceConnection connection,
             Guid applicationId)
         {
-            await WebApplicationCredential.AuthenticateKeySetPairAsync(connection, applicationId, this._cert).ConfigureAwait(false);
+            await AuthenticateKeySetPairAsync(connection, applicationId, this.cert).ConfigureAwait(false);
 
-            LoadAuthTokenPair(applicationId);
+            this.LoadAuthTokenPair(applicationId);
         }
 
         /// <summary>
@@ -499,24 +471,18 @@ namespace Microsoft.HealthVault.Web.Authentication
             // expire the instance authentication result as well
             base.ExpireAuthenticationResult(applicationId);
 
-            WebApplicationCredential.ExpireKeySetPair(
+            ExpireKeySetPair(
                 applicationId,
-                TokenIssuedRefreshCounter);
+                this.TokenIssuedRefreshCounter);
 
-            return !IsAuthenticationRetryDisabled;
+            return !this.IsAuthenticationRetryDisabled;
         }
 
         /// <summary>
         /// Gets if the credential currently is enabled to support retries.
         /// </summary>
         ///
-        internal bool IsAuthenticationRetryDisabled
-        {
-            get { return _isAuthenticationRetryDisabled; }
-            set { _isAuthenticationRetryDisabled = value; }
-        }
-
-        private bool _isAuthenticationRetryDisabled;
+        internal bool IsAuthenticationRetryDisabled { get; set; }
 
         /// <summary>
         /// Derived classes can insert header section XML as appropriate.
@@ -538,11 +504,11 @@ namespace Microsoft.HealthVault.Web.Authentication
                 applicationId,
                 writer);
 
-            if (!String.IsNullOrEmpty(SubCredential))
+            if (!string.IsNullOrEmpty(this.SubCredential))
             {
                 writer.WriteElementString(
                     "user-auth-token",
-                    SubCredential);
+                    this.SubCredential);
             }
         }
 
@@ -560,11 +526,11 @@ namespace Microsoft.HealthVault.Web.Authentication
         {
             string result = base.GetHeaderSection(applicationId);
 
-            if (!String.IsNullOrEmpty(SubCredential))
+            if (!string.IsNullOrEmpty(this.SubCredential))
             {
                 result += WebUtility.UrlEncode(
                     "<user-auth-token>"
-                    + SubCredential
+                    + this.SubCredential
                     + "</user-auth-token>");
             }
 
@@ -587,14 +553,14 @@ namespace Microsoft.HealthVault.Web.Authentication
         {
             base.AddRestAuthorizationHeaderToken(tokens, appId);
 
-            if (!String.IsNullOrEmpty(SubCredential))
+            if (!string.IsNullOrEmpty(this.SubCredential))
             {
                 tokens.Add(
-                    String.Format(
+                    string.Format(
                         CultureInfo.InvariantCulture,
                         RestConstants.AuthorizationHeaderElement,
                         RestConstants.UserToken,
-                        SubCredential));
+                        this.SubCredential));
             }
         }
 
@@ -628,30 +594,22 @@ namespace Microsoft.HealthVault.Web.Authentication
         internal override void UpdateAuthenticationResults(
             CreateAuthenticationTokenResult result)
         {
-            if (result.ApplicationId == ApplicationId)
+            if (result.ApplicationId == this.ApplicationId)
             {
                 if (CreateAuthenticationTokenResult.IsAuthenticated(result))
                 {
-                    AuthenticationTokenKeySetPair pair = _liveKeySetPairs.GetPair(ApplicationId);
-
-                    if (pair == null)
-                    {
-                        // this should only be true for a call to
-                        // CreateAuthenticatedSessionToken on an
-                        // unitialized WebApplicationCredential state -
-                        // both static and instance.
-                        pair = _liveKeySetPairs.CreatePair(ApplicationId);
-                    }
+                    AuthenticationTokenKeySetPair pair = liveKeySetPairs.GetPair(this.ApplicationId) ??
+                                                         liveKeySetPairs.CreatePair(this.ApplicationId);
 
                     lock (pair)
                     {
                         // update the static keyset pair
-                        pair.KeySet = KeySet.Clone();
+                        pair.KeySet = this.KeySet.Clone();
                         pair.Update(result);
                     }
 
                     // update the instance with the authentication info
-                    LoadAuthTokenPair(ApplicationId);
+                    this.LoadAuthTokenPair(this.ApplicationId);
                 }
             }
         }
@@ -669,7 +627,7 @@ namespace Microsoft.HealthVault.Web.Authentication
             XPathNavigator keyNav = nav.SelectSingleNode("shared-secret");
             if (keyNav != null)
             {
-                KeySet.HMAC.KeyMaterial = Convert.FromBase64String(keyNav.Value);
+                this.KeySet.HMAC.KeyMaterial = Convert.FromBase64String(keyNav.Value);
             }
         }
 
@@ -707,15 +665,11 @@ namespace Microsoft.HealthVault.Web.Authentication
             int index,
             int count)
         {
-            string result = String.Empty;
-
-            CryptoHmac hmac = KeySet.HMAC;
+            CryptoHmac hmac = this.KeySet.HMAC;
 
             hmac.Reset();
             hmac.ComputeHash(data, index, count);
-            result = hmac.Finalize().GetXml();
-
-            return result;
+            return hmac.Finalize().GetXml();
         }
 
         /// <summary>
@@ -757,7 +711,7 @@ namespace Microsoft.HealthVault.Web.Authentication
             int index,
             int count)
         {
-            return AuthenticateWebApplicationData(data, index, count);
+            return this.AuthenticateWebApplicationData(data, index, count);
         }
 
         /// <summary>
@@ -768,8 +722,8 @@ namespace Microsoft.HealthVault.Web.Authentication
         {
             UTF8Encoding encoding = new UTF8Encoding();
 
-            Byte[] paramBlob = encoding.GetBytes(requestXml);
-            Byte[] sigBlob = RsaProvider.SignData(paramBlob, DigestMethod);
+            byte[] paramBlob = encoding.GetBytes(requestXml);
+            byte[] sigBlob = this.RsaProvider.SignData(paramBlob, this.DigestMethod);
 
             return Convert.ToBase64String(sigBlob);
         }
@@ -796,7 +750,7 @@ namespace Microsoft.HealthVault.Web.Authentication
                 writer.WriteStartElement("content");
 
                 writer.WriteStartElement("app-id");
-                writer.WriteString(ApplicationId.ToString());
+                writer.WriteString(this.ApplicationId.ToString());
                 writer.WriteEndElement();
 
                 writer.WriteElementString("hmac", HealthApplicationConfiguration.Current.CryptoConfiguration.HmacAlgorithmName);
@@ -834,14 +788,14 @@ namespace Microsoft.HealthVault.Web.Authentication
 
             writer.WriteStartElement("appserver2");
 
-            string requestXml = GetContentSection();
+            string requestXml = this.GetContentSection();
 
             // SIG
             writer.WriteStartElement("sig");
-            writer.WriteAttributeString("digestMethod", DigestMethod);
-            writer.WriteAttributeString("sigMethod", SignMethod);
-            writer.WriteAttributeString("thumbprint", Thumbprint);
-            writer.WriteString(SignRequestXml(requestXml));
+            writer.WriteAttributeString("digestMethod", this.DigestMethod);
+            writer.WriteAttributeString("sigMethod", this.SignMethod);
+            writer.WriteAttributeString("thumbprint", this.Thumbprint);
+            writer.WriteString(this.SignRequestXml(requestXml));
             writer.WriteEndElement(); // sig
 
             // CONTENT
@@ -869,21 +823,23 @@ namespace Microsoft.HealthVault.Web.Authentication
             base.WriteCookieXml(writer);
 
             writer.WriteStartElement("appserver");
-            writer.WriteElementString("app-id", ApplicationId.ToString());
-            writer.WriteElementString("user-auth-token", SubCredential);
+            writer.WriteElementString("app-id", this.ApplicationId.ToString());
+            writer.WriteElementString("user-auth-token", this.SubCredential);
 
-            if (_certOriginFromStore)
+            if (this.certOriginFromStore)
             {
                 writer.WriteStartElement("cert-from-store");
 
-                writer.WriteElementString("store", _storeLocation.ToString());
+                writer.WriteElementString("store", this.storeLocation.ToString());
 
-                if (_certSubject != null)
+                if (this.certSubject != null)
                 {
-                    writer.WriteElementString("subject", _certSubject);
+                    writer.WriteElementString("subject", this.certSubject);
                 }
+
                 writer.WriteEndElement();
             }
+
             writer.WriteEndElement(); // appserver
         }
 
@@ -905,33 +861,32 @@ namespace Microsoft.HealthVault.Web.Authentication
             reader.ReadStartElement("appserver");
 
             Guid applicationId = new Guid(reader.ReadElementContentAsString());
-            SubCredential = reader.ReadElementContentAsString();
+            this.SubCredential = reader.ReadElementContentAsString();
 
             if (reader.LocalName.Equals("cert-from-store", StringComparison.OrdinalIgnoreCase))
             {
                 reader.ReadStartElement();
 
-                _storeLocation =
-                    (StoreLocation)
-                    Enum.Parse(typeof(StoreLocation), reader.ReadElementContentAsString());
+                this.storeLocation =
+                    (StoreLocation)Enum.Parse(typeof(StoreLocation), reader.ReadElementContentAsString());
 
                 if (reader.LocalName.Equals("subject", StringComparison.OrdinalIgnoreCase))
                 {
-                    _certSubject = reader.ReadElementContentAsString();
+                    this.certSubject = reader.ReadElementContentAsString();
                 }
 
                 reader.ReadEndElement();
-                Initialize(applicationId, _storeLocation, _certSubject);
+                this.Initialize(applicationId, this.storeLocation, this.certSubject);
             }
             else
             {
-                _applicationId = applicationId;
-                _cert = ApplicationCertificateStore.Current.ApplicationCertificate;
-                _digestMethod = HealthApplicationConfiguration.Current.CryptoConfiguration.SignatureHashAlgorithmName;
-                _signMethod = HealthApplicationConfiguration.Current.CryptoConfiguration.SignatureAlgorithmName;
-                _certOriginFromStore = false;
+                this.ApplicationId = applicationId;
+                this.cert = ApplicationCertificateStore.Current.ApplicationCertificate;
+                this.DigestMethod = HealthApplicationConfiguration.Current.CryptoConfiguration.SignatureHashAlgorithmName;
+                this.SignMethod = HealthApplicationConfiguration.Current.CryptoConfiguration.SignatureAlgorithmName;
+                this.certOriginFromStore = false;
 
-                LoadAuthTokenPair(applicationId);
+                this.LoadAuthTokenPair(applicationId);
             }
 
             if (!reader.EOF)
@@ -944,7 +899,7 @@ namespace Microsoft.HealthVault.Web.Authentication
 
         #region static authentication results management
 
-        private static AuthSessionKeySetPairs _liveKeySetPairs = new AuthSessionKeySetPairs();
+        private static AuthSessionKeySetPairs liveKeySetPairs = new AuthSessionKeySetPairs();
 
         /// <summary>
         /// Release lock of the pair so that the keyset pair after the request
@@ -961,10 +916,10 @@ namespace Microsoft.HealthVault.Web.Authentication
         /// expired status.
         /// </param>
         ///
-        private static void ExpireKeySetPair(Guid applicationId, Int64 refreshCounter)
+        private static void ExpireKeySetPair(Guid applicationId, long refreshCounter)
         {
             AuthenticationTokenKeySetPair pair =
-                _liveKeySetPairs.GetPair(applicationId);
+                liveKeySetPairs.GetPair(applicationId);
 
             if (pair == null)
             {
@@ -1007,10 +962,10 @@ namespace Microsoft.HealthVault.Web.Authentication
         ///
         private static bool IsAuthenticationExpired(
             Guid applicationId,
-            Int64 refreshCounter)
+            long refreshCounter)
         {
             AuthenticationTokenKeySetPair pair =
-                _liveKeySetPairs.GetPair(applicationId);
+                liveKeySetPairs.GetPair(applicationId);
 
             if (pair == null)
             {
@@ -1027,14 +982,14 @@ namespace Microsoft.HealthVault.Web.Authentication
         /// Gets the cached authentication keyset pair for the application id.
         /// </summary>
         ///
-        /// <param name="applicationId"></param>
-        /// <param name="refreshCounter"></param>
-        /// <param name="keySet"></param>
-        /// <param name="result"></param>
+        /// <param name="applicationId">The uuid associated with this application</param>
+        /// <param name="refreshCounter">the time until a credential refresh is needed</param>
+        /// <param name="keySet">out parameter: the authorized keys associated with this account</param>
+        /// <param name="result">out parameter: the result of the authentication attempt</param>
         ///
         private static bool GetAuthTokenPair(
             Guid applicationId,
-            out Int64 refreshCounter,
+            out long refreshCounter,
             out AuthenticatedSessionKeySet keySet,
             out CreateAuthenticationTokenResult result)
         {
@@ -1042,18 +997,18 @@ namespace Microsoft.HealthVault.Web.Authentication
             result = null;
             refreshCounter = 0;
 
-            if (_liveKeySetPairs == null)
+            if (liveKeySetPairs == null)
             {
                 return false;
             }
 
-            AuthenticationTokenKeySetPair pair = _liveKeySetPairs.GetPair(applicationId);
+            AuthenticationTokenKeySetPair pair = liveKeySetPairs.GetPair(applicationId);
 
             if (pair == null)
             {
                 // create a new unauthenticated pair so that we at least
                 // have the KeySet
-                pair = _liveKeySetPairs.CreatePair(applicationId);
+                pair = liveKeySetPairs.CreatePair(applicationId);
 
                 keySet = pair.KeySet.Clone();
 
@@ -1106,7 +1061,7 @@ namespace Microsoft.HealthVault.Web.Authentication
             Guid applicationId,
             X509Certificate2 certificate)
         {
-            await AuthenticateKeySetPairAsync(_liveKeySetPairs, connection, applicationId, certificate).ConfigureAwait(false);
+            await AuthenticateKeySetPairAsync(liveKeySetPairs, connection, applicationId, certificate).ConfigureAwait(false);
         }
 
         /// <summary>

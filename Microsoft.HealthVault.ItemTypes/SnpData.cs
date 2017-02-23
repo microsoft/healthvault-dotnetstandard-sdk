@@ -3,11 +3,12 @@
 // see http://www.microsoft.com/resources/sharedsource/licensingbasics/sharedsourcelicenses.mspx.
 // All other rights reserved.
 
-using Microsoft.HealthVault.ItemTypes.Csv;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Xml;
+using Microsoft.HealthVault.Helpers;
+using Microsoft.HealthVault.Thing;
 
 namespace Microsoft.HealthVault.ItemTypes
 {
@@ -69,12 +70,12 @@ namespace Microsoft.HealthVault.ItemTypes
             // Convert an OtherData instance to one of this type.
             // This is used to convert the OtherItemData instance that was deserialized when an SnpData
             // instance was created to an instance of this type.
-            Data = otherItemData.Data;
-            ContentEncoding = otherItemData.ContentEncoding;
-            ContentType = otherItemData.ContentType;
+            this.Data = otherItemData.Data;
+            this.ContentEncoding = otherItemData.ContentEncoding;
+            this.ContentType = otherItemData.ContentType;
         }
 
-        private Dictionary<String, SnpItem> _snpItems;
+        private Dictionary<string, SnpItem> snpItems;
 
         /// <summary>
         /// Gets the SNP data as a dictionary of SNP items.
@@ -84,23 +85,24 @@ namespace Microsoft.HealthVault.ItemTypes
         /// SNP items in a dictionary can be easily accessed by the reference SNP Id.
         /// </remarks>
         ///
-        public Dictionary<String, SnpItem> SnpItems
+        public Dictionary<string, SnpItem> SnpItems
         {
             get
             {
-                if (_snpItems == null)
+                if (this.snpItems == null)
                 {
                     // If there is no OtherData here, we're creating a new set of samples...
-                    if (Data == null)
+                    if (this.Data == null)
                     {
-                        _snpItems = new Dictionary<String, SnpItem>();
+                        this.snpItems = new Dictionary<string, SnpItem>();
                     }
                     else
                     {
-                        CreateSnpItems();
+                        this.CreateSnpItems();
                     }
                 }
-                return _snpItems;
+
+                return this.snpItems;
             }
         }
 
@@ -110,13 +112,13 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public void RefreshSnpItems()
         {
-            if (Data == null)
+            if (this.Data == null)
             {
-                _snpItems = null;
+                this.snpItems = null;
             }
             else
             {
-                CreateSnpItems();
+                this.CreateSnpItems();
             }
         }
 
@@ -130,8 +132,8 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         private void CreateSnpItems()
         {
-            _snpItems = new Dictionary<String, SnpItem>();
-            Collection<OtherItemDataCsvItem> rawSamples = GetAsString();
+            this.snpItems = new Dictionary<string, SnpItem>();
+            Collection<OtherItemDataCsvItem> rawSamples = this.GetAsString();
 
             // csvStringValueBuffer is used to store up to three valid string item.
             // For every three valid string items, a SNP item will be created.
@@ -152,18 +154,19 @@ namespace Microsoft.HealthVault.ItemTypes
                 result = ((OtherItemDataCsvString)rawSamples[sampleIndex + 2]).Value;
                 assayId = ((OtherItemDataCsvString)rawSamples[sampleIndex + 3]).Value;
                 startPosition =
-                    Int32.Parse(((OtherItemDataCsvString)rawSamples[sampleIndex + 4]).Value);
+                    int.Parse(((OtherItemDataCsvString)rawSamples[sampleIndex + 4]).Value);
                 endPosition =
-                    Int32.Parse(((OtherItemDataCsvString)rawSamples[sampleIndex + 5]).Value);
+                    int.Parse(((OtherItemDataCsvString)rawSamples[sampleIndex + 5]).Value);
                 SnpItem snpItem = new SnpItem(
                     referenceSnpId,
                     strandOrientation,
                     result,
                     assayId,
                     startPosition,
-                    endPosition
-                    );
-                _snpItems.Add(referenceSnpId, snpItem);
+                    endPosition);
+
+                this.snpItems.Add(referenceSnpId, snpItem);
+
                 // ignore the escape case since it is not applicable for
                 // snp data.
             }
@@ -184,9 +187,9 @@ namespace Microsoft.HealthVault.ItemTypes
         public override void WriteXml(XmlWriter writer)
         {
             Validator.ThrowIfWriterNull(writer);
-            Validator.ThrowInvalidIfNull(_snpItems, "SnpItemsNotSet");
+            Validator.ThrowInvalidIfNull(this.snpItems, "SnpItemsNotSet");
 
-            StoreSnpItems();
+            this.StoreSnpItems();
 
             // The base class takes the other data string and puts it in the proper xml format.
             base.WriteXml(writer);
@@ -200,7 +203,7 @@ namespace Microsoft.HealthVault.ItemTypes
         internal void StoreSnpItems()
         {
             List<OtherItemDataCsvItem> rawSamples = new List<OtherItemDataCsvItem>();
-            foreach (KeyValuePair<string, SnpItem> stringSnpItemPair in _snpItems)
+            foreach (KeyValuePair<string, SnpItem> stringSnpItemPair in this.snpItems)
             {
                 rawSamples.Add(new OtherItemDataCsvString(stringSnpItemPair.Value.ReferenceSnpId));
                 rawSamples.Add(new OtherItemDataCsvString(stringSnpItemPair.Value.StrandOrientation));
@@ -210,7 +213,7 @@ namespace Microsoft.HealthVault.ItemTypes
                 rawSamples.Add(new OtherItemDataCsvString(stringSnpItemPair.Value.EndPosition.ToString()));
             }
 
-            SetOtherData(rawSamples);
+            this.SetOtherData(rawSamples);
         }
     }
 }

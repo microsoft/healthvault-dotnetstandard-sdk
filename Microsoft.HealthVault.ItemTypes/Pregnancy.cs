@@ -8,6 +8,8 @@ using System.Collections.ObjectModel;
 using System.Text;
 using System.Xml;
 using System.Xml.XPath;
+using Microsoft.HealthVault.Helpers;
+using Microsoft.HealthVault.Thing;
 
 namespace Microsoft.HealthVault.ItemTypes
 {
@@ -40,7 +42,7 @@ namespace Microsoft.HealthVault.ItemTypes
         /// A GUID.
         /// </value>
         ///
-        public new static readonly Guid TypeId =
+        public static new readonly Guid TypeId =
             new Guid("46d485cf-2b84-429d-9159-83152ba801f4");
 
         /// <summary>
@@ -63,18 +65,18 @@ namespace Microsoft.HealthVault.ItemTypes
 
             Validator.ThrowInvalidIfNull(itemNav, "PregnancyUnexpectedNode");
 
-            _dueDate = XPathHelper.GetOptNavValue<ApproximateDate>(itemNav, "due-date");
-            _lastMenstrualPeriod = XPathHelper.GetOptNavValue<HealthServiceDate>(itemNav, "last-menstrual-period");
-            _conceptionMethod = XPathHelper.GetOptNavValue<CodableValue>(itemNav, "conception-method");
-            _fetusCount = XPathHelper.GetOptNavValueAsInt(itemNav, "fetus-count");
-            _gestationalAge = XPathHelper.GetOptNavValueAsInt(itemNav, "gestational-age");
+            this.dueDate = XPathHelper.GetOptNavValue<ApproximateDate>(itemNav, "due-date");
+            this.lastMenstrualPeriod = XPathHelper.GetOptNavValue<HealthServiceDate>(itemNav, "last-menstrual-period");
+            this.conceptionMethod = XPathHelper.GetOptNavValue<CodableValue>(itemNav, "conception-method");
+            this.fetusCount = XPathHelper.GetOptNavValueAsInt(itemNav, "fetus-count");
+            this.gestationalAge = XPathHelper.GetOptNavValueAsInt(itemNav, "gestational-age");
 
-            _delivery.Clear();
+            this.delivery.Clear();
             foreach (XPathNavigator deliveryNav in itemNav.Select("delivery"))
             {
                 Delivery delivery = new Delivery();
                 delivery.ParseXml(deliveryNav);
-                _delivery.Add(delivery);
+                this.delivery.Add(delivery);
             }
         }
 
@@ -97,15 +99,15 @@ namespace Microsoft.HealthVault.ItemTypes
             // <pregnancy>
             writer.WriteStartElement("pregnancy");
 
-            XmlWriterHelper.WriteOpt<ApproximateDate>(writer, "due-date", _dueDate);
-            XmlWriterHelper.WriteOpt<HealthServiceDate>(writer, "last-menstrual-period", _lastMenstrualPeriod);
-            XmlWriterHelper.WriteOpt<CodableValue>(writer, "conception-method", _conceptionMethod);
-            XmlWriterHelper.WriteOptInt(writer, "fetus-count", _fetusCount);
-            XmlWriterHelper.WriteOptInt(writer, "gestational-age", _gestationalAge);
+            XmlWriterHelper.WriteOpt(writer, "due-date", this.dueDate);
+            XmlWriterHelper.WriteOpt(writer, "last-menstrual-period", this.lastMenstrualPeriod);
+            XmlWriterHelper.WriteOpt(writer, "conception-method", this.conceptionMethod);
+            XmlWriterHelper.WriteOptInt(writer, "fetus-count", this.fetusCount);
+            XmlWriterHelper.WriteOptInt(writer, "gestational-age", this.gestationalAge);
 
-            for (int index = 0; index < _delivery.Count; ++index)
+            for (int index = 0; index < this.delivery.Count; ++index)
             {
-                _delivery[index].WriteXml("delivery", writer);
+                this.delivery[index].WriteXml("delivery", writer);
             }
 
             // </pregnancy>
@@ -122,10 +124,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public ApproximateDate DueDate
         {
-            get { return _dueDate; }
-            set { _dueDate = value; }
+            get { return this.dueDate; }
+            set { this.dueDate = value; }
         }
-        private ApproximateDate _dueDate;
+
+        private ApproximateDate dueDate;
 
         /// <summary>
         /// Gets or sets the first day of the last menstrual cycle.
@@ -137,10 +140,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public HealthServiceDate LastMenstrualPeriod
         {
-            get { return _lastMenstrualPeriod; }
-            set { _lastMenstrualPeriod = value; }
+            get { return this.lastMenstrualPeriod; }
+            set { this.lastMenstrualPeriod = value; }
         }
-        private HealthServiceDate _lastMenstrualPeriod;
+
+        private HealthServiceDate lastMenstrualPeriod;
 
         /// <summary>
         /// Gets or sets the method of conception.
@@ -153,10 +157,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public CodableValue ConceptionMethod
         {
-            get { return _conceptionMethod; }
-            set { _conceptionMethod = value; }
+            get { return this.conceptionMethod; }
+            set { this.conceptionMethod = value; }
         }
-        private CodableValue _conceptionMethod;
+
+        private CodableValue conceptionMethod;
 
         /// <summary>
         /// Gets or sets the number of fetuses.
@@ -168,17 +173,19 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public int? FetusCount
         {
-            get { return _fetusCount; }
+            get { return this.fetusCount; }
+
             set
             {
                 Validator.ThrowArgumentOutOfRangeIf(
                     value != null && value < 0,
                     "FetusCount",
                     "PregnancyFetusCountMustBeNonNegative");
-                _fetusCount = value;
+                this.fetusCount = value;
             }
         }
-        private int? _fetusCount;
+
+        private int? fetusCount;
 
         /// <summary>
         /// Gets or sets the number of weeks of pregnancy at the time of delivery.
@@ -194,17 +201,19 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public int? GestationalAge
         {
-            get { return _gestationalAge; }
+            get { return this.gestationalAge; }
+
             set
             {
                 Validator.ThrowArgumentOutOfRangeIf(
                     value != null && value < 0,
                     "GestationalAge",
                     "PregnancyGestationalAgeMustBePositive");
-                _gestationalAge = value;
+                this.gestationalAge = value;
             }
         }
-        private int? _gestationalAge;
+
+        private int? gestationalAge;
 
         /// <summary>
         /// Gets a collection of the details of the resolution of each fetus.
@@ -214,11 +223,9 @@ namespace Microsoft.HealthVault.ItemTypes
         /// If there is no delivery information the collection should be empty.
         /// </remarks>
         ///
-        public Collection<Delivery> Delivery
-        {
-            get { return _delivery; }
-        }
-        private Collection<Delivery> _delivery = new Collection<Delivery>();
+        public Collection<Delivery> Delivery => this.delivery;
+
+        private readonly Collection<Delivery> delivery = new Collection<Delivery>();
 
         /// <summary>
         /// Gets a string representation of the pregnancy item.
@@ -232,7 +239,7 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             StringBuilder result = new StringBuilder(200);
 
-            foreach (Delivery delivery in Delivery)
+            foreach (Delivery delivery in this.Delivery)
             {
                 if (result.Length > 0 && delivery.Baby != null && delivery.Baby.Name != null)
                 {
@@ -241,14 +248,15 @@ namespace Microsoft.HealthVault.ItemTypes
 
                 if (delivery.Baby != null && delivery.Baby.Name != null)
                 {
-                    result.Append(delivery.Baby.Name.ToString());
+                    result.Append(delivery.Baby.Name);
                 }
             }
 
-            if (result.Length == 0 && DueDate != null)
+            if (result.Length == 0 && this.DueDate != null)
             {
-                result.Append(DueDate.ToString());
+                result.Append(this.DueDate);
             }
+
             return result.ToString();
         }
     }

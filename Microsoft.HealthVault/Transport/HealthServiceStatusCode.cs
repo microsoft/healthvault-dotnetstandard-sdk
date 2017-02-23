@@ -4,8 +4,10 @@
 // All other rights reserved.
 
 using System.Diagnostics.CodeAnalysis;
+using Microsoft.HealthVault.Record;
+using Microsoft.HealthVault.Thing;
 
-namespace Microsoft.HealthVault
+namespace Microsoft.HealthVault.Transport
 {
     /// <summary>
     /// Status codes for various conditions occurring in the SDK. Contains
@@ -323,9 +325,9 @@ namespace Microsoft.HealthVault
         ///
         ApplicationAuthorizationNotRequired = 38,
 
-        ///<summary>
+        /// <summary>
         /// The request provided has exceeded maximum allowed request length.
-        ///</summary>
+        /// </summary>
         ///
         RequestTooLong = 39,
 
@@ -521,9 +523,9 @@ namespace Microsoft.HealthVault
         ///
         InvalidCertificate = 70,
 
-        ///<summary>
+        /// <summary>
         /// The response has exceeded maximum size allowed.
-        ///</summary>
+        /// </summary>
         ///
         ResponseTooLong = 71,
 
@@ -557,21 +559,21 @@ namespace Microsoft.HealthVault
         ///
         CultureNotSupported = 76,
 
-        ///<summary>
+        /// <summary>
         /// The file extension is not supported.
-        ///</summary>
+        /// </summary>
         ///
         InvalidFileExtension = 77,
 
-        ///<summary>
+        /// <summary>
         /// The vocabulary item does not exist.
-        ///</summary>
+        /// </summary>
         ///
         InvalidVocabularyItem = 78,
 
-        ///<summary>
+        /// <summary>
         /// Duplicate connect request found.
-        ///</summary>
+        /// </summary>
         ///
         DuplicateConnectRequestFound = 79,
 
@@ -1002,7 +1004,6 @@ namespace Microsoft.HealthVault
         /// <summary>
         /// Cannot change immutable flag to false if it is true.
         /// </summary>
-        [SuppressMessage("Microsoft.Naming", "CA1726:UsePreferredTerms")]
         CannotChangeReadOnlyFlag = 156,
 
         /// <summary>
@@ -1018,13 +1019,11 @@ namespace Microsoft.HealthVault
         /// <summary>
         /// Cannot set immutable flag to true on update.
         /// </summary>
-        [SuppressMessage("Microsoft.Naming", "CA1726:UsePreferredTerms")]
         CannotSetReadOnlyFlag = 161,
 
         /// <summary>
         /// The communication preferences access token has expired.
         /// </summary>
-        [SuppressMessage("Microsoft.Naming", "CA1726:UsePreferredTerms")]
         CommunicationPreferencesAccessTokenExpired = 162,
 
         /// <summary>
@@ -1035,7 +1034,6 @@ namespace Microsoft.HealthVault
         /// <summary>
         /// Invalid operation if Meaningful Use feature is disabled.
         /// </summary>
-        [SuppressMessage("Microsoft.Naming", "CA1726:UsePreferredTerms")]
         MeaningfulUseFeatureDisabled = 164,
 
         /// <summary>
@@ -1172,6 +1170,6 @@ namespace Microsoft.HealthVault
         /// This is not a valid status code.
         /// </summary>
         ///
-        Max,
+        Max
     }
 }

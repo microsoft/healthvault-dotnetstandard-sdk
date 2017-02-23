@@ -6,6 +6,7 @@
 using System.Globalization;
 using System.Xml;
 using System.Xml.XPath;
+using Microsoft.HealthVault.Helpers;
 
 namespace Microsoft.HealthVault.ItemTypes
 {
@@ -35,9 +36,9 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             Validator.ThrowIfNavigatorNull(navigator);
 
-            _icalRecurrence = XPathHelper.GetOptNavValue(navigator, "ical-recurrence");
-            _interval = XPathHelper.GetOptNavValue<CodableValue>(navigator, "interval");
-            _timesInInterval = XPathHelper.GetOptNavValueAsInt(navigator, "times-in-interval");
+            this.icalRecurrence = XPathHelper.GetOptNavValue(navigator, "ical-recurrence");
+            this.interval = XPathHelper.GetOptNavValue<CodableValue>(navigator, "interval");
+            this.timesInInterval = XPathHelper.GetOptNavValueAsInt(navigator, "times-in-interval");
         }
 
         /// <summary>
@@ -68,15 +69,15 @@ namespace Microsoft.HealthVault.ItemTypes
             Validator.ThrowIfWriterNull(writer);
 
             Validator.ThrowInvalidIf(
-                (_interval != null && _timesInInterval == null) ||
-                (_interval == null && _timesInInterval != null),
+                (this.interval != null && this.timesInInterval == null) ||
+                (this.interval == null && this.timesInInterval != null),
                 "CarePlanTaskRecurrenceIntervalAndTimesBothSet");
 
             writer.WriteStartElement("recurrence");
             {
-                XmlWriterHelper.WriteOptString(writer, "ical-recurrence", _icalRecurrence);
-                XmlWriterHelper.WriteOpt(writer, "interval", _interval);
-                XmlWriterHelper.WriteOptInt(writer, "times-in-interval", _timesInInterval);
+                XmlWriterHelper.WriteOptString(writer, "ical-recurrence", this.icalRecurrence);
+                XmlWriterHelper.WriteOpt(writer, "interval", this.interval);
+                XmlWriterHelper.WriteOptInt(writer, "times-in-interval", this.timesInInterval);
             }
 
             writer.WriteEndElement();
@@ -93,7 +94,7 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             get
             {
-                return _icalRecurrence;
+                return this.icalRecurrence;
             }
 
             set
@@ -101,13 +102,13 @@ namespace Microsoft.HealthVault.ItemTypes
                 Validator.ThrowIfStringNullOrEmpty(value, "IcalRecurrence");
                 Validator.ThrowIfStringIsWhitespace(value, "IcalRecurrence");
 
-                _icalRecurrence = value;
-                _interval = null;
-                _timesInInterval = null;
+                this.icalRecurrence = value;
+                this.interval = null;
+                this.timesInInterval = null;
             }
         }
 
-        private string _icalRecurrence;
+        private string icalRecurrence;
 
         /// <summary>
         /// Gets or sets the recurrence interval.
@@ -120,17 +121,17 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             get
             {
-                return _interval;
+                return this.interval;
             }
 
             set
             {
-                _interval = value;
-                _icalRecurrence = null;
+                this.interval = value;
+                this.icalRecurrence = null;
             }
         }
 
-        private CodableValue _interval;
+        private CodableValue interval;
 
         /// <summary>
         /// Gets or sets the number of times in the interval.
@@ -143,7 +144,7 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             get
             {
-                return _timesInInterval;
+                return this.timesInInterval;
             }
 
             set
@@ -153,12 +154,12 @@ namespace Microsoft.HealthVault.ItemTypes
                     "TimesInInterval",
                     "CarePlanTaskRecurrenceInvalidTimeInInterval");
 
-                _timesInInterval = value;
-                _icalRecurrence = null;
+                this.timesInInterval = value;
+                this.icalRecurrence = null;
             }
         }
 
-        private int? _timesInInterval;
+        private int? timesInInterval;
 
         /// <summary>
         /// Gets a string representation of the CarePlanTaskRecurrence.
@@ -170,23 +171,22 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public override string ToString()
         {
-            if (_icalRecurrence != null)
+            if (this.icalRecurrence != null)
             {
-                return _icalRecurrence;
+                return this.icalRecurrence;
             }
-            else if (_interval != null &&
-                    _timesInInterval != null)
+
+            if (this.interval != null &&
+                this.timesInInterval != null)
             {
                 return string.Format(
                     CultureInfo.CurrentUICulture,
                     ResourceRetriever.GetResourceString("CarePlanTaskRecurrenceFormat"),
-                    _timesInInterval,
-                    _interval.Text);
+                    this.timesInInterval,
+                    this.interval.Text);
             }
-            else
-            {
-                return string.Empty;
-            }
+
+            return string.Empty;
         }
     }
 }

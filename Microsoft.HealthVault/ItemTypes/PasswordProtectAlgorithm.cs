@@ -41,6 +41,6 @@ namespace Microsoft.HealthVault.ItemTypes
         /// encryption functions.
         /// </summary>
         ///
-        HmacSha256Aes256 = 3,
+        HmacSha256Aes256 = 3
     }
 }

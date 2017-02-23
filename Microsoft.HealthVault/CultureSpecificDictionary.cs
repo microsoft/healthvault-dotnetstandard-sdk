@@ -5,6 +5,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Xml;
 using System.Xml.XPath;
 
@@ -40,15 +41,14 @@ namespace Microsoft.HealthVault
             string elementName,
             ConvertFromType convert)
         {
-            string elementValue;
-            foreach (KeyValuePair<String, TValue> kvp in this)
+            foreach (KeyValuePair<string, TValue> kvp in this)
             {
-                elementValue = convert(kvp.Value);
-                if (!String.IsNullOrEmpty(elementValue))
+                var elementValue = convert(kvp.Value);
+                if (!string.IsNullOrEmpty(elementValue))
                 {
                     writer.WriteStartElement(elementName);
 
-                    if (!String.Equals(DefaultLanguage, kvp.Key))
+                    if (!string.Equals(DefaultLanguage, kvp.Key))
                     {
                         writer.WriteAttributeString("xml", "lang", null, kvp.Key);
                     }
@@ -68,19 +68,17 @@ namespace Microsoft.HealthVault
             string elementName,
             ConvertToType convert)
         {
-            String language = null;
-            string elementValue = null;
-
             XPathNodeIterator elementsIterator = containerNav.Select(elementName);
             foreach (XPathNavigator elementNav in elementsIterator)
             {
-                language = elementNav.GetAttribute("lang", "http://www.w3.org/XML/1998/namespace");
-                if (String.IsNullOrEmpty(language))
+                var language = elementNav.GetAttribute("lang", "http://www.w3.org/XML/1998/namespace");
+                if (string.IsNullOrEmpty(language))
                 {
                     language = DefaultLanguage;
                 }
-                elementValue = elementNav.Value;
-                if (!String.IsNullOrEmpty(elementValue))
+
+                var elementValue = elementNav.Value;
+                if (!string.IsNullOrEmpty(elementValue))
                 {
                     this[language] = convert(elementValue);
                 }
@@ -110,17 +108,14 @@ namespace Microsoft.HealthVault
             {
                 if (this.Count == 1)
                 {
-                    // Return the first one.
-                    //
-                    foreach (TValue value in this.Values)
-                    {
-                        return value;
-                    }
+                    return this.Values.First();
                 }
+
                 if (this.ContainsKey(DefaultLanguage))
                 {
                     return this[DefaultLanguage];
                 }
+
                 return default(TValue);
             }
         }
@@ -141,8 +136,10 @@ namespace Microsoft.HealthVault
                 {
                     return this[DefaultLanguage];
                 }
+
                 return default(TValue);
             }
+
             set
             {
                 if (value == null)
@@ -185,7 +182,7 @@ namespace Microsoft.HealthVault
         /// <summary>
         /// Creates a delegate for converting an string to an xml string.
         /// </summary>
-        internal static string ConvertFromString(String stringValue)
+        internal static string ConvertFromString(string stringValue)
         {
             return stringValue;
         }
@@ -194,9 +191,8 @@ namespace Microsoft.HealthVault
             XPathNavigator containerNav,
             string elementName)
         {
-            CultureSpecificDictionary<string>.ConvertToType stringConvert =
-                new CultureSpecificDictionary<string>.ConvertToType(ConvertToString);
-            PopulateFromXml(
+            ConvertToType stringConvert = ConvertToString;
+            this.PopulateFromXml(
                 containerNav,
                 elementName,
                 stringConvert);
@@ -206,10 +202,10 @@ namespace Microsoft.HealthVault
             XmlWriter writer,
             string elementName)
         {
-            CultureSpecificDictionary<String>.ConvertFromType stringConvert =
-                new CultureSpecificDictionary<string>.ConvertFromType(ConvertFromString);
+            ConvertFromType stringConvert =
+                ConvertFromString;
 
-            AppendLocalizedElements(
+            this.AppendLocalizedElements(
                 writer,
                 elementName,
                 stringConvert);
@@ -244,9 +240,9 @@ namespace Microsoft.HealthVault
             XPathNavigator containerNav,
             string elementName)
         {
-            CultureSpecificDictionary<Uri>.ConvertToType stringConvert =
-                new CultureSpecificDictionary<Uri>.ConvertToType(ConvertToUri);
-            PopulateFromXml(
+            ConvertToType stringConvert =
+                ConvertToUri;
+            this.PopulateFromXml(
                 containerNav,
                 elementName,
                 stringConvert);
@@ -256,10 +252,10 @@ namespace Microsoft.HealthVault
             XmlWriter writer,
             string elementName)
         {
-            CultureSpecificDictionary<Uri>.ConvertFromType stringConvert =
-                new CultureSpecificDictionary<Uri>.ConvertFromType(ConvertFromUri);
+            ConvertFromType stringConvert =
+                ConvertFromUri;
 
-            AppendLocalizedElements(
+            this.AppendLocalizedElements(
                 writer,
                 elementName,
                 stringConvert);
@@ -277,7 +273,7 @@ namespace Microsoft.HealthVault
         /// <summary>
         /// Creates a delegate for converting an xml string to a byte array.
         /// </summary>
-        internal static Byte[] ConvertToByteArray(string xmlString)
+        internal static byte[] ConvertToByteArray(string xmlString)
         {
             return Convert.FromBase64String(xmlString);
         }
@@ -285,7 +281,7 @@ namespace Microsoft.HealthVault
         /// <summary>
         /// Creates a delegate for converting a byte array to an xml string.
         /// </summary>
-        internal static string ConvertFromByteArray(Byte[] typeValue)
+        internal static string ConvertFromByteArray(byte[] typeValue)
         {
             return Convert.ToBase64String(typeValue);
         }
@@ -294,9 +290,9 @@ namespace Microsoft.HealthVault
             XPathNavigator containerNav,
             string elementName)
         {
-            CultureSpecificDictionary<Byte[]>.ConvertToType byteArrayConvert =
-                new CultureSpecificDictionary<byte[]>.ConvertToType(ConvertToByteArray);
-            PopulateFromXml(
+            ConvertToType byteArrayConvert =
+                ConvertToByteArray;
+            this.PopulateFromXml(
                 containerNav,
                 elementName,
                 byteArrayConvert);
@@ -306,10 +302,10 @@ namespace Microsoft.HealthVault
             XmlWriter writer,
             string elementName)
         {
-            CultureSpecificDictionary<Byte[]>.ConvertFromType byteArrayConvert =
-                new CultureSpecificDictionary<Byte[]>.ConvertFromType(ConvertFromByteArray);
+            ConvertFromType byteArrayConvert =
+                ConvertFromByteArray;
 
-            AppendLocalizedElements(
+            this.AppendLocalizedElements(
                 writer,
                 elementName,
                 byteArrayConvert);

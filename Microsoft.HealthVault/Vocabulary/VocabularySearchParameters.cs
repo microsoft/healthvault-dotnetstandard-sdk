@@ -3,9 +3,11 @@
 // see http://www.microsoft.com/resources/sharedsource/licensingbasics/sharedsourcelicenses.mspx.
 // All other rights reserved.
 
+using System;
 using System.Globalization;
+using Microsoft.HealthVault.Helpers;
 
-namespace Microsoft.HealthVault
+namespace Microsoft.HealthVault.Vocabulary
 {
     /// <summary>
     /// The set of search parameters are used with the Vocabulary Search feature to specify the
@@ -26,17 +28,13 @@ namespace Microsoft.HealthVault
         public VocabularySearchParameters(VocabularyKey vocabulary)
         {
             Validator.ThrowIfArgumentNull(vocabulary, "vocabulary", "VocabularyKeyNullOrEmpty");
-            _vocabulary = vocabulary;
+            this.Vocabulary = vocabulary;
         }
 
         /// <summary>
         /// Gets the vocabulary key used to identify the vocabulary to be searched.
         /// </summary>
-        public VocabularyKey Vocabulary
-        {
-            get { return _vocabulary; }
-        }
-        private VocabularyKey _vocabulary;
+        public VocabularyKey Vocabulary { get; }
 
         /// <summary>
         /// Gets or sets the culture in which the vocabulary will be searched.
@@ -48,12 +46,13 @@ namespace Microsoft.HealthVault
         {
             get
             {
-                return _culture ?? CultureInfo.CurrentUICulture;
+                return this.culture ?? CultureInfo.CurrentUICulture;
             }
 
-            set { _culture = value; }
+            set { this.culture = value; }
         }
-        private CultureInfo _culture;
+
+        private CultureInfo culture;
 
         /// <summary>
         /// Gets or sets the maximum number of results to be returned from the search.
@@ -63,16 +62,18 @@ namespace Microsoft.HealthVault
         /// </exception>
         public int? MaxResults
         {
-            get { return _maxResults; }
+            get { return this.maxResults; }
+
             set
             {
                 Validator.ThrowArgumentOutOfRangeIf(
                     value < 0,
                     "MaxResults",
                     "SearchMaxResultsInvalid");
-                _maxResults = value;
+                this.maxResults = value;
             }
         }
-        private int? _maxResults;
+
+        private int? maxResults;
     }
 }

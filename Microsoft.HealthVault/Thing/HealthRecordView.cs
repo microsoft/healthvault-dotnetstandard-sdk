@@ -9,8 +9,10 @@ using System.Diagnostics;
 using System.Text;
 using System.Xml;
 using System.Xml.XPath;
+using Microsoft.HealthVault.Helpers;
+using Microsoft.HealthVault.ItemTypes;
 
-namespace Microsoft.HealthVault
+namespace Microsoft.HealthVault.Thing
 {
     /// <summary>
     /// Defines a result view for use with
@@ -26,15 +28,6 @@ namespace Microsoft.HealthVault
     public class HealthRecordView
     {
         /// <summary>
-        /// Creates a new instance of the <see cref="HealthRecordView"/> class
-        /// using default values.
-        /// </summary>
-        ///
-        public HealthRecordView()
-        {
-        }
-
-        /// <summary>
         /// Gets or sets the sections that will be retrieved when the
         /// query is made.
         /// </summary>
@@ -46,14 +39,16 @@ namespace Microsoft.HealthVault
         ///
         public HealthRecordItemSections Sections
         {
-            get { return _sections; }
+            get { return this.sections; }
+
             set
             {
                 // Always add in Core so that we get the type-id element
-                _sections = value | HealthRecordItemSections.Core;
+                this.sections = value | HealthRecordItemSections.Core;
             }
         }
-        private HealthRecordItemSections _sections =
+
+        private HealthRecordItemSections sections =
             HealthRecordItemSections.Core |
             HealthRecordItemSections.Xml;
 
@@ -71,12 +66,7 @@ namespace Microsoft.HealthVault
         /// available in the HealthVault Developer's Guide.
         /// </remarks>
         ///
-        public Collection<string> TransformsToApply
-        {
-            get { return _transformsToApply; }
-        }
-        private Collection<string> _transformsToApply =
-            new Collection<string>();
+        public Collection<string> TransformsToApply { get; } = new Collection<string>();
 
         /// <summary>
         /// Gets a collection of the version IDs for the types in which the results should be
@@ -110,12 +100,7 @@ namespace Microsoft.HealthVault
         /// <see cref="HealthRecordItem"/> instance rather than the type specific class instance.
         /// </remarks>
         ///
-        public Collection<Guid> TypeVersionFormat
-        {
-            get { return _typeVersionFormat; }
-        }
-        private Collection<Guid> _typeVersionFormat =
-            new Collection<Guid>();
+        public Collection<Guid> TypeVersionFormat { get; } = new Collection<Guid>();
 
         /// <summary>
         /// Gets a collection representing the names of the BLOBs to return for the item(s).
@@ -125,11 +110,7 @@ namespace Microsoft.HealthVault
         /// If no BLOB names are specified, all BLOBs will be returned.
         /// </remarks>
         ///
-        public Collection<string> BlobNames
-        {
-            get { return _blobNames; }
-        }
-        private Collection<string> _blobNames = new Collection<string>();
+        public Collection<string> BlobNames { get; } = new Collection<string>();
 
         /// <summary>
         /// Gets the format of the BLOB that should be returned.
@@ -139,12 +120,7 @@ namespace Microsoft.HealthVault
         /// Defaults to <see cref="BlobFormat"/>.Unknown.
         /// </remarks>
         ///
-        public BlobFormat BlobFormat
-        {
-            get { return _blobFormat; }
-            set { _blobFormat = value; }
-        }
-        private BlobFormat _blobFormat = BlobFormat.Unknown;
+        public BlobFormat BlobFormat { get; set; } = BlobFormat.Unknown;
 
         /// <summary>
         /// Gets a string representation of the instance.
@@ -163,7 +139,7 @@ namespace Microsoft.HealthVault
 
             using (XmlWriter writer = XmlWriter.Create(result, settings))
             {
-                AddViewXml(writer);
+                this.AddViewXml(writer);
                 writer.Flush();
             }
 
@@ -200,6 +176,7 @@ namespace Microsoft.HealthVault
                         break;
                 }
             }
+
             XPathNodeIterator xmlTransformsIterator = nav.Select("xml");
 
             foreach (XPathNavigator xmlTransformNav in xmlTransformsIterator)
@@ -222,6 +199,7 @@ namespace Microsoft.HealthVault
                 Guid typeFormat = new Guid(typeFormatNav.Value);
                 view.TypeVersionFormat.Add(typeFormat);
             }
+
             return view;
         }
 
@@ -251,10 +229,10 @@ namespace Microsoft.HealthVault
             // <format>
             writer.WriteStartElement("format");
 
-            AddSectionsXml(writer);
-            AddTransformXml(writer);
-            AddTypeFormatXml(writer);
-            AddBlobFormatXml(writer);
+            this.AddSectionsXml(writer);
+            this.AddTransformXml(writer);
+            this.AddTypeFormatXml(writer);
+            this.AddBlobFormatXml(writer);
 
             // </format>
             writer.WriteEndElement();
@@ -262,31 +240,37 @@ namespace Microsoft.HealthVault
 
         private void AddSectionsXml(XmlWriter writer)
         {
-            if ((Sections & HealthRecordItemSections.Audits) != 0)
+            if ((this.Sections & HealthRecordItemSections.Audits) != 0)
             {
                 WriteSection(writer, "audits");
             }
-            if ((Sections & HealthRecordItemSections.Core) != 0)
+
+            if ((this.Sections & HealthRecordItemSections.Core) != 0)
             {
                 WriteSection(writer, "core");
             }
-            if ((Sections & HealthRecordItemSections.EffectivePermissions) != 0)
+
+            if ((this.Sections & HealthRecordItemSections.EffectivePermissions) != 0)
             {
                 WriteSection(writer, "effectivepermissions");
             }
-            if ((Sections & HealthRecordItemSections.BlobPayload) != 0)
+
+            if ((this.Sections & HealthRecordItemSections.BlobPayload) != 0)
             {
                 WriteSection(writer, "blobpayload");
             }
-            if ((Sections & HealthRecordItemSections.Tags) != 0)
+
+            if ((this.Sections & HealthRecordItemSections.Tags) != 0)
             {
                 WriteSection(writer, "tags");
             }
-            if ((Sections & HealthRecordItemSections.Signature) != 0)
+
+            if ((this.Sections & HealthRecordItemSections.Signature) != 0)
             {
                 WriteSection(writer, "digitalsignatures");
             }
-            if ((Sections & HealthRecordItemSections.Xml) != 0)
+
+            if ((this.Sections & HealthRecordItemSections.Xml) != 0)
             {
                 writer.WriteStartElement("xml");
                 writer.WriteEndElement();
@@ -302,7 +286,7 @@ namespace Microsoft.HealthVault
 
         private void AddTransformXml(XmlWriter writer)
         {
-            foreach (string transformName in TransformsToApply)
+            foreach (string transformName in this.TransformsToApply)
             {
                 writer.WriteElementString("xml", transformName);
             }
@@ -310,7 +294,7 @@ namespace Microsoft.HealthVault
 
         private void AddTypeFormatXml(XmlWriter writer)
         {
-            if (TypeVersionFormat.Count == 0 && !HealthApplicationConfiguration.Current.UseLegacyTypeVersionSupport)
+            if (this.TypeVersionFormat.Count == 0 && !HealthApplicationConfiguration.Current.UseLegacyTypeVersionSupport)
             {
                 // Add the supported type version formats from configuration.
                 foreach (Guid typeFormat in HealthApplicationConfiguration.Current.SupportedTypeVersions)
@@ -320,7 +304,7 @@ namespace Microsoft.HealthVault
             }
             else
             {
-                foreach (Guid typeFormat in TypeVersionFormat)
+                foreach (Guid typeFormat in this.TypeVersionFormat)
                 {
                     writer.WriteElementString("type-version-format", typeFormat.ToString());
                 }
@@ -329,24 +313,25 @@ namespace Microsoft.HealthVault
 
         private void AddBlobFormatXml(XmlWriter writer)
         {
-            if (_blobNames.Count > 0 || _blobFormat != BlobFormat.Unknown)
+            if (this.BlobNames.Count > 0 || this.BlobFormat != BlobFormat.Unknown)
             {
                 writer.WriteStartElement("blob-payload-request");
 
-                if (_blobNames.Count > 0)
+                if (this.BlobNames.Count > 0)
                 {
                     writer.WriteStartElement("blob-filters");
 
-                    for (int index = 0; index < _blobNames.Count; ++index)
+                    for (int index = 0; index < this.BlobNames.Count; ++index)
                     {
                         writer.WriteStartElement("blob-filter");
-                        writer.WriteElementString("blob-name", _blobNames[index]);
+                        writer.WriteElementString("blob-name", this.BlobNames[index]);
                         writer.WriteEndElement();
                     }
+
                     writer.WriteEndElement();
                 }
 
-                BlobFormat format = _blobFormat;
+                BlobFormat format = this.BlobFormat;
                 if (format == BlobFormat.Unknown)
                 {
                     format = BlobFormat.Default;

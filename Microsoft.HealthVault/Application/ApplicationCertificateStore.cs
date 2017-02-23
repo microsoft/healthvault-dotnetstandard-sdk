@@ -1,13 +1,16 @@
 ﻿using System;
+using System.IO;
 using System.Security;
 using System.Security.Cryptography;
 using System.Security.Cryptography.X509Certificates;
+using Microsoft.HealthVault.Diagnostics;
+using Microsoft.HealthVault.Helpers;
 
-namespace Microsoft.HealthVault
+namespace Microsoft.HealthVault.Application
 {
-    internal class ApplicationCertificateStore
+    internal sealed class ApplicationCertificateStore
     {
-        private static readonly object instanceLock = new object();
+        private static readonly object InstanceLock = new object();
 
         /// <summary>
         /// Gets or sets the current configuration object for the app-domain.
@@ -16,22 +19,22 @@ namespace Microsoft.HealthVault
         {
             get
             {
-                lock (instanceLock)
+                lock (InstanceLock)
                 {
-                    return _current ?? (_current = new ApplicationCertificateStore());
+                    return current ?? (current = new ApplicationCertificateStore());
                 }
             }
 
             internal set
             {
-                lock (instanceLock)
+                lock (InstanceLock)
                 {
-                    _current = value;
+                    current = value;
                 }
             }
         }
 
-        private static ApplicationCertificateStore _current;
+        private static ApplicationCertificateStore current;
 
         /// <summary>
         /// Gets a certificate containing the application's private key.
@@ -43,19 +46,11 @@ namespace Microsoft.HealthVault
         /// values.
         /// </remarks>
         ///
-        public virtual X509Certificate2 ApplicationCertificate
-        {
-            get
-            {
-                if (_applicationCertificate == null)
-                {
-                    _applicationCertificate = GetApplicationCertificate(HealthApplicationConfiguration.Current.ApplicationId);
-                }
+        public X509Certificate2 ApplicationCertificate => this.applicationCertificate ??
+                                                                  (this.applicationCertificate =
+                                                                      this.GetApplicationCertificate(HealthApplicationConfiguration.Current.ApplicationId));
 
-                return _applicationCertificate;
-            }
-        }
-        private volatile X509Certificate2 _applicationCertificate;
+        private volatile X509Certificate2 applicationCertificate;
 
         // This is here for compatibility with the previous relase and for testability.
         internal X509Certificate2 GetApplicationCertificate(Guid applicationId)
@@ -65,10 +60,10 @@ namespace Microsoft.HealthVault
                 "appId",
                 "GuidParameterEmpty");
 
-            return GetApplicationCertificate(
+            return this.GetApplicationCertificate(
                 applicationId,
                 HealthApplicationConfiguration.Current.SignatureCertStoreLocation,
-                "CN=" + GetApplicationCertificateSubject(applicationId));
+                "CN=" + this.GetApplicationCertificateSubject(applicationId));
         }
 
         internal X509Certificate2 GetApplicationCertificateFromStore(
@@ -78,7 +73,7 @@ namespace Microsoft.HealthVault
         {
             if (certSubject == null)
             {
-                certSubject = "CN=" + GetApplicationCertificateSubject(applicationId);
+                certSubject = "CN=" + this.GetApplicationCertificateSubject(applicationId);
             }
 
             HealthVaultPlatformTrace.LogCertLoading(
@@ -106,7 +101,7 @@ namespace Microsoft.HealthVault
 
                 foreach (X509Certificate2 cert in store.Certificates)
                 {
-                    if (String.Equals(
+                    if (string.Equals(
                             cert.Subject,
                             certSubject,
                             StringComparison.OrdinalIgnoreCase))
@@ -137,7 +132,7 @@ namespace Microsoft.HealthVault
                 store.Dispose();
             }
 
-            if (rsaProvider == null || String.IsNullOrEmpty(thumbprint))
+            if (rsaProvider == null || string.IsNullOrEmpty(thumbprint))
             {
                 throw new SecurityException(
                         ResourceRetriever.FormatResourceString(
@@ -156,12 +151,9 @@ namespace Microsoft.HealthVault
                 "Attempting to load certificate from file: {0}",
                 certFilename);
 
-            RSACryptoServiceProvider rsaProvider = null;
-            string thumbprint = null;
-
             certFilename = Environment.ExpandEnvironmentVariables(certFilename);
 
-            if (!System.IO.File.Exists(certFilename))
+            if (!File.Exists(certFilename))
             {
                 HealthVaultPlatformTrace.LogCertLoading(
                     "Cert file not found: {0}",
@@ -177,7 +169,7 @@ namespace Microsoft.HealthVault
             {
                 HealthVaultPlatformTrace.LogCertLoading(
                     "Loading certificate from file {0}",
-                    String.IsNullOrEmpty(password) ? "without a password" : "with a password");
+                    string.IsNullOrEmpty(password) ? "without a password" : "with a password");
 
                 cert = new X509Certificate2(certFilename, password, X509KeyStorageFlags.MachineKeySet);
             }
@@ -190,31 +182,29 @@ namespace Microsoft.HealthVault
                 throw Validator.SecurityException("ErrorLoadingCertificateFile", e);
             }
 
-            if (cert != null)
+            HealthVaultPlatformTrace.LogCertLoading("Looking for private key");
+
+            if (!cert.HasPrivateKey)
             {
-                HealthVaultPlatformTrace.LogCertLoading("Looking for private key");
-
-                if (!cert.HasPrivateKey)
-                {
-                    HealthVaultPlatformTrace.LogCertLoading(
-                        "Certificate did not contain a private key.");
-
-                    throw Validator.SecurityException("CertificateMissingPrivateKey");
-                }
-
                 HealthVaultPlatformTrace.LogCertLoading(
-                    "Found cert with thumbprint: {0}",
-                    cert.Thumbprint);
+                    "Certificate did not contain a private key.");
 
-                thumbprint = cert.Thumbprint;
-                rsaProvider = (RSACryptoServiceProvider)cert.GetRSAPrivateKey();
-                HealthVaultPlatformTrace.LogCertLoading("Private key found");
+                throw Validator.SecurityException("CertificateMissingPrivateKey");
             }
 
-            if (rsaProvider == null || String.IsNullOrEmpty(thumbprint))
+            HealthVaultPlatformTrace.LogCertLoading(
+                "Found cert with thumbprint: {0}",
+                cert.Thumbprint);
+
+            var thumbprint = cert.Thumbprint;
+            var rsaProvider = (RSACryptoServiceProvider)cert.GetRSAPrivateKey();
+            HealthVaultPlatformTrace.LogCertLoading("Private key found");
+
+            if (rsaProvider == null || string.IsNullOrEmpty(thumbprint))
             {
                 throw Validator.SecurityException("CertificateNotFound");
             }
+
             return cert;
         }
 
@@ -223,17 +213,10 @@ namespace Microsoft.HealthVault
             StoreLocation storeLocation,
             string certSubject)
         {
-            X509Certificate2 cert = null;
-
             string applicationCertificateFilename = HealthApplicationConfiguration.Current.ApplicationCertificateFileName;
-            if (applicationCertificateFilename != null)
-            {
-                cert = GetApplicationCertificateFromFile(applicationCertificateFilename);
-            }
-            else
-            {
-                cert = GetApplicationCertificateFromStore(applicationId, storeLocation, certSubject);
-            }
+            var cert = applicationCertificateFilename != null ? 
+                this.GetApplicationCertificateFromFile(applicationCertificateFilename) : this.GetApplicationCertificateFromStore(applicationId, storeLocation, certSubject);
+
             return cert;
         }
 

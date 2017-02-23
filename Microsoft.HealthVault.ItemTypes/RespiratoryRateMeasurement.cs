@@ -6,6 +6,7 @@
 using System.Globalization;
 using System.Xml;
 using System.Xml.XPath;
+using Microsoft.HealthVault.Helpers;
 
 namespace Microsoft.HealthVault.ItemTypes
 {
@@ -30,7 +31,6 @@ namespace Microsoft.HealthVault.ItemTypes
         /// </summary>
         ///
         public RespiratoryRateMeasurement()
-            : base()
         {
         }
 
@@ -101,7 +101,7 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         protected override void ParseValueXml(XPathNavigator navigator)
         {
-            Value = navigator.SelectSingleNode("breaths-per-minute").ValueAsDouble;
+            this.Value = navigator.SelectSingleNode("breaths-per-minute").ValueAsDouble;
         }
 
         /// <summary>
@@ -116,7 +116,7 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             writer.WriteElementString(
                 "breaths-per-minute",
-                XmlConvert.ToString(Value));
+                XmlConvert.ToString(this.Value));
         }
 
         /// <summary>

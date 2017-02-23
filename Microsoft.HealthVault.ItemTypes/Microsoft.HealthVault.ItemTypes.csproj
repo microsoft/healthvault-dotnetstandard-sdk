@@ -16,7 +16,7 @@
     <SignAssembly>true</SignAssembly>
     <DelaySign>true</DelaySign>
     <AssemblyOriginatorKeyFile>..\35MSSharedLib1024.snk</AssemblyOriginatorKeyFile>
-    <TargetFrameworkProfile/>
+    <TargetFrameworkProfile />
     <TargetFrameworkVersion>v5.0</TargetFrameworkVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
@@ -27,6 +27,8 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <CodeAnalysisRuleSet>..\CustomAnalysisRules.ruleset</CodeAnalysisRuleSet>
+    <RunCodeAnalysis>true</RunCodeAnalysis>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -222,7 +224,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="QuestionAnswer.cs" />
     <Compile Include="RadiologyLabResults.cs" />
-    <Compile Include="range.cs" />
+    <Compile Include="Range.cs" />
     <Compile Include="RelativeRating.cs" />
     <Compile Include="RespiratoryProfile.cs" />
     <Compile Include="RespiratoryRateMeasurement.cs" />
@@ -233,7 +235,7 @@
     <Compile Include="SnpData.cs" />
     <Compile Include="SnpItem.cs" />
     <Compile Include="SpeedMeasurement.cs" />
-    <Compile Include="status.cs" />
+    <Compile Include="Status.cs" />
     <Compile Include="StringMeasurement.cs" />
     <Compile Include="StructuredMeasurement.cs" />
     <Compile Include="TargetGlucoseZone.cs" />
@@ -247,7 +249,7 @@
     <Compile Include="VitalSigns.cs" />
     <Compile Include="VolumeMeasurement.cs" />
     <Compile Include="WakeState.cs" />
-    <Compile Include="weight.cs" />
+    <Compile Include="Weight.cs" />
     <Compile Include="WeightGoal.cs" />
     <Compile Include="WeightValue.cs" />
     <Compile Include="Wellbeing.cs" />

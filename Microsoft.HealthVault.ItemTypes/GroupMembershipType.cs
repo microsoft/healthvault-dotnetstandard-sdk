@@ -5,6 +5,7 @@
 
 using System.Xml;
 using System.Xml.XPath;
+using Microsoft.HealthVault.Helpers;
 
 namespace Microsoft.HealthVault.ItemTypes
 {
@@ -20,7 +21,6 @@ namespace Microsoft.HealthVault.ItemTypes
         /// </summary>
         ///
         public GroupMembershipType()
-            : base()
         {
         }
 
@@ -42,9 +42,8 @@ namespace Microsoft.HealthVault.ItemTypes
         /// </exception>
         ///
         public GroupMembershipType(CodableValue name)
-            : base()
         {
-            Name = name;
+            this.Name = name;
         }
 
         /// <summary>
@@ -77,10 +76,9 @@ namespace Microsoft.HealthVault.ItemTypes
         /// </exception>
         ///
         public GroupMembershipType(CodableValue name, string value)
-            : base()
         {
-            Name = name;
-            Value = value;
+            this.Name = name;
+            this.Value = value;
         }
 
         /// <summary>
@@ -101,8 +99,8 @@ namespace Microsoft.HealthVault.ItemTypes
 
             CodableValue name = new CodableValue();
             name.ParseXml(navigator.SelectSingleNode("name"));
-            _name = name;
-            _value = navigator.SelectSingleNode("value").Value;
+            this.name = name;
+            this.value = navigator.SelectSingleNode("value").Value;
         }
 
         /// <summary>
@@ -133,16 +131,16 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             Validator.ThrowIfStringNullOrEmpty(nodeName, "nodeName");
             Validator.ThrowIfWriterNull(writer);
-            Validator.ThrowSerializationIfNull(_name, "GroupMembershipTypeNameNotSet");
+            Validator.ThrowSerializationIfNull(this.name, "GroupMembershipTypeNameNotSet");
 
             Validator.ThrowSerializationIf(
-                string.IsNullOrEmpty(_value),
+                string.IsNullOrEmpty(this.value),
                 "GroupMembershipTypeValueNotSet");
 
             writer.WriteStartElement(nodeName);
 
-            _name.WriteXml("name", writer);
-            writer.WriteElementString("value", _value);
+            this.name.WriteXml("name", writer);
+            writer.WriteElementString("value", this.value);
 
             writer.WriteEndElement();
         }
@@ -161,15 +159,17 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public CodableValue Name
         {
-            get { return _name; }
+            get { return this.name; }
+
             set
             {
                 Validator.ThrowIfArgumentNull(value, "Name", "GroupMembershipTypeNameMandatory");
                 Validator.ThrowIfStringNullOrEmpty(value.Text, "Name");
-                _name = value;
+                this.name = value;
             }
         }
-        private CodableValue _name;
+
+        private CodableValue name;
 
         /// <summary>
         /// Gets or sets the group membership value.
@@ -185,15 +185,17 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public string Value
         {
-            get { return _value; }
+            get { return this.value; }
+
             set
             {
                 Validator.ThrowIfArgumentNull(value, "Value", "GroupMembershipTypeValueMandatory");
                 Validator.ThrowIfStringIsWhitespace(value, "Value");
-                _value = value;
+                this.value = value;
             }
         }
-        private string _value;
+
+        private string value;
 
         /// <summary>
         /// Gets a string representation of the group membership type.
@@ -209,8 +211,8 @@ namespace Microsoft.HealthVault.ItemTypes
                 string.Format(
                     ResourceRetriever.GetResourceString(
                         "NameEqualsValue"),
-                    Name.ToString(),
-                    Value);
+                    this.Name.ToString(),
+                    this.Value);
         }
     }
 }

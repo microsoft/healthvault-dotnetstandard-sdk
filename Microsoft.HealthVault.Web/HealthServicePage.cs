@@ -4,13 +4,17 @@
 // All other rights reserved.
 
 using Microsoft.HealthVault.Exceptions;
-using Microsoft.HealthVault.Web.Authentication;
 using System;
 using System.Security;
 using System.Security.Permissions;
 using System.Text;
 using System.Threading.Tasks;
 using System.Web;
+using Microsoft.HealthVault.Authentication;
+using Microsoft.HealthVault.Connection;
+using Microsoft.HealthVault.Person;
+using Microsoft.HealthVault.PlatformInformation;
+using Microsoft.HealthVault.Record;
 
 namespace Microsoft.HealthVault.Web
 {
@@ -173,7 +177,7 @@ namespace Microsoft.HealthVault.Web
         /// </summary>
         ///
         /// <returns>
-        /// A <see cref="HealthVault.ApplicationConnection"/> connection.
+        /// A <see cref="Connection.ApplicationConnection"/> connection.
         /// </returns>
         ///
         /// <remarks>
@@ -333,7 +337,7 @@ namespace Microsoft.HealthVault.Web
         ///
         /// <remarks>
         /// This information is a mirror of the
-        /// <see cref="HealthVault.PersonInfo"/> class and is used to
+        /// <see cref="Person.PersonInfo"/> class and is used to
         /// serialize information to and from the session.<br/>
         /// <br/>
         /// PersonInfo should never be set to null. If the application wants

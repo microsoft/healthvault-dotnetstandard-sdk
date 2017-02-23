@@ -12,6 +12,7 @@
 using System;
 using System.Security.Principal;
 using System.Web;
+using Microsoft.HealthVault.Person;
 
 namespace Microsoft.HealthVault.Web.Mvc
 {

@@ -6,6 +6,7 @@
 using System.Text;
 using System.Xml;
 using System.Xml.XPath;
+using Microsoft.HealthVault.Helpers;
 
 namespace Microsoft.HealthVault.ItemTypes
 {
@@ -36,7 +37,7 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public MedicalImageStudySeriesImage(string imageBlobName)
         {
-            ImageBlobName = imageBlobName;
+            this.ImageBlobName = imageBlobName;
         }
 
         /// <summary>
@@ -55,8 +56,8 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             Validator.ThrowIfNavigatorNull(navigator);
 
-            _imageBlobName = navigator.SelectSingleNode("image-blob-name").Value;
-            _imagePreviewBlobName = XPathHelper.GetOptNavValue(navigator, "image-preview-blob-name");
+            this.imageBlobName = navigator.SelectSingleNode("image-blob-name").Value;
+            this.imagePreviewBlobName = XPathHelper.GetOptNavValue(navigator, "image-preview-blob-name");
         }
 
         /// <summary>
@@ -90,14 +91,14 @@ namespace Microsoft.HealthVault.ItemTypes
             Validator.ThrowIfStringNullOrEmpty(nodeName, "nodeName");
             Validator.ThrowIfWriterNull(writer);
             Validator.ThrowSerializationIf(
-                string.IsNullOrEmpty(_imageBlobName) ||
-                string.IsNullOrEmpty(_imageBlobName.Trim()),
+                string.IsNullOrEmpty(this.imageBlobName) ||
+                string.IsNullOrEmpty(this.imageBlobName.Trim()),
                 "ImageBlobNameMandatory");
 
             writer.WriteStartElement(nodeName);
 
-            writer.WriteElementString("image-blob-name", _imageBlobName);
-            XmlWriterHelper.WriteOptString(writer, "image-preview-blob-name", _imagePreviewBlobName);
+            writer.WriteElementString("image-blob-name", this.imageBlobName);
+            XmlWriterHelper.WriteOptString(writer, "image-preview-blob-name", this.imagePreviewBlobName);
 
             writer.WriteEndElement();
         }
@@ -117,15 +118,17 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public string ImageBlobName
         {
-            get { return _imageBlobName; }
+            get { return this.imageBlobName; }
+
             set
             {
                 Validator.ThrowIfStringNullOrEmpty(value, "ImageBlobName");
                 Validator.ThrowIfStringIsWhitespace(value, "ImageBlobName");
-                _imageBlobName = value;
+                this.imageBlobName = value;
             }
         }
-        private string _imageBlobName;
+
+        private string imageBlobName;
 
         /// <summary>
         /// Gets or sets the name of the BLOB holding a smaller version of the image
@@ -144,14 +147,16 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public string ImagePreviewBlobName
         {
-            get { return _imagePreviewBlobName; }
+            get { return this.imagePreviewBlobName; }
+
             set
             {
                 Validator.ThrowIfStringIsWhitespace(value, "ImagePreviewBlobName");
-                _imagePreviewBlobName = value;
+                this.imagePreviewBlobName = value;
             }
         }
-        private string _imagePreviewBlobName;
+
+        private string imagePreviewBlobName;
 
         /// <summary>
         /// Gets a string representation of the medical image study series image.
@@ -164,9 +169,9 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             StringBuilder result = new StringBuilder(200);
 
-            if (!string.IsNullOrEmpty(ImageBlobName) && !string.IsNullOrEmpty(ImageBlobName.Trim()))
+            if (!string.IsNullOrEmpty(this.ImageBlobName) && !string.IsNullOrEmpty(this.ImageBlobName.Trim()))
             {
-                result.Append(ImageBlobName);
+                result.Append(this.ImageBlobName);
             }
 
             return result.ToString();

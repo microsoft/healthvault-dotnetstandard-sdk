@@ -7,6 +7,8 @@ using System;
 using System.Text;
 using System.Xml;
 using System.Xml.XPath;
+using Microsoft.HealthVault.Helpers;
+using Microsoft.HealthVault.Thing;
 
 namespace Microsoft.HealthVault.ItemTypes
 {
@@ -62,8 +64,8 @@ namespace Microsoft.HealthVault.ItemTypes
             string content)
             : base(TypeId)
         {
-            When = when;
-            Content = content;
+            this.When = when;
+            this.Content = content;
         }
 
         /// <summary>
@@ -74,7 +76,7 @@ namespace Microsoft.HealthVault.ItemTypes
         /// A GUID.
         /// </value>
         ///
-        public new static readonly Guid TypeId =
+        public static new readonly Guid TypeId =
             new Guid("9f4e0fcd-10d7-416d-855a-90514ce2016b");
 
         /// <summary>
@@ -103,10 +105,10 @@ namespace Microsoft.HealthVault.ItemTypes
 
             Validator.ThrowInvalidIfNull(itemNav, "CommentUnexpectedNode");
 
-            _when = new ApproximateDateTime();
-            _when.ParseXml(itemNav.SelectSingleNode("when"));
-            _content = itemNav.SelectSingleNode("content").Value;
-            _category = XPathHelper.GetOptNavValue<CodableValue>(itemNav, "category");
+            this.when = new ApproximateDateTime();
+            this.when.ParseXml(itemNav.SelectSingleNode("when"));
+            this.content = itemNav.SelectSingleNode("content").Value;
+            this.category = XPathHelper.GetOptNavValue<CodableValue>(itemNav, "category");
         }
 
         /// <summary>
@@ -132,16 +134,16 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             Validator.ThrowIfWriterNull(writer);
 
-            Validator.ThrowSerializationIfNull(_when, "WhenNullValue");
+            Validator.ThrowSerializationIfNull(this.when, "WhenNullValue");
             Validator.ThrowSerializationIf(
-                string.IsNullOrEmpty(_content) || string.IsNullOrEmpty(_content.Trim()),
+                string.IsNullOrEmpty(this.content) || string.IsNullOrEmpty(this.content.Trim()),
                 "CommentContentMandatory");
 
             writer.WriteStartElement("comment");
 
-            _when.WriteXml("when", writer);
-            writer.WriteElementString("content", _content);
-            XmlWriterHelper.WriteOpt(writer, "category", _category);
+            this.when.WriteXml("when", writer);
+            writer.WriteElementString("content", this.content);
+            XmlWriterHelper.WriteOpt(writer, "category", this.category);
 
             writer.WriteEndElement();
         }
@@ -158,17 +160,17 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             get
             {
-                return _when;
+                return this.when;
             }
 
             set
             {
                 Validator.ThrowIfArgumentNull(value, "value", "WhenNullValue");
-                _when = value;
+                this.when = value;
             }
         }
 
-        private ApproximateDateTime _when;
+        private ApproximateDateTime when;
 
         /// <summary>
         /// Gets or sets the text content of this comment.
@@ -182,18 +184,18 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             get
             {
-                return _content;
+                return this.content;
             }
 
             set
             {
                 Validator.ThrowIfStringNullOrEmpty(value, "Content");
                 Validator.ThrowIfStringIsWhitespace(value, "Content");
-                _content = value;
+                this.content = value;
             }
         }
 
-        private string _content;
+        private string content;
 
         /// <summary>
         /// Gets or sets the category of the comment.
@@ -206,12 +208,12 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public CodableValue Category
         {
-            get { return _category; }
+            get { return this.category; }
 
-            set { _category = value; }
+            set { this.category = value; }
         }
 
-        private CodableValue _category;
+        private CodableValue category;
 
         /// <summary>
         /// Gets a string representation of the comment.
@@ -225,13 +227,13 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             StringBuilder result = new StringBuilder(200);
 
-            result.Append(_content);
+            result.Append(this.content);
 
-            if (_category != null)
+            if (this.category != null)
             {
                 result.Append(ResourceRetriever.GetSpace("resources"));
                 result.Append(ResourceRetriever.GetResourceString("OpenParen"));
-                result.Append(_category.Text);
+                result.Append(this.category.Text);
                 result.Append(ResourceRetriever.GetResourceString("CloseParen"));
             }
 

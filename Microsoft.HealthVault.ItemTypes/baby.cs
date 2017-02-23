@@ -6,6 +6,7 @@
 using System.Text;
 using System.Xml;
 using System.Xml.XPath;
+using Microsoft.HealthVault.Helpers;
 
 namespace Microsoft.HealthVault.ItemTypes
 {
@@ -31,12 +32,12 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             Validator.ThrowIfNavigatorNull(navigator);
 
-            _name = XPathHelper.GetOptNavValue<Name>(navigator, "name");
-            _gender = XPathHelper.GetOptNavValue<CodableValue>(navigator, "gender");
-            _weight = XPathHelper.GetOptNavValue<WeightValue>(navigator, "weight");
-            _length = XPathHelper.GetOptNavValue<Length>(navigator, "length");
-            _head = XPathHelper.GetOptNavValue<Length>(navigator, "head-circumference");
-            _note = XPathHelper.GetOptNavValue(navigator, "note");
+            this.name = XPathHelper.GetOptNavValue<Name>(navigator, "name");
+            this.gender = XPathHelper.GetOptNavValue<CodableValue>(navigator, "gender");
+            this.weight = XPathHelper.GetOptNavValue<WeightValue>(navigator, "weight");
+            this.length = XPathHelper.GetOptNavValue<Length>(navigator, "length");
+            this.head = XPathHelper.GetOptNavValue<Length>(navigator, "head-circumference");
+            this.note = XPathHelper.GetOptNavValue(navigator, "note");
         }
 
         /// <summary>
@@ -68,12 +69,12 @@ namespace Microsoft.HealthVault.ItemTypes
 
             writer.WriteStartElement(nodeName);
 
-            XmlWriterHelper.WriteOpt(writer, "name", _name);
-            XmlWriterHelper.WriteOpt(writer, "gender", _gender);
-            XmlWriterHelper.WriteOpt(writer, "weight", _weight);
-            XmlWriterHelper.WriteOpt(writer, "length", _length);
-            XmlWriterHelper.WriteOpt(writer, "head-circumference", _head);
-            XmlWriterHelper.WriteOptString(writer, "note", _note);
+            XmlWriterHelper.WriteOpt(writer, "name", this.name);
+            XmlWriterHelper.WriteOpt(writer, "gender", this.gender);
+            XmlWriterHelper.WriteOpt(writer, "weight", this.weight);
+            XmlWriterHelper.WriteOpt(writer, "length", this.length);
+            XmlWriterHelper.WriteOpt(writer, "head-circumference", this.head);
+            XmlWriterHelper.WriteOptString(writer, "note", this.note);
 
             writer.WriteEndElement();
         }
@@ -88,10 +89,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public Name Name
         {
-            get { return _name; }
-            set { _name = value; }
+            get { return this.name; }
+            set { this.name = value; }
         }
-        private Name _name;
+
+        private Name name;
 
         /// <summary>
         /// Gets or sets the gender of the baby.
@@ -104,10 +106,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public CodableValue Gender
         {
-            get { return _gender; }
-            set { _gender = value; }
+            get { return this.gender; }
+            set { this.gender = value; }
         }
-        private CodableValue _gender;
+
+        private CodableValue gender;
 
         /// <summary>
         /// Gets or sets the birth weight of the baby.
@@ -119,10 +122,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public WeightValue Weight
         {
-            get { return _weight; }
-            set { _weight = value; }
+            get { return this.weight; }
+            set { this.weight = value; }
         }
-        private WeightValue _weight;
+
+        private WeightValue weight;
 
         /// <summary>
         /// Gets or sets the birth length of the baby.
@@ -134,10 +138,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public Length Length
         {
-            get { return _length; }
-            set { _length = value; }
+            get { return this.length; }
+            set { this.length = value; }
         }
-        private Length _length;
+
+        private Length length;
 
         /// <summary>
         /// Gets or sets the circumference of the baby's head.
@@ -149,10 +154,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public Length HeadCircumference
         {
-            get { return _head; }
-            set { _head = value; }
+            get { return this.head; }
+            set { this.head = value; }
         }
-        private Length _head;
+
+        private Length head;
 
         /// <summary>
         /// Gets or sets additional information about the baby.
@@ -168,14 +174,16 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public string Note
         {
-            get { return _note; }
+            get { return this.note; }
+
             set
             {
                 Validator.ThrowIfStringIsWhitespace(value, "Note");
-                _note = value;
+                this.note = value;
             }
         }
-        private string _note;
+
+        private string note;
 
         /// <summary>
         /// Gets a string representation of the baby information.
@@ -189,32 +197,32 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             StringBuilder result = new StringBuilder(200);
 
-            if (Name != null)
+            if (this.Name != null)
             {
-                result.Append(Name);
+                result.Append(this.Name);
             }
 
-            if (Weight != null && Length != null)
+            if (this.Weight != null && this.Length != null)
             {
                 result.AppendFormat(
                     ResourceRetriever.GetResourceString(
                         "BabyToStringFormatWeightAndLength"),
-                    Weight.ToString(),
-                    Length.ToString());
+                    this.Weight.ToString(),
+                    this.Length.ToString());
             }
-            else if (Weight != null)
+            else if (this.Weight != null)
             {
                 result.AppendFormat(
                     ResourceRetriever.GetResourceString(
                         "BabyToStringFormatWeight"),
-                    Weight.ToString());
+                    this.Weight.ToString());
             }
-            else if (Length != null)
+            else if (this.Length != null)
             {
                 result.AppendFormat(
                     ResourceRetriever.GetResourceString(
                         "BabyToStringFormatLength"),
-                    Length.ToString());
+                    this.Length.ToString());
             }
 
             return result.ToString();

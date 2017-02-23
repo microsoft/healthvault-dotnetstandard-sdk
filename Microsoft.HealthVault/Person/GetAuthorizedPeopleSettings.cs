@@ -4,8 +4,11 @@
 // All other rights reserved.
 
 using System;
+using Microsoft.HealthVault.Connection;
+using Microsoft.HealthVault.Exceptions;
+using Microsoft.HealthVault.Helpers;
 
-namespace Microsoft.HealthVault
+namespace Microsoft.HealthVault.Person
 {
     /// <summary>
     /// The settings for retrieving a set of <see cref="PersonInfo"/> objects through
@@ -39,17 +42,19 @@ namespace Microsoft.HealthVault
         ///
         public int BatchSize
         {
-            get { return _batchSize; }
+            get { return this.batchSize; }
+
             set
             {
                 Validator.ThrowArgumentOutOfRangeIf(
                     value < 0,
                     "BatchSize",
                     "GetAuthorizedPeopleSettingsBatchSizeNegative");
-                _batchSize = value;
+                this.batchSize = value;
             }
         }
-        private int _batchSize;
+
+        private int batchSize;
 
         /// <summary>
         /// Get or sets the DateTime in UTC that will be used to filter authorized people

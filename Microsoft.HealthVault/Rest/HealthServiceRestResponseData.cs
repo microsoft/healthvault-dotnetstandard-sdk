@@ -25,55 +25,16 @@ namespace Microsoft.HealthVault.Rest
         /// <value>
         /// A <see cref="HttpStatusCode"/> value.
         /// </value>        
-        public HttpStatusCode StatusCode
-        {
-            get
-            {
-                return _statusCode;
-            }
-
-            internal set
-            {
-                _statusCode = value;
-            }
-        }
-        
-        private HttpStatusCode _statusCode;
+        public HttpStatusCode StatusCode { get; internal set; }
 
         /// <summary>
         /// The response body of the rest request.
         /// </summary>
-        public string ResponseBody
-        {
-            get
-            {
-                return _responseBody;
-            }
-
-            internal set
-            {
-                _responseBody = value;
-            }
-        }
-
-        private string _responseBody;
+        public string ResponseBody { get; internal set; }
 
         /// <summary>
         /// The response headers
         /// </summary>
-        public HttpResponseHeaders Headers
-        {
-            get
-            {
-                return _headers;
-            }
-
-            internal set
-            {
-                _headers = value;
-            }
-        }
-
-        private HttpResponseHeaders _headers;
+        public HttpResponseHeaders Headers { get; internal set; }
     }
 }

@@ -8,14 +8,15 @@ using System.Diagnostics;
 using System.Runtime.InteropServices;
 using System.Security;
 using System.Security.Cryptography;
+using Microsoft.HealthVault.Helpers;
 
 namespace Microsoft.HealthVault.Certificate
 {
     /// <summary>
-    /// 	Blob to pass to CAPI.
+    /// Blob to pass to CAPI.
     /// </summary>
     /// <remarks>
-    /// 	See http://msdn.microsoft.com/library/default.asp?url=/library/en-us/seccrypto/security/cryptoapi_blob.asp
+    /// See http://msdn.microsoft.com/library/default.asp?url=/library/en-us/seccrypto/security/cryptoapi_blob.asp
     /// </remarks>
     [StructLayout(LayoutKind.Sequential)]
     internal sealed class CryptoApiBlob : IDisposable
@@ -32,7 +33,7 @@ namespace Microsoft.HealthVault.Certificate
         /// </summary>
         internal CryptoApiBlob()
         {
-            pbData = IntPtr.Zero;
+            this.pbData = IntPtr.Zero;
         }
 
         /// <summary>
@@ -44,14 +45,14 @@ namespace Microsoft.HealthVault.Certificate
         {
             Validator.ThrowIfArgumentNull(data, "data", "CryptoApiBlobNotNullData");
 
-            AllocateBlob(data.Length);
-            Marshal.Copy(data, 0, pbData, data.Length);
-            return;
+            this.AllocateBlob(data.Length);
+            Marshal.Copy(data, 0, this.pbData, data.Length);
         }
 
         #endregion
 
         #region Public properties
+
         /// <summary>
         /// Gets the size of the contained blob
         /// </summary>
@@ -59,8 +60,8 @@ namespace Microsoft.HealthVault.Certificate
         {
             get
             {
-                Debug.Assert(cbData >= 0);
-                return cbData;
+                Debug.Assert(this.cbData >= 0, "Crypto blob data not initialized");
+                return this.cbData;
             }
         }
         #endregion
@@ -79,10 +80,10 @@ namespace Microsoft.HealthVault.Certificate
         [SecurityCritical]
         internal void AllocateBlob(int size)
         {
-            Debug.Assert(cbData >= 0);
+            Debug.Assert(this.cbData >= 0, "Crypto blob data not initialized");
             Debug.Assert(
-                    (pbData == IntPtr.Zero && cbData == 0) ||
-                    (pbData != IntPtr.Zero && cbData != 0));
+                    (this.pbData == IntPtr.Zero && this.cbData == 0) ||
+                    (this.pbData != IntPtr.Zero && this.cbData != 0), "Crypto blob data not initialized");
 
             Validator.ThrowArgumentOutOfRangeIf(
                 size < 0,
@@ -103,13 +104,15 @@ namespace Microsoft.HealthVault.Certificate
             }
 
             // if that succeeds then replace the old one
-            IntPtr oldMemory = pbData;
-            pbData = newMemory;
-            cbData = size;
+            IntPtr oldMemory = this.pbData;
+            this.pbData = newMemory;
+            this.cbData = size;
 
             // then release the old memory
             if (oldMemory != IntPtr.Zero)
+            {
                 Marshal.FreeHGlobal(oldMemory);
+            }
         }
 
         /// <summary>
@@ -118,31 +121,33 @@ namespace Microsoft.HealthVault.Certificate
         [SecurityCritical]
         internal void ClearBlob()
         {
-            if (pbData != IntPtr.Zero)
+            if (this.pbData != IntPtr.Zero)
             {
-                Marshal.FreeHGlobal(pbData);
+                Marshal.FreeHGlobal(this.pbData);
             }
 
-            pbData = IntPtr.Zero;
-            cbData = 0;
+            this.pbData = IntPtr.Zero;
+            this.cbData = 0;
         }
 
-        ///	<summary>
-        ///	Create a byte array for this blob.
-        ///	</summary>
+        /// <summary>
+        /// Create a byte array for this blob.
+        /// </summary>
         [SecurityCritical]
         internal byte[] GetBytes()
         {
-            Debug.Assert(cbData >= 0);
+            Debug.Assert(this.cbData >= 0, "Crypto blob data not initialized");
             Debug.Assert(
-                    (pbData == IntPtr.Zero && cbData == 0) ||
-                    (pbData != IntPtr.Zero && cbData != 0));
+                    (this.pbData == IntPtr.Zero && this.cbData == 0) ||
+                    (this.pbData != IntPtr.Zero && this.cbData != 0), "Crypto blob data not initialized");
 
-            if (pbData == IntPtr.Zero)
+            if (this.pbData == IntPtr.Zero)
+            {
                 return null;
+            }
 
-            byte[] bytes = new byte[cbData];
-            Marshal.Copy(pbData, bytes, 0, cbData);
+            byte[] bytes = new byte[this.cbData];
+            Marshal.Copy(this.pbData, bytes, 0, this.cbData);
             return bytes;
         }
 
@@ -157,10 +162,10 @@ namespace Microsoft.HealthVault.Certificate
         [SecuritySafeCritical]
         private void Dispose(bool disposing)
         {
-            if (pbData != IntPtr.Zero)
+            if (this.pbData != IntPtr.Zero)
             {
-                Marshal.FreeHGlobal(pbData);
-                pbData = IntPtr.Zero;
+                Marshal.FreeHGlobal(this.pbData);
+                this.pbData = IntPtr.Zero;
             }
 
             if (disposing)
@@ -174,15 +179,16 @@ namespace Microsoft.HealthVault.Certificate
         /// </summary>
         public void Dispose()
         {
-            Dispose(true);
+            this.Dispose(true);
         }
 
         /// <summary>
-        /// 	Last resort blob cleanup
+        /// Finalizes an instance of the <see cref="CryptoApiBlob"/> class.
+        /// Last resort blob cleanup
         /// </summary>
         ~CryptoApiBlob()
         {
-            Dispose(false);
+            this.Dispose(false);
         }
 
         #endregion

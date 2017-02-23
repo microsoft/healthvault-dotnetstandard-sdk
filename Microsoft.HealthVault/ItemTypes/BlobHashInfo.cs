@@ -8,7 +8,7 @@ using System.Globalization;
 using System.Xml;
 using System.Xml.XPath;
 
-namespace Microsoft.HealthVault
+namespace Microsoft.HealthVault.ItemTypes
 {
     /// <summary>
     /// Represents hash information about a <see cref="Blob" />.
@@ -39,17 +39,17 @@ namespace Microsoft.HealthVault
         /// <param name="hash">
         /// Represents the BLOB hash value
         /// </param>
-        public BlobHashInfo(BlobHashAlgorithm blobHashAlgorithm, Int32 blobBlockSizeBytes, byte[] hash)
+        public BlobHashInfo(BlobHashAlgorithm blobHashAlgorithm, int blobBlockSizeBytes, byte[] hash)
         {
-            _blobHashAlgorithm = blobHashAlgorithm;
-            _blobHashAlgorithmString = blobHashAlgorithm.ToString();
-            _blockSizeBytes = blobBlockSizeBytes;
-            _hash = hash;
+            this.BlobHashAlgorithm = blobHashAlgorithm;
+            this.blobHashAlgorithmString = blobHashAlgorithm.ToString();
+            this.BlockSizeBytes = blobBlockSizeBytes;
+            this.Hash = hash;
         }
 
         internal void Parse(XPathNavigator blobHashNav)
         {
-            String blobHashAlgString = blobHashNav.SelectSingleNode("algorithm").Value;
+            string blobHashAlgString = blobHashNav.SelectSingleNode("algorithm").Value;
             BlobHashAlgorithm blobHashAlg;
             try
             {
@@ -61,40 +61,41 @@ namespace Microsoft.HealthVault
             {
                 blobHashAlg = BlobHashAlgorithm.Unknown;
             }
-            _blobHashAlgorithmString = blobHashAlgString;
 
-            Int32 blockSize = blobHashNav.SelectSingleNode("params/block-size").ValueAsInt;
+            this.blobHashAlgorithmString = blobHashAlgString;
+
+            int blockSize = blobHashNav.SelectSingleNode("params/block-size").ValueAsInt;
 
             XPathNavigator hashNav = blobHashNav.SelectSingleNode("hash");
 
-            Byte[] blobHash = null;
+            byte[] blobHash = null;
             if (hashNav != null)
             {
-                String blobHashStr = blobHashNav.SelectSingleNode("hash").Value;
+                string blobHashStr = blobHashNav.SelectSingleNode("hash").Value;
                 blobHash = Convert.FromBase64String(blobHashStr);
             }
 
-            _blobHashAlgorithm = blobHashAlg;
-            _blockSizeBytes = blockSize;
-            _hash = blobHash;
+            this.BlobHashAlgorithm = blobHashAlg;
+            this.BlockSizeBytes = blockSize;
+            this.Hash = blobHash;
         }
 
         internal void Write(XmlWriter writer)
         {
             writer.WriteStartElement("hash-info");
 
-            writer.WriteElementString("algorithm", _blobHashAlgorithmString);
+            writer.WriteElementString("algorithm", this.blobHashAlgorithmString);
             writer.WriteStartElement("params");
 
             writer.WriteElementString(
                 "block-size",
-                _blockSizeBytes.ToString(CultureInfo.InvariantCulture));
+                this.BlockSizeBytes.ToString(CultureInfo.InvariantCulture));
 
             writer.WriteEndElement();
 
-            if (_hash != null)
+            if (this.Hash != null)
             {
-                writer.WriteElementString("hash", Convert.ToBase64String(_hash));
+                writer.WriteElementString("hash", Convert.ToBase64String(this.Hash));
             }
 
             writer.WriteEndElement();
@@ -103,32 +104,20 @@ namespace Microsoft.HealthVault
         /// <summary>
         /// The algorithm used to calculate the BLOB hash.
         /// </summary>
-        public BlobHashAlgorithm BlobHashAlgorithm
-        {
-            get { return _blobHashAlgorithm; }
-        }
-        private BlobHashAlgorithm _blobHashAlgorithm;
+        public BlobHashAlgorithm BlobHashAlgorithm { get; private set; }
 
-        private string _blobHashAlgorithmString;
+        private string blobHashAlgorithmString;
 
         /// <summary>
         /// The block size in bytes used by the <see cref="BlobHashAlgorithm" /> to
         /// calculate the BLOB hash.
         /// </summary>
-        public int BlockSizeBytes
-        {
-            get { return _blockSizeBytes; }
-        }
-        private int _blockSizeBytes;
+        public int BlockSizeBytes { get; private set; }
 
         /// <summary>
         /// Represents the BLOB hash as calculated by the <see cref="BlobHashAlgorithm" />
         /// and <see cref="BlockSizeBytes" />
         /// </summary>
-        public byte[] Hash
-        {
-            get { return _hash; }
-        }
-        private byte[] _hash;
+        public byte[] Hash { get; private set; }
     }
 }

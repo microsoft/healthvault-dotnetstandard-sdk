@@ -8,41 +8,42 @@ using System.Diagnostics;
 using System.Text;
 using System.Threading;
 
-namespace Microsoft.HealthVault
+namespace Microsoft.HealthVault.Diagnostics
 {
     internal class HealthVaultPlatformTrace
     {
-        private static readonly object _lock = new object();
-        private static ITraceSource s_traceSource;
+        private static readonly object Lock = new object();
+        private static ITraceSource traceSource;
 
         internal static ITraceSource TraceSource
         {
             get
             {
-                if (s_traceSource == null)
+                if (traceSource == null)
                 {
-                    lock (_lock)
+                    lock (Lock)
                     {
-                        if (s_traceSource == null)
+                        if (traceSource == null)
                         {
-                            ITraceSource traceSource = new HealthVaultTraceSource();
-                            TraceSource = traceSource;
+                            ITraceSource newTraceSource = new HealthVaultTraceSource();
+                            TraceSource = newTraceSource;
                         }
                     }
                 }
 
-                return s_traceSource;
+                return traceSource;
             }
+
             set
             {
-                lock (_lock)
+                lock (Lock)
                 {
-                    Interlocked.Exchange(ref s_traceSource, value);
+                    Interlocked.Exchange(ref traceSource, value);
                 }
             }
         }
 
-        internal static void LogRequest(Byte[] utf8Bytes, Guid correlationId)
+        internal static void LogRequest(byte[] utf8Bytes, Guid correlationId)
         {
             if (LoggingEnabled)
             {

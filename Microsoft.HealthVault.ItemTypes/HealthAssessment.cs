@@ -9,6 +9,8 @@ using System.Collections.ObjectModel;
 using System.Text;
 using System.Xml;
 using System.Xml.XPath;
+using Microsoft.HealthVault.Helpers;
+using Microsoft.HealthVault.Thing;
 
 namespace Microsoft.HealthVault.ItemTypes
 {
@@ -86,11 +88,11 @@ namespace Microsoft.HealthVault.ItemTypes
                 throw Validator.ArgumentException("result", "HealthAssessmentResultMandatory");
             }
 
-            _result.Clear();
+            this.result.Clear();
 
             foreach (Assessment assessment in result)
             {
-                _result.Add(assessment);
+                this.result.Add(assessment);
             }
         }
 
@@ -98,7 +100,7 @@ namespace Microsoft.HealthVault.ItemTypes
         /// The unique identifier for the item type.
         /// </summary>
         ///
-        public new static readonly Guid TypeId =
+        public static new readonly Guid TypeId =
             new Guid("58fd8ac4-6c47-41a3-94b2-478401f0e26c");
 
         /// <summary>
@@ -122,24 +124,24 @@ namespace Microsoft.HealthVault.ItemTypes
             Validator.ThrowInvalidIfNull(itemNav, "HealthAssessmentUnexpectedNode");
 
             // <when>
-            _when = new HealthServiceDateTime();
-            _when.ParseXml(itemNav.SelectSingleNode("when"));
+            this.when = new HealthServiceDateTime();
+            this.when.ParseXml(itemNav.SelectSingleNode("when"));
 
             // <name>
-            _name = itemNav.SelectSingleNode("name").Value;
+            this.name = itemNav.SelectSingleNode("name").Value;
 
             // <category>
-            _category = new CodableValue();
-            _category.ParseXml(itemNav.SelectSingleNode("category"));
+            this.category = new CodableValue();
+            this.category.ParseXml(itemNav.SelectSingleNode("category"));
 
             // <result>
-            _result.Clear();
+            this.result.Clear();
             XPathNodeIterator resultIterator = itemNav.Select("result");
             foreach (XPathNavigator resultNav in resultIterator)
             {
                 Assessment result = new Assessment();
                 result.ParseXml(resultNav);
-                _result.Add(result);
+                this.result.Add(result);
             }
         }
 
@@ -163,25 +165,25 @@ namespace Microsoft.HealthVault.ItemTypes
         public override void WriteXml(XmlWriter writer)
         {
             Validator.ThrowIfWriterNull(writer);
-            Validator.ThrowSerializationIfNull(_when, "WhenNullValue");
-            Validator.ThrowSerializationIfNull(_name, "HealthAssessmentNameNotSet");
-            Validator.ThrowSerializationIfNull(_category, "HealthAssessmentCategoryNotSet");
-            Validator.ThrowSerializationIf(_result.Count == 0, "HealthAssessmentResultNotSet");
+            Validator.ThrowSerializationIfNull(this.when, "WhenNullValue");
+            Validator.ThrowSerializationIfNull(this.name, "HealthAssessmentNameNotSet");
+            Validator.ThrowSerializationIfNull(this.category, "HealthAssessmentCategoryNotSet");
+            Validator.ThrowSerializationIf(this.result.Count == 0, "HealthAssessmentResultNotSet");
 
             // <health-assessment>
             writer.WriteStartElement("health-assessment");
 
             // <when>
-            _when.WriteXml("when", writer);
+            this.when.WriteXml("when", writer);
 
             // <name>
-            writer.WriteElementString("name", _name);
+            writer.WriteElementString("name", this.name);
 
             // <category>
-            _category.WriteXml("category", writer);
+            this.category.WriteXml("category", writer);
 
             // <result>
-            foreach (Assessment result in _result)
+            foreach (Assessment result in this.result)
             {
                 result.WriteXml("result", writer);
             }
@@ -205,14 +207,16 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public HealthServiceDateTime When
         {
-            get { return _when; }
+            get { return this.when; }
+
             set
             {
                 Validator.ThrowIfArgumentNull(value, "When", "WhenNullValue");
-                _when = value;
+                this.when = value;
             }
         }
-        private HealthServiceDateTime _when;
+
+        private HealthServiceDateTime when;
 
         /// <summary>
         /// Gets or sets the application's name for the assessment.
@@ -228,15 +232,17 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public string Name
         {
-            get { return _name; }
+            get { return this.name; }
+
             set
             {
                 Validator.ThrowIfStringNullOrEmpty(value, "Name");
                 Validator.ThrowIfStringIsWhitespace(value, "Name");
-                _name = value;
+                this.name = value;
             }
         }
-        private string _name;
+
+        private string name;
 
         /// <summary>
         /// Gets or sets the type of assessment.
@@ -250,14 +256,16 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public CodableValue Category
         {
-            get { return _category; }
+            get { return this.category; }
+
             set
             {
                 Validator.ThrowIfArgumentNull(value, "Category", "HealthAssessmentCategoryMandatory");
-                _category = value;
+                this.category = value;
             }
         }
-        private CodableValue _category;
+
+        private CodableValue category;
 
         /// <summary>
         /// Gets a collection of the results of the assessment.
@@ -267,11 +275,9 @@ namespace Microsoft.HealthVault.ItemTypes
         /// Example: High blood pressure, low risk.
         /// </remarks>
         ///
-        public Collection<Assessment> Result
-        {
-            get { return _result; }
-        }
-        private Collection<Assessment> _result = new Collection<Assessment>();
+        public Collection<Assessment> Result => this.result;
+
+        private readonly Collection<Assessment> result = new Collection<Assessment>();
 
         /// <summary>
         /// Gets a string representation of the health assessment.
@@ -285,13 +291,14 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             StringBuilder result = new StringBuilder(200);
 
-            for (int index = 0; index < _result.Count; ++index)
+            for (int index = 0; index < this.result.Count; ++index)
             {
                 if (index > 0)
                 {
                     result.Append(ResourceRetriever.GetResourceString("GroupSeparator"));
                 }
-                result.Append(_result[index]);
+
+                result.Append(this.result[index]);
             }
 
             return result.ToString();

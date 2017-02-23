@@ -7,6 +7,8 @@ using System;
 using System.Globalization;
 using System.Xml;
 using System.Xml.XPath;
+using Microsoft.HealthVault.Helpers;
+using Microsoft.HealthVault.Thing;
 
 namespace Microsoft.HealthVault.ItemTypes
 {
@@ -44,14 +46,14 @@ namespace Microsoft.HealthVault.ItemTypes
         public BloodOxygenSaturation(HealthServiceDateTime when, double value)
             : base(TypeId)
         {
-            When = when;
-            Value = value;
+            this.When = when;
+            this.Value = value;
         }
 
         /// <summary>
         /// Retrieves the unique identifier for the blood oxygen saturation item type.
         /// </summary>
-        public new static readonly Guid TypeId =
+        public static new readonly Guid TypeId =
             new Guid("3a54f95f-03d8-4f62-815f-f691fc94a500");
 
         /// <summary>
@@ -75,18 +77,18 @@ namespace Microsoft.HealthVault.ItemTypes
             Validator.ThrowInvalidIfNull(itemNav, "BloodOxygenSaturationUnexpectedNode");
 
             // when
-            _when = new HealthServiceDateTime();
-            _when.ParseXml(itemNav.SelectSingleNode("when"));
+            this.when = new HealthServiceDateTime();
+            this.when.ParseXml(itemNav.SelectSingleNode("when"));
 
             // value
-            _value = itemNav.SelectSingleNode("value").ValueAsDouble;
+            this.value = itemNav.SelectSingleNode("value").ValueAsDouble;
 
             // measurement-method
-            _measurementMethod =
+            this.measurementMethod =
                 XPathHelper.GetOptNavValue<CodableValue>(itemNav, "measurement-method");
 
             // measurement-flags
-            _measurementFlags =
+            this.measurementFlags =
                 XPathHelper.GetOptNavValue<CodableValue>(itemNav, "measurement-flags");
         }
 
@@ -109,30 +111,30 @@ namespace Microsoft.HealthVault.ItemTypes
         public override void WriteXml(XmlWriter writer)
         {
             Validator.ThrowIfWriterNull(writer);
-            Validator.ThrowSerializationIfNull(_when, "WhenNullValue");
+            Validator.ThrowSerializationIfNull(this.when, "WhenNullValue");
 
             // <blood-oxygen-saturation>
             writer.WriteStartElement("blood-oxygen-saturation");
 
             // <when>
-            _when.WriteXml("when", writer);
+            this.when.WriteXml("when", writer);
 
             // <value>
             writer.WriteElementString(
                 "value",
-                XmlConvert.ToString(_value));
+                XmlConvert.ToString(this.value));
 
             // <measurement-method>
             XmlWriterHelper.WriteOpt(
                 writer,
                 "measurement-method",
-                _measurementMethod);
+                this.measurementMethod);
 
             // <measurement-flags>
             XmlWriterHelper.WriteOpt(
                 writer,
                 "measurement-flags",
-                _measurementFlags);
+                this.measurementFlags);
 
             // </blood-oxygen-saturation>
             writer.WriteEndElement();
@@ -153,14 +155,16 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public HealthServiceDateTime When
         {
-            get { return _when; }
+            get { return this.when; }
+
             set
             {
                 Validator.ThrowIfArgumentNull(value, "When", "WhenNullValue");
-                _when = value;
+                this.when = value;
             }
         }
-        private HealthServiceDateTime _when;
+
+        private HealthServiceDateTime when;
 
         /// <summary>
         /// Gets or sets the measured blood oxygen saturation percentage.
@@ -176,17 +180,19 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public double Value
         {
-            get { return _value; }
+            get { return this.value; }
+
             set
             {
                 Validator.ThrowArgumentOutOfRangeIf(
                     (value > 1.0) || (value < 0.0),
                     "Value",
                     "BloodOxygenSaturationValueOutOfRange");
-                _value = value;
+                this.value = value;
             }
         }
-        private double _value;
+
+        private double value;
 
         /// <summary>
         /// Gets or sets the technique used to obtain the measurement.
@@ -203,10 +209,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public CodableValue MeasurementMethod
         {
-            get { return _measurementMethod; }
-            set { _measurementMethod = value; }
+            get { return this.measurementMethod; }
+            set { this.measurementMethod = value; }
         }
-        private CodableValue _measurementMethod;
+
+        private CodableValue measurementMethod;
 
         /// <summary>
         /// Gets or sets the additional information about the measurement.
@@ -224,10 +231,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public CodableValue MeasurementFlags
         {
-            get { return _measurementFlags; }
-            set { _measurementFlags = value; }
+            get { return this.measurementFlags; }
+            set { this.measurementFlags = value; }
         }
-        private CodableValue _measurementFlags;
+
+        private CodableValue measurementFlags;
 
         /// <summary>
         /// Gets the description of a blood oxygen instance.
@@ -243,7 +251,7 @@ namespace Microsoft.HealthVault.ItemTypes
                 string.Format(
                     ResourceRetriever.GetResourceString(
                         "Percent"),
-                    (_value * 100.0).ToString(CultureInfo.CurrentCulture));
+                    (this.value * 100.0).ToString(CultureInfo.CurrentCulture));
         }
     }
 }

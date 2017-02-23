@@ -5,7 +5,7 @@
 
 using System;
 
-namespace Microsoft.HealthVault
+namespace Microsoft.HealthVault.Thing
 {
     /// <summary>
     /// Represents access restrictions for a <see cref="HealthRecordItem"/>.
@@ -44,6 +44,6 @@ namespace Microsoft.HealthVault
         /// The <see cref="HealthRecordItem"/> is read-only.
         /// </summary>
         ///
-        ReadOnly = 0x10,
+        ReadOnly = 0x10
     }
 }

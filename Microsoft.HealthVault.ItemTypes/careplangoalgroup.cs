@@ -9,6 +9,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Xml;
 using System.Xml.XPath;
+using Microsoft.HealthVault.Helpers;
 
 namespace Microsoft.HealthVault.ItemTypes
 {
@@ -51,12 +52,12 @@ namespace Microsoft.HealthVault.ItemTypes
             CodableValue name,
             Collection<CarePlanGoal> goals)
         {
-            Name = name;
+            this.Name = name;
 
             Validator.ThrowArgumentExceptionIf(goals == null, "goals", "CarePlanGoalGroupGroupsNull");
             Validator.ThrowArgumentExceptionIf(goals.Count == 0, "goals", "CarePlanGoalGroupGroupsNull");
 
-            _goals = goals;
+            this.goals = goals;
         }
 
         /// <summary>
@@ -75,10 +76,10 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             Validator.ThrowIfNavigatorNull(navigator);
 
-            _name = new CodableValue();
-            _name.ParseXml(navigator.SelectSingleNode("name"));
-            _description = XPathHelper.GetOptNavValue(navigator, "description");
-            _goals = XPathHelper.ParseXmlCollection<CarePlanGoal>(navigator, "goals/goal");
+            this.name = new CodableValue();
+            this.name.ParseXml(navigator.SelectSingleNode("name"));
+            this.description = XPathHelper.GetOptNavValue(navigator, "description");
+            this.goals = XPathHelper.ParseXmlCollection<CarePlanGoal>(navigator, "goals/goal");
         }
 
         /// <summary>
@@ -113,16 +114,16 @@ namespace Microsoft.HealthVault.ItemTypes
             Validator.ThrowIfStringNullOrEmpty(nodeName, "nodeName");
             Validator.ThrowIfWriterNull(writer);
 
-            Validator.ThrowSerializationIfNull(_name, "CarePlanGoalGroupNameNull");
-            Validator.ThrowSerializationIfNull(_goals, "CarePlanGoalGroupGroupsNull");
-            Validator.ThrowSerializationIf(_goals.Count == 0, "CarePlanGoalGroupGroupsEmpty");
+            Validator.ThrowSerializationIfNull(this.name, "CarePlanGoalGroupNameNull");
+            Validator.ThrowSerializationIfNull(this.goals, "CarePlanGoalGroupGroupsNull");
+            Validator.ThrowSerializationIf(this.goals.Count == 0, "CarePlanGoalGroupGroupsEmpty");
 
             writer.WriteStartElement("goal-group");
             {
-                _name.WriteXml("name", writer);
-                XmlWriterHelper.WriteOptString(writer, "description", _description);
+                this.name.WriteXml("name", writer);
+                XmlWriterHelper.WriteOptString(writer, "description", this.description);
 
-                XmlWriterHelper.WriteXmlCollection(writer, "goals", _goals, "goal");
+                XmlWriterHelper.WriteXmlCollection(writer, "goals", this.goals, "goal");
             }
 
             writer.WriteEndElement();
@@ -145,17 +146,17 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             get
             {
-                return _name;
+                return this.name;
             }
 
             set
             {
                 Validator.ThrowIfArgumentNull(value, "Name", "CarePlanGoalGroupNameNull");
-                _name = value;
+                this.name = value;
             }
         }
 
-        private CodableValue _name;
+        private CodableValue name;
 
         /// <summary>
         /// Gets or sets description of the goal group.
@@ -173,7 +174,7 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             get
             {
-                return _description;
+                return this.description;
             }
 
             set
@@ -181,25 +182,19 @@ namespace Microsoft.HealthVault.ItemTypes
                 Validator.ThrowIfStringNullOrEmpty(value, "Description");
                 Validator.ThrowIfStringIsEmptyOrWhitespace(value, "Description");
 
-                _description = value;
+                this.description = value;
             }
         }
 
-        private string _description;
+        private string description;
 
         /// <summary>
         /// Gets or sets list of care plan goals associated with this goal group.
         /// </summary>
         ///
-        public Collection<CarePlanGoal> Goals
-        {
-            get
-            {
-                return _goals;
-            }
-        }
+        public Collection<CarePlanGoal> Goals => this.goals;
 
-        private Collection<CarePlanGoal> _goals =
+        private Collection<CarePlanGoal> goals =
             new Collection<CarePlanGoal>();
 
         /// <summary>
@@ -212,34 +207,30 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public override string ToString()
         {
-            if (_name != null)
+            if (this.name != null)
             {
-                if (_description == null)
+                if (this.description == null)
                 {
-                    return _name.Text;
+                    return this.name.Text;
                 }
-                else
-                {
-                    return string.Format(
-                        CultureInfo.CurrentUICulture,
-                        ResourceRetriever.GetResourceString("CarePlanGoalGroupFormat"),
-                        _name.Text,
-                        _description);
-                }
+
+                return string.Format(
+                    CultureInfo.CurrentUICulture,
+                    ResourceRetriever.GetResourceString("CarePlanGoalGroupFormat"),
+                    this.name.Text,
+                    this.description);
             }
-            else
+
+            string listSeparator = ResourceRetriever.GetResourceString("ListSeparator");
+
+            List<string> goalStrings = new List<string>();
+
+            foreach (CarePlanGoal goal in this.goals)
             {
-                string listSeparator = ResourceRetriever.GetResourceString("ListSeparator");
-
-                List<string> goalStrings = new List<string>();
-
-                foreach (CarePlanGoal goal in _goals)
-                {
-                    goalStrings.Add(goal.ToString());
-                }
-
-                return string.Join(listSeparator, goalStrings.ToArray());
+                goalStrings.Add(goal.ToString());
             }
+
+            return string.Join(listSeparator, goalStrings.ToArray());
         }
     }
 }

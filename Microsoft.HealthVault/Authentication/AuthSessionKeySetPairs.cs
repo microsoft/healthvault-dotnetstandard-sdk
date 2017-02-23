@@ -3,23 +3,23 @@
 // see http://www.microsoft.com/resources/sharedsource/licensingbasics/sharedsourcelicenses.mspx.
 // All other rights reserved.
 
-using Microsoft.HealthVault.Web.Authentication;
 using System;
 using System.Collections.Generic;
 using System.Threading;
+using Microsoft.HealthVault.Helpers;
 
 namespace Microsoft.HealthVault.Authentication
 {
     internal class AuthSessionKeySetPairs
     {
-        private readonly Dictionary<Guid, AuthenticationTokenKeySetPair> Pairs =
+        private readonly Dictionary<Guid, AuthenticationTokenKeySetPair> pairs =
             new Dictionary<Guid, AuthenticationTokenKeySetPair>();
 
-        private readonly ReaderWriterLockSlim _lock = new ReaderWriterLockSlim();
+        private readonly ReaderWriterLockSlim @lock = new ReaderWriterLockSlim();
 
         private void AcquireWriterLock()
         {
-            _lock.TryEnterWriteLock(
+            this.@lock.TryEnterWriteLock(
                 HealthApplicationConfiguration.Current.RetryOnInternal500SleepSeconds
                 * HealthApplicationConfiguration.Current.RetryOnInternal500Count
                 * 1000);
@@ -27,24 +27,24 @@ namespace Microsoft.HealthVault.Authentication
 
         private void ReleaseWriterLockIfHeld()
         {
-            if (_lock.IsWriteLockHeld)
+            if (this.@lock.IsWriteLockHeld)
             {
-                _lock.ExitWriteLock();
+                this.@lock.ExitWriteLock();
             }
         }
 
         private void AcquireReaderLock()
         {
-            _lock.TryEnterReadLock(
+            this.@lock.TryEnterReadLock(
                 HealthApplicationConfiguration.Current.RetryOnInternal500SleepSeconds
                 * 1000);
         }
 
         private void ReleaseReaderLockIfHeld()
         {
-            if (_lock.IsReadLockHeld)
+            if (this.@lock.IsReadLockHeld)
             {
-                _lock.ExitReadLock();
+                this.@lock.ExitReadLock();
             }
         }
 
@@ -52,14 +52,14 @@ namespace Microsoft.HealthVault.Authentication
         {
             try
             {
-                AcquireReaderLock();
+                this.AcquireReaderLock();
 
-                if (!Pairs.ContainsKey(applicationId))
+                if (!this.pairs.ContainsKey(applicationId))
                 {
                     return null;
                 }
 
-                return Pairs[applicationId];
+                return this.pairs[applicationId];
             }
             catch (Exception)
             {
@@ -68,7 +68,7 @@ namespace Microsoft.HealthVault.Authentication
             }
             finally
             {
-                ReleaseReaderLockIfHeld();
+                this.ReleaseReaderLockIfHeld();
             }
         }
 
@@ -85,19 +85,19 @@ namespace Microsoft.HealthVault.Authentication
         {
             try
             {
-                AcquireWriterLock();
+                this.AcquireWriterLock();
 
                 AuthenticationTokenKeySetPair pair;
 
-                if (Pairs.ContainsKey(applicationId))
+                if (this.pairs.ContainsKey(applicationId))
                 {
-                    pair = Pairs[applicationId];
+                    pair = this.pairs[applicationId];
                 }
                 else
                 {
                     pair = new AuthenticationTokenKeySetPair();
 
-                    Pairs[applicationId] = pair;
+                    this.pairs[applicationId] = pair;
                 }
 
                 return pair;
@@ -108,7 +108,7 @@ namespace Microsoft.HealthVault.Authentication
             }
             finally
             {
-                ReleaseWriterLockIfHeld();
+                this.ReleaseWriterLockIfHeld();
             }
         }
     }

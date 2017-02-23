@@ -3,11 +3,12 @@
 // see http://www.microsoft.com/resources/sharedsource/licensingbasics/sharedsourcelicenses.mspx.
 // All other rights reserved.
 
-using Microsoft.HealthVault.Exceptions;
 using System;
 using System.Xml.XPath;
+using Microsoft.HealthVault.Exceptions;
+using Microsoft.HealthVault.Helpers;
 
-namespace Microsoft.HealthVault
+namespace Microsoft.HealthVault.Vocabulary
 {
     /// <summary>
     /// Represents the converter class that converts values
@@ -69,10 +70,10 @@ namespace Microsoft.HealthVault
             }
             catch (Exception)
             {
-                //this can occur if conversion xml is corrupted. We don't
-                //want to expose xml parse issues here to the outside world
-                //as recommended by the .NET documentation for
-                //XPathNavigator
+                // this can occur if conversion xml is corrupted. We don't
+                // want to expose xml parse issues here to the outside world
+                // as recommended by the .NET documentation for
+                // XPathNavigator
                 throw new ConversionFailureException(
                     ResourceRetriever.GetResourceString(
                         "VocabularyItemConversionGeneralException"));
@@ -88,7 +89,7 @@ namespace Microsoft.HealthVault
 
         private static double DoConversion(XPathNavigator nav, double val)
         {
-            //only linear conversions currently supported
+            // only linear conversions currently supported
             nav = nav.SelectSingleNode("linear-conversion");
             if (nav == null)
             {
@@ -96,6 +97,7 @@ namespace Microsoft.HealthVault
                         ResourceRetriever.GetResourceString(
                             "VocabularyItemUnsupportedConversion"));
             }
+
             return LinearConvert(nav, val);
         }
 
@@ -109,6 +111,7 @@ namespace Microsoft.HealthVault
                        ResourceRetriever.GetResourceString(
                            "VocabularyItemUnsupportedConversion"));
             }
+
             double multiplier = localNav.ValueAsDouble;
 
             // optional offset
@@ -119,7 +122,7 @@ namespace Microsoft.HealthVault
                 offset = localNav.ValueAsDouble;
             }
 
-            return (val * multiplier + offset);
+            return val * multiplier + offset;
         }
     }
 }

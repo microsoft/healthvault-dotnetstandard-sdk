@@ -4,8 +4,9 @@
 // All other rights reserved.
 
 using System.Collections.ObjectModel;
+using Microsoft.HealthVault.Thing;
 
-namespace Microsoft.HealthVault
+namespace Microsoft.HealthVault.Record
 {
     /// <summary>
     /// Provides the permission information that the current
@@ -19,7 +20,7 @@ namespace Microsoft.HealthVault
         /// </summary>
         public HealthRecordPermissions()
         {
-            ItemTypePermissions = new Collection<HealthRecordItemTypePermission>();
+            this.ItemTypePermissions = new Collection<HealthRecordItemTypePermission>();
         }
 
         /// <summary>

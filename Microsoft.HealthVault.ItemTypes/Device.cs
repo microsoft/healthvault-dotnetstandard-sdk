@@ -7,6 +7,8 @@ using System;
 using System.Text;
 using System.Xml;
 using System.Xml.XPath;
+using Microsoft.HealthVault.Helpers;
+using Microsoft.HealthVault.Thing;
 
 namespace Microsoft.HealthVault.ItemTypes
 {
@@ -58,7 +60,7 @@ namespace Microsoft.HealthVault.ItemTypes
         /// A GUID.
         /// </value>
         ///
-        public new static readonly Guid TypeId =
+        public static new readonly Guid TypeId =
             new Guid("EF9CF8D5-6C0B-4292-997F-4047240BC7BE");
 
         /// <summary>
@@ -82,28 +84,28 @@ namespace Microsoft.HealthVault.ItemTypes
             Validator.ThrowInvalidIfNull(itemNav, "DeviceUnexpectedNode");
 
             // <when>
-            _when = new HealthServiceDateTime();
-            _when.ParseXml(itemNav.SelectSingleNode("when"));
+            this.when = new HealthServiceDateTime();
+            this.when.ParseXml(itemNav.SelectSingleNode("when"));
 
             // <device-name>
-            _deviceName = XPathHelper.GetOptNavValue(itemNav, "device-name");
+            this.deviceName = XPathHelper.GetOptNavValue(itemNav, "device-name");
 
             // <vendor>
-            _vendor = XPathHelper.GetOptNavValue<PersonItem>(itemNav, "vendor");
+            this.vendor = XPathHelper.GetOptNavValue<PersonItem>(itemNav, "vendor");
 
             // <model>
-            _model = XPathHelper.GetOptNavValue(itemNav, "model");
+            this.model = XPathHelper.GetOptNavValue(itemNav, "model");
 
             // <serial-number>
-            _serialNumber =
+            this.serialNumber =
                 XPathHelper.GetOptNavValue(itemNav, "serial-number");
 
             // <anatomic-site>
-            _anatomicSite =
+            this.anatomicSite =
                 XPathHelper.GetOptNavValue(itemNav, "anatomic-site");
 
             // <description>
-            _description =
+            this.description =
                 XPathHelper.GetOptNavValue(itemNav, "description");
         }
 
@@ -126,49 +128,49 @@ namespace Microsoft.HealthVault.ItemTypes
         public override void WriteXml(XmlWriter writer)
         {
             Validator.ThrowIfWriterNull(writer);
-            Validator.ThrowSerializationIfNull(_when, "DeviceWhenNotSet");
+            Validator.ThrowSerializationIfNull(this.when, "DeviceWhenNotSet");
 
             // <device>
             writer.WriteStartElement("device");
 
             // <when>
-            _when.WriteXml("when", writer);
+            this.when.WriteXml("when", writer);
 
             // <device-name>
             XmlWriterHelper.WriteOptString(
                 writer,
                 "device-name",
-                _deviceName);
+                this.deviceName);
 
             // <vendor>
             XmlWriterHelper.WriteOpt(
                 writer,
                 "vendor",
-                _vendor);
+                this.vendor);
 
             // <model>
             XmlWriterHelper.WriteOptString(
                 writer,
                 "model",
-                _model);
+                this.model);
 
             // <serial-number>
             XmlWriterHelper.WriteOptString(
                 writer,
                 "serial-number",
-                _serialNumber);
+                this.serialNumber);
 
             // <anatomic-site>
             XmlWriterHelper.WriteOptString(
                 writer,
                 "anatomic-site",
-                _anatomicSite);
+                this.anatomicSite);
 
             // <description>
             XmlWriterHelper.WriteOptString(
                 writer,
                 "description",
-                _description);
+                this.description);
 
             // </device>
             writer.WriteEndElement();
@@ -189,14 +191,16 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public HealthServiceDateTime When
         {
-            get { return _when; }
+            get { return this.when; }
+
             set
             {
                 Validator.ThrowIfArgumentNull(value, "When", "WhenNullValue");
-                _when = value;
+                this.when = value;
             }
         }
-        private HealthServiceDateTime _when = new HealthServiceDateTime();
+
+        private HealthServiceDateTime when = new HealthServiceDateTime();
 
         /// <summary>
         /// Gets or sets the device name of the medical device.
@@ -217,14 +221,16 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public string DeviceName
         {
-            get { return _deviceName; }
+            get { return this.deviceName; }
+
             set
             {
                 Validator.ThrowIfStringIsWhitespace(value, "DeviceName");
-                _deviceName = value;
+                this.deviceName = value;
             }
         }
-        private string _deviceName;
+
+        private string deviceName;
 
         /// <summary>
         /// Gets or sets the vendor contact information.
@@ -241,10 +247,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public PersonItem Vendor
         {
-            get { return _vendor; }
-            set { _vendor = value; }
+            get { return this.vendor; }
+            set { this.vendor = value; }
         }
-        private PersonItem _vendor;
+
+        private PersonItem vendor;
 
         /// <summary>
         /// Gets or sets the model of the medical device.
@@ -265,14 +272,16 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public string Model
         {
-            get { return _model; }
+            get { return this.model; }
+
             set
             {
                 Validator.ThrowIfStringIsWhitespace(value, "Model");
-                _model = value;
+                this.model = value;
             }
         }
-        private string _model;
+
+        private string model;
 
         /// <summary>
         /// Gets or sets the serial number of the medical device.
@@ -293,21 +302,23 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public string SerialNumber
         {
-            get { return _serialNumber; }
+            get { return this.serialNumber; }
+
             set
             {
                 Validator.ThrowIfStringIsWhitespace(value, "SerialNumber");
-                _serialNumber = value;
+                this.serialNumber = value;
             }
         }
-        private string _serialNumber;
+
+        private string serialNumber;
 
         /// <summary>
         /// Gets or sets the position on the body from which the device
         /// takes readings.
         /// </summary>
         ///
-        ///<value>
+        /// <value>
         /// A string representing the position.
         /// </value>
         ///
@@ -322,14 +333,16 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public string AnatomicSite
         {
-            get { return _anatomicSite; }
+            get { return this.anatomicSite; }
+
             set
             {
                 Validator.ThrowIfStringIsWhitespace(value, "AnatomicSite");
-                _anatomicSite = value;
+                this.anatomicSite = value;
             }
         }
-        private string _anatomicSite;
+
+        private string anatomicSite;
 
         /// <summary>
         /// Gets or sets the description of the medical device.
@@ -350,14 +363,16 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public string Description
         {
-            get { return _description; }
+            get { return this.description; }
+
             set
             {
                 Validator.ThrowIfStringIsWhitespace(value, "Description");
-                _description = value;
+                this.description = value;
             }
         }
-        private string _description;
+
+        private string description;
 
         /// <summary>
         /// Gets a string representation of the device item.
@@ -371,41 +386,41 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             StringBuilder result = new StringBuilder(200);
 
-            if (DeviceName != null)
+            if (this.DeviceName != null)
             {
-                result.Append(DeviceName);
+                result.Append(this.DeviceName);
             }
 
-            if (Model != null)
+            if (this.Model != null)
             {
                 result.AppendFormat(
                     ResourceRetriever.GetResourceString(
                         "ListFormat"),
-                    Model);
+                    this.Model);
             }
 
-            if (Vendor != null)
+            if (this.Vendor != null)
             {
                 result.AppendFormat(
                     ResourceRetriever.GetResourceString(
                         "ListFormat"),
-                    Vendor.ToString());
+                    this.Vendor.ToString());
             }
 
-            if (AnatomicSite != null)
+            if (this.AnatomicSite != null)
             {
                 result.AppendFormat(
                     ResourceRetriever.GetResourceString(
                         "ListFormat"),
-                    AnatomicSite);
+                    this.AnatomicSite);
             }
 
-            if (Description != null)
+            if (this.Description != null)
             {
                 result.AppendFormat(
                     ResourceRetriever.GetResourceString(
                         "ListFormat"),
-                    Description);
+                    this.Description);
             }
 
             return result.ToString();

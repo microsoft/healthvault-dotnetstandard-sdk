@@ -3,9 +3,11 @@
 // see http://www.microsoft.com/resources/sharedsource/licensingbasics/sharedsourcelicenses.mspx.
 // All other rights reserved.
 
+using System;
 using System.Globalization;
 using System.Xml;
 using System.Xml.XPath;
+using Microsoft.HealthVault.Helpers;
 
 namespace Microsoft.HealthVault.ItemTypes
 {
@@ -90,7 +92,7 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         protected override void ParseValueXml(XPathNavigator navigator)
         {
-            Value = navigator.SelectSingleNode(ValueElementName).ValueAsDouble;
+            this.Value = navigator.SelectSingleNode(this.ValueElementName).ValueAsDouble;
         }
 
         /// <summary>
@@ -104,8 +106,8 @@ namespace Microsoft.HealthVault.ItemTypes
         protected override void WriteValueXml(XmlWriter writer)
         {
             writer.WriteElementString(
-                ValueElementName,
-                Value.ToString(CultureInfo.InvariantCulture));
+                this.ValueElementName,
+                this.Value.ToString(CultureInfo.InvariantCulture));
         }
 
         /// <summary>

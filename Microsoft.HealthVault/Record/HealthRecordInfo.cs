@@ -3,16 +3,21 @@
 // see http://www.microsoft.com/resources/sharedsource/licensingbasics/sharedsourcelicenses.mspx.
 // All other rights reserved.
 
-using Microsoft.HealthVault.Exceptions;
-using Microsoft.HealthVault.Web;
 using System;
 using System.Collections.ObjectModel;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.XPath;
+using Microsoft.HealthVault.Application;
+using Microsoft.HealthVault.Connection;
+using Microsoft.HealthVault.Exceptions;
+using Microsoft.HealthVault.Helpers;
+using Microsoft.HealthVault.Person;
+using Microsoft.HealthVault.Thing;
+using Microsoft.HealthVault.Transport;
 
-namespace Microsoft.HealthVault
+namespace Microsoft.HealthVault.Record
 {
     /// <summary>
     /// Represents the APIs and information about a health record for an individual.
@@ -53,7 +58,7 @@ namespace Microsoft.HealthVault
         /// parameter is <b>null</b>.
         /// </exception>
         ///
-        public new static HealthRecordInfo CreateFromXml(
+        public static new HealthRecordInfo CreateFromXml(
             ApplicationConnection connection,
             XPathNavigator navigator)
         {
@@ -77,7 +82,7 @@ namespace Microsoft.HealthVault
         {
             base.ParseXml(navigator);
 
-            _custodian = XPathHelper.ParseAttributeAsBoolean(navigator, "record-custodian", false);
+            this.custodian = XPathHelper.ParseAttributeAsBoolean(navigator, "record-custodian", false);
 
             long? relationshipNumber;
 
@@ -85,43 +90,43 @@ namespace Microsoft.HealthVault
             if (relationshipNumber.HasValue &&
                (relationshipNumber <= (int)RelationshipType.Daughter))
             {
-                _relationshipType = (RelationshipType)relationshipNumber;
+                this.relationshipType = (RelationshipType)relationshipNumber;
             }
 
-            _relationshipName = navigator.GetAttribute("rel-name", string.Empty);
+            this.relationshipName = navigator.GetAttribute("rel-name", string.Empty);
 
-            _dateAuthorizationExpires = XPathHelper.ParseAttributeAsDateTime(navigator, "auth-expires", DateTime.MinValue);
+            this.dateAuthorizationExpires = XPathHelper.ParseAttributeAsDateTime(navigator, "auth-expires", DateTime.MinValue);
 
-            _authExpired = XPathHelper.ParseAttributeAsBoolean(navigator, "auth-expired", false);
+            this.authExpired = XPathHelper.ParseAttributeAsBoolean(navigator, "auth-expired", false);
 
-            _name = navigator.Value;
+            this.name = navigator.Value;
 
-            _displayName = navigator.GetAttribute("display-name", string.Empty);
+            this.displayName = navigator.GetAttribute("display-name", string.Empty);
 
-            _state = XPathHelper.ParseAttributeAsEnum(navigator, "state", HealthRecordState.Unknown);
-            if (_state > HealthRecordState.Deleted)
+            this.State = XPathHelper.ParseAttributeAsEnum(navigator, "state", HealthRecordState.Unknown);
+            if (this.State > HealthRecordState.Deleted)
             {
-                _state = HealthRecordState.Unknown;
+                this.State = HealthRecordState.Unknown;
             }
 
-            _dateCreated = XPathHelper.ParseAttributeAsDateTime(navigator, "date-created", DateTime.MinValue);
-            _dateUpdated = XPathHelper.ParseAttributeAsDateTime(navigator, "date-updated", DateTime.MinValue);
+            this.DateCreated = XPathHelper.ParseAttributeAsDateTime(navigator, "date-created", DateTime.MinValue);
+            this.DateUpdated = XPathHelper.ParseAttributeAsDateTime(navigator, "date-updated", DateTime.MinValue);
 
-            _quotaInBytes = XPathHelper.ParseAttributeAsLong(navigator, "max-size-bytes", null);
-            _quotaUsedInBytes = XPathHelper.ParseAttributeAsLong(navigator, "size-bytes", null);
+            this.QuotaInBytes = XPathHelper.ParseAttributeAsLong(navigator, "max-size-bytes", null);
+            this.QuotaUsedInBytes = XPathHelper.ParseAttributeAsLong(navigator, "size-bytes", null);
 
-            _authorizationStatus = XPathHelper.ParseAttributeAsEnum(
+            this.HealthRecordAuthorizationStatus = XPathHelper.ParseAttributeAsEnum(
                     navigator,
                     "app-record-auth-action",
                     HealthRecordAuthorizationStatus.Unknown);
 
-            _applicationSpecificRecordId = navigator.GetAttribute("app-specific-record-id", string.Empty);
+            this.ApplicationSpecificRecordId = navigator.GetAttribute("app-specific-record-id", string.Empty);
 
-            LatestOperationSequenceNumber = XPathHelper.ParseAttributeAsLong(navigator, "latest-operation-sequence-number", 0).Value;
+            this.LatestOperationSequenceNumber = XPathHelper.ParseAttributeAsLong(navigator, "latest-operation-sequence-number", 0).Value;
 
-            RecordAppAuthCreatedDate = XPathHelper.ParseAttributeAsDateTime(navigator, "record-app-auth-created-date", DateTime.MinValue);
+            this.RecordAppAuthCreatedDate = XPathHelper.ParseAttributeAsDateTime(navigator, "record-app-auth-created-date", DateTime.MinValue);
 
-            _updated = true;
+            this.IsUpdated = true;
         }
 
         /// <summary>
@@ -142,7 +147,7 @@ namespace Microsoft.HealthVault
             Validator.ThrowIfArgumentNull(reader, "reader", "XmlNullReader");
 
             XPathDocument healthRecordInfoDoc = new XPathDocument(reader);
-            ParseXml(healthRecordInfoDoc.CreateNavigator());
+            this.ParseXml(healthRecordInfoDoc.CreateNavigator());
         }
 
         /// <summary>
@@ -161,9 +166,10 @@ namespace Microsoft.HealthVault
 
             using (XmlWriter writer = XmlWriter.Create(recordInfoXml, settings))
             {
-                WriteXml("record", writer);
+                this.WriteXml("record", writer);
                 writer.Flush();
             }
+
             return recordInfoXml.ToString();
         }
 
@@ -183,80 +189,80 @@ namespace Microsoft.HealthVault
         {
             Validator.ThrowIfArgumentNull(writer, "writer", "WriteXmlNullWriter");
 
-            WriteXml("record", writer);
+            this.WriteXml("record", writer);
         }
 
         internal override void WriteXml(string nodeName, XmlWriter writer)
         {
             writer.WriteStartElement(nodeName);
 
-            base.WriteXml(writer);
+            this.WriteXml(writer);
 
             writer.WriteAttributeString(
                 "record-custodian",
-                XmlConvert.ToString(_custodian));
+                XmlConvert.ToString(this.custodian));
 
             writer.WriteAttributeString(
                 "rel-type",
-                XmlConvert.ToString((int)_relationshipType));
+                XmlConvert.ToString((int)this.relationshipType));
 
-            if (!string.IsNullOrEmpty(_relationshipName))
+            if (!string.IsNullOrEmpty(this.relationshipName))
             {
                 writer.WriteAttributeString(
                     "rel-name",
-                    _relationshipName);
+                    this.relationshipName);
             }
 
             writer.WriteAttributeString(
                 "auth-expires",
-                SDKHelper.XmlFromDateTime(_dateAuthorizationExpires));
+                SDKHelper.XmlFromDateTime(this.dateAuthorizationExpires));
 
             writer.WriteAttributeString(
                 "auth-expired",
-                SDKHelper.XmlFromBool(_authExpired));
+                SDKHelper.XmlFromBool(this.authExpired));
 
-            if (!string.IsNullOrEmpty(_displayName))
+            if (!string.IsNullOrEmpty(this.displayName))
             {
                 writer.WriteAttributeString(
                     "display-name",
-                    _displayName);
+                    this.displayName);
             }
 
             writer.WriteAttributeString(
                 "state",
-                _state.ToString());
+                this.State.ToString());
 
             writer.WriteAttributeString(
                 "date-created",
-                SDKHelper.XmlFromDateTime(_dateCreated));
+                SDKHelper.XmlFromDateTime(this.DateCreated));
 
-            if (_quotaInBytes.HasValue)
+            if (this.QuotaInBytes.HasValue)
             {
                 writer.WriteAttributeString(
                     "max-size-bytes",
-                    XmlConvert.ToString(_quotaInBytes.Value));
+                    XmlConvert.ToString(this.QuotaInBytes.Value));
             }
 
-            if (_quotaUsedInBytes.HasValue)
+            if (this.QuotaUsedInBytes.HasValue)
             {
                 writer.WriteAttributeString(
                     "size-bytes",
-                    XmlConvert.ToString(_quotaUsedInBytes.Value));
+                    XmlConvert.ToString(this.QuotaUsedInBytes.Value));
             }
 
             writer.WriteAttributeString(
                 "app-record-auth-action",
-                _authorizationStatus.ToString());
+                this.HealthRecordAuthorizationStatus.ToString());
 
             writer.WriteAttributeString(
                 "app-specific-record-id",
-                _applicationSpecificRecordId);
+                this.ApplicationSpecificRecordId);
 
             writer.WriteAttributeString(
                 "date-updated",
-                SDKHelper.XmlFromDateTime(_dateUpdated));
+                SDKHelper.XmlFromDateTime(this.DateUpdated));
 
-            writer.WriteValue(_name);
+            writer.WriteValue(this.name);
 
             writer.WriteEndElement();
         }
@@ -277,19 +283,19 @@ namespace Microsoft.HealthVault
         {
             if (recordInfo.IsUpdated)
             {
-                _custodian = recordInfo.IsCustodian;
-                _dateAuthorizationExpires = recordInfo.DateAuthorizationExpires;
-                _name = recordInfo.Name;
-                _relationshipType = recordInfo.RelationshipType;
-                _relationshipName = recordInfo.RelationshipName;
-                _displayName = recordInfo.DisplayName;
+                this.custodian = recordInfo.IsCustodian;
+                this.dateAuthorizationExpires = recordInfo.DateAuthorizationExpires;
+                this.name = recordInfo.Name;
+                this.relationshipType = recordInfo.RelationshipType;
+                this.relationshipName = recordInfo.RelationshipName;
+                this.displayName = recordInfo.DisplayName;
 
                 if (recordInfo.Location != null)
                 {
-                    Location = new Location(recordInfo.Location.Country, recordInfo.Location.StateProvince);
+                    this.Location = new Location(recordInfo.Location.Country, recordInfo.Location.StateProvince);
                 }
 
-                _updated = true;
+                this.IsUpdated = true;
             }
         }
 
@@ -383,16 +389,18 @@ namespace Microsoft.HealthVault
         {
             get
             {
-                VerifyUpdated();
-                return _custodian;
+                this.VerifyUpdated();
+                return this.custodian;
             }
+
             protected set
             {
-                _custodian = value;
-                _updated = true;
+                this.custodian = value;
+                this.IsUpdated = true;
             }
         }
-        private bool _custodian;
+
+        private bool custodian;
 
         /// <summary>
         /// Gets the date/time that the authorization for the record expires.
@@ -420,16 +428,18 @@ namespace Microsoft.HealthVault
         {
             get
             {
-                VerifyUpdated();
-                return _dateAuthorizationExpires;
+                this.VerifyUpdated();
+                return this.dateAuthorizationExpires;
             }
+
             protected set
             {
-                _dateAuthorizationExpires = value;
-                _updated = true;
+                this.dateAuthorizationExpires = value;
+                this.IsUpdated = true;
             }
         }
-        private DateTime _dateAuthorizationExpires;
+
+        private DateTime dateAuthorizationExpires;
 
         /// <summary>
         /// <b>true</b> if the authorization of the authenticated person has
@@ -440,16 +450,18 @@ namespace Microsoft.HealthVault
         {
             get
             {
-                VerifyUpdated();
-                return _authExpired;
+                this.VerifyUpdated();
+                return this.authExpired;
             }
+
             protected set
             {
-                _authExpired = value;
-                _updated = true;
+                this.authExpired = value;
+                this.IsUpdated = true;
             }
         }
-        private bool _authExpired;
+
+        private bool authExpired;
 
         /// <summary>
         /// Gets the name of the record.
@@ -475,16 +487,18 @@ namespace Microsoft.HealthVault
         {
             get
             {
-                VerifyUpdated();
-                return _name;
+                this.VerifyUpdated();
+                return this.name;
             }
+
             protected set
             {
-                _name = value;
-                _updated = true;
+                this.name = value;
+                this.IsUpdated = true;
             }
         }
-        private string _name;
+
+        private string name;
 
         /// <summary>
         /// Gets the relationship the person authorized to view this record
@@ -510,16 +524,18 @@ namespace Microsoft.HealthVault
         {
             get
             {
-                VerifyUpdated();
-                return _relationshipType;
+                this.VerifyUpdated();
+                return this.relationshipType;
             }
+
             protected set
             {
-                _relationshipType = value;
-                _updated = true;
+                this.relationshipType = value;
+                this.IsUpdated = true;
             }
         }
-        private RelationshipType _relationshipType = RelationshipType.Unknown;
+
+        private RelationshipType relationshipType = RelationshipType.Unknown;
 
         /// <summary>
         /// Gets the localized string representing the relationship between
@@ -547,16 +563,18 @@ namespace Microsoft.HealthVault
         {
             get
             {
-                VerifyUpdated();
-                return _relationshipName;
+                this.VerifyUpdated();
+                return this.relationshipName;
             }
+
             protected set
             {
-                _relationshipName = value;
-                _updated = true;
+                this.relationshipName = value;
+                this.IsUpdated = true;
             }
         }
-        private string _relationshipName;
+
+        private string relationshipName;
 
         /// <summary>
         /// Gets the display name of the record.
@@ -584,68 +602,36 @@ namespace Microsoft.HealthVault
         {
             get
             {
-                VerifyUpdated();
-                return _displayName;
+                this.VerifyUpdated();
+                return this.displayName;
             }
+
             protected set
             {
-                _displayName = value;
-                _updated = true;
+                this.displayName = value;
+                this.IsUpdated = true;
             }
         }
-        private string _displayName;
+
+        private string displayName;
 
         /// <summary>
         /// Gets the state of a <see cref="HealthRecordInfo"/>.
         /// </summary>
         ///
-        public HealthRecordState State
-        {
-            get
-            {
-                return _state;
-            }
-
-            protected internal set
-            {
-                _state = value;
-            }
-        }
-        private HealthRecordState _state;
+        public HealthRecordState State { get; protected internal set; }
 
         /// <summary>
         /// Gets the date the record was created, in UTC.
         /// </summary>
         ///
-        public DateTime DateCreated
-        {
-            get
-            {
-                return _dateCreated;
-            }
-            protected set
-            {
-                _dateCreated = value;
-            }
-        }
-        private DateTime _dateCreated;
+        public DateTime DateCreated { get; protected set; }
 
         /// <summary>
         /// Gets the date the record was updated, in UTC.
         /// </summary>
         ///
-        public DateTime DateUpdated
-        {
-            get
-            {
-                return _dateUpdated;
-            }
-            protected set
-            {
-                _dateUpdated = value;
-            }
-        }
-        private DateTime _dateUpdated;
+        public DateTime DateUpdated { get; protected set; }
 
         /// <summary>
         /// Gets the maximum total size in bytes that the <see cref="HealthRecordItem" />s in
@@ -657,12 +643,7 @@ namespace Microsoft.HealthVault
         /// fetched from the HealthVault platform as opposed to created on the fly.
         /// </remarks>
         ///
-        public Int64? QuotaInBytes
-        {
-            get { return _quotaInBytes; }
-            protected set { _quotaInBytes = value; }
-        }
-        private Int64? _quotaInBytes;
+        public long? QuotaInBytes { get; protected set; }
 
         /// <summary>
         /// Gets the total size in bytes that the <see cref="HealthRecordItem" />s in
@@ -674,12 +655,7 @@ namespace Microsoft.HealthVault
         /// fetched from the HealthVault platform as opposed to created on the fly.
         /// </remarks>
         ///
-        public Int64? QuotaUsedInBytes
-        {
-            get { return _quotaUsedInBytes; }
-            protected set { _quotaUsedInBytes = value; }
-        }
-        private Int64? _quotaUsedInBytes;
+        public long? QuotaUsedInBytes { get; protected set; }
 
         /// <summary>
         /// Gets the record's latest operation sequence number.
@@ -706,30 +682,14 @@ namespace Microsoft.HealthVault
         /// requires user intervention in HealthVault before the application may
         /// successfully access the record.
         /// </remarks>
-        public HealthRecordAuthorizationStatus HealthRecordAuthorizationStatus
-        {
-            get { return _authorizationStatus; }
-            protected set { _authorizationStatus = value; }
-        }
-        private HealthRecordAuthorizationStatus _authorizationStatus;
+        public HealthRecordAuthorizationStatus HealthRecordAuthorizationStatus { get; protected set; }
 
         /// <summary>
         /// Gets the application specific record id for the specified
         /// record and application.
         /// </summary>
         ///
-        public string ApplicationSpecificRecordId
-        {
-            get
-            {
-                return _applicationSpecificRecordId;
-            }
-            protected set
-            {
-                _applicationSpecificRecordId = value;
-            }
-        }
-        private string _applicationSpecificRecordId;
+        public string ApplicationSpecificRecordId { get; protected set; }
 
         /// <summary>
         /// Gets the date when the user authorized the application to the record, in UTC.
@@ -757,17 +717,17 @@ namespace Microsoft.HealthVault
         public async Task Refresh()
         {
             AuthenticatedConnection connection =
-                Connection as AuthenticatedConnection;
+                this.Connection as AuthenticatedConnection;
             if (connection == null)
             {
                 OfflineWebApplicationConnection offlineAuthConnection =
-                    Connection as OfflineWebApplicationConnection;
+                    this.Connection as OfflineWebApplicationConnection;
 
                 Validator.ThrowInvalidIfNull(offlineAuthConnection, "ConnectionIsNeitherAuthenticatedNorOffline");
             }
 
             Collection<HealthRecordInfo> records =
-                await HealthVaultPlatform.GetAuthorizedRecordsAsync(Connection, new Guid[] { this.Id }).ConfigureAwait(false);
+                await HealthVaultPlatform.GetAuthorizedRecordsAsync(this.Connection, new[] { this.Id }).ConfigureAwait(false);
 
             if (records.Count == 0)
             {
@@ -785,19 +745,19 @@ namespace Microsoft.HealthVault
             }
 
             HealthRecordInfo thisRecord = records[0];
-            this._custodian = thisRecord.IsCustodian;
-            this._name = thisRecord.Name;
-            this._relationshipName = thisRecord.RelationshipName;
-            this._relationshipType = thisRecord.RelationshipType;
-            this._dateAuthorizationExpires = thisRecord.DateAuthorizationExpires;
-            this._quotaInBytes = thisRecord.QuotaInBytes;
-            this._quotaUsedInBytes = thisRecord.QuotaUsedInBytes;
-            this._state = thisRecord.State;
-            this._dateCreated = thisRecord.DateCreated;
-            this._displayName = thisRecord.DisplayName;
-            this._authExpired = thisRecord.HasAuthorizationExpired;
+            this.custodian = thisRecord.IsCustodian;
+            this.name = thisRecord.Name;
+            this.relationshipName = thisRecord.RelationshipName;
+            this.relationshipType = thisRecord.RelationshipType;
+            this.dateAuthorizationExpires = thisRecord.DateAuthorizationExpires;
+            this.QuotaInBytes = thisRecord.QuotaInBytes;
+            this.QuotaUsedInBytes = thisRecord.QuotaUsedInBytes;
+            this.State = thisRecord.State;
+            this.DateCreated = thisRecord.DateCreated;
+            this.displayName = thisRecord.DisplayName;
+            this.authExpired = thisRecord.HasAuthorizationExpired;
 
-            this._updated = true;
+            this.IsUpdated = true;
         }
 
         #endregion Update
@@ -814,20 +774,16 @@ namespace Microsoft.HealthVault
         ///
         public override string ToString()
         {
-            return Name;
+            return this.Name;
         }
 
         private void VerifyUpdated()
         {
             Validator.ThrowInvalidIf(
-                !_updated,
+                !this.IsUpdated,
                 "HealthRecordNotUpdated");
         }
 
-        internal bool IsUpdated
-        {
-            get { return _updated; }
-        }
-        private bool _updated;
+        internal bool IsUpdated { get; private set; }
     }
 }

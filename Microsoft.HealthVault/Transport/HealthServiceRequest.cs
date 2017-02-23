@@ -3,9 +3,6 @@
 // see http://www.microsoft.com/resources/sharedsource/licensingbasics/sharedsourcelicenses.mspx.
 // All other rights reserved.
 
-using Microsoft.HealthVault.Authentication;
-using Microsoft.HealthVault.Exceptions;
-using Microsoft.HealthVault.Web;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -22,8 +19,14 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Xml;
+using Microsoft.HealthVault.Authentication;
+using Microsoft.HealthVault.Connection;
+using Microsoft.HealthVault.Diagnostics;
+using Microsoft.HealthVault.Exceptions;
+using Microsoft.HealthVault.Helpers;
+using Microsoft.HealthVault.Thing;
 
-namespace Microsoft.HealthVault
+namespace Microsoft.HealthVault.Transport
 {
     /// <summary>
     /// Represents an individual request to a HealthVault service.
@@ -72,7 +75,7 @@ namespace Microsoft.HealthVault
             //                // prevent the initialzation from continuing.
             //            }
 
-            return String.Format(CultureInfo.InvariantCulture, "HV-NET/{0} ({1})", fileVersion, systemInfo);
+            return string.Format(CultureInfo.InvariantCulture, "HV-NET/{0} ({1})", fileVersion, systemInfo);
         }
 
         /// <summary>
@@ -108,11 +111,11 @@ namespace Microsoft.HealthVault
             Validator.ThrowIfArgumentNull(connection, "connection", "CtorServiceNull");
             Validator.ThrowIfStringNullOrEmpty(methodName, "methodName");
 
-            _connection = connection;
+            this.connection = connection;
             AuthenticatedConnection authenticatedConnection = connection as AuthenticatedConnection;
             if (authenticatedConnection != null)
             {
-                ImpersonatedPersonId = authenticatedConnection.ImpersonatedPersonId;
+                this.ImpersonatedPersonId = authenticatedConnection.ImpersonatedPersonId;
             }
 
             List<HealthServiceRequest> pendingRequests = connection.PendingRequests;
@@ -122,11 +125,11 @@ namespace Microsoft.HealthVault
                 connection.PendingRequests.Add(this);
             }
 
-            _methodName = methodName;
-            _timeoutSeconds = connection.RequestTimeoutSeconds;
-            _msgTimeToLive = connection.RequestTimeToLive;
-            _cultureCode = connection.Culture.Name;
-            _methodVersion = methodVersion;
+            this.MethodName = methodName;
+            this.timeoutSeconds = connection.RequestTimeoutSeconds;
+            this.TimeToLiveSeconds = connection.RequestTimeToLive;
+            this.CultureCode = connection.Culture.Name;
+            this.MethodVersion = methodVersion;
         }
 
         /// <summary>
@@ -162,10 +165,10 @@ namespace Microsoft.HealthVault
             HealthServiceConnection connection,
             string methodName,
             int methodVersion,
-            HealthRecordAccessor record) :
-            this(connection, methodName, methodVersion)
+            HealthRecordAccessor record)
+            : this(connection, methodName, methodVersion)
         {
-            _recordId = record.Id;
+            this.recordId = record.Id;
         }
 
         public HealthServiceRequest(
@@ -173,8 +176,8 @@ namespace Microsoft.HealthVault
             string methodName,
             int methodVersion,
             HealthRecordAccessor record,
-            Guid correlationId) :
-            this(connection, methodName, methodVersion, record)
+            Guid correlationId)
+            : this(connection, methodName, methodVersion, record)
         {
             this.CorrelationId = correlationId;
         }
@@ -198,9 +201,9 @@ namespace Microsoft.HealthVault
 
         public async Task<HealthServiceResponseData> ExecuteAsync()
         {
-            if (_connection.Credential != null)
+            if (this.connection.Credential != null)
             {
-                await _connection.Credential.AuthenticateIfRequiredAsync(_connection, _connection.ApplicationId).ConfigureAwait(false);
+                await this.connection.Credential.AuthenticateIfRequiredAsync(this.connection, this.connection.ApplicationId).ConfigureAwait(false);
             }
 
             try
@@ -209,14 +212,14 @@ namespace Microsoft.HealthVault
             }
             catch (HealthServiceAuthenticatedSessionTokenExpiredException)
             {
-                if (_connection.Credential != null)
+                if (this.connection.Credential != null)
                 {
                     // Mark the credential's authentication result as expired,
                     // so that in the following
                     // Credential.AuthenticateIfRequired we fetch a new token.
-                    if (_connection.Credential.ExpireAuthenticationResult(_connection.ApplicationId))
+                    if (this.connection.Credential.ExpireAuthenticationResult(this.connection.ApplicationId))
                     {
-                        await _connection.Credential.AuthenticateIfRequiredAsync(_connection, _connection.ApplicationId).ConfigureAwait(false);
+                        await this.connection.Credential.AuthenticateIfRequiredAsync(this.connection, this.connection.ApplicationId).ConfigureAwait(false);
 
                         return await this.ExecuteInternalAsync().ConfigureAwait(false);
                     }
@@ -236,8 +239,8 @@ namespace Microsoft.HealthVault
 
                 try
                 {
-                    this.cancellationTokenSource = new CancellationTokenSource(TimeSpan.FromSeconds(this._timeoutSeconds));
-                    response = await easyWeb.FetchAsync(_connection.RequestUrl, this.cancellationTokenSource.Token).ConfigureAwait(false);
+                    this.cancellationTokenSource = new CancellationTokenSource(TimeSpan.FromSeconds(this.timeoutSeconds));
+                    response = await easyWeb.FetchAsync(this.connection.RequestUrl, this.cancellationTokenSource.Token).ConfigureAwait(false);
                 }
                 finally
                 {
@@ -256,7 +259,7 @@ namespace Microsoft.HealthVault
                 Guid responseId;
                 if (response.Headers != null && Guid.TryParse(response.Headers.GetValues(ResponseIdContextKey)?.FirstOrDefault(), out responseId))
                 {
-                    ResponseId = responseId;
+                    this.ResponseId = responseId;
 
                     if (HealthVaultPlatformTrace.LoggingEnabled)
                     {
@@ -279,10 +282,10 @@ namespace Microsoft.HealthVault
             }
             finally
             {
-                List<HealthServiceRequest> pendingRequests = _connection.PendingRequests;
+                List<HealthServiceRequest> pendingRequests = this.connection.PendingRequests;
                 lock (pendingRequests)
                 {
-                    _connection.PendingRequests.Remove(this);
+                    this.connection.PendingRequests.Remove(this);
                 }
             }
         }
@@ -309,7 +312,7 @@ namespace Microsoft.HealthVault
                 }
                 else
                 {
-                    _pendingCancel = true;
+                    this.pendingCancel = true;
                 }
             }
         }
@@ -329,27 +332,27 @@ namespace Microsoft.HealthVault
         ///
         public virtual async Task<string> ExecuteForTransformAsync(string transform)
         {
-            if (_connection.Credential != null)
+            if (this.connection.Credential != null)
             {
-                await _connection.Credential.AuthenticateIfRequiredAsync(_connection, _connection.ApplicationId).ConfigureAwait(false);
+                await this.connection.Credential.AuthenticateIfRequiredAsync(this.connection, this.connection.ApplicationId).ConfigureAwait(false);
             }
 
             try
             {
-                return await ExecuteForTransformInternalAsync(transform).ConfigureAwait(false);
+                return await this.ExecuteForTransformInternalAsync(transform).ConfigureAwait(false);
             }
             catch (HealthServiceAuthenticatedSessionTokenExpiredException)
             {
-                if (_connection.Credential != null)
+                if (this.connection.Credential != null)
                 {
                     // Mark the credential's authentication result as expired,
                     // so that in the following
                     // Credential.AuthenticateIfRequired we fetch a new token.
-                    if (_connection.Credential.ExpireAuthenticationResult(_connection.ApplicationId))
+                    if (this.connection.Credential.ExpireAuthenticationResult(this.connection.ApplicationId))
                     {
-                        await _connection.Credential.AuthenticateIfRequiredAsync(_connection, _connection.ApplicationId).ConfigureAwait(false);
+                        await this.connection.Credential.AuthenticateIfRequiredAsync(this.connection, this.connection.ApplicationId).ConfigureAwait(false);
 
-                        return await ExecuteForTransformInternalAsync(transform).ConfigureAwait(false);
+                        return await this.ExecuteForTransformInternalAsync(transform).ConfigureAwait(false);
                     }
                 }
 
@@ -367,8 +370,8 @@ namespace Microsoft.HealthVault
 
                 try
                 {
-                    this.cancellationTokenSource = new CancellationTokenSource(TimeSpan.FromSeconds(this._timeoutSeconds));
-                    response = await easyWeb.FetchAsync(_connection.RequestUrl, this.cancellationTokenSource.Token).ConfigureAwait(false);
+                    this.cancellationTokenSource = new CancellationTokenSource(TimeSpan.FromSeconds(this.timeoutSeconds));
+                    response = await easyWeb.FetchAsync(this.connection.RequestUrl, this.cancellationTokenSource.Token).ConfigureAwait(false);
                 }
                 finally
                 {
@@ -403,10 +406,10 @@ namespace Microsoft.HealthVault
             }
             finally
             {
-                List<HealthServiceRequest> pendingRequests = _connection.PendingRequests;
+                List<HealthServiceRequest> pendingRequests = this.connection.PendingRequests;
                 lock (pendingRequests)
                 {
-                    _connection.PendingRequests.Remove(this);
+                    this.connection.PendingRequests.Remove(this);
                 }
             }
         }
@@ -496,23 +499,23 @@ namespace Microsoft.HealthVault
         {
             lock (this.cancelLock)
             {
-                if (_pendingCancel || _connection.CancelAllRequests)
+                if (this.pendingCancel || this.connection.CancelAllRequests)
                 {
-                    _pendingCancel = false;
+                    this.pendingCancel = false;
                     throw new OperationCanceledException();
                 } 
             }
 
             this.BuildRequestXml(transform);
 
-            HealthVaultPlatformTrace.LogRequest(_xmlRequest, CorrelationId);
+            HealthVaultPlatformTrace.LogRequest(this.XmlRequest, this.CorrelationId);
 
-            EasyWebRequest easyWeb = new EasyWebRequest(_xmlRequest, _xmlRequestLength);
-            easyWeb.WebProxy = _connection.WebProxy;
+            EasyWebRequest easyWeb = new EasyWebRequest(this.XmlRequest, this.XmlRequestLength);
+            easyWeb.WebProxy = this.connection.WebProxy;
 
-            if (CorrelationId != Guid.Empty)
+            if (this.CorrelationId != Guid.Empty)
             {
-                easyWeb.Headers.Add(CorrelationIdContextKey, CorrelationId.ToString());
+                easyWeb.Headers.Add(CorrelationIdContextKey, this.CorrelationId.ToString());
             }
 
             return easyWeb;
@@ -533,7 +536,7 @@ namespace Microsoft.HealthVault
         ///
         protected void BuildRequestXml()
         {
-            BuildRequestXml(null);
+            this.BuildRequestXml(null);
         }
 
         /// <summary>
@@ -546,8 +549,8 @@ namespace Microsoft.HealthVault
         ///
         public string RequestCompressionMethod
         {
-            get { return _connection.RequestCompressionMethod; }
-            set { _connection.RequestCompressionMethod = value; }
+            get { return this.connection.RequestCompressionMethod; }
+            set { this.connection.RequestCompressionMethod = value; }
         }
 
         /// <summary>
@@ -569,13 +572,13 @@ namespace Microsoft.HealthVault
         {
             // first, construct the non-authenticated sections sequentially
             string infoHash;
-            Byte[] infoXml;
+            byte[] infoXml;
             int infoXmlLength;
-            Byte[] headerXml;
+            byte[] headerXml;
             int headerXmlLength;
 
-            GetInfoSection(out infoHash, out infoXml, out infoXmlLength);
-            GetHeaderSection(transform, infoHash, out headerXml, out headerXmlLength);
+            this.GetInfoSection(out infoHash, out infoXml, out infoXmlLength);
+            this.GetHeaderSection(transform, infoHash, out headerXml, out headerXmlLength);
 
             using (MemoryStream requestXml = new MemoryStream(infoXml.Length + headerXml.Length + 512))
             {
@@ -590,11 +593,11 @@ namespace Microsoft.HealthVault
                     // <auth>
                     // If we have an authenticated section, then construct the auth data otherwise do
                     // not include an auth section.
-                    if (_connection.Credential != null)
+                    if (this.connection.Credential != null)
                     {
-                        string authInnerXml = _connection.Credential.AuthenticateData(headerXml, 0, headerXmlLength);
+                        string authInnerXml = this.connection.Credential.AuthenticateData(headerXml, 0, headerXmlLength);
 
-                        if (!String.IsNullOrEmpty(authInnerXml))
+                        if (!string.IsNullOrEmpty(authInnerXml))
                         {
                             writer.WriteStartElement("auth");
                             writer.WriteRaw(authInnerXml);
@@ -611,8 +614,8 @@ namespace Microsoft.HealthVault
                     writer.Flush();
 
                     // MemoryStream.Flush() does nothing, don't call
-                    _xmlRequest = requestXml.ToArray();
-                    _xmlRequestLength = (int)requestXml.Length;
+                    this.XmlRequest = requestXml.ToArray();
+                    this.XmlRequestLength = (int)requestXml.Length;
                 }
             }
         }
@@ -620,17 +623,17 @@ namespace Microsoft.HealthVault
         [SuppressMessage("Microsoft.Usage", "CA2202:Do not dispose objects multiple times", Justification = "MemoryStream can be disposed multiple times. Usings block makes the code more readable")]
         private void GetInfoSection(
             out string infoHash,
-            out Byte[] infoSection,
+            out byte[] infoSection,
             out int infoSectionLength)
         {
             XmlWriterSettings settings = SDKHelper.XmlUtf8WriterSettings;
 
-            using (MemoryStream infoXml = new MemoryStream(Parameters.Length + 16))
+            using (MemoryStream infoXml = new MemoryStream(this.Parameters.Length + 16))
             {
                 using (XmlWriter writer = XmlWriter.Create(infoXml, settings))
                 {
                     writer.WriteStartElement("info");
-                    writer.WriteRaw(Parameters);
+                    writer.WriteRaw(this.Parameters);
                     writer.WriteEndElement();
                     writer.Flush();
 
@@ -641,9 +644,9 @@ namespace Microsoft.HealthVault
                     // then there is no point in hashing the info section
                     // because we cannot protect the resulting hash
                     infoHash =
-                        _connection.Credential != null
+                        this.connection.Credential != null
                                 ? CryptoHash.CreateInfoHash(infoSection, 0, infoSectionLength)
-                                : String.Empty;
+                                : string.Empty;
                 }
             }
         }
@@ -652,7 +655,7 @@ namespace Microsoft.HealthVault
         private void GetHeaderSection(
             string transform,
             string infoHash,
-            out Byte[] headerXml,
+            out byte[] headerXml,
             out int headerXmlLength)
         {
             XmlWriterSettings settings = SDKHelper.XmlUtf8WriterSettings;
@@ -665,36 +668,36 @@ namespace Microsoft.HealthVault
                     writer.WriteStartElement("header");
 
                     // <method>
-                    writer.WriteElementString("method", _methodName);
+                    writer.WriteElementString("method", this.MethodName);
 
-                    if (_methodVersion != null)
+                    if (this.MethodVersion != null)
                     {
                         // <method-version>
-                        writer.WriteElementString("method-version", _methodVersion.Value.ToString());
+                        writer.WriteElementString("method-version", this.MethodVersion.Value.ToString());
                     }
 
-                    if (_targetPersonId != Guid.Empty)
+                    if (this.targetPersonId != Guid.Empty)
                     {
                         // <target-person-id>
-                        writer.WriteElementString("target-person-id", _targetPersonId.ToString());
+                        writer.WriteElementString("target-person-id", this.targetPersonId.ToString());
                     }
 
-                    if (_recordId != Guid.Empty)
+                    if (this.recordId != Guid.Empty)
                     {
                         // <record-id>
-                        writer.WriteElementString("record-id", _recordId.ToString());
+                        writer.WriteElementString("record-id", this.recordId.ToString());
                     }
 
                     // header based on the kind of connection we have...
 
-                    if (_connection.Credential != null &&
-                        !String.IsNullOrEmpty(_connection.AuthenticationToken))
+                    if (this.connection.Credential != null &&
+                        !string.IsNullOrEmpty(this.connection.AuthenticationToken))
                     {
                         writer.WriteStartElement("auth-session");
 
-                        _connection.Credential.GetHeaderSection(_connection.ApplicationId, writer);
+                        this.connection.Credential.GetHeaderSection(this.connection.ApplicationId, writer);
 
-                        OfflineWebApplicationConnection offlineConnection = _connection as OfflineWebApplicationConnection;
+                        OfflineWebApplicationConnection offlineConnection = this.connection as OfflineWebApplicationConnection;
                         if (offlineConnection != null)
                         {
                             if (offlineConnection.OfflinePersonId != Guid.Empty)
@@ -718,12 +721,12 @@ namespace Microsoft.HealthVault
                     }
                     else
                     {
-                        writer.WriteElementString("app-id", _connection.ApplicationId.ToString());
+                        writer.WriteElementString("app-id", this.connection.ApplicationId.ToString());
                     }
 
-                    if (_cultureCode != null)
+                    if (this.CultureCode != null)
                     {
-                        writer.WriteElementString("culture-code", _cultureCode);
+                        writer.WriteElementString("culture-code", this.CultureCode);
                     }
 
                     if (transform != null)
@@ -733,14 +736,14 @@ namespace Microsoft.HealthVault
 
                     writer.WriteElementString("msg-time", SDKHelper.XmlFromNow());
                     writer.WriteElementString(
-                        "msg-ttl", _msgTimeToLive.ToString(CultureInfo.InvariantCulture));
+                        "msg-ttl", this.TimeToLiveSeconds.ToString(CultureInfo.InvariantCulture));
 
-                    writer.WriteElementString("version", _version);
+                    writer.WriteElementString("version", Version);
 
                     // if we are not using an authenticated connection,
                     // then do not include the info-hash because we cannot protect it
                     //      with the auth section.
-                    if (_connection.Credential != null)
+                    if (this.connection.Credential != null)
                     {
                         writer.WriteStartElement("info-hash");
                         writer.WriteRaw(infoHash);
@@ -785,7 +788,7 @@ namespace Microsoft.HealthVault
                 if (responseStream == null)
                 {
                     newStreamCreated = true;
-                    responseStream = HealthServiceRequest.CreateMemoryStream(stream);
+                    responseStream = CreateMemoryStream(stream);
                 }
 
                 result = ParseResponse(responseStream);
@@ -799,7 +802,6 @@ namespace Microsoft.HealthVault
             }
 
             return result;
-
         }
 
         private static HealthServiceResponseData ParseResponse(MemoryStream responseStream)
@@ -813,7 +815,9 @@ namespace Microsoft.HealthVault
             reader.NameTable.Add("wc");
 
             if (!SDKHelper.ReadUntil(reader, "code"))
+            {
                 throw new MissingFieldException("code");
+            }
 
             result.CodeId = reader.ReadElementContentAsInt();
 
@@ -832,7 +836,7 @@ namespace Microsoft.HealthVault
                         offset++;
                     }
 
-                    result.ResponseText = new ArraySegment<Byte>(buff, offset, count - offset);
+                    result.ResponseText = new ArraySegment<byte>(buff, offset, count - offset);
                 }
 
                 return result;
@@ -854,11 +858,12 @@ namespace Microsoft.HealthVault
             try
             {
                 int count;
-                Byte[] buff = new Byte[1024 * 2];
+                byte[] buff = new byte[1024 * 2];
                 while ((count = stream.Read(buff, 0, buff.Length)) > 0)
                 {
                     responseStream.Write(buff, 0, count);
                 }
+
                 responseStream.Flush();
             }
             finally
@@ -874,18 +879,19 @@ namespace Microsoft.HealthVault
             HealthServiceResponseError error = new HealthServiceResponseError();
 
             // <error>
-            if (String.Equals(reader.Name, "error", StringComparison.Ordinal))
+            if (string.Equals(reader.Name, "error", StringComparison.Ordinal))
             {
                 // <message>
                 if (!SDKHelper.ReadUntil(reader, "message"))
                 {
                     throw new MissingFieldException("message");
                 }
+
                 error.Message = reader.ReadElementContentAsString();
 
                 // <context>
                 SDKHelper.SkipToElement(reader);
-                if (String.Equals(reader.Name, "context", StringComparison.Ordinal))
+                if (string.Equals(reader.Name, "context", StringComparison.Ordinal))
                 {
                     HealthServiceErrorContext errorContext = new HealthServiceErrorContext();
 
@@ -911,8 +917,10 @@ namespace Microsoft.HealthVault
                         {
                             ipAddresses.Add(ipAddress);
                         }
+
                         SDKHelper.SkipToElement(reader);
                     }
+
                     errorContext.SetServerIpAddresses(ipAddresses);
 
                     // <exception>
@@ -925,6 +933,7 @@ namespace Microsoft.HealthVault
                     {
                         throw new MissingFieldException("exception");
                     }
+
                     error.Context = errorContext;
                 }
 
@@ -935,6 +944,7 @@ namespace Microsoft.HealthVault
                     SDKHelper.SkipToElement(reader);
                 }
             }
+
             return error;
         }
 
@@ -950,12 +960,7 @@ namespace Microsoft.HealthVault
         /// A string representing the method name.
         /// </returns>
         ///
-        public string MethodName
-        {
-            get { return _methodName; }
-            set { _methodName = value; }
-        }
-        private string _methodName;
+        public string MethodName { get; set; }
 
         /// <summary>
         /// Gets or sets the version of the method to call.
@@ -969,12 +974,7 @@ namespace Microsoft.HealthVault
         /// If <b>null</b>, the current version is called.
         /// </remarks>
         ///
-        public int? MethodVersion
-        {
-            get { return _methodVersion; }
-            set { _methodVersion = value; }
-        }
-        private int? _methodVersion;
+        public int? MethodVersion { get; set; }
 
         /// <summary>
         /// Gets or sets the identifier of the person being impersonated.
@@ -986,10 +986,11 @@ namespace Microsoft.HealthVault
         ///
         public Guid ImpersonatedPersonId
         {
-            get { return _targetPersonId; }
-            set { _targetPersonId = value; }
+            get { return this.targetPersonId; }
+            set { this.targetPersonId = value; }
         }
-        private Guid _targetPersonId = Guid.Empty;
+
+        private Guid targetPersonId = Guid.Empty;
 
         /// <summary>
         /// Gets or sets the record identifier.
@@ -1001,10 +1002,11 @@ namespace Microsoft.HealthVault
         ///
         public Guid RecordId
         {
-            get { return _recordId; }
-            set { _recordId = value; }
+            get { return this.recordId; }
+            set { this.recordId = value; }
         }
-        private Guid _recordId;
+
+        private Guid recordId;
 
         /// <summary>
         /// Gets or sets the culture-code for the request.
@@ -1014,14 +1016,7 @@ namespace Microsoft.HealthVault
         /// A string representing the culture-code.
         /// </returns>
         ///
-        public string CultureCode
-        {
-            get { return _cultureCode; }
-            set { _cultureCode = value; }
-        }
-        private string _cultureCode;
-
-        private static readonly string _version = ConstructVersionString();
+        public string CultureCode { get; set; }
 
         /// <summary>
         /// Gets a string identifying this version of the HealthVault .NET APIs.
@@ -1031,12 +1026,9 @@ namespace Microsoft.HealthVault
         /// A string representing the version.
         /// </returns>
         ///
-        internal static string Version
-        {
-            get { return _version; }
-        }
+        internal static string Version { get; } = ConstructVersionString();
 
-        private string _parameters = String.Empty;
+        private string parameters = string.Empty;
 
         /// <summary>
         /// Gets or sets the parameters for the method invocation.
@@ -1054,20 +1046,21 @@ namespace Microsoft.HealthVault
                 // We can't return null - we use the return value for setting
                 // xml element's innter text - we'd have to do the value check
                 // in several places in the code...
-                if (_parameters == null)
+                if (this.parameters == null)
                 {
-                    _parameters = String.Empty;
+                    this.parameters = string.Empty;
                 }
 
-                return _parameters;
+                return this.parameters;
             }
+
             set
             {
-                _parameters = value;
+                this.parameters = value;
             }
         }
 
-        private int _timeoutSeconds;
+        private int timeoutSeconds;
 
         /// <summary>
         /// Gets or sets the timeout for the request, in seconds.
@@ -1083,7 +1076,8 @@ namespace Microsoft.HealthVault
         ///
         public int TimeoutSeconds
         {
-            get { return _timeoutSeconds; }
+            get { return this.timeoutSeconds; }
+
             set
             {
                 Validator.ThrowArgumentOutOfRangeIf(
@@ -1091,7 +1085,7 @@ namespace Microsoft.HealthVault
                     "TimeoutSeconds",
                     "TimeoutMustBePositive");
 
-                _timeoutSeconds = value;
+                this.timeoutSeconds = value;
             }
         }
 
@@ -1106,37 +1100,18 @@ namespace Microsoft.HealthVault
         /// to live to verify if HealthVault checks for it.
         /// </summary>
         ///
-        internal int TimeToLiveSeconds
-        {
-            get
-            {
-                return _msgTimeToLive;
-            }
-            set
-            {
-                _msgTimeToLive = value;
-            }
-        }
-        private int _msgTimeToLive = 300;
+        internal int TimeToLiveSeconds { get; set; } = 300;
 
         /// <summary>
         /// This is a test hook so that the derived testing class can
         /// verify the XML request.
         /// </summary>
         ///
-        internal Byte[] XmlRequest
-        {
-            get { return _xmlRequest; }
-        }
-        private Byte[] _xmlRequest;
+        internal byte[] XmlRequest { get; private set; }
 
-        internal int XmlRequestLength
-        {
-            get { return _xmlRequestLength; }
-        }
-        private int _xmlRequestLength;
+        internal int XmlRequestLength { get; private set; }
 
-        private bool _pendingCancel;
-        private HealthServiceConnection _connection;
+        private bool pendingCancel;
+        private HealthServiceConnection connection;
     }
 }

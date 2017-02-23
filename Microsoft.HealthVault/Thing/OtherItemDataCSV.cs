@@ -7,8 +7,9 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Text;
+using Microsoft.HealthVault.Helpers;
 
-namespace Microsoft.HealthVault.ItemTypes.Csv
+namespace Microsoft.HealthVault.Thing
 {
     /// <summary>
     /// The OtherItemDataCSV class is used to store and retrieve data stored in the HealthVault
@@ -61,7 +62,7 @@ namespace Microsoft.HealthVault.ItemTypes.Csv
         /// </summary>
         /// <param name="dataString">The string to search.</param>
         /// <param name="characterToBreakAt">The character to break apart at.</param>
-        /// <returns></returns>
+        /// <returns>the list of strings that have been broken apart</returns>
         private static List<string> BreakStringAtCharacter(string dataString, char characterToBreakAt)
         {
             List<string> items = new List<string>();
@@ -117,15 +118,15 @@ namespace Microsoft.HealthVault.ItemTypes.Csv
         protected Collection<OtherItemDataCsvItem> GetAsString()
         {
             Validator.ThrowArgumentExceptionIf(
-                ContentType != "text/csv",
+                this.ContentType != "text/csv",
                 "contentType",
                 "OtherItemDataFormat");
 
-            Validator.ThrowIfArgumentNull(Data, "Data", "OtherItemDataNull");
+            Validator.ThrowIfArgumentNull(this.Data, "Data", "OtherItemDataNull");
 
             Collection<OtherItemDataCsvItem> values = new Collection<OtherItemDataCsvItem>();
 
-            List<string> stringValues = BreakStringAtCharacter(Data, ',');
+            List<string> stringValues = BreakStringAtCharacter(this.Data, ',');
 
             for (int i = 0; i < stringValues.Count; i++)
             {
@@ -167,7 +168,7 @@ namespace Microsoft.HealthVault.ItemTypes.Csv
         /// <returns>A collection of OtherItemDataCsvItem</returns>
         protected Collection<OtherItemDataCsvItem> GetAsDouble()
         {
-            Collection<OtherItemDataCsvItem> stringValues = GetAsString();
+            Collection<OtherItemDataCsvItem> stringValues = this.GetAsString();
             Collection<OtherItemDataCsvItem> values = new Collection<OtherItemDataCsvItem>();
 
             foreach (OtherItemDataCsvItem item in stringValues)
@@ -178,12 +179,13 @@ namespace Microsoft.HealthVault.ItemTypes.Csv
                     double value;
                     try
                     {
-                        value = Double.Parse(itemString.Value);
+                        value = double.Parse(itemString.Value);
                     }
                     catch (FormatException)
                     {
                         throw Validator.InvalidOperationException("OtherItemDataInvalidNumber");
                     }
+
                     values.Add(new OtherItemDataCsvDouble(value));
                 }
                 else
@@ -247,9 +249,9 @@ namespace Microsoft.HealthVault.ItemTypes.Csv
                 currentItemIndex++;
             }
 
-            Data = builder.ToString();
-            ContentType = "text/csv";
-            ContentEncoding = String.Empty;
+            this.Data = builder.ToString();
+            this.ContentType = "text/csv";
+            this.ContentEncoding = string.Empty;
         }
     }
 }

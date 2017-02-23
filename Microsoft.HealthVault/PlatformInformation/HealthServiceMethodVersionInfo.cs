@@ -7,7 +7,7 @@ using System;
 using System.Xml;
 using System.Xml.XPath;
 
-namespace Microsoft.HealthVault
+namespace Microsoft.HealthVault.PlatformInformation
 {
     /// <summary>
     /// Provides information about the supported versions of a HealthVault
@@ -22,25 +22,25 @@ namespace Microsoft.HealthVault
         /// <param name="method">The method information.</param>
         public HealthServiceMethodVersionInfo(HealthServiceMethodInfo method)
         {
-            _method = method;
+            this.method = method;
         }
 
         internal void ParseXml(XPathNavigator nav)
         {
-            string versionString = nav.GetAttribute("number", String.Empty);
-            if (!String.IsNullOrEmpty(versionString))
+            string versionString = nav.GetAttribute("number", string.Empty);
+            if (!string.IsNullOrEmpty(versionString))
             {
-                _version = XmlConvert.ToInt32(versionString);
+                this.Version = XmlConvert.ToInt32(versionString);
             }
 
             XPathNavigator requestNav =
                 nav.SelectSingleNode("request-schema-url");
             if (requestNav != null)
             {
-                _requestSchemaUrl = new Uri(requestNav.Value);
+                this.RequestSchemaUrl = new Uri(requestNav.Value);
             }
 
-            _responseSchemaUrl =
+            this.ResponseSchemaUrl =
                 new Uri(nav.SelectSingleNode("response-schema-url").Value);
         }
 
@@ -52,11 +52,9 @@ namespace Microsoft.HealthVault
         /// A string representing the method name.
         /// </value>
         ///
-        public string Name
-        {
-            get { return _method.Name; }
-        }
-        private HealthServiceMethodInfo _method;
+        public string Name => this.method.Name;
+
+        private HealthServiceMethodInfo method;
 
         /// <summary>
         /// Gets the method version number.
@@ -66,12 +64,7 @@ namespace Microsoft.HealthVault
         /// An integer representing the method version number.
         /// </value>
         ///
-        public int Version
-        {
-            get { return _version; }
-            set { _version = value; }
-        }
-        private int _version;
+        public int Version { get; set; }
 
         /// <summary>
         /// Gets the URL of the request schema for the method.
@@ -85,12 +78,7 @@ namespace Microsoft.HealthVault
         /// This property returns <b>null</b> if the method takes no parameters.
         /// </remarks>
         ///
-        public Uri RequestSchemaUrl
-        {
-            get { return _requestSchemaUrl; }
-            set { _requestSchemaUrl = value; }
-        }
-        private Uri _requestSchemaUrl;
+        public Uri RequestSchemaUrl { get; set; }
 
         /// <summary>
         /// Gets the file name of the request schema.
@@ -104,25 +92,22 @@ namespace Microsoft.HealthVault
         {
             get
             {
-                if (_requestFileName == null)
+                if (this.requestFileName == null)
                 {
-                    _requestFileName = GetFileNameFromUrl(_requestSchemaUrl);
+                    this.requestFileName = GetFileNameFromUrl(this.RequestSchemaUrl);
                 }
-                return _requestFileName;
+
+                return this.requestFileName;
             }
         }
-        private string _requestFileName;
+
+        private string requestFileName;
 
         /// <summary>
         /// Gets the URL of the response schema for the method.
         /// </summary>
         ///
-        public Uri ResponseSchemaUrl
-        {
-            get { return _responseSchemaUrl; }
-            set { _responseSchemaUrl = value; }
-        }
-        private Uri _responseSchemaUrl;
+        public Uri ResponseSchemaUrl { get; set; }
 
         /// <summary>
         /// Gets the file name of the response schema.
@@ -136,14 +121,16 @@ namespace Microsoft.HealthVault
         {
             get
             {
-                if (_responseFileName == null)
+                if (this.responseFileName == null)
                 {
-                    _responseFileName = GetFileNameFromUrl(_responseSchemaUrl);
+                    this.responseFileName = GetFileNameFromUrl(this.ResponseSchemaUrl);
                 }
-                return _responseFileName;
+
+                return this.responseFileName;
             }
         }
-        private string _responseFileName;
+
+        private string responseFileName;
 
         private static string GetFileNameFromUrl(Uri url)
         {
@@ -155,6 +142,7 @@ namespace Microsoft.HealthVault
 
                 result = url.OriginalString.Substring(filenameStart);
             }
+
             return result;
         }
     }

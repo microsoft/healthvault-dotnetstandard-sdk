@@ -6,6 +6,8 @@
 using System;
 using System.Xml;
 using System.Xml.XPath;
+using Microsoft.HealthVault.Helpers;
+using Microsoft.HealthVault.Thing;
 
 namespace Microsoft.HealthVault.ItemTypes
 {
@@ -58,7 +60,7 @@ namespace Microsoft.HealthVault.ItemTypes
         /// A GUID.
         /// </value>
         ///
-        public new static readonly Guid TypeId =
+        public static new readonly Guid TypeId =
             new Guid("609319bf-35cc-40a4-b9d7-1b329679baaa");
 
         /// <summary>
@@ -81,15 +83,15 @@ namespace Microsoft.HealthVault.ItemTypes
 
             Validator.ThrowInvalidIfNull(lifeGoalNav, "LifeGoalUnexpectedNode");
 
-            _description = lifeGoalNav.SelectSingleNode("description").Value;
+            this.description = lifeGoalNav.SelectSingleNode("description").Value;
 
             XPathNavigator goalNav =
                 lifeGoalNav.SelectSingleNode("goal-info");
 
             if (goalNav != null)
             {
-                _goal = new Goal();
-                _goal.ParseXml(goalNav);
+                this.goal = new Goal();
+                this.goal.ParseXml(goalNav);
             }
         }
 
@@ -112,16 +114,16 @@ namespace Microsoft.HealthVault.ItemTypes
         public override void WriteXml(XmlWriter writer)
         {
             Validator.ThrowIfWriterNull(writer);
-            Validator.ThrowSerializationIfNull(_description, "LifeGoalDescriptionNotSet");
+            Validator.ThrowSerializationIfNull(this.description, "LifeGoalDescriptionNotSet");
 
             // <life-goal>
             writer.WriteStartElement("life-goal");
 
-            writer.WriteElementString("description", _description);
+            writer.WriteElementString("description", this.description);
 
-            if (_goal != null)
+            if (this.goal != null)
             {
-                _goal.WriteXml("goal-info", writer);
+                this.goal.WriteXml("goal-info", writer);
             }
 
             // </life-goal>
@@ -143,15 +145,17 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public string Description
         {
-            get { return _description; }
+            get { return this.description; }
+
             set
             {
                 Validator.ThrowIfStringNullOrEmpty(value, "Description");
                 Validator.ThrowIfStringIsWhitespace(value, "Description");
-                _description = value;
+                this.description = value;
             }
         }
-        private string _description;
+
+        private string description;
 
         /// <summary>
         /// Gets or sets the goal information.
@@ -167,10 +171,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public Goal Goal
         {
-            get { return _goal; }
-            set { _goal = value; }
+            get { return this.goal; }
+            set { this.goal = value; }
         }
-        private Goal _goal;
+
+        private Goal goal;
 
         /// <summary>
         /// Gets a string representation of the life goal.
@@ -182,17 +187,18 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public override string ToString()
         {
-            string result = Description;
+            string result = this.Description;
 
-            if (Goal != null && Goal.TargetDate != null)
+            if (this.Goal != null && this.Goal.TargetDate != null)
             {
                 result =
                     string.Format(
                         ResourceRetriever.GetResourceString(
                             "LifeGoalToStringFormat"),
-                        Description,
-                        Goal.TargetDate.ToString());
+                        this.Description,
+                        this.Goal.TargetDate.ToString());
             }
+
             return result;
         }
     }

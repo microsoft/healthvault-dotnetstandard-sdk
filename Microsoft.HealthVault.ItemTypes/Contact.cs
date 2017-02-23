@@ -6,6 +6,8 @@
 using System;
 using System.Xml;
 using System.Xml.XPath;
+using Microsoft.HealthVault.Helpers;
+using Microsoft.HealthVault.Thing;
 
 namespace Microsoft.HealthVault.ItemTypes
 {
@@ -58,7 +60,7 @@ namespace Microsoft.HealthVault.ItemTypes
         /// A GUID.
         /// </value>
         ///
-        public new static readonly Guid TypeId =
+        public static new readonly Guid TypeId =
             new Guid("162dd12d-9859-4a66-b75f-96760d67072b");
 
         /// <summary>
@@ -81,8 +83,8 @@ namespace Microsoft.HealthVault.ItemTypes
 
             Validator.ThrowInvalidIfNull(contactNav, "ContactInformationUnexpectedNode");
 
-            _contactInfo = new ContactInfo();
-            _contactInfo.ParseXml(contactNav.SelectSingleNode("contact"));
+            this.contactInfo = new ContactInfo();
+            this.contactInfo.ParseXml(contactNav.SelectSingleNode("contact"));
         }
 
         /// <summary>
@@ -104,12 +106,12 @@ namespace Microsoft.HealthVault.ItemTypes
         public override void WriteXml(XmlWriter writer)
         {
             Validator.ThrowIfWriterNull(writer);
-            Validator.ThrowSerializationIfNull(_contactInfo, "ContactInformationNotSet");
+            Validator.ThrowSerializationIfNull(this.contactInfo, "ContactInformationNotSet");
 
             // <contact>
             writer.WriteStartElement("contact");
 
-            _contactInfo.WriteXml("contact", writer);
+            this.contactInfo.WriteXml("contact", writer);
 
             // </contact>
             writer.WriteEndElement();
@@ -129,14 +131,16 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public ContactInfo ContactInformation
         {
-            get { return _contactInfo; }
+            get { return this.contactInfo; }
+
             set
             {
                 Validator.ThrowIfArgumentNull(value, "ContactInformation", "ContactInformationMandatory");
-                _contactInfo = value;
+                this.contactInfo = value;
             }
         }
-        private ContactInfo _contactInfo = new ContactInfo();
+
+        private ContactInfo contactInfo = new ContactInfo();
 
         /// <summary>
         /// Gets a string representation of the contact item.
@@ -148,16 +152,16 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public override string ToString()
         {
-            if (ContactInformation.Address.Count > 0 ||
-                ContactInformation.Email.Count > 0 ||
-                ContactInformation.Phone.Count > 0)
+            if (this.ContactInformation.Address.Count > 0 ||
+                this.ContactInformation.Email.Count > 0 ||
+                this.ContactInformation.Phone.Count > 0)
             {
-                return ContactInformation.ToString();
+                return this.ContactInformation.ToString();
             }
 
-            if (!string.IsNullOrEmpty(CommonData.Note))
+            if (!string.IsNullOrEmpty(this.CommonData.Note))
             {
-                return CommonData.Note;
+                return this.CommonData.Note;
             }
 
             return ResourceRetriever.GetResourceString(

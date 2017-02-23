@@ -6,11 +6,12 @@
 using System;
 using System.Security.Cryptography;
 using System.Xml;
+using Microsoft.HealthVault.Helpers;
 
 namespace Microsoft.HealthVault.Authentication
 {
     /// <summary>
-    ///
+    /// Class to generate a HMAC cryptographic algorithm and random key material.
     /// </summary>
     internal sealed class CryptoHmac : CryptoHash
     {
@@ -18,19 +19,18 @@ namespace Microsoft.HealthVault.Authentication
 
         internal byte[] KeyMaterial
         {
-            get { return _keyMaterial; }
+            get { return this.keyMaterial; }
+
             set
             {
-                _keyMaterial = value;
-                HMAC.Key = _keyMaterial;
+                this.keyMaterial = value;
+                this.HMAC.Key = this.keyMaterial;
             }
         }
-        private byte[] _keyMaterial;
 
-        private HMAC HMAC
-        {
-            get { return (this.HashAlgorithm as HMAC); }
-        }
+        private byte[] keyMaterial;
+
+        private HMAC HMAC => this.HashAlgorithm as HMAC;
 
         #endregion
 
@@ -42,14 +42,14 @@ namespace Microsoft.HealthVault.Authentication
         ///
         internal CryptoHmac()
         {
-            AlgorithmName = HealthApplicationConfiguration.Current.CryptoConfiguration.HmacAlgorithmName;
+            this.AlgorithmName = HealthApplicationConfiguration.Current.CryptoConfiguration.HmacAlgorithmName;
 
-            this.HashAlgorithm = ServiceLocator.Current.CryptoService.CreateHashAlgorithm(AlgorithmName);
+            this.HashAlgorithm = ServiceLocator.Current.CryptoService.CreateHashAlgorithm(this.AlgorithmName);
 
-            KeyMaterial = new byte[HMAC.Key.Length];
-            CryptoUtil.GetRandomBytes(KeyMaterial);
+            this.KeyMaterial = new byte[this.HMAC.Key.Length];
+            CryptoUtil.GetRandomBytes(this.KeyMaterial);
 
-            HMAC.Key = KeyMaterial;
+            this.HMAC.Key = this.KeyMaterial;
         }
 
         internal CryptoHmac(string algName, byte[] keyMaterial)
@@ -57,9 +57,9 @@ namespace Microsoft.HealthVault.Authentication
         {
             this.HashAlgorithm =
                 ServiceLocator.Current.CryptoService.CreateHmac(
-                    AlgorithmName,
+                    this.AlgorithmName,
                     keyMaterial);
-            KeyMaterial = keyMaterial;
+            this.KeyMaterial = keyMaterial;
         }
 
         #endregion
@@ -74,10 +74,7 @@ namespace Microsoft.HealthVault.Authentication
         /// This method is only called internally and is subject to change.
         /// </remarks>
         ///
-        protected override string DigestAlgorithmName
-        {
-            get { return "hmac"; }
-        }
+        protected override string DigestAlgorithmName => "hmac";
 
         /// <summary>
         /// Constructs the representation of the finalized HMAC state.
@@ -94,15 +91,15 @@ namespace Microsoft.HealthVault.Authentication
         ///
         public override CryptoHashFinalized Finalize()
         {
-            if (IsFinalized)
+            if (this.IsFinalized)
             {
                 throw Validator.InvalidOperationException("CryptoHmacAlreadyFinalized");
             }
 
-            IsFinalized = true;
+            this.IsFinalized = true;
 
             return new CryptoHmacFinalized(
-                AlgorithmName,
+                this.AlgorithmName,
                 this.Hash);
         }
 
@@ -127,12 +124,12 @@ namespace Microsoft.HealthVault.Authentication
         {
             if (writer == null)
             {
-                throw new ArgumentNullException("writer");
+                throw new ArgumentNullException(nameof(writer));
             }
 
-            writer.WriteStartElement(StartElementName);
-            writer.WriteAttributeString("algName", AlgorithmName);
-            writer.WriteString(Convert.ToBase64String(KeyMaterial));
+            writer.WriteStartElement(this.StartElementName);
+            writer.WriteAttributeString("algName", this.AlgorithmName);
+            writer.WriteString(Convert.ToBase64String(this.KeyMaterial));
             writer.WriteEndElement();
         }
     }

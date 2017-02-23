@@ -86,11 +86,10 @@ namespace Microsoft.HealthVault.Authentication
         ///
         internal static bool IsAuthenticated(CreateAuthenticationTokenResult result)
         {
-            return (result != null
+            return result != null
                     && result.Status == AuthenticationTokenCreationStatus.Success
-                    && result.ApplicationRecordAuthorizationAction ==
-                        ApplicationRecordAuthorizationAction.NoActionRequired
-                    && !String.IsNullOrEmpty(result.AuthenticationToken));
+                    && result.ApplicationRecordAuthorizationAction == ApplicationRecordAuthorizationAction.NoActionRequired
+                    && !string.IsNullOrEmpty(result.AuthenticationToken);
         }
     }
 }

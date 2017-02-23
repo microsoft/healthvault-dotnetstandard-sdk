@@ -14,6 +14,8 @@ using System.Collections.Specialized;
 using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using System.Web;
+using Microsoft.HealthVault.Person;
+using Microsoft.HealthVault.PlatformInformation;
 
 namespace Microsoft.HealthVault.Web.Mvc
 {

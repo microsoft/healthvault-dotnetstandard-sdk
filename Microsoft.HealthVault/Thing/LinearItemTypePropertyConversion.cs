@@ -5,7 +5,7 @@
 
 using System.Xml.XPath;
 
-namespace Microsoft.HealthVault
+namespace Microsoft.HealthVault.Thing
 {
     /// <summary>
     /// A linear conversion of the form x' = mx + b.
@@ -25,8 +25,8 @@ namespace Microsoft.HealthVault
         /// </param>
         public LinearItemTypePropertyConversion(double multiplier, double offset)
         {
-            Multiplier = multiplier;
-            Offset = offset;
+            this.Multiplier = multiplier;
+            this.Offset = offset;
         }
 
         /// <summary>
@@ -55,7 +55,7 @@ namespace Microsoft.HealthVault
         /// </returns>
         public double Convert(double value)
         {
-            return (value * Multiplier) + Offset;
+            return (value * this.Multiplier) + this.Offset;
         }
 
         /// <summary>

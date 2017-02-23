@@ -4,8 +4,9 @@
 // All other rights reserved.
 
 using System;
+using Microsoft.HealthVault.ItemTypes;
 
-namespace Microsoft.HealthVault
+namespace Microsoft.HealthVault.Thing
 {
     /// <summary>
     /// Blob parameters returned by BeginPutBlob
@@ -44,12 +45,12 @@ namespace Microsoft.HealthVault
             BlobHashAlgorithm blobHashAlgorithm,
             int blockSize)
         {
-            _url = blobReferenceUrl;
-            _chunkSize = chunkSize;
-            _postEncryptionChunkSize = chunkSize;
-            _maxBlobSize = maxBlobSize;
-            _blobHashAlgorithm = blobHashAlgorithm;
-            _hashBlockSize = blockSize;
+            this.Url = blobReferenceUrl;
+            this.ChunkSize = chunkSize;
+            this.PostEncryptionChunkSize = chunkSize;
+            this.MaxBlobSize = maxBlobSize;
+            this.BlobHashAlgorithm = blobHashAlgorithm;
+            this.HashBlockSize = blockSize;
         }
 
         /// <summary>
@@ -89,71 +90,47 @@ namespace Microsoft.HealthVault
             BlobHashAlgorithm blobHashAlgorithm,
             int blockSize)
         {
-            _url = blobReferenceUrl;
-            _chunkSize = chunkSize;
-            _postEncryptionChunkSize = postEncryptionChunkSize;
-            _maxBlobSize = maxBlobSize;
-            _blobHashAlgorithm = blobHashAlgorithm;
-            _hashBlockSize = blockSize;
+            this.Url = blobReferenceUrl;
+            this.ChunkSize = chunkSize;
+            this.PostEncryptionChunkSize = postEncryptionChunkSize;
+            this.MaxBlobSize = maxBlobSize;
+            this.BlobHashAlgorithm = blobHashAlgorithm;
+            this.HashBlockSize = blockSize;
         }
 
         /// <summary>
         /// Gets the BLOB reference url.
         /// </summary>
         ///
-        internal Uri Url
-        {
-            get { return _url; }
-        }
-        private Uri _url;
+        internal Uri Url { get; }
 
         /// <summary>
         /// Gets the put chunk size.
         /// </summary>
         ///
-        internal int ChunkSize
-        {
-            get { return _chunkSize; }
-        }
-        private int _chunkSize;
+        internal int ChunkSize { get; }
 
         /// <summary>
         /// Gets the put chunk size for the bytes after the connect package encryption has been
         /// applied.
         /// </summary>
         ///
-        internal int PostEncryptionChunkSize
-        {
-            get { return _postEncryptionChunkSize; }
-        }
-        private int _postEncryptionChunkSize;
+        internal int PostEncryptionChunkSize { get; }
 
         /// <summary>
         /// Gets the maximum size of the BLOB.
         /// </summary>
         ///
-        internal long MaxBlobSize
-        {
-            get { return _maxBlobSize; }
-        }
-        private long _maxBlobSize;
+        internal long MaxBlobSize { get; }
 
         /// <summary>
         /// Gets the BLOB hash algorithm used to hash the BLOB.
         /// </summary>
-        internal BlobHashAlgorithm BlobHashAlgorithm
-        {
-            get { return _blobHashAlgorithm; }
-        }
-        private BlobHashAlgorithm _blobHashAlgorithm;
+        internal BlobHashAlgorithm BlobHashAlgorithm { get; }
 
         /// <summary>
         /// Gets the block size to use for the BLOB hash algorithm.
         /// </summary>
-        internal int HashBlockSize
-        {
-            get { return _hashBlockSize; }
-        }
-        private int _hashBlockSize;
+        internal int HashBlockSize { get; }
     }
 }

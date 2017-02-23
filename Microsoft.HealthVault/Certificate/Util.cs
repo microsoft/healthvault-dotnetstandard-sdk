@@ -14,9 +14,9 @@ namespace Microsoft.HealthVault.Certificate
     /// </summary>
     internal static class Util
     {
-        ///	<summary>
-        ///	Get the formatted string of the last error message
-        ///	</summary>
+        /// <summary>
+        /// Get the formatted string of the last error message
+        /// </summary>
         [SecuritySafeCritical]
         internal static string GetLastErrorMessage()
         {

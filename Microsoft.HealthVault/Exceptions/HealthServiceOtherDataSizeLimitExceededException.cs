@@ -4,12 +4,13 @@
 // All other rights reserved.
 
 using System;
+using Microsoft.HealthVault.Transport;
 
 namespace Microsoft.HealthVault.Exceptions
 {
     /// <summary>
     /// The exception representing a HealthVault error code of
-    /// <see cref = "Microsoft.Health.HealthServiceStatusCode.OtherDataItemSizeLimitExceeded"/>
+    /// <see cref = "HealthServiceStatusCode.OtherDataItemSizeLimitExceeded"/>
     /// </summary>
     ///
     [Serializable]
@@ -19,7 +20,7 @@ namespace Microsoft.HealthVault.Exceptions
         /// Creates an instance of the <see cref="HealthServiceOtherDataSizeLimitExceededException"/>
         /// class with the specified error information to represent a
         /// HealthVault error code of
-        /// <see cref = "Microsoft.Health.HealthServiceStatusCode.OtherDataItemSizeLimitExceeded"/>.
+        /// <see cref = "HealthServiceStatusCode.OtherDataItemSizeLimitExceeded"/>.
         /// </summary>
         ///
         /// <remarks>

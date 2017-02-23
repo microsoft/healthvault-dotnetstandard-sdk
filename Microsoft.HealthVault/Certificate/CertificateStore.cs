@@ -5,6 +5,7 @@
 
 using System;
 using System.Security.Cryptography.X509Certificates;
+using Microsoft.HealthVault.Helpers;
 
 namespace Microsoft.HealthVault.Certificate
 {
@@ -13,9 +14,9 @@ namespace Microsoft.HealthVault.Certificate
     /// <summary>
     /// Wrapper around X509 Store for HealthVault.
     /// </summary>
-    internal class CertificateStore : IDisposable
+    internal sealed class CertificateStore : IDisposable
     {
-        private X509Store m_store;
+        private X509Store store;
 
         /// <summary>
         /// Creates an instance of CertificateStore.
@@ -50,8 +51,8 @@ namespace Microsoft.HealthVault.Certificate
         ///
         internal CertificateStore(StoreLocation storeType)
         {
-            this.m_store = new X509Store(StoreName.AuthRoot, storeType);
-            this.m_store.Open(OpenFlags.OpenExistingOnly | OpenFlags.ReadWrite);
+            this.store = new X509Store(StoreName.AuthRoot, storeType);
+            this.store.Open(OpenFlags.OpenExistingOnly | OpenFlags.ReadWrite);
         }
 
         /// <summary>
@@ -63,13 +64,7 @@ namespace Microsoft.HealthVault.Certificate
         /// </param>
         ///
         /// <returns>The certificate associated with the subject name.</returns>
-        internal X509Certificate2 this[string subjectName]
-        {
-            get
-            {
-                return this.FindBySubject(subjectName);
-            }
-        }
+        internal X509Certificate2 this[string subjectName] => this.FindBySubject(subjectName);
 
         /// <summary>
         /// Gets the X509Certificate asociated with the appID.
@@ -83,13 +78,7 @@ namespace Microsoft.HealthVault.Certificate
         /// The certificate associated with the appID.
         /// </returns>
         ///
-        internal X509Certificate2 this[Guid appID]
-        {
-            get
-            {
-                return this.FindBySubject(ApplicationCertificate.MakeCertSubject(appID));
-            }
-        }
+        internal X509Certificate2 this[Guid appID] => this.FindBySubject(ApplicationCertificate.MakeCertSubject(appID));
 
         /// <summary>
         /// Adds the certificate to the store.
@@ -100,7 +89,7 @@ namespace Microsoft.HealthVault.Certificate
         /// </param>
         internal void Add(X509Certificate2 cert)
         {
-            this.m_store.Add(cert);
+            this.store.Add(cert);
         }
 
         /// <summary>
@@ -130,12 +119,12 @@ namespace Microsoft.HealthVault.Certificate
         {
             if (cert == null)
             {
-                throw new ArgumentNullException("cert");
+                throw new ArgumentNullException(nameof(cert));
             }
 
             if (this.Contains(cert.Subject))
             {
-                this.m_store.Remove(cert);
+                this.store.Remove(cert);
             }
         }
 
@@ -152,7 +141,7 @@ namespace Microsoft.HealthVault.Certificate
         /// </returns>
         internal bool Contains(Guid appID)
         {
-            return (this[appID] != null);
+            return this[appID] != null;
         }
 
         /// <summary>
@@ -174,7 +163,7 @@ namespace Microsoft.HealthVault.Certificate
         internal bool Contains(string subjectName)
         {
             Validator.ThrowIfStringNullOrEmpty(subjectName, "subjectName");
-            return (this.FindBySubject(subjectName) != null);
+            return this.FindBySubject(subjectName) != null;
         }
 
         /// <summary>
@@ -197,10 +186,9 @@ namespace Microsoft.HealthVault.Certificate
         {
             Validator.ThrowIfStringNullOrEmpty(subjectName, "subjectName");
 
-            X509Certificate2Collection certs = this.m_store.Certificates;
-            for (int i = 0; i < certs.Count; ++i)
+            X509Certificate2Collection certs = this.store.Certificates;
+            foreach (X509Certificate2 cert in certs)
             {
-                X509Certificate2 cert = certs[i];
                 if (cert.Subject.Equals(subjectName, StringComparison.OrdinalIgnoreCase))
                 {
                     return cert;
@@ -213,15 +201,16 @@ namespace Microsoft.HealthVault.Certificate
         #region Dispose
 
         /// <summary>
-        /// 	Clean up the contained resources that need disposing.
+        /// Clean up the contained resources that need disposing.
         /// </summary>
         /// <param name="disposing">true if called from Dispose, false if from the finalizer</param>
         ///
-        protected virtual void Dispose(bool disposing)
+        private void Dispose(bool disposing)
         {
             if (disposing)
             {
-                this.m_store = null;
+                this.store?.Dispose();
+                this.store = null;
             }
         }
 
@@ -230,7 +219,7 @@ namespace Microsoft.HealthVault.Certificate
         /// </summary>
         public void Dispose()
         {
-            Dispose(true);
+            this.Dispose(true);
 
             // Use SupressFinalize in case a subclass of this type implements a finalizer.
             GC.SuppressFinalize(this);

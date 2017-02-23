@@ -3,12 +3,13 @@
 // see http://www.microsoft.com/resources/sharedsource/licensingbasics/sharedsourcelicenses.mspx.
 // All other rights reserved.
 
-using Microsoft.HealthVault.Authentication;
 using System;
 using System.Collections.Generic;
 using System.Security.Cryptography;
+using Microsoft.HealthVault.Authentication;
+using Microsoft.HealthVault.Helpers;
 
-namespace Microsoft.HealthVault
+namespace Microsoft.HealthVault.ItemTypes
 {
     /// <summary>
     /// Used to calculate BLOB hashes.
@@ -18,8 +19,8 @@ namespace Microsoft.HealthVault
         /// <summary>
         /// Constructs the BlobHasher for calculating BLOB hashes.
         /// </summary>
-        /// <param name="algorithm"></param>
-        /// <param name="blockSize"></param>
+        /// <param name="algorithm">The algorith to use to calculate the blob hasher</param>
+        /// <param name="blockSize">The block size to use in bytes</param>
         ///
         /// <exception cref="ArgumentException">
         /// If <paramref name="algorithm"/> is not a supported blob hash algorithm.
@@ -38,7 +39,7 @@ namespace Microsoft.HealthVault
             switch (algorithm)
             {
                 case BlobHashAlgorithm.SHA256Block:
-                    _baseHashAlgorithm = ServiceLocator.Current.CryptoService.CreateHashAlgorithm("SHA256");
+                    this.baseHashAlgorithm = ServiceLocator.Current.CryptoService.CreateHashAlgorithm("SHA256");
                     break;
                 default:
                     throw new ArgumentException(
@@ -50,25 +51,25 @@ namespace Microsoft.HealthVault
 
             Validator.ThrowArgumentOutOfRangeIf(blockSize < 1, "blockSize", "BlockSizeMustBePositive");
 
-            if ((_baseHashAlgorithm.HashSize % 8) != 0)
+            if (this.baseHashAlgorithm.HashSize % 8 != 0)
             {
                 throw new CryptographicUnexpectedOperationException(
                     ResourceRetriever.FormatResourceString(
                         "AlgorithmHashSizePartialByteLength",
-                        _baseHashAlgorithm.HashSize));
+                        this.baseHashAlgorithm.HashSize));
             }
 
-            _blockSize = blockSize;
-            _blobHashAlgorithm = algorithm;
-            _hashSizeBytes = _baseHashAlgorithm.HashSize / 8;
+            this.BlockSize = blockSize;
+            this.BlobHashAlgorithm = algorithm;
+            this.HashSizeBytes = this.baseHashAlgorithm.HashSize / 8;
         }
 
         /// <summary>
         /// Calculates the series of block hashes from the data.
         /// </summary>
-        /// <param name="data"></param>
-        /// <param name="offset"></param>
-        /// <param name="count"></param>
+        /// <param name="data">The data to calculate</param>
+        /// <param name="offset">the offset that the hash starts at</param>
+        /// <param name="count">the number of blocks to calculate</param>
         /// <returns>The block hashes.</returns>
         ///
         /// <exception cref="ArgumentNullException">
@@ -103,20 +104,20 @@ namespace Microsoft.HealthVault
                 "data",
                 "CalculateBlockHashesDataLengthTooSmall");
 
-            int numBlocks = (int)Math.Ceiling((double)count / _blockSize);
+            int numBlocks = (int)Math.Ceiling((double)count / this.BlockSize);
             List<byte[]> blockHashes = new List<byte[]>(numBlocks);
 
             int currentOffset = offset;
             while (currentOffset < offset + count)
             {
-                int numBytesToHash = Math.Min(_blockSize, (offset + count) - currentOffset);
+                int numBytesToHash = Math.Min(this.BlockSize, (offset + count) - currentOffset);
 
                 byte[] blockHash =
-                    _baseHashAlgorithm.ComputeHash(data, currentOffset, numBytesToHash);
+                    this.baseHashAlgorithm.ComputeHash(data, currentOffset, numBytesToHash);
 
                 blockHashes.Add(blockHash);
 
-                currentOffset = currentOffset + _blockSize;
+                currentOffset = currentOffset + this.BlockSize;
             }
 
             return blockHashes;
@@ -125,7 +126,7 @@ namespace Microsoft.HealthVault
         /// <summary>
         /// Calculates the BLOB hash from a series of block hashes.
         /// </summary>
-        /// <param name="blockHashes"></param>
+        /// <param name="blockHashes">The hashes to use in the calculations</param>
         /// <returns>The BLOB hash.</returns>
         ///
         /// <exception cref="ArgumentNullException">
@@ -144,16 +145,16 @@ namespace Microsoft.HealthVault
                 "blockHashes",
                 "CalculateBlobHashBlockHashCountMustBePositive");
 
-            byte[] blockHashBuffer = new byte[blockHashes.Count * _hashSizeBytes];
+            byte[] blockHashBuffer = new byte[blockHashes.Count * this.HashSizeBytes];
 
             int writeOffset = 0;
             foreach (byte[] blockHash in blockHashes)
             {
                 blockHash.CopyTo(blockHashBuffer, writeOffset);
-                writeOffset += _hashSizeBytes;
+                writeOffset += this.HashSizeBytes;
             }
 
-            return _baseHashAlgorithm.ComputeHash(blockHashBuffer);
+            return this.baseHashAlgorithm.ComputeHash(blockHashBuffer);
         }
 
         /// <summary>
@@ -161,37 +162,21 @@ namespace Microsoft.HealthVault
         /// </summary>
         internal byte[] CalculateBlobHash(byte[] data, int offset, int count)
         {
-            return CalculateBlobHash(CalculateBlockHashes(data, offset, count));
+            return this.CalculateBlobHash(this.CalculateBlockHashes(data, offset, count));
         }
 
-        internal static BlobHasher InlineBlobHasher
-        {
-            get { return _inlineBlobHasher; }
-        }
-        private static BlobHasher _inlineBlobHasher = new BlobHasher(
+        internal static BlobHasher InlineBlobHasher { get; } = new BlobHasher(
             BlobHashAlgorithm.SHA256Block,
             HealthApplicationConfiguration.Current.InlineBlobHashBlockSize);
 
         internal const int DefaultInlineBlobHashBlockSizeBytes = 1 << 21; // 2Mb.
 
-        internal BlobHashAlgorithm BlobHashAlgorithm
-        {
-            get { return _blobHashAlgorithm; }
-        }
-        private BlobHashAlgorithm _blobHashAlgorithm;
+        internal BlobHashAlgorithm BlobHashAlgorithm { get; }
 
-        private HashAlgorithm _baseHashAlgorithm;
+        private HashAlgorithm baseHashAlgorithm;
 
-        internal int BlockSize
-        {
-            get { return _blockSize; }
-        }
-        private int _blockSize;
+        internal int BlockSize { get; }
 
-        internal int HashSizeBytes
-        {
-            get { return _hashSizeBytes; }
-        }
-        private int _hashSizeBytes;
+        internal int HashSizeBytes { get; }
     }
 }

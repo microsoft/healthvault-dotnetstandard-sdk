@@ -10,7 +10,7 @@ using System.Globalization;
 using System.Linq;
 using System.Xml.XPath;
 
-namespace Microsoft.HealthVault
+namespace Microsoft.HealthVault.Thing
 {
     /// <summary>
     /// Describes the schema and structure of a health record item type.
@@ -55,58 +55,58 @@ namespace Microsoft.HealthVault
         protected virtual void ParseXml(XPathNavigator typeNavigator)
         {
             string typeIdString = typeNavigator.SelectSingleNode("id").Value;
-            _id = new Guid(typeIdString);
-            _name = typeNavigator.SelectSingleNode("name").Value;
+            this.TypeId = new Guid(typeIdString);
+            this.Name = typeNavigator.SelectSingleNode("name").Value;
 
             XPathNavigator isCreatableNavigator = typeNavigator.SelectSingleNode("uncreatable");
             if (isCreatableNavigator != null)
             {
-                _isCreatable = !isCreatableNavigator.ValueAsBoolean;
+                this.IsCreatable = !isCreatableNavigator.ValueAsBoolean;
             }
 
             XPathNavigator isImmutableNavigator = typeNavigator.SelectSingleNode("immutable");
             if (isImmutableNavigator != null)
             {
-                _isImmutable = isImmutableNavigator.ValueAsBoolean;
+                this.IsImmutable = isImmutableNavigator.ValueAsBoolean;
             }
 
             XPathNavigator isSingletonNavigator = typeNavigator.SelectSingleNode("singleton");
             if (isSingletonNavigator != null)
             {
-                _isSingletonType = isSingletonNavigator.ValueAsBoolean;
+                this.IsSingletonType = isSingletonNavigator.ValueAsBoolean;
             }
 
             XPathNavigator allowReadOnlyNavigator = typeNavigator.SelectSingleNode("allow-readonly");
             if (allowReadOnlyNavigator != null)
             {
-                AllowReadOnly = allowReadOnlyNavigator.ValueAsBoolean;
+                this.AllowReadOnly = allowReadOnlyNavigator.ValueAsBoolean;
             }
 
             XPathNavigator xsdNavigator = typeNavigator.SelectSingleNode("xsd");
 
             if (xsdNavigator != null)
             {
-                _xsd = xsdNavigator.Value;
+                this.XmlSchemaDefinition = xsdNavigator.Value;
             }
             else
             {
-                _xsd = String.Empty;
+                this.XmlSchemaDefinition = string.Empty;
             }
 
-            _versions = GetThingTypeVersions(typeNavigator);
+            this.Versions = GetThingTypeVersions(typeNavigator);
 
             XPathNavigator effectiveDateXPath = typeNavigator.SelectSingleNode("effective-date-xpath");
 
             if (effectiveDateXPath != null)
             {
-                _effectiveDateXPath = effectiveDateXPath.Value;
+                this.EffectiveDateXPath = effectiveDateXPath.Value;
             }
 
             XPathNavigator updatedEndDateNavigator = typeNavigator.SelectSingleNode("updated-end-date-xpath");
 
             if (updatedEndDateNavigator != null)
             {
-                UpdatedEndDateXPath = updatedEndDateNavigator.Value;
+                this.UpdatedEndDateXPath = updatedEndDateNavigator.Value;
             }
         }
 
@@ -122,9 +122,9 @@ namespace Microsoft.HealthVault
 
         private static HealthRecordItemTypeVersionInfo GetVersionInfoFromXml(XPathNavigator versionInfoNav)
         {
-            var versionTypeId = new Guid(versionInfoNav.GetAttribute("version-type-id", ""));
-            string versionName = versionInfoNav.GetAttribute("version-name", "");
-            int versionSequence = int.Parse(versionInfoNav.GetAttribute("version-sequence", ""), CultureInfo.InvariantCulture);
+            var versionTypeId = new Guid(versionInfoNav.GetAttribute("version-type-id", string.Empty));
+            string versionName = versionInfoNav.GetAttribute("version-name", string.Empty);
+            int versionSequence = int.Parse(versionInfoNav.GetAttribute("version-sequence", string.Empty), CultureInfo.InvariantCulture);
 
             XPathNavigator orderByPropertiesNav = versionInfoNav.SelectSingleNode("order-by-properties");
 
@@ -154,12 +154,7 @@ namespace Microsoft.HealthVault
         /// A string representing the type name.
         /// </value>
         ///
-        public string Name
-        {
-            get { return _name; }
-            protected set { _name = value; }
-        }
-        private string _name;
+        public string Name { get; protected set; }
 
         /// <summary>
         /// Gets or sets the type unique identifier.
@@ -169,12 +164,7 @@ namespace Microsoft.HealthVault
         /// A GUID representing the type identifier.
         /// </value>
         ///
-        public Guid TypeId
-        {
-            get { return _id; }
-            protected set { _id = value; }
-        }
-        private Guid _id;
+        public Guid TypeId { get; protected set; }
 
         /// <summary>
         /// Gets or sets the XML schema definition.
@@ -184,12 +174,7 @@ namespace Microsoft.HealthVault
         /// A string representing the definition.
         /// </value>
         ///
-        public string XmlSchemaDefinition
-        {
-            get { return _xsd; }
-            protected set { _xsd = value; }
-        }
-        private string _xsd;
+        public string XmlSchemaDefinition { get; protected set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether instances of the type are creatable.
@@ -199,12 +184,7 @@ namespace Microsoft.HealthVault
         /// <b>true</b> if the instances are creatable; otherwise, <b>false</b>.
         /// </value>
         ///
-        public bool IsCreatable
-        {
-            get { return _isCreatable; }
-            protected set { _isCreatable = value; }
-        }
-        private bool _isCreatable;
+        public bool IsCreatable { get; protected set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether instances of the type are immutable.
@@ -214,12 +194,7 @@ namespace Microsoft.HealthVault
         /// <b>true</b> if the instances are immutable; otherwise, <b>false</b>.
         /// </value>
         ///
-        public bool IsImmutable
-        {
-            get { return _isImmutable; }
-            protected set { _isImmutable = value; }
-        }
-        private bool _isImmutable;
+        public bool IsImmutable { get; protected set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether only a single instance of the type
@@ -231,12 +206,7 @@ namespace Microsoft.HealthVault
         /// health record; otherwise, <b>false</b>.
         /// </value>
         ///
-        public bool IsSingletonType
-        {
-            get { return _isSingletonType; }
-            protected set { _isSingletonType = value; }
-        }
-        private bool _isSingletonType;
+        public bool IsSingletonType { get; protected set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether the Thing Type allows read-only
@@ -254,12 +224,7 @@ namespace Microsoft.HealthVault
         /// <summary>
         /// Gets or sets a collection of the version information for the type.
         /// </summary>
-        public ReadOnlyCollection<HealthRecordItemTypeVersionInfo> Versions
-        {
-            get { return _versions; }
-            protected set { _versions = value; }
-        }
-        private ReadOnlyCollection<HealthRecordItemTypeVersionInfo> _versions;
+        public ReadOnlyCollection<HealthRecordItemTypeVersionInfo> Versions { get; protected set; }
 
         /// <summary>
         /// Gets or sets the XPath to the effective date element in the <see cref="HealthRecordItem.TypeSpecificData"/>.
@@ -269,12 +234,7 @@ namespace Microsoft.HealthVault
         /// The String representation of the XPath.
         /// </value>
         ///
-        public string EffectiveDateXPath
-        {
-            get { return _effectiveDateXPath; }
-            protected set { _effectiveDateXPath = value; }
-        }
-        private string _effectiveDateXPath;
+        public string EffectiveDateXPath { get; protected set; }
 
         /// <summary>
         /// Gets or sets the XPath to the updated end date element in the <see cref="HealthRecordItem.TypeSpecificData"/>.

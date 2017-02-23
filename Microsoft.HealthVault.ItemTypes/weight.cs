@@ -6,6 +6,8 @@
 using System;
 using System.Xml;
 using System.Xml.XPath;
+using Microsoft.HealthVault.Helpers;
+using Microsoft.HealthVault.Thing;
 
 namespace Microsoft.HealthVault.ItemTypes
 {
@@ -63,7 +65,7 @@ namespace Microsoft.HealthVault.ItemTypes
         /// A GUID.
         /// </value>
         ///
-        public new static readonly Guid TypeId =
+        public static new readonly Guid TypeId =
             new Guid("3d34d87e-7fc1-4153-800f-f56592cb0d17");
 
         /// <summary>
@@ -86,11 +88,11 @@ namespace Microsoft.HealthVault.ItemTypes
 
             Validator.ThrowInvalidIfNull(weightNav, "WeightUnexpectedNode");
 
-            _when = new HealthServiceDateTime();
-            _when.ParseXml(weightNav.SelectSingleNode("when"));
+            this.when = new HealthServiceDateTime();
+            this.when.ParseXml(weightNav.SelectSingleNode("when"));
 
-            _value = new WeightValue();
-            _value.ParseXml(weightNav.SelectSingleNode("value"));
+            this.value = new WeightValue();
+            this.value.ParseXml(weightNav.SelectSingleNode("value"));
         }
 
         /// <summary>
@@ -112,15 +114,15 @@ namespace Microsoft.HealthVault.ItemTypes
         public override void WriteXml(XmlWriter writer)
         {
             Validator.ThrowIfWriterNull(writer);
-            Validator.ThrowSerializationIfNull(_value, "WeightValueNotSet");
+            Validator.ThrowSerializationIfNull(this.value, "WeightValueNotSet");
 
             // <weight>
             writer.WriteStartElement("weight");
 
             // <when>
-            _when.WriteXml("when", writer);
+            this.when.WriteXml("when", writer);
 
-            _value.WriteXml("value", writer);
+            this.value.WriteXml("value", writer);
 
             // </weight>
             writer.WriteEndElement();
@@ -136,12 +138,13 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public override string ToString()
         {
-            string result = String.Empty;
+            string result = string.Empty;
 
-            if (Value != null)
+            if (this.Value != null)
             {
-                result = Value.ToString();
+                result = this.Value.ToString();
             }
+
             return result;
         }
 
@@ -161,14 +164,16 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public HealthServiceDateTime When
         {
-            get { return _when; }
+            get { return this.when; }
+
             set
             {
                 Validator.ThrowIfArgumentNull(value, "When", "WhenNullValue");
-                _when = value;
+                this.when = value;
             }
         }
-        private HealthServiceDateTime _when = new HealthServiceDateTime();
+
+        private HealthServiceDateTime when = new HealthServiceDateTime();
 
         /// <summary>
         /// Gets or sets the person's weight.
@@ -184,13 +189,15 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public WeightValue Value
         {
-            get { return _value; }
+            get { return this.value; }
+
             set
             {
                 Validator.ThrowIfArgumentNull(value, "Value", "WeightValueMandatory");
-                _value = value;
+                this.value = value;
             }
         }
-        private WeightValue _value = new WeightValue();
+
+        private WeightValue value = new WeightValue();
     }
 }

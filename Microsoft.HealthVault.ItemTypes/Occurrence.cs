@@ -5,6 +5,7 @@
 
 using System.Xml;
 using System.Xml.XPath;
+using Microsoft.HealthVault.Helpers;
 
 namespace Microsoft.HealthVault.ItemTypes
 {
@@ -67,10 +68,10 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             Validator.ThrowIfNavigatorNull(navigator);
 
-            _when = new ApproximateTime();
-            _when.ParseXml(navigator.SelectSingleNode("when"));
+            this.when = new ApproximateTime();
+            this.when.ParseXml(navigator.SelectSingleNode("when"));
 
-            _minutes = navigator.SelectSingleNode("minutes").ValueAsInt;
+            this.minutes = navigator.SelectSingleNode("minutes").ValueAsInt;
         }
 
         /// <summary>
@@ -104,13 +105,13 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             Validator.ThrowIfStringNullOrEmpty(nodeName, "nodeName");
             Validator.ThrowIfWriterNull(writer);
-            Validator.ThrowSerializationIfNull(_when, "OccurrenceWhenNotSet");
-            Validator.ThrowSerializationIfNull(_minutes, "OccurrenceMinutesNotSet");
+            Validator.ThrowSerializationIfNull(this.when, "OccurrenceWhenNotSet");
+            Validator.ThrowSerializationIfNull(this.minutes, "OccurrenceMinutesNotSet");
 
             writer.WriteStartElement(nodeName);
 
-            _when.WriteXml("when", writer);
-            writer.WriteElementString("minutes", _minutes.ToString());
+            this.when.WriteXml("when", writer);
+            writer.WriteElementString("minutes", this.minutes.ToString());
 
             writer.WriteEndElement();
         }
@@ -130,14 +131,16 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public ApproximateTime When
         {
-            get { return _when; }
+            get { return this.when; }
+
             set
             {
                 Validator.ThrowIfArgumentNull(value, "When", "OccurrenceWhenMandatory");
-                _when = value;
+                this.when = value;
             }
         }
-        private ApproximateTime _when;
+
+        private ApproximateTime when;
 
         /// <summary>
         /// Gets or sets the duration of the occurrence in minutes.
@@ -153,13 +156,15 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public int Minutes
         {
-            get { return (int)_minutes; }
+            get { return (int)this.minutes; }
+
             set
             {
                 Validator.ThrowArgumentOutOfRangeIf(value <= 0, "Minutes", "OccurrenceMinutesMustBePositive");
-                _minutes = value;
+                this.minutes = value;
             }
         }
-        private int? _minutes;
+
+        private int? minutes;
     }
 }

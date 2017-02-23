@@ -6,6 +6,7 @@
 using System.Globalization;
 using System.Xml;
 using System.Xml.XPath;
+using Microsoft.HealthVault.Helpers;
 
 namespace Microsoft.HealthVault.ItemTypes
 {
@@ -40,7 +41,7 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public CarePlanGoalRange(int statusIndicator)
         {
-            StatusIndicator = statusIndicator;
+            this.StatusIndicator = statusIndicator;
         }
 
         /// <summary>
@@ -59,9 +60,9 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             Validator.ThrowIfNavigatorNull(navigator);
 
-            _statusIndicator = XPathHelper.GetOptNavValueAsInt(navigator, "status-indicator").Value;
-            _minimumValue = XPathHelper.GetOptNavValueAsDouble(navigator, "minimum-value");
-            _maximumValue = XPathHelper.GetOptNavValueAsDouble(navigator, "maximum-value");
+            this.statusIndicator = XPathHelper.GetOptNavValueAsInt(navigator, "status-indicator").Value;
+            this.minimumValue = XPathHelper.GetOptNavValueAsDouble(navigator, "minimum-value");
+            this.maximumValue = XPathHelper.GetOptNavValueAsDouble(navigator, "maximum-value");
         }
 
         /// <summary>
@@ -93,9 +94,9 @@ namespace Microsoft.HealthVault.ItemTypes
 
             writer.WriteStartElement("goal-range");
             {
-                writer.WriteElementString("status-indicator", _statusIndicator.ToString(CultureInfo.InvariantCulture));
-                XmlWriterHelper.WriteOptDouble(writer, "minimum-value", _minimumValue);
-                XmlWriterHelper.WriteOptDouble(writer, "maximum-value", _maximumValue);
+                writer.WriteElementString("status-indicator", this.statusIndicator.ToString(CultureInfo.InvariantCulture));
+                XmlWriterHelper.WriteOptDouble(writer, "minimum-value", this.minimumValue);
+                XmlWriterHelper.WriteOptDouble(writer, "maximum-value", this.maximumValue);
             }
 
             writer.WriteEndElement();
@@ -113,7 +114,7 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             get
             {
-                return _statusIndicator;
+                return this.statusIndicator;
             }
 
             set
@@ -123,11 +124,11 @@ namespace Microsoft.HealthVault.ItemTypes
                     "StatusIndicator",
                     "CarePlanGoalRangeStatusIndicatorNegative");
 
-                _statusIndicator = value;
+                this.statusIndicator = value;
             }
         }
 
-        private int _statusIndicator;
+        private int statusIndicator;
 
         /// <summary>
         /// Gets or sets minimum value of the range.
@@ -141,16 +142,16 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             get
             {
-                return _minimumValue;
+                return this.minimumValue;
             }
 
             set
             {
-                _minimumValue = value;
+                this.minimumValue = value;
             }
         }
 
-        private double? _minimumValue;
+        private double? minimumValue;
 
         /// <summary>
         /// Gets or sets maximum value of the range.
@@ -164,16 +165,16 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             get
             {
-                return _maximumValue;
+                return this.maximumValue;
             }
 
             set
             {
-                _maximumValue = value;
+                this.maximumValue = value;
             }
         }
 
-        private double? _maximumValue;
+        private double? maximumValue;
 
         /// <summary>
         /// Gets a string representation of the CarePlanGoalRange.
@@ -187,31 +188,31 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             string rangeValue = string.Empty;
 
-            if (_minimumValue != null &&
-                _maximumValue != null)
+            if (this.minimumValue != null &&
+                this.maximumValue != null)
             {
                 rangeValue =
                     string.Format(
                         CultureInfo.CurrentUICulture,
                         ResourceRetriever.GetResourceString("CarePlanGoalRangeFormatMinMax"),
-                        _minimumValue,
-                        _maximumValue);
+                        this.minimumValue,
+                        this.maximumValue);
             }
-            else if (_minimumValue != null)
+            else if (this.minimumValue != null)
             {
                 rangeValue =
                     string.Format(
                         CultureInfo.CurrentUICulture,
                         ResourceRetriever.GetResourceString("CarePlanGoalRangeFormatMinOnly"),
-                        _minimumValue);
+                        this.minimumValue);
             }
-            else if (_maximumValue != null)
+            else if (this.maximumValue != null)
             {
                 rangeValue =
                     string.Format(
                         CultureInfo.CurrentUICulture,
                         ResourceRetriever.GetResourceString("CarePlanGoalRangeFormatMaxOnly"),
-                        _maximumValue);
+                        this.maximumValue);
             }
 
             return
@@ -219,7 +220,7 @@ namespace Microsoft.HealthVault.ItemTypes
                         CultureInfo.CurrentUICulture,
                         ResourceRetriever.GetResourceString("CarePlanGoalRangeFormat"),
                         rangeValue,
-                        _statusIndicator);
+                        this.statusIndicator);
         }
 
         /// <summary>
@@ -229,20 +230,20 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <returns>True if the value is in range. </returns>
         public bool IsInRange(double value)
         {
-            if (!_minimumValue.HasValue &&
-                !_maximumValue.HasValue)
+            if (!this.minimumValue.HasValue &&
+                !this.maximumValue.HasValue)
             {
                 return false;
             }
 
-            if (_minimumValue.HasValue &&
-                value < _minimumValue.Value)
+            if (this.minimumValue.HasValue &&
+                value < this.minimumValue.Value)
             {
                 return false;
             }
 
-            if (_maximumValue.HasValue &&
-                value > _maximumValue.Value)
+            if (this.maximumValue.HasValue &&
+                value > this.maximumValue.Value)
             {
                 return false;
             }

@@ -8,6 +8,8 @@ using System.Collections.ObjectModel;
 using System.Text;
 using System.Xml;
 using System.Xml.XPath;
+using Microsoft.HealthVault.Helpers;
+using Microsoft.HealthVault.Thing;
 
 namespace Microsoft.HealthVault.ItemTypes
 {
@@ -63,7 +65,7 @@ namespace Microsoft.HealthVault.ItemTypes
         /// A GUID.
         /// </value>
         ///
-        public new static readonly Guid TypeId =
+        public static new readonly Guid TypeId =
             new Guid("5E2C027E-3417-4CFC-BD10-5A6F2E91AD23");
 
         /// <summary>
@@ -86,35 +88,35 @@ namespace Microsoft.HealthVault.ItemTypes
 
             Validator.ThrowInvalidIfNull(itemNav, "ProblemUnexpectedNode");
 
-            _when = new HealthServiceDateTime();
-            _when.ParseXml(itemNav.SelectSingleNode("when"));
+            this.when = new HealthServiceDateTime();
+            this.when.ParseXml(itemNav.SelectSingleNode("when"));
 
             // <diagnosis>
             XPathNodeIterator diagnosisIterator =
                 itemNav.Select("diagnosis");
 
-            _diagnosis.Clear();
+            this.diagnosis.Clear();
             foreach (XPathNavigator diagnosisNav in diagnosisIterator)
             {
                 CodableValue value = new CodableValue();
                 value.ParseXml(diagnosisNav);
-                _diagnosis.Add(value);
+                this.diagnosis.Add(value);
             }
 
             // <duration>
             XPathNodeIterator durationIterator =
                 itemNav.Select("duration");
 
-            _duration.Clear();
+            this.duration.Clear();
             foreach (XPathNavigator durationNav in durationIterator)
             {
                 DurationValue value = new DurationValue();
                 value.ParseXml(durationNav);
-                _duration.Add(value);
+                this.duration.Add(value);
             }
 
             // <importance>
-            _importance =
+            this.importance =
                 XPathHelper.GetOptNavValueAsInt(
                     itemNav,
                     "importance");
@@ -139,22 +141,22 @@ namespace Microsoft.HealthVault.ItemTypes
         public override void WriteXml(XmlWriter writer)
         {
             Validator.ThrowIfWriterNull(writer);
-            Validator.ThrowSerializationIfNull(_when, "ProblemWhenNotSet");
+            Validator.ThrowSerializationIfNull(this.when, "ProblemWhenNotSet");
 
             // <problem>
             writer.WriteStartElement("problem");
 
             // <when>
-            _when.WriteXml("when", writer);
+            this.when.WriteXml("when", writer);
 
             // <diagnosis>
-            foreach (CodableValue value in _diagnosis)
+            foreach (CodableValue value in this.diagnosis)
             {
                 value.WriteXml("diagnosis", writer);
             }
 
             // <duration>
-            foreach (DurationValue value in _duration)
+            foreach (DurationValue value in this.duration)
             {
                 value.WriteXml("duration", writer);
             }
@@ -163,7 +165,7 @@ namespace Microsoft.HealthVault.ItemTypes
             XmlWriterHelper.WriteOptInt(
                 writer,
                 "importance",
-                _importance);
+                this.importance);
 
             // </problem>
             writer.WriteEndElement();
@@ -185,14 +187,16 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public HealthServiceDateTime When
         {
-            get { return _when; }
+            get { return this.when; }
+
             set
             {
                 Validator.ThrowIfArgumentNull(value, "When", "WhenNullValue");
-                _when = value;
+                this.when = value;
             }
         }
-        private HealthServiceDateTime _when = new HealthServiceDateTime();
+
+        private HealthServiceDateTime when = new HealthServiceDateTime();
 
         /// <summary>
         /// Gets a collection of diagnoses for the health problem.
@@ -208,11 +212,9 @@ namespace Microsoft.HealthVault.ItemTypes
         /// collection.
         /// </remarks>
         ///
-        public Collection<CodableValue> Diagnosis
-        {
-            get { return _diagnosis; }
-        }
-        private Collection<CodableValue> _diagnosis =
+        public Collection<CodableValue> Diagnosis => this.diagnosis;
+
+        private readonly Collection<CodableValue> diagnosis =
             new Collection<CodableValue>();
 
         /// <summary>
@@ -229,11 +231,9 @@ namespace Microsoft.HealthVault.ItemTypes
         /// collection.
         /// </remarks>
         ///
-        public Collection<DurationValue> Duration
-        {
-            get { return _duration; }
-        }
-        private Collection<DurationValue> _duration =
+        public Collection<DurationValue> Duration => this.duration;
+
+        private readonly Collection<DurationValue> duration =
             new Collection<DurationValue>();
 
         /// <summary>
@@ -251,17 +251,19 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public int? Importance
         {
-            get { return _importance; }
+            get { return this.importance; }
+
             set
             {
                 Validator.ThrowArgumentOutOfRangeIf(
                     value != null && (value.Value < 1 || value.Value > 5),
                     "Importance",
                     "ProblemImportanceOutOfRange");
-                _importance = value;
+                this.importance = value;
             }
         }
-        private int? _importance;
+
+        private int? importance;
 
         /// <summary>
         /// Gets a string representation of the problem.
@@ -275,9 +277,9 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             StringBuilder result = new StringBuilder(250);
 
-            if (Diagnosis.Count > 0)
+            if (this.Diagnosis.Count > 0)
             {
-                foreach (CodableValue diagnosis in Diagnosis)
+                foreach (CodableValue diagnosis in this.Diagnosis)
                 {
                     if (result.Length > 0)
                     {
@@ -285,13 +287,15 @@ namespace Microsoft.HealthVault.ItemTypes
                             ResourceRetriever.GetResourceString(
                             "ListSeparator"));
                     }
+
                     result.Append(diagnosis.Text);
                 }
             }
             else
             {
-                result.Append(When.ToString());
+                result.Append(this.When);
             }
+
             return result.ToString();
         }
     }

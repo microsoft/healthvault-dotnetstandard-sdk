@@ -7,6 +7,7 @@ using System.Collections.ObjectModel;
 using System.Text;
 using System.Xml;
 using System.Xml.XPath;
+using Microsoft.HealthVault.Helpers;
 
 namespace Microsoft.HealthVault.ItemTypes
 {
@@ -16,16 +17,6 @@ namespace Microsoft.HealthVault.ItemTypes
     ///
     public class LabResultType : HealthRecordItemData
     {
-        /// <summary>
-        /// Constructs a new instance of the <see cref="LabResultType"/> class with
-        /// default values.
-        /// </summary>
-        ///
-        public LabResultType()
-            : base()
-        {
-        }
-
         /// <summary>
         /// Populates the data for the lab result type from the XML.
         /// </summary>
@@ -42,19 +33,19 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             Validator.ThrowIfNavigatorNull(navigator);
 
-            _value = XPathHelper.GetOptNavValueAsDouble(navigator, "value");
-            _unit = XPathHelper.GetOptNavValue<CodableValue>(navigator, "unit");
-            _referenceRange = XPathHelper.GetOptNavValue<DoubleRange>(navigator, "reference-range");
-            _toxicRange = XPathHelper.GetOptNavValue<DoubleRange>(navigator, "toxic-range");
-            _textValue = XPathHelper.GetOptNavValue(navigator, "text-value");
+            this.value = XPathHelper.GetOptNavValueAsDouble(navigator, "value");
+            this.unit = XPathHelper.GetOptNavValue<CodableValue>(navigator, "unit");
+            this.referenceRange = XPathHelper.GetOptNavValue<DoubleRange>(navigator, "reference-range");
+            this.toxicRange = XPathHelper.GetOptNavValue<DoubleRange>(navigator, "toxic-range");
+            this.textValue = XPathHelper.GetOptNavValue(navigator, "text-value");
 
-            _flag.Clear();
+            this.flag.Clear();
             XPathNodeIterator flagIterator = navigator.Select("flag");
             foreach (XPathNavigator flagNav in flagIterator)
             {
                 CodableValue flagValue = new CodableValue();
                 flagValue.ParseXml(flagNav);
-                _flag.Add(flagValue);
+                this.flag.Add(flagValue);
             }
         }
 
@@ -85,13 +76,13 @@ namespace Microsoft.HealthVault.ItemTypes
 
             writer.WriteStartElement(nodeName);
 
-            XmlWriterHelper.WriteOptDouble(writer, "value", _value);
-            XmlWriterHelper.WriteOpt(writer, "unit", _unit);
-            XmlWriterHelper.WriteOpt(writer, "reference-range", _referenceRange);
-            XmlWriterHelper.WriteOpt(writer, "toxic-range", _toxicRange);
-            XmlWriterHelper.WriteOptString(writer, "text-value", _textValue);
+            XmlWriterHelper.WriteOptDouble(writer, "value", this.value);
+            XmlWriterHelper.WriteOpt(writer, "unit", this.unit);
+            XmlWriterHelper.WriteOpt(writer, "reference-range", this.referenceRange);
+            XmlWriterHelper.WriteOpt(writer, "toxic-range", this.toxicRange);
+            XmlWriterHelper.WriteOptString(writer, "text-value", this.textValue);
 
-            foreach (CodableValue flagValue in _flag)
+            foreach (CodableValue flagValue in this.flag)
             {
                 flagValue.WriteXml("flag", writer);
             }
@@ -110,10 +101,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public double? Value
         {
-            get { return _value; }
-            set { _value = value; }
+            get { return this.value; }
+            set { this.value = value; }
         }
-        private double? _value;
+
+        private double? value;
 
         /// <summary>
         /// Gets or sets the unit of measure for the <see cref="Value"/>.
@@ -126,10 +118,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public CodableValue Unit
         {
-            get { return _unit; }
-            set { _unit = value; }
+            get { return this.unit; }
+            set { this.unit = value; }
         }
-        private CodableValue _unit;
+
+        private CodableValue unit;
 
         /// <summary>
         /// Gets or sets the reference range for the lab result type.
@@ -142,10 +135,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public DoubleRange ReferenceRange
         {
-            get { return _referenceRange; }
-            set { _referenceRange = value; }
+            get { return this.referenceRange; }
+            set { this.referenceRange = value; }
         }
-        private DoubleRange _referenceRange;
+
+        private DoubleRange referenceRange;
 
         /// <summary>
         /// Gets or sets the toxic range for the lab result type.
@@ -158,10 +152,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public DoubleRange ToxicRange
         {
-            get { return _toxicRange; }
-            set { _toxicRange = value; }
+            get { return this.toxicRange; }
+            set { this.toxicRange = value; }
         }
-        private DoubleRange _toxicRange;
+
+        private DoubleRange toxicRange;
 
         /// <summary>
         /// Gets or set the text representation of the value.
@@ -178,14 +173,16 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public string TextValue
         {
-            get { return _textValue; }
+            get { return this.textValue; }
+
             set
             {
                 Validator.ThrowIfStringIsWhitespace(value, "TextValue");
-                _textValue = value;
+                this.textValue = value;
             }
         }
-        private string _textValue;
+
+        private string textValue;
 
         /// <summary>
         /// Gets a collection of the flags associated with the lab result type.
@@ -196,11 +193,9 @@ namespace Microsoft.HealthVault.ItemTypes
         /// "low", etc. which are defined by the "lab-result-flag" HealthVault vocabulary.
         /// </value>
         ///
-        public Collection<CodableValue> Flags
-        {
-            get { return _flag; }
-        }
-        private Collection<CodableValue> _flag = new Collection<CodableValue>();
+        public Collection<CodableValue> Flags => this.flag;
+
+        private readonly Collection<CodableValue> flag = new Collection<CodableValue>();
 
         /// <summary>
         /// Gets a string representation of the lab result type.
@@ -214,20 +209,20 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             StringBuilder result = new StringBuilder(200);
 
-            if (Value != null && Unit != null)
+            if (this.Value != null && this.Unit != null)
             {
                 result.AppendFormat(
                     ResourceRetriever.GetResourceString(
                         "LabResultTypeToStringFormatValueAndUnit"),
-                    Value,
-                    Unit.ToString());
+                    this.Value,
+                    this.Unit.ToString());
             }
-            else if (Value != null)
+            else if (this.Value != null)
             {
-                result.Append(Value);
+                result.Append(this.Value);
             }
 
-            if (!string.IsNullOrEmpty(TextValue))
+            if (!string.IsNullOrEmpty(this.TextValue))
             {
                 if (result.Length > 0)
                 {
@@ -235,10 +230,11 @@ namespace Microsoft.HealthVault.ItemTypes
                         ResourceRetriever.GetResourceString(
                             "ListSeparator"));
                 }
-                result.Append(TextValue);
+
+                result.Append(this.TextValue);
             }
 
-            foreach (CodableValue flag in _flag)
+            foreach (CodableValue flag in this.flag)
             {
                 if (result.Length > 0)
                 {
@@ -246,8 +242,10 @@ namespace Microsoft.HealthVault.ItemTypes
                         ResourceRetriever.GetResourceString(
                             "ListSeparator"));
                 }
+
                 result.Append(flag);
             }
+
             return result.ToString();
         }
     }

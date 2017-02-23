@@ -3,12 +3,12 @@
 // see http://www.microsoft.com/resources/sharedsource/licensingbasics/sharedsourcelicenses.mspx.
 // All other rights reserved.
 
-using Microsoft.HealthVault.ItemTypes;
 using System;
 using System.Collections.ObjectModel;
 using System.Xml;
+using Microsoft.HealthVault.ItemTypes;
 
-namespace Microsoft.HealthVault
+namespace Microsoft.HealthVault.Helpers
 {
     internal static class XmlWriterHelper
     {
@@ -17,7 +17,7 @@ namespace Microsoft.HealthVault
             string elementName,
             string value)
         {
-            if (!String.IsNullOrEmpty(value))
+            if (!string.IsNullOrEmpty(value))
             {
                 writer.WriteElementString(
                     elementName,
@@ -116,7 +116,7 @@ namespace Microsoft.HealthVault
         internal static void WriteDecimal(
             XmlWriter writer,
             string elementName,
-            Decimal value)
+            decimal value)
         {
             writer.WriteElementString(
                 elementName, XmlConvert.ToString(value));
@@ -131,10 +131,11 @@ namespace Microsoft.HealthVault
         ///
         /// <typeparam name="T">The item type in the collection.</typeparam>
         /// <param name="writer">The writer to use.</param>
-        /// <param name="collection">The collection to write.</param>
         /// <param name="enclosingElementName">The name of an element to enclose the items in the collection.</param>
+        /// <param name="collection">The collection to write.</param>
         /// <param name="itemNodeName">The name of the item node element.</param>
-        internal static void WriteXmlCollection<T>(XmlWriter writer, string enclosingElementName, Collection<T> collection, string itemNodeName) where T : HealthRecordItemData
+        internal static void WriteXmlCollection<T>(XmlWriter writer, string enclosingElementName, Collection<T> collection, string itemNodeName)
+            where T : HealthRecordItemData
         {
             if (collection == null || collection.Count == 0)
             {
@@ -143,7 +144,7 @@ namespace Microsoft.HealthVault
 
             writer.WriteStartElement(enclosingElementName);
 
-            WriteXmlCollection<T>(writer, collection, itemNodeName);
+            WriteXmlCollection(writer, collection, itemNodeName);
 
             writer.WriteEndElement();
         }
@@ -155,9 +156,10 @@ namespace Microsoft.HealthVault
         /// <param name="writer">The writer to use.</param>
         /// <param name="collection">The collection to write.</param>
         /// <param name="itemNodeName">The name of the item node element.</param>
-        internal static void WriteXmlCollection<T>(XmlWriter writer, Collection<T> collection, string itemNodeName) where T : HealthRecordItemData
+        internal static void WriteXmlCollection<T>(XmlWriter writer, Collection<T> collection, string itemNodeName)
+            where T : HealthRecordItemData
         {
-            foreach (HealthRecordItemData item in collection)
+            foreach (T item in collection)
             {
                 item.WriteXml(itemNodeName, writer);
             }

@@ -3,6 +3,8 @@
 // see http://www.microsoft.com/resources/sharedsource/licensingbasics/sharedsourcelicenses.mspx.
 // All other rights reserved.
 
+using Microsoft.HealthVault.Transport;
+
 namespace Microsoft.HealthVault.Exceptions
 {
     /// <summary>
@@ -21,7 +23,7 @@ namespace Microsoft.HealthVault.Exceptions
         ///
         /// <param name="responseData">
         /// The HealthServiceResponseData object created by parsing response returned by HealthVault.
-        ///</param>
+        /// </param>
         ///
         internal static HealthServiceException GetHealthServiceException(HealthServiceResponseData responseData)
         {
@@ -94,6 +96,7 @@ namespace Microsoft.HealthVault.Exceptions
                     e = new HealthServiceException(errorCode, error);
                     break;
             }
+
             return e;
         }
     }

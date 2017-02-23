@@ -22,28 +22,31 @@ namespace Microsoft.HealthVault.Authentication
 
         internal PassportCredential(Guid appId)
         {
-            _appId = appId;
+            this.appId = appId;
         }
 
         internal string AuthenticationToken
         {
-            get { return _authToken; }
+            get { return this.authToken; }
+
             set
             {
-                _authToken = value;
+                this.authToken = value;
                 CreateAuthenticationTokenResult result =
-                    new CreateAuthenticationTokenResult();
-                result.ApplicationRecordAuthorizationAction =
-                    ApplicationRecordAuthorizationAction.NoActionRequired;
-                result.AuthenticationToken = _authToken;
-                result.Status = AuthenticationTokenCreationStatus.Success;
-                result.ApplicationId = _appId;
+                    new CreateAuthenticationTokenResult
+                    {
+                        ApplicationRecordAuthorizationAction = ApplicationRecordAuthorizationAction.NoActionRequired,
+                        AuthenticationToken = this.authToken,
+                        Status = AuthenticationTokenCreationStatus.Success,
+                        ApplicationId = this.appId
+                    };
 
-                base.UpdateAuthenticationResults(result);
+                this.UpdateAuthenticationResults(result);
             }
         }
-        private Guid _appId;
-        private string _authToken;
+
+        private readonly Guid appId;
+        private string authToken;
 
         /// <summary>
         /// Creates a new instance of a PassportCredential.
@@ -77,7 +80,7 @@ namespace Microsoft.HealthVault.Authentication
         ///
         internal void GetToken()
         {
-            SharedSecret = new CryptoHmac();
+            this.SharedSecret = new CryptoHmac();
         }
 
         /// <summary>
@@ -93,7 +96,7 @@ namespace Microsoft.HealthVault.Authentication
             writer.WriteStartElement("passport");
 
             writer.WriteStartElement("shared-secret");
-            SharedSecret.WriteInfoXml(writer);
+            this.SharedSecret.WriteInfoXml(writer);
             writer.WriteEndElement();
 
             writer.WriteEndElement();

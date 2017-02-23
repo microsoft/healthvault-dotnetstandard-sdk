@@ -6,6 +6,7 @@
 using System;
 using System.Xml;
 using System.Xml.XPath;
+using Microsoft.HealthVault.Helpers;
 
 namespace Microsoft.HealthVault.ItemTypes
 {
@@ -129,15 +130,15 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             Validator.ThrowIfNavigatorNull(navigator);
 
-            _full = navigator.SelectSingleNode("full").Value;
+            this.full = navigator.SelectSingleNode("full").Value;
 
             XPathNavigator titleNav =
                 navigator.SelectSingleNode("title");
 
             if (titleNav != null)
             {
-                _title = new CodableValue();
-                _title.ParseXml(titleNav);
+                this.title = new CodableValue();
+                this.title.ParseXml(titleNav);
             }
 
             XPathNavigator firstNav =
@@ -145,7 +146,7 @@ namespace Microsoft.HealthVault.ItemTypes
 
             if (firstNav != null)
             {
-                _first = firstNav.Value;
+                this.first = firstNav.Value;
             }
 
             XPathNavigator middleNav =
@@ -153,7 +154,7 @@ namespace Microsoft.HealthVault.ItemTypes
 
             if (middleNav != null)
             {
-                _middle = middleNav.Value;
+                this.middle = middleNav.Value;
             }
 
             XPathNavigator lastNav =
@@ -161,7 +162,7 @@ namespace Microsoft.HealthVault.ItemTypes
 
             if (lastNav != null)
             {
-                _last = lastNav.Value;
+                this.last = lastNav.Value;
             }
 
             XPathNavigator suffixNav =
@@ -169,8 +170,8 @@ namespace Microsoft.HealthVault.ItemTypes
 
             if (suffixNav != null)
             {
-                _suffix = new CodableValue();
-                _suffix.ParseXml(suffixNav);
+                this.suffix = new CodableValue();
+                this.suffix.ParseXml(suffixNav);
             }
         }
 
@@ -204,35 +205,35 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             Validator.ThrowIfStringNullOrEmpty(nodeName, "nodeName");
             Validator.ThrowIfWriterNull(writer);
-            Validator.ThrowSerializationIfNull(_full, "FullNotSet");
+            Validator.ThrowSerializationIfNull(this.full, "FullNotSet");
 
             writer.WriteStartElement(nodeName);
 
-            writer.WriteElementString("full", _full);
+            writer.WriteElementString("full", this.full);
 
-            if (_title != null)
+            if (this.title != null)
             {
-                _title.WriteXml("title", writer);
+                this.title.WriteXml("title", writer);
             }
 
-            if (!String.IsNullOrEmpty(_first))
+            if (!string.IsNullOrEmpty(this.first))
             {
-                writer.WriteElementString("first", _first);
+                writer.WriteElementString("first", this.first);
             }
 
-            if (!String.IsNullOrEmpty(_middle))
+            if (!string.IsNullOrEmpty(this.middle))
             {
-                writer.WriteElementString("middle", _middle);
+                writer.WriteElementString("middle", this.middle);
             }
 
-            if (!String.IsNullOrEmpty(_last))
+            if (!string.IsNullOrEmpty(this.last))
             {
-                writer.WriteElementString("last", _last);
+                writer.WriteElementString("last", this.last);
             }
 
-            if (_suffix != null)
+            if (this.suffix != null)
             {
-                _suffix.WriteXml("suffix", writer);
+                this.suffix.WriteXml("suffix", writer);
             }
 
             writer.WriteEndElement();
@@ -252,14 +253,16 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public string Full
         {
-            get { return _full; }
+            get { return this.full; }
+
             set
             {
                 Validator.ThrowIfArgumentNull(value, "Full", "FullMandatory");
-                _full = value;
+                this.full = value;
             }
         }
-        private string _full;
+
+        private string full;
 
         /// <summary>
         /// Gets or sets the person's title.
@@ -275,10 +278,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public CodableValue Title
         {
-            get { return _title; }
-            set { _title = value; }
+            get { return this.title; }
+            set { this.title = value; }
         }
-        private CodableValue _title;
+
+        private CodableValue title;
 
         /// <summary>
         /// Gets or sets the person's first name.
@@ -294,10 +298,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public string First
         {
-            get { return _first; }
-            set { _first = value; }
+            get { return this.first; }
+            set { this.first = value; }
         }
-        private string _first;
+
+        private string first;
 
         /// <summary>
         /// Gets or sets the person's middle name.
@@ -313,10 +318,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public string Middle
         {
-            get { return _middle; }
-            set { _middle = value; }
+            get { return this.middle; }
+            set { this.middle = value; }
         }
-        private string _middle;
+
+        private string middle;
 
         /// <summary>
         /// Gets or sets the person's last name.
@@ -332,10 +338,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public string Last
         {
-            get { return _last; }
-            set { _last = value; }
+            get { return this.last; }
+            set { this.last = value; }
         }
-        private string _last;
+
+        private string last;
 
         /// <summary>
         /// Gets or sets the person's suffix.
@@ -351,10 +358,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public CodableValue Suffix
         {
-            get { return _suffix; }
-            set { _suffix = value; }
+            get { return this.suffix; }
+            set { this.suffix = value; }
         }
-        private CodableValue _suffix;
+
+        private CodableValue suffix;
 
         /// <summary>
         /// Gets a string representation of the name.
@@ -366,19 +374,19 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public override string ToString()
         {
-            string result = Full;
+            string result = this.Full;
 
-            if (Full == null)
+            if (this.Full == null)
             {
                 result =
-                    String.Format(
+                    string.Format(
                         ResourceRetriever.GetResourceString(
                             "NameToStringFormat"),
-                        Title != null ? Title.Text : String.Empty,
-                        First != null ? First : String.Empty,
-                        Middle != null ? Middle : String.Empty,
-                        Last != null ? Last : String.Empty,
-                        Suffix != null ? Suffix.Text : String.Empty);
+                        this.Title != null ? this.Title.Text : string.Empty,
+                        this.First != null ? this.First : string.Empty,
+                        this.Middle != null ? this.Middle : string.Empty,
+                        this.Last != null ? this.Last : string.Empty,
+                        this.Suffix != null ? this.Suffix.Text : string.Empty);
             }
 
             return result;

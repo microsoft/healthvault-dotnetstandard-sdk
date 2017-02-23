@@ -6,7 +6,7 @@
 using System.IO;
 using System.Net.Http.Headers;
 
-namespace Microsoft.HealthVault
+namespace Microsoft.HealthVault.Transport
 {
     /// <summary>
     /// handler to implement custom response handling

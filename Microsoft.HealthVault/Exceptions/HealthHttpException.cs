@@ -16,14 +16,14 @@ namespace Microsoft.HealthVault.Exceptions
     [Serializable]
     public class HealthHttpException : Exception
     {
-        ///  <summary>
-        ///  Creates an instance of the <see cref="HealthHttpException"/>
-        ///  class with the specified message and status code.
-        ///  </summary>
+        /// <summary>
+        /// Creates an instance of the <see cref="HealthHttpException"/>
+        /// class with the specified message and status code.
+        /// </summary>
         /// 
-        ///  <param name="message">
-        ///  The exception message.
-        ///  </param>
+        /// <param name="message">
+        /// The exception message.
+        /// </param>
         /// 
         /// <param name="statusCode">
         /// The HTTP error code corresponding with the error

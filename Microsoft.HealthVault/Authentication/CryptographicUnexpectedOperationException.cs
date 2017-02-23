@@ -11,19 +11,23 @@ namespace Microsoft.HealthVault.Authentication
         {
         }
 
-        public CryptographicUnexpectedOperationException(string message) : base(message)
+        public CryptographicUnexpectedOperationException(string message)
+            : base(message)
         {
         }
 
-        public CryptographicUnexpectedOperationException(int hr) : base(hr)
+        public CryptographicUnexpectedOperationException(int hr)
+            : base(hr)
         {
         }
 
-        public CryptographicUnexpectedOperationException(string format, string insert) : base(format, insert)
+        public CryptographicUnexpectedOperationException(string format, string insert)
+            : base(format, insert)
         {
         }
 
-        public CryptographicUnexpectedOperationException(string message, Exception inner) : base(message, inner)
+        public CryptographicUnexpectedOperationException(string message, Exception inner)
+            : base(message, inner)
         {
         }
     }

@@ -13,6 +13,7 @@ using System;
 using System.Runtime.Serialization;
 using System.Security;
 using System.Security.Principal;
+using Microsoft.HealthVault.Person;
 
 namespace Microsoft.HealthVault.Web.Mvc
 {

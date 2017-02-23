@@ -5,6 +5,7 @@
 
 using System.Xml;
 using System.Xml.XPath;
+using Microsoft.HealthVault.Helpers;
 
 namespace Microsoft.HealthVault.ItemTypes
 {
@@ -92,13 +93,13 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             Validator.ThrowIfNavigatorNull(navigator);
 
-            ParseValueXml(navigator);
+            this.ParseValueXml(navigator);
 
             XPathNavigator displayNav = navigator.SelectSingleNode("display");
             if (displayNav != null)
             {
-                _displayValue = new DisplayValue();
-                _displayValue.ParseXml(displayNav);
+                this.displayValue = new DisplayValue();
+                this.displayValue.ParseXml(displayNav);
             }
         }
 
@@ -139,12 +140,13 @@ namespace Microsoft.HealthVault.ItemTypes
 
             writer.WriteStartElement(nodeName);
 
-            WriteValueXml(writer);
+            this.WriteValueXml(writer);
 
-            if (_displayValue != null)
+            if (this.displayValue != null)
             {
-                _displayValue.WriteXml("display", writer);
+                this.displayValue.WriteXml("display", writer);
             }
+
             writer.WriteEndElement();
         }
 
@@ -176,14 +178,16 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public MeasurementType Value
         {
-            get { return _value; }
+            get { return this.value; }
+
             set
             {
-                AssertMeasurementValue(value);
-                _value = value;
+                this.AssertMeasurementValue(value);
+                this.value = value;
             }
         }
-        private MeasurementType _value;
+
+        private MeasurementType value;
 
         /// <summary>
         /// Verifies the value is in the appropriate base unit of measure and
@@ -212,10 +216,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public DisplayValue DisplayValue
         {
-            get { return _displayValue; }
-            set { _displayValue = value; }
+            get { return this.displayValue; }
+            set { this.displayValue = value; }
         }
-        private DisplayValue _displayValue;
+
+        private DisplayValue displayValue;
 
         /// <summary>
         /// Retrieves a string representation of the measurement using the
@@ -229,14 +234,15 @@ namespace Microsoft.HealthVault.ItemTypes
         public override string ToString()
         {
             string result = null;
-            if (_displayValue != null)
+            if (this.displayValue != null)
             {
-                result = _displayValue.ToString();
+                result = this.displayValue.ToString();
             }
             else
             {
-                result = GetValueString(_value);
+                result = this.GetValueString(this.value);
             }
+
             return result;
         }
 

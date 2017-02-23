@@ -7,6 +7,8 @@ using System;
 using System.Text;
 using System.Xml;
 using System.Xml.XPath;
+using Microsoft.HealthVault.Helpers;
+using Microsoft.HealthVault.Thing;
 
 namespace Microsoft.HealthVault.ItemTypes
 {
@@ -59,7 +61,7 @@ namespace Microsoft.HealthVault.ItemTypes
         /// A GUID.
         /// </value>
         ///
-        public new static readonly Guid TypeId =
+        public static new readonly Guid TypeId =
             new Guid("5fd15cb7-b717-4b1c-89e0-1dbcf7f815dd");
 
         /// <summary>
@@ -83,20 +85,20 @@ namespace Microsoft.HealthVault.ItemTypes
 
             Validator.ThrowInvalidIfNull(itemNav, "RespiratoryProfileUnexpectedNode");
 
-            _when = new HealthServiceDateTime();
-            _when.ParseXml(itemNav.SelectSingleNode("when"));
+            this.when = new HealthServiceDateTime();
+            this.when.ParseXml(itemNav.SelectSingleNode("when"));
 
-            _expiratoryFlowRedZoneUpperBoundary =
+            this.expiratoryFlowRedZoneUpperBoundary =
                 XPathHelper.GetOptNavValue<FlowMeasurement>(
                     itemNav,
                     "expiratory-flow-red-zone-upper-boundary");
 
-            _expiratoryFlowOrangeZoneUpperBoundary =
+            this.expiratoryFlowOrangeZoneUpperBoundary =
                 XPathHelper.GetOptNavValue<FlowMeasurement>(
                     itemNav,
                     "expiratory-flow-orange-zone-upper-boundary");
 
-            _expiratoryFlowYellowZoneUpperBoundary =
+            this.expiratoryFlowYellowZoneUpperBoundary =
                 XPathHelper.GetOptNavValue<FlowMeasurement>(
                     itemNav,
                     "expiratory-flow-yellow-zone-upper-boundary");
@@ -122,22 +124,22 @@ namespace Microsoft.HealthVault.ItemTypes
             writer.WriteStartElement("respiratory-profile");
 
             // <when>
-            _when.WriteXml("when", writer);
+            this.when.WriteXml("when", writer);
 
-            XmlWriterHelper.WriteOpt<FlowMeasurement>(
+            XmlWriterHelper.WriteOpt(
                 writer,
                 "expiratory-flow-red-zone-upper-boundary",
-                _expiratoryFlowRedZoneUpperBoundary);
+                this.expiratoryFlowRedZoneUpperBoundary);
 
-            XmlWriterHelper.WriteOpt<FlowMeasurement>(
+            XmlWriterHelper.WriteOpt(
                 writer,
                 "expiratory-flow-orange-zone-upper-boundary",
-                _expiratoryFlowOrangeZoneUpperBoundary);
+                this.expiratoryFlowOrangeZoneUpperBoundary);
 
-            XmlWriterHelper.WriteOpt<FlowMeasurement>(
+            XmlWriterHelper.WriteOpt(
                 writer,
                 "expiratory-flow-yellow-zone-upper-boundary",
-                _expiratoryFlowYellowZoneUpperBoundary);
+                this.expiratoryFlowYellowZoneUpperBoundary);
 
             // </respiratory-profile>
             writer.WriteEndElement();
@@ -158,14 +160,16 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public HealthServiceDateTime When
         {
-            get { return _when; }
+            get { return this.when; }
+
             set
             {
                 Validator.ThrowIfArgumentNull(value, "When", "WhenNullValue");
-                _when = value;
+                this.when = value;
             }
         }
-        private HealthServiceDateTime _when = new HealthServiceDateTime();
+
+        private HealthServiceDateTime when = new HealthServiceDateTime();
 
         /// <summary>
         /// Gets or sets the upper boundary of the expiratory flow red zone.
@@ -183,10 +187,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public FlowMeasurement ExpiratoryFlowRedZoneUpperBoundary
         {
-            get { return _expiratoryFlowRedZoneUpperBoundary; }
-            set { _expiratoryFlowRedZoneUpperBoundary = value; }
+            get { return this.expiratoryFlowRedZoneUpperBoundary; }
+            set { this.expiratoryFlowRedZoneUpperBoundary = value; }
         }
-        private FlowMeasurement _expiratoryFlowRedZoneUpperBoundary;
+
+        private FlowMeasurement expiratoryFlowRedZoneUpperBoundary;
 
         /// <summary>
         /// Gets or sets the upper boundary of the expiratory flow orange zone.
@@ -205,10 +210,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public FlowMeasurement ExpiratoryFlowOrangeZoneUpperBoundary
         {
-            get { return _expiratoryFlowOrangeZoneUpperBoundary; }
-            set { _expiratoryFlowOrangeZoneUpperBoundary = value; }
+            get { return this.expiratoryFlowOrangeZoneUpperBoundary; }
+            set { this.expiratoryFlowOrangeZoneUpperBoundary = value; }
         }
-        private FlowMeasurement _expiratoryFlowOrangeZoneUpperBoundary;
+
+        private FlowMeasurement expiratoryFlowOrangeZoneUpperBoundary;
 
         /// <summary>
         /// Gets or sets the upper boundary of the expiratory flow yellow zone.
@@ -227,10 +233,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public FlowMeasurement ExpiratoryFlowYellowZoneUpperBoundary
         {
-            get { return _expiratoryFlowYellowZoneUpperBoundary; }
-            set { _expiratoryFlowYellowZoneUpperBoundary = value; }
+            get { return this.expiratoryFlowYellowZoneUpperBoundary; }
+            set { this.expiratoryFlowYellowZoneUpperBoundary = value; }
         }
-        private FlowMeasurement _expiratoryFlowYellowZoneUpperBoundary;
+
+        private FlowMeasurement expiratoryFlowYellowZoneUpperBoundary;
 
         /// <summary>
         /// Gets a string representation of the respiratory profile.
@@ -243,64 +250,64 @@ namespace Microsoft.HealthVault.ItemTypes
         public override string ToString()
         {
             StringBuilder result = new StringBuilder(250);
-            if (ExpiratoryFlowRedZoneUpperBoundary != null)
+            if (this.ExpiratoryFlowRedZoneUpperBoundary != null)
             {
                 result.AppendFormat(
                     ResourceRetriever.GetResourceString(
                         "RespiratoryProfileToStringEFRedZoneUpper"),
-                    ExpiratoryFlowRedZoneUpperBoundary.ToString());
+                    this.ExpiratoryFlowRedZoneUpperBoundary.ToString());
             }
 
-            if (ExpiratoryFlowOrangeZoneUpperBoundary != null)
+            if (this.ExpiratoryFlowOrangeZoneUpperBoundary != null)
             {
-                if (ExpiratoryFlowRedZoneUpperBoundary != null)
+                if (this.ExpiratoryFlowRedZoneUpperBoundary != null)
                 {
                     result.AppendFormat(
                         ResourceRetriever.GetResourceString(
                             "ListSeparator"));
                 }
 
-                if (ExpiratoryFlowRedZoneUpperBoundary != null)
+                if (this.ExpiratoryFlowRedZoneUpperBoundary != null)
                 {
                     result.AppendFormat(
                         ResourceRetriever.GetResourceString(
                             "RespiratoryProfileToStringEFOrangeZone"),
-                        ExpiratoryFlowRedZoneUpperBoundary.ToString(),
-                        ExpiratoryFlowOrangeZoneUpperBoundary.ToString());
+                        this.ExpiratoryFlowRedZoneUpperBoundary.ToString(),
+                        this.ExpiratoryFlowOrangeZoneUpperBoundary.ToString());
                 }
                 else
                 {
                     result.AppendFormat(
                         ResourceRetriever.GetResourceString(
                             "RespiratoryProfileToStringEFOrangeZoneUpper"),
-                        ExpiratoryFlowOrangeZoneUpperBoundary.ToString());
+                        this.ExpiratoryFlowOrangeZoneUpperBoundary.ToString());
                 }
             }
 
-            if (ExpiratoryFlowYellowZoneUpperBoundary != null)
+            if (this.ExpiratoryFlowYellowZoneUpperBoundary != null)
             {
-                if (ExpiratoryFlowRedZoneUpperBoundary != null ||
-                    ExpiratoryFlowOrangeZoneUpperBoundary != null)
+                if (this.ExpiratoryFlowRedZoneUpperBoundary != null ||
+                    this.ExpiratoryFlowOrangeZoneUpperBoundary != null)
                 {
                     result.AppendFormat(
                         ResourceRetriever.GetResourceString(
                             "ListSeparator"));
                 }
 
-                if (ExpiratoryFlowOrangeZoneUpperBoundary != null)
+                if (this.ExpiratoryFlowOrangeZoneUpperBoundary != null)
                 {
                     result.AppendFormat(
                         ResourceRetriever.GetResourceString(
                             "RespiratoryProfileToStringEFYellowZone"),
-                        ExpiratoryFlowOrangeZoneUpperBoundary.ToString(),
-                        ExpiratoryFlowYellowZoneUpperBoundary.ToString());
+                        this.ExpiratoryFlowOrangeZoneUpperBoundary.ToString(),
+                        this.ExpiratoryFlowYellowZoneUpperBoundary.ToString());
                 }
                 else
                 {
                     result.AppendFormat(
                         ResourceRetriever.GetResourceString(
                             "RespiratoryProfileToStringEFYellowZoneUpper"),
-                        ExpiratoryFlowYellowZoneUpperBoundary.ToString());
+                        this.ExpiratoryFlowYellowZoneUpperBoundary.ToString());
                 }
             }
 

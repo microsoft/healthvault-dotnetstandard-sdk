@@ -7,7 +7,7 @@ using System;
 using System.Xml;
 using System.Xml.XPath;
 
-namespace Microsoft.HealthVault
+namespace Microsoft.HealthVault.PlatformInformation
 {
     /// <summary>
     /// Provides information about a single deployment of HealthVault services and health
@@ -30,11 +30,11 @@ namespace Microsoft.HealthVault
         /// </summary>
         public void ParseXml(XPathNavigator navigator)
         {
-            _id = navigator.SelectSingleNode("id").Value;
-            _name = navigator.SelectSingleNode("name").Value;
-            _description = navigator.SelectSingleNode("description").Value;
-            _healthServiceUrl = new Uri(navigator.SelectSingleNode("platform-url").Value);
-            _shellUrl = new Uri(navigator.SelectSingleNode("shell-url").Value);
+            this.Id = navigator.SelectSingleNode("id").Value;
+            this.Name = navigator.SelectSingleNode("name").Value;
+            this.Description = navigator.SelectSingleNode("description").Value;
+            this.HealthServiceUrl = new Uri(navigator.SelectSingleNode("platform-url").Value);
+            this.ShellUrl = new Uri(navigator.SelectSingleNode("shell-url").Value);
         }
 
         /// <summary>
@@ -43,11 +43,11 @@ namespace Microsoft.HealthVault
         public void WriteXml(XmlWriter writer)
         {
             writer.WriteStartElement("instance");
-            writer.WriteElementString("id", Id);
-            writer.WriteElementString("name", Name);
-            writer.WriteElementString("description", Description);
-            writer.WriteElementString("platform-url", HealthServiceUrl.OriginalString);
-            writer.WriteElementString("shell-url", ShellUrl.OriginalString);
+            writer.WriteElementString("id", this.Id);
+            writer.WriteElementString("name", this.Name);
+            writer.WriteElementString("description", this.Description);
+            writer.WriteElementString("platform-url", this.HealthServiceUrl.OriginalString);
+            writer.WriteElementString("shell-url", this.ShellUrl.OriginalString);
             writer.WriteEndElement();
         }
 
@@ -74,11 +74,11 @@ namespace Microsoft.HealthVault
             Uri healthServiceUrl,
             Uri shellUrl)
         {
-            _id = id;
-            _name = name;
-            _description = description;
-            _healthServiceUrl = healthServiceUrl;
-            _shellUrl = shellUrl;
+            this.Id = id;
+            this.Name = name;
+            this.Description = description;
+            this.HealthServiceUrl = healthServiceUrl;
+            this.ShellUrl = shellUrl;
         }
 
         /// <summary>
@@ -89,12 +89,7 @@ namespace Microsoft.HealthVault
         /// A string uniquely identifying the instance.
         /// </value>
         ///
-        public string Id
-        {
-            get { return _id; }
-        }
-
-        private string _id;
+        public string Id { get; private set; }
 
         /// <summary>
         /// Gets the instance name.
@@ -104,12 +99,7 @@ namespace Microsoft.HealthVault
         /// A friendly name for the instance.
         /// </value>
         ///
-        public string Name
-        {
-            get { return _name; }
-        }
-
-        private string _name;
+        public string Name { get; private set; }
 
         /// <summary>
         /// Gets a description of the instance.
@@ -119,12 +109,7 @@ namespace Microsoft.HealthVault
         /// A friendly description of the instance.
         /// </value>
         ///
-        public string Description
-        {
-            get { return _description; }
-        }
-
-        private string _description;
+        public string Description { get; private set; }
 
         /// <summary>
         /// Gets the HealthVault URL.
@@ -139,12 +124,7 @@ namespace Microsoft.HealthVault
         /// HealthVault XML methods.
         /// </remarks>
         ///
-        public Uri HealthServiceUrl
-        {
-            get { return _healthServiceUrl; }
-        }
-
-        private Uri _healthServiceUrl;
+        public Uri HealthServiceUrl { get; private set; }
 
         /// <summary>
         /// Gets the Shell URL.
@@ -153,11 +133,6 @@ namespace Microsoft.HealthVault
         /// <value>
         /// A Uri representing the URL to access the HealthVault Shell.
         /// </value>
-        public Uri ShellUrl
-        {
-            get { return _shellUrl; }
-        }
-
-        private Uri _shellUrl;
+        public Uri ShellUrl { get; private set; }
     }
 }

@@ -5,7 +5,7 @@
 
 using System;
 
-namespace Microsoft.HealthVault
+namespace Microsoft.HealthVault.PlatformInformation
 {
     /// <summary>
     /// Provides methods that retrieve URLs of important locations for the
@@ -207,6 +207,7 @@ namespace Microsoft.HealthVault
             {
                 url = url.Substring(0, index);
             }
+
             return new Uri(url);
         }
     }

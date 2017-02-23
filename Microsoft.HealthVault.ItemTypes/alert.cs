@@ -10,6 +10,7 @@ using System.Globalization;
 using System.Text;
 using System.Xml;
 using System.Xml.XPath;
+using Microsoft.HealthVault.Helpers;
 
 namespace Microsoft.HealthVault.ItemTypes
 {
@@ -54,12 +55,12 @@ namespace Microsoft.HealthVault.ItemTypes
 
             foreach (DayOfWeek dow in daysOfWeek)
             {
-                _daysOfWeek.Add(dow);
+                this.daysOfWeek.Add(dow);
             }
 
             foreach (ApproximateTime time in times)
             {
-                _times.Add(time);
+                this.times.Add(time);
             }
         }
 
@@ -83,7 +84,7 @@ namespace Microsoft.HealthVault.ItemTypes
 
             foreach (XPathNavigator dowNav in dowIterator)
             {
-                _daysOfWeek.Add((DayOfWeek)(dowNav.ValueAsInt - 1));
+                this.daysOfWeek.Add((DayOfWeek)(dowNav.ValueAsInt - 1));
             }
 
             XPathNodeIterator timeIterator = navigator.Select("time");
@@ -92,7 +93,7 @@ namespace Microsoft.HealthVault.ItemTypes
             {
                 ApproximateTime time = new ApproximateTime();
                 time.ParseXml(timeNav);
-                _times.Add(time);
+                this.times.Add(time);
             }
         }
 
@@ -129,26 +130,26 @@ namespace Microsoft.HealthVault.ItemTypes
             Validator.ThrowIfArgumentNull(writer, "writer", "WriteXmlNullWriter");
 
             Validator.ThrowSerializationIf(
-                _daysOfWeek.Count == 0,
+                this.daysOfWeek.Count == 0,
                 "AlertDaysNotSet");
 
             Validator.ThrowSerializationIf(
-                _times.Count == 0,
+                this.times.Count == 0,
                 "AlertTimesNotSet");
 
             writer.WriteStartElement(nodeName);
 
-            foreach (DayOfWeek dow in _daysOfWeek)
+            foreach (DayOfWeek dow in this.daysOfWeek)
             {
                 // The DayOfWeek enum starts at 0 whereas the XSD starts at
                 // 1.
 
                 writer.WriteElementString(
                     "dow",
-                    (((int)dow) + 1).ToString(CultureInfo.InvariantCulture));
+                    ((int)dow + 1).ToString(CultureInfo.InvariantCulture));
             }
 
-            foreach (ApproximateTime time in _times)
+            foreach (ApproximateTime time in this.times)
             {
                 time.WriteXml("time", writer);
             }
@@ -170,9 +171,9 @@ namespace Microsoft.HealthVault.ItemTypes
         /// values to the returned collection.
         /// </remarks>
         ///
-        public Collection<DayOfWeek> DaysOfWeek => _daysOfWeek;
+        public Collection<DayOfWeek> DaysOfWeek => this.daysOfWeek;
 
-        private readonly Collection<DayOfWeek> _daysOfWeek =
+        private readonly Collection<DayOfWeek> daysOfWeek =
             new Collection<DayOfWeek>();
 
         /// <summary>
@@ -189,9 +190,9 @@ namespace Microsoft.HealthVault.ItemTypes
         /// instances to the returned collection.
         /// </remarks>
         ///
-        public Collection<ApproximateTime> Times => _times;
+        public Collection<ApproximateTime> Times => this.times;
 
-        private readonly Collection<ApproximateTime> _times =
+        private readonly Collection<ApproximateTime> times =
             new Collection<ApproximateTime>();
 
         /// <summary>
@@ -206,13 +207,13 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             StringBuilder daysOfWeek = new StringBuilder(50);
 
-            for (int daysIndex = 0; daysIndex < DaysOfWeek.Count; ++daysIndex)
+            for (int daysIndex = 0; daysIndex < this.DaysOfWeek.Count; ++daysIndex)
             {
                 if (daysIndex == 0)
                 {
                     daysOfWeek.Append(
                         ResourceRetriever.GetResourceString(
-                            DaysOfWeek[daysIndex].ToString()));
+                            this.DaysOfWeek[daysIndex].ToString()));
                 }
                 else
                 {
@@ -220,26 +221,26 @@ namespace Microsoft.HealthVault.ItemTypes
                         ResourceRetriever.GetResourceString(
                             "ListFormat"),
                          ResourceRetriever.GetResourceString(
-                            DaysOfWeek[daysIndex].ToString()));
+                            this.DaysOfWeek[daysIndex].ToString()));
                 }
             }
 
             StringBuilder times = new StringBuilder(200);
-            for (int index = 0; index < Times.Count; ++index)
+            for (int index = 0; index < this.Times.Count; ++index)
             {
                 if (index == 0)
                 {
                     times.AppendFormat(
                         ResourceRetriever.GetResourceString(
                             "AlertTimeFormat"),
-                         Times[index].ToString());
+                         this.Times[index].ToString());
                 }
                 else
                 {
                     times.AppendFormat(
                         ResourceRetriever.GetResourceString(
                             "ListFormat"),
-                         Times[index].ToString());
+                         this.Times[index].ToString());
                 }
             }
 

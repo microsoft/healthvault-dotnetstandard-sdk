@@ -3,15 +3,17 @@
 // see http://www.microsoft.com/resources/sharedsource/licensingbasics/sharedsourcelicenses.mspx.
 // All other rights reserved.
 
-using Microsoft.HealthVault.Exceptions;
 using System;
 using System.Collections.ObjectModel;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.XPath;
+using Microsoft.HealthVault.Exceptions;
+using Microsoft.HealthVault.Helpers;
+using Microsoft.HealthVault.Transport;
 
-namespace Microsoft.HealthVault
+namespace Microsoft.HealthVault.Thing
 {
     /// <summary>
     /// Searches for health record items in HealthVault records.
@@ -38,7 +40,7 @@ namespace Microsoft.HealthVault
         public HealthRecordSearcher(HealthRecordAccessor record)
         {
             Validator.ThrowIfArgumentNull(record, "record", "HealthRecordSearcherCtorArgumentNull");
-            _record = record;
+            this.Record = record;
         }
 
         /// <summary>
@@ -55,11 +57,7 @@ namespace Microsoft.HealthVault
         /// health record to get results from the query.
         /// </remarks>
         ///
-        public HealthRecordAccessor Record
-        {
-            get { return _record; }
-        }
-        private HealthRecordAccessor _record;
+        public HealthRecordAccessor Record { get; }
 
         /// <summary>
         /// Gets the filters associated with the search.
@@ -70,12 +68,7 @@ namespace Microsoft.HealthVault
         /// returned collection.
         /// </remarks>
         ///
-        public Collection<HealthRecordFilter> Filters
-        {
-            get { return _filters; }
-        }
-        private Collection<HealthRecordFilter> _filters =
-            new Collection<HealthRecordFilter>();
+        public Collection<HealthRecordFilter> Filters { get; } = new Collection<HealthRecordFilter>();
 
         /// <summary>
         /// Gets the health record items that match the filters as specified by
@@ -100,7 +93,7 @@ namespace Microsoft.HealthVault
         ///
         public async Task<ReadOnlyCollection<HealthRecordItemCollection>> GetMatchingItems()
         {
-            return await HealthVaultPlatform.GetMatchingItemsAsync(Record.Connection, Record, this).ConfigureAwait(false);
+            return await HealthVaultPlatform.GetMatchingItemsAsync(this.Record.Connection, this.Record, this).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -122,7 +115,7 @@ namespace Microsoft.HealthVault
         ///
         public async Task<XmlReader> GetMatchingItemsReader()
         {
-            return await HealthVaultPlatform.GetMatchingItemsReaderAsync(Record.Connection, Record, this).ConfigureAwait(false);
+            return await HealthVaultPlatform.GetMatchingItemsReaderAsync(this.Record.Connection, this.Record, this).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -144,7 +137,7 @@ namespace Microsoft.HealthVault
         ///
         public async Task<XPathNavigator> GetMatchingItemsRaw()
         {
-            return await HealthVaultPlatform.GetMatchingItemsRawAsync(Record.Connection, Record, this).ConfigureAwait(false);
+            return await HealthVaultPlatform.GetMatchingItemsRawAsync(this.Record.Connection, this.Record, this).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -185,7 +178,7 @@ namespace Microsoft.HealthVault
             HealthRecordItemSections sections)
         {
             // Create a new searcher to get the item.
-            HealthRecordSearcher searcher = new HealthRecordSearcher(Record);
+            HealthRecordSearcher searcher = new HealthRecordSearcher(this.Record);
 
             HealthRecordFilter filter = new HealthRecordFilter();
             filter.ItemIds.Add(itemId);
@@ -195,7 +188,7 @@ namespace Microsoft.HealthVault
             searcher.Filters.Add(filter);
 
             ReadOnlyCollection<HealthRecordItemCollection> resultSet =
-                await HealthVaultPlatform.GetMatchingItemsAsync(Record.Connection, Record, searcher).ConfigureAwait(false);
+                await HealthVaultPlatform.GetMatchingItemsAsync(this.Record.Connection, this.Record, searcher).ConfigureAwait(false);
 
             // Check in case HealthVault returned invalid data.
             if (resultSet.Count > 1)
@@ -236,6 +229,7 @@ namespace Microsoft.HealthVault
                     result = resultGroup[0];
                 }
             }
+
             return result;
         }
 
@@ -303,7 +297,7 @@ namespace Microsoft.HealthVault
         ///
         public async Task<string> GetTransformedItems(string transform)
         {
-            return await HealthVaultPlatform.GetTransformedItemsAsync(Record.Connection, Record, this, transform).ConfigureAwait(false);
+            return await HealthVaultPlatform.GetTransformedItemsAsync(this.Record.Connection, this.Record, this, transform).ConfigureAwait(false);
         }
 
         #region helpers
@@ -322,7 +316,7 @@ namespace Microsoft.HealthVault
         ///
         internal string GetParametersXml()
         {
-            if (Filters.Count == 0)
+            if (this.Filters.Count == 0)
             {
                 HealthServiceResponseError error = new HealthServiceResponseError();
                 error.Message =
@@ -341,13 +335,15 @@ namespace Microsoft.HealthVault
 
             using (XmlWriter writer = XmlWriter.Create(parameters, settings))
             {
-                foreach (HealthRecordFilter filter in Filters)
+                foreach (HealthRecordFilter filter in this.Filters)
                 {
                     // Add all filters
                     filter.AddFilterXml(writer);
                 }
+
                 writer.Flush();
             }
+
             return parameters.ToString();
         }
 

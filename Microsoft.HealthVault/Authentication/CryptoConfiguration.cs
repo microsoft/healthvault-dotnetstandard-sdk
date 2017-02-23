@@ -30,49 +30,49 @@
         /// </summary>
         protected const string DefaultSymmetricAlgorithmName = "AES256";
 
-        private volatile string _hmacAlgorithmName;
+        private volatile string hmacAlgorithmName;
 
-        private volatile string _hashAlgorithmName;
+        private volatile string hashAlgorithmName;
 
-        private volatile string _signatureHashAlgorithmName;
+        private volatile string signatureHashAlgorithmName;
 
-        private volatile string _signatureAlgorithmName;
+        private volatile string signatureAlgorithmName;
 
-        private volatile string _symmetricAlgorithmName;
+        private volatile string symmetricAlgorithmName;
 
         public string HmacAlgorithmName
         {
-            get { return _hmacAlgorithmName ?? (_hmacAlgorithmName = DefaultHmacAlgorithmName); }
+            get { return this.hmacAlgorithmName ?? (this.hmacAlgorithmName = DefaultHmacAlgorithmName); }
 
-            set { _hmacAlgorithmName = value; }
+            set { this.hmacAlgorithmName = value; }
         }
 
         public string HashAlgorithmName
         {
-            get { return _hashAlgorithmName ?? (_hashAlgorithmName = DefaultHashAlgorithmName); }
+            get { return this.hashAlgorithmName ?? (this.hashAlgorithmName = DefaultHashAlgorithmName); }
 
-            set { _hashAlgorithmName = value; }
+            set { this.hashAlgorithmName = value; }
         }
 
         public string SignatureHashAlgorithmName
         {
-            get { return _signatureHashAlgorithmName ?? (_signatureHashAlgorithmName = DefaultSignatureHashAlgorithmName); }
+            get { return this.signatureHashAlgorithmName ?? (this.signatureHashAlgorithmName = DefaultSignatureHashAlgorithmName); }
 
-            set { _signatureHashAlgorithmName = value; }
+            set { this.signatureHashAlgorithmName = value; }
         }
 
         public string SignatureAlgorithmName
         {
-            get { return _signatureAlgorithmName ?? (_signatureAlgorithmName = DefaultSignatureAlgorithmName); }
+            get { return this.signatureAlgorithmName ?? (this.signatureAlgorithmName = DefaultSignatureAlgorithmName); }
 
-            set { _signatureAlgorithmName = value; }
+            set { this.signatureAlgorithmName = value; }
         }
 
         public string SymmetricAlgorithmName
         {
-            get { return _symmetricAlgorithmName ?? (_symmetricAlgorithmName = DefaultSymmetricAlgorithmName); }
+            get { return this.symmetricAlgorithmName ?? (this.symmetricAlgorithmName = DefaultSymmetricAlgorithmName); }
 
-            set { _symmetricAlgorithmName = value; }
+            set { this.symmetricAlgorithmName = value; }
         }
     }
 }

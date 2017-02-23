@@ -6,6 +6,7 @@
 using System;
 using System.Xml;
 using System.Xml.XPath;
+using Microsoft.HealthVault.Helpers;
 
 namespace Microsoft.HealthVault.ItemTypes
 {
@@ -60,35 +61,35 @@ namespace Microsoft.HealthVault.ItemTypes
             Validator.ThrowIfNavigatorNull(navigator);
 
             // <prescribed-by>
-            _prescribedBy = new PersonItem();
-            _prescribedBy.ParseXml(navigator.SelectSingleNode("prescribed-by"));
+            this.prescribedBy = new PersonItem();
+            this.prescribedBy.ParseXml(navigator.SelectSingleNode("prescribed-by"));
 
             // <date-prescribed>
-            _datePrescribed =
+            this.datePrescribed =
                 XPathHelper.GetOptNavValue<ApproximateDateTime>(navigator, "date-prescribed");
 
             // <amount-prescribed>
-            _amountPrescribed =
+            this.amountPrescribed =
                 XPathHelper.GetOptNavValue<GeneralMeasurement>(navigator, "amount-prescribed");
 
             // <substitution>
-            _substitution =
+            this.substitution =
                 XPathHelper.GetOptNavValue<CodableValue>(navigator, "substitution");
 
             // <refills>
-            _refills =
+            this.refills =
                 XPathHelper.GetOptNavValueAsInt(navigator, "refills");
 
             // <days-supply>
-            _daysSupply =
+            this.daysSupply =
                 XPathHelper.GetOptNavValueAsInt(navigator, "days-supply");
 
             // <prescription-expiration>
-            _expiration =
+            this.expiration =
                 XPathHelper.GetOptNavValue<HealthServiceDate>(navigator, "prescription-expiration");
 
             // <instructions>
-            _instructions =
+            this.instructions =
                 XPathHelper.GetOptNavValue<CodableValue>(navigator, "instructions");
         }
 
@@ -120,54 +121,54 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             Validator.ThrowIfStringNullOrEmpty(nodeName, "nodeName");
             Validator.ThrowIfWriterNull(writer);
-            Validator.ThrowSerializationIfNull(_prescribedBy, "PrescriptionPrescribedByNotSet");
+            Validator.ThrowSerializationIfNull(this.prescribedBy, "PrescriptionPrescribedByNotSet");
 
             // <prescription>
             writer.WriteStartElement(nodeName);
 
-            _prescribedBy.WriteXml("prescribed-by", writer);
+            this.prescribedBy.WriteXml("prescribed-by", writer);
 
             // <date-prescribed>
-            XmlWriterHelper.WriteOpt<ApproximateDateTime>(
+            XmlWriterHelper.WriteOpt(
                 writer,
                 "date-prescribed",
-                _datePrescribed);
+                this.datePrescribed);
 
             // <amount-prescribed>
-            XmlWriterHelper.WriteOpt<GeneralMeasurement>(
+            XmlWriterHelper.WriteOpt(
                 writer,
                 "amount-prescribed",
-                _amountPrescribed);
+                this.amountPrescribed);
 
             // <substitution>
-            XmlWriterHelper.WriteOpt<CodableValue>(
+            XmlWriterHelper.WriteOpt(
                 writer,
                 "substitution",
-                _substitution);
+                this.substitution);
 
             // <refills>
             XmlWriterHelper.WriteOptInt(
                 writer,
                 "refills",
-                _refills);
+                this.refills);
 
             // <days-supply>
             XmlWriterHelper.WriteOptInt(
                 writer,
                 "days-supply",
-                _daysSupply);
+                this.daysSupply);
 
             // <prescription-expiration>
-            XmlWriterHelper.WriteOpt<HealthServiceDate>(
+            XmlWriterHelper.WriteOpt(
                 writer,
                 "prescription-expiration",
-                _expiration);
+                this.expiration);
 
             // <instructions>
-            XmlWriterHelper.WriteOpt<CodableValue>(
+            XmlWriterHelper.WriteOpt(
                 writer,
                 "instructions",
-                _instructions);
+                this.instructions);
 
             // </prescription>
             writer.WriteEndElement();
@@ -187,14 +188,16 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public PersonItem PrescribedBy
         {
-            get { return _prescribedBy; }
+            get { return this.prescribedBy; }
+
             set
             {
                 Validator.ThrowIfArgumentNull(value, "PrescribedBy", "PrescriptionPrescribedByNameMandatory");
-                _prescribedBy = value;
+                this.prescribedBy = value;
             }
         }
-        private PersonItem _prescribedBy;
+
+        private PersonItem prescribedBy;
 
         /// <summary>
         /// Gets or sets the date the medication was prescribed.
@@ -206,10 +209,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public ApproximateDateTime DatePrescribed
         {
-            get { return _datePrescribed; }
-            set { _datePrescribed = value; }
+            get { return this.datePrescribed; }
+            set { this.datePrescribed = value; }
         }
-        private ApproximateDateTime _datePrescribed;
+
+        private ApproximateDateTime datePrescribed;
 
         /// <summary>
         /// Gets or sets the amount of medication prescribed.
@@ -221,10 +225,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public GeneralMeasurement AmountPrescribed
         {
-            get { return _amountPrescribed; }
-            set { _amountPrescribed = value; }
+            get { return this.amountPrescribed; }
+            set { this.amountPrescribed = value; }
         }
-        private GeneralMeasurement _amountPrescribed;
+
+        private GeneralMeasurement amountPrescribed;
 
         /// <summary>
         /// Gets or sets whether a substitution is permitted.
@@ -238,10 +243,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public CodableValue Substitution
         {
-            get { return _substitution; }
-            set { _substitution = value; }
+            get { return this.substitution; }
+            set { this.substitution = value; }
         }
-        private CodableValue _substitution;
+
+        private CodableValue substitution;
 
         /// <summary>
         /// Gets or sets the number of refills of the medication.
@@ -253,10 +259,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public int? Refills
         {
-            get { return _refills; }
-            set { _refills = value; }
+            get { return this.refills; }
+            set { this.refills = value; }
         }
-        private int? _refills;
+
+        private int? refills;
 
         /// <summary>
         /// Gets or sets the number of days supply of medication.
@@ -268,10 +275,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public int? DaysSupply
         {
-            get { return _daysSupply; }
-            set { _daysSupply = value; }
+            get { return this.daysSupply; }
+            set { this.daysSupply = value; }
         }
-        private int? _daysSupply;
+
+        private int? daysSupply;
 
         /// <summary>
         /// Gets or sets the date the prescription expires.
@@ -283,10 +291,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public HealthServiceDate PrescriptionExpiration
         {
-            get { return _expiration; }
-            set { _expiration = value; }
+            get { return this.expiration; }
+            set { this.expiration = value; }
         }
-        private HealthServiceDate _expiration;
+
+        private HealthServiceDate expiration;
 
         /// <summary>
         /// Gets or sets the medication instructions.
@@ -298,10 +307,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public CodableValue Instructions
         {
-            get { return _instructions; }
-            set { _instructions = value; }
+            get { return this.instructions; }
+            set { this.instructions = value; }
         }
-        private CodableValue _instructions;
+
+        private CodableValue instructions;
 
         /// <summary>
         /// Gets a string representation of the prescription item.
@@ -313,11 +323,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public override string ToString()
         {
-            string result = String.Empty;
+            string result = string.Empty;
 
-            if (PrescribedBy != null)
+            if (this.PrescribedBy != null)
             {
-                result = PrescribedBy.ToString();
+                result = this.PrescribedBy.ToString();
             }
 
             return result;

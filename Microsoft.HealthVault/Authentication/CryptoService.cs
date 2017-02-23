@@ -1,6 +1,7 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Security.Cryptography;
+using Microsoft.HealthVault.Helpers;
 
 namespace Microsoft.HealthVault.Authentication
 {
@@ -9,8 +10,12 @@ namespace Microsoft.HealthVault.Authentication
     /// </summary>
     public class CryptoService : ICryptoService
     {
-        private readonly ICryptoConfiguration _cryptoConfiguration;
+        private readonly ICryptoConfiguration cryptoConfiguration;
 
+        /// <summary>
+        /// Constructor for a base implementation of the Cryptography service 
+        /// </summary>
+        /// <param name="cryptoConfiguration">Returns a CryptoService with the user supplied parameters</param>
         public CryptoService(ICryptoConfiguration cryptoConfiguration)
         {
             Validator.ThrowIfArgumentNull(
@@ -18,7 +23,7 @@ namespace Microsoft.HealthVault.Authentication
                 nameof(cryptoConfiguration), 
                 "CryptoConfigurationNull");
 
-            _cryptoConfiguration = cryptoConfiguration;
+            this.cryptoConfiguration = cryptoConfiguration;
         }
 
         /// <summary>
@@ -52,7 +57,7 @@ namespace Microsoft.HealthVault.Authentication
 
             try
             {
-                hmac = CreateHmac(algorithmName);
+                hmac = this.CreateHmac(algorithmName);
                 hmac.Key = keyMaterial;
                 return hmac;
             }
@@ -71,7 +76,7 @@ namespace Microsoft.HealthVault.Authentication
         {
             Validator.ThrowIfStringNullOrEmpty(algorithmName, "algorithmName");
 
-            HMAC hmac = CreateHashAlgorithm(algorithmName) as HMAC;
+            HMAC hmac = this.CreateHashAlgorithm(algorithmName) as HMAC;
 
             Validator.ThrowArgumentExceptionIf(
                 hmac == null,
@@ -91,7 +96,7 @@ namespace Microsoft.HealthVault.Authentication
                 "keyMaterial",
                 "CryptoConfigEmptyKeyMaterial");
 
-            return CreateHmac(_cryptoConfiguration.HmacAlgorithmName, keyMaterial);
+            return this.CreateHmac(this.cryptoConfiguration.HmacAlgorithmName, keyMaterial);
         }
 
         /// <summary>
@@ -134,7 +139,7 @@ namespace Microsoft.HealthVault.Authentication
         /// </summary>
         public HashAlgorithm CreateHashAlgorithm()
         {
-            return CreateHashAlgorithm(_cryptoConfiguration.HashAlgorithmName);
+            return this.CreateHashAlgorithm(this.cryptoConfiguration.HashAlgorithmName);
         }
 
         /// <summary>
@@ -143,7 +148,7 @@ namespace Microsoft.HealthVault.Authentication
         [SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope", Justification = "'key' variable is returned to the caller")]
         public SymmetricAlgorithm CreateSymmetricAlgorithm(string algorithmName, byte[] keyMaterial)
         {
-            VerifyKeyMaterialNotEmpty(keyMaterial);
+            this.VerifyKeyMaterialNotEmpty(keyMaterial);
 
             // Note, previous SDK used RijndaelManaged key = new RijndaelManaged();
             // and is being repalced by AES

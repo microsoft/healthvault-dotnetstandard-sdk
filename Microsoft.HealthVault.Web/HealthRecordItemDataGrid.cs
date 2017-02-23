@@ -9,9 +9,12 @@ using System.Collections.Generic;
 using System.Data;
 using System.Security;
 using System.Security.Permissions;
+using System.Threading.Tasks;
 using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
+using Microsoft.HealthVault.Helpers;
+using Microsoft.HealthVault.Thing;
 using Microsoft.HealthVault.DesktopWeb.Common;
 
 namespace Microsoft.HealthVault.Web
@@ -484,9 +487,9 @@ namespace Microsoft.HealthVault.Web
 
         private const string BuiltinActionDelete = "_wcDelete";
 
-        private void DeleteThing(Guid thingId, Guid versionStamp)
+        private async Task DeleteThing(Guid thingId, Guid versionStamp)
         {
-            Record.RemoveItem(new HealthRecordItemKey(thingId, versionStamp));
+            await Record.RemoveItem(new HealthRecordItemKey(thingId, versionStamp));
 
             this.DataChanged = true;
         }
@@ -914,7 +917,7 @@ namespace Microsoft.HealthVault.Web
         /// </summary>
         ///
         /// <returns>
-        /// A <see cref="Microsoft.HealthVault.HealthRecordFilter"/> that is used
+        /// A <see cref="HealthRecordFilter"/> that is used
         /// by the underlying
         /// <see cref="HealthRecordItemDataTable"/>
         /// to retrieve data for the data grid.

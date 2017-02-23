@@ -18,12 +18,12 @@ namespace Microsoft.HealthVault
     /// <typeparam name="T">The type of the cache object.</typeparam>
     internal class LazyCacheWithTtl<T>
     {
-        private readonly Func<Task<T>> _loadValue;
-        private readonly Func<T, Task<T>> _reloadValue;
-        private readonly TimeSpan _ttl;
-        private readonly object _padlock = new object();
-        private DateTime _timeOfExpiration;
-        private T _value;
+        private readonly Func<Task<T>> loadValue;
+        private readonly Func<T, Task<T>> reloadValue;
+        private readonly TimeSpan ttl;
+        private readonly object padlock = new object();
+        private DateTime timeOfExpiration;
+        private T value;
 
         /// <summary>
         /// Creates a new instance that will load its initial value lazily on the first get call
@@ -49,10 +49,10 @@ namespace Microsoft.HealthVault
         /// </param>
         public LazyCacheWithTtl(Func<Task<T>> loadValue, Func<T, Task<T>> reloadValue, TimeSpan timeToLive)
         {
-            _loadValue = loadValue;
-            _reloadValue = reloadValue;
-            _ttl = timeToLive;
-            _timeOfExpiration = DateTime.MaxValue;
+            this.loadValue = loadValue;
+            this.reloadValue = reloadValue;
+            this.ttl = timeToLive;
+            this.timeOfExpiration = DateTime.MaxValue;
         }
 
         /// <summary>
@@ -66,29 +66,29 @@ namespace Microsoft.HealthVault
         /// </remarks>
         public T Value()
         {
-                lock (_padlock)
+                lock (this.padlock)
                 {
-                    if (!IsValueCreated)
+                    if (!this.IsValueCreated)
                     {
                         // first load- running synchronously to avoid potential deadlock
-                        _value = _loadValue().Result;
-                        ValueUpdated();
+                        this.value = this.loadValue().Result;
+                        this.ValueUpdated();
                     }
-                    else if (DateTime.Now > _timeOfExpiration)
+                    else if (DateTime.Now > this.timeOfExpiration)
                     {
                         // expired- running synchronously to avoid potential deadlock
-                        _value = _reloadValue(_value).Result;
-                        ValueUpdated();
+                        this.value = this.reloadValue(this.value).Result;
+                        this.ValueUpdated();
                     }
 
-                    return _value;
+                    return this.value;
                 }
         }
 
         private void ValueUpdated()
         {
-            _timeOfExpiration = DateTime.Now + _ttl;
-            IsValueCreated = true;
+            this.timeOfExpiration = DateTime.Now + this.ttl;
+            this.IsValueCreated = true;
         }
 
         public bool IsValueCreated { get; private set; }

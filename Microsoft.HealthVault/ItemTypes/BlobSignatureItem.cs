@@ -3,13 +3,17 @@
 // see http://www.microsoft.com/resources/sharedsource/licensingbasics/sharedsourcelicenses.mspx.
 // All other rights reserved.
 
-namespace Microsoft.HealthVault
+using System;
+using Microsoft.HealthVault.Helpers;
+using Microsoft.HealthVault.Thing;
+
+namespace Microsoft.HealthVault.ItemTypes
 {
     /// <summary>
     /// Represents information about a BLOB that is part of a digital signature.
     /// </summary>
     /// <remarks>
-    /// For more details please see <see cref="HealthRecordItemSignature" />.
+    /// For more details please see <see cref="HealthRecordItem" />.
     /// </remarks>
     ///
     public class BlobSignatureItem
@@ -17,9 +21,9 @@ namespace Microsoft.HealthVault
         /// <summary>
         /// Constructs a BlobSignatureItem object with the specified parameters.
         /// </summary>
-        /// <param name="name"></param>
-        /// <param name="contentType"></param>
-        /// <param name="hashInfo"></param>
+        /// <param name="name">The name of the item</param>
+        /// <param name="contentType">The type of the item</param>
+        /// <param name="hashInfo">The hash information for the BLOB</param>
         ///
         /// <exception cref="ArgumentNullException">
         /// If <paramref name="name"/> or <paramref name="contentType"/> are <b>null</b>.
@@ -29,36 +33,24 @@ namespace Microsoft.HealthVault
             Validator.ThrowIfArgumentNull(name, "name", "ArgumentNull");
             Validator.ThrowIfArgumentNull(contentType, "contentType", "ArgumentNull");
 
-            _name = name;
-            _contentType = contentType;
-            _hashInfo = hashInfo;
+            this.Name = name;
+            this.ContentType = contentType;
+            this.HashInfo = hashInfo;
         }
 
         /// <summary>
         /// Gets the name of the BLOB.
         /// </summary>
-        public string Name
-        {
-            get { return _name; }
-        }
-        private string _name;
+        public string Name { get; }
 
         /// <summary>
         /// Gets the content type of the BLOB.
         /// </summary>
-        public string ContentType
-        {
-            get { return _contentType; }
-        }
-        private string _contentType;
+        public string ContentType { get; }
 
         /// <summary>
         /// Get the hash information for the BLOB.
         /// </summary>
-        public BlobHashInfo HashInfo
-        {
-            get { return _hashInfo; }
-        }
-        private BlobHashInfo _hashInfo;
+        public BlobHashInfo HashInfo { get; }
     }
 }

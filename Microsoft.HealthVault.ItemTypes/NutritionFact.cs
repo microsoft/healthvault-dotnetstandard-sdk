@@ -3,12 +3,13 @@
 // see http://www.microsoft.com/resources/sharedsource/licensingbasics/sharedsourcelicenses.mspx.
 // All other rights reserved.
 
-using Microsoft.HealthVault.Exceptions;
 using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Xml;
 using System.Xml.XPath;
+using Microsoft.HealthVault.Exceptions;
+using Microsoft.HealthVault.Helpers;
 
 namespace Microsoft.HealthVault.ItemTypes
 {
@@ -41,7 +42,7 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public NutritionFact(CodableValue name)
         {
-            Name = name;
+            this.Name = name;
         }
 
         /// <summary>
@@ -66,9 +67,9 @@ namespace Microsoft.HealthVault.ItemTypes
                         "errors", "ParseXmlNavNull"));
             }
 
-            _name = new CodableValue();
-            _name.ParseXml(navigator.SelectSingleNode("name"));
-            _fact = XPathHelper.GetOptNavValue<GeneralMeasurement>(navigator, "fact");
+            this.name = new CodableValue();
+            this.name.ParseXml(navigator.SelectSingleNode("name"));
+            this.fact = XPathHelper.GetOptNavValue<GeneralMeasurement>(navigator, "fact");
         }
 
         /// <summary>
@@ -99,7 +100,7 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public override void WriteXml(string nodeName, XmlWriter writer)
         {
-            if (String.IsNullOrEmpty(nodeName))
+            if (string.IsNullOrEmpty(nodeName))
             {
                 throw new ArgumentException(
                     ResourceRetriever.GetResourceString(
@@ -115,7 +116,7 @@ namespace Microsoft.HealthVault.ItemTypes
                         "errors", "WriteXmlNullWriter"));
             }
 
-            if (_name == null)
+            if (this.name == null)
             {
                 throw new HealthRecordItemSerializationException(
                     ResourceRetriever.GetResourceString(
@@ -124,8 +125,8 @@ namespace Microsoft.HealthVault.ItemTypes
 
             writer.WriteStartElement(nodeName);
 
-            _name.WriteXml("name", writer);
-            XmlWriterHelper.WriteOpt<GeneralMeasurement>(writer, "fact", _fact);
+            this.name.WriteXml("name", writer);
+            XmlWriterHelper.WriteOpt(writer, "fact", this.fact);
             writer.WriteEndElement();
         }
 
@@ -147,7 +148,7 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             get
             {
-                return _name;
+                return this.name;
             }
 
             set
@@ -159,11 +160,11 @@ namespace Microsoft.HealthVault.ItemTypes
                         ResourceRetriever.GetResourceString("errors", "NutrientNameNullValue"));
                 }
 
-                _name = value;
+                this.name = value;
             }
         }
 
-        private CodableValue _name;
+        private CodableValue name;
 
         /// <summary>
         /// Gets or sets the amount of nutrient consumed.
@@ -178,16 +179,16 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             get
             {
-                return _fact;
+                return this.fact;
             }
 
             set
             {
-                _fact = value;
+                this.fact = value;
             }
         }
 
-        private GeneralMeasurement _fact;
+        private GeneralMeasurement fact;
 
         /// <summary>
         /// Gets a string representation of the NutritionFact.
@@ -199,16 +200,16 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public override string ToString()
         {
-            if (Fact != null)
+            if (this.Fact != null)
             {
-                return String.Format(
+                return string.Format(
                             CultureInfo.CurrentUICulture,
                             ResourceRetriever.GetResourceString("NutritionValueFormat"),
-                            Name.Text,
-                            Fact.ToString());
+                            this.Name.Text,
+                            this.Fact.ToString());
             }
 
-            return Name.Text;
+            return this.Name.Text;
         }
     }
 }

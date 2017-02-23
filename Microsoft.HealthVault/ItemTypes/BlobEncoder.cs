@@ -3,15 +3,17 @@
 // see http://www.microsoft.com/resources/sharedsource/licensingbasics/sharedsourcelicenses.mspx.
 // All other rights reserved.
 
-using Microsoft.HealthVault.Exceptions;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.IO.Compression;
 using System.Text;
+using Microsoft.HealthVault.Exceptions;
+using Microsoft.HealthVault.Helpers;
+using Microsoft.HealthVault.Transport;
 
-namespace Microsoft.HealthVault
+namespace Microsoft.HealthVault.ItemTypes
 {
     /// <summary>
     /// Used to encode BLOBs in various encoding schemes.
@@ -26,7 +28,7 @@ namespace Microsoft.HealthVault
                 return rawBlobPayload;
             }
 
-            string[] encodings = SDKHelper.SplitAndTrim(contentEncoding, c_encodingSeperator);
+            string[] encodings = SDKHelper.SplitAndTrim(contentEncoding, EncodingSeperator);
 
             return Encode(rawBlobPayload, encodings);
         }
@@ -38,7 +40,7 @@ namespace Microsoft.HealthVault
                 return encodedBlobPayload;
             }
 
-            string[] encodings = SDKHelper.SplitAndTrim(contentEncoding, c_encodingSeperator);
+            string[] encodings = SDKHelper.SplitAndTrim(contentEncoding, EncodingSeperator);
 
             return Decode(encodedBlobPayload, encodings);
         }
@@ -67,16 +69,17 @@ namespace Microsoft.HealthVault
                         break;
                 }
             }
+
             return encodedPayload;
         }
 
         private static byte[] Decode(byte[] encodedPayload, string[] encodings)
         {
-            Byte[] decodedPayload = encodedPayload;
+            byte[] decodedPayload = encodedPayload;
             List<string> contentEncodingsUsed = new List<string>();
             try
             {
-                for (Int32 i = encodings.Length - 1; i >= 0; --i)
+                for (int i = encodings.Length - 1; i >= 0; --i)
                 {
                     if (contentEncodingsUsed.Contains(encodings[i]))
                     {
@@ -106,8 +109,10 @@ namespace Microsoft.HealthVault
                             throw new HealthServiceException(
                                 HealthServiceStatusCode.UnsupportedContentEncoding);
                     }
+
                     contentEncodingsUsed.Add(encodings[i]);
                 }
+
                 VerifyPayloadExists(decodedPayload);
             }
             catch (HealthServiceException)
@@ -119,6 +124,7 @@ namespace Microsoft.HealthVault
                 throw new HealthServiceException(
                     HealthServiceStatusCode.ContentEncodingDataMismatch);
             }
+
             return decodedPayload;
         }
 
@@ -161,6 +167,7 @@ namespace Microsoft.HealthVault
                     {
                         CopyData(source, destination);
                     }
+
                     return encodedBytesStream.ToArray();
                 }
             }
@@ -197,6 +204,7 @@ namespace Microsoft.HealthVault
                     {
                         CopyData(source, destination);
                     }
+
                     return encodedBytesStream.ToArray();
                 }
             }
@@ -231,6 +239,6 @@ namespace Microsoft.HealthVault
             }
         }
 
-        private const char c_encodingSeperator = ',';
+        private const char EncodingSeperator = ',';
     }
 }

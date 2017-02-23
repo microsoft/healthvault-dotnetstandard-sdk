@@ -3,8 +3,10 @@
 // see http://www.microsoft.com/resources/sharedsource/licensingbasics/sharedsourcelicenses.mspx.
 // All other rights reserved.
 
+using System;
 using System.Xml;
 using System.Xml.XPath;
+using Microsoft.HealthVault.Helpers;
 
 namespace Microsoft.HealthVault.ItemTypes
 {
@@ -30,8 +32,8 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public Range()
         {
-            _minRange = DefaultMinValue;
-            _maxRange = DefaultMaxValue;
+            this.minRange = this.DefaultMinValue;
+            this.maxRange = this.DefaultMaxValue;
         }
 
         /// <summary>
@@ -54,8 +56,8 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public Range(RangeType minRange, RangeType maxRange)
         {
-            MinRange = minRange;
-            MaxRange = maxRange;
+            this.MinRange = minRange;
+            this.MaxRange = maxRange;
         }
 
         /// <summary>
@@ -77,12 +79,12 @@ namespace Microsoft.HealthVault.ItemTypes
             XPathNavigator minRangeNav =
                 navigator.SelectSingleNode("minimum-range");
 
-            _minRange = ReadRangeValue(minRangeNav);
+            this.minRange = this.ReadRangeValue(minRangeNav);
 
             XPathNavigator maxRangeNav =
                 navigator.SelectSingleNode("maximum-range");
 
-            _maxRange = ReadRangeValue(maxRangeNav);
+            this.maxRange = this.ReadRangeValue(maxRangeNav);
         }
 
         /// <summary>
@@ -132,8 +134,8 @@ namespace Microsoft.HealthVault.ItemTypes
 
             writer.WriteStartElement(nodeName);
 
-            WriteRangeValue("minimum-range", MinRange, writer);
-            WriteRangeValue("maximum-range", MaxRange, writer);
+            this.WriteRangeValue("minimum-range", this.MinRange, writer);
+            this.WriteRangeValue("maximum-range", this.MaxRange, writer);
 
             writer.WriteEndElement();
         }
@@ -195,14 +197,16 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public RangeType MinRange
         {
-            get { return _minRange; }
+            get { return this.minRange; }
+
             set
             {
-                VerifyRangeValue(value);
-                _minRange = value;
+                this.VerifyRangeValue(value);
+                this.minRange = value;
             }
         }
-        private RangeType _minRange;
+
+        private RangeType minRange;
 
         /// <summary>
         /// Gets or sets the maximum value of the range.
@@ -218,14 +222,16 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public RangeType MaxRange
         {
-            get { return _maxRange; }
+            get { return this.maxRange; }
+
             set
             {
-                VerifyRangeValue(value);
-                _maxRange = value;
+                this.VerifyRangeValue(value);
+                this.maxRange = value;
             }
         }
-        private RangeType _maxRange;
+
+        private RangeType maxRange;
 
         /// <summary>
         /// Verifies that the specified range value is an appropriate value for the range.
@@ -250,6 +256,7 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         protected virtual void VerifyRangeValue(RangeType value)
         {
+
         }
     }
 }

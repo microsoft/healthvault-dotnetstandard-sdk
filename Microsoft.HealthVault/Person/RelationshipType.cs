@@ -3,7 +3,9 @@
 // see http://www.microsoft.com/resources/sharedsource/licensingbasics/sharedsourcelicenses.mspx.
 // All other rights reserved.
 
-namespace Microsoft.HealthVault
+using Microsoft.HealthVault.Record;
+
+namespace Microsoft.HealthVault.Person
 {
     /// <summary>
     /// Defines the interpersonal relationship between the authorized
@@ -72,37 +74,37 @@ namespace Microsoft.HealthVault
         ///
         Parent = 8,
 
-        ///<summary>
-        ///The record is for an application.
-        ///</summary>
+        /// <summary>
+        /// The record is for an application.
+        /// </summary>
         ///
         Application = 9,
 
-        ///<summary>
+        /// <summary>
         /// The record is for a relative of the logged-in person.
         /// </summary>
         ///
         Relative = 10,
 
-        ///<summary>
+        /// <summary>
         /// The record is for a domestic partner of the logged-in person.
         /// </summary>
         ///
         DomesticPartner = 11,
 
-        ///<summary>
+        /// <summary>
         /// The record is for a pet of the logged-in person.
         /// </summary>
         Pet = 13,
 
-        ///<summary>
+        /// <summary>
         /// The record is for a son of the logged-in person
         /// </summary>
         Son = 14,
 
-        ///<summary>
+        /// <summary>
         /// The reocrd is for a daughter of the logged-in person
         /// </summary>
-        Daughter = 15,
+        Daughter = 15
     }
 }

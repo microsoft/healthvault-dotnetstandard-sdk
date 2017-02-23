@@ -6,6 +6,7 @@
 using System.Collections.ObjectModel;
 using System.Xml;
 using System.Xml.XPath;
+using Microsoft.HealthVault.Helpers;
 
 namespace Microsoft.HealthVault.ItemTypes
 {
@@ -15,14 +16,6 @@ namespace Microsoft.HealthVault.ItemTypes
     ///
     public class ContactInfo : HealthRecordItemData
     {
-        /// <summary>
-        /// Creates a new instance of the <see cref="ContactInfo"/> class with default values.
-        /// </summary>
-        ///
-        public ContactInfo()
-        {
-        }
-
         /// <summary>
         /// Populates the data from the specified XML.
         /// </summary>
@@ -45,7 +38,7 @@ namespace Microsoft.HealthVault.ItemTypes
             {
                 Address newAddress = new Address();
                 newAddress.ParseXml(addressNav);
-                _address.Add(newAddress);
+                this.address.Add(newAddress);
             }
 
             XPathNodeIterator phoneIterator = navigator.Select("phone");
@@ -54,7 +47,7 @@ namespace Microsoft.HealthVault.ItemTypes
             {
                 Phone newPhone = new Phone();
                 newPhone.ParseXml(phoneNav);
-                _phone.Add(newPhone);
+                this.phone.Add(newPhone);
             }
 
             XPathNodeIterator emailIterator = navigator.Select("email");
@@ -63,7 +56,7 @@ namespace Microsoft.HealthVault.ItemTypes
             {
                 Email newEmail = new Email();
                 newEmail.ParseXml(emailNav);
-                _email.Add(newEmail);
+                this.email.Add(newEmail);
             }
         }
 
@@ -100,17 +93,17 @@ namespace Microsoft.HealthVault.ItemTypes
 
             writer.WriteStartElement(nodeName);
 
-            foreach (Address address in _address)
+            foreach (Address address in this.address)
             {
                 address.WriteXml("address", writer);
             }
 
-            foreach (Phone phone in _phone)
+            foreach (Phone phone in this.phone)
             {
                 phone.WriteXml("phone", writer);
             }
 
-            foreach (Email email in _email)
+            foreach (Email email in this.email)
             {
                 email.WriteXml("email", writer);
             }
@@ -131,22 +124,24 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             get
             {
-                if (_primaryAddress == null)
+                if (this.primaryAddress == null)
                 {
-                    for (int index = 0; index < Address.Count; ++index)
+                    for (int index = 0; index < this.Address.Count; ++index)
                     {
-                        if (Address[index].IsPrimary != null &&
-                            (bool)Address[index].IsPrimary)
+                        if (this.Address[index].IsPrimary != null &&
+                            (bool)this.Address[index].IsPrimary)
                         {
-                            _primaryAddress = Address[index];
+                            this.primaryAddress = this.Address[index];
                             break;
                         }
                     }
                 }
-                return _primaryAddress;
+
+                return this.primaryAddress;
             }
         }
-        private Address _primaryAddress;
+
+        private Address primaryAddress;
 
         /// <summary>
         /// Gets the first telephone number that is marked as IsPrimary.
@@ -162,22 +157,24 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             get
             {
-                if (_primaryPhone == null)
+                if (this.primaryPhone == null)
                 {
-                    for (int index = 0; index < Phone.Count; ++index)
+                    for (int index = 0; index < this.Phone.Count; ++index)
                     {
-                        if (Phone[index].IsPrimary != null &&
-                            (bool)Phone[index].IsPrimary)
+                        if (this.Phone[index].IsPrimary != null &&
+                            (bool)this.Phone[index].IsPrimary)
                         {
-                            _primaryPhone = Phone[index];
+                            this.primaryPhone = this.Phone[index];
                             break;
                         }
                     }
                 }
-                return _primaryPhone;
+
+                return this.primaryPhone;
             }
         }
-        private Phone _primaryPhone;
+
+        private Phone primaryPhone;
 
         /// <summary>
         /// Gets the first email that is marked as IsPrimary.
@@ -192,22 +189,24 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             get
             {
-                if (_primaryEmail == null)
+                if (this.primaryEmail == null)
                 {
-                    for (int index = 0; index < Email.Count; ++index)
+                    for (int index = 0; index < this.Email.Count; ++index)
                     {
-                        if (Email[index].IsPrimary != null &&
-                            (bool)Email[index].IsPrimary)
+                        if (this.Email[index].IsPrimary != null &&
+                            (bool)this.Email[index].IsPrimary)
                         {
-                            _primaryEmail = Email[index];
+                            this.primaryEmail = this.Email[index];
                             break;
                         }
                     }
                 }
-                return _primaryEmail;
+
+                return this.primaryEmail;
             }
         }
-        private Email _primaryEmail;
+
+        private Email primaryEmail;
 
         /// <summary>
         /// Gets the addresses for the contact.
@@ -217,11 +216,9 @@ namespace Microsoft.HealthVault.ItemTypes
         /// A collection of addresses.
         /// </value>
         ///
-        public Collection<Address> Address
-        {
-            get { return _address; }
-        }
-        private Collection<Address> _address = new Collection<Address>();
+        public Collection<Address> Address => this.address;
+
+        private readonly Collection<Address> address = new Collection<Address>();
 
         /// <summary>
         /// Gets the telephone numbers for the contact.
@@ -231,11 +228,9 @@ namespace Microsoft.HealthVault.ItemTypes
         /// A collection of phone numbers.
         /// </value>
         ///
-        public Collection<Phone> Phone
-        {
-            get { return _phone; }
-        }
-        private Collection<Phone> _phone = new Collection<Phone>();
+        public Collection<Phone> Phone => this.phone;
+
+        private readonly Collection<Phone> phone = new Collection<Phone>();
 
         /// <summary>
         /// Gets the email addresses for the contact.
@@ -245,11 +240,9 @@ namespace Microsoft.HealthVault.ItemTypes
         /// A collection of email addresses.
         /// </value>
         ///
-        public Collection<Email> Email
-        {
-            get { return _email; }
-        }
-        private Collection<Email> _email = new Collection<Email>();
+        public Collection<Email> Email => this.email;
+
+        private readonly Collection<Email> email = new Collection<Email>();
 
         /// <summary>
         /// Gets a string representation of the contact information.
@@ -263,49 +256,49 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             string result = string.Empty;
 
-            if (PrimaryPhone != null)
+            if (this.PrimaryPhone != null)
             {
                 result =
                     string.Format(
                         ResourceRetriever.GetResourceString(
                             "ContactInfoFormatPrimary"),
-                        PrimaryPhone.Number);
+                        this.PrimaryPhone.Number);
             }
-            else if (Phone.Count > 0)
+            else if (this.Phone.Count > 0)
             {
-                result = Phone[0].Number;
+                result = this.Phone[0].Number;
             }
-            else if (Address.Count > 0)
+            else if (this.Address.Count > 0)
             {
-                result = Address[0].City;
+                result = this.Address[0].City;
 
-                if (!string.IsNullOrEmpty(Address[0].County))
+                if (!string.IsNullOrEmpty(this.Address[0].County))
                 {
                     result +=
                          ResourceRetriever.GetResourceString(
                             "ListSeparator") +
-                         Address[0].County;
+                         this.Address[0].County;
                 }
 
-                if (!string.IsNullOrEmpty(Address[0].State))
+                if (!string.IsNullOrEmpty(this.Address[0].State))
                 {
                     result +=
                          ResourceRetriever.GetResourceString(
                             "ListSeparator") +
-                         Address[0].State;
+                         this.Address[0].State;
                 }
             }
-            else if (PrimaryEmail != null)
+            else if (this.PrimaryEmail != null)
             {
                 result =
                     string.Format(
                         ResourceRetriever.GetResourceString(
                             "ContactInfoFormatPrimary"),
-                        PrimaryEmail.Address);
+                        this.PrimaryEmail.Address);
             }
-            else if (Email.Count > 0)
+            else if (this.Email.Count > 0)
             {
-                result = Email[0].Address;
+                result = this.Email[0].Address;
             }
 
             return result;

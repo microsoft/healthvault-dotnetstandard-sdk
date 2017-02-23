@@ -6,7 +6,7 @@
 using System;
 using System.Xml.XPath;
 
-namespace Microsoft.HealthVault
+namespace Microsoft.HealthVault.PlatformInformation
 {
     /// <summary>
     /// Provides information about the HealthVault assemblies.
@@ -32,9 +32,9 @@ namespace Microsoft.HealthVault
             string version,
             Uri documentationUrl)
         {
-            _url = url;
-            _version = version;
-            _docUrl = documentationUrl;
+            this.Url = url;
+            this.Version = version;
+            this.DocumentationUrl = documentationUrl;
         }
 
         /// <summary>
@@ -50,11 +50,7 @@ namespace Microsoft.HealthVault
         /// HealthVault XML methods.
         /// </remarks>
         ///
-        public Uri Url
-        {
-            get { return _url; }
-        }
-        private Uri _url;
+        public Uri Url { get; }
 
         /// <summary>
         /// Gets the version of the HealthVault assembly.
@@ -64,11 +60,7 @@ namespace Microsoft.HealthVault
         /// A string representing the version.
         /// </value>
         ///
-        public string Version
-        {
-            get { return _version; }
-        }
-        private string _version;
+        public string Version { get; }
 
         /// <summary>
         /// Gets the URL of the documentation for the assembly.
@@ -77,10 +69,6 @@ namespace Microsoft.HealthVault
         /// An instance of Uri representing the documentation URL.
         /// </value>
         ///
-        public Uri DocumentationUrl
-        {
-            get { return _docUrl; }
-        }
-        private Uri _docUrl;
+        public Uri DocumentationUrl { get; }
     }
 }

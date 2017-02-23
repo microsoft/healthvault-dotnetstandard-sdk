@@ -56,7 +56,7 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <value>
         /// A GUID.
         /// </value>
-        public new static readonly Guid TypeId =
+        public static new readonly Guid TypeId =
             new Guid("10291BCD-6C33-4297-86DF-167FEDEFD6D8");
 
         /// <summary>

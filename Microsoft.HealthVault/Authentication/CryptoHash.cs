@@ -4,10 +4,10 @@
 // All other rights reserved.
 
 using System;
-using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 using System.Xml;
+using Microsoft.HealthVault.Helpers;
 
 namespace Microsoft.HealthVault.Authentication
 {
@@ -34,17 +34,20 @@ namespace Microsoft.HealthVault.Authentication
         ///
         protected internal string AlgorithmName
         {
-            get { return _algName; }
+            get { return this.algName; }
+
             set
             {
-                if (String.IsNullOrEmpty(value))
+                if (string.IsNullOrEmpty(value))
                 {
                     throw new ArgumentException("value");
                 }
-                _algName = value;
+
+                this.algName = value;
             }
         }
-        private string _algName;
+
+        private string algName;
 
         /// <summary>
         /// Gets or sets an instance of the specified hash algorithm.
@@ -56,17 +59,20 @@ namespace Microsoft.HealthVault.Authentication
         ///
         protected HashAlgorithm HashAlgorithm
         {
-            get { return _hashAlg; }
+            get { return this.hashAlg; }
+
             set
             {
                 if (value == null)
                 {
                     throw new ArgumentException("value");
                 }
-                _hashAlg = value;
+
+                this.hashAlg = value;
             }
         }
-        private HashAlgorithm _hashAlg;
+
+        private HashAlgorithm hashAlg;
 
         /// <summary>
         /// Gets or sets a flag indicating whether the hash is already finalized.
@@ -82,16 +88,10 @@ namespace Microsoft.HealthVault.Authentication
         ///
         protected bool IsFinalized { get; set; }
 
-
         /// <summary>
         /// Gets or sets the computed hash.
         /// </summary>
-        protected internal byte[] Hash
-        {
-            get { return _hash; }
-            set { _hash = value; }
-        }
-        private byte[] _hash;
+        protected internal byte[] Hash { get; set; }
 
         #endregion
 
@@ -132,8 +132,8 @@ namespace Microsoft.HealthVault.Authentication
         ///
         public CryptoHash(string algorithmName)
         {
-            AlgorithmName = algorithmName;
-            HashAlgorithm = ServiceLocator.Current.CryptoService.CreateHashAlgorithm(AlgorithmName);
+            this.AlgorithmName = algorithmName;
+            this.HashAlgorithm = ServiceLocator.Current.CryptoService.CreateHashAlgorithm(this.AlgorithmName);
         }
 
         #endregion
@@ -152,9 +152,9 @@ namespace Microsoft.HealthVault.Authentication
         ///
         internal virtual void Reset()
         {
-            IsFinalized = false;
+            this.IsFinalized = false;
 
-            HashAlgorithm.Initialize();
+            this.HashAlgorithm.Initialize();
         }
 
         /// <summary>
@@ -180,12 +180,12 @@ namespace Microsoft.HealthVault.Authentication
         ///
         internal virtual void ComputeHash(byte[] buffer, int index, int count)
         {
-            if (IsFinalized)
+            if (this.IsFinalized)
             {
                 throw Validator.InvalidOperationException("CryptoHashAlreadyFinalized");
             }
 
-            _hash = HashAlgorithm.ComputeHash(buffer, index, count);
+            this.Hash = this.HashAlgorithm.ComputeHash(buffer, index, count);
         }
 
         /// <summary>
@@ -202,7 +202,7 @@ namespace Microsoft.HealthVault.Authentication
         ///
         internal virtual void ComputeHash(byte[] buffer)
         {
-           ComputeHash(buffer, 0, buffer.Length);
+           this.ComputeHash(buffer, 0, buffer.Length);
         }
 
         /// <summary>
@@ -220,11 +220,12 @@ namespace Microsoft.HealthVault.Authentication
         ///
         internal void ComputeHash(string data)
         {
-            if (String.IsNullOrEmpty(data))
+            if (string.IsNullOrEmpty(data))
             {
                 throw new ArgumentException("data");
             }
-            ComputeHash(Encoding.UTF8.GetBytes(data));
+
+            this.ComputeHash(Encoding.UTF8.GetBytes(data));
         }
 
         /// <summary>
@@ -242,14 +243,14 @@ namespace Microsoft.HealthVault.Authentication
         ///
         public virtual CryptoHashFinalized Finalize()
         {
-            if (IsFinalized)
+            if (this.IsFinalized)
             {
                 throw Validator.InvalidOperationException("CryptoHashAlreadyFinalized");
             }
 
-            IsFinalized = true;
+            this.IsFinalized = true;
 
-            return new CryptoHashFinalized(AlgorithmName, _hash);
+            return new CryptoHashFinalized(this.AlgorithmName, this.Hash);
         }
 
         /// <summary>
@@ -274,7 +275,7 @@ namespace Microsoft.HealthVault.Authentication
         /// <see cref="WriteInfoXml"/>.
         /// </returns>
         ///
-        protected string StartElementName => DigestAlgorithmName + "-alg";
+        protected string StartElementName => this.DigestAlgorithmName + "-alg";
 
         /// <summary>
         /// Writes the XML to use when authenticating with the HealthVault
@@ -299,8 +300,9 @@ namespace Microsoft.HealthVault.Authentication
             {
                 throw new ArgumentNullException(nameof(writer));
             }
-            writer.WriteStartElement(StartElementName);
-            writer.WriteAttributeString("algName", AlgorithmName);
+
+            writer.WriteStartElement(this.StartElementName);
+            writer.WriteAttributeString("algName", this.AlgorithmName);
             writer.WriteEndElement();
         }
 
@@ -312,9 +314,10 @@ namespace Microsoft.HealthVault.Authentication
             using (XmlWriter writer =
                        XmlWriter.Create(infoXml, settings))
             {
-                WriteInfoXml(writer);
+                this.WriteInfoXml(writer);
                 writer.Flush();
             }
+
             return infoXml.ToString();
         }
 
@@ -337,10 +340,11 @@ namespace Microsoft.HealthVault.Authentication
         ///
         internal static string CreateInfoHash(string text)
         {
-            if (String.IsNullOrEmpty(text))
+            if (string.IsNullOrEmpty(text))
             {
                 throw new ArgumentException("text");
             }
+
             return CreateInfoHash(new UTF8Encoding().GetBytes(text));
         }
 
@@ -358,7 +362,7 @@ namespace Microsoft.HealthVault.Authentication
         /// A string representing the info hash.
         /// </returns>
         ///
-        internal static string CreateInfoHash(Byte[] buffer)
+        internal static string CreateInfoHash(byte[] buffer)
         {
             return CreateInfoHash(buffer, 0, buffer.Length);
         }
@@ -385,7 +389,7 @@ namespace Microsoft.HealthVault.Authentication
         /// A string representing the info hash.
         /// </returns>
         ///
-        internal static string CreateInfoHash(Byte[] buffer, int index, int count)
+        internal static string CreateInfoHash(byte[] buffer, int index, int count)
         {
             CryptoHash hash = new CryptoHash();
             hash.ComputeHash(buffer, index, count);

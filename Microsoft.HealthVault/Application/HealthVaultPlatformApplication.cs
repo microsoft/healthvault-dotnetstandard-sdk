@@ -11,9 +11,14 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.XPath;
+using Microsoft.HealthVault.Connection;
 using Microsoft.HealthVault.Exceptions;
+using Microsoft.HealthVault.Helpers;
+using Microsoft.HealthVault.Person;
+using Microsoft.HealthVault.Record;
+using Microsoft.HealthVault.Transport;
 
-namespace Microsoft.HealthVault.PlatformPrimitives
+namespace Microsoft.HealthVault.Application
 {
     /// <summary>
     /// Provides low-level access to the HealthVault message operations.
@@ -22,7 +27,6 @@ namespace Microsoft.HealthVault.PlatformPrimitives
     /// <see cref="HealthVaultPlatform"/> uses this class to perform operations. Set
     /// HealthVaultPlatformApplication.Current to a derived class to intercept all message calls.
     /// </remarks>
-
     public class HealthVaultPlatformApplication
     {
         /// <summary>
@@ -42,10 +46,10 @@ namespace Microsoft.HealthVault.PlatformPrimitives
         ///
         public static void EnableMock(HealthVaultPlatformApplication mock)
         {
-            Validator.ThrowInvalidIf(_saved != null, "ClassAlreadyMocked");
+            Validator.ThrowInvalidIf(saved != null, "ClassAlreadyMocked");
 
-            _saved = _current;
-            _current = mock;
+            saved = Current;
+            Current = mock;
         }
 
         /// <summary>
@@ -58,18 +62,15 @@ namespace Microsoft.HealthVault.PlatformPrimitives
         ///
         public static void DisableMock()
         {
-            Validator.ThrowInvalidIfNull(_saved, "ClassIsntMocked");
+            Validator.ThrowInvalidIfNull(saved, "ClassIsntMocked");
 
-            _current = _saved;
-            _saved = null;
+            Current = saved;
+            saved = null;
         }
 
-        internal static HealthVaultPlatformApplication Current
-        {
-            get { return _current; }
-        }
-        private static HealthVaultPlatformApplication _current = new HealthVaultPlatformApplication();
-        private static HealthVaultPlatformApplication _saved;
+        internal static HealthVaultPlatformApplication Current { get; private set; } = new HealthVaultPlatformApplication();
+
+        private static HealthVaultPlatformApplication saved;
 
         #region GetAuthorizedPeople
 
@@ -153,7 +154,7 @@ namespace Microsoft.HealthVault.PlatformPrimitives
             ApplicationConnection connection,
             Guid personIdCursor,
             DateTime authCreatedSinceDate,
-            Int32 numResults)
+            int numResults)
         {
             Validator.ThrowArgumentOutOfRangeIf(
                 numResults < 0,
@@ -191,6 +192,7 @@ namespace Microsoft.HealthVault.PlatformPrimitives
                 writer.WriteEndElement(); // parameters
                 writer.Flush();
             }
+
             request.Parameters = requestParameters.ToString();
 
             HealthServiceResponseData responseData = await request.ExecuteAsync().ConfigureAwait(false);
@@ -209,7 +211,8 @@ namespace Microsoft.HealthVault.PlatformPrimitives
                 {
                     PersonInfo personInfo = PersonInfo.CreateFromXml(connection, nav);
                     personInfos.Add(personInfo);
-                } while (nav.MoveToNext("person-info", String.Empty));
+                }
+                while (nav.MoveToNext("person-info", string.Empty));
 
                 nav.MoveToNext();
             }
@@ -261,7 +264,7 @@ namespace Microsoft.HealthVault.PlatformPrimitives
         ///
         public virtual async Task<ApplicationInfo> GetApplicationInfoAsync(
             HealthServiceConnection connection,
-            Boolean allLanguages)
+            bool allLanguages)
         {
             HealthServiceRequest request =
                 new HealthServiceRequest(connection, "GetApplicationInfo", 2);

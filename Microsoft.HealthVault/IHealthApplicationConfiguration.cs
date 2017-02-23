@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Security.Cryptography.X509Certificates;
 using System.Threading;
 using Microsoft.HealthVault.Exceptions;
+using Microsoft.HealthVault.PlatformInformation;
+using Microsoft.HealthVault.Thing;
 
 namespace Microsoft.HealthVault
 {
@@ -51,8 +53,8 @@ namespace Microsoft.HealthVault
         /// This value is used to set the <see cref="Timeout"/> property 
         /// when making the request to HealthVault. The timeout is the number of seconds that a 
         /// request will wait for a response from HealtVault. If the method response is not
-        /// returned within the time-out period the request will throw a <see cref="System.Net.WebException"/>
-        /// with the <see cref="System.Net.WebException.Status">Status</see> property set to
+        /// returned within the time-out period the request will throw a <see cref="HealthHttpException"/>
+        /// with the <see cref="HealthHttpException.StatusCode">Status</see> property set to
         /// <see cref="Timeout"/>.
         /// This property corresponds to the "defaultRequestTimeout" configuration
         /// value. The value defaults to 30 seconds.
@@ -114,7 +116,7 @@ namespace Microsoft.HealthVault
         ///
         /// <remarks>
         /// Although most applications don't need this configuration setting, if an application
-        /// calls <see cref="HealthRecordAccessor.GetItemAsync"/> or makes any query to HealthVault
+        /// calls <see cref="HealthRecordAccessor.GetItemAsync(Guid,HealthRecordItemSections)"/> or makes any query to HealthVault
         /// that doesn't specify the type identifier in the filter, this configuration setting
         /// will tell HealthVault the format of the type to reply with. For example, if a web
         /// application has two servers and makes a call to GetItemAsync for EncounterV1 and the

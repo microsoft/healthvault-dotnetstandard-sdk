@@ -1,10 +1,11 @@
-{
+﻿{
   "supports": {},
   "dependencies": {
-    "System.Collections.Specialized": "4.3.0",
-    "System.Xml.XPath": "4.3.0",
+    "Microsoft.NETCore.Portable.Compatibility": "1.0.1",
     "NETStandard.Library": "1.6.0",
-    "Microsoft.NETCore.Portable.Compatibility": "1.0.1"
+    "StyleCop.Analyzers": "1.0.0",
+    "System.Collections.Specialized": "4.3.0",
+    "System.Xml.XPath": "4.3.0"
   },
   "frameworks": {
     "netstandard1.4": {}

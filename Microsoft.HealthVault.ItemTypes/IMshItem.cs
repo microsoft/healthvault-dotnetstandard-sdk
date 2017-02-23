@@ -4,6 +4,7 @@
 // All other rights reserved.
 
 using System;
+using Microsoft.HealthVault.Thing;
 
 namespace Microsoft.HealthVault.ItemTypes
 {

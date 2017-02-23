@@ -2,11 +2,12 @@
 // This content is subject to the Microsoft Reference Source License,
 // see http://www.microsoft.com/resources/sharedsource/licensingbasics/sharedsourcelicenses.mspx.
 // All other rights reserved.
+
 using System;
 using System.Xml;
 using System.Xml.XPath;
 
-namespace Microsoft.HealthVault
+namespace Microsoft.HealthVault.Application
 {
     /// <summary>
     /// A location defined by country and state/province ISO 3166 codes.
@@ -34,8 +35,8 @@ namespace Microsoft.HealthVault
         ///
         public Location(string country, string stateProvince)
         {
-            Country = country;
-            StateProvince = stateProvince;
+            this.Country = country;
+            this.StateProvince = stateProvince;
         }
 
         /// <summary>
@@ -50,19 +51,21 @@ namespace Microsoft.HealthVault
         {
             get
             {
-                return _country;
+                return this.country;
             }
+
             set
             {
-                if (String.IsNullOrWhiteSpace(value))
+                if (string.IsNullOrWhiteSpace(value))
                 {
-                    throw new ArgumentException("Country value cannot be null or white spaces only.", "value");
+                    throw new ArgumentException("Country value cannot be null or white spaces only.", nameof(value));
                 }
 
-                _country = value;
+                this.country = value;
             }
         }
-        private string _country;
+
+        private string country;
 
         /// <summary>
         /// Gets or sets the state/province code.
@@ -88,13 +91,13 @@ namespace Microsoft.HealthVault
             XPathNavigator countryNav = location.SelectSingleNode("country");
             if (countryNav != null)
             {
-                Country = countryNav.Value;
+                this.Country = countryNav.Value;
             }
 
             XPathNavigator stateNav = location.SelectSingleNode("state-province");
             if (stateNav != null)
             {
-                StateProvince = stateNav.Value;
+                this.StateProvince = stateNav.Value;
             }
         }
 
@@ -112,15 +115,15 @@ namespace Microsoft.HealthVault
         ///
         public void WriteXml(XmlWriter writer, string elementName)
         {
-            if (!String.IsNullOrEmpty(Country))
+            if (!string.IsNullOrEmpty(this.Country))
             {
                 writer.WriteStartElement(elementName);
 
-                writer.WriteElementString("country", Country);
+                writer.WriteElementString("country", this.Country);
 
-                if (!String.IsNullOrEmpty(StateProvince))
+                if (!string.IsNullOrEmpty(this.StateProvince))
                 {
-                    writer.WriteElementString("state-province", StateProvince);
+                    writer.WriteElementString("state-province", this.StateProvince);
                 }
 
                 writer.WriteEndElement();
@@ -137,17 +140,17 @@ namespace Microsoft.HealthVault
         ///
         public override string ToString()
         {
-            string result = String.Empty;
+            string result = string.Empty;
 
-            if (!String.IsNullOrEmpty(Country))
+            if (!string.IsNullOrEmpty(this.Country))
             {
-                if (!String.IsNullOrEmpty(StateProvince))
+                if (!string.IsNullOrEmpty(this.StateProvince))
                 {
-                    result = Country + "-" + StateProvince;
+                    result = this.Country + "-" + this.StateProvince;
                 }
                 else
                 {
-                    result = Country;
+                    result = this.Country;
                 }
             }
 

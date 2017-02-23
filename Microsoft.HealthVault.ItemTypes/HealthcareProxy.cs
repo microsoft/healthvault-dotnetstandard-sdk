@@ -7,6 +7,8 @@ using System;
 using System.Text;
 using System.Xml;
 using System.Xml.XPath;
+using Microsoft.HealthVault.Helpers;
+using Microsoft.HealthVault.Thing;
 
 namespace Microsoft.HealthVault.ItemTypes
 {
@@ -59,7 +61,7 @@ namespace Microsoft.HealthVault.ItemTypes
         /// A GUID.
         /// </value>
         ///
-        public new static readonly Guid TypeId =
+        public static new readonly Guid TypeId =
             new Guid("7EA47715-CBA4-47F0-99D2-EB0A9FB4A85C");
 
         /// <summary>
@@ -82,35 +84,35 @@ namespace Microsoft.HealthVault.ItemTypes
 
             Validator.ThrowInvalidIfNull(itemNav, "HealthcareProxyUnexpectedNode");
 
-            _when = new HealthServiceDateTime();
-            _when.ParseXml(itemNav.SelectSingleNode("when"));
+            this.when = new HealthServiceDateTime();
+            this.when.ParseXml(itemNav.SelectSingleNode("when"));
 
             // <proxy>
-            _proxy =
+            this.proxy =
                 XPathHelper.GetOptNavValue<PersonItem>(
                     itemNav,
                     "proxy");
 
             // <alternate>
-            _alternate =
+            this.alternate =
                 XPathHelper.GetOptNavValue<PersonItem>(
                     itemNav,
                     "alternate");
 
             // <primary-witness>
-            _primaryWitness =
+            this.primaryWitness =
                 XPathHelper.GetOptNavValue<PersonItem>(
                     itemNav,
                     "primary-witness");
 
             // <secondary-witness>
-            _secondaryWitness =
+            this.secondaryWitness =
                 XPathHelper.GetOptNavValue<PersonItem>(
                     itemNav,
                     "secondary-witness");
 
             // <content>
-            _content =
+            this.content =
                 XPathHelper.GetOptNavValue(itemNav, "content");
         }
 
@@ -133,43 +135,43 @@ namespace Microsoft.HealthVault.ItemTypes
         public override void WriteXml(XmlWriter writer)
         {
             Validator.ThrowIfWriterNull(writer);
-            Validator.ThrowSerializationIfNull(_when, "HealthcareProxyWhenNotSet");
+            Validator.ThrowSerializationIfNull(this.when, "HealthcareProxyWhenNotSet");
 
             // <healthcare-proxy>
             writer.WriteStartElement("healthcare-proxy");
 
             // <when>
-            _when.WriteXml("when", writer);
+            this.when.WriteXml("when", writer);
 
             // <proxy>
             XmlWriterHelper.WriteOpt(
                 writer,
                 "proxy",
-                _proxy);
+                this.proxy);
 
             // <alternate>
             XmlWriterHelper.WriteOpt(
                 writer,
                 "alternate",
-                _alternate);
+                this.alternate);
 
             // <primary-witness>
             XmlWriterHelper.WriteOpt(
                 writer,
                 "primary-witness",
-                _primaryWitness);
+                this.primaryWitness);
 
             // <secondary-witness>
             XmlWriterHelper.WriteOpt(
                 writer,
                 "secondary-witness",
-                _secondaryWitness);
+                this.secondaryWitness);
 
             // <content>
             XmlWriterHelper.WriteOptString(
                 writer,
                 "content",
-                _content);
+                this.content);
 
             // </healthcare-proxy>
             writer.WriteEndElement();
@@ -190,14 +192,16 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public HealthServiceDateTime When
         {
-            get { return _when; }
+            get { return this.when; }
+
             set
             {
                 Validator.ThrowIfArgumentNull(value, "When", "WhenNullValue");
-                _when = value;
+                this.when = value;
             }
         }
-        private HealthServiceDateTime _when = new HealthServiceDateTime();
+
+        private HealthServiceDateTime when = new HealthServiceDateTime();
 
         /// <summary>
         /// Gets or sets the proxy contact information.
@@ -214,10 +218,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public PersonItem Proxy
         {
-            get { return _proxy; }
-            set { _proxy = value; }
+            get { return this.proxy; }
+            set { this.proxy = value; }
         }
-        private PersonItem _proxy;
+
+        private PersonItem proxy;
 
         /// <summary>
         /// Gets or sets the alternate contact information.
@@ -234,10 +239,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public PersonItem Alternate
         {
-            get { return _alternate; }
-            set { _alternate = value; }
+            get { return this.alternate; }
+            set { this.alternate = value; }
         }
-        private PersonItem _alternate;
+
+        private PersonItem alternate;
 
         /// <summary>
         /// Gets or sets the primary witness contact information.
@@ -254,10 +260,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public PersonItem PrimaryWitness
         {
-            get { return _primaryWitness; }
-            set { _primaryWitness = value; }
+            get { return this.primaryWitness; }
+            set { this.primaryWitness = value; }
         }
-        private PersonItem _primaryWitness;
+
+        private PersonItem primaryWitness;
 
         /// <summary>
         /// Gets or sets the secondary witness contact information.
@@ -274,10 +281,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public PersonItem SecondaryWitness
         {
-            get { return _secondaryWitness; }
-            set { _secondaryWitness = value; }
+            get { return this.secondaryWitness; }
+            set { this.secondaryWitness = value; }
         }
-        private PersonItem _secondaryWitness;
+
+        private PersonItem secondaryWitness;
 
         /// <summary>
         /// Gets or sets the content of what is being proxied.
@@ -298,14 +306,16 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public string Content
         {
-            get { return _content; }
+            get { return this.content; }
+
             set
             {
                 Validator.ThrowIfStringIsWhitespace(value, "Content");
-                _content = value;
+                this.content = value;
             }
         }
-        private string _content;
+
+        private string content;
 
         /// <summary>
         /// Gets a string representation of the healthcare proxy item.
@@ -319,22 +329,22 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             StringBuilder result = new StringBuilder(200);
 
-            result.Append(When);
+            result.Append(this.When);
 
-            if (Proxy != null)
+            if (this.Proxy != null)
             {
                 result.AppendFormat(
                     ResourceRetriever.GetResourceString(
                         "ListFormat"),
-                    Proxy.ToString());
+                    this.Proxy.ToString());
             }
 
-            if (Content != null)
+            if (this.Content != null)
             {
                 result.AppendFormat(
                     ResourceRetriever.GetResourceString(
                         "ListFormat"),
-                    Content);
+                    this.Content);
             }
 
             return result.ToString();

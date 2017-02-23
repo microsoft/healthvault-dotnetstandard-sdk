@@ -7,6 +7,7 @@ using System;
 using System.Globalization;
 using System.Xml;
 using System.Xml.XPath;
+using Microsoft.HealthVault.Helpers;
 
 namespace Microsoft.HealthVault.ItemTypes
 {
@@ -84,19 +85,19 @@ namespace Microsoft.HealthVault.ItemTypes
             XPathNavigator yearNav = navigator.SelectSingleNode("y");
             if (yearNav != null)
             {
-                _year = yearNav.ValueAsInt;
+                this.year = yearNav.ValueAsInt;
             }
 
             XPathNavigator monthNav = navigator.SelectSingleNode("m");
             if (monthNav != null)
             {
-                _month = monthNav.ValueAsInt;
+                this.month = monthNav.ValueAsInt;
             }
 
             XPathNavigator dayNav = navigator.SelectSingleNode("d");
             if (dayNav != null)
             {
-                _day = dayNav.ValueAsInt;
+                this.day = dayNav.ValueAsInt;
             }
         }
 
@@ -129,15 +130,15 @@ namespace Microsoft.HealthVault.ItemTypes
 
             writer.WriteElementString(
                 "y",
-                _year.ToString(CultureInfo.InvariantCulture));
+                this.year.ToString(CultureInfo.InvariantCulture));
 
             writer.WriteElementString(
                 "m",
-                _month.ToString(CultureInfo.InvariantCulture));
+                this.month.ToString(CultureInfo.InvariantCulture));
 
             writer.WriteElementString(
                 "d",
-                _day.ToString(CultureInfo.InvariantCulture));
+                this.day.ToString(CultureInfo.InvariantCulture));
 
             writer.WriteEndElement();
         }
@@ -160,17 +161,19 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public int Year
         {
-            get { return _year; }
+            get { return this.year; }
+
             set
             {
                 Validator.ThrowArgumentOutOfRangeIf(
                     value < 1000 || value > 9999,
                     "Year",
                     "DateYearOutOfRange");
-                _year = value;
+                this.year = value;
             }
         }
-        private int _year = DateTime.Now.Year;
+
+        private int year = DateTime.Now.Year;
 
         /// <summary>
         /// Gets or sets the month of the date.
@@ -190,17 +193,19 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public int Month
         {
-            get { return _month; }
+            get { return this.month; }
+
             set
             {
                 Validator.ThrowArgumentOutOfRangeIf(
                     value < 1 || value > 12,
                     "Month",
                     "DateMonthOutOfRange");
-                _month = value;
+                this.month = value;
             }
         }
-        private int _month = DateTime.Now.Month;
+
+        private int month = DateTime.Now.Month;
 
         /// <summary>
         /// Gets or sets the day of the date.
@@ -220,17 +225,19 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public int Day
         {
-            get { return _day; }
+            get { return this.day; }
+
             set
             {
                 Validator.ThrowArgumentOutOfRangeIf(
                     value < 1 || value > 31,
                     "Day",
                     "DateDayOutOfRange");
-                _day = value;
+                this.day = value;
             }
         }
-        private int _day = DateTime.Now.Day;
+
+        private int day = DateTime.Now.Day;
 
         #region IComparable
 
@@ -258,34 +265,26 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public int CompareTo(object obj)
         {
-            int result = 0;
-
-            do // false loop
+            if (obj == null)
             {
-                if (obj == null)
-                {
-                    result = 1;
-                    break;
-                }
+                return 1;
+            }
 
-                HealthServiceDate hsDate = obj as HealthServiceDate;
-                if (hsDate == null)
+            HealthServiceDate hsDate = obj as HealthServiceDate;
+            if (hsDate == null)
+            {
+                try
                 {
-                    try
-                    {
-                        DateTime dt = (DateTime)obj;
-                        result = CompareTo(dt);
-                        break;
-                    }
-                    catch (InvalidCastException)
-                    {
-                        throw Validator.ArgumentException("secondInstance", "DateCompareToInvalidType");
-                    }
+                    DateTime dt = (DateTime)obj;
+                    return this.CompareTo(dt);
                 }
+                catch (InvalidCastException)
+                {
+                    throw Validator.ArgumentException("secondInstance", "DateCompareToInvalidType");
+                }
+            }
 
-                result = CompareTo(hsDate);
-            } while (false);
-            return result;
+            return this.CompareTo(hsDate);
         }
 
         /// <summary>
@@ -307,53 +306,42 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public int CompareTo(HealthServiceDate other)
         {
-            int result = 0;
-
-            do // false loop
+            if (other == null)
             {
-                if (other == null)
-                {
-                    result = 1;
-                    break;
-                }
+                return 1;
+            }
 
-                if (this.Year > other.Year)
-                {
-                    result = 1;
-                    break;
-                }
+            if (this.Year > other.Year)
+            {
+                return 1;
+            }
 
-                if (this.Year < other.Year)
-                {
-                    result = -1;
-                    break;
-                }
+            if (this.Year < other.Year)
+            {
+                return -1;
+            }
 
-                if (this.Month > other.Month)
-                {
-                    result = 1;
-                    break;
-                }
+            if (this.Month > other.Month)
+            {
+                return 1;
+            }
 
-                if (this.Month < other.Month)
-                {
-                    result = -1;
-                    break;
-                }
+            if (this.Month < other.Month)
+            {
+                return -1;
+            }
 
-                if (this.Day > other.Day)
-                {
-                    result = 1;
-                    break;
-                }
+            if (this.Day > other.Day)
+            {
+                return 1;
+            }
 
-                if (this.Day < other.Day)
-                {
-                    result = -1;
-                    break;
-                }
-            } while (false);
-            return result;
+            if (this.Day < other.Day)
+            {
+                return -1;
+            }
+
+            return 0;
         }
 
         /// <summary>
@@ -375,47 +363,37 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public int CompareTo(DateTime other)
         {
-            int result = 0;
-
-            do // false loop
+            if (this.Year > other.Year)
             {
-                if (this.Year > other.Year)
-                {
-                    result = 1;
-                    break;
-                }
+                return 1;
+            }
 
-                if (this.Year < other.Year)
-                {
-                    result = -1;
-                    break;
-                }
+            if (this.Year < other.Year)
+            {
+                return -1;
+            }
 
-                if (this.Month > other.Month)
-                {
-                    result = 1;
-                    break;
-                }
+            if (this.Month > other.Month)
+            {
+                return 1;
+            }
 
-                if (this.Month < other.Month)
-                {
-                    result = -1;
-                    break;
-                }
+            if (this.Month < other.Month)
+            {
+                return -1;
+            }
 
-                if (this.Day > other.Day)
-                {
-                    result = 1;
-                    break;
-                }
+            if (this.Day > other.Day)
+            {
+                return 1;
+            }
 
-                if (this.Day < other.Day)
-                {
-                    result = -1;
-                    break;
-                }
-            } while (false);
-            return result;
+            if (this.Day < other.Day)
+            {
+                return -1;
+            }
+
+            return 0;
         }
 
         #endregion IComparable
@@ -477,24 +455,12 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public static bool operator ==(HealthServiceDate date, object secondInstance)
         {
-            bool result = true;
-
-            do // false loop
+            if ((object)date == null)
             {
-                if ((object)date == null)
-                {
-                    if (secondInstance == null)
-                    {
-                        break;
-                    }
-                    result = false;
-                    break;
-                }
+                return secondInstance == null;
+            }
 
-                result = date.Equals(secondInstance);
-            } while (false);
-
-            return result;
+            return date.Equals(secondInstance);
         }
 
         /// <summary>
@@ -522,24 +488,12 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public static bool operator !=(HealthServiceDate date, object secondInstance)
         {
-            bool result = false;
-
-            do // false loop
+            if (date == null)
             {
-                if (date == null)
-                {
-                    if (secondInstance == null)
-                    {
-                        break;
-                    }
-                    result = true;
-                    break;
-                }
+                return secondInstance != null;
+            }
 
-                result = !date.Equals(secondInstance);
-            } while (false);
-
-            return result;
+            return !date.Equals(secondInstance);
         }
 
         /// <summary>
@@ -567,24 +521,12 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public static bool operator >(HealthServiceDate date, object secondInstance)
         {
-            bool result = false;
-
-            do // false loop
+            if (date == null)
             {
-                if (date == null)
-                {
-                    if (secondInstance == null)
-                    {
-                        break;
-                    }
-                    result = true;
-                    break;
-                }
+                return secondInstance != null;
+            }
 
-                result = date.CompareTo(secondInstance) > 0;
-            } while (false);
-
-            return result;
+            return date.CompareTo(secondInstance) > 0;
         }
 
         /// <summary>
@@ -612,31 +554,19 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public static bool operator <(HealthServiceDate date, object secondInstance)
         {
-            bool result = false;
-
-            do // false loop
+            if (date == null)
             {
-                if (date == null)
-                {
-                    if (secondInstance == null)
-                    {
-                        break;
-                    }
-                    result = true;
-                    break;
-                }
+                return secondInstance != null;
+            }
 
-                result = date.CompareTo(secondInstance) < 0;
-            } while (false);
-
-            return result;
+            return date.CompareTo(secondInstance) < 0;
         }
 
         #endregion Operators
 
         internal string ToString(IFormatProvider formatProvider)
         {
-            DateTime dt = new DateTime(Year, Month, Day);
+            DateTime dt = new DateTime(this.Year, this.Month, this.Day);
 
             return dt.ToString("d", formatProvider);
         }

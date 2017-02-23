@@ -3,6 +3,8 @@
 // see http://www.microsoft.com/resources/sharedsource/licensingbasics/sharedsourcelicenses.mspx.
 // All other rights reserved.
 
+using Microsoft.HealthVault.Helpers;
+
 namespace Microsoft.HealthVault.ItemTypes
 {
     /// <summary>
@@ -17,11 +19,11 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <param name="value">The data value of this sample.</param>
         public ExerciseSampleOneValue(double offsetInSeconds, double value)
         {
-            OffsetInSeconds = offsetInSeconds;
-            Value = value;
+            this.OffsetInSeconds = offsetInSeconds;
+            this.Value = value;
         }
 
-        private double _offsetInSeconds;
+        private double offsetInSeconds;
 
         /// <summary>
         /// Gets or sets the offset in seconds of this data sample from the beginning of the sample set.
@@ -36,26 +38,27 @@ namespace Microsoft.HealthVault.ItemTypes
         /// </exception>
         public double OffsetInSeconds
         {
-            get { return _offsetInSeconds; }
+            get { return this.offsetInSeconds; }
+
             set
             {
                 Validator.ThrowArgumentOutOfRangeIf(
                     value < 0,
                     "OffsetInSeconds",
                     "OffsetMustBePositive");
-                _offsetInSeconds = value;
+                this.offsetInSeconds = value;
             }
         }
 
-        private double _value;
+        private double value;
 
         /// <summary>
         /// Gets or sets the data value stored in the sample.
         /// </summary>
         public double Value
         {
-            get { return _value; }
-            set { _value = value; }
+            get { return this.value; }
+            set { this.value = value; }
         }
 
         /// <summary>
@@ -67,8 +70,8 @@ namespace Microsoft.HealthVault.ItemTypes
                 string.Format(
                     ResourceRetriever.GetResourceString(
                         "ExerciseSampleOneValueToStringFormat"),
-                    OffsetInSeconds.ToString(),
-                    Value.ToString());
+                    this.OffsetInSeconds.ToString(),
+                    this.Value.ToString());
         }
     }
 }

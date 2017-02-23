@@ -9,6 +9,9 @@ using System.Security.Cryptography.X509Certificates;
 using System.Threading;
 using Microsoft.HealthVault.Authentication;
 using Microsoft.HealthVault.Exceptions;
+using Microsoft.HealthVault.ItemTypes;
+using Microsoft.HealthVault.PlatformInformation;
+using Microsoft.HealthVault.Thing;
 
 namespace Microsoft.HealthVault
 {
@@ -19,31 +22,31 @@ namespace Microsoft.HealthVault
     ///
     public class HealthApplicationConfiguration : IHealthApplicationConfiguration
     {
-        private static readonly object instanceLock = new object();
+        private static readonly object InstanceLock = new object();
 
         /// <summary>
-        /// Gets or sets the current configuration object for the app-domain.
+        /// Gets the current configuration object for the app-domain.
         /// </summary>
         public static HealthApplicationConfiguration Current
         {
             get
             {
-                lock (instanceLock)
+                lock (InstanceLock)
                 {
-                    return _current ?? (_current = new HealthApplicationConfiguration());
+                    return current ?? (current = new HealthApplicationConfiguration());
                 }
             }
 
             internal set
             {
-                lock (instanceLock)
+                lock (InstanceLock)
                 {
-                    _current = value;
+                    current = value;
                 }
             }
         }
 
-        private static HealthApplicationConfiguration _current;
+        private static HealthApplicationConfiguration current;
 
         /// <summary>
         /// True if the app has been initialized.
@@ -65,16 +68,17 @@ namespace Microsoft.HealthVault
         {
             get
             {
-                return _healthVaultRootUrl;
+                return this.healthVaultRootUrl;
             }
 
             set
             {
                 this.EnsureAppNotInitialized();
-                _healthVaultRootUrl = EnsureTrailingSlash(value);
+                this.healthVaultRootUrl = EnsureTrailingSlash(value);
             }
         }
-        private volatile Uri _healthVaultRootUrl;
+
+        private volatile Uri healthVaultRootUrl;
 
         /// <summary>
         /// Gets the HealthVault Shell URL for
@@ -90,16 +94,17 @@ namespace Microsoft.HealthVault
         {
             get
             {
-                return _shellUrl;
+                return this.shellUrl;
             }
 
             set
             {
                 this.EnsureAppNotInitialized();
-                _shellUrl = EnsureTrailingSlash(value);
+                this.shellUrl = EnsureTrailingSlash(value);
             }
         }
-        private volatile Uri _shellUrl;
+
+        private volatile Uri shellUrl;
 
         /// <summary>
         /// Gets the application's unique identifier.
@@ -114,16 +119,17 @@ namespace Microsoft.HealthVault
         {
             get
             {
-                return _appId;
+                return this.appId;
             }
 
             set
             {
                 this.EnsureAppNotInitialized();
-                _appId = value;
+                this.appId = value;
             }
         }
-        private Guid _appId;
+
+        private Guid appId;
 
         /// <summary>
         /// Gets or sets the crypto configuration.
@@ -138,17 +144,17 @@ namespace Microsoft.HealthVault
         {
             get
             {
-                return _cryptoConfiguration ?? (_cryptoConfiguration = new CryptoConfiguration());
+                return this.cryptoConfiguration ?? (this.cryptoConfiguration = new CryptoConfiguration());
             }
 
             set
             {
                 this.EnsureAppNotInitialized();
-                _cryptoConfiguration = value;
+                this.cryptoConfiguration = value;
             }
         }
 
-        private ICryptoConfiguration _cryptoConfiguration;
+        private ICryptoConfiguration cryptoConfiguration;
         
         /// <summary>
         /// Gets or sets the application certificate password.
@@ -227,8 +233,8 @@ namespace Microsoft.HealthVault
         /// This value is used to set the <see cref="Timeout"/> property 
         /// when making the request to HealthVault. The timeout is the number of seconds that a 
         /// request will wait for a response from HealtVault. If the method response is not
-        /// returned within the time-out period the request will throw a <see cref="System.Net.WebException"/>
-        /// with the <see cref="System.Net.WebException.Status">Status</see> property set to
+        /// returned within the time-out period the request will throw a <see cref="HealthHttpException"/>
+        /// with the <see cref="HealthHttpException.StatusCode">Status</see> property set to
         /// <see cref="Timeout"/>.
         /// This property corresponds to the "defaultRequestTimeout" configuration
         /// value. The value defaults to 30 seconds.
@@ -238,13 +244,13 @@ namespace Microsoft.HealthVault
         {
             get
             {
-                if (!_configurationRequestTimeoutInitialized)
+                if (!this.configurationRequestTimeoutInitialized)
                 {
-                    _configuredRequestTimeout = DefaultDefaultRequestTimeout;
-                    _configurationRequestTimeoutInitialized = true;
+                    this.configuredRequestTimeout = DefaultDefaultRequestTimeout;
+                    this.configurationRequestTimeoutInitialized = true;
                 }
 
-                return _configuredRequestTimeout;
+                return this.configuredRequestTimeout;
             }
 
             set
@@ -259,12 +265,14 @@ namespace Microsoft.HealthVault
                     tempRequestTimeout = DefaultDefaultRequestTimeout;
                 }
 
-                _configuredRequestTimeout = tempRequestTimeout;
-                _configurationRequestTimeoutInitialized = true;
+                this.configuredRequestTimeout = tempRequestTimeout;
+                this.configurationRequestTimeoutInitialized = true;
             }
         }
-        private volatile int _configuredRequestTimeout;
-        private volatile bool _configurationRequestTimeoutInitialized;
+
+        private volatile int configuredRequestTimeout;
+        private volatile bool configurationRequestTimeoutInitialized;
+
         /// <summary>
         /// The default request time out value.
         /// </summary>
@@ -285,13 +293,13 @@ namespace Microsoft.HealthVault
         {
             get
             {
-                if (!_configuredRequestTimeToLiveInitialized)
+                if (!this.configuredRequestTimeToLiveInitialized)
                 {
-                    _configuredRequestTimeToLive = DefaultDefaultRequestTimeToLive;
-                    _configuredRequestTimeToLiveInitialized = true;
+                    this.configuredRequestTimeToLive = DefaultDefaultRequestTimeToLive;
+                    this.configuredRequestTimeToLiveInitialized = true;
                 }
 
-                return _configuredRequestTimeToLive;
+                return this.configuredRequestTimeToLive;
             }
 
             set
@@ -305,12 +313,14 @@ namespace Microsoft.HealthVault
                     tempRequestTimeToLive = DefaultDefaultRequestTimeToLive;
                 }
 
-                _configuredRequestTimeToLive = tempRequestTimeToLive;
-                _configuredRequestTimeToLiveInitialized = true;
+                this.configuredRequestTimeToLive = tempRequestTimeToLive;
+                this.configuredRequestTimeToLiveInitialized = true;
             }
         }
-        private volatile int _configuredRequestTimeToLive;
-        private volatile bool _configuredRequestTimeToLiveInitialized;
+
+        private volatile int configuredRequestTimeToLive;
+        private volatile bool configuredRequestTimeToLiveInitialized;
+
         /// <summary>
         /// The default request time to live value.
         /// </summary>
@@ -330,25 +340,27 @@ namespace Microsoft.HealthVault
         {
             get
             {
-                if (!_retryOnInternal500CountInitialized)
+                if (!this.retryOnInternal500CountInitialized)
                 {
-                    _retryOnInternal500Count = DefaultRetryOnInternal500Count;
-                    _retryOnInternal500CountInitialized = true;
+                    this.retryOnInternal500Count = DefaultRetryOnInternal500Count;
+                    this.retryOnInternal500CountInitialized = true;
                 }
 
-                return _retryOnInternal500Count;
+                return this.retryOnInternal500Count;
             }
 
             set
             {
                 this.EnsureAppNotInitialized();
 
-                _retryOnInternal500Count = value;
-                _retryOnInternal500CountInitialized = true;
+                this.retryOnInternal500Count = value;
+                this.retryOnInternal500CountInitialized = true;
             }
         }
-        private volatile int _retryOnInternal500Count;
-        private volatile bool _retryOnInternal500CountInitialized;
+
+        private volatile int retryOnInternal500Count;
+        private volatile bool retryOnInternal500CountInitialized;
+
         /// <summary>
         /// The default number of internal retries.
         /// </summary>
@@ -368,25 +380,26 @@ namespace Microsoft.HealthVault
         {
             get
             {
-                if (!_retryOnInternal500SleepSecondsInitialized)
+                if (!this.retryOnInternal500SleepSecondsInitialized)
                 {
-                    _retryOnInternal500SleepSeconds = DefaultRetryOnInternal500SleepSeconds;
-                    _retryOnInternal500SleepSecondsInitialized = true;
+                    this.retryOnInternal500SleepSeconds = DefaultRetryOnInternal500SleepSeconds;
+                    this.retryOnInternal500SleepSecondsInitialized = true;
                 }
 
-                return _retryOnInternal500SleepSeconds;
+                return this.retryOnInternal500SleepSeconds;
             }
 
             set
             {
                 this.EnsureAppNotInitialized();
 
-                _retryOnInternal500SleepSeconds = value;
-                _retryOnInternal500SleepSecondsInitialized = true;
+                this.retryOnInternal500SleepSeconds = value;
+                this.retryOnInternal500SleepSecondsInitialized = true;
             }
         }
-        private volatile int _retryOnInternal500SleepSeconds;
-        private volatile bool _retryOnInternal500SleepSecondsInitialized;
+
+        private volatile int retryOnInternal500SleepSeconds;
+        private volatile bool retryOnInternal500SleepSecondsInitialized;
 
         /// <summary>
         /// Default sleep duration in seconds.
@@ -408,13 +421,13 @@ namespace Microsoft.HealthVault
         {
             get
             {
-                if (!_configuredInlineBlobHashBlockSizeInitilialized)
+                if (!this.configuredInlineBlobHashBlockSizeInitilialized)
                 {
-                    _configuredInlineBlobHashBlockSize = BlobHasher.DefaultInlineBlobHashBlockSizeBytes;
-                    _configuredInlineBlobHashBlockSizeInitilialized = true;
+                    this.configuredInlineBlobHashBlockSize = BlobHasher.DefaultInlineBlobHashBlockSizeBytes;
+                    this.configuredInlineBlobHashBlockSizeInitilialized = true;
                 }
 
-                return _configuredInlineBlobHashBlockSize;
+                return this.configuredInlineBlobHashBlockSize;
             }
 
             set
@@ -428,12 +441,13 @@ namespace Microsoft.HealthVault
                     tempBlobHashSize = BlobHasher.DefaultInlineBlobHashBlockSizeBytes;
                 }
 
-                _configuredInlineBlobHashBlockSize = tempBlobHashSize;
-                _configuredInlineBlobHashBlockSizeInitilialized = true;
+                this.configuredInlineBlobHashBlockSize = tempBlobHashSize;
+                this.configuredInlineBlobHashBlockSizeInitilialized = true;
             }
         }
-        private volatile int _configuredInlineBlobHashBlockSize;
-        private volatile bool _configuredInlineBlobHashBlockSizeInitilialized;
+
+        private volatile int configuredInlineBlobHashBlockSize;
+        private volatile bool configuredInlineBlobHashBlockSizeInitilialized;
 
         /// <summary>
         /// Gets the type version identifiers of types supported by this application.
@@ -441,7 +455,7 @@ namespace Microsoft.HealthVault
         ///
         /// <remarks>
         /// Although most applications don't need this configuration setting, if an application
-        /// calls <see cref="HealthRecordAccessor.GetItemAsync"/> or makes any query to HealthVault
+        /// calls <see cref="HealthRecordAccessor.GetItemAsync(Guid, HealthRecordItemSections)"/> or makes any query to HealthVault
         /// that doesn't specify the type identifier in the filter, this configuration setting
         /// will tell HealthVault the format of the type to reply with. For example, if a web
         /// application has two servers and makes a call to GetItemAsync for EncounterV1 and the
@@ -463,23 +477,16 @@ namespace Microsoft.HealthVault
         ///
         public virtual IList<Guid> SupportedTypeVersions
         {
-            get
-            {
-                if (_supportedTypeVersions == null)
-                {
-                    _supportedTypeVersions = new List<Guid>();
-                }
-
-                return _supportedTypeVersions;
-            }
+            get { return this.supportedTypeVersions ?? (this.supportedTypeVersions = new List<Guid>()); }
 
             set
             {
                 this.EnsureAppNotInitialized();
-                this._supportedTypeVersions = value;
+                this.supportedTypeVersions = value;
             }
         }
-        private volatile IList<Guid> _supportedTypeVersions;
+
+        private volatile IList<Guid> supportedTypeVersions;
 
         /// <summary>
         /// Gets a value indicating whether or not legacy type versioning support should be used.
@@ -502,16 +509,17 @@ namespace Microsoft.HealthVault
         {
             get
             {
-                return _useLegacyTypeVersionSupport;
+                return this.useLegacyTypeVersionSupport;
             }
 
             set
             {
                 this.EnsureAppNotInitialized();
-                this._useLegacyTypeVersionSupport = value;
+                this.useLegacyTypeVersionSupport = value;
             }
         }
-        private volatile bool _useLegacyTypeVersionSupport;
+
+        private volatile bool useLegacyTypeVersionSupport;
 
         /// <summary>
         /// Gets the value which indicates whether the application is able to handle connecting to multiple
@@ -538,17 +546,17 @@ namespace Microsoft.HealthVault
         {
             get
             {
-                return _multiInstanceAware;
+                return this.multiInstanceAware;
             }
 
             set
             {
                 this.EnsureAppNotInitialized();
-                this._multiInstanceAware = value;
+                this.multiInstanceAware = value;
             }
         }
 
-        private volatile bool _multiInstanceAware = true;
+        private volatile bool multiInstanceAware = true;
 
         /// <summary>
         /// Gets the amount of time, in milliseconds, that the application's connection can
@@ -573,31 +581,31 @@ namespace Microsoft.HealthVault
         {
             get
             {
-                if (!_connectionMaxIdleTimeInitialized)
+                if (!this.connectionMaxIdleTimeInitialized)
                 {
-                    _connectionMaxIdleTime = 110 * 1000;
-                    _connectionMaxIdleTimeInitialized = true;
+                    this.connectionMaxIdleTime = 110 * 1000;
+                    this.connectionMaxIdleTimeInitialized = true;
                 }
 
-                return _connectionMaxIdleTime;
+                return this.connectionMaxIdleTime;
             }
 
             set
             {
                 this.EnsureAppNotInitialized();
-                _connectionMaxIdleTime = value;
+                this.connectionMaxIdleTime = value;
 
-                if (_connectionMaxIdleTime < -1)
+                if (this.connectionMaxIdleTime < -1)
                 {
-                    _connectionMaxIdleTime = -1;
+                    this.connectionMaxIdleTime = -1;
                 }
 
-                _connectionMaxIdleTimeInitialized = true;
+                this.connectionMaxIdleTimeInitialized = true;
             }
         }
 
-        private volatile int _connectionMaxIdleTime;
-        private volatile bool _connectionMaxIdleTimeInitialized;
+        private volatile int connectionMaxIdleTime;
+        private volatile bool connectionMaxIdleTimeInitialized;
 
         /// <summary>
         /// Gets the amount of time, in milliseconds, that the application's connection can
@@ -627,31 +635,31 @@ namespace Microsoft.HealthVault
         {
             get
             {
-                if (!_connectionLeaseTimeoutInitialized)
+                if (!this.connectionLeaseTimeoutInitialized)
                 {
-                    _connectionLeaseTimeout = 5 * 60 * 1000;
-                    _connectionLeaseTimeoutInitialized = true;
+                    this.connectionLeaseTimeout = 5 * 60 * 1000;
+                    this.connectionLeaseTimeoutInitialized = true;
                 }
 
-                return _connectionLeaseTimeout;
+                return this.connectionLeaseTimeout;
             }
 
             set
             {
                 this.EnsureAppNotInitialized();
-                _connectionLeaseTimeout = value;
+                this.connectionLeaseTimeout = value;
 
-                if (_connectionLeaseTimeout < -1)
+                if (this.connectionLeaseTimeout < -1)
                 {
-                    _connectionLeaseTimeout = -1;
+                    this.connectionLeaseTimeout = -1;
                 }
 
-                _connectionLeaseTimeoutInitialized = true;
+                this.connectionLeaseTimeoutInitialized = true;
             }
         }
 
-        private volatile int _connectionLeaseTimeout;
-        private volatile bool _connectionLeaseTimeoutInitialized;
+        private volatile int connectionLeaseTimeout;
+        private volatile bool connectionLeaseTimeoutInitialized;
 
         /// <summary>
         /// Gets a value that indicates whether the application uses Http 1.1 persistent
@@ -668,17 +676,17 @@ namespace Microsoft.HealthVault
         {
             get
             {
-                return _connectionUseHttpKeepAlive;
+                return this.connectionUseHttpKeepAlive;
             }
 
             set
             {
                 this.EnsureAppNotInitialized();
-                this._connectionUseHttpKeepAlive = value;
+                this.connectionUseHttpKeepAlive = value;
             }
         }
 
-        private volatile bool _connectionUseHttpKeepAlive = true;
+        private volatile bool connectionUseHttpKeepAlive = true;
 
         /// <summary>
         /// Gets the value which specifies the period of time before the <see cref="P:ServiceInfo.Current"/> built-in cache is considered expired.
@@ -710,15 +718,15 @@ namespace Microsoft.HealthVault
                 // but before the init flag write, and another barrier
                 // for the read.
 
-                lock (_serviceInfoDefaultCacheTtlInitLock)
+                lock (this.serviceInfoDefaultCacheTtlInitLock)
                 {
-                    if (!_serviceInfoDefaultCacheTtlInitialized)
+                    if (!this.serviceInfoDefaultCacheTtlInitialized)
                     {
-                        _serviceInfoDefaultCacheTtl = TimeSpan.FromDays(1);
-                        _serviceInfoDefaultCacheTtlInitialized = true;
+                        this.serviceInfoDefaultCacheTtl = TimeSpan.FromDays(1);
+                        this.serviceInfoDefaultCacheTtlInitialized = true;
                     }
 
-                    return _serviceInfoDefaultCacheTtl;
+                    return this.serviceInfoDefaultCacheTtl;
                 }
             }
 
@@ -726,17 +734,17 @@ namespace Microsoft.HealthVault
             {
                 this.EnsureAppNotInitialized();
 
-                lock (this._serviceInfoDefaultCacheTtlInitLock)
+                lock (this.serviceInfoDefaultCacheTtlInitLock)
                 {
-                    this._serviceInfoDefaultCacheTtl = value;
-                    _serviceInfoDefaultCacheTtlInitialized = true;
+                    this.serviceInfoDefaultCacheTtl = value;
+                    this.serviceInfoDefaultCacheTtlInitialized = true;
                 }
             }
         }
 
-        private TimeSpan _serviceInfoDefaultCacheTtl;
-        private bool _serviceInfoDefaultCacheTtlInitialized;
-        private readonly object _serviceInfoDefaultCacheTtlInitLock = new object();
+        private TimeSpan serviceInfoDefaultCacheTtl;
+        private bool serviceInfoDefaultCacheTtlInitialized;
+        private readonly object serviceInfoDefaultCacheTtlInitLock = new object();
 
         /// <summary>
         /// Gets the root URL for a default instance of the
@@ -751,16 +759,17 @@ namespace Microsoft.HealthVault
         {
             get
             {
-                return _restHealthVaultRootUrl;
+                return this.restHealthVaultRootUrl;
             }
 
             set
             {
                 this.EnsureAppNotInitialized();
-                this._restHealthVaultRootUrl = EnsureTrailingSlash(value);
+                this.restHealthVaultRootUrl = EnsureTrailingSlash(value);
             }
         }
-        private volatile Uri _restHealthVaultRootUrl;
+
+        private volatile Uri restHealthVaultRootUrl;
 
         private static Uri EnsureTrailingSlash(Uri uri)
         {

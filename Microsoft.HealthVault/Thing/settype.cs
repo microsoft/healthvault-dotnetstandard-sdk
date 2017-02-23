@@ -3,12 +3,12 @@
 // see http://www.microsoft.com/resources/sharedsource/licensingbasics/sharedsourcelicenses.mspx.
 // All other rights reserved.
 
-namespace Microsoft.HealthVault
+namespace Microsoft.HealthVault.Thing
 {
     internal enum SetType
     {
         DateRangeSet,
         TypeIdSet,
-        UserTagSet,
+        UserTagSet
     }
 }

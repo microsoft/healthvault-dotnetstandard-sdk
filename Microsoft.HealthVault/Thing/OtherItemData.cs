@@ -3,11 +3,10 @@
 // see http://www.microsoft.com/resources/sharedsource/licensingbasics/sharedsourcelicenses.mspx.
 // All other rights reserved.
 
-using System;
 using System.Xml;
 using System.Xml.XPath;
 
-namespace Microsoft.HealthVault
+namespace Microsoft.HealthVault.Thing
 {
     /// <summary>
     /// Represents data, typically binary data, that extends the XML of the
@@ -56,9 +55,9 @@ namespace Microsoft.HealthVault
             string contentEncoding,
             string contentType)
         {
-            _data = data;
-            _otherDataEncoding = contentEncoding;
-            _otherDataType = contentType;
+            this.Data = data;
+            this.ContentEncoding = contentEncoding;
+            this.ContentType = contentType;
         }
 
         /// <summary>
@@ -70,13 +69,13 @@ namespace Microsoft.HealthVault
         /// </param>
         public void ParseXml(XPathNavigator otherDataNavigator)
         {
-            _data = otherDataNavigator.Value;
+            this.Data = otherDataNavigator.Value;
 
-            _otherDataType =
-                otherDataNavigator.GetAttribute("content-type", String.Empty);
+            this.ContentType =
+                otherDataNavigator.GetAttribute("content-type", string.Empty);
 
-            _otherDataEncoding =
-                otherDataNavigator.GetAttribute("content-encoding", String.Empty);
+            this.ContentEncoding =
+                otherDataNavigator.GetAttribute("content-encoding", string.Empty);
         }
 
         /// <summary>
@@ -95,21 +94,21 @@ namespace Microsoft.HealthVault
             // <data-other>
             writer.WriteStartElement("data-other");
 
-            if (!String.IsNullOrEmpty(this.ContentType))
+            if (!string.IsNullOrEmpty(this.ContentType))
             {
                 writer.WriteAttributeString(
                     "content-type",
                     this.ContentType);
             }
 
-            if (!String.IsNullOrEmpty(this.ContentEncoding))
+            if (!string.IsNullOrEmpty(this.ContentEncoding))
             {
                 writer.WriteAttributeString(
                     "content-encoding",
                     this.ContentEncoding);
             }
 
-            writer.WriteString(_data);
+            writer.WriteString(this.Data);
 
             // </data-other>
             writer.WriteEndElement();
@@ -130,12 +129,7 @@ namespace Microsoft.HealthVault
         /// properties should be set to appropriate values for the data.
         /// </remarks>
         ///
-        public string Data
-        {
-            get { return _data; }
-            set { _data = value; }
-        }
-        private string _data;
+        public string Data { get; set; }
 
         /// <summary>
         /// Gets or sets the MIME content type of other data for the health
@@ -146,12 +140,7 @@ namespace Microsoft.HealthVault
         /// A string representing the content type.
         /// </returns>
         ///
-        public string ContentType
-        {
-            get { return _otherDataType; }
-            set { _otherDataType = value; }
-        }
-        private string _otherDataType;
+        public string ContentType { get; set; }
 
         /// <summary>
         /// Gets or sets the content encoding of other data for the health
@@ -167,11 +156,6 @@ namespace Microsoft.HealthVault
         /// encodings are acceptable, such as XML.
         /// </remarks>
         ///
-        public string ContentEncoding
-        {
-            get { return _otherDataEncoding; }
-            set { _otherDataEncoding = value; }
-        }
-        private string _otherDataEncoding;
+        public string ContentEncoding { get; set; }
     }
 }

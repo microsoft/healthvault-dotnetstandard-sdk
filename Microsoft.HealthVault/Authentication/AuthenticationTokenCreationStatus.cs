@@ -44,5 +44,5 @@ namespace Microsoft.HealthVault.Authentication
         /// The person requires two factor authentication.
         /// </summary>
         SecondFactorAuthenticationRequired = 5
-    };
+    }
 }

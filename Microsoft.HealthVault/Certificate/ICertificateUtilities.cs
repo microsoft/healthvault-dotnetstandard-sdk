@@ -11,7 +11,7 @@ namespace Microsoft.HealthVault.Certificate
         /// <param name="numberOfYears">Number of years</param>
         /// <param name="persist">Indicates if the certificate  should be persisted</param>
         /// <param name="storeLocation">Store location for the certificate</param>
-        /// <returns></returns>
+        /// <returns>Returns a new certificate with the required credentials</returns>
         X509Certificate2 CreateCert(string certificateName, short numberOfYears, bool persist, StoreLocation storeLocation);
 
         /// <summary>
@@ -24,7 +24,10 @@ namespace Microsoft.HealthVault.Certificate
         /// <summary>
         /// Removes the key container for the specified application identifier.
         /// </summary>
-        /// <param name="applicationId">The unique identifier for the HealthVault application which was used in creating the key container.</param>
+        /// <param name="certificateName">
+        /// The certificate name which was used in creating
+        /// the key container.
+        /// </param>
         void DeleteKeyContainer(string certificateName);
     }
 }

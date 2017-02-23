@@ -3,7 +3,7 @@
 // see http://www.microsoft.com/resources/sharedsource/licensingbasics/sharedsourcelicenses.mspx.
 // All other rights reserved.
 
-namespace Microsoft.HealthVault
+namespace Microsoft.HealthVault.ItemTypes
 {
     /// <summary>
     /// Defines the set of supported blob hash algorithms.
@@ -18,6 +18,6 @@ namespace Microsoft.HealthVault
         /// <summary>
         /// The block hash algorithm using SHA256.
         /// </summary>
-        SHA256Block = 1,
+        SHA256Block = 1
     }
 }

@@ -11,8 +11,9 @@ using System.Diagnostics;
 using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.XPath;
+using Microsoft.HealthVault.Helpers;
 
-namespace Microsoft.HealthVault
+namespace Microsoft.HealthVault.Thing
 {
     /// <summary>
     /// Defines a group of results that gets returned from the
@@ -67,7 +68,7 @@ namespace Microsoft.HealthVault
 
             // Name is optional
             HealthRecordFilter matchingFilter = null;
-            string name = String.Empty;
+            string name = string.Empty;
             if (groupReader.MoveToAttribute("name"))
             {
                 name = groupReader.Value;
@@ -76,13 +77,14 @@ namespace Microsoft.HealthVault
 
             foreach (HealthRecordFilter filter in filters)
             {
-                if (String.IsNullOrEmpty(filter.Name) &&
-                    String.IsNullOrEmpty(name))
+                if (string.IsNullOrEmpty(filter.Name) &&
+                    string.IsNullOrEmpty(name))
                 {
                     matchingFilter = filter;
                     break;
                 }
-                else if (String.Equals(
+
+                if (string.Equals(
                         filter.Name,
                         name,
                         StringComparison.Ordinal))
@@ -114,6 +116,7 @@ namespace Microsoft.HealthVault
                                 HealthRecordItem resultThing =
                                     ItemTypeManager.DeserializeItem(thingReader);
                                 thingReader.Dispose();
+                                
                                 // groupReader will normally be at the end element of
                                 // the group at this point, and needs a read to get to
                                 // the next element. If the group was empty, groupReader
@@ -133,7 +136,7 @@ namespace Microsoft.HealthVault
                                 {
                                     unprocessedThingReader.ReadToDescendant("thing-id");
 
-                                    string versionStamp = String.Empty;
+                                    string versionStamp = string.Empty;
                                     if (unprocessedThingReader.MoveToAttribute("version-stamp"))
                                     {
                                         versionStamp = unprocessedThingReader.Value;
@@ -161,14 +164,16 @@ namespace Microsoft.HealthVault
                             }
                             else
                             {
-                                //Unrecognized element. There are no other elements allowed by
+                                // Unrecognized element. There are no other elements allowed by
                                 // the xsd file, so should never get here. Just skip the element.
                                 using (XmlReader unknownElementReader = groupReader.ReadSubtree())
                                 {
                                     unknownElementReader.Read();
                                 }
+
                                 groupReader.Read();
                             }
+
                             break;
                         case XmlNodeType.EndElement:
                             // Must be the end of the group element
@@ -186,6 +191,7 @@ namespace Microsoft.HealthVault
             {
                 result.MaxResultsPerRequest = maxResultsPerRequest;
             }
+
             return result;
         }
 
@@ -202,7 +208,7 @@ namespace Microsoft.HealthVault
         {
             foreach (HealthRecordItem item in items)
             {
-                _abstractResults.Add(item);
+                this.abstractResults.Add(item);
             }
         }
 
@@ -211,9 +217,9 @@ namespace Microsoft.HealthVault
             HealthRecordAccessor record,
             HealthRecordFilter filter)
         {
-            _name = name;
-            _record = record;
-            _filter = filter;
+            this.Name = name;
+            this.Record = record;
+            this.Filter = filter;
         }
 
         #endregion Factory methods & ctor
@@ -234,11 +240,7 @@ namespace Microsoft.HealthVault
         /// group that was specified in the search.
         /// </remarks>
         ///
-        public string Name
-        {
-            get { return _name; }
-        }
-        private string _name;
+        public string Name { get; }
 
         /// <summary>
         /// Gets a value indicating whether the result set of health record
@@ -250,12 +252,7 @@ namespace Microsoft.HealthVault
         /// to the callers permissions; otherwise, <b>false</b>.
         /// </value>
         ///
-        public bool WasFiltered
-        {
-            get { return _wasFiltered; }
-            private set { _wasFiltered = value; }
-        }
-        private bool _wasFiltered;
+        public bool WasFiltered { get; private set; }
 
         /// <summary>
         /// Gets the value indicating the culture that order by values were sorted in.
@@ -265,44 +262,26 @@ namespace Microsoft.HealthVault
         /// The culture may not be the same culture as requested in request header.  It is the closest match HealthVault supports.
         /// </remarks>
         ///
-        public string OrderByCulture
-        {
-            get { return _orderByCulture; }
-            private set { _orderByCulture = value; }
-        }
-        private string _orderByCulture;
+        public string OrderByCulture { get; private set; }
 
         /// <summary>
         /// Gets the health record that the items were retrieved from.
         /// </summary>
         ///
-        internal HealthRecordAccessor Record
-        {
-            get { return _record; }
-        }
-        private HealthRecordAccessor _record;
+        internal HealthRecordAccessor Record { get; }
 
-        internal HealthRecordFilter Filter
-        {
-            get { return _filter; }
-        }
-        private HealthRecordFilter _filter;
+        internal HealthRecordFilter Filter { get; }
 
         // This collection contains a combination of the full HealthRecordItem
         // results as well as any partial thing IDs that were returned
-        private Collection<Object> _abstractResults = new Collection<Object>();
+        private Collection<object> abstractResults = new Collection<object>();
 
         /// <summary>
         /// Gets or sets the maximum number of full items returned in a
         /// GetThings request.
         /// </summary>
         ///
-        internal int MaxResultsPerRequest
-        {
-            get { return _maxResultsPerRequest; }
-            set { _maxResultsPerRequest = value; }
-        }
-        private int _maxResultsPerRequest = Int32.MinValue;
+        internal int MaxResultsPerRequest { get; set; } = int.MinValue;
 
         #endregion public properties
 
@@ -318,10 +297,7 @@ namespace Microsoft.HealthVault
         /// the partial items are retrieved automatically from the server.
         /// </remarks>
         ///
-        public int Count
-        {
-            get { return _abstractResults.Count; }
-        }
+        public int Count => this.abstractResults.Count;
 
         /// <summary>
         /// Gets a value indicating that this collection is read-only.
@@ -331,10 +307,7 @@ namespace Microsoft.HealthVault
         /// This property always returns <b>true</b>.
         /// </value>
         ///
-        public bool IsReadOnly
-        {
-            get { return true; }
-        }
+        public bool IsReadOnly => true;
 
         /// <summary>
         /// Gets a value indicating that this collection is thread-safe
@@ -350,10 +323,7 @@ namespace Microsoft.HealthVault
         /// synchronize access to the ICollection.
         /// </remarks>
         ///
-        public bool IsSynchronized
-        {
-            get { return true; }
-        }
+        public bool IsSynchronized => true;
 
         /// <summary>
         /// Gets an object that can be used to synchronize access to the
@@ -373,10 +343,7 @@ namespace Microsoft.HealthVault
         /// should return the underlying collection's SyncRoot property.
         /// </remarks>
         ///
-        public Object SyncRoot
-        {
-            get { return _abstractResults; }
-        }
+        public object SyncRoot => this.abstractResults;
 
         /// <summary>
         /// This method is not used, because the collection is read-only and
@@ -409,7 +376,7 @@ namespace Microsoft.HealthVault
         /// This exception is always thrown.
         /// </exception>
         ///
-        int IList.Add(Object value)
+        int IList.Add(object value)
         {
             throw Validator.NotSupportedException("ResultGroupIsReadOnly");
         }
@@ -448,7 +415,8 @@ namespace Microsoft.HealthVault
             {
                 return false;
             }
-            return Contains(item.Key);
+
+            return this.Contains(item.Key);
         }
 
         /// <summary>
@@ -464,19 +432,20 @@ namespace Microsoft.HealthVault
         /// <b>true</b> if a matching object is found; otherwise, <b>false</b>.
         /// </returns>
         ///
-        bool IList.Contains(Object value)
+        bool IList.Contains(object value)
         {
             bool result = false;
 
             HealthRecordItem thing = value as HealthRecordItem;
             if (thing != null)
             {
-                result = Contains(thing);
+                result = this.Contains(thing);
             }
             else
             {
-                result = Contains(value as HealthRecordItemKey);
+                result = this.Contains(value as HealthRecordItemKey);
             }
+
             return result;
         }
 
@@ -500,14 +469,14 @@ namespace Microsoft.HealthVault
         ///
         public bool Contains(HealthRecordItemKey itemKey)
         {
-            lock (_abstractResults)
+            lock (this.abstractResults)
             {
                 bool result = false;
-                for (int index = 0; index < _abstractResults.Count; ++index)
+                for (int index = 0; index < this.abstractResults.Count; ++index)
                 {
                     HealthRecordItemKey abstractThingKey;
                     HealthRecordItem thing
-                        = _abstractResults[index] as HealthRecordItem;
+                        = this.abstractResults[index] as HealthRecordItem;
                     if (thing != null)
                     {
                         abstractThingKey = thing.Key;
@@ -515,7 +484,7 @@ namespace Microsoft.HealthVault
                     else
                     {
                         abstractThingKey
-                            = (HealthRecordItemKey)_abstractResults[index];
+                            = (HealthRecordItemKey)this.abstractResults[index];
                     }
 
                     if (abstractThingKey.Equals(itemKey))
@@ -524,6 +493,7 @@ namespace Microsoft.HealthVault
                         break;
                     }
                 }
+
                 return result;
             }
         }
@@ -538,7 +508,7 @@ namespace Microsoft.HealthVault
         /// </param>
         ///
         /// <param name="arrayIndex">
-        /// This parameter is ignored, since the result group cannot be copied.
+        /// This parameter is also ignored, since the result group cannot be copied.
         /// </param>
         ///
         /// <exception cref="NotSupportedException">
@@ -560,14 +530,14 @@ namespace Microsoft.HealthVault
         /// </param>
         ///
         /// <param name="index">
-        /// This parameter is ignored, since the result group cannot be copied.
+        /// This parameter is also ignored, since the result group cannot be copied.
         /// </param>
         ///
         /// <exception cref="NotSupportedException">
         /// This exception is always thrown.
         /// </exception>
         ///
-        void ICollection.CopyTo(System.Array array, int index)
+        void ICollection.CopyTo(Array array, int index)
         {
             throw Validator.NotSupportedException("ResultGroupNotCopyable");
         }
@@ -620,18 +590,19 @@ namespace Microsoft.HealthVault
             get
             {
                 Validator.ThrowArgumentOutOfRangeIf(
-                    index < 0 || index >= _abstractResults.Count,
+                    index < 0 || index >= this.abstractResults.Count,
                     "index",
                     "ResultGroupIndexOutOfRange");
 
-                lock (_abstractResults)
+                lock (this.abstractResults)
                 {
-                    HealthRecordItem result = _abstractResults[index] as HealthRecordItem;
+                    HealthRecordItem result = this.abstractResults[index] as HealthRecordItem;
                     if (result == null)
                     {
-                        GetPartialThingsAsync(index).Wait();
-                        result = _abstractResults[index] as HealthRecordItem;
+                        this.GetPartialThingsAsync(index).Wait();
+                        result = this.abstractResults[index] as HealthRecordItem;
                     }
+
                     return result;
                 }
             }
@@ -658,12 +629,13 @@ namespace Microsoft.HealthVault
         /// Set is called on a read-only collection.
         /// </exception>
         ///
-        Object IList.this[int index]
+        object IList.this[int index]
         {
             get
             {
                 return this[index];
             }
+
             set
             {
                 throw Validator.NotSupportedException("ResultGroupIsReadOnly");
@@ -690,7 +662,8 @@ namespace Microsoft.HealthVault
             {
                 return -1;
             }
-            return IndexOf(item.Key);
+
+            return this.IndexOf(item.Key);
         }
 
         /// <summary>
@@ -705,19 +678,20 @@ namespace Microsoft.HealthVault
         /// The index of the item, if found in the list; otherwise, -1.
         /// </returns>
         ///
-        int IList.IndexOf(Object value)
+        int IList.IndexOf(object value)
         {
             int result = -1;
 
             HealthRecordItem thing = value as HealthRecordItem;
             if (thing != null)
             {
-                result = IndexOf(thing);
+                result = this.IndexOf(thing);
             }
             else
             {
-                result = IndexOf(value as HealthRecordItemKey);
+                result = this.IndexOf(value as HealthRecordItemKey);
             }
+
             return result;
         }
 
@@ -737,20 +711,20 @@ namespace Microsoft.HealthVault
         ///
         public int IndexOf(HealthRecordItemKey key)
         {
-            lock (_abstractResults)
+            lock (this.abstractResults)
             {
                 int result = -1;
-                for (int index = 0; index < _abstractResults.Count; ++index)
+                for (int index = 0; index < this.abstractResults.Count; ++index)
                 {
                     HealthRecordItemKey abstractThingKey;
-                    HealthRecordItem thing = _abstractResults[index] as HealthRecordItem;
+                    HealthRecordItem thing = this.abstractResults[index] as HealthRecordItem;
                     if (thing != null)
                     {
                         abstractThingKey = thing.Key;
                     }
                     else
                     {
-                        abstractThingKey = (HealthRecordItemKey)_abstractResults[index];
+                        abstractThingKey = (HealthRecordItemKey)this.abstractResults[index];
                     }
 
                     if (abstractThingKey.Equals(key))
@@ -759,6 +733,7 @@ namespace Microsoft.HealthVault
                         break;
                     }
                 }
+
                 return result;
             }
         }
@@ -773,7 +748,7 @@ namespace Microsoft.HealthVault
         /// </param>
         ///
         /// <param name="item">
-        /// This parameter is ignored because the collection is read-only.
+        /// This parameter is also ignored because the collection is read-only.
         /// </param>
         ///
         /// <exception cref="NotSupportedException">
@@ -795,14 +770,14 @@ namespace Microsoft.HealthVault
         /// </param>
         ///
         /// <param name="value">
-        /// This parameter is ignored because the collection is read-only.
+        /// This parameter is also ignored because the collection is read-only.
         /// </param>
         ///
         /// <exception cref="NotSupportedException">
         /// The collection is read-only and does not support insertion.
         /// </exception>
         ///
-        void IList.Insert(int index, Object value)
+        void IList.Insert(int index, object value)
         {
             throw Validator.NotSupportedException("ResultGroupIsReadOnly");
         }
@@ -840,7 +815,7 @@ namespace Microsoft.HealthVault
         /// items.
         /// </exception>
         ///
-        void IList.Remove(Object value)
+        void IList.Remove(object value)
         {
             throw Validator.NotSupportedException("ResultGroupIsReadOnly");
         }
@@ -859,10 +834,7 @@ namespace Microsoft.HealthVault
         /// might allow the modification of existing elements.
         /// </remarks>
         ///
-        public bool IsFixedSize
-        {
-            get { return true; }
-        }
+        public bool IsFixedSize => true;
 
         #endregion IList<HealthRecordItem>
 
@@ -926,7 +898,7 @@ namespace Microsoft.HealthVault
             internal HealthRecordItemEnumerator(
                 HealthRecordItemCollection resultGroup)
             {
-                _resultGroup = resultGroup;
+                this.resultGroup = resultGroup;
             }
 
             /// <summary>
@@ -960,12 +932,13 @@ namespace Microsoft.HealthVault
             {
                 get
                 {
-                    if (_currentIndex == -1 ||
-                        _currentIndex >= _resultGroup.Count)
+                    if (this.currentIndex == -1 ||
+                        this.currentIndex >= this.resultGroup.Count)
                     {
                         return null;
                     }
-                    return _resultGroup[_currentIndex];
+
+                    return this.resultGroup[this.currentIndex];
                 }
             }
 
@@ -996,13 +969,7 @@ namespace Microsoft.HealthVault
             ///
             /// </remarks>
             ///
-            Object IEnumerator.Current
-            {
-                get
-                {
-                    return this.Current;
-                }
-            }
+            object IEnumerator.Current => this.Current;
 
             /// <summary>
             /// Advances the enumerator to the next element of the collection.
@@ -1036,11 +1003,12 @@ namespace Microsoft.HealthVault
             ///
             public bool MoveNext()
             {
-                if (_currentIndex >= _resultGroup.Count - 1)
+                if (this.currentIndex >= this.resultGroup.Count - 1)
                 {
                     return false;
                 }
-                ++_currentIndex;
+
+                ++this.currentIndex;
                 return true;
             }
 
@@ -1051,10 +1019,10 @@ namespace Microsoft.HealthVault
             ///
             public void Reset()
             {
-                _currentIndex = -1;
+                this.currentIndex = -1;
             }
 
-            private int _currentIndex = -1;
+            private int currentIndex = -1;
 
             /// <summary>
             /// Resets the enumerator.
@@ -1066,10 +1034,10 @@ namespace Microsoft.HealthVault
                 // because we don't really need it. However, IEnumerator<T>
                 // requires IDisposable so we have to have the method.
 
-                Reset();
+                this.Reset();
             }
 
-            private HealthRecordItemCollection _resultGroup;
+            private HealthRecordItemCollection resultGroup;
         }
 
         #endregion IEnumerable<HealthRecordItem>
@@ -1108,10 +1076,10 @@ namespace Microsoft.HealthVault
         ///
         public void Sort(Comparison<HealthRecordItem> comparison)
         {
-            List<HealthRecordItem> sortableList = GetSortableList();
+            List<HealthRecordItem> sortableList = this.GetSortableList();
             sortableList.Sort(comparison);
 
-            ReplaceAbstractResults(sortableList);
+            this.ReplaceAbstractResults(sortableList);
         }
 
         /// <summary>
@@ -1148,10 +1116,10 @@ namespace Microsoft.HealthVault
         ///
         public void Sort(IComparer<HealthRecordItem> comparer)
         {
-            List<HealthRecordItem> sortableList = GetSortableList();
+            List<HealthRecordItem> sortableList = this.GetSortableList();
             sortableList.Sort(comparer);
 
-            ReplaceAbstractResults(sortableList);
+            this.ReplaceAbstractResults(sortableList);
         }
 
         private List<HealthRecordItem> GetSortableList()
@@ -1161,15 +1129,16 @@ namespace Microsoft.HealthVault
             {
                 sortableList.Add(item);
             }
+
             return sortableList;
         }
 
         private void ReplaceAbstractResults(List<HealthRecordItem> sortableList)
         {
-            _abstractResults.Clear();
+            this.abstractResults.Clear();
             foreach (HealthRecordItem item in sortableList)
             {
-                _abstractResults.Add(item);
+                this.abstractResults.Add(item);
             }
         }
 
@@ -1230,6 +1199,7 @@ namespace Microsoft.HealthVault
             {
                 result.Add(this[index]);
             }
+
             return result;
         }
 
@@ -1244,12 +1214,12 @@ namespace Microsoft.HealthVault
             List<HealthRecordItemKey> partialThings = new List<HealthRecordItemKey>();
             for (
                 int partialThingIndex = index;
-                (partialThings.Count < MaxResultsPerRequest ||
-                 MaxResultsPerRequest == Int32.MinValue) &&
-                partialThingIndex < _abstractResults.Count;
+                (partialThings.Count < this.MaxResultsPerRequest ||
+                 this.MaxResultsPerRequest == int.MinValue) &&
+                partialThingIndex < this.abstractResults.Count;
                 ++partialThingIndex)
             {
-                var key = _abstractResults[partialThingIndex] as HealthRecordItemKey;
+                var key = this.abstractResults[partialThingIndex] as HealthRecordItemKey;
                 if (key != null)
                 {
                     partialThings.Add(
@@ -1267,7 +1237,7 @@ namespace Microsoft.HealthVault
                 }
             }
 
-            Collection<HealthRecordItem> things = await GetPartialThingsAsync(partialThings).ConfigureAwait(false);
+            Collection<HealthRecordItem> things = await this.GetPartialThingsAsync(partialThings).ConfigureAwait(false);
 
             bool atEndOfPartialThings = false;
             int newThingIndex = index;
@@ -1278,10 +1248,10 @@ namespace Microsoft.HealthVault
                 // thing may have been removed while holding on to the
                 // partial thing ID from the original query.
 
-                for (; newThingIndex < _abstractResults.Count; ++newThingIndex)
+                for (; newThingIndex < this.abstractResults.Count; ++newThingIndex)
                 {
                     HealthRecordItemKey abstractResultKey =
-                        _abstractResults[newThingIndex] as HealthRecordItemKey;
+                        this.abstractResults[newThingIndex] as HealthRecordItemKey;
 
                     if (abstractResultKey != null)
                     {
@@ -1289,12 +1259,8 @@ namespace Microsoft.HealthVault
                         {
                             // replace the partial thing with the real
                             // thing
-                            _abstractResults[newThingIndex++] = thing;
+                            this.abstractResults[newThingIndex++] = thing;
                             break;
-                        }
-                        else
-                        {
-                            continue;
                         }
                     }
                     else
@@ -1317,7 +1283,7 @@ namespace Microsoft.HealthVault
             Collection<HealthRecordItem> results = new Collection<HealthRecordItem>();
 
             // Create the searcher
-            HealthRecordSearcher searcher = Record.CreateSearcher();
+            HealthRecordSearcher searcher = this.Record.CreateSearcher();
             HealthRecordFilter filter = new HealthRecordFilter();
 
             foreach (HealthRecordItemKey key in partialThings)
@@ -1326,12 +1292,12 @@ namespace Microsoft.HealthVault
             }
 
             // Need to copy the view from the original filter
-            filter.View = Filter.View;
-            filter.States = Filter.States;
-            filter.CurrentVersionOnly = Filter.CurrentVersionOnly;
-            if (Filter.OrderByClauses.Count > 0)
+            filter.View = this.Filter.View;
+            filter.States = this.Filter.States;
+            filter.CurrentVersionOnly = this.Filter.CurrentVersionOnly;
+            if (this.Filter.OrderByClauses.Count > 0)
             {
-                foreach (var orderByClause in Filter.OrderByClauses)
+                foreach (var orderByClause in this.Filter.OrderByClauses)
                 {
                     filter.OrderByClauses.Add(orderByClause);
                 }
@@ -1360,10 +1326,11 @@ namespace Microsoft.HealthVault
                     }
                 }
             }
+
             return results;
         }
 
-        private static XPathExpression _infoGroupPath =
+        private static XPathExpression infoGroupPath =
             XPathExpression.Compile("/wc:info/group");
 
         private static XPathExpression GetGroupXPathExpression(
@@ -1377,9 +1344,9 @@ namespace Microsoft.HealthVault
                 "urn:com.microsoft.wc.methods.response.GetThings3");
 
             XPathExpression infoGroupPathClone = null;
-            lock (_infoGroupPath)
+            lock (infoGroupPath)
             {
-                infoGroupPathClone = _infoGroupPath.Clone();
+                infoGroupPathClone = infoGroupPath.Clone();
             }
 
             infoGroupPathClone.SetContext(infoXmlNamespaceManager);
@@ -1389,12 +1356,12 @@ namespace Microsoft.HealthVault
 
         private void AddResult(HealthRecordItem result)
         {
-            _abstractResults.Add(result);
+            this.abstractResults.Add(result);
         }
 
         private void AddResult(HealthRecordItemKey thingKey)
         {
-            _abstractResults.Add(thingKey);
+            this.abstractResults.Add(thingKey);
         }
 
         #endregion helpers
@@ -1407,7 +1374,7 @@ namespace Microsoft.HealthVault
         ///
         private class HealthRecordItemCollectionDebugView
         {
-            private HealthRecordItemCollection _baseObject;
+            private HealthRecordItemCollection baseObject;
 
             /// <summary>
             /// Constructs a <see cref="HealthRecordItemCollectionDebugView"/> with the specified
@@ -1420,7 +1387,7 @@ namespace Microsoft.HealthVault
             ///
             public HealthRecordItemCollectionDebugView(HealthRecordItemCollection baseObject)
             {
-                _baseObject = baseObject;
+                this.baseObject = baseObject;
             }
 
             /// <summary>
@@ -1432,13 +1399,14 @@ namespace Microsoft.HealthVault
                 get
                 {
                     int fetched = 0;
-                    foreach (object o in _baseObject._abstractResults)
+                    foreach (object o in this.baseObject.abstractResults)
                     {
                         if (o is HealthRecordItem)
                         {
                             fetched++;
                         }
                     }
+
                     return fetched;
                 }
             }
@@ -1448,13 +1416,7 @@ namespace Microsoft.HealthVault
             /// </summary>
             ///
             [DebuggerBrowsable(DebuggerBrowsableState.RootHidden)]
-            public Collection<object> Items
-            {
-                get
-                {
-                    return _baseObject._abstractResults;
-                }
-            }
+            public Collection<object> Items => this.baseObject.abstractResults;
         }
 
         #endregion debughelper

@@ -5,31 +5,23 @@
 
 using System;
 
-namespace Microsoft.HealthVault
+namespace Microsoft.HealthVault.Thing
 {
     internal class HealthRecordItemTypeHandler
     {
         internal HealthRecordItemTypeHandler(Type thingTypeClass)
         {
-            _thingTypeClass = thingTypeClass;
+            this.ItemTypeClass = thingTypeClass;
         }
 
         internal HealthRecordItemTypeHandler(Guid typeId, Type thingTypeClass)
             : this(thingTypeClass)
         {
-            _typeId = typeId;
+            this.TypeId = typeId;
         }
 
-        internal Type ItemTypeClass
-        {
-            get { return _thingTypeClass; }
-        }
-        private Type _thingTypeClass;
+        internal Type ItemTypeClass { get; }
 
-        internal Guid TypeId
-        {
-            get { return _typeId; }
-        }
-        private Guid _typeId = Guid.Empty;
+        internal Guid TypeId { get; } = Guid.Empty;
     }
 }

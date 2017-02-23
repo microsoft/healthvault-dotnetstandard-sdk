@@ -3,8 +3,8 @@
 // see http://www.microsoft.com/resources/sharedsource/licensingbasics/sharedsourcelicenses.mspx.
 // All other rights reserved.
 
-using System;
 using System.Text;
+using Microsoft.HealthVault.Helpers;
 
 namespace Microsoft.HealthVault.ItemTypes
 {
@@ -57,12 +57,12 @@ namespace Microsoft.HealthVault.ItemTypes
             int startPosition,
             int endPosition)
         {
-            ReferenceSnpId = referenceSnpId;
-            StrandOrientation = strandOrientation;
-            Result = result;
-            AssayId = assayId;
-            StartPosition = startPosition;
-            EndPosition = endPosition;
+            this.ReferenceSnpId = referenceSnpId;
+            this.StrandOrientation = strandOrientation;
+            this.Result = result;
+            this.AssayId = assayId;
+            this.StartPosition = startPosition;
+            this.EndPosition = endPosition;
         }
 
         /// <summary>
@@ -75,10 +75,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public string ReferenceSnpId
         {
-            get { return _referenceSnpId; }
-            set { _referenceSnpId = value; }
+            get { return this.referenceSnpId; }
+            set { this.referenceSnpId = value; }
         }
-        private string _referenceSnpId;
+
+        private string referenceSnpId;
 
         /// <summary>
         /// Gets or sets the orientation of the strand.
@@ -90,10 +91,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public string StrandOrientation
         {
-            get { return _strandOrientation; }
-            set { _strandOrientation = value; }
+            get { return this.strandOrientation; }
+            set { this.strandOrientation = value; }
         }
-        private string _strandOrientation;
+
+        private string strandOrientation;
 
         /// <summary>
         /// Gets or sets the result of the SNP test.
@@ -107,10 +109,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public string Result
         {
-            get { return _result; }
-            set { _result = value; }
+            get { return this.result; }
+            set { this.result = value; }
         }
-        private string _result;
+
+        private string result;
 
         /// <summary>
         /// Gets or sets the assay ID.
@@ -118,10 +121,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public string AssayId
         {
-            get { return _assayId; }
-            set { _assayId = value; }
+            get { return this.assayId; }
+            set { this.assayId = value; }
         }
-        private string _assayId;
+
+        private string assayId;
 
         /// <summary>
         /// Gets or sets the start position.
@@ -129,10 +133,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public int StartPosition
         {
-            get { return _startPosition; }
-            set { _startPosition = value; }
+            get { return this.startPosition; }
+            set { this.startPosition = value; }
         }
-        private int _startPosition;
+
+        private int startPosition;
 
         /// <summary>
         /// Gets or sets the end Position.
@@ -140,10 +145,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public int EndPosition
         {
-            get { return _endPosition; }
-            set { _endPosition = value; }
+            get { return this.endPosition; }
+            set { this.endPosition = value; }
         }
-        private int _endPosition;
+
+        private int endPosition;
 
         /// <summary>
         /// Gets a string representation of the snp result item.
@@ -152,43 +158,43 @@ namespace Microsoft.HealthVault.ItemTypes
         public override string ToString()
         {
             StringBuilder result = new StringBuilder(200);
-            if (String.IsNullOrEmpty(ReferenceSnpId))
+            if (string.IsNullOrEmpty(this.ReferenceSnpId))
             {
                 result.AppendFormat(
                     ResourceRetriever.GetResourceString(
                         "SnpItemToStringFormatReferenceSnpId"),
-                        ReferenceSnpId);
+                        this.ReferenceSnpId);
             }
 
-            if (String.IsNullOrEmpty(StrandOrientation))
+            if (string.IsNullOrEmpty(this.StrandOrientation))
             {
                 result.AppendFormat(
                     ResourceRetriever.GetResourceString(
                         "SnpItemToStringFormatStrandOrientation"),
-                        StrandOrientation);
+                        this.StrandOrientation);
             }
 
-            if (String.IsNullOrEmpty(Result))
+            if (string.IsNullOrEmpty(this.Result))
             {
                 result.AppendFormat(
                     ResourceRetriever.GetResourceString(
                         "SnpItemToStringFormatResult"),
-                        Result);
+                        this.Result);
             }
 
-            if (String.IsNullOrEmpty(AssayId))
+            if (string.IsNullOrEmpty(this.AssayId))
             {
                 result.AppendFormat(
                     ResourceRetriever.GetResourceString(
                         "SnpItemToStringFormatAssayId"),
-                        AssayId);
+                        this.AssayId);
             }
 
             result.AppendFormat(
                 ResourceRetriever.GetResourceString(
                     "SnpItemToStringFormatStartAndEnd"),
-                StartPosition,
-                EndPosition);
+                this.StartPosition,
+                this.EndPosition);
 
             return result.ToString();
         }

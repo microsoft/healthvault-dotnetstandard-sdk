@@ -9,6 +9,8 @@ using System.Collections.ObjectModel;
 using System.Text;
 using System.Xml;
 using System.Xml.XPath;
+using Microsoft.HealthVault.Helpers;
+using Microsoft.HealthVault.Thing;
 
 namespace Microsoft.HealthVault.ItemTypes
 {
@@ -46,7 +48,7 @@ namespace Microsoft.HealthVault.ItemTypes
 
             foreach (LabTestResultGroup labGroup in labGroups)
             {
-                _labGroup.Add(labGroup);
+                this.labGroup.Add(labGroup);
             }
         }
 
@@ -54,7 +56,7 @@ namespace Microsoft.HealthVault.ItemTypes
         /// Retrieves the unique identifier for the item type.
         /// </summary>
         ///
-        public new static readonly Guid TypeId =
+        public static new readonly Guid TypeId =
             new Guid("5800eab5-a8c2-482a-a4d6-f1db25ae08c3");
 
         /// <summary>
@@ -78,22 +80,22 @@ namespace Microsoft.HealthVault.ItemTypes
             Validator.ThrowInvalidIfNull(itemNav, "LabTestResultsUnexpectedNode");
 
             // when
-            _when =
+            this.when =
                 XPathHelper.GetOptNavValue<ApproximateDateTime>(itemNav, "when");
 
             // lab-group
             XPathNodeIterator labGroupIterator =
                 itemNav.Select("lab-group");
-            _labGroup = new Collection<LabTestResultGroup>();
+            this.labGroup = new Collection<LabTestResultGroup>();
             foreach (XPathNavigator labGroupNav in labGroupIterator)
             {
                 LabTestResultGroup labTestResultGroup = new LabTestResultGroup();
                 labTestResultGroup.ParseXml(labGroupNav);
-                _labGroup.Add(labTestResultGroup);
+                this.labGroup.Add(labTestResultGroup);
             }
 
             // ordered-by
-            _orderedBy =
+            this.orderedBy =
                 XPathHelper.GetOptNavValue<Organization>(itemNav, "ordered-by");
         }
 
@@ -117,7 +119,7 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             Validator.ThrowIfWriterNull(writer);
             Validator.ThrowSerializationIf(
-                _labGroup == null || _labGroup.Count == 0,
+                this.labGroup == null || this.labGroup.Count == 0,
                 "LabTestResultsLabGroupNotSet");
 
             // <lab-test-results>
@@ -127,19 +129,19 @@ namespace Microsoft.HealthVault.ItemTypes
             XmlWriterHelper.WriteOpt(
                 writer,
                 "when",
-                _when);
+                this.when);
 
             // lab-group
-            for (int index = 0; index < _labGroup.Count; ++index)
+            for (int index = 0; index < this.labGroup.Count; ++index)
             {
-                _labGroup[index].WriteXml("lab-group", writer);
+                this.labGroup[index].WriteXml("lab-group", writer);
             }
 
             // ordered-by
             XmlWriterHelper.WriteOpt(
                 writer,
                 "ordered-by",
-                _orderedBy);
+                this.orderedBy);
 
             // </lab-test-results>
             writer.WriteEndElement();
@@ -156,20 +158,19 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public ApproximateDateTime When
         {
-            get { return _when; }
-            set { _when = value; }
+            get { return this.when; }
+            set { this.when = value; }
         }
-        private ApproximateDateTime _when;
+
+        private ApproximateDateTime when;
 
         /// <summary>
         /// Gets a set of lab results.
         /// </summary>
         ///
-        public Collection<LabTestResultGroup> Groups
-        {
-            get { return _labGroup; }
-        }
-        private Collection<LabTestResultGroup> _labGroup =
+        public Collection<LabTestResultGroup> Groups => this.labGroup;
+
+        private Collection<LabTestResultGroup> labGroup =
             new Collection<LabTestResultGroup>();
 
         /// <summary>
@@ -183,10 +184,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public Organization OrderedBy
         {
-            get { return _orderedBy; }
-            set { _orderedBy = value; }
+            get { return this.orderedBy; }
+            set { this.orderedBy = value; }
         }
-        private Organization _orderedBy;
+
+        private Organization orderedBy;
 
         /// <summary>
         /// Gets a string representation of the lab test results item.
@@ -200,26 +202,27 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             StringBuilder result = new StringBuilder(200);
 
-            for (int index = 0; index < _labGroup.Count; ++index)
+            for (int index = 0; index < this.labGroup.Count; ++index)
             {
-                if (_labGroup[index].GroupName != null)
+                if (this.labGroup[index].GroupName != null)
                 {
-                    if (!string.IsNullOrEmpty(_labGroup[index].GroupName.Text))
+                    if (!string.IsNullOrEmpty(this.labGroup[index].GroupName.Text))
                     {
                         if (index > 0)
                         {
                             result.AppendFormat(
                                 ResourceRetriever.GetResourceString(
                                     "ListFormat"),
-                                _labGroup[index].GroupName.Text);
+                                this.labGroup[index].GroupName.Text);
                         }
                         else
                         {
-                            result.Append(_labGroup[index].GroupName.Text);
+                            result.Append(this.labGroup[index].GroupName.Text);
                         }
                     }
                 }
             }
+
             return result.ToString();
         }
     }

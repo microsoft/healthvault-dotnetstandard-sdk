@@ -7,6 +7,7 @@ using System;
 using System.Globalization;
 using System.Xml;
 using System.Xml.XPath;
+using Microsoft.HealthVault.Helpers;
 
 namespace Microsoft.HealthVault.ItemTypes
 {
@@ -16,14 +17,6 @@ namespace Microsoft.HealthVault.ItemTypes
     ///
     public class UnitConversion : HealthRecordItemData
     {
-        /// <summary>
-        /// Creates a new instance of the <see cref="UnitConversion"/> class with default values.
-        /// </summary>
-        ///
-        public UnitConversion()
-        {
-        }
-
         /// <summary>
         /// Populates this <see cref="UnitConversion"/> instance from the data in the specified XML.
         /// </summary>
@@ -40,8 +33,8 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             Validator.ThrowIfNavigatorNull(navigator);
 
-            _multiplier = XPathHelper.GetOptNavValueAsDouble(navigator, "multiplier");
-            _offset = XPathHelper.GetOptNavValueAsDouble(navigator, "offset");
+            this.multiplier = XPathHelper.GetOptNavValueAsDouble(navigator, "multiplier");
+            this.offset = XPathHelper.GetOptNavValueAsDouble(navigator, "offset");
         }
 
         /// <summary>
@@ -73,8 +66,8 @@ namespace Microsoft.HealthVault.ItemTypes
 
             writer.WriteStartElement("unit-conversion");
 
-            XmlWriterHelper.WriteOptDouble(writer, "multiplier", _multiplier);
-            XmlWriterHelper.WriteOptDouble(writer, "offset", _offset);
+            XmlWriterHelper.WriteOptDouble(writer, "multiplier", this.multiplier);
+            XmlWriterHelper.WriteOptDouble(writer, "offset", this.offset);
             writer.WriteEndElement();
         }
 
@@ -86,16 +79,16 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             get
             {
-                return _multiplier;
+                return this.multiplier;
             }
 
             set
             {
-                _multiplier = value;
+                this.multiplier = value;
             }
         }
 
-        private double? _multiplier;
+        private double? multiplier;
 
         /// <summary>
         /// Gets or sets the offset.
@@ -105,16 +98,16 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             get
             {
-                return _offset;
+                return this.offset;
             }
 
             set
             {
-                _offset = value;
+                this.offset = value;
             }
         }
 
-        private double? _offset;
+        private double? offset;
 
         /// <summary>
         /// Gets a string representation of the UnitConversion.
@@ -126,28 +119,28 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public override string ToString()
         {
-            return String.Format(
+            return string.Format(
                 CultureInfo.CurrentUICulture,
                 ResourceRetriever.GetResourceString("UnitConversionFormat"),
-                _multiplier,
-                _offset);
+                this.multiplier,
+                this.offset);
         }
 
         /// <summary>
         /// Convert a value using this conversion.
         /// </summary>
         /// <param name="value">The value to convert.</param>
-        /// <returns></returns>
+        /// <returns>the value using the selected conversion</returns>
         public double Convert(double value)
         {
-            if (_multiplier.HasValue)
+            if (this.multiplier.HasValue)
             {
-                value = value * _multiplier.Value;
+                value = value * this.multiplier.Value;
             }
 
-            if (_offset.HasValue)
+            if (this.offset.HasValue)
             {
-                value = value + _offset.Value;
+                value = value + this.offset.Value;
             }
 
             return value;
@@ -157,17 +150,17 @@ namespace Microsoft.HealthVault.ItemTypes
         /// Reverse convert a value using this conversion.
         /// </summary>
         /// <param name="value">The value to convert.</param>
-        /// <returns></returns>
+        /// <returns>the value using the reverse of this conversion</returns>
         public double ReverseConvert(double value)
         {
-            if (_offset.HasValue)
+            if (this.offset.HasValue)
             {
-                value = value - _offset.Value;
+                value = value - this.offset.Value;
             }
 
-            if (_multiplier.HasValue)
+            if (this.multiplier.HasValue)
             {
-                value = value / _multiplier.Value;
+                value = value / this.multiplier.Value;
             }
 
             return value;

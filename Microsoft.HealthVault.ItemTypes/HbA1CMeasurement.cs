@@ -97,7 +97,7 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         protected override void ParseValueXml(XPathNavigator navigator)
         {
-            Value = navigator.SelectSingleNode("mmol-per-mol").ValueAsDouble;
+            this.Value = navigator.SelectSingleNode("mmol-per-mol").ValueAsDouble;
         }
 
         /// <summary>
@@ -111,7 +111,7 @@ namespace Microsoft.HealthVault.ItemTypes
         protected override void WriteValueXml(XmlWriter writer)
         {
             writer.WriteElementString(
-                "mmol-per-mol", XmlConvert.ToString(Value));
+                "mmol-per-mol", XmlConvert.ToString(this.Value));
         }
 
         /// <summary>

@@ -44,6 +44,6 @@ namespace Microsoft.HealthVault.Authentication
         /// <summary>
         /// The record location isn't supported by the application.
         /// </summary>
-        RecordLocationNotSupported = 5,
+        RecordLocationNotSupported = 5
     }
 }

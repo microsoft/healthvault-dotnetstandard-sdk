@@ -6,6 +6,8 @@
 using System;
 using System.Xml;
 using System.Xml.XPath;
+using Microsoft.HealthVault.Helpers;
+using Microsoft.HealthVault.Thing;
 
 namespace Microsoft.HealthVault.ItemTypes
 {
@@ -59,7 +61,7 @@ namespace Microsoft.HealthVault.ItemTypes
         /// A GUID.
         /// </value>
         ///
-        public new static readonly Guid TypeId =
+        public static new readonly Guid TypeId =
             new Guid("7ea7a1f9-880b-4bd4-b593-f5660f20eda8");
 
         /// <summary>
@@ -77,43 +79,43 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         protected override void ParseXml(IXPathNavigable typeSpecificXml)
         {
-            _name.Clear();
+            this.name.Clear();
             XPathNavigator conditionNav =
                 typeSpecificXml.CreateNavigator().SelectSingleNode("condition");
 
             Validator.ThrowInvalidIfNull(conditionNav, "ConditionUnexpectedNode");
 
-            _name.ParseXml(conditionNav.SelectSingleNode("name"));
+            this.name.ParseXml(conditionNav.SelectSingleNode("name"));
 
             XPathNavigator onsetNav =
                 conditionNav.SelectSingleNode("onset-date");
             if (onsetNav != null)
             {
-                _onsetDate = new ApproximateDateTime();
-                _onsetDate.ParseXml(onsetNav);
+                this.onsetDate = new ApproximateDateTime();
+                this.onsetDate.ParseXml(onsetNav);
             }
 
             XPathNavigator statusNav =
                 conditionNav.SelectSingleNode("status");
             if (statusNav != null)
             {
-                _status = new CodableValue();
-                _status.ParseXml(statusNav);
+                this.status = new CodableValue();
+                this.status.ParseXml(statusNav);
             }
 
             XPathNavigator stopDateNav =
                 conditionNav.SelectSingleNode("stop-date");
             if (stopDateNav != null)
             {
-                _stopDate = new ApproximateDateTime();
-                _stopDate.ParseXml(stopDateNav);
+                this.stopDate = new ApproximateDateTime();
+                this.stopDate.ParseXml(stopDateNav);
             }
 
             XPathNavigator stopReasonNav =
                 conditionNav.SelectSingleNode("stop-reason");
             if (stopReasonNav != null)
             {
-                _stopReason = stopReasonNav.Value;
+                this.stopReason = stopReasonNav.Value;
             }
         }
 
@@ -136,31 +138,31 @@ namespace Microsoft.HealthVault.ItemTypes
         public override void WriteXml(XmlWriter writer)
         {
             Validator.ThrowIfWriterNull(writer);
-            Validator.ThrowSerializationIfNull(_name.Text, "ConditionNameNotSet");
+            Validator.ThrowSerializationIfNull(this.name.Text, "ConditionNameNotSet");
 
             // <condition>
             writer.WriteStartElement("condition");
 
-            _name.WriteXml("name", writer);
+            this.name.WriteXml("name", writer);
 
-            if (_onsetDate != null)
+            if (this.onsetDate != null)
             {
-                _onsetDate.WriteXml("onset-date", writer);
+                this.onsetDate.WriteXml("onset-date", writer);
             }
 
-            if (_status != null)
+            if (this.status != null)
             {
-                _status.WriteXml("status", writer);
+                this.status.WriteXml("status", writer);
             }
 
-            if (_stopDate != null)
+            if (this.stopDate != null)
             {
-                _stopDate.WriteXml("stop-date", writer);
+                this.stopDate.WriteXml("stop-date", writer);
             }
 
-            if (!string.IsNullOrEmpty(_stopReason))
+            if (!string.IsNullOrEmpty(this.stopReason))
             {
-                writer.WriteElementString("stop-reason", _stopReason);
+                writer.WriteElementString("stop-reason", this.stopReason);
             }
 
             // </condition>
@@ -177,14 +179,16 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public CodableValue Name
         {
-            get { return _name; }
+            get { return this.name; }
+
             set
             {
                 Validator.ThrowIfArgumentNull(value, "Name", "ConditionNameMandatory");
-                _name = value;
+                this.name = value;
             }
         }
-        private CodableValue _name = new CodableValue();
+
+        private CodableValue name = new CodableValue();
 
         /// <summary>
         /// Gets or sets the approximate date of the first occurrence of the
@@ -202,10 +206,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public ApproximateDateTime OnsetDate
         {
-            get { return _onsetDate; }
-            set { _onsetDate = value; }
+            get { return this.onsetDate; }
+            set { this.onsetDate = value; }
         }
-        private ApproximateDateTime _onsetDate;
+
+        private ApproximateDateTime onsetDate;
 
         /// <summary>
         /// Gets or sets the status of the condition.
@@ -223,10 +228,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public CodableValue Status
         {
-            get { return _status; }
-            set { _status = value; }
+            get { return this.status; }
+            set { this.status = value; }
         }
-        private CodableValue _status;
+
+        private CodableValue status;
 
         /// <summary>
         /// Gets or sets the approximate date the condition resolved.
@@ -245,10 +251,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public ApproximateDateTime StopDate
         {
-            get { return _stopDate; }
-            set { _stopDate = value; }
+            get { return this.stopDate; }
+            set { this.stopDate = value; }
         }
-        private ApproximateDateTime _stopDate;
+
+        private ApproximateDateTime stopDate;
 
         /// <summary>
         /// Gets or sets how the condition was resolved.
@@ -268,14 +275,16 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public string StopReason
         {
-            get { return _stopReason; }
+            get { return this.stopReason; }
+
             set
             {
                 Validator.ThrowIfStringIsWhitespace(value, "StopReason");
-                _stopReason = value;
+                this.stopReason = value;
             }
         }
-        private string _stopReason;
+
+        private string stopReason;
 
         /// <summary>
         /// Gets a string representation of the condition item.
@@ -287,7 +296,7 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public override string ToString()
         {
-            return Name.Text;
+            return this.Name.Text;
         }
     }
 }

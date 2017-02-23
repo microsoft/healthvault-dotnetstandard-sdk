@@ -44,7 +44,6 @@ namespace Microsoft.HealthVault.Authentication
         /// 
         HMAC CreateHmac(string algorithmName, byte[] keyMaterial);
 
-
         /// <summary>
         /// Creates a new Hash Message Authentication Code (HMAC) instance 
         /// based on the specified <paramref name="algorithmName"/>.

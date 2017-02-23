@@ -3,7 +3,7 @@
 // see http://www.microsoft.com/resources/sharedsource/licensingbasics/sharedsourcelicenses.mspx.
 // All other rights reserved.
 
-namespace Microsoft.HealthVault.ItemTypes.Csv
+namespace Microsoft.HealthVault.Thing
 {
     /// <summary>
     /// Represents a string entry in the CSV list
@@ -16,18 +16,12 @@ namespace Microsoft.HealthVault.ItemTypes.Csv
         /// <param name="value">The string value of this entry.</param>
         internal OtherItemDataCsvString(string value)
         {
-            Value = value;
+            this.Value = value;
         }
-
-        private string _value;
 
         /// <summary>
         /// Gets or sets the value of the string entry.
         /// </summary>
-        internal string Value
-        {
-            get { return _value; }
-            set { _value = value; }
-        }
+        internal string Value { get; set; }
     }
 }

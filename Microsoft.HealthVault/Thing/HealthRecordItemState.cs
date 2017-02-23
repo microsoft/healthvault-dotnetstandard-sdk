@@ -3,7 +3,7 @@
 // see http://www.microsoft.com/resources/sharedsource/licensingbasics/sharedsourcelicenses.mspx.
 // All other rights reserved.
 
-namespace Microsoft.HealthVault
+namespace Microsoft.HealthVault.Thing
 {
     /// <summary>
     /// Represents the state of the <see cref="HealthRecordItem"/>.
@@ -40,6 +40,6 @@ namespace Microsoft.HealthVault
         /// purposes and cannot be updated.
         /// </remarks>
         ///
-        Deleted = 2,
+        Deleted = 2
     }
 }

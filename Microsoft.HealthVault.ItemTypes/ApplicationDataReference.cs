@@ -6,6 +6,8 @@
 using System;
 using System.Xml;
 using System.Xml.XPath;
+using Microsoft.HealthVault.Helpers;
+using Microsoft.HealthVault.Thing;
 
 namespace Microsoft.HealthVault.ItemTypes
 {
@@ -44,16 +46,17 @@ namespace Microsoft.HealthVault.ItemTypes
         /// The <paramref name="name"/> parameter is <b>null</b>.
         /// </exception>
         ///
-        public ApplicationDataReference(string name) : base(TypeId)
+        public ApplicationDataReference(string name)
+            : base(TypeId)
         {
-            Name = name;
+            this.Name = name;
         }
 
         /// <summary>
         /// Retrieves the unique identifier for the item type.
         /// </summary>
         ///
-        public new static readonly Guid TypeId =
+        public static new readonly Guid TypeId =
             new Guid("9ad2a94f-c6a4-4d78-8b50-75b65be0e250");
 
         /// <summary>
@@ -77,13 +80,13 @@ namespace Microsoft.HealthVault.ItemTypes
 
             Validator.ThrowInvalidIfNull(itemNav, "ApplicationDataReferenceUnexpectedNode");
 
-            _name = XPathHelper.GetOptNavValue(itemNav, "name");
+            this.name = XPathHelper.GetOptNavValue(itemNav, "name");
 
-            _renderFileName = XPathHelper.GetOptNavValue(itemNav, "render-filename");
+            this.renderFileName = XPathHelper.GetOptNavValue(itemNav, "render-filename");
 
-            _publicUrl = XPathHelper.GetOptNavValueAsUri(itemNav, "public-url");
-            _configurationUrl = XPathHelper.GetOptNavValueAsUri(itemNav, "configuration-url");
-            _applicationDataUrl = XPathHelper.GetOptNavValueAsUri(itemNav, "application-data-url");
+            this.publicUrl = XPathHelper.GetOptNavValueAsUri(itemNav, "public-url");
+            this.configurationUrl = XPathHelper.GetOptNavValueAsUri(itemNav, "configuration-url");
+            this.applicationDataUrl = XPathHelper.GetOptNavValueAsUri(itemNav, "application-data-url");
         }
 
         /// <summary>
@@ -105,19 +108,19 @@ namespace Microsoft.HealthVault.ItemTypes
         public override void WriteXml(XmlWriter writer)
         {
             Validator.ThrowIfWriterNull(writer);
-            Validator.ThrowSerializationIfNull(_name, "ApplicationDataReferenceNameNotSet");
+            Validator.ThrowSerializationIfNull(this.name, "ApplicationDataReferenceNameNotSet");
 
             writer.WriteStartElement("application-data-reference");
 
-            writer.WriteElementString("name", _name);
+            writer.WriteElementString("name", this.name);
 
-            XmlWriterHelper.WriteOptString(writer, "render-filename", _renderFileName);
+            XmlWriterHelper.WriteOptString(writer, "render-filename", this.renderFileName);
 
-            XmlWriterHelper.WriteOptUrl(writer, "public-url", _publicUrl);
+            XmlWriterHelper.WriteOptUrl(writer, "public-url", this.publicUrl);
 
-            XmlWriterHelper.WriteOptUrl(writer, "configuration-url", _configurationUrl);
+            XmlWriterHelper.WriteOptUrl(writer, "configuration-url", this.configurationUrl);
 
-            XmlWriterHelper.WriteOptUrl(writer, "application-data-url", _applicationDataUrl);
+            XmlWriterHelper.WriteOptUrl(writer, "application-data-url", this.applicationDataUrl);
 
             writer.WriteEndElement();
         }
@@ -136,14 +139,16 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public string Name
         {
-            get { return _name; }
+            get { return this.name; }
+
             set
             {
                 Validator.ThrowIfStringNullOrEmpty(value, "Name");
-                _name = value;
+                this.name = value;
             }
         }
-        private string _name;
+
+        private string name;
 
         /// <summary>
         /// Gets or sets the fully qualified name of the Silverlight application.
@@ -164,17 +169,19 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public string RenderFileName
         {
-            get { return _renderFileName; }
+            get { return this.renderFileName; }
+
             set
             {
                 Validator.ThrowArgumentExceptionIf(
                     value != null && value.Length == 0,
                     "RenderFileName",
                     "RenderFileNameEmptyValue");
-                _renderFileName = value;
+                this.renderFileName = value;
             }
         }
-        private string _renderFileName;
+
+        private string renderFileName;
 
         /// <summary>
         /// Gets or sets the URL that renders the application.
@@ -190,10 +197,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public Uri PublicUrl
         {
-            get { return _publicUrl; }
-            set { _publicUrl = value; }
+            get { return this.publicUrl; }
+            set { this.publicUrl = value; }
         }
-        private Uri _publicUrl;
+
+        private Uri publicUrl;
 
         /// <summary>
         /// Gets or sets the URL to the application's configuration page.
@@ -209,10 +217,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public Uri ConfigurationUrl
         {
-            get { return _configurationUrl; }
-            set { _configurationUrl = value; }
+            get { return this.configurationUrl; }
+            set { this.configurationUrl = value; }
         }
-        private Uri _configurationUrl;
+
+        private Uri configurationUrl;
 
         /// <summary>
         /// Gets or sets the URL used to obtain data from the application.
@@ -229,10 +238,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public Uri ApplicationDataUrl
         {
-            get { return _applicationDataUrl; }
-            set { _applicationDataUrl = value; }
+            get { return this.applicationDataUrl; }
+            set { this.applicationDataUrl = value; }
         }
-        private Uri _applicationDataUrl;
+
+        private Uri applicationDataUrl;
 
         /// <summary>
         /// Gets a string representation of the application data reference.
@@ -244,14 +254,12 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public override string ToString()
         {
-            if (_name == null)
+            if (this.name == null)
             {
                 return string.Empty;
             }
-            else
-            {
-                return _name;
-            }
+
+            return this.name;
         }
     }
 }

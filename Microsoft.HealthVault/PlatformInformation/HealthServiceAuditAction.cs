@@ -3,7 +3,7 @@
 // see http://www.microsoft.com/resources/sharedsource/licensingbasics/sharedsourcelicenses.mspx.
 // All other rights reserved.
 
-namespace Microsoft.HealthVault
+namespace Microsoft.HealthVault.PlatformInformation
 {
     /// <summary>
     /// Indicates the operation that was performed.
@@ -34,6 +34,6 @@ namespace Microsoft.HealthVault
         /// A deletion occurred.
         /// </summary>
         ///
-        Deleted = 3,
+        Deleted = 3
     }
 }

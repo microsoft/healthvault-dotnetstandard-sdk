@@ -6,6 +6,7 @@
 using System.Globalization;
 using System.Xml;
 using System.Xml.XPath;
+using Microsoft.HealthVault.Helpers;
 
 namespace Microsoft.HealthVault.ItemTypes
 {
@@ -29,7 +30,7 @@ namespace Microsoft.HealthVault.ItemTypes
         /// with empty values.
         /// </summary>
         ///
-        public SpeedMeasurement() : base()
+        public SpeedMeasurement()
         {
         }
 
@@ -42,7 +43,8 @@ namespace Microsoft.HealthVault.ItemTypes
         /// The speed in meters per second.
         /// </param>
         ///
-        public SpeedMeasurement(double metersPerSecond) : base(metersPerSecond)
+        public SpeedMeasurement(double metersPerSecond)
+            : base(metersPerSecond)
         {
         }
 
@@ -96,7 +98,7 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         protected override void ParseValueXml(XPathNavigator navigator)
         {
-            Value = navigator.SelectSingleNode("meters-per-second").ValueAsDouble;
+            this.Value = navigator.SelectSingleNode("meters-per-second").ValueAsDouble;
         }
 
         /// <summary>
@@ -111,7 +113,7 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             writer.WriteElementString(
                 "meters-per-second",
-                XmlConvert.ToString(Value));
+                XmlConvert.ToString(this.Value));
         }
 
         /// <summary>

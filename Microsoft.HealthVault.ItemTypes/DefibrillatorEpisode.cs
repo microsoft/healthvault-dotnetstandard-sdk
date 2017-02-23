@@ -9,6 +9,8 @@ using System.Diagnostics.CodeAnalysis;
 using System.Text;
 using System.Xml;
 using System.Xml.XPath;
+using Microsoft.HealthVault.Helpers;
+using Microsoft.HealthVault.Thing;
 
 namespace Microsoft.HealthVault.ItemTypes
 {
@@ -52,7 +54,7 @@ namespace Microsoft.HealthVault.ItemTypes
         public DefibrillatorEpisode(HealthServiceDateTime when)
             : base(TypeId)
         {
-            When = when;
+            this.When = when;
         }
 
         /// <summary>
@@ -63,7 +65,7 @@ namespace Microsoft.HealthVault.ItemTypes
         /// A GUID.
         /// </value>
         ///
-        public new static readonly Guid TypeId =
+        public static new readonly Guid TypeId =
             new Guid("a3d38add-b7b2-4ccd-856b-9b14bbc4e075");
 
         /// <summary>
@@ -91,14 +93,14 @@ namespace Microsoft.HealthVault.ItemTypes
 
             Validator.ThrowInvalidIfNull(itemNav, "DefibrillatorEpisodeFieldUnexpectedNode");
 
-            _when = new HealthServiceDateTime();
-            _when.ParseXml(itemNav.SelectSingleNode("when"));
+            this.when = new HealthServiceDateTime();
+            this.when.ParseXml(itemNav.SelectSingleNode("when"));
 
-            _episodeTypeGroup = XPathHelper.GetOptNavValue<CodableValue>(itemNav, "episode-type-group");
-            _episodeType = XPathHelper.GetOptNavValue<CodableValue>(itemNav, "episode-type");
-            _dataSource = XPathHelper.GetOptNavValue<CodableValue>(itemNav, "data-source");
-            _durationInSeconds = XPathHelper.GetOptNavValueAsUInt(itemNav, "duration-in-seconds");
-            _episodeFields = XPathHelper.ParseXmlCollection<DefibrillatorEpisodeField>(itemNav, "episode-fields/episode-field");
+            this.episodeTypeGroup = XPathHelper.GetOptNavValue<CodableValue>(itemNav, "episode-type-group");
+            this.episodeType = XPathHelper.GetOptNavValue<CodableValue>(itemNav, "episode-type");
+            this.dataSource = XPathHelper.GetOptNavValue<CodableValue>(itemNav, "data-source");
+            this.durationInSeconds = XPathHelper.GetOptNavValueAsUInt(itemNav, "duration-in-seconds");
+            this.episodeFields = XPathHelper.ParseXmlCollection<DefibrillatorEpisodeField>(itemNav, "episode-fields/episode-field");
         }
 
         /// <summary>
@@ -116,16 +118,16 @@ namespace Microsoft.HealthVault.ItemTypes
         public override void WriteXml(XmlWriter writer)
         {
             Validator.ThrowIfWriterNull(writer);
-            Validator.ThrowSerializationIfNull(_when, "DefibrillatorEpisodeWhenNullValue");
+            Validator.ThrowSerializationIfNull(this.when, "DefibrillatorEpisodeWhenNullValue");
 
             writer.WriteStartElement("defibrillator-episode");
-            _when.WriteXml("when", writer);
-            XmlWriterHelper.WriteOpt(writer, "episode-type-group", _episodeTypeGroup);
-            XmlWriterHelper.WriteOpt(writer, "episode-type", _episodeType);
-            XmlWriterHelper.WriteOpt(writer, "data-source", _dataSource);
-            XmlWriterHelper.WriteOptUInt(writer, "duration-in-seconds", _durationInSeconds);
+            this.when.WriteXml("when", writer);
+            XmlWriterHelper.WriteOpt(writer, "episode-type-group", this.episodeTypeGroup);
+            XmlWriterHelper.WriteOpt(writer, "episode-type", this.episodeType);
+            XmlWriterHelper.WriteOpt(writer, "data-source", this.dataSource);
+            XmlWriterHelper.WriteOptUInt(writer, "duration-in-seconds", this.durationInSeconds);
             writer.WriteStartElement("episode-fields");
-            XmlWriterHelper.WriteXmlCollection(writer, _episodeFields, "episode-field");
+            XmlWriterHelper.WriteXmlCollection(writer, this.episodeFields, "episode-field");
             writer.WriteEndElement();
             writer.WriteEndElement();
         }
@@ -142,27 +144,27 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             StringBuilder stringBuilder = new StringBuilder();
 
-            if (EpisodeTypeGroup != null)
+            if (this.EpisodeTypeGroup != null)
             {
-                stringBuilder.Append(EpisodeTypeGroup);
+                stringBuilder.Append(this.EpisodeTypeGroup);
             }
 
-            if (EpisodeType != null)
+            if (this.EpisodeType != null)
             {
                 AddListSeparator(stringBuilder);
-                stringBuilder.Append(EpisodeType);
+                stringBuilder.Append(this.EpisodeType);
             }
 
-            if (DataSource != null)
+            if (this.DataSource != null)
             {
                 AddListSeparator(stringBuilder);
-                stringBuilder.Append(DataSource);
+                stringBuilder.Append(this.DataSource);
             }
 
-            if (DurationInSeconds != null)
+            if (this.DurationInSeconds != null)
             {
                 AddListSeparator(stringBuilder);
-                stringBuilder.Append(DurationInSeconds);
+                stringBuilder.Append(this.DurationInSeconds);
             }
 
             return stringBuilder.ToString();
@@ -185,17 +187,17 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             get
             {
-                return _when;
+                return this.when;
             }
 
             set
             {
                 Validator.ThrowIfArgumentNull(value, "When", "DefibrillatorEpisodeWhenNullValue");
-                _when = value;
+                this.when = value;
             }
         }
 
-        private HealthServiceDateTime _when = new HealthServiceDateTime();
+        private HealthServiceDateTime when = new HealthServiceDateTime();
 
         /// <summary>
         /// Gets and sets the episode type group.
@@ -212,16 +214,16 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             get
             {
-                return _episodeTypeGroup;
+                return this.episodeTypeGroup;
             }
 
             set
             {
-                _episodeTypeGroup = value;
+                this.episodeTypeGroup = value;
             }
         }
 
-        private CodableValue _episodeTypeGroup;
+        private CodableValue episodeTypeGroup;
 
         /// <summary>
         /// Gets and sets the episode type.
@@ -238,16 +240,16 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             get
             {
-                return _episodeType;
+                return this.episodeType;
             }
 
             set
             {
-                _episodeType = value;
+                this.episodeType = value;
             }
         }
 
-        private CodableValue _episodeType;
+        private CodableValue episodeType;
 
         /// <summary>
         /// Gets and sets the data source of the defibrillator episode.
@@ -263,16 +265,16 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             get
             {
-                return _dataSource;
+                return this.dataSource;
             }
 
             set
             {
-                _dataSource = value;
+                this.dataSource = value;
             }
         }
 
-        private CodableValue _dataSource;
+        private CodableValue dataSource;
 
         /// <summary>
         /// Gets and sets the duration of the episode in seconds.
@@ -281,16 +283,16 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             get
             {
-                return _durationInSeconds;
+                return this.durationInSeconds;
             }
 
             set
             {
-                _durationInSeconds = value;
+                this.durationInSeconds = value;
             }
         }
 
-        private uint? _durationInSeconds;
+        private uint? durationInSeconds;
 
         /// <summary>
         /// Gets the collection of defibrillator episode fields.
@@ -298,9 +300,9 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <remarks>
         /// Each episode field stores an episode property as a name/value pair.
         /// </remarks>
-        public Collection<DefibrillatorEpisodeField> EpisodeFields => _episodeFields;
+        public Collection<DefibrillatorEpisodeField> EpisodeFields => this.episodeFields;
 
-        private Collection<DefibrillatorEpisodeField> _episodeFields =
+        private Collection<DefibrillatorEpisodeField> episodeFields =
             new Collection<DefibrillatorEpisodeField>();
 
         private static void AddListSeparator(StringBuilder stringBuilder)

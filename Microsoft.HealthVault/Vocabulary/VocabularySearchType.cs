@@ -3,7 +3,7 @@
 // see http://www.microsoft.com/resources/sharedsource/licensingbasics/sharedsourcelicenses.mspx.
 // All other rights reserved.
 
-namespace Microsoft.HealthVault
+namespace Microsoft.HealthVault.Vocabulary
 {
     /// <summary>
     /// Defines the types of search operations that can be performed on
@@ -30,6 +30,6 @@ namespace Microsoft.HealthVault
         /// Does a full text search for the search string.
         /// </summary>
         ///
-        FullText = 2,
+        FullText = 2
     }
 }

@@ -3,8 +3,10 @@
 // see http://www.microsoft.com/resources/sharedsource/licensingbasics/sharedsourcelicenses.mspx.
 // All other rights reserved.
 
+using System;
 using System.Xml;
 using System.Xml.XPath;
+using Microsoft.HealthVault.Helpers;
 
 namespace Microsoft.HealthVault.ItemTypes
 {
@@ -42,8 +44,8 @@ namespace Microsoft.HealthVault.ItemTypes
         /// </exception>
         public ExerciseDetail(CodedValue name, StructuredMeasurement value)
         {
-            Name = name;
-            Value = value;
+            this.Name = name;
+            this.Value = value;
         }
 
         /// <summary>
@@ -62,10 +64,10 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             Validator.ThrowIfNavigatorNull(navigator);
 
-            _name =
+            this.name =
                 XPathHelper.GetOptNavValue<CodedValue>(navigator, "name");
 
-            _value =
+            this.value =
                 XPathHelper.GetOptNavValue<StructuredMeasurement>(navigator, "value");
         }
 
@@ -92,20 +94,20 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             Validator.ThrowIfStringNullOrEmpty(nodeName, "nodeName");
             Validator.ThrowIfWriterNull(writer);
-            Validator.ThrowSerializationIfNull(_name, "ExerciseDetailNameNotSet");
-            Validator.ThrowSerializationIfNull(_value, "ExerciseDetailValueNotSet");
+            Validator.ThrowSerializationIfNull(this.name, "ExerciseDetailNameNotSet");
+            Validator.ThrowSerializationIfNull(this.value, "ExerciseDetailValueNotSet");
 
             writer.WriteStartElement(nodeName);
 
             XmlWriterHelper.WriteOpt(
                 writer,
                 "name",
-                _name);
+                this.name);
 
             XmlWriterHelper.WriteOpt(
                 writer,
                 "value",
-                _value);
+                this.value);
 
             writer.WriteEndElement();
         }
@@ -129,15 +131,16 @@ namespace Microsoft.HealthVault.ItemTypes
         /// </exception>
         public CodedValue Name
         {
-            get { return _name; }
+            get { return this.name; }
+
             set
             {
                 Validator.ThrowIfArgumentNull(value, "Name", "ExerciseDetailNameNullValue");
-                _name = value;
+                this.name = value;
             }
         }
 
-        private CodedValue _name;
+        private CodedValue name;
 
         /// <summary>
         /// Gets or sets the value of the exercise detail.
@@ -157,15 +160,16 @@ namespace Microsoft.HealthVault.ItemTypes
         /// </exception>
         public StructuredMeasurement Value
         {
-            get { return _value; }
+            get { return this.value; }
+
             set
             {
                 Validator.ThrowIfArgumentNull(value, "Value", "ExerciseDetailNameNullValue");
-                _value = value;
+                this.value = value;
             }
         }
 
-        private StructuredMeasurement _value;
+        private StructuredMeasurement value;
 
         /// <summary>
         /// Gets a string representation of the ExerciseDetail item.
@@ -181,8 +185,8 @@ namespace Microsoft.HealthVault.ItemTypes
                 string.Format(
                     ResourceRetriever.GetResourceString(
                         "NameEqualsValue"),
-                    _name.ToString(),
-                    _value.ToString());
+                    this.name.ToString(),
+                    this.value.ToString());
         }
 
         /// <summary>
@@ -193,22 +197,22 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <summary>
         /// Detail name for MinimumHeartrate_BPM.
         /// </summary>
-        public const string MinimumHeartrate_BPM = "MinimumHeartrate_BPM";
+        public const string MinimumHeartrateBPM = "MinimumHeartrate_BPM";
 
         /// <summary>
         /// Detail name for AverageHeartrate_BPM.
         /// </summary>
-        public const string AverageHeartrate_BPM = "AverageHeartrate_BPM";
+        public const string AverageHeartrateBPM = "AverageHeartrate_BPM";
 
         /// <summary>
         /// Detail name for MaximumHeartrate_BPM
         /// </summary>
-        public const string MaximumHeartrate_BPM = "MaximumHeartrate_BPM";
+        public const string MaximumHeartrateBPM = "MaximumHeartrate_BPM";
 
         /// <summary>
         /// Detail name for PeakHeartrate_BPM (use MaximumHeartrate_BPM instead)
         /// </summary>
-        public const string PeakHeartrate_BPM = "PeakHeartrate_BPM";
+        public const string PeakHeartrateBPM = "PeakHeartrate_BPM";
 
         /// <summary>
         /// Detail name for Work_kJ.
@@ -216,7 +220,7 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <remarks>
         /// The work_kJ detail pertains to the actual amount of work done during the exercise.
         /// </remarks>
-        public const string Work_kJ = "Work_kJ";
+        public const string WorkKJ = "Work_kJ";
 
         /// <summary>
         /// Detail name for CaloriesBurned_calories.
@@ -225,7 +229,7 @@ namespace Microsoft.HealthVault.ItemTypes
         /// The CaloriesBurned_calories detail expresses the number of food calories required to
         /// balance out the energy expended in the exercise.
         /// </remarks>
-        public const string CaloriesBurned_calories = "CaloriesBurned_calories";
+        public const string CaloriesBurnedCalories = "CaloriesBurned_calories";
 
         /// <summary>
         /// Detail name for FatCaloriesBurned_calories.
@@ -234,7 +238,7 @@ namespace Microsoft.HealthVault.ItemTypes
         /// The FatCaloriesBurned_calories detail expresses the number of fat calories required to
         /// balance out the energy expended in the exercise.
         /// </remarks>
-        public const string FatCaloriesBurned_calories = "FatCaloriesBurned_calories";
+        public const string FatCaloriesBurnedCalories = "FatCaloriesBurned_calories";
 
         /// <summary>
         /// Detail name for EnergyOld_kJ.
@@ -242,7 +246,7 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <remarks>
         /// This value corresponds to Energy_kJ value in the AerobicSession type.
         /// </remarks>
-        public const string EnergyOld_kJ = "EnergyOld_kJ";
+        public const string EnergyOldKJ = "EnergyOld_kJ";
 
         /// <summary>
         /// Detail name for EnergyFromFatOld_kJ.
@@ -250,67 +254,67 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <remarks>
         /// This value corresponds to EnergyFromFat_kJ value in the AerobicSession type.
         /// </remarks>
-        public const string EnergyFromFatOld_kJ = "EnergyFromFatOld_kJ";
+        public const string EnergyFromFatOldKJ = "EnergyFromFatOld_kJ";
 
         /// <summary>
         /// Detail name for MinimumSpeed_m-per-s.
         /// </summary>
-        public const string MinimumSpeed_m_per_s = "MinimumSpeed_m-per-s";
+        public const string MinimumSpeedMPerS = "MinimumSpeed_m-per-s";
 
         /// <summary>
         /// Detail name for AverageSpeed_m-per-s.
         /// </summary>
-        public const string AverageSpeed_m_per_s = "AverageSpeed_m-per-s";
+        public const string AverageSpeedMPerS = "AverageSpeed_m-per-s";
 
         /// <summary>
         /// Detail name for MaximumSpeed_m-per-s.
         /// </summary>
-        public const string MaximumSpeed_m_per_s = "MaximumSpeed_m-per-s";
+        public const string MaximumSpeedMPerS = "MaximumSpeed_m-per-s";
 
         /// <summary>
         /// Detail name for MinimumPace_s-per-100m.
         /// </summary>
-        public const string MinimumPace_s_per_100m = "MinimumPace_s-per-100m";
+        public const string MinimumPaceSPer100m = "MinimumPace_s-per-100m";
 
         /// <summary>
         /// Detail name for AveragePace_s-per-100m.
         /// </summary>
-        public const string AveragePace_s_per_100m = "AveragePace_s-per-100m";
+        public const string AveragePaceSPer100m = "AveragePace_s-per-100m";
 
         /// <summary>
         /// Detail name for MaximumPace_s-per-100m.
         /// </summary>
-        public const string MaximumPace_s_per_100m = "MaximumPace_s-per-100m";
+        public const string MaximumPaceSPer100m = "MaximumPace_s-per-100m";
 
         /// <summary>
         /// Detail name for MinimumPower_watts.
         /// </summary>
-        public const string MinimumPower_watts = "MinimumPower_watts";
+        public const string MinimumPowerWatts = "MinimumPower_watts";
 
         /// <summary>
         /// Detail name for AveragePower_watts.
         /// </summary>
-        public const string AveragePower_watts = "AveragePower_watts";
+        public const string AveragePowerWatts = "AveragePower_watts";
 
         /// <summary>
         /// Detail name for MaximumPower_watts.
         /// </summary>
-        public const string MaximumPower_watts = "MaximumPower_watts";
+        public const string MaximumPowerWatts = "MaximumPower_watts";
 
         /// <summary>
         /// Detail name for MinimumTorque_Nm.
         /// </summary>
-        public const string MinimumTorque_Nm = "MinimumTorque_Nm";
+        public const string MinimumTorqueNm = "MinimumTorque_Nm";
 
         /// <summary>
         /// Detail name for AverageTorque_Nm.
         /// </summary>
-        public const string AverageTorque_Nm = "AverageTorque_Nm";
+        public const string AverageTorqueNm = "AverageTorque_Nm";
 
         /// <summary>
         /// Detail name for MaximumTorque_Nm.
         /// </summary>
-        public const string MaximumTorque_Nm = "MaximumTorque_Nm";
+        public const string MaximumTorqueNm = "MaximumTorque_Nm";
 
         /// <summary>
         /// Detail name for LeftRightBalance_percent.
@@ -322,101 +326,101 @@ namespace Microsoft.HealthVault.ItemTypes
         /// For example, if the this value is 0.45, the left leg is doing 45% of the work and the right leg is
         /// doing 55% of the work.
         /// </remarks>
-        public const string LeftRightBalance_percent = "LeftRightBalance_percent";
+        public const string LeftRightBalancePercent = "LeftRightBalance_percent";
 
         /// <summary>
         /// Detail name for MinimumCadence_RPM.
         /// </summary>
-        public const string MinimumCadence_RPM = "MinimumCadence_RPM";
+        public const string MinimumCadenceRPM = "MinimumCadence_RPM";
 
         /// <summary>
         /// Detail name for AverageCadence_RPM.
         /// </summary>
-        public const string AverageCadence_RPM = "AverageCadence_RPM";
+        public const string AverageCadenceRPM = "AverageCadence_RPM";
 
         /// <summary>
         /// Detail name for MaximumCadence_RPM.
         /// </summary>
-        public const string MaximumCadence_RPM = "MaximumCadence_RPM";
+        public const string MaximumCadenceRPM = "MaximumCadence_RPM";
 
         /// <summary>
         /// Detail name for MinimumTemp_celsius.
         /// </summary>
-        public const string MinimumTemp_celsius = "MinimumTemp_celsius";
+        public const string MinimumTempCelsius = "MinimumTemp_celsius";
 
         /// <summary>
         /// Detail name for AverageTemp_celsius.
         /// </summary>
-        public const string AverageTemp_celsius = "AverageTemp_celsius";
+        public const string AverageTempCelsius = "AverageTemp_celsius";
 
         /// <summary>
         /// Detail name for MaximumTemp_celsius.
         /// </summary>
-        public const string MaximumTemp_celsius = "MaximumTemp_celsius";
+        public const string MaximumTempCelsius = "MaximumTemp_celsius";
 
         /// <summary>
         /// Detail name for MaximumTemp_celsius.
         /// </summary>
-        public const string MinimumAltitude_meters = "MaximumTemp_celsius";
+        public const string MinimumAltitudeMeters = "MaximumTemp_celsius";
 
         /// <summary>
         /// Detail name for AverageAltitude_meters.
         /// </summary>
-        public const string AverageAltitude_meters = "AverageAltitude_meters";
+        public const string AverageAltitudeMeters = "AverageAltitude_meters";
 
         /// <summary>
         /// Detail name for MaximumAltitude_meters.
         /// </summary>
-        public const string MaximumAltitude_meters = "MaximumAltitude_meters";
+        public const string MaximumAltitudeMeters = "MaximumAltitude_meters";
 
         /// <summary>
         /// Detail name for ElevationGain_meters.
         /// </summary>
-        public const string ElevationGain_meters = "ElevationGain_meters";
+        public const string ElevationGainMeters = "ElevationGain_meters";
 
         /// <summary>
         /// Detail name for ElevationLoss_meters.
         /// </summary>
-        public const string ElevationLoss_meters = "ElevationLoss_meters";
+        public const string ElevationLossMeters = "ElevationLoss_meters";
 
         /// <summary>
         /// Detail name for Steps_count.
         /// </summary>
-        public const string Steps_count = "Steps_count";
+        public const string StepsCount = "Steps_count";
 
         /// <summary>
         /// Detail name for AerobicSteps_count.
         /// </summary>
-        public const string AerobicSteps_count = "AerobicSteps_count";
+        public const string AerobicStepsCount = "AerobicSteps_count";
 
         /// <summary>
         /// Detail name for AerobicStepDuration_minutes.
         /// </summary>
-        public const string AerobicStepDuration_minutes = "AerobicStepDuration_minutes";
+        public const string AerobicStepDurationMinutes = "AerobicStepDuration_minutes";
 
         /// <summary>
         /// Detail name for Odometer_meters.
         /// </summary>
-        public const string Odometer_meters = "Odometer_meters";
+        public const string OdometerMeters = "Odometer_meters";
 
         /// <summary>
         /// Detail name for MaximumVerticalSpeedAscending_m-per-s.
         /// </summary>
-        public const string MaximumVerticalSpeedAscending_m_per_s = "MaximumVerticalSpeedAscending_m-per-s";
+        public const string MaximumVerticalSpeedAscendingMPerS = "MaximumVerticalSpeedAscending_m-per-s";
 
         /// <summary>
         /// Detail name for MaximumVerticalSpeedDescending_m-per-s.
         /// </summary>
-        public const string MaximumVerticalSpeedDescending_m_per_s = "MaximumVerticalSpeedDescending_m-per-s";
+        public const string MaximumVerticalSpeedDescendingMPerS = "MaximumVerticalSpeedDescending_m-per-s";
 
         /// <summary>
         /// Detail name for AverageVerticalSpeedAscending_m-per-s.
         /// </summary>
-        public const string AverageVerticalSpeedAscending_m_per_s = "AverageVerticalSpeedAscending_m-per-s";
+        public const string AverageVerticalSpeedAscendingMPerS = "AverageVerticalSpeedAscending_m-per-s";
 
         /// <summary>
         /// Detail name for AverageVerticalSpeedDescending_m-per-s.
         /// </summary>
-        public const string AverageVerticalSpeedDescending_m_per_s = "AverageVerticalSpeedDescending_m-per-s";
+        public const string AverageVerticalSpeedDescendingMPerS = "AverageVerticalSpeedDescending_m-per-s";
     }
 }

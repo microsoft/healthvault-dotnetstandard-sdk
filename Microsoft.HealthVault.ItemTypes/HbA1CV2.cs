@@ -7,6 +7,8 @@ using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Xml;
 using System.Xml.XPath;
+using Microsoft.HealthVault.Helpers;
+using Microsoft.HealthVault.Thing;
 
 namespace Microsoft.HealthVault.ItemTypes
 {
@@ -56,8 +58,8 @@ namespace Microsoft.HealthVault.ItemTypes
         public HbA1CV2(HealthServiceDateTime when, HbA1CMeasurement value)
             : base(TypeId)
         {
-            When = when;
-            Value = value;
+            this.When = when;
+            this.Value = value;
         }
 
         /// <summary>
@@ -68,7 +70,7 @@ namespace Microsoft.HealthVault.ItemTypes
         /// A GUID.
         /// </value>
         ///
-        public new static readonly Guid TypeId =
+        public static new readonly Guid TypeId =
             new Guid("62160199-b80f-4905-a55a-ac4ba825ceae");
 
         /// <summary>
@@ -92,17 +94,17 @@ namespace Microsoft.HealthVault.ItemTypes
 
             Validator.ThrowInvalidIfNull(itemNav, "HbA1CV2UnexpectedNode");
 
-            _when = new HealthServiceDateTime();
-            _when.ParseXml(itemNav.SelectSingleNode("when"));
+            this.when = new HealthServiceDateTime();
+            this.when.ParseXml(itemNav.SelectSingleNode("when"));
 
-            _value = XPathHelper.GetOptNavValue<HbA1CMeasurement>(itemNav, "value");
+            this.value = XPathHelper.GetOptNavValue<HbA1CMeasurement>(itemNav, "value");
 
-            _assayMethod =
+            this.assayMethod =
                 XPathHelper.GetOptNavValue<CodableValue>(
                     itemNav,
                     "HbA1C-assay-method");
 
-            _deviceId =
+            this.deviceId =
                 XPathHelper.GetOptNavValue(itemNav, "device-id");
         }
 
@@ -121,22 +123,22 @@ namespace Microsoft.HealthVault.ItemTypes
         public override void WriteXml(XmlWriter writer)
         {
             Validator.ThrowIfWriterNull(writer);
-            Validator.ThrowSerializationIfNull(_value, "HbA1CV2ValueMandatory");
+            Validator.ThrowSerializationIfNull(this.value, "HbA1CV2ValueMandatory");
 
             // <HbA1C>
             writer.WriteStartElement("HbA1C");
 
             // <when>
-            _when.WriteXml("when", writer);
+            this.when.WriteXml("when", writer);
 
             // <value>
-            _value.WriteXml("value", writer);
+            this.value.WriteXml("value", writer);
 
             // <HbA1C-assay-method>
-            XmlWriterHelper.WriteOpt(writer, "HbA1C-assay-method", _assayMethod);
+            XmlWriterHelper.WriteOpt(writer, "HbA1C-assay-method", this.assayMethod);
 
             // <device-id>
-            XmlWriterHelper.WriteOptString(writer, "device-id", _deviceId);
+            XmlWriterHelper.WriteOptString(writer, "device-id", this.deviceId);
 
             // </HbA1C>
             writer.WriteEndElement();
@@ -159,17 +161,17 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             get
             {
-                return _when;
+                return this.when;
             }
 
             set
             {
                 Validator.ThrowIfArgumentNull(value, "When", "WhenNullValue");
-                _when = value;
+                this.when = value;
             }
         }
 
-        private HealthServiceDateTime _when = new HealthServiceDateTime();
+        private HealthServiceDateTime when = new HealthServiceDateTime();
 
         /// <summary>
         /// Gets or sets the amount of glycosylated hemoglobin in the blood.
@@ -187,17 +189,17 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             get
             {
-                return _value;
+                return this.value;
             }
 
             set
             {
                 Validator.ThrowIfArgumentNull(value, "Value", "HbA1CV2ValueMandatory");
-                _value = value;
+                this.value = value;
             }
         }
 
-        private HbA1CMeasurement _value;
+        private HbA1CMeasurement value;
 
         /// <summary>
         /// Gets or sets the assay method.
@@ -215,16 +217,16 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             get
             {
-                return _assayMethod;
+                return this.assayMethod;
             }
 
             set
             {
-                _assayMethod = value;
+                this.assayMethod = value;
             }
         }
 
-        private CodableValue _assayMethod;
+        private CodableValue assayMethod;
 
         /// <summary>
         /// Gets or sets the ID of the device that took the reading.
@@ -242,17 +244,17 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             get
             {
-                return _deviceId;
+                return this.deviceId;
             }
 
             set
             {
                 Validator.ThrowIfStringIsWhitespace(value, "DeviceId");
-                _deviceId = value;
+                this.deviceId = value;
             }
         }
 
-        private string _deviceId;
+        private string deviceId;
 
         /// <summary>
         /// Gets a string representation of the HbA1C value.
@@ -266,9 +268,9 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             string result = string.Empty;
 
-            if (Value != null)
+            if (this.Value != null)
             {
-                result = Value.ToString();
+                result = this.Value.ToString();
             }
 
             return result;

@@ -8,8 +8,9 @@ using System.IO;
 using System.Net.Http.Headers;
 using System.Xml;
 using System.Xml.XPath;
+using Microsoft.HealthVault.Helpers;
 
-namespace Microsoft.HealthVault
+namespace Microsoft.HealthVault.Transport
 {
     /// <summary>
     /// Contains the response information from the HealthVault service after
@@ -18,10 +19,10 @@ namespace Microsoft.HealthVault
     ///
     public class HealthServiceResponseData
     {
-        //
         // Prevents creation of an instance.
-        //
-        internal HealthServiceResponseData() { }
+        internal HealthServiceResponseData()
+        {
+        }
 
         /// <summary>
         /// Gets the status code of the response.
@@ -37,7 +38,7 @@ namespace Microsoft.HealthVault
         /// to get more information about the error.
         /// </remarks>
         ///
-        public HealthServiceStatusCode Code => HealthServiceStatusCodeManager.GetStatusCode(this._codeId);
+        public HealthServiceStatusCode Code => HealthServiceStatusCodeManager.GetStatusCode(this.CodeId);
 
         /// <summary>
         /// Gets the integer identifier of the status code in the HealthVault
@@ -54,13 +55,7 @@ namespace Microsoft.HealthVault
         /// status code for further investigation.
         /// </remarks>
         ///
-        public int CodeId
-        {
-            get { return _codeId; }
-            internal set { _codeId = value; }
-        }
-
-        private int _codeId;
+        public int CodeId { get; internal set; }
 
         /// <summary>
         /// Gets the information about an error that occurred while processing
@@ -76,12 +71,7 @@ namespace Microsoft.HealthVault
         /// <see cref="HealthServiceStatusCode.Ok"/>.
         /// </remarks>
         ///
-        public HealthServiceResponseError Error
-        {
-            get { return _error; }
-            internal set { _error = value; }
-        }
-        private HealthServiceResponseError _error;
+        public HealthServiceResponseError Error { get; internal set; }
 
         /// <summary>
         /// Gets the info section of the response XML.
@@ -91,16 +81,19 @@ namespace Microsoft.HealthVault
         {
             get
             {
-                if (_infoNavigator == null && InfoReader != null)
+                if (this.infoNavigator == null && this.InfoReader != null)
                 {
-                    _infoNavigator = new XPathDocument(NewInfoReader).CreateNavigator();
-                    _infoNavigator.MoveToFirstChild();
+                    this.infoNavigator = new XPathDocument(this.NewInfoReader).CreateNavigator();
+                    this.infoNavigator.MoveToFirstChild();
                 }
-                return _infoNavigator;
+
+                return this.infoNavigator;
             }
-            internal set { _infoNavigator = value; }
+
+            internal set { this.infoNavigator = value; }
         }
-        private XPathNavigator _infoNavigator;
+
+        private XPathNavigator infoNavigator;
 
         /// <summary>
         /// Gets the info section of the response XML.
@@ -108,28 +101,17 @@ namespace Microsoft.HealthVault
         ///
         public XmlReader InfoReader
         {
-            get
-            {
-                if (_infoReader == null)
-                {
-                    _infoReader = NewInfoReader;
-                }
-                return _infoReader;
-            }
-            internal set { _infoReader = value; }
+            get { return this.infoReader ?? (this.infoReader = this.NewInfoReader); }
+
+            internal set { this.infoReader = value; }
         }
-        private XmlReader _infoReader;
+
+        private XmlReader infoReader;
 
         /// <summary>
         /// Gets the headers on the response.
         /// </summary>
-        public HttpResponseHeaders ResponseHeaders
-        {
-            get { return _responseHeaders; }
-            internal set { _responseHeaders = value; }
-        }
-
-        private HttpResponseHeaders _responseHeaders;
+        public HttpResponseHeaders ResponseHeaders { get; internal set; }
 
         internal XmlReader NewInfoReader
         {
@@ -140,27 +122,25 @@ namespace Microsoft.HealthVault
 
                 try
                 {
-                    if (_responseText.Array != null && _responseText.Count > 0)
+                    if (this.ResponseText.Array != null && this.ResponseText.Count > 0)
                     {
                         ms =
                             new MemoryStream(
-                                _responseText.Array,
-                                _responseText.Offset,
-                                _responseText.Count,
+                                this.ResponseText.Array,
+                                this.ResponseText.Offset,
+                                this.ResponseText.Count,
                                 false);
 
                         reader = XmlReader.Create(ms, SDKHelper.XmlReaderSettings);
                         reader.NameTable.Add("wc");
                         reader.ReadToFollowing("wc:info");
                     }
+
                     return reader;
                 }
                 catch
                 {
-                    if (ms != null)
-                    {
-                        ms.Dispose();
-                    }
+                    ms?.Dispose();
 
                     throw;
                 }
@@ -171,11 +151,6 @@ namespace Microsoft.HealthVault
         /// Gets or sets the cached response results text (UTF8 encoded).
         /// </summary>
         ///
-        internal ArraySegment<byte> ResponseText
-        {
-            get { return _responseText; }
-            set { _responseText = value; }
-        }
-        private ArraySegment<byte> _responseText;
+        internal ArraySegment<byte> ResponseText { get; set; }
     }
 }

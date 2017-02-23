@@ -3,14 +3,18 @@
 // see http://www.microsoft.com/resources/sharedsource/licensingbasics/sharedsourcelicenses.mspx.
 // All other rights reserved.
 
-using Microsoft.HealthVault.Web.Authentication;
 using System;
 using System.Security;
 using System.Threading.Tasks;
 using System.Xml.XPath;
+using Microsoft.HealthVault.Application;
+using Microsoft.HealthVault.Authentication;
 using Microsoft.HealthVault.Exceptions;
+using Microsoft.HealthVault.Helpers;
+using Microsoft.HealthVault.Person;
+using Microsoft.HealthVault.PlatformInformation;
 
-namespace Microsoft.HealthVault.Web
+namespace Microsoft.HealthVault.Connection
 {
     /// <summary>
     /// Represents a connection for an application to HealthVault for
@@ -122,13 +126,14 @@ namespace Microsoft.HealthVault.Web
             {
                 credential =
                     new WebApplicationCredential(
-                        ApplicationId,
+                        this.ApplicationId,
                         ApplicationCertificateStore.Current.ApplicationCertificate);
             }
-            Credential = credential;
+
+            this.Credential = credential;
             if (offlinePersonId != Guid.Empty)
             {
-                _offlinePersonId = offlinePersonId;
+                this.offlinePersonId = offlinePersonId;
             }
         }
 
@@ -314,10 +319,10 @@ namespace Microsoft.HealthVault.Web
                 callingApplicationId,
                 serviceInstance)
         {
-            Credential = credential;
+            this.Credential = credential;
             if (offlinePersonId != Guid.Empty)
             {
-                _offlinePersonId = offlinePersonId;
+                this.offlinePersonId = offlinePersonId;
             }
         }
 
@@ -410,10 +415,10 @@ namespace Microsoft.HealthVault.Web
                 callingApplicationId,
                 healthServiceUrl)
         {
-            Credential = credential;
+            this.Credential = credential;
             if (offlinePersonId != Guid.Empty)
             {
-                _offlinePersonId = offlinePersonId;
+                this.offlinePersonId = offlinePersonId;
             }
         }
 
@@ -449,7 +454,7 @@ namespace Microsoft.HealthVault.Web
         ///
         public async Task AuthenticateAsync()
         {
-            await Credential.AuthenticateIfRequiredAsync(
+            await this.Credential.AuthenticateIfRequiredAsync(
                 this,
                 this.ApplicationId).ConfigureAwait(false);
         }
@@ -528,7 +533,8 @@ namespace Microsoft.HealthVault.Web
         ///
         public Guid OfflinePersonId
         {
-            get { return _offlinePersonId; }
+            get { return this.offlinePersonId; }
+
             set
             {
                 Validator.ThrowArgumentExceptionIf(
@@ -536,9 +542,10 @@ namespace Microsoft.HealthVault.Web
                     "offlinePersonId",
                     "CtorOfflinePersonIdEmpty");
 
-                _offlinePersonId = value;
+                this.offlinePersonId = value;
             }
         }
-        private Guid _offlinePersonId;
+
+        private Guid offlinePersonId;
     }
 }

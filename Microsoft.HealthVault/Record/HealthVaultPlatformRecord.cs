@@ -10,8 +10,13 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.XPath;
+using Microsoft.HealthVault.Connection;
+using Microsoft.HealthVault.Exceptions;
+using Microsoft.HealthVault.Helpers;
+using Microsoft.HealthVault.Thing;
+using Microsoft.HealthVault.Transport;
 
-namespace Microsoft.HealthVault.PlatformPrimitives
+namespace Microsoft.HealthVault.Record
 {
     /// <summary>
     /// Provides low-level access to the HealthVault record operations.
@@ -20,7 +25,6 @@ namespace Microsoft.HealthVault.PlatformPrimitives
     /// <see cref="HealthVaultPlatform"/> uses this class to perform operations. Set
     /// HealthVaultPlatformRecord.Current to a derived class to intercept all message calls.
     /// </remarks>
-
     public class HealthVaultPlatformRecord
     {
         /// <summary>
@@ -40,10 +44,10 @@ namespace Microsoft.HealthVault.PlatformPrimitives
         ///
         public static void EnableMock(HealthVaultPlatformRecord mock)
         {
-            Validator.ThrowInvalidIf(_saved != null, "ClassAlreadyMocked");
+            Validator.ThrowInvalidIf(saved != null, "ClassAlreadyMocked");
 
-            _saved = _current;
-            _current = mock;
+            saved = Current;
+            Current = mock;
         }
 
         /// <summary>
@@ -56,18 +60,15 @@ namespace Microsoft.HealthVault.PlatformPrimitives
         ///
         public static void DisableMock()
         {
-            Validator.ThrowInvalidIfNull(_saved, "ClassIsntMocked");
+            Validator.ThrowInvalidIfNull(saved, "ClassIsntMocked");
 
-            _current = _saved;
-            _saved = null;
+            Current = saved;
+            saved = null;
         }
 
-        internal static HealthVaultPlatformRecord Current
-        {
-            get { return _current; }
-        }
-        private static HealthVaultPlatformRecord _current = new HealthVaultPlatformRecord();
-        private static HealthVaultPlatformRecord _saved;
+        internal static HealthVaultPlatformRecord Current { get; private set; } = new HealthVaultPlatformRecord();
+
+        private static HealthVaultPlatformRecord saved;
 
         /// <summary>
         /// Releases the authorization of the application on the health record.
@@ -144,16 +145,16 @@ namespace Microsoft.HealthVault.PlatformPrimitives
             HealthRecordAccessor accessor,
             IList<Guid> healthRecordItemTypeIds)
         {
-            HealthRecordPermissions recordPermissions = await QueryRecordPermissionsAsync(connection, accessor, healthRecordItemTypeIds).ConfigureAwait(false);
+            HealthRecordPermissions recordPermissions = await this.QueryRecordPermissionsAsync(connection, accessor, healthRecordItemTypeIds).ConfigureAwait(false);
             Collection<HealthRecordItemTypePermission> typePermissions = recordPermissions.ItemTypePermissions;
 
             Dictionary<Guid, HealthRecordItemTypePermission> permissions = new Dictionary<Guid, HealthRecordItemTypePermission>();
 
-            for (int i = 0; i < healthRecordItemTypeIds.Count; ++i)
+            foreach (Guid typeId in healthRecordItemTypeIds)
             {
-                if (!permissions.ContainsKey(healthRecordItemTypeIds[i]))
+                if (!permissions.ContainsKey(typeId))
                 {
-                    permissions.Add(healthRecordItemTypeIds[i], null);
+                    permissions.Add(typeId, null);
                 }
             }
 
@@ -212,7 +213,7 @@ namespace Microsoft.HealthVault.PlatformPrimitives
             HealthRecordAccessor accessor,
             IList<Guid> healthRecordItemTypeIds)
         {
-            HealthRecordPermissions permissions = await QueryRecordPermissionsAsync(connection, accessor, healthRecordItemTypeIds).ConfigureAwait(false);
+            HealthRecordPermissions permissions = await this.QueryRecordPermissionsAsync(connection, accessor, healthRecordItemTypeIds).ConfigureAwait(false);
             return permissions.ItemTypePermissions;
         }
 
@@ -266,10 +267,10 @@ namespace Microsoft.HealthVault.PlatformPrimitives
             Validator.ThrowIfArgumentNull(healthRecordItemTypeIds, "healthRecordItemTypeIds", "CtorhealthRecordItemTypeIdsArgumentNull");
 
             HealthServiceRequest request =
-                new HealthServiceRequest(connection, "QueryPermissions", 1, accessor);
-
-            request.Parameters =
-                GetQueryPermissionsParametersXml(healthRecordItemTypeIds);
+                new HealthServiceRequest(connection, "QueryPermissions", 1, accessor)
+                {
+                    Parameters = GetQueryPermissionsParametersXml(healthRecordItemTypeIds)
+                };
 
             HealthServiceResponseData responseData = await request.ExecuteAsync().ConfigureAwait(false);
 
@@ -317,12 +318,14 @@ namespace Microsoft.HealthVault.PlatformPrimitives
                         "thing-type-id",
                         guid.ToString());
                 }
+
                 writer.Flush();
             }
+
             return parameters.ToString();
         }
 
-        private static readonly XPathExpression _queryPermissionsInfoPath =
+        private static readonly XPathExpression QueryPermissionsInfoPath =
             XPathExpression.Compile("/wc:info");
 
         internal static XPathExpression GetQueryPermissionsInfoXPathExpression(
@@ -336,9 +339,9 @@ namespace Microsoft.HealthVault.PlatformPrimitives
                 "urn:com.microsoft.wc.methods.response.QueryPermissions");
 
             XPathExpression infoPathClone;
-            lock (_queryPermissionsInfoPath)
+            lock (QueryPermissionsInfoPath)
             {
-                infoPathClone = _queryPermissionsInfoPath.Clone();
+                infoPathClone = QueryPermissionsInfoPath.Clone();
             }
 
             infoPathClone.SetContext(infoXmlNamespaceManager);

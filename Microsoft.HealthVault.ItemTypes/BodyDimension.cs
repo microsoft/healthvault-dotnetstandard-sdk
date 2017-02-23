@@ -6,6 +6,8 @@
 using System;
 using System.Xml;
 using System.Xml.XPath;
+using Microsoft.HealthVault.Helpers;
+using Microsoft.HealthVault.Thing;
 
 namespace Microsoft.HealthVault.ItemTypes
 {
@@ -63,16 +65,16 @@ namespace Microsoft.HealthVault.ItemTypes
             Length value)
             : base(TypeId)
         {
-            When = when;
-            MeasurementName = measurementName;
-            Value = value;
+            this.When = when;
+            this.MeasurementName = measurementName;
+            this.Value = value;
         }
 
         /// <summary>
         /// Retrieves the unique identifier for the item type.
         /// </summary>
         ///
-        public new static readonly Guid TypeId =
+        public static new readonly Guid TypeId =
             new Guid("dd710b31-2b6f-45bd-9552-253562b9a7c1");
 
         /// <summary>
@@ -96,16 +98,16 @@ namespace Microsoft.HealthVault.ItemTypes
             Validator.ThrowInvalidIfNull(itemNav, "BodyDimensionUnexpectedNode");
 
             // when (approxi-date-time, mandatory)
-            _when = new ApproximateDateTime();
-            _when.ParseXml(itemNav.SelectSingleNode("when"));
+            this.when = new ApproximateDateTime();
+            this.when.ParseXml(itemNav.SelectSingleNode("when"));
 
             // measurement-name (codable-value, mandatory)
-            _measurementName = new CodableValue();
-            _measurementName.ParseXml(itemNav.SelectSingleNode("measurement-name"));
+            this.measurementName = new CodableValue();
+            this.measurementName.ParseXml(itemNav.SelectSingleNode("measurement-name"));
 
             // value (Length, mandatory)
-            _value = new Length();
-            _value.ParseXml(itemNav.SelectSingleNode("value"));
+            this.value = new Length();
+            this.value.ParseXml(itemNav.SelectSingleNode("value"));
         }
 
         /// <summary>
@@ -128,21 +130,21 @@ namespace Microsoft.HealthVault.ItemTypes
         public override void WriteXml(XmlWriter writer)
         {
             Validator.ThrowIfWriterNull(writer);
-            Validator.ThrowSerializationIfNull(_when, "WhenNullValue");
-            Validator.ThrowSerializationIfNull(_measurementName, "BodyDimensionMeasurementNameNotSet");
-            Validator.ThrowSerializationIfNull(_value, "BodyDimensionValueNotSet");
+            Validator.ThrowSerializationIfNull(this.when, "WhenNullValue");
+            Validator.ThrowSerializationIfNull(this.measurementName, "BodyDimensionMeasurementNameNotSet");
+            Validator.ThrowSerializationIfNull(this.value, "BodyDimensionValueNotSet");
 
             // <body-dimension>
             writer.WriteStartElement("body-dimension");
 
             // <when>
-            _when.WriteXml("when", writer);
+            this.when.WriteXml("when", writer);
 
             // <measurement-name>
-            _measurementName.WriteXml("measurement-name", writer);
+            this.measurementName.WriteXml("measurement-name", writer);
 
             // <value>
-            _value.WriteXml("value", writer);
+            this.value.WriteXml("value", writer);
 
             // </body-dimension>
             writer.WriteEndElement();
@@ -163,14 +165,16 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public ApproximateDateTime When
         {
-            get { return _when; }
+            get { return this.when; }
+
             set
             {
                 Validator.ThrowIfArgumentNull(value, "When", "WhenNullValue");
-                _when = value;
+                this.when = value;
             }
         }
-        private ApproximateDateTime _when;
+
+        private ApproximateDateTime when;
 
         /// <summary>
         /// Gets or sets the name of this measurement.
@@ -193,14 +197,16 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public CodableValue MeasurementName
         {
-            get { return _measurementName; }
+            get { return this.measurementName; }
+
             set
             {
                 Validator.ThrowIfArgumentNull(value, "MeasurementName", "BodyDimensionMeasurementNameNullValue");
-                _measurementName = value;
+                this.measurementName = value;
             }
         }
-        private CodableValue _measurementName;
+
+        private CodableValue measurementName;
 
         /// <summary>
         /// Gets or sets the value of this measurement.
@@ -217,14 +223,16 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public Length Value
         {
-            get { return _value; }
+            get { return this.value; }
+
             set
             {
                 Validator.ThrowIfArgumentNull(value, "Value", "BodyDimensionValueNullValue");
-                _value = value;
+                this.value = value;
             }
         }
-        private Length _value;
+
+        private Length value;
 
         /// <summary>
         /// Gets the representation of a body dimension instance.
@@ -236,22 +244,25 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public override string ToString()
         {
-            if (_measurementName != null && _value != null)
+            if (this.measurementName != null && this.value != null)
             {
                 return string.Format(
                         ResourceRetriever.GetResourceString(
                             "NameAndValue"),
-                        _measurementName.ToString(),
-                        _value.ToString());
+                        this.measurementName.ToString(),
+                        this.value.ToString());
             }
-            if (_measurementName != null)
+
+            if (this.measurementName != null)
             {
-                return _measurementName.ToString();
+                return this.measurementName.ToString();
             }
-            if (_value != null)
+
+            if (this.value != null)
             {
-                return _value.ToString();
+                return this.value.ToString();
             }
+
             return string.Empty;
         }
     }

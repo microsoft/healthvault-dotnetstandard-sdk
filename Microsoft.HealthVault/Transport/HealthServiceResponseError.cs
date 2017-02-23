@@ -5,7 +5,7 @@
 
 using System;
 
-namespace Microsoft.HealthVault
+namespace Microsoft.HealthVault.Transport
 {
     /// <summary>
     /// Contains error information for a response that has a code other
@@ -31,10 +31,11 @@ namespace Microsoft.HealthVault
         ///
         public string Message
         {
-            get { return _message; }
-            internal set { _message = value; }
+            get { return this.message; }
+            internal set { this.message = value; }
         }
-        private string _message;
+
+        private string message;
 
         /// <summary>
         /// Gets the context of the server in which the error occurred.
@@ -52,11 +53,12 @@ namespace Microsoft.HealthVault
         ///
         internal HealthServiceErrorContext Context
         {
-            get { return _context; }
-            set { _context = value; }
+            get { return this.context; }
+            set { this.context = value; }
         }
+
         [NonSerialized]
-        private HealthServiceErrorContext _context;
+        private HealthServiceErrorContext context;
 
         /// <summary>
         /// Gets the additional information specific to the method failure.
@@ -74,10 +76,11 @@ namespace Microsoft.HealthVault
         ///
         public string ErrorInfo
         {
-            get { return _errorInfo; }
-            internal set { _errorInfo = value; }
+            get { return this.errorInfo; }
+            internal set { this.errorInfo = value; }
         }
-        private string _errorInfo;
+
+        private string errorInfo;
 
         /// <summary>
         /// Gets the string representation of the <see cref="HealthServiceErrorContext"/>
@@ -92,11 +95,7 @@ namespace Microsoft.HealthVault
         public override string ToString()
         {
             string result =
-                String.Join(" ",
-                    new string[] {
-                            GetType().ToString(),
-                            _message,
-                    });
+                string.Join(" ", this.GetType().ToString(), this.message);
             return result;
         }
     }

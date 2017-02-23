@@ -6,8 +6,9 @@
 using System;
 using System.Xml;
 using System.Xml.XPath;
+using Microsoft.HealthVault.Helpers;
 
-namespace Microsoft.HealthVault
+namespace Microsoft.HealthVault.Thing
 {
     /// <summary>
     /// Represents a loose relationship between health record item instances.
@@ -50,7 +51,7 @@ namespace Microsoft.HealthVault
                 "itemId",
                 "RelationshipItemIDNotSpecified");
 
-            _itemKey = new HealthRecordItemKey(itemId);
+            this.ItemKey = new HealthRecordItemKey(itemId);
         }
 
         /// <summary>
@@ -71,7 +72,7 @@ namespace Microsoft.HealthVault
         {
             Validator.ThrowIfArgumentNull(itemKey, "itemKey", "RelationshipItemKeyNotSpecified");
 
-            _itemKey = itemKey;
+            this.ItemKey = itemKey;
         }
 
         /// <summary>
@@ -90,7 +91,7 @@ namespace Microsoft.HealthVault
         public HealthRecordItemRelationship(string clientId)
         {
             Validator.ThrowIfStringNullOrEmpty(clientId, "clientId");
-            _clientId = clientId;
+            this.ClientId = clientId;
         }
 
         /// <summary>
@@ -116,7 +117,7 @@ namespace Microsoft.HealthVault
         public HealthRecordItemRelationship(HealthRecordItemKey itemKey, string relationshipType)
             : this(itemKey)
         {
-            _relationshipType = relationshipType;
+            this.RelationshipType = relationshipType;
         }
 
         /// <summary>
@@ -141,7 +142,7 @@ namespace Microsoft.HealthVault
         public HealthRecordItemRelationship(string clientId, string relationshipType)
             : this(clientId)
         {
-            _relationshipType = relationshipType;
+            this.RelationshipType = relationshipType;
         }
 
         internal void ParseXml(XPathNavigator relationshipNav)
@@ -156,11 +157,11 @@ namespace Microsoft.HealthVault
                 {
                     Guid versionStamp = new Guid(versionStampNav.Value);
 
-                    _itemKey = new HealthRecordItemKey(itemId, versionStamp);
+                    this.ItemKey = new HealthRecordItemKey(itemId, versionStamp);
                 }
                 else
                 {
-                    _itemKey = new HealthRecordItemKey(itemId);
+                    this.ItemKey = new HealthRecordItemKey(itemId);
                 }
             }
             else
@@ -169,34 +170,35 @@ namespace Microsoft.HealthVault
 
                 if (clientIdNav != null)
                 {
-                    _clientId = clientIdNav.Value;
+                    this.ClientId = clientIdNav.Value;
                 }
             }
-            _relationshipType = XPathHelper.GetOptNavValue(relationshipNav, "relationship-type");
+
+            this.RelationshipType = XPathHelper.GetOptNavValue(relationshipNav, "relationship-type");
         }
 
         internal void WriteXml(string nodeName, XmlWriter writer)
         {
             Validator.ThrowSerializationIf(
-                _itemKey == null && String.IsNullOrEmpty(_clientId),
+                this.ItemKey == null && string.IsNullOrEmpty(this.ClientId),
                 "RelationshipItemKeyOrClientIdNotSpecified");
 
             writer.WriteStartElement(nodeName);
-            if (_itemKey != null)
+            if (this.ItemKey != null)
             {
-                writer.WriteElementString("thing-id", _itemKey.Id.ToString());
+                writer.WriteElementString("thing-id", this.ItemKey.Id.ToString());
 
-                if (_itemKey.VersionStamp != Guid.Empty)
+                if (this.ItemKey.VersionStamp != Guid.Empty)
                 {
-                    writer.WriteElementString("version-stamp", _itemKey.VersionStamp.ToString());
+                    writer.WriteElementString("version-stamp", this.ItemKey.VersionStamp.ToString());
                 }
             }
             else
             {
-                writer.WriteElementString("client-thing-id", _clientId);
+                writer.WriteElementString("client-thing-id", this.ClientId);
             }
 
-            XmlWriterHelper.WriteOptString(writer, "relationship-type", _relationshipType);
+            XmlWriterHelper.WriteOptString(writer, "relationship-type", this.RelationshipType);
 
             writer.WriteEndElement();
         }
@@ -210,22 +212,12 @@ namespace Microsoft.HealthVault
         /// and optionally the item version stamp.
         /// </value>
         ///
-        public HealthRecordItemKey ItemKey
-        {
-            get { return _itemKey; }
-            set { _itemKey = value; }
-        }
-        private HealthRecordItemKey _itemKey;
+        public HealthRecordItemKey ItemKey { get; set; }
 
         /// <summary>
         /// Gets and sets a client assigned identifier for the related <see cref="HealthRecordItem" />.
         /// </summary>
-        public String ClientId
-        {
-            get { return _clientId; }
-            set { _clientId = value; }
-        }
-        private String _clientId;
+        public string ClientId { get; set; }
 
         /// <summary>
         /// Gets or sets the type of relationship between the items.
@@ -238,11 +230,6 @@ namespace Microsoft.HealthVault
         /// "annotation" relationship to a Problem item.
         /// </remarks>
         ///
-        public string RelationshipType
-        {
-            get { return _relationshipType; }
-            set { _relationshipType = value; }
-        }
-        private string _relationshipType;
+        public string RelationshipType { get; set; }
     }
 }

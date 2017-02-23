@@ -3,9 +3,11 @@
 // see http://www.microsoft.com/resources/sharedsource/licensingbasics/sharedsourcelicenses.mspx.
 // All other rights reserved.
 
+using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Xml;
 using System.Xml.XPath;
+using Microsoft.HealthVault.Helpers;
 
 namespace Microsoft.HealthVault.ItemTypes
 {
@@ -30,7 +32,6 @@ namespace Microsoft.HealthVault.ItemTypes
         /// </summary>
         ///
         public PressureMeasurement()
-            : base()
         {
         }
 
@@ -43,7 +44,7 @@ namespace Microsoft.HealthVault.ItemTypes
         /// The pressure value in pascal.
         /// </param>
         ///
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", Justification = "pascals is a valid element name.")]
+        [SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", Justification = "pascals is a valid element name.")]
         public PressureMeasurement(double pascals)
             : base(pascals)
         {
@@ -67,7 +68,7 @@ namespace Microsoft.HealthVault.ItemTypes
         /// represents the unit of measure for the user-entered value.
         /// </param>
         ///
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", Justification = "pascals is a valid element name.")]
+        [SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", Justification = "pascals is a valid element name.")]
         public PressureMeasurement(double pascals, DisplayValue displayValue)
             : base(pascals, displayValue)
         {
@@ -103,7 +104,7 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         protected override void ParseValueXml(XPathNavigator navigator)
         {
-            Value = navigator.SelectSingleNode("pascals").ValueAsDouble;
+            this.Value = navigator.SelectSingleNode("pascals").ValueAsDouble;
         }
 
         /// <summary>
@@ -118,7 +119,7 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             writer.WriteElementString(
                 "pascals",
-                XmlConvert.ToString(Value));
+                XmlConvert.ToString(this.Value));
         }
 
         /// <summary>

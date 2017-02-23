@@ -8,7 +8,7 @@ using System.Collections.ObjectModel;
 using System.Xml;
 using System.Xml.XPath;
 
-namespace Microsoft.HealthVault
+namespace Microsoft.HealthVault.Application
 {
     /// <summary>
     /// A location defined by country and state/province ISO 3166 codes.
@@ -33,19 +33,12 @@ namespace Microsoft.HealthVault
         {
             if (locationCollection == null)
             {
-                throw new ArgumentNullException("locationCollection");
+                throw new ArgumentNullException(nameof(locationCollection));
             }
 
             XPathNavigator allLocationsIterator = locationCollection.SelectSingleNode("supported-record-locations/all-locations");
 
-            if (allLocationsIterator != null)
-            {
-                AllLocations = true;
-            }
-            else
-            {
-                AllLocations = false;
-            }
+            this.AllLocations = allLocationsIterator != null;
 
             XPathNodeIterator supportedRecordLocationsIterator = locationCollection.Select("supported-record-locations/location");
             foreach (XPathNavigator supportedLocationNav in supportedRecordLocationsIterator)
@@ -53,7 +46,7 @@ namespace Microsoft.HealthVault
                 Location location = new Location();
                 location.ParseXml(supportedLocationNav);
 
-                Add(location);
+                this.Add(location);
             }
         }
 
@@ -73,10 +66,10 @@ namespace Microsoft.HealthVault
         {
             if (writer == null)
             {
-                throw new ArgumentNullException("writer");
+                throw new ArgumentNullException(nameof(writer));
             }
 
-            if (AllLocations || Count > 0)
+            if (this.AllLocations || this.Count > 0)
             {
                 writer.WriteStartElement(elementName);
 
@@ -85,7 +78,7 @@ namespace Microsoft.HealthVault
                     location.WriteXml(writer, "location");
                 }
 
-                if (AllLocations)
+                if (this.AllLocations)
                 {
                     writer.WriteElementString("all-locations", "true");
                 }

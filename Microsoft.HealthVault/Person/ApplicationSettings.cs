@@ -7,8 +7,9 @@ using System;
 using System.IO;
 using System.Xml;
 using System.Xml.XPath;
+using Microsoft.HealthVault.Helpers;
 
-namespace Microsoft.HealthVault
+namespace Microsoft.HealthVault.Person
 {
     /// <summary>
     /// Application specific settings for the user.
@@ -22,14 +23,6 @@ namespace Microsoft.HealthVault
     ///
     public class ApplicationSettings
     {
-        /// <summary>
-        /// Constructs an ApplicationSettings instance with default values.
-        /// </summary>
-        ///
-        public ApplicationSettings()
-        {
-        }
-
         internal void ParseXml(XPathNavigator settingsRootNav)
         {
             XPathNavigator appSettingsNav = settingsRootNav.SelectSingleNode("app-settings");
@@ -38,7 +31,7 @@ namespace Microsoft.HealthVault
             {
                 using (StringReader stringReader = new StringReader(appSettingsNav.OuterXml))
                 {
-                    _xmlSettings = new XPathDocument(XmlReader.Create(stringReader, SDKHelper.XmlReaderSettings));
+                    this.XmlSettings = new XPathDocument(XmlReader.Create(stringReader, SDKHelper.XmlReaderSettings));
                 }
             }
 
@@ -46,7 +39,7 @@ namespace Microsoft.HealthVault
                 settingsRootNav.SelectSingleNode("selected-record-id");
             if (selectedRecordIdNav != null)
             {
-                _selectedRecordId = new Guid(selectedRecordIdNav.Value);
+                this.SelectedRecordId = new Guid(selectedRecordIdNav.Value);
             }
         }
 
@@ -54,23 +47,13 @@ namespace Microsoft.HealthVault
         /// Gets or sets the application specific XML settings that the application has set for the user.
         /// </summary>
         ///
-        public IXPathNavigable XmlSettings
-        {
-            get { return _xmlSettings; }
-            set { _xmlSettings = value; }
-        }
-        private IXPathNavigable _xmlSettings;
+        public IXPathNavigable XmlSettings { get; set; }
 
         /// <summary>
         /// Gets or sets the selected health record identifier that the user has chosen to use with this
         /// application.
         /// </summary>
         ///
-        public Guid SelectedRecordId
-        {
-            get { return _selectedRecordId; }
-            set { _selectedRecordId = value; }
-        }
-        private Guid _selectedRecordId;
+        public Guid SelectedRecordId { get; set; }
     }
 }

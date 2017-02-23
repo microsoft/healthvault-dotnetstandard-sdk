@@ -4,36 +4,38 @@ namespace Microsoft.HealthVault
 {
     public class ServiceLocator : IServiceLocator
     {
-        private static readonly object instanceLock = new object();
+        private static readonly object InstanceLock = new object();
 
-        private static ServiceLocator _current;
+        private static ServiceLocator current;
 
-        private ICryptoService _cryptoService;
+        private ICryptoService cryptoService;
 
         /// <summary>
-        /// Gets or sets the current configuration object for the app-domain.
+        /// Gets the current configuration object for the app-domain.
         /// </summary>
         public static ServiceLocator Current
         {
             get
             {
-                lock (instanceLock)
+                lock (InstanceLock)
                 {
-                    return _current ?? (_current = new ServiceLocator());
+                    return current ?? (current = new ServiceLocator());
                 }
             }
 
             internal set
             {
-                lock (instanceLock)
+                lock (InstanceLock)
                 {
-                    _current = value;
+                    current = value;
                 }
             }
         }
 
-        private ServiceLocator() { }
+        private ServiceLocator()
+        {
+        }
 
-        public ICryptoService CryptoService => _cryptoService ?? (_cryptoService = new CryptoService(new CryptoConfiguration()));
+        public ICryptoService CryptoService => this.cryptoService ?? (this.cryptoService = new CryptoService(new CryptoConfiguration()));
     }
 }

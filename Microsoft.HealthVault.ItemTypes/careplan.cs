@@ -9,6 +9,8 @@ using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Xml;
 using System.Xml.XPath;
+using Microsoft.HealthVault.Helpers;
+using Microsoft.HealthVault.Thing;
 
 namespace Microsoft.HealthVault.ItemTypes
 {
@@ -59,7 +61,7 @@ namespace Microsoft.HealthVault.ItemTypes
         public CarePlan(string name)
         : base(TypeId)
         {
-            Name = name;
+            this.Name = name;
         }
 
         /// <summary>
@@ -70,7 +72,7 @@ namespace Microsoft.HealthVault.ItemTypes
         /// A GUID.
         /// </value>
         ///
-        public new static readonly Guid TypeId =
+        public static new readonly Guid TypeId =
             new Guid("415c95e0-0533-4d9c-ac73-91dc5031186c");
 
         /// <summary>
@@ -99,16 +101,16 @@ namespace Microsoft.HealthVault.ItemTypes
 
             Validator.ThrowInvalidIfNull(itemNav, "CarePlanUnexpectedNode");
 
-            _name = itemNav.SelectSingleNode("name").Value;
-            _startDate = XPathHelper.GetOptNavValue<ApproximateDateTime>(itemNav, "start-date");
-            _endDate = XPathHelper.GetOptNavValue<ApproximateDateTime>(itemNav, "end-date");
-            _status = XPathHelper.GetOptNavValue<CodableValue>(itemNav, "status");
-            _carePlanManager = XPathHelper.GetOptNavValue<PersonItem>(itemNav, "care-plan-manager");
+            this.name = itemNav.SelectSingleNode("name").Value;
+            this.startDate = XPathHelper.GetOptNavValue<ApproximateDateTime>(itemNav, "start-date");
+            this.endDate = XPathHelper.GetOptNavValue<ApproximateDateTime>(itemNav, "end-date");
+            this.status = XPathHelper.GetOptNavValue<CodableValue>(itemNav, "status");
+            this.carePlanManager = XPathHelper.GetOptNavValue<PersonItem>(itemNav, "care-plan-manager");
 
             // collections
-            _careTeam = XPathHelper.ParseXmlCollection<PersonItem>(itemNav, "care-team/person");
-            _tasks = XPathHelper.ParseXmlCollection<CarePlanTask>(itemNav, "tasks/task");
-            _goalGroups = XPathHelper.ParseXmlCollection<CarePlanGoalGroup>(itemNav, "goal-groups/goal-group");
+            this.careTeam = XPathHelper.ParseXmlCollection<PersonItem>(itemNav, "care-team/person");
+            this.tasks = XPathHelper.ParseXmlCollection<CarePlanTask>(itemNav, "tasks/task");
+            this.goalGroups = XPathHelper.ParseXmlCollection<CarePlanGoalGroup>(itemNav, "goal-groups/goal-group");
         }
 
         /// <summary>
@@ -134,21 +136,21 @@ namespace Microsoft.HealthVault.ItemTypes
             Validator.ThrowIfArgumentNull(writer, "writer", "WriteXmlNullWriter");
 
             Validator.ThrowSerializationIf(
-                string.IsNullOrEmpty(_name) || string.IsNullOrEmpty(_name.Trim()),
+                string.IsNullOrEmpty(this.name) || string.IsNullOrEmpty(this.name.Trim()),
                 "CarePlanNameNullOrEmpty");
 
             writer.WriteStartElement("care-plan");
             {
-                writer.WriteElementString("name", _name);
-                XmlWriterHelper.WriteOpt(writer, "start-date", _startDate);
-                XmlWriterHelper.WriteOpt(writer, "end-date", _endDate);
-                XmlWriterHelper.WriteOpt(writer, "status", _status);
+                writer.WriteElementString("name", this.name);
+                XmlWriterHelper.WriteOpt(writer, "start-date", this.startDate);
+                XmlWriterHelper.WriteOpt(writer, "end-date", this.endDate);
+                XmlWriterHelper.WriteOpt(writer, "status", this.status);
 
-                XmlWriterHelper.WriteXmlCollection(writer, "care-team", _careTeam, "person");
+                XmlWriterHelper.WriteXmlCollection(writer, "care-team", this.careTeam, "person");
 
-                XmlWriterHelper.WriteOpt(writer, "care-plan-manager", _carePlanManager);
-                XmlWriterHelper.WriteXmlCollection(writer, "tasks", _tasks, "task");
-                XmlWriterHelper.WriteXmlCollection(writer, "goal-groups", _goalGroups, "goal-group");
+                XmlWriterHelper.WriteOpt(writer, "care-plan-manager", this.carePlanManager);
+                XmlWriterHelper.WriteXmlCollection(writer, "tasks", this.tasks, "task");
+                XmlWriterHelper.WriteXmlCollection(writer, "goal-groups", this.goalGroups, "goal-group");
             }
 
             writer.WriteEndElement();
@@ -174,7 +176,7 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             get
             {
-                return _name;
+                return this.name;
             }
 
             set
@@ -183,11 +185,11 @@ namespace Microsoft.HealthVault.ItemTypes
                 Validator.ThrowIfStringNullOrEmpty(value, "Name");
                 Validator.ThrowIfStringIsEmptyOrWhitespace(value, "Name");
 
-                _name = value;
+                this.name = value;
             }
         }
 
-        private string _name;
+        private string name;
 
         /// <summary>
         /// Gets or sets start date of the care plan.
@@ -201,16 +203,16 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             get
             {
-                return _startDate;
+                return this.startDate;
             }
 
             set
             {
-                _startDate = value;
+                this.startDate = value;
             }
         }
 
-        private ApproximateDateTime _startDate;
+        private ApproximateDateTime startDate;
 
         /// <summary>
         /// Gets or sets end date of the care plan.
@@ -224,16 +226,16 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             get
             {
-                return _endDate;
+                return this.endDate;
             }
 
             set
             {
-                _endDate = value;
+                this.endDate = value;
             }
         }
 
-        private ApproximateDateTime _endDate;
+        private ApproximateDateTime endDate;
 
         /// <summary>
         /// Gets or sets status of the care plan.
@@ -248,24 +250,24 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             get
             {
-                return _status;
+                return this.status;
             }
 
             set
             {
-                _status = value;
+                this.status = value;
             }
         }
 
-        private CodableValue _status;
+        private CodableValue status;
 
         /// <summary>
         /// Gets or sets list of person contacts associated with the care plan.
         /// </summary>
         ///
-        public Collection<PersonItem> CareTeam => _careTeam;
+        public Collection<PersonItem> CareTeam => this.careTeam;
 
-        private Collection<PersonItem> _careTeam =
+        private Collection<PersonItem> careTeam =
             new Collection<PersonItem>();
 
         /// <summary>
@@ -280,33 +282,33 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             get
             {
-                return _carePlanManager;
+                return this.carePlanManager;
             }
 
             set
             {
-                _carePlanManager = value;
+                this.carePlanManager = value;
             }
         }
 
-        private PersonItem _carePlanManager;
+        private PersonItem carePlanManager;
 
         /// <summary>
         /// Gets or sets list of tasks associated with the care plan.
         /// </summary>
         ///
-        public Collection<CarePlanTask> Tasks => _tasks;
+        public Collection<CarePlanTask> Tasks => this.tasks;
 
-        private Collection<CarePlanTask> _tasks =
+        private Collection<CarePlanTask> tasks =
             new Collection<CarePlanTask>();
 
         /// <summary>
         /// Gets or sets list of goals associated with the care plan.
         /// </summary>
         ///
-        public Collection<CarePlanGoalGroup> GoalGroups => _goalGroups;
+        public Collection<CarePlanGoalGroup> GoalGroups => this.goalGroups;
 
-        private Collection<CarePlanGoalGroup> _goalGroups =
+        private Collection<CarePlanGoalGroup> goalGroups =
             new Collection<CarePlanGoalGroup>();
 
         /// <summary>
@@ -319,18 +321,16 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public override string ToString()
         {
-            if (_status == null)
+            if (this.status == null)
             {
-                return _name;
+                return this.name;
             }
-            else
-            {
-                return string.Format(
-                    CultureInfo.CurrentUICulture,
-                    ResourceRetriever.GetResourceString("CarePlanFormat"),
-                    _name,
-                    _status);
-            }
+
+            return string.Format(
+                CultureInfo.CurrentUICulture,
+                ResourceRetriever.GetResourceString("CarePlanFormat"),
+                this.name,
+                this.status);
         }
     }
 }

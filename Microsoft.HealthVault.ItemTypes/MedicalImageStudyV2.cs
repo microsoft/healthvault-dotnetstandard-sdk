@@ -9,6 +9,8 @@ using System.Collections.ObjectModel;
 using System.Text;
 using System.Xml;
 using System.Xml.XPath;
+using Microsoft.HealthVault.Helpers;
+using Microsoft.HealthVault.Thing;
 
 namespace Microsoft.HealthVault.ItemTypes
 {
@@ -72,14 +74,14 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             Validator.ThrowIfArgumentNull(series, "series", "MedicalImageStudySeriesMandatory");
 
-            When = when;
+            this.When = when;
             foreach (MedicalImageStudySeriesV2 medicalImageStudySeries in series)
             {
-                Series.Add(medicalImageStudySeries);
+                this.Series.Add(medicalImageStudySeries);
             }
 
             Validator.ThrowArgumentExceptionIf(
-                Series.Count == 0,
+                this.Series.Count == 0,
                 "series",
                 "MedicalImageStudySeriesMandatory");
         }
@@ -92,7 +94,7 @@ namespace Microsoft.HealthVault.ItemTypes
         /// A GUID.
         /// </value>
         ///
-        public new static readonly Guid TypeId =
+        public static new readonly Guid TypeId =
             new Guid("cdfc0a9b-6d3b-4d16-afa8-02b86d621a8d");
 
         /// <summary>
@@ -121,37 +123,37 @@ namespace Microsoft.HealthVault.ItemTypes
 
             Validator.ThrowInvalidIfNull(itemNav, "MedicalImageStudyUnexpectedNode");
 
-            if (_when == null)
+            if (this.when == null)
             {
-                _when = new HealthServiceDateTime();
+                this.when = new HealthServiceDateTime();
             }
 
-            _when.ParseXml(itemNav.SelectSingleNode("when"));
-            _patientName = XPathHelper.GetOptNavValue(itemNav, "patient-name");
-            _description = XPathHelper.GetOptNavValue(itemNav, "description");
+            this.when.ParseXml(itemNav.SelectSingleNode("when"));
+            this.patientName = XPathHelper.GetOptNavValue(itemNav, "patient-name");
+            this.description = XPathHelper.GetOptNavValue(itemNav, "description");
 
-            _series.Clear();
+            this.series.Clear();
             foreach (XPathNavigator imageStudySeriesNav in itemNav.Select("series"))
             {
                 MedicalImageStudySeriesV2 imageStudySeries = new MedicalImageStudySeriesV2();
                 imageStudySeries.ParseXml(imageStudySeriesNav);
-                _series.Add(imageStudySeries);
+                this.series.Add(imageStudySeries);
             }
 
-            _reason = XPathHelper.GetOptNavValue<CodableValue>(itemNav, "reason");
-            _previewBlobName = XPathHelper.GetOptNavValue(itemNav, "preview-blob-name");
+            this.reason = XPathHelper.GetOptNavValue<CodableValue>(itemNav, "reason");
+            this.previewBlobName = XPathHelper.GetOptNavValue(itemNav, "preview-blob-name");
 
-            _keyImages.Clear();
+            this.keyImages.Clear();
             foreach (XPathNavigator imageNav in itemNav.Select("key-images"))
             {
                 MedicalImageStudySeriesImage image = new MedicalImageStudySeriesImage();
                 image.ParseXml(imageNav);
-                _keyImages.Add(image);
+                this.keyImages.Add(image);
             }
 
-            _studyInstanceUID = XPathHelper.GetOptNavValue(itemNav, "study-instance-uid");
-            _referringPhysician = XPathHelper.GetOptNavValue<PersonItem>(itemNav, "referring-physician");
-            _accessionNumber = XPathHelper.GetOptNavValue(itemNav, "accession-number");
+            this.studyInstanceUID = XPathHelper.GetOptNavValue(itemNav, "study-instance-uid");
+            this.referringPhysician = XPathHelper.GetOptNavValue<PersonItem>(itemNav, "referring-physician");
+            this.accessionNumber = XPathHelper.GetOptNavValue(itemNav, "accession-number");
         }
 
         /// <summary>
@@ -176,33 +178,33 @@ namespace Microsoft.HealthVault.ItemTypes
         public override void WriteXml(XmlWriter writer)
         {
             Validator.ThrowIfWriterNull(writer);
-            Validator.ThrowSerializationIfNull(_when, "WhenNullValue");
+            Validator.ThrowSerializationIfNull(this.when, "WhenNullValue");
             Validator.ThrowSerializationIf(
-                _series == null || _series.Count == 0,
+                this.series == null || this.series.Count == 0,
                 "MedicalImageStudySeriesMandatory");
 
             writer.WriteStartElement("medical-image-study");
 
-            _when.WriteXml("when", writer);
-            XmlWriterHelper.WriteOptString(writer, "patient-name", _patientName);
-            XmlWriterHelper.WriteOptString(writer, "description", _description);
+            this.when.WriteXml("when", writer);
+            XmlWriterHelper.WriteOptString(writer, "patient-name", this.patientName);
+            XmlWriterHelper.WriteOptString(writer, "description", this.description);
 
-            foreach (MedicalImageStudySeriesV2 medicalImageStudySeries in _series)
+            foreach (MedicalImageStudySeriesV2 medicalImageStudySeries in this.series)
             {
                 medicalImageStudySeries.WriteXml("series", writer);
             }
 
-            XmlWriterHelper.WriteOpt(writer, "reason", _reason);
-            XmlWriterHelper.WriteOptString(writer, "preview-blob-name", _previewBlobName);
+            XmlWriterHelper.WriteOpt(writer, "reason", this.reason);
+            XmlWriterHelper.WriteOptString(writer, "preview-blob-name", this.previewBlobName);
 
-            foreach (MedicalImageStudySeriesImage image in _keyImages)
+            foreach (MedicalImageStudySeriesImage image in this.keyImages)
             {
                 image.WriteXml("key-images", writer);
             }
 
-            XmlWriterHelper.WriteOptString(writer, "study-instance-uid", _studyInstanceUID);
-            XmlWriterHelper.WriteOpt(writer, "referring-physician", _referringPhysician);
-            XmlWriterHelper.WriteOptString(writer, "accession-number", _accessionNumber);
+            XmlWriterHelper.WriteOptString(writer, "study-instance-uid", this.studyInstanceUID);
+            XmlWriterHelper.WriteOpt(writer, "referring-physician", this.referringPhysician);
+            XmlWriterHelper.WriteOptString(writer, "accession-number", this.accessionNumber);
 
             writer.WriteEndElement();
         }
@@ -223,17 +225,17 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             get
             {
-                return _when;
+                return this.when;
             }
 
             set
             {
                 Validator.ThrowIfArgumentNull(value, "When", "WhenNullValue");
-                _when = value;
+                this.when = value;
             }
         }
 
-        private HealthServiceDateTime _when;
+        private HealthServiceDateTime when;
 
         /// <summary>
         /// Gets or sets the name of the patient as contained in the medical image.
@@ -251,17 +253,17 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             get
             {
-                return _patientName;
+                return this.patientName;
             }
 
             set
             {
                 Validator.ThrowIfStringIsWhitespace(value, "PatientName");
-                _patientName = value;
+                this.patientName = value;
             }
         }
 
-        private string _patientName;
+        private string patientName;
 
         /// <summary>
         /// Gets or sets a description of the study.
@@ -279,28 +281,25 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             get
             {
-                return _description;
+                return this.description;
             }
 
             set
             {
                 Validator.ThrowIfStringIsWhitespace(value, "Description");
-                _description = value;
+                this.description = value;
             }
         }
 
-        private string _description;
+        private string description;
 
         /// <summary>
         /// Gets the collection of image series.
         /// </summary>
         ///
-        public Collection<MedicalImageStudySeriesV2> Series
-        {
-            get { return _series; }
-        }
+        public Collection<MedicalImageStudySeriesV2> Series => this.series;
 
-        private Collection<MedicalImageStudySeriesV2> _series = new Collection<MedicalImageStudySeriesV2>();
+        private readonly Collection<MedicalImageStudySeriesV2> series = new Collection<MedicalImageStudySeriesV2>();
 
         /// <summary>
         /// Gets or sets the reason for the study.
@@ -315,11 +314,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public CodableValue Reason
         {
-            get { return _reason; }
-            set { _reason = value; }
+            get { return this.reason; }
+            set { this.reason = value; }
         }
 
-        private CodableValue _reason;
+        private CodableValue reason;
 
         /// <summary>
         /// Gets or sets the name of the BLOB holding a smaller version of the image
@@ -340,17 +339,17 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             get
             {
-                return _previewBlobName;
+                return this.previewBlobName;
             }
 
             set
             {
                 Validator.ThrowIfStringIsWhitespace(value, "PreviewBlobName");
-                _previewBlobName = value;
+                this.previewBlobName = value;
             }
         }
 
-        private string _previewBlobName;
+        private string previewBlobName;
 
         /// <summary>
         /// Gets the important images in the study.
@@ -360,12 +359,9 @@ namespace Microsoft.HealthVault.ItemTypes
         /// If there is no information about the key images the collection should be empty.
         /// </remarks>
         ///
-        public Collection<MedicalImageStudySeriesImage> KeyImages
-        {
-            get { return _keyImages; }
-        }
+        public Collection<MedicalImageStudySeriesImage> KeyImages => this.keyImages;
 
-        private Collection<MedicalImageStudySeriesImage> _keyImages = new Collection<MedicalImageStudySeriesImage>();
+        private readonly Collection<MedicalImageStudySeriesImage> keyImages = new Collection<MedicalImageStudySeriesImage>();
 
         /// <summary>
         /// Gets or sets the study instance UID.
@@ -384,17 +380,17 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             get
             {
-                return _studyInstanceUID;
+                return this.studyInstanceUID;
             }
 
             set
             {
                 Validator.ThrowIfStringIsWhitespace(value, "StudyInstanceUID");
-                _studyInstanceUID = value;
+                this.studyInstanceUID = value;
             }
         }
 
-        private string _studyInstanceUID;
+        private string studyInstanceUID;
 
         /// <summary>
         /// Gets or sets the physician who ordered the study.
@@ -409,11 +405,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public PersonItem ReferringPhysician
         {
-            get { return _referringPhysician; }
-            set { _referringPhysician = value; }
+            get { return this.referringPhysician; }
+            set { this.referringPhysician = value; }
         }
 
-        private PersonItem _referringPhysician;
+        private PersonItem referringPhysician;
 
         /// <summary>
         /// Gets or sets the accession number.
@@ -432,17 +428,17 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             get
             {
-                return _accessionNumber;
+                return this.accessionNumber;
             }
 
             set
             {
                 Validator.ThrowIfStringIsWhitespace(value, "AccessionNumber");
-                _accessionNumber = value;
+                this.accessionNumber = value;
             }
         }
 
-        private string _accessionNumber;
+        private string accessionNumber;
 
         /// <summary>
         /// Gets a string representation of the medical image study.
@@ -456,19 +452,19 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             StringBuilder result = new StringBuilder(200);
 
-            if (!string.IsNullOrEmpty(Description) && !string.IsNullOrEmpty(Description.Trim()))
+            if (!string.IsNullOrEmpty(this.Description) && !string.IsNullOrEmpty(this.Description.Trim()))
             {
-                result.Append(Description);
+                result.Append(this.Description);
             }
 
-            if (Reason != null)
+            if (this.Reason != null)
             {
                 if (result.Length > 0)
                 {
                     result.Append(ResourceRetriever.GetResourceString("ListSeparator"));
                 }
 
-                result.Append(Reason);
+                result.Append(this.Reason);
             }
 
             return result.ToString();

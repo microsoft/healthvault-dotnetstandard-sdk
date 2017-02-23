@@ -6,6 +6,8 @@
 using System;
 using System.Xml;
 using System.Xml.XPath;
+using Microsoft.HealthVault.Helpers;
+using Microsoft.HealthVault.Thing;
 
 namespace Microsoft.HealthVault.ItemTypes
 {
@@ -58,7 +60,7 @@ namespace Microsoft.HealthVault.ItemTypes
         /// A GUID.
         /// </value>
         ///
-        public new static readonly Guid TypeId =
+        public static new readonly Guid TypeId =
             new Guid("df4db479-a1ba-42a2-8714-2b083b88150f");
 
         /// <summary>
@@ -81,24 +83,24 @@ namespace Microsoft.HealthVault.ItemTypes
 
             Validator.ThrowInvalidIfNull(itemNav, "ProcedureUnexpectedNode");
 
-            _when = XPathHelper.GetOptNavValue<ApproximateDateTime>(itemNav, "when");
+            this.when = XPathHelper.GetOptNavValue<ApproximateDateTime>(itemNav, "when");
 
-            _name =
+            this.name =
                 XPathHelper.GetOptNavValue<CodableValue>(
                     itemNav,
                     "name");
 
-            _primaryProvider =
+            this.primaryProvider =
                 XPathHelper.GetOptNavValue<PersonItem>(
                     itemNav,
                     "primary-provider");
 
-            _anatomicLocation =
+            this.anatomicLocation =
                 XPathHelper.GetOptNavValue<CodableValue>(
                     itemNav,
                     "anatomic-location");
 
-            _secondaryProvider =
+            this.secondaryProvider =
                 XPathHelper.GetOptNavValue<PersonItem>(
                     itemNav,
                     "secondary-provider");
@@ -123,34 +125,34 @@ namespace Microsoft.HealthVault.ItemTypes
         public override void WriteXml(XmlWriter writer)
         {
             Validator.ThrowIfWriterNull(writer);
-            Validator.ThrowSerializationIfNull(_name, "ProcedureNameNotSet");
+            Validator.ThrowSerializationIfNull(this.name, "ProcedureNameNotSet");
 
             writer.WriteStartElement("procedure");
 
-            XmlWriterHelper.WriteOpt<ApproximateDateTime>(
+            XmlWriterHelper.WriteOpt(
                 writer,
                 "when",
-                _when);
+                this.when);
 
-            XmlWriterHelper.WriteOpt<CodableValue>(
+            XmlWriterHelper.WriteOpt(
                 writer,
                 "name",
-                _name);
+                this.name);
 
-            XmlWriterHelper.WriteOpt<CodableValue>(
+            XmlWriterHelper.WriteOpt(
                 writer,
                 "anatomic-location",
-                _anatomicLocation);
+                this.anatomicLocation);
 
-            XmlWriterHelper.WriteOpt<PersonItem>(
+            XmlWriterHelper.WriteOpt(
                 writer,
                 "primary-provider",
-                _primaryProvider);
+                this.primaryProvider);
 
-            XmlWriterHelper.WriteOpt<PersonItem>(
+            XmlWriterHelper.WriteOpt(
                 writer,
                 "secondary-provider",
-                _secondaryProvider);
+                this.secondaryProvider);
 
             writer.WriteEndElement();
         }
@@ -166,10 +168,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public ApproximateDateTime When
         {
-            get { return _when; }
-            set { _when = value; }
+            get { return this.when; }
+            set { this.when = value; }
         }
-        private ApproximateDateTime _when = new ApproximateDateTime();
+
+        private ApproximateDateTime when = new ApproximateDateTime();
 
         /// <summary>
         /// Gets or sets the name of the procedure.
@@ -190,14 +193,16 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public CodableValue Name
         {
-            get { return _name; }
+            get { return this.name; }
+
             set
             {
                 Validator.ThrowIfArgumentNull(value, "Name", "ProcedureNameNullValue");
-                _name = value;
+                this.name = value;
             }
         }
-        private CodableValue _name;
+
+        private CodableValue name;
 
         /// <summary>
         /// Gets or sets the primary provider contact information.
@@ -214,10 +219,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public PersonItem PrimaryProvider
         {
-            get { return _primaryProvider; }
-            set { _primaryProvider = value; }
+            get { return this.primaryProvider; }
+            set { this.primaryProvider = value; }
         }
-        private PersonItem _primaryProvider;
+
+        private PersonItem primaryProvider;
 
         /// <summary>
         /// Gets or sets the anatomic location for the procedure.
@@ -234,10 +240,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public CodableValue AnatomicLocation
         {
-            get { return _anatomicLocation; }
-            set { _anatomicLocation = value; }
+            get { return this.anatomicLocation; }
+            set { this.anatomicLocation = value; }
         }
-        private CodableValue _anatomicLocation;
+
+        private CodableValue anatomicLocation;
 
         /// <summary>
         /// Gets or sets the secondary provider contact information.
@@ -254,10 +261,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public PersonItem SecondaryProvider
         {
-            get { return _secondaryProvider; }
-            set { _secondaryProvider = value; }
+            get { return this.secondaryProvider; }
+            set { this.secondaryProvider = value; }
         }
-        private PersonItem _secondaryProvider;
+
+        private PersonItem secondaryProvider;
 
         /// <summary>
         /// Gets a string representation of the procedure.
@@ -269,28 +277,28 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public override string ToString()
         {
-            string result = String.Empty;
+            string result = string.Empty;
 
-            if (Name != null && AnatomicLocation != null)
+            if (this.Name != null && this.AnatomicLocation != null)
             {
                 result =
-                    String.Format(
+                    string.Format(
                         ResourceRetriever.GetResourceString(
                             "ProcedureToStringFormatNameAndLocation"),
-                        Name.ToString(),
-                        AnatomicLocation.ToString());
+                        this.Name.ToString(),
+                        this.AnatomicLocation.ToString());
             }
-            else if (Name != null)
+            else if (this.Name != null)
             {
-                result = Name.ToString();
+                result = this.Name.ToString();
             }
-            else if (AnatomicLocation != null)
+            else if (this.AnatomicLocation != null)
             {
                 result =
-                    String.Format(
+                    string.Format(
                         ResourceRetriever.GetResourceString(
                             "ProcedureToStringFormatLocation"),
-                        AnatomicLocation.ToString());
+                        this.AnatomicLocation.ToString());
             }
 
             return result;

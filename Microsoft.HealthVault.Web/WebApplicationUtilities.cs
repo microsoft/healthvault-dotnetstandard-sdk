@@ -15,9 +15,15 @@ using System.Threading.Tasks;
 using System.Web;
 using System.Xml;
 using System.Xml.XPath;
+using Microsoft.HealthVault.Application;
+using Microsoft.HealthVault.Authentication;
+using Microsoft.HealthVault.Connection;
 using Microsoft.HealthVault.Exceptions;
+using Microsoft.HealthVault.Helpers;
 using Microsoft.HealthVault.ItemTypes;
-using Microsoft.HealthVault.Web.Authentication;
+using Microsoft.HealthVault.Person;
+using Microsoft.HealthVault.PlatformInformation;
+using Microsoft.HealthVault.Thing;
 
 namespace Microsoft.HealthVault.Web
 {
@@ -44,7 +50,7 @@ namespace Microsoft.HealthVault.Web
     /// methods like <see cref="LoadPersonInfoFromCookie(System.Web.HttpContext)"/> require another method be called first
     /// to handle the user's authentication token. Methods like 
     /// <see cref="SavePersonInfoToCookie(System.Web.HttpContext, PersonInfo)"/> and 
-    /// <see cref="RefreshAndSavePersonInfoToCookieAsync(System.Web.HttpContext,Microsoft.HealthVault.PersonInfo)"/> deal with storing the HealthVault user information in a 
+    /// <see cref="RefreshAndSavePersonInfoToCookieAsync(System.Web.HttpContext,PersonInfo)"/> deal with storing the HealthVault user information in a 
     /// cookie or session.
     /// </remarks>
     /// 
@@ -355,7 +361,7 @@ namespace Microsoft.HealthVault.Web
         /// </summary>
         /// 
         /// <returns>
-        /// A <see cref="HealthVault.ApplicationConnection"/> connection.
+        /// A <see cref="Connection.ApplicationConnection"/> connection.
         /// </returns>
         /// 
         /// <exception cref="System.Security.SecurityException">
@@ -383,7 +389,7 @@ namespace Microsoft.HealthVault.Web
         /// </param>
         /// 
         /// <returns>
-        /// A <see cref="HealthVault.ApplicationConnection"/> connection.
+        /// A <see cref="Connection.ApplicationConnection"/> connection.
         /// </returns>
         /// 
         /// <exception cref="System.Security.SecurityException">
@@ -405,7 +411,7 @@ namespace Microsoft.HealthVault.Web
         /// </param>
         /// 
         /// <returns>
-        /// A <see cref="HealthVault.ApplicationConnection"/> connection.
+        /// A <see cref="Connection.ApplicationConnection"/> connection.
         /// </returns>
         /// 
         /// <exception cref="System.Security.SecurityException">
@@ -434,7 +440,7 @@ namespace Microsoft.HealthVault.Web
         /// </param>
         /// 
         /// <returns>
-        /// A <see cref="HealthVault.ApplicationConnection"/> connection.
+        /// A <see cref="Connection.ApplicationConnection"/> connection.
         /// </returns>
         /// 
         /// <exception cref="System.Security.SecurityException">
@@ -2058,7 +2064,7 @@ namespace Microsoft.HealthVault.Web
         /// The signup code for creating a HealthVault account.  This is required
         /// for applications in locations with limited access to HealthVault.
         /// Signup codes may be obtained from
-        /// <see cref="HealthVault.ApplicationConnection.NewSignupCode" />,
+        /// <see cref="Connection.ApplicationConnection.NewSignupCode" />,
         /// </param>
         /// 
         /// <remarks>

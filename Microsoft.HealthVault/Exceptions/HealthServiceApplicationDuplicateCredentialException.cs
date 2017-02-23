@@ -4,6 +4,7 @@
 // All other rights reserved.
 
 using System;
+using Microsoft.HealthVault.Transport;
 
 namespace Microsoft.HealthVault.Exceptions
 {
@@ -48,7 +49,6 @@ namespace Microsoft.HealthVault.Exceptions
         /// </summary>
         ///
         public HealthServiceApplicationDuplicateCredentialException()
-            : base()
         {
         }
 

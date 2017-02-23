@@ -6,6 +6,7 @@
 using System.Globalization;
 using System.Xml;
 using System.Xml.XPath;
+using Microsoft.HealthVault.Helpers;
 
 namespace Microsoft.HealthVault.ItemTypes
 {
@@ -30,7 +31,7 @@ namespace Microsoft.HealthVault.ItemTypes
         /// with empty values.
         /// </summary>
         ///
-        public FlowMeasurement() : base()
+        public FlowMeasurement()
         {
         }
 
@@ -43,7 +44,8 @@ namespace Microsoft.HealthVault.ItemTypes
         /// The flow in liters per second.
         /// </param>
         ///
-        public FlowMeasurement(double litersPerSecond) : base(litersPerSecond)
+        public FlowMeasurement(double litersPerSecond)
+            : base(litersPerSecond)
         {
         }
 
@@ -97,7 +99,7 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         protected override void ParseValueXml(XPathNavigator navigator)
         {
-            Value = navigator.SelectSingleNode("liters-per-second").ValueAsDouble;
+            this.Value = navigator.SelectSingleNode("liters-per-second").ValueAsDouble;
         }
 
         /// <summary>
@@ -112,7 +114,7 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             writer.WriteElementString(
                 "liters-per-second",
-                XmlConvert.ToString(Value));
+                XmlConvert.ToString(this.Value));
         }
 
         /// <summary>

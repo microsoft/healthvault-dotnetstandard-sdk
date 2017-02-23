@@ -7,9 +7,17 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
+using Microsoft.HealthVault.Application;
 using Microsoft.HealthVault.Exceptions;
+using Microsoft.HealthVault.Helpers;
+using Microsoft.HealthVault.Person;
+using Microsoft.HealthVault.PlatformInformation;
+using Microsoft.HealthVault.Record;
+using Microsoft.HealthVault.Thing;
+using Microsoft.HealthVault.Transport;
+using Microsoft.HealthVault.Vocabulary;
 
-namespace Microsoft.HealthVault
+namespace Microsoft.HealthVault.Connection
 {
     /// <summary>
     /// Base class that represents a connection of an application
@@ -43,7 +51,6 @@ namespace Microsoft.HealthVault
         /// </exception>
         ///
         public ApplicationConnection()
-            : base()
         {
         }
 
@@ -242,7 +249,7 @@ namespace Microsoft.HealthVault
             Validator.ThrowIfStringNullOrEmpty(methodName, "methodName");
 
             HealthServiceRequest request =
-                CreateRequest(methodName, methodVersion, false);
+                this.CreateRequest(methodName, methodVersion, false);
 
             request.RecordId = record.Id;
 
@@ -299,7 +306,7 @@ namespace Microsoft.HealthVault
         /// There is an error loading the vocabulary.
         /// </exception>
         ///
-        public async Task<Vocabulary> GetVocabularyAsync(string name)
+        public async Task<Vocabulary.Vocabulary> GetVocabularyAsync(string name)
         {
             return await HealthVaultPlatform.GetVocabularyAsync(this, name).ConfigureAwait(false);
         }
@@ -350,8 +357,8 @@ namespace Microsoft.HealthVault
         /// There is an error loading the vocabulary.
         /// </exception>
         ///
-        //[Obsolete("Use HealthServicePlatform.GetVocabulary() instead.")]
-        public async Task<Vocabulary> GetVocabulary(VocabularyKey vocabularyKey, bool cultureIsFixed)
+        /// [Obsolete("Use HealthServicePlatform.GetVocabulary() instead.")]
+        public async Task<Vocabulary.Vocabulary> GetVocabulary(VocabularyKey vocabularyKey, bool cultureIsFixed)
         {
             return await HealthVaultPlatform.GetVocabularyAsync(this, vocabularyKey, cultureIsFixed).ConfigureAwait(false);
         }
@@ -408,7 +415,7 @@ namespace Microsoft.HealthVault
         /// </exception>
         ///
         // [Obsolete("Use HealthServicePlatform.GetVocabulary() instead.")]
-        public async Task<ReadOnlyCollection<Vocabulary>> GetVocabulary(
+        public async Task<ReadOnlyCollection<Vocabulary.Vocabulary>> GetVocabulary(
             IList<VocabularyKey> vocabularyKeys, bool cultureIsFixed)
         {
             return await HealthVaultPlatform.GetVocabularyAsync(this, vocabularyKeys, cultureIsFixed).ConfigureAwait(false);
@@ -423,7 +430,7 @@ namespace Microsoft.HealthVault
         /// A collection of keys identifying the vocabularies in the system.
         /// </returns>
         ///
-        //[Obsolete("Use HealthServicePlatform.GetVocabularyKeys() instead.")]
+        /// [Obsolete("Use HealthServicePlatform.GetVocabularyKeys() instead.")]
         public async Task<ReadOnlyCollection<VocabularyKey>> GetVocabularyKeys()
         {
             return await HealthVaultPlatform.GetVocabularyKeysAsync(this).ConfigureAwait(false);
@@ -474,7 +481,7 @@ namespace Microsoft.HealthVault
         /// There is an error in the server request.
         /// </exception>
         ///
-        //[Obsolete("Use HealthServicePlatform.SearchVocabularyKeys() instead.")]
+        /// [Obsolete("Use HealthServicePlatform.SearchVocabularyKeys() instead.")]
         public async Task<ReadOnlyCollection<VocabularyKey>> SearchVocabularyKeys(
             string searchString,
             VocabularySearchType searchType,
@@ -549,7 +556,7 @@ namespace Microsoft.HealthVault
         /// The requested search culture is not supported.
         /// </exception>
         ///
-        //[Obsolete("Use HealthServicePlatform.SearchVocabulary() instead.")]
+        /// [Obsolete("Use HealthServicePlatform.SearchVocabulary() instead.")]
         public async Task<VocabularyItemCollection> SearchVocabulary(
             VocabularyKey vocabularyKey,
             string searchString,
@@ -582,7 +589,7 @@ namespace Microsoft.HealthVault
         /// The HealthVault service returned an error.
         /// </exception>
         ///
-        //[Obsolete("Use HealthServicePlatform.GetPersonInfo() instead.")]
+        /// [Obsolete("Use HealthServicePlatform.GetPersonInfo() instead.")]
         public async Task<PersonInfo> GetPersonInfoAsync()
         {
             return await HealthVaultPlatform.GetPersonInfoAsync(this).ConfigureAwait(false);
@@ -610,10 +617,10 @@ namespace Microsoft.HealthVault
         /// <exception cref="HealthServiceException">
         /// The HealthVault service returned an error.
         /// </exception>
-        //[Obsolete("Use HealthServicePlatform.GetAuthorizedPeople() instead.")]
+        /// [Obsolete("Use HealthServicePlatform.GetAuthorizedPeople() instead.")]
         public IEnumerable<Task<PersonInfo>> GetAuthorizedPeople()
         {
-            return GetAuthorizedPeople(new GetAuthorizedPeopleSettings());
+            return this.GetAuthorizedPeople(new GetAuthorizedPeopleSettings());
         }
 
         /// <summary>
@@ -646,7 +653,7 @@ namespace Microsoft.HealthVault
         /// <paramref name="settings"/> is null.
         /// </exception>
         ///
-        //[Obsolete("Use HealthServicePlatform.GetAuthorizedPeople() instead.")]
+        /// [Obsolete("Use HealthServicePlatform.GetAuthorizedPeople() instead.")]
         public IEnumerable<Task<PersonInfo>> GetAuthorizedPeople(GetAuthorizedPeopleSettings settings)
         {
             return HealthVaultPlatform.GetAuthorizedPeopleAsync(this, settings);
@@ -676,7 +683,7 @@ namespace Microsoft.HealthVault
         /// by the object model.
         /// </remarks>
         ///
-        //[Obsolete("Use HealthServicePlatform.GetAuthorizedRecords() instead.")]
+        /// [Obsolete("Use HealthServicePlatform.GetAuthorizedRecords() instead.")]
         public async Task<Collection<HealthRecordInfo>> GetAuthorizedRecords(
             IList<Guid> recordIds)
         {
@@ -705,7 +712,7 @@ namespace Microsoft.HealthVault
         /// The HealthVault service returned an error.
         /// </exception>
         ///
-        //[Obsolete("Use HealthServicePlatform.GetApplicationInfo() instead.")]
+        /// [Obsolete("Use HealthServicePlatform.GetApplicationInfo() instead.")]
         public async Task<ApplicationInfo> GetApplicationInfoAsync()
         {
             return await HealthVaultPlatform.GetApplicationInfo(this).ConfigureAwait(false);
@@ -742,9 +749,9 @@ namespace Microsoft.HealthVault
         /// The HealthVault service returned an error.
         /// </exception>
         ///
-        //[Obsolete("Use HealthServicePlatform.GetApplicationInfo() instead.")]
+        /// [Obsolete("Use HealthServicePlatform.GetApplicationInfo() instead.")]
         public async Task<ApplicationInfo> GetApplicationInfo(
-            Boolean allLanguages)
+            bool allLanguages)
         {
             return await HealthVaultPlatform.GetApplicationInfoAsync(this, allLanguages).ConfigureAwait(false);
         }
@@ -767,7 +774,7 @@ namespace Microsoft.HealthVault
         /// List of health record IDs filtered by any specified input parameters.
         /// </returns>
         ///
-        //[Obsolete("Use HealthServicePlatform.GetUpdatedRecordsForApplication() instead.")]
+        /// [Obsolete("Use HealthServicePlatform.GetUpdatedRecordsForApplication() instead.")]
         public async Task<IList<Guid>> GetUpdatedRecordsForApplication(DateTime? updatedDate)
         {
             return await HealthVaultPlatform.GetUpdatedRecordsForApplicationAsync(this, updatedDate).ConfigureAwait(false);
@@ -787,7 +794,7 @@ namespace Microsoft.HealthVault
         /// List of <see cref="HealthRecordUpdateInfo"/> objects filtered by any specified input parameters.
         /// </returns>
         ///
-        //[Obsolete("Use HealthServicePlatform.GetUpdatedRecordInfoForApplication() instead.")]
+        /// [Obsolete("Use HealthServicePlatform.GetUpdatedRecordInfoForApplication() instead.")]
         public async Task<IList<HealthRecordUpdateInfo>> GetUpdatedRecordInfoForApplication(
             DateTime? updatedDate)
         {
@@ -807,8 +814,8 @@ namespace Microsoft.HealthVault
         /// A signup code that can be used to create an account.
         /// </returns>
         ///
-        //[Obsolete("Use HealthServicePlatform.NewSignupCode() instead.")]
-        public async Task<string >NewSignupCode()
+        /// [Obsolete("Use HealthServicePlatform.NewSignupCode() instead.")]
+        public async Task<string> NewSignupCode()
         {
             return await HealthVaultPlatform.NewSignupCodeAsync(this).ConfigureAwait(false);
         }

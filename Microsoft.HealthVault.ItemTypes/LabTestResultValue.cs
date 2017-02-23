@@ -7,6 +7,7 @@ using System.Collections.ObjectModel;
 using System.Text;
 using System.Xml;
 using System.Xml.XPath;
+using Microsoft.HealthVault.Helpers;
 
 namespace Microsoft.HealthVault.ItemTypes
 {
@@ -45,7 +46,7 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public LabTestResultValue(GeneralMeasurement measurement)
         {
-            Measurement = measurement;
+            this.Measurement = measurement;
         }
 
         /// <summary>
@@ -65,29 +66,29 @@ namespace Microsoft.HealthVault.ItemTypes
             Validator.ThrowIfNavigatorNull(navigator);
 
             // measurement
-            _measurement = new GeneralMeasurement();
-            _measurement.ParseXml(navigator.SelectSingleNode("measurement"));
+            this.measurement = new GeneralMeasurement();
+            this.measurement.ParseXml(navigator.SelectSingleNode("measurement"));
 
             // ranges
             XPathNodeIterator rangesIterator = navigator.Select("ranges");
 
-            _ranges = new Collection<TestResultRange>();
+            this.ranges = new Collection<TestResultRange>();
             foreach (XPathNavigator rangeNav in rangesIterator)
             {
-                TestResultRange _range = new TestResultRange();
-                _range.ParseXml(rangeNav);
-                _ranges.Add(_range);
+                TestResultRange range = new TestResultRange();
+                range.ParseXml(rangeNav);
+                this.ranges.Add(range);
             }
 
             // flag
             XPathNodeIterator flagsIterator = navigator.Select("flag");
 
-            _flag = new Collection<CodableValue>();
+            this.flag = new Collection<CodableValue>();
             foreach (XPathNavigator flagNav in flagsIterator)
             {
-                CodableValue _singleflag = new CodableValue();
-                _singleflag.ParseXml(flagNav);
-                _flag.Add(_singleflag);
+                CodableValue singleflag = new CodableValue();
+                singleflag.ParseXml(flagNav);
+                this.flag.Add(singleflag);
             }
         }
 
@@ -118,30 +119,30 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             Validator.ThrowIfStringNullOrEmpty(nodeName, "nodeName");
             Validator.ThrowIfWriterNull(writer);
-            Validator.ThrowSerializationIfNull(_measurement, "LabTestResultValueTypeMeasurementNotSet");
+            Validator.ThrowSerializationIfNull(this.measurement, "LabTestResultValueTypeMeasurementNotSet");
 
             // <lab-test-result-value-type>
             writer.WriteStartElement(nodeName);
 
             // measurement
-            _measurement.WriteXml("measurement", writer);
+            this.measurement.WriteXml("measurement", writer);
 
             // ranges
-            for (int index = 0; index < _ranges.Count; ++index)
+            for (int index = 0; index < this.ranges.Count; ++index)
             {
                 XmlWriterHelper.WriteOpt(
                     writer,
                     "ranges",
-                    _ranges[index]);
+                    this.ranges[index]);
             }
 
             // flag
-            for (int index = 0; index < _flag.Count; ++index)
+            for (int index = 0; index < this.flag.Count; ++index)
             {
                 XmlWriterHelper.WriteOpt(
                     writer,
                     "flag",
-                    _flag[index]);
+                    this.flag[index]);
             }
 
             // </lab-test-result-value-type>
@@ -158,24 +159,24 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public GeneralMeasurement Measurement
         {
-            get { return _measurement; }
+            get { return this.measurement; }
+
             set
             {
                 Validator.ThrowIfArgumentNull(value, "Measurement", "LabTestResultValueTypeMeasurementNotSet");
-                _measurement = value;
+                this.measurement = value;
             }
         }
-        private GeneralMeasurement _measurement;
+
+        private GeneralMeasurement measurement;
 
         /// <summary>
         /// Gets the ranges that are associated with this test.
         /// </summary>
         ///
-        public Collection<TestResultRange> Ranges
-        {
-            get { return _ranges; }
-        }
-        private Collection<TestResultRange> _ranges = new Collection<TestResultRange>();
+        public Collection<TestResultRange> Ranges => this.ranges;
+
+        private Collection<TestResultRange> ranges = new Collection<TestResultRange>();
 
         /// <summary>
         /// Gets a collection containing the flags for laboratory results.
@@ -185,14 +186,9 @@ namespace Microsoft.HealthVault.ItemTypes
         /// Example values are normal, high, low.
         /// </value>
         ///
-        public Collection<CodableValue> Flag
-        {
-            get
-            {
-                return _flag;
-            }
-        }
-        private Collection<CodableValue> _flag = new Collection<CodableValue>();
+        public Collection<CodableValue> Flag => this.flag;
+
+        private Collection<CodableValue> flag = new Collection<CodableValue>();
 
         /// <summary>
         /// Gets a string representation of the lab test result value type item.
@@ -205,20 +201,21 @@ namespace Microsoft.HealthVault.ItemTypes
         public override string ToString()
         {
             StringBuilder result = new StringBuilder(200);
-            result.Append(_measurement);
-            if (_ranges != null)
+            result.Append(this.measurement);
+            if (this.ranges != null)
             {
-                for (int index = 0; index < _ranges.Count; ++index)
+                for (int index = 0; index < this.ranges.Count; ++index)
                 {
                     result.AppendFormat(
                         ResourceRetriever.GetResourceString(
                             "ListFormat"),
-                        _ranges[index].ToString());
+                        this.ranges[index].ToString());
                 }
             }
-            if (_flag != null)
+
+            if (this.flag != null)
             {
-                for (int index = 0; index < _flag.Count; ++index)
+                for (int index = 0; index < this.flag.Count; ++index)
                 {
                     if (result.Length > 0)
                     {
@@ -226,9 +223,11 @@ namespace Microsoft.HealthVault.ItemTypes
                             ResourceRetriever.GetResourceString(
                                 "ListSeparator"));
                     }
-                    result.Append(_flag[index]);
+
+                    result.Append(this.flag[index]);
                 }
             }
+
             return result.ToString();
         }
     }

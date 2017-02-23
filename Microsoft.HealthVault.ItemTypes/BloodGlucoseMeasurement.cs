@@ -3,9 +3,11 @@
 // see http://www.microsoft.com/resources/sharedsource/licensingbasics/sharedsourcelicenses.mspx.
 // All other rights reserved.
 
+using System;
 using System.Globalization;
 using System.Xml;
 using System.Xml.XPath;
+using Microsoft.HealthVault.Helpers;
 
 namespace Microsoft.HealthVault.ItemTypes
 {
@@ -100,7 +102,7 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         protected override void ParseValueXml(XPathNavigator navigator)
         {
-            Value = navigator.SelectSingleNode("mmolPerL").ValueAsDouble;
+            this.Value = navigator.SelectSingleNode("mmolPerL").ValueAsDouble;
         }
 
         /// <summary>
@@ -114,7 +116,7 @@ namespace Microsoft.HealthVault.ItemTypes
         protected override void WriteValueXml(XmlWriter writer)
         {
             writer.WriteElementString(
-                "mmolPerL", XmlConvert.ToString(Value));
+                "mmolPerL", XmlConvert.ToString(this.Value));
         }
 
         /// <summary>
