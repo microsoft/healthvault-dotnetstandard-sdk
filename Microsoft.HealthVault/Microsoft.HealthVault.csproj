@@ -16,7 +16,7 @@
     <SignAssembly>true</SignAssembly>
     <DelaySign>true</DelaySign>
     <AssemblyOriginatorKeyFile>..\35MSSharedLib1024.snk</AssemblyOriginatorKeyFile>
-    <TargetFrameworkProfile/>
+    <TargetFrameworkProfile />
     <TargetFrameworkVersion>v5.0</TargetFrameworkVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
@@ -124,7 +124,6 @@
     <Compile Include="Exceptions\HealthServiceOtherDataSizeLimitExceededException.cs" />
     <Compile Include="Exceptions\HealthServicePasswordNotStrongException.cs" />
     <Compile Include="Exceptions\HealthServiceRecordQuotaExceededException.cs" />
-    <Compile Include="Exceptions\HealthServiceRequestCancelledException.cs" />
     <Compile Include="Exceptions\IncompatibleVersionException.cs" />
     <Compile Include="Exceptions\InvalidConfigurationException.cs" />
     <Compile Include="Exceptions\SignatureFailureException.cs" />

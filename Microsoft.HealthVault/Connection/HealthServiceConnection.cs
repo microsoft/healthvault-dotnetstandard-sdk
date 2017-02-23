@@ -225,7 +225,7 @@ namespace Microsoft.HealthVault
         /// Setting this property to true will cancel any requests that was started using this
         /// connection and will prevent new requests from being made.
         /// It is up to the caller to start the request on another thread. Cancelling will cause
-        /// a HealthServiceRequestCancelledException to be thrown on the thread the request was
+        /// an OperationCancelledException to be thrown on the thread the request was
         /// executed on.
         /// <br/><br/>
         /// If you want to start reusing the connection set the property to false.

@@ -447,7 +447,7 @@ namespace Microsoft.HealthVault
                 HealthServiceResponseData responseData;
                 using (Stream responseStream = await httpResponse.Content.ReadAsStreamAsync().ConfigureAwait(false))
                 {
-                    responseData = HealthServiceRequest.HandleResponseStreamResult(responseStream);
+                    responseData = HealthServiceRequest.CreateHealthServiceResponseData(responseStream, httpResponse.Headers);
                 }
 
                 ApplicationRecordAuthorizationAction action =

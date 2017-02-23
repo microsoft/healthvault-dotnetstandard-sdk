@@ -267,7 +267,7 @@ namespace Microsoft.HealthVault
                 HealthServiceResponseData result = null;
 
                 Stream responseStream = await response.Content.ReadAsStreamAsync().ConfigureAwait(false);
-                result = HandleResponseStreamResult(responseStream);
+                result = CreateHealthServiceResponseData(responseStream, response.Headers);
 
                 return result;
             }
@@ -295,7 +295,7 @@ namespace Microsoft.HealthVault
         /// <remarks>
         /// Calling this method will cancel any requests that was started using the connection.
         /// It is up to the caller to start the request on another thread. Cancelling will cause
-        /// a HealthServiceRequestCancelledException to be thrown on the thread the request was
+        /// an OperationCancelledException to be thrown on the thread the request was
         /// executed on.
         /// </remarks>
         ///
@@ -499,7 +499,7 @@ namespace Microsoft.HealthVault
                 if (_pendingCancel || _connection.CancelAllRequests)
                 {
                     _pendingCancel = false;
-                    throw new HealthServiceRequestCancelledException();
+                    throw new OperationCanceledException();
                 } 
             }
 
@@ -765,15 +765,18 @@ namespace Microsoft.HealthVault
         /// <param name="stream">
         /// The response stream from the web request.
         /// </param>
+        /// <param name="responseHeaders">The web response headers.</param>
         ///
         /// <exception cref ="HealthServiceException">
         /// HealthVault returns an exception in the form of an
         /// exception section in the response XML.
         /// </exception>
         ///
-        public static HealthServiceResponseData HandleResponseStreamResult(Stream stream)
+        public static HealthServiceResponseData CreateHealthServiceResponseData(Stream stream, HttpResponseHeaders responseHeaders)
         {
             HealthServiceResponseData result = new HealthServiceResponseData();
+            result.ResponseHeaders = responseHeaders;
+
             bool newStreamCreated = false;
             MemoryStream responseStream = stream as MemoryStream;
 

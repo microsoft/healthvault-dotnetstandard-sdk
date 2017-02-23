@@ -37,14 +37,7 @@ namespace Microsoft.HealthVault
         /// to get more information about the error.
         /// </remarks>
         ///
-        public HealthServiceStatusCode Code
-        {
-            get
-            {
-                return
-                    HealthServiceStatusCodeManager.GetStatusCode(_codeId);
-            }
-        }
+        public HealthServiceStatusCode Code => HealthServiceStatusCodeManager.GetStatusCode(this._codeId);
 
         /// <summary>
         /// Gets the integer identifier of the status code in the HealthVault
@@ -127,6 +120,17 @@ namespace Microsoft.HealthVault
         }
         private XmlReader _infoReader;
 
+        /// <summary>
+        /// Gets the headers on the response.
+        /// </summary>
+        public HttpResponseHeaders ResponseHeaders
+        {
+            get { return _responseHeaders; }
+            internal set { _responseHeaders = value; }
+        }
+
+        private HttpResponseHeaders _responseHeaders;
+
         internal XmlReader NewInfoReader
         {
             get
@@ -167,11 +171,11 @@ namespace Microsoft.HealthVault
         /// Gets or sets the cached response results text (UTF8 encoded).
         /// </summary>
         ///
-        internal ArraySegment<Byte> ResponseText
+        internal ArraySegment<byte> ResponseText
         {
             get { return _responseText; }
             set { _responseText = value; }
         }
-        private ArraySegment<Byte> _responseText;
+        private ArraySegment<byte> _responseText;
     }
 }
