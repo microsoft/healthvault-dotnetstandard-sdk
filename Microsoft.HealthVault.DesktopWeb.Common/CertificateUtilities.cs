@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Microsoft.HealthVault.Certificate;
+using Microsoft.HealthVault.Helpers;
+using System;
 using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
@@ -7,7 +9,6 @@ using System.Security;
 using System.Security.Cryptography;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
-using Microsoft.HealthVault.Certificate;
 
 namespace Microsoft.HealthVault.DesktopWeb.Common
 {
