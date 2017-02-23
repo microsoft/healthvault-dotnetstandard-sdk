@@ -3,6 +3,9 @@
 // see http://www.microsoft.com/resources/sharedsource/licensingbasics/sharedsourcelicenses.mspx.
 // All other rights reserved.
 
+using Microsoft.HealthVault.DesktopWeb.Common;
+using Microsoft.HealthVault.Helpers;
+using Microsoft.HealthVault.Thing;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -13,9 +16,6 @@ using System.Threading.Tasks;
 using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
-using Microsoft.HealthVault.Helpers;
-using Microsoft.HealthVault.Thing;
-using Microsoft.HealthVault.DesktopWeb.Common;
 
 namespace Microsoft.HealthVault.Web
 {
@@ -32,7 +32,6 @@ namespace Microsoft.HealthVault.Web
     /// This control can only be used inside a <see cref="HealthServicePage"/>.
     /// </remarks>
     [AspNetHostingPermission(SecurityAction.InheritanceDemand, Level = AspNetHostingPermissionLevel.Minimal)]
-    [SecurityCritical]
     public class HealthRecordItemDataGrid : Control, INamingContainer
     {
         /// <summary>
@@ -471,7 +470,7 @@ namespace Microsoft.HealthVault.Web
                 case BuiltinActionDelete:
                     string[] identifiers =
                         e.CommandArgument.ToString().Split(',');
-                    this.DeleteThing(
+                    this.DeleteThingAsync(
                         new Guid(identifiers[0]),
                         new Guid(identifiers[1]));
                     break;
@@ -487,14 +486,13 @@ namespace Microsoft.HealthVault.Web
 
         private const string BuiltinActionDelete = "_wcDelete";
 
-        private async Task DeleteThing(Guid thingId, Guid versionStamp)
+        private async Task DeleteThingAsync(Guid thingId, Guid versionStamp)
         {
             await Record.RemoveItem(new HealthRecordItemKey(thingId, versionStamp));
 
             this.DataChanged = true;
         }
 
-        [SecurityCritical]
         private void AddActionLinksOnDataBind()
         {
             if (HaveValidActions())
@@ -512,7 +510,6 @@ namespace Microsoft.HealthVault.Web
             }
         }
 
-        [SecurityCritical]
         private void AddActionLinksOnPostback()
         {
             if (this.HaveValidActions())
@@ -544,7 +541,6 @@ namespace Microsoft.HealthVault.Web
             return result;
         }
 
-        [SecurityCritical]
         internal void AddActionLinksToContainer(
             Control container,
             int rowIndex,
@@ -686,7 +682,6 @@ namespace Microsoft.HealthVault.Web
         /// a page not deriving from <see cref="HealthServicePage"/>.
         /// </exception>
         ///
-        [SecurityCritical]
         protected void PopulateGridView()
         {
             // Clear out the GridView
@@ -782,7 +777,6 @@ namespace Microsoft.HealthVault.Web
             _numResults = _wcDataTable.Rows.Count;
         }
 
-        [SecurityCritical]
         private void AddDisplayColumn(
             DataColumn cdef,
             string columnHeader,
