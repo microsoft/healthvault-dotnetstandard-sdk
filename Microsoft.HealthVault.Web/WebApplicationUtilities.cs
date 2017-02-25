@@ -178,7 +178,7 @@ namespace Microsoft.HealthVault.Web
                     context, 
                     logOnRequired, 
                     false,
-                    HealthWebApplicationConfiguration.Current.ApplicationId)
+                    HealthWebApplicationConfiguration.Current.ApplicationConfiguration.ApplicationId)
                 .ConfigureAwait(false);
         }
 
@@ -249,7 +249,7 @@ namespace Microsoft.HealthVault.Web
                     context, 
                     logOnRequired, 
                     isMra,
-                    HealthWebApplicationConfiguration.Current.ApplicationId)
+                    HealthWebApplicationConfiguration.Current.ApplicationConfiguration.ApplicationId)
                 .ConfigureAwait(false);
         }
 
@@ -298,7 +298,7 @@ namespace Microsoft.HealthVault.Web
             await HandleTokenOnUrl(context, logOnRequired, appId).ConfigureAwait(false);
 
             // Get whatever's in the cookie...
-            PersonInfo personInfo = LoadPersonInfoFromCookie(context);
+            PersonInfo personInfo = await LoadPersonInfoFromCookie(context);
 
             // If we didn't just authenticate and the cookie was blank and
             // we ought to be logged in...
@@ -330,7 +330,7 @@ namespace Microsoft.HealthVault.Web
             get
             {
                 return GetApplicationAuthenticationCredential(
-                    HealthWebApplicationConfiguration.Current.ApplicationId);
+                    HealthWebApplicationConfiguration.Current.ApplicationConfiguration.ApplicationId);
             }
         }
 
@@ -374,7 +374,7 @@ namespace Microsoft.HealthVault.Web
             get
             {
                 return GetApplicationConnection(
-                    HealthWebApplicationConfiguration.Current.ApplicationId);
+                    HealthWebApplicationConfiguration.Current.ApplicationConfiguration.ApplicationId);
             }
         }
 
@@ -398,7 +398,9 @@ namespace Microsoft.HealthVault.Web
         /// </exception>
         public static ApplicationConnection GetApplicationConnection(HealthServiceInstance serviceInstance)
         {
-            return GetApplicationConnection(HealthWebApplicationConfiguration.Current.ApplicationId, serviceInstance);
+            return GetApplicationConnection(
+                HealthWebApplicationConfiguration.Current.ApplicationConfiguration.ApplicationId, 
+                serviceInstance);
         }
 
         /// <summary>
@@ -473,9 +475,9 @@ namespace Microsoft.HealthVault.Web
         /// If a person has not been logged in.
         /// </exception>
         /// 
-        public static WebApplicationConnection GetAuthenticatedConnection(System.Web.HttpContext context)
+        public static async Task<WebApplicationConnection> GetAuthenticatedConnection(System.Web.HttpContext context)
         {
-            PersonInfo personInfo = LoadPersonInfoFromCookie(context);
+            PersonInfo personInfo = await LoadPersonInfoFromCookie(context);
 
             Validator.ThrowInvalidIfNull(personInfo, "PersonNotLoggedIn");
 
@@ -1299,7 +1301,7 @@ namespace Microsoft.HealthVault.Web
         /// token.
         /// </returns>
         /// 
-        public static PersonInfo LoadPersonInfoFromCookie(System.Web.HttpContext context)
+        public static async Task<PersonInfo> LoadPersonInfoFromCookie(System.Web.HttpContext context)
         {
             string serializedPersonInfo = null;
 
@@ -1323,7 +1325,7 @@ namespace Microsoft.HealthVault.Web
             PersonInfo personInfo = null;
             try
             {
-                personInfo = DeserializePersonInfo(serializedPersonInfo);
+                personInfo = await DeserializePersonInfo(serializedPersonInfo);
                 if (personInfo != null)
                 {
                     personInfo.ApplicationSettingsChanged += new EventHandler(OnPersonInfoChanged);
@@ -1355,7 +1357,7 @@ namespace Microsoft.HealthVault.Web
         /// expired authentication token.
         /// </returns>
         /// 
-        public static PersonInfo LoadPersonInfoFromCookie(HttpCookie cookie)
+        public static async Task<PersonInfo> LoadPersonInfoFromCookie(HttpCookie cookie)
         {
             string serializedPersonInfo = null;
             if (cookie != null)
@@ -1364,10 +1366,10 @@ namespace Microsoft.HealthVault.Web
                     cookie[WcTokenPersonInfo];
             }
 
-            return DeserializePersonInfo(serializedPersonInfo);
+            return await DeserializePersonInfo(serializedPersonInfo);
         }
 
-        private static PersonInfo DeserializePersonInfo(string serializedPersonInfo)
+        private static async Task<PersonInfo> DeserializePersonInfo(string serializedPersonInfo)
         {
             if (String.IsNullOrEmpty(serializedPersonInfo)) return null;
 
@@ -1388,7 +1390,7 @@ namespace Microsoft.HealthVault.Web
                             SDKHelper.XmlReaderSettings));
 
                 personInfo =
-                    PersonInfo.CreateFromXmlExcludeUrl(
+                    await PersonInfo.CreateFromXmlExcludeUrl(
                         null, 
                         personDoc.CreateNavigator().SelectSingleNode(
                             "person-info"));
@@ -2122,7 +2124,7 @@ namespace Microsoft.HealthVault.Web
             redirectParameters = redirectParameters.Clone();
             redirectParameters.TargetLocation = "AUTH";
             redirectParameters.TokenRedirectionMethod = "POST";
-            redirectParameters.ApplicationId = HealthWebApplicationConfiguration.Current.ApplicationId;
+            redirectParameters.ApplicationId = HealthWebApplicationConfiguration.Current.ApplicationConfiguration.ApplicationId;
 
             RedirectToShellUrl(context, redirectParameters);
         }
@@ -2264,7 +2266,7 @@ namespace Microsoft.HealthVault.Web
             SignOut(
                 context, 
                 actionUrlQueryString,
-                HealthWebApplicationConfiguration.Current.ApplicationId);
+                HealthWebApplicationConfiguration.Current.ApplicationConfiguration.ApplicationId);
         }
 
 
@@ -2322,7 +2324,7 @@ namespace Microsoft.HealthVault.Web
                 actionUrlQueryString,
                 appId,
                 credentialToken,
-                HealthWebApplicationConfiguration.Current.HealthVaultShellUrl.OriginalString);
+                HealthWebApplicationConfiguration.Current.ApplicationConfiguration.HealthVaultShellUrl.OriginalString);
         }
 
         /// <summary>

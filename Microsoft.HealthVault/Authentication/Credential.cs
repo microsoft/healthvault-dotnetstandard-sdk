@@ -992,11 +992,11 @@ namespace Microsoft.HealthVault.Authentication
             {
                 switch (typeNav.Value)
                 {
-                    case "Microsoft.Health.Authentication.PassportCredential":
+                    case "Microsoft.HealthVault.Authentication.PassportCredential":
                         cred = new PassportCredential();
                         break;
 
-                    case "Microsoft.Health.Web.Authentication.WebApplicationCredential":
+                    case "Microsoft.HealthVault.Web.Authentication.WebApplicationCredential":
                         cred = new WebApplicationCredential();
                         break;
 

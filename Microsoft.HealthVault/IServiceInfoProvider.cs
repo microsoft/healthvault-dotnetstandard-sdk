@@ -21,5 +21,11 @@ namespace Microsoft.HealthVault
         /// Service information retrieved from the HealthVault web-service.
         /// </returns>
         ServiceInfo GetServiceInfo();
+
+        /// <summary>
+        /// Gets the service information asynchronous.
+        /// </summary>
+        /// <returns></returns>
+        Task<ServiceInfo> GetServiceInfoAsync();
     }
 }

@@ -67,39 +67,15 @@ namespace Microsoft.HealthVault.Thing
             try
             {
                 Assembly itemTypeAssembly =
-                    GetItemTypesAssembly("Microsoft.Health.ItemTypes");
+                    GetItemTypesAssembly("Microsoft.HealthVault.ItemTypes");
 
                 Type registrarType =
-                    itemTypeAssembly?.GetType("Microsoft.Health.ItemTypes.ItemTypeRegistrar");
+                    itemTypeAssembly?.GetType("Microsoft.HealthVault.ItemTypes.ItemTypeRegistrar");
 
                 MethodInfo registrarMethod =
                     registrarType?.GetTypeInfo().GetDeclaredMethod("RegisterAssemblyHealthRecordItemTypes");
 
                 registrarMethod?.Invoke(null, null);
-            }
-            catch (Exception)
-            {
-                // Under no circumstances should this prevent us from proceeding
-            }
-
-            // Look for the Microsoft.Health.ItemTypes.Old assembly. If loaded, then register
-            // those types as well.
-
-            try
-            {
-                Assembly itemTypeAssembly =
-                    GetItemTypesAssembly("Microsoft.Health.ItemTypes.Old");
-
-                Type registrarType =
-                    itemTypeAssembly?.GetType("Microsoft.Health.ItemTypes.Old.ItemTypeOldRegistrar");
-
-                if (registrarType != null)
-                {
-                    MethodInfo registrarMethod =
-                        registrarType.GetTypeInfo().GetDeclaredMethod("RegisterAssemblyHealthRecordItemTypes");
-
-                    registrarMethod?.Invoke(null, null);
-                }
             }
             catch (Exception)
             {

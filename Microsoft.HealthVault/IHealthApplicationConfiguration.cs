@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Security.Cryptography.X509Certificates;
 using System.Threading;
+using Microsoft.HealthVault.Authentication;
 using Microsoft.HealthVault.Exceptions;
 using Microsoft.HealthVault.PlatformInformation;
 using Microsoft.HealthVault.Thing;
@@ -291,5 +292,13 @@ namespace Microsoft.HealthVault
         /// Gets the certificate subject.
         /// </summary>
         string CertSubject { get; }
+
+        /// <summary>
+        /// Gets the crypto configuration.
+        /// </summary>
+        /// <value>
+        /// The crypto configuration.
+        /// </value>
+        ICryptoConfiguration CryptoConfiguration { get; }
     }
 }

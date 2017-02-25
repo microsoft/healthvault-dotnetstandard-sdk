@@ -11,8 +11,8 @@
     <AssemblyName>Microsoft.HealthVault.Web</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-    <SignAssembly>true</SignAssembly>
-    <DelaySign>true</DelaySign>
+    <SignAssembly>False</SignAssembly>
+    <DelaySign>false</DelaySign>
     <AssemblyOriginatorKeyFile>..\35MSSharedLib1024.snk</AssemblyOriginatorKeyFile>
     <TargetFrameworkProfile />
   </PropertyGroup>
@@ -77,7 +77,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Microsoft.HealthVault.DesktopWeb.Common\Microsoft.HealthVault.DesktopWeb.Common.csproj">
-      <Project>{F269F61A-5CB2-4F81-BC24-E6825F261061}</Project>
+      <Project>{f269f61a-5cb2-4f81-bc24-e6825f261061}</Project>
       <Name>Microsoft.HealthVault.DesktopWeb.Common</Name>
     </ProjectReference>
     <ProjectReference Include="..\Microsoft.HealthVault\Microsoft.HealthVault.csproj">

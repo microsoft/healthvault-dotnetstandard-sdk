@@ -40,7 +40,9 @@
   </PropertyGroup>
   <ItemGroup>
     <None Include="project.json" />
-    <EmbeddedResource Include="resources.restext" />
+    <EmbeddedResource Include="resources.restext">
+      <LogicalName>resources.resources</LogicalName>
+    </EmbeddedResource>
     <!-- A reference to the entire .NET Framework is automatically included -->
   </ItemGroup>
   <ItemGroup>

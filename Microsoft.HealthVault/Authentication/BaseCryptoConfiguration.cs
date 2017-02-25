@@ -3,32 +3,32 @@
     /// <summary>
     /// <inheritdoc cref="ICryptoConfiguration"/>
     /// </summary>
-    public class CryptoConfiguration : ICryptoConfiguration
+    public class BaseCryptoConfiguration : ICryptoConfiguration
     {
         /// <summary>
         /// The default HMAC algorithm name.
         /// </summary>
-        protected const string DefaultHmacAlgorithmName = "HMACSHA256";
+        public const string DefaultHmacAlgorithmName = "HMACSHA256";
 
         /// <summary>
         /// The default hash algorithm name.
         /// </summary>
-        protected const string DefaultHashAlgorithmName = "SHA256";
+        public const string DefaultHashAlgorithmName = "SHA256";
 
         /// <summary>
         /// The default signature hash algorithm name.
         /// </summary>
-        protected const string DefaultSignatureHashAlgorithmName = "SHA1";
+        public const string DefaultSignatureHashAlgorithmName = "SHA1";
 
         /// <summary>
         /// The default signature algorithm name.
         /// </summary>
-        protected const string DefaultSignatureAlgorithmName = "RSA-SHA1";
+        public const string DefaultSignatureAlgorithmName = "RSA-SHA1";
 
         /// <summary>
         /// The default symmetric algorithm name.
         /// </summary>
-        protected const string DefaultSymmetricAlgorithmName = "AES256";
+        public const string DefaultSymmetricAlgorithmName = "AES256";
 
         private volatile string hmacAlgorithmName;
 

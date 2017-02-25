@@ -198,6 +198,10 @@ namespace Microsoft.HealthVault.Thing
             this.Connection = connection;
         }
 
+        internal HealthRecordAccessor()
+        {
+        }
+
         #region Public properties
         
         /// <summary>
@@ -228,7 +232,12 @@ namespace Microsoft.HealthVault.Thing
         /// created this <see cref="HealthRecordAccessor"/>.
         /// </summary>
         ///
-        public ApplicationConnection Connection { get; }
+        public ApplicationConnection Connection
+        {
+            get { return _connection; }
+            internal set { _connection = value; }
+        }
+        private ApplicationConnection _connection;
 
         #endregion Public properties
 

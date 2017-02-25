@@ -49,13 +49,13 @@ namespace Microsoft.HealthVault.Web
         /// Application id, from web config.
         /// </summary>
         ///
-        public static readonly Guid AppId = HealthWebApplicationConfiguration.Current.ApplicationId;
+        public static readonly Guid AppId = HealthWebApplicationConfiguration.Current.ApplicationConfiguration.ApplicationId;
 
         /// <summary>
         /// Shell url, from web config.
         /// </summary>
         ///
-        public static Uri ShellUrl => HealthWebApplicationConfiguration.Current.HealthVaultShellUrl;
+        public static Uri ShellUrl => HealthWebApplicationConfiguration.Current.ApplicationConfiguration.HealthVaultShellUrl;
 
         /// <summary>
         /// Cookie domain, from web config.
@@ -133,18 +133,18 @@ namespace Microsoft.HealthVault.Web
         /// HealthVault url, from web config.
         /// </summary>
         ///
-        public static Uri HealthServiceUrl => HealthWebApplicationConfiguration.Current.HealthVaultUrl;
+        public static Uri HealthServiceUrl => HealthWebApplicationConfiguration.Current.ApplicationConfiguration.HealthVaultUrl;
 
         /// <summary>
         /// HealthVault root url, from web config.
         /// </summary>
-        public static Uri HealthServiceRootUrl => HealthWebApplicationConfiguration.Current.HealthVaultUrl;
+        public static Uri HealthServiceRootUrl => HealthWebApplicationConfiguration.Current.ApplicationConfiguration.HealthVaultUrl;
 
         /// <summary>
         /// Shell redirector url, derived from web config.
         /// </summary>
         ///
-        public static Uri ShellRedirectorUrl => UrlPathAppend(HealthWebApplicationConfiguration.Current.HealthVaultShellUrl, ShellRedirectorLocation);
+        public static Uri ShellRedirectorUrl => UrlPathAppend(HealthWebApplicationConfiguration.Current.ApplicationConfiguration.HealthVaultShellUrl, ShellRedirectorLocation);
 
         private const string ShellRedirectorLocation = "redirect.aspx?target=";
 
@@ -152,7 +152,7 @@ namespace Microsoft.HealthVault.Web
         /// HealthVault handler url, derived from web config.
         /// </summary>
         ///
-        public static Uri HealthServiceHandlerUrl => HealthWebApplicationConfiguration.Current.GetHealthVaultMethodUrl();
+        public static Uri HealthServiceHandlerUrl => HealthWebApplicationConfiguration.Current.ApplicationConfiguration.GetHealthVaultMethodUrl();
 
         /// <summary>
         /// Gets the URL for the specified application action.

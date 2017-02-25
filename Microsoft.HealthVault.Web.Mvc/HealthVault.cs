@@ -42,7 +42,7 @@ namespace Microsoft.HealthVault.Web.Mvc
                 "Redirect",
                 "Redirect/{action}",
                 new { controller = "Redirect", action = "Index" },
-                new[] { "Microsoft.Health.Web.Mvc" });
+                new[] { "Microsoft.HealthVault.Web.Mvc" });
         }
 
         /// <summary>

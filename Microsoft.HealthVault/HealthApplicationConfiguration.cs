@@ -27,7 +27,7 @@ namespace Microsoft.HealthVault
         /// <summary>
         /// Gets the current configuration object for the app-domain.
         /// </summary>
-        public static HealthApplicationConfiguration Current
+        public static IHealthApplicationConfiguration Current
         {
             get
             {
@@ -37,7 +37,7 @@ namespace Microsoft.HealthVault
                 }
             }
 
-            internal set
+            set
             {
                 lock (InstanceLock)
                 {
@@ -144,7 +144,7 @@ namespace Microsoft.HealthVault
         {
             get
             {
-                return this.cryptoConfiguration ?? (this.cryptoConfiguration = new CryptoConfiguration());
+                return _cryptoConfiguration ?? (_cryptoConfiguration = new BaseCryptoConfiguration());
             }
 
             set

@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Globalization;
 using System.Text;
+using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.XPath;
 using Microsoft.HealthVault.Helpers;
@@ -43,6 +44,11 @@ namespace Microsoft.HealthVault.PlatformInformation
         /// </remarks>
         ///
         public static ServiceInfo Current => defaultServiceInfoProvider.GetServiceInfo();
+
+        public async Task<ServiceInfo> GetSericeInfoAsync()
+        {
+            return await _defaultServiceInfoProvider.GetServiceInfoAsync().ConfigureAwait(false);
+        }
 
         /// <summary>
         /// Sets the provider to be used for the <see cref="P:CurrentInfo"/> singleton.
@@ -420,7 +426,7 @@ namespace Microsoft.HealthVault.PlatformInformation
         /// <summary>
         /// Create a new instance of the <see cref="ServiceInfo"/> class for testing purposes.
         /// </summary>
-        protected ServiceInfo()
+        public ServiceInfo()
         {
         }
 

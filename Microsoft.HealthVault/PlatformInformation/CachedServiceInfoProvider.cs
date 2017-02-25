@@ -16,6 +16,7 @@ namespace Microsoft.HealthVault.PlatformInformation
     /// <remarks>
     /// This provider will cache the service information it obtains from Platform for
     /// a configured or specified period of time.
+    /// TODO: THIS NEEDS TO BE REWORKED. THIS DOESN'T SEEM TO WORK AS IS
     /// </remarks>
     public class CachedServiceInfoProvider : IServiceInfoProvider
     {
@@ -128,12 +129,19 @@ namespace Microsoft.HealthVault.PlatformInformation
         /// Service information retrieved from the HealthVault web-service.
         /// </returns>
         /// 
-        /// <remarks>
-        /// Calls to this method are thread-safe.
-        /// </remarks>
+        ///  <remarks>
+        ///  Calls to this method are thread-safe.
+        /// TODO: THIS METHODS THO REFERENCED IS NOT USED ANYWHERE
+        ///  </remarks>
         public ServiceInfo GetServiceInfo()
         {
-            return this.serviceInfo.Value();
+            // return _serviceInfo.Value();
+            return GetFromServiceAsync().Result;
+        }
+
+        public async Task<ServiceInfo> GetServiceInfoAsync()
+        {
+            return await GetFromServiceAsync().ConfigureAwait(false);
         }
 
         /// <summary>

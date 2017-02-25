@@ -10,4 +10,4 @@ using System.Reflection;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyDescription("Microsoft HealthVault SDK MVC Assembly")]
-[assembly: AssemblyTitle("Microsoft.Health.Web.Mvc")]
+[assembly: AssemblyTitle("Microsoft.HealthVault.Web.Mvc")]

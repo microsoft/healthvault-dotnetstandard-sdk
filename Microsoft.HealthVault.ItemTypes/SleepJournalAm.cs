@@ -340,7 +340,7 @@ namespace Microsoft.HealthVault.ItemTypes
 
             set
             {
-                Validator.ThrowArgumentOutOfRangeIf(value <= 0, "SettlingMinutes", "SleepJournalAMSettlingMinutesMandatory");
+                Validator.ThrowArgumentOutOfRangeIf(value < 0, "SettlingMinutes", "SleepJournalAMSettlingMinutesMandatory");
                 this.settlingMinutes = value;
             }
         }

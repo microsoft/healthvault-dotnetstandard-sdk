@@ -93,7 +93,7 @@ namespace Microsoft.HealthVault.Web
         /// <see cref="OnInit"/>.
         /// </remarks>
         ///
-        protected virtual Guid ApplicationId { get; set; } = HealthWebApplicationConfiguration.Current.ApplicationId;
+        protected virtual Guid ApplicationId { get; set; } = HealthWebApplicationConfiguration.Current.ApplicationConfiguration.ApplicationId;
 
         /// <summary>
         /// Handles the PreLoad event for the page.

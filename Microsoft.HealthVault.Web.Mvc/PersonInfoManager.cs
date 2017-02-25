@@ -138,14 +138,14 @@ namespace Microsoft.HealthVault.Web.Mvc
             "Microsoft.Design",
             "CA1031:DoNotCatchGeneralExceptionTypes",
             Justification = "Fail gracefully if unable to load the personInfo for *any* reason")]
-        internal PersonInfo Load()
+        internal async Task<PersonInfo> LoadAsync()
         {
             HttpCookie cookie = GetCookie();
             if (cookie != null)
             {
                 try
                 {
-                    PersonInfo person = PersonInfoFromCookie(cookie);
+                    PersonInfo person = await PersonInfoFromCookie(cookie);
                     InitializePersonInfo(person);
                     return person;
                 }
@@ -195,9 +195,9 @@ namespace Microsoft.HealthVault.Web.Mvc
         }
 
         // PersonInfo Serialization - to & from cookies
-        private static PersonInfo PersonInfoFromCookie(HttpCookie cookie)
+        private static async Task<PersonInfo> PersonInfoFromCookie(HttpCookie cookie)
         {
-            return WebApplicationUtilities.LoadPersonInfoFromCookie(cookie);
+            return await WebApplicationUtilities.LoadPersonInfoFromCookie(cookie);
         }
 
         private HttpCookie PersonInfoToCookie(PersonInfo personInfo)

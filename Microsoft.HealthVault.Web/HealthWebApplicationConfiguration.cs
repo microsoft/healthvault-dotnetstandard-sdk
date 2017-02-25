@@ -6,7 +6,9 @@
 using Microsoft.HealthVault.Exceptions;
 using System;
 using System.Globalization;
+using System.Threading;
 using System.Web;
+using Microsoft.HealthVault.DesktopWeb.Common;
 using Microsoft.HealthVault.Helpers;
 using Microsoft.HealthVault.Transport;
 
@@ -15,8 +17,10 @@ namespace Microsoft.HealthVault.Web
     /// <summary>
     /// </summary>
     ///
-    public class HealthWebApplicationConfiguration : HealthApplicationConfiguration
+    public class HealthWebApplicationConfiguration
     {
+        private static readonly object instanceLock = new object();
+
         #region configuration key constants
         private const string ConfigKeyItemsPerPage = "DataGrid_ItemsPerPage";
         private const string ConfigKeyActionPagePrefix = "WCPage_Action";
@@ -34,25 +38,50 @@ namespace Microsoft.HealthVault.Web
         private const string ConfigKeyIsSignupCodeRequired = "WCPage_IsSignupCodeRequired";
         #endregion
 
-        static HealthWebApplicationConfiguration()
-        {
-            HealthApplicationConfiguration.Current = Current;
-        }
-
         /// <summary>
         /// Gets or sets the current configuration object for the app-domain.
         /// </summary>
-        public new static HealthWebApplicationConfiguration Current
+        public static HealthWebApplicationConfiguration Current
         {
-            get { return _current; }
+            get
+            {
+                lock (instanceLock)
+                {
+                    if (_current == null)
+                    {
+                        var applicationConfiguration = new ApplicationConfiguration();
+
+                        _current = new HealthWebApplicationConfiguration
+                        {
+                            ApplicationConfiguration = applicationConfiguration
+                        };
+
+                        HealthApplicationConfiguration.Current = applicationConfiguration;
+                    }
+
+                    return _current;
+                }
+            }
+
             set
             {
-                _current = value;
-                HealthApplicationConfiguration.Current = _current;
+                lock (instanceLock)
+                {
+                    _current = value;
+                }
             }
         }
-        private static volatile HealthWebApplicationConfiguration _current =
-            new HealthWebApplicationConfiguration();
+
+        private static volatile HealthWebApplicationConfiguration _current;
+
+        /// <summary>
+        /// Gets the health application configuration.
+        /// </summary>
+        /// <value>
+        /// The health application configuration.
+        /// </value>
+        public virtual IHealthApplicationConfiguration ApplicationConfiguration { get; set; }
+
 
         /// <summary>
         /// Gets the number of items that are shown per page when using the
@@ -448,14 +477,24 @@ namespace Microsoft.HealthVault.Web
         {
             get
             {
-                var redirect = new ShellRedirectParameters(HealthVaultShellUrl.OriginalString)
+                var redirect = new ShellRedirectParameters(ApplicationConfiguration.HealthVaultShellUrl.OriginalString)
                 {
                     TargetLocation = "AUTH",
-                    ApplicationId = ApplicationId,
+                    ApplicationId = ApplicationConfiguration.ApplicationId,
                 };
 
                 return redirect.ConstructRedirectUrl();
             }
+        }
+
+        /// <summary>
+        /// Gets the string configuration value given the key
+        /// </summary>
+        /// <param name="configurationKey">Key to look up the configuration item.</param>
+        /// <returns>String value of the configuration item, should return null if key not found.</returns>
+        protected virtual string GetConfigurationString(string configurationKey)
+        {
+            return ApplicationConfigurationManager.GetConfigurationValue(configurationKey);
         }
 
         /// <summary>
@@ -476,7 +515,7 @@ namespace Microsoft.HealthVault.Web
         ///
         private string GetConfigurationString(string key, string defaultValue)
         {
-            string result = GetConfigurationString(key, defaultValue);
+            string result = GetConfigurationString(key);
 
             if (result == null)
             {

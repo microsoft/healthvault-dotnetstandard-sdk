@@ -150,6 +150,23 @@ namespace Microsoft.HealthVault.Application
             }
         }
 
+        // TODO: prefer usage of this method over the other one
+        public virtual async Task<IList<PersonInfo>> EnsureGetAuthorizedPeopleAsync(
+            ApplicationConnection connection,
+            GetAuthorizedPeopleSettings settings)
+        {
+            var peopleTasks = GetAuthorizedPeopleAsync(connection, settings);
+            var people = new List<PersonInfo>();
+
+            foreach (var personTask in peopleTasks)
+            {
+                await personTask;
+                people.Add(personTask.Result);
+            }
+
+            return people;
+        }
+
         internal static async Task<GetAuthorizedPeopleResult> GetAuthorizedPeopleAsync(
             ApplicationConnection connection,
             Guid personIdCursor,

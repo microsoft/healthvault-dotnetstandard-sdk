@@ -11,6 +11,6 @@ using System.Security;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyDescription("Microsoft HealthVault SDK Web Assembly")]
-[assembly: AssemblyTitle("Microsoft.Health.Web")]
+[assembly: AssemblyTitle("Microsoft.HealthVault.Web")]
 [assembly: ReliabilityContract(Consistency.MayCorruptAppDomain, Cer.MayFail)]
 [assembly: SecurityRules(SecurityRuleSet.Level2)]

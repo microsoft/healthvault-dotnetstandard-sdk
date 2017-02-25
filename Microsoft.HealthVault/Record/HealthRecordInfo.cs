@@ -71,6 +71,20 @@ namespace Microsoft.HealthVault.Record
         }
 
         /// <summary>
+        /// Creates an instance of a HealthRecordInfo object using  the specified XML.
+        /// </summary>
+        /// <param name="navigator">The navigator.</param>
+        /// <returns></returns>
+        public static HealthRecordInfo CreateFromXml(XPathNavigator navigator)
+        {
+            Validator.ThrowIfArgumentNull(navigator, "navigator", "ParseXmlNavNull");
+
+            HealthRecordInfo recordInfo = new HealthRecordInfo();
+            recordInfo.ParseXml(navigator);
+            return recordInfo;
+        }
+
+        /// <summary>
         /// Parses HealthRecordInfo member data from the specified XPathNavigator.
         /// </summary>
         ///
@@ -359,6 +373,10 @@ namespace Microsoft.HealthVault.Record
         ///
         internal HealthRecordInfo(ApplicationConnection connection)
             : base(connection)
+        {
+        }
+
+        internal HealthRecordInfo()
         {
         }
 

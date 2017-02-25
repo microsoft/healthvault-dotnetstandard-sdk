@@ -202,22 +202,20 @@ namespace Microsoft.HealthVault.Rest
         }
 
         /// <summary>
-        /// The response details from the server
-        /// </summary>
-        public HealthServiceRestResponseData Response { get; private set; }
-
-        /// <summary>
         /// Builds up the request and reads the response.        
         /// </summary>
-        public async void ExecuteAsync()
+        public async Task<HealthServiceRestResponseData> ExecuteAsync()
         {
             int retryCount = HealthApplicationConfiguration.Current.RetryOnInternal500Count;
             int retrySleepSeconds = HealthApplicationConfiguration.Current.RetryOnInternal500SleepSeconds;
+
+            HealthServiceRestResponseData responseData = null;
+
             do
             {
                 try
                 {
-                    this.FetchAsync();
+                    responseData = await this.FetchAsync().ConfigureAwait(false);
 
                     // Completed successfully, break the do-while loop
                     break;
@@ -239,6 +237,8 @@ namespace Microsoft.HealthVault.Rest
                 --retryCount;
             }
             while (retryCount >= 0);
+
+            return responseData;
         }
         
         private void Initialize(
@@ -261,11 +261,11 @@ namespace Microsoft.HealthVault.Rest
             this.timeoutSeconds = connection.RequestTimeoutSeconds;
         }
 
-        private async void FetchAsync()
+        private async Task<HealthServiceRestResponseData> FetchAsync()
         {
             try
             {
-               await this.FetchInternalAsync(this.uri);
+               return await FetchInternalAsync(_uri).ConfigureAwait(false);
             }
             catch (HealthHttpException we)
             {
@@ -276,7 +276,7 @@ namespace Microsoft.HealthVault.Rest
                     response.StatusCode == HttpStatusCode.Unauthorized &&
                     this.connection.Credential.ExpireAuthenticationResult(this.connection.ApplicationId))
                 {
-                    await this.FetchInternalAsync(this.uri);
+                    return await FetchInternalAsync(_uri).ConfigureAwait(false);
                 }
                 else
                 {
@@ -285,7 +285,7 @@ namespace Microsoft.HealthVault.Rest
             }
         }
 
-        private async Task FetchInternalAsync(Uri uri)
+        private async Task<HealthServiceRestResponseData> FetchInternalAsync(Uri uri)
         {
             var httpRequest = this.CreateRequest(uri);
             HttpResponseMessage response = null;
@@ -307,7 +307,7 @@ namespace Microsoft.HealthVault.Rest
                 response = await client.SendAsync(httpRequest, this.cancellationTokenSource.Token).ConfigureAwait(false);
             }
 
-            await this.SetResponseAsync(response);
+            return await GetResponseAsync(response).ConfigureAwait(false);
         }
 
         private HttpClient CreateHttpClient()
@@ -330,11 +330,11 @@ namespace Microsoft.HealthVault.Rest
             return httpRequest;
         }
 
-        private void SetHeaders(HttpRequestMessage request)
+        private async Task SetHeaders(HttpRequestMessage request)
         {
-            // request.Headers = new HttpRequestHeaders();
-            var authHeader = this.GetAuthorizationHeader();
-            request.Headers.Add(RestConstants.AuthorizationHeaderName, authHeader.Result);
+            //request.Headers = new HttpRequestHeaders();
+            var authHeader = await GetAuthorizationHeader().ConfigureAwait(false);
+            request.Headers.Add(RestConstants.AuthorizationHeaderName, authHeader);
 
             if (this.isContentRequest)
             {
@@ -359,8 +359,10 @@ namespace Microsoft.HealthVault.Rest
             }
         }
         
-        private async Task SetResponseAsync(HttpResponseMessage response)
+        private async Task<HealthServiceRestResponseData> GetResponseAsync(HttpResponseMessage response)
         {
+            HealthServiceRestResponseData responseData = null;
+
             using (Stream responseStream = await response.Content.ReadAsStreamAsync().ConfigureAwait(false))
             {
                 using (MemoryStream ms = new MemoryStream())
@@ -373,7 +375,7 @@ namespace Microsoft.HealthVault.Rest
                         ms.Write(buffer, 0, count);
                     }
 
-                    this.Response = new HealthServiceRestResponseData
+                    responseData = new HealthServiceRestResponseData
                     {
                         StatusCode = response.StatusCode,
                         ResponseBody = Encoding.UTF8.GetString(buffer),
@@ -384,10 +386,12 @@ namespace Microsoft.HealthVault.Rest
 
                     if (response.Headers != null)
                     {
-                        this.Response.Headers = response.Headers; 
+                        responseData.Headers = response.Headers; 
                     }
                 }
             }
+
+            return responseData;
         }
 
         [SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes", Justification = "Any exception when getting the version shouldn't stop execution")]

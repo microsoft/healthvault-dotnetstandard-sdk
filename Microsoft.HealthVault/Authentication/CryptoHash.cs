@@ -103,7 +103,7 @@ namespace Microsoft.HealthVault.Authentication
         /// </summary>
         ///
         /// <remarks>
-        /// The default hash algorithm specified by <see cref="CryptoConfiguration"/>
+        /// The default hash algorithm specified by <see cref="BaseCryptoConfiguration"/>
         /// determines which hash primitive to use.
         /// </remarks>
         ///
