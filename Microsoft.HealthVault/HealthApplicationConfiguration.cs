@@ -46,7 +46,7 @@ namespace Microsoft.HealthVault
             }
         }
 
-        private static HealthApplicationConfiguration current;
+        private static IHealthApplicationConfiguration current;
 
         /// <summary>
         /// True if the app has been initialized.
@@ -144,7 +144,7 @@ namespace Microsoft.HealthVault
         {
             get
             {
-                return _cryptoConfiguration ?? (_cryptoConfiguration = new BaseCryptoConfiguration());
+                return this.cryptoConfiguration ?? (this.cryptoConfiguration = new BaseCryptoConfiguration());
             }
 
             set

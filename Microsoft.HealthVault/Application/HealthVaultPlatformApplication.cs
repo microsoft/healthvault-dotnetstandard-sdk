@@ -150,12 +150,18 @@ namespace Microsoft.HealthVault.Application
             }
         }
 
-        // TODO: prefer usage of this method over the other one
+        /// <summary>
+        /// Ensures all the authozed people for the application are returned
+        /// </summary>
+        /// 
+        /// <param name="connection">Connection</param>
+        /// <param name="settings">Settings</param>
+        /// <returns>List of persons</returns>
         public virtual async Task<IList<PersonInfo>> EnsureGetAuthorizedPeopleAsync(
             ApplicationConnection connection,
             GetAuthorizedPeopleSettings settings)
         {
-            var peopleTasks = GetAuthorizedPeopleAsync(connection, settings);
+            var peopleTasks = this.GetAuthorizedPeopleAsync(connection, settings);
             var people = new List<PersonInfo>();
 
             foreach (var personTask in peopleTasks)

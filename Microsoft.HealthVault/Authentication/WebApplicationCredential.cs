@@ -85,7 +85,7 @@ namespace Microsoft.HealthVault.Authentication
         ///
         internal RSACng RsaProvider
         {
-            get { return (RSACng)_cert.GetRSAPrivateKey(); }
+            get { return (RSACng)this.cert.GetRSAPrivateKey(); }
         }
 
         private long TokenIssuedRefreshCounter
@@ -725,8 +725,8 @@ namespace Microsoft.HealthVault.Authentication
         {
             UTF8Encoding encoding = new UTF8Encoding();
 
-            Byte[] paramBlob = encoding.GetBytes(requestXml);
-            Byte[] sigBlob = RsaProvider.SignData(paramBlob, new HashAlgorithmName(DigestMethod), RSASignaturePadding.Pkcs1); // SignData(paramBlob, DigestMethod);
+            byte[] paramBlob = encoding.GetBytes(requestXml);
+            byte[] sigBlob = this.RsaProvider.SignData(paramBlob, new HashAlgorithmName(this.DigestMethod), RSASignaturePadding.Pkcs1); // SignData(paramBlob, DigestMethod);
 
             return Convert.ToBase64String(sigBlob);
         }

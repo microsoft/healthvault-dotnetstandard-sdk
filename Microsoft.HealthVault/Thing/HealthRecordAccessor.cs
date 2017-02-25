@@ -234,10 +234,11 @@ namespace Microsoft.HealthVault.Thing
         ///
         public ApplicationConnection Connection
         {
-            get { return _connection; }
-            internal set { _connection = value; }
+            get { return this.connection; }
+            internal set { this.connection = value; }
         }
-        private ApplicationConnection _connection;
+
+        private ApplicationConnection connection;
 
         #endregion Public properties
 

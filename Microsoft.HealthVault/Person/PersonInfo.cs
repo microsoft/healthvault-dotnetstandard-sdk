@@ -264,18 +264,17 @@ namespace Microsoft.HealthVault.Person
                 navigator.SelectSingleNode("connection");
             if (connectionNav != null)
             {
-                _appId = new Guid(connectionNav.SelectSingleNode("app-id").Value);
+                this.appId = new Guid(connectionNav.SelectSingleNode("app-id").Value);
 
                 var instanceIdNav = connectionNav.SelectSingleNode("instance-id");
-                HealthServiceInstance serviceInstance = null;
                 if (instanceIdNav != null)
                 {
-                    _instanceId = instanceIdNav.Value;
+                    this.instanceId = instanceIdNav.Value;
                 }
 
                 if (includeUrl)
                 {
-                    _healthServiceUri =
+                    this.healthServiceUri =
                         new Uri(connectionNav.SelectSingleNode("wildcat-url").Value);
                 }
 
@@ -283,7 +282,7 @@ namespace Microsoft.HealthVault.Person
 
                 if (credNav != null)
                 {
-                    _credential = Credential.CreateFromCookieXml(credNav);
+                    this.credential = Credential.CreateFromCookieXml(credNav);
                 }
 
                 XPathNavigator compressionNode =
@@ -291,7 +290,7 @@ namespace Microsoft.HealthVault.Person
 
                 if (compressionNode != null)
                 {
-                    _compressionMethod = compressionNode.Value;
+                    this.compressionMethod = compressionNode.Value;
                 }
             }
             else
@@ -325,31 +324,31 @@ namespace Microsoft.HealthVault.Person
 
         private async Task SetServiceInfoConnectionAsync()
         {
-            if (!string.IsNullOrEmpty(_instanceId))
+            if (!string.IsNullOrEmpty(this.instanceId))
             {
                 ServiceInfo info = new ServiceInfo();
 
                 var serviceInfo = await info.GetSericeInfoAsync();
 
-                HealthServiceInstance serviceInstance = serviceInfo.ServiceInstances[_instanceId];
-                _connection = new AuthenticatedConnection(_appId, serviceInstance, _credential);
+                HealthServiceInstance serviceInstance = serviceInfo.ServiceInstances[this.instanceId];
+                this.ApplicationConnection = new AuthenticatedConnection(this.appId, serviceInstance, this.credential);
             }
             else
             {
-                _healthServiceUri = HealthApplicationConfiguration.Current.GetHealthVaultMethodUrl();
-                _connection = new AuthenticatedConnection(_appId, _healthServiceUri, _credential);
+                this.healthServiceUri = HealthApplicationConfiguration.Current.GetHealthVaultMethodUrl();
+                this.ApplicationConnection = new AuthenticatedConnection(this.appId, this.healthServiceUri, this.credential);
             }
 
-            if (!string.IsNullOrEmpty(_compressionMethod))
+            if (!string.IsNullOrEmpty(this.compressionMethod))
             {
-                _connection.RequestCompressionMethod = _compressionMethod;
+                this.ApplicationConnection.RequestCompressionMethod = this.compressionMethod;
             }
 
-            if (_authorizedRecords != null)
+            if (this.authorizedRecords != null)
             {
-                foreach (var authorizedRecord in _authorizedRecords)
+                foreach (var authorizedRecord in this.authorizedRecords)
                 {
-                    authorizedRecord.Value.Connection = _connection;
+                    authorizedRecord.Value.Connection = this.ApplicationConnection;
                 }
             }
         }
@@ -844,11 +843,11 @@ namespace Microsoft.HealthVault.Person
         ///
         public Location Location { get; private set; }
 
-        private string _instanceId;
-        private Credential _credential;
-        private Guid _appId;
-        private Uri _healthServiceUri;
-        private string _compressionMethod;
+        private string instanceId;
+        private Credential credential;
+        private Guid appId;
+        private Uri healthServiceUri;
+        private string compressionMethod;
 
         #endregion public properties
 

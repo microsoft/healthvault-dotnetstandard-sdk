@@ -36,6 +36,6 @@ namespace Microsoft.HealthVault
         {
         }
 
-        public ICryptoService CryptoService => _cryptoService ?? (_cryptoService = new CryptoService(new BaseCryptoConfiguration()));
+        public ICryptoService CryptoService => this.cryptoService ?? (this.cryptoService = new CryptoService(new BaseCryptoConfiguration()));
     }
 }

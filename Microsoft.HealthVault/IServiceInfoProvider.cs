@@ -3,6 +3,7 @@
 // see http://www.microsoft.com/resources/sharedsource/licensingbasics/sharedsourcelicenses.mspx.
 // All other rights reserved.
 
+using System.Threading.Tasks;
 using Microsoft.HealthVault.PlatformInformation;
 
 namespace Microsoft.HealthVault
@@ -25,7 +26,7 @@ namespace Microsoft.HealthVault
         /// <summary>
         /// Gets the service information asynchronous.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>ServiceInfo</returns>
         Task<ServiceInfo> GetServiceInfoAsync();
     }
 }

@@ -265,7 +265,7 @@ namespace Microsoft.HealthVault.Rest
         {
             try
             {
-               return await FetchInternalAsync(_uri).ConfigureAwait(false);
+               return await this.FetchInternalAsync(this.uri).ConfigureAwait(false);
             }
             catch (HealthHttpException we)
             {
@@ -276,7 +276,7 @@ namespace Microsoft.HealthVault.Rest
                     response.StatusCode == HttpStatusCode.Unauthorized &&
                     this.connection.Credential.ExpireAuthenticationResult(this.connection.ApplicationId))
                 {
-                    return await FetchInternalAsync(_uri).ConfigureAwait(false);
+                    return await this.FetchInternalAsync(this.uri).ConfigureAwait(false);
                 }
                 else
                 {
@@ -291,7 +291,7 @@ namespace Microsoft.HealthVault.Rest
             HttpResponseMessage response = null;
             this.cancellationTokenSource = new CancellationTokenSource(TimeSpan.FromSeconds(this.timeoutSeconds));
 
-            this.SetHeaders(httpRequest);
+            await this.SetHeadersAsync(httpRequest);
 
             if (this.isContentRequest)
             {
@@ -307,7 +307,7 @@ namespace Microsoft.HealthVault.Rest
                 response = await client.SendAsync(httpRequest, this.cancellationTokenSource.Token).ConfigureAwait(false);
             }
 
-            return await GetResponseAsync(response).ConfigureAwait(false);
+            return await this.GetResponseAsync(response).ConfigureAwait(false);
         }
 
         private HttpClient CreateHttpClient()
@@ -330,10 +330,9 @@ namespace Microsoft.HealthVault.Rest
             return httpRequest;
         }
 
-        private async Task SetHeaders(HttpRequestMessage request)
+        private async Task SetHeadersAsync(HttpRequestMessage request)
         {
-            //request.Headers = new HttpRequestHeaders();
-            var authHeader = await GetAuthorizationHeader().ConfigureAwait(false);
+            var authHeader = await this.GetAuthorizationHeaderAsync().ConfigureAwait(false);
             request.Headers.Add(RestConstants.AuthorizationHeaderName, authHeader);
 
             if (this.isContentRequest)
@@ -436,7 +435,7 @@ namespace Microsoft.HealthVault.Rest
             return result;
         }
 
-        private async Task<string> GetAuthorizationHeader()
+        private async Task<string> GetAuthorizationHeaderAsync()
         {
             List<string> tokens = new List<string>();
 

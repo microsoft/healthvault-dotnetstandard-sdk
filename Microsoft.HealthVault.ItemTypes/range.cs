@@ -256,7 +256,6 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         protected virtual void VerifyRangeValue(RangeType value)
         {
-
         }
     }
 }

@@ -74,7 +74,7 @@ namespace Microsoft.HealthVault.Record
         /// Creates an instance of a HealthRecordInfo object using  the specified XML.
         /// </summary>
         /// <param name="navigator">The navigator.</param>
-        /// <returns></returns>
+        /// <returns>HealthRecordInfo</returns>
         public static HealthRecordInfo CreateFromXml(XPathNavigator navigator)
         {
             Validator.ThrowIfArgumentNull(navigator, "navigator", "ParseXmlNavNull");
