@@ -996,7 +996,7 @@ namespace Microsoft.HealthVault.Authentication
                         cred = new PassportCredential();
                         break;
 
-                    case "Microsoft.HealthVault.Web.Authentication.WebApplicationCredential":
+                    case "Microsoft.HealthVault.Authentication.WebApplicationCredential":
                         cred = new WebApplicationCredential();
                         break;
 
