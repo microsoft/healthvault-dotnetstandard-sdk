@@ -49,6 +49,13 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AsyncEnumerable.cs" />
+    <Compile Include="Clients\IActionPlanClient.cs" />
+    <Compile Include="Clients\IClient.cs" />
+    <Compile Include="Clients\IConnection.cs" />
+    <Compile Include="Clients\IPersonClient.cs" />
+    <Compile Include="Clients\IPlatformClient.cs" />
+    <Compile Include="Clients\IThingClient.cs" />
+    <Compile Include="Clients\IVocabularyClient.cs" />
     <Compile Include="Connection\WebApplicationConnection.cs" />
     <Compile Include="Extensions\UriExtensions.cs" />
     <Compile Include="Person\ActiveRecordAuthorization.cs" />
@@ -80,6 +87,7 @@
     <Compile Include="Authentication\ICryptoService.cs" />
     <Compile Include="Authentication\PassportCredential.cs" />
     <Compile Include="Authentication\WebApplicationCredential.cs" />
+    <Compile Include="Clients\PlatformClient.cs" />
     <Compile Include="Rest\HealthServiceRestRequest.cs" />
     <Compile Include="Rest\HealthServiceRestResponseData.cs" />
     <Compile Include="Thing\AuthorizationRule.cs" />
