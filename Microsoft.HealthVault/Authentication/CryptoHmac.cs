@@ -13,7 +13,7 @@ namespace Microsoft.HealthVault.Authentication
     /// <summary>
     /// Class to generate a HMAC cryptographic algorithm and random key material.
     /// </summary>
-    internal sealed class CryptoHmac : CryptoHash
+    public sealed class CryptoHmac : CryptoHash
     {
         #region properties
 

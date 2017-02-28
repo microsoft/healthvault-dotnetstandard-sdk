@@ -50,14 +50,18 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AsyncEnumerable.cs" />
+    <Compile Include="Connection\IConnection.cs" />
+    <Compile Include="Connection\ICryptographer.cs" />
+    <Compile Include="Connection\ISessionCredential.cs" />
     <Compile Include="Clients\IActionPlanClient.cs" />
     <Compile Include="Clients\IClient.cs" />
-    <Compile Include="Clients\IConnection.cs" />
     <Compile Include="Clients\IPersonClient.cs" />
     <Compile Include="Clients\IPlatformClient.cs" />
     <Compile Include="Clients\IThingClient.cs" />
     <Compile Include="Clients\IVocabularyClient.cs" />
     <Compile Include="Connection\WebApplicationConnection.cs" />
+    <Compile Include="Connection\ApplicationConnectionV2.cs" />
+    <Compile Include="Connection\WebApplicationConnectionv2.cs" />
     <Compile Include="Extensions\UriExtensions.cs" />
     <Compile Include="Person\ActiveRecordAuthorization.cs" />
     <Compile Include="Connection\AnonymousConnection.cs" />
@@ -206,6 +210,7 @@
     <Compile Include="Person\HealthVaultPlatformPerson.cs" />
     <Compile Include="Record\HealthVaultPlatformRecord.cs" />
     <Compile Include="Diagnostics\HealthVaultPlatformTrace.cs" />
+    <Compile Include="Transport\IHealthServiceRequest.cs" />
     <Compile Include="Vocabulary\HealthVaultPlatformVocabulary.cs" />
     <Compile Include="Diagnostics\HealthVaultTraceSource.cs" />
     <Compile Include="Transport\IEasyWebResponseHandler.cs" />

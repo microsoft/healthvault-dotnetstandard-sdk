@@ -41,7 +41,7 @@ namespace Microsoft.HealthVault.Transport
     /// must execute concurrently.
     /// </remarks>
     ///
-    public class HealthServiceRequest
+    public class HealthServiceRequest : IHealthServiceRequest
     {
         private const string CorrelationIdContextKey = "WC_CorrelationId";
         private const string ResponseIdContextKey = "WC_ResponseId";
@@ -506,8 +506,10 @@ namespace Microsoft.HealthVault.Transport
                 } 
             }
 
+            // Core
             this.BuildRequestXml(transform);
 
+            // Do we need this log
             HealthVaultPlatformTrace.LogRequest(this.XmlRequest, this.CorrelationId);
 
             EasyWebRequest easyWeb = new EasyWebRequest(this.XmlRequest, this.XmlRequestLength);
