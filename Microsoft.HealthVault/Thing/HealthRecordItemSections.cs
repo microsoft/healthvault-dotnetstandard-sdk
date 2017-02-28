@@ -5,7 +5,7 @@
 
 using System;
 
-namespace Microsoft.HealthVault.Thing
+namespace Microsoft.HealthVault.Things
 {
     /// <summary>
     /// The section that will be or were retrieved when accessing

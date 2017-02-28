@@ -13,7 +13,7 @@ using System.Xml.XPath;
 using Microsoft.HealthVault.Exceptions;
 using Microsoft.HealthVault.ItemTypes;
 
-namespace Microsoft.HealthVault.Thing
+namespace Microsoft.HealthVault.Things
 {
     /// <summary>
     /// A collection of the BLOBs associated with a health record item.

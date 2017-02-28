@@ -9,7 +9,7 @@ using System.Security;
 using System.Xml.XPath;
 using Microsoft.HealthVault.Helpers;
 using Microsoft.HealthVault.Person;
-using Microsoft.HealthVault.Thing;
+using Microsoft.HealthVault.Things;
 
 namespace Microsoft.HealthVault.Record
 {

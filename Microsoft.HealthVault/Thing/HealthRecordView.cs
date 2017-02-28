@@ -12,7 +12,7 @@ using System.Xml.XPath;
 using Microsoft.HealthVault.Helpers;
 using Microsoft.HealthVault.ItemTypes;
 
-namespace Microsoft.HealthVault.Thing
+namespace Microsoft.HealthVault.Things
 {
     /// <summary>
     /// Defines a result view for use with

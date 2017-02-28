@@ -1,7 +1,7 @@
 ﻿using Microsoft.HealthVault.Application;
 using Microsoft.HealthVault.Exceptions;
 using Microsoft.HealthVault.PlatformInformation;
-using Microsoft.HealthVault.Thing;
+using Microsoft.HealthVault.Things;
 using System;
 using System.Collections.Generic;
 using System.Linq;

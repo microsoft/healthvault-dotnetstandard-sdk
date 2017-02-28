@@ -13,7 +13,7 @@ using Microsoft.HealthVault.Application;
 using Microsoft.HealthVault.Connection;
 using Microsoft.HealthVault.Exceptions;
 using Microsoft.HealthVault.Helpers;
-using Microsoft.HealthVault.Thing;
+using Microsoft.HealthVault.Things;
 using Microsoft.HealthVault.Transport;
 
 namespace Microsoft.HealthVault.PlatformInformation

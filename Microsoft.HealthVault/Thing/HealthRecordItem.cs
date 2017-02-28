@@ -16,7 +16,7 @@ using Microsoft.HealthVault.Helpers;
 using Microsoft.HealthVault.ItemTypes;
 using Microsoft.HealthVault.PlatformInformation;
 
-namespace Microsoft.HealthVault.Thing
+namespace Microsoft.HealthVault.Things
 {
     /// <summary>
     /// Represents a health record item.

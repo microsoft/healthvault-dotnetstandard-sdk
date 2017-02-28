@@ -10,7 +10,7 @@ using System.Globalization;
 using System.Linq;
 using System.Xml.XPath;
 
-namespace Microsoft.HealthVault.Thing
+namespace Microsoft.HealthVault.Things
 {
     /// <summary>
     /// Describes the schema and structure of a health record item type.

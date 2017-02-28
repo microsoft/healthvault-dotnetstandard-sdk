@@ -5,7 +5,7 @@
 
 using System;
 using Microsoft.HealthVault.Helpers;
-using Microsoft.HealthVault.Thing;
+using Microsoft.HealthVault.Things;
 
 namespace Microsoft.HealthVault
 {

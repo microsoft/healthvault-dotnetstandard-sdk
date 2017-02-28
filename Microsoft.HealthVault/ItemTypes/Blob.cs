@@ -8,7 +8,7 @@ using System.IO;
 using System.Text;
 using Microsoft.HealthVault.Exceptions;
 using Microsoft.HealthVault.Helpers;
-using Microsoft.HealthVault.Thing;
+using Microsoft.HealthVault.Things;
 
 namespace Microsoft.HealthVault.ItemTypes
 {

@@ -5,7 +5,7 @@
 
 using System;
 
-namespace Microsoft.HealthVault.Thing
+namespace Microsoft.HealthVault.Things
 {
     /// <summary>
     /// Represents access restrictions for a <see cref="HealthRecordItem"/>.

@@ -7,7 +7,7 @@ using System;
 using Microsoft.HealthVault.Connection;
 using Microsoft.HealthVault.Helpers;
 
-namespace Microsoft.HealthVault.Thing
+namespace Microsoft.HealthVault.Things
 {
     /// <summary>
     /// Defines a set of health record items of the specified type

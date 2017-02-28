@@ -11,7 +11,7 @@ using System.IO;
 using System.IO.Compression;
 using System.Xml;
 using Microsoft.HealthVault.Helpers;
-using Microsoft.HealthVault.Thing;
+using Microsoft.HealthVault.Things;
 
 namespace Microsoft.HealthVault.ItemTypes
 {

@@ -11,7 +11,7 @@ using Microsoft.HealthVault.Authentication;
 using Microsoft.HealthVault.Exceptions;
 using Microsoft.HealthVault.ItemTypes;
 using Microsoft.HealthVault.PlatformInformation;
-using Microsoft.HealthVault.Thing;
+using Microsoft.HealthVault.Things;
 
 namespace Microsoft.HealthVault
 {

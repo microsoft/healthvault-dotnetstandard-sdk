@@ -5,7 +5,7 @@
 
 using System.Diagnostics.CodeAnalysis;
 using Microsoft.HealthVault.Record;
-using Microsoft.HealthVault.Thing;
+using Microsoft.HealthVault.Things;
 
 namespace Microsoft.HealthVault.Transport
 {

@@ -13,7 +13,7 @@ using Microsoft.HealthVault.Helpers;
 using Microsoft.HealthVault.Person;
 using Microsoft.HealthVault.PlatformInformation;
 using Microsoft.HealthVault.Record;
-using Microsoft.HealthVault.Thing;
+using Microsoft.HealthVault.Things;
 using Microsoft.HealthVault.Transport;
 using Microsoft.HealthVault.Vocabulary;
 

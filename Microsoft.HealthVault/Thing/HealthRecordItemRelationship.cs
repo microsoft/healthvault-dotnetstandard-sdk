@@ -8,7 +8,7 @@ using System.Xml;
 using System.Xml.XPath;
 using Microsoft.HealthVault.Helpers;
 
-namespace Microsoft.HealthVault.Thing
+namespace Microsoft.HealthVault.Things
 {
     /// <summary>
     /// Represents a loose relationship between health record item instances.

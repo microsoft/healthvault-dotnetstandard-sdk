@@ -5,7 +5,7 @@
 
 using Microsoft.HealthVault.DesktopWeb.Common;
 using Microsoft.HealthVault.Helpers;
-using Microsoft.HealthVault.Thing;
+using Microsoft.HealthVault.Things;
 using System;
 using System.Collections;
 using System.Collections.Generic;

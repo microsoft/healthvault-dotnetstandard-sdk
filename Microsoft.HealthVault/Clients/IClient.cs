@@ -18,5 +18,15 @@ namespace Microsoft.HealthVault.Clients
         /// The HealthVault connection object
         /// </summary>
         HealthServiceConnection Connection { get; set; }
+
+        /// <summary>
+        /// An optional identifier that can be used to correlate a request. 
+        /// </summary>
+        Guid CorrelationId { get; set; }
+
+        /// <summary>
+        /// The unique identifier of the last completed response.
+        /// </summary>
+        Guid LastResponseId { get; }
     }
 }

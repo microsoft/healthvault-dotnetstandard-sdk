@@ -6,7 +6,7 @@
 using System;
 using Microsoft.HealthVault.ItemTypes;
 
-namespace Microsoft.HealthVault.Thing
+namespace Microsoft.HealthVault.Things
 {
     /// <summary>
     /// Blob parameters returned by BeginPutBlob

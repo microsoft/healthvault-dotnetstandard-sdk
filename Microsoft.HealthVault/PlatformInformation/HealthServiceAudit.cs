@@ -8,7 +8,7 @@ using System.Globalization;
 using System.Xml;
 using System.Xml.XPath;
 using Microsoft.HealthVault.Helpers;
-using Microsoft.HealthVault.Thing;
+using Microsoft.HealthVault.Things;
 
 namespace Microsoft.HealthVault.PlatformInformation
 {

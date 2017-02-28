@@ -41,6 +41,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <None Include="ClassDiagram1.cd" />
     <None Include="project.json" />
     <EmbeddedResource Include="resources.restext">
       <LogicalName>resources.resources</LogicalName>
@@ -113,6 +114,8 @@
     <Compile Include="Certificate\ICertificateUtilities.cs" />
     <Compile Include="Certificate\Util.cs" />
     <Compile Include="Thing\CommonItemData.cs" />
+    <Compile Include="Thing\Thing.cs" />
+    <Compile Include="Thing\ThingQuery.cs" />
     <Compile Include="Transport\CompressedContent.cs" />
     <Compile Include="CultureSpecificDictionary.cs" />
     <Compile Include="DateRange.cs" />

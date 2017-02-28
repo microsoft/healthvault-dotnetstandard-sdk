@@ -12,7 +12,7 @@ using System.Xml;
 using System.Xml.XPath;
 using Microsoft.HealthVault.Helpers;
 
-namespace Microsoft.HealthVault.Thing
+namespace Microsoft.HealthVault.Things
 {
     /// <summary>
     /// This class defines an authorization rule in the HealthVault service.

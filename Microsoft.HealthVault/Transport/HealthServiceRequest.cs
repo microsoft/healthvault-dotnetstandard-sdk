@@ -24,7 +24,7 @@ using Microsoft.HealthVault.Connection;
 using Microsoft.HealthVault.Diagnostics;
 using Microsoft.HealthVault.Exceptions;
 using Microsoft.HealthVault.Helpers;
-using Microsoft.HealthVault.Thing;
+using Microsoft.HealthVault.Things;
 
 namespace Microsoft.HealthVault.Transport
 {

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Microsoft.HealthVault.Thing;
+using Microsoft.HealthVault.Things;
 using Microsoft.HealthVault.PlatformInformation;
 using Microsoft.HealthVault.Connection;
 using Microsoft.HealthVault.Application;
@@ -14,6 +14,10 @@ namespace Microsoft.HealthVault.Clients
     public class PlatformClient : IPlatformClient
     {
         public HealthServiceConnection Connection { get; set; }
+
+        public Guid CorrelationId { get; set; }
+
+        public Guid LastResponseId { get; set; }
 
         public Task<HealthServiceInstance> SelectInstanceAsync(Location preferredLocation)
         {

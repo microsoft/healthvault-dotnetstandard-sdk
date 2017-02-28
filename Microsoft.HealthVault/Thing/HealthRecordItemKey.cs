@@ -6,7 +6,7 @@
 using System;
 using Microsoft.HealthVault.Helpers;
 
-namespace Microsoft.HealthVault.Thing
+namespace Microsoft.HealthVault.Things
 {
     /// <summary>
     /// Uniquely identifies a health record item in the system.

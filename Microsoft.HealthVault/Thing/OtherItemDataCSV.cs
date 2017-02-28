@@ -9,7 +9,7 @@ using System.Collections.ObjectModel;
 using System.Text;
 using Microsoft.HealthVault.Helpers;
 
-namespace Microsoft.HealthVault.Thing
+namespace Microsoft.HealthVault.Things
 {
     /// <summary>
     /// The OtherItemDataCSV class is used to store and retrieve data stored in the HealthVault

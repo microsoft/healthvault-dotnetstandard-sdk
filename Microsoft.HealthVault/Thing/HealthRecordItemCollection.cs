@@ -13,7 +13,7 @@ using System.Xml;
 using System.Xml.XPath;
 using Microsoft.HealthVault.Helpers;
 
-namespace Microsoft.HealthVault.Thing
+namespace Microsoft.HealthVault.Things
 {
     /// <summary>
     /// Defines a group of results that gets returned from the
