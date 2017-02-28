@@ -41,7 +41,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <None Include="ClassDiagram1.cd" />
     <None Include="project.json" />
     <EmbeddedResource Include="resources.restext">
       <LogicalName>resources.resources</LogicalName>
