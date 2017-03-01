@@ -9,7 +9,7 @@ namespace Microsoft.HealthVault.ItemTypes
     /// Represents the algorithm used to protect a package of data with a password.
     /// </summary>
     ///
-    public enum PasswordProtectAlgorithm
+    internal enum PasswordProtectAlgorithm
     {
         /// <summary>
         /// The algorithm name returned from the server was not understood

@@ -5,7 +5,7 @@ namespace Microsoft.HealthVault.Authentication
 {
     // TODO: CryptographicUnexpectedOperationException is avaiable in .NET 2.0
     // temporary fix till then with our own implementation
-    public class CryptographicUnexpectedOperationException : CryptographicException
+    internal class CryptographicUnexpectedOperationException : CryptographicException
     {
         public CryptographicUnexpectedOperationException()
         {

@@ -13,7 +13,7 @@ namespace Microsoft.HealthVault.Vocabulary
     /// The set of search parameters are used with the Vocabulary Search feature to specify the
     /// vocabulary etc.
     /// </summary>
-    public class VocabularySearchParameters
+    internal class VocabularySearchParameters
     {
         /// <summary>
         /// Creates a vocabulary search parameter set with the <see cref="VocabularyKey"/> that is

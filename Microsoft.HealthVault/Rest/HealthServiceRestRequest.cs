@@ -36,7 +36,7 @@ namespace Microsoft.HealthVault.Rest
     /// must execute concurrently.
     /// </remarks>
     /// 
-    public class HealthServiceRestRequest : IEasyWebResponseHandler
+    internal class HealthServiceRestRequest : IEasyWebResponseHandler
     {
         //// TODO: GCorvera Hook up response id
         private const string ResponseIdContextKey = "WC_ResponseId";

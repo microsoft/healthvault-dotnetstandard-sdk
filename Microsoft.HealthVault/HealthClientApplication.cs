@@ -31,7 +31,7 @@ namespace Microsoft.HealthVault
     /// for connecting to HealthVault.
     /// </remarks>
     ///
-    public class HealthClientApplication : IDisposable
+    internal class HealthClientApplication : IDisposable
     {
         #region Private variables
 

@@ -25,7 +25,7 @@ namespace Microsoft.HealthVault.Vocabulary
     /// <see cref="HealthVaultPlatform"/> uses this class to perform operations. Set
     /// HealthVaultPlatformVocabulary.Current to a derived class to intercept all message calls.
     /// </remarks>
-    public class HealthVaultPlatformVocabulary
+    internal class HealthVaultPlatformVocabulary
     {
         /// <summary>
         /// Enables mocking of calls to this class.
@@ -390,7 +390,7 @@ namespace Microsoft.HealthVault.Vocabulary
             return itemCollection;
         }
 
-        public class VocabularySearchResult
+        internal class VocabularySearchResult
         {
             public VocabularySearchResult(VocabularyItemCollection matchingVocabulary)
             {

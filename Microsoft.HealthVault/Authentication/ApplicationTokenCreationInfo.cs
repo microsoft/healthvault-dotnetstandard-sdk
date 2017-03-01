@@ -12,7 +12,7 @@ namespace Microsoft.HealthVault.Authentication
     /// that application.
     /// </summary>
     ///
-    public class ApplicationTokenCreationInfo
+    internal class ApplicationTokenCreationInfo
     {
         /// <summary>
         /// Constructs an <see cref="ApplicationTokenCreationInfo"/> instance with the specified

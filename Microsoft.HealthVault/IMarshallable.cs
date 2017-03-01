@@ -13,7 +13,7 @@ namespace Microsoft.HealthVault
     /// serialization of objects.
     /// </summary>
     ///
-    public interface IMarshallable
+    internal interface IMarshallable
     {
         /// <summary>
         /// Serializes the object.

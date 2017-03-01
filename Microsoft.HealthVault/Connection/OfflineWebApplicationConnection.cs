@@ -33,7 +33,7 @@ namespace Microsoft.HealthVault.Connection
     /// <see cref="AuthenticatedConnection"/> class.
     /// </remarks>
     ///
-    public class OfflineWebApplicationConnection : ApplicationConnection
+    internal class OfflineWebApplicationConnection : ApplicationConnection
     {
         #region ctors
 

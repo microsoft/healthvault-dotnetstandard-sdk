@@ -32,7 +32,7 @@ namespace Microsoft.HealthVault
     /// <b>Data item operations</b>
     /// <see cref="HealthRecordAccessor"/> and <see cref="HealthRecordInfo"/>
     /// </remarks>
-    public static class HealthVaultPlatform
+    internal static class HealthVaultPlatform
     {
         #region ApplicationSettings
 

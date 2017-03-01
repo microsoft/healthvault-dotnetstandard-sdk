@@ -7,7 +7,7 @@ namespace Microsoft.HealthVault.Transport
     /// Represents an individual request to a HealthVault service.
     /// The class wraps up the XML generation and web request/response.
     /// </summary>
-    public interface IHealthServiceRequest
+    internal interface IHealthServiceRequest
     {
         /// <summary>
         /// Gets or sets the correlation identifier.

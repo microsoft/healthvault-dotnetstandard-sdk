@@ -7,7 +7,7 @@ namespace Microsoft.HealthVault.Connection
     /// WebApplicationConnection
     /// </summary>
     /// <seealso cref="Microsoft.HealthVault.Connection.ApplicationConnectionV2" />
-    public class WebApplicationConnectionv2 : ApplicationConnectionV2
+    internal class WebApplicationConnectionv2 : ApplicationConnectionV2
     {
         internal override string ConstructAuthSessionHeader(XPathNavigator xpath)
         {

@@ -10,7 +10,7 @@ namespace Microsoft.HealthVault.Things
     /// <summary>
     /// A linear conversion of the form x' = mx + b.
     /// </summary>
-    public class LinearItemTypePropertyConversion : IItemTypePropertyConversion
+    internal class LinearItemTypePropertyConversion : IItemTypePropertyConversion
     {
         /// <summary>
         /// Creates a new instance of the <see cref="LinearItemTypePropertyConversion"/> class.

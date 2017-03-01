@@ -16,7 +16,7 @@ namespace Microsoft.HealthVault.ItemTypes
     /// For more details please see <see cref="HealthRecordItem" />.
     /// </remarks>
     ///
-    public class BlobSignatureItem
+    internal class BlobSignatureItem
     {
         /// <summary>
         /// Constructs a BlobSignatureItem object with the specified parameters.

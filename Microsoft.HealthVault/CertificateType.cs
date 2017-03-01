@@ -9,7 +9,7 @@ namespace Microsoft.HealthVault
     /// Supported certificate types.
     /// </summary>
     ///
-    public enum CertificateType
+    internal enum CertificateType
     {
         /// <summary>
         /// The HealthRecordItem is not signed.

@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 namespace Microsoft.HealthVault.Transport
 {
     // From https://github.com/WebApiContrib/WebAPIContrib/blob/master/src/WebApiContrib/Content/CompressedContent.cs , which is not compatible with .NET Standard
-    public class CompressedContent : HttpContent
+    internal class CompressedContent : HttpContent
     {
         private readonly HttpContent originalContent;
         private readonly string encodingType;

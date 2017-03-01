@@ -14,7 +14,7 @@ namespace Microsoft.HealthVault.Authentication
     /// HealthVault verifies the hash against this object's digest.
     /// </remarks>
     ///
-    public sealed class CryptoHmacFinalized : CryptoHashFinalized
+    internal sealed class CryptoHmacFinalized : CryptoHashFinalized
     {
         #region ctor
 

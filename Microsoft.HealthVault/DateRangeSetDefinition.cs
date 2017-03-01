@@ -26,7 +26,7 @@ namespace Microsoft.HealthVault
     /// <seealso cref="AuthorizationSetDefinition"/>
     /// <seealso cref="TypeIdSetDefinition"/>
     ///
-    public class DateRangeSetDefinition : AuthorizationSetDefinition
+    internal class DateRangeSetDefinition : AuthorizationSetDefinition
     {
         /// <summary>
         /// Creates a new instance of the <see cref="DateRangeSetDefinition"/> class

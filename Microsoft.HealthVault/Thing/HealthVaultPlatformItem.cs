@@ -24,7 +24,7 @@ namespace Microsoft.HealthVault.Things
     /// <see cref="HealthVaultPlatform"/> uses this class to perform operations. Set
     /// HealthVaultPlatformItem.Current to a derived class to intercept all calls.
     /// </remarks>
-    public class HealthVaultPlatformItem
+    internal class HealthVaultPlatformItem
     {
         private static readonly XPathExpression ThingIdPath =
             XPathExpression.Compile("/wc:info/thing-id");

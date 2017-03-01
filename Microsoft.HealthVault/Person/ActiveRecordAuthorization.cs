@@ -13,7 +13,7 @@ namespace Microsoft.HealthVault.Person
     /// Provides information about a person who has access to a HealthVault record.
     /// </summary>
     ///
-    public class ActiveRecordAuthorization : RecordAuthorization
+    internal class ActiveRecordAuthorization : RecordAuthorization
     {
         /// <summary>
         /// Populates the class members with data from the specified

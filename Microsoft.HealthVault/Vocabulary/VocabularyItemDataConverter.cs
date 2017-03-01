@@ -15,7 +15,7 @@ namespace Microsoft.HealthVault.Vocabulary
     /// between different vocabulary items.
     /// </summary>
     ///
-    public static class VocabularyItemDataConverter
+    internal static class VocabularyItemDataConverter
     {
         /// <summary>
         /// Converts a value from the source vocabulary item units to

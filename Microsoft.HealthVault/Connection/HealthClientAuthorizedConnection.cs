@@ -23,7 +23,7 @@ namespace Microsoft.HealthVault.Connection
     /// each instance must be authorized using the HealthVault Shell service.
     /// </remarks>
     ///
-    public class HealthClientAuthorizedConnection : OfflineWebApplicationConnection
+    internal class HealthClientAuthorizedConnection : OfflineWebApplicationConnection
     {
         #region Constructors
 

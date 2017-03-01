@@ -11,7 +11,7 @@ namespace Microsoft.HealthVault
     /// <summary>
     /// Represents the range of time between two dates.
     /// </summary>
-    public class DateRange
+    internal class DateRange
     {
         /// <summary>
         /// Creates a new instance of the <see cref="DateRange"/> class

@@ -19,7 +19,7 @@ namespace Microsoft.HealthVault.Certificate
     /// This certificate is typically used by HealthVaultClientApplication.
     /// </remarks>
     ///
-    public class ApplicationCertificate
+    internal class ApplicationCertificate
     {
         #region constants
         

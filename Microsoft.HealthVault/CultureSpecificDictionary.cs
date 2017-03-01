@@ -218,7 +218,7 @@ namespace Microsoft.HealthVault
     /// <remarks>
     /// The key is the language-country string such as "en-US", and the value is of type string.
     /// </remarks>
-    public class CultureSpecificUrlDictionary : CultureSpecificDictionary<Uri>
+    internal class CultureSpecificUrlDictionary : CultureSpecificDictionary<Uri>
     {
         /// <summary>
         /// Creates a delegate for converting an xml string to a string.

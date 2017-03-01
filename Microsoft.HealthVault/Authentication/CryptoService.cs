@@ -8,7 +8,7 @@ namespace Microsoft.HealthVault.Authentication
     /// <summary>
     /// <inheritdoc cref="ICryptoService"/>
     /// </summary>
-    public class CryptoService : ICryptoService
+    internal class CryptoService : ICryptoService
     {
         private readonly ICryptoConfiguration cryptoConfiguration;
 

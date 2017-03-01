@@ -2,7 +2,7 @@
 
 namespace Microsoft.HealthVault
 {
-    public class ServiceLocator : IServiceLocator
+    internal class ServiceLocator : IServiceLocator
     {
         private static readonly object InstanceLock = new object();
 

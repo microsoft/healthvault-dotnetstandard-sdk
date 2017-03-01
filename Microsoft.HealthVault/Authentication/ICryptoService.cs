@@ -6,7 +6,7 @@ namespace Microsoft.HealthVault.Authentication
     /// <summary>
     /// Service to provide cryptography
     /// </summary>
-    public interface ICryptoService
+    internal interface ICryptoService
     {
         /// <summary>
         /// Generates an HMAC shared secret for the default HMAC algorithm.

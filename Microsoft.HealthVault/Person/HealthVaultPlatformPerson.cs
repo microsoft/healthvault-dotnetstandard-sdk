@@ -25,7 +25,7 @@ namespace Microsoft.HealthVault.Person
     /// <see cref="HealthVaultPlatform"/> uses this class to perform operations. Set
     /// HealthVaultPlatformPerson.Current to a derived class to intercept all message calls.
     /// </remarks>
-    public class HealthVaultPlatformPerson
+    internal class HealthVaultPlatformPerson
     {
         /// <summary>
         /// Enables mocking of calls to this class.

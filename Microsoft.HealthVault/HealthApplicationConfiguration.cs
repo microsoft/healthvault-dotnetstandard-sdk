@@ -20,7 +20,7 @@ namespace Microsoft.HealthVault
     /// exposes some of the settings directly.
     /// </summary>
     ///
-    public class HealthApplicationConfiguration : IHealthApplicationConfiguration
+    internal class HealthApplicationConfiguration : IHealthApplicationConfiguration
     {
         private static readonly object InstanceLock = new object();
 

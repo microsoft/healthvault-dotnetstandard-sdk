@@ -6,7 +6,7 @@ namespace Microsoft.HealthVault.Extensions
     /// <summary>
     /// Extensions to help dealing with Uri objects.
     /// </summary>
-    public static class UriExtensions
+    internal static class UriExtensions
     {
         public static IDictionary<string, string> ParseQueryWithCaseIgnorantKeys(this Uri uri)
         {

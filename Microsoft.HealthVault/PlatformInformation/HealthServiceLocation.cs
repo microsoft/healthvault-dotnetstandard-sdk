@@ -12,7 +12,7 @@ namespace Microsoft.HealthVault.PlatformInformation
     /// HealthVault service.
     /// </summary>
     ///
-    public static class HealthServiceLocation
+    internal static class HealthServiceLocation
     {
         /// <summary>
         /// Constructs a URL to be redirected to via the HealthVault service Shell

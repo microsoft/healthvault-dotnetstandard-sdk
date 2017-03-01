@@ -25,7 +25,7 @@ namespace Microsoft.HealthVault.Record
     /// <see cref="HealthVaultPlatform"/> uses this class to perform operations. Set
     /// HealthVaultPlatformRecord.Current to a derived class to intercept all message calls.
     /// </remarks>
-    public class HealthVaultPlatformRecord
+    internal class HealthVaultPlatformRecord
     {
         /// <summary>
         /// Enables mocking of calls to this class.

@@ -12,7 +12,7 @@ namespace Microsoft.HealthVault.Rest
     /// Contains the response information from the HealthVault service after
     /// processing a request on the rest endpoint
     /// </summary>
-    public class HealthServiceRestResponseData
+    internal class HealthServiceRestResponseData
     {
         internal HealthServiceRestResponseData()
         {

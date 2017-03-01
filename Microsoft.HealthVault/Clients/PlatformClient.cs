@@ -11,7 +11,7 @@ namespace Microsoft.HealthVault.Clients
     /// <summary>
     /// The default implementation of IPlatformClient
     /// </summary>
-    public class PlatformClient : IPlatformClient
+    internal class PlatformClient : IPlatformClient
     {
         public HealthServiceConnection Connection { get; set; }
 

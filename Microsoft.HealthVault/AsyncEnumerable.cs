@@ -9,7 +9,7 @@ namespace Microsoft.HealthVault
     /// A collection of asynchronous items and a method to operate on each of them.
     /// </summary>
     /// <typeparam name="T">The item type in the collection.</typeparam>
-    public class AsyncEnumerable<T>
+    internal class AsyncEnumerable<T>
     {
         private readonly IEnumerable<Task<T>> itemTasks;
 

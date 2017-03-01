@@ -18,7 +18,7 @@ namespace Microsoft.HealthVault.PlatformInformation
     /// a configured or specified period of time.
     /// TODO: THIS NEEDS TO BE REWORKED. THIS DOESN'T SEEM TO WORK AS IS
     /// </remarks>
-    public class CachedServiceInfoProvider : IServiceInfoProvider
+    internal class CachedServiceInfoProvider : IServiceInfoProvider
     {
         private LazyCacheWithTtl<ServiceInfo> serviceInfo;
         private DateTime lastCheckTime;

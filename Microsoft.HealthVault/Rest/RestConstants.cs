@@ -8,7 +8,7 @@ namespace Microsoft.HealthVault.Rest
     /// <summary>
     /// Constants used for Rest calls to the REST Health Vault endpoint.
     /// </summary>
-    public static class RestConstants
+    internal static class RestConstants
     {
         internal const string CorrelationIdContextKey = "WC_CorrelationId";
 

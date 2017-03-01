@@ -29,7 +29,7 @@ namespace Microsoft.HealthVault.ItemTypes
     /// should adhere to standard practices in dealing with PKCS5v2 data.
     /// </remarks>
     ///
-    public class PasswordProtectedPackage : HealthRecordItem
+    internal class PasswordProtectedPackage : HealthRecordItem
     {
         /// <summary>
         /// Creates a new instance of the <see cref="PasswordProtectedPackage"/> class

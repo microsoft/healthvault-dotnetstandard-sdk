@@ -3,7 +3,7 @@
     /// <summary>
     /// <inheritdoc cref="ICryptoConfiguration"/>
     /// </summary>
-    public class BaseCryptoConfiguration : ICryptoConfiguration
+    internal class BaseCryptoConfiguration : ICryptoConfiguration
     {
         /// <summary>
         /// The default HMAC algorithm name.

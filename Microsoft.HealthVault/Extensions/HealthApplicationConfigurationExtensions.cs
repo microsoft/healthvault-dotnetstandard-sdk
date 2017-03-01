@@ -5,7 +5,7 @@ namespace Microsoft.HealthVault.Extensions
     /// <summary>
     /// Extension methods for IHealthApplicationConfiguration.
     /// </summary>
-    public static class HealthApplicationConfigurationExtensions
+    internal static class HealthApplicationConfigurationExtensions
     {
         /// <summary>
         /// Gets the HealthVault method request URL for

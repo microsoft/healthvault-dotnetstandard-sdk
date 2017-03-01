@@ -13,7 +13,7 @@ namespace Microsoft.HealthVault.Transport
     /// Contains the error context of the service when the error occurred.
     /// </summary>
     ///
-    public class HealthServiceErrorContext
+    internal class HealthServiceErrorContext
     {
         /// <summary>
         /// Gets the name of the server that was handling the request when

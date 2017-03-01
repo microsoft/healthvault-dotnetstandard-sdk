@@ -5,7 +5,7 @@ namespace Microsoft.HealthVault.Connection
     /// <summary>
     /// Not yet flushed
     /// </summary>
-    public interface ICryptographer
+    internal interface ICryptographer
     {
         /// <summary>
         /// Gets the hash algorithm.

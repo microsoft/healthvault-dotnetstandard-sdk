@@ -24,7 +24,7 @@ namespace Microsoft.HealthVault.Vocabulary
     /// The urls provide a means for browser based access to the vocabulary search in HealthVault.
     /// The response is returned in JSON format.
     /// </remarks>
-    public static class VocabularySearchHelper
+    internal static class VocabularySearchHelper
     {
         /// <summary>
         /// Creates a vocabulary search request URL in which the application is identified using
