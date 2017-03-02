@@ -63,7 +63,7 @@
     <Compile Include="Connection\WebApplicationConnectionv2.cs" />
     <Compile Include="Extensions\DependencyInjectionContainerExtensions.cs" />
     <Compile Include="Extensions\UriExtensions.cs" />
-    <Compile Include="CoreIoc.cs" />
+    <Compile Include="Ioc.cs" />
     <Compile Include="Person\ActiveRecordAuthorization.cs" />
     <Compile Include="Connection\AnonymousConnection.cs" />
     <Compile Include="Application\ApplicationBinaryConfiguration.cs" />

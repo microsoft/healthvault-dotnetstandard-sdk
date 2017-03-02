@@ -5,14 +5,27 @@ namespace Microsoft.HealthVault.Soda
 {
     internal static class SodaIoc
     {
-        static SodaIoc()
-        {
-            Container = new DependencyInjectionContainer();
+        private static readonly object RegistrationLock = new object();
 
-            CoreIoc.RegisterTypes(Container);
-            PlatformSodaIoc.RegisterTypes(Container);
+        private static bool typesRegistered;
+
+        public static void EnsureTypesRegistered()
+        {
+            lock (RegistrationLock)
+            {
+                if (!typesRegistered)
+                {
+                    // Register SODA types
+                    RegisterTypes(Ioc.Container);
+
+                    PlatformSodaIoc.RegisterTypes(Ioc.Container);
+                    typesRegistered = true;
+                }
+            }
         }
 
-        public static DependencyInjectionContainer Container { get; }
+        private static void RegisterTypes(DependencyInjectionContainer container)
+        {
+        }
     }
 }
