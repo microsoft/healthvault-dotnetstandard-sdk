@@ -1,0 +1,12 @@
+﻿{
+  "supports": {},
+  "dependencies": {
+    "Grace": "5.1.0",
+    "Microsoft.NETCore.Portable.Compatibility": "1.0.1",
+    "NETStandard.Library": "1.6.0",
+    "SimpleInjector": "3.3.2"
+  },
+  "frameworks": {
+    "netstandard1.4": {}
+  }
+}
