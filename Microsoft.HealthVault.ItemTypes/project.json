@@ -5,7 +5,7 @@
     "NETStandard.Library": "1.6.0",
     "StyleCop.Analyzers": "1.0.0",
     "System.Collections.Specialized": "4.3.0",
-    "System.Xml.ReaderWriter": "4.0.11",
+    "System.Xml.ReaderWriter": "4.3.0",
     "System.Xml.XPath": "4.3.0"
   },
   "frameworks": {
