@@ -38,6 +38,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Configurations\SodaConfiguration.cs" />
     <Compile Include="SodaIoc.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
