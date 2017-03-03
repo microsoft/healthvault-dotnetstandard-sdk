@@ -136,12 +136,12 @@ namespace Microsoft.HealthVault.PlatformInformation
         public ServiceInfo GetServiceInfo()
         {
             // return _serviceInfo.Value();
-            return GetFromServiceAsync().Result;
+            return this.GetFromServiceAsync().Result;
         }
 
         public async Task<ServiceInfo> GetServiceInfoAsync()
         {
-            return await GetFromServiceAsync().ConfigureAwait(false);
+            return await this.GetFromServiceAsync().ConfigureAwait(false);
         }
 
         /// <summary>

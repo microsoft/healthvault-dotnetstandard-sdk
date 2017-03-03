@@ -153,7 +153,6 @@ namespace Microsoft.HealthVault.ItemTypes
             return Convert.ToBase64String(rawPayload);
         }
 
-        [SuppressMessage("Microsoft.Usage", "CA2202:Do not dispose objects multiple times", Justification = "MemoryStream can be disposed multiple times. Usings block makes code more readable")]
         private static byte[] EncodeAsGzipBytes(byte[] rawPayload)
         {
             using (MemoryStream source = new MemoryStream(rawPayload))
@@ -173,7 +172,6 @@ namespace Microsoft.HealthVault.ItemTypes
             }
         }
 
-        [SuppressMessage("Microsoft.Usage", "CA2202:Do not dispose objects multiple times", Justification = "MemoryStream can be disposed multiple times. Usings block makes code more readable")]
         private static byte[] DecodeAsGzipBytes(byte[] encodedPayload)
         {
             VerifyPayloadExists(encodedPayload);
@@ -190,7 +188,6 @@ namespace Microsoft.HealthVault.ItemTypes
             }
         }
 
-        [SuppressMessage("Microsoft.Usage", "CA2202:Do not dispose objects multiple times", Justification = "MemoryStream can be disposed multiple times. Usings block makes code more readable")]
         private static byte[] EncodeAsDeflateBytes(byte[] rawPayload)
         {
             using (MemoryStream source = new MemoryStream(rawPayload))
@@ -210,7 +207,6 @@ namespace Microsoft.HealthVault.ItemTypes
             }
         }
 
-        [SuppressMessage("Microsoft.Usage", "CA2202:Do not dispose objects multiple times", Justification = "MemoryStream can be disposed multiple times. Usings block makes code more readable")]
         private static byte[] DecodeAsDeflateBytes(byte[] encodedPayload)
         {
             VerifyPayloadExists(encodedPayload);

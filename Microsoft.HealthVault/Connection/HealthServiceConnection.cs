@@ -8,11 +8,14 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Net;
 using System.Threading.Tasks;
+using System.Xml;
 using Microsoft.HealthVault.Authentication;
+using Microsoft.HealthVault.Clients;
 using Microsoft.HealthVault.Exceptions;
 using Microsoft.HealthVault.Extensions;
 using Microsoft.HealthVault.Helpers;
 using Microsoft.HealthVault.PlatformInformation;
+using Microsoft.HealthVault.Record;
 using Microsoft.HealthVault.Transport;
 
 namespace Microsoft.HealthVault.Connection
@@ -38,7 +41,7 @@ namespace Microsoft.HealthVault.Connection
     /// <seealso cref="AuthenticatedConnection" />
     /// <seealso cref="ApplicationConnection" />
     ///
-    public abstract class HealthServiceConnection
+    public abstract class HealthServiceConnection : IConnection
     {
         #region constructors
 
@@ -515,6 +518,37 @@ namespace Microsoft.HealthVault.Connection
             private set;
         }
 
+        public IHealthApplicationConfiguration ApplicationConfiguration { get; set; }
+
+        public ISessionCredential SessionCredential { get; set; }
+
+        public T GetClient<T>() 
+            where T : IClient
+        {
+            throw new NotImplementedException();
+        }
+
+        public IPlatformClient PlatformClient { get; }
+
+        public IPersonClient PersonClient { get; }
+
+        public IVocabularyClient VocabularyClient { get; }
+
+        public IThingClient GetThingClient(HealthRecordInfo record)
+        {
+            throw new NotImplementedException();
+        }
+
+        public IActionPlanClient GetActionPlanClient(HealthRecordInfo record)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task AuthenticateAsync()
+        {
+            throw new NotImplementedException();
+        }
+
         /// <summary>
         /// Gets the HealthVault web-service URL to use when retrieving and setting the other data
         /// in the HealthRecordItem using the http binary channel API.
@@ -632,6 +666,15 @@ namespace Microsoft.HealthVault.Connection
             int methodVersion,
             bool forAuthentication);
 
+        /// <summary>
+        /// Gets header content specific to this configuration.
+        /// </summary>
+        /// <param name="writer">The XML writer to use in the configuration check</param>
+        internal void GetSessionAuthorizationHeader(XmlWriter writer)
+        {
+            throw new NotImplementedException();
+        }
+
         #endregion internal helpers
 
         /// <summary>
@@ -693,5 +736,7 @@ namespace Microsoft.HealthVault.Connection
         }
 
         private Credential credentialValue;
+
+        HealthServiceInstance IConnection.ServiceInstance { get; }
     }
 }

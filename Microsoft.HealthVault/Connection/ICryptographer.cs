@@ -37,5 +37,28 @@ namespace Microsoft.HealthVault.Connection
         /// <param name="text">The text.</param>
         /// <returns>CryptoHash</returns>
         CryptoHash Hash(string text);
+
+        /// <summary>
+        /// Generates the info hash section for HealthVault service
+        /// web requests given the specified data beginning at the specified
+        /// index.
+        /// </summary>
+        ///
+        /// <param name="buffer">
+        /// An array of bytes representing the UTF8 encoded data.
+        /// </param>
+        ///
+        /// <param name="index">
+        /// An integer representing the starting location in the byte array.
+        /// </param>
+        ///
+        /// <param name="count">
+        /// An integer representing the count of bytes.
+        /// </param>
+        ///
+        /// <returns>
+        /// A string representing the info hash.
+        /// </returns>
+        string CreateInfoHash(byte[] buffer, int index, int count);
     }
 }

@@ -11,7 +11,7 @@ namespace Microsoft.HealthVault.Connection
     /// <summary>
     /// Sample
     /// </summary>
-    /// <seealso cref="Microsoft.HealthVault.Connection.IConnection" />
+    /// <seealso cref="IConnection" />
     public abstract class ApplicationConnectionV2 : IConnection
     {
         /// <summary>

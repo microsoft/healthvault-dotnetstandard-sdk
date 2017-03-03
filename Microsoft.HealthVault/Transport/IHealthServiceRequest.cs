@@ -90,7 +90,7 @@ namespace Microsoft.HealthVault.Transport
         int TimeoutSeconds { get; set; }
 
         /// <summary>
-        /// Executes the asynchronous.
+        /// Executes the asynchronous health service request
         /// </summary>
         /// <returns>HealthServiceResponseData</returns>
         Task<HealthServiceResponseData> ExecuteAsync();
