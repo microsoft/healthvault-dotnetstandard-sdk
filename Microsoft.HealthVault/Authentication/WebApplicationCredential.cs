@@ -419,7 +419,7 @@ namespace Microsoft.HealthVault.Authentication
         /// </param>
         ///
         internal override async Task AuthenticateIfRequiredAsync(
-            HealthServiceConnection connection,
+            IConnection connection,
             Guid applicationId)
         {
             if (IsAuthenticationExpired(applicationId, this.TokenIssuedRefreshCounter))
@@ -452,7 +452,7 @@ namespace Microsoft.HealthVault.Authentication
         /// </returns>
         ///
         private async Task AuthenticateAsync(
-            HealthServiceConnection connection,
+            IConnection connection,
             Guid applicationId)
         {
             await AuthenticateKeySetPairAsync(connection, applicationId, this.cert).ConfigureAwait(false);
@@ -1060,7 +1060,7 @@ namespace Microsoft.HealthVault.Authentication
         /// </param>
         ///
         private static async Task AuthenticateKeySetPairAsync(
-            HealthServiceConnection connection,
+            IConnection connection,
             Guid applicationId,
             X509Certificate2 certificate)
         {
@@ -1098,7 +1098,7 @@ namespace Microsoft.HealthVault.Authentication
         ///
         private static async Task AuthenticateKeySetPairAsync(
             AuthSessionKeySetPairs keySetPairs,
-            HealthServiceConnection connection,
+            IConnection connection,
             Guid applicationId,
             X509Certificate2 certificate)
         {

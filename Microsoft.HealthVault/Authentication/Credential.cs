@@ -162,7 +162,7 @@ namespace Microsoft.HealthVault.Authentication
         /// </param>
         /// 
         internal virtual async Task AuthenticateIfRequiredAsync(
-            HealthServiceConnection connection,
+            IConnection connection,
             Guid applicationId)
         {
             if (this.GetAuthenticationResult(applicationId) == null)
@@ -176,7 +176,7 @@ namespace Microsoft.HealthVault.Authentication
         /// </summary>
         /// 
         private async Task AuthenticateAsync(
-            HealthServiceConnection connection,
+            IConnection connection,
             Guid appId)
         {
             this.AuthenticationResults?.Remove(appId);
@@ -361,8 +361,8 @@ namespace Microsoft.HealthVault.Authentication
         /// 
         /// <seealso cref="HealthServiceConnection"/>
         /// 
-        public async Task CreateAuthenticatedSessionTokenAsync(
-            HealthServiceConnection connection,
+        internal async Task CreateAuthenticatedSessionTokenAsync(
+            IConnection connection,
             Guid appId)
         {
             Validator.ThrowIfArgumentNull(connection, "connection", "AuthenticatedConnectionNull");
@@ -373,11 +373,7 @@ namespace Microsoft.HealthVault.Authentication
                 "AuthenticationAppIDNullOrEmpty");
 
             AnonymousConnection anonConn =
-                new AnonymousConnection(connection.ApplicationId, connection.RequestUrl);
-            if (connection.WebProxy != null)
-            {
-                anonConn.WebProxy = connection.WebProxy;
-            }
+                new AnonymousConnection(connection.ApplicationConfiguration.ApplicationId, connection.ApplicationConfiguration.HealthVaultUrl);
 
             await this.MakeCreateTokenCallAsync(
                 "CreateAuthenticatedSessionToken",

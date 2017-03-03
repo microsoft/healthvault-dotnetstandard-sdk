@@ -888,7 +888,7 @@ namespace Microsoft.HealthVault.Things
         /// 
         private async Task<BlobPutParameters> BeginPutBlobAsync()
         {
-            HealthServiceRequest request =
+            HealthServiceRequest request =  
                 new HealthServiceRequest(this.record.Connection, "BeginPutBlob", 1, this.record);
             HealthServiceResponseData responseData = await request.ExecuteAsync().ConfigureAwait(false);
 
