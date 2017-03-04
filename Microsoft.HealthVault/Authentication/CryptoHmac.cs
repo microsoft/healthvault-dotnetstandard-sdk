@@ -6,6 +6,7 @@
 using System;
 using System.Security.Cryptography;
 using System.Xml;
+using Microsoft.HealthVault.Configurations;
 using Microsoft.HealthVault.Helpers;
 
 namespace Microsoft.HealthVault.Authentication
@@ -42,7 +43,7 @@ namespace Microsoft.HealthVault.Authentication
         ///
         internal CryptoHmac()
         {
-            this.AlgorithmName = HealthApplicationConfiguration.Current.CryptoConfiguration.HmacAlgorithmName;
+            this.AlgorithmName = ConfigurationBase.Current.CryptoConfiguration.HmacAlgorithmName;
 
             this.HashAlgorithm = ServiceLocator.Current.CryptoService.CreateHashAlgorithm(this.AlgorithmName);
 

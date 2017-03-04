@@ -4,6 +4,7 @@
 // All other rights reserved.
 
 using System;
+using Microsoft.HealthVault.Configurations;
 
 namespace Microsoft.HealthVault.PlatformInformation
 {
@@ -36,7 +37,7 @@ namespace Microsoft.HealthVault.PlatformInformation
             // apply configuration
             // aib
             paramsCopy.AllowInstanceBounce = paramsCopy.AllowInstanceBounce ??
-                HealthApplicationConfiguration.Current.MultiInstanceAware;
+                ConfigurationBase.Current.MultiInstanceAware;
 
             return paramsCopy.ConstructRedirectUrl();
         }
@@ -67,7 +68,7 @@ namespace Microsoft.HealthVault.PlatformInformation
         ///
         public static Uri GetHealthServiceShellUrl(string targetLocation)
         {
-            return GetHealthServiceShellUrl(HealthApplicationConfiguration.Current.HealthVaultShellUrl, targetLocation);
+            return GetHealthServiceShellUrl(ConfigurationBase.Current.HealthVaultShellUrl, targetLocation);
         }
 
         /// <summary>
@@ -142,7 +143,7 @@ namespace Microsoft.HealthVault.PlatformInformation
             string targetQuery)
         {
             return GetHealthServiceShellUrl(
-                HealthApplicationConfiguration.Current.HealthVaultShellUrl,
+                ConfigurationBase.Current.HealthVaultShellUrl,
                 targetLocation,
                 targetQuery);
         }

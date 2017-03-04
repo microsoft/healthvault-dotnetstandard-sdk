@@ -4,6 +4,7 @@
 // All other rights reserved.
 
 using System;
+using Microsoft.HealthVault.Configurations;
 
 namespace Microsoft.HealthVault.Authentication
 {
@@ -38,7 +39,7 @@ namespace Microsoft.HealthVault.Authentication
         {
             this.KeySet =
                 new AuthenticatedSessionKeySet(
-                    HealthApplicationConfiguration.Current.CryptoConfiguration.HmacAlgorithmName,
+                    ConfigurationBase.Current.CryptoConfiguration.HmacAlgorithmName,
                     ServiceLocator.Current.CryptoService.GenerateHmacSharedSecret());
         }
 

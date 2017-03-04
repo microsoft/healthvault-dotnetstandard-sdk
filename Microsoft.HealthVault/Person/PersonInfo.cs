@@ -12,6 +12,7 @@ using System.Xml.Linq;
 using System.Xml.XPath;
 using Microsoft.HealthVault.Application;
 using Microsoft.HealthVault.Authentication;
+using Microsoft.HealthVault.Configurations;
 using Microsoft.HealthVault.Connection;
 using Microsoft.HealthVault.Exceptions;
 using Microsoft.HealthVault.Extensions;
@@ -335,7 +336,7 @@ namespace Microsoft.HealthVault.Person
             }
             else
             {
-                this.healthServiceUri = HealthApplicationConfiguration.Current.GetHealthVaultMethodUrl();
+                this.healthServiceUri = ConfigurationBase.Current.GetHealthVaultMethodUrl();
                 this.ApplicationConnection = new AuthenticatedConnection(this.appId, this.healthServiceUri, this.credential);
             }
 

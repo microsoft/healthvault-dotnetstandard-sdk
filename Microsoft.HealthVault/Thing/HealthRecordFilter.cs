@@ -12,6 +12,7 @@ using System.Globalization;
 using System.Text;
 using System.Xml;
 using System.Xml.XPath;
+using Microsoft.HealthVault.Configurations;
 using Microsoft.HealthVault.Exceptions;
 using Microsoft.HealthVault.Helpers;
 using Microsoft.HealthVault.Transport;
@@ -1385,7 +1386,7 @@ namespace Microsoft.HealthVault.Things
             {
                 this.list.Add(item);
 
-                if (!HealthApplicationConfiguration.Current.UseLegacyTypeVersionSupport)
+                if (!ConfigurationBase.Current.UseLegacyTypeVersionSupport)
                 {
                     this.view.TypeVersionFormat.Add(item);
                 }
@@ -1394,7 +1395,7 @@ namespace Microsoft.HealthVault.Things
             public void Clear()
             {
                 this.list.Clear();
-                if (!HealthApplicationConfiguration.Current.UseLegacyTypeVersionSupport)
+                if (!ConfigurationBase.Current.UseLegacyTypeVersionSupport)
                 {
                     this.view.TypeVersionFormat.Clear();
                 }
@@ -1428,7 +1429,7 @@ namespace Microsoft.HealthVault.Things
             public void Insert(int index, Guid item)
             {
                 this.list.Insert(index, item);
-                if (!HealthApplicationConfiguration.Current.UseLegacyTypeVersionSupport)
+                if (!ConfigurationBase.Current.UseLegacyTypeVersionSupport)
                 {
                     this.view.TypeVersionFormat.Add(item);
                 }
@@ -1437,7 +1438,7 @@ namespace Microsoft.HealthVault.Things
             public bool Remove(Guid item)
             {
                 bool result = this.list.Remove(item);
-                if (result && !HealthApplicationConfiguration.Current.UseLegacyTypeVersionSupport)
+                if (result && !ConfigurationBase.Current.UseLegacyTypeVersionSupport)
                 {
                     this.view.TypeVersionFormat.Remove(item);
                 }
@@ -1449,7 +1450,7 @@ namespace Microsoft.HealthVault.Things
             {
                 Guid item = this.list[index];
                 this.list.RemoveAt(index);
-                if (!HealthApplicationConfiguration.Current.UseLegacyTypeVersionSupport)
+                if (!ConfigurationBase.Current.UseLegacyTypeVersionSupport)
                 {
                     this.view.TypeVersionFormat.Remove(item);
                 }

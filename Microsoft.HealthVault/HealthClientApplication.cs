@@ -13,6 +13,7 @@ using System.Threading.Tasks;
 using Microsoft.HealthVault.Application;
 using Microsoft.HealthVault.Authentication;
 using Microsoft.HealthVault.Certificate;
+using Microsoft.HealthVault.Configurations;
 using Microsoft.HealthVault.Connection;
 using Microsoft.HealthVault.Exceptions;
 using Microsoft.HealthVault.Extensions;
@@ -101,12 +102,12 @@ namespace Microsoft.HealthVault
             Guid applicationId,
             Guid masterApplicationId)
         {
-            if (HealthApplicationConfiguration.Current.HealthVaultShellUrl == null)
+            if (ConfigurationBase.Current.HealthVaultShellUrl == null)
             {
                 throw Validator.InvalidConfigurationException("InvalidRequestUrlConfiguration");
             }
 
-            if (HealthApplicationConfiguration.Current.GetHealthVaultMethodUrl() == null)
+            if (ConfigurationBase.Current.GetHealthVaultMethodUrl() == null)
             {
                 throw Validator.InvalidConfigurationException("InvalidRequestUrlConfiguration");
             }
@@ -114,8 +115,8 @@ namespace Microsoft.HealthVault
             return Create(
                 applicationId,
                 masterApplicationId,
-                HealthApplicationConfiguration.Current.HealthVaultShellUrl,
-                HealthApplicationConfiguration.Current.GetHealthVaultMethodUrl());
+                ConfigurationBase.Current.HealthVaultShellUrl,
+                ConfigurationBase.Current.GetHealthVaultMethodUrl());
         }
 
         /// <summary>

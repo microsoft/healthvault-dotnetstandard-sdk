@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 using System.Xml;
 using Microsoft.HealthVault.Authentication;
 using Microsoft.HealthVault.Clients;
+using Microsoft.HealthVault.Configurations;
 using Microsoft.HealthVault.Exceptions;
 using Microsoft.HealthVault.Extensions;
 using Microsoft.HealthVault.Helpers;
@@ -96,7 +97,7 @@ namespace Microsoft.HealthVault.Connection
             Validator.ThrowIfArgumentNull(healthServiceUrl, "healthServiceUrl", "CtorServiceUrlNull");
 
             // If the HealthServiceUrl is set in a .config file,
-            // HealthApplicationConfiguration.Current.HealthVaultMethodUrl
+            // ConfigurationBase.Current.HealthVaultMethodUrl
             // will automatically append "wildcat.ashx" to it.
             // Users of OfflineWebApplicationConnection need the same help, so we do it here if necessary...
             if (!healthServiceUrl.AbsoluteUri.ToUpperInvariant().EndsWith("WILDCAT.ASHX", StringComparison.Ordinal))
@@ -484,7 +485,7 @@ namespace Microsoft.HealthVault.Connection
         /// Gets the calling application's ID.
         /// </summary>
         ///
-        public Guid ApplicationId { get; } = HealthApplicationConfiguration.Current.ApplicationId;
+        public Guid ApplicationId { get; } = ConfigurationBase.Current.ApplicationId;
 
         /// <summary>
         /// Gets the HealthVault web-service URL.
@@ -500,7 +501,7 @@ namespace Microsoft.HealthVault.Connection
             {
                 if (this.requestUrl == null)
                 {
-                    return HealthApplicationConfiguration.Current.GetHealthVaultMethodUrl();
+                    return ConfigurationBase.Current.GetHealthVaultMethodUrl();
                 }
 
                 return this.requestUrl;
@@ -518,7 +519,7 @@ namespace Microsoft.HealthVault.Connection
             private set;
         }
 
-        public IHealthApplicationConfiguration ApplicationConfiguration { get; set; }
+        public IConfiguration ApplicationConfiguration { get; set; }
 
         public ISessionCredential SessionCredential { get; set; }
 
@@ -558,19 +559,19 @@ namespace Microsoft.HealthVault.Connection
         /// An instance of Uri representing the HealthVault web-service URL.
         /// </value>
         ///
-        internal Uri OtherDataStreamUrl { get; } = HealthApplicationConfiguration.Current.GetBlobStreamUrl();
+        internal Uri OtherDataStreamUrl { get; } = ConfigurationBase.Current.GetBlobStreamUrl();
 
         /// <summary>
         /// Gets or sets the request timeout in seconds.
         /// </summary>
         ///
-        public int RequestTimeoutSeconds { get; set; } = HealthApplicationConfiguration.Current.DefaultRequestTimeout;
+        public int RequestTimeoutSeconds { get; set; } = ConfigurationBase.Current.DefaultRequestTimeout;
 
         /// <summary>
         /// Gets or sets the request time-to-live in seconds.
         /// </summary>
         ///
-        public int RequestTimeToLive { get; set; } = HealthApplicationConfiguration.Current.DefaultRequestTimeToLive;
+        public int RequestTimeToLive { get; set; } = ConfigurationBase.Current.DefaultRequestTimeToLive;
 
         /// <summary>
         /// Gets or sets the language to be sent to the server when making

@@ -43,37 +43,37 @@ namespace Microsoft.HealthVault.Web
         /// Shell auth page location including the application id.
         /// </summary>
         ///
-        public static Uri ShellAuthenticationUrl => HealthWebApplicationConfiguration.Current.HealthVaultShellAuthenticationUrl;
+        public static Uri ShellAuthenticationUrl => WebConfiguration.Current.HealthVaultShellAuthenticationUrl;
 
         /// <summary>
         /// Application id, from web config.
         /// </summary>
         ///
-        public static readonly Guid AppId = HealthWebApplicationConfiguration.Current.ApplicationConfiguration.ApplicationId;
+        public static readonly Guid AppId = WebConfiguration.Current.ApplicationConfiguration.ApplicationId;
 
         /// <summary>
         /// Shell url, from web config.
         /// </summary>
         ///
-        public static Uri ShellUrl => HealthWebApplicationConfiguration.Current.ApplicationConfiguration.HealthVaultShellUrl;
+        public static Uri ShellUrl => WebConfiguration.Current.ApplicationConfiguration.HealthVaultShellUrl;
 
         /// <summary>
         /// Cookie domain, from web config.
         /// </summary>
         ///
-        public static readonly string CookieDomain = HealthWebApplicationConfiguration.Current.CookieDomain;
+        public static readonly string CookieDomain = WebConfiguration.Current.CookieDomain;
 
         /// <Summary>
         /// Cookie path, from web config.
         /// </Summary>
         ///
-        public static readonly string CookiePath = HealthWebApplicationConfiguration.Current.CookiePath;
+        public static readonly string CookiePath = WebConfiguration.Current.CookiePath;
 
         /// <summary>
         /// Cookie timeout in minutes, from web config.
         /// </summary>
         ///
-        public static readonly int CookieTimeoutMinutes = HealthWebApplicationConfiguration.Current.CookieTimeoutMinutes;
+        public static readonly int CookieTimeoutMinutes = WebConfiguration.Current.CookieTimeoutMinutes;
 
         /// <summary>
         /// The maximum cookie timeout in minutes, from web config.
@@ -90,7 +90,7 @@ namespace Microsoft.HealthVault.Web
         /// from the applications configuration is larger.
         /// </remarks>
         ///
-        public static readonly int MaxCookieTimeoutMinutes = HealthWebApplicationConfiguration.Current.MaxCookieTimeoutMinutes;
+        public static readonly int MaxCookieTimeoutMinutes = WebConfiguration.Current.MaxCookieTimeoutMinutes;
 
         /// <summary>
         /// The 32 byte key used to encrypt cookies for privacy.
@@ -103,48 +103,48 @@ namespace Microsoft.HealthVault.Web
             "Microsoft.Security",
             "CA2105:ArrayFieldsShouldNotBeReadOnly",
             Justification = "Each access returns a new array")]
-        public static readonly byte[] CookieEncryptionKey = HealthWebApplicationConfiguration.Current.CookieEncryptionKey;
+        public static readonly byte[] CookieEncryptionKey = WebConfiguration.Current.CookieEncryptionKey;
 
         /// <summary>
         /// Whether to secure the connection with SSL, from web config.
         /// </summary>
-        public static readonly bool UseSslForSecurity = HealthWebApplicationConfiguration.Current.UseSslForSecurity;
+        public static readonly bool UseSslForSecurity = WebConfiguration.Current.UseSslForSecurity;
 
         /// <summary>
         /// Use the asp session rather than a cookie, from web config.
         /// </summary>
         ///
-        public static readonly bool UseAspSession = HealthWebApplicationConfiguration.Current.UseAspSession;
+        public static readonly bool UseAspSession = WebConfiguration.Current.UseAspSession;
 
         /// <summary>
         /// If true, the application is a multi-record application.
         /// </summary>
         ///
-        public static readonly bool IsMra = HealthWebApplicationConfiguration.Current.IsMultipleRecordApplication;
+        public static readonly bool IsMra = WebConfiguration.Current.IsMultipleRecordApplication;
 
         /// <summary>
         /// Indicates whether a signup code is required for a user to create
         /// a HealthVault account.
         /// </summary>
         ///
-        public static readonly bool IsSignupCodeRequired = HealthWebApplicationConfiguration.Current.IsSignupCodeRequired;
+        public static readonly bool IsSignupCodeRequired = WebConfiguration.Current.IsSignupCodeRequired;
 
         /// <summary>
         /// HealthVault url, from web config.
         /// </summary>
         ///
-        public static Uri HealthServiceUrl => HealthWebApplicationConfiguration.Current.ApplicationConfiguration.HealthVaultUrl;
+        public static Uri HealthServiceUrl => WebConfiguration.Current.ApplicationConfiguration.HealthVaultUrl;
 
         /// <summary>
         /// HealthVault root url, from web config.
         /// </summary>
-        public static Uri HealthServiceRootUrl => HealthWebApplicationConfiguration.Current.ApplicationConfiguration.HealthVaultUrl;
+        public static Uri HealthServiceRootUrl => WebConfiguration.Current.ApplicationConfiguration.HealthVaultUrl;
 
         /// <summary>
         /// Shell redirector url, derived from web config.
         /// </summary>
         ///
-        public static Uri ShellRedirectorUrl => UrlPathAppend(HealthWebApplicationConfiguration.Current.ApplicationConfiguration.HealthVaultShellUrl, ShellRedirectorLocation);
+        public static Uri ShellRedirectorUrl => UrlPathAppend(WebConfiguration.Current.ApplicationConfiguration.HealthVaultShellUrl, ShellRedirectorLocation);
 
         private const string ShellRedirectorLocation = "redirect.aspx?target=";
 
@@ -152,7 +152,7 @@ namespace Microsoft.HealthVault.Web
         /// HealthVault handler url, derived from web config.
         /// </summary>
         ///
-        public static Uri HealthServiceHandlerUrl => HealthWebApplicationConfiguration.Current.ApplicationConfiguration.GetHealthVaultMethodUrl();
+        public static Uri HealthServiceHandlerUrl => WebConfiguration.Current.ApplicationConfiguration.GetHealthVaultMethodUrl();
 
         /// <summary>
         /// Gets the URL for the specified application action.
@@ -177,7 +177,7 @@ namespace Microsoft.HealthVault.Web
         ///
         public static string GetActionUrl(string action)
         {
-            return HealthWebApplicationConfiguration.Current.GetActionUrl(action).ToString();
+            return WebConfiguration.Current.GetActionUrl(action).ToString();
         }
 
         /// <summary>
@@ -202,13 +202,13 @@ namespace Microsoft.HealthVault.Web
         /// separated list.
         /// </remarks>
         ///
-        public static string AllowedRedirectSites => HealthWebApplicationConfiguration.Current.AllowedRedirectSites;
+        public static string AllowedRedirectSites => WebConfiguration.Current.AllowedRedirectSites;
 
         /// <summary>
         /// Non-production action url redirect override.
         /// </summary>
         ///
-        public static string ActionUrlRedirectOverride => HealthWebApplicationConfiguration.Current.ActionUrlRedirectOverride.ToString();
+        public static string ActionUrlRedirectOverride => WebConfiguration.Current.ActionUrlRedirectOverride.ToString();
 
         #region DataGrid
 
@@ -217,7 +217,7 @@ namespace Microsoft.HealthVault.Web
         /// <see cref="HealthRecordItemDataGrid"/> page.
         /// </summary>
         ///
-        public static int DataGridItemsPerPage => HealthWebApplicationConfiguration.Current.DataGridItemsPerPage;
+        public static int DataGridItemsPerPage => WebConfiguration.Current.DataGridItemsPerPage;
 
         #endregion DataGrid
 

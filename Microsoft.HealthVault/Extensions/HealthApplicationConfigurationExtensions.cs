@@ -1,9 +1,10 @@
 ﻿using System;
+using Microsoft.HealthVault.Configurations;
 
 namespace Microsoft.HealthVault.Extensions
 {
     /// <summary>
-    /// Extension methods for IHealthApplicationConfiguration.
+    /// Extension methods for IConfiguration.
     /// </summary>
     internal static class HealthApplicationConfigurationExtensions
     {
@@ -15,7 +16,7 @@ namespace Microsoft.HealthVault.Extensions
         /// This property is based on the "HealthVaultUrl" configuration
         /// value.
         /// </remarks>
-        public static Uri GetHealthVaultMethodUrl(this IHealthApplicationConfiguration configuration)
+        public static Uri GetHealthVaultMethodUrl(this IConfiguration configuration)
         {
             string newUri = configuration.HealthVaultUrl.AbsoluteUri;
             if (!newUri.EndsWith("/", StringComparison.Ordinal))
@@ -38,7 +39,7 @@ namespace Microsoft.HealthVault.Extensions
         /// This property is based on the "HealthVaultUrl" configuration
         /// value.
         /// </remarks>
-        public static Uri GetHealthVaultTypeSchemaUrl(this IHealthApplicationConfiguration configuration)
+        public static Uri GetHealthVaultTypeSchemaUrl(this IConfiguration configuration)
         {
             return new Uri(configuration.HealthVaultUrl, "type-xsd/");
         }
@@ -51,7 +52,7 @@ namespace Microsoft.HealthVault.Extensions
         /// This property is based on the "HealthVaultUrl" configuration
         /// value with the path modified to the appropriate handler.
         /// </remarks>
-        public static Uri GetBlobStreamUrl(this IHealthApplicationConfiguration configuration)
+        public static Uri GetBlobStreamUrl(this IConfiguration configuration)
         {
             if (configuration.HealthVaultUrl != null)
             {
@@ -70,7 +71,7 @@ namespace Microsoft.HealthVault.Extensions
         /// This property is based on the "HealthVaultUrl" configuration
         /// value with the path modified to the appropriate handler.
         /// </remarks>
-        public static Uri GetHealthClientServiceUrl(this IHealthApplicationConfiguration configuration)
+        public static Uri GetHealthClientServiceUrl(this IConfiguration configuration)
         {
             if (configuration.HealthVaultUrl != null)
             {

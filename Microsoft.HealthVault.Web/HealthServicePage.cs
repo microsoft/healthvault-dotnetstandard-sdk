@@ -11,6 +11,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Web;
 using Microsoft.HealthVault.Authentication;
+using Microsoft.HealthVault.Configurations;
 using Microsoft.HealthVault.Connection;
 using Microsoft.HealthVault.Person;
 using Microsoft.HealthVault.PlatformInformation;
@@ -81,19 +82,19 @@ namespace Microsoft.HealthVault.Web
         /// also be overridden on a per page basis by overriding this property in a derived class.
         /// </remarks>
         ///
-        protected virtual bool IsMra => HealthWebApplicationConfiguration.Current.IsMultipleRecordApplication;
+        protected virtual bool IsMra => WebConfiguration.Current.IsMultipleRecordApplication;
 
         /// <summary>
         /// Gets or sets the unique application identifier.
         /// </summary>
         ///
         /// <remarks>
-        /// By default the value is set to <see cref="HealthApplicationConfiguration.ApplicationId"/>. If the
+        /// By default the value is set to <see cref="ConfigurationBase.ApplicationId"/>. If the
         /// application needs to change the application identifier it can set the value during
         /// <see cref="OnInit"/>.
         /// </remarks>
         ///
-        protected virtual Guid ApplicationId { get; set; } = HealthWebApplicationConfiguration.Current.ApplicationConfiguration.ApplicationId;
+        protected virtual Guid ApplicationId { get; set; } = WebConfiguration.Current.ApplicationConfiguration.ApplicationId;
 
         /// <summary>
         /// Handles the PreLoad event for the page.

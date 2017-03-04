@@ -7,6 +7,7 @@ using System;
 using System.Security.Cryptography;
 using System.Text;
 using System.Xml;
+using Microsoft.HealthVault.Configurations;
 using Microsoft.HealthVault.Helpers;
 
 namespace Microsoft.HealthVault.Authentication
@@ -108,7 +109,7 @@ namespace Microsoft.HealthVault.Authentication
         /// </remarks>
         ///
         public CryptoHash()
-            : this(HealthApplicationConfiguration.Current.CryptoConfiguration.HashAlgorithmName)
+            : this(ConfigurationBase.Current.CryptoConfiguration.HashAlgorithmName)
         {
         }
 

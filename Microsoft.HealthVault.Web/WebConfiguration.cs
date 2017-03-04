@@ -14,7 +14,10 @@ using Microsoft.HealthVault.Configurations;
 
 namespace Microsoft.HealthVault.Web
 {
-    class WebConfiguration: BaseConfiguration
+    /// <summary>
+    /// Class used for web configurations
+    /// </summary>
+    public class WebConfiguration: ConfigurationBase
     {
         private static readonly object instanceLock = new object();
 
@@ -52,14 +55,14 @@ namespace Microsoft.HealthVault.Web
                 {
                     if (_current == null)
                     {
-                        var applicationConfiguration = new BaseConfiguration();
+                        var applicationConfiguration = new ConfigurationBase();
 
                         _current = new WebConfiguration
                         {
                             ApplicationConfiguration = applicationConfiguration
                         };
 
-                        BaseConfiguration.Current = applicationConfiguration;
+                        ConfigurationBase.Current = applicationConfiguration;
                     }
 
                     return _current;

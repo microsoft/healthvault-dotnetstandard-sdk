@@ -12,11 +12,36 @@ using System.Xml;
 
 namespace Microsoft.HealthVault.Configurations
 {
+
+    // TODO:  This class needs to be an abstract.  The IOC will need to be used for registering
+
     /// <summary>
     /// Base class for the app, web and soda configurations
     /// </summary>
-    public class BaseConfiguration : IConfiguration
+    public class ConfigurationBase : IConfiguration
     {
+        /// <summary>
+        /// The default number of internal retries.
+        /// </summary>
+        protected const int DefaultRetryOnInternal500Count = 2;
+
+        /// <summary>
+        /// Default sleep duration in seconds.
+        /// </summary>
+        protected const int DefaultRetryOnInternal500SleepSeconds = 1;
+
+        /// <summary>
+        /// Base class for the app, web and soda configurations
+        /// </summary>
+        /// <summary>
+        /// The default request time to live value.
+        /// </summary>
+        protected const int DefaultDefaultRequestTimeToLive = 30 * 60;
+
+        /// <summary>
+        /// The default request time out value.
+        /// </summary>
+        protected const int DefaultDefaultRequestTimeout = 30;
         private static readonly object InstanceLock = new object();
 
         /// <summary>
@@ -28,7 +53,7 @@ namespace Microsoft.HealthVault.Configurations
             {
                 lock (InstanceLock)
                 {
-                    return current ?? (current = new BaseConfiguration());
+                    return current ?? (current = new ConfigurationBase());
                 }
             }
 
@@ -271,11 +296,6 @@ namespace Microsoft.HealthVault.Configurations
         private volatile bool configurationRequestTimeoutInitialized;
 
         /// <summary>
-        /// The default request time out value.
-        /// </summary>
-        protected const int DefaultDefaultRequestTimeout = 30;
-
-        /// <summary>
         /// Gets the request time to live in seconds.
         /// </summary>
         ///
@@ -319,11 +339,6 @@ namespace Microsoft.HealthVault.Configurations
         private volatile bool configuredRequestTimeToLiveInitialized;
 
         /// <summary>
-        /// The default request time to live value.
-        /// </summary>
-        protected const int DefaultDefaultRequestTimeToLive = 30 * 60;
-
-        /// <summary>
         /// Gets the number of retries the .NET APIs will make when getting an internal
         /// error response (error 500) from HealthVault.
         /// </summary>
@@ -359,11 +374,6 @@ namespace Microsoft.HealthVault.Configurations
         private volatile bool retryOnInternal500CountInitialized;
 
         /// <summary>
-        /// The default number of internal retries.
-        /// </summary>
-        protected const int DefaultRetryOnInternal500Count = 2;
-
-        /// <summary>
         /// Gets the sleep duration in seconds between retries due to HealthVault returning
         /// an internal error (error 500).
         /// </summary>
@@ -397,11 +407,6 @@ namespace Microsoft.HealthVault.Configurations
 
         private volatile int retryOnInternal500SleepSeconds;
         private volatile bool retryOnInternal500SleepSecondsInitialized;
-
-        /// <summary>
-        /// Default sleep duration in seconds.
-        /// </summary>
-        protected const int DefaultRetryOnInternal500SleepSeconds = 1;
 
         #endregion web request/response configuration
 
@@ -493,7 +498,7 @@ namespace Microsoft.HealthVault.Configurations
         /// Type versions support was initially determined by an applications base authorizations
         /// and/or the <see cref="HealthRecordView.TypeVersionFormat"/>. Some of these behaviors
         /// were unexpected which led to changes to automatically put the <see cref="HealthRecordFilter.TypeIds"/>
-        /// and <see cref="BaseConfiguration.SupportedTypeVersions"/> into the
+        /// and <see cref="ConfigurationBase.SupportedTypeVersions"/> into the
         /// <see cref="HealthRecordView.TypeVersionFormat"/> automatically for developers. This
         /// exhibits the expected behavior for most applications. However, in some rare cases
         /// applications may need to revert back to the original behavior. When this property
@@ -564,7 +569,7 @@ namespace Microsoft.HealthVault.Configurations
         /// This default value is 110 seconds of inactivity.
         /// <p>
         /// This setting only applies when using HTTP Persistent Connections
-        /// <see cref="BaseConfiguration.ConnectionUseHttpKeepAlive"/>.
+        /// <see cref="ConfigurationBase.ConnectionUseHttpKeepAlive"/>.
         /// </p>
         /// <p>
         /// Setting this property to -1 indicates the connection should never
@@ -613,7 +618,7 @@ namespace Microsoft.HealthVault.Configurations
         /// The default value is 5 minutes.
         /// <p>
         /// This setting only applies when using HTTP Persistent Connections
-        /// <see cref="BaseConfiguration.ConnectionUseHttpKeepAlive"/>.
+        /// <see cref="ConfigurationBase.ConnectionUseHttpKeepAlive"/>.
         /// </p>
         /// <p>
         /// Using this property ensures that active connections do not remain open

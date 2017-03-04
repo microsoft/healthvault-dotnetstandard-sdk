@@ -15,6 +15,7 @@ using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.XPath;
 using Microsoft.HealthVault.Application;
+using Microsoft.HealthVault.Configurations;
 using Microsoft.HealthVault.Connection;
 using Microsoft.HealthVault.Helpers;
 using Microsoft.HealthVault.Rest;
@@ -165,8 +166,8 @@ namespace Microsoft.HealthVault.Authentication
         {
             this.ApplicationId = applicationId;
             this.cert = certificate;
-            this.DigestMethod = HealthApplicationConfiguration.Current.CryptoConfiguration.SignatureHashAlgorithmName;
-            this.SignMethod = HealthApplicationConfiguration.Current.CryptoConfiguration.SignatureAlgorithmName;
+            this.DigestMethod = ConfigurationBase.Current.CryptoConfiguration.SignatureHashAlgorithmName;
+            this.SignMethod = ConfigurationBase.Current.CryptoConfiguration.SignatureAlgorithmName;
 
             this.LoadAuthTokenPair(applicationId);
         }
@@ -384,8 +385,8 @@ namespace Microsoft.HealthVault.Authentication
             StoreLocation storeLocation,
             string certSubject)
         {
-            this.DigestMethod = HealthApplicationConfiguration.Current.CryptoConfiguration.SignatureHashAlgorithmName;
-            this.SignMethod = HealthApplicationConfiguration.Current.CryptoConfiguration.SignatureAlgorithmName;
+            this.DigestMethod = ConfigurationBase.Current.CryptoConfiguration.SignatureHashAlgorithmName;
+            this.SignMethod = ConfigurationBase.Current.CryptoConfiguration.SignatureAlgorithmName;
 
             this.cert =
                 ApplicationCertificateStore.Current.GetApplicationCertificateFromStore(
@@ -756,7 +757,7 @@ namespace Microsoft.HealthVault.Authentication
                 writer.WriteString(this.ApplicationId.ToString());
                 writer.WriteEndElement();
 
-                writer.WriteElementString("hmac", HealthApplicationConfiguration.Current.CryptoConfiguration.HmacAlgorithmName);
+                writer.WriteElementString("hmac", ConfigurationBase.Current.CryptoConfiguration.HmacAlgorithmName);
 
                 writer.WriteStartElement("signing-time");
                 writer.WriteValue(DateTime.Now.ToUniversalTime());
@@ -885,8 +886,8 @@ namespace Microsoft.HealthVault.Authentication
             {
                 this.ApplicationId = applicationId;
                 this.cert = ApplicationCertificateStore.Current.ApplicationCertificate;
-                this.DigestMethod = HealthApplicationConfiguration.Current.CryptoConfiguration.SignatureHashAlgorithmName;
-                this.SignMethod = HealthApplicationConfiguration.Current.CryptoConfiguration.SignatureAlgorithmName;
+                this.DigestMethod = ConfigurationBase.Current.CryptoConfiguration.SignatureHashAlgorithmName;
+                this.SignMethod = ConfigurationBase.Current.CryptoConfiguration.SignatureAlgorithmName;
                 this.certOriginFromStore = false;
 
                 this.LoadAuthTokenPair(applicationId);

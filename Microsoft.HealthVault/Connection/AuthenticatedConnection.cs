@@ -14,6 +14,7 @@ using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.XPath;
 using Microsoft.HealthVault.Authentication;
+using Microsoft.HealthVault.Configurations;
 using Microsoft.HealthVault.Exceptions;
 using Microsoft.HealthVault.Extensions;
 using Microsoft.HealthVault.Helpers;
@@ -170,9 +171,9 @@ namespace Microsoft.HealthVault.Connection
             bool isMra,
             CancellationToken cancellationToken)
         {
-            Guid appId = HealthApplicationConfiguration.Current.ApplicationId;
-            Uri healthServiceUrl = HealthApplicationConfiguration.Current.GetHealthVaultMethodUrl();
-            Uri shellUrl = HealthApplicationConfiguration.Current.HealthVaultShellUrl;
+            Guid appId = ConfigurationBase.Current.ApplicationId;
+            Uri healthServiceUrl = ConfigurationBase.Current.GetHealthVaultMethodUrl();
+            Uri shellUrl = ConfigurationBase.Current.HealthVaultShellUrl;
 
             if (appId == Guid.Empty)
             {

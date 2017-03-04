@@ -9,6 +9,7 @@ using System.Diagnostics;
 using System.Text;
 using System.Xml;
 using System.Xml.XPath;
+using Microsoft.HealthVault.Configurations;
 using Microsoft.HealthVault.Helpers;
 using Microsoft.HealthVault.ItemTypes;
 
@@ -294,10 +295,10 @@ namespace Microsoft.HealthVault.Things
 
         private void AddTypeFormatXml(XmlWriter writer)
         {
-            if (this.TypeVersionFormat.Count == 0 && !HealthApplicationConfiguration.Current.UseLegacyTypeVersionSupport)
+            if (this.TypeVersionFormat.Count == 0 && !ConfigurationBase.Current.UseLegacyTypeVersionSupport)
             {
                 // Add the supported type version formats from configuration.
-                foreach (Guid typeFormat in HealthApplicationConfiguration.Current.SupportedTypeVersions)
+                foreach (Guid typeFormat in ConfigurationBase.Current.SupportedTypeVersions)
                 {
                     writer.WriteElementString("type-version-format", typeFormat.ToString());
                 }

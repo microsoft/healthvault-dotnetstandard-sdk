@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Security.Cryptography;
 using Microsoft.HealthVault.Authentication;
+using Microsoft.HealthVault.Configurations;
 using Microsoft.HealthVault.Helpers;
 
 namespace Microsoft.HealthVault.ItemTypes
@@ -167,7 +168,7 @@ namespace Microsoft.HealthVault.ItemTypes
 
         internal static BlobHasher InlineBlobHasher { get; } = new BlobHasher(
             BlobHashAlgorithm.SHA256Block,
-            HealthApplicationConfiguration.Current.InlineBlobHashBlockSize);
+            ConfigurationBase.Current.InlineBlobHashBlockSize);
 
         internal const int DefaultInlineBlobHashBlockSizeBytes = 1 << 21; // 2Mb.
 

@@ -11,6 +11,7 @@ using System.Security.Cryptography;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using Microsoft.HealthVault.Application;
+using Microsoft.HealthVault.Configurations;
 using Microsoft.HealthVault.Extensions;
 using Microsoft.HealthVault.Helpers;
 
@@ -74,7 +75,7 @@ namespace Microsoft.HealthVault.Vocabulary
             AppendVocabularySearchParameters(queryString, searchParameters);
             return
                 new Uri(
-                    HealthApplicationConfiguration.Current.GetHealthClientServiceUrl().OriginalString +
+                    ConfigurationBase.Current.GetHealthClientServiceUrl().OriginalString +
                     "?" +
                     queryString);
         }
@@ -122,7 +123,7 @@ namespace Microsoft.HealthVault.Vocabulary
             AppendVocabularySearchParameters(queryString, searchParameters);
             return
                 new Uri(
-                    HealthApplicationConfiguration.Current.GetHealthClientServiceUrl().OriginalString +
+                    ConfigurationBase.Current.GetHealthClientServiceUrl().OriginalString +
                     "?" +
                     queryString);
         }
@@ -146,7 +147,7 @@ namespace Microsoft.HealthVault.Vocabulary
         {
             queryString.AppendFormat(
                 "&appid={0}",
-                HealthApplicationConfiguration.Current.ApplicationId);
+                ConfigurationBase.Current.ApplicationId);
 
             X509Certificate2 certificate
                 = ApplicationCertificateStore.Current.ApplicationCertificate;

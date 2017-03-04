@@ -3,6 +3,7 @@ using System.IO;
 using System.Security;
 using System.Security.Cryptography;
 using System.Security.Cryptography.X509Certificates;
+using Microsoft.HealthVault.Configurations;
 using Microsoft.HealthVault.Diagnostics;
 using Microsoft.HealthVault.Helpers;
 
@@ -48,7 +49,7 @@ namespace Microsoft.HealthVault.Application
         ///
         public X509Certificate2 ApplicationCertificate => this.applicationCertificate ??
                                                                   (this.applicationCertificate =
-                                                                      this.GetApplicationCertificate(HealthApplicationConfiguration.Current.ApplicationId));
+                                                                      this.GetApplicationCertificate(ConfigurationBase.Current.ApplicationId));
 
         private volatile X509Certificate2 applicationCertificate;
 
@@ -62,7 +63,7 @@ namespace Microsoft.HealthVault.Application
 
             return this.GetApplicationCertificate(
                 applicationId,
-                HealthApplicationConfiguration.Current.SignatureCertStoreLocation,
+                ConfigurationBase.Current.SignatureCertStoreLocation,
                 "CN=" + this.GetApplicationCertificateSubject(applicationId));
         }
 
@@ -162,7 +163,7 @@ namespace Microsoft.HealthVault.Application
                 throw Validator.SecurityException("CertificateFileNotFound");
             }
 
-            string password = HealthApplicationConfiguration.Current.ApplicationCertificatePassword;
+            string password = ConfigurationBase.Current.ApplicationCertificatePassword;
             X509Certificate2 cert;
 
             try
@@ -213,7 +214,7 @@ namespace Microsoft.HealthVault.Application
             StoreLocation storeLocation,
             string certSubject)
         {
-            string applicationCertificateFilename = HealthApplicationConfiguration.Current.ApplicationCertificateFileName;
+            string applicationCertificateFilename = ConfigurationBase.Current.ApplicationCertificateFileName;
             var cert = applicationCertificateFilename != null ? 
                 this.GetApplicationCertificateFromFile(applicationCertificateFilename) : this.GetApplicationCertificateFromStore(applicationId, storeLocation, certSubject);
 
@@ -237,7 +238,7 @@ namespace Microsoft.HealthVault.Application
         ///
         private string GetApplicationCertificateSubject(Guid applicationId)
         {
-            string result = HealthApplicationConfiguration.Current.CertSubject;
+            string result = ConfigurationBase.Current.CertSubject;
 
             if (result == null)
             {

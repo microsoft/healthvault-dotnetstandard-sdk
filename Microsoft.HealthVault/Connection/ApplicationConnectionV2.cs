@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using System.Xml.XPath;
 using Microsoft.HealthVault.Clients;
+using Microsoft.HealthVault.Configurations;
 using Microsoft.HealthVault.PlatformInformation;
 using Microsoft.HealthVault.Record;
 using Microsoft.HealthVault.Transport;
@@ -25,7 +26,7 @@ namespace Microsoft.HealthVault.Connection
         /// <value>
         /// The application configuration.
         /// </value>
-        public IHealthApplicationConfiguration ApplicationConfiguration { get; set; }
+        public IConfiguration ApplicationConfiguration { get; set; }
 
         /// <summary>
         /// Gets or sets the session credential.

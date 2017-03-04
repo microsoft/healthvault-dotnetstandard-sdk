@@ -117,9 +117,6 @@
       <SubType>ASPXCodeBehind</SubType>
       <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
     </Compile>
-    <Compile Include="HealthWebApplicationConfiguration.cs">
-      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
-    </Compile>
     <Compile Include="TemplateType.cs">
       <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
     </Compile>

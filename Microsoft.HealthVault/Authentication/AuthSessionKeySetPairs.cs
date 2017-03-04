@@ -6,6 +6,7 @@
 using System;
 using System.Collections.Generic;
 using System.Threading;
+using Microsoft.HealthVault.Configurations;
 using Microsoft.HealthVault.Helpers;
 
 namespace Microsoft.HealthVault.Authentication
@@ -20,8 +21,8 @@ namespace Microsoft.HealthVault.Authentication
         private void AcquireWriterLock()
         {
             this.@lock.TryEnterWriteLock(
-                HealthApplicationConfiguration.Current.RetryOnInternal500SleepSeconds
-                * HealthApplicationConfiguration.Current.RetryOnInternal500Count
+                ConfigurationBase.Current.RetryOnInternal500SleepSeconds
+                * ConfigurationBase.Current.RetryOnInternal500Count
                 * 1000);
         }
 
@@ -36,7 +37,7 @@ namespace Microsoft.HealthVault.Authentication
         private void AcquireReaderLock()
         {
             this.@lock.TryEnterReadLock(
-                HealthApplicationConfiguration.Current.RetryOnInternal500SleepSeconds
+                ConfigurationBase.Current.RetryOnInternal500SleepSeconds
                 * 1000);
         }
 

@@ -705,7 +705,7 @@ namespace Microsoft.HealthVault.Web
                 if (IsRequestOkayToRedirect(
                     actionQueryString,
                     Request.Url.Host,
-                    HealthWebApplicationConfiguration.Current.AllowedRedirectSites))
+                    WebConfiguration.Current.AllowedRedirectSites))
                 {
                     Response.Redirect(actionQueryString);
                 }
@@ -814,7 +814,7 @@ namespace Microsoft.HealthVault.Web
                 _action = action;
 
                 targetLocation =
-                    HealthWebApplicationConfiguration.Current.GetActionUrl(_action).OriginalString;
+                    WebConfiguration.Current.GetActionUrl(_action).OriginalString;
 
                 if (!String.IsNullOrEmpty(actionQueryString))
                 {

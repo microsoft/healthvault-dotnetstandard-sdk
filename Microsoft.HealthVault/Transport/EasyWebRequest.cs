@@ -4,6 +4,7 @@ using System.Net;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.HealthVault.Configurations;
 using Microsoft.HealthVault.Exceptions;
 using Microsoft.HealthVault.Helpers;
 
@@ -101,7 +102,7 @@ namespace Microsoft.HealthVault.Transport
             // TODO: Investigate singleton for HttpClient?
             using (HttpClient client = this.CreateHttpClient())
             {
-                int retryCount = HealthApplicationConfiguration.Current.RetryOnInternal500Count;
+                int retryCount = ConfigurationBase.Current.RetryOnInternal500Count;
                 do
                 {
                     HttpResponseMessage response = await client.SendAsync(message, token).ConfigureAwait(false);
@@ -109,7 +110,7 @@ namespace Microsoft.HealthVault.Transport
                     {
                         // If we have a 500 and have retries left, retry.
                         await Task.Delay(
-                            TimeSpan.FromSeconds(HealthApplicationConfiguration.Current.RetryOnInternal500SleepSeconds),
+                            TimeSpan.FromSeconds(ConfigurationBase.Current.RetryOnInternal500SleepSeconds),
                             token).ConfigureAwait(false);
                     }
                     else

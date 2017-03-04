@@ -18,6 +18,7 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.HealthVault.Configurations;
 using Microsoft.HealthVault.Connection;
 using Microsoft.HealthVault.Exceptions;
 using Microsoft.HealthVault.Extensions;
@@ -99,7 +100,7 @@ namespace Microsoft.HealthVault.Rest
         {
             var fullUri =
                 new UriBuilder(apiRoot ??
-                               HealthApplicationConfiguration.Current.RestHealthVaultUrl ??
+                               ConfigurationBase.Current.RestHealthVaultUrl ??
                                new Uri(RestConstants.DefaultMshhvRoot)) { Path = path };
 
             IDictionary<string, string> queryAsDictionary = fullUri.Uri.ParseQuery();
@@ -206,8 +207,8 @@ namespace Microsoft.HealthVault.Rest
         /// </summary>
         public async Task<HealthServiceRestResponseData> ExecuteAsync()
         {
-            int retryCount = HealthApplicationConfiguration.Current.RetryOnInternal500Count;
-            int retrySleepSeconds = HealthApplicationConfiguration.Current.RetryOnInternal500SleepSeconds;
+            int retryCount = ConfigurationBase.Current.RetryOnInternal500Count;
+            int retrySleepSeconds = ConfigurationBase.Current.RetryOnInternal500SleepSeconds;
 
             HealthServiceRestResponseData responseData = null;
 

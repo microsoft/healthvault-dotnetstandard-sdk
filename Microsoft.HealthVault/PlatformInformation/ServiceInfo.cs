@@ -11,6 +11,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.XPath;
+using Microsoft.HealthVault.Configurations;
 using Microsoft.HealthVault.Helpers;
 
 namespace Microsoft.HealthVault.PlatformInformation
@@ -31,8 +32,8 @@ namespace Microsoft.HealthVault.PlatformInformation
         /// <remarks>
         /// <p>
         /// By default, retrieval of <see cref="ServiceInfo"/> through this singleton property is thread-safe. It is obtained from the
-        /// configured default HealthVault web-service instance (<see cref="HealthApplicationConfiguration.HealthVaultUrl"/>) on the
-        /// first get, and cached for a configured period of time (<see cref="HealthApplicationConfiguration.ServiceInfoDefaultCacheTtl"/>).
+        /// configured default HealthVault web-service instance (<see cref="ConfigurationBase.HealthVaultUrl"/>) on the
+        /// first get, and cached for a configured period of time (<see cref="ConfigurationBase.ServiceInfoDefaultCacheTtl"/>).
         /// The next get after this cache has expired will result in calling the HealthVault web-service to check for updates to the service
         /// information, and retrieving the updated service information when there is an update.
         /// </p>
