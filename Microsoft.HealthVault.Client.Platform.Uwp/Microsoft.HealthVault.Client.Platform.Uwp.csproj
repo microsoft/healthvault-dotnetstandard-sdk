@@ -7,8 +7,8 @@
     <ProjectGuid>{713A0A22-0AD9-41A9-B808-70FC88431FB5}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Microsoft.HealthVault.Soda.Platform.Uwp</RootNamespace>
-    <AssemblyName>Microsoft.HealthVault.Soda.Platform</AssemblyName>
+    <RootNamespace>Microsoft.HealthVault.Client.Platform.Uwp</RootNamespace>
+    <AssemblyName>Microsoft.HealthVault.Client.Platform</AssemblyName>
     <DefaultLanguage>en-US</DefaultLanguage>
     <TargetPlatformIdentifier>UAP</TargetPlatformIdentifier>
     <TargetPlatformVersion>10.0.14393.0</TargetPlatformVersion>

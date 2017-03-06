@@ -8,8 +8,8 @@
     <ProjectGuid>{00E3B0D1-95BE-4CAA-A482-4629B10EFBD7}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Microsoft.HealthVault.Soda</RootNamespace>
-    <AssemblyName>Microsoft.HealthVault.Soda</AssemblyName>
+    <RootNamespace>Microsoft.HealthVault.Client</RootNamespace>
+    <AssemblyName>Microsoft.HealthVault.Client</AssemblyName>
     <DefaultLanguage>en-US</DefaultLanguage>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{786C830F-07A1-408B-BD7F-6EE04809D6DB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
@@ -38,16 +38,16 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="SodaIoc.cs" />
+    <Compile Include="ClientIoc.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="project.json" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Microsoft.HealthVault.Soda.Platform\Microsoft.HealthVault.Soda.Platform.csproj">
+    <ProjectReference Include="..\Microsoft.HealthVault.Client.Platform\Microsoft.HealthVault.Client.Platform.csproj">
       <Project>{29a7078e-f90c-438a-bcc4-ffe9216d8405}</Project>
-      <Name>Microsoft.HealthVault.Soda.Platform</Name>
+      <Name>Microsoft.HealthVault.Client.Platform</Name>
     </ProjectReference>
     <ProjectReference Include="..\Microsoft.HealthVault\Microsoft.HealthVault.csproj">
       <Project>{dbe2ba67-dbc3-479e-a374-1ce5ee33c453}</Project>
