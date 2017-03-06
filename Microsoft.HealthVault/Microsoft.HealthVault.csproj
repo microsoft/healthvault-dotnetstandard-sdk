@@ -49,6 +49,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AsyncEnumerable.cs" />
+    <Compile Include="Clients\VocabularyClient.cs" />
     <Compile Include="Connection\IConnection.cs" />
     <Compile Include="Connection\ICryptographer.cs" />
     <Compile Include="Connection\ISessionCredential.cs" />
