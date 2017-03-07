@@ -19,7 +19,8 @@ using System.Runtime.CompilerServices;
            InternalsVisibleTo("Microsoft.HealthVault.Web.Mvc"),
            InternalsVisibleTo("Microsoft.HealthVault.Client"),
            InternalsVisibleTo("Microsoft.HealthVault.Client.Platform"),
-           InternalsVisibleTo("Microsoft.HealthVault.Client.Platform.Uwp")]
+           InternalsVisibleTo("Microsoft.HealthVault.Client.Platform.Uwp"),
+           InternalsVisibleTo("Microsoft.HealthVault.UnitTest)]
 
 // Version information for an assembly consists of the following four values:
 //
