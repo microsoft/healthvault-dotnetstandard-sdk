@@ -13,13 +13,13 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.HealthVault.Web.M
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.HealthVault.DesktopWeb.Common", "Microsoft.HealthVault.DesktopWeb.Common\Microsoft.HealthVault.DesktopWeb.Common.csproj", "{F269F61A-5CB2-4F81-BC24-E6825F261061}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.HealthVault.Soda", "Microsoft.HealthVault.Soda\Microsoft.HealthVault.Soda.csproj", "{00E3B0D1-95BE-4CAA-A482-4629B10EFBD7}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.HealthVault.Client", "Microsoft.HealthVault.Client\Microsoft.HealthVault.Client.csproj", "{00E3B0D1-95BE-4CAA-A482-4629B10EFBD7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.HealthVault.Soda.Platform", "Microsoft.HealthVault.Soda.Platform\Microsoft.HealthVault.Soda.Platform.csproj", "{29A7078E-F90C-438A-BCC4-FFE9216D8405}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.HealthVault.Client.Platform", "Microsoft.HealthVault.Client.Platform\Microsoft.HealthVault.Client.Platform.csproj", "{29A7078E-F90C-438A-BCC4-FFE9216D8405}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.HealthVault.Soda.Platform.Android", "Microsoft.HealthVault.Soda.Platform.Android\Microsoft.HealthVault.Soda.Platform.Android.csproj", "{55F66A25-EAEC-48E2-B396-D824470E8C81}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.HealthVault.Client.Platform.Android", "Microsoft.HealthVault.Client.Platform.Android\Microsoft.HealthVault.Client.Platform.Android.csproj", "{55F66A25-EAEC-48E2-B396-D824470E8C81}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.HealthVault.Soda.Platform.Uwp", "Microsoft.HealthVault.Soda.Platform.Uwp\Microsoft.HealthVault.Soda.Platform.Uwp.csproj", "{713A0A22-0AD9-41A9-B808-70FC88431FB5}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.HealthVault.Client.Platform.Uwp", "Microsoft.HealthVault.Client.Platform.Uwp\Microsoft.HealthVault.Client.Platform.Uwp.csproj", "{713A0A22-0AD9-41A9-B808-70FC88431FB5}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.HealthVault.UnitTest", "Microsoft.HealthVault.UnitTest\Microsoft.HealthVault.UnitTest.csproj", "{43EEDD43-150C-4F41-8D37-FE6D602E3D4E}"
 EndProject
