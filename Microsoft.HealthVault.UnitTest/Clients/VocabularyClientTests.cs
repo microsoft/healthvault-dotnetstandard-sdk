@@ -1,7 +1,7 @@
-﻿using System;
+﻿using Microsoft.HealthVault.Clients;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace Microsoft.HealthVault.UnitTest
+namespace Microsoft.HealthVault.UnitTest.Clients
 {
     [TestClass]
     public class VocabularyClientTests
@@ -9,6 +9,8 @@ namespace Microsoft.HealthVault.UnitTest
         [TestMethod]
         public void CreateClient()
         {
+            VocabularyClient client = new VocabularyClient();
+            Assert.IsTrue(client.Connection != null);
         }
     }
 }
