@@ -1,9 +1,9 @@
 ﻿using Grace.DependencyInjection;
-using Microsoft.HealthVault.Soda.Platform;
+using Microsoft.HealthVault.Client.Platform;
 
-namespace Microsoft.HealthVault.Soda
+namespace Microsoft.HealthVault.Client
 {
-    internal static class SodaIoc
+    internal static class ClientIoc
     {
         private static readonly object RegistrationLock = new object();
 
@@ -18,7 +18,7 @@ namespace Microsoft.HealthVault.Soda
                     // Register SODA types
                     RegisterTypes(Ioc.Container);
 
-                    PlatformSodaIoc.RegisterTypes(Ioc.Container);
+                    PlatformClientIoc.RegisterTypes(Ioc.Container);
                     typesRegistered = true;
                 }
             }

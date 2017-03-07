@@ -285,7 +285,7 @@ namespace Microsoft.HealthVault
         public static async Task<ReadOnlyCollection<Vocabulary.Vocabulary>> GetVocabularyAsync(
             HealthServiceConnection connection,
             IList<VocabularyKey> vocabularyKeys,
-            bool cultureIsFixed)
+            bool cultureIsFixed = false)
         {
             return await HealthVaultPlatformVocabulary.Current.GetVocabularyAsync(
                 connection,

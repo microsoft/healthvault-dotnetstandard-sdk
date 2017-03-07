@@ -1,6 +1,6 @@
-using Grace.DependencyInjection;
+﻿using Grace.DependencyInjection;
 
-namespace Microsoft.HealthVault.Soda.Platform
+namespace Microsoft.HealthVault.Client.Platform
 {
     internal static class PlatformSodaIoc
     {

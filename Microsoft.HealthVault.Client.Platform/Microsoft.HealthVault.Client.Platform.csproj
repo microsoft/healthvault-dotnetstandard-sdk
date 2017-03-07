@@ -5,19 +5,18 @@
     <MinimumVisualStudioVersion>14.0</MinimumVisualStudioVersion>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{00E3B0D1-95BE-4CAA-A482-4629B10EFBD7}</ProjectGuid>
+    <ProjectGuid>{29A7078E-F90C-438A-BCC4-FFE9216D8405}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Microsoft.HealthVault.Soda</RootNamespace>
-    <AssemblyName>Microsoft.HealthVault.Soda</AssemblyName>
+    <RootNamespace>Microsoft.HealthVault.Client.Platform</RootNamespace>
+    <AssemblyName>Microsoft.HealthVault.Client.Platform</AssemblyName>
     <DefaultLanguage>en-US</DefaultLanguage>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{786C830F-07A1-408B-BD7F-6EE04809D6DB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <SignAssembly>true</SignAssembly>
     <DelaySign>true</DelaySign>
     <AssemblyOriginatorKeyFile>..\35MSSharedLib1024.snk</AssemblyOriginatorKeyFile>
-    <TargetFrameworkProfile>
-    </TargetFrameworkProfile>
+    <TargetFrameworkProfile />
     <TargetFrameworkVersion>v5.0</TargetFrameworkVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
@@ -38,22 +37,12 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="Configurations\SodaConfiguration.cs" />
-    <Compile Include="SodaIoc.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-  </ItemGroup>
-  <ItemGroup>
+    <!-- A reference to the entire .NET Framework is automatically included -->
     <None Include="project.json" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Microsoft.HealthVault.Soda.Platform\Microsoft.HealthVault.Soda.Platform.csproj">
-      <Project>{29a7078e-f90c-438a-bcc4-ffe9216d8405}</Project>
-      <Name>Microsoft.HealthVault.Soda.Platform</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Microsoft.HealthVault\Microsoft.HealthVault.csproj">
-      <Project>{dbe2ba67-dbc3-479e-a374-1ce5ee33c453}</Project>
-      <Name>Microsoft.HealthVault</Name>
-    </ProjectReference>
+    <Compile Include="PlatformClientIoc.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -9,9 +9,9 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-[assembly: global::Android.Runtime.ResourceDesignerAttribute("Microsoft.HealthVault.Soda.Platform.Android.Resource", IsApplication=false)]
+[assembly: global::Android.Runtime.ResourceDesignerAttribute("Microsoft.HealthVault.Client.Platform.Android.Resource", IsApplication=false)]
 
-namespace Microsoft.HealthVault.Soda.Platform.Android
+namespace Microsoft.HealthVault.Client.Platform.Android
 {
 	
 	

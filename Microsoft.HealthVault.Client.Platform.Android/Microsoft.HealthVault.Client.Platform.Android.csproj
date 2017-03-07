@@ -9,8 +9,8 @@
     <ProjectTypeGuids>{EFBA0AD7-5A72-4C68-AF49-83D382785DCF};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Microsoft.HealthVault.Soda.Platform.Android</RootNamespace>
-    <AssemblyName>Microsoft.HealthVault.Soda.Platform</AssemblyName>
+    <RootNamespace>Microsoft.HealthVault.Client.Platform.Android</RootNamespace>
+    <AssemblyName>Microsoft.HealthVault.Client.Platform</AssemblyName>
     <FileAlignment>512</FileAlignment>
     <AndroidResgenFile>Resources\Resource.Designer.cs</AndroidResgenFile>
     <GenerateSerializationAssemblies>Off</GenerateSerializationAssemblies>
@@ -62,9 +62,9 @@
     <AndroidResource Include="Resources\Values\Strings.xml" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Microsoft.HealthVault.Soda\Microsoft.HealthVault.Soda.csproj">
+    <ProjectReference Include="..\Microsoft.HealthVault.Client\Microsoft.HealthVault.Client.csproj">
       <Project>{00e3b0d1-95be-4caa-a482-4629b10efbd7}</Project>
-      <Name>Microsoft.HealthVault.Soda</Name>
+      <Name>Microsoft.HealthVault.Client</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />
