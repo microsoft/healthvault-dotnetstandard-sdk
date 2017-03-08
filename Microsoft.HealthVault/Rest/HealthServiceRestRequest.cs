@@ -43,7 +43,9 @@ namespace Microsoft.HealthVault.Rest
         private const string ResponseIdContextKey = "WC_ResponseId";
         private const string Optional = "Optional Headers";
         private CancellationTokenSource cancellationTokenSource;
-        
+
+        private Lazy<IConfiguration> configuration = Ioc.Get<Lazy<IConfiguration>>();
+
         /// <summary>
         /// Creates a new instance of the <see cref="HealthServiceRestRequest"/> 
         /// class for the specified parameters.
@@ -100,7 +102,7 @@ namespace Microsoft.HealthVault.Rest
         {
             var fullUri =
                 new UriBuilder(apiRoot ??
-                               ConfigurationBase.Current.RestHealthVaultUrl ??
+                               this.configuration.Value.RestHealthVaultUrl ??
                                new Uri(RestConstants.DefaultMshhvRoot)) { Path = path };
 
             IDictionary<string, string> queryAsDictionary = fullUri.Uri.ParseQuery();
@@ -207,8 +209,8 @@ namespace Microsoft.HealthVault.Rest
         /// </summary>
         public async Task<HealthServiceRestResponseData> ExecuteAsync()
         {
-            int retryCount = ConfigurationBase.Current.RetryOnInternal500Count;
-            int retrySleepSeconds = ConfigurationBase.Current.RetryOnInternal500SleepSeconds;
+            int retryCount = this.configuration.Value.RetryOnInternal500Count;
+            int retrySleepSeconds = this.configuration.Value.RetryOnInternal500SleepSeconds;
 
             HealthServiceRestResponseData responseData = null;
 

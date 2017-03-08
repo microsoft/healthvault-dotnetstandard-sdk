@@ -34,6 +34,8 @@ namespace Microsoft.HealthVault
     ///
     internal class HealthClientApplication : IDisposable
     {
+        private static Lazy<IConfiguration> configuration = Ioc.Get<Lazy<IConfiguration>>();
+
         #region Private variables
 
         /// <summary>
@@ -102,12 +104,12 @@ namespace Microsoft.HealthVault
             Guid applicationId,
             Guid masterApplicationId)
         {
-            if (ConfigurationBase.Current.HealthVaultShellUrl == null)
+            if (configuration.Value.HealthVaultShellUrl == null)
             {
                 throw Validator.InvalidConfigurationException("InvalidRequestUrlConfiguration");
             }
 
-            if (ConfigurationBase.Current.GetHealthVaultMethodUrl() == null)
+            if (configuration.Value.GetHealthVaultMethodUrl() == null)
             {
                 throw Validator.InvalidConfigurationException("InvalidRequestUrlConfiguration");
             }
@@ -115,8 +117,8 @@ namespace Microsoft.HealthVault
             return Create(
                 applicationId,
                 masterApplicationId,
-                ConfigurationBase.Current.HealthVaultShellUrl,
-                ConfigurationBase.Current.GetHealthVaultMethodUrl());
+                configuration.Value.HealthVaultShellUrl,
+                configuration.Value.GetHealthVaultMethodUrl());
         }
 
         /// <summary>

@@ -16,6 +16,8 @@ namespace Microsoft.HealthVault.Authentication
     /// </summary>
     internal sealed class CryptoHmac : CryptoHash
     {
+        private Lazy<IConfiguration> configuration = Ioc.Get<Lazy<IConfiguration>>();
+
         #region properties
 
         internal byte[] KeyMaterial
@@ -43,7 +45,7 @@ namespace Microsoft.HealthVault.Authentication
         ///
         internal CryptoHmac()
         {
-            this.AlgorithmName = ConfigurationBase.Current.CryptoConfiguration.HmacAlgorithmName;
+            this.AlgorithmName = this.configuration.Value.CryptoConfiguration.HmacAlgorithmName;
 
             this.HashAlgorithm = ServiceLocator.Current.CryptoService.CreateHashAlgorithm(this.AlgorithmName);
 

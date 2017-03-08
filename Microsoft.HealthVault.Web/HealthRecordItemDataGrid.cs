@@ -54,8 +54,9 @@ namespace Microsoft.HealthVault.Web
             gridView.ID = "gridView";
             gridView.DataKeyNames = new string[] { "wc-id" };
             this.Controls.Add(gridView);
-            gridView.PageSize =
-                WebConfiguration.Current.DataGridItemsPerPage;
+            // TODO: This file depends on the web configuration and needs cleanup
+            //gridView.PageSize =
+            //    WebConfiguration.Current.DataGridItemsPerPage;
         }
 
         /// <summary>

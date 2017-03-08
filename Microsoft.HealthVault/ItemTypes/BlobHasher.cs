@@ -17,6 +17,8 @@ namespace Microsoft.HealthVault.ItemTypes
     /// </summary>
     internal class BlobHasher
     {
+        private static Lazy<IConfiguration> configuration = Ioc.Get<Lazy<IConfiguration>>();
+
         /// <summary>
         /// Constructs the BlobHasher for calculating BLOB hashes.
         /// </summary>
@@ -168,7 +170,7 @@ namespace Microsoft.HealthVault.ItemTypes
 
         internal static BlobHasher InlineBlobHasher { get; } = new BlobHasher(
             BlobHashAlgorithm.SHA256Block,
-            ConfigurationBase.Current.InlineBlobHashBlockSize);
+            configuration.Value.InlineBlobHashBlockSize);
 
         internal const int DefaultInlineBlobHashBlockSizeBytes = 1 << 21; // 2Mb.
 

@@ -14,6 +14,7 @@ namespace Microsoft.HealthVault.Transport
     {
         private readonly byte[] xmlRequest; // utf8Encoded
         private readonly int xmlRequestLength;
+        private Lazy<IConfiguration> configuration = Ioc.Get<Lazy<IConfiguration>>();
 
         internal EasyWebRequest()
         {
@@ -102,7 +103,7 @@ namespace Microsoft.HealthVault.Transport
             // TODO: Investigate singleton for HttpClient?
             using (HttpClient client = this.CreateHttpClient())
             {
-                int retryCount = ConfigurationBase.Current.RetryOnInternal500Count;
+                int retryCount = this.configuration.Value.RetryOnInternal500Count;
                 do
                 {
                     HttpResponseMessage response = await client.SendAsync(message, token).ConfigureAwait(false);
@@ -110,7 +111,7 @@ namespace Microsoft.HealthVault.Transport
                     {
                         // If we have a 500 and have retries left, retry.
                         await Task.Delay(
-                            TimeSpan.FromSeconds(ConfigurationBase.Current.RetryOnInternal500SleepSeconds),
+                            TimeSpan.FromSeconds(this.configuration.Value.RetryOnInternal500SleepSeconds),
                             token).ConfigureAwait(false);
                     }
                     else

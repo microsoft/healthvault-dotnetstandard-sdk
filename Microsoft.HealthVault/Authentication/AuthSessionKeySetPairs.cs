@@ -13,6 +13,8 @@ namespace Microsoft.HealthVault.Authentication
 {
     internal class AuthSessionKeySetPairs
     {
+        private Lazy<IConfiguration> configuration = Ioc.Get<Lazy<IConfiguration>>();
+
         private readonly Dictionary<Guid, AuthenticationTokenKeySetPair> pairs =
             new Dictionary<Guid, AuthenticationTokenKeySetPair>();
 
@@ -21,8 +23,8 @@ namespace Microsoft.HealthVault.Authentication
         private void AcquireWriterLock()
         {
             this.@lock.TryEnterWriteLock(
-                ConfigurationBase.Current.RetryOnInternal500SleepSeconds
-                * ConfigurationBase.Current.RetryOnInternal500Count
+                this.configuration.Value.RetryOnInternal500SleepSeconds
+                * this.configuration.Value.RetryOnInternal500Count
                 * 1000);
         }
 
@@ -37,7 +39,7 @@ namespace Microsoft.HealthVault.Authentication
         private void AcquireReaderLock()
         {
             this.@lock.TryEnterReadLock(
-                ConfigurationBase.Current.RetryOnInternal500SleepSeconds
+                this.configuration.Value.RetryOnInternal500SleepSeconds
                 * 1000);
         }
 

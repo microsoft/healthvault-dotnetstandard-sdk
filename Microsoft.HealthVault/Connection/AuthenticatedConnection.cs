@@ -48,6 +48,8 @@ namespace Microsoft.HealthVault.Connection
     ///
     public class AuthenticatedConnection : ApplicationConnection
     {
+        private static Lazy<IConfiguration> configuration = Ioc.Get<Lazy<IConfiguration>>();
+
         #region ctors
 
         /// <summary>
@@ -171,9 +173,9 @@ namespace Microsoft.HealthVault.Connection
             bool isMra,
             CancellationToken cancellationToken)
         {
-            Guid appId = ConfigurationBase.Current.ApplicationId;
-            Uri healthServiceUrl = ConfigurationBase.Current.GetHealthVaultMethodUrl();
-            Uri shellUrl = ConfigurationBase.Current.HealthVaultShellUrl;
+            Guid appId = configuration.Value.ApplicationId;
+            Uri healthServiceUrl = configuration.Value.GetHealthVaultMethodUrl();
+            Uri shellUrl = configuration.Value.HealthVaultShellUrl;
 
             if (appId == Guid.Empty)
             {

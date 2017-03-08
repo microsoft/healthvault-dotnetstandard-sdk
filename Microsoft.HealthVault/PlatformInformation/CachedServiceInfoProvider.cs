@@ -21,6 +21,7 @@ namespace Microsoft.HealthVault.PlatformInformation
     /// </remarks>
     internal class CachedServiceInfoProvider : IServiceInfoProvider
     {
+        private static Lazy<IConfiguration> configuration = Ioc.Get<Lazy<IConfiguration>>();
         private LazyCacheWithTtl<ServiceInfo> serviceInfo;
         private DateTime lastCheckTime;
         private ServiceInfoSections responseSections;
@@ -37,7 +38,7 @@ namespace Microsoft.HealthVault.PlatformInformation
         /// </remarks>
         ///
         public CachedServiceInfoProvider()
-            : this(ConfigurationBase.Current.ServiceInfoDefaultCacheTtl)
+            : this(configuration.Value.ServiceInfoDefaultCacheTtl)
         {
         }
 
@@ -74,7 +75,7 @@ namespace Microsoft.HealthVault.PlatformInformation
         /// </remarks>
         ///
         public CachedServiceInfoProvider(ServiceInfoSections responseSections)
-            : this(responseSections, ConfigurationBase.Current.ServiceInfoDefaultCacheTtl)
+            : this(responseSections, configuration.Value.ServiceInfoDefaultCacheTtl)
         {
         }
 
@@ -88,7 +89,7 @@ namespace Microsoft.HealthVault.PlatformInformation
         /// The URL for the HealthVault web-service to use to retrieve the service information.
         /// </param>
         public CachedServiceInfoProvider(Uri healthServiceUrl)
-            : this(ServiceInfoSections.All, ConfigurationBase.Current.ServiceInfoDefaultCacheTtl, healthServiceUrl)
+            : this(ServiceInfoSections.All, configuration.Value.ServiceInfoDefaultCacheTtl, healthServiceUrl)
         {
         }
 
@@ -156,7 +157,7 @@ namespace Microsoft.HealthVault.PlatformInformation
         private async Task<ServiceInfo> GetFromServiceAsync()
         {
             var connection = this.healthServiceUrl != null
-                ? new AnonymousConnection(ConfigurationBase.Current.ApplicationId, this.healthServiceUrl)
+                ? new AnonymousConnection(configuration.Value.ApplicationId, this.healthServiceUrl)
                 : new AnonymousConnection();
 
             var serviceInfo = await HealthVaultPlatformInformation.Current.GetServiceDefinitionAsync(connection, this.responseSections);
@@ -172,7 +173,7 @@ namespace Microsoft.HealthVault.PlatformInformation
         private async Task<ServiceInfo> RefreshFromServiceAsync(ServiceInfo currentServiceInfo)
         {
             var connection = this.healthServiceUrl != null
-                ? new AnonymousConnection(ConfigurationBase.Current.ApplicationId, this.healthServiceUrl)
+                ? new AnonymousConnection(configuration.Value.ApplicationId, this.healthServiceUrl)
                 : new AnonymousConnection();
 
             ServiceInfo serviceInfo = await HealthVaultPlatformInformation.Current.GetServiceDefinitionAsync(connection, this.responseSections, this.lastCheckTime).ConfigureAwait(false);

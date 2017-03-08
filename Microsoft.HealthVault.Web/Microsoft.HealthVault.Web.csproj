@@ -120,12 +120,6 @@
     <Compile Include="TemplateType.cs">
       <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
     </Compile>
-    <Compile Include="WebApplicationConfiguration.cs">
-      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
-    </Compile>
-    <Compile Include="WebApplicationUtilities.cs">
-      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
-    </Compile>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

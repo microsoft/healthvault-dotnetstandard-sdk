@@ -12,13 +12,10 @@ using System.Xml;
 
 namespace Microsoft.HealthVault.Configurations
 {
-
-    // TODO:  This class needs to be an abstract.  The IOC will need to be used for registering
-
     /// <summary>
     /// Base class for the app, web and soda configurations
     /// </summary>
-    public class ConfigurationBase : IConfiguration
+    public abstract class ConfigurationBase : IConfiguration
     {
         /// <summary>
         /// The default number of internal retries.
@@ -43,30 +40,6 @@ namespace Microsoft.HealthVault.Configurations
         /// </summary>
         protected const int DefaultDefaultRequestTimeout = 30;
         private static readonly object InstanceLock = new object();
-
-        /// <summary>
-        /// Gets the current configuration object for the app-domain.
-        /// </summary>
-        public static IConfiguration Current
-        {
-            get
-            {
-                lock (InstanceLock)
-                {
-                    return current ?? (current = new ConfigurationBase());
-                }
-            }
-
-            set
-            {
-                lock (InstanceLock)
-                {
-                    current = value;
-                }
-            }
-        }
-
-        private static IConfiguration current;
 
         /// <summary>
         /// True if the app has been initialized.

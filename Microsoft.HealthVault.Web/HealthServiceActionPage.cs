@@ -702,13 +702,14 @@ namespace Microsoft.HealthVault.Web
             }
             else
             {
-                if (IsRequestOkayToRedirect(
-                    actionQueryString,
-                    Request.Url.Host,
-                    WebConfiguration.Current.AllowedRedirectSites))
-                {
-                    Response.Redirect(actionQueryString);
-                }
+                // TODO: This file depends on the web configuration and needs cleanup
+                //if (IsRequestOkayToRedirect(
+                //    actionQueryString,
+                //    Request.Url.Host,
+                //    WebConfiguration.Current.AllowedRedirectSites))
+                //{
+                //    Response.Redirect(actionQueryString);
+                //}
             }
         }
 
@@ -813,8 +814,9 @@ namespace Microsoft.HealthVault.Web
             {
                 _action = action;
 
-                targetLocation =
-                    WebConfiguration.Current.GetActionUrl(_action).OriginalString;
+                // TODO: This file depends on the web configuration and needs cleanup
+                //targetLocation =
+                //    WebConfiguration.Current.GetActionUrl(_action).OriginalString;
 
                 if (!String.IsNullOrEmpty(actionQueryString))
                 {

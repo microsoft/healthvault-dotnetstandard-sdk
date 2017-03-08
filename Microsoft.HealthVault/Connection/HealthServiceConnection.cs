@@ -44,6 +44,8 @@ namespace Microsoft.HealthVault.Connection
     ///
     public abstract class HealthServiceConnection : IConnection
     {
+        private static Lazy<IConfiguration> configuration = Ioc.Get<Lazy<IConfiguration>>();
+
         #region constructors
 
         /// <summary>
@@ -97,7 +99,7 @@ namespace Microsoft.HealthVault.Connection
             Validator.ThrowIfArgumentNull(healthServiceUrl, "healthServiceUrl", "CtorServiceUrlNull");
 
             // If the HealthServiceUrl is set in a .config file,
-            // ConfigurationBase.Current.HealthVaultMethodUrl
+            // this.configuration.Value.HealthVaultMethodUrl
             // will automatically append "wildcat.ashx" to it.
             // Users of OfflineWebApplicationConnection need the same help, so we do it here if necessary...
             if (!healthServiceUrl.AbsoluteUri.ToUpperInvariant().EndsWith("WILDCAT.ASHX", StringComparison.Ordinal))
@@ -485,7 +487,7 @@ namespace Microsoft.HealthVault.Connection
         /// Gets the calling application's ID.
         /// </summary>
         ///
-        public Guid ApplicationId { get; } = ConfigurationBase.Current.ApplicationId;
+        public Guid ApplicationId { get; } = configuration.Value.ApplicationId;
 
         /// <summary>
         /// Gets the HealthVault web-service URL.
@@ -501,7 +503,7 @@ namespace Microsoft.HealthVault.Connection
             {
                 if (this.requestUrl == null)
                 {
-                    return ConfigurationBase.Current.GetHealthVaultMethodUrl();
+                    return configuration.Value.GetHealthVaultMethodUrl();
                 }
 
                 return this.requestUrl;
@@ -559,19 +561,19 @@ namespace Microsoft.HealthVault.Connection
         /// An instance of Uri representing the HealthVault web-service URL.
         /// </value>
         ///
-        internal Uri OtherDataStreamUrl { get; } = ConfigurationBase.Current.GetBlobStreamUrl();
+        internal Uri OtherDataStreamUrl { get; } = configuration.Value.GetBlobStreamUrl();
 
         /// <summary>
         /// Gets or sets the request timeout in seconds.
         /// </summary>
         ///
-        public int RequestTimeoutSeconds { get; set; } = ConfigurationBase.Current.DefaultRequestTimeout;
+        public int RequestTimeoutSeconds { get; set; } = configuration.Value.DefaultRequestTimeout;
 
         /// <summary>
         /// Gets or sets the request time-to-live in seconds.
         /// </summary>
         ///
-        public int RequestTimeToLive { get; set; } = ConfigurationBase.Current.DefaultRequestTimeToLive;
+        public int RequestTimeToLive { get; set; } = configuration.Value.DefaultRequestTimeToLive;
 
         /// <summary>
         /// Gets or sets the language to be sent to the server when making

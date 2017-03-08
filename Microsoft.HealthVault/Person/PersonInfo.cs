@@ -31,6 +31,7 @@ namespace Microsoft.HealthVault.Person
     {
         private bool moreRecords;  // AuthorizedRecords collection does not contain the full set of records...
         private bool moreAppSettings;  // ApplicationSettings does not contain the app settings xml...
+        private Lazy<IConfiguration> configuration = Ioc.Get<Lazy<IConfiguration>>();
 
         /// <summary>
         /// Creates a new instance of the PersonInfo class using
@@ -336,7 +337,7 @@ namespace Microsoft.HealthVault.Person
             }
             else
             {
-                this.healthServiceUri = ConfigurationBase.Current.GetHealthVaultMethodUrl();
+                this.healthServiceUri = this.configuration.Value.GetHealthVaultMethodUrl();
                 this.ApplicationConnection = new AuthenticatedConnection(this.appId, this.healthServiceUri, this.credential);
             }
 
