@@ -59,7 +59,7 @@
     <Compile Include="Configuration\IConfiguration.cs" />
     <Compile Include="Connection\ConnectionInternalBase.cs" />
     <Compile Include="Connection\CryptoData.cs" />
-    <Compile Include="Connection\IConnection.cs" />
+    <Compile Include="Connection\IHealthVaultConnection.cs" />
     <Compile Include="Connection\IConnectionRequestHeaderProvider.cs" />
     <Compile Include="Connection\ICryptographer.cs" />
     <Compile Include="Clients\IActionPlanClient.cs" />

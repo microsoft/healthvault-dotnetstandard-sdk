@@ -32,10 +32,10 @@ namespace Microsoft.HealthVault.Web
         {
         }
 
-        public IConnection GetWebApplicationConnection()
+        public IHealthVaultConnection GetWebApplicationConnection()
         {
             WebIoc.EnsureTypesRegistered();
-            IConnection connection = Ioc.Get<IConnectionInternal>();
+            IHealthVaultConnection connection = Ioc.Get<IConnectionInternal>();
             connection.ApplicationConfiguration = Ioc.Get<WebConfiguration>();
             return connection;
         }

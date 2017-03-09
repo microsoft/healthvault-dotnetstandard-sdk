@@ -39,11 +39,13 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="ClientConfiguration.cs" />
-    <Compile Include="ClientConnection.cs" />
+    <Compile Include="ClientHealthVaultConnection.cs" />
+    <Compile Include="ClientHealthVaultFactory.cs" />
     <Compile Include="Exceptions\BrowserAuthException.cs" />
     <Compile Include="Exceptions\ShellAuthException.cs" />
     <Compile Include="IBrowserAuthBroker.cs" />
     <Compile Include="ClientIoc.cs" />
+    <Compile Include="IClientHealthVaultFactory.cs" />
     <Compile Include="IFileStore.cs" />
     <Compile Include="ILocalDataProtection.cs" />
     <Compile Include="ILocalObjectStore.cs" />

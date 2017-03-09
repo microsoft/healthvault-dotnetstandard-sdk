@@ -8,9 +8,9 @@ using Microsoft.HealthVault.Connection;
 
 namespace Microsoft.HealthVault.Client
 {
-    internal class ClientConnection : ConnectionInternalBase
+    internal class ClientHealthVaultConnection : ConnectionInternalBase
     {
-        public ClientConnection(IServiceLocator serviceLocator)
+        public ClientHealthVaultConnection(IServiceLocator serviceLocator)
             : base(serviceLocator)
         {
         }

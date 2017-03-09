@@ -519,7 +519,7 @@ namespace Microsoft.HealthVault.Person
             {
                 writer.WriteElementString(
                     "wildcat-url",
-                    this.Connection.ApplicationConfiguration.HealthVaultUrl.ToString());
+                    this.Connection.ApplicationConfiguration.DefaultHealthVaultUrl.ToString());
             }
 
             if (this.Connection?.SessionCredential != null)

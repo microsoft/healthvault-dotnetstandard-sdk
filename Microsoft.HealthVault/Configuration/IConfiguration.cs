@@ -23,7 +23,7 @@ namespace Microsoft.HealthVault.Configurations
         /// value with "wildcat.ashx" removed.
         /// </remarks>
         ///
-        Uri HealthVaultUrl { get; }
+        Uri DefaultHealthVaultUrl { get; }
 
         /// <summary>
         /// Gets the HealthVault Shell URL for
@@ -35,7 +35,7 @@ namespace Microsoft.HealthVault.Configurations
         /// value.
         /// </remarks>
         ///
-        Uri HealthVaultShellUrl { get; }
+        Uri DefaultHealthVaultShellUrl { get; }
 
         /// <summary>
         /// Gets the application's unique identifier.

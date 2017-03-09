@@ -162,7 +162,7 @@ namespace Microsoft.HealthVault.Authentication
         /// </param>
         ///
         internal virtual async Task AuthenticateIfRequiredAsync(
-            IConnection connection,
+            IHealthVaultConnection connection,
             Guid applicationId)
         {
             if (this.GetAuthenticationResult(applicationId) == null)
@@ -176,7 +176,7 @@ namespace Microsoft.HealthVault.Authentication
         /// </summary>
         ///
         private async Task AuthenticateAsync(
-            IConnection connection,
+            IHealthVaultConnection connection,
             Guid appId)
         {
             this.AuthenticationResults?.Remove(appId);
@@ -362,7 +362,7 @@ namespace Microsoft.HealthVault.Authentication
         /// <seealso cref="HealthServiceConnection"/>
         /// 
         internal async Task CreateAuthenticatedSessionTokenAsync(
-            IConnection connection,
+            IHealthVaultConnection connection,
             Guid appId)
         {
             Validator.ThrowIfArgumentNull(connection, "connection", "AuthenticatedConnectionNull");
@@ -408,7 +408,7 @@ namespace Microsoft.HealthVault.Authentication
         /// </param>
         ///
         /// <param name="connection">
-        /// The <see cref="IConnection"/> instance.
+        /// The <see cref="IHealthVaultConnection"/> instance.
         /// </param>
         ///
         /// <param name="appId">
@@ -456,7 +456,7 @@ namespace Microsoft.HealthVault.Authentication
         /// </param>
         ///
         /// <param name="connection">
-        /// The <see cref="IConnection"/> instance.
+        /// The <see cref="IHealthVaultConnection"/> instance.
         /// </param>
         ///
         /// <param name="appId">
@@ -506,7 +506,7 @@ namespace Microsoft.HealthVault.Authentication
         /// </param>
         ///
         /// <param name="connection">
-        /// The <see cref="IConnection"/> instance.
+        /// The <see cref="IHealthVaultConnection"/> instance.
         /// </param>
         ///
         /// <exception cref="ArgumentNullException">
@@ -546,7 +546,7 @@ namespace Microsoft.HealthVault.Authentication
         /// </param>
         ///
         /// <param name="connection">
-        /// The <see cref="IConnection"/> instance.
+        /// The <see cref="IHealthVaultConnection"/> instance.
         /// </param>
         ///
         /// <param name="applicationTokenCreationInfo">

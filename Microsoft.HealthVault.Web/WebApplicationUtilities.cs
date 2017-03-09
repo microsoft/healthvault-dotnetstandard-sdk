@@ -945,7 +945,7 @@ namespace Microsoft.HealthVault.Web
             */
             // return null;
 
-            IConnection connection = Ioc.Get<IConnection>();
+            IHealthVaultConnection connection = Ioc.Get<IHealthVaultConnection>();
             IPersonClient personClient = connection.PersonClient;
 
             PersonInfo personInfo = await personClient.GetPersonInfoAsync();
@@ -2108,7 +2108,7 @@ namespace Microsoft.HealthVault.Web
                 actionUrlQueryString,
                 appId,
                 credentialToken,
-                configuration.HealthVaultShellUrl.OriginalString);
+                configuration.DefaultHealthVaultShellUrl.OriginalString);
         }
 
         /// <summary>

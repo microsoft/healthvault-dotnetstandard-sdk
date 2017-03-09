@@ -5,7 +5,7 @@ using System.Xml.XPath;
 namespace Microsoft.HealthVault.Connection
 {
     // TODO: Do we need an internal connection
-    public interface IConnectionInternal : IConnection
+    public interface IConnectionInternal : IHealthVaultConnection
     {
         CryptoData GetAuthData(string methodName, byte[] data);
 

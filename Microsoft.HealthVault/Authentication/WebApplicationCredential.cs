@@ -422,7 +422,7 @@ namespace Microsoft.HealthVault.Authentication
         /// </param>
         ///
         internal override async Task AuthenticateIfRequiredAsync(
-            IConnection connection,
+            IHealthVaultConnection connection,
             Guid applicationId)
         {
             if (IsAuthenticationExpired(applicationId, this.TokenIssuedRefreshCounter))
@@ -448,14 +448,14 @@ namespace Microsoft.HealthVault.Authentication
         /// If <paramref name="connection"/> is null.
         /// </exception>
         ///
-        /// <seealso cref="IConnection"/>
+        /// <seealso cref="IHealthVaultConnection"/>
         ///
         /// <returns>
         /// The credential to use for the request.
         /// </returns>
         ///
         private async Task AuthenticateAsync(
-            IConnection connection,
+            IHealthVaultConnection connection,
             Guid applicationId)
         {
             await AuthenticateKeySetPairAsync(connection, applicationId, this.cert).ConfigureAwait(false);
@@ -1063,7 +1063,7 @@ namespace Microsoft.HealthVault.Authentication
         /// </param>
         ///
         private static async Task AuthenticateKeySetPairAsync(
-            IConnection connection,
+            IHealthVaultConnection connection,
             Guid applicationId,
             X509Certificate2 certificate)
         {
@@ -1101,7 +1101,7 @@ namespace Microsoft.HealthVault.Authentication
         ///
         private static async Task AuthenticateKeySetPairAsync(
             AuthSessionKeySetPairs keySetPairs,
-            IConnection connection,
+            IHealthVaultConnection connection,
             Guid applicationId,
             X509Certificate2 certificate)
         {

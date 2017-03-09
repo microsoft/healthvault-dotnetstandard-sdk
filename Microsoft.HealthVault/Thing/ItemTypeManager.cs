@@ -259,7 +259,7 @@ namespace Microsoft.HealthVault.Things
         /// types that are available through the HealthVault service.
         ///
         /// To retrieve information about the types from the HealthVault service,
-        /// use the <see cref="GetHealthRecordItemTypeDefinitionAsync(IConnection)"/> method.
+        /// use the <see cref="GetHealthRecordItemTypeDefinitionAsync(IHealthVaultConnection)"/> method.
         /// </remarks>
         /// <returns>A dictionary of <see cref="Type"/> instances.</returns>
         public static IDictionary<Guid, Type> RegisteredTypes
@@ -287,7 +287,7 @@ namespace Microsoft.HealthVault.Things
         /// released, this method will not return them.
         ///
         /// To retrieve information about the types from the HealthVault service,
-        /// use the <see cref="GetHealthRecordItemTypeDefinitionAsync(IConnection)"/> method.
+        /// use the <see cref="GetHealthRecordItemTypeDefinitionAsync(IHealthVaultConnection)"/> method.
         /// </remarks>
         /// <param name="typeId">The ID of the associated type</param>
         /// <returns>The typeId.</returns>
