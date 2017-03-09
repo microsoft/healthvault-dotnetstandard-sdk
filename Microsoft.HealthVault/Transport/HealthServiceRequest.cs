@@ -422,7 +422,7 @@ namespace Microsoft.HealthVault.Transport
                     if (this.connectionInternal.SessionCredential != null &&
                         !string.IsNullOrEmpty(this.connectionInternal.SessionCredential.Token))
                     {
-                        this.connectionInternal.PrepareAuthSessionHeader(writer);
+                        this.connectionInternal.PrepareAuthSessionHeader(writer, this.RecordId);
                     }
                     else
                     {

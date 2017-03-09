@@ -1,4 +1,5 @@
-﻿using System.Xml;
+﻿using System;
+using System.Xml;
 using System.Xml.XPath;
 
 namespace Microsoft.HealthVault.Connection
@@ -10,7 +11,7 @@ namespace Microsoft.HealthVault.Connection
 
         CryptoData GetInfoHash(byte[] data);
 
-        void PrepareAuthSessionHeader(XmlWriter writer);
+        void PrepareAuthSessionHeader(XmlWriter writer, Guid? recordId);
 
         // TODO: Temp. fix to quick run
         void StoreSessionCredentialInCookieXml(XmlWriter writer);

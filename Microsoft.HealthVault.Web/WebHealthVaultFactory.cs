@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Microsoft.HealthVault.Web
 {
-    public class WebHealthVaultFactory : BaseHealthVaultFactory
+    public class WebHealthVaultFactory : HealthVaultFactoryBase
     {
         private static readonly object InstanceLock = new object();
     

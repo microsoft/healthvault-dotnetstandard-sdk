@@ -187,7 +187,7 @@ namespace Microsoft.HealthVault.Connection
             return cryptographer.Hash(data);
         }
 
-        public abstract void PrepareAuthSessionHeader(XmlWriter writer);
+        public abstract void PrepareAuthSessionHeader(XmlWriter writer, Guid? recordId);
 
         // TODO: temp fix
         public virtual void StoreSessionCredentialInCookieXml(XmlWriter writer)
