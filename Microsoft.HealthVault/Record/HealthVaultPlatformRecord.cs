@@ -13,7 +13,7 @@ using System.Xml.XPath;
 using Microsoft.HealthVault.Connection;
 using Microsoft.HealthVault.Exceptions;
 using Microsoft.HealthVault.Helpers;
-using Microsoft.HealthVault.Things;
+using Microsoft.HealthVault.Thing;
 using Microsoft.HealthVault.Transport;
 
 namespace Microsoft.HealthVault.Record
@@ -73,19 +73,16 @@ namespace Microsoft.HealthVault.Record
         /// <summary>
         /// Releases the authorization of the application on the health record.
         /// </summary>
-        ///
         /// <param name="connection">
         /// The connection to use to access the data.
         /// </param>
-        ///
         /// <param name="accessor">
         /// The record to use.
         /// </param>
-        ///
         /// <exception cref="HealthServiceException">
         /// Errors during the authorization release.
         /// </exception>
-        ///
+        /// 
         /// <remarks>
         /// Once the application releases the authorization to the health record,
         /// calling any methods of this <see cref="HealthRecordAccessor"/> will result
@@ -106,36 +103,32 @@ namespace Microsoft.HealthVault.Record
         /// has when using the calling application for the specified item types
         /// in this  record.
         /// </summary>
-        ///
         /// <param name="connection">
         /// The connection to use to access the data.
         /// </param>
-        ///
         /// <param name="accessor">
         /// The record to use.
         /// </param>
-        ///
         /// <param name="healthRecordItemTypeIds">
         /// A collection of unique identifiers to identify the health record
         /// item types, for which the permissions are being queried.
         /// </param>
-        ///
         /// <returns>
         /// Returns a dictionary of <see cref="HealthRecordItemTypePermission"/>
         /// with health record item types as the keys.
         /// </returns>
-        ///
+        /// 
         /// <remarks>
         /// If the list of health record item types is empty, an empty dictionary is
         /// returned. If for a health record item type, the person has
         /// neither online access nor offline access permissions,
         /// <b> null </b> will be returned for that type in the dictionary.
         /// </remarks>
-        ///
+        /// 
         /// <exception cref="ArgumentNullException">
         /// If <paramref name="healthRecordItemTypeIds"/> is <b>null</b>.
         /// </exception>
-        ///
+        /// 
         /// <exception cref="HealthServiceException">
         /// If there is an exception during executing the request to HealthVault.
         /// </exception>
@@ -176,27 +169,23 @@ namespace Microsoft.HealthVault.Record
         /// has when using the calling application for the specified item types
         /// in this health record.
         /// </summary>
-        ///
         /// <param name="connection">
         /// The connection to use to access the data.
         /// </param>
-        ///
         /// <param name="accessor">
         /// The record to use.
         /// </param>
-        ///
         /// <param name="healthRecordItemTypeIds">
         /// A collection of uniqueidentifiers to identify the health record
         /// item types, for which the permissions are being queried.
         /// </param>
-        ///
         /// <returns>
         /// A list of <see cref="HealthRecordItemTypePermission"/>
         /// objects which represent the permissions that the current
         /// authenticated person has for the HealthRecordItemTypes specified
         /// in the current health record when using the current application.
         /// </returns>
-        ///
+        /// 
         /// <remarks>
         /// If the list of health record item types is empty, an empty list is
         /// returned. If for a health record item type, the person has
@@ -204,11 +193,11 @@ namespace Microsoft.HealthVault.Record
         /// HealthRecordItemTypePermission object is not returned for that
         /// health record item type.
         /// </remarks>
-        ///
+        /// 
         /// <exception cref="ArgumentNullException">
         /// If <paramref name="healthRecordItemTypeIds"/> is <b>null</b>.
         /// </exception>
-        ///
+        /// 
         /// <exception cref="HealthServiceException">
         /// If there is an exception during executing the request to HealthVault.
         /// </exception>
@@ -227,26 +216,22 @@ namespace Microsoft.HealthVault.Record
         /// has when using the calling application for the specified item types
         /// in this health record as well as the other permission settings such as MeaningfulUseOptIn.
         /// </summary>
-        ///
         /// <param name="connection">
         /// The connection to use to access the data.
         /// </param>
-        ///
         /// <param name="accessor">
         /// The record to use.
         /// </param>
-        ///
         /// <param name="healthRecordItemTypeIds">
         /// A collection of uniqueidentifiers to identify the health record
         /// item types, for which the permissions are being queried.
         /// </param>
-        ///
         /// <returns>
         /// A <see cref="HealthRecordPermissions"/> object
         /// which contains a collection of <see cref="HealthRecordItemTypePermission"/> objects and
         /// other permission settings.
         /// </returns>
-        ///
+        /// 
         /// <remarks>
         /// If the list of health record item types is empty, an empty list is
         /// returned for <see cref="HealthRecordPermissions"/> object's ItemTypePermissions property.
@@ -255,11 +240,11 @@ namespace Microsoft.HealthVault.Record
         /// HealthRecordItemTypePermission object is not returned for that
         /// health record item type.
         /// </remarks>
-        ///
+        /// 
         /// <exception cref="ArgumentNullException">
         /// If <paramref name="healthRecordItemTypeIds"/> is <b>null</b>.
         /// </exception>
-        ///
+        /// 
         /// <exception cref="HealthServiceException">
         /// There is an error in the server request.
         /// </exception>
@@ -362,7 +347,7 @@ namespace Microsoft.HealthVault.Record
         /// <summary>
         /// Gets valid group memberships for a record.
         /// </summary>
-        ///
+        /// 
         /// <remarks>
         /// Group membership thing types allow an application to signify that the
         /// record belongs to an application defined group.  A record in the group may be
@@ -373,15 +358,12 @@ namespace Microsoft.HealthVault.Record
         /// last updating application is authorized by the the last updating person to
         /// read and delete the membership.
         /// </remarks>
-        ///
         /// <param name="connection">
         /// The connection to use to access the data.
         /// </param>
-        ///
         /// <param name="accessor">
         /// The record to use.
         /// </param>
-        ///
         /// <param name="applicationIds">
         /// A collection of unique application identifiers for which to
         /// search for group memberships.  For a null or empty application identifier
@@ -389,7 +371,6 @@ namespace Microsoft.HealthVault.Record
         /// return only those group memberships last updated by one of the
         /// supplied application identifiers.
         /// </param>
-        ///
         /// <returns>
         /// A List of HealthRecordItems representing the valid group memberships.
         /// </returns>

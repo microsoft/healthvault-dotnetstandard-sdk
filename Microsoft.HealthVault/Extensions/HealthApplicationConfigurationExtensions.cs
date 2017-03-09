@@ -1,5 +1,5 @@
 ﻿using System;
-using Microsoft.HealthVault.Configurations;
+using Microsoft.HealthVault.Configuration;
 
 namespace Microsoft.HealthVault.Extensions
 {

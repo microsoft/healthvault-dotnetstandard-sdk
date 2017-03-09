@@ -31,7 +31,7 @@ namespace Microsoft.HealthVault
         AssociateAlternateId,
 
         /// <summary>
-        /// Begin to stream binary data for a Thing.
+        /// Begin to stream binary data for a HealthRecordItem.
         /// </summary>
         BeginPutBlob,
 

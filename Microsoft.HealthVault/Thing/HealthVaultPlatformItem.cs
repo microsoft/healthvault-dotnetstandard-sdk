@@ -15,7 +15,7 @@ using Microsoft.HealthVault.Exceptions;
 using Microsoft.HealthVault.Helpers;
 using Microsoft.HealthVault.Transport;
 
-namespace Microsoft.HealthVault.Things
+namespace Microsoft.HealthVault.Thing
 {
     /// <summary>
     /// Provides low-level access to the HealthVault item operations.
@@ -247,12 +247,12 @@ namespace Microsoft.HealthVault.Things
 
                 foreach (XPathNavigator thingIdNav in thingIds)
                 {
-                    HealthRecordItem thing = itemsToUpdate[index];
-                    thing.Key = new HealthRecordItemKey(
+                    HealthRecordItem healthRecordItem = itemsToUpdate[index];
+                    healthRecordItem.Key = new HealthRecordItemKey(
                         new Guid(thingIdNav.Value),
                         new Guid(thingIdNav.GetAttribute(
                             "version-stamp", string.Empty)));
-                    thing.ClearDirtyFlags();
+                    healthRecordItem.ClearDirtyFlags();
                     ++index;
                 }
             }
@@ -521,7 +521,7 @@ namespace Microsoft.HealthVault.Things
                 throw e;
             }
 
-            foreach (HealthRecordFilter filter in searcher.Filters)
+            foreach (ThingQuery filter in searcher.Filters)
             {
                 filter.ThrowIfNotValid();
             }
@@ -615,7 +615,7 @@ namespace Microsoft.HealthVault.Things
 
             using (XmlWriter writer = XmlWriter.Create(parameters, settings))
             {
-                foreach (HealthRecordFilter filter in searcher.Filters)
+                foreach (ThingQuery filter in searcher.Filters)
                 {
                     // Add all filters
                     filter.AddFilterXml(writer);
