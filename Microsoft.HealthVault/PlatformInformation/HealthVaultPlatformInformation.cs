@@ -15,6 +15,7 @@ using Microsoft.HealthVault.Exceptions;
 using Microsoft.HealthVault.Helpers;
 using Microsoft.HealthVault.Things;
 using Microsoft.HealthVault.Transport;
+using System.Globalization;
 
 namespace Microsoft.HealthVault.PlatformInformation
 {
@@ -110,7 +111,7 @@ namespace Microsoft.HealthVault.PlatformInformation
         /// One or more URL strings returned by HealthVault is invalid.
         /// </exception>
         ///
-        public virtual async Task<ServiceInfo> GetServiceDefinitionAsync(HealthServiceConnection connection)
+        public virtual async Task<ServiceInfo> GetServiceDefinitionAsync(IConnectionInternal connection)
         {
             Validator.ThrowIfArgumentNull(connection, "connection", "ConnectionNull");
             return await GetServiceDefinitionAsync(connection, null).ConfigureAwait(false);
@@ -163,7 +164,7 @@ namespace Microsoft.HealthVault.PlatformInformation
         /// One or more URL strings returned by HealthVault is invalid.
         /// </exception>
         ///
-        public virtual async Task<ServiceInfo> GetServiceDefinitionAsync(HealthServiceConnection connection, DateTime lastUpdatedTime)
+        public virtual async Task<ServiceInfo> GetServiceDefinitionAsync(IConnectionInternal connection, DateTime lastUpdatedTime)
         {
             Validator.ThrowIfArgumentNull(connection, "connection", "ConnectionNull");
 
@@ -227,10 +228,10 @@ namespace Microsoft.HealthVault.PlatformInformation
         ///
         /// <exception cref="UriFormatException">
         /// One or more URL strings returned by HealthVault is invalid.
-        /// </exception> 
+        /// </exception>
         ///
         public virtual async Task<ServiceInfo> GetServiceDefinitionAsync(
-            HealthServiceConnection connection,
+            IConnectionInternal connection,
             ServiceInfoSections responseSections)
         {
             Validator.ThrowIfArgumentNull(connection, "connection", "ConnectionNull");
@@ -297,7 +298,7 @@ namespace Microsoft.HealthVault.PlatformInformation
         /// </exception>
         ///
         public virtual async Task<ServiceInfo> GetServiceDefinitionAsync(
-            HealthServiceConnection connection,
+            IConnectionInternal connection,
             ServiceInfoSections responseSections,
             DateTime lastUpdatedTime)
         {
@@ -355,10 +356,9 @@ namespace Microsoft.HealthVault.PlatformInformation
             return requestBuilder.ToString();
         }
 
-        private static async Task<ServiceInfo> GetServiceDefinitionAsync(HealthServiceConnection connection, string parameters)
+        private static async Task<ServiceInfo> GetServiceDefinitionAsync(IConnectionInternal connection, string parameters)
         {
-            HealthServiceRequest request = new HealthServiceRequest(connection, "GetServiceDefinition", 2) { Parameters = parameters };
-            HealthServiceResponseData responseData = await request.ExecuteAsync().ConfigureAwait(false);
+            HealthServiceResponseData responseData = await connection.ExecuteAsync("GetServiceDefinition", 2, parameters).ConfigureAwait(false);
 
             if (responseData.InfoNavigator.HasChildren)
             {
@@ -455,7 +455,7 @@ namespace Microsoft.HealthVault.PlatformInformation
             HealthRecordItemTypeSections sections,
             IList<string> imageTypes,
             DateTime? lastClientRefreshDate,
-            HealthServiceConnection connection)
+            IConnectionInternal connection)
         {
             Validator.ThrowIfArgumentNull(connection, "connection", "TypeManagerConnectionNull");
 
@@ -486,11 +486,8 @@ namespace Microsoft.HealthVault.PlatformInformation
             IList<Guid> typeIds,
             HealthRecordItemTypeSections sections,
             IList<string> imageTypes,
-            HealthServiceConnection connection)
+            IConnectionInternal connection)
         {
-            HealthServiceRequest request =
-                new HealthServiceRequest(connection, "GetThingType", 1);
-
             StringBuilder requestParameters = new StringBuilder();
             XmlWriterSettings settings = SDKHelper.XmlUnicodeWriterSettings;
             settings.OmitXmlDeclaration = true;
@@ -498,7 +495,7 @@ namespace Microsoft.HealthVault.PlatformInformation
 
             Dictionary<Guid, HealthRecordItemTypeDefinition> cachedThingTypes = null;
 
-            string cultureName = connection.Culture.Name;
+            string cultureName = CultureInfo.CurrentCulture.Name;
             bool sendRequest = false;
 
             using (XmlWriter writer = XmlWriter.Create(requestParameters, settings))
@@ -588,9 +585,11 @@ namespace Microsoft.HealthVault.PlatformInformation
                 }
 
                 writer.Flush();
-                request.Parameters = requestParameters.ToString();
 
-                HealthServiceResponseData responseData = await request.ExecuteAsync().ConfigureAwait(false);
+                HealthServiceResponseData responseData = await connection.ExecuteAsync(
+                    "GetThingType",
+                    1, 
+                    requestParameters.ToString()).ConfigureAwait(false);
 
                 Dictionary<Guid, HealthRecordItemTypeDefinition> result =
                     this.CreateThingTypesFromResponse(
@@ -616,11 +615,8 @@ namespace Microsoft.HealthVault.PlatformInformation
             HealthRecordItemTypeSections sections,
             IList<string> imageTypes,
             DateTime lastClientRefreshDate,
-            HealthServiceConnection connection)
+            IConnectionInternal connection)
         {
-            HealthServiceRequest request =
-                new HealthServiceRequest(connection, "GetThingType", 1);
-
             StringBuilder requestParameters = new StringBuilder();
             XmlWriterSettings settings = SDKHelper.XmlUnicodeWriterSettings;
             settings.OmitXmlDeclaration = true;
@@ -660,20 +656,21 @@ namespace Microsoft.HealthVault.PlatformInformation
 
                 writer.Flush();
 
-                request.Parameters = requestParameters.ToString();
-
-                HealthServiceResponseData responseData = await request.ExecuteAsync().ConfigureAwait(false);
+                HealthServiceResponseData responseData = await connection.ExecuteAsync(
+                    "GetThingType",
+                    1,
+                    requestParameters.ToString()).ConfigureAwait(false);
 
                 Dictionary<Guid, HealthRecordItemTypeDefinition> result =
                     this.CreateThingTypesFromResponse(
-                        connection.Culture.Name,
+                        CultureInfo.CurrentCulture.Name,
                         responseData,
                         sections,
                         null);
 
                 lock (this.sectionCache)
                 {
-                    this.sectionCache[connection.Culture.Name][sections] = result;
+                    this.sectionCache[CultureInfo.CurrentCulture.Name][sections] = result;
                 }
 
                 return result;
@@ -824,7 +821,7 @@ namespace Microsoft.HealthVault.PlatformInformation
         /// If <paramref name="connection"/> parameter is <b>null</b>.
         /// </exception>
         public virtual async Task<HealthServiceInstance> SelectInstanceAsync(
-            HealthServiceConnection connection,
+            IConnectionInternal connection,
             Location preferredLocation)
         {
             Validator.ThrowIfArgumentNull(connection, "connection", "TypeManagerConnectionNull");
@@ -839,10 +836,10 @@ namespace Microsoft.HealthVault.PlatformInformation
                 writer.Flush();
             }
 
-            HealthServiceRequest request =
-                new HealthServiceRequest(connection, "SelectInstance", 1) { Parameters = requestParameters.ToString() };
-
-            HealthServiceResponseData responseData = await request.ExecuteAsync().ConfigureAwait(false);
+            HealthServiceResponseData responseData = await connection.ExecuteAsync(
+                "SelectInstance",
+                1, 
+                requestParameters.ToString()).ConfigureAwait(false);
 
             XPathExpression infoPath = SDKHelper.GetInfoXPathExpressionForMethod(
                 responseData.InfoNavigator,

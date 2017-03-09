@@ -57,7 +57,7 @@ namespace Microsoft.HealthVault.Things
         /// </exception>
         ///
         public static HealthRecordAccessor CreateFromXml(
-            ApplicationConnection connection,
+            IConnectionInternal connection,
             XPathNavigator navigator)
         {
             Validator.ThrowIfArgumentNull(connection, "connection", "PersonInfoConnectionNull");
@@ -161,7 +161,7 @@ namespace Microsoft.HealthVault.Things
         /// </exception>
         ///
         public HealthRecordAccessor(
-            ApplicationConnection connection,
+            IConnectionInternal connection,
             Guid id)
         {
             Validator.ThrowIfArgumentNull(connection, "connection", "CtorServiceArgumentNull");
@@ -193,7 +193,7 @@ namespace Microsoft.HealthVault.Things
         /// </exception>
         ///
         internal HealthRecordAccessor(
-            ApplicationConnection connection)
+            IConnectionInternal connection)
         {
             this.Connection = connection;
         }
@@ -203,7 +203,7 @@ namespace Microsoft.HealthVault.Things
         }
 
         #region Public properties
-        
+
         /// <summary>
         /// Gets the record identifier.
         /// </summary>
@@ -232,13 +232,7 @@ namespace Microsoft.HealthVault.Things
         /// created this <see cref="HealthRecordAccessor"/>.
         /// </summary>
         ///
-        public ApplicationConnection Connection
-        {
-            get { return this.connection; }
-            internal set { this.connection = value; }
-        }
-
-        private ApplicationConnection connection;
+        public IConnectionInternal Connection { get; internal set; }
 
         #endregion Public properties
 

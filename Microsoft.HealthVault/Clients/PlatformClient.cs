@@ -13,7 +13,7 @@ namespace Microsoft.HealthVault.Clients
     /// </summary>
     internal class PlatformClient : IPlatformClient
     {
-        public HealthServiceConnection Connection { get; set; }
+        public IConnectionInternal Connection { get; set; }
 
         public Guid CorrelationId { get; set; }
 
@@ -45,9 +45,9 @@ namespace Microsoft.HealthVault.Clients
         }
 
         public Task<IDictionary<Guid, HealthRecordItemTypeDefinition>> GetHealthRecordItemTypeDefinitionAsync(
-            IList<Guid> typeIds, 
-            HealthRecordItemTypeSections sections, 
-            IList<string> imageTypes, 
+            IList<Guid> typeIds,
+            HealthRecordItemTypeSections sections,
+            IList<string> imageTypes,
             DateTime? lastClientRefreshDate)
         {
             return HealthVaultPlatformInformation.Current.GetHealthRecordItemTypeDefinitionAsync(typeIds, sections, imageTypes, lastClientRefreshDate, this.Connection);

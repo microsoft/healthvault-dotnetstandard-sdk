@@ -104,14 +104,14 @@ namespace Microsoft.HealthVault.Things
         /// </exception>
         ///
         public virtual async Task NewItemsAsync(
-            ApplicationConnection connection,
+            IConnectionInternal connection,
             HealthRecordAccessor accessor,
             IList<HealthRecordItem> items)
         {
             Validator.ThrowIfArgumentNull(items, "items", "NewItemsNullItem");
 
             HealthServiceRequest request =
-                new HealthServiceRequest(connection, "PutThings", 2, accessor);
+                new HealthServiceRequest(connection, "PutThings", 2);
 
             StringBuilder infoXml = new StringBuilder();
             XmlWriterSettings settings = SDKHelper.XmlUnicodeWriterSettings;
@@ -197,7 +197,7 @@ namespace Microsoft.HealthVault.Things
         /// </exception>
         ///
         public virtual async Task UpdateItemsAsync(
-            ApplicationConnection connection,
+            IConnectionInternal connection,
             HealthRecordAccessor accessor,
             IList<HealthRecordItem> itemsToUpdate)
         {
@@ -232,7 +232,7 @@ namespace Microsoft.HealthVault.Things
             if (somethingRequiresUpdate)
             {
                 HealthServiceRequest request =
-                    new HealthServiceRequest(connection, "PutThings", 2, accessor) { Parameters = infoXml.ToString() };
+                    new HealthServiceRequest(connection, "PutThings", 2) { Parameters = infoXml.ToString() };
 
                 // Add the XML to the request.
 
@@ -320,7 +320,7 @@ namespace Microsoft.HealthVault.Things
         /// </exception>
         ///
         public virtual async Task RemoveItemsAsync(
-            ApplicationConnection connection,
+            IConnectionInternal connection,
             HealthRecordAccessor accessor,
             IList<HealthRecordItemKey> itemsToRemove)
         {
@@ -340,7 +340,7 @@ namespace Microsoft.HealthVault.Things
             }
 
             HealthServiceRequest request =
-                new HealthServiceRequest(connection, "RemoveThings", 1, accessor) { Parameters = parameters.ToString() };
+                new HealthServiceRequest(connection, "RemoveThings", 1) { Parameters = parameters.ToString() };
 
             await request.ExecuteAsync().ConfigureAwait(false);
         }
@@ -381,7 +381,7 @@ namespace Microsoft.HealthVault.Things
         /// </exception>
         ///
         public virtual async Task<ReadOnlyCollection<HealthRecordItemCollection>> GetMatchingItemsAsync(
-            ApplicationConnection connection,
+            IConnectionInternal connection,
             HealthRecordAccessor accessor,
             HealthRecordSearcher searcher)
         {
@@ -420,7 +420,7 @@ namespace Microsoft.HealthVault.Things
         /// </remarks>
         ///
         public virtual async Task<XmlReader> GetMatchingItemsReaderAsync(
-            ApplicationConnection connection,
+            IConnectionInternal connection,
             HealthRecordAccessor accessor,
             HealthRecordSearcher searcher)
         {
@@ -460,7 +460,7 @@ namespace Microsoft.HealthVault.Things
         /// </remarks>
         ///
         public virtual async Task<XPathNavigator> GetMatchingItemsRawAsync(
-            ApplicationConnection connection,
+            IConnectionInternal connection,
             HealthRecordAccessor accessor,
             HealthRecordSearcher searcher)
         {
@@ -468,93 +468,6 @@ namespace Microsoft.HealthVault.Things
             HealthServiceResponseData responseData = await request.ExecuteAsync().ConfigureAwait(false);
 
             return responseData.InfoNavigator;
-        }
-
-        /// <summary>
-        /// Gets the health record items specified by the
-        /// <see cref="HealthRecordSearcher"/> and runs them through the specified
-        /// transform.
-        /// </summary>
-        ///
-        /// <param name="connection">
-        /// The connection to use to access the data.
-        /// </param>
-        ///
-        /// <param name="accessor">
-        /// The record to use.
-        /// </param>
-        ///
-        /// <param name="searcher">
-        /// The searcher that defines what items to return.
-        /// </param>
-        ///
-        /// <param name="transform">
-        /// A URL to a transform to run on the resulting XML. This can be
-        /// a fully-qualified URL or the name of one of the standard XSLs
-        /// provided by the HealthVault system.
-        /// </param>
-        ///
-        /// <returns>
-        /// The string resulting from performing the specified transform on
-        /// the XML representation of the items.
-        /// </returns>
-        ///
-        /// <remarks>
-        /// This method accesses the HealthVault service across the network.
-        /// <br/><br/>
-        /// Any call to HealthVault may specify a transform to be run on the
-        /// response XML. The transform can be specified as a XSL fragment or
-        /// a well-known transform tag provided by the HealthVault service. If a
-        /// XSL fragment is specified, it gets compiled and cached on the server.
-        /// <br/>
-        /// <br/>
-        /// A final-xsl is useful when you want to convert the result from XML to
-        /// HTML so that you can display the result directly in a web page.
-        /// You may also use it to generate other data formats like CCR, CCD, CSV,
-        /// RSS, etc.
-        /// <br/>
-        /// <br/>
-        /// Transform fragments cannot contain embedded script. The following set
-        /// of parameters are passed to all final-xsl transforms:<br/>
-        /// <ul>
-        ///     <li>currentDateTimeUtc - the date and time just before the transform
-        ///     started executing</li>
-        ///     <li>requestingApplicationName - the name of the application that
-        ///     made the request to HealthVault.</li>
-        ///     <li>countryCode - the ISO 3166 country code from the request.</li>
-        ///     <li>languageCode - the ISO 639-1 language code from the request.</li>
-        ///     <li>personName - the name of the person making the request.</li>
-        ///     <li>recordName - if the request identified a HealthVault record to
-        ///     be used, this parameter contains the name of that record.</li>
-        /// </ul>
-        /// </remarks>
-        ///
-        /// <exception cref="ArgumentException">
-        /// The <paramref name="transform"/> parameter is <b>null</b> or empty.
-        /// </exception>
-        ///
-        /// <exception cref="ArgumentException">
-        /// <see cref="HealthRecordView.Sections"/> does not
-        /// contain the XML section in the view.
-        /// </exception>
-        ///
-        /// <exception cref="HealthServiceException">
-        /// There is a failure retrieving the items.
-        /// -or-
-        /// No filters have been specified.
-        /// </exception>
-        ///
-        public virtual async Task<string> GetTransformedItemsAsync(
-            ApplicationConnection connection,
-            HealthRecordAccessor accessor,
-            HealthRecordSearcher searcher,
-            string transform)
-        {
-            Validator.ThrowIfStringNullOrEmpty(transform, "transform");
-
-            HealthServiceRequest request = PrepareRequest(connection, accessor, searcher);
-
-            return await request.ExecuteForTransformAsync(transform).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -572,12 +485,12 @@ namespace Microsoft.HealthVault.Things
         /// </exception>
         ///
         private static HealthServiceRequest PrepareRequest(
-            ApplicationConnection connection,
+            IConnectionInternal connection,
             HealthRecordAccessor accessor,
             HealthRecordSearcher searcher)
         {
             HealthServiceRequest request =
-                new HealthServiceRequest(connection, "GetThings", 3, accessor) { Parameters = GetParametersXml(searcher) };
+                new HealthServiceRequest(connection, "GetThings", 3) { Parameters = GetParametersXml(searcher) };
 
             return request;
         }
@@ -624,7 +537,7 @@ namespace Microsoft.HealthVault.Things
         /// </exception>
         ///
         private static async Task<ReadOnlyCollection<HealthRecordItemCollection>> ExecuteAsync(
-            ApplicationConnection connection,
+            IConnectionInternal connection,
             HealthRecordAccessor accessor,
             HealthRecordSearcher searcher)
         {

@@ -13,7 +13,7 @@ namespace Microsoft.HealthVault.Clients
     /// </summary>
     public class VocabularyClient : IVocabularyClient
     {
-        public HealthServiceConnection Connection { get; set; }
+        public IConnectionInternal Connection { get; set; }
 
         public Guid CorrelationId { get; set; }
 
@@ -21,7 +21,7 @@ namespace Microsoft.HealthVault.Clients
 
         public async Task<IReadOnlyCollection<VocabularyKey>> GetVocabularyKeysAsync()
         {
-            return await HealthVaultPlatformVocabulary.Current.GetVocabularyKeys(this.Connection);
+            return await HealthVaultPlatformVocabulary.Current.GetVocabularyKeysAsync(this.Connection);
         }
 
         public async Task<Vocabulary.Vocabulary> GetVocabularyAsync(string vocabularyId, bool cultureIsFixed = false)

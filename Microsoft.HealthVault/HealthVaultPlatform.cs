@@ -53,7 +53,7 @@ namespace Microsoft.HealthVault
         /// stored for the application or user.
         /// </remarks>
         ///
-        public static async Task<IXPathNavigable> GetApplicationSettingsAsXmlAsync(HealthServiceConnection connection)
+        public static async Task<IXPathNavigable> GetApplicationSettingsAsXmlAsync(IConnectionInternal connection)
         {
             ApplicationSettings applicationSettings =
                 await HealthVaultPlatformPerson
@@ -76,7 +76,7 @@ namespace Microsoft.HealthVault
         /// The complete set application settings including the XML settings, selected record ID, etc.
         /// </returns>
         ///
-        public static async Task<ApplicationSettings> GetApplicationSettingsAsync(HealthServiceConnection connection)
+        public static async Task<ApplicationSettings> GetApplicationSettingsAsync(IConnectionInternal connection)
         {
             return await HealthVaultPlatformPerson.Current.GetApplicationSettingsAsync(connection).ConfigureAwait(false);
         }
@@ -99,7 +99,7 @@ namespace Microsoft.HealthVault
         /// </remarks>
         ///
         public static async Task SetApplicationSettingsAsync(
-            HealthServiceConnection connection,
+            IConnectionInternal connection,
             IXPathNavigable applicationSettings)
         {
             string requestParameters =
@@ -151,7 +151,7 @@ namespace Microsoft.HealthVault
         /// </exception>
         ///
         public static async Task<Vocabulary.Vocabulary> GetVocabularyAsync(
-            HealthServiceConnection connection,
+            IConnectionInternal connection,
             string name)
         {
             Validator.ThrowIfStringNullOrEmpty(name, "name");
@@ -212,7 +212,7 @@ namespace Microsoft.HealthVault
         /// </exception>
         ///
         public static async Task<Vocabulary.Vocabulary> GetVocabularyAsync(
-            HealthServiceConnection connection,
+            IConnectionInternal connection,
             VocabularyKey vocabularyKey,
             bool cultureIsFixed)
         {
@@ -283,7 +283,7 @@ namespace Microsoft.HealthVault
         /// </exception>
         ///
         public static async Task<ReadOnlyCollection<Vocabulary.Vocabulary>> GetVocabularyAsync(
-            HealthServiceConnection connection,
+            IConnectionInternal connection,
             IList<VocabularyKey> vocabularyKeys,
             bool cultureIsFixed = false)
         {
@@ -307,9 +307,9 @@ namespace Microsoft.HealthVault
         /// A collection of keys identifying the vocabularies in the system.
         /// </returns>
         ///
-        public static async Task<ReadOnlyCollection<VocabularyKey>> GetVocabularyKeysAsync(HealthServiceConnection connection)
+        public static async Task<ReadOnlyCollection<VocabularyKey>> GetVocabularyKeysAsync(IConnectionInternal connection)
         {
-            return await HealthVaultPlatformVocabulary.Current.GetVocabularyKeys(connection);
+            return await HealthVaultPlatformVocabulary.Current.GetVocabularyKeysAsync(connection);
         }
 
         /// <summary>
@@ -363,7 +363,7 @@ namespace Microsoft.HealthVault
         /// </exception>
         ///
         public static async Task<ReadOnlyCollection<VocabularyKey>> SearchVocabularyKeysAsync(
-            HealthServiceConnection connection,
+            IConnectionInternal connection,
             string searchValue,
             VocabularySearchType searchType,
             int? maxResults)
@@ -448,7 +448,7 @@ namespace Microsoft.HealthVault
         /// </exception>
         ///
         public static async Task<VocabularyItemCollection> SearchVocabulary(
-            HealthServiceConnection connection,
+            IConnectionInternal connection,
             VocabularyKey vocabularyKey,
             string searchValue,
             VocabularySearchType searchType,
@@ -490,7 +490,7 @@ namespace Microsoft.HealthVault
         /// The HealthVault service returned an error.
         /// </exception>
         ///
-        public static async Task<PersonInfo> GetPersonInfoAsync(ApplicationConnection connection)
+        public static async Task<PersonInfo> GetPersonInfoAsync(IConnectionInternal connection)
         {
             return await HealthVaultPlatformPerson.Current.GetPersonInfoAsync(connection).ConfigureAwait(false);
         }
@@ -520,7 +520,7 @@ namespace Microsoft.HealthVault
         /// <exception cref="HealthServiceException">
         /// The HealthVault service returned an error.
         /// </exception>
-        public static IEnumerable<Task<PersonInfo>> GetAuthorizedPeopleAsync(ApplicationConnection connection)
+        public static IEnumerable<Task<PersonInfo>> GetAuthorizedPeopleAsync(IConnectionInternal connection)
         {
             return HealthVaultPlatformApplication.Current.GetAuthorizedPeopleAsync(connection, new GetAuthorizedPeopleSettings());
         }
@@ -559,7 +559,7 @@ namespace Microsoft.HealthVault
         /// </exception>
         ///
         public static IEnumerable<Task<PersonInfo>> GetAuthorizedPeopleAsync(
-            ApplicationConnection connection,
+            IConnectionInternal connection,
             GetAuthorizedPeopleSettings settings)
         {
             return HealthVaultPlatformApplication.Current.GetAuthorizedPeopleAsync(connection, settings);
@@ -593,7 +593,7 @@ namespace Microsoft.HealthVault
         /// </remarks>
         ///
         public static async Task<Collection<HealthRecordInfo>> GetAuthorizedRecordsAsync(
-            ApplicationConnection connection,
+            IConnectionInternal connection,
             IList<Guid> recordIds)
         {
             return await HealthVaultPlatformPerson.Current.GetAuthorizedRecordsAsync(connection, recordIds).ConfigureAwait(false);
@@ -624,7 +624,7 @@ namespace Microsoft.HealthVault
         /// The HealthVault service returned an error.
         /// </exception>
         ///
-        public static async Task<ApplicationInfo> GetApplicationInfo(HealthServiceConnection connection)
+        public static async Task<ApplicationInfo> GetApplicationInfo(IConnectionInternal connection)
         {
             return await HealthVaultPlatformApplication.Current.GetApplicationInfoAsync(connection, false).ConfigureAwait(false);
         }
@@ -664,7 +664,7 @@ namespace Microsoft.HealthVault
         /// </exception>
         ///
         public static async Task<ApplicationInfo> GetApplicationInfoAsync(
-            HealthServiceConnection connection,
+            IConnectionInternal connection,
             bool allLanguages)
         {
             return await HealthVaultPlatformApplication.Current.GetApplicationInfoAsync(connection, allLanguages).ConfigureAwait(false);
@@ -692,7 +692,7 @@ namespace Microsoft.HealthVault
         /// </returns>
         ///
         public static async Task<IList<Guid>> GetUpdatedRecordsForApplicationAsync(
-            HealthServiceConnection connection,
+            IConnectionInternal connection,
             DateTime? updatedDate)
         {
             return await HealthVaultPlatformApplication.Current.GetUpdatedRecordsForApplicationAsync(connection, updatedDate).ConfigureAwait(false);
@@ -716,7 +716,7 @@ namespace Microsoft.HealthVault
         /// </returns>
         ///
         public static async Task<IList<HealthRecordUpdateInfo>> GetUpdatedRecordInfoForApplicationAsync(
-            HealthServiceConnection connection,
+            IConnectionInternal connection,
             DateTime? updatedDate)
         {
             return await HealthVaultPlatformApplication.Current.GetUpdatedRecordInfoForApplicationAsync(connection, updatedDate).ConfigureAwait(false);
@@ -738,7 +738,7 @@ namespace Microsoft.HealthVault
         /// A signup code that can be used to create an account.
         /// </returns>
         ///
-        public static async Task<string> NewSignupCodeAsync(HealthServiceConnection connection)
+        public static async Task<string> NewSignupCodeAsync(IConnectionInternal connection)
         {
             return await HealthVaultPlatformApplication.Current.NewSignupCodeAsync(connection).ConfigureAwait(false);
         }
@@ -781,7 +781,7 @@ namespace Microsoft.HealthVault
         /// One or more URL strings returned by HealthVault is invalid.
         /// </exception>
         ///
-        public static async Task<ServiceInfo> GetServiceDefinitionAsync(HealthServiceConnection connection)
+        public static async Task<ServiceInfo> GetServiceDefinitionAsync(IConnectionInternal connection)
         {
             return await HealthVaultPlatformInformation.Current.GetServiceDefinitionAsync(connection).ConfigureAwait(false);
         }
@@ -829,7 +829,7 @@ namespace Microsoft.HealthVault
         /// One or more URL strings returned by HealthVault is invalid.
         /// </exception>
         ///
-        public static async Task<ServiceInfo> GetServiceDefinitionAsync(HealthServiceConnection connection, DateTime lastUpdatedTime)
+        public static async Task<ServiceInfo> GetServiceDefinitionAsync(IConnectionInternal connection, DateTime lastUpdatedTime)
         {
             return await HealthVaultPlatformInformation.Current.GetServiceDefinitionAsync(connection, lastUpdatedTime).ConfigureAwait(false);
         }
@@ -883,7 +883,7 @@ namespace Microsoft.HealthVault
         /// </exception>
         ///
         public static async Task<ServiceInfo> GetServiceDefinitionAsync(
-            HealthServiceConnection connection,
+            IConnectionInternal connection,
             ServiceInfoSections responseSections)
         {
             return await HealthVaultPlatformInformation.Current.GetServiceDefinitionAsync(connection, responseSections).ConfigureAwait(false);
@@ -948,7 +948,7 @@ namespace Microsoft.HealthVault
         /// </exception>
         ///
         public static async Task<ServiceInfo> GetServiceDefinitionAsync(
-            HealthServiceConnection connection,
+            IConnectionInternal connection,
             ServiceInfoSections responseSections,
             DateTime lastUpdatedTime)
         {
@@ -991,7 +991,7 @@ namespace Microsoft.HealthVault
         /// </exception>
         ///
         public static async Task NewItemsAsync(
-            ApplicationConnection connection,
+            IConnectionInternal connection,
             HealthRecordAccessor accessor,
             IList<HealthRecordItem> items)
         {
@@ -1039,7 +1039,7 @@ namespace Microsoft.HealthVault
         /// </exception>
         ///
         public static async Task UpdateItemsAsync(
-            ApplicationConnection connection,
+            IConnectionInternal connection,
             HealthRecordAccessor accessor,
             IList<HealthRecordItem> itemsToUpdate)
         {
@@ -1082,7 +1082,7 @@ namespace Microsoft.HealthVault
         /// </exception>
         ///
         public static async Task RemoveItemsAsync(
-            ApplicationConnection connection,
+            IConnectionInternal connection,
             HealthRecordAccessor accessor,
             IList<HealthRecordItemKey> itemsToRemove)
         {
@@ -1115,7 +1115,7 @@ namespace Microsoft.HealthVault
         /// in a <see cref="HealthServiceAccessDeniedException"/>."
         /// </remarks>
         public static async Task RemoveApplicationAuthorizationAsync(
-            ApplicationConnection connection,
+            IConnection connection,
             HealthRecordAccessor accessor)
         {
             await HealthVaultPlatformRecord.Current.RemoveApplicationAuthorizationAsync(connection, accessor).ConfigureAwait(false);
@@ -1161,7 +1161,7 @@ namespace Microsoft.HealthVault
         /// </exception>
         ///
         public static async Task<IDictionary<Guid, HealthRecordItemTypePermission>> QueryPermissionsByTypesAsync(
-            ApplicationConnection connection,
+            IConnection connection,
             HealthRecordAccessor accessor,
             IList<Guid> healthRecordItemTypeIds)
         {
@@ -1211,7 +1211,7 @@ namespace Microsoft.HealthVault
         /// </exception>
         ///
         public static async Task<Collection<HealthRecordItemTypePermission>> QueryPermissionsAsync(
-            ApplicationConnection connection,
+            IConnection connection,
             HealthRecordAccessor accessor,
             IList<Guid> healthRecordItemTypeIds)
         {
@@ -1260,7 +1260,7 @@ namespace Microsoft.HealthVault
         /// </exception>
         ///
         public static async Task<HealthRecordPermissions> QueryRecordPermissionsAsync(
-            ApplicationConnection connection,
+            IConnection connection,
             HealthRecordAccessor accessor,
             IList<Guid> healthRecordItemTypeIds)
         {
@@ -1305,7 +1305,7 @@ namespace Microsoft.HealthVault
         /// If an error occurs while contacting the HealthVault service.
         /// </exception>
         public static async Task<Collection<HealthRecordItem>> GetValidGroupMembershipAsync(
-            ApplicationConnection connection,
+            IConnection connection,
             HealthRecordAccessor accessor,
             IList<Guid> applicationIds)
         {
@@ -1346,7 +1346,7 @@ namespace Microsoft.HealthVault
         /// </exception>
         ///
         public static async Task<ReadOnlyCollection<HealthRecordItemCollection>> GetMatchingItemsAsync(
-            ApplicationConnection connection,
+            IConnectionInternal connection,
             HealthRecordAccessor accessor,
             HealthRecordSearcher searcher)
         {
@@ -1383,7 +1383,7 @@ namespace Microsoft.HealthVault
         /// </remarks>
         ///
         public static async Task<XmlReader> GetMatchingItemsReaderAsync(
-            ApplicationConnection connection,
+            IConnectionInternal connection,
             HealthRecordAccessor accessor,
             HealthRecordSearcher searcher)
         {
@@ -1420,7 +1420,7 @@ namespace Microsoft.HealthVault
         /// </remarks>
         ///
         public static async Task<XPathNavigator> GetMatchingItemsRawAsync(
-            ApplicationConnection connection,
+            IConnectionInternal connection,
             HealthRecordAccessor accessor,
             HealthRecordSearcher searcher)
         {
@@ -1502,12 +1502,14 @@ namespace Microsoft.HealthVault
         /// </exception>
         ///
         public static async Task<string> GetTransformedItemsAsync(
-            ApplicationConnection connection,
+            IConnectionInternal connection,
             HealthRecordAccessor accessor,
             HealthRecordSearcher searcher,
             string transform)
         {
-            return await HealthVaultPlatformItem.Current.GetTransformedItemsAsync(connection, accessor, searcher, transform).ConfigureAwait(false);
+            throw new NotImplementedException();
+
+            // return await HealthVaultPlatformItem.Current.GetTransformedItemsAsync(connection, accessor, searcher, transform).ConfigureAwait(false);
         }
 
         #endregion
@@ -1585,7 +1587,7 @@ namespace Microsoft.HealthVault
             HealthRecordItemTypeSections sections,
             IList<string> imageTypes,
             DateTime? lastClientRefreshDate,
-            HealthServiceConnection connection)
+            IConnectionInternal connection)
         {
             return await HealthVaultPlatformInformation.Current.GetHealthRecordItemTypeDefinitionAsync(
                 typeIds,
@@ -1640,7 +1642,7 @@ namespace Microsoft.HealthVault
         /// If <paramref name="connection"/> parameter is <b>null</b>.
         /// </exception>
         public static async Task<HealthServiceInstance> SelectInstanceAsync(
-            HealthServiceConnection connection,
+            IConnectionInternal connection,
             Location preferredLocation)
         {
             return await HealthVaultPlatformInformation.Current.SelectInstanceAsync(

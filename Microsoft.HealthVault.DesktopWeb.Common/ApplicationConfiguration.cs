@@ -77,12 +77,12 @@ namespace Microsoft.HealthVault.DesktopWeb.Common
         /// Gets the HealthVault Shell URL for
         /// the configured default instance of the HealthVault web-service.
         /// </summary>
-        /// 
+        ///
         /// <remarks>
         /// This property corresponds to the "ShellUrl" configuration
         /// value.
         /// </remarks>
-        /// 
+        ///
         public virtual Uri HealthVaultShellUrl
         {
             get
@@ -101,12 +101,12 @@ namespace Microsoft.HealthVault.DesktopWeb.Common
         /// <summary>
         /// Gets the application's unique identifier.
         /// </summary>
-        /// 
+        ///
         /// <remarks>
         /// This property corresponds to the "ApplicationId" configuration
         /// value.
         /// </remarks>
-        /// 
+        ///
         public virtual Guid ApplicationId
         {
             get
@@ -125,10 +125,10 @@ namespace Microsoft.HealthVault.DesktopWeb.Common
         /// <summary>
         /// Gets the request timeout in seconds.
         /// </summary>
-        /// 
+        ///
         /// <remarks>
-        /// This value is used to set the <see cref="HttpWebRequest.Timeout"/> property 
-        /// when making the request to HealthVault. The timeout is the number of seconds that a 
+        /// This value is used to set the <see cref="HttpWebRequest.Timeout"/> property
+        /// when making the request to HealthVault. The timeout is the number of seconds that a
         /// request will wait for a response from HealtVault. If the method response is not
         /// returned within the time-out period the request will throw a <see cref="System.Net.WebException"/>
         /// with the <see cref="System.Net.WebException.Status">Status</see> property set to
@@ -136,7 +136,7 @@ namespace Microsoft.HealthVault.DesktopWeb.Common
         /// This property corresponds to the "defaultRequestTimeout" configuration
         /// value. The value defaults to 30 seconds.
         /// </remarks>
-        /// 
+        ///
         public virtual int DefaultRequestTimeout
         {
             get
@@ -171,14 +171,14 @@ namespace Microsoft.HealthVault.DesktopWeb.Common
         /// <summary>
         /// Gets the request time to live in seconds.
         /// </summary>
-        /// 
+        ///
         /// <remarks>
         /// This property defines the "msg-ttl" in the HealthVault request header XML. It determines
         /// how long the same XML can be used before HealthVault determines the request invalid.
         /// This property corresponds to the "defaultRequestTimeToLive" configuration
         /// value. The value defaults to 1800 seconds.
         /// </remarks>
-        /// 
+        ///
         public virtual int DefaultRequestTimeToLive
         {
             get
@@ -207,18 +207,18 @@ namespace Microsoft.HealthVault.DesktopWeb.Common
         /// <summary>
         /// The default request time to live value.
         /// </summary>
-        protected const int DefaultDefaultRequestTimeToLive = 30*60;
+        protected const int DefaultDefaultRequestTimeToLive = 30 * 60;
 
         /// <summary>
         /// Gets the number of retries the .NET APIs will make when getting an internal
         /// error response (error 500) from HealthVault.
         /// </summary>
-        /// 
+        ///
         /// <remarks>
         /// This property corresponds to the "RequestRetryOnInternal500" configuration
         /// value. The value defaults to 2.
         /// </remarks>
-        /// 
+        ///
         public virtual int RetryOnInternal500Count
         {
             get
@@ -246,12 +246,12 @@ namespace Microsoft.HealthVault.DesktopWeb.Common
         /// Gets the sleep duration in seconds between retries due to HealthVault returning
         /// an internal error (error 500).
         /// </summary>
-        /// 
+        ///
         /// <remarks>
         /// This property corresponds to the "RequestRetryOnInternal500SleepSeconds" configuration
         /// value. The value defaults to 1 second.
         /// </remarks>
-        /// 
+        ///
         public virtual int RetryOnInternal500SleepSeconds
         {
             get
@@ -279,12 +279,12 @@ namespace Microsoft.HealthVault.DesktopWeb.Common
         /// <summary>
         /// Gets the size in bytes of the block used to hash inlined BLOB data.
         /// </summary>
-        /// 
+        ///
         /// <remarks>
         /// This property corresponds to the "defaultInlineBlobHashBlockSize" configuration
         /// value. The value defaults to 2MB.
         /// </remarks>
-        /// 
+        ///
         public virtual int InlineBlobHashBlockSize
         {
             get
@@ -315,13 +315,13 @@ namespace Microsoft.HealthVault.DesktopWeb.Common
         /// <summary>
         /// Gets the type version identifiers of types supported by this application.
         /// </summary>
-        /// 
+        ///
         /// <remarks>
         /// Although most applications don't need this configuration setting, if an application
         /// calls <see cref="HealthRecordAccessor.GetItem(Guid)"/> or makes any query to HealthVault
         /// that doesn't specify the type identifier in the filter, this configuration setting
-        /// will tell HealthVault the format of the type to reply with. For example, if a web 
-        /// application has two servers and makes a call to GetItem for EncounterV1 and the 
+        /// will tell HealthVault the format of the type to reply with. For example, if a web
+        /// application has two servers and makes a call to GetItem for EncounterV1 and the
         /// application authorization is set to the EncounterV1 format then the application will
         /// get EncounterV1 instances back even if the record contains Encounter v2 instances. Now
         /// the application wants to upgrade to Encounter v2 without having application down-time.
@@ -332,12 +332,12 @@ namespace Microsoft.HealthVault.DesktopWeb.Common
         /// the application), then both servers can continue to work while the application is
         /// upgraded.
         /// </remarks>
-        /// 
+        ///
         /// <exception cref="InvalidConfigurationException">
         /// If the configuration contains the name of a type that is not registered as a type handler
         /// in <see cref="ItemTypeManager"/>.
         /// </exception>
-        /// 
+        ///
         public virtual IList<Guid> SupportedTypeVersions
         {
             get
@@ -359,7 +359,7 @@ namespace Microsoft.HealthVault.DesktopWeb.Common
 
             string typeVersionsConfig = ApplicationConfigurationManager.GetConfigurationString(ConfigKeySupportedType, String.Empty);
             string[] typeVersions =
-                typeVersionsConfig.Split(new char[] {','}, StringSplitOptions.RemoveEmptyEntries);
+                typeVersionsConfig.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
 
             foreach (string typeVersionClassName in typeVersions)
             {
@@ -379,7 +379,7 @@ namespace Microsoft.HealthVault.DesktopWeb.Common
         /// <summary>
         /// Gets a value indicating whether or not legacy type versioning support should be used.
         /// </summary>
-        /// 
+        ///
         /// <remarks>
         /// Type versions support was initially determined by an applications base authorizations
         /// and/or the <see cref="HealthRecordView.TypeVersionFormat"/>. Some of these behaviors
@@ -392,7 +392,7 @@ namespace Microsoft.HealthVault.DesktopWeb.Common
         /// be observed. This property defaults to false and can be changed in the web.config file
         /// "UseLegacyTypeVersionSupport" setting.
         /// </remarks>
-        /// 
+        ///
         public virtual bool UseLegacyTypeVersionSupport
         {
             get
@@ -411,9 +411,9 @@ namespace Microsoft.HealthVault.DesktopWeb.Common
 
         /// <summary>
         /// Gets the value which indicates whether the application is able to handle connecting to multiple
-        /// instances of the HealthVault web-service. 
+        /// instances of the HealthVault web-service.
         /// </summary>
-        /// 
+        ///
         /// <remarks>
         /// This setting defaults to <b>true</b> and can be set in an application
         /// configuration file, using the "MultiInstanceAware" setting key.
@@ -448,10 +448,10 @@ namespace Microsoft.HealthVault.DesktopWeb.Common
         private volatile bool _multiInstanceAwareInitialized;
 
         /// <summary>
-        /// Gets the amount of time, in milliseconds, that the application's connection can 
+        /// Gets the amount of time, in milliseconds, that the application's connection can
         /// remain idle before the HealthVault framework closes the connection.
         /// </summary>
-        /// 
+        ///
         /// <remarks>
         /// This default value is 110 seconds of inactivity.
         /// <p>
@@ -472,7 +472,7 @@ namespace Microsoft.HealthVault.DesktopWeb.Common
             {
                 if (!_connectionMaxIdleTimeInitialized)
                 {
-                    _connectionMaxIdleTime = ApplicationConfigurationManager.GetConfigurationInt32(ConfigKeyConnectionMaxIdleTime, 110*1000);
+                    _connectionMaxIdleTime = ApplicationConfigurationManager.GetConfigurationInt32(ConfigKeyConnectionMaxIdleTime, 110 * 1000);
 
                     if (_connectionMaxIdleTime < -1)
                     {
@@ -490,10 +490,10 @@ namespace Microsoft.HealthVault.DesktopWeb.Common
         private volatile bool _connectionMaxIdleTimeInitialized;
 
         /// <summary>
-        /// Gets the amount of time, in milliseconds, that the application's connection can 
+        /// Gets the amount of time, in milliseconds, that the application's connection can
         /// remain open before the HealthVault framework closes the connection.
         /// </summary>
-        /// 
+        ///
         /// <remarks>
         /// The default value is 5 minutes.
         /// <p>
@@ -519,7 +519,7 @@ namespace Microsoft.HealthVault.DesktopWeb.Common
             {
                 if (!_connectionLeaseTimeoutInitialized)
                 {
-                    _connectionLeaseTimeout = ApplicationConfigurationManager.GetConfigurationInt32(ConfigKeyConnectionLeaseTimeout, 5*60*1000);
+                    _connectionLeaseTimeout = ApplicationConfigurationManager.GetConfigurationInt32(ConfigKeyConnectionLeaseTimeout, 5 * 60 * 1000);
 
                     if (_connectionLeaseTimeout < -1)
                     {
@@ -540,7 +540,7 @@ namespace Microsoft.HealthVault.DesktopWeb.Common
         /// Gets a value that indicates whether the application uses Http 1.1 persistent
         /// connections to HealthVault.
         /// </summary>
-        /// 
+        ///
         /// <remarks>
         /// True to use persistent connections; otherwise false. The default is true.
         /// <p>
@@ -567,7 +567,7 @@ namespace Microsoft.HealthVault.DesktopWeb.Common
         /// <summary>
         /// Gets the value which specifies the period of time before the <see cref="P:ServiceInfo.Current"/> built-in cache is considered expired.
         /// </summary>
-        /// 
+        ///
         /// <remarks>
         /// <p>
         /// Default value is <b>24 hours</b>.  This property corresponds to the "ServiceInfoDefaultCacheTtlMilliseconds" configuration value.
@@ -617,11 +617,11 @@ namespace Microsoft.HealthVault.DesktopWeb.Common
         /// Gets the root URL for a default instance of the
         /// Rest HealthVault service
         /// </summary>
-        /// 
+        ///
         /// <remarks>
         /// This property corresponds to the "RestHealthServiceUrl" configuration.
         /// </remarks>
-        /// 
+        ///
         public virtual Uri RestHealthVaultUrl
         {
             get
@@ -655,7 +655,6 @@ namespace Microsoft.HealthVault.DesktopWeb.Common
 
         private volatile string _applicationCertificatePassword;
 
-
         public string ApplicationCertificateFileName
         {
             get
@@ -671,7 +670,6 @@ namespace Microsoft.HealthVault.DesktopWeb.Common
 
         private volatile string _applicationCertificateFileName;
 
-
         public virtual StoreLocation SignatureCertStoreLocation
         {
             get
@@ -682,7 +680,7 @@ namespace Microsoft.HealthVault.DesktopWeb.Common
                 StoreLocation result = StoreLocation.LocalMachine;
                 try
                 {
-                    result = (StoreLocation) Enum.Parse(
+                    result = (StoreLocation)Enum.Parse(
                         typeof(StoreLocation),
                         signatureCertStoreLocation,
                         true);
@@ -733,12 +731,13 @@ namespace Microsoft.HealthVault.DesktopWeb.Common
             }
         }
 
-        private volatile ICryptoConfiguration _cryptoConfiguration;
+        public bool IsMultiRecordApp { get; set; }
 
+        private volatile ICryptoConfiguration _cryptoConfiguration;
 
         private void PopulateCrytoConfiguration()
         {
-            var hmacAlgorithmName = ApplicationConfigurationManager.GetConfigurationString(ConfigKeyHmacAlgorithmName, 
+            var hmacAlgorithmName = ApplicationConfigurationManager.GetConfigurationString(ConfigKeyHmacAlgorithmName,
                 BaseCryptoConfiguration.DefaultHmacAlgorithmName);
 
             var hashAlgorithmName = ApplicationConfigurationManager.GetConfigurationString(ConfigKeyHashAlgorithmName,
@@ -752,7 +751,6 @@ namespace Microsoft.HealthVault.DesktopWeb.Common
 
             var symmetricAlgorithmName = ApplicationConfigurationManager.GetConfigurationString(ConfigSymmetricAlgorithmName,
                BaseCryptoConfiguration.DefaultSymmetricAlgorithmName);
-
 
             _cryptoConfiguration = new AppCryptoConfiguration()
             {

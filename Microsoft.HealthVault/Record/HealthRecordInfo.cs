@@ -59,7 +59,7 @@ namespace Microsoft.HealthVault.Record
         /// </exception>
         ///
         public static new HealthRecordInfo CreateFromXml(
-            ApplicationConnection connection,
+            IConnectionInternal connection,
             XPathNavigator navigator)
         {
             Validator.ThrowIfArgumentNull(connection, "connection", "PersonInfoConnectionNull");
@@ -292,7 +292,7 @@ namespace Microsoft.HealthVault.Record
         ///
         internal HealthRecordInfo(HealthRecordInfo recordInfo)
             : this(
-                recordInfo.Connection as AuthenticatedConnection,
+                recordInfo.Connection,
                 recordInfo.Id)
         {
             if (recordInfo.IsUpdated)
@@ -347,7 +347,7 @@ namespace Microsoft.HealthVault.Record
         /// </exception>
         ///
         public HealthRecordInfo(
-            ApplicationConnection connection,
+            IConnectionInternal connection,
             Guid id)
             : base(connection, id)
         {
@@ -371,7 +371,7 @@ namespace Microsoft.HealthVault.Record
         /// The <paramref name="connection"/> parameter is <b>null</b>.
         /// </exception>
         ///
-        internal HealthRecordInfo(ApplicationConnection connection)
+        internal HealthRecordInfo(IConnectionInternal connection)
             : base(connection)
         {
         }
@@ -734,16 +734,6 @@ namespace Microsoft.HealthVault.Record
         ///
         public async Task Refresh()
         {
-            AuthenticatedConnection connection =
-                this.Connection as AuthenticatedConnection;
-            if (connection == null)
-            {
-                OfflineWebApplicationConnection offlineAuthConnection =
-                    this.Connection as OfflineWebApplicationConnection;
-
-                Validator.ThrowInvalidIfNull(offlineAuthConnection, "ConnectionIsNeitherAuthenticatedNorOffline");
-            }
-
             Collection<HealthRecordInfo> records =
                 await HealthVaultPlatform.GetAuthorizedRecordsAsync(this.Connection, new[] { this.Id }).ConfigureAwait(false);
 

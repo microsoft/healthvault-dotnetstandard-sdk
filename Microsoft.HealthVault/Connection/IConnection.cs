@@ -1,8 +1,11 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using Microsoft.HealthVault.Clients;
+using Microsoft.HealthVault.Person;
 using Microsoft.HealthVault.Configurations;
 using Microsoft.HealthVault.PlatformInformation;
 using Microsoft.HealthVault.Record;
+using Microsoft.HealthVault.Transport;
 
 namespace Microsoft.HealthVault.Connection
 {
@@ -31,15 +34,23 @@ namespace Microsoft.HealthVault.Connection
         /// <value>
         /// The session credential.
         /// </value>
-        ISessionCredential SessionCredential { get; set; }
+        SessionCredential SessionCredential { get; }
+
+        /// <summary>
+        /// Gets the application identifier.
+        /// </summary>
+        /// <value>
+        /// The application identifier.
+        /// </value>
+        Guid ApplicationId { get; }
 
         /// <summary>
         /// Gets a client of a given type.
         /// </summary>
-        /// <typeparam name="T">The type of the client to retrieve</typeparam>
+        /// <typeparam name="TClient">The type of the client to retrieve</typeparam>
         /// <returns>A client instance</returns>
-        T GetClient<T>()
-            where T : IClient;
+        TClient GetClient<TClient>()
+            where TClient : IClient;
 
         /// <summary>
         /// A client that can be used to access information about the platform.
@@ -75,5 +86,20 @@ namespace Microsoft.HealthVault.Connection
         /// </summary>
         /// <remarks> This should depend on application platform - SODA vs WEB </remarks>
         Task AuthenticateAsync();
+
+        /// <summary>
+        /// Makes Web request call to HealthVault service 
+        /// for specified method name and method version
+        /// </summary>
+        /// <param name="methodName">Name of the method.</param>
+        /// <param name="methodVersion">The method version.</param>
+        /// <param name="parameters">Method parameters</param>
+        /// <param name="recordId">Record Id</param>
+        /// <returns>HealthServiceResponseData</returns>
+        Task<HealthServiceResponseData> ExecuteAsync(
+            string methodName,
+            int methodVersion,
+            string parameters = null,
+            Guid? recordId = null);
     }
 }

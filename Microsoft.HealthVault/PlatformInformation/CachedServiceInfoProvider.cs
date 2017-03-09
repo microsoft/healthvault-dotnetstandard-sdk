@@ -126,11 +126,11 @@ namespace Microsoft.HealthVault.PlatformInformation
         /// <summary>
         /// Returns the service information retrieved from the HealthVault web-service.
         /// </summary>
-        /// 
+        ///
         /// <returns>
         /// Service information retrieved from the HealthVault web-service.
         /// </returns>
-        /// 
+        ///
         ///  <remarks>
         ///  Calls to this method are thread-safe.
         /// TODO: THIS METHODS THO REFERENCED IS NOT USED ANYWHERE
@@ -156,6 +156,8 @@ namespace Microsoft.HealthVault.PlatformInformation
         /// </remarks>
         private async Task<ServiceInfo> GetFromServiceAsync()
         {
+            // TODO: IConnection-ify this.
+            /*
             var connection = this.healthServiceUrl != null
                 ? new AnonymousConnection(configuration.ApplicationId, this.healthServiceUrl)
                 : new AnonymousConnection();
@@ -163,6 +165,8 @@ namespace Microsoft.HealthVault.PlatformInformation
             var serviceInfo = await HealthVaultPlatformInformation.Current.GetServiceDefinitionAsync(connection, this.responseSections);
             this.lastCheckTime = serviceInfo.LastUpdated;
             return serviceInfo;
+            */
+            return null;
         }
 
         /// <summary>
@@ -172,6 +176,8 @@ namespace Microsoft.HealthVault.PlatformInformation
         /// </summary>
         private async Task<ServiceInfo> RefreshFromServiceAsync(ServiceInfo currentServiceInfo)
         {
+            // TODO: IConnection-ify this.
+            /*
             var connection = this.healthServiceUrl != null
                 ? new AnonymousConnection(configuration.ApplicationId, this.healthServiceUrl)
                 : new AnonymousConnection();
@@ -180,6 +186,8 @@ namespace Microsoft.HealthVault.PlatformInformation
             this.lastCheckTime = DateTime.Now;
 
             return serviceInfo ?? currentServiceInfo;
+            */
+            return null;
         }
     }
 }

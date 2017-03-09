@@ -5,15 +5,18 @@ using Microsoft.HealthVault.PlatformInformation;
 using Microsoft.HealthVault.Things;
 using System;
 using System.Collections.Generic;
-using System.Globalization;
-using System.Security.Cryptography.X509Certificates;
 using System.Threading;
-using System.Xml;
+using Microsoft.HealthVault.Authentication;
+using Microsoft.HealthVault.Exceptions;
+using Microsoft.HealthVault.ItemTypes;
+using Microsoft.HealthVault.PlatformInformation;
+using Microsoft.HealthVault.Things;
 
 namespace Microsoft.HealthVault.Configurations
 {
     /// <summary>
-    /// Base class for the app, web and soda configurations
+    /// Gives access to the configuration file for the application and
+    /// exposes some of the settings directly.
     /// </summary>
     public abstract class ConfigurationBase : IConfiguration
     {
@@ -745,6 +748,38 @@ namespace Microsoft.HealthVault.Configurations
         }
 
         private volatile Uri restHealthVaultRootUrl;
+
+        public virtual int? RequestTimeoutSeconds
+        {
+            get
+            {
+                return this.requestTimeoutSeconds;
+            }
+
+            set
+            {
+                this.EnsureAppNotInitialized();
+                this.requestTimeoutSeconds = value;
+            }
+        }
+
+        private int? requestTimeoutSeconds;
+
+        public virtual bool IsMultiRecordApp
+        {
+            get
+            {
+                return this.isMultiAppRecord;
+            }
+
+            set
+            {
+                this.EnsureAppNotInitialized();
+                this.isMultiAppRecord = value;
+            }
+        }
+
+        private bool isMultiAppRecord;
 
         private static Uri EnsureTrailingSlash(Uri uri)
         {

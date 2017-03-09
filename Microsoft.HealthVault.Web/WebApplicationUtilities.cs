@@ -3,7 +3,6 @@
 // see http://www.microsoft.com/resources/sharedsource/licensingbasics/sharedsourcelicenses.mspx.
 // All other rights reserved.
 
-
 using System;
 using System.Diagnostics;
 using System.Globalization;
@@ -17,6 +16,7 @@ using System.Xml;
 using System.Xml.XPath;
 using Microsoft.HealthVault.Application;
 using Microsoft.HealthVault.Authentication;
+using Microsoft.HealthVault.Clients;
 using Microsoft.HealthVault.Configurations;
 using Microsoft.HealthVault.Connection;
 using Microsoft.HealthVault.Exceptions;
@@ -28,11 +28,11 @@ using Microsoft.HealthVault.Things;
 
 namespace Microsoft.HealthVault.Web
 {
-    /// <summary> 
-    /// A collection of utility functions to help HealthVault web application developers 
+    /// <summary>
+    /// A collection of utility functions to help HealthVault web application developers
     /// authenticate and perform other actions with HealthVault.
     /// </summary>
-    /// 
+    ///
     /// <remarks>
     /// If possible, it is recommended that HealthVault applications derive from
     /// <see cref="HealthServicePage"/>. If the requirements for the application don't allow for
@@ -40,21 +40,21 @@ namespace Microsoft.HealthVault.Web
     /// the static utility methods in this class give the developer access to the same functionality
     /// that is available in the <see cref="HealthServicePage"/>.
     /// <br/><br/>
-    /// Methods like <see cref="PageOnInit"/> and 
+    /// Methods like <see cref="PageOnInit"/> and
     /// <see cref="PageOnPreLoadAsync(System.Web.HttpContext,bool,bool)"/> should be called from
-    /// the application's page <see cref="System.Web.UI.Page.OnInit"/> and 
+    /// the application's page <see cref="System.Web.UI.Page.OnInit"/> and
     /// <see cref="System.Web.UI.Page.OnPreLoad"/> methods respectively.
     /// <br/><br/>
     /// Other methods help the application with management of the HealthVault cookie. For instance,
     /// <see cref="LoadPersonInfoFromCookie(System.Web.HttpContext)"/> reads the HealthVault cookie from the request and
     /// instantiates the <see cref="PersonInfo"/> instance for the logged in person. Note, some
     /// methods like <see cref="LoadPersonInfoFromCookie(System.Web.HttpContext)"/> require another method be called first
-    /// to handle the user's authentication token. Methods like 
-    /// <see cref="SavePersonInfoToCookie(System.Web.HttpContext, PersonInfo)"/> and 
-    /// <see cref="RefreshAndSavePersonInfoToCookieAsync(System.Web.HttpContext,PersonInfo)"/> deal with storing the HealthVault user information in a 
+    /// to handle the user's authentication token. Methods like
+    /// <see cref="SavePersonInfoToCookie(System.Web.HttpContext, PersonInfo)"/> and
+    /// <see cref="RefreshAndSavePersonInfoToCookieAsync(System.Web.HttpContext,PersonInfo)"/> deal with storing the HealthVault user information in a
     /// cookie or session.
     /// </remarks>
-    /// 
+    ///
     public static class WebApplicationUtilities
     {
         internal const string QueryStringToken = "WCToken";
@@ -64,26 +64,27 @@ namespace Microsoft.HealthVault.Web
         internal const string WcTokenExpiration = "e";
         internal const string WcTokenPersonInfo = "p";
 
-        static int CookieMaxSize = 2048;
+        private static int CookieMaxSize = 2048;
 
         private static WebConfiguration configuration = Ioc.Get<WebConfiguration>();
 
         #region OnInit
+
         /// <summary>
-        /// Replicates the <see cref="HealthServicePage.OnInit"/> behavior by redirecting to a 
+        /// Replicates the <see cref="HealthServicePage.OnInit"/> behavior by redirecting to a
         /// secure version of the page if the URL requested is insecure and the application requires
         /// a secure connection.
         /// </summary>
-        /// 
+        ///
         /// <param name="context">
         /// The current request context.
         /// </param>
-        /// 
+        ///
         /// <param name="isPageSslSecure">
         /// If true, the application requires all connections to this page be over a secure SSL
         /// channel.
         /// </param>
-        /// 
+        ///
         /// <remarks>
         /// Applications can require certain pages (or all pages) to be accessed only over a secure
         /// SSL channel. To do this the application must set the "WCPage_SSLForSecure" config value
@@ -92,7 +93,7 @@ namespace Microsoft.HealthVault.Web
         /// If the conditions above are true the user's browser will automatically be redirected
         /// to a secure version of the page.
         /// </remarks>
-        /// 
+        ///
         public static void PageOnInit(System.Web.HttpContext context, bool isPageSslSecure)
         {
             if (isPageSslSecure)
@@ -106,17 +107,17 @@ namespace Microsoft.HealthVault.Web
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="request"></param>
         /// <returns></returns>
-        /// 
+        ///
         /// <remarks>
         /// This is usually called during page initialization (<see cref="System.Web.UI.Page.OnInit"/>).
         /// If a <see cref="System.Uri"/> is returned then the user should be redirected to the
         /// specified URL.
         /// </remarks>
-        /// 
+        ///
         private static string GetSSLRedirectURL(HttpRequest request)
         {
             string result = null;
@@ -148,6 +149,7 @@ namespace Microsoft.HealthVault.Web
             }
             return result;
         }
+
         #endregion OnInit
 
         #region OnPreLoad
@@ -155,26 +157,26 @@ namespace Microsoft.HealthVault.Web
         /// <summary>
         /// Ensures that the person is logged on if <paramref name="logOnRequired"/> is true.
         /// </summary>
-        /// 
+        ///
         /// <param name="context">
         /// The current request context.
         /// </param>
-        /// 
+        ///
         /// <param name="logOnRequired">
         /// True if the requested page requires the user to be logged on to HealthVault, or false
         /// otherwise. If true and the user isn't logged on, the user's browser will be automatically
         /// redirected to the HealthVault authentication page.
         /// </param>
-        /// 
+        ///
         /// <remarks>
-        /// It is recommended that HealthVault applications that cannot derive from 
+        /// It is recommended that HealthVault applications that cannot derive from
         /// <see cref="HealthServicePage"/> call this method during their pages OnPreLoad. This
         /// method will ensure that the HealthVault token is extracted from the URL query string,
         /// the authenticated person's <see cref="PersonInfo"/> is retrieved and stored in a cookie.
-        /// This will make the person's information available through the cookie on all future 
+        /// This will make the person's information available through the cookie on all future
         /// requests until they log off.
         /// </remarks>
-        /// 
+        ///
         public static async Task<PersonInfo> PageOnPreLoadAsync(System.Web.HttpContext context, bool logOnRequired)
         {
             return await PageOnPreLoad(
@@ -185,34 +187,33 @@ namespace Microsoft.HealthVault.Web
                 .ConfigureAwait(false);
         }
 
-
         /// <summary>
         /// Ensures that the person is logged on if <paramref name="logOnRequired"/> is true.
         /// </summary>
-        /// 
+        ///
         /// <param name="context">
         /// The current request context.
         /// </param>
-        /// 
+        ///
         /// <param name="logOnRequired">
         /// True if the requested page requires the user to be logged on to HealthVault, or false
         /// otherwise. If true and the user isn't logged on, the user's browser will be automatically
         /// redirected to the HealthVault authentication page.
         /// </param>
-        /// 
+        ///
         /// <param name="appId">
         /// The unique application identifier.
         /// </param>
-        /// 
+        ///
         /// <remarks>
-        /// It is recommended that HealthVault applications that cannot derive from 
+        /// It is recommended that HealthVault applications that cannot derive from
         /// <see cref="HealthServicePage"/> call this method during their pages OnPreLoad. This
         /// method will ensure that the HealthVault token is extracted from the URL query string,
         /// the authenticated person's <see cref="PersonInfo"/> is retrieved and stored in a cookie.
-        /// This will make the person's information available through the cookie on all future 
+        /// This will make the person's information available through the cookie on all future
         /// requests until they log off.
         /// </remarks>
-        /// 
+        ///
         public static async Task<PersonInfo> PageOnPreLoad(System.Web.HttpContext context, bool logOnRequired, Guid appId)
         {
             return await PageOnPreLoad(context, logOnRequired, false /* isMra */, appId).ConfigureAwait(false);
@@ -221,31 +222,31 @@ namespace Microsoft.HealthVault.Web
         /// <summary>
         /// Ensures that the person is logged on if <paramref name="logOnRequired"/> is true.
         /// </summary>
-        /// 
+        ///
         /// <param name="context">
         /// The current request context.
         /// </param>
-        /// 
+        ///
         /// <param name="logOnRequired">
         /// True if the requested page requires the user to be logged on to HealthVault, or false
         /// otherwise. If true and the user isn't logged on, the user's browser will be automatically
         /// redirected to the HealthVault authentication page.
         /// </param>
-        /// 
+        ///
         /// <param name="isMra">
         /// Whether this application simultaneously deals with multiple records
         /// for the same person.
         /// </param>
-        /// 
+        ///
         /// <remarks>
-        /// It is recommended that HealthVault applications that cannot derive from 
+        /// It is recommended that HealthVault applications that cannot derive from
         /// <see cref="HealthServicePage"/> call this method during their pages OnPreLoad. This
         /// method will ensure that the HealthVault token is extracted from the URL query string,
         /// the authenticated person's <see cref="PersonInfo"/> is retrieved and stored in a cookie.
-        /// This will make the person's information available through the cookie on all future 
+        /// This will make the person's information available through the cookie on all future
         /// requests until they log off.
         /// </remarks>
-        /// 
+        ///
         public static async Task<PersonInfo> PageOnPreLoadAsync(System.Web.HttpContext context, bool logOnRequired, bool isMra)
         {
             return await PageOnPreLoad(
@@ -256,46 +257,45 @@ namespace Microsoft.HealthVault.Web
                 .ConfigureAwait(false);
         }
 
-
         /// <summary>
         /// Ensures that the person is logged on if <paramref name="logOnRequired"/> is true.
         /// </summary>
-        /// 
+        ///
         /// <param name="context">
         /// The current request context.
         /// </param>
-        /// 
+        ///
         /// <param name="logOnRequired">
         /// True if the requested page requires the user to be logged on to HealthVault, or false
         /// otherwise. If true and the user isn't logged on, the user's browser will be automatically
         /// redirected to the HealthVault authentication page.
         /// </param>
-        /// 
+        ///
         /// <param name="isMra">
         /// Whether this application simultaneously deals with multiple records
         /// for the same person.
         /// </param>
-        /// 
+        ///
         /// <param name="appId">
         /// The unique identifier for the application.
         /// </param>
-        /// 
+        ///
         /// <remarks>
-        /// It is recommended that HealthVault applications that cannot derive from 
+        /// It is recommended that HealthVault applications that cannot derive from
         /// <see cref="HealthServicePage"/> call this method during their pages OnPreLoad. This
         /// method will ensure that the HealthVault token is extracted from the URL query string,
         /// the authenticated person's <see cref="PersonInfo"/> is retrieved and stored in a cookie.
-        /// This will make the person's information available through the cookie on all future 
+        /// This will make the person's information available through the cookie on all future
         /// requests until they log off.
         /// </remarks>
-        /// 
+        ///
         public static async Task<PersonInfo> PageOnPreLoad(
             HttpContext context,
             bool logOnRequired,
             bool isMra,
             Guid appId)
         {
-            // this will redirect if needed 
+            // this will redirect if needed
             // NOTE: I reverted this code because it was spreading query
             // string info around as it was previously.
             await HandleTokenOnUrl(context, logOnRequired, appId).ConfigureAwait(false);
@@ -312,7 +312,8 @@ namespace Microsoft.HealthVault.Web
                 string signupCode = null;
                 if (configuration.IsSignupCodeRequired)
                 {
-                    signupCode = HealthVaultPlatform.NewSignupCodeAsync(ApplicationConnection).Result;
+                    // TODO: IConnection-ify this.
+                    // signupCode = HealthVaultPlatform.NewSignupCodeAsync(ApplicationConnection).Result;
                 }
 
                 RedirectToLogOn(context, isMra, context.Request.Url.PathAndQuery, signupCode);
@@ -341,15 +342,15 @@ namespace Microsoft.HealthVault.Web
         /// Gets a credential used to authenticate the web application to
         /// Microsoft HealthVault.
         /// </summary>
-        /// 
+        ///
         /// <param name="appId">
         /// The unique application identifier to get the credential for.
         /// </param>
-        /// 
+        ///
         /// <returns>
         /// The application credential for the specified application.
         /// </returns>
-        /// 
+        ///
         public static WebApplicationCredential GetApplicationAuthenticationCredential(Guid appId)
         {
             return
@@ -359,259 +360,35 @@ namespace Microsoft.HealthVault.Web
         }
 
         /// <summary>
-        /// Gets a HealthVault application connection without a user context for the
-        /// configured default HealthVault web-service instance.
-        /// </summary>
-        /// 
-        /// <returns>
-        /// A <see cref="Connection.ApplicationConnection"/> connection.
-        /// </returns>
-        /// 
-        /// <exception cref="System.Security.SecurityException">
-        /// If the application private key could not be found in the 
-        /// certificate store to sign requests.
-        /// </exception>
-        /// 
-        public static ApplicationConnection ApplicationConnection
-        {
-            get
-            {
-                return GetApplicationConnection(
-                    configuration.ApplicationId);
-            }
-        }
-
-
-        /// <summary>
-        /// Gets a HealthVault application connection without a user context for the
-        /// specified HealthVault web-service instance.
-        /// </summary>
-        /// 
-        /// <param name="serviceInstance">
-        /// The HealthVault web-service instance.
-        /// </param>
-        /// 
-        /// <returns>
-        /// A <see cref="Connection.ApplicationConnection"/> connection.
-        /// </returns>
-        /// 
-        /// <exception cref="System.Security.SecurityException">
-        /// If the application private key could not be found in the 
-        /// certificate store to sign requests.
-        /// </exception>
-        public static ApplicationConnection GetApplicationConnection(HealthServiceInstance serviceInstance)
-        {
-            return GetApplicationConnection(
-                configuration.ApplicationId,
-                serviceInstance);
-        }
-
-        /// <summary>
-        /// Gets a HealthVault application connection without a user context for the
-        /// configured default HealthVault web-service instance.
-        /// </summary>
-        /// 
-        /// <param name="appId">
-        /// The unique application identifier for the application to get the connection for.
-        /// </param>
-        /// 
-        /// <returns>
-        /// A <see cref="Connection.ApplicationConnection"/> connection.
-        /// </returns>
-        /// 
-        /// <exception cref="System.Security.SecurityException">
-        /// If the application private key could not be found in the 
-        /// certificate store to sign requests.
-        /// </exception>
-        /// 
-        public static ApplicationConnection GetApplicationConnection(Guid appId)
-        {
-            return new OfflineWebApplicationConnection(
-                GetApplicationAuthenticationCredential(appId),
-                Guid.Empty);
-        }
-
-        /// <summary>
-        /// Gets a HealthVault application connection without a user context for the
-        /// specified HealthVault web-service instance.
-        /// </summary>
-        /// 
-        /// <param name="appId">
-        /// The unique application identifier for the application to get the connection for.
-        /// </param>
-        /// 
-        /// <param name="serviceInstance">
-        /// The HealthVault web-service instance.
-        /// </param>
-        /// 
-        /// <returns>
-        /// A <see cref="Connection.ApplicationConnection"/> connection.
-        /// </returns>
-        /// 
-        /// <exception cref="System.Security.SecurityException">
-        /// If the application private key could not be found in the 
-        /// certificate store to sign requests.
-        /// </exception>
-        public static ApplicationConnection GetApplicationConnection(Guid appId, HealthServiceInstance serviceInstance)
-        {
-            return new OfflineWebApplicationConnection(
-                GetApplicationAuthenticationCredential(appId),
-                appId,
-                serviceInstance,
-                Guid.Empty);
-        }
-
-        /// <summary>
-        /// Gets a HealthVault connection for the authenticated user.
-        /// </summary>
-        /// 
-        /// <returns>
-        /// A <see cref="WebApplicationConnection"/>.
-        /// </returns>
-        /// 
-        /// <exception cref="System.Security.SecurityException">
-        /// If the application private key could not be found in the 
-        /// certificate store to sign requests.
-        /// </exception>
-        /// 
-        /// <exception cref="InvalidOperationException">
-        /// If a person has not been logged in.
-        /// </exception>
-        /// 
-        public static async Task<WebApplicationConnection> GetAuthenticatedConnection(System.Web.HttpContext context)
-        {
-            PersonInfo personInfo = await LoadPersonInfoFromCookie(context);
-
-            Validator.ThrowInvalidIfNull(personInfo, "PersonNotLoggedIn");
-
-            var conn = (AuthenticatedConnection)personInfo.ApplicationConnection;
-
-            return conn.ServiceInstance != null
-                ? new WebApplicationConnection(conn.ServiceInstance, conn.Credential)
-                : new WebApplicationConnection(conn.Credential);
-        }
-
-        /// <summary>
-        /// Gets a HealthVault connection for the configured default HealthVault web-service instance,
-        /// without an authentication token for the user but with an application authentication token,
-        /// which can be used to access vocabularies.
-        /// </summary>
-        /// 
-        /// <returns>
-        /// A <see cref="ApplicationConnection"/> connection.
-        /// </returns>
-        /// 
-        /// <exception cref="System.Security.SecurityException">
-        /// If the application private key could not be found in the 
-        /// certificate store to sign requests.
-        /// </exception>
-        /// 
-        public static ApplicationConnection DictionaryConnection
-        {
-            get
-            {
-                return ApplicationConnection;
-            }
-        }
-
-        /// <summary>
-        /// Gets a HealthVault connection for the specified HealthVault web-service instance, without
-        /// an authentication token for the user but with an application authentication token, which
-        /// can be used to access vocabularies.
-        /// </summary>
-        /// 
-        /// <returns>
-        /// A <see cref="ApplicationConnection"/> connection.
-        /// </returns>
-        /// 
-        /// <exception cref="System.Security.SecurityException">
-        /// If the application private key could not be found in the 
-        /// certificate store to sign requests.
-        /// </exception>
-        /// 
-        public static ApplicationConnection GetDictionaryConnectionForInstance(HealthServiceInstance serviceInstance)
-        {
-            return GetApplicationConnection(serviceInstance);
-        }
-
-        /// <summary>
-        /// Gets a HealthVault connection for the configured default HealthVault web-service instance
-        /// without an authentication token for either the user or the application.
-        /// </summary>
-        /// 
-        /// <returns>
-        /// A connection to HealthVault that does not contain user or application
-        /// authentication information.
-        /// </returns>
-        /// 
-        /// <exception cref="System.Security.SecurityException">
-        /// If the application private key could not be found in the 
-        /// certificate store to sign requests.
-        /// </exception>
-        /// 
-        public static AnonymousConnection AnonymousConnection
-        {
-            get
-            {
-                return new AnonymousConnection();
-            }
-        }
-
-        /// <summary>
-        /// Gets a HealthVault connection for the specified HealthVault web-service instance
-        /// without an authentication token for either the user or the application.
-        /// </summary>
-        /// 
-        /// <param name="serviceInstance">
-        /// The HealthVault web-service instance.
-        /// </param>
-        /// 
-        /// <returns>
-        /// A connection to HealthVault that does not contain user or application
-        /// authentication information.
-        /// </returns>
-        /// 
-        /// <exception cref="System.Security.SecurityException">
-        /// If the application private key could not be found in the 
-        /// certificate store to sign requests.
-        /// </exception>
-        /// 
-        /// 
-        public static AnonymousConnection GetAnonymousConnectionForInstance(HealthServiceInstance serviceInstance)
-        {
-            return new AnonymousConnection(configuration.ApplicationId, serviceInstance);
-        }
-
-        /// <summary> 
-        /// Cleans the application's session of HealthVault information and 
+        /// Cleans the application's session of HealthVault information and
         /// then repopulates it.
         /// </summary>
-        /// 
+        ///
         /// <param name="context">
         /// The current request context.
         /// </param>
-        /// 
+        ///
         /// <param name="personInfo">
         /// The information about the authenticated person that needs refreshing.
         /// </param>
-        /// 
+        ///
         /// <exception cref="InvalidOperationException">
         /// If a person isn't logged on when this is called.
         /// </exception>
-        /// 
+        ///
         /// <remarks>
-        /// This method should be called anytime an action occurs that will affect the 
+        /// This method should be called anytime an action occurs that will affect the
         /// <see cref="PersonInfo"/> object for the authenticated person. This includes changing
         /// the person's authorization for the application or changing the selected record.
         /// </remarks>
-        /// 
+        ///
         public static async Task<PersonInfo> RefreshAndSavePersonInfoToCookieAsync(
             HttpContext context,
             PersonInfo personInfo)
         {
             Validator.ThrowInvalidIfNull(personInfo, "PersonNotLoggedIn");
 
-            personInfo = await HealthVaultPlatform.GetPersonInfoAsync(personInfo.ApplicationConnection).ConfigureAwait(false);
+            personInfo = await HealthVaultPlatform.GetPersonInfoAsync(personInfo.Connection).ConfigureAwait(false);
 
             SavePersonInfoToCookie(context, personInfo);
             return personInfo;
@@ -630,47 +407,47 @@ namespace Microsoft.HealthVault.Web
         /// <summary>
         /// Stores the specified person's information in the cookie.
         /// </summary>
-        /// 
+        ///
         /// <param name="context">
         /// The current request context.
         /// </param>
-        /// 
+        ///
         /// <param name="personInfo">
         /// The authenticated person's information.
         /// </param>
-        /// 
+        ///
         /// <remarks>
         /// If <paramref name="personInfo"/> is null, this call will not clear the cookie.
         /// </remarks>
-        /// 
+        ///
         public static void SavePersonInfoToCookie(System.Web.HttpContext context, PersonInfo personInfo)
         {
             SavePersonInfoToCookie(context, personInfo, false);
         }
 
-        /// <summary> 
-        /// Cleans the application's session of HealthVault information and 
+        /// <summary>
+        /// Cleans the application's session of HealthVault information and
         /// then repopulates it using the specified authentication.
         /// </summary>
-        /// 
+        ///
         /// <param name="context">
         /// The current request context.
         /// </param>
-        /// 
+        ///
         /// <param name="authToken">
         /// The authentication to use to populate the session with HealthVault
         /// information.
         /// </param>
-        /// 
+        ///
         /// <exception cref="HealthServiceException">
         /// If HealthVault returns an error when getting information
         /// about the person in the <paramref name="authToken"/>.
         /// </exception>
-        /// 
+        ///
         /// <remarks>
-        /// This method should be called anytime the application takes a redirect from the 
+        /// This method should be called anytime the application takes a redirect from the
         /// HealthVault shell and there is a WCToken on the query string. Note, if you are calling
-        /// <see cref="PageOnPreLoadAsync(System.Web.HttpContext, bool, bool)"/> or 
+        /// <see cref="PageOnPreLoadAsync(System.Web.HttpContext, bool, bool)"/> or
         /// <see cref="PageOnPreLoadAsync(System.Web.HttpContext, bool)"/> this is handled for you.
         /// </remarks>
         public static async Task<PersonInfo> RefreshAndSavePersonInfoToCookieAsync(
@@ -682,35 +459,35 @@ namespace Microsoft.HealthVault.Web
             return personInfo;
         }
 
-        /// <summary> 
-        /// Cleans the application's session of HealthVault information and 
+        /// <summary>
+        /// Cleans the application's session of HealthVault information and
         /// then repopulates it using the specified authentication token and
         /// HealthVault web-service instance.
         /// </summary>
-        /// 
+        ///
         /// <param name="context">
         /// The current request context.
         /// </param>
-        /// 
+        ///
         /// <param name="authToken">
         /// The authentication to use to populate the session with HealthVault
         /// information.
         /// </param>
-        /// 
+        ///
         /// <param name="serviceInstance">
         /// The HealthVault web-service instance that the session auth token
         /// was originally received from.
         /// </param>
-        /// 
+        ///
         /// <exception cref="HealthServiceException">
         /// If HealthVault returns an error when getting information
         /// about the person in the <paramref name="authToken"/>.
         /// </exception>
-        /// 
+        ///
         /// <remarks>
-        /// This method should be called anytime the application takes a redirect from the 
+        /// This method should be called anytime the application takes a redirect from the
         /// HealthVault shell and there is a WCToken on the query string. Note, if you are calling
-        /// <see cref="PageOnPreLoadAsync(System.Web.HttpContext, bool, bool)"/> or 
+        /// <see cref="PageOnPreLoadAsync(System.Web.HttpContext, bool, bool)"/> or
         /// <see cref="PageOnPreLoadAsync(System.Web.HttpContext, bool)"/> this is handled for you.
         /// </remarks>
         public static async Task<PersonInfo> RefreshAndSavePersonInfoToCookieAsync(
@@ -724,32 +501,32 @@ namespace Microsoft.HealthVault.Web
         }
 
         /// <summary>
-        /// Redirects to the HealthVault Shell URL with the queryString params 
+        /// Redirects to the HealthVault Shell URL with the queryString params
         /// appended.
         /// </summary>
-        /// 
+        ///
         /// <param name="context">
         /// The current request context.
         /// </param>
-        /// 
+        ///
         /// <param name="targetLocation">
-        /// A known constant indicating the internal HealthVault 
+        /// A known constant indicating the internal HealthVault
         /// service Shell location to redirect to.
         /// See <a href="http://msdn.microsoft.com/en-us/library/ff803620.aspx">Shell redirect interface</a>.
         /// </param>
-        /// 
+        ///
         /// <param name="targetQuery">
-        /// The query string value to pass to the URL to which redirection is 
-        /// taking place. 
+        /// The query string value to pass to the URL to which redirection is
+        /// taking place.
         /// </param>
-        /// 
+        ///
         /// <remarks>
         /// The <paramref name="targetLocation"/> will be passed as the target parameter value to
         /// the redirector URL.
-        /// The <paramref name="targetQuery"/> will be URL encoded and passed as the targetqs 
+        /// The <paramref name="targetQuery"/> will be URL encoded and passed as the targetqs
         /// parameter value to the redirector URL.
         /// </remarks>
-        /// 
+        ///
         public static void RedirectToShellUrl(
             System.Web.HttpContext context,
             string targetLocation,
@@ -763,39 +540,39 @@ namespace Microsoft.HealthVault.Web
         }
 
         /// <summary>
-        /// Redirects to the HealthVault Shell URL with the queryString params 
+        /// Redirects to the HealthVault Shell URL with the queryString params
         /// appended.
         /// </summary>
-        /// 
+        ///
         /// <param name="context">
         /// The current request context.
         /// </param>
-        /// 
+        ///
         /// <param name="targetLocation">
-        /// A known constant indicating the internal HealthVault 
+        /// A known constant indicating the internal HealthVault
         /// service Shell location to redirect to.
         /// See <a href="http://msdn.microsoft.com/en-us/library/ff803620.aspx">Shell redirect interface</a>.
         /// </param>
-        /// 
+        ///
         /// <param name="targetQuery">
-        /// The query string value to pass to the URL to which redirection is 
-        /// taking place. 
+        /// The query string value to pass to the URL to which redirection is
+        /// taking place.
         /// </param>
-        /// 
+        ///
         /// <param name="actionUrlQueryString">
         /// The query string parameters passed to the calling application action URL after the
         /// target action is completed in the Shell.
         /// </param>
-        /// 
+        ///
         /// <remarks>
         /// The <paramref name="targetLocation"/> will be passed as the target parameter value to
         /// the redirector URL.
-        /// The <paramref name="targetQuery"/> will be URL encoded and passed as the targetqs 
+        /// The <paramref name="targetQuery"/> will be URL encoded and passed as the targetqs
         /// parameter value to the redirector URL.
         /// The <paramref name="actionUrlQueryString"/> will be URL encoded and passed as the actionqs
         /// parameter value to the redirector URL.
         /// </remarks>
-        /// 
+        ///
         public static void RedirectToShellUrl(
             System.Web.HttpContext context,
             string targetLocation,
@@ -811,25 +588,25 @@ namespace Microsoft.HealthVault.Web
         }
 
         /// <summary>
-        /// Redirects to the HealthVault Shell URL with the query string params 
+        /// Redirects to the HealthVault Shell URL with the query string params
         /// appended.
         /// </summary>
-        /// 
+        ///
         /// <param name="context">
         /// The current request context.
         /// </param>
-        /// 
+        ///
         /// <param name="targetLocation">
-        /// A known constant indicating the internal HealthVault 
+        /// A known constant indicating the internal HealthVault
         /// service Shell location to redirect to.
         /// See <a href="http://msdn.microsoft.com/en-us/library/ff803620.aspx">Shell redirect interface</a>.
         /// </param>
-        /// 
+        ///
         /// <remarks>
         /// The <paramref name="targetLocation"/> will be passed as the target parameter value to
         /// the redirector URL.
         /// </remarks>
-        /// 
+        ///
         public static void RedirectToShellUrl(System.Web.HttpContext context, string targetLocation)
         {
             context.Response.Redirect(
@@ -839,18 +616,18 @@ namespace Microsoft.HealthVault.Web
         }
 
         /// <summary>
-        /// Redirects to the HealthVault Shell URL with the query string params 
+        /// Redirects to the HealthVault Shell URL with the query string params
         /// appended.
         /// </summary>
-        /// 
+        ///
         /// <param name="context">
         /// The current request context.
         /// </param>
-        /// 
+        ///
         /// <param name="redirectParameters">
         /// HealthVault Shell redirect parameters.
         /// </param>
-        /// 
+        ///
         public static void RedirectToShellUrl(System.Web.HttpContext context, ShellRedirectParameters redirectParameters)
         {
             context.Response.Redirect(
@@ -859,43 +636,42 @@ namespace Microsoft.HealthVault.Web
                     redirectParameters).OriginalString);
         }
 
-
         /// <summary>
-        /// Constructs a URL to be redirected to via the HealthVault URL 
+        /// Constructs a URL to be redirected to via the HealthVault URL
         /// redirector.
         /// </summary>
-        /// 
+        ///
         /// <param name="context">
         /// The current request context.
         /// </param>
-        /// 
+        ///
         /// <param name="targetLocation">
-        /// A known constant indicating the internal HealthVault 
+        /// A known constant indicating the internal HealthVault
         /// service Shell location to redirect to.
         /// See <a href="http://msdn.microsoft.com/en-us/library/ff803620.aspx">Shell redirect interface</a>.
         /// </param>
-        /// 
+        ///
         /// <param name="targetQuery">
-        /// The query string value to pass to the URL to which redirection is 
+        /// The query string value to pass to the URL to which redirection is
         /// taking place.
         /// </param>
-        /// 
+        ///
         /// <remarks>
         /// The <paramref name="targetLocation"/> will be passed as the target parameter value to
         /// the redirector URL.
-        /// The <paramref name="targetQuery"/> will be URL encoded and passed as the targetqs 
+        /// The <paramref name="targetQuery"/> will be URL encoded and passed as the targetqs
         /// parameter value to the redirector URL.
         /// </remarks>
-        /// 
+        ///
         /// <returns>
         /// The constructed URL.
         /// </returns>
-        /// 
+        ///
         /// <exception cref="UriFormatException">
         /// If the specific target location causes an improper URL to be
         /// constructed.
         /// </exception>
-        /// 
+        ///
         public static Uri ConstructShellTargetUrl(
             System.Web.HttpContext context,
             string targetLocation,
@@ -904,50 +680,49 @@ namespace Microsoft.HealthVault.Web
             return ConstructShellTargetUrl(context, targetLocation, targetQuery, null);
         }
 
-
         /// <summary>
-        /// Constructs a URL to be redirected to via the HealthVault URL 
+        /// Constructs a URL to be redirected to via the HealthVault URL
         /// redirector.
         /// </summary>
-        /// 
+        ///
         /// <param name="context">
         /// The current request context.
         /// </param>
-        /// 
+        ///
         /// <param name="targetLocation">
-        /// A known constant indicating the internal HealthVault 
+        /// A known constant indicating the internal HealthVault
         /// service Shell location to redirect to.
         /// See <a href="http://msdn.microsoft.com/en-us/library/ff803620.aspx">Shell redirect interface</a>.
         /// </param>
-        /// 
+        ///
         /// <param name="targetQuery">
-        /// The query string value to pass to the URL to which redirection is 
+        /// The query string value to pass to the URL to which redirection is
         /// taking place.
         /// </param>
-        /// 
+        ///
         /// <param name="actionUrlQueryString">
         /// The query string parameters passed to the calling application action URL after the
         /// target action is completed in the Shell.
         /// </param>
-        /// 
+        ///
         /// <remarks>
         /// The <paramref name="targetLocation"/> will be passed as the target parameter value to
         /// the redirector URL.
-        /// The <paramref name="targetQuery"/> will be URL encoded and passed as the targetqs 
+        /// The <paramref name="targetQuery"/> will be URL encoded and passed as the targetqs
         /// parameter value to the redirector URL.
         /// The <paramref name="actionUrlQueryString"/> will be URL encoded and passed as the actionqs
         /// parameter value to the redirector URL.
         /// </remarks>
-        /// 
+        ///
         /// <returns>
         /// The constructed URL.
         /// </returns>
-        /// 
+        ///
         /// <exception cref="UriFormatException">
         /// If the specific target location causes an improper URL to be
         /// constructed.
         /// </exception>
-        /// 
+        ///
         public static Uri ConstructShellTargetUrl(
             System.Web.HttpContext context,
             string targetLocation,
@@ -964,22 +739,22 @@ namespace Microsoft.HealthVault.Web
         }
 
         /// <summary>
-        /// Constructs a URL to be redirected to via the HealthVault URL 
+        /// Constructs a URL to be redirected to via the HealthVault URL
         /// redirector.
         /// </summary>
-        /// 
+        ///
         /// <param name="context">
         /// The current request context.
         /// </param>
-        /// 
+        ///
         /// <param name="redirectParameters">
         /// HealthVault Shell redirect parameters.
         /// </param>
-        /// 
+        ///
         /// <returns>
         /// The constructed URL.
         /// </returns>
-        /// 
+        ///
         /// <exception cref="UriFormatException">
         /// If the specific target location causes an improper URL to be
         /// constructed.
@@ -996,34 +771,34 @@ namespace Microsoft.HealthVault.Web
         }
 
         /// <summary>
-        /// Constructs a URL to be redirected to via the HealthVault URL 
+        /// Constructs a URL to be redirected to via the HealthVault URL
         /// redirector.
         /// </summary>
-        /// 
+        ///
         /// <param name="context">
         /// The current request context.
         /// </param>
-        /// 
+        ///
         /// <param name="targetLocation">
-        /// A known constant indicating the internal HealthVault 
+        /// A known constant indicating the internal HealthVault
         /// service Shell location to redirect to.
         /// See <a href="http://msdn.microsoft.com/en-us/library/ff803620.aspx">Shell redirect interface</a>.
         /// </param>
-        /// 
+        ///
         /// <remarks>
         /// The <paramref name="targetLocation"/> will be passed as the target parameter value to
         /// the redirector URL.
         /// </remarks>
-        /// 
+        ///
         /// <returns>
         /// The constructed URL.
         /// </returns>
-        /// 
+        ///
         /// <exception cref="UriFormatException">
         /// If the specific target location causes an improper URL to be
         /// constructed.
         /// </exception>
-        /// 
+        ///
         public static Uri ConstructShellTargetUrl(
             System.Web.HttpContext context,
             string targetLocation)
@@ -1035,23 +810,23 @@ namespace Microsoft.HealthVault.Web
         /// Gets the authenticated person's information using the specified authentication token from
         /// the configured default HealthVault web-service instance.
         /// </summary>
-        /// 
+        ///
         /// <param name="authToken">
         /// The authentication token for a user. This can be retrieved by extracting the WCToken
         /// query string parameter from the request after the user has been redirected to the
         /// HealthVault AUTH page. See <see cref="RedirectToShellUrl(System.Web.HttpContext, string)"/> for more information.
         /// </param>
-        /// 
+        ///
         /// <returns>
         /// The information about the logged in person.
         /// </returns>
-        /// 
+        ///
         /// <remarks>
         /// Applications that work with more than one HealthVault instance should not call this method.
         /// Instead, call the overload which takes an <see cref="HealthServiceInstance"/>, specifying the
         /// HealthVault instance where the session auth token was created.
         /// </remarks>
-        /// 
+        ///
         public static async Task<PersonInfo> GetPersonInfoAsync(string authToken)
         {
             return await GetPersonInfoAsync(
@@ -1064,17 +839,17 @@ namespace Microsoft.HealthVault.Web
         /// Gets the authenticated person's information using the specified authentication token from
         /// the specified HealthVault web-service instance.
         /// </summary>
-        /// 
+        ///
         /// <param name="authToken">
         /// The authentication token for a user. This can be retrieved by extracting the WCToken
         /// query string parameter from the request after the user has been redirected to the
         /// HealthVault AUTH page. See <see cref="RedirectToShellUrl(System.Web.HttpContext, string)"/> for more information.
         /// </param>
-        /// 
+        ///
         /// <param name="serviceInstance">
         /// The HealthVault web-service instance where the session auth token was received from.
         /// </param>
-        /// 
+        ///
         /// <returns>
         /// The information about the logged in person.
         /// </returns>
@@ -1091,27 +866,27 @@ namespace Microsoft.HealthVault.Web
         /// Gets the authenticated person's information using the specified authentication token,
         /// from the specified HealthVault web-service instance.
         /// </summary>
-        /// 
+        ///
         /// <param name="authToken">
         /// The authentication token for a user. This can be retrieved by extracting the WCToken
         /// query string parameter from the request after the user has been redirected to the
         /// HealthVault AUTH page. See <see cref="RedirectToShellUrl(System.Web.HttpContext, string)"/> for more information.
         /// </param>
-        /// 
+        ///
         /// <param name="appId">
         /// The unique identifier for the application.
         /// </param>
-        /// 
+        ///
         /// <returns>
         /// The information about the logged in person.
         /// </returns>
-        /// 
+        ///
         /// <remarks>
         /// Applications that work with more than one HealthVault instance should not call this method.
         /// Instead, call the overload which takes an <see cref="HealthServiceInstance"/>, specifying the
         /// HealthVault instance where the session auth token was created.
         /// </remarks>
-        /// 
+        ///
         public static async Task<PersonInfo> GetPersonInfoAsync(string authToken, Guid appId)
         {
             return await GetPersonInfoAsync(authToken, appId, null).ConfigureAwait(false);
@@ -1121,40 +896,42 @@ namespace Microsoft.HealthVault.Web
         /// Gets the authenticated person's information using the specified authentication token,
         /// from the specified HealthVault web-service instance.
         /// </summary>
-        /// 
+        ///
         /// <param name="authToken">
         /// The authentication token for a user. This can be retrieved by extracting the WCToken
         /// query string parameter from the request after the user has been redirected to the
         /// HealthVault AUTH page. See <see cref="RedirectToShellUrl(System.Web.HttpContext, string)"/> for more information.
         /// </param>
-        /// 
+        ///
         /// <param name="appId">
         /// The unique identifier for the application.
         /// </param>
-        /// 
+        ///
         /// <param name="serviceInstance">
         /// The HealthVault web-service instance.
         /// </param>
-        /// 
+        ///
         /// <returns>
         /// The information about the logged in person.
         /// </returns>
-        /// 
+        ///
         /// <remarks>
         /// Applications that work with more than one HealthVault instance should not call this method.
         /// Instead, call the overload which takes an <see cref="HealthServiceInstance"/>, specifying the
         /// HealthVault instance where the session auth token was created.
         /// </remarks>
-        /// 
+        ///
         public static async Task<PersonInfo> GetPersonInfoAsync(string authToken, Guid appId, HealthServiceInstance serviceInstance)
         {
-            WebApplicationCredential cred =
-                new WebApplicationCredential(
-                    appId,
-                    authToken,
-                    ApplicationCertificateStore.Current.ApplicationCertificate);
+            //WebApplicationCredential cred =
+            //    new WebApplicationCredential(
+            //        appId,
+            //        authToken,
+            //        ApplicationCertificateStore.Current.ApplicationCertificate);
 
             // set up our cookie
+            // TODO: IConnection-ify this.
+            /*
             WebApplicationConnection connection =
                 serviceInstance != null
                     ? new WebApplicationConnection(appId, serviceInstance, cred)
@@ -1163,6 +940,16 @@ namespace Microsoft.HealthVault.Web
             PersonInfo personInfo = await HealthVaultPlatform.GetPersonInfoAsync(connection).ConfigureAwait(false);
             personInfo.ApplicationSettingsChanged += new EventHandler(OnPersonInfoChanged);
             personInfo.SelectedRecordChanged += new EventHandler(OnPersonInfoChanged);
+
+            return personInfo;
+            */
+            // return null;
+
+            IConnection connection = Ioc.Get<IConnection>();
+            IPersonClient personClient = connection.PersonClient;
+
+            PersonInfo personInfo = await personClient.GetPersonInfoAsync();
+
 
             return personInfo;
         }
@@ -1212,19 +999,19 @@ namespace Microsoft.HealthVault.Web
         /// <summary>
         /// Removes the specified variables from the query string.
         /// </summary>
-        /// 
+        ///
         /// <param name="context">
         /// The current request context.
         /// </param>
-        /// 
+        ///
         /// <param name="keys">
-        /// variable(s) to remove 
+        /// variable(s) to remove
         /// </param>
-        /// 
-        /// <returns> 
-        /// original url without key 
+        ///
+        /// <returns>
+        /// original url without key
         /// </returns>
-        /// 
+        ///
         private static string StripFromQueryString(
             System.Web.HttpContext context,
             params string[] keys)
@@ -1289,21 +1076,20 @@ namespace Microsoft.HealthVault.Web
             return personInfoXml;
         }
 
-
         /// <summary>
         /// Gets the person's information from the cookie.
         /// </summary>
-        /// 
+        ///
         /// <param name="context">
         /// The current request context.
         /// </param>
-        /// 
+        ///
         /// <returns>
-        /// The person's information that was stored in the cookie or null if the cookie doesn't 
+        /// The person's information that was stored in the cookie or null if the cookie doesn't
         /// exist. Note, the <see cref="PersonInfo"/> returned may contain an expired authentication
         /// token.
         /// </returns>
-        /// 
+        ///
         public static async Task<PersonInfo> LoadPersonInfoFromCookie(System.Web.HttpContext context)
         {
             string serializedPersonInfo = null;
@@ -1349,17 +1135,17 @@ namespace Microsoft.HealthVault.Web
         /// <summary>
         /// Gets the person's information from the cookie.
         /// </summary>
-        /// 
+        ///
         /// <param name="cookie">
         /// The cookie to load the person's information from
         /// </param>
-        /// 
+        ///
         /// <returns>
         /// The person's information that was stored in the cookie or null if the cookie doesn't
-        /// contain the information. Note, the <see cref="PersonInfo"/> returned may contain an 
+        /// contain the information. Note, the <see cref="PersonInfo"/> returned may contain an
         /// expired authentication token.
         /// </returns>
-        /// 
+        ///
         public static async Task<PersonInfo> LoadPersonInfoFromCookie(HttpCookie cookie)
         {
             string serializedPersonInfo = null;
@@ -1534,18 +1320,18 @@ namespace Microsoft.HealthVault.Web
         /// <summary>
         /// Compress incoming string.
         /// </summary>
-        /// 
+        ///
         /// <param name="data">
         /// String to be compressed.
         /// </param>
         /// <param name="bufferLength">
         /// The length of the incoming string in bytes.
         /// </param>
-        /// 
+        ///
         /// <returns>
         /// Base 64 string of compressed data.
         /// </returns>
-        /// 
+        ///
         public static string Compress(string data, out int bufferLength)
         {
             ArraySegment<byte> compressedBytes = CompressInternal(data, out bufferLength);
@@ -1568,15 +1354,15 @@ namespace Microsoft.HealthVault.Web
         /// <summary>
         /// Compress incoming string.
         /// </summary>
-        /// 
+        ///
         /// <param name="data">
         /// String to be compressed.
         /// </param>
-        /// 
+        ///
         /// <returns>
         /// Base 64 string of compressed data.
         /// </returns>
-        /// 
+        ///
         public static string Compress(string data)
         {
             int bufferLength;
@@ -1586,15 +1372,15 @@ namespace Microsoft.HealthVault.Web
         /// <summary>
         /// Decompress a compressed string.
         /// </summary>
-        /// 
+        ///
         /// <param name="compressedData">
         /// Base 64 String of compressed data.
         /// </param>
-        /// 
+        ///
         /// <returns>
         /// Uncompressed string.
         /// </returns>
-        /// 
+        ///
         public static string Decompress(string compressedData)
         {
             return Decompress(compressedData, -1);
@@ -1603,18 +1389,18 @@ namespace Microsoft.HealthVault.Web
         /// <summary>
         /// Decompress a compressed string.
         /// </summary>
-        /// 
+        ///
         /// <param name="compressedData">
         /// Base 64 string of compressed data.
         /// </param>
         /// <param name="decompressedDataLength">
         /// Length of uncompressed data.
         /// </param>
-        /// 
+        ///
         /// <returns>
         /// Uncompressed string.
         /// </returns>
-        /// 
+        ///
         private static string Decompress(string compressedData, int decompressedDataLength)
         {
             if (String.IsNullOrEmpty(compressedData))
@@ -1755,21 +1541,21 @@ namespace Microsoft.HealthVault.Web
         /// <summary>
         /// Stores the specified person's information in the cookie.
         /// </summary>
-        /// 
+        ///
         /// <param name="context">
         /// The current request context.
         /// </param>
-        /// 
+        ///
         /// <param name="personInfo">
         /// The person's information to store. If null and <paramref name="clearIfNull"/> is true,
         /// the cookie will be cleared and the person will be logged off from HealthVault.
         /// </param>
-        /// 
+        ///
         /// <param name="clearIfNull">
         /// If true and <paramref name="personInfo"/> is null, the cookie will be cleared and the
         /// person will be logged off from HealthVault.
         /// </param>
-        /// 
+        ///
         public static void SavePersonInfoToCookie(
             System.Web.HttpContext context,
             PersonInfo personInfo,
@@ -1814,21 +1600,21 @@ namespace Microsoft.HealthVault.Web
         /// <summary>
         /// Stores the specified person's information in the cookie.
         /// </summary>
-        /// 
+        ///
         /// <param name="personInfo">
         /// The authenticated person's information.
         /// </param>
-        /// 
+        ///
         /// <returns>
         /// A cookie containing the person's information.
         /// </returns>
-        /// 
+        ///
         /// <remarks>
         /// If <paramref name="personInfo"/> is null, the returned cookie will have an
         /// expiration date in the past, and adding it to a response would result in the cookie
         /// being cleared.
         /// </remarks>
-        /// 
+        ///
         public static HttpCookie SavePersonInfoToCookie(PersonInfo personInfo)
         {
             return SavePersonInfoToCookie(personInfo, null, -1);
@@ -1837,26 +1623,26 @@ namespace Microsoft.HealthVault.Web
         /// <summary>
         /// Stores the specified person's information in the cookie.
         /// </summary>
-        /// 
+        ///
         /// <param name="personInfo">
         /// The authenticated person's information.
         /// </param>
-        /// 
+        ///
         /// <param name="existingCookie">
-        /// The existing cooke containing the person's information. The expiration date of this 
+        /// The existing cooke containing the person's information. The expiration date of this
         /// cookie will be used as the expiration date of the returned cookie.
         /// </param>
-        /// 
+        ///
         /// <returns>
         /// A cookie containing the person's information.
         /// </returns>
-        /// 
+        ///
         /// <remarks>
         /// If <paramref name="personInfo"/> is null, the returned cookie will have an
         /// expiration date in the past, and adding it to a response would result in the cookie
         /// being cleared.
         /// </remarks>
-        /// 
+        ///
         public static HttpCookie SavePersonInfoToCookie(
             PersonInfo personInfo,
             HttpCookie existingCookie)
@@ -2006,34 +1792,34 @@ namespace Microsoft.HealthVault.Web
         }
 
         /// <summary>
-        /// Redirects the caller's browser to the logon page for 
+        /// Redirects the caller's browser to the logon page for
         /// authentication.
         /// </summary>
-        /// 
+        ///
         /// <param name="context">
         /// The current request context.
         /// </param>
-        /// 
+        ///
         /// <param name="isMra">
         /// Whether this application simultaneously deals with multiple records
         /// for the same person.
         /// </param>
-        /// 
+        ///
         /// <param name="actionUrlQueryString">
         /// The query string parameters to pass to the signin action URL after
         /// signin.
         /// </param>
-        /// 
+        ///
         /// <remarks>
-        /// After the user successfully authenticates, they get redirected 
+        /// After the user successfully authenticates, they get redirected
         /// to the action url for which the target is set to either
         /// AppAuthSuccess or AppAuthRejected depending on whether the user
-        /// authorized one or more records for use with the application, 
+        /// authorized one or more records for use with the application,
         /// with the authentication token in the query
         /// string. This is stripped out and used to populate HealthVault
         /// data for the page.
         /// </remarks>
-        /// 
+        ///
         public static void RedirectToLogOn(
             System.Web.HttpContext context,
             bool isMra,
@@ -2042,43 +1828,42 @@ namespace Microsoft.HealthVault.Web
             RedirectToLogOn(context, isMra, actionUrlQueryString, null /* signupCode */);
         }
 
-
         /// <summary>
-        /// Redirects the caller's browser to the logon page for 
+        /// Redirects the caller's browser to the logon page for
         /// authentication.
         /// </summary>
-        /// 
+        ///
         /// <param name="context">
         /// The current request context.
         /// </param>
-        /// 
+        ///
         /// <param name="isMra">
         /// Whether this application simultaneously deals with multiple records
         /// for the same person.
         /// </param>
-        /// 
+        ///
         /// <param name="actionUrlQueryString">
         /// The query string parameters to pass to the signin action URL after
         /// signin.
         /// </param>
-        /// 
+        ///
         /// <param name="signupCode">
         /// The signup code for creating a HealthVault account.  This is required
         /// for applications in locations with limited access to HealthVault.
         /// Signup codes may be obtained from
         /// <see cref="Connection.ApplicationConnection.NewSignupCode" />,
         /// </param>
-        /// 
+        ///
         /// <remarks>
-        /// After the user successfully authenticates, they get redirected 
+        /// After the user successfully authenticates, they get redirected
         /// to the action url for which the target is set to either
         /// AppAuthSuccess or AppAuthRejected depending on whether the user
-        /// authorized one or more records for use with the application, 
+        /// authorized one or more records for use with the application,
         /// with the authentication token in the query
         /// string. This is stripped out and used to populate HealthVault
         /// data for the page.
         /// </remarks>
-        /// 
+        ///
         public static void RedirectToLogOn(
             System.Web.HttpContext context,
             bool isMra,
@@ -2096,23 +1881,23 @@ namespace Microsoft.HealthVault.Web
         }
 
         /// <summary>
-        /// Redirects the caller's browser to the logon page for 
+        /// Redirects the caller's browser to the logon page for
         /// authentication.
         /// </summary>
-        /// 
+        ///
         /// <param name="context">
         /// The current request context.
         /// </param>
-        /// 
+        ///
         /// <param name="redirectParameters">
         /// HealthVault Shell redirect parameters.
         /// </param>
-        /// 
+        ///
         /// <remarks>
-        /// After the user successfully authenticates, they get redirected 
+        /// After the user successfully authenticates, they get redirected
         /// to the action url for which the target is set to either
         /// AppAuthSuccess or AppAuthRejected depending on whether the user
-        /// authorized one or more records for use with the application, 
+        /// authorized one or more records for use with the application,
         /// with the authentication token in the query
         /// string. This is stripped out and used to populate HealthVault
         /// data for the page.
@@ -2139,48 +1924,48 @@ namespace Microsoft.HealthVault.Web
         }
 
         /// <summary>
-        /// Redirects the caller's browser to the logon page for 
+        /// Redirects the caller's browser to the logon page for
         /// authentication.
         /// </summary>
-        /// 
+        ///
         /// <param name="context">
         /// The current request context.
         /// </param>
-        /// 
+        ///
         /// <param name="isMra">
         /// Whether this application simultaneously deals with multiple records
         /// for the same person.
         /// </param>
-        /// 
+        ///
         /// <remarks>
-        /// After the user successfully authenticates, they get redirected 
+        /// After the user successfully authenticates, they get redirected
         /// to the action url for which the target is set to either
         /// AppAuthSuccess or AppAuthRejected depending on whether the user
-        /// authorized one or more records for use with the application, with 
+        /// authorized one or more records for use with the application, with
         /// the authentication token in the query
         /// string. This is stripped out and used to populate HealthVault
         /// data for the page.
         /// </remarks>
-        /// 
+        ///
         public static void RedirectToLogOn(System.Web.HttpContext context, bool isMra)
         {
             RedirectToLogOn(context, isMra, context.Request.Url.PathAndQuery);
         }
 
         /// <summary>
-        /// Redirects the caller's browser to the logon page for 
+        /// Redirects the caller's browser to the logon page for
         /// authentication.
         /// </summary>
-        /// 
+        ///
         /// <param name="context">
         /// The current request context.
         /// </param>
-        /// 
+        ///
         /// <remarks>
-        /// After the user successfully authenticates, they get redirected 
+        /// After the user successfully authenticates, they get redirected
         /// back to the action url for which the target is set to either
         /// AppAuthSuccess or AppAuthRejected depending on whether the user
-        /// authorized one or more records for use with the application, 
+        /// authorized one or more records for use with the application,
         /// with the authentication token in the query
         /// string. This is stripped out and used to populate HealthVault
         /// data for the page.<br/>
@@ -2188,79 +1973,79 @@ namespace Microsoft.HealthVault.Web
         /// This overload assumes that the applications does not simultaneously
         /// deal with multiple records for the same person i.e. isMra is false.
         /// </remarks>
-        /// 
+        ///
         public static void RedirectToLogOn(System.Web.HttpContext context)
         {
             RedirectToLogOn(context, false);
         }
 
         /// <summary>
-        /// Signs the person out and cleans up the HealthVault session 
+        /// Signs the person out and cleans up the HealthVault session
         /// information.
         /// </summary>
-        /// 
+        ///
         /// <param name="context">
         /// The current request context.
         /// </param>
-        /// 
+        ///
         /// <remarks>
         /// This should only be used by the HealthVault Shell.
         /// </remarks>
-        /// 
+        ///
         private static void LogOff(System.Web.HttpContext context)
         {
             SavePersonInfoToCookie(context, null, true);
         }
 
         /// <summary>
-        /// Signs the person out, cleans up the HealthVault session 
-        /// information, and redirects the user's browser to the signout action 
+        /// Signs the person out, cleans up the HealthVault session
+        /// information, and redirects the user's browser to the signout action
         /// URL.
         /// </summary>
-        /// 
+        ///
         /// <param name="context">
         /// The current request context.
         /// </param>
-        /// 
+        ///
         public static void SignOut(System.Web.HttpContext context)
         {
             SignOut(context, null);
         }
 
         /// <summary>
-        /// Signs the person out, cleans up the HealthVault session 
-        /// information, and redirects the user's browser to the signout action 
+        /// Signs the person out, cleans up the HealthVault session
+        /// information, and redirects the user's browser to the signout action
         /// URL.
         /// </summary>
-        /// 
+        ///
         /// <param name="context">
         /// The current request context.
         /// </param>
-        /// 
+        ///
         /// <param name="appId">
         /// The unique identifier for the application.
         /// </param>
-        /// 
+        ///
         public static void SignOut(System.Web.HttpContext context, Guid appId)
         {
             SignOut(context, null, appId);
         }
 
         /// <summary>
-        /// Signs the person out, cleans up the HealthVault session 
-        /// information, and redirects the user's browser to the signout action 
+        /// Signs the person out, cleans up the HealthVault session
+        /// information, and redirects the user's browser to the signout action
         /// URL with the specified querystring parameter if any.
         /// </summary>
-        /// 
+        ///
         /// <param name="context">
         /// The current request context.
         /// </param>
-        /// 
+        ///
         /// <param name="actionUrlQueryString">
         /// The query string parameters to pass to the signout action URL after
         /// cleaning up data.
         /// </param>
-        /// 
+        ///
         public static void SignOut(System.Web.HttpContext context, string actionUrlQueryString)
         {
             SignOut(
@@ -2269,54 +2054,53 @@ namespace Microsoft.HealthVault.Web
                 configuration.ApplicationId);
         }
 
-
         /// <summary>
-        /// Signs the person out, cleans up the HealthVault session 
-        /// information, and redirects the user's browser to the signout action 
+        /// Signs the person out, cleans up the HealthVault session
+        /// information, and redirects the user's browser to the signout action
         /// URL with the specified querystring parameter if any.
         /// </summary>
-        /// 
+        ///
         /// <param name="context">
         /// The current request context.
         /// </param>
-        /// 
+        ///
         /// <param name="actionUrlQueryString">
         /// The query string parameters to pass to the signout action URL after
         /// cleaning up data.
         /// </param>
-        /// 
+        ///
         /// <param name="appId">
         /// The unique identifier of the application.
         /// </param>
-        /// 
+        ///
         public static void SignOut(System.Web.HttpContext context, string actionUrlQueryString, Guid appId)
         {
             SignOut(context, actionUrlQueryString, appId, null);
         }
 
         /// <summary>
-        /// Signs the person out, cleans up the HealthVault session 
-        /// information, and redirects the user's browser to the signout action 
+        /// Signs the person out, cleans up the HealthVault session
+        /// information, and redirects the user's browser to the signout action
         /// URL with the specified querystring parameter (including user's credential token) if any.
         /// </summary>
-        /// 
+        ///
         /// <param name="context">
         /// The current request context.
         /// </param>
-        /// 
+        ///
         /// <param name="actionUrlQueryString">
         /// The query string parameters to pass to the signout action URL after
         /// cleaning up data.
         /// </param>
-        /// 
+        ///
         /// <param name="appId">
         /// The unique identifier of the application.
         /// </param>
-        /// 
+        ///
         /// <param name="credentialToken">
         /// The user's credential token to sign out.
         /// </param>
-        /// 
+        ///
         public static void SignOut(System.Web.HttpContext context, string actionUrlQueryString, Guid appId, string credentialToken)
         {
             SignOut(
@@ -2328,28 +2112,28 @@ namespace Microsoft.HealthVault.Web
         }
 
         /// <summary>
-        /// Signs the person out, cleans up the HealthVault session 
-        /// information, and redirects the user's browser to the signout action 
+        /// Signs the person out, cleans up the HealthVault session
+        /// information, and redirects the user's browser to the signout action
         /// URL with the specified querystring parameter (including user's credential token) if any.
         /// </summary>
-        /// 
+        ///
         /// <param name="context">
         /// The current request context.
         /// </param>
-        /// 
+        ///
         /// <param name="actionUrlQueryString">
         /// The query string parameters to pass to the signout action URL after
         /// cleaning up data.
         /// </param>
-        /// 
+        ///
         /// <param name="appId">
         /// The unique identifier of the application.
         /// </param>
-        /// 
+        ///
         /// <param name="credentialToken">
         /// The user's credential token to sign out.
         /// </param>
-        /// 
+        ///
         /// <param name="serviceInstance">
         /// The HealthVault instance where the user account resides.
         /// If <b>null</b>, the configured default HealthVault Shell URL will be used.
@@ -2370,28 +2154,28 @@ namespace Microsoft.HealthVault.Web
         }
 
         /// <summary>
-        /// Signs the person out, cleans up the HealthVault session 
-        /// information, and redirects the user's browser to the signout action 
+        /// Signs the person out, cleans up the HealthVault session
+        /// information, and redirects the user's browser to the signout action
         /// URL with the specified querystring parameter (including user's credential token) if any.
         /// </summary>
-        /// 
+        ///
         /// <param name="context">
         /// The current request context.
         /// </param>
-        /// 
+        ///
         /// <param name="actionUrlQueryString">
         /// The query string parameters to pass to the signout action URL after
         /// cleaning up data.
         /// </param>
-        /// 
+        ///
         /// <param name="appId">
         /// The unique identifier of the application.
         /// </param>
-        /// 
+        ///
         /// <param name="credentialToken">
         /// The user's credential token to sign out.
         /// </param>
-        /// 
+        ///
         /// <param name="shellRedirectorUrl">
         /// The base HealthVault Shell redirector URL.  If <b>null</b>,
         /// the configured default HealthVault Shell URL will be used.
@@ -2420,16 +2204,16 @@ namespace Microsoft.HealthVault.Web
         /// <summary>
         /// Redirects application to Shell help page
         /// </summary>
-        /// 
+        ///
         /// <param name="context">
         /// The current request context.
         /// </param>
-        /// 
+        ///
         /// <param name="topic">
         /// Optional topic string. For example, "faq" would redirect the user's browser to the
         /// HealthVault frequently asked questions.
         /// </param>
-        /// 
+        ///
         public static void GotoHelp(System.Web.HttpContext context, string topic)
         {
             string targetQuery = String.IsNullOrEmpty(topic)

@@ -39,7 +39,7 @@ namespace Microsoft.HealthVault.Person
         /// </summary>
         ///
         /// <param name="connection">
-        /// An <see cref="ApplicationConnection"/> for the current user. The
+        /// An <see cref="Connection"/> for the current user. The
         /// connection can be optionally supplied, but it is overwritten if
         /// the connection information is in the XML.
         /// </param>
@@ -60,7 +60,7 @@ namespace Microsoft.HealthVault.Person
         /// </exception>
         ///
         public static PersonInfo CreateFromXml(
-            ApplicationConnection connection,
+            IConnectionInternal connection,
             XPathNavigator navigator)
         {
             Validator.ThrowIfNavigatorNull(navigator);
@@ -81,7 +81,7 @@ namespace Microsoft.HealthVault.Person
         /// </summary>
         ///
         /// <param name="connection">
-        /// An <see cref="ApplicationConnection"/> for the current user. The
+        /// An <see cref="Connection"/> for the current user. The
         /// connection can be optionally supplied, but it is overwritten if
         /// the connection information is in the XML.
         /// </param>
@@ -102,7 +102,7 @@ namespace Microsoft.HealthVault.Person
         /// </exception>
         ///
         internal static async Task<PersonInfo> CreateFromXmlExcludeUrl(
-            ApplicationConnection connection,
+            IConnectionInternal connection,
             XPathNavigator navigator)
         {
             Validator.ThrowIfNavigatorNull(navigator);
@@ -126,7 +126,7 @@ namespace Microsoft.HealthVault.Person
         ///
         internal PersonInfo(PersonInfo personInfo)
         {
-            this.ApplicationConnection = personInfo.ApplicationConnection;
+            this.Connection = personInfo.Connection;
             this.personId = personInfo.personId;
             this.Name = personInfo.Name;
             this.selectedRecordId = personInfo.selectedRecordId;
@@ -146,9 +146,9 @@ namespace Microsoft.HealthVault.Person
         /// The <paramref name="connection"/> is <b>null</b>.
         /// </exception>
         ///
-        internal PersonInfo(ApplicationConnection connection)
+        internal PersonInfo(IConnectionInternal connection)
         {
-            this.ApplicationConnection = connection;
+            this.Connection = connection;
         }
 
         /// <summary>
@@ -169,7 +169,7 @@ namespace Microsoft.HealthVault.Person
         /// </param>
         ///
         /// <exception cref="ArgumentNullException">
-        /// The <see cref="Connection"/> is <b>null</b> and the XML does not contain
+        /// The <see cref="HealthVault.Connection"/> is <b>null</b> and the XML does not contain
         /// connection information.
         /// </exception>
         ///
@@ -188,7 +188,7 @@ namespace Microsoft.HealthVault.Person
         /// </param>
         ///
         /// <exception cref="InvalidOperationException">
-        /// The <see cref="Connection"/> is <b>null</b>, and the XML does not contain
+        /// The <see cref="HealthVault.Connection"/> is <b>null</b>, and the XML does not contain
         /// valid connection information.
         /// </exception>
         ///
@@ -266,6 +266,8 @@ namespace Microsoft.HealthVault.Person
                 navigator.SelectSingleNode("connection");
             if (connectionNav != null)
             {
+                IConnectionInternal connection = Ioc.Get<IConnectionInternal>();
+
                 this.appId = new Guid(connectionNav.SelectSingleNode("app-id").Value);
 
                 var instanceIdNav = connectionNav.SelectSingleNode("instance-id");
@@ -284,7 +286,8 @@ namespace Microsoft.HealthVault.Person
 
                 if (credNav != null)
                 {
-                    this.credential = Credential.CreateFromCookieXml(credNav);
+                    connection.SetSessionCredentialFromCookieXml(credNav);
+                    this.credential = connection.SessionCredential;
                 }
 
                 XPathNavigator compressionNode =
@@ -297,7 +300,7 @@ namespace Microsoft.HealthVault.Person
             }
             else
             {
-                Validator.ThrowInvalidIfNull(this.ApplicationConnection, "PersonInfoConnectionNull");
+                Validator.ThrowInvalidIfNull(this.Connection, "PersonInfoConnectionNull");
             }
 
             XPathNodeIterator recordsNav = navigator.Select("record");
@@ -330,27 +333,36 @@ namespace Microsoft.HealthVault.Person
             {
                 ServiceInfo info = new ServiceInfo();
 
-                var serviceInfo = await info.GetSericeInfoAsync();
+                var serviceInfo = await info.GetServiceInfoAsync();
 
                 HealthServiceInstance serviceInstance = serviceInfo.ServiceInstances[this.instanceId];
-                this.ApplicationConnection = new AuthenticatedConnection(this.appId, serviceInstance, this.credential);
+
+                // connection.DoDirtyWork(this.appId, serviceInstance, this.credential);
+
+                // TODO: IConnection-ify this.
+                // this.ApplicationConnection = new AuthenticatedConnection(this.appId, serviceInstance, this.credential);
             }
             else
             {
+                this.healthServiceUri = HealthApplicationConfiguration.Current.GetHealthVaultMethodUrl();
+
+                // TODO: IConnection-ify this.
+                // this.ApplicationConnection = new AuthenticatedConnection(this.appId, this.healthServiceUri, this.credential);
                 this.healthServiceUri = this.configuration.GetHealthVaultMethodUrl();
                 this.ApplicationConnection = new AuthenticatedConnection(this.appId, this.healthServiceUri, this.credential);
             }
 
             if (!string.IsNullOrEmpty(this.compressionMethod))
             {
-                this.ApplicationConnection.RequestCompressionMethod = this.compressionMethod;
+                // TODO: IConnection-ify this.
+                // this.ApplicationConnection.RequestCompressionMethod = this.compressionMethod;
             }
 
             if (this.authorizedRecords != null)
             {
                 foreach (var authorizedRecord in this.authorizedRecords)
                 {
-                    authorizedRecord.Value.Connection = this.ApplicationConnection;
+                    authorizedRecord.Value.Connection = this.Connection;
                 }
             }
         }
@@ -494,36 +506,37 @@ namespace Microsoft.HealthVault.Person
 
             writer.WriteElementString(
                 "app-id",
-                this.ApplicationConnection.ApplicationId.ToString());
+                this.Connection.ApplicationConfiguration.ApplicationId.ToString());
 
-            if (this.ApplicationConnection.ServiceInstance != null)
+            if (this.Connection.ServiceInstance != null)
             {
                 writer.WriteElementString(
                     "instance-id",
-                    this.ApplicationConnection.ServiceInstance.Id);
+                    this.Connection.ServiceInstance.Id);
             }
 
             if ((cookieOptions & CookieOptions.IncludeUrl) != 0)
             {
                 writer.WriteElementString(
                     "wildcat-url",
-                    this.ApplicationConnection.RequestUrl.ToString());
+                    this.Connection.ApplicationConfiguration.HealthVaultUrl.ToString());
             }
 
-            AuthenticatedConnection authConnection = this.ApplicationConnection as AuthenticatedConnection;
-            if (authConnection?.Credential != null)
+            if (this.Connection?.SessionCredential != null)
             {
                 writer.WriteStartElement("credential");
-                authConnection.Credential.WriteCookieXml(writer);
+
+                this.Connection.StoreSessionCredentialInCookieXml(writer);
                 writer.WriteEndElement();
             }
 
-            if (!string.IsNullOrEmpty(this.ApplicationConnection.RequestCompressionMethod))
-            {
-                writer.WriteElementString(
-                    "request-compression-method",
-                    this.ApplicationConnection.RequestCompressionMethod);
-            }
+            // TODO: comment this for now
+            // if (!string.IsNullOrEmpty(this.Connection.RequestCompressionMethod))
+            // {
+            //    writer.WriteElementString(
+            //        "request-compression-method",
+            //        this.Connection.RequestCompressionMethod);
+            // }
 
             writer.WriteEndElement();
 
@@ -625,7 +638,7 @@ namespace Microsoft.HealthVault.Person
 
         private async Task FetchApplicationSettingsAndAuthorizedRecordsAsync()
         {
-            PersonInfo personInfo = await HealthVaultPlatform.GetPersonInfoAsync(this.ApplicationConnection);
+            PersonInfo personInfo = await HealthVaultPlatform.GetPersonInfoAsync(this.Connection);
             this.ApplicationSettingsDocument = personInfo.ApplicationSettingsDocument;
             this.authorizedRecords = personInfo.authorizedRecords;
 
@@ -645,12 +658,12 @@ namespace Microsoft.HealthVault.Person
         ///
         public async Task<IXPathNavigable> GetApplicationSettings()
         {
-                if (this.moreAppSettings)
-                {
-                    await this.FetchApplicationSettingsAndAuthorizedRecordsAsync().ConfigureAwait(false);
-                }
+            if (this.moreAppSettings)
+            {
+                await this.FetchApplicationSettingsAndAuthorizedRecordsAsync().ConfigureAwait(false);
+            }
 
-                return this.ApplicationSettingsDocument.CreateNavigator();
+            return this.ApplicationSettingsDocument.CreateNavigator();
         }
 
         /// <summary>
@@ -687,7 +700,7 @@ namespace Microsoft.HealthVault.Person
 
             await HealthVaultPlatformPerson
                 .Current
-                .SetApplicationSettingsAsync(this.ApplicationConnection, requestParameters)
+                .SetApplicationSettingsAsync(this.Connection, requestParameters)
                 .ConfigureAwait(false);
 
             this.ApplicationSettingsDocument = SDKHelper.SafeLoadXml(requestParameters);
@@ -846,7 +859,7 @@ namespace Microsoft.HealthVault.Person
         public Location Location { get; private set; }
 
         private string instanceId;
-        private Credential credential;
+        private SessionCredential credential;
         private Guid appId;
         private Uri healthServiceUri;
         private string compressionMethod;
@@ -854,25 +867,11 @@ namespace Microsoft.HealthVault.Person
         #endregion public properties
 
         /// <summary>
-        /// Gets a reference to the HealthVault service that
-        /// created this <see cref="PersonInfo"/> or null if the connection used was an
-        /// <see cref="OfflineWebApplicationConnection"/>.
-        /// </summary>
-        ///
-        /// <remarks>
-        /// This may return null if the <see cref="PersonInfo"/> was retrieved using an
-        /// <see cref="HealthVault.Connection.ApplicationConnection"/>.
-        /// It is preferred that <see cref="ApplicationConnection"/> is used instead.
-        /// </remarks>
-        ///
-        public AuthenticatedConnection Connection => this.ApplicationConnection as AuthenticatedConnection;
-
-        /// <summary>
         /// Gets a reference to the HealthVault connection instance that was used to create this
         /// <see cref="PersonInfo"/>.
         /// </summary>
         ///
-        public ApplicationConnection ApplicationConnection { get; private set; }
+        public IConnectionInternal Connection { get; private set; }
 
         /// <summary>
         /// Gets the <see cref="HealthRecordInfo"/> for the first health record
