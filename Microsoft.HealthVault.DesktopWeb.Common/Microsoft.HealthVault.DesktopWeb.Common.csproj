@@ -70,6 +70,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AppCryptoConfiguration.cs" />
+    <Compile Include="ApplicationConfiguration.cs" />
     <Compile Include="ApplicationConfigurationManager.cs" />
     <Compile Include="CertificateUtilities.cs" />
     <Compile Include="Handles.cs" />
