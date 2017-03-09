@@ -15,7 +15,8 @@ namespace Microsoft.HealthVault.PlatformInformation
     ///
     internal static class HealthServiceLocation
     {
-        private static Lazy<IConfiguration> configuration = Ioc.Get<Lazy<IConfiguration>>();
+        private static IConfiguration configuration = Ioc.Get<IConfiguration>();
+
         /// <summary>
         /// Constructs a URL to be redirected to via the HealthVault service Shell
         /// URL redirector, given the specified redirect parameters.
@@ -38,7 +39,7 @@ namespace Microsoft.HealthVault.PlatformInformation
             // apply configuration
             // aib
             paramsCopy.AllowInstanceBounce = paramsCopy.AllowInstanceBounce ??
-                configuration.Value.MultiInstanceAware;
+                configuration.MultiInstanceAware;
 
             return paramsCopy.ConstructRedirectUrl();
         }
@@ -69,7 +70,7 @@ namespace Microsoft.HealthVault.PlatformInformation
         ///
         public static Uri GetHealthServiceShellUrl(string targetLocation)
         {
-            return GetHealthServiceShellUrl(configuration.Value.HealthVaultShellUrl, targetLocation);
+            return GetHealthServiceShellUrl(configuration.HealthVaultShellUrl, targetLocation);
         }
 
         /// <summary>
@@ -144,7 +145,7 @@ namespace Microsoft.HealthVault.PlatformInformation
             string targetQuery)
         {
             return GetHealthServiceShellUrl(
-                configuration.Value.HealthVaultShellUrl,
+                configuration.HealthVaultShellUrl,
                 targetLocation,
                 targetQuery);
         }

@@ -36,7 +36,7 @@ namespace Microsoft.HealthVault.Web
     [SecurityCritical]
     public class HealthServicePage : System.Web.UI.Page
     {
-        // TODO: This file depends on the web configuration and needs cleanup
+        private static WebConfiguration configuration = Ioc.Get<WebConfiguration>();
 
         /// <summary>
         /// Initializes the page to use SSL if necessary.
@@ -59,8 +59,7 @@ namespace Microsoft.HealthVault.Web
             base.OnInit(e);
 
             // Redirect to Secure page if necessary
-            // TODO: This file depends on the web configuration and needs cleanup
-            //WebApplicationUtilities.PageOnInit(Context, IsPageSslSecure);
+            WebApplicationUtilities.PageOnInit(Context, IsPageSslSecure);
         }
 
         /// <summary>
@@ -75,8 +74,6 @@ namespace Microsoft.HealthVault.Web
         ///
         protected virtual bool LogOnRequired => true;
 
-        // TODO: This file depends on the web configuration and needs cleanup
-
         /// <summary>
         /// Gets a value indicating whether the page is for multi-record application.
         /// </summary>
@@ -87,7 +84,7 @@ namespace Microsoft.HealthVault.Web
         /// also be overridden on a per page basis by overriding this property in a derived class.
         /// </remarks>
         ///
-        //protected virtual bool IsMra => WebConfiguration.Current.IsMultipleRecordApplication;
+        protected virtual bool IsMra => configuration.IsMultipleRecordApplication;
 
         /// <summary>
         /// Gets or sets the unique application identifier.
@@ -99,8 +96,7 @@ namespace Microsoft.HealthVault.Web
         /// <see cref="OnInit"/>.
         /// </remarks>
         ///
-        // TODO: This file depends on the web configuration and needs cleanup
-        //protected virtual Guid ApplicationId { get; set; } = WebConfiguration.Current.ApplicationConfiguration.ApplicationId;
+        protected virtual Guid ApplicationId { get; set; } = configuration.ApplicationId;
 
         /// <summary>
         /// Handles the PreLoad event for the page.
@@ -121,14 +117,12 @@ namespace Microsoft.HealthVault.Web
         [SecuritySafeCritical]
         protected override void OnPreLoad(EventArgs e)
         {
-            // TODO: This file depends on the web configuration and needs cleanup
-
-            //_personInfo =
-            //   WebApplicationUtilities.PageOnPreLoad(
-            //        Context,
-            //        LogOnRequired,
-            //        IsMra,
-            //        ApplicationId).Result;
+            _personInfo =
+               WebApplicationUtilities.PageOnPreLoad(
+                    Context,
+                    LogOnRequired,
+                    IsMra,
+                    ApplicationId).Result;
             base.OnPreLoad(e);
         }
 
@@ -152,15 +146,13 @@ namespace Microsoft.HealthVault.Web
         ///
         protected void InitializeUserDataAsync(bool logOnRequired)
         {
-            // TODO: This file depends on the web configuration and needs cleanup
-
-            //_personInfo =
-            //    WebApplicationUtilities.PageOnPreLoad(
-            //            Context,
-            //            logOnRequired,
-            //            IsMra,
-            //            ApplicationId)
-            //        .Result;
+            _personInfo =
+                WebApplicationUtilities.PageOnPreLoad(
+                        Context,
+                        logOnRequired,
+                        IsMra,
+                        ApplicationId)
+                    .Result;
         }
 
         /// <summary>
@@ -174,9 +166,8 @@ namespace Microsoft.HealthVault.Web
             {
                 if (_tier1AppAuthCredential == null)
                 {
-                    // TODO: This file depends on the web configuration and needs cleanup
-                    //_tier1AppAuthCredential =
-                    //    WebApplicationUtilities.GetApplicationAuthenticationCredential(ApplicationId);
+                    _tier1AppAuthCredential =
+                        WebApplicationUtilities.GetApplicationAuthenticationCredential(ApplicationId);
                 }
                 return _tier1AppAuthCredential;
             }
@@ -209,10 +200,8 @@ namespace Microsoft.HealthVault.Web
             {
                 if (_tier1AuthConnection == null)
                 {
-                    // TODO: This file depends on the web configuration and needs cleanup
-
-                    //_tier1AuthConnection =
-                    //    WebApplicationUtilities.GetApplicationConnection(ApplicationId);
+                    _tier1AuthConnection =
+                        WebApplicationUtilities.GetApplicationConnection(configuration.ApplicationId);
                 }
                 return _tier1AuthConnection;
             }
@@ -298,8 +287,7 @@ namespace Microsoft.HealthVault.Web
         public void SetSelectedRecord(HealthRecordInfo activeRecord)
         {
             _personInfo.SelectedRecord = activeRecord;
-            // TODO: This file depends on the web configuration and needs cleanup
-            //WebApplicationUtilities.SavePersonInfoToCookie(Context, _personInfo);
+            WebApplicationUtilities.SavePersonInfoToCookie(Context, _personInfo);
         }
 
         /// <summary>
@@ -314,9 +302,8 @@ namespace Microsoft.HealthVault.Web
         [SecurityCritical]
         public void RefreshAndPersist()
         {
-            // TODO: This file depends on the web configuration and needs cleanup
-            //_personInfo =
-            //    WebApplicationUtilities.RefreshAndSavePersonInfoToCookieAsync(Context, _personInfo).Result;
+            _personInfo =
+                WebApplicationUtilities.RefreshAndSavePersonInfoToCookieAsync(Context, _personInfo).Result;
         }
 
         /// <summary>
@@ -336,12 +323,11 @@ namespace Microsoft.HealthVault.Web
         ///
         public void RefreshAndPersist(string authToken)
         {
-            // TODO: This file depends on the web configuration and needs cleanup
-            //_personInfo =
-            //    WebApplicationUtilities.RefreshAndSavePersonInfoToCookieAsync(Context, 
-            //        authToken,
-            //        _personInfo.Connection.ServiceInstance)
-            //        .Result;
+            _personInfo =
+                WebApplicationUtilities.RefreshAndSavePersonInfoToCookieAsync(Context,
+                    authToken,
+                    _personInfo.Connection.ServiceInstance)
+                    .Result;
         }
 
         /// <summary>
@@ -366,12 +352,11 @@ namespace Microsoft.HealthVault.Web
             get { return _personInfo; }
             set
             {
-                // TODO: This file depends on the web configuration and needs cleanup
                 _personInfo = value;
-                //WebApplicationUtilities.SavePersonInfoToCookie(
-                //    System.Web.HttpContext.Current,
-                //    _personInfo,
-                //    true);
+                WebApplicationUtilities.SavePersonInfoToCookie(
+                    System.Web.HttpContext.Current,
+                    _personInfo,
+                    true);
             }
         }
 
@@ -475,8 +460,7 @@ namespace Microsoft.HealthVault.Web
             {
                 redirectParameters.ShellRedirectorUrl = PersonInfo.Connection.ServiceInstance.ShellUrl.OriginalString;
             }
-            // TODO: This file depends on the web configuration and needs cleanup
-            //WebApplicationUtilities.RedirectToShellUrl(System.Web.HttpContext.Current, redirectParameters);
+            WebApplicationUtilities.RedirectToShellUrl(System.Web.HttpContext.Current, redirectParameters);
         }
 
         /// <summary>
@@ -532,16 +516,15 @@ namespace Microsoft.HealthVault.Web
         /// constructed.
         /// </exception>
         ///
-        // TODO: This file depends on the web configuration and needs cleanup
-        //public static Uri ConstructShellTargetUrl(
-        //string targetLocation,
-        //        string targetQuery)
-        //{
-        //    return WebApplicationUtilities.ConstructShellTargetUrl(
-        //        System.Web.HttpContext.Current,
-        //        targetLocation,
-        //        targetQuery);
-        //}
+        public static Uri ConstructShellTargetUrl(
+        string targetLocation,
+                string targetQuery)
+        {
+            return WebApplicationUtilities.ConstructShellTargetUrl(
+                System.Web.HttpContext.Current,
+                targetLocation,
+                targetQuery);
+        }
 
         /// <summary>
         /// Constructs a URL to be redirected to via the HealthVault URL
@@ -582,18 +565,17 @@ namespace Microsoft.HealthVault.Web
         /// constructed.
         /// </exception>
         ///
-        // TODO: This file depends on the web configuration and needs cleanup
-        //public static Uri ConstructShellTargetUrl(
-        //string targetLocation,
-        //    string targetQuery,
-        //    string actionUrlQueryString)
-        //{
-        //    return WebApplicationUtilities.ConstructShellTargetUrl(
-        //        System.Web.HttpContext.Current,
-        //        targetLocation,
-        //        targetQuery,
-        //        actionUrlQueryString);
-        //}
+        public static Uri ConstructShellTargetUrl(
+        string targetLocation,
+            string targetQuery,
+            string actionUrlQueryString)
+        {
+            return WebApplicationUtilities.ConstructShellTargetUrl(
+                System.Web.HttpContext.Current,
+                targetLocation,
+                targetQuery,
+                actionUrlQueryString);
+        }
 
         /// <summary>
         /// Constructs a URL to be redirected to via the HealthVault URL
@@ -620,13 +602,12 @@ namespace Microsoft.HealthVault.Web
         /// constructed.
         /// </exception>
         ///
-        // TODO: This file depends on the web configuration and needs cleanup
-        //public static Uri ConstructShellTargetUrl(string targetLocation)
-        //{
-        //    return WebApplicationUtilities.ConstructShellTargetUrl(
-        //        System.Web.HttpContext.Current,
-        //        targetLocation);
-        //}
+        public static Uri ConstructShellTargetUrl(string targetLocation)
+        {
+            return WebApplicationUtilities.ConstructShellTargetUrl(
+                System.Web.HttpContext.Current,
+                targetLocation);
+        }
 
         /// <summary>
         /// Gets a value indicating whether a page wants to use SSL for
@@ -737,8 +718,7 @@ namespace Microsoft.HealthVault.Web
                 ActionQueryString = System.Web.HttpContext.Current.Request.Url.PathAndQuery,
             };
 
-            // TODO: This file depends on the web configuration and needs cleanup
-            //WebApplicationUtilities.RedirectToLogOn(System.Web.HttpContext.Current, redirectParameters);
+            WebApplicationUtilities.RedirectToLogOn(System.Web.HttpContext.Current, redirectParameters);
         }
 
         /// <summary>
@@ -761,8 +741,7 @@ namespace Microsoft.HealthVault.Web
         ///
         public void RedirectToLogOn()
         {
-            // TODO: This file depends on the web configuration and needs cleanup
-            //RedirectToLogOn(IsMra);
+            RedirectToLogOn(IsMra);
         }
 
         /// <summary>
@@ -796,13 +775,12 @@ namespace Microsoft.HealthVault.Web
             {
                 serviceInstance = PersonInfo.Connection.ServiceInstance;
             }
-            // TODO: This file depends on the web configuration and needs cleanup
-            //WebApplicationUtilities.SignOut(
-            //    System.Web.HttpContext.Current,
-            //    actionUrlQueryString,
-            //    ApplicationId,
-            //    userCredentialToken,
-            //    serviceInstance);
+            WebApplicationUtilities.SignOut(
+                System.Web.HttpContext.Current,
+                actionUrlQueryString,
+                ApplicationId,
+                userCredentialToken,
+                serviceInstance);
         }
 
         // private members

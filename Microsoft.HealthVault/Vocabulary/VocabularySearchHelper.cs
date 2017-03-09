@@ -27,7 +27,7 @@ namespace Microsoft.HealthVault.Vocabulary
     /// </remarks>
     internal static class VocabularySearchHelper
     {
-        private static Lazy<IConfiguration> configuration = Ioc.Get<Lazy<IConfiguration>>();
+        private static IConfiguration configuration = Ioc.Get<IConfiguration>();
 
         /// <summary>
         /// Creates a vocabulary search request URL in which the application is identified using
@@ -77,7 +77,7 @@ namespace Microsoft.HealthVault.Vocabulary
             AppendVocabularySearchParameters(queryString, searchParameters);
             return
                 new Uri(
-                    configuration.Value.GetHealthClientServiceUrl().OriginalString +
+                    configuration.GetHealthClientServiceUrl().OriginalString +
                     "?" +
                     queryString);
         }
@@ -125,7 +125,7 @@ namespace Microsoft.HealthVault.Vocabulary
             AppendVocabularySearchParameters(queryString, searchParameters);
             return
                 new Uri(
-                    configuration.Value.GetHealthClientServiceUrl().OriginalString +
+                    configuration.GetHealthClientServiceUrl().OriginalString +
                     "?" +
                     queryString);
         }
@@ -149,7 +149,7 @@ namespace Microsoft.HealthVault.Vocabulary
         {
             queryString.AppendFormat(
                 "&appid={0}",
-                configuration.Value.ApplicationId);
+                configuration.ApplicationId);
 
             X509Certificate2 certificate
                 = ApplicationCertificateStore.Current.ApplicationCertificate;

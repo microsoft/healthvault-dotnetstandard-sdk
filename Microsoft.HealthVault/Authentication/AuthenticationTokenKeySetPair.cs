@@ -28,7 +28,7 @@ namespace Microsoft.HealthVault.Authentication
     ///
     internal class AuthenticationTokenKeySetPair
     {
-        private Lazy<IConfiguration> configuration = Ioc.Get<Lazy<IConfiguration>>();
+        private IConfiguration configuration = Ioc.Get<IConfiguration>();
 
         internal AuthenticationTokenKeySetPair()
         {
@@ -41,7 +41,7 @@ namespace Microsoft.HealthVault.Authentication
         {
             this.KeySet =
                 new AuthenticatedSessionKeySet(
-                    this.configuration.Value.CryptoConfiguration.HmacAlgorithmName,
+                    this.configuration.CryptoConfiguration.HmacAlgorithmName,
                     ServiceLocator.Current.CryptoService.GenerateHmacSharedSecret());
         }
 

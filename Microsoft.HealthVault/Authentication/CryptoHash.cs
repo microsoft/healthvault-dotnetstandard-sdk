@@ -23,7 +23,7 @@ namespace Microsoft.HealthVault.Authentication
     ///
     public class CryptoHash
     {
-        private static Lazy<IConfiguration> configuration = Ioc.Get<Lazy<IConfiguration>>();
+        private static IConfiguration configuration = Ioc.Get<IConfiguration>();
 
         #region properties
 
@@ -111,7 +111,7 @@ namespace Microsoft.HealthVault.Authentication
         /// </remarks>
         ///
         public CryptoHash()
-            : this(configuration.Value.CryptoConfiguration.HashAlgorithmName)
+            : this(configuration.CryptoConfiguration.HashAlgorithmName)
         {
         }
 

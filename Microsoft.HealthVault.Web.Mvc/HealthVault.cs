@@ -25,7 +25,7 @@ namespace Microsoft.HealthVault.Web.Mvc
     public static class HealthVault
     {
 
-        private static Lazy<IConfiguration> Config = Ioc.Get<Lazy<IConfiguration>>();
+        public static WebConfiguration Config = Ioc.Get<WebConfiguration>();
 
         /// <summary>
         /// Registers routes to HealthVault controllers.

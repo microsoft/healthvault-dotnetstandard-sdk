@@ -86,6 +86,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="WebApplicationUtilities.cs" />
     <Compile Include="WebConfiguration.cs" />
     <EmbeddedResource Include="resources.restext">
       <LogicalName>resources.resources</LogicalName>

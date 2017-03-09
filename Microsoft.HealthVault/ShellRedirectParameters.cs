@@ -24,7 +24,7 @@ namespace Microsoft.HealthVault
     public class ShellRedirectParameters
     {
         private const string ShellRedirectPage = "/redirect.aspx";
-        private Lazy<IConfiguration> configuration = Ioc.Get<Lazy<IConfiguration>>();
+        private IConfiguration configuration = Ioc.Get<IConfiguration>();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ShellRedirectParameters"/> class that is empty.
@@ -329,13 +329,13 @@ namespace Microsoft.HealthVault
             string shellRedirectorUrl = this.ShellRedirectorUrl;
             if (string.IsNullOrEmpty(shellRedirectorUrl))
             {
-                if (this.configuration.Value.HealthVaultShellUrl == null)
+                if (this.configuration.HealthVaultShellUrl == null)
                 {
                     throw Validator.InvalidConfigurationException("ShellUrlRequired");
                 }
 
                 // get from config
-                shellRedirectorUrl = this.configuration.Value.HealthVaultShellUrl.OriginalString;
+                shellRedirectorUrl = this.configuration.HealthVaultShellUrl.OriginalString;
             }
 
             if (!shellRedirectorUrl.EndsWith(ShellRedirectPage, StringComparison.OrdinalIgnoreCase))

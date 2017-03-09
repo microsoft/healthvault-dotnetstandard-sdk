@@ -44,7 +44,7 @@ namespace Microsoft.HealthVault.Connection
     ///
     public abstract class HealthServiceConnection : IConnection
     {
-        private static Lazy<IConfiguration> configuration = Ioc.Get<Lazy<IConfiguration>>();
+        private static IConfiguration configuration = Ioc.Get<IConfiguration>();
 
         #region constructors
 
@@ -99,7 +99,7 @@ namespace Microsoft.HealthVault.Connection
             Validator.ThrowIfArgumentNull(healthServiceUrl, "healthServiceUrl", "CtorServiceUrlNull");
 
             // If the HealthServiceUrl is set in a .config file,
-            // this.configuration.Value.HealthVaultMethodUrl
+            // this.configuration.HealthVaultMethodUrl
             // will automatically append "wildcat.ashx" to it.
             // Users of OfflineWebApplicationConnection need the same help, so we do it here if necessary...
             if (!healthServiceUrl.AbsoluteUri.ToUpperInvariant().EndsWith("WILDCAT.ASHX", StringComparison.Ordinal))
@@ -487,7 +487,7 @@ namespace Microsoft.HealthVault.Connection
         /// Gets the calling application's ID.
         /// </summary>
         ///
-        public Guid ApplicationId { get; } = configuration.Value.ApplicationId;
+        public Guid ApplicationId { get; } = configuration.ApplicationId;
 
         /// <summary>
         /// Gets the HealthVault web-service URL.
@@ -503,7 +503,7 @@ namespace Microsoft.HealthVault.Connection
             {
                 if (this.requestUrl == null)
                 {
-                    return configuration.Value.GetHealthVaultMethodUrl();
+                    return configuration.GetHealthVaultMethodUrl();
                 }
 
                 return this.requestUrl;
@@ -561,19 +561,19 @@ namespace Microsoft.HealthVault.Connection
         /// An instance of Uri representing the HealthVault web-service URL.
         /// </value>
         ///
-        internal Uri OtherDataStreamUrl { get; } = configuration.Value.GetBlobStreamUrl();
+        internal Uri OtherDataStreamUrl { get; } = configuration.GetBlobStreamUrl();
 
         /// <summary>
         /// Gets or sets the request timeout in seconds.
         /// </summary>
         ///
-        public int RequestTimeoutSeconds { get; set; } = configuration.Value.DefaultRequestTimeout;
+        public int RequestTimeoutSeconds { get; set; } = configuration.DefaultRequestTimeout;
 
         /// <summary>
         /// Gets or sets the request time-to-live in seconds.
         /// </summary>
         ///
-        public int RequestTimeToLive { get; set; } = configuration.Value.DefaultRequestTimeToLive;
+        public int RequestTimeToLive { get; set; } = configuration.DefaultRequestTimeToLive;
 
         /// <summary>
         /// Gets or sets the language to be sent to the server when making

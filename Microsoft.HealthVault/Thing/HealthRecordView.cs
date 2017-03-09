@@ -28,7 +28,7 @@ namespace Microsoft.HealthVault.Things
     [DebuggerDisplay("Sections = {Sections}")]
     public class HealthRecordView
     {
-        private Lazy<IConfiguration> configuration = Ioc.Get<Lazy<IConfiguration>>();
+        private IConfiguration configuration = Ioc.Get<IConfiguration>();
 
         /// <summary>
         /// Gets or sets the sections that will be retrieved when the
@@ -297,10 +297,10 @@ namespace Microsoft.HealthVault.Things
 
         private void AddTypeFormatXml(XmlWriter writer)
         {
-            if (this.TypeVersionFormat.Count == 0 && !this.configuration.Value.UseLegacyTypeVersionSupport)
+            if (this.TypeVersionFormat.Count == 0 && !this.configuration.UseLegacyTypeVersionSupport)
             {
                 // Add the supported type version formats from configuration.
-                foreach (Guid typeFormat in this.configuration.Value.SupportedTypeVersions)
+                foreach (Guid typeFormat in this.configuration.SupportedTypeVersions)
                 {
                     writer.WriteElementString("type-version-format", typeFormat.ToString());
                 }

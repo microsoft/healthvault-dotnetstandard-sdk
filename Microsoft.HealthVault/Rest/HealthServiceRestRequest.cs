@@ -44,7 +44,7 @@ namespace Microsoft.HealthVault.Rest
         private const string Optional = "Optional Headers";
         private CancellationTokenSource cancellationTokenSource;
 
-        private Lazy<IConfiguration> configuration = Ioc.Get<Lazy<IConfiguration>>();
+        private IConfiguration configuration = Ioc.Get<IConfiguration>();
 
         /// <summary>
         /// Creates a new instance of the <see cref="HealthServiceRestRequest"/> 
@@ -102,7 +102,7 @@ namespace Microsoft.HealthVault.Rest
         {
             var fullUri =
                 new UriBuilder(apiRoot ??
-                               this.configuration.Value.RestHealthVaultUrl ??
+                               this.configuration.RestHealthVaultUrl ??
                                new Uri(RestConstants.DefaultMshhvRoot)) { Path = path };
 
             IDictionary<string, string> queryAsDictionary = fullUri.Uri.ParseQuery();
@@ -209,8 +209,8 @@ namespace Microsoft.HealthVault.Rest
         /// </summary>
         public async Task<HealthServiceRestResponseData> ExecuteAsync()
         {
-            int retryCount = this.configuration.Value.RetryOnInternal500Count;
-            int retrySleepSeconds = this.configuration.Value.RetryOnInternal500SleepSeconds;
+            int retryCount = this.configuration.RetryOnInternal500Count;
+            int retrySleepSeconds = this.configuration.RetryOnInternal500SleepSeconds;
 
             HealthServiceRestResponseData responseData = null;
 

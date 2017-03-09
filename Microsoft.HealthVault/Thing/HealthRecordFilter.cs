@@ -1375,7 +1375,7 @@ namespace Microsoft.HealthVault.Things
 
         private class TypeList : IList<Guid>
         {
-            private Lazy<IConfiguration> configuration = Ioc.Get<Lazy<IConfiguration>>();
+            private IConfiguration configuration = Ioc.Get<IConfiguration>();
             private readonly HealthRecordView view;
             private readonly Collection<Guid> list = new Collection<Guid>();
 
@@ -1388,7 +1388,7 @@ namespace Microsoft.HealthVault.Things
             {
                 this.list.Add(item);
 
-                if (!this.configuration.Value.UseLegacyTypeVersionSupport)
+                if (!this.configuration.UseLegacyTypeVersionSupport)
                 {
                     this.view.TypeVersionFormat.Add(item);
                 }
@@ -1397,7 +1397,7 @@ namespace Microsoft.HealthVault.Things
             public void Clear()
             {
                 this.list.Clear();
-                if (!this.configuration.Value.UseLegacyTypeVersionSupport)
+                if (!this.configuration.UseLegacyTypeVersionSupport)
                 {
                     this.view.TypeVersionFormat.Clear();
                 }
@@ -1431,7 +1431,7 @@ namespace Microsoft.HealthVault.Things
             public void Insert(int index, Guid item)
             {
                 this.list.Insert(index, item);
-                if (!this.configuration.Value.UseLegacyTypeVersionSupport)
+                if (!this.configuration.UseLegacyTypeVersionSupport)
                 {
                     this.view.TypeVersionFormat.Add(item);
                 }
@@ -1440,7 +1440,7 @@ namespace Microsoft.HealthVault.Things
             public bool Remove(Guid item)
             {
                 bool result = this.list.Remove(item);
-                if (result && !this.configuration.Value.UseLegacyTypeVersionSupport)
+                if (result && !this.configuration.UseLegacyTypeVersionSupport)
                 {
                     this.view.TypeVersionFormat.Remove(item);
                 }
@@ -1452,7 +1452,7 @@ namespace Microsoft.HealthVault.Things
             {
                 Guid item = this.list[index];
                 this.list.RemoveAt(index);
-                if (!this.configuration.Value.UseLegacyTypeVersionSupport)
+                if (!this.configuration.UseLegacyTypeVersionSupport)
                 {
                     this.view.TypeVersionFormat.Remove(item);
                 }

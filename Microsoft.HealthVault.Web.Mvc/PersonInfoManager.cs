@@ -32,7 +32,7 @@ namespace Microsoft.HealthVault.Web.Mvc
 
         /// <summary>
         /// Constructs an instance of the <see cref="PersonInfoManager"/> class using the
-        /// default <see cref="HealthWebApplicationConfiguration"/> settings.
+        /// default <see cref="WebConfiguration"/> settings.
         /// </summary>
         /// <param name="context">The current context</param>
         public PersonInfoManager(HttpContextBase context)
