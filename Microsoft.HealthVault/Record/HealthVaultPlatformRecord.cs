@@ -92,13 +92,13 @@ namespace Microsoft.HealthVault.Record
         /// in a <see cref="HealthServiceAccessDeniedException"/>."
         /// </remarks>
         public virtual async Task RemoveApplicationAuthorizationAsync(
-            ApplicationConnection connection,
+            IHealthVaultConnection connection,
             HealthRecordAccessor accessor)
         {
-            HealthServiceRequest request =
-                new HealthServiceRequest(connection, "RemoveApplicationRecordAuthorization", 1, accessor);
+            // TODO: IConnection-ify this.
+            // HealthServiceRequest request = new HealthServiceRequest(connection, "RemoveApplicationRecordAuthorization", 1, accessor);
 
-            await request.ExecuteAsync().ConfigureAwait(false);
+            // await request.ExecuteAsync().ConfigureAwait(false);
         }
 
         /// <summary>
@@ -141,10 +141,12 @@ namespace Microsoft.HealthVault.Record
         /// </exception>
         ///
         public virtual async Task<IDictionary<Guid, HealthRecordItemTypePermission>> QueryPermissionsByTypesAsync(
-            ApplicationConnection connection,
+            IHealthVaultConnection connection,
             HealthRecordAccessor accessor,
             IList<Guid> healthRecordItemTypeIds)
         {
+            // TODO: IConnection-ify this.
+            /*
             HealthRecordPermissions recordPermissions = await this.QueryRecordPermissionsAsync(connection, accessor, healthRecordItemTypeIds).ConfigureAwait(false);
             Collection<HealthRecordItemTypePermission> typePermissions = recordPermissions.ItemTypePermissions;
 
@@ -164,6 +166,9 @@ namespace Microsoft.HealthVault.Record
             }
 
             return permissions;
+            */
+
+            return null;
         }
 
         /// <summary>
@@ -209,7 +214,7 @@ namespace Microsoft.HealthVault.Record
         /// </exception>
         ///
         public virtual async Task<Collection<HealthRecordItemTypePermission>> QueryPermissionsAsync(
-            ApplicationConnection connection,
+            IHealthVaultConnection connection,
             HealthRecordAccessor accessor,
             IList<Guid> healthRecordItemTypeIds)
         {
@@ -260,14 +265,16 @@ namespace Microsoft.HealthVault.Record
         /// </exception>
         ///
         public virtual async Task<HealthRecordPermissions> QueryRecordPermissionsAsync(
-            ApplicationConnection connection,
+            IHealthVaultConnection connection,
             HealthRecordAccessor accessor,
             IList<Guid> healthRecordItemTypeIds)
         {
             Validator.ThrowIfArgumentNull(healthRecordItemTypeIds, "healthRecordItemTypeIds", "CtorhealthRecordItemTypeIdsArgumentNull");
 
+            // TODO: IConnection-ify this.
+            /*
             HealthServiceRequest request =
-                new HealthServiceRequest(connection, "QueryPermissions", 1, accessor)
+            new HealthServiceRequest(connection, "QueryPermissions", 1, accessor)
                 {
                     Parameters = GetQueryPermissionsParametersXml(healthRecordItemTypeIds)
                 };
@@ -301,6 +308,9 @@ namespace Microsoft.HealthVault.Record
             }
 
             return recordPermissions;
+            */
+
+            return null;
         }
 
         private static string GetQueryPermissionsParametersXml(
@@ -387,7 +397,7 @@ namespace Microsoft.HealthVault.Record
         /// If an error occurs while contacting the HealthVault service.
         /// </exception>
         public virtual async Task<Collection<HealthRecordItem>> GetValidGroupMembershipAsync(
-            ApplicationConnection connection,
+            IHealthVaultConnection connection,
             HealthRecordAccessor accessor,
             IList<Guid> applicationIds)
         {
@@ -406,8 +416,10 @@ namespace Microsoft.HealthVault.Record
                 }
             }
 
+            // TODO: IConnection-ify this.
+            /*
             HealthServiceRequest request =
-                new HealthServiceRequest(connection, "GetValidGroupMembership", 1, accessor)
+            new HealthServiceRequest(connection, "GetValidGroupMembership", 1, accessor)
                 {
                     Parameters = parameters.ToString()
                 };
@@ -433,6 +445,9 @@ namespace Microsoft.HealthVault.Record
             }
 
             return memberships;
+            */
+
+            return null;
         }
     }
 }

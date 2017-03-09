@@ -15,6 +15,7 @@ using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.XPath;
 using Microsoft.HealthVault.Application;
+using Microsoft.HealthVault.Configurations;
 using Microsoft.HealthVault.Connection;
 using Microsoft.HealthVault.Helpers;
 using Microsoft.HealthVault.Rest;
@@ -48,6 +49,8 @@ namespace Microsoft.HealthVault.Authentication
     public class WebApplicationCredential : Credential
     {
         #region properties
+
+        private IConfiguration configuration = Ioc.Get<IConfiguration>();
 
         internal string DigestMethod { get; set; }
 
@@ -165,8 +168,8 @@ namespace Microsoft.HealthVault.Authentication
         {
             this.ApplicationId = applicationId;
             this.cert = certificate;
-            this.DigestMethod = HealthApplicationConfiguration.Current.CryptoConfiguration.SignatureHashAlgorithmName;
-            this.SignMethod = HealthApplicationConfiguration.Current.CryptoConfiguration.SignatureAlgorithmName;
+            this.DigestMethod = this.configuration.CryptoConfiguration.SignatureHashAlgorithmName;
+            this.SignMethod = this.configuration.CryptoConfiguration.SignatureAlgorithmName;
 
             this.LoadAuthTokenPair(applicationId);
         }
@@ -384,8 +387,8 @@ namespace Microsoft.HealthVault.Authentication
             StoreLocation storeLocation,
             string certSubject)
         {
-            this.DigestMethod = HealthApplicationConfiguration.Current.CryptoConfiguration.SignatureHashAlgorithmName;
-            this.SignMethod = HealthApplicationConfiguration.Current.CryptoConfiguration.SignatureAlgorithmName;
+            this.DigestMethod = this.configuration.CryptoConfiguration.SignatureHashAlgorithmName;
+            this.SignMethod = this.configuration.CryptoConfiguration.SignatureAlgorithmName;
 
             this.cert =
                 ApplicationCertificateStore.Current.GetApplicationCertificateFromStore(
@@ -419,7 +422,7 @@ namespace Microsoft.HealthVault.Authentication
         /// </param>
         ///
         internal override async Task AuthenticateIfRequiredAsync(
-            IConnection connection,
+            IHealthVaultConnection connection,
             Guid applicationId)
         {
             if (IsAuthenticationExpired(applicationId, this.TokenIssuedRefreshCounter))
@@ -445,14 +448,14 @@ namespace Microsoft.HealthVault.Authentication
         /// If <paramref name="connection"/> is null.
         /// </exception>
         ///
-        /// <seealso cref="HealthServiceConnection"/>
+        /// <seealso cref="IHealthVaultConnection"/>
         ///
         /// <returns>
         /// The credential to use for the request.
         /// </returns>
         ///
         private async Task AuthenticateAsync(
-            IConnection connection,
+            IHealthVaultConnection connection,
             Guid applicationId)
         {
             await AuthenticateKeySetPairAsync(connection, applicationId, this.cert).ConfigureAwait(false);
@@ -756,7 +759,7 @@ namespace Microsoft.HealthVault.Authentication
                 writer.WriteString(this.ApplicationId.ToString());
                 writer.WriteEndElement();
 
-                writer.WriteElementString("hmac", HealthApplicationConfiguration.Current.CryptoConfiguration.HmacAlgorithmName);
+                writer.WriteElementString("hmac", this.configuration.CryptoConfiguration.HmacAlgorithmName);
 
                 writer.WriteStartElement("signing-time");
                 writer.WriteValue(DateTime.Now.ToUniversalTime());
@@ -885,8 +888,8 @@ namespace Microsoft.HealthVault.Authentication
             {
                 this.ApplicationId = applicationId;
                 this.cert = ApplicationCertificateStore.Current.ApplicationCertificate;
-                this.DigestMethod = HealthApplicationConfiguration.Current.CryptoConfiguration.SignatureHashAlgorithmName;
-                this.SignMethod = HealthApplicationConfiguration.Current.CryptoConfiguration.SignatureAlgorithmName;
+                this.DigestMethod = this.configuration.CryptoConfiguration.SignatureHashAlgorithmName;
+                this.SignMethod = this.configuration.CryptoConfiguration.SignatureAlgorithmName;
                 this.certOriginFromStore = false;
 
                 this.LoadAuthTokenPair(applicationId);
@@ -1060,7 +1063,7 @@ namespace Microsoft.HealthVault.Authentication
         /// </param>
         ///
         private static async Task AuthenticateKeySetPairAsync(
-            IConnection connection,
+            IHealthVaultConnection connection,
             Guid applicationId,
             X509Certificate2 certificate)
         {
@@ -1098,7 +1101,7 @@ namespace Microsoft.HealthVault.Authentication
         ///
         private static async Task AuthenticateKeySetPairAsync(
             AuthSessionKeySetPairs keySetPairs,
-            IConnection connection,
+            IHealthVaultConnection connection,
             Guid applicationId,
             X509Certificate2 certificate)
         {

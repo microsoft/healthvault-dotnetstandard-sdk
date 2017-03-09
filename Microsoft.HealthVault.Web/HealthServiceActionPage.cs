@@ -45,6 +45,8 @@ namespace Microsoft.HealthVault.Web
     [SecurityCritical]
     public class HealthServiceActionPage : HealthServicePage
     {
+        private static WebConfiguration configuration = Ioc.Get<WebConfiguration>();
+
         /// <summary>
         /// Reads the target from the query string calls the appropriate virtual method to
         /// perform the action.
@@ -705,7 +707,7 @@ namespace Microsoft.HealthVault.Web
                 if (IsRequestOkayToRedirect(
                     actionQueryString,
                     Request.Url.Host,
-                    HealthWebApplicationConfiguration.Current.AllowedRedirectSites))
+                    configuration.AllowedRedirectSites))
                 {
                     Response.Redirect(actionQueryString);
                 }
@@ -814,7 +816,7 @@ namespace Microsoft.HealthVault.Web
                 _action = action;
 
                 targetLocation =
-                    HealthWebApplicationConfiguration.Current.GetActionUrl(_action).OriginalString;
+                    configuration.GetActionUrl(_action).OriginalString;
 
                 if (!String.IsNullOrEmpty(actionQueryString))
                 {

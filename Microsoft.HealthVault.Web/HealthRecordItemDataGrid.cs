@@ -34,6 +34,8 @@ namespace Microsoft.HealthVault.Web
     [AspNetHostingPermission(SecurityAction.InheritanceDemand, Level = AspNetHostingPermissionLevel.Minimal)]
     public class HealthRecordItemDataGrid : Control, INamingContainer
     {
+        private static WebConfiguration configuration = Ioc.Get<WebConfiguration>();
+
         /// <summary>
         /// Constructs a HealthRecordItemDataGrid instance with default values.
         /// </summary>
@@ -55,7 +57,7 @@ namespace Microsoft.HealthVault.Web
             gridView.DataKeyNames = new string[] { "wc-id" };
             this.Controls.Add(gridView);
             gridView.PageSize =
-                HealthWebApplicationConfiguration.Current.DataGridItemsPerPage;
+                configuration.DataGridItemsPerPage;
         }
 
         /// <summary>

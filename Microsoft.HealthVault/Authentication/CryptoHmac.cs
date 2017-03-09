@@ -6,6 +6,7 @@
 using System;
 using System.Security.Cryptography;
 using System.Xml;
+using Microsoft.HealthVault.Configurations;
 using Microsoft.HealthVault.Helpers;
 
 namespace Microsoft.HealthVault.Authentication
@@ -15,6 +16,8 @@ namespace Microsoft.HealthVault.Authentication
     /// </summary>
     internal sealed class CryptoHmac : CryptoHash
     {
+        private IConfiguration configuration = Ioc.Get<IConfiguration>();
+
         #region properties
 
         internal byte[] KeyMaterial
@@ -42,9 +45,9 @@ namespace Microsoft.HealthVault.Authentication
         ///
         internal CryptoHmac()
         {
-            this.AlgorithmName = HealthApplicationConfiguration.Current.CryptoConfiguration.HmacAlgorithmName;
+            this.AlgorithmName = this.configuration.CryptoConfiguration.HmacAlgorithmName;
 
-            this.HashAlgorithm = ServiceLocator.Current.CryptoService.CreateHashAlgorithm(this.AlgorithmName);
+            this.HashAlgorithm = Ioc.Get<ICryptoService>().CreateHashAlgorithm(this.AlgorithmName);
 
             this.KeyMaterial = new byte[this.HMAC.Key.Length];
             CryptoUtil.GetRandomBytes(this.KeyMaterial);
@@ -56,7 +59,7 @@ namespace Microsoft.HealthVault.Authentication
             : base(algName)
         {
             this.HashAlgorithm =
-                ServiceLocator.Current.CryptoService.CreateHmac(
+                Ioc.Get<ICryptoService>().CreateHmac(
                     this.AlgorithmName,
                     keyMaterial);
             this.KeyMaterial = keyMaterial;

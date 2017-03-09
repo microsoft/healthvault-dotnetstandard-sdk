@@ -71,7 +71,7 @@ namespace Microsoft.HealthVault.Web.Mvc
 
         private static StringBuilder GetShellUrl()
         {
-            string shellUrl = HealthVault.Config.ApplicationConfiguration.HealthVaultShellUrl.OriginalString;
+            string shellUrl = HealthVault.Config.DefaultHealthVaultShellUrl.OriginalString;
             StringBuilder targetUrl = new StringBuilder(shellUrl);
             if (!shellUrl.EndsWith("/", StringComparison.OrdinalIgnoreCase))
             {
@@ -119,7 +119,7 @@ namespace Microsoft.HealthVault.Web.Mvc
         {
             if (!_params.ContainsKey("appid"))
             {
-                _params.Add("appid", HealthVault.Config.ApplicationConfiguration.ApplicationId);
+                _params.Add("appid", HealthVault.Config.ApplicationId);
             }
         }
 
@@ -134,7 +134,7 @@ namespace Microsoft.HealthVault.Web.Mvc
         private void EnsureAib()
         {
             if (!_params.ContainsKey("aib")
-                && HealthWebApplicationConfiguration.Current.ApplicationConfiguration.MultiInstanceAware)
+                && HealthVault.Config.MultiInstanceAware)
             {
                 _params.Add("aib", "true");
             }

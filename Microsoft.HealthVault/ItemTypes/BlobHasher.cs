@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Security.Cryptography;
 using Microsoft.HealthVault.Authentication;
+using Microsoft.HealthVault.Configurations;
 using Microsoft.HealthVault.Helpers;
 
 namespace Microsoft.HealthVault.ItemTypes
@@ -16,6 +17,8 @@ namespace Microsoft.HealthVault.ItemTypes
     /// </summary>
     internal class BlobHasher
     {
+        private static IConfiguration configuration = Ioc.Get<IConfiguration>();
+
         /// <summary>
         /// Constructs the BlobHasher for calculating BLOB hashes.
         /// </summary>
@@ -39,7 +42,7 @@ namespace Microsoft.HealthVault.ItemTypes
             switch (algorithm)
             {
                 case BlobHashAlgorithm.SHA256Block:
-                    this.baseHashAlgorithm = ServiceLocator.Current.CryptoService.CreateHashAlgorithm("SHA256");
+                    this.baseHashAlgorithm = Ioc.Get<ICryptoService>().CreateHashAlgorithm("SHA256");
                     break;
                 default:
                     throw new ArgumentException(
@@ -167,7 +170,7 @@ namespace Microsoft.HealthVault.ItemTypes
 
         internal static BlobHasher InlineBlobHasher { get; } = new BlobHasher(
             BlobHashAlgorithm.SHA256Block,
-            HealthApplicationConfiguration.Current.InlineBlobHashBlockSize);
+            configuration.InlineBlobHashBlockSize);
 
         internal const int DefaultInlineBlobHashBlockSizeBytes = 1 << 21; // 2Mb.
 

@@ -4,7 +4,6 @@
 // All other rights reserved.
 
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
@@ -23,7 +22,6 @@ using Microsoft.HealthVault.Connection;
 using Microsoft.HealthVault.Diagnostics;
 using Microsoft.HealthVault.Exceptions;
 using Microsoft.HealthVault.Helpers;
-using Microsoft.HealthVault.Things;
 
 namespace Microsoft.HealthVault.Transport
 {
@@ -37,13 +35,13 @@ namespace Microsoft.HealthVault.Transport
     /// must execute concurrently.
     /// </remarks>
     ///
-    public class HealthServiceRequest : IHealthServiceRequest
+    /// TODO: DO NOT USE OUTSIDE OF ConnectionInternalBase 
+    internal class HealthServiceRequest
     {
         private const string CorrelationIdContextKey = "WC_CorrelationId";
         private const string ResponseIdContextKey = "WC_ResponseId";
 
         private readonly object cancelLock = new object();
-        private readonly HealthServiceConnection connection;
         private CancellationTokenSource cancellationTokenSource;
         private bool pendingCancel;
 
@@ -83,8 +81,8 @@ namespace Microsoft.HealthVault.Transport
         /// Creates a new instance of the <see cref="HealthServiceRequest"/>
         /// class for the specified method.
         /// </summary>
-        /// 
-        /// <param name="connection">
+        ///
+        /// <param name="connectionInternal">
         /// The client-side representation of the HealthVault service.
         /// </param>
         /// 
@@ -97,81 +95,30 @@ namespace Microsoft.HealthVault.Transport
         /// </param>
         /// 
         /// <exception cref="ArgumentNullException">
-        /// The <paramref name="connection"/> parameter is <b>null</b>.
+        /// The <paramref name="connectionInternal"/> parameter is <b>null</b>.
         /// </exception>
         /// 
         /// <exception cref="ArgumentException">
         /// The <paramref name="methodName"/> parameter is <b>null</b> or empty.
         /// </exception>
+        /// <param name="recordId">RecordId</param>
         public HealthServiceRequest(
-            HealthServiceConnection connection,
+            IConnectionInternal connectionInternal,
             string methodName,
-            int methodVersion)
+            int methodVersion,
+            Guid? recordId = null)
         {
-            Validator.ThrowIfArgumentNull(connection, "connection", "CtorServiceNull");
+            Validator.ThrowIfArgumentNull(connectionInternal, "connection", "CtorServiceNull");
             Validator.ThrowIfStringNullOrEmpty(methodName, "methodName");
 
-            this.connection = connection;
-            AuthenticatedConnection authenticatedConnection = connection as AuthenticatedConnection;
-            if (authenticatedConnection != null)
-            {
-                this.ImpersonatedPersonId = authenticatedConnection.ImpersonatedPersonId;
-            }
+            this.connectionInternal = connectionInternal;
 
             this.MethodName = methodName;
-            this.timeoutSeconds = connection.ApplicationConfiguration.DefaultRequestTimeout;
-            this.TimeToLiveSeconds = connection.ApplicationConfiguration.DefaultRequestTimeToLive;
-            this.CultureCode = CultureInfo.CurrentCulture.Name;
             this.MethodVersion = methodVersion;
-        }
-
-        /// <summary>
-        /// Creates a new instance of the <see cref="HealthServiceRequest"/>
-        /// class for the specified method.
-        /// </summary>
-        /// 
-        /// <param name="connection">
-        /// The client-side representation of the HealthVault service.
-        /// </param>
-        /// 
-        /// <param name="methodName">
-        /// The name of the method to invoke on the service.
-        /// </param>
-        /// 
-        /// <param name="methodVersion">
-        /// The version of the method to invoke on the service.
-        /// </param>
-        /// 
-        /// <param name="record">
-        /// The record to use.
-        /// </param>
-        /// 
-        /// <exception cref="ArgumentNullException">
-        /// The <paramref name="connection"/> parameter is <b>null</b>.
-        /// </exception>
-        /// 
-        /// <exception cref="ArgumentException">
-        /// The <paramref name="methodName"/> parameter is <b>null</b> or empty.
-        /// </exception>
-        public HealthServiceRequest(
-            HealthServiceConnection connection,
-            string methodName,
-            int methodVersion,
-            HealthRecordAccessor record)
-            : this(connection, methodName, methodVersion)
-        {
-            this.recordId = record.Id;
-        }
-
-        public HealthServiceRequest(
-            HealthServiceConnection connection, 
-            string methodName,
-            int methodVersion,
-            HealthRecordAccessor record,
-            Guid correlationId)
-            : this(connection, methodName, methodVersion, record)
-        {
-            this.CorrelationId = correlationId;
+            this.timeoutSeconds = connectionInternal.ApplicationConfiguration.DefaultRequestTimeout;
+            this.TimeToLiveSeconds = connectionInternal.ApplicationConfiguration.DefaultRequestTimeToLive;
+            this.CultureCode = CultureInfo.CurrentUICulture.Name;
+            this.recordId = recordId.GetValueOrDefault(Guid.Empty);
         }
 
         /// <summary>
@@ -185,7 +132,7 @@ namespace Microsoft.HealthVault.Transport
         /// <summary>
         /// Gets the response id that was returned by the HealthVault platform. The response id
         /// is found in the response headers and is set when a request finishes executing.
-        /// 
+        ///
         /// If an error occurs / exception thrown, the caller can call GetLastResponseId to get that response
         /// id which can be used to look up error information in the HealthVault logs.
         /// </summary>
@@ -193,42 +140,17 @@ namespace Microsoft.HealthVault.Transport
 
         public async Task<HealthServiceResponseData> ExecuteAsync()
         {
-            if (this.connection.SessionCredential != null)
-            {
-                await this.connection.SessionCredential.AuthenticateIfRequiredAsync().ConfigureAwait(false);
-            }
-
-            try
-            {
-                return await this.ExecuteInternalAsync().ConfigureAwait(false);
-            }
-            catch (HealthServiceAuthenticatedSessionTokenExpiredException)
-            {
-                if (this.connection.SessionCredential != null)
-                {
-                    // Mark the credential's authentication result as expired,
-                    // so that in the following Credential.AuthenticateIfRequired we fetch a new token.
-                    await this.connection.SessionCredential.AuthenticateIfRequiredAsync().ConfigureAwait(false);
-
-                    return await this.ExecuteInternalAsync().ConfigureAwait(false);
-                }
-
-                throw;
-            }
-        }
-
-        private async Task<HealthServiceResponseData> ExecuteInternalAsync()
-        {
             try
             {
                 EasyWebRequest easyWeb = this.BuildWebRequest(null);
-                easyWeb.RequestCompressionMethod = this.RequestCompressionMethod;
                 HttpResponseMessage response;
 
                 try
                 {
                     this.cancellationTokenSource = new CancellationTokenSource(TimeSpan.FromSeconds(this.timeoutSeconds));
-                    response = await easyWeb.FetchAsync(this.connection.ApplicationConfiguration.HealthVaultUrl, this.cancellationTokenSource.Token).ConfigureAwait(false);
+                    response = await easyWeb.FetchAsync(
+                        this.connectionInternal.ApplicationConfiguration.DefaultHealthVaultUrl,
+                        this.cancellationTokenSource.Token).ConfigureAwait(false);
                 }
                 finally
                 {
@@ -267,184 +189,6 @@ namespace Microsoft.HealthVault.Transport
             }
         }
 
-        /// <summary>
-        /// Cancels any pending request to HealthVault that was initiated with the same connection
-        /// as this request.
-        /// </summary>
-        ///
-        /// <remarks>
-        /// Calling this method will cancel any requests that was started using the connection.
-        /// It is up to the caller to start the request on another thread. Cancelling will cause
-        /// an OperationCancelledException to be thrown on the thread the request was
-        /// executed on.
-        /// </remarks>
-        ///
-        public void CancelRequest()
-        {
-            lock (this.cancelLock)
-            {
-                if (this.cancellationTokenSource != null)
-                {
-                    this.cancellationTokenSource.Cancel();
-                }
-                else
-                {
-                    this.pendingCancel = true;
-                }
-            }
-        }
-
-        /// <summary>
-        /// Same as Execute, but takes a transform url (or tag) that is
-        /// used to transform the result (on the server). Since the
-        /// response is no longer necessarily xml, it is returned as
-        /// a string
-        /// </summary>
-        ///
-        /// <param name="transform">
-        /// The public URL of the transform to apply to the results. If <b>null</b>,
-        /// no transform is applied and the results are returned
-        /// as a string.
-        /// </param>
-        ///
-        public virtual async Task<string> ExecuteForTransformAsync(string transform)
-        {
-            if (this.connection.SessionCredential != null)
-            {
-                await this.connection.SessionCredential.AuthenticateIfRequiredAsync().ConfigureAwait(false);
-            }
-
-            try
-            {
-                return await this.ExecuteForTransformInternalAsync(transform).ConfigureAwait(false);
-            }
-            catch (HealthServiceAuthenticatedSessionTokenExpiredException)
-            {
-                if (this.connection.SessionCredential != null)
-                {
-                    // Mark the credential's authentication result as expired,
-                    // so that in the following
-                    // Credential.AuthenticateIfRequired we fetch a new token.
-                    await this.connection.SessionCredential.AuthenticateIfRequiredAsync().ConfigureAwait(false);
-
-                    return await this.ExecuteForTransformInternalAsync(transform).ConfigureAwait(false);
-                }
-
-                throw;
-            }
-        }
-
-        internal virtual async Task<string> ExecuteForTransformInternalAsync(string transform)
-        {
-            EasyWebRequest easyWeb = this.BuildWebRequest(transform);
-            easyWeb.RequestCompressionMethod = this.RequestCompressionMethod;
-
-            HttpResponseMessage response;
-            try
-            {
-                this.cancellationTokenSource = new CancellationTokenSource(TimeSpan.FromSeconds(this.timeoutSeconds));
-                response = await easyWeb.FetchAsync(this.connection.ApplicationConfiguration.HealthVaultUrl, this.cancellationTokenSource.Token).ConfigureAwait(false);
-            }
-            finally
-            {
-                lock (this.cancelLock)
-                {
-                    if (this.cancellationTokenSource != null)
-                    {
-                        this.cancellationTokenSource.Dispose();
-                        this.cancellationTokenSource = null;
-                    }
-                }
-            }
-
-            using (Stream responseStream = await response.Content.ReadAsStreamAsync().ConfigureAwait(false))
-            using (MemoryStream responseMemoryStream = new MemoryStream())
-            {
-                // Copy the response stream to a memory stream so we can go over it multiple times.
-                await responseStream.CopyToAsync(responseMemoryStream).ConfigureAwait(false);
-
-                // Look over the response to see if it's an error and extract response ID
-                responseMemoryStream.Position = 0;
-                this.HandleTransformResponse(responseMemoryStream, response.Headers);
-
-                // Reset stream position and read as string for result
-                responseMemoryStream.Position = 0;
-
-                using (StreamReader reader = new StreamReader(responseMemoryStream))
-                {
-                    return await reader.ReadToEndAsync().ConfigureAwait(false);
-                }
-            }
-        }
-
-        /// <summary>
-        /// Handles the response stream and headers from transform request.
-        /// </summary>
-        ///
-        /// <param name="stream">The response stream.</param>
-        /// <param name="responseHeaders">The response header collection.</param>
-        ///
-        public void HandleTransformResponse(MemoryStream stream, HttpResponseHeaders responseHeaders)
-        {
-            // Platform returns a platform request id with the responses. This allows
-            // developers to have additional information if necessary for debugging/logging purposes.
-            Guid responseId;
-            if (responseHeaders != null && Guid.TryParse(responseHeaders.GetValues("WC_ResponseId").FirstOrDefault(), out responseId))
-            {
-                this.ResponseId = responseId;
-            }
-
-            ProcessTransformResponseForErrors(stream);
-        }
-
-        private static void ProcessTransformResponseForErrors(MemoryStream responseStream)
-        {
-            // Now look at the errors in the response before returning. If we see HV XML returned
-            // containing a failure status code, throw an exception
-            XmlReaderSettings settings = SDKHelper.XmlReaderSettings;
-            settings.CloseInput = false;
-            settings.IgnoreWhitespace = false;
-
-            try
-            {
-                using (XmlReader reader = XmlReader.Create(responseStream, settings))
-                {
-                    reader.NameTable.Add("wc");
-
-                    if (SDKHelper.ReadUntil(reader, "response") &&
-                        SDKHelper.ReadUntil(reader, "status") &&
-                        SDKHelper.ReadUntil(reader, "code"))
-                    {
-                        HealthServiceResponseData responseData = new HealthServiceResponseData
-                        {
-                            CodeId = reader.ReadElementContentAsInt()
-                        };
-
-                        if (responseData.Code != HealthServiceStatusCode.Ok)
-                        {
-                            responseData.Error = HandleErrorResponse(reader);
-
-                            HealthServiceException e = HealthServiceExceptionHelper.GetHealthServiceException(responseData);
-
-                            throw e;
-                        }
-                    }
-                }
-            }
-            catch (FormatException)
-            {
-            }
-            catch (MissingFieldException)
-            {
-            }
-            catch (XmlException)
-            {
-            }
-            catch (InvalidOperationException)
-            {
-            }
-        }
-
         #region helpers
 
         /// <summary>
@@ -460,15 +204,6 @@ namespace Microsoft.HealthVault.Transport
         /// </returns>
         private EasyWebRequest BuildWebRequest(string transform)
         {
-            lock (this.cancelLock)
-            {
-                if (this.pendingCancel)
-                {
-                    this.pendingCancel = false;
-                    throw new OperationCanceledException();
-                } 
-            }
-
             // Core
             this.BuildRequestXml(transform);
 
@@ -477,7 +212,6 @@ namespace Microsoft.HealthVault.Transport
 
             // TODO: let's pass this in so that we can mock more easily
             EasyWebRequest easyWeb = new EasyWebRequest(this.XmlRequest, this.XmlRequestLength);
-
             if (this.CorrelationId != Guid.Empty)
             {
                 easyWeb.Headers.Add(CorrelationIdContextKey, this.CorrelationId.ToString());
@@ -487,18 +221,31 @@ namespace Microsoft.HealthVault.Transport
         }
 
         /// <summary>
-        /// Gets or sets the request compression method used by the connection.
+        /// Connects the XML using default values.
         /// </summary>
         ///
-        /// <returns>
-        /// A string representing the request compression method.
-        /// </returns>
+        /// <exception cref="XmlException">
+        /// There is a failure building up the XML.
+        /// </exception>
         ///
+        /// <private>
+        /// This is protected so that the derived testing class can call it
+        /// to create the request XML and then verify it is correct.
+        /// </private>
+        ///
+        protected void BuildRequestXml()
+        {
+            this.BuildRequestXml(null);
+        }
+
+        // TODO: IConnection-ify this.
+        /*
         public string RequestCompressionMethod
         {
             get { return this.connection.RequestCompressionMethod; }
             set { this.connection.RequestCompressionMethod = value; }
         }
+        */
 
         /// <summary>
         /// Connects the XML using the specified optional XSL.
@@ -539,13 +286,18 @@ namespace Microsoft.HealthVault.Transport
                     // <auth>
                     // If we have an authenticated section, then construct the auth data otherwise do
                     // not include an auth section.
-                    string authInnerXml = this.connection.SessionCredential?.AuthenticateData(headerXml, 0, headerXmlLength);
-
-                    if (!string.IsNullOrEmpty(authInnerXml))
+                    if (this.connectionInternal.SessionCredential != null)
                     {
-                        writer.WriteStartElement("auth");
-                        writer.WriteRaw(authInnerXml);
-                        writer.WriteEndElement();
+                        CryptoData crytpoData = this.connectionInternal.GetAuthData(this.MethodName, headerXml);
+
+                        string authInnerXml = this.GetCryptoDataInnerXml(crytpoData);
+
+                        if (!string.IsNullOrEmpty(authInnerXml))
+                        {
+                            writer.WriteStartElement("auth");
+                            writer.WriteRaw(authInnerXml);
+                            writer.WriteEndElement();
+                        }
                     }
 
                     writer.WriteRaw(Encoding.UTF8.GetString(headerXml, 0, headerXmlLength));
@@ -582,18 +334,54 @@ namespace Microsoft.HealthVault.Transport
                     infoSection = infoXml.ToArray();
                     infoSectionLength = (int)infoXml.Length;
 
-                    // if we are not using an auth connection,
-                    // then there is no point in hashing the info section
-                    // because we cannot protect the resulting hash
-                    infoHash =
-                        this.connection.SessionCredential != null
-                                ? this.cryptographyClient.CreateInfoHash(infoSection, 0, infoSectionLength)
-                                : string.Empty;
+                    infoHash = string.Empty;
+
+                    if (this.connectionInternal.SessionCredential != null)
+                    {
+                        // if we are not using an auth connection,
+                        // then there is no point in hashing the info section
+                        // because we cannot protect the resulting hash
+
+                        CryptoData data = this.connectionInternal.GetInfoHash(infoSection);
+                        infoHash = this.GetCryptoDataInnerXml(data);
+                    }
                 }
             }
         }
 
-        internal void GetHeaderSection(
+        #endregion
+
+        #region AuthData
+
+        // TODO: Find hash-data header
+        private string GetCryptoDataInnerXml(CryptoData crytpoData)
+        {
+            StringBuilder builder = new StringBuilder(256);
+            XmlWriterSettings settings = SDKHelper.XmlUnicodeWriterSettings;
+
+            using (XmlWriter writer = XmlWriter.Create(builder, settings))
+            {
+                this.WriteCryptoDataInfoXml(writer, crytpoData);
+            }
+
+            return builder.ToString();
+        }
+
+        internal virtual void WriteCryptoDataInfoXml(XmlWriter writer, CryptoData cryptoData)
+        {
+            if (writer == null)
+            {
+                throw new ArgumentNullException(nameof(writer));
+            }
+
+            writer.WriteStartElement("hash-data"); // TODO: what is this StartElementName
+            writer.WriteAttributeString("algName", cryptoData.Algorithm);
+            writer.WriteString(cryptoData.Value);
+            writer.WriteEndElement();
+        }
+
+        [SuppressMessage("Microsoft.Usage", "CA2202:Do not dispose objects multiple times", Justification = "MemoryStream can be disposed multiple times. Usings block makes the code more readable")]
+        private void GetHeaderSection(
             string transform,
             string infoHash,
             out byte[] headerXml,
@@ -629,19 +417,16 @@ namespace Microsoft.HealthVault.Transport
                         writer.WriteElementString("record-id", this.recordId.ToString());
                     }
 
-                    // header based on the kind of connection we have.   TODO: Consider if this should be injected rather than retrieved from ApplicationConfiguration
-                    // First, we need to ensure that we have an authentication token
-                    if (!string.IsNullOrEmpty(this.connection.SessionCredential?.Token))
+                    // header based on the kind of connection we have...
+
+                    if (this.connectionInternal.SessionCredential != null &&
+                        !string.IsNullOrEmpty(this.connectionInternal.SessionCredential.Token))
                     {
-                        writer.WriteStartElement("auth-session");
-
-                        this.connection.GetSessionAuthorizationHeader(writer);
-
-                        writer.WriteEndElement();
+                        this.connectionInternal.PrepareAuthSessionHeader(writer, this.RecordId);
                     }
                     else
                     {
-                        writer.WriteElementString("app-id", this.connection.ApplicationConfiguration.ApplicationId.ToString());
+                        writer.WriteElementString("app-id", this.connectionInternal.ApplicationId.ToString());
                     }
 
                     if (this.CultureCode != null)
@@ -663,7 +448,7 @@ namespace Microsoft.HealthVault.Transport
                     // if we are not using an authenticated connection,
                     // then do not include the info-hash because we cannot protect it
                     //      with the auth section.
-                    if (this.connection.SessionCredential != null)
+                    if (this.connectionInternal.SessionCredential != null)
                     {
                         writer.WriteStartElement("info-hash");
                         writer.WriteRaw(infoHash);
@@ -1003,6 +788,7 @@ namespace Microsoft.HealthVault.Transport
                 this.timeoutSeconds = value;
             }
         }
+        private IConnectionInternal connectionInternal;
 
         internal Guid ResponseId
         {

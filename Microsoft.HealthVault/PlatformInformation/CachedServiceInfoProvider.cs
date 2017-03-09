@@ -5,6 +5,7 @@
 
 using System;
 using System.Threading.Tasks;
+using Microsoft.HealthVault.Configurations;
 using Microsoft.HealthVault.Connection;
 
 namespace Microsoft.HealthVault.PlatformInformation
@@ -20,6 +21,7 @@ namespace Microsoft.HealthVault.PlatformInformation
     /// </remarks>
     internal class CachedServiceInfoProvider : IServiceInfoProvider
     {
+        private static IConfiguration configuration = Ioc.Get<IConfiguration>();
         private LazyCacheWithTtl<ServiceInfo> serviceInfo;
         private DateTime lastCheckTime;
         private ServiceInfoSections responseSections;
@@ -32,11 +34,11 @@ namespace Microsoft.HealthVault.PlatformInformation
         ///
         /// <remarks>
         /// The expiration period is the value of the
-        /// <see cref="HealthApplicationConfiguration.ServiceInfoDefaultCacheTtl"/> configuration.
+        /// <see cref="BaseConfiguration.ServiceInfoDefaultCacheTtl"/> configuration.
         /// </remarks>
         ///
         public CachedServiceInfoProvider()
-            : this(HealthApplicationConfiguration.Current.ServiceInfoDefaultCacheTtl)
+            : this(configuration.ServiceInfoDefaultCacheTtl)
         {
         }
 
@@ -69,11 +71,11 @@ namespace Microsoft.HealthVault.PlatformInformation
         ///
         /// <remarks>
         /// The expiration period is the value of the
-        /// <see cref="HealthApplicationConfiguration.ServiceInfoDefaultCacheTtl"/> configuration.
+        /// <see cref="BaseConfiguration.ServiceInfoDefaultCacheTtl"/> configuration.
         /// </remarks>
         ///
         public CachedServiceInfoProvider(ServiceInfoSections responseSections)
-            : this(responseSections, HealthApplicationConfiguration.Current.ServiceInfoDefaultCacheTtl)
+            : this(responseSections, configuration.ServiceInfoDefaultCacheTtl)
         {
         }
 
@@ -87,7 +89,7 @@ namespace Microsoft.HealthVault.PlatformInformation
         /// The URL for the HealthVault web-service to use to retrieve the service information.
         /// </param>
         public CachedServiceInfoProvider(Uri healthServiceUrl)
-            : this(ServiceInfoSections.All, HealthApplicationConfiguration.Current.ServiceInfoDefaultCacheTtl, healthServiceUrl)
+            : this(ServiceInfoSections.All, configuration.ServiceInfoDefaultCacheTtl, healthServiceUrl)
         {
         }
 
@@ -124,11 +126,11 @@ namespace Microsoft.HealthVault.PlatformInformation
         /// <summary>
         /// Returns the service information retrieved from the HealthVault web-service.
         /// </summary>
-        /// 
+        ///
         /// <returns>
         /// Service information retrieved from the HealthVault web-service.
         /// </returns>
-        /// 
+        ///
         ///  <remarks>
         ///  Calls to this method are thread-safe.
         /// TODO: THIS METHODS THO REFERENCED IS NOT USED ANYWHERE
@@ -154,13 +156,17 @@ namespace Microsoft.HealthVault.PlatformInformation
         /// </remarks>
         private async Task<ServiceInfo> GetFromServiceAsync()
         {
+            // TODO: IConnection-ify this.
+            /*
             var connection = this.healthServiceUrl != null
-                ? new AnonymousConnection(HealthApplicationConfiguration.Current.ApplicationId, this.healthServiceUrl)
+                ? new AnonymousConnection(configuration.ApplicationId, this.healthServiceUrl)
                 : new AnonymousConnection();
 
             var serviceInfo = await HealthVaultPlatformInformation.Current.GetServiceDefinitionAsync(connection, this.responseSections);
             this.lastCheckTime = serviceInfo.LastUpdated;
             return serviceInfo;
+            */
+            return null;
         }
 
         /// <summary>
@@ -170,14 +176,18 @@ namespace Microsoft.HealthVault.PlatformInformation
         /// </summary>
         private async Task<ServiceInfo> RefreshFromServiceAsync(ServiceInfo currentServiceInfo)
         {
+            // TODO: IConnection-ify this.
+            /*
             var connection = this.healthServiceUrl != null
-                ? new AnonymousConnection(HealthApplicationConfiguration.Current.ApplicationId, this.healthServiceUrl)
+                ? new AnonymousConnection(configuration.ApplicationId, this.healthServiceUrl)
                 : new AnonymousConnection();
 
             ServiceInfo serviceInfo = await HealthVaultPlatformInformation.Current.GetServiceDefinitionAsync(connection, this.responseSections, this.lastCheckTime).ConfigureAwait(false);
             this.lastCheckTime = DateTime.Now;
 
             return serviceInfo ?? currentServiceInfo;
+            */
+            return null;
         }
     }
 }

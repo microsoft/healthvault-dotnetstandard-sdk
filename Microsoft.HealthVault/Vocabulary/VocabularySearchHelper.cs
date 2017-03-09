@@ -11,6 +11,7 @@ using System.Security.Cryptography;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using Microsoft.HealthVault.Application;
+using Microsoft.HealthVault.Configurations;
 using Microsoft.HealthVault.Extensions;
 using Microsoft.HealthVault.Helpers;
 
@@ -26,6 +27,8 @@ namespace Microsoft.HealthVault.Vocabulary
     /// </remarks>
     internal static class VocabularySearchHelper
     {
+        private static IConfiguration configuration = Ioc.Get<IConfiguration>();
+
         /// <summary>
         /// Creates a vocabulary search request URL in which the application is identified using
         /// its service token.
@@ -74,7 +77,7 @@ namespace Microsoft.HealthVault.Vocabulary
             AppendVocabularySearchParameters(queryString, searchParameters);
             return
                 new Uri(
-                    HealthApplicationConfiguration.Current.GetHealthClientServiceUrl().OriginalString +
+                    configuration.GetHealthClientServiceUrl().OriginalString +
                     "?" +
                     queryString);
         }
@@ -122,7 +125,7 @@ namespace Microsoft.HealthVault.Vocabulary
             AppendVocabularySearchParameters(queryString, searchParameters);
             return
                 new Uri(
-                    HealthApplicationConfiguration.Current.GetHealthClientServiceUrl().OriginalString +
+                    configuration.GetHealthClientServiceUrl().OriginalString +
                     "?" +
                     queryString);
         }
@@ -146,7 +149,7 @@ namespace Microsoft.HealthVault.Vocabulary
         {
             queryString.AppendFormat(
                 "&appid={0}",
-                HealthApplicationConfiguration.Current.ApplicationId);
+                configuration.ApplicationId);
 
             X509Certificate2 certificate
                 = ApplicationCertificateStore.Current.ApplicationCertificate;

@@ -84,7 +84,7 @@ namespace Microsoft.HealthVault.Person
         /// The complete set application settings including the XML settings, selected record ID, etc.
         /// </returns>
         ///
-        public virtual async Task<ApplicationSettings> GetApplicationSettingsAsync(HealthServiceConnection connection)
+        public virtual async Task<ApplicationSettings> GetApplicationSettingsAsync(IConnectionInternal connection)
         {
             HealthServiceRequest request =
                 new HealthServiceRequest(connection, "GetApplicationSettings", 1);
@@ -123,7 +123,7 @@ namespace Microsoft.HealthVault.Person
         /// </remarks>
         ///
         public virtual async Task SetApplicationSettingsAsync(
-            HealthServiceConnection connection,
+            IConnectionInternal connection,
             IXPathNavigable applicationSettings)
         {
             string requestParameters =
@@ -150,7 +150,7 @@ namespace Microsoft.HealthVault.Person
         /// </remarks>
         ///
         public virtual async Task SetApplicationSettingsAsync(
-            HealthServiceConnection connection,
+            IConnectionInternal connection,
             string requestParameters)
         {
             HealthServiceRequest request = new HealthServiceRequest(connection, "SetApplicationSettings", 1);
@@ -225,8 +225,8 @@ namespace Microsoft.HealthVault.Person
         /// <exception cref="HealthServiceException">
         /// The HealthVault service returned an error.
         /// </exception>
-        /// 
-        public virtual async Task<PersonInfo> GetPersonInfoAsync(ApplicationConnection connection)
+        ///
+        public virtual async Task<PersonInfo> GetPersonInfoAsync(IConnectionInternal connection)
         {
             HealthServiceRequest request = new HealthServiceRequest(connection, "GetPersonInfo", 1);
 
@@ -291,7 +291,7 @@ namespace Microsoft.HealthVault.Person
         /// </remarks>
         ///
         public virtual async Task<Collection<HealthRecordInfo>> GetAuthorizedRecordsAsync(
-            ApplicationConnection connection,
+            IConnectionInternal connection,
             IList<Guid> recordIds)
         {
             HealthServiceRequest request =

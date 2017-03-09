@@ -4,6 +4,7 @@
 // All other rights reserved.
 
 using System;
+using Microsoft.HealthVault.Configurations;
 
 namespace Microsoft.HealthVault.Authentication
 {
@@ -27,6 +28,8 @@ namespace Microsoft.HealthVault.Authentication
     ///
     internal class AuthenticationTokenKeySetPair
     {
+        private IConfiguration configuration = Ioc.Get<IConfiguration>();
+
         internal AuthenticationTokenKeySetPair()
         {
             this.RefreshSharedSecret();
@@ -38,8 +41,8 @@ namespace Microsoft.HealthVault.Authentication
         {
             this.KeySet =
                 new AuthenticatedSessionKeySet(
-                    HealthApplicationConfiguration.Current.CryptoConfiguration.HmacAlgorithmName,
-                    ServiceLocator.Current.CryptoService.GenerateHmacSharedSecret());
+                    this.configuration.CryptoConfiguration.HmacAlgorithmName,
+                    Ioc.Get<ICryptoService>().GenerateHmacSharedSecret());
         }
 
         internal CreateAuthenticationTokenResult AuthenticationResult { get; set; }

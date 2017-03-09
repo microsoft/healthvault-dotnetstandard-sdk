@@ -11,6 +11,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Web;
 using Microsoft.HealthVault.Authentication;
+using Microsoft.HealthVault.Configurations;
 using Microsoft.HealthVault.Connection;
 using Microsoft.HealthVault.Person;
 using Microsoft.HealthVault.PlatformInformation;
@@ -35,6 +36,8 @@ namespace Microsoft.HealthVault.Web
     [SecurityCritical]
     public class HealthServicePage : System.Web.UI.Page
     {
+        private static WebConfiguration configuration = Ioc.Get<WebConfiguration>();
+
         /// <summary>
         /// Initializes the page to use SSL if necessary.
         /// </summary>
@@ -81,19 +84,19 @@ namespace Microsoft.HealthVault.Web
         /// also be overridden on a per page basis by overriding this property in a derived class.
         /// </remarks>
         ///
-        protected virtual bool IsMra => HealthWebApplicationConfiguration.Current.IsMultipleRecordApplication;
+        protected virtual bool IsMra => configuration.IsMultipleRecordApplication;
 
         /// <summary>
         /// Gets or sets the unique application identifier.
         /// </summary>
         ///
         /// <remarks>
-        /// By default the value is set to <see cref="HealthApplicationConfiguration.ApplicationId"/>. If the
+        /// By default the value is set to <see cref="ConfigurationBase.ApplicationId"/>. If the
         /// application needs to change the application identifier it can set the value during
         /// <see cref="OnInit"/>.
         /// </remarks>
         ///
-        protected virtual Guid ApplicationId { get; set; } = HealthWebApplicationConfiguration.Current.ApplicationConfiguration.ApplicationId;
+        protected virtual Guid ApplicationId { get; set; } = configuration.ApplicationId;
 
         /// <summary>
         /// Handles the PreLoad event for the page.
@@ -105,7 +108,7 @@ namespace Microsoft.HealthVault.Web
         ///
         /// <remarks>
         /// The base implementation calls <see cref="WebApplicationUtilities.PageOnPreLoadAsync(System.Web.HttpContext,bool)"/>
-        /// and then calls the 
+        /// and then calls the
         /// <see cref='System.Web.UI.Page.OnPreLoad(EventArgs)'/>.
         ///
         /// If a derived class overrides this method, it must call the base
@@ -191,19 +194,19 @@ namespace Microsoft.HealthVault.Web
         /// certificate store to sign requests.
         /// </exception>
         ///
-        public ApplicationConnection ApplicationConnection
+        public IHealthVaultConnection ApplicationConnection
         {
             get
             {
                 if (_tier1AuthConnection == null)
                 {
-                    _tier1AuthConnection =
-                        WebApplicationUtilities.GetApplicationConnection(ApplicationId);
+                    // TODO: IConnection-ify this.
+                    // _tier1AuthConnection = WebApplicationUtilities.GetApplicationConnection(ApplicationId);
                 }
                 return _tier1AuthConnection;
             }
         }
-        private ApplicationConnection _tier1AuthConnection;
+        private IHealthVaultConnection _tier1AuthConnection;
 
         /// <summary>
         /// Gets a HealthVault connection without an authentication token.
@@ -224,7 +227,7 @@ namespace Microsoft.HealthVault.Web
         /// certificate store to sign requests.
         /// </exception>
         ///
-        public ApplicationConnection DictionaryConnection
+        public IHealthVaultConnection DictionaryConnection
         {
             get
             {
@@ -235,35 +238,7 @@ namespace Microsoft.HealthVault.Web
                 return _dictionaryConnection;
             }
         }
-        private ApplicationConnection _dictionaryConnection;
-
-        /// <summary>
-        /// Gets a HealthVault connection without an authentication token.
-        /// </summary>
-        ///
-        /// <returns>
-        /// A connection to HealthVault that does not contain user
-        /// authentication information.
-        /// </returns>
-        ///
-        /// <remarks>
-        /// If a connection has already been made on the page, that connection
-        /// is returned. If no connection has been made, a new connection is
-        /// created a returned.
-        /// </remarks>
-        ///
-        /// <exception cref="System.Security.SecurityException">
-        /// If the application private key could not be found in the
-        /// certificate store to sign requests.
-        /// </exception>
-        ///
-        public static AnonymousConnection AnonymousConnection
-        {
-            get
-            {
-                return new AnonymousConnection();
-            }
-        }
+        private IHealthVaultConnection _dictionaryConnection;
 
         /// <summary>
         /// Sets the selected health record for the application.
@@ -321,7 +296,7 @@ namespace Microsoft.HealthVault.Web
         public void RefreshAndPersist(string authToken)
         {
             _personInfo =
-                WebApplicationUtilities.RefreshAndSavePersonInfoToCookieAsync(Context, 
+                WebApplicationUtilities.RefreshAndSavePersonInfoToCookieAsync(Context,
                     authToken,
                     _personInfo.Connection.ServiceInstance)
                     .Result;
@@ -457,7 +432,6 @@ namespace Microsoft.HealthVault.Web
             {
                 redirectParameters.ShellRedirectorUrl = PersonInfo.Connection.ServiceInstance.ShellUrl.OriginalString;
             }
-
             WebApplicationUtilities.RedirectToShellUrl(System.Web.HttpContext.Current, redirectParameters);
         }
 
@@ -515,7 +489,7 @@ namespace Microsoft.HealthVault.Web
         /// </exception>
         ///
         public static Uri ConstructShellTargetUrl(
-                string targetLocation,
+        string targetLocation,
                 string targetQuery)
         {
             return WebApplicationUtilities.ConstructShellTargetUrl(
@@ -564,7 +538,7 @@ namespace Microsoft.HealthVault.Web
         /// </exception>
         ///
         public static Uri ConstructShellTargetUrl(
-            string targetLocation,
+        string targetLocation,
             string targetQuery,
             string actionUrlQueryString)
         {
@@ -773,7 +747,6 @@ namespace Microsoft.HealthVault.Web
             {
                 serviceInstance = PersonInfo.Connection.ServiceInstance;
             }
-
             WebApplicationUtilities.SignOut(
                 System.Web.HttpContext.Current,
                 actionUrlQueryString,
@@ -809,13 +782,16 @@ namespace Microsoft.HealthVault.Web
         private string GetUserCredentialToken()
         {
             string token = null;
+
+            // TODO: IConnection-ify this.
+            /*
             if (_personInfo != null &&
                 _personInfo.Connection != null &&
                 _personInfo.Connection.Credential is WebApplicationCredential)
             {
                 token = ((WebApplicationCredential)_personInfo.Connection.Credential).SubCredential;
             }
-
+            */
             return token;
         }
     }

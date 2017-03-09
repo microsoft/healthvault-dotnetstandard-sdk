@@ -8,5 +8,10 @@ namespace Microsoft.HealthVault.Extensions
         {
             container.Configure(c => c.Export<TType>().As<TInterface>().Lifestyle.Singleton());
         }
+
+        public static void RegisterTransient<TInterface, TType>(this DependencyInjectionContainer container)
+        {
+            container.Configure(c => c.Export<TType>().As<TInterface>());
+        }
     }
 }

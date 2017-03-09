@@ -7,6 +7,7 @@ using System;
 using System.Security.Cryptography;
 using System.Text;
 using System.Xml;
+using Microsoft.HealthVault.Configurations;
 using Microsoft.HealthVault.Helpers;
 
 namespace Microsoft.HealthVault.Authentication
@@ -22,6 +23,8 @@ namespace Microsoft.HealthVault.Authentication
     ///
     public class CryptoHash
     {
+        private static IConfiguration configuration = Ioc.Get<IConfiguration>();
+
         #region properties
 
         /// <summary>
@@ -108,7 +111,7 @@ namespace Microsoft.HealthVault.Authentication
         /// </remarks>
         ///
         public CryptoHash()
-            : this(HealthApplicationConfiguration.Current.CryptoConfiguration.HashAlgorithmName)
+            : this(configuration.CryptoConfiguration.HashAlgorithmName)
         {
         }
 
@@ -133,7 +136,7 @@ namespace Microsoft.HealthVault.Authentication
         public CryptoHash(string algorithmName)
         {
             this.AlgorithmName = algorithmName;
-            this.HashAlgorithm = ServiceLocator.Current.CryptoService.CreateHashAlgorithm(this.AlgorithmName);
+            this.HashAlgorithm = Ioc.Get<ICryptoService>().CreateHashAlgorithm(this.AlgorithmName);
         }
 
         #endregion

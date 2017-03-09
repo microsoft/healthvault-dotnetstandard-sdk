@@ -108,7 +108,7 @@ namespace Microsoft.HealthVault.Application
         /// </exception>
         ///
         public virtual IEnumerable<Task<PersonInfo>> GetAuthorizedPeopleAsync(
-            ApplicationConnection connection,
+            IConnectionInternal connection,
             GetAuthorizedPeopleSettings settings)
         {
             Validator.ThrowIfArgumentNull(settings, "settings", "GetAuthorizedPeopleSettingsNull");
@@ -153,12 +153,12 @@ namespace Microsoft.HealthVault.Application
         /// <summary>
         /// Ensures all the authozed people for the application are returned
         /// </summary>
-        /// 
+        ///
         /// <param name="connection">Connection</param>
         /// <param name="settings">Settings</param>
         /// <returns>List of persons</returns>
         public virtual async Task<IList<PersonInfo>> EnsureGetAuthorizedPeopleAsync(
-            ApplicationConnection connection,
+            IConnectionInternal connection,
             GetAuthorizedPeopleSettings settings)
         {
             var peopleTasks = this.GetAuthorizedPeopleAsync(connection, settings);
@@ -174,7 +174,7 @@ namespace Microsoft.HealthVault.Application
         }
 
         internal static async Task<GetAuthorizedPeopleResult> GetAuthorizedPeopleAsync(
-            ApplicationConnection connection,
+            IConnectionInternal connection,
             Guid personIdCursor,
             DateTime authCreatedSinceDate,
             int numResults)
@@ -286,7 +286,7 @@ namespace Microsoft.HealthVault.Application
         /// </exception>
         ///
         public virtual async Task<ApplicationInfo> GetApplicationInfoAsync(
-            HealthServiceConnection connection,
+            IConnectionInternal connection,
             bool allLanguages)
         {
             HealthServiceRequest request =
@@ -337,7 +337,7 @@ namespace Microsoft.HealthVault.Application
         /// </returns>
         ///
         public virtual async Task<IList<Guid>> GetUpdatedRecordsForApplicationAsync(
-            HealthServiceConnection connection,
+            IConnectionInternal connection,
             DateTime? updatedDate)
         {
             HealthServiceRequest request =
@@ -366,7 +366,7 @@ namespace Microsoft.HealthVault.Application
         /// </returns>
         ///
         public virtual async Task<IList<HealthRecordUpdateInfo>> GetUpdatedRecordInfoForApplicationAsync(
-            HealthServiceConnection connection,
+            IConnectionInternal connection,
             DateTime? updatedDate)
         {
             HealthServiceRequest request =
@@ -379,7 +379,7 @@ namespace Microsoft.HealthVault.Application
         }
 
         private static HealthServiceRequest CreateGetUpdateRecordsForApplicationRequest(
-            HealthServiceConnection connection,
+            IConnectionInternal connection,
             DateTime? updateDate,
             int methodVersion)
         {
@@ -455,7 +455,7 @@ namespace Microsoft.HealthVault.Application
         /// A signup code that can be used to create an account.
         /// </returns>
         ///
-        public virtual async Task<string> NewSignupCodeAsync(HealthServiceConnection connection)
+        public virtual async Task<string> NewSignupCodeAsync(IConnectionInternal connection)
         {
             HealthServiceRequest request =
                 new HealthServiceRequest(connection, "NewSignupCode", 1);
