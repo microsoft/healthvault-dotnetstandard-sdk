@@ -5,12 +5,12 @@ using System.Net;
 using System.Security.Cryptography.X509Certificates;
 using System.Threading;
 using Microsoft.HealthVault.Authentication;
-using Microsoft.HealthVault.Configurations;
+using Microsoft.HealthVault.Configuration;
 using Microsoft.HealthVault.Exceptions;
 using Microsoft.HealthVault.Helpers;
 using Microsoft.HealthVault.ItemTypes;
 using Microsoft.HealthVault.PlatformInformation;
-using Microsoft.HealthVault.Things;
+using Microsoft.HealthVault.Thing;
 
 namespace Microsoft.HealthVault.DesktopWeb.Common
 {

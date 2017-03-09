@@ -6,7 +6,7 @@
 using System.Xml;
 using System.Xml.XPath;
 
-namespace Microsoft.HealthVault.Things
+namespace Microsoft.HealthVault.Thing
 {
     /// <summary>
     /// Represents data, typically binary data, that extends the XML of the

@@ -18,7 +18,7 @@ using Microsoft.HealthVault.Exceptions;
 using Microsoft.HealthVault.Helpers;
 using Microsoft.HealthVault.ItemTypes;
 
-namespace Microsoft.HealthVault.Things
+namespace Microsoft.HealthVault.Thing
 {
     /// <summary>
     /// Manages the mapping of a health record item type ID to a class
@@ -596,7 +596,7 @@ namespace Microsoft.HealthVault.Things
 
         #endregion RegisterApplicationSpecificTypeHandler
 
-        #region Thing serialization
+        #region HealthRecordItem serialization
 
         /// <summary>
         /// Constructs a <see cref="HealthRecordItem"/> or an appropriate derived type for the
@@ -717,7 +717,7 @@ namespace Microsoft.HealthVault.Things
             return result;
         }
 
-        #endregion Thing serialization
+        #endregion HealthRecordItem serialization
 
         #region Extension serialization
 
@@ -773,7 +773,7 @@ namespace Microsoft.HealthVault.Things
 
         #endregion Extension serialization
 
-        #region Thing Type Definitions
+        #region HealthRecordItem Type Definitions
 
         /// <summary>
         /// Gets the definitions for all health record item type definitions
@@ -1207,7 +1207,7 @@ namespace Microsoft.HealthVault.Things
         private static readonly Guid BaseTypeId =
             new Guid("3e730686-781f-4616-aa0d-817bba8eb141");
 
-        #endregion Thing Type Definitions
+        #endregion HealthRecordItem Type Definitions
 
         #region private helpers
 

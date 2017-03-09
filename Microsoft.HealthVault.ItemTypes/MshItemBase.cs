@@ -9,7 +9,7 @@ using System.Globalization;
 using System.Xml;
 using System.Xml.XPath;
 using Microsoft.HealthVault.Helpers;
-using Microsoft.HealthVault.Things;
+using Microsoft.HealthVault.Thing;
 
 namespace Microsoft.HealthVault.ItemTypes
 {
@@ -49,8 +49,8 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <param name="typeId">Unique type id</param>
         /// <param name="wrappedTypeName">Wrapped type name</param>
         /// <param name="base64EncodedJson">Base64-encoded JSON</param>
-        /// <param name="thingId">Thing id</param>
-        /// <param name="versionStamp">Thing versionstamp</param>
+        /// <param name="thingId">HealthRecordItem id</param>
+        /// <param name="versionStamp">HealthRecordItem versionstamp</param>
         protected MshItemBase(
             Guid typeId,
             string wrappedTypeName,

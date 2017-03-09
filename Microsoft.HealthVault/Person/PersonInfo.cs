@@ -12,7 +12,7 @@ using System.Xml.Linq;
 using System.Xml.XPath;
 using Microsoft.HealthVault.Application;
 using Microsoft.HealthVault.Authentication;
-using Microsoft.HealthVault.Configurations;
+using Microsoft.HealthVault.Configuration;
 using Microsoft.HealthVault.Connection;
 using Microsoft.HealthVault.Exceptions;
 using Microsoft.HealthVault.Extensions;

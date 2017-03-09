@@ -125,7 +125,7 @@ namespace Microsoft.HealthVault.ItemTypes
         /// </summary>
         ///
         /// <remarks>
-        /// Thing type version ID is used to specify measurements relevant for this goal or task.
+        /// HealthRecordItem type version ID is used to specify measurements relevant for this goal or task.
         /// </remarks>
         ///
         public Guid ThingTypeVersionId
@@ -149,7 +149,7 @@ namespace Microsoft.HealthVault.ItemTypes
         /// </summary>
         ///
         /// <remarks>
-        /// Thing type value XPath could be used to specify which element in a thing type defined by the thing-type-version-id can be used to find the measurements. The XPath can also include a condition such as steps greater than 1000.
+        /// HealthRecordItem type value XPath could be used to specify which element in a thing type defined by the thing-type-version-id can be used to find the measurements. The XPath can also include a condition such as steps greater than 1000.
         /// If there is no information about thingTypeValueXpath the value should be set to <b>null</b>.
         /// </remarks>
         ///
@@ -183,7 +183,7 @@ namespace Microsoft.HealthVault.ItemTypes
         /// </summary>
         ///
         /// <remarks>
-        /// Thing type display XPath should point to a "display-value" element in the thing XML for the type defined by the thing-type-version-id.
+        /// HealthRecordItem type display XPath should point to a "display-value" element in the thing XML for the type defined by the thing-type-version-id.
         /// If there is no information about thingTypeDisplayXpath the value should be set to <b>null</b>.
         /// </remarks>
         ///

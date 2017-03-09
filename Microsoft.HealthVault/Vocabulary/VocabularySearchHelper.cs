@@ -11,7 +11,7 @@ using System.Security.Cryptography;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using Microsoft.HealthVault.Application;
-using Microsoft.HealthVault.Configurations;
+using Microsoft.HealthVault.Configuration;
 using Microsoft.HealthVault.Extensions;
 using Microsoft.HealthVault.Helpers;
 

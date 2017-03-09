@@ -5,7 +5,7 @@
 
 using System.Diagnostics.CodeAnalysis;
 using Microsoft.HealthVault.Record;
-using Microsoft.HealthVault.Things;
+using Microsoft.HealthVault.Thing;
 
 namespace Microsoft.HealthVault.Transport
 {
@@ -1119,7 +1119,7 @@ namespace Microsoft.HealthVault.Transport
         InvalidThingOrderSpecs = 180,
 
         /// <summary>
-        /// Thing sort functionality is not enabled.
+        /// HealthRecordItem sort functionality is not enabled.
         /// </summary>
         ThingSortNotEnabled = 181,
 

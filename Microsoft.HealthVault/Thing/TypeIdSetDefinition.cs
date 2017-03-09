@@ -4,10 +4,9 @@
 // All other rights reserved.
 
 using System;
-using Microsoft.HealthVault.Connection;
 using Microsoft.HealthVault.Helpers;
 
-namespace Microsoft.HealthVault.Things
+namespace Microsoft.HealthVault.Thing
 {
     /// <summary>
     /// Defines a set of health record items of the specified type

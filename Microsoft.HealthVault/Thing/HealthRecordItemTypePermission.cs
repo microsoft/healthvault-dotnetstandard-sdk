@@ -7,7 +7,7 @@ using System;
 using System.Xml.XPath;
 using Microsoft.HealthVault.Helpers;
 
-namespace Microsoft.HealthVault.Things
+namespace Microsoft.HealthVault.Thing
 {
     /// <summary>
     /// Provides online and offline access permissions to persons for a health

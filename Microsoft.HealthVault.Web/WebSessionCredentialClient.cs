@@ -8,7 +8,6 @@ using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.XPath;
 using Microsoft.HealthVault.Connection;
-using Microsoft.HealthVault.Configurations;
 using Microsoft.HealthVault.Diagnostics;
 using Microsoft.HealthVault.Helpers;
 using Microsoft.HealthVault.Transport;

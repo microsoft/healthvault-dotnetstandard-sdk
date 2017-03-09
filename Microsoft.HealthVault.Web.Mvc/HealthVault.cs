@@ -9,7 +9,6 @@
 //
 // ********************************************************
 
-using Microsoft.HealthVault.Configurations;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;

@@ -5,7 +5,7 @@
 
 using System;
 using System.Threading.Tasks;
-using Microsoft.HealthVault.Configurations;
+using Microsoft.HealthVault.Configuration;
 using Microsoft.HealthVault.Connection;
 
 namespace Microsoft.HealthVault.PlatformInformation

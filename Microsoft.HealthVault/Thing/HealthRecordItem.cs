@@ -10,13 +10,12 @@ using System.Text;
 using System.Xml;
 using System.Xml.Linq;
 using System.Xml.XPath;
-using Microsoft.HealthVault.Connection;
 using Microsoft.HealthVault.Exceptions;
 using Microsoft.HealthVault.Helpers;
 using Microsoft.HealthVault.ItemTypes;
 using Microsoft.HealthVault.PlatformInformation;
 
-namespace Microsoft.HealthVault.Things
+namespace Microsoft.HealthVault.Thing
 {
     /// <summary>
     /// Represents a health record item.
@@ -32,7 +31,7 @@ namespace Microsoft.HealthVault.Things
     /// schema for the type.
     /// </remarks>
     ///
-    public class HealthRecordItem
+    public class HealthRecordItem : IThing
     {
         /// <summary>
         /// Derived classes must call this method when their default
@@ -402,7 +401,7 @@ namespace Microsoft.HealthVault.Things
         /// This data value is only available when the
         /// <see cref="HealthRecordItem.Sections"/> show the
         /// <see cref="HealthRecordItemSections.EffectivePermissions"/>
-        /// bit set. Returns true if either Thing Type is immutable or Thing instance is read-only.
+        /// bit set. Returns true if either HealthRecordItem Type is immutable or HealthRecordItem instance is read-only.
         /// </remarks>
         ///
         public bool IsImmutable { get; internal set; }
@@ -418,7 +417,7 @@ namespace Microsoft.HealthVault.Things
         /// Cannot change read-only flag to false if it is already true.
         /// </exception>
         /// <remarks>
-        /// Returns true if either Thing Type is immutable or Thing instance is read-only
+        /// Returns true if either HealthRecordItem Type is immutable or HealthRecordItem instance is read-only
         /// but sets only the instance immutability.
         /// </remarks>
         public bool IsReadOnly

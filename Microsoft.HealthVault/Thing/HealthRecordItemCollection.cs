@@ -12,8 +12,9 @@ using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.XPath;
 using Microsoft.HealthVault.Helpers;
+using System.Linq;
 
-namespace Microsoft.HealthVault.Things
+namespace Microsoft.HealthVault.Thing
 {
     /// <summary>
     /// Defines a group of results that gets returned from the
@@ -27,9 +28,12 @@ namespace Microsoft.HealthVault.Things
     [DebuggerTypeProxy(typeof(HealthRecordItemCollectionDebugView))]
     [DebuggerDisplay("Count = {Count}")]
     public class HealthRecordItemCollection :
-        IList<HealthRecordItem>,
-        ICollection<HealthRecordItem>, IEnumerable<HealthRecordItem>,
-        IList, ICollection, IEnumerable
+        IList<IThing>,
+        ICollection<IThing>, 
+        IEnumerable<IThing>,
+        IList, 
+        ICollection, 
+        IEnumerable
     {
         #region Factory methods & ctor
 
@@ -62,12 +66,12 @@ namespace Microsoft.HealthVault.Things
         internal static HealthRecordItemCollection CreateResultGroupFromResponse(
             HealthRecordAccessor record,
             XmlReader groupReader,
-            IList<HealthRecordFilter> filters)
+            IList<ThingQuery> filters)
         {
             Validator.ThrowIfArgumentNull(record, "record", "ResponseRecordNull");
 
             // Name is optional
-            HealthRecordFilter matchingFilter = null;
+            ThingQuery matchingQuery = null;
             string name = string.Empty;
             if (groupReader.MoveToAttribute("name"))
             {
@@ -75,12 +79,12 @@ namespace Microsoft.HealthVault.Things
                 groupReader.MoveToElement();
             }
 
-            foreach (HealthRecordFilter filter in filters)
+            foreach (ThingQuery filter in filters)
             {
                 if (string.IsNullOrEmpty(filter.Name) &&
                     string.IsNullOrEmpty(name))
                 {
-                    matchingFilter = filter;
+                    matchingQuery = filter;
                     break;
                 }
 
@@ -89,13 +93,18 @@ namespace Microsoft.HealthVault.Things
                         name,
                         StringComparison.Ordinal))
                 {
-                    matchingFilter = filter;
+                    matchingQuery = filter;
                     break;
                 }
             }
 
+            return GetResultGroupFromResponse(name, record, matchingQuery, groupReader);
+        }
+
+        private static HealthRecordItemCollection GetResultGroupFromResponse(string name, HealthRecordAccessor record, ThingQuery matchingQuery, XmlReader groupReader)
+        {
             HealthRecordItemCollection result =
-                new HealthRecordItemCollection(name, record, matchingFilter);
+                new HealthRecordItemCollection(name, record, matchingQuery);
 
             int maxResultsPerRequest = 0;
 
@@ -113,10 +122,10 @@ namespace Microsoft.HealthVault.Things
                                 XmlReader thingReader = groupReader.ReadSubtree();
                                 thingReader.MoveToContent();
 
-                                HealthRecordItem resultThing =
+                                HealthRecordItem resultHealthRecordItem =
                                     ItemTypeManager.DeserializeItem(thingReader);
                                 thingReader.Dispose();
-                                
+
                                 // groupReader will normally be at the end element of
                                 // the group at this point, and needs a read to get to
                                 // the next element. If the group was empty, groupReader
@@ -124,9 +133,9 @@ namespace Microsoft.HealthVault.Things
                                 // single read will still move to the next element.
                                 groupReader.Read();
 
-                                if (resultThing != null)
+                                if (resultHealthRecordItem != null)
                                 {
-                                    result.AddResult(resultThing);
+                                    result.AddResult(resultHealthRecordItem);
                                     maxResultsPerRequest++;
                                 }
                             }
@@ -215,11 +224,11 @@ namespace Microsoft.HealthVault.Things
         private HealthRecordItemCollection(
             string name,
             HealthRecordAccessor record,
-            HealthRecordFilter filter)
+            ThingQuery query)
         {
             this.Name = name;
             this.Record = record;
-            this.Filter = filter;
+            this.Query = query;
         }
 
         #endregion Factory methods & ctor
@@ -270,9 +279,9 @@ namespace Microsoft.HealthVault.Things
         ///
         internal HealthRecordAccessor Record { get; }
 
-        internal HealthRecordFilter Filter { get; }
+        internal ThingQuery Query { get; }
 
-        // This collection contains a combination of the full HealthRecordItem
+        // This collection contains a combination of the full IThing
         // results as well as any partial thing IDs that were returned
         private Collection<object> abstractResults = new Collection<object>();
 
@@ -285,7 +294,7 @@ namespace Microsoft.HealthVault.Things
 
         #endregion public properties
 
-        #region ICollection<HealthRecordItem>
+        #region ICollection<IThing>
 
         /// <summary>
         /// Gets the number of items in the result group.
@@ -358,7 +367,7 @@ namespace Microsoft.HealthVault.Things
         /// This exception is always thrown.
         /// </exception>
         ///
-        public void Add(HealthRecordItem item)
+        public void Add(IThing item)
         {
             throw Validator.NotSupportedException("ResultGroupIsReadOnly");
         }
@@ -397,19 +406,19 @@ namespace Microsoft.HealthVault.Things
 
         /// <summary>
         /// Gets a value indicating whether the collection contains the
-        /// specified <see cref="HealthRecordItem"/>.
+        /// specified <see cref="IThing"/>.
         /// </summary>
         ///
         /// <param name="item">
-        /// The <see cref="HealthRecordItem"/> to locate in the collection.
+        /// The <see cref="IThing"/> to locate in the collection.
         /// </param>
         ///
         /// <returns>
-        /// <b>true</b> if a matching <see cref="HealthRecordItem"/> is found;
+        /// <b>true</b> if a matching <see cref="IThing"/> is found;
         /// otherwise, <b>false</b>.
         /// </returns>
         ///
-        public bool Contains(HealthRecordItem item)
+        public bool Contains(IThing item)
         {
             if (item == null)
             {
@@ -434,24 +443,18 @@ namespace Microsoft.HealthVault.Things
         ///
         bool IList.Contains(object value)
         {
-            bool result = false;
+            bool result;
 
-            HealthRecordItem thing = value as HealthRecordItem;
-            if (thing != null)
-            {
-                result = this.Contains(thing);
-            }
-            else
-            {
-                result = this.Contains(value as HealthRecordItemKey);
-            }
+            IThing thing = value as IThing;
+
+            result = thing != null ? this.Contains(thing) : this.Contains(value as HealthRecordItemKey);
 
             return result;
         }
 
         /// <summary>
         /// Gets a value indicating whether the collection contains a
-        /// <see cref="HealthRecordItem"/> with the specified
+        /// <see cref="IThing"/> with the specified
         /// <see cref="HealthRecordItemKey"/>.
         /// </summary>
         ///
@@ -460,7 +463,7 @@ namespace Microsoft.HealthVault.Things
         /// <see cref="HealthRecordItem"/>item in the collection. The key
         /// contains a unique identifier for the <see cref="HealthRecordItem"/>
         /// and a unique version stamp identifying the version of
-        /// the <see cref="HealthRecordItem"/>.
+        /// the <see cref="IThing"/>.
         /// </param>
         ///
         /// <returns>
@@ -474,20 +477,20 @@ namespace Microsoft.HealthVault.Things
                 bool result = false;
                 for (int index = 0; index < this.abstractResults.Count; ++index)
                 {
-                    HealthRecordItemKey abstractThingKey;
-                    HealthRecordItem thing
-                        = this.abstractResults[index] as HealthRecordItem;
+                    HealthRecordItemKey abstractHealthRecordItemKey;
+                    IThing thing
+                        = this.abstractResults[index] as IThing;
                     if (thing != null)
                     {
-                        abstractThingKey = thing.Key;
+                        abstractHealthRecordItemKey = thing.Key;
                     }
                     else
                     {
-                        abstractThingKey
+                        abstractHealthRecordItemKey
                             = (HealthRecordItemKey)this.abstractResults[index];
                     }
 
-                    if (abstractThingKey.Equals(itemKey))
+                    if (abstractHealthRecordItemKey.Equals(itemKey))
                     {
                         result = true;
                         break;
@@ -515,7 +518,7 @@ namespace Microsoft.HealthVault.Things
         /// This exception is always thrown.
         /// </exception>
         ///
-        public void CopyTo(HealthRecordItem[] array, int arrayIndex)
+        public void CopyTo(IThing[] array, int arrayIndex)
         {
             throw Validator.NotSupportedException("ResultGroupNotCopyable");
         }
@@ -555,17 +558,17 @@ namespace Microsoft.HealthVault.Things
         /// This exception is always thrown.
         /// </exception>
         ///
-        public bool Remove(HealthRecordItem item)
+        public bool Remove(IThing item)
         {
             throw Validator.NotSupportedException("ResultGroupIsReadOnly");
         }
 
-        #endregion ICollection<HealthRecordItem>
+        #endregion ICollection<IThing>
 
-        #region IList<HealthRecordItem>
+        #region IList<IThing>
 
         /// <summary>
-        /// Retrieves the <see cref="HealthRecordItem"/> at the specified index.
+        /// Retrieves the <see cref="IThing"/> at the specified index.
         /// </summary>
         ///
         /// <param name="index">
@@ -585,7 +588,7 @@ namespace Microsoft.HealthVault.Things
         /// greater than the value of <see cref="Count"/>.
         /// </exception>
         ///
-        public HealthRecordItem this[int index]
+        public IThing this[int index]
         {
             get
             {
@@ -596,11 +599,11 @@ namespace Microsoft.HealthVault.Things
 
                 lock (this.abstractResults)
                 {
-                    HealthRecordItem result = this.abstractResults[index] as HealthRecordItem;
+                    IThing result = this.abstractResults[index] as IThing;
                     if (result == null)
                     {
                         this.GetPartialThingsAsync(index).Wait();
-                        result = this.abstractResults[index] as HealthRecordItem;
+                        result = this.abstractResults[index] as IThing;
                     }
 
                     return result;
@@ -643,20 +646,20 @@ namespace Microsoft.HealthVault.Things
         }
 
         /// <summary>
-        /// Determines the index of the specific <see cref="HealthRecordItem"/>
+        /// Determines the index of the specific <see cref="IThing"/>
         /// in the list.
         /// </summary>
         ///
         /// <param name="item">
-        /// The <see cref="HealthRecordItem"/> to locate in the list.
+        /// The <see cref="IThing"/> to locate in the list.
         /// </param>
         ///
         /// <returns>
-        /// The index of the <see cref="HealthRecordItem"/>, if found;
+        /// The index of the <see cref="IThing"/>, if found;
         /// otherwise, -1.
         /// </returns>
         ///
-        public int IndexOf(HealthRecordItem item)
+        public int IndexOf(IThing item)
         {
             if (item == null)
             {
@@ -682,7 +685,7 @@ namespace Microsoft.HealthVault.Things
         {
             int result = -1;
 
-            HealthRecordItem thing = value as HealthRecordItem;
+            IThing thing = value as IThing;
             if (thing != null)
             {
                 result = this.IndexOf(thing);
@@ -716,18 +719,18 @@ namespace Microsoft.HealthVault.Things
                 int result = -1;
                 for (int index = 0; index < this.abstractResults.Count; ++index)
                 {
-                    HealthRecordItemKey abstractThingKey;
-                    HealthRecordItem thing = this.abstractResults[index] as HealthRecordItem;
+                    HealthRecordItemKey abstractHealthRecordItemKey;
+                    IThing thing = this.abstractResults[index] as IThing;
                     if (thing != null)
                     {
-                        abstractThingKey = thing.Key;
+                        abstractHealthRecordItemKey = thing.Key;
                     }
                     else
                     {
-                        abstractThingKey = (HealthRecordItemKey)this.abstractResults[index];
+                        abstractHealthRecordItemKey = (HealthRecordItemKey)this.abstractResults[index];
                     }
 
-                    if (abstractThingKey.Equals(key))
+                    if (abstractHealthRecordItemKey.Equals(key))
                     {
                         result = index;
                         break;
@@ -755,7 +758,7 @@ namespace Microsoft.HealthVault.Things
         /// The collection is read-only and does not support insertion.
         /// </exception>
         ///
-        public void Insert(int index, HealthRecordItem item)
+        public void Insert(int index, IThing item)
         {
             throw Validator.NotSupportedException("ResultGroupIsReadOnly");
         }
@@ -836,9 +839,9 @@ namespace Microsoft.HealthVault.Things
         ///
         public bool IsFixedSize => true;
 
-        #endregion IList<HealthRecordItem>
+        #endregion IList<IThing>
 
-        #region IEnumerable<HealthRecordItem>
+        #region IEnumerable<IThing>
 
         /// <summary>
         /// Returns an enumerator that iterates through the collection.
@@ -856,9 +859,9 @@ namespace Microsoft.HealthVault.Things
         /// collection is enumerated.
         /// </remarks>
         ///
-        public IEnumerator<HealthRecordItem> GetEnumerator()
+        public IEnumerator<IThing> GetEnumerator()
         {
-            return new HealthRecordItemEnumerator(this);
+            return new ThingEnumerator(this);
         }
 
         /// <summary>
@@ -879,7 +882,7 @@ namespace Microsoft.HealthVault.Things
         ///
         IEnumerator IEnumerable.GetEnumerator()
         {
-            return new HealthRecordItemEnumerator(this);
+            return new ThingEnumerator(this);
         }
 
         /// <summary>
@@ -893,9 +896,9 @@ namespace Microsoft.HealthVault.Things
         /// item.
         /// </remarks>
         ///
-        internal class HealthRecordItemEnumerator : IEnumerator<HealthRecordItem>
+        internal class ThingEnumerator : IEnumerator<IThing>
         {
-            internal HealthRecordItemEnumerator(
+            internal ThingEnumerator(
                 HealthRecordItemCollection resultGroup)
             {
                 this.resultGroup = resultGroup;
@@ -928,7 +931,7 @@ namespace Microsoft.HealthVault.Things
             ///
             /// </remarks>
             ///
-            public HealthRecordItem Current
+            public IThing Current
             {
                 get
                 {
@@ -1040,12 +1043,12 @@ namespace Microsoft.HealthVault.Things
             private HealthRecordItemCollection resultGroup;
         }
 
-        #endregion IEnumerable<HealthRecordItem>
+        #endregion IEnumerable<IThing>
 
         #region Sort
 
         /// <summary>
-        /// Sorts the HealthRecordItems in the collection using the specified comparison
+        /// Sorts the IThings in the collection using the specified comparison
         /// method.
         /// </summary>
         ///
@@ -1074,16 +1077,16 @@ namespace Microsoft.HealthVault.Things
         /// with itself.
         /// </exception>
         ///
-        public void Sort(Comparison<HealthRecordItem> comparison)
+        public void Sort(Comparison<IThing> comparison)
         {
-            List<HealthRecordItem> sortableList = this.GetSortableList();
+            List<IThing> sortableList = this.GetSortableList();
             sortableList.Sort(comparison);
 
             this.ReplaceAbstractResults(sortableList);
         }
 
         /// <summary>
-        /// Sorts the HealthRecordItems in the collection using the specified comparer.
+        /// Sorts the IThings in the collection using the specified comparer.
         /// </summary>
         ///
         /// <param name="comparer">
@@ -1104,8 +1107,8 @@ namespace Microsoft.HealthVault.Things
         ///
         /// <exception cref="InvalidOperationException">
         /// <paramref name="comparer"/> is <b>null</b>, and the default comparer
-        /// <see cref="Comparer{HealthRecordItem}.Default"/> cannot find implementation of the
-        /// <see cref="IComparable{HealthRecordItem}"/> generic interface.
+        /// <see cref="Comparer{IThing}.Default"/> cannot find implementation of the
+        /// <see cref="IComparable{IThing}"/> generic interface.
         /// </exception>
         ///
         /// <exception cref="ArgumentException">
@@ -1114,18 +1117,18 @@ namespace Microsoft.HealthVault.Things
         /// comparing an item with itself.
         /// </exception>
         ///
-        public void Sort(IComparer<HealthRecordItem> comparer)
+        public void Sort(IComparer<IThing> comparer)
         {
-            List<HealthRecordItem> sortableList = this.GetSortableList();
+            List<IThing> sortableList = this.GetSortableList();
             sortableList.Sort(comparer);
 
             this.ReplaceAbstractResults(sortableList);
         }
 
-        private List<HealthRecordItem> GetSortableList()
+        private List<IThing> GetSortableList()
         {
-            List<HealthRecordItem> sortableList = new List<HealthRecordItem>();
-            foreach (HealthRecordItem item in this)
+            List<IThing> sortableList = new List<IThing>();
+            foreach (IThing item in this)
             {
                 sortableList.Add(item);
             }
@@ -1133,10 +1136,10 @@ namespace Microsoft.HealthVault.Things
             return sortableList;
         }
 
-        private void ReplaceAbstractResults(List<HealthRecordItem> sortableList)
+        private void ReplaceAbstractResults(List<IThing> sortableList)
         {
             this.abstractResults.Clear();
-            foreach (HealthRecordItem item in sortableList)
+            foreach (IThing item in sortableList)
             {
                 this.abstractResults.Add(item);
             }
@@ -1145,7 +1148,7 @@ namespace Microsoft.HealthVault.Things
         #endregion Sort
 
         /// <summary>
-        /// Retrieves the <see cref="HealthRecordItem"/> from the result group in the
+        /// Retrieves the <see cref="IThing"/> from the result group in the
         /// specified range of indexes, including the specified indexes.
         /// </summary>
         ///
@@ -1173,7 +1176,7 @@ namespace Microsoft.HealthVault.Things
         /// <see cref="Count"/> -1.
         /// </exception>
         ///
-        public Collection<HealthRecordItem> GetRange(
+        public Collection<IThing> GetRange(
             int minIndex,
             int maxIndex)
         {
@@ -1192,8 +1195,8 @@ namespace Microsoft.HealthVault.Things
                 "minIndex",
                 "ResultGroupRangeMinGreaterThanMax");
 
-            Collection<HealthRecordItem> result
-                = new Collection<HealthRecordItem>();
+            Collection<IThing> result
+                = new Collection<IThing>();
 
             for (int index = minIndex; index <= maxIndex; ++index)
             {
@@ -1284,26 +1287,26 @@ namespace Microsoft.HealthVault.Things
 
             // Create the searcher
             HealthRecordSearcher searcher = this.Record.CreateSearcher();
-            HealthRecordFilter filter = new HealthRecordFilter();
+            ThingQuery query = new ThingQuery();
 
             foreach (HealthRecordItemKey key in partialThings)
             {
-                filter.ItemKeys.Add(key);
+                query.ItemKeys.Add(key);
             }
 
             // Need to copy the view from the original filter
-            filter.View = this.Filter.View;
-            filter.States = this.Filter.States;
-            filter.CurrentVersionOnly = this.Filter.CurrentVersionOnly;
-            if (this.Filter.OrderByClauses.Count > 0)
+            query.View = this.Query.View;
+            query.States = this.Query.States;
+            query.CurrentVersionOnly = this.Query.CurrentVersionOnly;
+            if (this.Query.OrderByClauses.Count > 0)
             {
-                foreach (var orderByClause in this.Filter.OrderByClauses)
+                foreach (var orderByClause in this.Query.OrderByClauses)
                 {
-                    filter.OrderByClauses.Add(orderByClause);
+                    query.OrderByClauses.Add(orderByClause);
                 }
             }
 
-            searcher.Filters.Add(filter);
+            searcher.Filters.Add(query);
 
             // Get the partial things
             XmlReader infoReader = await searcher.GetMatchingItemsReader().ConfigureAwait(false);
@@ -1316,12 +1319,12 @@ namespace Microsoft.HealthVault.Things
                     using (XmlReader thingReader = infoReader.ReadSubtree())
                     {
                         thingReader.MoveToContent();
-                        HealthRecordItem resultThing = ItemTypeManager.DeserializeItem(thingReader);
+                        HealthRecordItem resultHealthRecordItem = ItemTypeManager.DeserializeItem(thingReader);
                         infoReader.Read();
 
-                        if (resultThing != null)
+                        if (resultHealthRecordItem != null)
                         {
-                            results.Add(resultThing);
+                            results.Add(resultHealthRecordItem);
                         }
                     }
                 }
@@ -1359,9 +1362,9 @@ namespace Microsoft.HealthVault.Things
             this.abstractResults.Add(result);
         }
 
-        private void AddResult(HealthRecordItemKey thingKey)
+        private void AddResult(HealthRecordItemKey healthRecordItemKey)
         {
-            this.abstractResults.Add(thingKey);
+            this.abstractResults.Add(healthRecordItemKey);
         }
 
         #endregion helpers

@@ -5,7 +5,7 @@
 
 using System.Xml.XPath;
 
-namespace Microsoft.HealthVault.Things
+namespace Microsoft.HealthVault.Thing
 {
     /// <summary>
     /// A linear conversion of the form x' = mx + b.

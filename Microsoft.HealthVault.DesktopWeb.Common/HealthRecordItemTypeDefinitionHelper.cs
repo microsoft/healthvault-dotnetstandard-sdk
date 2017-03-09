@@ -9,7 +9,7 @@ using System.Xml;
 using System.Xml.XPath;
 using System.Xml.Xsl;
 using Microsoft.HealthVault.Helpers;
-using Microsoft.HealthVault.Things;
+using Microsoft.HealthVault.Thing;
 
 namespace Microsoft.HealthVault.DesktopWeb.Common
 {

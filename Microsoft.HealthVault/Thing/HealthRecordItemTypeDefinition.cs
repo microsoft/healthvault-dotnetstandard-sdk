@@ -10,7 +10,7 @@ using System.Globalization;
 using System.Linq;
 using System.Xml.XPath;
 
-namespace Microsoft.HealthVault.Things
+namespace Microsoft.HealthVault.Thing
 {
     /// <summary>
     /// Describes the schema and structure of a health record item type.
@@ -209,11 +209,11 @@ namespace Microsoft.HealthVault.Things
         public bool IsSingletonType { get; protected set; }
 
         /// <summary>
-        /// Gets or sets a value indicating whether the Thing Type allows read-only
+        /// Gets or sets a value indicating whether the HealthRecordItem Type allows read-only
         /// instances.
         /// </summary>
         /// <value>
-        /// <b>true</b> if the Thing Type allows read-only instances; otherwise <b>false</b>
+        /// <b>true</b> if the HealthRecordItem Type allows read-only instances; otherwise <b>false</b>
         /// </value>
         public bool AllowReadOnly
         {

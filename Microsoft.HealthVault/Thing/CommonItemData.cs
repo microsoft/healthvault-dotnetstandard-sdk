@@ -8,7 +8,7 @@ using System.Collections.ObjectModel;
 using System.Xml;
 using System.Xml.XPath;
 
-namespace Microsoft.HealthVault.Things
+namespace Microsoft.HealthVault.Thing
 {
     /// <summary>
     /// Represents data that is common for all types of health record items.
