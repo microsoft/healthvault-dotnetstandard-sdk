@@ -16,7 +16,7 @@ using Microsoft.HealthVault.Exceptions;
 using Microsoft.HealthVault.Helpers;
 using Microsoft.HealthVault.Record;
 
-namespace Microsoft.HealthVault.Things
+namespace Microsoft.HealthVault.Thing
 {
     /// <summary>
     /// Represents the API set used to access a health record for an individual.
@@ -284,8 +284,8 @@ namespace Microsoft.HealthVault.Things
         public HealthRecordSearcher CreateSearcher(params Guid[] typeIds)
         {
             HealthRecordSearcher searcher = new HealthRecordSearcher(this);
-            HealthRecordFilter filter = new HealthRecordFilter(typeIds);
-            searcher.Filters.Add(filter);
+            ThingQuery query = new ThingQuery(typeIds);
+            searcher.Filters.Add(query);
 
             return searcher;
         }
@@ -315,7 +315,7 @@ namespace Microsoft.HealthVault.Things
         /// The HealthVault service returned an error.
         /// </exception>
         ///
-        public async Task<HealthRecordItem> GetItemAsync(
+        public async Task<IThing> GetItemAsync(
             Guid itemId,
             HealthRecordItemSections sections)
         {
@@ -344,7 +344,7 @@ namespace Microsoft.HealthVault.Things
         /// The HealthVault service returned an error.
         /// </exception>
         ///
-        public async Task<HealthRecordItem> GetItemAsync(
+        public async Task<IThing> GetItemAsync(
             Guid itemId)
         {
             return await this.GetItemAsync(itemId, HealthRecordItemSections.Default).ConfigureAwait(false);
@@ -467,7 +467,7 @@ namespace Microsoft.HealthVault.Things
 
         #endregion Health Record Item search methods
 
-        #region Thing Create/Update methods
+        #region HealthRecordItem Create/Update methods
 
         /// <summary>
         /// Creates a new health record item associated with this record in the

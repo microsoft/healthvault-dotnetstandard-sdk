@@ -6,7 +6,7 @@
 using System;
 using Microsoft.HealthVault.Helpers;
 
-namespace Microsoft.HealthVault.Things
+namespace Microsoft.HealthVault.Thing
 {
     /// <summary>
     /// Uniquely identifies a health record item in the system.
@@ -15,7 +15,7 @@ namespace Microsoft.HealthVault.Things
     public class HealthRecordItemKey
     {
         /// <summary>
-        /// Creates a new instance of the <see cref="HealthRecordItemKey"/>
+        /// Creates a new instance of the <see cref="HealthRecordItem"/>
         /// class with the specified globally unique ID for the
         /// <see cref="HealthRecordItem"/> and globally unique version stamp.
         /// </summary>
@@ -26,12 +26,12 @@ namespace Microsoft.HealthVault.Things
         /// </param>
         ///
         /// <param name="versionStamp">
-        /// A globally unique identifier for the version of the <see cref="HealthRecordItem"/>
+        /// A globally unique identifier for the version of the <see cref="ArgumentException"/>
         /// in the system.
         /// </param>
         ///
         /// <exception cref="ArgumentException">
-        /// The <paramref name="id"/> or <paramref name="versionStamp"/>
+        /// The <paramref name="versionStamp"/> or <paramref name="versionStamp"/>
         /// parameter is Guid.Empty.
         /// </exception>
         ///
@@ -52,13 +52,13 @@ namespace Microsoft.HealthVault.Things
         }
 
         /// <summary>
-        /// Creates a new instance of the <see cref="HealthRecordItemKey"/>
+        /// Creates a new instance of the <see cref="HealthRecordItem"/>
         /// class with the specified globally unique ID for the
         /// <see cref="HealthRecordItem"/>.
         /// </summary>
         ///
         /// <param name="id">
-        /// A globally unique identifier for the <see cref="HealthRecordItem"/>
+        /// A globally unique identifier for the <see cref="ArgumentException"/>
         /// in the system.
         /// </param>
         ///

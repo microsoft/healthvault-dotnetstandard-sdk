@@ -14,7 +14,7 @@ using System.Xml.XPath;
 using Microsoft.HealthVault.Connection;
 using Microsoft.HealthVault.Exceptions;
 using Microsoft.HealthVault.Helpers;
-using Microsoft.HealthVault.Things;
+using Microsoft.HealthVault.Thing;
 
 namespace Microsoft.HealthVault.DesktopWeb.Common
 {
@@ -34,34 +34,34 @@ namespace Microsoft.HealthVault.DesktopWeb.Common
         /// The view that the data table should take on the data.
         /// </param>
         ///
-        /// <param name="filter">
+        /// <param name="query">
         /// The filter used to gather health record items from the HealthVault
         /// service.
         /// </param>
         ///
         /// <exception cref="ArgumentNullException">
-        /// The <paramref name="filter"/> parameter is <b>null</b>.
+        /// The <paramref name="query"/> parameter is <b>null</b>.
         /// </exception>
         ///
         /// <exception cref="ArgumentException">
         /// The <paramref name="view"/> parameter is
         /// <see cref="HealthRecordItemDataTableView.SingleTypeTable"/> and
-        /// the <paramref name="filter"/> parameter contains more than one type
+        /// the <paramref name="query"/> parameter contains more than one type
         /// identifier.
         /// </exception>
         public HealthRecordItemDataTable(
             HealthRecordItemDataTableView view,
-            HealthRecordFilter filter)
+            ThingQuery query)
         {
-            Validator.ThrowIfArgumentNull(filter, "filter", "DataTableFilterNull");
+            Validator.ThrowIfArgumentNull(query, "filter", "DataTableFilterNull");
 
             Validator.ThrowArgumentExceptionIf(
                 view == HealthRecordItemDataTableView.SingleTypeTable &&
-                filter.TypeIds.Count > 1,
+                query.TypeIds.Count > 1,
                 "view",
                 "DataTableViewInvalid");
 
-            _filter = filter;
+            this.query = query;
             _view = view;
         }
 
@@ -78,10 +78,10 @@ namespace Microsoft.HealthVault.DesktopWeb.Common
                 await this.ApplyEffectiveViewAsync(record.Connection).ConfigureAwait(false);
 
             IDictionary<Guid, HealthRecordItemTypeDefinition> typeDefDict =
-                await ItemTypeManager.GetHealthRecordItemTypeDefinitionAsync(_filter.TypeIds,
+                await ItemTypeManager.GetHealthRecordItemTypeDefinitionAsync(query.TypeIds,
                     record.Connection).ConfigureAwait(false);
             HealthRecordItemTypeDefinition sttTypeDef =
-                typeDefDict.Count == 1 ? typeDefDict[_filter.TypeIds[0]] : null;
+                typeDefDict.Count == 1 ? typeDefDict[query.TypeIds[0]] : null;
 
             bool firstRow = true;
             string transformName =
@@ -229,14 +229,14 @@ namespace Microsoft.HealthVault.DesktopWeb.Common
             // supports multiple versions.
             if (effectiveView == HealthRecordItemDataTableView.SingleTypeTable)
             {
-                for (int index = 0; index < this.Filter.TypeIds.Count; ++index)
+                for (int index = 0; index < this.Query.TypeIds.Count; ++index)
                 {
-                    this.Filter.View.TypeVersionFormat.Add(this.Filter.TypeIds[index]);
+                    this.Query.View.TypeVersionFormat.Add(this.Query.TypeIds[index]);
                 }
             }
 
             HealthRecordSearcher searcher = record.CreateSearcher();
-            searcher.Filters.Add(this.Filter);
+            searcher.Filters.Add(this.Query);
 
             XPathNavigator nav = await searcher.GetMatchingItemsRaw().ConfigureAwait(false);
 
@@ -412,12 +412,12 @@ namespace Microsoft.HealthVault.DesktopWeb.Common
 
             HealthRecordItemTypeDefinition typeDefinition = null;
 
-            if (Filter.TypeIds.Count == 1 &&
+            if (Query.TypeIds.Count == 1 &&
                 View != HealthRecordItemDataTableView.MultipleTypeTable)
             {
                 typeDefinition =
                     await ItemTypeManager.GetHealthRecordItemTypeDefinitionAsync(
-                        this.Filter.TypeIds[0],
+                        this.Query.TypeIds[0],
                         connection).ConfigureAwait(false);
 
                 HealthRecordItemTypeDefinitionHelper healthRecordItemTypeDefinitionHelper = null;
@@ -442,8 +442,8 @@ namespace Microsoft.HealthVault.DesktopWeb.Common
                             column.ColumnName, column.Clone());
                     }
 
-                    this.Filter.View.TransformsToApply.Clear();
-                    this.Filter.View.TransformsToApply.Add("stt");
+                    this.Query.View.TransformsToApply.Clear();
+                    this.Query.View.TransformsToApply.Add("stt");
                 }
             }
 
@@ -467,8 +467,8 @@ namespace Microsoft.HealthVault.DesktopWeb.Common
                         _displayColumns.Add(column.ColumnName, column.Clone());
                     }
 
-                    this.Filter.View.TransformsToApply.Clear();
-                    this.Filter.View.TransformsToApply.Add("mtt");
+                    this.Query.View.TransformsToApply.Clear();
+                    this.Query.View.TransformsToApply.Add("mtt");
                 }
             }
 
@@ -504,27 +504,27 @@ namespace Microsoft.HealthVault.DesktopWeb.Common
             int numberOfFullThingsToRetrieve)
         {
             HealthRecordSearcher searcher = record.CreateSearcher();
-            HealthRecordFilter filter = new HealthRecordFilter();
+            ThingQuery query = new ThingQuery();
 
             for (int i = currentThingKeyIndex;
                  i < thingKeys.Count &&
                     i < currentThingKeyIndex + numberOfFullThingsToRetrieve;
                  i++)
             {
-                filter.ItemKeys.Add(thingKeys[i]);
+                query.ItemKeys.Add(thingKeys[i]);
             }
-            filter.View = this.Filter.View;
-            filter.States = this.Filter.States;
-            filter.CurrentVersionOnly = this.Filter.CurrentVersionOnly;
-            if (Filter.OrderByClauses.Count > 0)
+            query.View = this.Query.View;
+            query.States = this.Query.States;
+            query.CurrentVersionOnly = this.Query.CurrentVersionOnly;
+            if (Query.OrderByClauses.Count > 0)
             {
-                foreach (var orderByClause in Filter.OrderByClauses)
+                foreach (var orderByClause in Query.OrderByClauses)
                 {
-                    filter.OrderByClauses.Add(orderByClause);
+                    query.OrderByClauses.Add(orderByClause);
                 }
             }
 
-            searcher.Filters.Add(filter);
+            searcher.Filters.Add(query);
 
             return await searcher.GetMatchingItemsRaw().ConfigureAwait(false);
         }
@@ -576,19 +576,19 @@ namespace Microsoft.HealthVault.DesktopWeb.Common
         /// health record.
         /// </summary>
         ///
-        public HealthRecordFilter Filter
+        public ThingQuery Query
         {
             get
             {
-                return _filter;
+                return query;
             }
             set
             {
                 Validator.ThrowIfArgumentNull(value, "Filter", "ArgumentNull");
-                _filter = value;
+                query = value;
             }
         }
-        private HealthRecordFilter _filter = new HealthRecordFilter();
+        private ThingQuery query = new ThingQuery();
 
         /// <summary>
         /// Gets a value indicating whether the data was filtered by the

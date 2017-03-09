@@ -7,7 +7,7 @@ using System;
 using System.Security.Cryptography;
 using System.Text;
 using System.Xml;
-using Microsoft.HealthVault.Configurations;
+using Microsoft.HealthVault.Configuration;
 using Microsoft.HealthVault.Helpers;
 
 namespace Microsoft.HealthVault.Authentication

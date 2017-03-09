@@ -6,7 +6,7 @@
 using System.Diagnostics.CodeAnalysis;
 using System.Xml.XPath;
 
-namespace Microsoft.HealthVault.Things
+namespace Microsoft.HealthVault.Thing
 {
     /// <summary>
     /// The property that the thing-type can be

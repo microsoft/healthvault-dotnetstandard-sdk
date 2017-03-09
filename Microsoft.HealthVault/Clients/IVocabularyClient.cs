@@ -29,7 +29,7 @@ namespace Microsoft.HealthVault.Clients
         /// <param name="vocabularyId">the string representing the vocabulary to fetch</param>
         /// <param name="cultureIsFixed">
         /// HealthVault looks for the vocabulary items for the culture info
-        /// specified using <see cref="HealthServiceConnection.Culture"/>.
+        /// specified by the system.
         /// If <paramref name="cultureIsFixed"/> is set to <b>false</b> and if
         /// items are not found for the specified culture, items for the
         /// default fallback culture are returned. If

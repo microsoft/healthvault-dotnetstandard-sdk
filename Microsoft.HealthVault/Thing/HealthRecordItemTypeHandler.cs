@@ -5,7 +5,7 @@
 
 using System;
 
-namespace Microsoft.HealthVault.Things
+namespace Microsoft.HealthVault.Thing
 {
     internal class HealthRecordItemTypeHandler
     {

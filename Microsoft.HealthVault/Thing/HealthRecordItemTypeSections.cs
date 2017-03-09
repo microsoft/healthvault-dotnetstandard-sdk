@@ -5,7 +5,7 @@
 
 using System;
 
-namespace Microsoft.HealthVault.Things
+namespace Microsoft.HealthVault.Thing
 {
     /// <summary>
     /// Enumeration used to specify the sections of health record item type definition that should be returned.

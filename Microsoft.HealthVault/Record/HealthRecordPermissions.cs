@@ -4,7 +4,7 @@
 // All other rights reserved.
 
 using System.Collections.ObjectModel;
-using Microsoft.HealthVault.Things;
+using Microsoft.HealthVault.Thing;
 
 namespace Microsoft.HealthVault.Record
 {

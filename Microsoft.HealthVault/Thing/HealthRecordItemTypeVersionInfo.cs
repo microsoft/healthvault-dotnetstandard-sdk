@@ -5,7 +5,7 @@
 
 using System;
 
-namespace Microsoft.HealthVault.Things
+namespace Microsoft.HealthVault.Thing
 {
     /// <summary>
     /// Represents the version information for a health record item type.

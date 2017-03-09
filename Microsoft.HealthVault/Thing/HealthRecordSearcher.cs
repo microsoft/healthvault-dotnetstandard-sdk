@@ -13,7 +13,7 @@ using Microsoft.HealthVault.Exceptions;
 using Microsoft.HealthVault.Helpers;
 using Microsoft.HealthVault.Transport;
 
-namespace Microsoft.HealthVault.Things
+namespace Microsoft.HealthVault.Thing
 {
     /// <summary>
     /// Searches for health record items in HealthVault records.
@@ -37,7 +37,7 @@ namespace Microsoft.HealthVault.Things
         /// The <paramref name="record"/> parameter is <b>null</b>.
         /// </exception>
         ///
-        public HealthRecordSearcher(HealthRecordAccessor record)
+        internal HealthRecordSearcher(HealthRecordAccessor record)
         {
             Validator.ThrowIfArgumentNull(record, "record", "HealthRecordSearcherCtorArgumentNull");
             this.Record = record;
@@ -68,7 +68,7 @@ namespace Microsoft.HealthVault.Things
         /// returned collection.
         /// </remarks>
         ///
-        public Collection<HealthRecordFilter> Filters { get; } = new Collection<HealthRecordFilter>();
+        public Collection<ThingQuery> Filters { get; } = new Collection<ThingQuery>();
 
         /// <summary>
         /// Gets the health record items that match the filters as specified by
@@ -91,7 +91,7 @@ namespace Microsoft.HealthVault.Things
         /// or contains invalid filters.
         /// </exception>
         ///
-        public async Task<ReadOnlyCollection<HealthRecordItemCollection>> GetMatchingItems()
+        internal async Task<ReadOnlyCollection<HealthRecordItemCollection>> GetMatchingItems()
         {
             return await HealthVaultPlatform.GetMatchingItemsAsync(this.Record.Connection, this.Record, this).ConfigureAwait(false);
         }
@@ -113,7 +113,7 @@ namespace Microsoft.HealthVault.Things
         /// object model.
         /// </remarks>
         ///
-        public async Task<XmlReader> GetMatchingItemsReader()
+        internal async Task<XmlReader> GetMatchingItemsReader()
         {
             return await HealthVaultPlatform.GetMatchingItemsReaderAsync(this.Record.Connection, this.Record, this).ConfigureAwait(false);
         }
@@ -135,7 +135,7 @@ namespace Microsoft.HealthVault.Things
         /// object model.
         /// </remarks>
         ///
-        public async Task<XPathNavigator> GetMatchingItemsRaw()
+        internal async Task<XPathNavigator> GetMatchingItemsRaw()
         {
             return await HealthVaultPlatform.GetMatchingItemsRawAsync(this.Record.Connection, this.Record, this).ConfigureAwait(false);
         }
@@ -173,19 +173,19 @@ namespace Microsoft.HealthVault.Things
         /// or contains invalid filters.
         /// </exception>
         ///
-        public async Task<HealthRecordItem> GetSingleItem(
+        public async Task<IThing> GetSingleItem(
             Guid itemId,
             HealthRecordItemSections sections)
         {
             // Create a new searcher to get the item.
             HealthRecordSearcher searcher = new HealthRecordSearcher(this.Record);
 
-            HealthRecordFilter filter = new HealthRecordFilter();
-            filter.ItemIds.Add(itemId);
-            filter.View.Sections = sections;
-            filter.CurrentVersionOnly = true;
+            ThingQuery query = new ThingQuery();
+            query.ItemIds.Add(itemId);
+            query.View.Sections = sections;
+            query.CurrentVersionOnly = true;
 
-            searcher.Filters.Add(filter);
+            searcher.Filters.Add(query);
 
             ReadOnlyCollection<HealthRecordItemCollection> resultSet =
                 await HealthVaultPlatform.GetMatchingItemsAsync(this.Record.Connection, this.Record, searcher).ConfigureAwait(false);
@@ -193,10 +193,11 @@ namespace Microsoft.HealthVault.Things
             // Check in case HealthVault returned invalid data.
             if (resultSet.Count > 1)
             {
-                HealthServiceResponseError error = new HealthServiceResponseError();
-                error.Message =
-                    ResourceRetriever.GetResourceString(
-                        "GetSingleThingTooManyResults");
+                HealthServiceResponseError error = new HealthServiceResponseError
+                {
+                    Message = ResourceRetriever.GetResourceString(
+                        "GetSingleThingTooManyResults")
+                };
 
                 HealthServiceException e =
                     HealthServiceExceptionHelper.GetHealthServiceException(
@@ -205,17 +206,18 @@ namespace Microsoft.HealthVault.Things
                 throw e;
             }
 
-            HealthRecordItem result = null;
+            IThing result = null;
             if (resultSet.Count == 1)
             {
                 HealthRecordItemCollection resultGroup = resultSet[0];
 
                 if (resultGroup.Count > 1)
                 {
-                    HealthServiceResponseError error = new HealthServiceResponseError();
-                    error.Message =
-                        ResourceRetriever.GetResourceString(
-                            "GetSingleThingTooManyResults");
+                    HealthServiceResponseError error = new HealthServiceResponseError
+                    {
+                        Message = ResourceRetriever.GetResourceString(
+                            "GetSingleThingTooManyResults")
+                    };
 
                     HealthServiceException e =
                         HealthServiceExceptionHelper.GetHealthServiceException(
@@ -335,7 +337,7 @@ namespace Microsoft.HealthVault.Things
 
             using (XmlWriter writer = XmlWriter.Create(parameters, settings))
             {
-                foreach (HealthRecordFilter filter in this.Filters)
+                foreach (ThingQuery filter in this.Filters)
                 {
                     // Add all filters
                     filter.AddFilterXml(writer);
