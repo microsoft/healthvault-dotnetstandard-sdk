@@ -187,25 +187,6 @@ namespace Microsoft.HealthVault.Configurations
         private string applicationCertificateFileName;
 
         /// <summary>
-        /// Gets or sets the signature certificate store location.
-        /// </summary>
-        public virtual StoreLocation SignatureCertStoreLocation
-        {
-            get
-            {
-                return this.signatureCertStoreLocation;
-            }
-
-            set
-            {
-                this.EnsureAppNotInitialized();
-                this.signatureCertStoreLocation = value;
-            }
-        }
-
-        private StoreLocation signatureCertStoreLocation = StoreLocation.LocalMachine;
-
-        /// <summary>
         /// Gets or sets the certificate subject.
         /// </summary>
         public virtual string CertSubject

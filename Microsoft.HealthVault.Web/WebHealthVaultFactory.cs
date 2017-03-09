@@ -1,4 +1,5 @@
 ﻿using Microsoft.HealthVault.Connection;
+using Microsoft.HealthVault.Configurations;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -35,7 +36,7 @@ namespace Microsoft.HealthVault.Web
         {
             WebIoc.EnsureTypesRegistered();
             IConnection connection = Ioc.Get<IConnectionInternal>();
-            connection.ApplicationConfiguration = WebApplicationConfiguration.Current;
+            connection.ApplicationConfiguration = Ioc.Get<WebConfiguration>();
             return connection;
         }
     }

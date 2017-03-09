@@ -4,6 +4,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.XPath;
+using Microsoft.HealthVault.Configurations;
 using Microsoft.HealthVault.Helpers;
 using Microsoft.HealthVault.Transport;
 
@@ -140,7 +141,7 @@ namespace Microsoft.HealthVault.Connection
             Validator.ThrowIfArgumentNull(writer, "writer", "WriteXmlNullWriter");
             writer.WriteStartElement("app-id");
 
-            var healthApplicationConfiguration = Ioc.Get<IHealthApplicationConfiguration>();
+            var healthApplicationConfiguration = Ioc.Get<IConfiguration>();
 
             if (healthApplicationConfiguration.IsMultiRecordApp)
             {

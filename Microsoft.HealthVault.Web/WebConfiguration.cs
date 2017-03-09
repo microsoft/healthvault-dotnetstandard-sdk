@@ -93,7 +93,7 @@ namespace Microsoft.HealthVault.Web
 
         private volatile string _applicationCertificateFileName;
 
-        public override StoreLocation SignatureCertStoreLocation
+        public virtual StoreLocation SignatureCertStoreLocation
         {
             get
             {

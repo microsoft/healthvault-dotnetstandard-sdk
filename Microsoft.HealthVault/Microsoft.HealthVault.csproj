@@ -162,9 +162,6 @@
     <Compile Include="Extensions\HealthApplicationConfigurationExtensions.cs" />
     <Compile Include="Person\GetAuthorizedPeopleSettings.cs" />
     <Compile Include="GlobalSuppressions.cs" />
-    <Compile Include="HealthApplicationConfiguration.cs" />
-    <Compile Include="HealthClientApplication.cs" />
-    <Compile Include="Connection\HealthClientAuthorizedConnection.cs" />
     <Compile Include="Thing\HealthRecordAccessor.cs" />
     <Compile Include="Exceptions\HealthRecordAuthorizationNotPossibleException.cs" />
     <Compile Include="Record\HealthRecordAuthorizationStatus.cs" />

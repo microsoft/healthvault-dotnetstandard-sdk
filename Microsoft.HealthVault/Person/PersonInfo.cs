@@ -344,12 +344,12 @@ namespace Microsoft.HealthVault.Person
             }
             else
             {
-                this.healthServiceUri = HealthApplicationConfiguration.Current.GetHealthVaultMethodUrl();
+                this.healthServiceUri = this.configuration.GetHealthVaultMethodUrl();
 
                 // TODO: IConnection-ify this.
                 // this.ApplicationConnection = new AuthenticatedConnection(this.appId, this.healthServiceUri, this.credential);
                 this.healthServiceUri = this.configuration.GetHealthVaultMethodUrl();
-                this.ApplicationConnection = new AuthenticatedConnection(this.appId, this.healthServiceUri, this.credential);
+                //this.ApplicationConnection = new AuthenticatedConnection(this.appId, this.healthServiceUri, this.credential);
             }
 
             if (!string.IsNullOrEmpty(this.compressionMethod))

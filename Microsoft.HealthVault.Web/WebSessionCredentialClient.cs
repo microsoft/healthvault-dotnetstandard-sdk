@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.XPath;
 using Microsoft.HealthVault.Connection;
+using Microsoft.HealthVault.Configurations;
 using Microsoft.HealthVault.Diagnostics;
 using Microsoft.HealthVault.Helpers;
 using Microsoft.HealthVault.Transport;
@@ -22,6 +23,7 @@ namespace Microsoft.HealthVault.Web
         private const string DigestMethod = "RSA-SHA1";
 
         private const string SignMethod = "SHA1";
+        private static WebConfiguration configuration = Ioc.Get<WebConfiguration>();
 
         public WebSessionCredentialClient(IConnectionInternal connection, X509Certificate2 cert) 
             : base(connection)
@@ -156,7 +158,7 @@ namespace Microsoft.HealthVault.Web
 
         private string GetApplicationCertificateSubject(Guid applicationId)
         {
-            string result = HealthApplicationConfiguration.Current.CertSubject;
+            string result = configuration.CertSubject;
 
             if (result == null)
             {

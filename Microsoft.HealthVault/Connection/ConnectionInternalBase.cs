@@ -7,6 +7,7 @@ using System.Xml;
 using System.Xml.XPath;
 using Microsoft.HealthVault.Authentication;
 using Microsoft.HealthVault.Clients;
+using Microsoft.HealthVault.Configurations;
 using Microsoft.HealthVault.Exceptions;
 using Microsoft.HealthVault.Helpers;
 using Microsoft.HealthVault.Person;
@@ -57,7 +58,7 @@ namespace Microsoft.HealthVault.Connection
 
         public Guid ApplicationId => this.ApplicationIdInternal;
 
-        public IHealthApplicationConfiguration ApplicationConfiguration { get; set; }
+        public IConfiguration ApplicationConfiguration { get; set; }
 
         public TClient GetClient<TClient>()
             where TClient : IClient
