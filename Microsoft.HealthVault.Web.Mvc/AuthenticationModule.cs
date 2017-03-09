@@ -103,7 +103,7 @@ namespace Microsoft.HealthVault.Web.Mvc
 
         private static async Task<PersonInfo> RequestPersonInfoAsync(string token, string instanceId)
         {
-            IConnection connection = WebHealthVaultFactory.Current.GetWebApplicationConnection();
+            IConnection connection = await WebHealthVaultFactory.Current.GetWebApplicationConnectionAsync();
             var serviceDefinition = await connection.PlatformClient.GetServiceDefinitionAsync();
             var serviceInstance = serviceDefinition.ServiceInstances[instanceId];
 

@@ -32,11 +32,13 @@ namespace Microsoft.HealthVault.Web
         {
         }
 
-        public IConnection GetWebApplicationConnection()
+        public async Task<IConnection> GetWebApplicationConnectionAsync()
         {
             WebIoc.EnsureTypesRegistered();
             IConnection connection = Ioc.Get<IConnectionInternal>();
             connection.ApplicationConfiguration = Ioc.Get<WebConfiguration>();
+
+            await connection.AuthenticateAsync();
             return connection;
         }
     }
