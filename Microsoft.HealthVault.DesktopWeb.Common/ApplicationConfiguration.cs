@@ -58,7 +58,7 @@ namespace Microsoft.HealthVault.DesktopWeb.Common
 
         #endregion
 
-        public Uri HealthVaultUrl
+        public Uri DefaultHealthVaultUrl
         {
             get
             {
@@ -83,7 +83,7 @@ namespace Microsoft.HealthVault.DesktopWeb.Common
         /// value.
         /// </remarks>
         ///
-        public virtual Uri HealthVaultShellUrl
+        public virtual Uri DefaultHealthVaultShellUrl
         {
             get
             {

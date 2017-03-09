@@ -45,14 +45,20 @@ namespace Microsoft.HealthVault.Configurations
         private static readonly object InstanceLock = new object();
 
         /// <summary>
+        /// Gets or sets a value indicating whether the configuration is locked.
+        /// </summary>
+        protected bool IsLocked { get; set; }
+
+        /// <summary>
         /// True if the app has been initialized.
         /// </summary>
         /// <remarks>After the app is initialized, changes to these config values are not permitted.</remarks>
         internal bool AppInitialized { get; set; }
 
         /// <summary>
-        /// Gets the root URL for a default instance of the
-        /// HealthVault web-service.
+        /// Gets or sets the root URL for the default instance of the
+        /// HealthVault web-service. This may be overwritten if an environment
+        /// instance bounce happens.
         /// </summary>
         ///
         /// <remarks>
@@ -60,25 +66,26 @@ namespace Microsoft.HealthVault.Configurations
         /// value with "wildcat.ashx" removed.
         /// </remarks>
         ///
-        public virtual Uri HealthVaultUrl
+        public virtual Uri DefaultHealthVaultUrl
         {
             get
             {
-                return this.healthVaultRootUrl;
+                return this.defaultHealthVaultRootUrl;
             }
 
             set
             {
-                this.EnsureAppNotInitialized();
-                this.healthVaultRootUrl = EnsureTrailingSlash(value);
+                this.EnsureNotLocked();
+                this.defaultHealthVaultRootUrl = EnsureTrailingSlash(value);
             }
         }
 
-        private volatile Uri healthVaultRootUrl;
+        private volatile Uri defaultHealthVaultRootUrl;
 
         /// <summary>
         /// Gets the HealthVault Shell URL for
-        /// the configured default instance of the HealthVault web-service.
+        /// the configured default instance of the HealthVault web-service. This
+        /// may be overwritten if an environment instance bounce happens.
         /// </summary>
         ///
         /// <remarks>
@@ -86,7 +93,7 @@ namespace Microsoft.HealthVault.Configurations
         /// value.
         /// </remarks>
         ///
-        public virtual Uri HealthVaultShellUrl
+        public virtual Uri DefaultHealthVaultShellUrl
         {
             get
             {
@@ -95,7 +102,7 @@ namespace Microsoft.HealthVault.Configurations
 
             set
             {
-                this.EnsureAppNotInitialized();
+                this.EnsureNotLocked();
                 this.shellUrl = EnsureTrailingSlash(value);
             }
         }
@@ -120,7 +127,7 @@ namespace Microsoft.HealthVault.Configurations
 
             set
             {
-                this.EnsureAppNotInitialized();
+                this.EnsureNotLocked();
                 this.appId = value;
             }
         }
@@ -145,7 +152,7 @@ namespace Microsoft.HealthVault.Configurations
 
             set
             {
-                this.EnsureAppNotInitialized();
+                this.EnsureNotLocked();
                 this.cryptoConfiguration = value;
             }
         }
@@ -163,7 +170,7 @@ namespace Microsoft.HealthVault.Configurations
 
             set
             {
-                this.EnsureAppNotInitialized();
+                this.EnsureNotLocked();
                 this.applicationCertificatePassword = value;
             }
         }
@@ -179,7 +186,7 @@ namespace Microsoft.HealthVault.Configurations
 
             set
             {
-                this.EnsureAppNotInitialized();
+                this.EnsureNotLocked();
                 this.applicationCertificateFileName = value;
             }
         }
@@ -195,7 +202,7 @@ namespace Microsoft.HealthVault.Configurations
 
             set
             {
-                this.EnsureAppNotInitialized();
+                this.EnsureNotLocked();
                 this.certSubject = value;
             }
         }
@@ -234,7 +241,7 @@ namespace Microsoft.HealthVault.Configurations
 
             set
             {
-                this.EnsureAppNotInitialized();
+                this.EnsureNotLocked();
 
                 int tempRequestTimeout = value;
 
@@ -278,7 +285,7 @@ namespace Microsoft.HealthVault.Configurations
 
             set
             {
-                this.EnsureAppNotInitialized();
+                this.EnsureNotLocked();
 
                 int tempRequestTimeToLive = value;
 
@@ -320,7 +327,7 @@ namespace Microsoft.HealthVault.Configurations
 
             set
             {
-                this.EnsureAppNotInitialized();
+                this.EnsureNotLocked();
 
                 this.retryOnInternal500Count = value;
                 this.retryOnInternal500CountInitialized = true;
@@ -355,7 +362,7 @@ namespace Microsoft.HealthVault.Configurations
 
             set
             {
-                this.EnsureAppNotInitialized();
+                this.EnsureNotLocked();
 
                 this.retryOnInternal500SleepSeconds = value;
                 this.retryOnInternal500SleepSecondsInitialized = true;
@@ -391,7 +398,7 @@ namespace Microsoft.HealthVault.Configurations
 
             set
             {
-                this.EnsureAppNotInitialized();
+                this.EnsureNotLocked();
 
                 int tempBlobHashSize = value;
 
@@ -440,7 +447,7 @@ namespace Microsoft.HealthVault.Configurations
 
             set
             {
-                this.EnsureAppNotInitialized();
+                this.EnsureNotLocked();
                 this.supportedTypeVersions = value;
             }
         }
@@ -473,7 +480,7 @@ namespace Microsoft.HealthVault.Configurations
 
             set
             {
-                this.EnsureAppNotInitialized();
+                this.EnsureNotLocked();
                 this.useLegacyTypeVersionSupport = value;
             }
         }
@@ -510,7 +517,7 @@ namespace Microsoft.HealthVault.Configurations
 
             set
             {
-                this.EnsureAppNotInitialized();
+                this.EnsureNotLocked();
                 this.multiInstanceAware = value;
             }
         }
@@ -551,7 +558,7 @@ namespace Microsoft.HealthVault.Configurations
 
             set
             {
-                this.EnsureAppNotInitialized();
+                this.EnsureNotLocked();
                 this.connectionMaxIdleTime = value;
 
                 if (this.connectionMaxIdleTime < -1)
@@ -605,7 +612,7 @@ namespace Microsoft.HealthVault.Configurations
 
             set
             {
-                this.EnsureAppNotInitialized();
+                this.EnsureNotLocked();
                 this.connectionLeaseTimeout = value;
 
                 if (this.connectionLeaseTimeout < -1)
@@ -640,7 +647,7 @@ namespace Microsoft.HealthVault.Configurations
 
             set
             {
-                this.EnsureAppNotInitialized();
+                this.EnsureNotLocked();
                 this.connectionUseHttpKeepAlive = value;
             }
         }
@@ -691,7 +698,7 @@ namespace Microsoft.HealthVault.Configurations
 
             set
             {
-                this.EnsureAppNotInitialized();
+                this.EnsureNotLocked();
 
                 lock (this.serviceInfoDefaultCacheTtlInitLock)
                 {
@@ -723,7 +730,7 @@ namespace Microsoft.HealthVault.Configurations
 
             set
             {
-                this.EnsureAppNotInitialized();
+                this.EnsureNotLocked();
                 this.restHealthVaultRootUrl = EnsureTrailingSlash(value);
             }
         }
@@ -739,7 +746,7 @@ namespace Microsoft.HealthVault.Configurations
 
             set
             {
-                this.EnsureAppNotInitialized();
+                this.EnsureNotLocked();
                 this.requestTimeoutSeconds = value;
             }
         }
@@ -755,7 +762,7 @@ namespace Microsoft.HealthVault.Configurations
 
             set
             {
-                this.EnsureAppNotInitialized();
+                this.EnsureNotLocked();
                 this.isMultiAppRecord = value;
             }
         }
@@ -768,12 +775,17 @@ namespace Microsoft.HealthVault.Configurations
             return new Uri(uriString.EndsWith("/", StringComparison.Ordinal) ? uriString : uriString + "/");
         }
 
+        internal void Lock()
+        {
+            this.IsLocked = true;
+        }
+
         /// <summary>
         /// Users are only allowed to change these values before app initialization.
         /// </summary>
-        private void EnsureAppNotInitialized()
+        protected void EnsureNotLocked()
         {
-            if (this.AppInitialized)
+            if (this.IsLocked)
             {
                 throw new InvalidOperationException("Changing app configuration values after initialization is not permitted.");
             }

@@ -71,7 +71,7 @@ namespace Microsoft.HealthVault.Web.Mvc
 
         private static StringBuilder GetShellUrl()
         {
-            string shellUrl = HealthVault.Config.HealthVaultShellUrl.OriginalString;
+            string shellUrl = HealthVault.Config.DefaultHealthVaultShellUrl.OriginalString;
             StringBuilder targetUrl = new StringBuilder(shellUrl);
             if (!shellUrl.EndsWith("/", StringComparison.OrdinalIgnoreCase))
             {

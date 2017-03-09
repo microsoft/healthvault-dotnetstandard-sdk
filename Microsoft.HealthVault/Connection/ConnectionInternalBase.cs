@@ -20,7 +20,7 @@ namespace Microsoft.HealthVault.Connection
     /// <summary>
     /// Base implementations of IConnection
     /// </summary>
-    /// <seealso cref="Microsoft.HealthVault.Connection.IConnection" />
+    /// <seealso cref="IHealthVaultConnection" />
     internal abstract class ConnectionInternalBase : IConnectionInternal
     {
         private readonly AsyncLock asyncLock = new AsyncLock();

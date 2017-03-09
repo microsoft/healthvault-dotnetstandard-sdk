@@ -1115,7 +1115,7 @@ namespace Microsoft.HealthVault
         /// in a <see cref="HealthServiceAccessDeniedException"/>."
         /// </remarks>
         public static async Task RemoveApplicationAuthorizationAsync(
-            IConnection connection,
+            IHealthVaultConnection connection,
             HealthRecordAccessor accessor)
         {
             await HealthVaultPlatformRecord.Current.RemoveApplicationAuthorizationAsync(connection, accessor).ConfigureAwait(false);
@@ -1161,7 +1161,7 @@ namespace Microsoft.HealthVault
         /// </exception>
         ///
         public static async Task<IDictionary<Guid, HealthRecordItemTypePermission>> QueryPermissionsByTypesAsync(
-            IConnection connection,
+            IHealthVaultConnection connection,
             HealthRecordAccessor accessor,
             IList<Guid> healthRecordItemTypeIds)
         {
@@ -1211,7 +1211,7 @@ namespace Microsoft.HealthVault
         /// </exception>
         ///
         public static async Task<Collection<HealthRecordItemTypePermission>> QueryPermissionsAsync(
-            IConnection connection,
+            IHealthVaultConnection connection,
             HealthRecordAccessor accessor,
             IList<Guid> healthRecordItemTypeIds)
         {
@@ -1260,7 +1260,7 @@ namespace Microsoft.HealthVault
         /// </exception>
         ///
         public static async Task<HealthRecordPermissions> QueryRecordPermissionsAsync(
-            IConnection connection,
+            IHealthVaultConnection connection,
             HealthRecordAccessor accessor,
             IList<Guid> healthRecordItemTypeIds)
         {
@@ -1305,7 +1305,7 @@ namespace Microsoft.HealthVault
         /// If an error occurs while contacting the HealthVault service.
         /// </exception>
         public static async Task<Collection<HealthRecordItem>> GetValidGroupMembershipAsync(
-            IConnection connection,
+            IHealthVaultConnection connection,
             HealthRecordAccessor accessor,
             IList<Guid> applicationIds)
         {

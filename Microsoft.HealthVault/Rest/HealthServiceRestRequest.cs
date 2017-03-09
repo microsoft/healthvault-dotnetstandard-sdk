@@ -92,7 +92,7 @@ namespace Microsoft.HealthVault.Rest
         /// </exception>
         ///
         public HealthServiceRestRequest(
-            IConnection connection,
+            IHealthVaultConnection connection,
             HttpMethod httpVerb,
             string path,
             NameValueCollection queryStringParameters = null,
@@ -161,7 +161,7 @@ namespace Microsoft.HealthVault.Rest
         /// </exception>
         ///
         public HealthServiceRestRequest(
-            IConnection connection,
+            IHealthVaultConnection connection,
             HttpMethod httpVerb,
             Uri fullUri,
             string requestBody = null,
@@ -245,7 +245,7 @@ namespace Microsoft.HealthVault.Rest
         }
 
         private void Initialize(
-            IConnection connection,
+            IHealthVaultConnection connection,
             HttpMethod httpVerb,
             Uri fullUri,
             string requestBody = null,
@@ -527,7 +527,7 @@ namespace Microsoft.HealthVault.Rest
         [ThreadStatic]
         private static Guid correlationId;
 
-        private IConnection connection;
+        private IHealthVaultConnection connection;
         private HttpMethod verb;
         private string body;
         private Uri uri;

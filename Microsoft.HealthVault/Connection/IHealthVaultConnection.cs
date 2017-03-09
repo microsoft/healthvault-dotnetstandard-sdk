@@ -13,7 +13,7 @@ namespace Microsoft.HealthVault.Connection
     /// Represents a connection for an application to the HealthVault service
     /// for operations
     /// </summary>
-    public interface IConnection
+    public interface IHealthVaultConnection
     {
         /// <summary>
         /// The HealthVault web-service instance.

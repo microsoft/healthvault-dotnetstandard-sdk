@@ -92,7 +92,7 @@ namespace Microsoft.HealthVault.Record
         /// in a <see cref="HealthServiceAccessDeniedException"/>."
         /// </remarks>
         public virtual async Task RemoveApplicationAuthorizationAsync(
-            IConnection connection,
+            IHealthVaultConnection connection,
             HealthRecordAccessor accessor)
         {
             // TODO: IConnection-ify this.
@@ -141,7 +141,7 @@ namespace Microsoft.HealthVault.Record
         /// </exception>
         ///
         public virtual async Task<IDictionary<Guid, HealthRecordItemTypePermission>> QueryPermissionsByTypesAsync(
-            IConnection connection,
+            IHealthVaultConnection connection,
             HealthRecordAccessor accessor,
             IList<Guid> healthRecordItemTypeIds)
         {
@@ -214,7 +214,7 @@ namespace Microsoft.HealthVault.Record
         /// </exception>
         ///
         public virtual async Task<Collection<HealthRecordItemTypePermission>> QueryPermissionsAsync(
-            IConnection connection,
+            IHealthVaultConnection connection,
             HealthRecordAccessor accessor,
             IList<Guid> healthRecordItemTypeIds)
         {
@@ -265,7 +265,7 @@ namespace Microsoft.HealthVault.Record
         /// </exception>
         ///
         public virtual async Task<HealthRecordPermissions> QueryRecordPermissionsAsync(
-            IConnection connection,
+            IHealthVaultConnection connection,
             HealthRecordAccessor accessor,
             IList<Guid> healthRecordItemTypeIds)
         {
@@ -397,7 +397,7 @@ namespace Microsoft.HealthVault.Record
         /// If an error occurs while contacting the HealthVault service.
         /// </exception>
         public virtual async Task<Collection<HealthRecordItem>> GetValidGroupMembershipAsync(
-            IConnection connection,
+            IHealthVaultConnection connection,
             HealthRecordAccessor accessor,
             IList<Guid> applicationIds)
         {
