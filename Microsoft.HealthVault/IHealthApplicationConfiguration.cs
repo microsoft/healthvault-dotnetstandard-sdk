@@ -1,9 +1,6 @@
 using System;
 using System.Collections.Generic;
-using System.Globalization;
-using System.Security.Cryptography.X509Certificates;
 using System.Threading;
-using System.Xml;
 using Microsoft.HealthVault.Authentication;
 using Microsoft.HealthVault.Exceptions;
 using Microsoft.HealthVault.PlatformInformation;
@@ -11,6 +8,10 @@ using Microsoft.HealthVault.Things;
 
 namespace Microsoft.HealthVault
 {
+    /// <summary>
+    /// Application configuration containing properties
+    /// which used by the service
+    /// </summary>
     public interface IHealthApplicationConfiguration
     {
         /// <summary>
@@ -288,7 +289,7 @@ namespace Microsoft.HealthVault
         /// <summary>
         /// Gets the signature certificate store location.
         /// </summary>
-        StoreLocation SignatureCertStoreLocation { get; }
+        // StoreLocation SignatureCertStoreLocation { get; }
 
         /// <summary>
         /// Gets the certificate subject.
@@ -302,5 +303,13 @@ namespace Microsoft.HealthVault
         /// The crypto configuration.
         /// </value>
         ICryptoConfiguration CryptoConfiguration { get; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether this instance is multi record application.
+        /// </summary>
+        /// <value>
+        /// <c>true</c> if this instance is multi record application; otherwise, <c>false</c>.
+        /// </value>
+        bool IsMultiRecordApp { get; set; }
     }
 }

@@ -4,8 +4,10 @@
 // All other rights reserved.
 
 using System;
+using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Web;
+using Microsoft.HealthVault.Authentication;
 using Microsoft.HealthVault.Extensions;
 
 namespace Microsoft.HealthVault.Web
@@ -15,7 +17,7 @@ namespace Microsoft.HealthVault.Web
     /// web.config or as constants.
     /// </summary>
     ///
-    public sealed class WebApplicationConfiguration
+    public sealed class WebApplicationConfiguration : HealthApplicationConfiguration
     {
         /// <summary>
         /// Constant to indicate logon required
@@ -38,24 +40,6 @@ namespace Microsoft.HealthVault.Web
             HttpContext.Current == null ? String.Empty :
                 (HttpRuntime.AppDomainAppVirtualPath + "_wcpage")
                 .Substring(1);
-
-        /// <summary>
-        /// Shell auth page location including the application id.
-        /// </summary>
-        ///
-        public static Uri ShellAuthenticationUrl => HealthWebApplicationConfiguration.Current.HealthVaultShellAuthenticationUrl;
-
-        /// <summary>
-        /// Application id, from web config.
-        /// </summary>
-        ///
-        public static readonly Guid AppId = HealthWebApplicationConfiguration.Current.ApplicationConfiguration.ApplicationId;
-
-        /// <summary>
-        /// Shell url, from web config.
-        /// </summary>
-        ///
-        public static Uri ShellUrl => HealthWebApplicationConfiguration.Current.ApplicationConfiguration.HealthVaultShellUrl;
 
         /// <summary>
         /// Cookie domain, from web config.
@@ -128,12 +112,6 @@ namespace Microsoft.HealthVault.Web
         /// </summary>
         ///
         public static readonly bool IsSignupCodeRequired = HealthWebApplicationConfiguration.Current.IsSignupCodeRequired;
-
-        /// <summary>
-        /// HealthVault url, from web config.
-        /// </summary>
-        ///
-        public static Uri HealthServiceUrl => HealthWebApplicationConfiguration.Current.ApplicationConfiguration.HealthVaultUrl;
 
         /// <summary>
         /// HealthVault root url, from web config.
@@ -220,6 +198,16 @@ namespace Microsoft.HealthVault.Web
         public static int DataGridItemsPerPage => HealthWebApplicationConfiguration.Current.DataGridItemsPerPage;
 
         #endregion DataGrid
+
+        #region IHealthVaultConfiguration
+
+        public override Uri HealthVaultUrl => HealthWebApplicationConfiguration.Current.ApplicationConfiguration.HealthVaultUrl;
+
+        public override Uri HealthVaultShellUrl => HealthWebApplicationConfiguration.Current.ApplicationConfiguration.HealthVaultShellUrl;
+
+        public override Guid ApplicationId => HealthWebApplicationConfiguration.Current.ApplicationConfiguration.ApplicationId;
+
+        #endregion
 
         /// <summary>
         /// Appends the specified path to the URL after trimming the path.

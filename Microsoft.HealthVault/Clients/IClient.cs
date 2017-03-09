@@ -17,10 +17,10 @@ namespace Microsoft.HealthVault.Clients
         /// <summary>
         /// The HealthVault connection object
         /// </summary>
-        HealthServiceConnection Connection { get; set; }
+        IConnectionInternal Connection { get; set; }
 
         /// <summary>
-        /// An optional identifier that can be used to correlate a request. 
+        /// An optional identifier that can be used to correlate a request.
         /// </summary>
         Guid CorrelationId { get; set; }
 

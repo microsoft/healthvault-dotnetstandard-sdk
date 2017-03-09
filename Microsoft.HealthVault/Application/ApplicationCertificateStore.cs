@@ -60,10 +60,14 @@ namespace Microsoft.HealthVault.Application
                 "appId",
                 "GuidParameterEmpty");
 
-            return this.GetApplicationCertificate(
-                applicationId,
-                HealthApplicationConfiguration.Current.SignatureCertStoreLocation,
-                "CN=" + this.GetApplicationCertificateSubject(applicationId));
+            // TODO: What to do here?
+
+            //return this.GetApplicationCertificate(
+            //    applicationId,
+            //    HealthApplicationConfiguration.Current.SignatureCertStoreLocation,
+            //    "CN=" + this.GetApplicationCertificateSubject(applicationId));
+
+            return null;
         }
 
         internal X509Certificate2 GetApplicationCertificateFromStore(

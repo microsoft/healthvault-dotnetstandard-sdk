@@ -160,7 +160,7 @@ namespace Microsoft.HealthVault.Authentication
         /// <param name="applicationId">
         /// The application ID to verify if authentication is required.
         /// </param>
-        /// 
+        ///
         internal virtual async Task AuthenticateIfRequiredAsync(
             IConnection connection,
             Guid applicationId)
@@ -174,7 +174,7 @@ namespace Microsoft.HealthVault.Authentication
         /// <summary>
         /// Authenticates or re-authenticates the credential.
         /// </summary>
-        /// 
+        ///
         private async Task AuthenticateAsync(
             IConnection connection,
             Guid appId)
@@ -372,8 +372,13 @@ namespace Microsoft.HealthVault.Authentication
                 "appId",
                 "AuthenticationAppIDNullOrEmpty");
 
-            AnonymousConnection anonConn =
-                new AnonymousConnection(connection.ApplicationConfiguration.ApplicationId, connection.ApplicationConfiguration.HealthVaultUrl);
+            // TODO: IConnection-ify this.
+            /*
+            AnonymousConnection anonConn = new AnonymousConnection(connection.ApplicationConfiguration.ApplicationId, connection.ApplicationConfiguration.HealthVaultUrl);
+            if (connection.WebProxy != null)
+            {
+                anonConn.WebProxy = connection.WebProxy;
+            }
 
             await this.MakeCreateTokenCallAsync(
                 "CreateAuthenticatedSessionToken",
@@ -381,6 +386,7 @@ namespace Microsoft.HealthVault.Authentication
                 anonConn,
                 appId,
                 false).ConfigureAwait(false);
+            */
         }
 
         #region create token web service helpers
@@ -402,7 +408,7 @@ namespace Microsoft.HealthVault.Authentication
         /// </param>
         ///
         /// <param name="connection">
-        /// The <see cref="HealthServiceConnection"/> instance.
+        /// The <see cref="IConnection"/> instance.
         /// </param>
         ///
         /// <param name="appId">
@@ -417,11 +423,11 @@ namespace Microsoft.HealthVault.Authentication
         /// The <paramref name="methodName"/>
         /// parameter is <b>null</b> or empty.
         /// </exception>
-        /// 
+        ///
         internal async Task MakeCreateTokenCallAsync(
             string methodName,
             int version,
-            HealthServiceConnection connection,
+            IConnectionInternal connection,
             Guid appId,
             bool isMra)
         {
@@ -450,7 +456,7 @@ namespace Microsoft.HealthVault.Authentication
         /// </param>
         ///
         /// <param name="connection">
-        /// The <see cref="HealthServiceConnection"/> instance.
+        /// The <see cref="IConnection"/> instance.
         /// </param>
         ///
         /// <param name="appId">
@@ -469,11 +475,11 @@ namespace Microsoft.HealthVault.Authentication
         /// The <paramref name="methodName"/>
         /// parameter is <b>null</b> or empty.
         /// </exception>
-        /// 
+        ///
         internal async Task MakeCreateTokenCallAsync(
             string methodName,
             int version,
-            HealthServiceConnection connection,
+            IConnectionInternal connection,
             Guid appId,
             bool isMra,
             string stsOriginalUrl)
@@ -500,18 +506,18 @@ namespace Microsoft.HealthVault.Authentication
         /// </param>
         ///
         /// <param name="connection">
-        /// The <see cref="HealthServiceConnection"/> instance.
+        /// The <see cref="IConnection"/> instance.
         /// </param>
         ///
         /// <exception cref="ArgumentNullException">
         /// The <paramref name="methodName"/>
         /// parameter is <b>null</b> or empty.
         /// </exception>
-        /// 
+        ///
         internal async Task MakeCreateTokenCallAsync(
             string methodName,
             int version,
-            HealthServiceConnection connection)
+            IConnectionInternal connection)
         {
             await this.MakeCreateTokenCallImplAsync(
                 methodName,
@@ -540,7 +546,7 @@ namespace Microsoft.HealthVault.Authentication
         /// </param>
         ///
         /// <param name="connection">
-        /// The <see cref="HealthServiceConnection"/> instance.
+        /// The <see cref="IConnection"/> instance.
         /// </param>
         ///
         /// <param name="applicationTokenCreationInfo">
@@ -555,11 +561,11 @@ namespace Microsoft.HealthVault.Authentication
         /// The <paramref name="methodName"/>
         /// parameter is <b>null</b> or empty.
         /// </exception>
-        /// 
+        ///
         internal async Task MakeCreateTokenCallAsync(
             string methodName,
             int version,
-            HealthServiceConnection connection,
+            IConnectionInternal connection,
             ApplicationTokenCreationInfo applicationTokenCreationInfo,
             string stsOriginalUrl)
         {
@@ -581,7 +587,7 @@ namespace Microsoft.HealthVault.Authentication
         private async Task MakeCreateTokenCallImplAsync(
             string methodName,
             int version,
-            HealthServiceConnection connection,
+            IConnectionInternal connection,
             ApplicationTokenCreationInfo applicationTokenCreationInfo = null,
             string stsOriginalUrl = null)
         {

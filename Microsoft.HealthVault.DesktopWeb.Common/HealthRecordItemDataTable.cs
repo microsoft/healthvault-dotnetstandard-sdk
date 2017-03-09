@@ -153,7 +153,7 @@ namespace Microsoft.HealthVault.DesktopWeb.Common
         ///
         public async Task GetData(
             Guid recordId,
-            ApplicationConnection connection)
+            IConnectionInternal connection)
         {
             HealthRecordAccessor record =
                 new HealthRecordAccessor(connection, recordId);
@@ -405,7 +405,7 @@ namespace Microsoft.HealthVault.DesktopWeb.Common
         }
 
         private async Task<HealthRecordItemDataTableView> ApplyEffectiveViewAsync(
-            ApplicationConnection connection)
+            IConnectionInternal connection)
         {
             HealthRecordItemDataTableView effectiveView =
                 HealthRecordItemDataTableView.MultipleTypeTable;
@@ -424,7 +424,7 @@ namespace Microsoft.HealthVault.DesktopWeb.Common
 
                 if (typeDefinition != null)
                 {
-                   healthRecordItemTypeDefinitionHelper = HealthRecordItemTypeDefinitionHelper.Create(typeDefinition);
+                    healthRecordItemTypeDefinitionHelper = HealthRecordItemTypeDefinitionHelper.Create(typeDefinition);
                 }
 
                 if (healthRecordItemTypeDefinitionHelper != null &&

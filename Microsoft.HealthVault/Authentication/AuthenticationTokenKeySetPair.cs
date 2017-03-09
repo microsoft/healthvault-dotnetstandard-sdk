@@ -39,7 +39,7 @@ namespace Microsoft.HealthVault.Authentication
             this.KeySet =
                 new AuthenticatedSessionKeySet(
                     HealthApplicationConfiguration.Current.CryptoConfiguration.HmacAlgorithmName,
-                    ServiceLocator.Current.CryptoService.GenerateHmacSharedSecret());
+                    Ioc.Get<ICryptoService>().GenerateHmacSharedSecret());
         }
 
         internal CreateAuthenticationTokenResult AuthenticationResult { get; set; }

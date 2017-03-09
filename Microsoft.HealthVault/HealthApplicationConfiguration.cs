@@ -5,10 +5,7 @@
 
 using System;
 using System.Collections.Generic;
-using System.Globalization;
-using System.Security.Cryptography.X509Certificates;
 using System.Threading;
-using System.Xml;
 using Microsoft.HealthVault.Authentication;
 using Microsoft.HealthVault.Exceptions;
 using Microsoft.HealthVault.ItemTypes;
@@ -22,7 +19,7 @@ namespace Microsoft.HealthVault
     /// exposes some of the settings directly.
     /// </summary>
     ///
-    internal class HealthApplicationConfiguration : IHealthApplicationConfiguration
+    public class HealthApplicationConfiguration : IHealthApplicationConfiguration
     {
         private static readonly object InstanceLock = new object();
 
@@ -191,25 +188,6 @@ namespace Microsoft.HealthVault
         }
 
         private string applicationCertificateFileName;
-
-        /// <summary>
-        /// Gets or sets the signature certificate store location.
-        /// </summary>
-        public StoreLocation SignatureCertStoreLocation
-        {
-            get
-            {
-                return this.signatureCertStoreLocation;
-            }
-
-            set
-            {
-                this.EnsureAppNotInitialized();
-                this.signatureCertStoreLocation = value;
-            }
-        }
-
-        private StoreLocation signatureCertStoreLocation = StoreLocation.LocalMachine;
 
         /// <summary>
         /// Gets or sets the certificate subject.
@@ -774,6 +752,38 @@ namespace Microsoft.HealthVault
         }
 
         private volatile Uri restHealthVaultRootUrl;
+
+        public virtual int? RequestTimeoutSeconds
+        {
+            get
+            {
+                return this.requestTimeoutSeconds;
+            }
+
+            set
+            {
+                this.EnsureAppNotInitialized();
+                this.requestTimeoutSeconds = value;
+            }
+        }
+
+        private int? requestTimeoutSeconds;
+
+        public virtual bool IsMultiRecordApp
+        {
+            get
+            {
+                return this.isMultiAppRecord;
+            }
+
+            set
+            {
+                this.EnsureAppNotInitialized();
+                this.isMultiAppRecord = value;
+            }
+        }
+
+        private bool isMultiAppRecord;
 
         private static Uri EnsureTrailingSlash(Uri uri)
         {

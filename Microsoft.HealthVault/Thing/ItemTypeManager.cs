@@ -259,7 +259,7 @@ namespace Microsoft.HealthVault.Things
         /// types that are available through the HealthVault service.
         ///
         /// To retrieve information about the types from the HealthVault service,
-        /// use the <see cref="GetHealthRecordItemTypeDefinitionAsync(HealthServiceConnection)"/> method.
+        /// use the <see cref="GetHealthRecordItemTypeDefinitionAsync(IConnection)"/> method.
         /// </remarks>
         /// <returns>A dictionary of <see cref="Type"/> instances.</returns>
         public static IDictionary<Guid, Type> RegisteredTypes
@@ -287,7 +287,7 @@ namespace Microsoft.HealthVault.Things
         /// released, this method will not return them.
         ///
         /// To retrieve information about the types from the HealthVault service,
-        /// use the <see cref="GetHealthRecordItemTypeDefinitionAsync(HealthServiceConnection)"/> method.
+        /// use the <see cref="GetHealthRecordItemTypeDefinitionAsync(IConnection)"/> method.
         /// </remarks>
         /// <param name="typeId">The ID of the associated type</param>
         /// <returns>The typeId.</returns>
@@ -799,7 +799,7 @@ namespace Microsoft.HealthVault.Things
         /// </exception>
         ///
         public static async Task<IDictionary<Guid, HealthRecordItemTypeDefinition>> GetHealthRecordItemTypeDefinitionAsync(
-            HealthServiceConnection connection)
+            IConnectionInternal connection)
         {
             return await GetHealthRecordItemTypeDefinitionAsync(
                 null,
@@ -853,7 +853,7 @@ namespace Microsoft.HealthVault.Things
         public static async Task<IDictionary<Guid, HealthRecordItemTypeDefinition>> GetHealthRecordItemTypeDefinitionAsync(
             IList<Guid> typeIds,
             DateTime? lastClientRefreshDate,
-            HealthServiceConnection connection)
+            IConnectionInternal connection)
         {
             return await GetHealthRecordItemTypeDefinitionAsync(
                 typeIds,
@@ -906,7 +906,7 @@ namespace Microsoft.HealthVault.Things
         public static async Task<IDictionary<Guid, HealthRecordItemTypeDefinition>> GetHealthRecordItemTypeDefinitionAsync(
             IList<Guid> typeIds,
             HealthRecordItemTypeSections sections,
-            HealthServiceConnection connection)
+            IConnectionInternal connection)
         {
             return await GetHealthRecordItemTypeDefinitionAsync(
                 typeIds,
@@ -965,7 +965,7 @@ namespace Microsoft.HealthVault.Things
             IList<Guid> typeIds,
             HealthRecordItemTypeSections sections,
             DateTime? lastClientRefreshDate,
-            HealthServiceConnection connection)
+            IConnectionInternal connection)
         {
             return await GetHealthRecordItemTypeDefinitionAsync(
                 typeIds,
@@ -1005,7 +1005,7 @@ namespace Microsoft.HealthVault.Things
         ///
         public static async Task<IDictionary<Guid, HealthRecordItemTypeDefinition>> GetHealthRecordItemTypeDefinitionAsync(
             HealthRecordItemTypeSections sections,
-            HealthServiceConnection connection)
+            IConnectionInternal connection)
         {
             return await GetHealthRecordItemTypeDefinitionAsync(null, sections, null, null, connection).ConfigureAwait(false);
         }
@@ -1072,7 +1072,7 @@ namespace Microsoft.HealthVault.Things
             HealthRecordItemTypeSections sections,
             IList<string> imageTypes,
             DateTime? lastClientRefreshDate,
-            HealthServiceConnection connection)
+            IConnectionInternal connection)
         {
             return await HealthVaultPlatform.GetHealthRecordItemTypeDefinitionAsync(
                 typeIds,
@@ -1115,7 +1115,7 @@ namespace Microsoft.HealthVault.Things
         ///
         public static async Task<HealthRecordItemTypeDefinition> GetHealthRecordItemTypeDefinitionAsync(
             Guid typeId,
-            HealthServiceConnection connection)
+            IConnectionInternal connection)
         {
             IDictionary<Guid, HealthRecordItemTypeDefinition> typeDefs =
                 await GetHealthRecordItemTypeDefinitionAsync(new[] { typeId }, connection).ConfigureAwait(false);
@@ -1158,7 +1158,7 @@ namespace Microsoft.HealthVault.Things
         ///
         public static async Task<IDictionary<Guid, HealthRecordItemTypeDefinition>> GetHealthRecordItemTypeDefinitionAsync(
             IList<Guid> typeIds,
-            HealthServiceConnection connection)
+            IConnectionInternal connection)
         {
             return await GetHealthRecordItemTypeDefinitionAsync(
                 typeIds,
@@ -1190,7 +1190,7 @@ namespace Microsoft.HealthVault.Things
         /// </exception>
         ///
         public static async Task<HealthRecordItemTypeDefinition> GetBaseHealthRecordItemTypeDefinitionAsync(
-            HealthServiceConnection connection)
+            IConnectionInternal connection)
         {
             return await GetHealthRecordItemTypeDefinitionAsync(BaseTypeId, connection).ConfigureAwait(false);
         }

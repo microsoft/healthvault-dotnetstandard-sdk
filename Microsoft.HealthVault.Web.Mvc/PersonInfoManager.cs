@@ -74,11 +74,14 @@ namespace Microsoft.HealthVault.Web.Mvc
             get
             {
                 string token = null;
+
+                // TODO: IConnection-ify this.
+                /*
                 if (PersonInfo?.Connection?.Credential is WebApplicationCredential)
                 {
                     token = ((WebApplicationCredential)PersonInfo.Connection.Credential).SubCredential;
                 }
-
+                */
                 return token;
             }
         }
@@ -94,7 +97,7 @@ namespace Microsoft.HealthVault.Web.Mvc
             }
 
             PersonInfo freshPersonInfo =
-                await HealthVaultPlatform.GetPersonInfoAsync(PersonInfo.ApplicationConnection).ConfigureAwait(false);
+                await HealthVaultPlatform.GetPersonInfoAsync(PersonInfo.Connection).ConfigureAwait(false);
             if (freshPersonInfo == null)
             {
                 return;

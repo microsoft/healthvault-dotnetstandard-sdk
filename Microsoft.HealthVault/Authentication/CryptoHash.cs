@@ -133,7 +133,7 @@ namespace Microsoft.HealthVault.Authentication
         public CryptoHash(string algorithmName)
         {
             this.AlgorithmName = algorithmName;
-            this.HashAlgorithm = ServiceLocator.Current.CryptoService.CreateHashAlgorithm(this.AlgorithmName);
+            this.HashAlgorithm = Ioc.Get<ICryptoService>().CreateHashAlgorithm(this.AlgorithmName);
         }
 
         #endregion

@@ -44,7 +44,7 @@ namespace Microsoft.HealthVault.Authentication
         {
             this.AlgorithmName = HealthApplicationConfiguration.Current.CryptoConfiguration.HmacAlgorithmName;
 
-            this.HashAlgorithm = ServiceLocator.Current.CryptoService.CreateHashAlgorithm(this.AlgorithmName);
+            this.HashAlgorithm = Ioc.Get<ICryptoService>().CreateHashAlgorithm(this.AlgorithmName);
 
             this.KeyMaterial = new byte[this.HMAC.Key.Length];
             CryptoUtil.GetRandomBytes(this.KeyMaterial);
@@ -56,7 +56,7 @@ namespace Microsoft.HealthVault.Authentication
             : base(algName)
         {
             this.HashAlgorithm =
-                ServiceLocator.Current.CryptoService.CreateHmac(
+                Ioc.Get<ICryptoService>().CreateHmac(
                     this.AlgorithmName,
                     keyMaterial);
             this.KeyMaterial = keyMaterial;

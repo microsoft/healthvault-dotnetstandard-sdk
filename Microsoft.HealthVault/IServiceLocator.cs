@@ -4,6 +4,6 @@ namespace Microsoft.HealthVault
 {
     internal interface IServiceLocator
     {
-        ICryptoService CryptoService { get; }
+        T GetInstance<T>();
     }
 }

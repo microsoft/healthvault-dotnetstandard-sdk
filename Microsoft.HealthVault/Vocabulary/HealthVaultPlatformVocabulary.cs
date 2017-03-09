@@ -127,7 +127,7 @@ namespace Microsoft.HealthVault.Vocabulary
         /// </exception>
         ///
         public virtual async Task<ReadOnlyCollection<Vocabulary>> GetVocabularyAsync(
-            HealthServiceConnection connection,
+            IConnectionInternal connection,
             IList<VocabularyKey> vocabularyKeys,
             bool cultureIsFixed)
         {
@@ -139,7 +139,7 @@ namespace Microsoft.HealthVault.Vocabulary
                 "VocabularyKeysNullOrEmpty");
 
             string methodName = "GetVocabulary";
-            HealthServiceRequest request = new HealthServiceRequest(connection, methodName, 2);
+            int methodVersion = 2;
 
             StringBuilder requestParameters = new StringBuilder(256);
             XmlWriterSettings settings = SDKHelper.XmlUnicodeWriterSettings;
@@ -165,9 +165,9 @@ namespace Microsoft.HealthVault.Vocabulary
                 writer.Flush();
             }
 
-            request.Parameters = requestParameters.ToString();
+            string parameters = requestParameters.ToString();
 
-            HealthServiceResponseData responseData = await request.ExecuteAsync().ConfigureAwait(false);
+            HealthServiceResponseData responseData = await connection.ExecuteAsync(methodName, methodVersion, parameters).ConfigureAwait(false);
 
             ReadOnlyCollection<Vocabulary> vocabularies
                 = CreateVocabulariesFromResponse(methodName, responseData);
@@ -213,12 +213,12 @@ namespace Microsoft.HealthVault.Vocabulary
         /// A collection of keys identifying the vocabularies in the system.
         /// </returns>
         ///
-        public virtual async Task<ReadOnlyCollection<VocabularyKey>> GetVocabularyKeys(HealthServiceConnection connection)
+        public virtual async Task<ReadOnlyCollection<VocabularyKey>> GetVocabularyKeysAsync(IConnectionInternal connection)
         {
             string methodName = "GetVocabulary";
-            HealthServiceRequest request = new HealthServiceRequest(connection, methodName, 1);
+            int methodVersion = 1;
 
-            HealthServiceResponseData responseData = await request.ExecuteAsync().ConfigureAwait(false);
+            HealthServiceResponseData responseData = await connection.ExecuteAsync(methodName, methodVersion).ConfigureAwait(false);
 
             ReadOnlyCollection<VocabularyKey> keys = CreateVocabularyKeysFromResponse(methodName, responseData);
             return keys;
@@ -314,7 +314,7 @@ namespace Microsoft.HealthVault.Vocabulary
         /// </exception>
         ///
         public virtual async Task<VocabularySearchResult> SearchVocabularyAsync(
-            HealthServiceConnection connection,
+            IConnectionInternal connection,
             VocabularyKey vocabularyKey,
             string searchValue,
             VocabularySearchType searchType,
@@ -336,7 +336,8 @@ namespace Microsoft.HealthVault.Vocabulary
                 "SearchMaxResultsInvalid");
 
             string methodName = "SearchVocabulary";
-            HealthServiceRequest request = new HealthServiceRequest(connection, methodName, 1);
+            int methodVersion = 1;
+
             StringBuilder requestParameters = new StringBuilder(256);
             XmlWriterSettings settings = SDKHelper.XmlUnicodeWriterSettings;
             settings.OmitXmlDeclaration = true;
@@ -362,9 +363,9 @@ namespace Microsoft.HealthVault.Vocabulary
                 writer.Flush();
             }
 
-            request.Parameters = requestParameters.ToString();
+            string parameters = requestParameters.ToString();
 
-            HealthServiceResponseData responseData = await request.ExecuteAsync().ConfigureAwait(false);
+            HealthServiceResponseData responseData = await connection.ExecuteAsync(methodName, methodVersion, parameters).ConfigureAwait(false);
 
             if (vocabularyKey != null)
             {

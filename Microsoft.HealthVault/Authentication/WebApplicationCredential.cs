@@ -445,7 +445,7 @@ namespace Microsoft.HealthVault.Authentication
         /// If <paramref name="connection"/> is null.
         /// </exception>
         ///
-        /// <seealso cref="HealthServiceConnection"/>
+        /// <seealso cref="IConnection"/>
         ///
         /// <returns>
         /// The credential to use for the request.

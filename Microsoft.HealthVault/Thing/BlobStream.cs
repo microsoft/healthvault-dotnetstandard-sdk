@@ -83,7 +83,7 @@ namespace Microsoft.HealthVault.Things
         /// <summary>
         /// Gets a value indicating whether the current stream supports reading.
         /// </summary>
-        /// 
+        ///
         public override bool CanRead { get; }
 
         /// <summary>
@@ -99,7 +99,7 @@ namespace Microsoft.HealthVault.Things
         /// <summary>
         /// Gets a value that determines whether the current stream can time out.
         /// </summary>
-        /// 
+        ///
         public override bool CanTimeout => true;
 
         /// <summary>
@@ -652,7 +652,7 @@ namespace Microsoft.HealthVault.Things
                 while (writeBufferOffset < chunkSizeToWrite)
                 {
                     BufferRequest curRequestBuffer = this.bufferList[this.currentBufferRequestIndex];
-                    
+
                     // Get the number of bytes in the current request buffer up to a chunk.
                     int numBytesToCopy = Math.Min(curRequestBuffer.Count, chunkSizeToWrite);
 
@@ -885,11 +885,11 @@ namespace Microsoft.HealthVault.Things
         /// <exception cref="HealthServiceException">
         /// If the call to HealthVault fails in some way.
         /// </exception>
-        /// 
+        ///
         private async Task<BlobPutParameters> BeginPutBlobAsync()
         {
-            HealthServiceRequest request =  
-                new HealthServiceRequest(this.record.Connection, "BeginPutBlob", 1, this.record);
+            HealthServiceRequest request =
+                new HealthServiceRequest(this.record.Connection, "BeginPutBlob", 1);
             HealthServiceResponseData responseData = await request.ExecuteAsync().ConfigureAwait(false);
 
             XPathExpression infoPath =

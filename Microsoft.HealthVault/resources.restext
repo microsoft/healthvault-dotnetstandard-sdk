@@ -1030,3 +1030,6 @@ MeaningfulUseReportsRetrievalNotSupported=Meaningful Use report retrieval not su
 
 #CryptoService.cs
 CryptoConfigurationNull=CryptoConfiguration cannot be null.
+
+#ConnectionRequestHeaderProvider.cs
+MethodNameNull=Method name cannot be null.

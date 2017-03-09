@@ -14,6 +14,7 @@ using System.Collections.Specialized;
 using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using System.Web;
+using Microsoft.HealthVault.Connection;
 using Microsoft.HealthVault.Person;
 using Microsoft.HealthVault.PlatformInformation;
 
@@ -33,6 +34,8 @@ namespace Microsoft.HealthVault.Web.Mvc
         {
             var wrapper = new EventHandlerTaskAsyncHelper(AuthenticateRequest);
             context.AddOnAuthenticateRequestAsync(wrapper.BeginEventHandler, wrapper.EndEventHandler);
+
+            WebIoc.EnsureTypesRegistered();
         }
 
         /// <summary>
@@ -100,11 +103,9 @@ namespace Microsoft.HealthVault.Web.Mvc
 
         private static async Task<PersonInfo> RequestPersonInfoAsync(string token, string instanceId)
         {
-            ServiceInfo serviceInfo = new ServiceInfo();
-
-            var serviceInfoClient = await serviceInfo.GetSericeInfoAsync();
-
-            var serviceInstance = serviceInfoClient.ServiceInstances[instanceId];
+            IConnection connection = WebHealthVaultFactory.Current.GetWebApplicationConnection();
+            var serviceDefinition = await connection.PlatformClient.GetServiceDefinitionAsync();
+            var serviceInstance = serviceDefinition.ServiceInstances[instanceId];
 
             return await WebApplicationUtilities
                 .GetPersonInfoAsync(

@@ -45,7 +45,7 @@ namespace Microsoft.HealthVault.PlatformInformation
         ///
         public static ServiceInfo Current => defaultServiceInfoProvider.GetServiceInfo();
 
-        public async Task<ServiceInfo> GetSericeInfoAsync()
+        public async Task<ServiceInfo> GetServiceInfoAsync()
         {
             return await defaultServiceInfoProvider.GetServiceInfoAsync().ConfigureAwait(false);
         }

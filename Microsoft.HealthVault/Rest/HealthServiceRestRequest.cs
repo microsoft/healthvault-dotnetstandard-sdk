@@ -30,48 +30,48 @@ namespace Microsoft.HealthVault.Rest
     /// Represents an individual request to a HealthVault REST service.
     /// The class wraps up the header generation and web request/response.
     /// </summary>
-    /// 
+    ///
     /// <remarks>
-    /// This class is not thread safe. A new instance should be created when multiple requests 
+    /// This class is not thread safe. A new instance should be created when multiple requests
     /// must execute concurrently.
     /// </remarks>
-    /// 
+    ///
     internal class HealthServiceRestRequest : IEasyWebResponseHandler
     {
         //// TODO: GCorvera Hook up response id
         private const string ResponseIdContextKey = "WC_ResponseId";
         private const string Optional = "Optional Headers";
         private CancellationTokenSource cancellationTokenSource;
-        
+
         /// <summary>
-        /// Creates a new instance of the <see cref="HealthServiceRestRequest"/> 
+        /// Creates a new instance of the <see cref="HealthServiceRestRequest"/>
         /// class for the specified parameters.
         /// </summary>
-        /// 
+        ///
         /// <param name="connection">
         /// The client-side representation of the HealthVault service.
         /// </param>
-        /// 
+        ///
         /// <param name="httpVerb">
         /// The HTTP Verb to execute against the service.
         /// </param>
-        /// 
+        ///
         /// <param name="path">
         /// The path to the resource in the URL.
         /// </param>
-        /// 
+        ///
         /// <param name="queryStringParameters">
         /// A collection of query string parameters.
         /// </param>
-        /// 
+        ///
         /// <param name="requestBody">
         /// The body for this request.
         /// </param>
-        /// 
+        ///
         /// <param name="apiRoot">
         /// Domain name override, used to redirect to other endpoints.
         /// </param>
-        /// 
+        ///
         /// <param name="optionalHeaders">
         /// Optional headers to include in the API request.
         /// </param>
@@ -79,17 +79,17 @@ namespace Microsoft.HealthVault.Rest
         /// <exception cref="ArgumentNullException">
         /// The <paramref name="connection"/> parameter is <b>null</b>.
         /// </exception>
-        /// 
+        ///
         /// <exception cref="ArgumentException">
         /// The <paramref name="httpVerb"/> parameter is <b>null</b> or empty.
         /// </exception>
-        /// 
+        ///
         /// <exception cref="ArgumentException">
         /// The <paramref name="path"/> parameter is <b>null</b> or empty.
         /// </exception>
-        /// 
+        ///
         public HealthServiceRestRequest(
-            HealthServiceConnection connection,
+            IConnection connection,
             HttpMethod httpVerb,
             string path,
             NameValueCollection queryStringParameters = null,
@@ -100,7 +100,8 @@ namespace Microsoft.HealthVault.Rest
             var fullUri =
                 new UriBuilder(apiRoot ??
                                HealthApplicationConfiguration.Current.RestHealthVaultUrl ??
-                               new Uri(RestConstants.DefaultMshhvRoot)) { Path = path };
+                               new Uri(RestConstants.DefaultMshhvRoot))
+                { Path = path };
 
             IDictionary<string, string> queryAsDictionary = fullUri.Uri.ParseQuery();
 
@@ -121,26 +122,26 @@ namespace Microsoft.HealthVault.Rest
         }
 
         /// <summary>
-        /// Creates a new instance of the <see cref="HealthServiceRestRequest"/> 
+        /// Creates a new instance of the <see cref="HealthServiceRestRequest"/>
         /// class for the specified parameters.
         /// </summary>
-        /// 
+        ///
         /// <param name="connection">
         /// The client-side representation of the HealthVault service.
         /// </param>
-        /// 
+        ///
         /// <param name="httpVerb">
         /// The HTTP Verb to execute against the service.
         /// </param>
-        /// 
+        ///
         /// <param name="fullUri">
         /// The full URI of the API request.
         /// </param>
-        /// 
+        ///
         /// <param name="requestBody">
         /// The body for this request.
         /// </param>
-        /// 
+        ///
         /// <param name="optionalHeaders">
         /// Optional headers to include in the API request.
         /// </param>
@@ -148,17 +149,17 @@ namespace Microsoft.HealthVault.Rest
         /// <exception cref="ArgumentNullException">
         /// The <paramref name="connection"/> parameter is <b>null</b>.
         /// </exception>
-        /// 
+        ///
         /// <exception cref="ArgumentException">
         /// The <paramref name="httpVerb"/> parameter is <b>null</b> or empty.
         /// </exception>
-        /// 
+        ///
         /// <exception cref="ArgumentException">
         /// The <paramref name="fullUri"/> parameter is <b>null</b> or empty.
         /// </exception>
-        /// 
+        ///
         public HealthServiceRestRequest(
-            HealthServiceConnection connection,
+            IConnection connection,
             HttpMethod httpVerb,
             Uri fullUri,
             string requestBody = null,
@@ -202,7 +203,7 @@ namespace Microsoft.HealthVault.Rest
         }
 
         /// <summary>
-        /// Builds up the request and reads the response.        
+        /// Builds up the request and reads the response.
         /// </summary>
         public async Task<HealthServiceRestResponseData> ExecuteAsync()
         {
@@ -240,9 +241,9 @@ namespace Microsoft.HealthVault.Rest
 
             return responseData;
         }
-        
+
         private void Initialize(
-            HealthServiceConnection connection,
+            IConnection connection,
             HttpMethod httpVerb,
             Uri fullUri,
             string requestBody = null,
@@ -258,23 +259,26 @@ namespace Microsoft.HealthVault.Rest
             this.uri = fullUri;
             this.body = this.isContentRequest ? requestBody ?? string.Empty : null;
             this.optionalheaders = optionalHeaders;
-            this.timeoutSeconds = connection.RequestTimeoutSeconds;
+            this.timeoutSeconds = connection.ApplicationConfiguration.DefaultRequestTimeout;
         }
 
         private async Task<HealthServiceRestResponseData> FetchAsync()
         {
+            return await this.FetchInternalAsync(this.uri).ConfigureAwait(false);
+            // TODO: IConnection-ify this.
+            /*
             try
             {
-               return await this.FetchInternalAsync(this.uri).ConfigureAwait(false);
+                return await this.FetchInternalAsync(this.uri).ConfigureAwait(false);
             }
             catch (HealthHttpException we)
             {
-                // An Unauthorized response might mean the token expired, we try to request for a 
-                // new token from the user and retry the call again 
+                // An Unauthorized response might mean the token expired, we try to request for a
+                // new token from the user and retry the call again
                 var response = we.InnerException as HealthHttpException;
                 if (response != null &&
-                    response.StatusCode == HttpStatusCode.Unauthorized &&
-                    this.connection.Credential.ExpireAuthenticationResult(this.connection.ApplicationId))
+                response.StatusCode == HttpStatusCode.Unauthorized &&
+                    this.connection.Credential.ExpireAuthenticationResult(this.connection.ApplicationConfiguration.ApplicationId))
                 {
                     return await this.FetchInternalAsync(this.uri).ConfigureAwait(false);
                 }
@@ -283,6 +287,7 @@ namespace Microsoft.HealthVault.Rest
                     throw;
                 }
             }
+            */
         }
 
         private async Task<HealthServiceRestResponseData> FetchInternalAsync(Uri uri)
@@ -322,7 +327,7 @@ namespace Microsoft.HealthVault.Rest
 
         private HttpRequestMessage CreateRequest(Uri uri)
         {
-            var httpRequest = new HttpRequestMessage(); 
+            var httpRequest = new HttpRequestMessage();
             httpRequest.RequestUri = uri;
 
             httpRequest.Method = this.verb;
@@ -357,7 +362,7 @@ namespace Microsoft.HealthVault.Rest
                 request.Headers.Add(Optional, this.optionalheaders);
             }
         }
-        
+
         private async Task<HealthServiceRestResponseData> GetResponseAsync(HttpResponseMessage response)
         {
             HealthServiceRestResponseData responseData = null;
@@ -385,7 +390,7 @@ namespace Microsoft.HealthVault.Rest
 
                     if (response.Headers != null)
                     {
-                        responseData.Headers = response.Headers; 
+                        responseData.Headers = response.Headers;
                     }
                 }
             }
@@ -400,7 +405,7 @@ namespace Microsoft.HealthVault.Rest
             string fileVersion = "Unknown";
             string systemInfo = "Unknown";
 
-            // TODO: this is not currently accessible in .Net Standard 1.4- we should revisit once 2.0 is released. 
+            // TODO: this is not currently accessible in .Net Standard 1.4- we should revisit once 2.0 is released.
             // safe attempt to obtain the assembly file version, and system information
             // try
             // {
@@ -439,14 +444,16 @@ namespace Microsoft.HealthVault.Rest
         {
             List<string> tokens = new List<string>();
 
+            // TODO: IConnection-ify this.
+            /*
             if (this.connection.Credential != null)
             {
-               await this.connection.Credential.AuthenticateIfRequiredAsync(this.connection, this.connection.ApplicationId).ConfigureAwait(false);
+                await this.connection.Credential.AuthenticateIfRequiredAsync(this.connection, this.connection.ApplicationConfiguration.ApplicationId).ConfigureAwait(false);
             }
 
             if (this.connection.Credential != null && !string.IsNullOrEmpty(this.connection.AuthenticationToken))
             {
-                this.connection.Credential.AddRestAuthorizationHeaderToken(tokens, this.connection.ApplicationId);
+                this.connection.Credential.AddRestAuthorizationHeaderToken(tokens, this.connection.ApplicationConfiguration.ApplicationId);
 
                 OfflineWebApplicationConnection offlineConnection = this.connection as OfflineWebApplicationConnection;
                 if (offlineConnection != null)
@@ -457,6 +464,7 @@ namespace Microsoft.HealthVault.Rest
                     }
                 }
             }
+            */
 
             if (this.RecordId != Guid.Empty)
             {
@@ -497,14 +505,14 @@ namespace Microsoft.HealthVault.Rest
             }
         }
 
-        /// <summary> 
+        /// <summary>
         /// Represents the <see cref="IEasyWebResponseHandler"/> callback.
         /// </summary>
-        /// 
+        ///
         /// <param name="stream">
         /// The response stream.
-        /// </param>       
-        /// 
+        /// </param>
+        ///
         /// <param name="responseHeaders">
         /// Response headers.
         /// </param>
@@ -517,7 +525,7 @@ namespace Microsoft.HealthVault.Rest
         [ThreadStatic]
         private static Guid correlationId;
 
-        private HealthServiceConnection connection;
+        private IConnection connection;
         private HttpMethod verb;
         private string body;
         private Uri uri;
