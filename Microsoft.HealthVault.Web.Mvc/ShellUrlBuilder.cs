@@ -119,7 +119,7 @@ namespace Microsoft.HealthVault.Web.Mvc
         {
             if (!_params.ContainsKey("appid"))
             {
-                _params.Add("appid", Ioc.Get<WebConfiguration>().ApplicationId);
+                _params.Add("appid", Ioc.Get<WebConfiguration>().MasterApplicationId);
             }
         }
 

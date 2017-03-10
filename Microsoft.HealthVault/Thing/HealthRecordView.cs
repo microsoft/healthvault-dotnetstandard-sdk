@@ -28,7 +28,7 @@ namespace Microsoft.HealthVault.Thing
     [DebuggerDisplay("Sections = {Sections}")]
     public class HealthRecordView
     {
-        private IConfiguration configuration = Ioc.Get<IConfiguration>();
+        private HealthVaultConfiguration configuration = Ioc.Get<HealthVaultConfiguration>();
 
         /// <summary>
         /// Gets or sets the sections that will be retrieved when the

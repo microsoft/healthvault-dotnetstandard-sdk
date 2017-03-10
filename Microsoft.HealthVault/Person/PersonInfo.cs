@@ -31,7 +31,7 @@ namespace Microsoft.HealthVault.Person
     {
         private bool moreRecords;  // AuthorizedRecords collection does not contain the full set of records...
         private bool moreAppSettings;  // ApplicationSettings does not contain the app settings xml...
-        private IConfiguration configuration = Ioc.Get<IConfiguration>();
+        private HealthVaultConfiguration configuration = Ioc.Get<HealthVaultConfiguration>();
 
         /// <summary>
         /// Creates a new instance of the PersonInfo class using
@@ -344,12 +344,10 @@ namespace Microsoft.HealthVault.Person
             }
             else
             {
-                this.healthServiceUri = this.configuration.GetHealthVaultMethodUrl();
+                this.healthServiceUri = this.Connection.ServiceInstance.GetHealthVaultMethodUrl();
 
                 // TODO: IConnection-ify this.
                 // this.ApplicationConnection = new AuthenticatedConnection(this.appId, this.healthServiceUri, this.credential);
-                this.healthServiceUri = this.configuration.GetHealthVaultMethodUrl();
-                //this.ApplicationConnection = new AuthenticatedConnection(this.appId, this.healthServiceUri, this.credential);
             }
 
             if (!string.IsNullOrEmpty(this.compressionMethod))
@@ -506,7 +504,7 @@ namespace Microsoft.HealthVault.Person
 
             writer.WriteElementString(
                 "app-id",
-                this.Connection.ApplicationConfiguration.ApplicationId.ToString());
+                this.configuration.MasterApplicationId.ToString());
 
             if (this.Connection.ServiceInstance != null)
             {
@@ -520,7 +518,7 @@ namespace Microsoft.HealthVault.Person
                 // TODO: Should we be using the HealthVault from the config for this or the bounced url from the connection? 
                 writer.WriteElementString(
                     "wildcat-url",
-                    this.Connection.ApplicationConfiguration.DefaultHealthVaultUrl.ToString());
+                    this.configuration.DefaultHealthVaultUrl.ToString());
             }
 
             if (this.Connection?.SessionCredential != null)

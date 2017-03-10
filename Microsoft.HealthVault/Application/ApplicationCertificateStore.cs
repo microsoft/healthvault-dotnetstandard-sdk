@@ -12,7 +12,7 @@ namespace Microsoft.HealthVault.Application
     internal sealed class ApplicationCertificateStore
     {
         private static readonly object InstanceLock = new object();
-        private IConfiguration configuration = Ioc.Get<IConfiguration>();
+        private HealthVaultConfiguration configuration = Ioc.Get<HealthVaultConfiguration>();
 
         /// <summary>
         /// Gets or sets the current configuration object for the app-domain.
@@ -50,7 +50,7 @@ namespace Microsoft.HealthVault.Application
         ///
         public X509Certificate2 ApplicationCertificate => this.applicationCertificate ??
                                                                   (this.applicationCertificate =
-                                                                      this.GetApplicationCertificate(this.configuration.ApplicationId));
+                                                                      this.GetApplicationCertificate(this.configuration.MasterApplicationId));
 
         private volatile X509Certificate2 applicationCertificate;
 

@@ -21,7 +21,7 @@ namespace Microsoft.HealthVault.PlatformInformation
     /// </remarks>
     internal class CachedServiceInfoProvider : IServiceInfoProvider
     {
-        private static IConfiguration configuration = Ioc.Get<IConfiguration>();
+        private static HealthVaultConfiguration configuration = Ioc.Get<HealthVaultConfiguration>();
         private LazyCacheWithTtl<ServiceInfo> serviceInfo;
         private DateTime lastCheckTime;
         private ServiceInfoSections responseSections;

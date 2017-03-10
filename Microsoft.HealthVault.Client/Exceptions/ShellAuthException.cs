@@ -1,11 +1,12 @@
 ﻿using System;
+using Microsoft.HealthVault.Exceptions;
 
 namespace Microsoft.HealthVault.Client.Exceptions
 {
     /// <summary>
     /// Exception thrown when authentication through shell fails.
     /// </summary>
-    public class ShellAuthException : Exception
+    public class ShellAuthException : HealthServiceException
     {
         public ShellAuthException(string message)
             : base(message)

@@ -7,7 +7,7 @@ namespace Microsoft.HealthVault.Connection
     // TODO: Do we need an internal connection
     public interface IConnectionInternal : IHealthVaultConnection
     {
-        CryptoData GetAuthData(string methodName, byte[] data);
+        CryptoData GetAuthData(HealthVaultMethods method, byte[] data);
 
         CryptoData GetInfoHash(byte[] data);
 

@@ -138,7 +138,7 @@ namespace Microsoft.HealthVault.Vocabulary
                 "vocabularyKeys",
                 "VocabularyKeysNullOrEmpty");
 
-            string methodName = "GetVocabulary";
+            var method = HealthVaultMethods.GetVocabulary;
             int methodVersion = 2;
 
             StringBuilder requestParameters = new StringBuilder(256);
@@ -167,10 +167,10 @@ namespace Microsoft.HealthVault.Vocabulary
 
             string parameters = requestParameters.ToString();
 
-            HealthServiceResponseData responseData = await connection.ExecuteAsync(methodName, methodVersion, parameters).ConfigureAwait(false);
+            HealthServiceResponseData responseData = await connection.ExecuteAsync(method, methodVersion, parameters).ConfigureAwait(false);
 
             ReadOnlyCollection<Vocabulary> vocabularies
-                = CreateVocabulariesFromResponse(methodName, responseData);
+                = CreateVocabulariesFromResponse(method.ToString(), responseData);
 
             return vocabularies;
         }
@@ -215,12 +215,12 @@ namespace Microsoft.HealthVault.Vocabulary
         ///
         public virtual async Task<ReadOnlyCollection<VocabularyKey>> GetVocabularyKeysAsync(IConnectionInternal connection)
         {
-            string methodName = "GetVocabulary";
+            var method = HealthVaultMethods.GetVocabulary;
             int methodVersion = 1;
 
-            HealthServiceResponseData responseData = await connection.ExecuteAsync(methodName, methodVersion).ConfigureAwait(false);
+            HealthServiceResponseData responseData = await connection.ExecuteAsync(method, methodVersion).ConfigureAwait(false);
 
-            ReadOnlyCollection<VocabularyKey> keys = CreateVocabularyKeysFromResponse(methodName, responseData);
+            ReadOnlyCollection<VocabularyKey> keys = CreateVocabularyKeysFromResponse(method.ToString(), responseData);
             return keys;
         }
 
@@ -335,7 +335,7 @@ namespace Microsoft.HealthVault.Vocabulary
                 "maxResults",
                 "SearchMaxResultsInvalid");
 
-            string methodName = "SearchVocabulary";
+            var method = HealthVaultMethods.SearchVocabulary;
             int methodVersion = 1;
 
             StringBuilder requestParameters = new StringBuilder(256);
@@ -365,14 +365,14 @@ namespace Microsoft.HealthVault.Vocabulary
 
             string parameters = requestParameters.ToString();
 
-            HealthServiceResponseData responseData = await connection.ExecuteAsync(methodName, methodVersion, parameters).ConfigureAwait(false);
+            HealthServiceResponseData responseData = await connection.ExecuteAsync(method, methodVersion, parameters).ConfigureAwait(false);
 
             if (vocabularyKey != null)
             {
-                return new VocabularySearchResult(CreateVocabularyItemCollectionFromResponse(methodName, responseData));
+                return new VocabularySearchResult(CreateVocabularyItemCollectionFromResponse(method.ToString(), responseData));
             }
 
-            return new VocabularySearchResult(CreateVocabularyKeysFromResponse(methodName, responseData));
+            return new VocabularySearchResult(CreateVocabularyKeysFromResponse(method.ToString(), responseData));
         }
 
         private static VocabularyItemCollection CreateVocabularyItemCollectionFromResponse(
