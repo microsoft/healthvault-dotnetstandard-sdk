@@ -9,21 +9,26 @@ namespace Microsoft.HealthVault.UnitTest.Clients
     [TestClass]
     public class VocabularyClientTests
     {
+        private IConnectionInternal connection;
+        private VocabularyClient client;
+
+        [TestInitialize]
+        public void InitializeTest()
+        {
+            this.connection = Substitute.For<IConnectionInternal>();
+            this.client = new VocabularyClient { Connection = connection };
+        }
 
         [TestMethod]
         public void CreateClient()
         {
-            var connection = Substitute.For<IConnectionInternal>();
-            VocabularyClient client = new VocabularyClient { Connection = connection };
-            Assert.IsTrue(client.Connection != null);
+            Assert.IsTrue(client.Connection == connection);
         }
 
         [TestMethod]
         public async Task GetVocabulary()
         {
-            VocabularyClient client = new VocabularyClient();
             await client.GetVocabularyKeysAsync();
-
         }
     }
 }
