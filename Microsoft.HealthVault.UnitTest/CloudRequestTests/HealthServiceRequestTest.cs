@@ -7,7 +7,7 @@ using System.Web;
 using Microsoft.HealthVault.Connection;
 using Microsoft.HealthVault.Transport;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Moq;
+using NSubstitute;
 
 namespace Core
 {
@@ -19,9 +19,9 @@ namespace Core
         [TestMethod]
         public void Ctor()
         {
-            Mock<IConnectionInternal> mock = new Mock<IConnectionInternal>();
+            IConnectionInternal mock = Substitute.For<IConnectionInternal>();
 
-            HealthServiceRequest req = new HealthServiceRequest(mock.Object, "my-test-method", 5);
+            HealthServiceRequest req = new HealthServiceRequest(mock, "my-test-method", 5);
 
             Assert.AreEqual(req.MethodName, "my-test-method");
             Assert.AreEqual(req.MethodVersion, 5);
@@ -44,11 +44,11 @@ namespace Core
         [TestMethod]
         public void CtorNullMethodName()
         {
-            Mock<IConnectionInternal> mock = new Mock<IConnectionInternal>();
+            IConnectionInternal mock = Substitute.For<IConnectionInternal>();
 
             try
             {
-                HealthServiceRequest req = new HealthServiceRequest(mock.Object, null, 5);
+                HealthServiceRequest req = new HealthServiceRequest(mock, null, 5);
                 Assert.Fail("Expecting an ArgumentException.");
             }
             catch (ArgumentException)
@@ -60,10 +60,10 @@ namespace Core
         [TestMethod]
         public void CtorEmptyStringMethodName()
         {
-            Mock<IConnectionInternal> mock = new Mock<IConnectionInternal>();
+            IConnectionInternal mock = Substitute.For<IConnectionInternal>();
             try
             {
-                HealthServiceRequest req = new HealthServiceRequest(mock.Object, String.Empty, 5);
+                HealthServiceRequest req = new HealthServiceRequest(mock, String.Empty, 5);
                 Assert.Fail("Expecting an ArgumentException.");
             }
             catch (ArgumentException)
@@ -115,8 +115,8 @@ namespace Core
         #region Helpers
         private HealthServiceRequest CreateDefault()
         {
-            Mock<IConnectionInternal> mock = new Mock<IConnectionInternal>();
-            HealthServiceRequest req = new HealthServiceRequest(mock.Object, "my-test-method", 5);
+            IConnectionInternal mock = Substitute.For<IConnectionInternal>();
+            HealthServiceRequest req = new HealthServiceRequest(mock, "my-test-method", 5);
             return req;
         }
 
