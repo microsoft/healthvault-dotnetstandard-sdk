@@ -27,7 +27,7 @@ namespace Microsoft.HealthVault.Vocabulary
     /// </remarks>
     internal static class VocabularySearchHelper
     {
-        private static IConfiguration configuration = Ioc.Get<IConfiguration>();
+        private static HealthVaultConfiguration configuration = Ioc.Get<HealthVaultConfiguration>();
 
         /// <summary>
         /// Creates a vocabulary search request URL in which the application is identified using
@@ -149,7 +149,7 @@ namespace Microsoft.HealthVault.Vocabulary
         {
             queryString.AppendFormat(
                 "&appid={0}",
-                configuration.ApplicationId);
+                configuration.MasterApplicationId);
 
             X509Certificate2 certificate
                 = ApplicationCertificateStore.Current.ApplicationCertificate;

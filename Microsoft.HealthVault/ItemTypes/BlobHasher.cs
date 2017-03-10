@@ -17,7 +17,7 @@ namespace Microsoft.HealthVault.ItemTypes
     /// </summary>
     internal class BlobHasher
     {
-        private static IConfiguration configuration = Ioc.Get<IConfiguration>();
+        private static HealthVaultConfiguration configuration = Ioc.Get<HealthVaultConfiguration>();
 
         /// <summary>
         /// Constructs the BlobHasher for calculating BLOB hashes.

@@ -110,7 +110,7 @@ namespace Microsoft.HealthVault.Web.Mvc
             return await WebApplicationUtilities
                 .GetPersonInfoAsync(
                     token,
-                    HealthVault.Config.ApplicationId,
+                    HealthVault.Config.MasterApplicationId,
                     serviceInstance);
         }
     }

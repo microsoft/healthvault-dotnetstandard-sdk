@@ -50,13 +50,13 @@
   <ItemGroup>
     <Compile Include="AsyncEnumerable.cs" />
     <Compile Include="AsyncLock.cs" />
+    <Compile Include="Extensions\HealthServiceInstanceExtensions.cs" />
     <Compile Include="HealthVaultFactoryBase.cs" />
     <Compile Include="Clients\ActionPlanClient.cs" />
     <Compile Include="Clients\PersonClient.cs" />
     <Compile Include="Clients\ThingClient.cs" />
     <Compile Include="Clients\VocabularyClient.cs" />
-    <Compile Include="Configuration\ConfigurationBase.cs" />
-    <Compile Include="Configuration\IConfiguration.cs" />
+    <Compile Include="Configuration\HealthVaultConfiguration.cs" />
     <Compile Include="Connection\ConnectionInternalBase.cs" />
     <Compile Include="Connection\CryptoData.cs" />
     <Compile Include="Connection\IHealthVaultConnection.cs" />

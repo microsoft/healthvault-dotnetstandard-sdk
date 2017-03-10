@@ -17,7 +17,7 @@ namespace Microsoft.HealthVault.Web
     /// <summary>
     /// Class used for web configurations
     /// </summary>
-    public class WebConfiguration: ConfigurationBase
+    public class WebConfiguration: HealthVaultConfiguration
     {
         private static readonly object instanceLock = new object();
 

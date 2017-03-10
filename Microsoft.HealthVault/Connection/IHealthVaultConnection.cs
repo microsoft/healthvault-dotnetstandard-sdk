@@ -21,14 +21,6 @@ namespace Microsoft.HealthVault.Connection
         HealthServiceInstance ServiceInstance { get; }
 
         /// <summary>
-        /// Gets or sets the application configuration.
-        /// </summary>
-        /// <value>
-        /// The application configuration.
-        /// </value>
-        IConfiguration ApplicationConfiguration { get; set; }
-
-        /// <summary>
         /// Gets or sets the session credential.
         /// </summary>
         /// <value>

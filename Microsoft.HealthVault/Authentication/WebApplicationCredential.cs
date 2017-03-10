@@ -50,7 +50,7 @@ namespace Microsoft.HealthVault.Authentication
     {
         #region properties
 
-        private IConfiguration configuration = Ioc.Get<IConfiguration>();
+        private HealthVaultConfiguration configuration = Ioc.Get<HealthVaultConfiguration>();
 
         internal string DigestMethod { get; set; }
 

@@ -24,7 +24,7 @@ namespace Microsoft.HealthVault
     public class ShellRedirectParameters
     {
         private const string ShellRedirectPage = "/redirect.aspx";
-        private IConfiguration configuration = Ioc.Get<IConfiguration>();
+        private HealthVaultConfiguration configuration = Ioc.Get<HealthVaultConfiguration>();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ShellRedirectParameters"/> class that is empty.
@@ -62,7 +62,7 @@ namespace Microsoft.HealthVault
         /// </p>
         ///
         /// <p>
-        /// If not specified, the value of the <see cref="ConfigurationBase.DefaultHealthVaultShellUrl"/> configuration is
+        /// If not specified, the value of the <see cref="HealthVaultConfiguration.DefaultHealthVaultShellUrl"/> configuration is
         /// used for constructing the Shell redirect URL.
         /// </p>
         /// </remarks>
@@ -316,7 +316,7 @@ namespace Microsoft.HealthVault
         /// <exception cref="InvalidConfigurationException">
         /// No <see cref="ShellRedirectorUrl"/> specified or
         /// Shell URL configured for the application
-        /// (<see cref="ConfigurationBase.DefaultHealthVaultShellUrl"/>).
+        /// (<see cref="HealthVaultConfiguration.DefaultHealthVaultShellUrl"/>).
         /// </exception>
         ///
         /// <exception cref="UriFormatException">
