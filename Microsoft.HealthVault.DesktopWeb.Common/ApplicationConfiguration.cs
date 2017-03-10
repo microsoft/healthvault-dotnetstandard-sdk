@@ -5,12 +5,12 @@ using System.Net;
 using System.Security.Cryptography.X509Certificates;
 using System.Threading;
 using Microsoft.HealthVault.Authentication;
-using Microsoft.HealthVault.Configurations;
+using Microsoft.HealthVault.Configuration;
 using Microsoft.HealthVault.Exceptions;
 using Microsoft.HealthVault.Helpers;
 using Microsoft.HealthVault.ItemTypes;
 using Microsoft.HealthVault.PlatformInformation;
-using Microsoft.HealthVault.Things;
+using Microsoft.HealthVault.Thing;
 
 namespace Microsoft.HealthVault.DesktopWeb.Common
 {
@@ -58,7 +58,7 @@ namespace Microsoft.HealthVault.DesktopWeb.Common
 
         #endregion
 
-        public Uri HealthVaultUrl
+        public Uri DefaultHealthVaultUrl
         {
             get
             {
@@ -83,7 +83,7 @@ namespace Microsoft.HealthVault.DesktopWeb.Common
         /// value.
         /// </remarks>
         ///
-        public virtual Uri HealthVaultShellUrl
+        public virtual Uri DefaultHealthVaultShellUrl
         {
             get
             {

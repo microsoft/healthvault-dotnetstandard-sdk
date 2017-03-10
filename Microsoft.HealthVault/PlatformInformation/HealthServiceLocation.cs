@@ -4,7 +4,7 @@
 // All other rights reserved.
 
 using System;
-using Microsoft.HealthVault.Configurations;
+using Microsoft.HealthVault.Configuration;
 
 namespace Microsoft.HealthVault.PlatformInformation
 {
@@ -70,7 +70,7 @@ namespace Microsoft.HealthVault.PlatformInformation
         ///
         public static Uri GetHealthServiceShellUrl(string targetLocation)
         {
-            return GetHealthServiceShellUrl(configuration.HealthVaultShellUrl, targetLocation);
+            return GetHealthServiceShellUrl(configuration.DefaultHealthVaultShellUrl, targetLocation);
         }
 
         /// <summary>
@@ -145,7 +145,7 @@ namespace Microsoft.HealthVault.PlatformInformation
             string targetQuery)
         {
             return GetHealthServiceShellUrl(
-                configuration.HealthVaultShellUrl,
+                configuration.DefaultHealthVaultShellUrl,
                 targetLocation,
                 targetQuery);
         }

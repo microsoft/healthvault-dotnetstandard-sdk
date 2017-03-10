@@ -1,5 +1,5 @@
 ﻿using System;
-using Microsoft.HealthVault.Configurations;
+using Microsoft.HealthVault.Configuration;
 
 namespace Microsoft.HealthVault.Extensions
 {
@@ -18,7 +18,7 @@ namespace Microsoft.HealthVault.Extensions
         /// </remarks>
         public static Uri GetHealthVaultMethodUrl(this IConfiguration configuration)
         {
-            string newUri = configuration.HealthVaultUrl.AbsoluteUri;
+            string newUri = configuration.DefaultHealthVaultUrl.AbsoluteUri;
             if (!newUri.EndsWith("/", StringComparison.Ordinal))
             {
                 newUri = newUri + "/wildcat.ashx";
@@ -41,7 +41,7 @@ namespace Microsoft.HealthVault.Extensions
         /// </remarks>
         public static Uri GetHealthVaultTypeSchemaUrl(this IConfiguration configuration)
         {
-            return new Uri(configuration.HealthVaultUrl, "type-xsd/");
+            return new Uri(configuration.DefaultHealthVaultUrl, "type-xsd/");
         }
 
         /// <summary>
@@ -54,9 +54,9 @@ namespace Microsoft.HealthVault.Extensions
         /// </remarks>
         public static Uri GetBlobStreamUrl(this IConfiguration configuration)
         {
-            if (configuration.HealthVaultUrl != null)
+            if (configuration.DefaultHealthVaultUrl != null)
             {
-                return new Uri(configuration.HealthVaultUrl.GetComponents(UriComponents.Scheme | UriComponents.Host, UriFormat.Unescaped) + "/streaming/wildcatblob.ashx");
+                return new Uri(configuration.DefaultHealthVaultUrl.GetComponents(UriComponents.Scheme | UriComponents.Host, UriFormat.Unescaped) + "/streaming/wildcatblob.ashx");
             }
 
             return null;
@@ -73,9 +73,9 @@ namespace Microsoft.HealthVault.Extensions
         /// </remarks>
         public static Uri GetHealthClientServiceUrl(this IConfiguration configuration)
         {
-            if (configuration.HealthVaultUrl != null)
+            if (configuration.DefaultHealthVaultUrl != null)
             {
-                return new Uri(configuration.HealthVaultUrl, "hvclientservice.ashx");
+                return new Uri(configuration.DefaultHealthVaultUrl, "hvclientservice.ashx");
             }
 
             return null;

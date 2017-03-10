@@ -16,6 +16,6 @@ namespace Microsoft.HealthVault.Web
         /// Gets a connection for an online we connection
         /// </summary>
         /// <returns></returns>
-        Task<IConnection> GetWebApplicationConnectionAsync();
+        Task<IHealthVaultConnection> GetWebApplicationConnectionAsync();
     }
 }

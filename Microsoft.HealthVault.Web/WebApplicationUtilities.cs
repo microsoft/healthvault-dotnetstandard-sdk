@@ -17,14 +17,12 @@ using System.Xml.XPath;
 using Microsoft.HealthVault.Application;
 using Microsoft.HealthVault.Authentication;
 using Microsoft.HealthVault.Clients;
-using Microsoft.HealthVault.Configurations;
 using Microsoft.HealthVault.Connection;
 using Microsoft.HealthVault.Exceptions;
 using Microsoft.HealthVault.Helpers;
 using Microsoft.HealthVault.ItemTypes;
 using Microsoft.HealthVault.Person;
 using Microsoft.HealthVault.PlatformInformation;
-using Microsoft.HealthVault.Things;
 
 namespace Microsoft.HealthVault.Web
 {
@@ -945,7 +943,7 @@ namespace Microsoft.HealthVault.Web
             */
             // return null;
 
-            IConnection connection = Ioc.Get<IConnection>();
+            IHealthVaultConnection connection = Ioc.Get<IHealthVaultConnection>();
             IPersonClient personClient = connection.PersonClient;
 
             PersonInfo personInfo = await personClient.GetPersonInfoAsync();
@@ -2108,7 +2106,7 @@ namespace Microsoft.HealthVault.Web
                 actionUrlQueryString,
                 appId,
                 credentialToken,
-                configuration.HealthVaultShellUrl.OriginalString);
+                configuration.DefaultHealthVaultShellUrl.OriginalString);
         }
 
         /// <summary>

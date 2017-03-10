@@ -9,7 +9,6 @@
 //
 // ********************************************************
 
-using Microsoft.HealthVault.Configurations;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
@@ -24,9 +23,6 @@ namespace Microsoft.HealthVault.Web.Mvc
     /// </summary>
     public static class HealthVault
     {
-
-        public static IConfiguration Config = Ioc.Get<WebConfiguration>();
-
         /// <summary>
         /// Registers routes to HealthVault controllers.
         /// </summary>

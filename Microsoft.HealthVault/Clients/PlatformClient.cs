@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Microsoft.HealthVault.Things;
 using Microsoft.HealthVault.PlatformInformation;
 using Microsoft.HealthVault.Connection;
 using Microsoft.HealthVault.Application;
+using Microsoft.HealthVault.Thing;
 
 namespace Microsoft.HealthVault.Clients
 {

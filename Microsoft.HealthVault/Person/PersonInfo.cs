@@ -12,7 +12,7 @@ using System.Xml.Linq;
 using System.Xml.XPath;
 using Microsoft.HealthVault.Application;
 using Microsoft.HealthVault.Authentication;
-using Microsoft.HealthVault.Configurations;
+using Microsoft.HealthVault.Configuration;
 using Microsoft.HealthVault.Connection;
 using Microsoft.HealthVault.Exceptions;
 using Microsoft.HealthVault.Extensions;
@@ -520,7 +520,7 @@ namespace Microsoft.HealthVault.Person
                 // TODO: Should we be using the HealthVault from the config for this or the bounced url from the connection? 
                 writer.WriteElementString(
                     "wildcat-url",
-                    this.Connection.ApplicationConfiguration.HealthVaultUrl.ToString());
+                    this.Connection.ApplicationConfiguration.DefaultHealthVaultUrl.ToString());
             }
 
             if (this.Connection?.SessionCredential != null)

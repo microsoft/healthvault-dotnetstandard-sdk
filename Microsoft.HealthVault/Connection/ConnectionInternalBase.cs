@@ -7,7 +7,7 @@ using System.Xml;
 using System.Xml.XPath;
 using Microsoft.HealthVault.Authentication;
 using Microsoft.HealthVault.Clients;
-using Microsoft.HealthVault.Configurations;
+using Microsoft.HealthVault.Configuration;
 using Microsoft.HealthVault.Exceptions;
 using Microsoft.HealthVault.Helpers;
 using Microsoft.HealthVault.Person;
@@ -20,7 +20,7 @@ namespace Microsoft.HealthVault.Connection
     /// <summary>
     /// Base implementations of IConnection
     /// </summary>
-    /// <seealso cref="Microsoft.HealthVault.Connection.IConnection" />
+    /// <seealso cref="IHealthVaultConnection" />
     internal abstract class ConnectionInternalBase : IConnectionInternal
     {
         private readonly AsyncLock asyncLock = new AsyncLock();
@@ -187,7 +187,7 @@ namespace Microsoft.HealthVault.Connection
             return cryptographer.Hash(data);
         }
 
-        public abstract void PrepareAuthSessionHeader(XmlWriter writer);
+        public abstract void PrepareAuthSessionHeader(XmlWriter writer, Guid? recordId);
 
         // TODO: temp fix
         public virtual void StoreSessionCredentialInCookieXml(XmlWriter writer)

@@ -11,7 +11,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Web;
 using Microsoft.HealthVault.Authentication;
-using Microsoft.HealthVault.Configurations;
+using Microsoft.HealthVault.Configuration;
 using Microsoft.HealthVault.Connection;
 using Microsoft.HealthVault.Person;
 using Microsoft.HealthVault.PlatformInformation;
@@ -194,7 +194,7 @@ namespace Microsoft.HealthVault.Web
         /// certificate store to sign requests.
         /// </exception>
         ///
-        public IConnection ApplicationConnection
+        public IHealthVaultConnection ApplicationConnection
         {
             get
             {
@@ -206,7 +206,7 @@ namespace Microsoft.HealthVault.Web
                 return _tier1AuthConnection;
             }
         }
-        private IConnection _tier1AuthConnection;
+        private IHealthVaultConnection _tier1AuthConnection;
 
         /// <summary>
         /// Gets a HealthVault connection without an authentication token.
@@ -227,7 +227,7 @@ namespace Microsoft.HealthVault.Web
         /// certificate store to sign requests.
         /// </exception>
         ///
-        public IConnection DictionaryConnection
+        public IHealthVaultConnection DictionaryConnection
         {
             get
             {
@@ -238,7 +238,7 @@ namespace Microsoft.HealthVault.Web
                 return _dictionaryConnection;
             }
         }
-        private IConnection _dictionaryConnection;
+        private IHealthVaultConnection _dictionaryConnection;
 
         /// <summary>
         /// Sets the selected health record for the application.

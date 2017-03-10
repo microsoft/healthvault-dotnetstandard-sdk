@@ -5,7 +5,7 @@
 
 using System;
 
-namespace Microsoft.HealthVault.Things
+namespace Microsoft.HealthVault.Thing
 {
     /// <summary>
     /// Specifies if the order should be sorted in ascending or descending order.

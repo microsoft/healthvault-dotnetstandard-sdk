@@ -50,7 +50,7 @@
   <ItemGroup>
     <Compile Include="AsyncEnumerable.cs" />
     <Compile Include="AsyncLock.cs" />
-    <Compile Include="BaseHealthVaultFactory.cs" />
+    <Compile Include="HealthVaultFactoryBase.cs" />
     <Compile Include="Clients\ActionPlanClient.cs" />
     <Compile Include="Clients\PersonClient.cs" />
     <Compile Include="Clients\ThingClient.cs" />
@@ -59,7 +59,7 @@
     <Compile Include="Configuration\IConfiguration.cs" />
     <Compile Include="Connection\ConnectionInternalBase.cs" />
     <Compile Include="Connection\CryptoData.cs" />
-    <Compile Include="Connection\IConnection.cs" />
+    <Compile Include="Connection\IHealthVaultConnection.cs" />
     <Compile Include="Connection\IConnectionRequestHeaderProvider.cs" />
     <Compile Include="Connection\ICryptographer.cs" />
     <Compile Include="Clients\IActionPlanClient.cs" />
@@ -128,8 +128,9 @@
     <Compile Include="Certificate\ICertificateUtilities.cs" />
     <Compile Include="Certificate\Util.cs" />
     <Compile Include="Thing\CommonItemData.cs" />
-    <Compile Include="Thing\Thing.cs" />
-    <Compile Include="Thing\ThingQuery.cs" />
+    <Compile Include="Thing\ItemFilterCollection.cs" />
+    <Compile Include="Thing\ItemSectionTypes.cs" />
+    <Compile Include="Thing\IThing.cs" />
     <Compile Include="Transport\CompressedContent.cs" />
     <Compile Include="CultureSpecificDictionary.cs" />
     <Compile Include="DateRange.cs" />
@@ -165,7 +166,7 @@
     <Compile Include="Thing\HealthRecordAccessor.cs" />
     <Compile Include="Exceptions\HealthRecordAuthorizationNotPossibleException.cs" />
     <Compile Include="Record\HealthRecordAuthorizationStatus.cs" />
-    <Compile Include="Thing\HealthRecordFilter.cs" />
+    <Compile Include="Thing\ThingQuery.cs" />
     <Compile Include="Record\HealthRecordInfo.cs" />
     <Compile Include="Thing\HealthRecordItem.cs" />
     <Compile Include="Thing\HealthRecordItemCollection.cs" />
@@ -233,7 +234,7 @@
     <Compile Include="Diagnostics\ITraceSource.cs" />
     <Compile Include="LazyCacheWithTtl.cs" />
     <Compile Include="Thing\LinearItemTypePropertyConversion.cs" />
-    <Compile Include="Application\location.cs" />
+    <Compile Include="Application\Location.cs" />
     <Compile Include="Application\LocationCollection.cs" />
     <Compile Include="Thing\OtherItemData.cs" />
     <Compile Include="Thing\OtherItemDataCSV.cs" />
@@ -251,7 +252,7 @@
     <Compile Include="PlatformInformation\ServiceInfo.cs" />
     <Compile Include="PlatformInformation\ServiceInfoSections.cs" />
     <Compile Include="ServiceLocator.cs" />
-    <Compile Include="Thing\settype.cs" />
+    <Compile Include="Thing\SetType.cs" />
     <Compile Include="ShellRedirectParameters.cs" />
     <Compile Include="Thing\TypeIdSetDefinition.cs" />
     <Compile Include="Helpers\Validator.cs" />

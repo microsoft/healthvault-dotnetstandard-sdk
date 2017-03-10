@@ -149,7 +149,7 @@ namespace Microsoft.HealthVault.Transport
                 {
                     this.cancellationTokenSource = new CancellationTokenSource(TimeSpan.FromSeconds(this.timeoutSeconds));
                     response = await easyWeb.FetchAsync(
-                        this.connectionInternal.ApplicationConfiguration.HealthVaultUrl,
+                        this.connectionInternal.ApplicationConfiguration.DefaultHealthVaultUrl,
                         this.cancellationTokenSource.Token).ConfigureAwait(false);
                 }
                 finally
@@ -422,7 +422,7 @@ namespace Microsoft.HealthVault.Transport
                     if (this.connectionInternal.SessionCredential != null &&
                         !string.IsNullOrEmpty(this.connectionInternal.SessionCredential.Token))
                     {
-                        this.connectionInternal.PrepareAuthSessionHeader(writer);
+                        this.connectionInternal.PrepareAuthSessionHeader(writer, this.RecordId);
                     }
                     else
                     {

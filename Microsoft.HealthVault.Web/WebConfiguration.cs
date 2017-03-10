@@ -10,7 +10,7 @@ using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
 using System.Web;
-using Microsoft.HealthVault.Configurations;
+using Microsoft.HealthVault.Configuration;
 
 namespace Microsoft.HealthVault.Web
 {

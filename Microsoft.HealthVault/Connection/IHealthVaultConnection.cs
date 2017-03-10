@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Microsoft.HealthVault.Clients;
+using Microsoft.HealthVault.Configuration;
 using Microsoft.HealthVault.Person;
-using Microsoft.HealthVault.Configurations;
 using Microsoft.HealthVault.PlatformInformation;
 using Microsoft.HealthVault.Record;
 using Microsoft.HealthVault.Transport;
@@ -13,7 +13,7 @@ namespace Microsoft.HealthVault.Connection
     /// Represents a connection for an application to the HealthVault service
     /// for operations
     /// </summary>
-    public interface IConnection
+    public interface IHealthVaultConnection
     {
         /// <summary>
         /// The HealthVault web-service instance.

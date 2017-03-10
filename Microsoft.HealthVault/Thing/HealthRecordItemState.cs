@@ -3,7 +3,7 @@
 // see http://www.microsoft.com/resources/sharedsource/licensingbasics/sharedsourcelicenses.mspx.
 // All other rights reserved.
 
-namespace Microsoft.HealthVault.Things
+namespace Microsoft.HealthVault.Thing
 {
     /// <summary>
     /// Represents the state of the <see cref="HealthRecordItem"/>.
@@ -35,7 +35,7 @@ namespace Microsoft.HealthVault.Things
         ///
         /// <remarks>
         /// Deleted health record items are retrieved when specified in
-        /// <see cref="HealthRecordFilter.States"/>.
+        /// <see cref="ThingQuery.States"/>.
         /// Deleted health record items are useful to view for auditing
         /// purposes and cannot be updated.
         /// </remarks>

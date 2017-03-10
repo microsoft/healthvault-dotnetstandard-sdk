@@ -72,7 +72,7 @@ namespace Microsoft.HealthVault.Web.Mvc
                     return true;
                 }
 
-                foreach (var host in HealthVault.Config.AllowedRedirectSites.Split(','))
+                foreach (var host in Ioc.Get<WebConfiguration>().AllowedRedirectSites.Split(','))
                 {
                     if (actionUri.Host.Equals(host, StringComparison.OrdinalIgnoreCase))
                     {
@@ -94,7 +94,7 @@ namespace Microsoft.HealthVault.Web.Mvc
             Uri uri;
             try
             {
-                uri = HealthVault.Config.GetActionUrl(target);
+                uri = Ioc.Get<WebConfiguration>().GetActionUrl(target);
             }
             catch (HealthServiceException)
             {

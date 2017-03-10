@@ -1,12 +1,12 @@
 ﻿using Microsoft.HealthVault.Application;
 using Microsoft.HealthVault.Exceptions;
 using Microsoft.HealthVault.PlatformInformation;
-using Microsoft.HealthVault.Things;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.HealthVault.Thing;
 
 namespace Microsoft.HealthVault.Clients
 {

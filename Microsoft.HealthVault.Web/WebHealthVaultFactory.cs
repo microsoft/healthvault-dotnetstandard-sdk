@@ -1,5 +1,4 @@
 ﻿using Microsoft.HealthVault.Connection;
-using Microsoft.HealthVault.Configurations;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Microsoft.HealthVault.Web
 {
-    public class WebHealthVaultFactory : BaseHealthVaultFactory
+    public class WebHealthVaultFactory : HealthVaultFactoryBase
     {
         private static readonly object InstanceLock = new object();
     
@@ -32,10 +31,10 @@ namespace Microsoft.HealthVault.Web
         {
         }
 
-        public async Task<IConnection> GetWebApplicationConnectionAsync()
+        public async Task<IHealthVaultConnection> GetWebApplicationConnectionAsync()
         {
             WebIoc.EnsureTypesRegistered();
-            IConnection connection = Ioc.Get<IConnectionInternal>();
+            IHealthVaultConnection connection = Ioc.Get<IConnectionInternal>();
             connection.ApplicationConfiguration = Ioc.Get<WebConfiguration>();
 
             await connection.AuthenticateAsync();

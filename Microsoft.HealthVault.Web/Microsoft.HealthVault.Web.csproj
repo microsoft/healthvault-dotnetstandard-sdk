@@ -94,7 +94,9 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Extensions\NameValueCollectionExtensions.cs" />
     <Compile Include="IWebHealthVaultFactory.cs" />
+    <Compile Include="WebConfigurationFactory.cs" />
     <Compile Include="WebCryptographer.cs" />
     <Compile Include="WebHealthVaultFactory.cs" />
     <Compile Include="WebSessionCredentialClient.cs" />

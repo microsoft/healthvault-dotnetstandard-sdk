@@ -4,9 +4,9 @@ using System.Threading;
 using Microsoft.HealthVault.Authentication;
 using Microsoft.HealthVault.Exceptions;
 using Microsoft.HealthVault.PlatformInformation;
-using Microsoft.HealthVault.Things;
+using Microsoft.HealthVault.Thing;
 
-namespace Microsoft.HealthVault.Configurations
+namespace Microsoft.HealthVault.Configuration
 {
     /// <summary>
     /// Interface for app, web, soda configurations
@@ -23,7 +23,7 @@ namespace Microsoft.HealthVault.Configurations
         /// value with "wildcat.ashx" removed.
         /// </remarks>
         ///
-        Uri HealthVaultUrl { get; }
+        Uri DefaultHealthVaultUrl { get; }
 
         /// <summary>
         /// Gets the HealthVault Shell URL for
@@ -35,7 +35,7 @@ namespace Microsoft.HealthVault.Configurations
         /// value.
         /// </remarks>
         ///
-        Uri HealthVaultShellUrl { get; }
+        Uri DefaultHealthVaultShellUrl { get; }
 
         /// <summary>
         /// Gets the application's unique identifier.
@@ -119,7 +119,7 @@ namespace Microsoft.HealthVault.Configurations
         ///
         /// <remarks>
         /// Although most applications don't need this configuration setting, if an application
-        /// calls <see cref="HealthRecordAccessor.GetItemAsync(Guid,HealthRecordItemSections)"/> or makes any query to HealthVault
+        /// calls <see cref="HealthRecordAccessor.GetItemAsync(System.Guid,Microsoft.HealthVault.Thing.HealthRecordItemSections)"/> or makes any query to HealthVault
         /// that doesn't specify the type identifier in the filter, this configuration setting
         /// will tell HealthVault the format of the type to reply with. For example, if a web
         /// application has two servers and makes a call to GetItemAsync for EncounterV1 and the

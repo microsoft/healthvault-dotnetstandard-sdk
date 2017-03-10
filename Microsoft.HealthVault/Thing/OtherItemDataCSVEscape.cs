@@ -6,7 +6,7 @@
 using System;
 using Microsoft.HealthVault.Helpers;
 
-namespace Microsoft.HealthVault.Things
+namespace Microsoft.HealthVault.Thing
 {
     /// <summary>
     /// Information about a single escape entity from an OtherDataHelper object.

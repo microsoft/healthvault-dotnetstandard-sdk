@@ -24,7 +24,7 @@ namespace Microsoft.HealthVault.Web
             return Task.FromResult<object>(null);
         }
 
-        public override void PrepareAuthSessionHeader(XmlWriter writer)
+        public override void PrepareAuthSessionHeader(XmlWriter writer, Guid? recordId)
         {
             if (!String.IsNullOrEmpty(SessionCredential?.Token))
             {

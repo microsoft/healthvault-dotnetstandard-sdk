@@ -5,7 +5,7 @@
 
 using System;
 using System.Xml.XPath;
-using Microsoft.HealthVault.Things;
+using Microsoft.HealthVault.Thing;
 
 namespace Microsoft.HealthVault.ItemTypes
 {

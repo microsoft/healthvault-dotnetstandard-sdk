@@ -1,37 +1,25 @@
 ﻿using System;
-using Microsoft.HealthVault.Configurations;
+using Microsoft.HealthVault.Configuration;
 using Microsoft.HealthVault.Helpers;
 
 namespace Microsoft.HealthVault.Client
 {
-    public class ClientConfiguration
+    public class ClientConfiguration : ConfigurationBase
     {
-        private static IConfiguration configuration = Ioc.Get<IConfiguration>();
-        private bool isLocked = false;
         private bool allowInstanceBounce = true;
 
         public bool AllowInstanceBounce
         {
             get
             {
-                return allowInstanceBounce;
+                return this.allowInstanceBounce;
             }
+
             set
             {
-                if (!isLocked)
-                {
-                    allowInstanceBounce = value;
-                }
-                else
-                {
-                    throw Validator.InvalidOperationException("CannotSetPropertyAfterConnectionCreation");
-                }
+                this.EnsureNotLocked();
+                this.allowInstanceBounce = value;
             }
-        }
-
-        internal void LockConfiguration()
-        {
-            this.isLocked = true;
         }
     }
 }
