@@ -9,17 +9,20 @@ using System.Web.Configuration;
 
 namespace Microsoft.HealthVault.Web
 {
+    /// <summary>
+    /// A factory for the WebConfiguration
+    /// </summary>
     internal class WebConfigurationFactory
     {
         public static WebConfiguration CreateConfiguration()
         {
-            // TODO: This should instantiate the WebConfiguration instance and then set it's properties based on the WebConfig.
             NameValueCollection appSettings = WebConfigurationManager.AppSettings;
             WebConfiguration config = new WebConfiguration
             {
                 ApplicationId = appSettings.GetGuid("ApplicationId"),
                 DefaultHealthVaultShellUrl = appSettings.GetUrl("ShellUrl", true)
                
+                // TODO: finish populating the config!
             };
 
             return config;

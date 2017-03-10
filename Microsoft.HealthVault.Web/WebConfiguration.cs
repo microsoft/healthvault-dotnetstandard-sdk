@@ -17,7 +17,7 @@ namespace Microsoft.HealthVault.Web
     /// <summary>
     /// Class used for web configurations
     /// </summary>
-    public class WebConfiguration: ConfigurationBase
+    public class WebConfiguration : ConfigurationBase
     {
         private static readonly object instanceLock = new object();
 
@@ -167,7 +167,7 @@ namespace Microsoft.HealthVault.Web
         {
             get
             {
-               return _useSslForSecurity;
+                return _useSslForSecurity;
             }
             set
             {
@@ -480,7 +480,7 @@ namespace Microsoft.HealthVault.Web
         {
             get
             {
-               return _allowedRedirectSites;
+                return _allowedRedirectSites;
             }
             set
             {
