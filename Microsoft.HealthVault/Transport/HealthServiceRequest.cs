@@ -18,9 +18,11 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Xml;
+using Microsoft.HealthVault.Configuration;
 using Microsoft.HealthVault.Connection;
 using Microsoft.HealthVault.Diagnostics;
 using Microsoft.HealthVault.Exceptions;
+using Microsoft.HealthVault.Extensions;
 using Microsoft.HealthVault.Helpers;
 
 namespace Microsoft.HealthVault.Transport
@@ -35,7 +37,7 @@ namespace Microsoft.HealthVault.Transport
     /// must execute concurrently.
     /// </remarks>
     ///
-    /// TODO: DO NOT USE OUTSIDE OF ConnectionInternalBase 
+    /// TODO: DO NOT USE OUTSIDE OF ConnectionInternalBase
     internal class HealthServiceRequest
     {
         private const string CorrelationIdContextKey = "WC_CorrelationId";
@@ -86,8 +88,8 @@ namespace Microsoft.HealthVault.Transport
         /// The client-side representation of the HealthVault service.
         /// </param>
         /// 
-        /// <param name="methodName">
-        /// The name of the method to invoke on the service.
+        /// <param name="method">
+        /// The method to invoke on the service.
         /// </param>
         /// 
         /// <param name="methodVersion">
@@ -97,26 +99,23 @@ namespace Microsoft.HealthVault.Transport
         /// <exception cref="ArgumentNullException">
         /// The <paramref name="connectionInternal"/> parameter is <b>null</b>.
         /// </exception>
-        /// 
-        /// <exception cref="ArgumentException">
-        /// The <paramref name="methodName"/> parameter is <b>null</b> or empty.
-        /// </exception>
         /// <param name="recordId">RecordId</param>
         public HealthServiceRequest(
             IConnectionInternal connectionInternal,
-            string methodName,
+            HealthVaultMethods method,
             int methodVersion,
             Guid? recordId = null)
         {
             Validator.ThrowIfArgumentNull(connectionInternal, "connection", "CtorServiceNull");
-            Validator.ThrowIfStringNullOrEmpty(methodName, "methodName");
 
             this.connectionInternal = connectionInternal;
 
-            this.MethodName = methodName;
+            HealthVaultConfiguration config = Ioc.Get<HealthVaultConfiguration>();
+
+            this.Method = method;
             this.MethodVersion = methodVersion;
-            this.timeoutSeconds = connectionInternal.ApplicationConfiguration.DefaultRequestTimeout;
-            this.TimeToLiveSeconds = connectionInternal.ApplicationConfiguration.DefaultRequestTimeToLive;
+            this.timeoutSeconds = config.DefaultRequestTimeout;
+            this.TimeToLiveSeconds = config.DefaultRequestTimeToLive;
             this.CultureCode = CultureInfo.CurrentUICulture.Name;
             this.recordId = recordId.GetValueOrDefault(Guid.Empty);
         }
@@ -149,7 +148,7 @@ namespace Microsoft.HealthVault.Transport
                 {
                     this.cancellationTokenSource = new CancellationTokenSource(TimeSpan.FromSeconds(this.timeoutSeconds));
                     response = await easyWeb.FetchAsync(
-                        this.connectionInternal.ApplicationConfiguration.DefaultHealthVaultUrl,
+                        this.connectionInternal.ServiceInstance.GetHealthVaultMethodUrl(),
                         this.cancellationTokenSource.Token).ConfigureAwait(false);
                 }
                 finally
@@ -288,7 +287,7 @@ namespace Microsoft.HealthVault.Transport
                     // not include an auth section.
                     if (this.connectionInternal.SessionCredential != null)
                     {
-                        CryptoData crytpoData = this.connectionInternal.GetAuthData(this.MethodName, headerXml);
+                        CryptoData crytpoData = this.connectionInternal.GetAuthData(this.Method, headerXml);
 
                         string authInnerXml = this.GetCryptoDataInnerXml(crytpoData);
 
@@ -397,7 +396,7 @@ namespace Microsoft.HealthVault.Transport
                     writer.WriteStartElement("header");
 
                     // <method>
-                    writer.WriteElementString("method", this.MethodName);
+                    writer.WriteElementString("method", this.Method.ToString());
 
                     if (this.MethodVersion != null)
                     {
@@ -665,7 +664,7 @@ namespace Microsoft.HealthVault.Transport
         /// A string representing the method name.
         /// </returns>
         ///
-        public string MethodName { get; set; }
+        public HealthVaultMethods Method { get; set; }
 
         /// <summary>
         /// Gets or sets the version of the method to call.

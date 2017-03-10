@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.HealthVault.Configuration;
 using Microsoft.HealthVault.Connection;
 
 namespace Microsoft.HealthVault.Client
@@ -73,6 +74,7 @@ namespace Microsoft.HealthVault.Client
                 {
                     var requiredParameters = new List<string>
                     {
+                        nameof(this.configuration.MasterApplicationId),
                         nameof(this.configuration.DefaultHealthVaultUrl),
                         nameof(this.configuration.DefaultHealthVaultShellUrl)
                     };
@@ -83,7 +85,8 @@ namespace Microsoft.HealthVault.Client
 
                 this.configuration.Lock();
 
-                Ioc.Container.Configure(c => c.ExportInstance(this.configuration).As<ClientConfiguration>().Lifestyle.Singleton());
+                Ioc.Container.Configure(c => c.ExportInstance(this.configuration).As<ClientConfiguration>());
+                Ioc.Container.Configure(c => c.ExportInstance(this.configuration).As<HealthVaultConfiguration>());
 
                 ClientHealthVaultConnection newConnection = Ioc.Get<ClientHealthVaultConnection>();
                 await newConnection.AuthenticateAsync().ConfigureAwait(false);

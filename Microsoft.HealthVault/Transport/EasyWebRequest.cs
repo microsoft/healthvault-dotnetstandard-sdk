@@ -14,7 +14,7 @@ namespace Microsoft.HealthVault.Transport
     {
         private readonly byte[] xmlRequest; // utf8Encoded
         private readonly int xmlRequestLength;
-        private IConfiguration configuration = Ioc.Get<IConfiguration>();
+        private HealthVaultConfiguration configuration = Ioc.Get<HealthVaultConfiguration>();
 
         internal EasyWebRequest()
         {

@@ -10,9 +10,14 @@ namespace Microsoft.HealthVault.Client
 {
     internal class ClientHealthVaultConnection : ConnectionInternalBase
     {
-        public ClientHealthVaultConnection(IServiceLocator serviceLocator)
+        private readonly ILocalObjectStore localObjectStore;
+        private readonly IShellAuthService shellAuthService;
+
+        public ClientHealthVaultConnection(IServiceLocator serviceLocator, ILocalObjectStore localObjectStore, IShellAuthService shellAuthService)
             : base(serviceLocator)
         {
+            this.localObjectStore = localObjectStore;
+            this.shellAuthService = shellAuthService;
         }
 
         public override async Task AuthenticateAsync()

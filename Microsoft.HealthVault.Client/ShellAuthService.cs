@@ -21,6 +21,8 @@ namespace Microsoft.HealthVault.Client
             this.clientConfiguration = clientConfiguration;
         }
 
+        private string MraString => this.clientConfiguration.IsMultiRecordApp ? "true" : "false";
+
         public async Task<string> ProvisionApplicationAsync(Uri shellUrl, Guid masterAppId, string appCreationToken, string appInstanceId)
         {
             if (shellUrl == null)
@@ -38,8 +40,8 @@ namespace Microsoft.HealthVault.Client
                 throw new ArgumentNullException(nameof(appInstanceId));
             }
 
-            string query = $"?appid={masterAppId}&appCreationToken={appCreationToken}&instanceName={appInstanceId}&ismra=true";
-            if (this.clientConfiguration.AllowInstanceBounce)
+            string query = $"?appid={masterAppId}&appCreationToken={appCreationToken}&instanceName={appInstanceId}&ismra={this.MraString}";
+            if (this.clientConfiguration.MultiInstanceAware)
             {
                 query += "&aib=true";
             }
@@ -69,7 +71,7 @@ namespace Microsoft.HealthVault.Client
                 throw new ArgumentNullException(nameof(shellUrl));
             }
 
-            string query = $"?appid={masterAppId}&ismra=true";
+            string query = $"?appid={masterAppId}&ismra={this.MraString}";
 
             UriBuilder builder = GetShellUriBuilder(shellUrl);
             builder.Query = query;

@@ -6,16 +6,6 @@ namespace Microsoft.HealthVault.Web
 {
     internal class WebCryptographer : ICryptographer
     {
-        public string HashAlgorithm
-        {
-            get { return "SHA256"; }
-        }
-
-        public string HmacAlgorithm
-        {
-            get { return "HMACSHA256"; }
-        }
-
         public CryptoData Hmac(string keyMaterial, byte[] data)
         {
             byte[] key = Convert.FromBase64String(keyMaterial);
@@ -25,7 +15,7 @@ namespace Microsoft.HealthVault.Web
                 byte[] hash = hmac.ComputeHash(data);
                 string value = Convert.ToBase64String(hash);
 
-                return new CryptoData() { Algorithm = HmacAlgorithm, Value = value };
+                return new CryptoData() { Algorithm = HealthVaultConstants.Cryptography.HmacAlgorithm, Value = value };
             }
         }
 
@@ -38,7 +28,7 @@ namespace Microsoft.HealthVault.Web
 
                 sha.Clear();
 
-                return new CryptoData() { Algorithm = HmacAlgorithm, Value = value };
+                return new CryptoData() { Algorithm = HealthVaultConstants.Cryptography.HmacAlgorithm, Value = value };
             }
         }
     }

@@ -26,11 +26,11 @@ namespace Microsoft.HealthVault.Web
 
         public override void PrepareAuthSessionHeader(XmlWriter writer, Guid? recordId)
         {
-            if (!String.IsNullOrEmpty(SessionCredential?.Token))
+            if (!string.IsNullOrEmpty(this.SessionCredential?.Token))
             {
                 writer.WriteStartElement("auth-session");
 
-                writer.WriteElementString("auth-token", SessionCredential.Token);
+                writer.WriteElementString("auth-token", this.SessionCredential.Token);
 
                 if (!string.IsNullOrEmpty(this.SubCredential))
                 {
@@ -60,7 +60,7 @@ namespace Microsoft.HealthVault.Web
             var sharedSecret = credNavigator?.SelectSingleNode("shared-secret")?.Value;
 
             this.SubCredential = credNavigator?.SelectSingleNode("user-auth-token")?.Value;
-            this.SessionCredentialInternal = new SessionCredential() {SharedSecret = sharedSecret, Token = authToken};
+            this.SessionCredential = new SessionCredential { SharedSecret = sharedSecret, Token = authToken };
         }
     }
 }

@@ -111,7 +111,7 @@ namespace Microsoft.HealthVault.Thing
             Validator.ThrowIfArgumentNull(items, "items", "NewItemsNullItem");
 
             HealthServiceRequest request =
-                new HealthServiceRequest(connection, "PutThings", 2);
+                new HealthServiceRequest(connection, HealthVaultMethods.PutThings, 2);
 
             StringBuilder infoXml = new StringBuilder();
             XmlWriterSettings settings = SDKHelper.XmlUnicodeWriterSettings;
@@ -232,7 +232,7 @@ namespace Microsoft.HealthVault.Thing
             if (somethingRequiresUpdate)
             {
                 HealthServiceRequest request =
-                    new HealthServiceRequest(connection, "PutThings", 2) { Parameters = infoXml.ToString() };
+                    new HealthServiceRequest(connection, HealthVaultMethods.PutThings, 2) { Parameters = infoXml.ToString() };
 
                 // Add the XML to the request.
 
@@ -340,7 +340,7 @@ namespace Microsoft.HealthVault.Thing
             }
 
             HealthServiceRequest request =
-                new HealthServiceRequest(connection, "RemoveThings", 1) { Parameters = parameters.ToString() };
+                new HealthServiceRequest(connection, HealthVaultMethods.RemoveThings, 1) { Parameters = parameters.ToString() };
 
             await request.ExecuteAsync().ConfigureAwait(false);
         }
@@ -490,7 +490,7 @@ namespace Microsoft.HealthVault.Thing
             HealthRecordSearcher searcher)
         {
             HealthServiceRequest request =
-                new HealthServiceRequest(connection, "GetThings", 3) { Parameters = GetParametersXml(searcher) };
+                new HealthServiceRequest(connection, HealthVaultMethods.GetThings, 3) { Parameters = GetParametersXml(searcher) };
 
             return request;
         }

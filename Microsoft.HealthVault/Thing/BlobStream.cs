@@ -16,6 +16,7 @@ using Microsoft.HealthVault.Exceptions;
 using Microsoft.HealthVault.Helpers;
 using Microsoft.HealthVault.ItemTypes;
 using Microsoft.HealthVault.Transport;
+using Microsoft.HealthVault.Connection;
 
 namespace Microsoft.HealthVault.Thing
 {
@@ -889,7 +890,7 @@ namespace Microsoft.HealthVault.Thing
         private async Task<BlobPutParameters> BeginPutBlobAsync()
         {
             HealthServiceRequest request =
-                new HealthServiceRequest(this.record.Connection, "BeginPutBlob", 1);
+                new HealthServiceRequest(this.record.Connection, HealthVaultMethods.BeginPutBlob, 1);
             HealthServiceResponseData responseData = await request.ExecuteAsync().ConfigureAwait(false);
 
             XPathExpression infoPath =

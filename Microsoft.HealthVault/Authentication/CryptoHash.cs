@@ -23,7 +23,7 @@ namespace Microsoft.HealthVault.Authentication
     ///
     public class CryptoHash
     {
-        private static IConfiguration configuration = Ioc.Get<IConfiguration>();
+        private static HealthVaultConfiguration configuration = Ioc.Get<HealthVaultConfiguration>();
 
         #region properties
 

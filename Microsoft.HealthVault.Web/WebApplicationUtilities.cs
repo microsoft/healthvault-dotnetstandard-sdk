@@ -181,7 +181,7 @@ namespace Microsoft.HealthVault.Web
                     context,
                     logOnRequired,
                     false,
-                    configuration.ApplicationId)
+                    configuration.MasterApplicationId)
                 .ConfigureAwait(false);
         }
 
@@ -251,7 +251,7 @@ namespace Microsoft.HealthVault.Web
                     context,
                     logOnRequired,
                     isMra,
-                    configuration.ApplicationId)
+                    configuration.MasterApplicationId)
                 .ConfigureAwait(false);
         }
 
@@ -332,7 +332,7 @@ namespace Microsoft.HealthVault.Web
             get
             {
                 return GetApplicationAuthenticationCredential(
-                    configuration.ApplicationId);
+                    configuration.MasterApplicationId);
             }
         }
 
@@ -829,7 +829,7 @@ namespace Microsoft.HealthVault.Web
         {
             return await GetPersonInfoAsync(
                 authToken,
-                configuration.ApplicationId)
+                configuration.MasterApplicationId)
                 .ConfigureAwait(false);
         }
 
@@ -855,7 +855,7 @@ namespace Microsoft.HealthVault.Web
         {
             return await GetPersonInfoAsync(
                 authToken,
-                configuration.ApplicationId,
+                configuration.MasterApplicationId,
                 serviceInstance)
                 .ConfigureAwait(false);
         }
@@ -1907,7 +1907,7 @@ namespace Microsoft.HealthVault.Web
             redirectParameters = redirectParameters.Clone();
             redirectParameters.TargetLocation = "AUTH";
             redirectParameters.TokenRedirectionMethod = "POST";
-            redirectParameters.ApplicationId = configuration.ApplicationId;
+            redirectParameters.ApplicationId = configuration.MasterApplicationId;
 
             RedirectToShellUrl(context, redirectParameters);
         }
@@ -2049,7 +2049,7 @@ namespace Microsoft.HealthVault.Web
             SignOut(
                 context,
                 actionUrlQueryString,
-                configuration.ApplicationId);
+                configuration.MasterApplicationId);
         }
 
         /// <summary>

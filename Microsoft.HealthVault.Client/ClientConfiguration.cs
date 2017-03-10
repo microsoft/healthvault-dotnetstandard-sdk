@@ -4,22 +4,8 @@ using Microsoft.HealthVault.Helpers;
 
 namespace Microsoft.HealthVault.Client
 {
-    public class ClientConfiguration : ConfigurationBase
+    public class ClientConfiguration : HealthVaultConfiguration
     {
-        private bool allowInstanceBounce = true;
-
-        public bool AllowInstanceBounce
-        {
-            get
-            {
-                return this.allowInstanceBounce;
-            }
-
-            set
-            {
-                this.EnsureNotLocked();
-                this.allowInstanceBounce = value;
-            }
-        }
+        // Nothing here yet, but we may add something.
     }
 }

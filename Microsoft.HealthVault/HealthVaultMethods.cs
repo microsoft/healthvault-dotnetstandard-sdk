@@ -15,12 +15,6 @@ namespace Microsoft.HealthVault
     public enum HealthVaultMethods
     {
         /// <summary>
-        /// Creates an application session token for use with the HealthVault service.
-        /// </summary>
-        ///
-        CreateAuthenticatedSessionToken,
-
-        /// <summary>
         /// Pre-allocates a DOPU package id.
         /// </summary>
         AllocatePackageId,
@@ -39,6 +33,12 @@ namespace Microsoft.HealthVault
         /// Begin to stream binary data for a DOPU package.
         /// </summary>
         BeginPutConnectPackageBlob,
+
+        /// <summary>
+        /// Creates an application session token for use with the HealthVault service.
+        /// </summary>
+        ///
+        CreateAuthenticatedSessionToken,
 
         /// <summary>
         /// Create a new DOPU package.
@@ -89,6 +89,11 @@ namespace Microsoft.HealthVault
         GetAuthorizedConnectRequests,
 
         /// <summary>
+        /// Get all people authorized for an application.
+        /// </summary>
+        GetAuthorizedPeople,
+
+        /// <summary>
         /// Gets all the records that the user has authorized the application use.
         /// </summary>
         ///
@@ -98,6 +103,16 @@ namespace Microsoft.HealthVault
         /// Get a list of event subscriptions for the application.
         /// </summary>
         GetEventSubscriptions,
+
+        /// <summary>
+        /// Get Meaningful Use Timley Access Report.
+        /// </summary>
+        GetMeaningfulUseTimelyAccessReport,
+
+        /// <summary>
+        /// Get Meaningful Use VDT Report.
+        /// </summary>
+        GetMeaningfulUseVDTReport,
 
         /// <summary>
         /// Gets information about the logged in user.
@@ -141,6 +156,11 @@ namespace Microsoft.HealthVault
         GetVocabulary,
 
         /// <summary>
+        /// Create a new application instance information from a master app id.  First step in SODA authentication.
+        /// </summary>
+        NewApplicationCreationInfo,
+
+        /// <summary>
         /// Generate a new signup code.
         /// </summary>
         NewSignupCode,
@@ -167,6 +187,16 @@ namespace Microsoft.HealthVault
         /// </summary>
         ///
         RemoveThings,
+
+        /// <summary>
+        /// Search a specific vocabulary and retrieve the matching vocabulary items.
+        /// </summary>
+        SearchVocabulary,
+
+        /// <summary>
+        /// Get the instance where a HealthVault account should be created for the specified account location.
+        /// </summary>
+        SelectInstance,
 
         /// <summary>
         /// Sends an SMTP message on behalf of the logged in user.
@@ -204,16 +234,6 @@ namespace Microsoft.HealthVault
         /// <summary>
         /// Update DOPU packages external id.
         /// </summary>
-        UpdateExternalId,
-
-        /// <summary>
-        /// Get Meaningful Use VDT Report.
-        /// </summary>
-        GetMeaningfulUseVDTReport,
-
-        /// <summary>
-        /// Get Meaningful Use Timley Access Report.
-        /// </summary>
-        GetMeaningfulUseTimelyAccessReport
+        UpdateExternalId
     }
 }

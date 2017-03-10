@@ -358,7 +358,7 @@ namespace Microsoft.HealthVault.PlatformInformation
 
         private static async Task<ServiceInfo> GetServiceDefinitionAsync(IConnectionInternal connection, string parameters)
         {
-            HealthServiceResponseData responseData = await connection.ExecuteAsync("GetServiceDefinition", 2, parameters).ConfigureAwait(false);
+            HealthServiceResponseData responseData = await connection.ExecuteAsync(HealthVaultMethods.GetServiceDefinition, 2, parameters).ConfigureAwait(false);
 
             if (responseData.InfoNavigator.HasChildren)
             {
@@ -587,8 +587,8 @@ namespace Microsoft.HealthVault.PlatformInformation
                 writer.Flush();
 
                 HealthServiceResponseData responseData = await connection.ExecuteAsync(
-                    "GetThingType",
-                    1, 
+                    HealthVaultMethods.GetThingType,
+                    1,
                     requestParameters.ToString()).ConfigureAwait(false);
 
                 Dictionary<Guid, HealthRecordItemTypeDefinition> result =
@@ -657,7 +657,7 @@ namespace Microsoft.HealthVault.PlatformInformation
                 writer.Flush();
 
                 HealthServiceResponseData responseData = await connection.ExecuteAsync(
-                    "GetThingType",
+                    HealthVaultMethods.GetThingType,
                     1,
                     requestParameters.ToString()).ConfigureAwait(false);
 
@@ -837,8 +837,8 @@ namespace Microsoft.HealthVault.PlatformInformation
             }
 
             HealthServiceResponseData responseData = await connection.ExecuteAsync(
-                "SelectInstance",
-                1, 
+                HealthVaultMethods.SelectInstance,
+                1,
                 requestParameters.ToString()).ConfigureAwait(false);
 
             XPathExpression infoPath = SDKHelper.GetInfoXPathExpressionForMethod(
