@@ -32,13 +32,11 @@ namespace Microsoft.HealthVault.Connection
             this.serviceLocator = serviceLocator;
         }
 
-        public static string SessionAuthenticationMethodName => "CreateAuthenticatedSessionToken";
-
-        public static HashSet<string> AnonymousMethods => new HashSet<string>(StringComparer.OrdinalIgnoreCase)
+        public static HashSet<HealthVaultMethods> AnonymousMethods => new HashSet<HealthVaultMethods>()
         {
-            "NewApplicationCreationInfo",
-            "GetServiceDefinition",
-            SessionAuthenticationMethodName
+            HealthVaultMethods.NewApplicationCreationInfo,
+            HealthVaultMethods.GetServiceDefinition,
+            HealthVaultMethods.CreateAuthenticatedSessionToken
         };
 
         // protected PersonInfo PersonInfoInternal { get; set; }
@@ -107,22 +105,20 @@ namespace Microsoft.HealthVault.Connection
         public abstract Task AuthenticateAsync();
 
         public async Task<HealthServiceResponseData> ExecuteAsync(
-            string methodName,
+            HealthVaultMethods method,
             int methodVersion,
             string parameters = null,
             Guid? recordId = null)
         {
-            Validator.ThrowIfStringNullOrEmpty(methodName, "methodName");
-
             // Make sure that session credential is set for method calls requiring
             // authentication
-            if (!AnonymousMethods.Contains(methodName)
+            if (!AnonymousMethods.Contains(method)
                 && this.SessionCredential == null)
             {
                 await this.AuthenticateAsync().ConfigureAwait(false);
             }
 
-            HealthServiceRequest request = new HealthServiceRequest(this, methodName, methodVersion, recordId)
+            HealthServiceRequest request = new HealthServiceRequest(this, method, methodVersion, recordId)
             {
                 Parameters = parameters
             };
@@ -154,15 +150,13 @@ namespace Microsoft.HealthVault.Connection
             }
         }
 
-        public virtual CryptoData GetAuthData(string methodName, byte[] data)
+        public virtual CryptoData GetAuthData(HealthVaultMethods method, byte[] data)
         {
             // No need to create auth headers for anonymous methods
-            if (AnonymousMethods.Contains(methodName))
+            if (AnonymousMethods.Contains(method))
             {
                 return null;
             }
-
-            Validator.ThrowIfStringIsEmptyOrWhitespace(methodName, nameof(methodName));
 
             if (this.SessionCredential == null)
             {

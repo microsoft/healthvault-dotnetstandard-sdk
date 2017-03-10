@@ -31,7 +31,7 @@ namespace Microsoft.HealthVault.Clients
 
         public HealthRecordInfo Record { get; set; }
 
-        public async Task<T> GetThingAsync<T>(Guid thingId) 
+        public async Task<T> GetThingAsync<T>(Guid thingId)
             where T : IThing
         {
             // Create a new searcher to get the item.
@@ -44,7 +44,7 @@ namespace Microsoft.HealthVault.Clients
 
             searcher.Filters.Add(query);
 
-            HealthServiceResponseData result = await this.Connection.ExecuteAsync("GetThings", 3, GetParametersXml(searcher));
+            HealthServiceResponseData result = await this.Connection.ExecuteAsync(HealthVaultMethods.GetThings, 3, GetParametersXml(searcher));
 
             ReadOnlyCollection<HealthRecordItemCollection> resultSet = this.ParseThings(result, searcher);
 
@@ -80,11 +80,11 @@ namespace Microsoft.HealthVault.Clients
             return default(T);
         }
 
-        public async Task<IReadOnlyCollection<HealthRecordItemCollection>> GetThingsAsync(ThingQuery query) 
+        public async Task<IReadOnlyCollection<HealthRecordItemCollection>> GetThingsAsync(ThingQuery query)
         {
             HealthServiceResponseData response = await this.GetRequestWithParameters(query);
             HealthRecordSearcher searcher = new HealthRecordSearcher(this.Record);
-            ReadOnlyCollection<HealthRecordItemCollection> resultSet = 
+            ReadOnlyCollection<HealthRecordItemCollection> resultSet =
                 this.ParseThings(response, searcher);
 
             return resultSet;
@@ -136,7 +136,7 @@ namespace Microsoft.HealthVault.Clients
                 infoXmlWriter.Flush();
             }
 
-            HealthServiceResponseData responseData = await this.Connection.ExecuteAsync("PutThings", 2, infoXml.ToString());
+            HealthServiceResponseData responseData = await this.Connection.ExecuteAsync(HealthVaultMethods.PutThings, 2, infoXml.ToString());
 
             // Now update the Id for the new item
             XPathNodeIterator thingIds =
@@ -192,7 +192,7 @@ namespace Microsoft.HealthVault.Clients
 
             if (somethingRequiresUpdate)
             {
-                HealthServiceResponseData response = await this.Connection.ExecuteAsync("PutThings", 2, infoXml.ToString());
+                HealthServiceResponseData response = await this.Connection.ExecuteAsync(HealthVaultMethods.PutThings, 2, infoXml.ToString());
 
                 XPathNodeIterator thingIds =
                     response.InfoNavigator.Select(
@@ -230,7 +230,7 @@ namespace Microsoft.HealthVault.Clients
                 parameters.Append("</thing-id>");
             }
 
-            await this.Connection.ExecuteAsync("RemoveThings", 1, parameters.ToString());
+            await this.Connection.ExecuteAsync(HealthVaultMethods.RemoveThings, 1, parameters.ToString());
         }
 
         internal static string GetParametersXml(HealthRecordSearcher searcher)
@@ -269,7 +269,6 @@ namespace Microsoft.HealthVault.Clients
 
         private ReadOnlyCollection<HealthRecordItemCollection> ParseThings(HealthServiceResponseData responseData, HealthRecordSearcher query)
         {
-
             XmlReader infoReader = responseData.InfoReader;
 
             Collection<HealthRecordItemCollection> result =
@@ -310,7 +309,7 @@ namespace Microsoft.HealthVault.Clients
         {
             HealthRecordSearcher searcher = new HealthRecordSearcher(this.Record);
             searcher.Filters.Add(query);
-            return await this.Connection.ExecuteAsync("GetThings", 3, GetParametersXml(searcher));
+            return await this.Connection.ExecuteAsync(HealthVaultMethods.GetThings, 3, GetParametersXml(searcher));
         }
 
         /// <summary>

@@ -10,22 +10,6 @@ namespace Microsoft.HealthVault.Connection
     internal interface ICryptographer
     {
         /// <summary>
-        /// Gets the hash algorithm.
-        /// </summary>
-        /// <value>
-        /// The hash algorithm.
-        /// </value>
-        string HashAlgorithm { get; }
-
-        /// <summary>
-        /// Gets the hmac algorithm.
-        /// </summary>
-        /// <value>
-        /// The hmac algorithm.
-        /// </value>
-        string HmacAlgorithm { get; }
-
-        /// <summary>
         /// Hmacs the specified key material.
         /// </summary>
         /// <param name="keyMaterial">The key material.</param>

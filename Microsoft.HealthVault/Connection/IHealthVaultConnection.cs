@@ -80,16 +80,16 @@ namespace Microsoft.HealthVault.Connection
         Task AuthenticateAsync();
 
         /// <summary>
-        /// Makes Web request call to HealthVault service 
+        /// Makes Web request call to HealthVault service
         /// for specified method name and method version
         /// </summary>
-        /// <param name="methodName">Name of the method.</param>
+        /// <param name="method">The method to execute.</param>
         /// <param name="methodVersion">The method version.</param>
         /// <param name="parameters">Method parameters</param>
         /// <param name="recordId">Record Id</param>
         /// <returns>HealthServiceResponseData</returns>
         Task<HealthServiceResponseData> ExecuteAsync(
-            string methodName,
+            HealthVaultMethods method,
             int methodVersion,
             string parameters = null,
             Guid? recordId = null);

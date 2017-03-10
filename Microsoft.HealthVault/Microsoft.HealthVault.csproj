@@ -51,6 +51,7 @@
     <Compile Include="AsyncEnumerable.cs" />
     <Compile Include="AsyncLock.cs" />
     <Compile Include="Extensions\HealthServiceInstanceExtensions.cs" />
+    <Compile Include="HealthVaultConstants.cs" />
     <Compile Include="HealthVaultFactoryBase.cs" />
     <Compile Include="Clients\ActionPlanClient.cs" />
     <Compile Include="Clients\PersonClient.cs" />

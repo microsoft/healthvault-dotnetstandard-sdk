@@ -87,7 +87,7 @@ namespace Microsoft.HealthVault.Person
         public virtual async Task<ApplicationSettings> GetApplicationSettingsAsync(IConnectionInternal connection)
         {
             HealthServiceRequest request =
-                new HealthServiceRequest(connection, "GetApplicationSettings", 1);
+                new HealthServiceRequest(connection, HealthVaultMethods.GetApplicationSettings, 1);
 
             HealthServiceResponseData responseData = await request.ExecuteAsync().ConfigureAwait(false);
 
@@ -153,7 +153,7 @@ namespace Microsoft.HealthVault.Person
             IConnectionInternal connection,
             string requestParameters)
         {
-            HealthServiceRequest request = new HealthServiceRequest(connection, "SetApplicationSettings", 1);
+            HealthServiceRequest request = new HealthServiceRequest(connection, HealthVaultMethods.SetApplicationSettings, 1);
 
             request.Parameters = requestParameters;
             await request.ExecuteAsync().ConfigureAwait(false);
@@ -228,7 +228,7 @@ namespace Microsoft.HealthVault.Person
         ///
         public virtual async Task<PersonInfo> GetPersonInfoAsync(IConnectionInternal connection)
         {
-            HealthServiceRequest request = new HealthServiceRequest(connection, "GetPersonInfo", 1);
+            HealthServiceRequest request = new HealthServiceRequest(connection, HealthVaultMethods.GetPersonInfo, 1);
 
             HealthServiceResponseData responseData = await request.ExecuteAsync().ConfigureAwait(false);
 
@@ -295,7 +295,7 @@ namespace Microsoft.HealthVault.Person
             IList<Guid> recordIds)
         {
             HealthServiceRequest request =
-                new HealthServiceRequest(connection, "GetAuthorizedRecords", 1);
+                new HealthServiceRequest(connection, HealthVaultMethods.GetAuthorizedRecords, 1);
 
             StringBuilder parameters = new StringBuilder(128);
             foreach (Guid id in recordIds)

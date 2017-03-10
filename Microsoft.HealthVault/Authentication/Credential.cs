@@ -147,7 +147,7 @@ namespace Microsoft.HealthVault.Authentication
         /// by the shell.
         /// </remarks>
         ///
-        internal string AuthenticationMethodName { get; set; } = "CreateAuthenticatedSessionToken";
+        internal HealthVaultMethods AuthenticationMethod { get; set; } = HealthVaultMethods.CreateAuthenticatedSessionToken;
 
         /// <summary>
         /// Authenticates an <paramref name="applicationId"/> if none exists.
@@ -358,9 +358,9 @@ namespace Microsoft.HealthVault.Authentication
         /// <exception cref="ArgumentException">
         /// The <paramref name="appId"/> parameter is <b>null</b> or empty.
         /// </exception>
-        /// 
+        ///
         /// <seealso cref="HealthServiceConnection"/>
-        /// 
+        ///
         internal async Task CreateAuthenticatedSessionTokenAsync(
             IHealthVaultConnection connection,
             Guid appId)
@@ -381,7 +381,7 @@ namespace Microsoft.HealthVault.Authentication
             }
 
             await this.MakeCreateTokenCallAsync(
-                "CreateAuthenticatedSessionToken",
+                this.AuthenticationMethodName,
                 2,
                 anonConn,
                 appId,
@@ -399,7 +399,7 @@ namespace Microsoft.HealthVault.Authentication
         /// This method takes only one application ID, which is the typical case.
         /// </remarks>
         ///
-        /// <param name="methodName">
+        /// <param name="method">
         /// The HealthVault service method name to call.
         /// </param>
         ///
@@ -419,20 +419,15 @@ namespace Microsoft.HealthVault.Authentication
         /// The application is a multi-record app.
         /// </param>
         ///
-        /// <exception cref="ArgumentNullException">
-        /// The <paramref name="methodName"/>
-        /// parameter is <b>null</b> or empty.
-        /// </exception>
-        ///
         internal async Task MakeCreateTokenCallAsync(
-            string methodName,
+            HealthVaultMethods method,
             int version,
             IConnectionInternal connection,
             Guid appId,
             bool isMra)
         {
             await this.MakeCreateTokenCallAsync(
-                methodName,
+                method,
                 version,
                 connection,
                 new ApplicationTokenCreationInfo(appId, isMra),
@@ -447,7 +442,7 @@ namespace Microsoft.HealthVault.Authentication
         /// This method takes only one application ID, which is the typical case.
         /// </remarks>
         ///
-        /// <param name="methodName">
+        /// <param name="method">
         /// The HealthVault service method name to call.
         /// </param>
         ///
@@ -471,13 +466,8 @@ namespace Microsoft.HealthVault.Authentication
         /// The original url from the STS request.
         /// </param>
         ///
-        /// <exception cref="ArgumentNullException">
-        /// The <paramref name="methodName"/>
-        /// parameter is <b>null</b> or empty.
-        /// </exception>
-        ///
         internal async Task MakeCreateTokenCallAsync(
-            string methodName,
+            HealthVaultMethods method,
             int version,
             IConnectionInternal connection,
             Guid appId,
@@ -485,7 +475,7 @@ namespace Microsoft.HealthVault.Authentication
             string stsOriginalUrl)
         {
             await this.MakeCreateTokenCallAsync(
-                methodName,
+                method,
                 version,
                 connection,
                 new ApplicationTokenCreationInfo(appId, isMra),
@@ -497,7 +487,7 @@ namespace Microsoft.HealthVault.Authentication
         /// credentials for the calling app, given the specified method and connection.
         /// </summary>
         ///
-        /// <param name="methodName">
+        /// <param name="method">
         /// The HealthVault service method name to call.
         /// </param>
         ///
@@ -509,18 +499,13 @@ namespace Microsoft.HealthVault.Authentication
         /// The <see cref="IHealthVaultConnection"/> instance.
         /// </param>
         ///
-        /// <exception cref="ArgumentNullException">
-        /// The <paramref name="methodName"/>
-        /// parameter is <b>null</b> or empty.
-        /// </exception>
-        ///
         internal async Task MakeCreateTokenCallAsync(
-            string methodName,
+            HealthVaultMethods method,
             int version,
             IConnectionInternal connection)
         {
             await this.MakeCreateTokenCallImplAsync(
-                methodName,
+                method,
                 version,
                 connection).ConfigureAwait(false);
         }
@@ -537,7 +522,7 @@ namespace Microsoft.HealthVault.Authentication
         /// for the target application.
         /// </remarks>
         ///
-        /// <param name="methodName">
+        /// <param name="method">
         /// The HealthVault service method name to call.
         /// </param>
         ///
@@ -557,20 +542,13 @@ namespace Microsoft.HealthVault.Authentication
         /// The original url from the STS request.
         /// </param>
         ///
-        /// <exception cref="ArgumentNullException">
-        /// The <paramref name="methodName"/>
-        /// parameter is <b>null</b> or empty.
-        /// </exception>
-        ///
         internal async Task MakeCreateTokenCallAsync(
-            string methodName,
+            HealthVaultMethods method,
             int version,
             IConnectionInternal connection,
             ApplicationTokenCreationInfo applicationTokenCreationInfo,
             string stsOriginalUrl)
         {
-            Validator.ThrowIfStringNullOrEmpty(methodName, "CreateTokenMethodNameIsNullOrEmpty");
-
             Validator.ThrowArgumentExceptionIf(
                 applicationTokenCreationInfo == null,
                 "appTokenCreationInfo",
@@ -581,22 +559,20 @@ namespace Microsoft.HealthVault.Authentication
                 return;
             }
 
-            await this.MakeCreateTokenCallImplAsync(methodName, version, connection, applicationTokenCreationInfo, stsOriginalUrl).ConfigureAwait(false);
+            await this.MakeCreateTokenCallImplAsync(method, version, connection, applicationTokenCreationInfo, stsOriginalUrl).ConfigureAwait(false);
         }
 
         private async Task MakeCreateTokenCallImplAsync(
-            string methodName,
+            HealthVaultMethods method,
             int version,
             IConnectionInternal connection,
             ApplicationTokenCreationInfo applicationTokenCreationInfo = null,
             string stsOriginalUrl = null)
         {
-            Validator.ThrowIfStringNullOrEmpty(methodName, "CreateTokenMethodNameIsNullOrEmpty");
-
-            this.AuthenticationMethodName = methodName;
+            this.AuthenticationMethod = method;
 
             HealthServiceRequest request =
-                new HealthServiceRequest(connection, this.AuthenticationMethodName, version)
+                new HealthServiceRequest(connection, this.AuthenticationMethod, version)
                 {
                     Parameters = this.ConstructCreateTokenInfoXml(applicationTokenCreationInfo, stsOriginalUrl)
                 };
@@ -953,8 +929,8 @@ namespace Microsoft.HealthVault.Authentication
             XmlNamespaceManager infoXmlNamespaceManager =
                 new XmlNamespaceManager(infoNav.NameTable);
 
-            string nsName = this.AuthenticationMethodName;
-            if (nsName == "CreateAuthenticatedSessionToken")
+            string nsName = this.AuthenticationMethod.ToString();
+            if (nsName == HealthVaultMethods.CreateAuthenticatedSessionToken.ToString())
             {
                 nsName = "CreateAuthenticatedSessionToken2";
             }
