@@ -32,7 +32,6 @@ namespace Microsoft.HealthVault.Web
             WebConfiguration config = WebConfigurationFactory.CreateConfiguration();
             container.Configure(c => c.ExportInstance(() => config));
             container.Configure(c => c.ExportInstance<ConfigurationBase>(() => config));
-            container.Configure(c => c.ExportInstance<IConfiguration>(() => config));
         }
 
 
