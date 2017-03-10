@@ -515,6 +515,7 @@ namespace Microsoft.HealthVault.Person
 
             if ((cookieOptions & CookieOptions.IncludeUrl) != 0)
             {
+                // TODO: Should we be using the HealthVault from the config for this or the bounced url from the connection? 
                 writer.WriteElementString(
                     "wildcat-url",
                     this.configuration.DefaultHealthVaultUrl.ToString());
