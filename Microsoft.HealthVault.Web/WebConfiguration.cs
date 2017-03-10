@@ -21,16 +21,6 @@ namespace Microsoft.HealthVault.Web
     {
         private static readonly object instanceLock = new object();
 
-        /// <summary>
-        /// Gets or sets a value indicating whether the configuration is locked.
-        /// </summary>
-        protected bool IsLocked { get; set; }
-
-        internal void Lock()
-        {
-            this.IsLocked = true;
-        }
-
         public override string ApplicationCertificatePassword
         {
             get
@@ -467,18 +457,6 @@ namespace Microsoft.HealthVault.Web
             //return !String.IsNullOrEmpty(resultUrl) ?
             //        new Uri(resultUrl, UriKind.RelativeOrAbsolute) : null;
             return new Uri(action);
-        }
-
-        /// <summary>
-        /// Users are only allowed to change these values before app initialization.
-        /// </summary>
-        protected void EnsureNotLocked()
-        {
-            if (this.AppInitialized)
-                if (this.IsLocked)
-                {
-                    throw new InvalidOperationException("Changing app configuration values after initialization is not permitted.");
-                }
         }
     }
 }

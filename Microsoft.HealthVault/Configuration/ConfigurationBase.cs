@@ -45,12 +45,6 @@ namespace Microsoft.HealthVault.Configuration
         protected bool IsLocked { get; set; }
 
         /// <summary>
-        /// True if the app has been initialized.
-        /// </summary>
-        /// <remarks>After the app is initialized, changes to these config values are not permitted.</remarks>
-        internal bool AppInitialized { get; set; }
-
-        /// <summary>
         /// Gets or sets the root URL for the default instance of the
         /// HealthVault web-service. This may be overwritten if an environment
         /// instance bounce happens.
