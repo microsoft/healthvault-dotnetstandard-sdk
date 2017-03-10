@@ -141,7 +141,7 @@ namespace Microsoft.HealthVault.Connection
             Validator.ThrowIfArgumentNull(writer, "writer", "WriteXmlNullWriter");
             writer.WriteStartElement("app-id");
 
-            var healthApplicationConfiguration = Ioc.Get<IConfiguration>();
+            var healthApplicationConfiguration = Ioc.Get<HealthVaultConfiguration>();
 
             if (healthApplicationConfiguration.IsMultiRecordApp)
             {

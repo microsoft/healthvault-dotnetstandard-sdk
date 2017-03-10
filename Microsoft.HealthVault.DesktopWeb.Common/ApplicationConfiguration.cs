@@ -14,7 +14,7 @@ using Microsoft.HealthVault.Thing;
 
 namespace Microsoft.HealthVault.DesktopWeb.Common
 {
-    public class ApplicationConfiguration : IConfiguration
+    public class ApplicationConfiguration
     {
         #region configuration key constants
 
@@ -384,7 +384,7 @@ namespace Microsoft.HealthVault.DesktopWeb.Common
         /// Type versions support was initially determined by an applications base authorizations
         /// and/or the <see cref="HealthRecordView.TypeVersionFormat"/>. Some of these behaviors
         /// were unexpected which led to changes to automatically put the <see cref="HealthRecordFilter.TypeIds"/>
-        /// and <see cref="ConfigurationBase.SupportedTypeVersions"/> into the
+        /// and <see cref="HealthVaultConfiguration.SupportedTypeVersions"/> into the
         /// <see cref="HealthRecordView.TypeVersionFormat"/> automatically for developers. This 
         /// exhibits the expected behavior for most applications. However, in some rare cases 
         /// applications may need to revert back to the original behavior. When this property
@@ -456,7 +456,7 @@ namespace Microsoft.HealthVault.DesktopWeb.Common
         /// This default value is 110 seconds of inactivity.
         /// <p>
         /// This setting only applies when using HTTP Persistent Connections
-        /// <see cref="ConfigurationBase.ConnectionUseHttpKeepAlive"/>.  
+        /// <see cref="HealthVaultConfiguration.ConnectionUseHttpKeepAlive"/>.  
         /// </p>
         /// <p>
         /// Setting this property to -1 indicates the connection should never
@@ -498,7 +498,7 @@ namespace Microsoft.HealthVault.DesktopWeb.Common
         /// The default value is 5 minutes.
         /// <p>
         /// This setting only applies when using HTTP Persistent Connections
-        /// <see cref="ConfigurationBase.ConnectionUseHttpKeepAlive"/>.  
+        /// <see cref="HealthVaultConfiguration.ConnectionUseHttpKeepAlive"/>.  
         /// </p>
         /// <p>
         /// Using this property ensures that active connections do not remain open

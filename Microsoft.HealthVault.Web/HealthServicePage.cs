@@ -91,12 +91,12 @@ namespace Microsoft.HealthVault.Web
         /// </summary>
         ///
         /// <remarks>
-        /// By default the value is set to <see cref="ConfigurationBase.ApplicationId"/>. If the
+        /// By default the value is set to <see cref="HealthVaultConfiguration.MasterApplicationId"/>. If the
         /// application needs to change the application identifier it can set the value during
         /// <see cref="OnInit"/>.
         /// </remarks>
         ///
-        protected virtual Guid ApplicationId { get; set; } = configuration.ApplicationId;
+        protected virtual Guid ApplicationId { get; set; } = configuration.MasterApplicationId;
 
         /// <summary>
         /// Handles the PreLoad event for the page.

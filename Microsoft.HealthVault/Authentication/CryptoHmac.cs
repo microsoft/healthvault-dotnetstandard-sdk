@@ -16,7 +16,7 @@ namespace Microsoft.HealthVault.Authentication
     /// </summary>
     internal sealed class CryptoHmac : CryptoHash
     {
-        private IConfiguration configuration = Ioc.Get<IConfiguration>();
+        private HealthVaultConfiguration configuration = Ioc.Get<HealthVaultConfiguration>();
 
         #region properties
 

@@ -1330,7 +1330,7 @@ namespace Microsoft.HealthVault.Thing
 
         private class TypeList : IList<Guid>
         {
-            private IConfiguration configuration = Ioc.Get<IConfiguration>();
+            private HealthVaultConfiguration configuration = Ioc.Get<HealthVaultConfiguration>();
             private readonly HealthRecordView view;
             private readonly Collection<Guid> list = new Collection<Guid>();
 

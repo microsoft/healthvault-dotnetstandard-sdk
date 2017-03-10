@@ -18,9 +18,11 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Xml;
+using Microsoft.HealthVault.Configuration;
 using Microsoft.HealthVault.Connection;
 using Microsoft.HealthVault.Diagnostics;
 using Microsoft.HealthVault.Exceptions;
+using Microsoft.HealthVault.Extensions;
 using Microsoft.HealthVault.Helpers;
 
 namespace Microsoft.HealthVault.Transport
@@ -113,10 +115,12 @@ namespace Microsoft.HealthVault.Transport
 
             this.connectionInternal = connectionInternal;
 
+            HealthVaultConfiguration config = Ioc.Get<HealthVaultConfiguration>();
+
             this.MethodName = methodName;
             this.MethodVersion = methodVersion;
-            this.timeoutSeconds = connectionInternal.ApplicationConfiguration.DefaultRequestTimeout;
-            this.TimeToLiveSeconds = connectionInternal.ApplicationConfiguration.DefaultRequestTimeToLive;
+            this.timeoutSeconds = config.DefaultRequestTimeout;
+            this.TimeToLiveSeconds = config.DefaultRequestTimeToLive;
             this.CultureCode = CultureInfo.CurrentUICulture.Name;
             this.recordId = recordId.GetValueOrDefault(Guid.Empty);
         }
@@ -149,7 +153,7 @@ namespace Microsoft.HealthVault.Transport
                 {
                     this.cancellationTokenSource = new CancellationTokenSource(TimeSpan.FromSeconds(this.timeoutSeconds));
                     response = await easyWeb.FetchAsync(
-                        this.connectionInternal.ApplicationConfiguration.DefaultHealthVaultUrl,
+                        this.connectionInternal.ServiceInstance.GetHealthVaultMethodUrl(),
                         this.cancellationTokenSource.Token).ConfigureAwait(false);
                 }
                 finally

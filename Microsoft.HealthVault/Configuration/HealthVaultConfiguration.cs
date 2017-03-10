@@ -13,7 +13,7 @@ namespace Microsoft.HealthVault.Configuration
     /// Gives access to the configuration file for the application and
     /// exposes some of the settings directly.
     /// </summary>
-    public abstract class ConfigurationBase : IConfiguration
+    public abstract class HealthVaultConfiguration
     {
         /// <summary>
         /// The default number of internal retries.
@@ -37,7 +37,6 @@ namespace Microsoft.HealthVault.Configuration
         /// The default request time out value.
         /// </summary>
         protected const int DefaultDefaultRequestTimeout = 30;
-        private static readonly object InstanceLock = new object();
 
         /// <summary>
         /// Gets or sets a value indicating whether the configuration is locked.
@@ -113,21 +112,21 @@ namespace Microsoft.HealthVault.Configuration
         /// value.
         /// </remarks>
         ///
-        public virtual Guid ApplicationId
+        public virtual Guid MasterApplicationId
         {
             get
             {
-                return this.appId;
+                return this.masterAppId;
             }
 
             set
             {
                 this.EnsureNotLocked();
-                this.appId = value;
+                this.masterAppId = value;
             }
         }
 
-        private Guid appId;
+        private Guid masterAppId;
 
         /// <summary>
         /// Gets or sets the crypto configuration.
@@ -457,7 +456,7 @@ namespace Microsoft.HealthVault.Configuration
         /// Type versions support was initially determined by an applications base authorizations
         /// and/or the <see cref="HealthRecordView.TypeVersionFormat"/>. Some of these behaviors
         /// were unexpected which led to changes to automatically put the <see cref="HealthRecordFilter.TypeIds"/>
-        /// and <see cref="ConfigurationBase.SupportedTypeVersions"/> into the
+        /// and <see cref="HealthVaultConfiguration.SupportedTypeVersions"/> into the
         /// <see cref="HealthRecordView.TypeVersionFormat"/> automatically for developers. This
         /// exhibits the expected behavior for most applications. However, in some rare cases
         /// applications may need to revert back to the original behavior. When this property
@@ -528,7 +527,7 @@ namespace Microsoft.HealthVault.Configuration
         /// This default value is 110 seconds of inactivity.
         /// <p>
         /// This setting only applies when using HTTP Persistent Connections
-        /// <see cref="ConfigurationBase.ConnectionUseHttpKeepAlive"/>.
+        /// <see cref="HealthVaultConfiguration.ConnectionUseHttpKeepAlive"/>.
         /// </p>
         /// <p>
         /// Setting this property to -1 indicates the connection should never
@@ -577,7 +576,7 @@ namespace Microsoft.HealthVault.Configuration
         /// The default value is 5 minutes.
         /// <p>
         /// This setting only applies when using HTTP Persistent Connections
-        /// <see cref="ConfigurationBase.ConnectionUseHttpKeepAlive"/>.
+        /// <see cref="HealthVaultConfiguration.ConnectionUseHttpKeepAlive"/>.
         /// </p>
         /// <p>
         /// Using this property ensures that active connections do not remain open
@@ -752,17 +751,17 @@ namespace Microsoft.HealthVault.Configuration
         {
             get
             {
-                return this.isMultiAppRecord;
+                return this.isMultiRecordApp;
             }
 
             set
             {
                 this.EnsureNotLocked();
-                this.isMultiAppRecord = value;
+                this.isMultiRecordApp = value;
             }
         }
 
-        private bool isMultiAppRecord;
+        private bool isMultiRecordApp;
 
         private static Uri EnsureTrailingSlash(Uri uri)
         {

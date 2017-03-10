@@ -41,24 +41,16 @@ namespace Microsoft.HealthVault.Connection
             SessionAuthenticationMethodName
         };
 
-        protected HealthServiceInstance HealthServiceInstanceInternal { get; set; }
-
-        protected SessionCredential SessionCredentialInternal { get; set; }
-
         // protected PersonInfo PersonInfoInternal { get; set; }
 
-        protected Guid ApplicationIdInternal { get; set; }
+        public HealthServiceInstance ServiceInstance { get; internal set; }
 
-        public HealthServiceInstance ServiceInstance => this.HealthServiceInstanceInternal;
-
-        public SessionCredential SessionCredential => this.SessionCredentialInternal;
+        public SessionCredential SessionCredential { get; internal set; }
 
         // comment for now
         // public PersonInfo PersonInfo => this.PersonInfoInternal;
 
-        public Guid ApplicationId => this.ApplicationIdInternal;
-
-        public IConfiguration ApplicationConfiguration { get; set; }
+        public Guid ApplicationId { get; internal set; }
 
         public TClient GetClient<TClient>()
             where TClient : IClient
@@ -158,7 +150,7 @@ namespace Microsoft.HealthVault.Connection
 
             using (await this.asyncLock.LockAsync())
             {
-                this.SessionCredentialInternal = await sessionCredentialClient.GetSessionCredentialAsync(token).ConfigureAwait(false);
+                this.SessionCredential = await sessionCredentialClient.GetSessionCredentialAsync(token).ConfigureAwait(false);
             }
         }
 

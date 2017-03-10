@@ -15,7 +15,7 @@ namespace Microsoft.HealthVault.PlatformInformation
     ///
     internal static class HealthServiceLocation
     {
-        private static IConfiguration configuration = Ioc.Get<IConfiguration>();
+        private static HealthVaultConfiguration configuration = Ioc.Get<HealthVaultConfiguration>();
 
         /// <summary>
         /// Constructs a URL to be redirected to via the HealthVault service Shell
