@@ -27,7 +27,7 @@ namespace Microsoft.HealthVault.Connection
             }
 
             HealthServiceRequest request = new HealthServiceRequest(
-                this.Connection, ConnectionInternalBase.SessionAuthenticationMethodName, 2)
+                this.Connection, HealthVaultMethods.CreateAuthenticatedSessionToken, 2)
             {
                 Parameters = this.ConstructCreateTokenInfoXml()
             };
@@ -111,7 +111,10 @@ namespace Microsoft.HealthVault.Connection
             XmlNamespaceManager infoXmlNamespaceManager =
                 new XmlNamespaceManager(infoNav.NameTable);
 
-            string nsName = ConnectionInternalBase.SessionAuthenticationMethodName;
+            // TODO: Learn more about these XPath expressions
+            // This constant used to be a less obvious constant (get-only property), and I'm not sure
+            // when there was ever a chance for it to be anything other than the string it's testing for.
+            string nsName = HealthVaultMethods.CreateAuthenticatedSessionToken.ToString();
             if (nsName == "CreateAuthenticatedSessionToken")
             {
                 nsName = "CreateAuthenticatedSessionToken2";
@@ -141,7 +144,7 @@ namespace Microsoft.HealthVault.Connection
             Validator.ThrowIfArgumentNull(writer, "writer", "WriteXmlNullWriter");
             writer.WriteStartElement("app-id");
 
-            var healthApplicationConfiguration = Ioc.Get<IConfiguration>();
+            var healthApplicationConfiguration = Ioc.Get<HealthVaultConfiguration>();
 
             if (healthApplicationConfiguration.IsMultiRecordApp)
             {

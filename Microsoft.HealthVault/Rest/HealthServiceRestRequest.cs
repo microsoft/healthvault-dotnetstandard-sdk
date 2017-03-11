@@ -44,7 +44,7 @@ namespace Microsoft.HealthVault.Rest
         private const string Optional = "Optional Headers";
         private CancellationTokenSource cancellationTokenSource;
 
-        private IConfiguration configuration = Ioc.Get<IConfiguration>();
+        private HealthVaultConfiguration configuration = Ioc.Get<HealthVaultConfiguration>();
 
         /// <summary>
         /// Creates a new instance of the <see cref="HealthServiceRestRequest"/>
@@ -261,7 +261,7 @@ namespace Microsoft.HealthVault.Rest
             this.uri = fullUri;
             this.body = this.isContentRequest ? requestBody ?? string.Empty : null;
             this.optionalheaders = optionalHeaders;
-            this.timeoutSeconds = connection.ApplicationConfiguration.DefaultRequestTimeout;
+            this.timeoutSeconds = this.configuration.DefaultRequestTimeout;
         }
 
         private async Task<HealthServiceRestResponseData> FetchAsync()

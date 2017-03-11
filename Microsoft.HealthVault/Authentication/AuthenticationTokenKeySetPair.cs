@@ -28,7 +28,7 @@ namespace Microsoft.HealthVault.Authentication
     ///
     internal class AuthenticationTokenKeySetPair
     {
-        private IConfiguration configuration = Ioc.Get<IConfiguration>();
+        private HealthVaultConfiguration configuration = Ioc.Get<HealthVaultConfiguration>();
 
         internal AuthenticationTokenKeySetPair()
         {

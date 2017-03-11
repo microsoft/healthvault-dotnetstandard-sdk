@@ -30,7 +30,7 @@ namespace Microsoft.HealthVault.Clients
         public virtual async Task<ApplicationSettings> GetApplicationSettingsAsync()
         {
             HealthServiceResponseData responseData = await this.Connection
-                .ExecuteAsync("GetApplicationSettings", 1, null)
+                .ExecuteAsync(HealthVaultMethods.GetApplicationSettings, 1, null)
                 .ConfigureAwait(false);
 
             XPathExpression xPathExpression = this.GetPersonAppSettingsXPathExpression(responseData.InfoNavigator);
@@ -56,12 +56,12 @@ namespace Microsoft.HealthVault.Clients
 
         public virtual async Task SetApplicationSettingsAsync(string requestParameters)
         {
-            await this.Connection.ExecuteAsync("SetApplicationSettings", 1, requestParameters).ConfigureAwait(false);
+            await this.Connection.ExecuteAsync(HealthVaultMethods.SetApplicationSettings, 1, requestParameters).ConfigureAwait(false);
         }
 
         public virtual async Task<PersonInfo> GetPersonInfoAsync()
         {
-            HealthServiceResponseData responseData = await this.Connection.ExecuteAsync("GetPersonInfo", 1).ConfigureAwait(false);
+            HealthServiceResponseData responseData = await this.Connection.ExecuteAsync(HealthVaultMethods.GetPersonInfo, 1).ConfigureAwait(false);
 
             XPathExpression personPath = this.GetPersonXPathExpression(responseData.InfoNavigator);
 
@@ -80,7 +80,7 @@ namespace Microsoft.HealthVault.Clients
             }
 
             HealthServiceResponseData responseData = await this.Connection.ExecuteAsync(
-                    "GetAuthorizedRecords",
+                    HealthVaultMethods.GetAuthorizedRecords,
                     1,
                     parameters.ToString())
                 .ConfigureAwait(false);

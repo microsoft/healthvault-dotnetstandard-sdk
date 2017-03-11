@@ -4,10 +4,11 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Web;
+using Microsoft.HealthVault;
 using Microsoft.HealthVault.Connection;
 using Microsoft.HealthVault.Transport;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Moq;
+using NSubstitute;
 
 namespace Core
 {
@@ -19,11 +20,11 @@ namespace Core
         [TestMethod]
         public void Ctor()
         {
-            Mock<IConnectionInternal> mock = new Mock<IConnectionInternal>();
+            IConnectionInternal mock = Substitute.For<IConnectionInternal>();
 
-            HealthServiceRequest req = new HealthServiceRequest(mock.Object, "my-test-method", 5);
+            HealthServiceRequest req = new HealthServiceRequest(mock, HealthVaultMethods.GetPersonInfo, 5);
 
-            Assert.AreEqual(req.MethodName, "my-test-method");
+            Assert.AreEqual(req.Method, HealthVaultMethods.GetPersonInfo);
             Assert.AreEqual(req.MethodVersion, 5);
         }
 
@@ -32,41 +33,10 @@ namespace Core
         {
             try
             {
-                HealthServiceRequest req = new HealthServiceRequest(null, "my-test-method", 5);
+                HealthServiceRequest req = new HealthServiceRequest(null, HealthVaultMethods.GetPersonInfo, 5);
                 Assert.Fail("Expecting an ArgumentNullException.");
             }
             catch (ArgumentNullException)
-            {
-                // pass
-            }
-        }
-
-        [TestMethod]
-        public void CtorNullMethodName()
-        {
-            Mock<IConnectionInternal> mock = new Mock<IConnectionInternal>();
-
-            try
-            {
-                HealthServiceRequest req = new HealthServiceRequest(mock.Object, null, 5);
-                Assert.Fail("Expecting an ArgumentException.");
-            }
-            catch (ArgumentException)
-            {
-                // pass
-            }
-        }
-
-        [TestMethod]
-        public void CtorEmptyStringMethodName()
-        {
-            Mock<IConnectionInternal> mock = new Mock<IConnectionInternal>();
-            try
-            {
-                HealthServiceRequest req = new HealthServiceRequest(mock.Object, String.Empty, 5);
-                Assert.Fail("Expecting an ArgumentException.");
-            }
-            catch (ArgumentException)
             {
                 // pass
             }
@@ -115,8 +85,8 @@ namespace Core
         #region Helpers
         private HealthServiceRequest CreateDefault()
         {
-            Mock<IConnectionInternal> mock = new Mock<IConnectionInternal>();
-            HealthServiceRequest req = new HealthServiceRequest(mock.Object, "my-test-method", 5);
+            IConnectionInternal mock = Substitute.For<IConnectionInternal>();
+            HealthServiceRequest req = new HealthServiceRequest(mock, HealthVaultMethods.GetPersonInfo, 5);
             return req;
         }
 

@@ -13,7 +13,7 @@ namespace Microsoft.HealthVault.Authentication
 {
     internal class AuthSessionKeySetPairs
     {
-        private IConfiguration configuration = Ioc.Get<IConfiguration>();
+        private HealthVaultConfiguration configuration = Ioc.Get<HealthVaultConfiguration>();
 
         private readonly Dictionary<Guid, AuthenticationTokenKeySetPair> pairs =
             new Dictionary<Guid, AuthenticationTokenKeySetPair>();

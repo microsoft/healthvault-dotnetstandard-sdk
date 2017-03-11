@@ -71,7 +71,7 @@ namespace Microsoft.HealthVault.Web.Mvc
 
         private static StringBuilder GetShellUrl()
         {
-            string shellUrl = HealthVault.Config.DefaultHealthVaultShellUrl.OriginalString;
+            string shellUrl = Ioc.Get<WebConfiguration>().DefaultHealthVaultShellUrl.OriginalString;
             StringBuilder targetUrl = new StringBuilder(shellUrl);
             if (!shellUrl.EndsWith("/", StringComparison.OrdinalIgnoreCase))
             {
@@ -119,7 +119,7 @@ namespace Microsoft.HealthVault.Web.Mvc
         {
             if (!_params.ContainsKey("appid"))
             {
-                _params.Add("appid", HealthVault.Config.ApplicationId);
+                _params.Add("appid", Ioc.Get<WebConfiguration>().MasterApplicationId);
             }
         }
 
@@ -134,7 +134,7 @@ namespace Microsoft.HealthVault.Web.Mvc
         private void EnsureAib()
         {
             if (!_params.ContainsKey("aib")
-                && HealthVault.Config.MultiInstanceAware)
+                && Ioc.Get<WebConfiguration>().MultiInstanceAware)
             {
                 _params.Add("aib", "true");
             }
@@ -142,7 +142,7 @@ namespace Microsoft.HealthVault.Web.Mvc
 
         private void EnsureRedirect()
         {
-            Uri redirectOverride = HealthVault.Config.ActionUrlRedirectOverride;
+            Uri redirectOverride = Ioc.Get<WebConfiguration>().ActionUrlRedirectOverride;
             if (_params.ContainsKey("redirect") || redirectOverride == null)
             {
                 return;

@@ -17,38 +17,9 @@ namespace Microsoft.HealthVault.Web
     /// <summary>
     /// Class used for web configurations
     /// </summary>
-    public class WebConfiguration: ConfigurationBase
+    public class WebConfiguration: HealthVaultConfiguration
     {
         private static readonly object instanceLock = new object();
-
-        // Application related configuration keys
-        private const string ConfigKeyApplicationCertificateFileName = "ApplicationCertificateFilename";
-        private const string ConfigKeyApplicationCertificatePassword = "ApplicationCertificatePassword";
-        private const string ConfigKeyCertSubject = "AppCertSubject";
-        private const string ConfigKeySignatureCertStoreLocation = "SignatureCertStoreLocation";
-        private bool isLocked = false;
-
-        #region configuration key constants
-        private const string ConfigKeyItemsPerPage = "DataGrid_ItemsPerPage";
-        private const string ConfigKeyActionPagePrefix = "WCPage_Action";
-        private const string ConfigKeyAllowedRedirectSites = "WCPage_AllowedRedirectSites";
-        private const string ConfigKeyIsMra = "WCPage_IsMRA";
-        private const string ConfigKeyUseAspSession = "WCPage_UseAspSession";
-        private const string ConfigKeyUseSslForSecurity = "WCPage_SSLForSecure";
-        private const string ConfigKeyCookieEncryptionKey = "WCPage_CookieEncryptionKey";
-        private const string ConfigKeyMaxCookieTimeoutMinutesSpelledCorrectly = "WCPage_MaxCookieTimeoutMinutes";
-        private const string ConfigKeyMaxCookieTimeoutMinutes = "WCPage_MaxCookieTimeoutMintes";
-        private const string ConfigKeyCookieTimeoutMinutes = "WCPage_CookieTimeoutMinutes";
-        private const string ConfigKeyCookieDomain = "WCPage_CookieDomain";
-        private const string ConfigKeyCookiePath = "WCPage_CookiePath";
-        private const string ConfigKeyNonProductionActionUrlRedirectOverride = "NonProductionActionUrlRedirectOverride";
-        private const string ConfigKeyIsSignupCodeRequired = "WCPage_IsSignupCodeRequired";
-        #endregion
-
-        internal void lockConfiguration()
-        {
-            isLocked = true;
-        }
 
         public override string ApplicationCertificatePassword
         {
@@ -58,14 +29,8 @@ namespace Microsoft.HealthVault.Web
             }
             set
             {
-                if (!isLocked)
-                {
-                    _applicationCertificatePassword = value;
-                }
-                else
-                {
-                    throw Validator.InvalidConfigurationException("ApplicationCertificatePassword");
-                }
+                this.EnsureNotLocked();
+                _applicationCertificatePassword = value;
             }
         }
 
@@ -80,14 +45,8 @@ namespace Microsoft.HealthVault.Web
             }
             set
             {
-                if (!isLocked)
-                {
-                    _applicationCertificateFileName = value;
-                }
-                else
-                {
-                    throw Validator.InvalidConfigurationException("ApplicationCertificateFileName");
-                }
+                this.EnsureNotLocked();
+                _applicationCertificateFileName = value;
             }
         }
 
@@ -101,14 +60,8 @@ namespace Microsoft.HealthVault.Web
             }
             set
             {
-                if (!isLocked)
-                {
-                    _signatureCertStoreLocation = value;
-                }
-                else
-                {
-                    throw Validator.InvalidConfigurationException("SignatureCertStoreLocation");
-                }
+                this.EnsureNotLocked();
+                _signatureCertStoreLocation = value;
             }
         }
 
@@ -123,14 +76,8 @@ namespace Microsoft.HealthVault.Web
             }
             set
             {
-                if (!isLocked)
-                {
-                    _certSubject = value;
-                }
-                else
-                {
-                    throw Validator.InvalidConfigurationException("CertSubject");
-                }
+                this.EnsureNotLocked();
+                _certSubject = value;
             }
         }
 
@@ -167,18 +114,12 @@ namespace Microsoft.HealthVault.Web
         {
             get
             {
-               return _useSslForSecurity;
+                return _useSslForSecurity;
             }
             set
             {
-                if (!isLocked)
-                {
-                    _useSslForSecurity = value;
-                }
-                else
-                {
-                    throw Validator.InvalidOperationException("CannotSetPropertyAfterConnectionCreation");
-                }
+                this.EnsureNotLocked();
+                _useSslForSecurity = value;
             }
         }
         private volatile bool _useSslForSecurity;
@@ -235,14 +176,8 @@ namespace Microsoft.HealthVault.Web
             }
             set
             {
-                if (!isLocked)
-                {
-                    _useAspSession = value;
-                }
-                else
-                {
-                    throw Validator.InvalidOperationException("CannotSetPropertyAfterConnectionCreation");
-                }
+                this.EnsureNotLocked();
+                _useAspSession = value;
             }
         }
         private volatile bool _useAspSession;
@@ -266,14 +201,8 @@ namespace Microsoft.HealthVault.Web
             }
             set
             {
-                if (!isLocked)
-                {
-                    _cookieEncryptionKey = value;
-                }
-                else
-                {
-                    throw Validator.InvalidOperationException("CannotSetPropertyAfterConnectionCreation");
-                }
+                this.EnsureNotLocked();
+                _cookieEncryptionKey = value;
             }
         }
         private volatile byte[] _cookieEncryptionKey;
@@ -299,14 +228,8 @@ namespace Microsoft.HealthVault.Web
             }
             set
             {
-                if (!isLocked)
-                {
-                    _isSignupCodeRequired = value;
-                }
-                else
-                {
-                    throw Validator.InvalidOperationException("CannotSetPropertyAfterConnectionCreation");
-                }
+                this.EnsureNotLocked();
+                _isSignupCodeRequired = value;
             }
         }
         private volatile bool _isSignupCodeRequired;
@@ -330,14 +253,8 @@ namespace Microsoft.HealthVault.Web
             }
             set
             {
-                if (!isLocked)
-                {
-                    _actionUrlRedirectOverride = value;
-                }
-                else
-                {
-                    throw Validator.InvalidOperationException("CannotSetPropertyAfterConnectionCreation");
-                }
+                this.EnsureNotLocked();
+                _actionUrlRedirectOverride = value;
             }
         }
         private volatile Uri _actionUrlRedirectOverride;
@@ -386,14 +303,8 @@ namespace Microsoft.HealthVault.Web
             }
             set
             {
-                if (!isLocked)
-                {
-                    _defaultCookieTimeout = value;
-                }
-                else
-                {
-                    throw Validator.InvalidOperationException("CannotSetPropertyAfterConnectionCreation");
-                }
+                this.EnsureNotLocked();
+                _defaultCookieTimeout = value;
             }
         }
         private volatile int _defaultCookieTimeout;
@@ -422,14 +333,8 @@ namespace Microsoft.HealthVault.Web
             }
             set
             {
-                if (!isLocked)
-                {
-                    _cookieDomain = value;
-                }
-                else
-                {
-                    throw Validator.InvalidOperationException("CannotSetPropertyAfterConnectionCreation");
-                }
+                this.EnsureNotLocked();
+                _cookieDomain = value;
             }
         }
         private volatile string _cookieDomain;
@@ -453,14 +358,8 @@ namespace Microsoft.HealthVault.Web
             }
             set
             {
-                if (!isLocked)
-                {
-                    _cookiePath = value;
-                }
-                else
-                {
-                    throw Validator.InvalidOperationException("CannotSetPropertyAfterConnectionCreation");
-                }
+                this.EnsureNotLocked();
+                _cookiePath = value;
             }
         }
         private volatile string _cookiePath;
@@ -480,18 +379,12 @@ namespace Microsoft.HealthVault.Web
         {
             get
             {
-               return _allowedRedirectSites;
+                return _allowedRedirectSites;
             }
             set
             {
-                if (!isLocked)
-                {
-                    _allowedRedirectSites = value;
-                }
-                else
-                {
-                    throw Validator.InvalidOperationException("CannotSetPropertyAfterConnectionCreation");
-                }
+                this.EnsureNotLocked();
+                _allowedRedirectSites = value;
             }
         }
         private volatile string _allowedRedirectSites;
@@ -515,14 +408,8 @@ namespace Microsoft.HealthVault.Web
             }
             set
             {
-                if (!isLocked)
-                {
-                    _isMultipleRecordApplication = value;
-                }
-                else
-                {
-                    throw Validator.InvalidOperationException("CannotSetPropertyAfterConnectionCreation");
-                }
+                this.EnsureNotLocked();
+                _isMultipleRecordApplication = value;
             }
         }
         private volatile bool _isMultipleRecordApplication;
@@ -547,14 +434,8 @@ namespace Microsoft.HealthVault.Web
             }
             set
             {
-                if (!isLocked)
-                {
-                    _dataGridItemsPerPage = value;
-                }
-                else
-                {
-                    throw Validator.InvalidOperationException("CannotSetPropertyAfterConnectionCreation");
-                }
+                this.EnsureNotLocked();
+                _dataGridItemsPerPage = value;
             }
         }
         private int? _dataGridItemsPerPage;
@@ -572,8 +453,8 @@ namespace Microsoft.HealthVault.Web
         public virtual Uri GetActionUrl(string action)
         {
             // TODO:  We need to refactor to not get values from config file
-            //string resultUrl = GetConfigurationString(ConfigKeyActionPagePrefix + action, null);
-            //return !String.IsNullOrEmpty(resultUrl) ?
+            // string resultUrl = GetConfigurationString(ConfigKeyActionPagePrefix + action, null);
+            // return !String.IsNullOrEmpty(resultUrl) ?
             //        new Uri(resultUrl, UriKind.RelativeOrAbsolute) : null;
             return new Uri(action);
         }

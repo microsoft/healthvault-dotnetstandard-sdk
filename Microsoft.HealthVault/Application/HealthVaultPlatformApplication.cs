@@ -185,7 +185,7 @@ namespace Microsoft.HealthVault.Application
                 "GetAuthorizedPeopleNumResultsNegative");
 
             HealthServiceRequest request =
-                new HealthServiceRequest(connection, "GetAuthorizedPeople", 1);
+                new HealthServiceRequest(connection, HealthVaultMethods.GetAuthorizedPeople, 1);
             StringBuilder requestParameters = new StringBuilder(256);
             XmlWriterSettings settings = SDKHelper.XmlUnicodeWriterSettings;
             settings.OmitXmlDeclaration = true;
@@ -290,7 +290,7 @@ namespace Microsoft.HealthVault.Application
             bool allLanguages)
         {
             HealthServiceRequest request =
-                new HealthServiceRequest(connection, "GetApplicationInfo", 2);
+                new HealthServiceRequest(connection, HealthVaultMethods.GetApplicationInfo, 2);
 
             if (allLanguages)
             {
@@ -384,7 +384,7 @@ namespace Microsoft.HealthVault.Application
             int methodVersion)
         {
             HealthServiceRequest request =
-                new HealthServiceRequest(connection, "GetUpdatedRecordsForApplication", methodVersion);
+                new HealthServiceRequest(connection, HealthVaultMethods.GetUpdatedRecordsForApplication, methodVersion);
 
             StringBuilder parameters = new StringBuilder();
 
@@ -458,7 +458,7 @@ namespace Microsoft.HealthVault.Application
         public virtual async Task<string> NewSignupCodeAsync(IConnectionInternal connection)
         {
             HealthServiceRequest request =
-                new HealthServiceRequest(connection, "NewSignupCode", 1);
+                new HealthServiceRequest(connection, HealthVaultMethods.NewSignupCode, 1);
             HealthServiceResponseData responseData = await request.ExecuteAsync().ConfigureAwait(false);
 
             XPathExpression infoPath = SDKHelper.GetInfoXPathExpressionForMethod(responseData.InfoNavigator, "NewSignupCode");

@@ -16,9 +16,9 @@
     "System.Security.Cryptography.Cng": "4.3.0",
     "System.Security.Cryptography.Csp": "4.3.0",
     "System.Security.Cryptography.X509Certificates": "4.3.0",
-    "System.Xml.ReaderWriter": "4.0.11",
+    "System.Xml.ReaderWriter": "4.3.0",
     "System.Xml.XDocument": "4.3.0",
-    "System.Xml.XPath": "4.0.1",
+    "System.Xml.XPath": "4.3.0",
     "System.Xml.XPath.XDocument": "4.3.0"
   },
   "frameworks": {

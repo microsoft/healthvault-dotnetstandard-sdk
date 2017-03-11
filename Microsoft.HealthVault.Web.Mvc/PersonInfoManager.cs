@@ -36,7 +36,7 @@ namespace Microsoft.HealthVault.Web.Mvc
         /// </summary>
         /// <param name="context">The current context</param>
         public PersonInfoManager(HttpContextBase context)
-            : this(context, HealthVault.Config.CookieName, HealthVault.Config.UseAspSession)
+            : this(context, Ioc.Get<WebConfiguration>().CookieName, Ioc.Get<WebConfiguration>().UseAspSession)
         {
         }
 
