@@ -82,6 +82,7 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
+    <Compile Include="Clients\PlatformClientTests.cs" />
     <Compile Include="Clients\VocabularyClientTests.cs" />
     <Compile Include="CloudRequestTests\HealthServiceRequestTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
