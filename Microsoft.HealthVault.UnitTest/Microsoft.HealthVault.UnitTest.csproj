@@ -53,6 +53,10 @@
       <HintPath>..\..\..\packages\NSubstitute.2.0.2\lib\net45\NSubstitute.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Xml.XPath, Version=4.0.2.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\System.Xml.XPath.4.3.0\lib\net46\System.Xml.XPath.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <Choose>
     <When Condition="('$(VisualStudioVersion)' == '10.0' or '$(VisualStudioVersion)' == '') and '$(TargetFrameworkVersion)' == 'v3.5'">
@@ -67,12 +71,15 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
+    <Compile Include="Clients\PersonClientTests.cs" />
     <Compile Include="Clients\VocabularyClientTests.cs" />
     <Compile Include="CloudRequestTests\HealthServiceRequestTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="packages.config" />
+    <None Include="packages.config">
+      <SubType>Designer</SubType>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Microsoft.HealthVault\Microsoft.HealthVault.csproj">
