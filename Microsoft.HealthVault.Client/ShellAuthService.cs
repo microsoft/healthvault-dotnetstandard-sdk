@@ -4,7 +4,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.HealthVault.Client.Exceptions;
-using Microsoft.HealthVault.Soda;
 
 namespace Microsoft.HealthVault.Client
 {

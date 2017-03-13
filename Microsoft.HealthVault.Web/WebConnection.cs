@@ -10,7 +10,7 @@ namespace Microsoft.HealthVault.Web
     /// <summary>
     /// Web connection
     /// </summary>
-    internal class WebConnection : ConnectionInternalBase
+    internal class WebConnection : HealthVaultConnectionBase
     {
         private WebConfiguration config;
 
@@ -27,12 +27,22 @@ namespace Microsoft.HealthVault.Web
 
         }
 
+        public override Guid ApplicationId => this.config.MasterApplicationId;
+
         public string SubCredential { get; set; }
 
         public override Task AuthenticateAsync()
         {
             // Do nothing for now.
             return Task.FromResult<object>(null);
+        }
+
+        protected override ISessionCredentialClient CreateSessionCredentialClient()
+        {
+            var sessionCredentialClient = this.ServiceLocator.GetInstance<ISessionCredentialClient>();
+            sessionCredentialClient.Connection = this;
+
+            return sessionCredentialClient;
         }
 
         public override void PrepareAuthSessionHeader(XmlWriter writer, Guid? recordId)

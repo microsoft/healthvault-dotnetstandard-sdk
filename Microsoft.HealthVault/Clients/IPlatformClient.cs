@@ -11,7 +11,7 @@ using Microsoft.HealthVault.Thing;
 namespace Microsoft.HealthVault.Clients
 {
     /// <summary>
-    /// An interface for the HealthVault platform client. Used to access information about the platform.
+    /// Methods to interact with the platform.
     /// </summary>
     public interface IPlatformClient : IClient
     {
@@ -274,5 +274,11 @@ namespace Microsoft.HealthVault.Clients
             HealthRecordItemTypeSections sections,
             IList<string> imageTypes,
             DateTime? lastClientRefreshDate);
+
+        /// <summary>
+        /// Creates a new application instance. This is the first step in the SODA authentication flow.
+        /// </summary>
+        /// <returns>Information about the newly created application instance.</returns>
+        Task<ApplicationCreationInfo> NewApplicationCreationInfoAsync();
     }
 }

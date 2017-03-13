@@ -20,7 +20,7 @@ namespace Microsoft.HealthVault.Client
 
         private readonly AsyncLock connectionLock = new AsyncLock();
 
-        private IHealthVaultConnection cachedConnection;
+        private IClientHealthVaultConnection cachedConnection;
 
         private ClientConfiguration configuration;
 
@@ -54,7 +54,7 @@ namespace Microsoft.HealthVault.Client
             this.configuration = clientConfiguration;
         }
 
-        public async Task<IHealthVaultConnection> GetConnectionAsync()
+        public async Task<IClientHealthVaultConnection> GetConnectionAsync()
         {
             this.getConnectionCalled = true;
 
@@ -70,13 +70,11 @@ namespace Microsoft.HealthVault.Client
                     throw new InvalidOperationException("Cannot call GetConnectionAsync before calling SetConfiguration.");
                 }
 
-                if (this.configuration.DefaultHealthVaultUrl == null || this.configuration.DefaultHealthVaultShellUrl == null)
+                if (this.configuration.MasterApplicationId == Guid.Empty)
                 {
                     var requiredParameters = new List<string>
                     {
                         nameof(this.configuration.MasterApplicationId),
-                        nameof(this.configuration.DefaultHealthVaultUrl),
-                        nameof(this.configuration.DefaultHealthVaultShellUrl)
                     };
 
                     string requiredParametersString = string.Join(", ", requiredParameters);
