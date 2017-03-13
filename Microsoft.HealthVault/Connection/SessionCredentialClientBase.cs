@@ -14,11 +14,6 @@ namespace Microsoft.HealthVault.Connection
     {
         public IConnectionInternal Connection { get; set; }
 
-        protected SessionCredentialClientBase(IConnectionInternal connection)
-        {
-            this.Connection = connection;
-        }
-
         public async Task<SessionCredential> GetSessionCredentialAsync(CancellationToken token)
         {
             if (this.Connection == null)
@@ -151,11 +146,9 @@ namespace Microsoft.HealthVault.Connection
                 writer.WriteAttributeString("is-multi-record-app", "true");
             }
 
-            writer.WriteValue(this.ApplicationInstanceId.ToString());
+            writer.WriteValue(this.Connection.ApplicationId);
             writer.WriteEndElement();
         }
-
-        public abstract Guid ApplicationInstanceId { get; set; }
 
         public abstract void WriteInfoXml(XmlWriter writer);
     }

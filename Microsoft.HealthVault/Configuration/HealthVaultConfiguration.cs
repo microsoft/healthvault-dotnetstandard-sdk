@@ -45,15 +45,11 @@ namespace Microsoft.HealthVault.Configuration
 
         /// <summary>
         /// Gets or sets the root URL for the default instance of the
-        /// HealthVault web-service. This may be overwritten if an environment
-        /// instance bounce happens.
+        /// HealthVault web-service. ( ex: https://platform.healthvault.com/platform/ )
         /// </summary>
-        ///
         /// <remarks>
-        /// This property corresponds to the "HealthServiceUrl" configuration
-        /// value with "wildcat.ashx" removed.
+        /// This may be overwritten if an environment instance bounce happens.
         /// </remarks>
-        ///
         public virtual Uri DefaultHealthVaultUrl
         {
             get
@@ -68,19 +64,14 @@ namespace Microsoft.HealthVault.Configuration
             }
         }
 
-        private volatile Uri defaultHealthVaultRootUrl;
+        private volatile Uri defaultHealthVaultRootUrl = new Uri("https://platform.healthvault.com/platform/");
 
         /// <summary>
         /// Gets the HealthVault Shell URL for
-        /// the configured default instance of the HealthVault web-service. This
-        /// may be overwritten if an environment instance bounce happens.
+        /// the configured default instance of the HealthVault web-service.
+        /// ( ex: https://account.healthvault.com )
         /// </summary>
-        ///
-        /// <remarks>
-        /// This property corresponds to the "ShellUrl" configuration
-        /// value.
-        /// </remarks>
-        ///
+        /// <remarks> This may be overwritten if an environment instance bounce happens.</remarks>
         public virtual Uri DefaultHealthVaultShellUrl
         {
             get
@@ -95,7 +86,7 @@ namespace Microsoft.HealthVault.Configuration
             }
         }
 
-        private volatile Uri shellUrl;
+        private volatile Uri shellUrl = new Uri("https://account.healthvault.com");
 
         /// <summary>
         /// Gets the application's unique identifier.

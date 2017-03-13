@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.HealthVault.Exceptions;
 
-namespace Microsoft.HealthVault.Soda.Exceptions
+namespace Microsoft.HealthVault.Client.Exceptions
 {
     /// <summary>
     /// Thrown from the browser auth flow when authentication fails.

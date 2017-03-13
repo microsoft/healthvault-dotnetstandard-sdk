@@ -37,7 +37,7 @@ namespace Microsoft.HealthVault
         private static void RegisterTypes(DependencyInjectionContainer container)
         {
             container.RegisterTransient<ICryptoConfiguration, BaseCryptoConfiguration>();
-            container.RegisterTransient<IConnectionInternal, ConnectionInternalBase>();
+            container.RegisterTransient<IConnectionInternal, HealthVaultConnectionBase>();
             container.RegisterTransient<ISessionCredentialClient, SessionCredentialClientBase>();
             container.RegisterSingleton<ICryptoService, CryptoService>();
             container.RegisterSingleton<IServiceLocator, ServiceLocator>();

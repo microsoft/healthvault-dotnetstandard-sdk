@@ -35,8 +35,6 @@ namespace Microsoft.HealthVault.Web
         {
             WebIoc.EnsureTypesRegistered();
             IHealthVaultConnection connection = Ioc.Get<IConnectionInternal>();
-            connection.ApplicationConfiguration = Ioc.Get<WebConfiguration>();
-
             await connection.AuthenticateAsync().ConfigureAwait(false);
             return connection;
         }

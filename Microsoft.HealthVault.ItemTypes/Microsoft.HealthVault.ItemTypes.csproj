@@ -46,9 +46,6 @@
     <!-- A reference to the entire .NET Framework is automatically included -->
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\..\Microsoft.Health.ItemTypes\PersonItem.cs">
-      <Link>PersonItem.cs</Link>
-    </Compile>
     <Compile Include="ActionPlanWrapper.cs" />
     <Compile Include="Address.cs" />
     <Compile Include="AerobicData.cs" />

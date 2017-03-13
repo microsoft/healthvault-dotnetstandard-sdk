@@ -16,39 +16,33 @@ namespace Microsoft.HealthVault.Web
 {
     internal class WebSessionCredentialClient : SessionCredentialClientBase
     {
+        private readonly WebConfiguration configuration;
         private X509Certificate2 certificate;
-        private Guid _applicationInstanceId;
 
         private const string DigestMethod = "RSA-SHA1";
 
         private const string SignMethod = "SHA1";
-        private static WebConfiguration configuration = Ioc.Get<WebConfiguration>();
 
-        public WebSessionCredentialClient(IConnectionInternal connection, X509Certificate2 cert) 
-            : base(connection)
+        // TODO: Find how to get cert from IoC or refactor to get cert information in some other fashion
+        public WebSessionCredentialClient(WebConfiguration configuration, X509Certificate2 cert)
         {
             if (cert == null)
             {
                 throw new ArgumentException(nameof(cert));
             }
 
+            this.configuration = configuration;
             this.certificate = cert;
         }
 
         internal RSACng RsaProvider => (RSACng)this.certificate.GetRSAPrivateKey();
 
-        public override Guid ApplicationInstanceId
-        {
-            get { return Guid.Parse("79aec84a-1131-435d-bdcc-40de9b870c35"); } // Hard coded for now
-
-            set { _applicationInstanceId = value; }
-        }
-
         public override void WriteInfoXml(XmlWriter writer)
         {
             if (this.certificate == null)
             {
-                this.certificate = GetApplicationCertificate(ApplicationInstanceId,
+                this.certificate = this.GetApplicationCertificate(
+                    this.Connection.ApplicationId,
                     StoreLocation.LocalMachine,
                     null);
             }
@@ -157,7 +151,7 @@ namespace Microsoft.HealthVault.Web
 
         private string GetApplicationCertificateSubject(Guid applicationId)
         {
-            string result = configuration.CertSubject;
+            string result = this.configuration.CertSubject;
 
             if (result == null)
             {
@@ -196,7 +190,7 @@ namespace Microsoft.HealthVault.Web
                 writer.WriteStartElement("content");
 
                 writer.WriteStartElement("app-id");
-                writer.WriteString(this.ApplicationInstanceId.ToString());
+                writer.WriteString(this.Connection.ApplicationId.ToString());
                 writer.WriteEndElement();
 
                 writer.WriteElementString("hmac", "HMACSHA256");
