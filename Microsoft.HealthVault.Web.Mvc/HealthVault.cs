@@ -23,9 +23,6 @@ namespace Microsoft.HealthVault.Web.Mvc
     /// </summary>
     public static class HealthVault
     {
-
-        public static WebConfiguration Config = Ioc.Get<WebConfiguration>();
-
         /// <summary>
         /// Registers routes to HealthVault controllers.
         /// </summary>

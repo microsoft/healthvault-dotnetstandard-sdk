@@ -114,7 +114,7 @@ namespace Microsoft.HealthVault.Web
         {
             get
             {
-               return _useSslForSecurity;
+                return _useSslForSecurity;
             }
             set
             {
@@ -379,7 +379,7 @@ namespace Microsoft.HealthVault.Web
         {
             get
             {
-               return _allowedRedirectSites;
+                return _allowedRedirectSites;
             }
             set
             {
@@ -453,8 +453,8 @@ namespace Microsoft.HealthVault.Web
         public virtual Uri GetActionUrl(string action)
         {
             // TODO:  We need to refactor to not get values from config file
-            //string resultUrl = GetConfigurationString(ConfigKeyActionPagePrefix + action, null);
-            //return !String.IsNullOrEmpty(resultUrl) ?
+            // string resultUrl = GetConfigurationString(ConfigKeyActionPagePrefix + action, null);
+            // return !String.IsNullOrEmpty(resultUrl) ?
             //        new Uri(resultUrl, UriKind.RelativeOrAbsolute) : null;
             return new Uri(action);
         }

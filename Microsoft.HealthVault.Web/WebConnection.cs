@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.XPath;
 using Microsoft.HealthVault.Connection;
+using Microsoft.HealthVault.PlatformInformation;
 
 namespace Microsoft.HealthVault.Web
 {
@@ -11,12 +12,22 @@ namespace Microsoft.HealthVault.Web
     /// </summary>
     internal class WebConnection : ConnectionInternalBase
     {
-        public string SubCredential { get; set; }
+        private WebConfiguration config;
 
-        public WebConnection(IServiceLocator serviceLocator)
+        public WebConnection(
+            IServiceLocator serviceLocator,
+            WebConfiguration configuration)
             : base(serviceLocator)
         {
+            this.config = configuration;
+            this.ServiceInstance = new HealthServiceInstance
+            {
+
+            };
+
         }
+
+        public string SubCredential { get; set; }
 
         public override Task AuthenticateAsync()
         {
