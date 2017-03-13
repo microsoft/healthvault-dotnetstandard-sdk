@@ -3,6 +3,10 @@
 // see http://www.microsoft.com/resources/sharedsource/licensingbasics/sharedsourcelicenses.mspx.
 // All other rights reserved.
 
+using Microsoft.HealthVault.Connection;
+using Microsoft.HealthVault.Exceptions;
+using Microsoft.HealthVault.Helpers;
+using Microsoft.HealthVault.Transport;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -10,10 +14,6 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.XPath;
-using Microsoft.HealthVault.Connection;
-using Microsoft.HealthVault.Exceptions;
-using Microsoft.HealthVault.Helpers;
-using Microsoft.HealthVault.Transport;
 
 namespace Microsoft.HealthVault.Thing
 {
@@ -110,9 +110,6 @@ namespace Microsoft.HealthVault.Thing
         {
             Validator.ThrowIfArgumentNull(items, "items", "NewItemsNullItem");
 
-            HealthServiceRequest request =
-                new HealthServiceRequest(connection, HealthVaultMethods.PutThings, 2);
-
             StringBuilder infoXml = new StringBuilder();
             XmlWriterSettings settings = SDKHelper.XmlUnicodeWriterSettings;
 
@@ -129,11 +126,8 @@ namespace Microsoft.HealthVault.Thing
                 infoXmlWriter.Flush();
             }
 
-            // Add the XML to the request.
-            request.Parameters = infoXml.ToString();
-
             // Call the web-service
-            HealthServiceResponseData responseData = await request.ExecuteAsync().ConfigureAwait(false);
+            HealthServiceResponseData responseData = await connection.ExecuteAsync(HealthVaultMethods.PutThings, 2, infoXml.ToString()).ConfigureAwait(false);
 
             // Now update the Id for the new item
             XPathNodeIterator thingIds =
@@ -231,13 +225,8 @@ namespace Microsoft.HealthVault.Thing
 
             if (somethingRequiresUpdate)
             {
-                HealthServiceRequest request =
-                    new HealthServiceRequest(connection, HealthVaultMethods.PutThings, 2) { Parameters = infoXml.ToString() };
-
-                // Add the XML to the request.
-
                 // Call the web-service
-                HealthServiceResponseData responseData = await request.ExecuteAsync().ConfigureAwait(false);
+                HealthServiceResponseData responseData = await connection.ExecuteAsync(HealthVaultMethods.PutThings, 2, infoXml.ToString()).ConfigureAwait(false);
 
                 XPathNodeIterator thingIds =
                     responseData.InfoNavigator.Select(
@@ -339,10 +328,7 @@ namespace Microsoft.HealthVault.Thing
                 parameters.Append("</thing-id>");
             }
 
-            HealthServiceRequest request =
-                new HealthServiceRequest(connection, HealthVaultMethods.RemoveThings, 1) { Parameters = parameters.ToString() };
-
-            await request.ExecuteAsync().ConfigureAwait(false);
+            await connection.ExecuteAsync(HealthVaultMethods.RemoveThings, 1, parameters.ToString()).ConfigureAwait(false);
         }
 
         #region GetThings
@@ -387,7 +373,7 @@ namespace Microsoft.HealthVault.Thing
         {
             ValidateFilters(searcher);
 
-            return await ExecuteAsync(connection, accessor, searcher).ConfigureAwait(false);
+            return await this.ExecuteAsync(connection, accessor, searcher).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -424,8 +410,7 @@ namespace Microsoft.HealthVault.Thing
             HealthRecordAccessor accessor,
             HealthRecordSearcher searcher)
         {
-            HealthServiceRequest request = PrepareRequest(connection, accessor, searcher);
-            HealthServiceResponseData responseData = await request.ExecuteAsync().ConfigureAwait(false);
+            HealthServiceResponseData responseData = await this.ExecuteGetThingsRequest(connection, accessor, searcher).ConfigureAwait(false);
 
             return responseData.InfoReader;
         }
@@ -464,8 +449,7 @@ namespace Microsoft.HealthVault.Thing
             HealthRecordAccessor accessor,
             HealthRecordSearcher searcher)
         {
-            HealthServiceRequest request = PrepareRequest(connection, accessor, searcher);
-            HealthServiceResponseData responseData = await request.ExecuteAsync().ConfigureAwait(false);
+            HealthServiceResponseData responseData = await this.ExecuteGetThingsRequest(connection, accessor, searcher).ConfigureAwait(false);
 
             return responseData.InfoNavigator;
         }
@@ -484,15 +468,12 @@ namespace Microsoft.HealthVault.Thing
         /// No filters have been specified.
         /// </exception>
         ///
-        private static HealthServiceRequest PrepareRequest(
+        private async Task<HealthServiceResponseData> ExecuteGetThingsRequest(
             IConnectionInternal connection,
             HealthRecordAccessor accessor,
             HealthRecordSearcher searcher)
         {
-            HealthServiceRequest request =
-                new HealthServiceRequest(connection, HealthVaultMethods.GetThings, 3) { Parameters = GetParametersXml(searcher) };
-
-            return request;
+            return await connection.ExecuteAsync(HealthVaultMethods.GetThings, 3, GetParametersXml(searcher)).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -536,14 +517,12 @@ namespace Microsoft.HealthVault.Thing
         /// HealthServiceStatusCode.OK, or no filters have been specified.
         /// </exception>
         ///
-        private static async Task<ReadOnlyCollection<HealthRecordItemCollection>> ExecuteAsync(
+        private async Task<ReadOnlyCollection<HealthRecordItemCollection>> ExecuteAsync(
             IConnectionInternal connection,
             HealthRecordAccessor accessor,
             HealthRecordSearcher searcher)
         {
-            HealthServiceRequest request = PrepareRequest(connection, accessor, searcher);
-
-            HealthServiceResponseData responseData = await request.ExecuteAsync().ConfigureAwait(false);
+            HealthServiceResponseData responseData = await this.ExecuteGetThingsRequest(connection, accessor, searcher).ConfigureAwait(false);
 
             XmlReader infoReader = responseData.InfoReader;
 

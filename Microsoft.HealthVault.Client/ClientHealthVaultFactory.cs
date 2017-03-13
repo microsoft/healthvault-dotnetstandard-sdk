@@ -1,11 +1,8 @@
-﻿using Grace.DependencyInjection;
+﻿using Microsoft.HealthVault.Configuration;
+using Microsoft.HealthVault.Connection;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
-using Microsoft.HealthVault.Configuration;
-using Microsoft.HealthVault.Connection;
 
 namespace Microsoft.HealthVault.Client
 {
@@ -23,8 +20,6 @@ namespace Microsoft.HealthVault.Client
         private IClientHealthVaultConnection cachedConnection;
 
         private ClientConfiguration configuration;
-
-        private volatile bool getConnectionCalled;
 
         internal ClientHealthVaultFactory()
         {
@@ -46,17 +41,14 @@ namespace Microsoft.HealthVault.Client
 
         public void SetConfiguration(ClientConfiguration clientConfiguration)
         {
-            if (this.getConnectionCalled)
-            {
-                throw new InvalidOperationException("Cannot set configuration after calling GetConnectionAsync.");
-            }
+            this.ThrowIfGetConnectionCalled();
 
             this.configuration = clientConfiguration;
         }
 
         public async Task<IClientHealthVaultConnection> GetConnectionAsync()
         {
-            this.getConnectionCalled = true;
+            this.GetConnectionCalled = true;
 
             using (await this.connectionLock.LockAsync().ConfigureAwait(false))
             {

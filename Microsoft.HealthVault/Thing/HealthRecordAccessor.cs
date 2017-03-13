@@ -3,6 +3,11 @@
 // see http://www.microsoft.com/resources/sharedsource/licensingbasics/sharedsourcelicenses.mspx.
 // All other rights reserved.
 
+using Microsoft.HealthVault.Application;
+using Microsoft.HealthVault.Connection;
+using Microsoft.HealthVault.Exceptions;
+using Microsoft.HealthVault.Helpers;
+using Microsoft.HealthVault.Record;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -10,11 +15,6 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.XPath;
-using Microsoft.HealthVault.Application;
-using Microsoft.HealthVault.Connection;
-using Microsoft.HealthVault.Exceptions;
-using Microsoft.HealthVault.Helpers;
-using Microsoft.HealthVault.Record;
 
 namespace Microsoft.HealthVault.Thing
 {
@@ -765,7 +765,7 @@ namespace Microsoft.HealthVault.Thing
         /// </remarks>
         public async Task RemoveApplicationAuthorizationAsync()
         {
-            await HealthVaultPlatform.RemoveApplicationAuthorizationAsync(this.Connection, this).ConfigureAwait(false);
+            await this.Connection.ExecuteAsync(HealthVaultMethods.RemoveApplicationRecordAuthorization, 1).ConfigureAwait(false);
         }
 
         #endregion Authorization methods

@@ -3,6 +3,11 @@
 // see http://www.microsoft.com/resources/sharedsource/licensingbasics/sharedsourcelicenses.mspx.
 // All other rights reserved.
 
+using Microsoft.HealthVault.Connection;
+using Microsoft.HealthVault.Exceptions;
+using Microsoft.HealthVault.Helpers;
+using Microsoft.HealthVault.Thing;
+using Microsoft.HealthVault.Transport;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -10,11 +15,6 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.XPath;
-using Microsoft.HealthVault.Connection;
-using Microsoft.HealthVault.Exceptions;
-using Microsoft.HealthVault.Helpers;
-using Microsoft.HealthVault.Thing;
-using Microsoft.HealthVault.Transport;
 
 namespace Microsoft.HealthVault.Record
 {
@@ -76,26 +76,18 @@ namespace Microsoft.HealthVault.Record
         /// <param name="connection">
         /// The connection to use to access the data.
         /// </param>
-        /// <param name="accessor">
-        /// The record to use.
-        /// </param>
         /// <exception cref="HealthServiceException">
         /// Errors during the authorization release.
         /// </exception>
-        /// 
+        ///
         /// <remarks>
         /// Once the application releases the authorization to the health record,
         /// calling any methods of this <see cref="HealthRecordAccessor"/> will result
         /// in a <see cref="HealthServiceAccessDeniedException"/>."
         /// </remarks>
-        public virtual async Task RemoveApplicationAuthorizationAsync(
-            IHealthVaultConnection connection,
-            HealthRecordAccessor accessor)
+        public virtual async Task RemoveApplicationAuthorizationAsync(IHealthVaultConnection connection)
         {
-            // TODO: IConnection-ify this.
-            // HealthServiceRequest request = new HealthServiceRequest(connection, "RemoveApplicationRecordAuthorization", 1, accessor);
-
-            // await request.ExecuteAsync().ConfigureAwait(false);
+            await connection.ExecuteAsync(HealthVaultMethods.RemoveApplicationRecordAuthorization, 1).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -117,18 +109,18 @@ namespace Microsoft.HealthVault.Record
         /// Returns a dictionary of <see cref="HealthRecordItemTypePermission"/>
         /// with health record item types as the keys.
         /// </returns>
-        /// 
+        ///
         /// <remarks>
         /// If the list of health record item types is empty, an empty dictionary is
         /// returned. If for a health record item type, the person has
         /// neither online access nor offline access permissions,
         /// <b> null </b> will be returned for that type in the dictionary.
         /// </remarks>
-        /// 
+        ///
         /// <exception cref="ArgumentNullException">
         /// If <paramref name="healthRecordItemTypeIds"/> is <b>null</b>.
         /// </exception>
-        /// 
+        ///
         /// <exception cref="HealthServiceException">
         /// If there is an exception during executing the request to HealthVault.
         /// </exception>
@@ -138,8 +130,6 @@ namespace Microsoft.HealthVault.Record
             HealthRecordAccessor accessor,
             IList<Guid> healthRecordItemTypeIds)
         {
-            // TODO: IConnection-ify this.
-            /*
             HealthRecordPermissions recordPermissions = await this.QueryRecordPermissionsAsync(connection, accessor, healthRecordItemTypeIds).ConfigureAwait(false);
             Collection<HealthRecordItemTypePermission> typePermissions = recordPermissions.ItemTypePermissions;
 
@@ -159,9 +149,6 @@ namespace Microsoft.HealthVault.Record
             }
 
             return permissions;
-            */
-
-            return null;
         }
 
         /// <summary>
@@ -185,7 +172,7 @@ namespace Microsoft.HealthVault.Record
         /// authenticated person has for the HealthRecordItemTypes specified
         /// in the current health record when using the current application.
         /// </returns>
-        /// 
+        ///
         /// <remarks>
         /// If the list of health record item types is empty, an empty list is
         /// returned. If for a health record item type, the person has
@@ -193,11 +180,11 @@ namespace Microsoft.HealthVault.Record
         /// HealthRecordItemTypePermission object is not returned for that
         /// health record item type.
         /// </remarks>
-        /// 
+        ///
         /// <exception cref="ArgumentNullException">
         /// If <paramref name="healthRecordItemTypeIds"/> is <b>null</b>.
         /// </exception>
-        /// 
+        ///
         /// <exception cref="HealthServiceException">
         /// If there is an exception during executing the request to HealthVault.
         /// </exception>
@@ -231,7 +218,7 @@ namespace Microsoft.HealthVault.Record
         /// which contains a collection of <see cref="HealthRecordItemTypePermission"/> objects and
         /// other permission settings.
         /// </returns>
-        /// 
+        ///
         /// <remarks>
         /// If the list of health record item types is empty, an empty list is
         /// returned for <see cref="HealthRecordPermissions"/> object's ItemTypePermissions property.
@@ -240,11 +227,11 @@ namespace Microsoft.HealthVault.Record
         /// HealthRecordItemTypePermission object is not returned for that
         /// health record item type.
         /// </remarks>
-        /// 
+        ///
         /// <exception cref="ArgumentNullException">
         /// If <paramref name="healthRecordItemTypeIds"/> is <b>null</b>.
         /// </exception>
-        /// 
+        ///
         /// <exception cref="HealthServiceException">
         /// There is an error in the server request.
         /// </exception>
@@ -256,15 +243,9 @@ namespace Microsoft.HealthVault.Record
         {
             Validator.ThrowIfArgumentNull(healthRecordItemTypeIds, "healthRecordItemTypeIds", "CtorhealthRecordItemTypeIdsArgumentNull");
 
-            // TODO: IConnection-ify this.
-            /*
-            HealthServiceRequest request =
-            new HealthServiceRequest(connection, "QueryPermissions", 1, accessor)
-                {
-                    Parameters = GetQueryPermissionsParametersXml(healthRecordItemTypeIds)
-                };
+            string parameters = GetQueryPermissionsParametersXml(healthRecordItemTypeIds);
 
-            HealthServiceResponseData responseData = await request.ExecuteAsync().ConfigureAwait(false);
+            HealthServiceResponseData responseData = await connection.ExecuteAsync(HealthVaultMethods.QueryPermissions, 1, parameters).ConfigureAwait(false);
 
             XPathNavigator infoNav =
                 responseData.InfoNavigator.SelectSingleNode(
@@ -293,13 +274,9 @@ namespace Microsoft.HealthVault.Record
             }
 
             return recordPermissions;
-            */
-
-            return null;
         }
 
-        private static string GetQueryPermissionsParametersXml(
-            IList<Guid> healthRecordItemTypeIds)
+        private static string GetQueryPermissionsParametersXml(IList<Guid> healthRecordItemTypeIds)
         {
             StringBuilder parameters = new StringBuilder(128);
 
@@ -320,11 +297,9 @@ namespace Microsoft.HealthVault.Record
             return parameters.ToString();
         }
 
-        private static readonly XPathExpression QueryPermissionsInfoPath =
-            XPathExpression.Compile("/wc:info");
+        private static readonly XPathExpression QueryPermissionsInfoPath = XPathExpression.Compile("/wc:info");
 
-        internal static XPathExpression GetQueryPermissionsInfoXPathExpression(
-            XPathNavigator infoNav)
+        internal static XPathExpression GetQueryPermissionsInfoXPathExpression(XPathNavigator infoNav)
         {
             XmlNamespaceManager infoXmlNamespaceManager =
                 new XmlNamespaceManager(infoNav.NameTable);
@@ -347,7 +322,7 @@ namespace Microsoft.HealthVault.Record
         /// <summary>
         /// Gets valid group memberships for a record.
         /// </summary>
-        /// 
+        ///
         /// <remarks>
         /// Group membership thing types allow an application to signify that the
         /// record belongs to an application defined group.  A record in the group may be
@@ -397,15 +372,7 @@ namespace Microsoft.HealthVault.Record
                 }
             }
 
-            // TODO: IConnection-ify this.
-            /*
-            HealthServiceRequest request =
-            new HealthServiceRequest(connection, "GetValidGroupMembership", 1, accessor)
-                {
-                    Parameters = parameters.ToString()
-                };
-
-            HealthServiceResponseData responseData = await request.ExecuteAsync().ConfigureAwait(false);
+            HealthServiceResponseData responseData = await connection.ExecuteAsync(HealthVaultMethods.GetValidGroupMembership, 1, parameters.ToString()).ConfigureAwait(false);
 
             XPathExpression infoPath =
                 SDKHelper.GetInfoXPathExpressionForMethod(
@@ -426,9 +393,6 @@ namespace Microsoft.HealthVault.Record
             }
 
             return memberships;
-            */
-
-            return null;
         }
     }
 }

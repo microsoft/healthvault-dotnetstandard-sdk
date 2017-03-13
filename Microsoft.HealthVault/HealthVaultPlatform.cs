@@ -3,12 +3,6 @@
 // see http://www.microsoft.com/resources/sharedsource/licensingbasics/sharedsourcelicenses.mspx.
 // All other rights reserved.
 
-using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Threading.Tasks;
-using System.Xml;
-using System.Xml.XPath;
 using Microsoft.HealthVault.Application;
 using Microsoft.HealthVault.Connection;
 using Microsoft.HealthVault.Exceptions;
@@ -19,6 +13,12 @@ using Microsoft.HealthVault.Record;
 using Microsoft.HealthVault.Thing;
 using Microsoft.HealthVault.Transport;
 using Microsoft.HealthVault.Vocabulary;
+using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Threading.Tasks;
+using System.Xml;
+using System.Xml.XPath;
 
 namespace Microsoft.HealthVault
 {
@@ -1118,7 +1118,7 @@ namespace Microsoft.HealthVault
             IHealthVaultConnection connection,
             HealthRecordAccessor accessor)
         {
-            await HealthVaultPlatformRecord.Current.RemoveApplicationAuthorizationAsync(connection, accessor).ConfigureAwait(false);
+            await HealthVaultPlatformRecord.Current.RemoveApplicationAuthorizationAsync(connection).ConfigureAwait(false);
         }
 
         /// <summary>
