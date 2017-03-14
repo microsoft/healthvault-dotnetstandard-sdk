@@ -3,6 +3,11 @@
 // see http://www.microsoft.com/resources/sharedsource/licensingbasics/sharedsourcelicenses.mspx.
 // All other rights reserved.
 
+using Microsoft.HealthVault.Connection;
+using Microsoft.HealthVault.Exceptions;
+using Microsoft.HealthVault.Helpers;
+using Microsoft.HealthVault.Rest;
+using Microsoft.HealthVault.Transport;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -11,11 +16,6 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.XPath;
-using Microsoft.HealthVault.Connection;
-using Microsoft.HealthVault.Exceptions;
-using Microsoft.HealthVault.Helpers;
-using Microsoft.HealthVault.Rest;
-using Microsoft.HealthVault.Transport;
 
 namespace Microsoft.HealthVault.Authentication
 {
@@ -162,7 +162,7 @@ namespace Microsoft.HealthVault.Authentication
         /// </param>
         ///
         internal virtual async Task AuthenticateIfRequiredAsync(
-            IHealthVaultConnection connection,
+            IConnectionInternal connection,
             Guid applicationId)
         {
             if (this.GetAuthenticationResult(applicationId) == null)
@@ -176,7 +176,7 @@ namespace Microsoft.HealthVault.Authentication
         /// </summary>
         ///
         private async Task AuthenticateAsync(
-            IHealthVaultConnection connection,
+            IConnectionInternal connection,
             Guid appId)
         {
             this.AuthenticationResults?.Remove(appId);
@@ -362,7 +362,7 @@ namespace Microsoft.HealthVault.Authentication
         /// <seealso cref="HealthServiceConnection"/>
         ///
         internal async Task CreateAuthenticatedSessionTokenAsync(
-            IHealthVaultConnection connection,
+            IConnectionInternal connection,
             Guid appId)
         {
             Validator.ThrowIfArgumentNull(connection, "connection", "AuthenticatedConnectionNull");
@@ -372,21 +372,12 @@ namespace Microsoft.HealthVault.Authentication
                 "appId",
                 "AuthenticationAppIDNullOrEmpty");
 
-            // TODO: IConnection-ify this.
-            /*
-            AnonymousConnection anonConn = new AnonymousConnection(connection.ApplicationConfiguration.ApplicationId, connection.ApplicationConfiguration.HealthVaultUrl);
-            if (connection.WebProxy != null)
-            {
-                anonConn.WebProxy = connection.WebProxy;
-            }
-
             await this.MakeCreateTokenCallAsync(
-                this.AuthenticationMethodName,
+                this.AuthenticationMethod,
                 2,
-                anonConn,
+                connection,
                 appId,
                 false).ConfigureAwait(false);
-            */
         }
 
         #region create token web service helpers
@@ -571,13 +562,8 @@ namespace Microsoft.HealthVault.Authentication
         {
             this.AuthenticationMethod = method;
 
-            HealthServiceRequest request =
-                new HealthServiceRequest(connection, this.AuthenticationMethod, version)
-                {
-                    Parameters = this.ConstructCreateTokenInfoXml(applicationTokenCreationInfo, stsOriginalUrl)
-                };
-
-            HealthServiceResponseData responseData = await request.ExecuteAsync().ConfigureAwait(false);
+            var parameters = this.ConstructCreateTokenInfoXml(applicationTokenCreationInfo, stsOriginalUrl);
+            HealthServiceResponseData responseData = await connection.ExecuteAsync(this.AuthenticationMethod, version, parameters).ConfigureAwait(false);
 
             CreateAuthenticationTokenResult createAuthTokenResult = this.GetAuthTokenAndAbsenceReasons(responseData.InfoNavigator);
 

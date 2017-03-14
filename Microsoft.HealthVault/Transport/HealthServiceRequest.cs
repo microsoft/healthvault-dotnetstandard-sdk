@@ -3,6 +3,12 @@
 // see http://www.microsoft.com/resources/sharedsource/licensingbasics/sharedsourcelicenses.mspx.
 // All other rights reserved.
 
+using Microsoft.HealthVault.Configuration;
+using Microsoft.HealthVault.Connection;
+using Microsoft.HealthVault.Diagnostics;
+using Microsoft.HealthVault.Exceptions;
+using Microsoft.HealthVault.Extensions;
+using Microsoft.HealthVault.Helpers;
 using System;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
@@ -18,12 +24,6 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Xml;
-using Microsoft.HealthVault.Configuration;
-using Microsoft.HealthVault.Connection;
-using Microsoft.HealthVault.Diagnostics;
-using Microsoft.HealthVault.Exceptions;
-using Microsoft.HealthVault.Extensions;
-using Microsoft.HealthVault.Helpers;
 
 namespace Microsoft.HealthVault.Transport
 {
@@ -87,15 +87,15 @@ namespace Microsoft.HealthVault.Transport
         /// <param name="connectionInternal">
         /// The client-side representation of the HealthVault service.
         /// </param>
-        /// 
+        ///
         /// <param name="method">
         /// The method to invoke on the service.
         /// </param>
-        /// 
+        ///
         /// <param name="methodVersion">
         /// The version of the method to invoke on the service.
         /// </param>
-        /// 
+        ///
         /// <exception cref="ArgumentNullException">
         /// The <paramref name="connectionInternal"/> parameter is <b>null</b>.
         /// </exception>
@@ -236,15 +236,6 @@ namespace Microsoft.HealthVault.Transport
         {
             this.BuildRequestXml(null);
         }
-
-        // TODO: IConnection-ify this.
-        /*
-        public string RequestCompressionMethod
-        {
-            get { return this.connection.RequestCompressionMethod; }
-            set { this.connection.RequestCompressionMethod = value; }
-        }
-        */
 
         /// <summary>
         /// Connects the XML using the specified optional XSL.

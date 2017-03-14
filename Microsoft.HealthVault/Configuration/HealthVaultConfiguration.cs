@@ -400,7 +400,7 @@ namespace Microsoft.HealthVault.Configuration
         ///
         /// <remarks>
         /// Although most applications don't need this configuration setting, if an application
-        /// calls <see cref="HealthRecordAccessor.GetItemAsync(System.Guid,Microsoft.HealthVault.Thing.HealthRecordItemSections)"/> or makes any query to HealthVault
+        /// calls <see cref="HealthRecordAccessor.GetItemAsync(System.Guid,ThingSections)"/> or makes any query to HealthVault
         /// that doesn't specify the type identifier in the filter, this configuration setting
         /// will tell HealthVault the format of the type to reply with. For example, if a web
         /// application has two servers and makes a call to GetItemAsync for EncounterV1 and the

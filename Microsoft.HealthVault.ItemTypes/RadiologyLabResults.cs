@@ -12,11 +12,11 @@ using Microsoft.HealthVault.Thing;
 namespace Microsoft.HealthVault.ItemTypes
 {
     /// <summary>
-    /// Represents a health record item type that encapsulates radiology
+    /// Represents a thing type that encapsulates radiology
     /// laboratory results.
     /// </summary>
     ///
-    public class RadiologyLabResults : HealthRecordItem
+    public class RadiologyLabResults : ThingBase
     {
         /// <summary>
         /// Creates a new instance of the <see cref="RadiologyLabResults"/> class
@@ -25,7 +25,7 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         /// <remarks>
         /// The item is not added to the health record until the
-        /// <see cref="HealthRecordAccessor.NewItem(HealthRecordItem)"/> method
+        /// <see cref="HealthRecordAccessor.NewItem(ThingBase)"/> method
         /// is called.
         /// </remarks>
         ///

@@ -1,9 +1,5 @@
-﻿using Microsoft.HealthVault.Authentication;
-
-namespace Microsoft.HealthVault.Connection
+﻿namespace Microsoft.HealthVault.Connection
 {
-    // TODO: We need to clean up this interface.
-
     /// <summary>
     /// Not yet flushed
     /// </summary>

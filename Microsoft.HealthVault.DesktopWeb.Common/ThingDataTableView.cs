@@ -6,10 +6,10 @@
 namespace Microsoft.HealthVault.DesktopWeb.Common
 {
     /// <summary>
-    /// Defines the possible views for the <see cref="HealthRecordItemDataTable"/>.
+    /// Defines the possible views for the <see cref="ThingDataTable"/>.
     /// </summary>
     ///
-    public enum HealthRecordItemDataTableView
+    public enum ThingDataTableView
     {
         /// <summary>
         /// The default view uses SingleTypeTable if the filter contains
@@ -20,7 +20,7 @@ namespace Microsoft.HealthVault.DesktopWeb.Common
         Default = 0,
 
         /// <summary>
-        /// A view for the <see cref="HealthRecordItemDataTable"/> that shows
+        /// A view for the <see cref="ThingDataTable"/> that shows
         /// columns that are specific to a single item type. However, if the
         /// type does not contain a specific single type table view, the base
         /// type is used, which is the same as the multiple type table.

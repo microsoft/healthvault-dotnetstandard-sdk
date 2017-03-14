@@ -16,7 +16,7 @@ namespace Microsoft.HealthVault.ItemTypes
     /// Information about the body composition of the record owner.
     /// </summary>
     ///
-    public class BodyComposition : HealthRecordItem
+    public class BodyComposition : ThingBase
     {
         /// <summary>
         /// Creates an instance of information about the body composition of the record owner

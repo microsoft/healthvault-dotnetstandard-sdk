@@ -9,11 +9,11 @@ namespace Microsoft.HealthVault.Thing
 {
     /// <summary>
     /// Provides values that indicate the rights associated with access to a
-    /// health record item.
+    /// thing.
     /// </summary>
     ///
     [Flags]
-    public enum HealthRecordItemPermissions
+    public enum ThingPermissions
     {
         /// <summary>
         /// The person or group has no permissions.
@@ -38,13 +38,13 @@ namespace Microsoft.HealthVault.Thing
         Update = 0x2,
 
         /// <summary>
-        /// The person or group can create health record items in the set.
+        /// The person or group can create things in the set.
         /// </summary>
         ///
         Create = 0x4,
 
         /// <summary>
-        /// The person or group can delete health record items in the set.
+        /// The person or group can delete things in the set.
         /// </summary>
         ///
         Delete = 0x8,

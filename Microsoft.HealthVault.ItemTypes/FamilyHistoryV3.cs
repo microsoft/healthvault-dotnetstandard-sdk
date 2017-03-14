@@ -33,7 +33,7 @@ namespace Microsoft.HealthVault.ItemTypes
     /// that's all it takes to get a new instance started.
     /// </remarks>
     ///
-    public class FamilyHistoryV3 : HealthRecordItem
+    public class FamilyHistoryV3 : ThingBase
     {
         /// <summary>
         /// Initialize a new instance of the <see cref="FamilyHistoryV3"/>

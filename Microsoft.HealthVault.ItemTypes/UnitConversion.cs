@@ -15,7 +15,7 @@ namespace Microsoft.HealthVault.ItemTypes
     /// Unit conversion representation.
     /// </summary>
     ///
-    public class UnitConversion : HealthRecordItemData
+    public class UnitConversion : ItemBase
     {
         /// <summary>
         /// Populates this <see cref="UnitConversion"/> instance from the data in the specified XML.

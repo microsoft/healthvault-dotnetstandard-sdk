@@ -40,7 +40,7 @@ namespace Microsoft.HealthVault.ItemTypes
     ///
     /// </remarks>
     ///
-    public class GeneticSnpResults : HealthRecordItem
+    public class GeneticSnpResults : ThingBase
     {
         /// <summary>
         /// Creates an instance of <see cref="GeneticSnpResults"/> with default values.
@@ -49,7 +49,7 @@ namespace Microsoft.HealthVault.ItemTypes
         public GeneticSnpResults()
             : base(TypeId)
         {
-            this.Sections |= HealthRecordItemSections.BlobPayload;
+            this.Sections |= ThingSections.BlobPayload;
         }
 
         /// <summary>
@@ -90,7 +90,7 @@ namespace Microsoft.HealthVault.ItemTypes
             this.GenomeBuild = genomeBuild;
             this.Chromosome = chromosome;
             this.NumberingScheme = numberingScheme;
-            this.Sections |= HealthRecordItemSections.BlobPayload;
+            this.Sections |= ThingSections.BlobPayload;
         }
 
         /// <summary>
@@ -532,7 +532,7 @@ namespace Microsoft.HealthVault.ItemTypes
         /// The SNP test result data is exposed as a <see cref="SnpData"/> instance.
         ///
         /// To get the SNP test result data when fetching an instance of the
-        /// GeneticSnpResults health record item type, you must specify that
+        /// GeneticSnpResults thing type, you must specify that
         /// the other-data section to be returned to access the SnpData.
         /// </remarks>
         ///

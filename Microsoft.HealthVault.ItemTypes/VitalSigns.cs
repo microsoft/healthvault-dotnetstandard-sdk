@@ -14,10 +14,10 @@ using Microsoft.HealthVault.Thing;
 namespace Microsoft.HealthVault.ItemTypes
 {
     /// <summary>
-    /// Represents a health record item type that encapsulates vital signs.
+    /// Represents a thing type that encapsulates vital signs.
     /// </summary>
     ///
-    public class VitalSigns : HealthRecordItem
+    public class VitalSigns : ThingBase
     {
         /// <summary>
         /// Creates a new instance of the <see cref="VitalSigns"/> class with default
@@ -26,7 +26,7 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         /// <remarks>
         /// The item is not added to the health record until the
-        /// <see cref="HealthRecordAccessor.NewItem(HealthRecordItem)"/> method
+        /// <see cref="HealthRecordAccessor.NewItem(ThingBase)"/> method
         /// is called.
         /// </remarks>
         ///

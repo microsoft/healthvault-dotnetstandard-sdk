@@ -16,7 +16,7 @@ using Microsoft.HealthVault.ItemTypes;
 namespace Microsoft.HealthVault.Thing
 {
     /// <summary>
-    /// A collection of the BLOBs associated with a health record item.
+    /// A collection of the BLOBs associated with a thing.
     /// </summary>
     ///
     /// <remarks>
@@ -28,26 +28,26 @@ namespace Microsoft.HealthVault.Thing
     ///
     public class BlobStore : IDictionary<string, Blob>
     {
-        internal BlobStore(HealthRecordItem item, HealthRecordAccessor record)
+        internal BlobStore(ThingBase item, HealthRecordAccessor record)
         {
             this.item = item;
             this.Record = record;
         }
 
         internal BlobStore(
-            HealthRecordItem item)
+            ThingBase item)
         {
             this.item = item;
         }
 
         internal HealthRecordAccessor Record { get; set; }
 
-        private HealthRecordItem item;
+        private ThingBase item;
 
         #region IDictionary implementation
 
         /// <summary>
-        /// Gets the count of BLOBs associated with the health record item.
+        /// Gets the count of BLOBs associated with the thing.
         /// </summary>
         ///
         public int Count => this.blobs.Count;
@@ -436,13 +436,13 @@ namespace Microsoft.HealthVault.Thing
         {
             Blob blob = new Blob(blobName, contentType, null, null, this.Record);
             this.blobs.Add(blobName, blob);
-            this.item.Sections |= HealthRecordItemSections.BlobPayload;
+            this.item.Sections |= ThingSections.BlobPayload;
             return blob;
         }
 
         /// <summary>
         /// Recreates a BLOB in the store to allow for restarting multiple BLOB uploads on a
-        /// <see cref="HealthRecordItem"/>.
+        /// <see cref="ThingBase"/>.
         /// </summary>
         ///
         /// <param name="blobName">
@@ -467,7 +467,7 @@ namespace Microsoft.HealthVault.Thing
         ///
         /// <remarks>
         /// This overload is intended to allow the caller to recover from issues that may arise
-        /// while uploading large BLOBs or many BLOBs for a <see cref="HealthRecordItem"/>.
+        /// while uploading large BLOBs or many BLOBs for a <see cref="ThingBase"/>.
         /// If you have a large amount of data to upload, you can periodically save the state of
         /// the Blob instance (and BlobStream if necessary) and then use this method to recreate
         /// that same Blob instance in the store.
@@ -491,7 +491,7 @@ namespace Microsoft.HealthVault.Thing
             Blob blob = new Blob(blobName, contentType, null, null, hashInfo, this.Record) { Url = blobUrl };
 
             this.blobs.Add(blobName, blob);
-            this.item.Sections |= HealthRecordItemSections.BlobPayload;
+            this.item.Sections |= ThingSections.BlobPayload;
             return blob;
         }
 

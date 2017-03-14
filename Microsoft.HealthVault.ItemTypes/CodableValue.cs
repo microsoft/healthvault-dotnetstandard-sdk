@@ -19,7 +19,7 @@ namespace Microsoft.HealthVault.ItemTypes
     /// store.
     /// </summary>
     ///
-    public class CodableValue : HealthRecordItemData,
+    public class CodableValue : ItemBase,
         IList<CodedValue>
     {
         /// <summary>
@@ -474,7 +474,7 @@ namespace Microsoft.HealthVault.ItemTypes
         /// The <paramref name="writer"/> parameter is <b>null</b>.
         /// </exception>
         ///
-        /// <exception cref="HealthRecordItemSerializationException">
+        /// <exception cref="ThingSerializationException">
         /// The <see cref="Text"/>, <see cref="CodedValue.Value"/>, or
         /// <see cref="CodedValue.Family"/> parameter is <b>null</b> or empty.
         /// </exception>

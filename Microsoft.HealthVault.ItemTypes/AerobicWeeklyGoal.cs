@@ -13,11 +13,11 @@ using Microsoft.HealthVault.Thing;
 namespace Microsoft.HealthVault.ItemTypes
 {
     /// <summary>
-    /// Represents a health record item type that encapsulates a goal to have
+    /// Represents a thing type that encapsulates a goal to have
     /// a certain number of aerobic sessions per week.
     /// </summary>
     ///
-    public class AerobicWeeklyGoal : HealthRecordItem
+    public class AerobicWeeklyGoal : ThingBase
     {
         /// <summary>
         /// Creates a new instance of the <see cref="AerobicWeeklyGoal"/> class with default
@@ -26,7 +26,7 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         /// <remarks>
         /// The item is not added to the health record until the
-        /// <see cref="HealthRecordAccessor.NewItemAsync(HealthRecordItem)"/>
+        /// <see cref="HealthRecordAccessor.NewItemAsync(ThingBase)"/>
         /// method is called.
         /// </remarks>
         ///
@@ -57,7 +57,7 @@ namespace Microsoft.HealthVault.ItemTypes
         /// The <paramref name="recurrence"/> parameter is negative or zero.
         /// </exception>
         ///
-        public AerobicWeeklyGoal(AerobicData session, int recurrence)
+        public AerobicWeeklyGoal(AerobicBase session, int recurrence)
             : base(TypeId)
         {
             this.AerobicSession = session;
@@ -96,7 +96,7 @@ namespace Microsoft.HealthVault.ItemTypes
 
             Validator.ThrowInvalidIfNull(aerobicWeeklyNav, "AerobicWeeklyUnexpectedNode");
 
-            this.session = new AerobicData();
+            this.session = new AerobicBase();
             this.session.ParseXml(aerobicWeeklyNav.SelectSingleNode("session"));
 
             this.recurrence =
@@ -145,14 +145,14 @@ namespace Microsoft.HealthVault.ItemTypes
         /// </summary>
         ///
         /// <value>
-        /// An <see cref="AerobicData"/> value representing the session definition.
+        /// An <see cref="AerobicBase"/> value representing the session definition.
         /// </value>
         ///
         /// <exception cref="ArgumentNullException">
         /// The <paramref name="value"/> parameter is <b>null</b>.
         /// </exception>
         ///
-        public AerobicData AerobicSession
+        public AerobicBase AerobicSession
         {
             get { return this.session; }
 
@@ -163,7 +163,7 @@ namespace Microsoft.HealthVault.ItemTypes
             }
         }
 
-        private AerobicData session = new AerobicData();
+        private AerobicBase session = new AerobicBase();
 
         /// <summary>
         /// Gets or sets the number of sessions per week required to meet

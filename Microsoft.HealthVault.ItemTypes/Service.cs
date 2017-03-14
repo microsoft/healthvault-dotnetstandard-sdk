@@ -17,7 +17,7 @@ namespace Microsoft.HealthVault.ItemTypes
     /// Information about a specific service provided on an explanation of benefits.
     /// </summary>
     ///
-    public class Service : HealthRecordItemData
+    public class Service : ItemBase
     {
         /// <summary>
         /// Creates a new instance of the <see cref="Service"/> class with default values.
@@ -25,7 +25,7 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         /// <remarks>
         /// This item is not added to the health record until the
-        /// <see cref="HealthRecordAccessor.NewItem(HealthRecordItem)"/> method
+        /// <see cref="HealthRecordAccessor.NewItem(ThingBase)"/> method
         /// is called
         /// </remarks>
         ///
@@ -39,7 +39,7 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         /// <remarks>
         /// This item is not added to the health record until the
-        /// <see cref="HealthRecordAccessor.NewItem(HealthRecordItem)"/> method
+        /// <see cref="HealthRecordAccessor.NewItem(ThingBase)"/> method
         /// is called.
         /// </remarks>
         ///

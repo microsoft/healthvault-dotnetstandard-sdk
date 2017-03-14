@@ -21,7 +21,7 @@ namespace Microsoft.HealthVault.ItemTypes
     /// Examples: Average heart rate, average temperature, intensity.
     /// </remarks>
     ///
-    public class ExerciseDetail : HealthRecordItemData
+    public class ExerciseDetail : ItemBase
     {
         /// <summary>
         /// Creates a new instance of the <see cref="ExerciseDetail"/> class

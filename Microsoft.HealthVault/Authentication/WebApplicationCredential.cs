@@ -3,6 +3,11 @@
 // see http://www.microsoft.com/resources/sharedsource/licensingbasics/sharedsourcelicenses.mspx.
 // All other rights reserved.
 
+using Microsoft.HealthVault.Application;
+using Microsoft.HealthVault.Configuration;
+using Microsoft.HealthVault.Connection;
+using Microsoft.HealthVault.Helpers;
+using Microsoft.HealthVault.Rest;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -14,11 +19,6 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.XPath;
-using Microsoft.HealthVault.Application;
-using Microsoft.HealthVault.Configuration;
-using Microsoft.HealthVault.Connection;
-using Microsoft.HealthVault.Helpers;
-using Microsoft.HealthVault.Rest;
 
 namespace Microsoft.HealthVault.Authentication
 {
@@ -162,9 +162,7 @@ namespace Microsoft.HealthVault.Authentication
         /// The application certificate containing the application's private key.
         /// </param>
         ///
-        public WebApplicationCredential(
-            Guid applicationId,
-            X509Certificate2 certificate)
+        public WebApplicationCredential(Guid applicationId, X509Certificate2 certificate)
         {
             this.ApplicationId = applicationId;
             this.cert = certificate;
@@ -187,11 +185,8 @@ namespace Microsoft.HealthVault.Authentication
         /// The required application-specific certificate is not found.
         /// </exception>
         ///
-        public WebApplicationCredential(
-            Guid applicationId)
-            : this(
-                applicationId,
-                ApplicationCertificateStore.Current.GetApplicationCertificate(applicationId))
+        public WebApplicationCredential(Guid applicationId)
+            : this(applicationId, ApplicationCertificateStore.Current.GetApplicationCertificate(applicationId))
         {
             this.certOriginFromStore = true;
         }
@@ -225,9 +220,7 @@ namespace Microsoft.HealthVault.Authentication
         /// The required application-specific certificate is not found.
         /// </exception>
         ///
-        public WebApplicationCredential(
-            Guid applicationId,
-            string subCredential)
+        public WebApplicationCredential(Guid applicationId, string subCredential)
             : this(applicationId)
         {
             Validator.ThrowIfStringNullOrEmpty(subCredential, "subCredential");
@@ -264,10 +257,7 @@ namespace Microsoft.HealthVault.Authentication
         /// The required application-specific certificate is not found.
         /// </exception>
         ///
-        public WebApplicationCredential(
-            Guid applicationId,
-            string subCredential,
-            X509Certificate2 certificate)
+        public WebApplicationCredential(Guid applicationId, string subCredential, X509Certificate2 certificate)
             : this(applicationId, certificate)
         {
             Validator.ThrowIfStringNullOrEmpty(subCredential, "subCredential");
@@ -300,10 +290,7 @@ namespace Microsoft.HealthVault.Authentication
         /// Subject of the certificate for the application.
         /// </param>
         ///
-        public WebApplicationCredential(
-            Guid applicationId,
-            StoreLocation storeLocation,
-            string certSubject)
+        public WebApplicationCredential(Guid applicationId, StoreLocation storeLocation, string certSubject)
         {
             this.Initialize(applicationId, storeLocation, certSubject);
         }
@@ -338,10 +325,7 @@ namespace Microsoft.HealthVault.Authentication
         /// specified certificate store.
         /// </exception>
         ///
-        private void Initialize(
-            Guid applicationId,
-            StoreLocation storeLocation,
-            string certSubject)
+        private void Initialize(Guid applicationId, StoreLocation storeLocation, string certSubject)
         {
             Validator.ThrowArgumentExceptionIf(
                 applicationId == Guid.Empty,
@@ -358,8 +342,7 @@ namespace Microsoft.HealthVault.Authentication
             this.LoadAuthTokenPair(applicationId);
         }
 
-        private void LoadAuthTokenPair(
-            Guid applicationId)
+        private void LoadAuthTokenPair(Guid applicationId)
         {
             CreateAuthenticationTokenResult newResult;
 
@@ -382,10 +365,7 @@ namespace Microsoft.HealthVault.Authentication
         /// certificate store.
         /// </summary>
         ///
-        private void SetupSignatureCertRsaProvider(
-            Guid applicationId,
-            StoreLocation storeLocation,
-            string certSubject)
+        private void SetupSignatureCertRsaProvider(Guid applicationId, StoreLocation storeLocation, string certSubject)
         {
             this.DigestMethod = this.configuration.CryptoConfiguration.SignatureHashAlgorithmName;
             this.SignMethod = this.configuration.CryptoConfiguration.SignatureAlgorithmName;
@@ -421,9 +401,7 @@ namespace Microsoft.HealthVault.Authentication
         /// The application identifier to verify, if authentication is required.
         /// </param>
         ///
-        internal override async Task AuthenticateIfRequiredAsync(
-            IHealthVaultConnection connection,
-            Guid applicationId)
+        internal override async Task AuthenticateIfRequiredAsync(IConnectionInternal connection, Guid applicationId)
         {
             if (IsAuthenticationExpired(applicationId, this.TokenIssuedRefreshCounter))
             {
@@ -454,9 +432,7 @@ namespace Microsoft.HealthVault.Authentication
         /// The credential to use for the request.
         /// </returns>
         ///
-        private async Task AuthenticateAsync(
-            IHealthVaultConnection connection,
-            Guid applicationId)
+        private async Task AuthenticateAsync(IConnectionInternal connection, Guid applicationId)
         {
             await AuthenticateKeySetPairAsync(connection, applicationId, this.cert).ConfigureAwait(false);
 
@@ -502,9 +478,7 @@ namespace Microsoft.HealthVault.Authentication
         /// The XML writer that is constructing the header section.
         /// </param>
         ///
-        internal override void GetHeaderSection(
-            Guid applicationId,
-            XmlWriter writer)
+        internal override void GetHeaderSection(Guid applicationId, XmlWriter writer)
         {
             base.GetHeaderSection(
                 applicationId,
@@ -527,8 +501,7 @@ namespace Microsoft.HealthVault.Authentication
         /// The header section query string parameter.
         /// </return>
         ///
-        internal override string GetHeaderSection(
-            Guid applicationId)
+        internal override string GetHeaderSection(Guid applicationId)
         {
             string result = base.GetHeaderSection(applicationId);
 
@@ -597,8 +570,7 @@ namespace Microsoft.HealthVault.Authentication
         /// The result of the authentication request.
         /// </param>
         [SecuritySafeCritical]
-        internal override void UpdateAuthenticationResults(
-            CreateAuthenticationTokenResult result)
+        internal override void UpdateAuthenticationResults(CreateAuthenticationTokenResult result)
         {
             if (result.ApplicationId == this.ApplicationId)
             {
@@ -666,10 +638,7 @@ namespace Microsoft.HealthVault.Authentication
         /// A string representing the data that was authenticated by the credential.
         /// </returns>
         ///
-        protected virtual string AuthenticateWebApplicationData(
-            byte[] data,
-            int index,
-            int count)
+        protected virtual string AuthenticateWebApplicationData(byte[] data, int index, int count)
         {
             CryptoHmac hmac = this.KeySet.HMAC;
 
@@ -712,10 +681,7 @@ namespace Microsoft.HealthVault.Authentication
         /// The <paramref name="data"/> parameter is <b>null</b> or empty.
         /// </exception>
         ///
-        internal override string AuthenticateData(
-            byte[] data,
-            int index,
-            int count)
+        internal override string AuthenticateData(byte[] data, int index, int count)
         {
             return this.AuthenticateWebApplicationData(data, index, count);
         }
@@ -966,12 +932,9 @@ namespace Microsoft.HealthVault.Authentication
         /// True if <cref name="AuthenticateKeySetPairAsync"/> needs to be called.
         /// </returns>
         ///
-        private static bool IsAuthenticationExpired(
-            Guid applicationId,
-            long refreshCounter)
+        private static bool IsAuthenticationExpired(Guid applicationId, long refreshCounter)
         {
-            AuthenticationTokenKeySetPair pair =
-                liveKeySetPairs.GetPair(applicationId);
+            AuthenticationTokenKeySetPair pair = liveKeySetPairs.GetPair(applicationId);
 
             if (pair == null)
             {
@@ -1062,10 +1025,7 @@ namespace Microsoft.HealthVault.Authentication
         /// The application's certificate containing the application's private key.
         /// </param>
         ///
-        private static async Task AuthenticateKeySetPairAsync(
-            IHealthVaultConnection connection,
-            Guid applicationId,
-            X509Certificate2 certificate)
+        private static async Task AuthenticateKeySetPairAsync(IConnectionInternal connection, Guid applicationId, X509Certificate2 certificate)
         {
             await AuthenticateKeySetPairAsync(liveKeySetPairs, connection, applicationId, certificate).ConfigureAwait(false);
         }
@@ -1101,7 +1061,7 @@ namespace Microsoft.HealthVault.Authentication
         ///
         private static async Task AuthenticateKeySetPairAsync(
             AuthSessionKeySetPairs keySetPairs,
-            IHealthVaultConnection connection,
+            IConnectionInternal connection,
             Guid applicationId,
             X509Certificate2 certificate)
         {

@@ -14,7 +14,7 @@ namespace Microsoft.HealthVault.ItemTypes
     /// A range related to a specific test result.
     /// </summary>
     ///
-    public class TestResultRange : HealthRecordItemData
+    public class TestResultRange : ItemBase
     {
         /// <summary>
         /// Initialize a new instance of the <see cref="TestResultRange"/>

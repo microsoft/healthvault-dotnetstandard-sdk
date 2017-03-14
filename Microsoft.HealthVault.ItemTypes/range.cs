@@ -23,7 +23,7 @@ namespace Microsoft.HealthVault.ItemTypes
     /// The type of the minimum and maximum values for the range.
     /// </typeparam>
     ///
-    public abstract class Range<RangeType> : HealthRecordItemData
+    public abstract class Range<RangeType> : ItemBase
     {
         /// <summary>
         /// Creates a new instance of the Range class with

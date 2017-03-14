@@ -14,7 +14,7 @@ namespace Microsoft.HealthVault.ItemTypes
     /// Represents a vital sign result type.
     /// </summary>
     ///
-    public class VitalSignsResultType : HealthRecordItemData
+    public class VitalSignsResultType : ItemBase
     {
         /// <summary>
         /// Creates a new instance of the <see cref="VitalSignsResultType"/> class with

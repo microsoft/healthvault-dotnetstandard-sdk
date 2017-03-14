@@ -14,7 +14,7 @@ namespace Microsoft.HealthVault.ItemTypes
     /// A single laboratory test.
     /// </summary>
     ///
-    public class LabTestResultDetails : HealthRecordItemData
+    public class LabTestResultDetails : ItemBase
     {
         /// <summary>
         /// Populates this <see cref="LabTestResultDetails"/> instance from the data in the XML.

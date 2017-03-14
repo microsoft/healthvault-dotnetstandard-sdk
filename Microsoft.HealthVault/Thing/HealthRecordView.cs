@@ -22,7 +22,7 @@ namespace Microsoft.HealthVault.Thing
     ///
     /// <remarks>
     /// This class wraps up the logic for constructing the format tag for
-    /// querying health record items with the "GetThings" method.
+    /// querying things with the "GetThings" method.
     /// </remarks>
     ///
     [DebuggerDisplay("Sections = {Sections}")]
@@ -36,24 +36,24 @@ namespace Microsoft.HealthVault.Thing
         /// </summary>
         ///
         /// <value>
-        /// An instance of <see cref="HealthRecordItemSections"/>. The default
+        /// An instance of <see cref="ThingSections"/>. The default
         /// values are Core and XML.
         /// </value>
         ///
-        public HealthRecordItemSections Sections
+        public ThingSections Sections
         {
             get { return this.sections; }
 
             set
             {
                 // Always add in Core so that we get the type-id element
-                this.sections = value | HealthRecordItemSections.Core;
+                this.sections = value | ThingSections.Core;
             }
         }
 
-        private HealthRecordItemSections sections =
-            HealthRecordItemSections.Core |
-            HealthRecordItemSections.Xml;
+        private ThingSections sections =
+            ThingSections.Core |
+            ThingSections.Xml;
 
         /// <summary>
         /// Gets the names of the transforms to apply to the resulting
@@ -100,7 +100,7 @@ namespace Microsoft.HealthVault.Thing
         /// Be careful when adding to this collection. If you are not specifying any
         /// <see cref="TransformsToApply"/> and the Microsoft.Health.ItemTypes namespace doesn't
         /// contain a class for parsing the type version you specify, you will get a
-        /// <see cref="HealthRecordItem"/> instance rather than the type specific class instance.
+        /// <see cref="ThingBase"/> instance rather than the type specific class instance.
         /// </remarks>
         ///
         public Collection<Guid> TypeVersionFormat { get; } = new Collection<Guid>();
@@ -160,22 +160,22 @@ namespace Microsoft.HealthVault.Thing
                 switch (sectionNav.Value)
                 {
                     case "core":
-                        view.Sections |= HealthRecordItemSections.Core;
+                        view.Sections |= ThingSections.Core;
                         break;
                     case "audits":
-                        view.Sections |= HealthRecordItemSections.Audits;
+                        view.Sections |= ThingSections.Audits;
                         break;
                     case "blobpayload":
-                        view.Sections |= HealthRecordItemSections.BlobPayload;
+                        view.Sections |= ThingSections.BlobPayload;
                         break;
                     case "effectivepermissions":
-                        view.Sections |= HealthRecordItemSections.EffectivePermissions;
+                        view.Sections |= ThingSections.EffectivePermissions;
                         break;
                     case "tags":
-                        view.Sections |= HealthRecordItemSections.Tags;
+                        view.Sections |= ThingSections.Tags;
                         break;
                     case "digitalsignatures":
-                        view.Sections |= HealthRecordItemSections.Signature;
+                        view.Sections |= ThingSections.Signature;
                         break;
                 }
             }
@@ -187,7 +187,7 @@ namespace Microsoft.HealthVault.Thing
                 string transformName = xmlTransformNav.Value;
                 if (transformName.Length == 0)
                 {
-                    view.Sections |= HealthRecordItemSections.Xml;
+                    view.Sections |= ThingSections.Xml;
                 }
                 else
                 {
@@ -224,7 +224,7 @@ namespace Microsoft.HealthVault.Thing
             // First check to be sure we either have sections and/or
             // transforms defined.
             Validator.ThrowArgumentExceptionIf(
-                this.Sections == HealthRecordItemSections.None &&
+                this.Sections == ThingSections.None &&
                 this.TransformsToApply.Count == 0,
                 "sections",
                 "NoSectionsOrTransforms");
@@ -243,37 +243,37 @@ namespace Microsoft.HealthVault.Thing
 
         private void AddSectionsXml(XmlWriter writer)
         {
-            if ((this.Sections & HealthRecordItemSections.Audits) != 0)
+            if ((this.Sections & ThingSections.Audits) != 0)
             {
                 WriteSection(writer, "audits");
             }
 
-            if ((this.Sections & HealthRecordItemSections.Core) != 0)
+            if ((this.Sections & ThingSections.Core) != 0)
             {
                 WriteSection(writer, "core");
             }
 
-            if ((this.Sections & HealthRecordItemSections.EffectivePermissions) != 0)
+            if ((this.Sections & ThingSections.EffectivePermissions) != 0)
             {
                 WriteSection(writer, "effectivepermissions");
             }
 
-            if ((this.Sections & HealthRecordItemSections.BlobPayload) != 0)
+            if ((this.Sections & ThingSections.BlobPayload) != 0)
             {
                 WriteSection(writer, "blobpayload");
             }
 
-            if ((this.Sections & HealthRecordItemSections.Tags) != 0)
+            if ((this.Sections & ThingSections.Tags) != 0)
             {
                 WriteSection(writer, "tags");
             }
 
-            if ((this.Sections & HealthRecordItemSections.Signature) != 0)
+            if ((this.Sections & ThingSections.Signature) != 0)
             {
                 WriteSection(writer, "digitalsignatures");
             }
 
-            if ((this.Sections & HealthRecordItemSections.Xml) != 0)
+            if ((this.Sections & ThingSections.Xml) != 0)
             {
                 writer.WriteStartElement("xml");
                 writer.WriteEndElement();

@@ -11,7 +11,7 @@ using System.Xml.XPath;
 namespace Microsoft.HealthVault.DesktopWeb.Common
 {
     /// <summary>
-    /// Describes the schema of a column of health record item data when 
+    /// Describes the schema of a column of thing data when 
     /// transformed by the single-type item transform or multi-type item 
     /// transform.
     /// </summary>

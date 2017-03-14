@@ -20,24 +20,24 @@ using Microsoft.HealthVault.Thing;
 namespace Microsoft.HealthVault.Web
 {
     /// <summary>
-    /// An ASP.NET server control for viewing health record items.
+    /// An ASP.NET server control for viewing things.
     /// </summary>
     ///
     /// <remarks>
-    /// The HealthRecordItemDataGrid works with the
-    /// <see cref="HealthRecordItemDataTable"/> to show a
-    /// paged list of the health record items matching the specified
+    /// The ThingDataGrid works with the
+    /// <see cref="ThingDataTable"/> to show a
+    /// paged list of the things matching the specified
     /// search criteria.<br/>
     /// <br/>
     /// This control can only be used inside a <see cref="HealthServicePage"/>.
     /// </remarks>
     [AspNetHostingPermission(SecurityAction.InheritanceDemand, Level = AspNetHostingPermissionLevel.Minimal)]
-    public class HealthRecordItemDataGrid : Control, INamingContainer
+    public class ThingDataGrid : Control, INamingContainer
     {
         private static WebConfiguration configuration = Ioc.Get<WebConfiguration>();
 
         /// <summary>
-        /// Constructs a HealthRecordItemDataGrid instance with default values.
+        /// Constructs a ThingDataGrid instance with default values.
         /// </summary>
         ///
         /// <remarks>
@@ -45,10 +45,10 @@ namespace Microsoft.HealthVault.Web
         /// grid. Instead, specify the grid in an .aspx file.
         /// </remarks>
         ///
-        public HealthRecordItemDataGrid()
+        public ThingDataGrid()
         {
             // We are initializing the GridView in the constructor
-            // so that the pages that consume HealthRecordItemDataGrid can have
+            // so that the pages that consume ThingDataGrid can have
             // access to the grid view's properties. If we do it on
             // CreateChildControls(), it happens after Load, so we would
             // get uninitialized exceptions.
@@ -272,7 +272,7 @@ namespace Microsoft.HealthVault.Web
         /// <see cref="ActionCommands"/> are also set.<br/>
         /// <br/>
         /// Actions are server-side events that can be configured through
-        /// attributes of the HealthRecordItemDataGrid element in an aspx
+        /// attributes of the ThingDataGrid element in an aspx
         /// file. Actions consist of text which gets displayed as a link,
         /// a command identifier, and an action event handler to call to
         /// handle the action when clicked. When an action is specified a
@@ -299,7 +299,7 @@ namespace Microsoft.HealthVault.Web
         /// <see cref="ActionCommands"/> are also set.<br/>
         /// <br/>
         /// Actions are server-side events that can be configured through
-        /// attributes of the HealthRecordItemDataGrid element in an aspx
+        /// attributes of the ThingDataGrid element in an aspx
         /// file. Actions consist of text which gets displayed as a link,
         /// a command identifier, and an action event handler to call to
         /// handle the action when clicked. When an action is specified a
@@ -326,7 +326,7 @@ namespace Microsoft.HealthVault.Web
         /// <see cref="ActionCommands"/> is also set.<br/>
         /// <br/>
         /// Actions are server-side events that can be configured through
-        /// attributes of the HealthRecordItemDataGrid element in an aspx
+        /// attributes of the ThingDataGrid element in an aspx
         /// file. Actions consist of text which gets displayed as a link,
         /// a command identifier, and an action event handler to call to
         /// handle the action when clicked. When an action is specified a
@@ -360,7 +360,7 @@ namespace Microsoft.HealthVault.Web
         /// <see cref="ActionLabels"/> is also set.<br/>
         /// <br/>
         /// Actions are server-side events that can be configured through
-        /// attributes of the HealthRecordItemDataGrid element in an aspx
+        /// attributes of the ThingDataGrid element in an aspx
         /// file. Actions consist of text which gets displayed as a link,
         /// a command identifier, and an action event handler to call to
         /// handle the action when clicked. When an action is specified a
@@ -421,7 +421,7 @@ namespace Microsoft.HealthVault.Web
         /// <remarks>
         /// The Action event is fired in response to an action link being
         /// clicked. The Action event can be handled by associating a method
-        /// with the Action property in the HealthRecordItemDataGrid element
+        /// with the Action property in the ThingDataGrid element
         /// in the aspx page.<br/>
         /// <br/>
         /// The action command is passed to the event handler as a parameter.
@@ -490,7 +490,7 @@ namespace Microsoft.HealthVault.Web
 
         private async Task DeleteThingAsync(Guid thingId, Guid versionStamp)
         {
-            await Record.RemoveItem(new HealthRecordItemKey(thingId, versionStamp));
+            await Record.RemoveItem(new ThingKey(thingId, versionStamp));
 
             this.DataChanged = true;
         }
@@ -605,7 +605,7 @@ namespace Microsoft.HealthVault.Web
         #endregion Server-side actions
 
         /// <summary>
-        /// Renders the HTML for the HealthRecordItemDataGrid.
+        /// Renders the HTML for the ThingDataGrid.
         /// </summary>
         ///
         /// <remarks>
@@ -680,7 +680,7 @@ namespace Microsoft.HealthVault.Web
         /// </remarks>
         ///
         /// <exception cref="InvalidOperationException">
-        /// If the <see cref="HealthRecordItemDataGrid"/> instance is placed in
+        /// If the <see cref="ThingDataGrid"/> instance is placed in
         /// a page not deriving from <see cref="HealthServicePage"/>.
         /// </exception>
         ///
@@ -700,7 +700,7 @@ namespace Microsoft.HealthVault.Web
 
             query.MaxFullItemsReturnedPerRequest = PageSize;
 
-            _wcDataTable = new HealthRecordItemDataTable(_tableView, query);
+            _wcDataTable = new ThingDataTable(_tableView, query);
             _wcDataTable.GetData(Record, PageIndex * PageSize, PageSize);
 
             this._showIsSignedColumn = this._showIsSignedColumn && _wcDataTable.HasSignedData;
@@ -795,7 +795,7 @@ namespace Microsoft.HealthVault.Web
 
             DataControlField fld = null;
 
-            if (cdef.ColumnName == HealthRecordItemDataGrid.WCIsSignedAttributeName)
+            if (cdef.ColumnName == ThingDataGrid.WCIsSignedAttributeName)
             {
                 if (!this._showIsSignedColumn)
                 {
@@ -915,7 +915,7 @@ namespace Microsoft.HealthVault.Web
         /// <returns>
         /// A <see cref="ThingQuery"/> that is used
         /// by the underlying
-        /// <see cref="HealthRecordItemDataTable"/>
+        /// <see cref="ThingDataTable"/>
         /// to retrieve data for the data grid.
         /// </returns>
         ///
@@ -937,7 +937,7 @@ namespace Microsoft.HealthVault.Web
         /// </summary>
         ///
         /// <remarks>
-        /// The data grid can either show health record items of specific
+        /// The data grid can either show things of specific
         /// types specified by the <see cref="TypeIds"/> property or by
         /// specifying a specific filter.<br/>
         /// <br/>
@@ -958,7 +958,7 @@ namespace Microsoft.HealthVault.Web
         /// </summary>
         ///
         /// <remarks>
-        /// The data grid can either show health record items of specific
+        /// The data grid can either show things of specific
         /// types or by specifying a more detailed filter in the
         /// <see cref="QueryOverride"/> property.<br/>
         /// <br/>
@@ -1021,15 +1021,15 @@ namespace Microsoft.HealthVault.Web
         ///
         /// <remarks>
         /// The default value is
-        /// <see cref="HealthRecordItemDataTableView.Default"/>.
+        /// <see cref="ThingDataTableView.Default"/>.
         /// </remarks>
         ///
-        public HealthRecordItemDataTableView TableView
+        public ThingDataTableView TableView
         {
             get { return _tableView; }
             set { _tableView = value; }
         }
-        private HealthRecordItemDataTableView _tableView;
+        private ThingDataTableView _tableView;
 
         /// <summary>
         /// Gets or sets a value which indicates to the data grid that data
@@ -1294,6 +1294,6 @@ namespace Microsoft.HealthVault.Web
         }
         private bool _showActionLinks = true;
 
-        private HealthRecordItemDataTable _wcDataTable;
+        private ThingDataTable _wcDataTable;
     }
 }

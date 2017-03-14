@@ -18,20 +18,20 @@ using Microsoft.HealthVault.PlatformInformation;
 namespace Microsoft.HealthVault.Thing
 {
     /// <summary>
-    /// Represents a health record item.
+    /// Represents a thing.
     /// </summary>
     ///
     /// <remarks>
-    /// A health record item is a single piece of data in a health record
+    /// A thing is a single piece of data in a health record
     /// that is accessible through the HealthVault service. Examples of health
     /// record items include a blood pressure measurement, an exercise session,
     /// or an insurance claim.
     /// <br/><br/>
-    /// Health record items are typed and have XML data that adheres to the
+    /// things are typed and have XML data that adheres to the
     /// schema for the type.
     /// </remarks>
     ///
-    public class HealthRecordItem : IThing
+    public class ThingBase : IThing
     {
         /// <summary>
         /// Derived classes must call this method when their default
@@ -42,14 +42,14 @@ namespace Microsoft.HealthVault.Thing
         /// The unique identifier of the type of which the item is an instance.
         /// </param>
         ///
-        protected internal HealthRecordItem(Guid typeId)
+        protected internal ThingBase(Guid typeId)
         {
             this.TypeId = typeId;
             this.tags = new TagsCollection(this);
         }
 
         /// <summary>
-        /// Creates a new instance of the <see cref="HealthRecordItem"/> class
+        /// Creates a new instance of the <see cref="ThingBase"/> class
         /// with the specified type identifier and type-specific data.
         /// </summary>
         ///
@@ -67,7 +67,7 @@ namespace Microsoft.HealthVault.Thing
         /// derived type constructor.
         /// </remarks>
         ///
-        public HealthRecordItem(Guid typeId, IXPathNavigable typeSpecificData)
+        public ThingBase(Guid typeId, IXPathNavigable typeSpecificData)
             : this(typeId)
         {
             this.TypeSpecificData = typeSpecificData;
@@ -125,7 +125,7 @@ namespace Microsoft.HealthVault.Thing
         }
 
         /// <summary>
-        /// Gets the key of the health record item.
+        /// Gets the key of the thing.
         /// </summary>
         ///
         /// <value>
@@ -137,13 +137,13 @@ namespace Microsoft.HealthVault.Thing
         /// <remarks>
         /// This is the only property that
         /// is guaranteed to be available regardless of how
-        /// <see cref="HealthRecordItem.Sections"/> is set.
+        /// <see cref="ThingBase.Sections"/> is set.
         /// </remarks>
         ///
-        public HealthRecordItemKey Key { get; internal set; }
+        public ThingKey Key { get; internal set; }
 
         /// <summary>
-        /// Gets the type identifier for the health record item type.
+        /// Gets the type identifier for the thing type.
         /// </summary>
         ///
         /// <value>
@@ -151,23 +151,17 @@ namespace Microsoft.HealthVault.Thing
         /// </value>
         ///
         /// <remarks>
-        /// The types available can be queried using
-        /// <see
-        /// cref="ItemTypeManager.GetHealthRecordItemTypeDefinitionAsync(System.Guid,HealthServiceConnection)"/>
-        /// .
+        /// The types available can be queried
         /// </remarks>
         ///
         public Guid TypeId { get; internal set; }
 
         /// <summary>
-        /// Gets the health record item type name.
+        /// Gets the thing type name.
         /// </summary>
         ///
         /// <remarks>
-        /// The types and names of types available can be queried using
-        /// <see
-        /// cref="ItemTypeManager.GetHealthRecordItemTypeDefinitionAsync(System.Guid,HealthServiceConnection)"/>
-        /// .
+        /// The types and names of types available can be queried
         /// </remarks>
         ///
         public string TypeName { get; internal set; }
@@ -175,7 +169,7 @@ namespace Microsoft.HealthVault.Thing
         #region Core information
 
         /// <summary>
-        /// Gets or sets the date and time that the health record item data was taken.
+        /// Gets or sets the date and time that the thing data was taken.
         /// </summary>
         ///
         /// <remarks>
@@ -183,8 +177,8 @@ namespace Microsoft.HealthVault.Thing
         /// into the system.
         /// <br/><br/>
         /// This data value is only available when the
-        /// <see cref="HealthRecordItem.Sections"/> show the
-        /// <see cref="HealthRecordItemSections.Core"/> bit
+        /// <see cref="ThingBase.Sections"/> show the
+        /// <see cref="ThingSections.Core"/> bit
         /// set.
         /// </remarks>
         ///
@@ -206,28 +200,28 @@ namespace Microsoft.HealthVault.Thing
         private bool effectiveDateDirty;
 
         /// <summary>
-        /// Gets the state of the <see cref="HealthRecordItem"/>.
+        /// Gets the state of the <see cref="ThingBase"/>.
         /// </summary>
         ///
         /// <remarks>
-        /// <see cref="HealthRecordItem.Sections"/> show the
-        /// <see cref="HealthRecordItemSections.Core"/> bit
+        /// <see cref="ThingBase.Sections"/> show the
+        /// <see cref="ThingSections.Core"/> bit
         /// set.
         /// </remarks>
         ///
-        public HealthRecordItemState State { get; internal set; } = HealthRecordItemState.Active;
+        public ThingState State { get; internal set; } = ThingState.Active;
 
         /// <summary>
-        /// Gets the <see cref="HealthRecordItem"/> flags.
+        /// Gets the <see cref="ThingBase"/> flags.
         /// </summary>
         ///
         /// <remarks>
-        /// <see cref="HealthRecordItem.Sections"/> show the
-        /// <see cref="HealthRecordItemSections.Core"/> bit
+        /// <see cref="ThingBase.Sections"/> show the
+        /// <see cref="ThingSections.Core"/> bit
         /// set.
         /// </remarks>
         ///
-        public HealthRecordItemFlags Flags
+        public ThingFlags Flags
         {
             get
             {
@@ -244,50 +238,50 @@ namespace Microsoft.HealthVault.Thing
             }
         }
 
-        private HealthRecordItemFlags flags;
+        private ThingFlags flags;
         private bool areFlagsDirty;
 
         /// <summary>
-        /// Gets or sets the value indicating if the <see cref="HealthRecordItem"/> is private.
+        /// Gets or sets the value indicating if the <see cref="ThingBase"/> is private.
         /// </summary>
         ///
         /// <remarks>
         /// Private items are accessible only by custodians.
-        /// <see cref="HealthRecordItem.Sections"/> show the
-        /// <see cref="HealthRecordItemSections.Core"/> bit
+        /// <see cref="ThingBase.Sections"/> show the
+        /// <see cref="ThingSections.Core"/> bit
         /// set.
         /// </remarks>
         ///
         public bool IsPersonal
         {
-            get { return this.IsFlagSet(HealthRecordItemFlags.Personal); }
+            get { return this.IsFlagSet(ThingFlags.Personal); }
 
             set
             {
                 if (value)
                 {
-                    this.SetFlag(HealthRecordItemFlags.Personal);
+                    this.SetFlag(ThingFlags.Personal);
                 }
                 else
                 {
-                    this.ClearFlag(HealthRecordItemFlags.Personal);
+                    this.ClearFlag(ThingFlags.Personal);
                 }
             }
         }
 
         /// <summary>
-        /// Gets the value indicating if the <see cref="HealthRecordItem"/> is down-versioned.
+        /// Gets the value indicating if the <see cref="ThingBase"/> is down-versioned.
         /// </summary>
         ///
         /// <remarks>
-        /// If this value is true then an attempt to update the <see cref="HealthRecordItem"/>
+        /// If this value is true then an attempt to update the <see cref="ThingBase"/>
         /// will fail.
         /// </remarks>
         ///
-        public bool IsDownVersioned => this.IsFlagSet(HealthRecordItemFlags.DownVersioned);
+        public bool IsDownVersioned => this.IsFlagSet(ThingFlags.DownVersioned);
 
         /// <summary>
-        /// Gets the value indicating if the <see cref="HealthRecordItem"/> is up-versioned.
+        /// Gets the value indicating if the <see cref="ThingBase"/> is up-versioned.
         /// </summary>
         ///
         /// <remarks>
@@ -296,15 +290,15 @@ namespace Microsoft.HealthVault.Thing
         /// type version which may cause data loss in some cases.
         /// </remarks>
         ///
-        public bool IsUpVersioned => this.IsFlagSet(HealthRecordItemFlags.UpVersioned);
+        public bool IsUpVersioned => this.IsFlagSet(ThingFlags.UpVersioned);
 
         /// <summary>
-        /// Gets or sets the date when HealthRecordItem is not relevant.
+        /// Gets or sets the date when ThingBase is not relevant.
         /// </summary>
         /// <remarks>
         /// This data value is only available when the
-        /// <see cref="HealthRecordItem.Sections"/> show the
-        /// <see cref="HealthRecordItemSections.Core"/> bit
+        /// <see cref="ThingBase.Sections"/> show the
+        /// <see cref="ThingSections.Core"/> bit
         /// set.
         /// </remarks>
         public DateTime UpdatedEndDate
@@ -333,7 +327,7 @@ namespace Microsoft.HealthVault.Thing
 
         /// <summary>
         /// Gets the audit information associated with the last update of
-        /// this health record item.
+        /// this thing.
         /// </summary>
         ///
         /// <remarks>
@@ -341,8 +335,8 @@ namespace Microsoft.HealthVault.Thing
         /// to local time if necessary.
         /// <br/><br/>
         /// This data value is only available when the
-        /// <see cref="HealthRecordItem.Sections"/> show the
-        /// <see cref="HealthRecordItemSections.Audits"/> bit
+        /// <see cref="ThingBase.Sections"/> show the
+        /// <see cref="ThingSections.Audits"/> bit
         /// set.
         /// </remarks>
         ///
@@ -350,7 +344,7 @@ namespace Microsoft.HealthVault.Thing
 
         /// <summary>
         /// Gets the audit information associated with the creation of
-        /// this health record item.
+        /// this thing.
         /// </summary>
         ///
         /// <remarks>
@@ -358,8 +352,8 @@ namespace Microsoft.HealthVault.Thing
         /// to local time if necessary.
         /// <br/><br/>
         /// This data value is only available when the
-        /// <see cref="HealthRecordItem.Sections"/> show the
-        /// <see cref="HealthRecordItemSections.Audits"/> bit
+        /// <see cref="ThingBase.Sections"/> show the
+        /// <see cref="ThingSections.Audits"/> bit
         /// set.
         /// </remarks>
         ///
@@ -371,7 +365,7 @@ namespace Microsoft.HealthVault.Thing
 
         /// <summary>
         /// Gets the effective permissions on the item granted to the person
-        /// retrieving the <see cref="HealthRecordItem"/>.
+        /// retrieving the <see cref="ThingBase"/>.
         /// </summary>
         ///
         /// <value>
@@ -381,62 +375,62 @@ namespace Microsoft.HealthVault.Thing
         ///
         /// <remarks>
         /// This data value is only available when the
-        /// <see cref="HealthRecordItem.Sections"/> show the
-        /// <see cref="HealthRecordItemSections.EffectivePermissions"/>
+        /// <see cref="ThingBase.Sections"/> show the
+        /// <see cref="ThingSections.EffectivePermissions"/>
         /// bit set.
         /// </remarks>
         ///
-        public HealthRecordItemPermissions? EffectivePermissions { get; internal set; }
+        public ThingPermissions? EffectivePermissions { get; internal set; }
 
         /// <summary>
-        /// Gets a value indicating whether the <see cref="HealthRecordItem"/>
+        /// Gets a value indicating whether the <see cref="ThingBase"/>
         /// is immutable.
         /// </summary>
         ///
         /// <value>
-        /// <b>true</b> if the <see cref="HealthRecordItem"/> is immutable; otherwise,
+        /// <b>true</b> if the <see cref="ThingBase"/> is immutable; otherwise,
         /// <b>false</b>.
         /// </value>
         /// <remarks>
         /// This data value is only available when the
-        /// <see cref="HealthRecordItem.Sections"/> show the
-        /// <see cref="HealthRecordItemSections.EffectivePermissions"/>
-        /// bit set. Returns true if either HealthRecordItem Type is immutable or HealthRecordItem instance is read-only.
+        /// <see cref="ThingBase.Sections"/> show the
+        /// <see cref="ThingSections.EffectivePermissions"/>
+        /// bit set. Returns true if either ThingBase Type is immutable or ThingBase instance is read-only.
         /// </remarks>
         ///
         public bool IsImmutable { get; internal set; }
 
         /// <summary>
-        /// Gets a value indicating whether <see cref="HealthRecordItem"/> is read-only.
+        /// Gets a value indicating whether <see cref="ThingBase"/> is read-only.
         /// </summary>
         /// <value>
-        /// <b>true</b> if the <see cref="HealthRecordItem"/> is read-only; otherwise,
+        /// <b>true</b> if the <see cref="ThingBase"/> is read-only; otherwise,
         /// <b>false</b>.
         /// </value>
         /// <exception cref="InvalidOperationException">
         /// Cannot change read-only flag to false if it is already true.
         /// </exception>
         /// <remarks>
-        /// Returns true if either HealthRecordItem Type is immutable or HealthRecordItem instance is read-only
+        /// Returns true if either ThingBase Type is immutable or ThingBase instance is read-only
         /// but sets only the instance immutability.
         /// </remarks>
         public bool IsReadOnly
         {
             get
             {
-                return this.IsImmutable || this.IsFlagSet(HealthRecordItemFlags.ReadOnly);
+                return this.IsImmutable || this.IsFlagSet(ThingFlags.ReadOnly);
             }
 
             set
             {
                 Validator.ThrowInvalidIf(
                     !value
-                    && (this.IsFlagSet(HealthRecordItemFlags.ReadOnly) || this.IsImmutable),
+                    && (this.IsFlagSet(ThingFlags.ReadOnly) || this.IsImmutable),
                     "CannotChangeImmutableFlag");
 
                 if (value)
                 {
-                    this.SetFlag(HealthRecordItemFlags.ReadOnly);
+                    this.SetFlag(ThingFlags.ReadOnly);
                 }
             }
         }
@@ -447,7 +441,7 @@ namespace Microsoft.HealthVault.Thing
 
         /// <summary>
         /// Gets or sets the XML representation of the type-specific data for the
-        /// <see cref="HealthRecordItem"/>.
+        /// <see cref="ThingBase"/>.
         /// </summary>
         ///
         /// <remarks>
@@ -456,19 +450,19 @@ namespace Microsoft.HealthVault.Thing
         /// existing data when making updates. Do not remove or manipulate
         /// elements in the XML that you do not understand.
         /// <br/><br/>
-        /// If this property is set on a type derived from <see cref="HealthRecordItem"/> the data
+        /// If this property is set on a type derived from <see cref="ThingBase"/> the data
         /// is not parsed into the object model so properties of the class may still show old data.
         /// <br/><br/>
         /// This data value is only available to get when the
-        /// <see cref="HealthRecordItem.Sections"/> show the
-        /// <see cref="HealthRecordItemSections.Xml"/> bit
+        /// <see cref="ThingBase.Sections"/> show the
+        /// <see cref="ThingSections.Xml"/> bit
         /// set.
         /// </remarks>
         ///
         public IXPathNavigable TypeSpecificData { get; set; }
 
         /// <summary>
-        /// Gets the transformed XML data of the <see cref="HealthRecordItem"/>.
+        /// Gets the transformed XML data of the <see cref="ThingBase"/>.
         /// </summary>
         ///
         /// <remarks>
@@ -478,8 +472,8 @@ namespace Microsoft.HealthVault.Thing
         /// search was performed.
         /// <br/><br/>
         /// This data value is only available to get when the
-        /// <see cref="HealthRecordItem.Sections"/> show the
-        /// <see cref="HealthRecordItemSections.Xml"/> bit
+        /// <see cref="ThingBase.Sections"/> show the
+        /// <see cref="ThingSections.Xml"/> bit
         /// set though it will not contain data unless a transform was
         /// specified when getting the item.
         /// </remarks>
@@ -490,12 +484,12 @@ namespace Microsoft.HealthVault.Thing
             new Dictionary<string, XDocument>(StringComparer.OrdinalIgnoreCase);
 
         /// <summary>
-        /// Gets the common data for the <see cref="HealthRecordItem"/>.
+        /// Gets the common data for the <see cref="ThingBase"/>.
         /// </summary>
         ///
         /// <value>
         /// An instance of <see cref="CommonItemData"/> for the
-        /// <see cref="HealthRecordItem"/>.
+        /// <see cref="ThingBase"/>.
         /// </value>
         ///
         /// <remarks>
@@ -509,7 +503,7 @@ namespace Microsoft.HealthVault.Thing
         #region Blobs
 
         /// <summary>
-        /// Gets the BLOB store for this health record item.
+        /// Gets the BLOB store for this thing.
         /// </summary>
         ///
         /// <param name="record">
@@ -521,19 +515,19 @@ namespace Microsoft.HealthVault.Thing
         /// <remarks>
         /// This method replaces the previous OtherData property. All binary data is now created,
         /// updated, and retrieved through <see cref="BlobStore"/> instance associated with the
-        /// <see cref="HealthRecordItem"/>.<br/>
+        /// <see cref="ThingBase"/>.<br/>
         /// <br/>
-        /// GetBlobStore will return an empty store on an existing <see cref="HealthRecordItem"/>
-        /// if <see cref="HealthRecordItemSections.BlobPayload"/> is not specified when retrieving
+        /// GetBlobStore will return an empty store on an existing <see cref="ThingBase"/>
+        /// if <see cref="ThingSections.BlobPayload"/> is not specified when retrieving
         /// the item. In this case it is possible to overwrite or remove existing Blobs in the
-        /// <see cref="HealthRecordItem"/> instance stored in HealthVault by using the same name
+        /// <see cref="ThingBase"/> instance stored in HealthVault by using the same name
         /// as the existing Blob. It is recommended that if you are going to be manipulating
         /// Blobs in the BlobStore, that you specify
-        /// <see cref="HealthRecordItemSections.BlobPayload"/> when retrieving the item.
+        /// <see cref="ThingSections.BlobPayload"/> when retrieving the item.
         /// </remarks>
         ///
         /// <returns>
-        /// A <see cref="BlobStore"/> instance related to this health record item.
+        /// A <see cref="BlobStore"/> instance related to this thing.
         /// </returns>
         ///
         public BlobStore GetBlobStore(HealthRecordAccessor record)
@@ -557,7 +551,7 @@ namespace Microsoft.HealthVault.Thing
         #region Tags
 
         /// <summary>
-        /// Gets the list of tags on the <see cref="HealthRecordItem"/>.
+        /// Gets the list of tags on the <see cref="ThingBase"/>.
         /// </summary>
         ///
         /// <value>
@@ -570,59 +564,59 @@ namespace Microsoft.HealthVault.Thing
 
         private class TagsCollection : Collection<string>
         {
-            internal TagsCollection(HealthRecordItem item)
+            internal TagsCollection(ThingBase item)
             {
                 this.item = item;
             }
 
-            internal TagsCollection(HealthRecordItem item, IList<string> list)
+            internal TagsCollection(ThingBase item, IList<string> list)
                 : base(list)
             {
                 this.item = item;
             }
 
-            private readonly HealthRecordItem item;
+            private readonly ThingBase item;
 
             protected override void ClearItems()
             {
                 base.ClearItems();
-                this.item.Sections |= HealthRecordItemSections.Tags;
+                this.item.Sections |= ThingSections.Tags;
             }
 
             protected override void InsertItem(int index, string itemToInsert)
             {
                 base.InsertItem(index, itemToInsert);
-                this.item.Sections |= HealthRecordItemSections.Tags;
+                this.item.Sections |= ThingSections.Tags;
             }
 
             protected override void RemoveItem(int index)
             {
                 base.RemoveItem(index);
-                this.item.Sections |= HealthRecordItemSections.Tags;
+                this.item.Sections |= ThingSections.Tags;
             }
 
             protected override void SetItem(int index, string itemToInsert)
             {
                 base.SetItem(index, itemToInsert);
-                this.item.Sections |= HealthRecordItemSections.Tags;
+                this.item.Sections |= ThingSections.Tags;
             }
         }
 
         #endregion Tags
 
         /// <summary>
-        /// Gets the data sections that this HealthRecordItem represents.
+        /// Gets the data sections that this ThingBase represents.
         /// </summary>
         ///
         /// <value>
-        /// An instance of <see cref="HealthRecordItemSections"/>.
+        /// An instance of <see cref="ThingSections"/>.
         /// </value>
         ///
-        public HealthRecordItemSections Sections { get; internal set; } = HealthRecordItemSections.Core |
-            HealthRecordItemSections.Xml;
+        public ThingSections Sections { get; internal set; } = ThingSections.Core |
+            ThingSections.Xml;
 
         /// <summary>
-        /// Gets the size of the health record item which will be added to the quota used in the
+        /// Gets the size of the thing which will be added to the quota used in the
         /// person's health record.
         /// </summary>
         ///
@@ -637,7 +631,7 @@ namespace Microsoft.HealthVault.Thing
         /// </remarks>
         ///
         /// <returns>
-        /// The size in bytes of the health record item.
+        /// The size in bytes of the thing.
         /// </returns>
         ///
         public int GetSizeInBytes()
@@ -658,7 +652,7 @@ namespace Microsoft.HealthVault.Thing
         }
 
         /// <summary>
-        /// Gets the XML representation of the health record item.
+        /// Gets the XML representation of the thing.
         /// </summary>
         ///
         /// <param name="elementName">
@@ -676,19 +670,19 @@ namespace Microsoft.HealthVault.Thing
         ///
         public string GetItemXml(string elementName = "thing")
         {
-            HealthRecordItemSections sections = this.Sections;
+            ThingSections sections = this.Sections;
 
             // Add the tags section if there are tags present
             if (this.tags != null && this.tags.Count > 0)
             {
-                sections |= HealthRecordItemSections.Tags;
+                sections |= ThingSections.Tags;
             }
 
             return this.GetItemXml(sections, elementName);
         }
 
         /// <summary>
-        /// Gets the XML representation of the health record item.
+        /// Gets the XML representation of the thing.
         /// </summary>
         ///
         /// <param name="sections">
@@ -708,7 +702,7 @@ namespace Microsoft.HealthVault.Thing
         /// If <paramref name="elementName"/> is <b>null</b> or empty.
         /// </exception>
         ///
-        public string GetItemXml(HealthRecordItemSections sections, string elementName = "thing")
+        public string GetItemXml(ThingSections sections, string elementName = "thing")
         {
             Validator.ThrowIfStringNullOrEmpty(elementName, "elementName");
 
@@ -736,12 +730,12 @@ namespace Microsoft.HealthVault.Thing
 
         internal bool WriteItemXml(XmlWriter infoXmlWriter, bool writeAllCore, string elementName)
         {
-            HealthRecordItemSections sections = this.Sections & ~HealthRecordItemSections.Audits;
+            ThingSections sections = this.Sections & ~ThingSections.Audits;
 
             // Add the tags section if there are tags present
             if (this.tags != null && this.tags.Count > 0)
             {
-                sections |= HealthRecordItemSections.Tags;
+                sections |= ThingSections.Tags;
             }
 
             return this.WriteItemXml(
@@ -753,7 +747,7 @@ namespace Microsoft.HealthVault.Thing
 
         internal bool WriteItemXml(
             XmlWriter infoXmlWriter,
-            HealthRecordItemSections sections,
+            ThingSections sections,
             bool writeAllCore = true,
             string elementName = "thing")
         {
@@ -767,30 +761,30 @@ namespace Microsoft.HealthVault.Thing
             updateRequired =
                 this.AddCorePutThingsRequestParameters(infoXmlWriter, writeAllCore, sections);
 
-            if ((sections & HealthRecordItemSections.Audits) != 0)
+            if ((sections & ThingSections.Audits) != 0)
             {
                 this.AddAuditThingsRequestParameters(infoXmlWriter);
             }
 
-            if ((sections & HealthRecordItemSections.Xml) != 0)
+            if ((sections & ThingSections.Xml) != 0)
             {
                 this.AddXmlPutThingsRequestParameters(infoXmlWriter);
                 updateRequired = true;
             }
 
-            if ((sections & HealthRecordItemSections.BlobPayload) != 0)
+            if ((sections & ThingSections.BlobPayload) != 0)
             {
                 this.AddBlobPayloadPutThingsRequestParameters(infoXmlWriter);
                 updateRequired = true;
             }
 
-            if ((sections & HealthRecordItemSections.Tags) != 0)
+            if ((sections & ThingSections.Tags) != 0)
             {
                 this.AddTagsPutThingsRequestParameters(infoXmlWriter);
                 updateRequired = true;
             }
 
-            if ((sections & HealthRecordItemSections.Core) == HealthRecordItemSections.Core)
+            if ((sections & ThingSections.Core) == ThingSections.Core)
             {
                 updateRequired |= this.AddUpdatedEndDate(infoXmlWriter, writeAllCore);
             }
@@ -841,20 +835,20 @@ namespace Microsoft.HealthVault.Thing
         private string fetchedXml;
 
         /// <summary>
-        /// Create a <see cref="HealthRecordItem"/> instance from the item XML.
+        /// Create a <see cref="ThingBase"/> instance from the item XML.
         /// </summary>
         ///
         /// <remarks>
         /// This method is identical to calling <see cref="ItemTypeManager.DeserializeItem(string)"/>.
         ///
-        /// The item XML should come from a previous call to <see cref="HealthRecordItem.Serialize"/>.
+        /// The item XML should come from a previous call to <see cref="ThingBase.Serialize"/>.
         /// </remarks>
         ///
         /// <returns>
-        /// A instance of the <see cref="HealthRecordItem"/> class.
+        /// A instance of the <see cref="ThingBase"/> class.
         /// </returns>
         ///
-        public static HealthRecordItem Deserialize(string itemXml)
+        public static ThingBase Deserialize(string itemXml)
         {
             return ItemTypeManager.DeserializeItem(itemXml);
         }
@@ -947,7 +941,7 @@ namespace Microsoft.HealthVault.Thing
         private bool AddCorePutThingsRequestParameters(
             XmlWriter writer,
             bool writeAllCore,
-            HealthRecordItemSections sections)
+            ThingSections sections)
         {
             bool updateRequired = false;
 
@@ -971,7 +965,7 @@ namespace Microsoft.HealthVault.Thing
             writer.WriteValue(this.TypeId.ToString());
             writer.WriteEndElement();
 
-            if ((sections & HealthRecordItemSections.Core) != 0 && writeAllCore)
+            if ((sections & ThingSections.Core) != 0 && writeAllCore)
             {
                 updateRequired = true;
                 writer.WriteElementString("thing-state", this.State.ToString());
@@ -987,7 +981,7 @@ namespace Microsoft.HealthVault.Thing
                 }
             }
 
-            if ((sections & HealthRecordItemSections.Core) != 0 &&
+            if ((sections & ThingSections.Core) != 0 &&
                 this.EffectiveDate != SDKHelper.DateUnspecified && (this.effectiveDateDirty || writeAllCore))
             {
                 // <eff-date>
@@ -1054,15 +1048,15 @@ namespace Microsoft.HealthVault.Thing
         #region Parsing the XML
 
         /// <summary>
-        /// Populates the HealthRecordItem elements with data from the XML.
+        /// Populates the ThingBase elements with data from the XML.
         /// </summary>
         ///
         /// <param name="thingNavigator">
-        /// The Xml Navigator from which the health record item will be constructed.
+        /// The Xml Navigator from which the thing will be constructed.
         /// </param>
         ///
         /// <param name="thingXml">
-        /// The XML from which the health record item will be constructed.
+        /// The XML from which the thing will be constructed.
         /// </param>
         ///
         /// <remarks>
@@ -1071,7 +1065,7 @@ namespace Microsoft.HealthVault.Thing
         /// can change the white space.
         /// </remarks>
         ///
-        /// <exception cref="HealthRecordItemDeserializationException">
+        /// <exception cref="ThingDeserializationException">
         /// The derived type's <see cref="ParseXml(IXPathNavigable)"/>
         /// method throws an exception when called. The inner exception
         /// will be the exception thrown by the method.
@@ -1081,7 +1075,7 @@ namespace Microsoft.HealthVault.Thing
         {
             this.fetchedXml = thingXml;
 
-            this.Sections = HealthRecordItemSections.None;
+            this.Sections = ThingSections.None;
 
             XPathNavigator thingIdNav = thingNavigator.SelectSingleNode("thing-id");
             if (thingIdNav != null)
@@ -1090,7 +1084,7 @@ namespace Microsoft.HealthVault.Thing
 
                 string versionStamp = thingIdNav.GetAttribute("version-stamp", string.Empty);
 
-                this.Key = !string.IsNullOrEmpty(versionStamp) ? new HealthRecordItemKey(thingId, new Guid(versionStamp)) : new HealthRecordItemKey(thingId);
+                this.Key = !string.IsNullOrEmpty(versionStamp) ? new ThingKey(thingId, new Guid(versionStamp)) : new ThingKey(thingId);
             }
 
             XPathNavigator thingTypeNavigator = thingNavigator.SelectSingleNode("type-id");
@@ -1120,8 +1114,8 @@ namespace Microsoft.HealthVault.Thing
         }
 
         /// <summary>
-        /// Adds the values from the core section of the health record item to
-        /// the specified HealthRecordItem and updates the Sections
+        /// Adds the values from the core section of the thing to
+        /// the specified ThingBase and updates the Sections
         /// appropriately.
         /// </summary>
         ///
@@ -1137,7 +1131,7 @@ namespace Microsoft.HealthVault.Thing
 
             if (effectiveDateNav != null)
             {
-                this.Sections |= HealthRecordItemSections.Core;
+                this.Sections |= ThingSections.Core;
                 this.effectiveDate = effectiveDateNav.ValueAsDateTime;
             }
 
@@ -1145,39 +1139,39 @@ namespace Microsoft.HealthVault.Thing
                 thingNavigator.SelectSingleNode("thing-state");
             if (stateNav != null)
             {
-                this.Sections |= HealthRecordItemSections.Core;
+                this.Sections |= ThingSections.Core;
 
                 try
                 {
                     this.State =
-                        (HealthRecordItemState)Enum.Parse(
-                            typeof(HealthRecordItemState), stateNav.Value);
+                        (ThingState)Enum.Parse(
+                            typeof(ThingState), stateNav.Value);
                 }
                 catch (ArgumentException)
                 {
-                    this.State = HealthRecordItemState.Unknown;
+                    this.State = ThingState.Unknown;
                 }
             }
 
             XPathNavigator flagsNav = thingNavigator.SelectSingleNode("flags");
             if (flagsNav != null)
             {
-                this.Sections |= HealthRecordItemSections.Core;
+                this.Sections |= ThingSections.Core;
 
-                this.flags = (HealthRecordItemFlags)Convert.ToInt64(flagsNav.Value);
+                this.flags = (ThingFlags)Convert.ToInt64(flagsNav.Value);
             }
 
             XPathNavigator updatedEndDateNav = thingNavigator.SelectSingleNode("updated-end-date");
             if (updatedEndDateNav != null)
             {
-                this.Sections |= HealthRecordItemSections.Core;
+                this.Sections |= ThingSections.Core;
                 this.updatedEndDate = updatedEndDateNav.ValueAsDateTime;
             }
         }
 
         /// <summary>
         /// Adds the values from the created and updated sections of the
-        /// health record item to the specified HealthRecordItem and updates
+        /// thing to the specified ThingBase and updates
         /// the Sections appropriately.
         /// </summary>
         ///
@@ -1197,7 +1191,7 @@ namespace Microsoft.HealthVault.Thing
                 this.LastUpdated.ParseXml(updatedNav);
 
                 // Now update the sections appropriately
-                this.Sections |= HealthRecordItemSections.Audits;
+                this.Sections |= ThingSections.Audits;
             }
 
             // Check the "created" group
@@ -1209,13 +1203,13 @@ namespace Microsoft.HealthVault.Thing
                 this.Created.ParseXml(createdNav);
 
                 // Now update the sections appropriately
-                this.Sections |= HealthRecordItemSections.Audits;
+                this.Sections |= ThingSections.Audits;
             }
         }
 
         /// <summary>
-        /// Adds the values from the xml section of the health record item to
-        /// the specified HealthRecordItem and updates the Sections
+        /// Adds the values from the xml section of the thing to
+        /// the specified ThingBase and updates the Sections
         /// appropriately.
         /// </summary>
         ///
@@ -1224,7 +1218,7 @@ namespace Microsoft.HealthVault.Thing
         /// "data-xml".
         /// </param>
         ///
-        /// <exception cref="HealthRecordItemDeserializationException">
+        /// <exception cref="ThingDeserializationException">
         /// If derived type's <see cref="ParseXml(IXPathNavigable)"/> throws
         /// an exception when called. The inner exception will be the
         /// exception thrown by the method.
@@ -1240,7 +1234,7 @@ namespace Microsoft.HealthVault.Thing
             foreach (XPathNavigator dataXml in dataXmlIterator)
             {
                 // Now update the sections appropriately
-                this.Sections |= HealthRecordItemSections.Xml;
+                this.Sections |= ThingSections.Xml;
 
                 string transformName =
                     dataXml.GetAttribute("transform", string.Empty);
@@ -1276,7 +1270,7 @@ namespace Microsoft.HealthVault.Thing
                         catch (Exception e)
                         {
                             // third-party call-out
-                            throw new HealthRecordItemDeserializationException(
+                            throw new ThingDeserializationException(
                             ResourceRetriever.GetResourceString(
                                     "ThingDeserializationFailed"),
                                 e);
@@ -1309,8 +1303,8 @@ namespace Microsoft.HealthVault.Thing
         }
 
         /// <summary>
-        /// Adds the values from the BLOB payload section of the health record item to
-        /// the specified HealthRecordItem and updates the Sections
+        /// Adds the values from the BLOB payload section of the thing to
+        /// the specified ThingBase and updates the Sections
         /// appropriately.
         /// </summary>
         ///
@@ -1329,14 +1323,14 @@ namespace Microsoft.HealthVault.Thing
             {
                 this.blobStore = new BlobStore(this, default(HealthRecordAccessor));
                 this.blobStore.ParseXml(blobPayloadNav);
-                this.Sections |= HealthRecordItemSections.BlobPayload;
+                this.Sections |= ThingSections.BlobPayload;
             }
 
             XPathNavigator otherDataNav = thingNavigator.SelectSingleNode("data-other");
             if (otherDataNav != null)
             {
                 this.blobStore = new BlobStore(this, default(HealthRecordAccessor));
-                this.Sections |= HealthRecordItemSections.BlobPayload;
+                this.Sections |= ThingSections.BlobPayload;
                 string contentEncoding =
                     otherDataNav.GetAttribute("content-encoding", string.Empty);
                 byte[] blobPayload =
@@ -1374,10 +1368,10 @@ namespace Microsoft.HealthVault.Thing
         }
 
         /// <summary>
-        /// Adds tags to the HealthRecordItem and updates the Sections if tags are present.
+        /// Adds tags to the ThingBase and updates the Sections if tags are present.
         /// </summary>
         ///
-        /// <param name="thingNavigator">The Xml navigator that is currently working with this HealthRecordItem</param>
+        /// <param name="thingNavigator">The Xml navigator that is currently working with this ThingBase</param>
         ///
         private void AddTagsSectionValues(XPathNavigator thingNavigator)
         {
@@ -1393,14 +1387,14 @@ namespace Microsoft.HealthVault.Thing
                 if (tagStrings.Count > 0)
                 {
                     this.tags = new TagsCollection(this, tagStrings);
-                    this.Sections |= HealthRecordItemSections.Tags;
+                    this.Sections |= ThingSections.Tags;
                 }
             }
         }
 
         /// <summary>
         /// Adds the values from the eff-permissions section of the
-        /// health record item to the specified HealthRecordItem and updates
+        /// thing to the specified ThingBase and updates
         /// the Sections appropriately.
         /// </summary>
         ///
@@ -1417,7 +1411,7 @@ namespace Microsoft.HealthVault.Thing
             if (permsNav != null)
             {
                 // Now update the sections appropriately
-                this.Sections |= HealthRecordItemSections.EffectivePermissions;
+                this.Sections |= ThingSections.EffectivePermissions;
 
                 string isImmutableString = permsNav.GetAttribute("immutable", string.Empty);
                 if (!string.IsNullOrEmpty(isImmutableString))
@@ -1433,9 +1427,9 @@ namespace Microsoft.HealthVault.Thing
 
                     try
                     {
-                        HealthRecordItemPermissions permission =
-                            (HealthRecordItemPermissions)Enum.Parse(
-                                typeof(HealthRecordItemPermissions),
+                        ThingPermissions permission =
+                            (ThingPermissions)Enum.Parse(
+                                typeof(ThingPermissions),
                                 permissionString);
 
                         if (this.EffectivePermissions == null)
@@ -1456,7 +1450,7 @@ namespace Microsoft.HealthVault.Thing
 
         #endregion Parsing the XML
 
-        private void SetFlag(HealthRecordItemFlags flag)
+        private void SetFlag(ThingFlags flag)
         {
             // Check if *all* bits in flag are set
             if ((this.flags & flag) != flag)
@@ -1466,7 +1460,7 @@ namespace Microsoft.HealthVault.Thing
             }
         }
 
-        private void ClearFlag(HealthRecordItemFlags flag)
+        private void ClearFlag(ThingFlags flag)
         {
             // Check if *any* bits in flag are set
             if ((this.flags & flag) != 0)
@@ -1476,7 +1470,7 @@ namespace Microsoft.HealthVault.Thing
             }
         }
 
-        private bool IsFlagSet(HealthRecordItemFlags flagToCheck)
+        private bool IsFlagSet(ThingFlags flagToCheck)
         {
             return (this.flags & flagToCheck) == flagToCheck;
         }

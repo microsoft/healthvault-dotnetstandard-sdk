@@ -7,14 +7,14 @@ using System;
 
 namespace Microsoft.HealthVault.Thing
 {
-    internal class HealthRecordItemTypeHandler
+    internal class ThingTypeHandler
     {
-        internal HealthRecordItemTypeHandler(Type thingTypeClass)
+        internal ThingTypeHandler(Type thingTypeClass)
         {
             this.ItemTypeClass = thingTypeClass;
         }
 
-        internal HealthRecordItemTypeHandler(Guid typeId, Type thingTypeClass)
+        internal ThingTypeHandler(Guid typeId, Type thingTypeClass)
             : this(thingTypeClass)
         {
             this.TypeId = typeId;

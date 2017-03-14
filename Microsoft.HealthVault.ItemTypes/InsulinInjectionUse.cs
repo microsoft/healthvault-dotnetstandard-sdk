@@ -12,7 +12,7 @@ using Microsoft.HealthVault.Thing;
 namespace Microsoft.HealthVault.ItemTypes
 {
     /// <summary>
-    /// Represents a health record item type that encapsulates an insulin
+    /// Represents a thing type that encapsulates an insulin
     /// injection use.
     /// </summary>
     ///
@@ -21,7 +21,7 @@ namespace Microsoft.HealthVault.ItemTypes
     /// based on the prescription.
     /// </remarks>
     ///
-    public class InsulinInjectionUse : HealthRecordItem
+    public class InsulinInjectionUse : ThingBase
     {
         /// <summary>
         /// Creates a new instance of the <see cref="InsulinInjectionUse"/> class with
@@ -30,7 +30,7 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         /// <remarks>
         /// The item is not added to the health record until the
-        /// <see cref="HealthRecordAccessor.NewItem(HealthRecordItem)"/> method
+        /// <see cref="HealthRecordAccessor.NewItem(ThingBase)"/> method
         /// is called.
         /// </remarks>
         ///

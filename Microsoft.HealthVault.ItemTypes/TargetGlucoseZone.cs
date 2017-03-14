@@ -15,7 +15,7 @@ namespace Microsoft.HealthVault.ItemTypes
     /// Represents a target glucose zone.
     /// </summary>
     ///
-    public class TargetGlucoseZone : HealthRecordItemData
+    public class TargetGlucoseZone : ItemBase
     {
         /// <summary>
         /// Creates a new instance of the <see cref="TargetGlucoseZone"/> class with default

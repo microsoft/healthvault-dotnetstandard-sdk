@@ -12,13 +12,13 @@ namespace Microsoft.HealthVault
     internal enum CertificateType
     {
         /// <summary>
-        /// The HealthRecordItem is not signed.
+        /// The ThingBase is not signed.
         /// </summary>
         ///
         None = 0,
 
         /// <summary>
-        /// Unable to determine the type of the certificate used to sign the HealthRecordItem.
+        /// Unable to determine the type of the certificate used to sign the ThingBase.
         /// </summary>
         ///
         Unknown = 1,

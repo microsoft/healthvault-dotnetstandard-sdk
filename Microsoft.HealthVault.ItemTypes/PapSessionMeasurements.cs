@@ -16,8 +16,8 @@ namespace Microsoft.HealthVault.ItemTypes
     /// </summary>
     /// <typeparam name="T">The type of the measurement.</typeparam>
     ///
-    public class PapSessionMeasurements<T> : HealthRecordItemData
-        where T : HealthRecordItemData, new()
+    public class PapSessionMeasurements<T> : ItemBase
+        where T : ItemBase, new()
     {
         /// <summary>
         /// Populates this <see cref="PapSessionMeasurements{T}"/> instance from the data in the specified XML.

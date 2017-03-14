@@ -14,7 +14,7 @@ namespace Microsoft.HealthVault.ItemTypes
     /// Represents a telephone number.
     /// </summary>
     ///
-    public class Phone : HealthRecordItemData
+    public class Phone : ItemBase
     {
         /// <summary>
         /// Creates a new instance of the <see cref="Phone"/> class with default values.

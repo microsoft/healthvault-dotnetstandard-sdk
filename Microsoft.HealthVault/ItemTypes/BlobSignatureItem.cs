@@ -13,7 +13,7 @@ namespace Microsoft.HealthVault.ItemTypes
     /// Represents information about a BLOB that is part of a digital signature.
     /// </summary>
     /// <remarks>
-    /// For more details please see <see cref="HealthRecordItem" />.
+    /// For more details please see <see cref="ThingBase" />.
     /// </remarks>
     ///
     internal class BlobSignatureItem

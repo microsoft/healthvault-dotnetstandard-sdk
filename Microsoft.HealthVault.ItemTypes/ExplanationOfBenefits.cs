@@ -19,7 +19,7 @@ namespace Microsoft.HealthVault.ItemTypes
     /// Describes the benefits received from an insurance plan.
     /// </summary>
     ///
-    public class ExplanationOfBenefits : HealthRecordItem
+    public class ExplanationOfBenefits : ThingBase
     {
         /// <summary>
         /// Creates a new instance of the <see cref="ExplanationOfBenefits"/> class with default values.
@@ -27,7 +27,7 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         /// <remarks>
         /// This item is not added to the health record until the
-        /// <see cref="HealthRecordAccessor.NewItem(HealthRecordItem)"/> method
+        /// <see cref="HealthRecordAccessor.NewItem(ThingBase)"/> method
         /// is called
         /// </remarks>
         ///
@@ -42,7 +42,7 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         /// <remarks>
         /// This item is not added to the health record until the
-        /// <see cref="HealthRecordAccessor.NewItem(HealthRecordItem)"/> method
+        /// <see cref="HealthRecordAccessor.NewItem(ThingBase)"/> method
         /// is called.
         /// </remarks>
         ///
@@ -209,7 +209,7 @@ namespace Microsoft.HealthVault.ItemTypes
         /// If <paramref name="writer"/> parameter is <b>null</b>.
         /// </exception>
         ///
-        /// <exception cref="HealthRecordItemSerializationException">
+        /// <exception cref="ThingSerializationException">
         /// If <see cref="DateSubmitted"/> is <b>null</b>.
         /// If <see cref="Patient"/> is <b>null</b>.
         /// If <see cref="Plan"/> is <b>null</b>.

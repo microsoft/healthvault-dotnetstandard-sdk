@@ -20,14 +20,14 @@ namespace Microsoft.HealthVault.Record
         /// </summary>
         public HealthRecordPermissions()
         {
-            this.ItemTypePermissions = new Collection<HealthRecordItemTypePermission>();
+            this.ItemTypePermissions = new Collection<ThingTypePermission>();
         }
 
         /// <summary>
-        /// A collection of <see cref="HealthRecordItemTypePermission" />(s) describing
+        /// A collection of <see cref="ThingTypePermission" />(s) describing
         /// the permissions for current person record in the context of the application.
         /// </summary>
-        public Collection<HealthRecordItemTypePermission> ItemTypePermissions { get; private set; }
+        public Collection<ThingTypePermission> ItemTypePermissions { get; private set; }
 
         /// <summary>
         /// Gets or sets whether the current record has opted in for

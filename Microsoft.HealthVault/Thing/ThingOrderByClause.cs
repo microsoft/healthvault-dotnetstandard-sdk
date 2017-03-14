@@ -29,7 +29,7 @@ namespace Microsoft.HealthVault.Thing
     /// <summary>
     /// Specifies the order in which data is returned in GetThings request.
     /// </summary>
-    public class HealthRecordItemsOrderByClause
+    public class ThingOrderByClause
     {
         /// <summary>
         /// Gets or sets the unique item type identifiers that the order by clause is set for.

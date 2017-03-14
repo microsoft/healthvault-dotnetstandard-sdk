@@ -23,13 +23,13 @@ namespace Microsoft.HealthVault.ItemTypes
     /// application should generate a password (or take it from the user) and
     /// encrypt the desired data. This data should be set in a <see cref="Blob"/> created off the
     /// <see cref="BlobStore"/> retrieved from the
-    /// <see cref="HealthRecordItem.GetBlobStore(HealthRecordAccessor)"/>.
+    /// <see cref="ThingBase.GetBlobStore(HealthRecordAccessor)"/>.
     /// The properties of the Blob should be set with the parameters required
     /// to decrypt the data. These parameters are application dependant but
     /// should adhere to standard practices in dealing with PKCS5v2 data.
     /// </remarks>
     ///
-    internal class PasswordProtectedPackage : HealthRecordItem
+    internal class PasswordProtectedPackage : ThingBase
     {
         /// <summary>
         /// Creates a new instance of the <see cref="PasswordProtectedPackage"/> class
@@ -38,7 +38,7 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         /// <remarks>
         /// The item is not added to the health record until the
-        /// <see cref="HealthRecordAccessor.NewItemAsync(HealthRecordItem)"/>
+        /// <see cref="HealthRecordAccessor.NewItemAsync(ThingBase)"/>
         /// method is called.
         /// </remarks>
         ///

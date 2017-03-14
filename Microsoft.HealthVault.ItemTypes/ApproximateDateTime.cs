@@ -21,7 +21,7 @@ namespace Microsoft.HealthVault.ItemTypes
     /// </remarks>
     ///
     public class ApproximateDateTime
-        : HealthRecordItemData,
+        : ItemBase,
             IComparable,
             IComparable<ApproximateDateTime>,
             IComparable<DateTime>

@@ -13,10 +13,10 @@ using Microsoft.HealthVault.Thing;
 namespace Microsoft.HealthVault.ItemTypes
 {
     /// <summary>
-    /// Represents a health record item type that encapsulates a healthcare proxy.
+    /// Represents a thing type that encapsulates a healthcare proxy.
     /// </summary>
     ///
-    public class HealthcareProxy : HealthRecordItem
+    public class HealthcareProxy : ThingBase
     {
         /// <summary>
         /// Creates a new instance of the <see cref="HealthcareProxy"/> class with default
@@ -25,7 +25,7 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         /// <remarks>
         /// The item isn't added to the health record until the
-        /// <see cref="HealthRecordAccessor.NewItem(HealthRecordItem)"/> method
+        /// <see cref="HealthRecordAccessor.NewItem(ThingBase)"/> method
         /// is called.
         /// </remarks>
         ///

@@ -595,7 +595,7 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         /// <remarks>
         /// Normally this property is maintained by the members of the class, however,
-        /// if <see cref="HealthRecordItem.GetItemXml(string)"/> is used to serialize an item
+        /// if <see cref="ThingBase.GetItemXml(string)"/> is used to serialize an item
         /// that contains this Blob before the item is committed to HealthVault, you will
         /// need to mark the Blob as dirty before trying to commit the item to HealthVault.
         /// </remarks>

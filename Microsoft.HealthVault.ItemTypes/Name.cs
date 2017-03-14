@@ -14,7 +14,7 @@ namespace Microsoft.HealthVault.ItemTypes
     /// Represents a person's name.
     /// </summary>
     ///
-    public class Name : HealthRecordItemData
+    public class Name : ItemBase
     {
         /// <summary>
         /// Creates a new instance of the  <see cref="Name"/> class with default values.

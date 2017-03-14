@@ -15,7 +15,7 @@ namespace Microsoft.HealthVault.ItemTypes
     /// Represents the code description for a <see cref="CodableValue"/>.
     /// </summary>
     ///
-    public class CodedValue : HealthRecordItemData
+    public class CodedValue : ItemBase
     {
         /// <summary>
         /// Creates a new instance of the <see cref="CodedValue"/> class with default values.

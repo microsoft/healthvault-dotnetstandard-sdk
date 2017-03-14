@@ -16,7 +16,7 @@ namespace Microsoft.HealthVault.DesktopWeb.Common
     /// <summary>
     //  Supports XSL transform for HealthRecordItemTypeDefintion
     /// </summary>
-    public class HealthRecordItemTypeDefinitionHelper
+    public class ThingTypeDefinitionHelper
     {
         /// <summary>
         /// Gets or sets the HealthVault transform names supported by the type.
@@ -75,11 +75,11 @@ namespace Microsoft.HealthVault.DesktopWeb.Common
         private ReadOnlyCollection<ItemTypeDataColumn> _columns =
             new ReadOnlyCollection<ItemTypeDataColumn>(new ItemTypeDataColumn[0]);
 
-        public HealthRecordItemTypeDefinition ItemTypeDefinition { get; protected set; }
+        public ThingTypeDefinition ItemTypeDefinition { get; protected set; }
 
-        public static HealthRecordItemTypeDefinitionHelper Create(HealthRecordItemTypeDefinition itemTypeDefinition)
+        public static ThingTypeDefinitionHelper Create(ThingTypeDefinition itemTypeDefinition)
         {
-            HealthRecordItemTypeDefinitionHelper helper = new HealthRecordItemTypeDefinitionHelper(itemTypeDefinition);
+            ThingTypeDefinitionHelper helper = new ThingTypeDefinitionHelper(itemTypeDefinition);
 
             if (itemTypeDefinition.TypeNavigator == null)
             {
@@ -92,7 +92,7 @@ namespace Microsoft.HealthVault.DesktopWeb.Common
             return helper;
         }
 
-        protected HealthRecordItemTypeDefinitionHelper(HealthRecordItemTypeDefinition itemTypeDefinition)
+        protected ThingTypeDefinitionHelper(ThingTypeDefinition itemTypeDefinition)
         {
             if (itemTypeDefinition == null)
             {
@@ -141,7 +141,7 @@ namespace Microsoft.HealthVault.DesktopWeb.Common
         #region TransformItem
 
         /// <summary>
-        /// Transforms the XML of the specified health record item using the specified transform.
+        /// Transforms the XML of the specified thing using the specified transform.
         /// </summary>
         /// 
         /// <param name="transformName">
@@ -150,7 +150,7 @@ namespace Microsoft.HealthVault.DesktopWeb.Common
         /// </param>
         /// 
         /// <param name="item">
-        /// The health record item to be transformed.
+        /// The thing to be transformed.
         /// </param>
         /// 
         /// <returns>
@@ -169,7 +169,7 @@ namespace Microsoft.HealthVault.DesktopWeb.Common
         /// </exception>
         /// 
         [SuppressMessage("Microsoft.Usage", "CA2202:Do not dispose objects multiple times", Justification = "StringReader can be disposed multiple times. Usings block makes the code more readable")]
-        public string TransformItem(string transformName, HealthRecordItem item)
+        public string TransformItem(string transformName, ThingBase item)
         {
             XslCompiledTransform transform = GetTransform(transformName);
 

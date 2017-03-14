@@ -74,16 +74,16 @@
     <Compile Include="ApplicationConfigurationManager.cs" />
     <Compile Include="CertificateUtilities.cs" />
     <Compile Include="Handles.cs" />
-    <Compile Include="HealthRecordItemDataTable.cs">
+    <Compile Include="ThingDataTable.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="HealthRecordItemDataTableView.cs" />
+    <Compile Include="ThingDataTableView.cs" />
     <Compile Include="ItemTypeDataColumn.cs">
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="NativeMethods.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="HealthRecordItemTypeDefinitionHelper.cs" />
+    <Compile Include="ThingTypeDefinitionHelper.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Microsoft.HealthVault\Microsoft.HealthVault.csproj">

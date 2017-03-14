@@ -12,7 +12,7 @@ namespace Microsoft.HealthVault.ItemTypes
     /// <summary>
     /// Represents Insight attribution information.
     /// </summary>
-    public class InsightAttribution : HealthRecordItemData
+    public class InsightAttribution : ItemBase
     {
         /// <summary>
         /// Constructs a new instance of the <see cref="InsightAttribution"/> class with

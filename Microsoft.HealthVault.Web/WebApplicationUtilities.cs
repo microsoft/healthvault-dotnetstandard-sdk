@@ -3,6 +3,14 @@
 // see http://www.microsoft.com/resources/sharedsource/licensingbasics/sharedsourcelicenses.mspx.
 // All other rights reserved.
 
+using Microsoft.HealthVault.Application;
+using Microsoft.HealthVault.Authentication;
+using Microsoft.HealthVault.Clients;
+using Microsoft.HealthVault.Connection;
+using Microsoft.HealthVault.Exceptions;
+using Microsoft.HealthVault.Helpers;
+using Microsoft.HealthVault.Person;
+using Microsoft.HealthVault.PlatformInformation;
 using System;
 using System.Diagnostics;
 using System.Globalization;
@@ -14,15 +22,6 @@ using System.Threading.Tasks;
 using System.Web;
 using System.Xml;
 using System.Xml.XPath;
-using Microsoft.HealthVault.Application;
-using Microsoft.HealthVault.Authentication;
-using Microsoft.HealthVault.Clients;
-using Microsoft.HealthVault.Connection;
-using Microsoft.HealthVault.Exceptions;
-using Microsoft.HealthVault.Helpers;
-using Microsoft.HealthVault.ItemTypes;
-using Microsoft.HealthVault.Person;
-using Microsoft.HealthVault.PlatformInformation;
 
 namespace Microsoft.HealthVault.Web
 {
@@ -310,8 +309,7 @@ namespace Microsoft.HealthVault.Web
                 string signupCode = null;
                 if (configuration.IsSignupCodeRequired)
                 {
-                    // TODO: IConnection-ify this.
-                    // signupCode = HealthVaultPlatform.NewSignupCodeAsync(ApplicationConnection).Result;
+                    signupCode = HealthVaultPlatform.NewSignupCodeAsync(Ioc.Get<IConnectionInternal>()).Result;
                 }
 
                 RedirectToLogOn(context, isMra, context.Request.Url.PathAndQuery, signupCode);
@@ -921,33 +919,10 @@ namespace Microsoft.HealthVault.Web
         ///
         public static async Task<PersonInfo> GetPersonInfoAsync(string authToken, Guid appId, HealthServiceInstance serviceInstance)
         {
-            //WebApplicationCredential cred =
-            //    new WebApplicationCredential(
-            //        appId,
-            //        authToken,
-            //        ApplicationCertificateStore.Current.ApplicationCertificate);
-
-            // set up our cookie
-            // TODO: IConnection-ify this.
-            /*
-            WebApplicationConnection connection =
-                serviceInstance != null
-                    ? new WebApplicationConnection(appId, serviceInstance, cred)
-                    : new WebApplicationConnection(appId, cred);
-
-            PersonInfo personInfo = await HealthVaultPlatform.GetPersonInfoAsync(connection).ConfigureAwait(false);
-            personInfo.ApplicationSettingsChanged += new EventHandler(OnPersonInfoChanged);
-            personInfo.SelectedRecordChanged += new EventHandler(OnPersonInfoChanged);
-
-            return personInfo;
-            */
-            // return null;
-
             IHealthVaultConnection connection = Ioc.Get<IHealthVaultConnection>();
             IPersonClient personClient = connection.PersonClient;
 
             PersonInfo personInfo = await personClient.GetPersonInfoAsync();
-
 
             return personInfo;
         }

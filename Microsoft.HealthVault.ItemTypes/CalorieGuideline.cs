@@ -15,7 +15,7 @@ namespace Microsoft.HealthVault.ItemTypes
     /// Stores suggested calorie intak guidelines.
     /// </summary>
     ///
-    public class CalorieGuideline : HealthRecordItem
+    public class CalorieGuideline : ThingBase
     {
         /// <summary>
         /// Constructs an instance of suggested calorie intake guidelines with default values.

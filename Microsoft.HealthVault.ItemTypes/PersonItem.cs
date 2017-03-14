@@ -15,7 +15,7 @@ namespace Microsoft.HealthVault.ItemTypes
     /// Represents non-identifying information about a person.
     /// </summary>
     ///
-    public class PersonItem : HealthRecordItemData
+    public class PersonItem : ItemBase
     {
         /// <summary>
         /// Creates a new instance of the <see cref="PersonItem"/> class with default

@@ -15,10 +15,10 @@ using Microsoft.HealthVault.Thing;
 namespace Microsoft.HealthVault.ItemTypes
 {
     /// <summary>
-    /// Represents a health record item type that encapsulates an aerobic session.
+    /// Represents a thing type that encapsulates an aerobic session.
     /// </summary>
     ///
-    public class Exercise : HealthRecordItem
+    public class Exercise : ThingBase
     {
         /// <summary>
         /// Constructs a new instance of the <see cref="Exercise"/> class

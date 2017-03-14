@@ -46,7 +46,6 @@ namespace Microsoft.HealthVault
         public static void OverrideClientType<T>(Func<T, T> func)
             where T : IClient
         {
-            // TODO: Throw an exception if a connection has already been created.
             Container.Configure(c => c.ExportFactory(() => func(clientContainer.Locate<T>())));
         }
 

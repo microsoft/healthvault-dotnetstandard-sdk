@@ -21,7 +21,7 @@ using Microsoft.HealthVault.ItemTypes;
 namespace Microsoft.HealthVault.Thing
 {
     /// <summary>
-    /// Manages the mapping of a health record item type ID to a class
+    /// Manages the mapping of a thing type ID to a class
     /// representing the type-specific data for an item and the method used
     /// to deserialize it.
     /// </summary>
@@ -32,20 +32,20 @@ namespace Microsoft.HealthVault.Thing
         /// Registers the default type handlers.
         /// </summary>
         ///
-        private static Dictionary<Guid, HealthRecordItemTypeHandler> RegisterDefaultTypeHandlers(
-            out Dictionary<string, HealthRecordItemTypeHandler> typeHandlersByClassName)
+        private static Dictionary<Guid, ThingTypeHandler> RegisterDefaultTypeHandlers(
+            out Dictionary<string, ThingTypeHandler> typeHandlersByClassName)
         {
-            Dictionary<Guid, HealthRecordItemTypeHandler> typeHandlers =
-                new Dictionary<Guid, HealthRecordItemTypeHandler>();
+            Dictionary<Guid, ThingTypeHandler> typeHandlers =
+                new Dictionary<Guid, ThingTypeHandler>();
 
             typeHandlersByClassName =
-                new Dictionary<string, HealthRecordItemTypeHandler>(
+                new Dictionary<string, ThingTypeHandler>(
                     StringComparer.OrdinalIgnoreCase);
 
             foreach (DefaultTypeHandler typeHandler in DefaultTypeHandlers)
             {
-                HealthRecordItemTypeHandler handler =
-                    new HealthRecordItemTypeHandler(typeHandler.TypeId, typeHandler.Type);
+                ThingTypeHandler handler =
+                    new ThingTypeHandler(typeHandler.TypeId, typeHandler.Type);
 
                 typeHandlers.Add(
                     typeHandler.TypeId,
@@ -178,7 +178,7 @@ namespace Microsoft.HealthVault.Thing
         ///
         /// <param name="itemTypeClass">
         /// The class that implements the item type-specific data. It must
-        /// be public, derive from <see cref="HealthRecordItem"/>, and
+        /// be public, derive from <see cref="ThingBase"/>, and
         /// have a default constructor.
         /// </param>
         ///
@@ -191,7 +191,7 @@ namespace Microsoft.HealthVault.Thing
         /// <exception cref="ArgumentException">
         /// The <paramref name="typeId"/> parameter is <see cref="System.Guid.Empty"/> or
         /// the <paramref name="itemTypeClass"/> parameter does not derive from
-        /// <see cref="HealthRecordItem"/>.
+        /// <see cref="ThingBase"/>.
         /// </exception>
         ///
         /// <exception cref="ArgumentNullException">
@@ -216,9 +216,9 @@ namespace Microsoft.HealthVault.Thing
             Validator.ThrowIfArgumentNull(itemTypeClass, "itemTypeClass", "ThingTypeClassNull");
 
             Validator.ThrowArgumentExceptionIf(
-                !itemTypeClass.GetTypeInfo().IsSubclassOf(typeof(HealthRecordItem)),
+                !itemTypeClass.GetTypeInfo().IsSubclassOf(typeof(ThingBase)),
                 "itemTypeClass",
-                "ThingTypeClassNotHealthRecordItem");
+                "TypeClassNotThing");
 
             if (TypeHandlers.ContainsKey(typeId) && !overwriteExisting)
             {
@@ -226,11 +226,11 @@ namespace Microsoft.HealthVault.Thing
                     ResourceRetriever.GetResourceString("TypeHandlerAlreadyRegistered"));
             }
 
-            TypeHandlers[typeId] = new HealthRecordItemTypeHandler(typeId, itemTypeClass);
+            TypeHandlers[typeId] = new ThingTypeHandler(typeId, itemTypeClass);
             typeHandlersByClassName[itemTypeClass.Name] = TypeHandlers[typeId];
         }
 
-        private static Dictionary<Guid, HealthRecordItemTypeHandler> TypeHandlers
+        private static Dictionary<Guid, ThingTypeHandler> TypeHandlers
         {
             get
             {
@@ -244,14 +244,14 @@ namespace Microsoft.HealthVault.Thing
             }
         }
 
-        private static Dictionary<Guid, HealthRecordItemTypeHandler> typeHandlers;
+        private static Dictionary<Guid, ThingTypeHandler> typeHandlers;
 
-        internal static Dictionary<string, HealthRecordItemTypeHandler> TypeHandlersByClassName => typeHandlersByClassName;
+        internal static Dictionary<string, ThingTypeHandler> TypeHandlersByClassName => typeHandlersByClassName;
 
-        private static Dictionary<string, HealthRecordItemTypeHandler> typeHandlersByClassName;
+        private static Dictionary<string, ThingTypeHandler> typeHandlersByClassName;
 
         /// <summary>
-        /// Get a collection of all the HealthRecordItem-derived types that are registered.
+        /// Get a collection of all the ThingBase-derived types that are registered.
         /// </summary>
         /// <remarks>
         /// This set of types defines all of the HealthVault item types that this SDK
@@ -268,7 +268,7 @@ namespace Microsoft.HealthVault.Thing
             {
                 Dictionary<Guid, Type> registeredTypes = new Dictionary<Guid, Type>();
 
-                foreach (KeyValuePair<Guid, HealthRecordItemTypeHandler> item in TypeHandlers)
+                foreach (KeyValuePair<Guid, ThingTypeHandler> item in TypeHandlers)
                 {
                     registeredTypes.Add(item.Key, item.Value.ItemTypeClass);
                 }
@@ -295,7 +295,7 @@ namespace Microsoft.HealthVault.Thing
         {
             if (TypeHandlers.ContainsKey(typeId))
             {
-                HealthRecordItemTypeHandler itemTypeHandler = TypeHandlers[typeId];
+                ThingTypeHandler itemTypeHandler = TypeHandlers[typeId];
                 return itemTypeHandler.ItemTypeClass;
             }
 
@@ -326,7 +326,7 @@ namespace Microsoft.HealthVault.Thing
         ///
         /// <param name="itemExtensionClass">
         /// The class that implements the item extension. It must
-        /// be public, derive from <see cref="HealthRecordItemExtension"/>,
+        /// be public, derive from <see cref="ThingExtension"/>,
         /// and have a default constructor.
         /// </param>
         ///
@@ -357,7 +357,7 @@ namespace Microsoft.HealthVault.Thing
         ///
         /// <param name="itemExtensionClass">
         /// The class that implements the item extension. It must
-        /// be public, derive from <see cref="HealthRecordItemExtension"/>,
+        /// be public, derive from <see cref="ThingExtension"/>,
         /// and have a default constructor.
         /// </param>
         ///
@@ -370,7 +370,7 @@ namespace Microsoft.HealthVault.Thing
         /// <exception cref="ArgumentException">
         /// The <paramref name="extensionSource"/> parameter is <b>null</b> or empty or
         /// the <paramref name="itemExtensionClass"/> parameter does not derive from
-        /// <see cref="HealthRecordItemExtension"/>.
+        /// <see cref="ThingExtension"/>.
         /// </exception>
         ///
         /// <exception cref="ArgumentNullException">
@@ -398,11 +398,11 @@ namespace Microsoft.HealthVault.Thing
             }
 
             extensionHandlers[extensionSource] =
-                new HealthRecordItemTypeHandler(itemExtensionClass);
+                new ThingTypeHandler(itemExtensionClass);
         }
 
-        private static Dictionary<string, HealthRecordItemTypeHandler> extensionHandlers =
-            new Dictionary<string, HealthRecordItemTypeHandler>();
+        private static Dictionary<string, ThingTypeHandler> extensionHandlers =
+            new Dictionary<string, ThingTypeHandler>();
 
         #endregion RegisterExtensionHandler
 
@@ -566,7 +566,7 @@ namespace Microsoft.HealthVault.Thing
                 "applicationSpecificHandlerClass",
                 "AppDataHandlerNotApplicationSpecific");
 
-            Dictionary<string, HealthRecordItemTypeHandler> handlerDictionary;
+            Dictionary<string, ThingTypeHandler> handlerDictionary;
 
             if (appSpecificHandlers.ContainsKey(applicationId))
             {
@@ -581,38 +581,38 @@ namespace Microsoft.HealthVault.Thing
             }
             else
             {
-                handlerDictionary = new Dictionary<string, HealthRecordItemTypeHandler>();
+                handlerDictionary = new Dictionary<string, ThingTypeHandler>();
                 appSpecificHandlers.Add(applicationId, handlerDictionary);
             }
 
-            HealthRecordItemTypeHandler handler =
-                new HealthRecordItemTypeHandler(applicationSpecificHandlerClass);
+            ThingTypeHandler handler =
+                new ThingTypeHandler(applicationSpecificHandlerClass);
 
             handlerDictionary[subtypeTag] = handler;
         }
 
-        private static Dictionary<string, Dictionary<string, HealthRecordItemTypeHandler>> appSpecificHandlers =
-            new Dictionary<string, Dictionary<string, HealthRecordItemTypeHandler>>();
+        private static Dictionary<string, Dictionary<string, ThingTypeHandler>> appSpecificHandlers =
+            new Dictionary<string, Dictionary<string, ThingTypeHandler>>();
 
         #endregion RegisterApplicationSpecificTypeHandler
 
-        #region HealthRecordItem serialization
+        #region ThingBase serialization
 
         /// <summary>
-        /// Constructs a <see cref="HealthRecordItem"/> or an appropriate derived type for the
+        /// Constructs a <see cref="ThingBase"/> or an appropriate derived type for the
         /// specified item XML.
         /// </summary>
         ///
         /// <param name="itemXml">
-        /// The item XML, including the health record item tag as the root, to be
-        /// deserialized into a <see cref="HealthRecordItem"/>.
+        /// The item XML, including the thing tag as the root, to be
+        /// deserialized into a <see cref="ThingBase"/>.
         /// </param>
         ///
         /// <returns>
-        /// A <see cref="HealthRecordItem"/> or derived type based on the specified item XML.
+        /// A <see cref="ThingBase"/> or derived type based on the specified item XML.
         /// </returns>
         ///
-        public static HealthRecordItem DeserializeItem(string itemXml)
+        public static ThingBase DeserializeItem(string itemXml)
         {
             using (XmlReader thingReader = SDKHelper.GetXmlReaderForXml(itemXml, SDKHelper.XmlReaderSettings))
             {
@@ -626,8 +626,8 @@ namespace Microsoft.HealthVault.Thing
         private static Guid applicationSpecificId = new Guid("a5033c9d-08cf-4204-9bd3-cb412ce39fc0");
 
         /// <summary>
-        /// Deserializes the response XML into a <see cref="HealthRecordItem"/> or derived type
-        /// based on the registered health record item handler.
+        /// Deserializes the response XML into a <see cref="ThingBase"/> or derived type
+        /// based on the registered thing handler.
         /// </summary>
         ///
         /// <param name="thingReader">
@@ -635,7 +635,7 @@ namespace Microsoft.HealthVault.Thing
         /// </param>
         ///
         /// <returns>
-        /// The <see cref="HealthRecordItem"/> or derived class instance representing the data
+        /// The <see cref="ThingBase"/> or derived class instance representing the data
         /// in the XML.
         /// </returns>
         ///
@@ -653,9 +653,9 @@ namespace Microsoft.HealthVault.Thing
         /// </exception>
         ///
         [SuppressMessage("Microsoft.Usage", "CA2202:Do not dispose objects multiple times", Justification = "StringReader can be disposed multiple times. Usings block makes the code more readable")]
-        internal static HealthRecordItem DeserializeItem(XmlReader thingReader)
+        internal static ThingBase DeserializeItem(XmlReader thingReader)
         {
-            HealthRecordItem result;
+            ThingBase result;
 
             string thingString = thingReader.ReadOuterXml();
 
@@ -676,7 +676,7 @@ namespace Microsoft.HealthVault.Thing
 
             Guid typeId = GetTypeId(thingNav);
 
-            HealthRecordItemTypeHandler handler = null;
+            ThingTypeHandler handler = null;
             if (typeId == applicationSpecificId)
             {
                 // Handle application specific health item records by checking for handlers
@@ -706,24 +706,24 @@ namespace Microsoft.HealthVault.Thing
 
             if (handler != null)
             {
-                result = (HealthRecordItem)Activator.CreateInstance(handler.ItemTypeClass);
+                result = (ThingBase)Activator.CreateInstance(handler.ItemTypeClass);
             }
             else
             {
-                result = new HealthRecordItem(typeId);
+                result = new ThingBase(typeId);
             }
 
             result.ParseXml(thingNav, thingString);
             return result;
         }
 
-        #endregion HealthRecordItem serialization
+        #endregion ThingBase serialization
 
         #region Extension serialization
 
         /// <summary>
         /// Deserializes the response XML for extensions into a
-        /// <see cref="HealthRecordItemExtension"/> or derived type based on the registered
+        /// <see cref="ThingExtension"/> or derived type based on the registered
         /// extension handler.
         /// </summary>
         ///
@@ -732,7 +732,7 @@ namespace Microsoft.HealthVault.Thing
         /// </param>
         ///
         /// <returns>
-        /// The <see cref="HealthRecordItemExtension"/> or derived class instance
+        /// The <see cref="ThingExtension"/> or derived class instance
         /// representing the data in the XML.
         /// </returns>
         ///
@@ -749,22 +749,22 @@ namespace Microsoft.HealthVault.Thing
         /// constructor.
         /// </exception>
         ///
-        internal static HealthRecordItemExtension DeserializeExtension(
+        internal static ThingExtension DeserializeExtension(
             XPathNavigator extensionNav)
         {
-            HealthRecordItemExtension result;
+            ThingExtension result;
 
             string source = extensionNav.GetAttribute("source", string.Empty);
             if (extensionHandlers.ContainsKey(source))
             {
-                HealthRecordItemTypeHandler handler = extensionHandlers[source];
+                ThingTypeHandler handler = extensionHandlers[source];
                 result =
-                    (HealthRecordItemExtension)Activator.CreateInstance(
+                    (ThingExtension)Activator.CreateInstance(
                         handler.ItemTypeClass);
             }
             else
             {
-                result = new HealthRecordItemExtension(source);
+                result = new ThingExtension(source);
             }
 
             result.ParseXml(extensionNav);
@@ -773,10 +773,10 @@ namespace Microsoft.HealthVault.Thing
 
         #endregion Extension serialization
 
-        #region HealthRecordItem Type Definitions
+        #region ThingBase Type Definitions
 
         /// <summary>
-        /// Gets the definitions for all health record item type definitions
+        /// Gets the definitions for all thing type definitions
         /// supported by HealthVault.
         /// </summary>
         ///
@@ -785,7 +785,7 @@ namespace Microsoft.HealthVault.Thing
         /// </param>
         ///
         /// <returns>
-        /// The type definitions for all health record item type definitions
+        /// The type definitions for all thing type definitions
         /// supported by HealthVault.
         /// </returns>
         ///
@@ -798,25 +798,25 @@ namespace Microsoft.HealthVault.Thing
         /// If <paramref name="connection"/> parameter is <b>null</b>.
         /// </exception>
         ///
-        public static async Task<IDictionary<Guid, HealthRecordItemTypeDefinition>> GetHealthRecordItemTypeDefinitionAsync(
+        public static async Task<IDictionary<Guid, ThingTypeDefinition>> GetHealthRecordItemTypeDefinitionAsync(
             IConnectionInternal connection)
         {
             return await GetHealthRecordItemTypeDefinitionAsync(
                 null,
-                HealthRecordItemTypeSections.All,
+                ThingTypeSections.All,
                 null,
                 null,
                 connection).ConfigureAwait(false);
         }
 
         /// <summary>
-        /// Gets the definitions for all health record item type definitions
+        /// Gets the definitions for all thing type definitions
         /// supported by HealthVault only if they have been updated since the
         /// specified last client refresh date.
         /// </summary>
         ///
         /// <param name="typeIds">
-        /// A collection of health record items whose details are being requested. Null indicates
+        /// A collection of things whose details are being requested. Null indicates
         /// that all health item records should be returned.
         /// </param>
         ///
@@ -850,21 +850,21 @@ namespace Microsoft.HealthVault.Thing
         /// If <paramref name="connection"/> parameter is <b>null</b>.
         /// </exception>
         ///
-        public static async Task<IDictionary<Guid, HealthRecordItemTypeDefinition>> GetHealthRecordItemTypeDefinitionAsync(
+        public static async Task<IDictionary<Guid, ThingTypeDefinition>> GetHealthRecordItemTypeDefinitionAsync(
             IList<Guid> typeIds,
             DateTime? lastClientRefreshDate,
             IConnectionInternal connection)
         {
             return await GetHealthRecordItemTypeDefinitionAsync(
                 typeIds,
-                HealthRecordItemTypeSections.All,
+                ThingTypeSections.All,
                 null,
                 lastClientRefreshDate,
                 connection).ConfigureAwait(false);
         }
 
         /// <summary>
-        /// Gets the requested definitions for the specified health record item type definitions
+        /// Gets the requested definitions for the specified thing type definitions
         /// supported by HealthVault.
         /// </summary>
         ///
@@ -874,7 +874,7 @@ namespace Microsoft.HealthVault.Thing
         /// </param>
         ///
         /// <param name="sections">
-        /// A collection of HealthRecordItemTypeSections enumeration values that indicate the type of
+        /// A collection of ThingTypeSections enumeration values that indicate the type of
         /// details to be returned for the specified health item record(s).
         /// </param>
         ///
@@ -903,9 +903,9 @@ namespace Microsoft.HealthVault.Thing
         /// If <paramref name="connection"/> parameter is <b>null</b>.
         /// </exception>
         ///
-        public static async Task<IDictionary<Guid, HealthRecordItemTypeDefinition>> GetHealthRecordItemTypeDefinitionAsync(
+        public static async Task<IDictionary<Guid, ThingTypeDefinition>> GetHealthRecordItemTypeDefinitionAsync(
             IList<Guid> typeIds,
-            HealthRecordItemTypeSections sections,
+            ThingTypeSections sections,
             IConnectionInternal connection)
         {
             return await GetHealthRecordItemTypeDefinitionAsync(
@@ -917,7 +917,7 @@ namespace Microsoft.HealthVault.Thing
         }
 
         /// <summary>
-        /// Gets the requested health record item type definitions supported by HealthVault
+        /// Gets the requested thing type definitions supported by HealthVault
         /// only if they have been updated since the specified last client refresh date.
         /// </summary>
         ///
@@ -927,7 +927,7 @@ namespace Microsoft.HealthVault.Thing
         /// </param>
         ///
         /// <param name="sections">
-        /// A collection of HealthRecordItemTypeSections enumeration values that indicate the type of
+        /// A collection of ThingTypeSections enumeration values that indicate the type of
         /// details to be returned for the specified health item record(s).
         /// </param>
         ///
@@ -961,9 +961,9 @@ namespace Microsoft.HealthVault.Thing
         /// If <paramref name="connection"/> parameter is <b>null</b>.
         /// </exception>
         ///
-        public static async Task<IDictionary<Guid, HealthRecordItemTypeDefinition>> GetHealthRecordItemTypeDefinitionAsync(
+        public static async Task<IDictionary<Guid, ThingTypeDefinition>> GetHealthRecordItemTypeDefinitionAsync(
             IList<Guid> typeIds,
-            HealthRecordItemTypeSections sections,
+            ThingTypeSections sections,
             DateTime? lastClientRefreshDate,
             IConnectionInternal connection)
         {
@@ -976,12 +976,12 @@ namespace Microsoft.HealthVault.Thing
         }
 
         /// <summary>
-        /// Gets the definitions for all health record item type definitions
+        /// Gets the definitions for all thing type definitions
         /// supported by HealthVault.
         /// </summary>
         ///
         /// <param name="sections">
-        /// A collection of HealthRecordItemTypeSections enumeration values that indicate the type of
+        /// A collection of ThingTypeSections enumeration values that indicate the type of
         /// details to be returned for the specified health item record(s).
         /// </param>
         ///
@@ -990,7 +990,7 @@ namespace Microsoft.HealthVault.Thing
         /// </param>
         ///
         /// <returns>
-        /// The type definitions for all the health record item type definitions
+        /// The type definitions for all the thing type definitions
         /// supported by HealthVault.
         /// </returns>
         ///
@@ -1003,15 +1003,15 @@ namespace Microsoft.HealthVault.Thing
         /// If <paramref name="connection"/> parameter is <b>null</b>.
         /// </exception>
         ///
-        public static async Task<IDictionary<Guid, HealthRecordItemTypeDefinition>> GetHealthRecordItemTypeDefinitionAsync(
-            HealthRecordItemTypeSections sections,
+        public static async Task<IDictionary<Guid, ThingTypeDefinition>> GetHealthRecordItemTypeDefinitionAsync(
+            ThingTypeSections sections,
             IConnectionInternal connection)
         {
             return await GetHealthRecordItemTypeDefinitionAsync(null, sections, null, null, connection).ConfigureAwait(false);
         }
 
         /// <summary>
-        /// Gets the definitions for one or more health record item type definitions
+        /// Gets the definitions for one or more thing type definitions
         /// supported by HealthVault.
         /// </summary>
         ///
@@ -1021,7 +1021,7 @@ namespace Microsoft.HealthVault.Thing
         /// </param>
         ///
         /// <param name="sections">
-        /// A collection of HealthRecordItemTypeSections enumeration values that indicate the type
+        /// A collection of ThingTypeSections enumeration values that indicate the type
         /// of details to be returned for the specified health item records(s).
         /// </param>
         ///
@@ -1067,9 +1067,9 @@ namespace Microsoft.HealthVault.Thing
         /// If <paramref name="connection"/> parameter is <b>null</b>.
         /// </exception>
         ///
-        public static async Task<IDictionary<Guid, HealthRecordItemTypeDefinition>> GetHealthRecordItemTypeDefinitionAsync(
+        public static async Task<IDictionary<Guid, ThingTypeDefinition>> GetHealthRecordItemTypeDefinitionAsync(
             IList<Guid> typeIds,
-            HealthRecordItemTypeSections sections,
+            ThingTypeSections sections,
             IList<string> imageTypes,
             DateTime? lastClientRefreshDate,
             IConnectionInternal connection)
@@ -1083,7 +1083,7 @@ namespace Microsoft.HealthVault.Thing
         }
 
         /// <summary>
-        /// Gets the definition for a health record item type.
+        /// Gets the definition for a thing type.
         /// </summary>
         ///
         /// <param name="typeId">
@@ -1113,17 +1113,17 @@ namespace Microsoft.HealthVault.Thing
         /// The <paramref name="connection"/> parameter is <b>null</b>.
         /// </exception>
         ///
-        public static async Task<HealthRecordItemTypeDefinition> GetHealthRecordItemTypeDefinitionAsync(
+        public static async Task<ThingTypeDefinition> GetHealthRecordItemTypeDefinitionAsync(
             Guid typeId,
             IConnectionInternal connection)
         {
-            IDictionary<Guid, HealthRecordItemTypeDefinition> typeDefs =
+            IDictionary<Guid, ThingTypeDefinition> typeDefs =
                 await GetHealthRecordItemTypeDefinitionAsync(new[] { typeId }, connection).ConfigureAwait(false);
             return typeDefs[typeId];
         }
 
         /// <summary>
-        /// Gets the definition of one or more health record item type definitions
+        /// Gets the definition of one or more thing type definitions
         /// supported by HealthVault.
         /// </summary>
         ///
@@ -1156,18 +1156,18 @@ namespace Microsoft.HealthVault.Thing
         /// If <paramref name="connection"/> parameter is <b>null</b>.
         /// </exception>
         ///
-        public static async Task<IDictionary<Guid, HealthRecordItemTypeDefinition>> GetHealthRecordItemTypeDefinitionAsync(
+        public static async Task<IDictionary<Guid, ThingTypeDefinition>> GetHealthRecordItemTypeDefinitionAsync(
             IList<Guid> typeIds,
             IConnectionInternal connection)
         {
             return await GetHealthRecordItemTypeDefinitionAsync(
                 typeIds,
-                HealthRecordItemTypeSections.All,
+                ThingTypeSections.All,
                 connection).ConfigureAwait(false);
         }
 
         /// <summary>
-        /// Gets the health record item type definition for the base item type.
+        /// Gets the thing type definition for the base item type.
         /// </summary>
         ///
         /// <param name="connection">
@@ -1189,7 +1189,7 @@ namespace Microsoft.HealthVault.Thing
         /// The <paramref name="connection"/> parameter is <b>null</b>.
         /// </exception>
         ///
-        public static async Task<HealthRecordItemTypeDefinition> GetBaseHealthRecordItemTypeDefinitionAsync(
+        public static async Task<ThingTypeDefinition> GetBaseHealthRecordItemTypeDefinitionAsync(
             IConnectionInternal connection)
         {
             return await GetHealthRecordItemTypeDefinitionAsync(BaseTypeId, connection).ConfigureAwait(false);
@@ -1207,7 +1207,7 @@ namespace Microsoft.HealthVault.Thing
         private static readonly Guid BaseTypeId =
             new Guid("3e730686-781f-4616-aa0d-817bba8eb141");
 
-        #endregion HealthRecordItem Type Definitions
+        #endregion ThingBase Type Definitions
 
         #region private helpers
 

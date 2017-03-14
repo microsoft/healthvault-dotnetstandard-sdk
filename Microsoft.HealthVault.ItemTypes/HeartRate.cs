@@ -16,7 +16,7 @@ namespace Microsoft.HealthVault.ItemTypes
     /// A measurement of the record owner's heart rate.
     /// </summary>
     ///
-    public class HeartRate : HealthRecordItem
+    public class HeartRate : ThingBase
     {
         /// <summary>
         /// Creates an instance of <see cref="HeartRate"/> with default values.

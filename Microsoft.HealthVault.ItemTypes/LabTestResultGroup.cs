@@ -15,7 +15,7 @@ namespace Microsoft.HealthVault.ItemTypes
     ///  A set of lab test results.
     /// </summary>
     ///
-    public class LabTestResultGroup : HealthRecordItemData
+    public class LabTestResultGroup : ItemBase
     {
         /// <summary>
         /// Initialize a new instance of the <see cref="LabTestResultGroup"/>
