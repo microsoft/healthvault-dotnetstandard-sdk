@@ -48,7 +48,7 @@
   <ItemGroup>
     <Compile Include="ActionPlanWrapper.cs" />
     <Compile Include="Address.cs" />
-    <Compile Include="AerobicData.cs" />
+    <Compile Include="AerobicBase.cs" />
     <Compile Include="AerobicProfile.cs" />
     <Compile Include="AerobicWeeklyGoal.cs" />
     <Compile Include="Alert.cs" />

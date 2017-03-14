@@ -10,12 +10,12 @@ namespace Microsoft.HealthVault.Thing
 {
     /// <summary>
     /// Represents data, typically binary data, that extends the XML of the
-    /// health record item.
+    /// thing.
     /// </summary>
     ///
     /// <remarks>
-    /// Other data for a health record item is usually auxiliary to the
-    /// health record item. This data might either be large or not
+    /// Other data for a thing is usually auxiliary to the
+    /// thing. This data might either be large or not
     /// easily or efficiently stored as XML. Examples include
     /// binary data such as images, videos, or binary files.
     /// </remarks>

@@ -175,8 +175,7 @@ namespace Microsoft.HealthVault
         /// </param>
         ///
         /// <param name="cultureIsFixed">
-        /// HealthVault looks for the vocabulary items for the culture info
-        /// specified using <see cref="HealthServiceConnection.Culture"/>.
+        /// HealthVault looks for the vocabulary items for the device's culture info.
         /// If <paramref name="cultureIsFixed"/> is set to <b>false</b> and if
         /// items are not found for the specified culture, items for the
         /// default fallback culture are returned. If
@@ -382,7 +381,7 @@ namespace Microsoft.HealthVault
         ///
         /// <remarks>
         /// This method does text search matching of display text and abbreviation text
-        /// for the culture defined by the <see cref="HealthServiceConnection.Culture"/>.
+        /// for the device's culture.
         /// The <paramref name="searchValue"/> is a string of characters in the specified
         /// culture.
         /// </remarks>
@@ -960,7 +959,7 @@ namespace Microsoft.HealthVault
         #region ItemOperations
 
         /// <summary>
-        /// Creates new health record items associated with the record.
+        /// Creates new things associated with the record.
         /// </summary>
         ///
         /// <param name="connection">
@@ -972,7 +971,7 @@ namespace Microsoft.HealthVault
         /// </param>
         ///
         /// <param name="items">
-        /// The health record items from which to create new instances.
+        /// The things from which to create new instances.
         /// </param>
         ///
         /// <remarks>
@@ -987,19 +986,19 @@ namespace Microsoft.HealthVault
         /// </exception>
         ///
         /// <exception cref="ArgumentNullException">
-        /// At least one HealthRecordItem in the supplied list was null.
+        /// At least one ThingBase in the supplied list was null.
         /// </exception>
         ///
         public static async Task NewItemsAsync(
             IConnectionInternal connection,
             HealthRecordAccessor accessor,
-            IList<HealthRecordItem> items)
+            IList<ThingBase> items)
         {
             await HealthVaultPlatformItem.Current.NewItemsAsync(connection, accessor, items).ConfigureAwait(false);
         }
 
         /// <summary>
-        /// Updates the specified health record items in one batch call to
+        /// Updates the specified things in one batch call to
         /// the service.
         /// </summary>
         ///
@@ -1012,7 +1011,7 @@ namespace Microsoft.HealthVault
         /// </param>
         ///
         /// <param name="itemsToUpdate">
-        /// The health record items to be updated.
+        /// The things to be updated.
         /// </param>
         ///
         /// <remarks>
@@ -1028,7 +1027,7 @@ namespace Microsoft.HealthVault
         ///
         /// <exception cref="ArgumentException">
         /// The <paramref name="itemsToUpdate"/> contains a <b>null</b> member or
-        /// a <see cref="HealthRecordItem"/> instance that does not have an ID.
+        /// a <see cref="ThingBase"/> instance that does not have an ID.
         /// </exception>
         ///
         /// <exception cref="HealthServiceException">
@@ -1041,13 +1040,13 @@ namespace Microsoft.HealthVault
         public static async Task UpdateItemsAsync(
             IConnectionInternal connection,
             HealthRecordAccessor accessor,
-            IList<HealthRecordItem> itemsToUpdate)
+            IList<ThingBase> itemsToUpdate)
         {
             await HealthVaultPlatformItem.Current.UpdateItemsAsync(connection, accessor, itemsToUpdate).ConfigureAwait(false);
         }
 
         /// <summary>
-        /// Marks the specified health record item as deleted.
+        /// Marks the specified thing as deleted.
         /// </summary>
         ///
         /// <param name="connection">
@@ -1065,7 +1064,7 @@ namespace Microsoft.HealthVault
         /// <remarks>
         /// This method accesses the HealthVault service across the network.
         /// <br/><br/>
-        /// Health record items are never completely deleted. They are marked
+        /// things are never completely deleted. They are marked
         /// as deleted and are ignored for most normal operations. Items can
         /// be undeleted by contacting customer service.
         /// </remarks>
@@ -1075,7 +1074,7 @@ namespace Microsoft.HealthVault
         /// </exception>
         ///
         /// <exception cref="HealthServiceException">
-        /// Errors removed the health record items from the server.
+        /// Errors removed the things from the server.
         /// The exception's Error property will contain the index of the
         /// item on which the failure occurred in the ErrorInfo property. If any failures occur,
         /// no items will have been removed.
@@ -1084,7 +1083,7 @@ namespace Microsoft.HealthVault
         public static async Task RemoveItemsAsync(
             IConnectionInternal connection,
             HealthRecordAccessor accessor,
-            IList<HealthRecordItemKey> itemsToRemove)
+            IList<ThingKey> itemsToRemove)
         {
             await HealthVaultPlatformItem.Current.RemoveItemsAsync(connection, accessor, itemsToRemove).ConfigureAwait(false);
         }
@@ -1141,13 +1140,13 @@ namespace Microsoft.HealthVault
         /// </param>
         ///
         /// <returns>
-        /// Returns a dictionary of <see cref="HealthRecordItemTypePermission"/>
-        /// with health record item types as the keys.
+        /// Returns a dictionary of <see cref="ThingTypePermission"/>
+        /// with thing types as the keys.
         /// </returns>
         ///
         /// <remarks>
-        /// If the list of health record item types is empty, an empty dictionary is
-        /// returned. If for a health record item type, the person has
+        /// If the list of thing types is empty, an empty dictionary is
+        /// returned. If for a thing type, the person has
         /// neither online access nor offline access permissions,
         /// <b> null </b> will be returned for that type in the dictionary.
         /// </remarks>
@@ -1160,7 +1159,7 @@ namespace Microsoft.HealthVault
         /// If there is an exception during executing the request to HealthVault.
         /// </exception>
         ///
-        public static async Task<IDictionary<Guid, HealthRecordItemTypePermission>> QueryPermissionsByTypesAsync(
+        public static async Task<IDictionary<Guid, ThingTypePermission>> QueryPermissionsByTypesAsync(
             IHealthVaultConnection connection,
             HealthRecordAccessor accessor,
             IList<Guid> healthRecordItemTypeIds)
@@ -1188,18 +1187,18 @@ namespace Microsoft.HealthVault
         /// </param>
         ///
         /// <returns>
-        /// A list of <see cref="HealthRecordItemTypePermission"/>
+        /// A list of <see cref="ThingTypePermission"/>
         /// objects which represent the permissions that the current
         /// authenticated person has for the HealthRecordItemTypes specified
         /// in the current health record when using the current application.
         /// </returns>
         ///
         /// <remarks>
-        /// If the list of health record item types is empty, an empty list is
-        /// returned. If for a health record item type, the person has
+        /// If the list of thing types is empty, an empty list is
+        /// returned. If for a thing type, the person has
         /// neither online access nor offline access permissions,
-        /// HealthRecordItemTypePermission object is not returned for that
-        /// health record item type.
+        /// ThingTypePermission object is not returned for that
+        /// thing type.
         /// </remarks>
         ///
         /// <exception cref="ArgumentNullException">
@@ -1210,7 +1209,7 @@ namespace Microsoft.HealthVault
         /// If there is an exception during executing the request to HealthVault.
         /// </exception>
         ///
-        public static async Task<Collection<HealthRecordItemTypePermission>> QueryPermissionsAsync(
+        public static async Task<Collection<ThingTypePermission>> QueryPermissionsAsync(
             IHealthVaultConnection connection,
             HealthRecordAccessor accessor,
             IList<Guid> healthRecordItemTypeIds)
@@ -1239,16 +1238,16 @@ namespace Microsoft.HealthVault
         ///
         /// <returns>
         /// A <see cref="HealthRecordPermissions"/> object
-        /// which contains a collection of <see cref="HealthRecordItemTypePermission"/> objects and
+        /// which contains a collection of <see cref="ThingTypePermission"/> objects and
         /// other permission settings.
         /// </returns>
         ///
         /// <remarks>
-        /// If the list of health record item types is empty, an empty list is
-        /// returned. If for a health record item type, the person has
+        /// If the list of thing types is empty, an empty list is
+        /// returned. If for a thing type, the person has
         /// neither online access nor offline access permissions,
-        /// HealthRecordItemTypePermission object is not returned for that
-        /// health record item type.
+        /// ThingTypePermission object is not returned for that
+        /// thing type.
         /// </remarks>
         ///
         /// <exception cref="ArgumentNullException">
@@ -1299,12 +1298,12 @@ namespace Microsoft.HealthVault
         /// </param>
         ///
         /// <returns>
-        /// A List of HealthRecordItems representing the valid group memberships.
+        /// A List of things representing the valid group memberships.
         /// </returns>
         /// <exception cref="HealthServiceException">
         /// If an error occurs while contacting the HealthVault service.
         /// </exception>
-        public static async Task<Collection<HealthRecordItem>> GetValidGroupMembershipAsync(
+        public static async Task<Collection<ThingBase>> GetValidGroupMembershipAsync(
             IHealthVaultConnection connection,
             HealthRecordAccessor accessor,
             IList<Guid> applicationIds)
@@ -1313,7 +1312,7 @@ namespace Microsoft.HealthVault
         }
 
         /// <summary>
-        /// Gets the health record items that match the filters as specified by
+        /// Gets the things that match the filters as specified by
         /// the properties of this class.
         /// </summary>
         ///
@@ -1330,7 +1329,7 @@ namespace Microsoft.HealthVault
         /// </param>
         ///
         /// <returns>
-        /// A collection of health record items that match the applied filters.
+        /// A collection of things that match the applied filters.
         /// </returns>
         ///
         /// <remarks>
@@ -1345,7 +1344,7 @@ namespace Microsoft.HealthVault
         /// or contains invalid filters.
         /// </exception>
         ///
-        public static async Task<ReadOnlyCollection<HealthRecordItemCollection>> GetMatchingItemsAsync(
+        public static async Task<ReadOnlyCollection<ThingCollection>> GetMatchingItemsAsync(
             IConnectionInternal connection,
             HealthRecordAccessor accessor,
             HealthRecordSearcher searcher)
@@ -1354,7 +1353,7 @@ namespace Microsoft.HealthVault
         }
 
         /// <summary>
-        /// Gets the health record items that match the filters as specified by
+        /// Gets the things that match the filters as specified by
         /// the properties of this class.
         /// </summary>
         ///
@@ -1378,7 +1377,7 @@ namespace Microsoft.HealthVault
         /// This method accesses the HealthVault service across the network.
         /// <br/><br/>
         /// This method is typically used when the calling application wants to
-        /// handle the raw health record item XML directly instead of using the
+        /// handle the raw thing XML directly instead of using the
         /// object model.
         /// </remarks>
         ///
@@ -1391,7 +1390,7 @@ namespace Microsoft.HealthVault
         }
 
         /// <summary>
-        /// Gets the health record items that match the filters as specified by
+        /// Gets the things that match the filters as specified by
         /// the properties of this class.
         /// </summary>
         ///
@@ -1415,7 +1414,7 @@ namespace Microsoft.HealthVault
         /// This method accesses the HealthVault service across the network.
         /// <br/><br/>
         /// This method is typically used when the calling application wants to
-        /// handle the raw health record item XML directly instead of using the
+        /// handle the raw thing XML directly instead of using the
         /// object model.
         /// </remarks>
         ///
@@ -1428,7 +1427,7 @@ namespace Microsoft.HealthVault
         }
 
         /// <summary>
-        /// Gets the health record items specified by the
+        /// Gets the things specified by the
         /// <see cref="HealthRecordSearcher"/> and runs them through the specified
         /// transform.
         /// </summary>
@@ -1526,7 +1525,7 @@ namespace Microsoft.HealthVault
         }
 
         /// <summary>
-        /// Gets the definitions for one or more health record item type definitions
+        /// Gets the definitions for one or more thing type definitions
         /// supported by HealthVault.
         /// </summary>
         ///
@@ -1536,7 +1535,7 @@ namespace Microsoft.HealthVault
         /// </param>
         ///
         /// <param name="sections">
-        /// A collection of HealthRecordItemTypeSections enumeration values that indicate the type
+        /// A collection of ThingTypeSections enumeration values that indicate the type
         /// of details to be returned for the specified health item records(s).
         /// </param>
         ///
@@ -1582,9 +1581,9 @@ namespace Microsoft.HealthVault
         /// If <paramref name="connection"/> parameter is <b>null</b>.
         /// </exception>
         ///
-        public static async Task<IDictionary<Guid, HealthRecordItemTypeDefinition>> GetHealthRecordItemTypeDefinitionAsync(
+        public static async Task<IDictionary<Guid, ThingTypeDefinition>> GetHealthRecordItemTypeDefinitionAsync(
             IList<Guid> typeIds,
-            HealthRecordItemTypeSections sections,
+            ThingTypeSections sections,
             IList<string> imageTypes,
             DateTime? lastClientRefreshDate,
             IConnectionInternal connection)

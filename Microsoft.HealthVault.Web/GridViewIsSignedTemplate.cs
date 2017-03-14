@@ -15,7 +15,7 @@ namespace Microsoft.HealthVault.Web
 {
     /// <summary>
     /// A <see cref="TemplateField"/> implementation used on the
-    /// <see cref="HealthRecordItemDataGrid"/> to override Signed column.
+    /// <see cref="ThingDataGrid"/> to override Signed column.
     /// </summary>
     [AspNetHostingPermission(SecurityAction.InheritanceDemand, Level = AspNetHostingPermissionLevel.Minimal)]
     [SecurityCritical]
@@ -28,7 +28,7 @@ namespace Microsoft.HealthVault.Web
         ///
         /// <param name="type">
         /// Tells the template which type of a controls should be added to the
-        /// container based on the health record item type.
+        /// container based on the thing type.
         /// </param>
         ///
         /// <param name="columnName">

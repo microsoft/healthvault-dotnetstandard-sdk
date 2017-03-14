@@ -14,9 +14,9 @@ using Microsoft.HealthVault.Thing;
 namespace Microsoft.HealthVault.ItemTypes
 {
     /// <summary>
-    /// Represents a health record item type that encapsulates an action plan record
+    /// Represents a thing type that encapsulates an action plan record
     /// </summary>
-    public abstract class MshItemBase : HealthRecordItem
+    public abstract class MshItemBase : ThingBase
     {
         #region ctor
 
@@ -35,7 +35,7 @@ namespace Microsoft.HealthVault.ItemTypes
                 this.WrappedInstanceJson = wrappedInstance.Base64EncodedJson;
                 if (wrappedInstance.ThingId != Guid.Empty && wrappedInstance.VersionStamp != Guid.Empty)
                 {
-                    this.Key = new HealthRecordItemKey(wrappedInstance.ThingId, wrappedInstance.VersionStamp);
+                    this.Key = new ThingKey(wrappedInstance.ThingId, wrappedInstance.VersionStamp);
                 }
             }
 
@@ -49,8 +49,8 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <param name="typeId">Unique type id</param>
         /// <param name="wrappedTypeName">Wrapped type name</param>
         /// <param name="base64EncodedJson">Base64-encoded JSON</param>
-        /// <param name="thingId">HealthRecordItem id</param>
-        /// <param name="versionStamp">HealthRecordItem versionstamp</param>
+        /// <param name="thingId">ThingBase id</param>
+        /// <param name="versionStamp">ThingBase versionstamp</param>
         protected MshItemBase(
             Guid typeId,
             string wrappedTypeName,
@@ -63,7 +63,7 @@ namespace Microsoft.HealthVault.ItemTypes
             this.WrappedInstanceJson = base64EncodedJson;
             if (thingId != Guid.Empty && versionStamp != Guid.Empty)
             {
-                this.Key = new HealthRecordItemKey(thingId, versionStamp);
+                this.Key = new ThingKey(thingId, versionStamp);
             }
 
             this.Headers = new Dictionary<string, string>();
@@ -127,7 +127,7 @@ namespace Microsoft.HealthVault.ItemTypes
         private string wrappedInstanceJson;
         #endregion
 
-        #region Overrides of HealthRecordItem
+        #region Overrides of ThingBase
 
         /// <summary>
         /// Populates the <see cref="Message"/> instance from the data in the specified XML.

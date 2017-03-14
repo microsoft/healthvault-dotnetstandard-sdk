@@ -23,7 +23,7 @@ namespace Microsoft.HealthVault.ItemTypes
     /// Example goals: maintain average blood glucose level below 90 mg/dl, walk 1000 steps per day.
     /// </remarks>
     ///
-    public class HealthGoal : HealthRecordItem
+    public class HealthGoal : ThingBase
     {
         /// <summary>
         /// Creates a new instance of the <see cref="HealthGoal"/> class with default values.
@@ -31,7 +31,7 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         /// <remarks>
         /// This item is not added to the health record until the
-        /// <see cref="HealthRecordAccessor.NewItem(HealthRecordItem)"/> method
+        /// <see cref="HealthRecordAccessor.NewItem(ThingBase)"/> method
         /// is called.
         /// </remarks>
         ///
@@ -47,7 +47,7 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         /// <remarks>
         /// This item is not added to the health record until the
-        /// <see cref="HealthRecordAccessor.NewItem(HealthRecordItem)"/> method
+        /// <see cref="HealthRecordAccessor.NewItem(ThingBase)"/> method
         /// is called.
         /// </remarks>
         ///
@@ -146,7 +146,7 @@ namespace Microsoft.HealthVault.ItemTypes
         /// If <paramref name="writer"/> parameter is <b>null</b>.
         /// </exception>
         ///
-        /// <exception cref="HealthRecordItemSerializationException">
+        /// <exception cref="ThingSerializationException">
         /// If <see cref="Name"/> is <b>null</b>.
         /// </exception>
         ///
@@ -162,7 +162,7 @@ namespace Microsoft.HealthVault.ItemTypes
 
             if (this.name == null)
             {
-                throw new HealthRecordItemSerializationException(
+                throw new ThingSerializationException(
                     ResourceRetriever.GetResourceString(
                         "errors", "GoalNameNullValue"));
             }

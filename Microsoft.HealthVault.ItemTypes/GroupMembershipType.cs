@@ -13,7 +13,7 @@ namespace Microsoft.HealthVault.ItemTypes
     /// Represents a group membership.
     /// </summary>
     ///
-    public class GroupMembershipType : HealthRecordItemData
+    public class GroupMembershipType : ItemBase
     {
         /// <summary>
         /// Constructs a new instance of the <see cref="GroupMembershipType"/> class with

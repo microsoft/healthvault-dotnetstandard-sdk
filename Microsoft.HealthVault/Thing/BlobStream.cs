@@ -20,7 +20,7 @@ using System.Xml.XPath;
 namespace Microsoft.HealthVault.Thing
 {
     /// <summary>
-    /// A stream for sending and receiving binary data associated with a health record item.
+    /// A stream for sending and receiving binary data associated with a thing.
     /// </summary>
     ///
     /// <remarks>

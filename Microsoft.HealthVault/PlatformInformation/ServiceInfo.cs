@@ -533,7 +533,7 @@ namespace Microsoft.HealthVault.PlatformInformation
         /// <value>
         /// The dictionary returned uses the configuration value name as the key. All entries are
         /// public configuration values that the HealthVault service exposes as information to
-        /// HealthVault applications. Values can be used to throttle health record item queries, etc.
+        /// HealthVault applications. Values can be used to throttle thing queries, etc.
         /// </value>
         ///
         public Dictionary<string, string> ConfigurationValues { get; protected set; } = new Dictionary<string, string>();

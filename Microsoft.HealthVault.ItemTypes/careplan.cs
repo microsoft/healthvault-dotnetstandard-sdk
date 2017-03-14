@@ -22,7 +22,7 @@ namespace Microsoft.HealthVault.ItemTypes
     /// The care plan contains tasks and goals.
     /// </remarks>
     ///
-    public class CarePlan : HealthRecordItem
+    public class CarePlan : ThingBase
     {
         /// <summary>
         /// Creates a new instance of the <see cref="CarePlan"/> class with default values.
@@ -30,7 +30,7 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         /// <remarks>
         /// This item is not added to the health record until the
-        /// <see cref="HealthRecordAccessor.NewItem(HealthRecordItem)"/> method
+        /// <see cref="HealthRecordAccessor.NewItem(ThingBase)"/> method
         /// is called.
         /// </remarks>
         ///
@@ -46,7 +46,7 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         /// <remarks>
         /// This item is not added to the health record until the
-        /// <see cref="HealthRecordAccessor.NewItem(HealthRecordItem)"/> method
+        /// <see cref="HealthRecordAccessor.NewItem(ThingBase)"/> method
         /// is called.
         /// </remarks>
         ///

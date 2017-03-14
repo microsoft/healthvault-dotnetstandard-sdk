@@ -12,11 +12,11 @@ using Microsoft.HealthVault.Thing;
 namespace Microsoft.HealthVault.ItemTypes
 {
     /// <summary>
-    /// Represents a health record item that stores information that can be used by an application to
+    /// Represents a thing that stores information that can be used by an application to
     /// render content from another application.
     /// </summary>
     ///
-    public class ApplicationDataReference : HealthRecordItem
+    public class ApplicationDataReference : ThingBase
     {
         /// <summary>
         /// Creates a new instance of the <see cref="ApplicationDataReference"/> class with default values.
@@ -24,7 +24,7 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         /// <remarks>
         /// The item is not added to the health record until the
-        /// <see cref="HealthRecordAccessor.NewItem(HealthRecordItem)"/> method
+        /// <see cref="HealthRecordAccessor.NewItem(ThingBase)"/> method
         /// is called.
         /// </remarks>
         ///

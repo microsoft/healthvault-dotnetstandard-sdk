@@ -27,7 +27,7 @@ namespace Microsoft.HealthVault.ItemTypes
     /// The data stored is intended to be compatible with the SendMail Multipart MIME format.
     /// </remarks>
     ///
-    public class Message : HealthRecordItem
+    public class Message : ThingBase
     {
         /// <summary>
         /// Creates a new instance of the <see cref="Message"/> class with default values.
@@ -35,7 +35,7 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         /// <remarks>
         /// This item is not added to the health record until the
-        /// <see cref="HealthRecordAccessor.NewItem(HealthRecordItem)"/> method
+        /// <see cref="HealthRecordAccessor.NewItem(ThingBase)"/> method
         /// is called.
         /// </remarks>
         ///
@@ -51,7 +51,7 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         /// <remarks>
         /// This item is not added to the health record until the
-        /// <see cref="HealthRecordAccessor.NewItem(HealthRecordItem)"/> method
+        /// <see cref="HealthRecordAccessor.NewItem(ThingBase)"/> method
         /// is called.
         /// </remarks>
         ///

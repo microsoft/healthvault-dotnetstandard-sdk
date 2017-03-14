@@ -73,7 +73,7 @@ namespace Microsoft.HealthVault.Thing
         private static HealthVaultPlatformItem saved;
 
         /// <summary>
-        /// Creates new health record items associated with the record.
+        /// Creates new things associated with the record.
         /// </summary>
         ///
         /// <param name="connection">
@@ -85,7 +85,7 @@ namespace Microsoft.HealthVault.Thing
         /// </param>
         ///
         /// <param name="items">
-        /// The health record items from which to create new instances.
+        /// The things from which to create new instances.
         /// </param>
         ///
         /// <remarks>
@@ -100,13 +100,13 @@ namespace Microsoft.HealthVault.Thing
         /// </exception>
         ///
         /// <exception cref="ArgumentNullException">
-        /// At least one HealthRecordItem in the supplied list was null.
+        /// At least one ThingBase in the supplied list was null.
         /// </exception>
         ///
         public virtual async Task NewItemsAsync(
             IConnectionInternal connection,
             HealthRecordAccessor accessor,
-            IList<HealthRecordItem> items)
+            IList<ThingBase> items)
         {
             Validator.ThrowIfArgumentNull(items, "items", "NewItemsNullItem");
 
@@ -116,7 +116,7 @@ namespace Microsoft.HealthVault.Thing
             using (XmlWriter infoXmlWriter =
                 XmlWriter.Create(infoXml, settings))
             {
-                foreach (HealthRecordItem item in items)
+                foreach (ThingBase item in items)
                 {
                     Validator.ThrowIfArgumentNull(item, "items", "NewItemsNullItem");
 
@@ -140,7 +140,7 @@ namespace Microsoft.HealthVault.Thing
                 if (items[thingIndex] != null)
                 {
                     items[thingIndex].Key =
-                        new HealthRecordItemKey(
+                        new ThingKey(
                             new Guid(thingIdNav.Value),
                             new Guid(thingIdNav.GetAttribute(
                                     "version-stamp", string.Empty)));
@@ -151,7 +151,7 @@ namespace Microsoft.HealthVault.Thing
         }
 
         /// <summary>
-        /// Updates the specified health record items in one batch call to
+        /// Updates the specified things in one batch call to
         /// the service.
         /// </summary>
         ///
@@ -164,7 +164,7 @@ namespace Microsoft.HealthVault.Thing
         /// </param>
         ///
         /// <param name="itemsToUpdate">
-        /// The health record items to be updated.
+        /// The things to be updated.
         /// </param>
         ///
         /// <remarks>
@@ -180,7 +180,7 @@ namespace Microsoft.HealthVault.Thing
         ///
         /// <exception cref="ArgumentException">
         /// The <paramref name="itemsToUpdate"/> contains a <b>null</b> member or
-        /// a <see cref="HealthRecordItem"/> instance that does not have an ID.
+        /// a <see cref="ThingBase"/> instance that does not have an ID.
         /// </exception>
         ///
         /// <exception cref="HealthServiceException">
@@ -193,7 +193,7 @@ namespace Microsoft.HealthVault.Thing
         public virtual async Task UpdateItemsAsync(
             IConnectionInternal connection,
             HealthRecordAccessor accessor,
-            IList<HealthRecordItem> itemsToUpdate)
+            IList<ThingBase> itemsToUpdate)
         {
             Validator.ThrowIfArgumentNull(itemsToUpdate, "itemsToUpdate", "UpdateItemsArgumentNull");
 
@@ -205,7 +205,7 @@ namespace Microsoft.HealthVault.Thing
             using (XmlWriter infoXmlWriter =
                 XmlWriter.Create(infoXml, settings))
             {
-                foreach (HealthRecordItem item in itemsToUpdate)
+                foreach (ThingBase item in itemsToUpdate)
                 {
                     Validator.ThrowIfArgumentNull(item, "items", "UpdateItemsArgumentNull");
 
@@ -236,12 +236,12 @@ namespace Microsoft.HealthVault.Thing
 
                 foreach (XPathNavigator thingIdNav in thingIds)
                 {
-                    HealthRecordItem healthRecordItem = itemsToUpdate[index];
-                    healthRecordItem.Key = new HealthRecordItemKey(
+                    ThingBase thingBase = itemsToUpdate[index];
+                    thingBase.Key = new ThingKey(
                         new Guid(thingIdNav.Value),
                         new Guid(thingIdNav.GetAttribute(
                             "version-stamp", string.Empty)));
-                    healthRecordItem.ClearDirtyFlags();
+                    thingBase.ClearDirtyFlags();
                     ++index;
                 }
             }
@@ -274,7 +274,7 @@ namespace Microsoft.HealthVault.Thing
         }
 
         /// <summary>
-        /// Marks the specified health record item as deleted.
+        /// Marks the specified thing as deleted.
         /// </summary>
         ///
         /// <param name="connection">
@@ -292,7 +292,7 @@ namespace Microsoft.HealthVault.Thing
         /// <remarks>
         /// This method accesses the HealthVault service across the network.
         /// <br/><br/>
-        /// Health record items are never completely deleted. They are marked
+        /// things are never completely deleted. They are marked
         /// as deleted and are ignored for most normal operations. Items can
         /// be undeleted by contacting customer service.
         /// </remarks>
@@ -302,7 +302,7 @@ namespace Microsoft.HealthVault.Thing
         /// </exception>
         ///
         /// <exception cref="HealthServiceException">
-        /// Errors removed the health record items from the server.
+        /// Errors removed the things from the server.
         /// The exception's Error property will contain the index of the
         /// item on which the failure occurred in the ErrorInfo property. If any failures occur,
         /// no items will have been removed.
@@ -311,7 +311,7 @@ namespace Microsoft.HealthVault.Thing
         public virtual async Task RemoveItemsAsync(
             IConnectionInternal connection,
             HealthRecordAccessor accessor,
-            IList<HealthRecordItemKey> itemsToRemove)
+            IList<ThingKey> itemsToRemove)
         {
             Validator.ThrowArgumentExceptionIf(
                 itemsToRemove == null || itemsToRemove.Count == 0,
@@ -334,7 +334,7 @@ namespace Microsoft.HealthVault.Thing
         #region GetThings
 
         /// <summary>
-        /// Gets the health record items that match the filters as specified by
+        /// Gets the things that match the filters as specified by
         /// the properties of this class.
         /// </summary>
         ///
@@ -351,7 +351,7 @@ namespace Microsoft.HealthVault.Thing
         /// </param>
         ///
         /// <returns>
-        /// A collection of health record items that match the applied filters.
+        /// A collection of things that match the applied filters.
         /// </returns>
         ///
         /// <remarks>
@@ -366,7 +366,7 @@ namespace Microsoft.HealthVault.Thing
         /// or contains invalid filters.
         /// </exception>
         ///
-        public virtual async Task<ReadOnlyCollection<HealthRecordItemCollection>> GetMatchingItemsAsync(
+        public virtual async Task<ReadOnlyCollection<ThingCollection>> GetMatchingItemsAsync(
             IConnectionInternal connection,
             HealthRecordAccessor accessor,
             HealthRecordSearcher searcher)
@@ -377,7 +377,7 @@ namespace Microsoft.HealthVault.Thing
         }
 
         /// <summary>
-        /// Gets the health record items that match the filters as specified by
+        /// Gets the things that match the filters as specified by
         /// the properties of this class.
         /// </summary>
         ///
@@ -401,7 +401,7 @@ namespace Microsoft.HealthVault.Thing
         /// This method accesses the HealthVault service across the network.
         /// <br/><br/>
         /// This method is typically used when the calling application wants to
-        /// handle the raw health record item XML directly instead of using the
+        /// handle the raw thing XML directly instead of using the
         /// object model.
         /// </remarks>
         ///
@@ -416,7 +416,7 @@ namespace Microsoft.HealthVault.Thing
         }
 
         /// <summary>
-        /// Gets the health record items that match the filters as specified by
+        /// Gets the things that match the filters as specified by
         /// the properties of this class.
         /// </summary>
         ///
@@ -440,7 +440,7 @@ namespace Microsoft.HealthVault.Thing
         /// This method accesses the HealthVault service across the network.
         /// <br/><br/>
         /// This method is typically used when the calling application wants to
-        /// handle the raw health record item XML directly instead of using the
+        /// handle the raw thing XML directly instead of using the
         /// object model.
         /// </remarks>
         ///
@@ -517,7 +517,7 @@ namespace Microsoft.HealthVault.Thing
         /// HealthServiceStatusCode.OK, or no filters have been specified.
         /// </exception>
         ///
-        private async Task<ReadOnlyCollection<HealthRecordItemCollection>> ExecuteAsync(
+        private async Task<ReadOnlyCollection<ThingCollection>> ExecuteAsync(
             IConnectionInternal connection,
             HealthRecordAccessor accessor,
             HealthRecordSearcher searcher)
@@ -526,8 +526,8 @@ namespace Microsoft.HealthVault.Thing
 
             XmlReader infoReader = responseData.InfoReader;
 
-            Collection<HealthRecordItemCollection> result =
-                new Collection<HealthRecordItemCollection>();
+            Collection<ThingCollection> result =
+                new Collection<ThingCollection>();
 
             if ((infoReader != null) && infoReader.ReadToDescendant("group"))
             {
@@ -537,8 +537,8 @@ namespace Microsoft.HealthVault.Thing
                     {
                         groupReader.MoveToContent();
 
-                        HealthRecordItemCollection resultGroup =
-                            HealthRecordItemCollection.CreateResultGroupFromResponse(
+                        ThingCollection resultGroup =
+                            ThingCollection.CreateResultGroupFromResponse(
                                 accessor,
                                 groupReader,
                                 searcher.Filters);
@@ -557,7 +557,7 @@ namespace Microsoft.HealthVault.Thing
                 }
             }
 
-            return new ReadOnlyCollection<HealthRecordItemCollection>(result);
+            return new ReadOnlyCollection<ThingCollection>(result);
         }
 
         /// <summary>

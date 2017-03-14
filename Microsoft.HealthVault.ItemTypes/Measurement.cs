@@ -27,7 +27,7 @@ namespace Microsoft.HealthVault.ItemTypes
     /// on the base unit type for that measurement.
     /// </remarks>
     ///
-    public abstract class Measurement<MeasurementType> : HealthRecordItemData
+    public abstract class Measurement<MeasurementType> : ItemBase
     {
         /// <summary>
         /// Creates a new instance of the Measurement class

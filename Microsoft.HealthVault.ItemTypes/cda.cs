@@ -17,7 +17,7 @@ namespace Microsoft.HealthVault.ItemTypes
     /// The CDA XML can be accessed through the TypeSpecificXml property.
     /// </remarks>
     ///
-    public class CDA : HealthRecordItem
+    public class CDA : ThingBase
     {
         /// <summary>
         /// Initializes an instance of the <see cref="CDA"/> class,

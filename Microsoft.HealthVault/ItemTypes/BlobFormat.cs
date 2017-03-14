@@ -9,7 +9,7 @@ namespace Microsoft.HealthVault.ItemTypes
 {
     /// <summary>
     /// Determines how BLOB information will be returned when fetching a
-    /// <see cref="HealthRecordItem"/>.
+    /// <see cref="ThingBase"/>.
     /// </summary>
     ///
     public enum BlobFormat

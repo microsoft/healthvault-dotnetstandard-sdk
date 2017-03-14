@@ -16,7 +16,7 @@ namespace Microsoft.HealthVault.ItemTypes
     /// Percentage of oxygen saturation in the blood.
     /// </summary>
     ///
-    public class BloodOxygenSaturation : HealthRecordItem
+    public class BloodOxygenSaturation : ThingBase
     {
         /// <summary>
         /// Creates an instance of <see cref="BloodOxygenSaturation"/> with default values.

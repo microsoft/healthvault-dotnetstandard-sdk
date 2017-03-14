@@ -9,14 +9,14 @@ namespace Microsoft.HealthVault.Exceptions
 {
     /// <summary>
     /// Represents the exception thrown when the deserialization of a
-    /// type-specific health record item fails.
+    /// type-specific thing fails.
     /// </summary>
     ///
     [Serializable]
-    public class HealthRecordItemDeserializationException : Exception
+    public class ThingDeserializationException : Exception
     {
         /// <summary>
-        /// Creates an instance of the <see cref="HealthRecordItemDeserializationException"/>
+        /// Creates an instance of the <see cref="ThingDeserializationException"/>
         /// class with the specified message and inner exception.
         /// </summary>
         ///
@@ -25,11 +25,11 @@ namespace Microsoft.HealthVault.Exceptions
         /// </param>
         ///
         /// <param name="innerException">
-        /// The exception that occurred in the health record item type
+        /// The exception that occurred in the thing type
         /// deserializer.
         /// </param>
         ///
-        public HealthRecordItemDeserializationException(
+        public ThingDeserializationException(
             string message,
             Exception innerException)
             : base(message, innerException)
@@ -39,16 +39,16 @@ namespace Microsoft.HealthVault.Exceptions
         #region FxCop required ctors
 
         /// <summary>
-        /// Creates an instance of the <see cref="HealthRecordItemDeserializationException"/>
+        /// Creates an instance of the <see cref="ThingDeserializationException"/>
         /// class with default values.
         /// </summary>
         ///
-        public HealthRecordItemDeserializationException()
+        public ThingDeserializationException()
         {
         }
 
         /// <summary>
-        /// Creates an instance of the <see cref="HealthRecordItemDeserializationException"/>
+        /// Creates an instance of the <see cref="ThingDeserializationException"/>
         /// class with the specified message.
         /// </summary>
         ///
@@ -56,7 +56,7 @@ namespace Microsoft.HealthVault.Exceptions
         /// The error message.
         /// </param>
         ///
-        public HealthRecordItemDeserializationException(string message)
+        public ThingDeserializationException(string message)
             : base(message)
         {
         }

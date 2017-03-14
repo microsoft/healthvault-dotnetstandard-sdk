@@ -123,7 +123,7 @@
     <Compile Include="GridViewIsSignedTemplate.cs">
       <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
     </Compile>
-    <Compile Include="HealthRecordItemDataGrid.cs">
+    <Compile Include="ThingDataGrid.cs">
       <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
     </Compile>
     <Compile Include="HealthServiceActionPage.cs">

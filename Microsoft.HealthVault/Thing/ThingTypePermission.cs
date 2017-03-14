@@ -11,24 +11,24 @@ namespace Microsoft.HealthVault.Thing
 {
     /// <summary>
     /// Provides online and offline access permissions to persons for a health
-    /// record item type (<see cref="HealthRecordItemTypeDefinition"/>) in a
+    /// record item type (<see cref="ThingTypeDefinition"/>) in a
     /// health record in the context of an application.
     /// </summary>
     ///
-    public class HealthRecordItemTypePermission
+    public class ThingTypePermission
     {
         /// <summary>
         /// Creates an instance of
-        /// <see cref="HealthRecordItemTypePermission"/> from XML.
+        /// <see cref="ThingTypePermission"/> from XML.
         /// </summary>
         ///
         /// <param name="navigator">
-        /// The XML containing the <see cref="HealthRecordItemTypePermission"/>
+        /// The XML containing the <see cref="ThingTypePermission"/>
         /// information.
         /// </param>
         ///
         /// <returns>
-        /// A new instance of <see cref="HealthRecordItemTypePermission"/>
+        /// A new instance of <see cref="ThingTypePermission"/>
         /// populated with the information in the XML.
         /// </returns>
         ///
@@ -36,52 +36,52 @@ namespace Microsoft.HealthVault.Thing
         /// The XPathNavigator intended to contain the XML information is <b>null</b>.
         /// </exception>
         ///
-        public static HealthRecordItemTypePermission CreateFromXml(
+        public static ThingTypePermission CreateFromXml(
             XPathNavigator navigator)
         {
             Validator.ThrowIfNavigatorNull(navigator);
 
-            HealthRecordItemTypePermission permissions
-                = new HealthRecordItemTypePermission();
+            ThingTypePermission permissions
+                = new ThingTypePermission();
             permissions.ParseXml(navigator);
 
             return permissions;
         }
 
         /// <summary>
-        /// Gets or sets the unique identifier of the health record item
+        /// Gets or sets the unique identifier of the thing
         /// type associated with the permissions.
         /// </summary>
         ///
         /// <returns>
-        /// The GUID of the health record item type.
+        /// The GUID of the thing type.
         /// </returns>
         ///
         public Guid TypeId { get; set; }
 
         /// <summary>
         /// Gets or sets the permissions for online access for the person, for the
-        /// health record item type in the health record in the context of
+        /// thing type in the health record in the context of
         /// the application.
         /// </summary>
         ///
         /// <returns>
-        /// The <see cref="HealthRecordItemPermissions"/> for online access.
+        /// The <see cref="ThingPermissions"/> for online access.
         /// </returns>
         ///
-        public HealthRecordItemPermissions OnlineAccessPermissions { get; set; }
+        public ThingPermissions OnlineAccessPermissions { get; set; }
 
         /// <summary>
         /// Gets or sets the permissions for offline access for the person, for the
-        /// health record item type in the health record in the context of
+        /// thing type in the health record in the context of
         /// the application.
         /// </summary>
         ///
         /// <returns>
-        /// The <see cref="HealthRecordItemPermissions"/> for offline access.
+        /// The <see cref="ThingPermissions"/> for offline access.
         /// </returns>
         ///
-        public HealthRecordItemPermissions OfflineAccessPermissions { get; set; }
+        public ThingPermissions OfflineAccessPermissions { get; set; }
 
         internal void ParseXml(XPathNavigator navigator)
         {
@@ -90,7 +90,7 @@ namespace Microsoft.HealthVault.Thing
 
             XPathNavigator onlinePermissions
                 = navigator.SelectSingleNode("online-access-permissions");
-            this.OnlineAccessPermissions = HealthRecordItemPermissions.None;
+            this.OnlineAccessPermissions = ThingPermissions.None;
 
             if (onlinePermissions != null)
             {
@@ -101,21 +101,21 @@ namespace Microsoft.HealthVault.Thing
                     foreach (XPathNavigator navPerms in nodes)
                     {
                         this.OnlineAccessPermissions
-                            |= (HealthRecordItemPermissions)Enum.Parse(
-                                    typeof(HealthRecordItemPermissions),
+                            |= (ThingPermissions)Enum.Parse(
+                                    typeof(ThingPermissions),
                                     navPerms.Value);
                     }
                 }
                 catch (ArgumentException)
                 {
                     this.OnlineAccessPermissions
-                        = HealthRecordItemPermissions.None;
+                        = ThingPermissions.None;
                 }
             }
 
             XPathNavigator offlinePermissions
                 = navigator.SelectSingleNode("offline-access-permissions");
-            this.OfflineAccessPermissions = HealthRecordItemPermissions.None;
+            this.OfflineAccessPermissions = ThingPermissions.None;
 
             if (offlinePermissions != null)
             {
@@ -126,15 +126,15 @@ namespace Microsoft.HealthVault.Thing
                     foreach (XPathNavigator navPerms in nodes)
                     {
                         this.OfflineAccessPermissions
-                            |= (HealthRecordItemPermissions)Enum.Parse(
-                                    typeof(HealthRecordItemPermissions),
+                            |= (ThingPermissions)Enum.Parse(
+                                    typeof(ThingPermissions),
                                     navPerms.Value);
                     }
                 }
                 catch (ArgumentException)
                 {
                     this.OfflineAccessPermissions
-                        = HealthRecordItemPermissions.None;
+                        = ThingPermissions.None;
                 }
             }
         }

@@ -45,9 +45,9 @@ namespace Microsoft.HealthVault.Clients
             return HealthVaultPlatformInformation.Current.GetServiceDefinitionAsync(this.Connection, responseSections, lastUpdatedTime);
         }
 
-        public Task<IDictionary<Guid, HealthRecordItemTypeDefinition>> GetHealthRecordItemTypeDefinitionAsync(
+        public Task<IDictionary<Guid, ThingTypeDefinition>> GetHealthRecordItemTypeDefinitionAsync(
             IList<Guid> typeIds,
-            HealthRecordItemTypeSections sections,
+            ThingTypeSections sections,
             IList<string> imageTypes,
             DateTime? lastClientRefreshDate)
         {

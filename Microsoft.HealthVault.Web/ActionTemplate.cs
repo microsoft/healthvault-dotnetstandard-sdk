@@ -19,7 +19,7 @@ namespace Microsoft.HealthVault.Web
     internal class ActionTemplate : ITemplate
     {
         [SecurityCritical]
-        internal ActionTemplate(HealthRecordItemDataGrid grid)
+        internal ActionTemplate(ThingDataGrid grid)
         {
             _grid = grid;
         }
@@ -58,6 +58,6 @@ namespace Microsoft.HealthVault.Web
                 link.OnClientClick = link.OnClientClick.Replace("[KEY]", key);
         }
 
-        private HealthRecordItemDataGrid _grid;
+        private ThingDataGrid _grid;
     }
 }

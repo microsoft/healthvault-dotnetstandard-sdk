@@ -19,7 +19,7 @@ namespace Microsoft.HealthVault.ItemTypes
     /// The document itself is uploaded as a BLOB instance of the thing.
     /// </summary>
     ///
-    public class BlueButtonTextFile : HealthRecordItem
+    public class BlueButtonTextFile : ThingBase
     {
         /// <summary>
         /// Creates a <see cref="BlueButtonTextFile"/> item instance using the specified file path and content
@@ -41,7 +41,7 @@ namespace Microsoft.HealthVault.ItemTypes
         /// </param>
         ///
         /// <returns>
-        /// A new instance of the <see cref="BlueButtonTextFile"/> health record item with data populated from the
+        /// A new instance of the <see cref="BlueButtonTextFile"/> thing with data populated from the
         /// specified file path.
         /// </returns>
         ///
@@ -124,7 +124,7 @@ namespace Microsoft.HealthVault.ItemTypes
         /// </param>
         ///
         /// <returns>
-        /// A new instance of the <see cref="BlueButtonTextFile"/> health record item with data populated from the
+        /// A new instance of the <see cref="BlueButtonTextFile"/> thing with data populated from the
         /// specified file path.
         /// </returns>
         ///
@@ -203,7 +203,7 @@ namespace Microsoft.HealthVault.ItemTypes
         /// </param>
         ///
         /// <returns>
-        /// A new instance of the <see cref="BlueButtonTextFile"/> health record item with data populated from the
+        /// A new instance of the <see cref="BlueButtonTextFile"/> thing with data populated from the
         /// specified stream.
         /// </returns>
         ///
@@ -262,7 +262,7 @@ namespace Microsoft.HealthVault.ItemTypes
         /// </param>
         ///
         /// <returns>
-        /// A new instance of the <see cref="BlueButtonTextFile"/> health record item with data populated from the
+        /// A new instance of the <see cref="BlueButtonTextFile"/> thing with data populated from the
         /// specified stream.
         /// </returns>
         ///
@@ -297,7 +297,7 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         /// <remarks>
         /// The item is not added to the health record until the
-        /// <see cref="HealthRecordAccessor.NewItem(HealthRecordItem)"/> method
+        /// <see cref="HealthRecordAccessor.NewItem(ThingBase)"/> method
         /// is called.
         /// </remarks>
         ///

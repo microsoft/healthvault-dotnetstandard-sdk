@@ -12,12 +12,12 @@ namespace Microsoft.HealthVault.Thing
     /// The property that the thing-type can be
     /// ordered by in the result.
     /// </summary>
-    public class HealthRecordItemTypeProperty
+    public class ThingTypeProperty
     {
         /// <summary>
         /// The property that the thing-type can be ordered by in the result.
         /// </summary>
-        public HealthRecordItemTypeProperty(
+        public ThingTypeProperty(
             string name,
             string type,
             string xpath,
@@ -62,9 +62,9 @@ namespace Microsoft.HealthVault.Thing
 
         /// <summary>
         /// This method converts the Property xml to the
-        /// HealthRecordItemTypeProperty object.
+        /// ThingTypeProperty object.
         /// </summary>
-        public static HealthRecordItemTypeProperty CreateFromXml(XPathNavigator propertyNav)
+        public static ThingTypeProperty CreateFromXml(XPathNavigator propertyNav)
         {
             string name = propertyNav.GetAttribute("name", string.Empty);
             string type = propertyNav.GetAttribute("type", string.Empty);
@@ -78,7 +78,7 @@ namespace Microsoft.HealthVault.Thing
                 conversion = LinearItemTypePropertyConversion.CreateFromXml(conversionNav);
             }
 
-            return new HealthRecordItemTypeProperty(name, type, xpath, conversion);
+            return new ThingTypeProperty(name, type, xpath, conversion);
         }
     }
 }

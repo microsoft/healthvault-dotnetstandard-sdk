@@ -14,7 +14,7 @@ namespace Microsoft.HealthVault.ItemTypes
     /// <summary>
     /// Defines a single health or medical issue/problem.
     /// </summary>
-    public class ConditionEntry : HealthRecordItemData
+    public class ConditionEntry : ItemBase
     {
         /// <summary>
         /// Initialize a new instance of the <see cref="ConditionEntry"/> class
@@ -106,7 +106,7 @@ namespace Microsoft.HealthVault.ItemTypes
         /// If <paramref name="writer"/> is <b> null </b>.
         /// </exception>
         ///
-        /// <exception cref="HealthRecordItemSerializationException">
+        /// <exception cref="ThingSerializationException">
         /// If <see cref="Name"/> is <b> null </b>.
         /// </exception>
         ///

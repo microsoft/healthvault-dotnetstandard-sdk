@@ -6,7 +6,7 @@
 namespace Microsoft.HealthVault.Thing
 {
     /// <summary>
-    /// Defines the interface for interacting with sets of health record items
+    /// Defines the interface for interacting with sets of things
     /// for authorization purposes. This class is abstract.
     /// </summary>
     ///

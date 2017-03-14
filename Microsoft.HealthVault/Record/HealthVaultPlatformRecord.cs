@@ -106,13 +106,13 @@ namespace Microsoft.HealthVault.Record
         /// item types, for which the permissions are being queried.
         /// </param>
         /// <returns>
-        /// Returns a dictionary of <see cref="HealthRecordItemTypePermission"/>
-        /// with health record item types as the keys.
+        /// Returns a dictionary of <see cref="ThingTypePermission"/>
+        /// with thing types as the keys.
         /// </returns>
         ///
         /// <remarks>
-        /// If the list of health record item types is empty, an empty dictionary is
-        /// returned. If for a health record item type, the person has
+        /// If the list of thing types is empty, an empty dictionary is
+        /// returned. If for a thing type, the person has
         /// neither online access nor offline access permissions,
         /// <b> null </b> will be returned for that type in the dictionary.
         /// </remarks>
@@ -125,15 +125,15 @@ namespace Microsoft.HealthVault.Record
         /// If there is an exception during executing the request to HealthVault.
         /// </exception>
         ///
-        public virtual async Task<IDictionary<Guid, HealthRecordItemTypePermission>> QueryPermissionsByTypesAsync(
+        public virtual async Task<IDictionary<Guid, ThingTypePermission>> QueryPermissionsByTypesAsync(
             IHealthVaultConnection connection,
             HealthRecordAccessor accessor,
             IList<Guid> healthRecordItemTypeIds)
         {
             HealthRecordPermissions recordPermissions = await this.QueryRecordPermissionsAsync(connection, accessor, healthRecordItemTypeIds).ConfigureAwait(false);
-            Collection<HealthRecordItemTypePermission> typePermissions = recordPermissions.ItemTypePermissions;
+            Collection<ThingTypePermission> typePermissions = recordPermissions.ItemTypePermissions;
 
-            Dictionary<Guid, HealthRecordItemTypePermission> permissions = new Dictionary<Guid, HealthRecordItemTypePermission>();
+            Dictionary<Guid, ThingTypePermission> permissions = new Dictionary<Guid, ThingTypePermission>();
 
             foreach (Guid typeId in healthRecordItemTypeIds)
             {
@@ -143,7 +143,7 @@ namespace Microsoft.HealthVault.Record
                 }
             }
 
-            foreach (HealthRecordItemTypePermission typePermission in typePermissions)
+            foreach (ThingTypePermission typePermission in typePermissions)
             {
                 permissions[typePermission.TypeId] = typePermission;
             }
@@ -167,18 +167,18 @@ namespace Microsoft.HealthVault.Record
         /// item types, for which the permissions are being queried.
         /// </param>
         /// <returns>
-        /// A list of <see cref="HealthRecordItemTypePermission"/>
+        /// A list of <see cref="ThingTypePermission"/>
         /// objects which represent the permissions that the current
         /// authenticated person has for the HealthRecordItemTypes specified
         /// in the current health record when using the current application.
         /// </returns>
         ///
         /// <remarks>
-        /// If the list of health record item types is empty, an empty list is
-        /// returned. If for a health record item type, the person has
+        /// If the list of thing types is empty, an empty list is
+        /// returned. If for a thing type, the person has
         /// neither online access nor offline access permissions,
-        /// HealthRecordItemTypePermission object is not returned for that
-        /// health record item type.
+        /// ThingTypePermission object is not returned for that
+        /// thing type.
         /// </remarks>
         ///
         /// <exception cref="ArgumentNullException">
@@ -189,7 +189,7 @@ namespace Microsoft.HealthVault.Record
         /// If there is an exception during executing the request to HealthVault.
         /// </exception>
         ///
-        public virtual async Task<Collection<HealthRecordItemTypePermission>> QueryPermissionsAsync(
+        public virtual async Task<Collection<ThingTypePermission>> QueryPermissionsAsync(
             IHealthVaultConnection connection,
             HealthRecordAccessor accessor,
             IList<Guid> healthRecordItemTypeIds)
@@ -215,17 +215,17 @@ namespace Microsoft.HealthVault.Record
         /// </param>
         /// <returns>
         /// A <see cref="HealthRecordPermissions"/> object
-        /// which contains a collection of <see cref="HealthRecordItemTypePermission"/> objects and
+        /// which contains a collection of <see cref="ThingTypePermission"/> objects and
         /// other permission settings.
         /// </returns>
         ///
         /// <remarks>
-        /// If the list of health record item types is empty, an empty list is
+        /// If the list of thing types is empty, an empty list is
         /// returned for <see cref="HealthRecordPermissions"/> object's ItemTypePermissions property.
-        /// If for a health record item type, the person has
+        /// If for a thing type, the person has
         /// neither online access nor offline access permissions,
-        /// HealthRecordItemTypePermission object is not returned for that
-        /// health record item type.
+        /// ThingTypePermission object is not returned for that
+        /// thing type.
         /// </remarks>
         ///
         /// <exception cref="ArgumentNullException">
@@ -258,8 +258,8 @@ namespace Microsoft.HealthVault.Record
 
             foreach (XPathNavigator nav in thingTypePermissionsNodes)
             {
-                HealthRecordItemTypePermission thingTypePermissions =
-                    HealthRecordItemTypePermission.CreateFromXml(nav);
+                ThingTypePermission thingTypePermissions =
+                    ThingTypePermission.CreateFromXml(nav);
                 recordPermissions.ItemTypePermissions.Add(thingTypePermissions);
             }
 
@@ -347,12 +347,12 @@ namespace Microsoft.HealthVault.Record
         /// supplied application identifiers.
         /// </param>
         /// <returns>
-        /// A List of HealthRecordItems representing the valid group memberships.
+        /// A List of things representing the valid group memberships.
         /// </returns>
         /// <exception cref="HealthServiceException">
         /// If an error occurs while contacting the HealthVault service.
         /// </exception>
-        public virtual async Task<Collection<HealthRecordItem>> GetValidGroupMembershipAsync(
+        public virtual async Task<Collection<ThingBase>> GetValidGroupMembershipAsync(
             IHealthVaultConnection connection,
             HealthRecordAccessor accessor,
             IList<Guid> applicationIds)
@@ -381,7 +381,7 @@ namespace Microsoft.HealthVault.Record
 
             XPathNavigator infoNav = responseData.InfoNavigator.SelectSingleNode(infoPath);
 
-            Collection<HealthRecordItem> memberships = new Collection<HealthRecordItem>();
+            Collection<ThingBase> memberships = new Collection<ThingBase>();
 
             XPathNodeIterator membershipIterator = infoNav.Select("thing");
             if (membershipIterator != null)

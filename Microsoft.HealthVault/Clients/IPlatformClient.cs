@@ -226,7 +226,7 @@ namespace Microsoft.HealthVault.Clients
         Task<ServiceInfo> GetServiceDefinitionAsync(ServiceInfoSections responseSections, DateTime lastUpdatedTime);
 
         /// <summary>
-        /// Gets the definitions for one or more health record item type definitions
+        /// Gets the definitions for one or more thing type definitions
         /// supported by HealthVault.
         /// </summary>
         ///
@@ -236,7 +236,7 @@ namespace Microsoft.HealthVault.Clients
         /// </param>
         ///
         /// <param name="sections">
-        /// A collection of HealthRecordItemTypeSections enumeration values that indicate the type
+        /// A collection of ThingTypeSections enumeration values that indicate the type
         /// of details to be returned for the specified health item records(s).
         /// </param>
         ///
@@ -269,9 +269,9 @@ namespace Microsoft.HealthVault.Clients
         /// <see cref="System.Guid.Empty"/>.
         /// </exception>
         /// 
-        Task<IDictionary<Guid, HealthRecordItemTypeDefinition>> GetHealthRecordItemTypeDefinitionAsync(
+        Task<IDictionary<Guid, ThingTypeDefinition>> GetHealthRecordItemTypeDefinitionAsync(
             IList<Guid> typeIds,
-            HealthRecordItemTypeSections sections,
+            ThingTypeSections sections,
             IList<string> imageTypes,
             DateTime? lastClientRefreshDate);
 

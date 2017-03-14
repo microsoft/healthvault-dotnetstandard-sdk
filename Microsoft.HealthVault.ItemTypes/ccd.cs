@@ -17,7 +17,7 @@ namespace Microsoft.HealthVault.ItemTypes
     /// The CCD XML can be accessed through the TypeSpecificXml property.
     /// </remarks>
     ///
-    public class CCD : HealthRecordItem
+    public class CCD : ThingBase
     {
         /// <summary>
         /// Initializes an instance of the <see cref="CCD"/> class,

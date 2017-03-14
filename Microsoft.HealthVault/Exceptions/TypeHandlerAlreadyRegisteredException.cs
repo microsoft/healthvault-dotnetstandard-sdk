@@ -8,7 +8,7 @@ using System;
 namespace Microsoft.HealthVault.Exceptions
 {
     /// <summary>
-    /// Indicates that a health record item type handler has already been registered for
+    /// Indicates that a thing type handler has already been registered for
     /// the specified item type.
     /// </summary>
     ///

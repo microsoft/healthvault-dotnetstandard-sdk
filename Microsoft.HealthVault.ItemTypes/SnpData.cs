@@ -107,7 +107,7 @@ namespace Microsoft.HealthVault.ItemTypes
         }
 
         /// <summary>
-        /// Reloads SNP items from other data section of the health record item.
+        /// Reloads SNP items from other data section of the thing.
         /// </summary>
         ///
         public void RefreshSnpItems()

@@ -13,7 +13,7 @@ namespace Microsoft.HealthVault.ItemTypes
     /// A single measurement of body composition.
     /// </summary>
     ///
-    public class BodyCompositionValue : HealthRecordItemData
+    public class BodyCompositionValue : ItemBase
     {
         /// <summary>
         /// Populates this <see cref="BodyCompositionValue"/> instance from the data in the XML.

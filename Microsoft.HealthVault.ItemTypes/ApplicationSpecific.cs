@@ -14,7 +14,7 @@ using Microsoft.HealthVault.Thing;
 namespace Microsoft.HealthVault.ItemTypes
 {
     /// <summary>
-    /// Represents a health record item type that encapsulates application
+    /// Represents a thing type that encapsulates application
     /// specific data.
     /// </summary>
     ///
@@ -29,7 +29,7 @@ namespace Microsoft.HealthVault.ItemTypes
     /// method.
     /// </remarks>
     ///
-    public class ApplicationSpecific : HealthRecordItem
+    public class ApplicationSpecific : ThingBase
     {
         /// <summary>
         /// Creates a new instance of the <see cref="ApplicationSpecific"/> class with default values.
@@ -37,7 +37,7 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         /// <remarks>
         /// The item is not added to the health record until the
-        /// <see cref="HealthRecordAccessor.NewItem(HealthRecordItem)"/> method
+        /// <see cref="HealthRecordAccessor.NewItem(ThingBase)"/> method
         /// is called.
         /// </remarks>
         ///
@@ -58,7 +58,7 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <param name="subtypeTag">
         /// A string identifying a unique schema for the application specific
         /// type. The string format is completely arbitrary and is used by
-        /// the application to identify the health record item application specific
+        /// the application to identify the thing application specific
         /// data as a specific subtype.
         /// </param>
         ///
@@ -92,7 +92,7 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <param name="subtypeTag">
         /// A string identifying a unique schema for the application specific
         /// type. The string format is completely arbitrary and is used by
-        /// the application to identify the health record item application specific
+        /// the application to identify the thing application specific
         /// data as a specific subtype.
         /// </param>
         ///

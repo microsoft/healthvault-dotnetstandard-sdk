@@ -20,7 +20,7 @@ namespace Microsoft.HealthVault.Vocabulary
     /// Represents an item in the HealthVault <see cref="Vocabulary"/>.
     /// </summary>
     /// 
-    public class VocabularyItem : HealthRecordItemData, IXmlSerializable
+    public class VocabularyItem : ItemBase, IXmlSerializable
     {
         /// <summary>
         /// Create an instance of the <see cref="VocabularyItem"/> class.
@@ -130,7 +130,7 @@ namespace Microsoft.HealthVault.Vocabulary
         /// The <paramref name="writer"/> parameter is <b>null</b>.
         /// </exception>
         ///
-        /// <exception cref="HealthRecordItemSerializationException">
+        /// <exception cref="ThingSerializationException">
         /// The Value or VocabularyName property
         /// is <b>null</b> or empty.
         /// </exception>
@@ -186,7 +186,7 @@ namespace Microsoft.HealthVault.Vocabulary
         /// The <paramref name="writer"/> parameter is <b>null</b>.
         /// </exception>
         ///
-        /// <exception cref="HealthRecordItemSerializationException">
+        /// <exception cref="ThingSerializationException">
         /// The <see cref="Value"/> or <see cref="VocabularyName"/> property
         /// is <b>null</b> or empty.
         /// </exception>

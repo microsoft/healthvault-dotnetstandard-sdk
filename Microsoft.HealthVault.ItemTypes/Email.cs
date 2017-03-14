@@ -13,7 +13,7 @@ namespace Microsoft.HealthVault.ItemTypes
     /// Represents an email address.
     /// </summary>
     ///
-    public class Email : HealthRecordItemData
+    public class Email : ItemBase
     {
         /// <summary>
         /// Creates a new instance of the <see cref="Email"/> class with default values.

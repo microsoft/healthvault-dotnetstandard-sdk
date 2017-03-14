@@ -10,7 +10,7 @@ namespace Microsoft.HealthVault.ItemTypes
 {
     /// <summary>
     /// Contract to make sure wrapped object passes key value
-    /// of <see cref="HealthRecordItem"/> class and type name.
+    /// of <see cref="ThingBase"/> class and type name.
     /// </summary>
     public interface IMshItem
     {

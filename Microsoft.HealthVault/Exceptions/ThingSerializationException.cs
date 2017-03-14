@@ -9,15 +9,15 @@ namespace Microsoft.HealthVault.Exceptions
 {
     /// <summary>
     /// Represents the exception thrown when the serialization of a
-    /// type-specific health record item fails or if a mandatory element in
-    /// the health record item is missing.
+    /// type-specific thing fails or if a mandatory element in
+    /// the thing is missing.
     /// </summary>
     ///
     [Serializable]
-    public class HealthRecordItemSerializationException : Exception
+    public class ThingSerializationException : Exception
     {
         /// <summary>
-        /// Creates an instance of the <see cref="HealthRecordItemSerializationException"/>
+        /// Creates an instance of the <see cref="ThingSerializationException"/>
         /// class with the specified message.
         /// </summary>
         ///
@@ -25,13 +25,13 @@ namespace Microsoft.HealthVault.Exceptions
         /// The exception message.
         /// </param>
         ///
-        public HealthRecordItemSerializationException(string message)
+        public ThingSerializationException(string message)
             : base(message)
         {
         }
 
         /// <summary>
-        /// Creates an instance of the <see cref="HealthRecordItemSerializationException"/>
+        /// Creates an instance of the <see cref="ThingSerializationException"/>
         /// class with the specified message and inner exception.
         /// </summary>
         ///
@@ -40,11 +40,11 @@ namespace Microsoft.HealthVault.Exceptions
         /// </param>
         ///
         /// <param name="innerException">
-        /// The exception that occurred in the health record item type
+        /// The exception that occurred in the thing type
         /// serializer.
         /// </param>
         ///
-        public HealthRecordItemSerializationException(
+        public ThingSerializationException(
             string message,
             Exception innerException)
             : base(message, innerException)
@@ -54,11 +54,11 @@ namespace Microsoft.HealthVault.Exceptions
         #region FxCop required ctors
 
         /// <summary>
-        /// Creates an instance of the <see cref="HealthRecordItemSerializationException"/>
+        /// Creates an instance of the <see cref="ThingSerializationException"/>
         /// class  with default values.
         /// </summary>
         ///
-        public HealthRecordItemSerializationException()
+        public ThingSerializationException()
         {
         }
 

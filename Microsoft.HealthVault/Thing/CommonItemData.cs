@@ -11,11 +11,11 @@ using System.Xml.XPath;
 namespace Microsoft.HealthVault.Thing
 {
     /// <summary>
-    /// Represents data that is common for all types of health record items.
+    /// Represents data that is common for all types of things.
     /// </summary>
     ///
     /// <remarks>
-    /// The common data for all health record item types includes data
+    /// The common data for all thing types includes data
     /// such as notes, source, and extensions.
     /// </remarks>
     ///
@@ -46,7 +46,7 @@ namespace Microsoft.HealthVault.Thing
 
             foreach (XPathNavigator extensionNav in extensionIterator)
             {
-                HealthRecordItemExtension extension =
+                ThingExtension extension =
                     ItemTypeManager.DeserializeExtension(extensionNav);
 
                 if (extension != null)
@@ -60,8 +60,8 @@ namespace Microsoft.HealthVault.Thing
 
             foreach (XPathNavigator relationshipNav in relationshipIterator)
             {
-                HealthRecordItemRelationship relationship =
-                    new HealthRecordItemRelationship();
+                ThingRelationship relationship =
+                    new ThingRelationship();
 
                 relationship.ParseXml(relationshipNav);
 
@@ -85,7 +85,7 @@ namespace Microsoft.HealthVault.Thing
                     Guid thingId;
                     if (Guid.TryParse(relThing.Split(',')[0], out thingId))
                     {
-                        this.RelatedItems.Add(new HealthRecordItemRelationship(thingId));
+                        this.RelatedItems.Add(new ThingRelationship(thingId));
                     }
                 }
             }
@@ -112,12 +112,12 @@ namespace Microsoft.HealthVault.Thing
                 writer.WriteElementString("tags", this.Tags);
             }
 
-            foreach (HealthRecordItemExtension extension in this.Extensions)
+            foreach (ThingExtension extension in this.Extensions)
             {
                 extension.WriteExtensionXml(writer);
             }
 
-            foreach (HealthRecordItemRelationship relationship in this.RelatedItems)
+            foreach (ThingRelationship relationship in this.RelatedItems)
             {
                 relationship.WriteXml("related-thing", writer);
             }
@@ -132,7 +132,7 @@ namespace Microsoft.HealthVault.Thing
         }
 
         /// <summary>
-        /// Gets or sets the source of the health record item.
+        /// Gets or sets the source of the thing.
         /// </summary>
         ///
         ///
@@ -142,13 +142,13 @@ namespace Microsoft.HealthVault.Thing
         ///
         /// <remarks>
         /// The source is the description of the device or application
-        /// from which the health record item came.
+        /// from which the thing came.
         /// </remarks>
         ///
         public string Source { get; set; }
 
         /// <summary>
-        /// Gets or sets a note on the health record item.
+        /// Gets or sets a note on the thing.
         /// </summary>
         ///
         /// <value>
@@ -156,14 +156,14 @@ namespace Microsoft.HealthVault.Thing
         /// </value>
         ///
         /// <remarks>
-        /// Notes are general annotations about the health record item.
+        /// Notes are general annotations about the thing.
         /// </remarks>
         ///
         public string Note { get; set; }
 
         /// <summary>
         /// Gets or sets a comma-separated list of tags on
-        /// the health record item.
+        /// the thing.
         /// </summary>
         ///
         /// <value>
@@ -175,44 +175,44 @@ namespace Microsoft.HealthVault.Thing
         /// must parse the tag list for individual tags.
         /// </remarks>
         ///
-        [Obsolete("This property will be soon removed. Please use HealthRecordItem.Tags instead.")]
+        [Obsolete("This property will be soon removed. Please use ThingBase.Tags instead.")]
         public string Tags { get; set; }
 
         /// <summary>
         /// Gets the collection representing the extension data of the
-        /// health record item.
+        /// thing.
         /// </summary>
         ///
         /// <value>
-        /// A collection of <see cref="HealthRecordItemExtension"/> objects.
+        /// A collection of <see cref="ThingExtension"/> objects.
         /// </value>
         ///
         /// <remarks>
-        /// To add extensions to the health record item, add an instance of the
-        /// <see cref="HealthRecordItemExtension"/> or derived class to this
+        /// To add extensions to the thing, add an instance of the
+        /// <see cref="ThingExtension"/> or derived class to this
         /// collection.
         /// </remarks>
         ///
-        public Collection<HealthRecordItemExtension> Extensions { get; } = new Collection<HealthRecordItemExtension>();
+        public Collection<ThingExtension> Extensions { get; } = new Collection<ThingExtension>();
 
         /// <summary>
-        /// Gets the collection representing the health record items related to this one.
+        /// Gets the collection representing the things related to this one.
         /// </summary>
         ///
         /// <value>
-        /// A collection of <see cref="HealthRecordItemRelationship"/> objects.
+        /// A collection of <see cref="ThingRelationship"/> objects.
         /// </value>
         ///
         /// <remarks>
-        /// The relationships between this item and the health record items defined in this collection
+        /// The relationships between this item and the things defined in this collection
         /// are not maintained by HealthVault. It is solely the responsibility of applications to
         /// ensure that the referenced items exist and are in the same health record.
         /// </remarks>
         ///
-        public Collection<HealthRecordItemRelationship> RelatedItems { get; } = new Collection<HealthRecordItemRelationship>();
+        public Collection<ThingRelationship> RelatedItems { get; } = new Collection<ThingRelationship>();
 
         /// <summary>
-        /// Gets and sets a client assigned identifier to be associated with the <see cref="HealthRecordItem" />.
+        /// Gets and sets a client assigned identifier to be associated with the <see cref="ThingBase" />.
         /// </summary>
         public string ClientId { get; set; }
     }

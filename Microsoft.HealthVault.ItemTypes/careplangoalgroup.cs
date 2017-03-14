@@ -21,7 +21,7 @@ namespace Microsoft.HealthVault.ItemTypes
     /// together under blood pressure.
     /// </remarks>
     ///
-    public class CarePlanGoalGroup : HealthRecordItemData
+    public class CarePlanGoalGroup : ItemBase
     {
         /// <summary>
         /// Creates a new instance of the <see cref="CarePlanGoalGroup"/> class with default values.

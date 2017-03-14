@@ -17,7 +17,7 @@ namespace Microsoft.HealthVault.ItemTypes
     /// <summary>
     /// Represents the details of a specific series of images in a medical image study.
     /// </summary>
-    public class MedicalImageStudySeries : HealthRecordItemData
+    public class MedicalImageStudySeries : ItemBase
     {
         /// <summary>
         /// Creates a new instance of the <see cref="MedicalImageStudySeries"/> class with default values.
@@ -126,7 +126,7 @@ namespace Microsoft.HealthVault.ItemTypes
         /// If <paramref name="writer"/> parameter is <b>null</b>.
         /// </exception>
         ///
-        /// <exception cref="HealthRecordItemSerializationException">
+        /// <exception cref="ThingSerializationException">
         /// If <see cref="AcquisitionDateTime"/> is <b>null</b>.
         /// If <see cref="Images"/> is <b>null</b> or doesn't contain any image.
         /// </exception>

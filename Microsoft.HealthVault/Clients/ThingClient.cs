@@ -39,14 +39,14 @@ namespace Microsoft.HealthVault.Clients
 
             ThingQuery query = new ThingQuery();
             query.ItemIds.Add(thingId);
-            query.View.Sections = HealthRecordItemSections.Default;
+            query.View.Sections = ThingSections.Default;
             query.CurrentVersionOnly = true;
 
             searcher.Filters.Add(query);
 
             HealthServiceResponseData result = await this.Connection.ExecuteAsync(HealthVaultMethods.GetThings, 3, GetParametersXml(searcher));
 
-            ReadOnlyCollection<HealthRecordItemCollection> resultSet = this.ParseThings(result, searcher);
+            ReadOnlyCollection<ThingCollection> resultSet = this.ParseThings(result, searcher);
 
             // Check in case HealthVault returned invalid data.
             if (resultSet.Count == 0)
@@ -69,7 +69,7 @@ namespace Microsoft.HealthVault.Clients
 
             if (resultSet.Count == 1)
             {
-                HealthRecordItemCollection resultGroup = resultSet[0];
+                ThingCollection resultGroup = resultSet[0];
 
                 if (resultGroup.Count == 1)
                 {
@@ -80,11 +80,11 @@ namespace Microsoft.HealthVault.Clients
             return default(T);
         }
 
-        public async Task<IReadOnlyCollection<HealthRecordItemCollection>> GetThingsAsync(ThingQuery query)
+        public async Task<IReadOnlyCollection<ThingCollection>> GetThingsAsync(ThingQuery query) 
         {
             HealthServiceResponseData response = await this.GetRequestWithParameters(query);
             HealthRecordSearcher searcher = new HealthRecordSearcher(this.Record);
-            ReadOnlyCollection<HealthRecordItemCollection> resultSet =
+            ReadOnlyCollection<ThingCollection> resultSet = 
                 this.ParseThings(response, searcher);
 
             return resultSet;
@@ -99,10 +99,10 @@ namespace Microsoft.HealthVault.Clients
             query.TypeIds.Clear();
             query.TypeIds.Add(thing.TypeId);
 
-            IReadOnlyCollection<HealthRecordItemCollection> resultSet = await this.GetThingsAsync(query);
+            IReadOnlyCollection<ThingCollection> resultSet = await this.GetThingsAsync(query);
 
             IList<T> things = new Collection<T>();
-            foreach (HealthRecordItemCollection results in resultSet)
+            foreach (ThingCollection results in resultSet)
             {
                 foreach (IThing resultThing in results)
                 {
@@ -146,11 +146,11 @@ namespace Microsoft.HealthVault.Clients
             int thingIndex = 0;
             foreach (XPathNavigator thingIdNav in thingIds)
             {
-                var thing = things.ElementAt(thingIndex) as HealthRecordItem;
+                var thing = things.ElementAt(thingIndex) as ThingBase;
                 if (thing != null)
                 {
                     thing.Key =
-                        new HealthRecordItemKey(
+                        new ThingKey(
                             new Guid(thingIdNav.Value),
                             new Guid(thingIdNav.GetAttribute(
                                     "version-stamp", string.Empty)));
@@ -181,7 +181,7 @@ namespace Microsoft.HealthVault.Clients
                         "thingsToUpdate",
                         "UpdateThingWithNoId");
 
-                    if ((thing as HealthRecordItem)?.WriteItemXml(infoXmlWriter, false) == true)
+                    if ((thing as ThingBase)?.WriteItemXml(infoXmlWriter, false) == true)
                     {
                         somethingRequiresUpdate = true;
                     }
@@ -202,14 +202,14 @@ namespace Microsoft.HealthVault.Clients
                 {
                     foreach (XPathNavigator thingIdNav in thingIds)
                     {
-                        HealthRecordItem healthRecordItem = enumerator.Current as HealthRecordItem;
-                        if (healthRecordItem != null)
+                        ThingBase thingBase = enumerator.Current as ThingBase;
+                        if (thingBase != null)
                         {
-                            healthRecordItem.Key = new HealthRecordItemKey(
+                            thingBase.Key = new ThingKey(
                                 new Guid(thingIdNav.Value),
                                 new Guid(thingIdNav.GetAttribute(
                                     "version-stamp", string.Empty)));
-                            healthRecordItem.ClearDirtyFlags();
+                            thingBase.ClearDirtyFlags();
                         }
 
                         enumerator.MoveNext();
@@ -267,12 +267,12 @@ namespace Microsoft.HealthVault.Clients
             return parameters.ToString();
         }
 
-        private ReadOnlyCollection<HealthRecordItemCollection> ParseThings(HealthServiceResponseData responseData, HealthRecordSearcher query)
+        private ReadOnlyCollection<ThingCollection> ParseThings(HealthServiceResponseData responseData, HealthRecordSearcher query)
         {
             XmlReader infoReader = responseData.InfoReader;
 
-            Collection<HealthRecordItemCollection> result =
-                new Collection<HealthRecordItemCollection>();
+            Collection<ThingCollection> result =
+                new Collection<ThingCollection>();
 
             if ((infoReader != null) && infoReader.ReadToDescendant("group"))
             {
@@ -282,8 +282,8 @@ namespace Microsoft.HealthVault.Clients
                     {
                         groupReader.MoveToContent();
 
-                        HealthRecordItemCollection resultGroup =
-                            HealthRecordItemCollection.CreateResultGroupFromResponse(
+                        ThingCollection resultGroup =
+                            ThingCollection.CreateResultGroupFromResponse(
                                 this.Record,
                                 groupReader,
                                 query.Filters);
@@ -302,7 +302,7 @@ namespace Microsoft.HealthVault.Clients
                 }
             }
 
-            return new ReadOnlyCollection<HealthRecordItemCollection>(result);
+            return new ReadOnlyCollection<ThingCollection>(result);
         }
 
         private async Task<HealthServiceResponseData> GetRequestWithParameters(ThingQuery query)

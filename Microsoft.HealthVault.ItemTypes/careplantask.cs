@@ -15,7 +15,7 @@ namespace Microsoft.HealthVault.ItemTypes
     /// A task defines an action to be performed by the user.
     /// </summary>
     ///
-    public class CarePlanTask : HealthRecordItemData
+    public class CarePlanTask : ItemBase
     {
         /// <summary>
         /// Creates a new instance of the <see cref="CarePlanTask"/> class with default values.

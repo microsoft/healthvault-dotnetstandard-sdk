@@ -13,13 +13,13 @@ using System.Xml.XPath;
 namespace Microsoft.HealthVault.Thing
 {
     /// <summary>
-    /// Describes the schema and structure of a health record item type.
+    /// Describes the schema and structure of a thing type.
     /// </summary>
     ///
-    public class HealthRecordItemTypeDefinition
+    public class ThingTypeDefinition
     {
         /// <summary>
-        /// Constructs an instance of <see cref="HealthRecordItemTypeDefinition"/> from the specified
+        /// Constructs an instance of <see cref="ThingTypeDefinition"/> from the specified
         /// XML.
         /// </summary>
         ///
@@ -29,15 +29,15 @@ namespace Microsoft.HealthVault.Thing
         /// </param>
         ///
         /// <returns>
-        /// An instance of <see cref="HealthRecordItemTypeDefinition"/> constructed from the
+        /// An instance of <see cref="ThingTypeDefinition"/> constructed from the
         /// specified XML.
         /// </returns>
         ///
-        public static HealthRecordItemTypeDefinition CreateFromXml(
+        public static ThingTypeDefinition CreateFromXml(
             XPathNavigator typeNavigator)
         {
-            HealthRecordItemTypeDefinition typeDefinition =
-                new HealthRecordItemTypeDefinition();
+            ThingTypeDefinition typeDefinition =
+                new ThingTypeDefinition();
 
             typeDefinition.TypeNavigator = typeNavigator;
 
@@ -46,9 +46,9 @@ namespace Microsoft.HealthVault.Thing
         }
 
         /// <summary>
-        /// Creates a new instance of the <see cref="HealthRecordItemTypeDefinition"/> class for use in testing.
+        /// Creates a new instance of the <see cref="ThingTypeDefinition"/> class for use in testing.
         /// </summary>
-        protected HealthRecordItemTypeDefinition()
+        protected ThingTypeDefinition()
         {
         }
 
@@ -110,17 +110,17 @@ namespace Microsoft.HealthVault.Thing
             }
         }
 
-        private static ReadOnlyCollection<HealthRecordItemTypeVersionInfo> GetThingTypeVersions(XPathNavigator typeNavigator)
+        private static ReadOnlyCollection<ThingTypeVersionInfo> GetThingTypeVersions(XPathNavigator typeNavigator)
         {
             XPathNodeIterator versionInfoIterator = typeNavigator.Select("versions/version-info");
 
-            List<HealthRecordItemTypeVersionInfo> versions =
+            List<ThingTypeVersionInfo> versions =
                 (from XPathNavigator versionInfoNav in versionInfoIterator select GetVersionInfoFromXml(versionInfoNav)).ToList();
 
-            return new ReadOnlyCollection<HealthRecordItemTypeVersionInfo>(versions);
+            return new ReadOnlyCollection<ThingTypeVersionInfo>(versions);
         }
 
-        private static HealthRecordItemTypeVersionInfo GetVersionInfoFromXml(XPathNavigator versionInfoNav)
+        private static ThingTypeVersionInfo GetVersionInfoFromXml(XPathNavigator versionInfoNav)
         {
             var versionTypeId = new Guid(versionInfoNav.GetAttribute("version-type-id", string.Empty));
             string versionName = versionInfoNav.GetAttribute("version-name", string.Empty);
@@ -130,16 +130,16 @@ namespace Microsoft.HealthVault.Thing
 
             if (orderByPropertiesNav == null)
             {
-                return new HealthRecordItemTypeVersionInfo(
+                return new ThingTypeVersionInfo(
                     versionTypeId,
                     versionName,
                     versionSequence,
-                    new HealthRecordItemTypeOrderByProperties(new List<HealthRecordItemTypeProperty>(0)));
+                    new ThingTypeOrderByProperties(new List<ThingTypeProperty>(0)));
             }
 
-            HealthRecordItemTypeOrderByProperties orderByProperties = HealthRecordItemTypeOrderByProperties.CreateFromXml(orderByPropertiesNav);
+            ThingTypeOrderByProperties orderByProperties = ThingTypeOrderByProperties.CreateFromXml(orderByPropertiesNav);
 
-            return new HealthRecordItemTypeVersionInfo(
+            return new ThingTypeVersionInfo(
                 versionTypeId,
                 versionName,
                 versionSequence,
@@ -209,11 +209,11 @@ namespace Microsoft.HealthVault.Thing
         public bool IsSingletonType { get; protected set; }
 
         /// <summary>
-        /// Gets or sets a value indicating whether the HealthRecordItem Type allows read-only
+        /// Gets or sets a value indicating whether the ThingBase Type allows read-only
         /// instances.
         /// </summary>
         /// <value>
-        /// <b>true</b> if the HealthRecordItem Type allows read-only instances; otherwise <b>false</b>
+        /// <b>true</b> if the ThingBase Type allows read-only instances; otherwise <b>false</b>
         /// </value>
         public bool AllowReadOnly
         {
@@ -224,10 +224,10 @@ namespace Microsoft.HealthVault.Thing
         /// <summary>
         /// Gets or sets a collection of the version information for the type.
         /// </summary>
-        public ReadOnlyCollection<HealthRecordItemTypeVersionInfo> Versions { get; protected set; }
+        public ReadOnlyCollection<ThingTypeVersionInfo> Versions { get; protected set; }
 
         /// <summary>
-        /// Gets or sets the XPath to the effective date element in the <see cref="HealthRecordItem.TypeSpecificData"/>.
+        /// Gets or sets the XPath to the effective date element in the <see cref="ThingBase.TypeSpecificData"/>.
         /// </summary>
         ///
         /// <value>
@@ -237,7 +237,7 @@ namespace Microsoft.HealthVault.Thing
         public string EffectiveDateXPath { get; protected set; }
 
         /// <summary>
-        /// Gets or sets the XPath to the updated end date element in the <see cref="HealthRecordItem.TypeSpecificData"/>.
+        /// Gets or sets the XPath to the updated end date element in the <see cref="ThingBase.TypeSpecificData"/>.
         /// </summary>
         ///
         /// <value>

@@ -13,12 +13,12 @@ namespace Microsoft.HealthVault.Thing
     /// The set of properties that the thing-type can be
     /// ordered by in the result.
     /// </summary>
-    public class HealthRecordItemTypeOrderByProperties
+    public class ThingTypeOrderByProperties
     {
         /// <summary>
         /// The set of properties that the thing-type can be ordered by in the result.
         /// </summary>
-        public HealthRecordItemTypeOrderByProperties(List<HealthRecordItemTypeProperty> properties)
+        public ThingTypeOrderByProperties(List<ThingTypeProperty> properties)
         {
             this.properties = properties;
         }
@@ -27,27 +27,27 @@ namespace Microsoft.HealthVault.Thing
         /// The set of properties that the thing-type can be
         /// ordered by in the result..
         /// </summary>
-        public List<HealthRecordItemTypeProperty> Properties => this.properties ?? new List<HealthRecordItemTypeProperty>();
+        public List<ThingTypeProperty> Properties => this.properties ?? new List<ThingTypeProperty>();
 
-        private readonly List<HealthRecordItemTypeProperty> properties;
+        private readonly List<ThingTypeProperty> properties;
 
         /// <summary>
         /// This method converts the OrderByProperties xml to the
-        /// HealthRecordItemTypeOrderByProperties object.
+        /// ThingTypeOrderByProperties object.
         /// </summary>
-        public static HealthRecordItemTypeOrderByProperties CreateFromXml(XPathNavigator orderByPropertiesNav)
+        public static ThingTypeOrderByProperties CreateFromXml(XPathNavigator orderByPropertiesNav)
         {
             XPathNodeIterator propertiesIter = orderByPropertiesNav.Select("property");
 
-            List<HealthRecordItemTypeProperty> properties =
+            List<ThingTypeProperty> properties =
                 (from XPathNavigator propertiesNav in propertiesIter select GetPropertyFromXml(propertiesNav)).ToList();
 
-            return new HealthRecordItemTypeOrderByProperties(properties);
+            return new ThingTypeOrderByProperties(properties);
         }
 
-        private static HealthRecordItemTypeProperty GetPropertyFromXml(XPathNavigator propertyNav)
+        private static ThingTypeProperty GetPropertyFromXml(XPathNavigator propertyNav)
         {
-            return HealthRecordItemTypeProperty.CreateFromXml(propertyNav);
+            return ThingTypeProperty.CreateFromXml(propertyNav);
         }
     }
 }

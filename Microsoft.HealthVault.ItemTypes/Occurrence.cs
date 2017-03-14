@@ -14,7 +14,7 @@ namespace Microsoft.HealthVault.ItemTypes
     /// period of awakening during sleep, and so on.
     /// </summary>
     ///
-    public class Occurrence : HealthRecordItemData
+    public class Occurrence : ItemBase
     {
         /// <summary>
         /// Creates a new instance of the <see cref="Occurrence"/> class with

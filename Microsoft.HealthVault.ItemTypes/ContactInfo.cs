@@ -14,7 +14,7 @@ namespace Microsoft.HealthVault.ItemTypes
     /// Represents information about a contact person.
     /// </summary>
     ///
-    public class ContactInfo : HealthRecordItemData
+    public class ContactInfo : ItemBase
     {
         /// <summary>
         /// Populates the data from the specified XML.

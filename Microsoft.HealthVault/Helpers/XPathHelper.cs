@@ -257,7 +257,7 @@ namespace Microsoft.HealthVault.Helpers
         internal static DataType GetOptNavValue<DataType>(
             XPathNavigator nav,
             string elementName)
-            where DataType : HealthRecordItemData, new()
+            where DataType : ItemBase, new()
         {
             DataType result = default(DataType);
 
@@ -415,14 +415,14 @@ namespace Microsoft.HealthVault.Helpers
         }
 
         /// <summary>
-        /// Parse into a HealthRecordItemData-derived collection
+        /// Parse into a ItemBase-derived collection
         /// </summary>
-        /// <typeparam name="T">The HealthRecordItemData-derived class</typeparam>
+        /// <typeparam name="T">The ItemBase-derived class</typeparam>
         /// <param name="nav">The navigator</param>
         /// <param name="itemPath">The xpath for the item</param>
         /// <returns>Returns a collection of parsed data types</returns>
         internal static Collection<T> ParseXmlCollection<T>(XPathNavigator nav, string itemPath)
-            where T : HealthRecordItemData, new()
+            where T : ItemBase, new()
         {
             XPathNodeIterator itemIterator = nav.Select(itemPath);
 

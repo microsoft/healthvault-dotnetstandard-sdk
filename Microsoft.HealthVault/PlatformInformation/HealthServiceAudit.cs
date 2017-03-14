@@ -186,7 +186,7 @@ namespace Microsoft.HealthVault.PlatformInformation
         ///
         /// <remarks>
         /// The value is <b>null</b> if impersonation was not used to create,
-        /// change, or delete the <see cref="HealthRecordItem"/>.
+        /// change, or delete the <see cref="ThingBase"/>.
         /// </remarks>
         ///
         public Guid? ImpersonatorId { get; private set; }
@@ -201,14 +201,14 @@ namespace Microsoft.HealthVault.PlatformInformation
         ///
         /// <remarks>
         /// The value is <b>null</b> if impersonation was not used to create,
-        /// change, or delete the <see cref="HealthRecordItem"/>.
+        /// change, or delete the <see cref="ThingBase"/>.
         /// </remarks>
         ///
         public string ImpersonatorName { get; private set; }
 
         /// <summary>
         /// Gets the access avenue used to create, change, or delete the
-        /// <see cref="HealthRecordItem"/>.
+        /// <see cref="ThingBase"/>.
         /// </summary>
         ///
         /// <value>

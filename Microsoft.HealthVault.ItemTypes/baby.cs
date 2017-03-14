@@ -14,7 +14,7 @@ namespace Microsoft.HealthVault.ItemTypes
     /// Represents a baby associated with a pregnancy or delivery.
     /// </summary>
     ///
-    public class Baby : HealthRecordItemData
+    public class Baby : ItemBase
     {
         /// <summary>
         /// Populates the data from the specified XML.

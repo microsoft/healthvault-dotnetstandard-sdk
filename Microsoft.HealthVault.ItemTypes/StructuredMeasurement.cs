@@ -14,7 +14,7 @@ namespace Microsoft.HealthVault.ItemTypes
     /// A measurement using specific units.
     /// </summary>
     ///
-    public class StructuredMeasurement : HealthRecordItemData
+    public class StructuredMeasurement : ItemBase
     {
         /// <summary>
         /// Initialize a new instance of the <see cref="StructuredMeasurement"/>

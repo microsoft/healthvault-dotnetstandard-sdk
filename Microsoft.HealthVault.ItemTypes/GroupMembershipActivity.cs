@@ -12,10 +12,10 @@ using Microsoft.HealthVault.Thing;
 namespace Microsoft.HealthVault.ItemTypes
 {
     /// <summary>
-    /// Represents a health record item type that an activity related to a group membership.
+    /// Represents a thing type that an activity related to a group membership.
     /// </summary>
     ///
-    public class GroupMembershipActivity : HealthRecordItem
+    public class GroupMembershipActivity : ThingBase
     {
         /// <summary>
         /// Creates a new instance of the <see cref="GroupMembershipActivity"/> class with default
@@ -24,7 +24,7 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         /// <remarks>
         /// The item is not added to the health record until the
-        /// <see cref="HealthRecordAccessor.NewItem(HealthRecordItem)"/> method
+        /// <see cref="HealthRecordAccessor.NewItem(ThingBase)"/> method
         /// is called.
         /// </remarks>
         ///

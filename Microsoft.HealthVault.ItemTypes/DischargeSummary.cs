@@ -13,10 +13,10 @@ using Microsoft.HealthVault.Thing;
 namespace Microsoft.HealthVault.ItemTypes
 {
     /// <summary>
-    /// Represents a health record item that encapsulates a discharge summary.
+    /// Represents a thing that encapsulates a discharge summary.
     /// </summary>
     ///
-    public class DischargeSummary : HealthRecordItem
+    public class DischargeSummary : ThingBase
     {
         /// <summary>
         /// Creates a new instance of the <see cref="DischargeSummary"/> class with default
@@ -25,7 +25,7 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         /// <remarks>
         /// The item is not added to the health record until the
-        /// <see cref="HealthRecordAccessor.NewItem(HealthRecordItem)"/> method
+        /// <see cref="HealthRecordAccessor.NewItem(ThingBase)"/> method
         /// is called.
         /// </remarks>
         ///

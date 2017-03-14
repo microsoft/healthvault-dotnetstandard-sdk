@@ -8,38 +8,38 @@ using System;
 namespace Microsoft.HealthVault.Thing
 {
     /// <summary>
-    /// The states of the health record item to search for.
+    /// The states of the thing to search for.
     /// </summary>
     ///
     [Flags]
-    public enum HealthRecordItemStates
+    public enum ThingStates
     {
         /// <summary>
-        /// Health record items with state
-        /// <see cref="HealthRecordItemState.Active"/>
+        /// things with state
+        /// <see cref="ThingState.Active"/>
         /// are retrieved.
         /// </summary>
         ///
         Active = 0x1,
 
         /// <summary>
-        /// Health record items with state
-        /// <see cref="HealthRecordItemState.Deleted"/>
+        /// things with state
+        /// <see cref="ThingState.Deleted"/>
         /// are retrieved.
         /// </summary>
         ///
         Deleted = 0x2,
 
         /// <summary>
-        /// Health record items with state
-        /// <see cref="HealthRecordItemState.Active"/> are
+        /// things with state
+        /// <see cref="ThingState.Active"/> are
         /// retrieved by default.
         /// </summary>
         ///
         Default = Active,
 
         /// <summary>
-        /// Health record items with any state will be retrieved.
+        /// things with any state will be retrieved.
         /// </summary>
         ///
         Any = Active | Deleted

@@ -10,11 +10,11 @@ using Microsoft.HealthVault.Helpers;
 namespace Microsoft.HealthVault.ItemTypes
 {
     /// <summary>
-    /// Represents a health record item type that encapsulates a duration of
+    /// Represents a thing type that encapsulates a duration of
     /// time with a starting and optional ending date.
     /// </summary>
     ///
-    public class DurationValue : HealthRecordItemData
+    public class DurationValue : ItemBase
     {
         /// <summary>
         /// Creates a new instance of the <see cref="DurationValue"/> class with default

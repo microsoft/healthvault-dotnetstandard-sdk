@@ -9,7 +9,7 @@ using Microsoft.HealthVault.Helpers;
 namespace Microsoft.HealthVault.Thing
 {
     /// <summary>
-    /// Defines a set of health record items of the specified type
+    /// Defines a set of things of the specified type
     /// for authorization purposes.
     /// </summary>
     ///
@@ -17,7 +17,7 @@ namespace Microsoft.HealthVault.Thing
     /// Permissions on data in a person's health records are always included
     /// in an authorization set (whether implicitly via their type or
     /// effective date, or explicitly by setting the system set.) This class
-    /// serves as a set of health record items that have a specified type ID.
+    /// serves as a set of things that have a specified type ID.
     /// Other types of authorization sets include:
     /// <see cref="DateRangeSetDefinition"/>.
     /// </remarks>
@@ -41,7 +41,7 @@ namespace Microsoft.HealthVault.Thing
         /// record item type. See
         /// <see
         /// cref="ItemTypeManager.GetHealthRecordItemTypeDefinitionAsync(System.Guid,HealthServiceConnection)"/>
-        /// for information on getting the value health record item types.
+        /// for information on getting the value thing types.
         /// </remarks>
         ///
         /// <exception cref="ArgumentException">
@@ -64,16 +64,16 @@ namespace Microsoft.HealthVault.Thing
         /// </summary>
         ///
         /// <value>
-        /// A Guid representing the unique identifier for a health record item
+        /// A Guid representing the unique identifier for a thing
         /// type.
         /// </value>
         ///
         /// <remarks>
-        /// The value must be the identifier for a health record item
+        /// The value must be the identifier for a thing
         /// type.
         /// <see
         /// cref="ItemTypeManager.GetHealthRecordItemTypeDefinitionAsync(System.Guid,HealthServiceConnection)"/>
-        /// for information on getting the value health record item types.
+        /// for information on getting the value thing types.
         /// </remarks>
         ///
         public Guid TypeId { get; } = Guid.Empty;

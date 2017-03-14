@@ -6,12 +6,12 @@
 namespace Microsoft.HealthVault.Thing
 {
     /// <summary>
-    /// Converts units for a numeric value of a <see cref="HealthRecordItemTypeProperty"/>.
+    /// Converts units for a numeric value of a <see cref="ThingTypeProperty"/>.
     /// </summary>
     /// <remarks>
     /// When a thing type has multiple versions that store the same data with different units,
     /// a conversion between units may be required to ensure that values are ordered correctly
-    /// across versions. The <see cref="HealthRecordItemTypeProperty"/> can define a conversion
+    /// across versions. The <see cref="ThingTypeProperty"/> can define a conversion
     /// formula to perform this conversion.
     /// </remarks>
     public interface IItemTypePropertyConversion
