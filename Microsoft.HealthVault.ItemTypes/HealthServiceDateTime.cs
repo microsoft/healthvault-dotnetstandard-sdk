@@ -23,7 +23,7 @@ namespace Microsoft.HealthVault.ItemTypes
     /// </remarks>
     ///
     public class HealthServiceDateTime
-        : HealthRecordItemData,
+        : ItemBase,
             IComparable,
             IComparable<HealthServiceDateTime>,
             IComparable<DateTime>

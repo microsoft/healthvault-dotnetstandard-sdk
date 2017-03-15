@@ -5,6 +5,7 @@ using Microsoft.HealthVault.PlatformInformation;
 using Microsoft.HealthVault.Connection;
 using Microsoft.HealthVault.Application;
 using Microsoft.HealthVault.Thing;
+using Microsoft.HealthVault.Transport;
 
 namespace Microsoft.HealthVault.Clients
 {
@@ -44,13 +45,19 @@ namespace Microsoft.HealthVault.Clients
             return HealthVaultPlatformInformation.Current.GetServiceDefinitionAsync(this.Connection, responseSections, lastUpdatedTime);
         }
 
-        public Task<IDictionary<Guid, HealthRecordItemTypeDefinition>> GetHealthRecordItemTypeDefinitionAsync(
+        public Task<IDictionary<Guid, ThingTypeDefinition>> GetHealthRecordItemTypeDefinitionAsync(
             IList<Guid> typeIds,
-            HealthRecordItemTypeSections sections,
+            ThingTypeSections sections,
             IList<string> imageTypes,
             DateTime? lastClientRefreshDate)
         {
             return HealthVaultPlatformInformation.Current.GetHealthRecordItemTypeDefinitionAsync(typeIds, sections, imageTypes, lastClientRefreshDate, this.Connection);
+        }
+
+        public async Task<ApplicationCreationInfo> NewApplicationCreationInfoAsync()
+        {
+            HealthServiceResponseData responseData = await this.Connection.ExecuteAsync(HealthVaultMethods.NewApplicationCreationInfo, 1).ConfigureAwait(false);
+            return ApplicationCreationInfo.Create(responseData.InfoNavigator);
         }
     }
 }

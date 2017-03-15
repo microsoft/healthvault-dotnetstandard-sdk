@@ -3,6 +3,11 @@
 // see http://www.microsoft.com/resources/sharedsource/licensingbasics/sharedsourcelicenses.mspx.
 // All other rights reserved.
 
+using Microsoft.HealthVault.Connection;
+using Microsoft.HealthVault.Exceptions;
+using Microsoft.HealthVault.Helpers;
+using Microsoft.HealthVault.Record;
+using Microsoft.HealthVault.Transport;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -10,11 +15,6 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.XPath;
-using Microsoft.HealthVault.Connection;
-using Microsoft.HealthVault.Exceptions;
-using Microsoft.HealthVault.Helpers;
-using Microsoft.HealthVault.Record;
-using Microsoft.HealthVault.Transport;
 
 namespace Microsoft.HealthVault.Person
 {
@@ -86,10 +86,7 @@ namespace Microsoft.HealthVault.Person
         ///
         public virtual async Task<ApplicationSettings> GetApplicationSettingsAsync(IConnectionInternal connection)
         {
-            HealthServiceRequest request =
-                new HealthServiceRequest(connection, HealthVaultMethods.GetApplicationSettings, 1);
-
-            HealthServiceResponseData responseData = await request.ExecuteAsync().ConfigureAwait(false);
+            HealthServiceResponseData responseData = await connection.ExecuteAsync(HealthVaultMethods.GetApplicationSettings, 1).ConfigureAwait(false);
 
             XPathExpression xPathExpression = GetPersonAppSettingsXPathExpression(responseData.InfoNavigator);
 
@@ -153,10 +150,7 @@ namespace Microsoft.HealthVault.Person
             IConnectionInternal connection,
             string requestParameters)
         {
-            HealthServiceRequest request = new HealthServiceRequest(connection, HealthVaultMethods.SetApplicationSettings, 1);
-
-            request.Parameters = requestParameters;
-            await request.ExecuteAsync().ConfigureAwait(false);
+            await connection.ExecuteAsync(HealthVaultMethods.SetApplicationSettings, 1, requestParameters).ConfigureAwait(false);
         }
 
         internal static string GetSetApplicationSettingsParameters(
@@ -228,9 +222,7 @@ namespace Microsoft.HealthVault.Person
         ///
         public virtual async Task<PersonInfo> GetPersonInfoAsync(IConnectionInternal connection)
         {
-            HealthServiceRequest request = new HealthServiceRequest(connection, HealthVaultMethods.GetPersonInfo, 1);
-
-            HealthServiceResponseData responseData = await request.ExecuteAsync().ConfigureAwait(false);
+            HealthServiceResponseData responseData = await connection.ExecuteAsync(HealthVaultMethods.GetPersonInfo, 1).ConfigureAwait(false);
 
             XPathExpression personPath = GetPersonXPathExpression(responseData.InfoNavigator);
 
@@ -294,9 +286,6 @@ namespace Microsoft.HealthVault.Person
             IConnectionInternal connection,
             IList<Guid> recordIds)
         {
-            HealthServiceRequest request =
-                new HealthServiceRequest(connection, HealthVaultMethods.GetAuthorizedRecords, 1);
-
             StringBuilder parameters = new StringBuilder(128);
             foreach (Guid id in recordIds)
             {
@@ -304,9 +293,7 @@ namespace Microsoft.HealthVault.Person
                     "<id>" + id + "</id>");
             }
 
-            request.Parameters = parameters.ToString();
-
-            HealthServiceResponseData responseData = await request.ExecuteAsync().ConfigureAwait(false);
+            HealthServiceResponseData responseData = await connection.ExecuteAsync(HealthVaultMethods.GetAuthorizedRecords, 1, parameters.ToString()).ConfigureAwait(false);
 
             Collection<HealthRecordInfo> results =
                 new Collection<HealthRecordInfo>();

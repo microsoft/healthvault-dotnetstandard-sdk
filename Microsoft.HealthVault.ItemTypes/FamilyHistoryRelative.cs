@@ -20,7 +20,7 @@ namespace Microsoft.HealthVault.ItemTypes
     /// family medical history.
     /// </remarks>
     ///
-    public class FamilyHistoryRelative : HealthRecordItemData
+    public class FamilyHistoryRelative : ItemBase
     {
         /// <summary>
         /// Populates this <see cref="FamilyHistoryRelative"/> instance from the data in the XML.

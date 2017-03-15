@@ -13,7 +13,7 @@ using Microsoft.HealthVault.Thing;
 namespace Microsoft.HealthVault.ItemTypes
 {
     /// <summary>
-    /// Represents a health record item type that encapsulates a single use of
+    /// Represents a thing type that encapsulates a single use of
     /// an asthma inhaler.
     /// </summary>
     ///
@@ -22,7 +22,7 @@ namespace Microsoft.HealthVault.ItemTypes
     /// calls for it.
     /// </remarks>
     ///
-    public class AsthmaInhalerUse : HealthRecordItem
+    public class AsthmaInhalerUse : ThingBase
     {
         /// <summary>
         /// Creates a new instance of the <see cref="AsthmaInhalerUse"/> class with default values.
@@ -30,7 +30,7 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         /// <remarks>
         /// The item is not added to the health record until the
-        /// <see cref="HealthRecordAccessor.NewItem(HealthRecordItem)"/> method
+        /// <see cref="HealthRecordAccessor.NewItem(ThingBase)"/> method
         /// is called.
         /// </remarks>
         ///

@@ -15,11 +15,11 @@ using Microsoft.HealthVault.Thing;
 namespace Microsoft.HealthVault.ItemTypes
 {
     /// <summary>
-    /// Represents a health record item type that encapsulates a sleep journal
+    /// Represents a thing type that encapsulates a sleep journal
     /// morning entry.
     /// </summary>
     ///
-    public class SleepJournalAM : HealthRecordItem
+    public class SleepJournalAM : ThingBase
     {
         /// <summary>
         /// Creates a new instance of the <see cref="SleepJournalAM"/> class with
@@ -28,7 +28,7 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         /// <remarks>
         /// The item is not added to the health record until the
-        /// <see cref="HealthRecordAccessor.NewItem(HealthRecordItem)"/> method
+        /// <see cref="HealthRecordAccessor.NewItem(ThingBase)"/> method
         /// is called.
         /// </remarks>
         ///
@@ -169,7 +169,7 @@ namespace Microsoft.HealthVault.ItemTypes
         /// If <paramref name="writer"/> is <b>null</b>.
         /// </exception>
         ///
-        /// <exception cref="HealthRecordItemSerializationException">
+        /// <exception cref="ThingSerializationException">
         /// The <see cref="When"/>, <see cref="Bedtime"/>,
         /// <see cref="WakeTime"/>, <see cref="SleepMinutes"/>,
         /// <see cref="SettlingMinutes"/>, or <see cref="WakeState"/> parameter

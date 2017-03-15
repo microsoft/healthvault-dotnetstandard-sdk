@@ -10,7 +10,7 @@ using Microsoft.HealthVault.Thing;
 namespace Microsoft.HealthVault
 {
     /// <summary>
-    /// Defines a set of health record items for authorization
+    /// Defines a set of things for authorization
     /// purposes whose effective date falls within a specified range.
     /// </summary>
     ///
@@ -18,7 +18,7 @@ namespace Microsoft.HealthVault
     /// Permissions on data in a person's health records are always included
     /// in an authorization set (whether implicitly via their type or
     /// effective date, or explicitly by setting the system set.) This class
-    /// serves as a set of health record items that have effective dates
+    /// serves as a set of things that have effective dates
     /// falling within the specified range. Other types of authorization
     /// sets include <see cref="TypeIdSetDefinition"/>.
     /// </remarks>
@@ -34,12 +34,12 @@ namespace Microsoft.HealthVault
         /// </summary>
         ///
         /// <param name="dateMin">
-        /// The minimum effective date of the health record items included in
+        /// The minimum effective date of the things included in
         /// the set.
         /// </param>
         ///
         /// <param name="dateMax">
-        /// The maximum effective date of health record items included in
+        /// The maximum effective date of things included in
         /// the set.
         /// </param>
         ///
@@ -66,7 +66,7 @@ namespace Microsoft.HealthVault
         }
 
         /// <summary>
-        /// Gets the minimum effective date of the health record items in
+        /// Gets the minimum effective date of the things in
         /// this set.
         /// </summary>
         ///
@@ -82,7 +82,7 @@ namespace Microsoft.HealthVault
         public DateTime DateMin { get; } = DateTime.MinValue;
 
         /// <summary>
-        /// Gets the maximum effective date of the health record items in
+        /// Gets the maximum effective date of the things in
         /// this set.
         /// </summary>
         ///

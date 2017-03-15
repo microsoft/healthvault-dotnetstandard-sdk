@@ -17,7 +17,7 @@ namespace Microsoft.HealthVault.ItemTypes
     /// See <see cref="HealthAssessment"/> for more information.
     /// </remarks>
     ///
-    public class Assessment : HealthRecordItemData
+    public class Assessment : ItemBase
     {
         /// <summary>
         /// Constructs a new instance of the <see cref="Assessment"/> class

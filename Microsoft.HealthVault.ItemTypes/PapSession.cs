@@ -21,7 +21,7 @@ namespace Microsoft.HealthVault.ItemTypes
     /// A common use for PAP therapy is in the treatment of sleep apnea.
     /// </remarks>
     ///
-    public class PapSession : HealthRecordItem
+    public class PapSession : ThingBase
     {
         /// <summary>
         /// Creates a new instance of the <see cref="PapSession"/> class with default values.
@@ -29,7 +29,7 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         /// <remarks>
         /// This item is not added to the health record until the
-        /// <see cref="HealthRecordAccessor.NewItem(HealthRecordItem)"/> method
+        /// <see cref="HealthRecordAccessor.NewItem(ThingBase)"/> method
         /// is called.
         /// </remarks>
         ///
@@ -44,7 +44,7 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         /// <remarks>
         /// This item is not added to the health record until the
-        /// <see cref="HealthRecordAccessor.NewItem(HealthRecordItem)"/> method
+        /// <see cref="HealthRecordAccessor.NewItem(ThingBase)"/> method
         /// is called.
         /// </remarks>
         ///

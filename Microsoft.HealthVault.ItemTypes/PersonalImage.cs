@@ -20,7 +20,7 @@ namespace Microsoft.HealthVault.ItemTypes
     /// There can be only one personal image for each health record.
     /// </remarks>
     ///
-    public class PersonalImage : HealthRecordItem
+    public class PersonalImage : ThingBase
     {
         /// <summary>
         /// Creates a new instance of the <see cref="PersonalImage"/> class with
@@ -29,7 +29,7 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         /// <remarks>
         /// The item is not added to the health record until the
-        /// <see cref="HealthRecordAccessor.NewItem(HealthRecordItem)"/> method
+        /// <see cref="HealthRecordAccessor.NewItem(ThingBase)"/> method
         /// is called.
         /// </remarks>
         ///

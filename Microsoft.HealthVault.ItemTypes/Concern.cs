@@ -22,7 +22,7 @@ namespace Microsoft.HealthVault.ItemTypes
     /// a chronic condition", "family issues", "emotional issues", etc.
     /// </remarks>
     ///
-    public class Concern : HealthRecordItem
+    public class Concern : ThingBase
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="Concern"/> class,

@@ -13,7 +13,7 @@ namespace Microsoft.HealthVault.ItemTypes
     /// <summary>
     /// Information containing name value pair of defibrillator episode property.
     /// </summary>
-    public class DefibrillatorEpisodeField : HealthRecordItemData
+    public class DefibrillatorEpisodeField : ItemBase
     {
         /// <summary>
         /// Creates a new instance of the <see cref="DefibrillatorEpisodeField"/> class with default values.

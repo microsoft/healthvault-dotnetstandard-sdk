@@ -20,7 +20,7 @@ namespace Microsoft.HealthVault.ItemTypes
     /// for a single lap, or the desired aerobic session for an aerobic goal.
     /// </remarks>
     ///
-    public class AerobicData : HealthRecordItemData
+    public class AerobicBase : ItemBase
     {
         /// <summary>
         /// Populates the data for the length from the XML.

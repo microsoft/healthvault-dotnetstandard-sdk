@@ -15,7 +15,7 @@ using Microsoft.HealthVault.Thing;
 namespace Microsoft.HealthVault.ItemTypes
 {
     /// <summary>
-    /// Represents a health record item type that encapsulates a study containing medical images.
+    /// Represents a thing type that encapsulates a study containing medical images.
     /// </summary>
     ///
     /// <remarks>
@@ -25,7 +25,7 @@ namespace Microsoft.HealthVault.ItemTypes
     /// An application may store XDS-i manifest information in XML format in the xds-i element.
     /// </remarks>
     ///
-    public class MedicalImageStudyV2 : HealthRecordItem
+    public class MedicalImageStudyV2 : ThingBase
     {
         /// <summary>
         /// Creates a new instance of the <see cref="MedicalImageStudyV2"/> class with default values.
@@ -33,7 +33,7 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         /// <remarks>
         /// The item is not added to the health record until the
-        /// <see cref="HealthRecordAccessor.NewItem(HealthRecordItem)"/> method
+        /// <see cref="HealthRecordAccessor.NewItem(ThingBase)"/> method
         /// is called.
         /// </remarks>
         ///
@@ -49,7 +49,7 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         /// <remarks>
         /// The item is not added to the health record until the
-        /// <see cref="HealthRecordAccessor.NewItem(HealthRecordItem)"/> method
+        /// <see cref="HealthRecordAccessor.NewItem(ThingBase)"/> method
         /// is called.
         /// </remarks>
         ///

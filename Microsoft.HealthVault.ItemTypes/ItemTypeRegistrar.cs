@@ -8,14 +8,14 @@ using Microsoft.HealthVault.Thing;
 namespace Microsoft.HealthVault.ItemTypes
 {
     /// <summary>
-    /// Defines a method for registering all the health record item types with the
+    /// Defines a method for registering all the thing types with the
     /// <see cref="ItemTypeManager"/> that are in this assembly.
     /// </summary>
     ///
     public static class ItemTypeRegistrar
     {
         /// <summary>
-        /// Registers all the health record item types in this assembly with the
+        /// Registers all the thing types in this assembly with the
         /// <see cref="ItemTypeManager"/>.
         /// </summary>
         ///

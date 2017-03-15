@@ -27,13 +27,9 @@ namespace Microsoft.HealthVault.Thing
     ///
     [DebuggerTypeProxy(typeof(HealthRecordItemCollectionDebugView))]
     [DebuggerDisplay("Count = {Count}")]
-    public class HealthRecordItemCollection :
+    public class ThingCollection :
         IList<IThing>,
-        ICollection<IThing>, 
-        IEnumerable<IThing>,
-        IList, 
-        ICollection, 
-        IEnumerable
+        IList
     {
         #region Factory methods & ctor
 
@@ -55,7 +51,7 @@ namespace Microsoft.HealthVault.Thing
         /// </param>
         ///
         /// <returns>
-        /// An instance of a result group containing the health record items
+        /// An instance of a result group containing the things
         /// in the response.
         /// </returns>
         ///
@@ -63,7 +59,7 @@ namespace Microsoft.HealthVault.Thing
         /// The <paramref name="record"/> parameter is <b>null</b>.
         /// </exception>
         ///
-        internal static HealthRecordItemCollection CreateResultGroupFromResponse(
+        internal static ThingCollection CreateResultGroupFromResponse(
             HealthRecordAccessor record,
             XmlReader groupReader,
             IList<ThingQuery> filters)
@@ -101,10 +97,10 @@ namespace Microsoft.HealthVault.Thing
             return GetResultGroupFromResponse(name, record, matchingQuery, groupReader);
         }
 
-        private static HealthRecordItemCollection GetResultGroupFromResponse(string name, HealthRecordAccessor record, ThingQuery matchingQuery, XmlReader groupReader)
+        private static ThingCollection GetResultGroupFromResponse(string name, HealthRecordAccessor record, ThingQuery matchingQuery, XmlReader groupReader)
         {
-            HealthRecordItemCollection result =
-                new HealthRecordItemCollection(name, record, matchingQuery);
+            ThingCollection result =
+                new ThingCollection(name, record, matchingQuery);
 
             int maxResultsPerRequest = 0;
 
@@ -122,7 +118,7 @@ namespace Microsoft.HealthVault.Thing
                                 XmlReader thingReader = groupReader.ReadSubtree();
                                 thingReader.MoveToContent();
 
-                                HealthRecordItem resultHealthRecordItem =
+                                ThingBase resultThingBase =
                                     ItemTypeManager.DeserializeItem(thingReader);
                                 thingReader.Dispose();
 
@@ -133,9 +129,9 @@ namespace Microsoft.HealthVault.Thing
                                 // single read will still move to the next element.
                                 groupReader.Read();
 
-                                if (resultHealthRecordItem != null)
+                                if (resultThingBase != null)
                                 {
-                                    result.AddResult(resultHealthRecordItem);
+                                    result.AddResult(resultThingBase);
                                     maxResultsPerRequest++;
                                 }
                             }
@@ -155,8 +151,8 @@ namespace Microsoft.HealthVault.Thing
                                     Guid thingId =
                                         new Guid(unprocessedThingReader.ReadElementContentAsString());
 
-                                    HealthRecordItemKey key =
-                                        new HealthRecordItemKey(thingId, new Guid(versionStamp));
+                                    ThingKey key =
+                                        new ThingKey(thingId, new Guid(versionStamp));
 
                                     result.AddResult(key);
 
@@ -205,7 +201,7 @@ namespace Microsoft.HealthVault.Thing
         }
 
         /// <summary>
-        /// Create an instance of the <see cref="HealthRecordItemCollection"/> class with a specific set of items.
+        /// Create an instance of the <see cref="ThingCollection"/> class with a specific set of items.
         /// </summary>
         ///
         /// <remarks>
@@ -213,15 +209,15 @@ namespace Microsoft.HealthVault.Thing
         /// </remarks>
         ///
         /// <param name="items">The items to put into the collection.</param>
-        public HealthRecordItemCollection(IEnumerable<HealthRecordItem> items)
+        public ThingCollection(IEnumerable<ThingBase> items)
         {
-            foreach (HealthRecordItem item in items)
+            foreach (ThingBase item in items)
             {
                 this.abstractResults.Add(item);
             }
         }
 
-        private HealthRecordItemCollection(
+        private ThingCollection(
             string name,
             HealthRecordAccessor record,
             ThingQuery query)
@@ -257,7 +253,7 @@ namespace Microsoft.HealthVault.Thing
         /// </summary>
         ///
         /// <value>
-        /// <b>true</b> if the result set of health record items was filtered due
+        /// <b>true</b> if the result set of things was filtered due
         /// to the callers permissions; otherwise, <b>false</b>.
         /// </value>
         ///
@@ -434,7 +430,7 @@ namespace Microsoft.HealthVault.Thing
         /// </summary>
         ///
         /// <param name="value">
-        /// The health record item to locate in the collection.
+        /// The thing to locate in the collection.
         /// </param>
         ///
         /// <returns>
@@ -447,7 +443,7 @@ namespace Microsoft.HealthVault.Thing
 
             IThing thing = value as IThing;
 
-            result = thing != null ? this.Contains(thing) : this.Contains(value as HealthRecordItemKey);
+            result = thing != null ? this.Contains(thing) : this.Contains(value as ThingKey);
 
             return result;
         }
@@ -455,13 +451,13 @@ namespace Microsoft.HealthVault.Thing
         /// <summary>
         /// Gets a value indicating whether the collection contains a
         /// <see cref="IThing"/> with the specified
-        /// <see cref="HealthRecordItemKey"/>.
+        /// <see cref="ThingKey"/>.
         /// </summary>
         ///
         /// <param name="itemKey">
-        /// The unique <see cref="HealthRecordItemKey"/> used to locate the
-        /// <see cref="HealthRecordItem"/>item in the collection. The key
-        /// contains a unique identifier for the <see cref="HealthRecordItem"/>
+        /// The unique <see cref="ThingKey"/> used to locate the
+        /// <see cref="ThingBase"/>item in the collection. The key
+        /// contains a unique identifier for the <see cref="ThingBase"/>
         /// and a unique version stamp identifying the version of
         /// the <see cref="IThing"/>.
         /// </param>
@@ -470,27 +466,27 @@ namespace Microsoft.HealthVault.Thing
         /// <b>true</b> if a matching object is found; otherwise, <b>false</b>.
         /// </returns>
         ///
-        public bool Contains(HealthRecordItemKey itemKey)
+        public bool Contains(ThingKey itemKey)
         {
             lock (this.abstractResults)
             {
                 bool result = false;
                 for (int index = 0; index < this.abstractResults.Count; ++index)
                 {
-                    HealthRecordItemKey abstractHealthRecordItemKey;
+                    ThingKey abstractThingKey;
                     IThing thing
                         = this.abstractResults[index] as IThing;
                     if (thing != null)
                     {
-                        abstractHealthRecordItemKey = thing.Key;
+                        abstractThingKey = thing.Key;
                     }
                     else
                     {
-                        abstractHealthRecordItemKey
-                            = (HealthRecordItemKey)this.abstractResults[index];
+                        abstractThingKey
+                            = (ThingKey)this.abstractResults[index];
                     }
 
-                    if (abstractHealthRecordItemKey.Equals(itemKey))
+                    if (abstractThingKey.Equals(itemKey))
                     {
                         result = true;
                         break;
@@ -692,7 +688,7 @@ namespace Microsoft.HealthVault.Thing
             }
             else
             {
-                result = this.IndexOf(value as HealthRecordItemKey);
+                result = this.IndexOf(value as ThingKey);
             }
 
             return result;
@@ -700,11 +696,11 @@ namespace Microsoft.HealthVault.Thing
 
         /// <summary>
         /// Determines the index of the specific item in the list using the
-        /// unique health record item identifier.
+        /// unique thing identifier.
         /// </summary>
         ///
         /// <param name="key">
-        /// The unique health record item key used to locate the
+        /// The unique thing key used to locate the
         /// item in the list.
         /// </param>
         ///
@@ -712,25 +708,25 @@ namespace Microsoft.HealthVault.Thing
         /// The index of item, if found in the list; otherwise, -1.
         /// </returns>
         ///
-        public int IndexOf(HealthRecordItemKey key)
+        public int IndexOf(ThingKey key)
         {
             lock (this.abstractResults)
             {
                 int result = -1;
                 for (int index = 0; index < this.abstractResults.Count; ++index)
                 {
-                    HealthRecordItemKey abstractHealthRecordItemKey;
+                    ThingKey abstractThingKey;
                     IThing thing = this.abstractResults[index] as IThing;
                     if (thing != null)
                     {
-                        abstractHealthRecordItemKey = thing.Key;
+                        abstractThingKey = thing.Key;
                     }
                     else
                     {
-                        abstractHealthRecordItemKey = (HealthRecordItemKey)this.abstractResults[index];
+                        abstractThingKey = (ThingKey)this.abstractResults[index];
                     }
 
-                    if (abstractHealthRecordItemKey.Equals(key))
+                    if (abstractThingKey.Equals(key))
                     {
                         result = index;
                         break;
@@ -890,16 +886,16 @@ namespace Microsoft.HealthVault.Thing
         /// </summary>
         ///
         /// <remarks>
-        /// All synchronization is done in the HealthRecordItemCollection. The
+        /// All synchronization is done in the ThingCollection. The
         /// iterator only keeps track of the current index and uses the
-        /// Item collection of the HealthRecordItemCollection to retrieve the
+        /// Item collection of the ThingCollection to retrieve the
         /// item.
         /// </remarks>
         ///
         internal class ThingEnumerator : IEnumerator<IThing>
         {
             internal ThingEnumerator(
-                HealthRecordItemCollection resultGroup)
+                ThingCollection resultGroup)
             {
                 this.resultGroup = resultGroup;
             }
@@ -1040,7 +1036,7 @@ namespace Microsoft.HealthVault.Thing
                 this.Reset();
             }
 
-            private HealthRecordItemCollection resultGroup;
+            private ThingCollection resultGroup;
         }
 
         #endregion IEnumerable<IThing>
@@ -1060,9 +1056,9 @@ namespace Microsoft.HealthVault.Thing
         /// This method will cause all results to be retrieved from HealthVault.<br/>
         /// When a query results in many matches, HealthVault will return a fixed number
         /// of "full" results (all data requested is returned) and the remaining matches
-        /// as "partial" (only identifying information is returned). HealthRecordItemCollection
+        /// as "partial" (only identifying information is returned). ThingCollection
         /// automatically retrieves the full information for the partial results as the
-        /// collection gets enumerated. In order to sort the results, HealthRecordItemCollection
+        /// collection gets enumerated. In order to sort the results, ThingCollection
         /// must retrieve the full set of data for all the results. This may cause several
         /// requests to HealthVault to retrieve all the data.
         /// </remarks>
@@ -1098,9 +1094,9 @@ namespace Microsoft.HealthVault.Thing
         /// This method will cause all result to be retrieved from HealthVault.<br/>
         /// When a query results in many matches, HealthVault will return a fixed number
         /// of "full" results (all data requested is returned) and the remaining matches
-        /// as "partial" (only identifying information is returned). HealthRecordItemCollection
+        /// as "partial" (only identifying information is returned). ThingCollection
         /// automatically pages down the full information for the partial results as the
-        /// collection gets enumerated. In order to sort the results, HealthRecordItemCollection
+        /// collection gets enumerated. In order to sort the results, ThingCollection
         /// must retrieve the full set of data for all the results. This may cause several
         /// requests to HealthVault to retrieve all the data.
         /// </remarks>
@@ -1214,7 +1210,7 @@ namespace Microsoft.HealthVault.Thing
             // the next MaxResultsPerRequest number of partial
             // items.
 
-            List<HealthRecordItemKey> partialThings = new List<HealthRecordItemKey>();
+            List<ThingKey> partialThings = new List<ThingKey>();
             for (
                 int partialThingIndex = index;
                 (partialThings.Count < this.MaxResultsPerRequest ||
@@ -1222,7 +1218,7 @@ namespace Microsoft.HealthVault.Thing
                 partialThingIndex < this.abstractResults.Count;
                 ++partialThingIndex)
             {
-                var key = this.abstractResults[partialThingIndex] as HealthRecordItemKey;
+                var key = this.abstractResults[partialThingIndex] as ThingKey;
                 if (key != null)
                 {
                     partialThings.Add(
@@ -1231,7 +1227,7 @@ namespace Microsoft.HealthVault.Thing
                 else
                 {
                     // We break if we hit something that is
-                    // not a Guid (like HealthRecordItem). This means
+                    // not a Guid (like ThingBase). This means
                     // that we will retrieve fewer things than
                     // MaxResultsPerRequest but it will be simpler
                     // to replace the partial things with the real
@@ -1240,11 +1236,11 @@ namespace Microsoft.HealthVault.Thing
                 }
             }
 
-            Collection<HealthRecordItem> things = await this.GetPartialThingsAsync(partialThings).ConfigureAwait(false);
+            Collection<ThingBase> things = await this.GetPartialThingsAsync(partialThings).ConfigureAwait(false);
 
             bool atEndOfPartialThings = false;
             int newThingIndex = index;
-            foreach (HealthRecordItem thing in things)
+            foreach (ThingBase thing in things)
             {
                 // We need to start at the current index but look until
                 // we find a matching thing ID.  It is possible that the
@@ -1253,8 +1249,8 @@ namespace Microsoft.HealthVault.Thing
 
                 for (; newThingIndex < this.abstractResults.Count; ++newThingIndex)
                 {
-                    HealthRecordItemKey abstractResultKey =
-                        this.abstractResults[newThingIndex] as HealthRecordItemKey;
+                    ThingKey abstractResultKey =
+                        this.abstractResults[newThingIndex] as ThingKey;
 
                     if (abstractResultKey != null)
                     {
@@ -1280,16 +1276,16 @@ namespace Microsoft.HealthVault.Thing
             }
         }
 
-        private async Task<Collection<HealthRecordItem>> GetPartialThingsAsync(
-            IList<HealthRecordItemKey> partialThings)
+        private async Task<Collection<ThingBase>> GetPartialThingsAsync(
+            IList<ThingKey> partialThings)
         {
-            Collection<HealthRecordItem> results = new Collection<HealthRecordItem>();
+            Collection<ThingBase> results = new Collection<ThingBase>();
 
             // Create the searcher
             HealthRecordSearcher searcher = this.Record.CreateSearcher();
             ThingQuery query = new ThingQuery();
 
-            foreach (HealthRecordItemKey key in partialThings)
+            foreach (ThingKey key in partialThings)
             {
                 query.ItemKeys.Add(key);
             }
@@ -1319,12 +1315,12 @@ namespace Microsoft.HealthVault.Thing
                     using (XmlReader thingReader = infoReader.ReadSubtree())
                     {
                         thingReader.MoveToContent();
-                        HealthRecordItem resultHealthRecordItem = ItemTypeManager.DeserializeItem(thingReader);
+                        ThingBase resultThingBase = ItemTypeManager.DeserializeItem(thingReader);
                         infoReader.Read();
 
-                        if (resultHealthRecordItem != null)
+                        if (resultThingBase != null)
                         {
-                            results.Add(resultHealthRecordItem);
+                            results.Add(resultThingBase);
                         }
                     }
                 }
@@ -1357,14 +1353,14 @@ namespace Microsoft.HealthVault.Thing
             return infoGroupPathClone;
         }
 
-        private void AddResult(HealthRecordItem result)
+        private void AddResult(ThingBase result)
         {
             this.abstractResults.Add(result);
         }
 
-        private void AddResult(HealthRecordItemKey healthRecordItemKey)
+        private void AddResult(ThingKey thingKey)
         {
-            this.abstractResults.Add(healthRecordItemKey);
+            this.abstractResults.Add(thingKey);
         }
 
         #endregion helpers
@@ -1372,29 +1368,29 @@ namespace Microsoft.HealthVault.Thing
         #region debughelper
 
         /// <summary>
-        /// A class that helps the <see cref="HealthRecordItemCollection"/> display better in the debugger.
+        /// A class that helps the <see cref="ThingCollection"/> display better in the debugger.
         /// </summary>
         ///
         private class HealthRecordItemCollectionDebugView
         {
-            private HealthRecordItemCollection baseObject;
+            private ThingCollection baseObject;
 
             /// <summary>
             /// Constructs a <see cref="HealthRecordItemCollectionDebugView"/> with the specified
-            /// <see cref="HealthRecordItemCollection"/>.
+            /// <see cref="ThingCollection"/>.
             /// </summary>
             ///
             /// <param name="baseObject">
             /// The object this class presents a view of for the debugger.
             /// </param>
             ///
-            public HealthRecordItemCollectionDebugView(HealthRecordItemCollection baseObject)
+            public HealthRecordItemCollectionDebugView(ThingCollection baseObject)
             {
                 this.baseObject = baseObject;
             }
 
             /// <summary>
-            /// Gets the items in the <see cref="HealthRecordItemCollection"/> that were fetched.
+            /// Gets the items in the <see cref="ThingCollection"/> that were fetched.
             /// </summary>
             ///
             public int FetchedItems
@@ -1404,7 +1400,7 @@ namespace Microsoft.HealthVault.Thing
                     int fetched = 0;
                     foreach (object o in this.baseObject.abstractResults)
                     {
-                        if (o is HealthRecordItem)
+                        if (o is ThingBase)
                         {
                             fetched++;
                         }

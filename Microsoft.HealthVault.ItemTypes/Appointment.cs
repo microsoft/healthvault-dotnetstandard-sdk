@@ -13,10 +13,10 @@ using Microsoft.HealthVault.Thing;
 namespace Microsoft.HealthVault.ItemTypes
 {
     /// <summary>
-    /// Represents a health record item type that encapsulates a medical appointment.
+    /// Represents a thing type that encapsulates a medical appointment.
     /// </summary>
     ///
-    public class Appointment : HealthRecordItem
+    public class Appointment : ThingBase
     {
         /// <summary>
         /// Creates a new instance of the <see cref="Appointment"/> class with default
@@ -25,7 +25,7 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         /// <remarks>
         /// The item isn't added to the health record until the
-        /// <see cref="HealthRecordAccessor.NewItem(HealthRecordItem)"/> method
+        /// <see cref="HealthRecordAccessor.NewItem(ThingBase)"/> method
         /// is called.
         /// </remarks>
         ///

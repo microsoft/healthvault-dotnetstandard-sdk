@@ -26,7 +26,7 @@ namespace Microsoft.HealthVault.Thing
     ///
     /// <remarks>
     /// This class generates the XML for a single filter group for querying
-    /// health record items with the "GetThings" method.
+    /// things with the "GetThings" method.
     /// </remarks>
     ///
     [DebuggerDisplay("ThingQuery")]
@@ -197,7 +197,7 @@ namespace Microsoft.HealthVault.Thing
         private string name;
 
         /// <summary>
-        /// Gets or sets the maximum number of health record items to return.
+        /// Gets or sets the maximum number of things to return.
         /// </summary>
         ///
         /// <remarks>
@@ -226,14 +226,14 @@ namespace Microsoft.HealthVault.Thing
         private int maxItemsReturned = int.MinValue;
 
         /// <summary>
-        /// Gets or sets the maximum number of full health record items returned per request to
+        /// Gets or sets the maximum number of full things returned per request to
         /// HealthVault.
         /// </summary>
         ///
         /// <remarks>
-        /// By default HealthVault will only return a certain number of "full" health record items
+        /// By default HealthVault will only return a certain number of "full" things
         /// for any query. It then returns the "keys" for the remaining items that matched the
-        /// query which can then be queried for by ID. <see cref="HealthRecordItemCollection"/>
+        /// query which can then be queried for by ID. <see cref="ThingCollection"/>
         /// automatically manages this paging for you. However, if you want further control over
         /// the count of full items retrieved on each request,
         /// <see cref="MaxFullItemsReturnedPerRequest"/> can be set to optimize for smaller sets
@@ -291,13 +291,13 @@ namespace Microsoft.HealthVault.Thing
         private HealthRecordView view = new HealthRecordView();
 
         /// <summary>
-        /// Gets or sets the ids identifying health record items for
+        /// Gets or sets the ids identifying things for
         /// the search filter.
         /// </summary>
         ///
         /// <remarks>
         /// Each specified ID is AND'd with any other filter parameter. The
-        /// filter limits the search to the specified health record items.
+        /// filter limits the search to the specified things.
         /// It is illegal to specify both ItemIds and ItemKeys in a single
         /// filter.
         /// </remarks>
@@ -307,29 +307,29 @@ namespace Microsoft.HealthVault.Thing
         private readonly List<Guid> thingIds = new List<Guid>();
 
         /// <summary>
-        /// Gets or sets the keys uniquely identifying health record items for
+        /// Gets or sets the keys uniquely identifying things for
         /// the search filter.
         /// </summary>
         ///
         /// <remarks>
         /// Each specified ItemKey is AND'd with any other filter parameter. The
-        /// filter limits the search to the specified health record items.
+        /// filter limits the search to the specified things.
         /// It is illegal to specify more than one of ItemIds, ClientItemIds or ItemKeys in a
         /// single filter.
         /// </remarks>
         ///
-        public IList<HealthRecordItemKey> ItemKeys => this.thingKeys;
+        public IList<ThingKey> ItemKeys => this.thingKeys;
 
-        private readonly List<HealthRecordItemKey> thingKeys = new List<HealthRecordItemKey>();
+        private readonly List<ThingKey> thingKeys = new List<ThingKey>();
 
         /// <summary>
-        /// Gets or sets the client assigned IDs identifying health record items for
+        /// Gets or sets the client assigned IDs identifying things for
         /// the search filter.
         /// </summary>
         ///
         /// <remarks>
         /// Each specified ID is AND'd with any other filter parameter. The
-        /// filter limits the search to the specified health record items.
+        /// filter limits the search to the specified things.
         /// It is illegal to specify more than one of ItemIds, ClientItemIds or ItemKeys in a
         /// single filter.
         /// </remarks>
@@ -351,9 +351,9 @@ namespace Microsoft.HealthVault.Thing
         /// type IDs are listed in the filter spec.
         /// </remarks>
         ///
-        public IList<HealthRecordItemsOrderByClause> OrderByClauses => this.orderByClauses;
+        public IList<ThingOrderByClause> OrderByClauses => this.orderByClauses;
 
-        private readonly List<HealthRecordItemsOrderByClause> orderByClauses = new List<HealthRecordItemsOrderByClause>();
+        private readonly List<ThingOrderByClause> orderByClauses = new List<ThingOrderByClause>();
 
         /// <summary>
         /// Gets a collection of the unique item type identifiers to search
@@ -361,7 +361,7 @@ namespace Microsoft.HealthVault.Thing
         /// </summary>
         ///
         /// <remarks>
-        /// Each health record item is associated with a type through a
+        /// Each thing is associated with a type through a
         /// type identifier. If set, these values are combined in an OR
         /// operation. The group is then combined in an AND operation with
         /// any other filter value in the search for matching health record
@@ -375,27 +375,27 @@ namespace Microsoft.HealthVault.Thing
         private readonly TypeList typeIds;
 
         /// <summary>
-        /// Gets or sets a set of flags representing the health record item
+        /// Gets or sets a set of flags representing the thing
         /// states to search for.
         /// </summary>
         ///
         /// <value>
-        /// The set of flags. If not specified, health record items with state
-        /// <see cref="HealthRecordItemState.Active"/>
+        /// The set of flags. If not specified, things with state
+        /// <see cref="ThingState.Active"/>
         /// are returned.
         /// </value>
         ///
-        public HealthRecordItemStates States { get; set; } = HealthRecordItemStates.Default;
+        public ThingStates States { get; set; } = ThingStates.Default;
 
         /// <summary>
         /// Gets or sets a value indicating whether to return only the flag
-        /// specifying the current versions of the health record items that
+        /// specifying the current versions of the things that
         /// satisfy the filter restrictions.
         /// </summary>
         ///
         /// <value>
-        /// <b>true</b> to return only current versions of health record items;
-        /// <b>false</b> to return all versions of the health record items that
+        /// <b>true</b> to return only current versions of things;
+        /// <b>false</b> to return all versions of the things that
         /// satisfy the filter restrictions.
         /// </value>
         ///
@@ -484,7 +484,7 @@ namespace Microsoft.HealthVault.Thing
 
         /// <summary>
         /// Gets or sets the search filter to filter on the person who
-        /// last updated the health record item.
+        /// last updated the thing.
         /// </summary>
         ///
         /// <remarks>
@@ -510,7 +510,7 @@ namespace Microsoft.HealthVault.Thing
 
         /// <summary>
         /// Gets or sets the search filter to filter on the application that
-        /// last updated the health record item.
+        /// last updated the thing.
         /// </summary>
         ///
         /// <remarks>
@@ -600,7 +600,7 @@ namespace Microsoft.HealthVault.Thing
 
         /// <summary>
         /// Gets or sets the search filter to filter on the person who
-        /// created the health record item.
+        /// created the thing.
         /// </summary>
         ///
         /// <remarks>
@@ -626,7 +626,7 @@ namespace Microsoft.HealthVault.Thing
 
         /// <summary>
         /// Gets or sets the search filter to filter on the application that
-        /// created the health record item.
+        /// created the thing.
         /// </summary>
         ///
         /// <remarks>
@@ -858,7 +858,7 @@ namespace Microsoft.HealthVault.Thing
                 string versionStamp
                     = thingIdNav.GetAttribute("version-stamp", string.Empty);
                 filter.ItemKeys.Add(
-                    new HealthRecordItemKey(
+                    new ThingKey(
                         new Guid(thingIdNav.Value),
                             new Guid(versionStamp)));
             }
@@ -1016,7 +1016,7 @@ namespace Microsoft.HealthVault.Thing
                 XPathNodeIterator orderByIterator = orderByNav.Select("order-by-property");
                 foreach (XPathNavigator orderByPropertyNav in orderByIterator)
                 {
-                    var orderByClause = new HealthRecordItemsOrderByClause
+                    var orderByClause = new ThingOrderByClause
                     {
                         ThingTypeId = new Guid(orderByPropertyNav.GetAttribute("type-id", string.Empty)),
                         Name = orderByPropertyNav.GetAttribute("property-name", string.Empty)
@@ -1094,7 +1094,7 @@ namespace Microsoft.HealthVault.Thing
                 writer.WriteElementString("id", id.ToString());
             }
 
-            foreach (HealthRecordItemKey key in this.ItemKeys)
+            foreach (ThingKey key in this.ItemKeys)
             {
                 // Add the <key> tag to the filter group
                 writer.WriteStartElement("key");
@@ -1182,20 +1182,20 @@ namespace Microsoft.HealthVault.Thing
                     }
                 }
 
-                if ((this.States & HealthRecordItemStates.Active) != 0)
+                if ((this.States & ThingStates.Active) != 0)
                 {
                     // <thing-state>
                     writer.WriteElementString(
                         "thing-state",
-                        HealthRecordItemState.Active.ToString());
+                        ThingState.Active.ToString());
                 }
 
-                if ((this.States & HealthRecordItemStates.Deleted) != 0)
+                if ((this.States & ThingStates.Deleted) != 0)
                 {
                     // <thing-state>
                     writer.WriteElementString(
                         "thing-state",
-                        HealthRecordItemState.Deleted.ToString());
+                        ThingState.Deleted.ToString());
                 }
 
                 if (this.effectiveDateMin != null)
@@ -1310,7 +1310,7 @@ namespace Microsoft.HealthVault.Thing
         private bool AreFiltersPresent()
         {
             return (this.typeIds.Count > 0)
-                   || (this.States & HealthRecordItemStates.Default) != this.States
+                   || (this.States & ThingStates.Default) != this.States
                    || (this.effectiveDateMin != null)
                    || (this.effectiveDateMax != null)
                    || (this.updatedDateMin != null)

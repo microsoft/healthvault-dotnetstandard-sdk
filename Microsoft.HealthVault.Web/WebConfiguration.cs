@@ -418,7 +418,7 @@ namespace Microsoft.HealthVault.Web
 
         /// <summary>
         /// Gets the number of items that are shown per page when using the 
-        /// <see cref="HealthRecordItemDataGrid"/>.
+        /// <see cref="ThingDataGrid"/>.
         /// </summary>
         /// 
         /// <remarks>

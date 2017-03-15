@@ -18,7 +18,7 @@ namespace Microsoft.HealthVault.ItemTypes
     /// For recurrence rules that cannot be expressed using iCalendar recurrence format, use interval and times-in-interval fields. Ex: Two times in a week.
     /// </remarks>
     ///
-    public class CarePlanTaskRecurrence : HealthRecordItemData
+    public class CarePlanTaskRecurrence : ItemBase
     {
         /// <summary>
         /// Populates this <see cref="CarePlanTaskRecurrence"/> instance from the data in the specified XML.

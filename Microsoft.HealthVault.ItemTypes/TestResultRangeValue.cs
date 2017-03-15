@@ -23,7 +23,7 @@ namespace Microsoft.HealthVault.ItemTypes
     /// </remarks>
     ///
     ///
-    public class TestResultRangeValue : HealthRecordItemData
+    public class TestResultRangeValue : ItemBase
     {
         /// <summary>
         /// Populates the data for the range from the XML.

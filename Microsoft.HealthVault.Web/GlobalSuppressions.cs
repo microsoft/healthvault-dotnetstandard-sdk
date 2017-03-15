@@ -8,7 +8,7 @@
 using System.Diagnostics.CodeAnalysis;
 
 [module: SuppressMessage("Microsoft.Security.Web", "CA3007:ReviewCodeForOpenRedirectVulnerabilities", Scope = "member", Target = "Microsoft.HealthVault.Web.WebApplicationUtilities.#RedirectToShellUrl(System.Web.HttpContext,Microsoft.HealthVault.ShellRedirectParameters)")]
-[module: SuppressMessage("Microsoft.Security.Web", "CA3002:ReviewCodeForXssVulnerabilities", Scope = "member", Target = "Microsoft.HealthVault.Web.HealthRecordItemDataGrid.#OnRowDataBound(System.Object,System.Web.UI.WebControls.GridViewRowEventArgs)")]
+[module: SuppressMessage("Microsoft.Security.Web", "CA3002:ReviewCodeForXssVulnerabilities", Scope = "member", Target = "Microsoft.HealthVault.Web.ThingDataGrid.#OnRowDataBound(System.Object,System.Web.UI.WebControls.GridViewRowEventArgs)")]
 [module: SuppressMessage("Microsoft.Security.Web", "CA3007:ReviewCodeForOpenRedirectVulnerabilities", Scope = "member", Target = "Microsoft.HealthVault.Web.HealthServiceActionPage.#OnActionUnknown(System.String,System.String)")]
 [module: SuppressMessage("Microsoft.Security.Cryptography", "CA5357:RijndaelCannotBeUsed", Scope = "member", Target = "Microsoft.HealthVault.Web.WebApplicationUtilities.#GetEncryptionAlgorithm()")]
 [module: SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes", Scope = "member", Target = "Microsoft.HealthVault.Web.HealthServiceActionPage.#OnActionUnknown(System.String,System.String)")]
@@ -32,7 +32,7 @@ using System.Diagnostics.CodeAnalysis;
 [module: SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", Scope = "member", Target = "Microsoft.HealthVault.Web.WebApplicationUtilities.#PageOnPreLoad(System.Web.HttpContext,System.Boolean,System.Boolean)", MessageId = "Mra")]
 [module: SuppressMessage("Microsoft.Naming", "CA1702:CompoundWordsShouldBeCasedCorrectly", Scope = "member", Target = "Microsoft.HealthVault.Web.WebApplicationUtilities.#PageOnPreLoad(System.Web.HttpContext,System.Boolean,System.Boolean)", MessageId = "PreLoad")]
 [module: SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", Scope = "member", Target = "Microsoft.HealthVault.Web.WebApplicationUtilities.#RedirectToLogOn(System.Web.HttpContext,System.Boolean,System.String,System.String)", MessageId = "Mra")]
-[module: SuppressMessage("Microsoft.Naming", "CA1726:UsePreferredTerms", Scope = "member", Target = "Microsoft.HealthVault.Web.HealthRecordItemDataGrid.#ShowIsPersonalFlag", MessageId = "Flag")]
+[module: SuppressMessage("Microsoft.Naming", "CA1726:UsePreferredTerms", Scope = "member", Target = "Microsoft.HealthVault.Web.ThingDataGrid.#ShowIsPersonalFlag", MessageId = "Flag")]
 [module: SuppressMessage("Microsoft.Performance", "CA1824:MarkAssembliesWithNeutralResourcesLanguage")]
 [module: SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Scope = "member", Target = "Microsoft.HealthVault.Web.HealthServicePage.#RedirectToShellUrl(System.String,System.String,System.String)")]
 [module: SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Scope = "member", Target = "Microsoft.HealthVault.Web.HealthServicePage.#RedirectToShellUrl(System.String,System.String)")]
@@ -51,4 +51,4 @@ using System.Diagnostics.CodeAnalysis;
 [module: SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope", Scope = "member", Target = "Microsoft.HealthVault.Web.WebApplicationUtilities.#CompressInternal(System.String,System.Int32&)")]
 [module: SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope", Scope = "member", Target = "Microsoft.HealthVault.Web.WebApplicationUtilities.#UnmarshalCookieVersion2(System.String)")]
 [module: SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope", Scope = "member", Target = "Microsoft.HealthVault.Web.GridViewAuditActionTemplate.#InstantiateIn(System.Web.UI.Control)")]
-[module: SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope", Scope = "member", Target = "Microsoft.HealthVault.Web.HealthRecordItemDataGrid.#AddActionLinksToContainer(System.Web.UI.Control,System.Int32,Microsoft.HealthVault.Web.ActionTemplate)")]
+[module: SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope", Scope = "member", Target = "Microsoft.HealthVault.Web.ThingDataGrid.#AddActionLinksToContainer(System.Web.UI.Control,System.Int32,Microsoft.HealthVault.Web.ActionTemplate)")]

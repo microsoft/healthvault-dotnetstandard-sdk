@@ -13,7 +13,7 @@ namespace Microsoft.HealthVault.ItemTypes
     /// <summary>
     /// Represents the details of a single image in a series.
     /// </summary>
-    public class MedicalImageStudySeriesImage : HealthRecordItemData
+    public class MedicalImageStudySeriesImage : ItemBase
     {
         /// <summary>
         /// Creates a new instance of the <see cref="MedicalImageStudySeriesImage"/> class with default values.

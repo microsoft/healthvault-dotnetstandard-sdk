@@ -12,7 +12,7 @@ namespace Microsoft.HealthVault.ItemTypes
     /// <summary>
     /// Represents the collection of message strings associated with this Insight.
     /// </summary>
-    public class InsightMessages : HealthRecordItemData
+    public class InsightMessages : ItemBase
     {
         /// <summary>
         /// Populates the data for insight messages from the XML.

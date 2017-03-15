@@ -19,7 +19,7 @@ namespace Microsoft.HealthVault.ItemTypes
     /// a triathlon.
     /// </remarks>
     ///
-    public class ExerciseSegment : HealthRecordItemData
+    public class ExerciseSegment : ItemBase
     {
         /// <summary>
         /// Creates a new instance of the <see cref="ExerciseSegment"/> class

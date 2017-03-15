@@ -19,7 +19,7 @@ namespace Microsoft.HealthVault.Web
             NameValueCollection appSettings = WebConfigurationManager.AppSettings;
             WebConfiguration config = new WebConfiguration
             {
-                ApplicationId = appSettings.GetGuid("ApplicationId"),
+                MasterApplicationId = appSettings.GetGuid("ApplicationId"),
                 DefaultHealthVaultShellUrl = appSettings.GetUrl("ShellUrl", true)
                
                 // TODO: finish populating the config!

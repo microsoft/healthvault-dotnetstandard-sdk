@@ -8,19 +8,19 @@ using System;
 namespace Microsoft.HealthVault.Thing
 {
     /// <summary>
-    /// Represents the version information for a health record item type.
+    /// Represents the version information for a thing type.
     /// </summary>
-    public class HealthRecordItemTypeVersionInfo
+    public class ThingTypeVersionInfo
     {
-        private HealthRecordItemTypeVersionInfo()
+        private ThingTypeVersionInfo()
         {
         }
 
-        internal HealthRecordItemTypeVersionInfo(
+        internal ThingTypeVersionInfo(
             Guid versionTypeId,
             string versionName,
             int versionSequence,
-            HealthRecordItemTypeOrderByProperties orderByProperties)
+            ThingTypeOrderByProperties orderByProperties)
         {
             this.VersionTypeId = versionTypeId;
             this.Name = versionName;
@@ -29,17 +29,17 @@ namespace Microsoft.HealthVault.Thing
         }
 
         /// <summary>
-        /// Gets the unique identifier for the versioned health record item type.
+        /// Gets the unique identifier for the versioned thing type.
         /// </summary>
         public Guid VersionTypeId { get; }
 
         /// <summary>
-        /// Gets the name for this version of the health record item type.
+        /// Gets the name for this version of the thing type.
         /// </summary>
         public string Name { get; }
 
         /// <summary>
-        /// Gets the sequence number for the health record item type version.
+        /// Gets the sequence number for the thing type version.
         /// </summary>
         /// <remarks>
         /// The sequence number starts at one and is incremented for each new version
@@ -51,6 +51,6 @@ namespace Microsoft.HealthVault.Thing
         /// The set of properties that the thing-type can be
         /// ordered by in the result.
         /// </summary>
-        public HealthRecordItemTypeOrderByProperties OrderByProperties { get; }
+        public ThingTypeOrderByProperties OrderByProperties { get; }
     }
 }

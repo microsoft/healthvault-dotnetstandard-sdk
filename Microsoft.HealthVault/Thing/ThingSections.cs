@@ -9,39 +9,39 @@ namespace Microsoft.HealthVault.Thing
 {
     /// <summary>
     /// The section that will be or were retrieved when accessing
-    /// a <see cref="HealthRecordItem"/>.
+    /// a <see cref="ThingBase"/>.
     /// </summary>
     ///
     /// <remarks>
     /// To enable efficient use of the network, the HealthVault service
-    /// retrieves only those portions of a <see cref="HealthRecordItem"/> that
+    /// retrieves only those portions of a <see cref="ThingBase"/> that
     /// the application needs.
     /// These sections are identified in the <see cref="HealthRecordView"/>
-    /// when performing a search, and are specified on a <see cref="HealthRecordItem"/>
+    /// when performing a search, and are specified on a <see cref="ThingBase"/>
     /// when the item is retrieved.
     /// When <see cref="HealthRecordAccessor.UpdateItemsAsync"/> is called,
     /// only specified sections are updated.
     /// </remarks>
     ///
     [Flags]
-    public enum HealthRecordItemSections
+    public enum ThingSections
     {
         /// <summary>
         /// No sections are retrieved or represented in the
-        /// <see cref="HealthRecordItem"/> object.
+        /// <see cref="ThingBase"/> object.
         /// </summary>
         ///
         None = 0x0,
 
         /// <summary>
-        /// The Core section of the <see cref="HealthRecordItem"/>
+        /// The Core section of the <see cref="ThingBase"/>
         /// is retrieved.
         /// </summary>
         ///
         Core = 0x1,
 
         /// <summary>
-        /// The Audits section of the <see cref="HealthRecordItem"/>
+        /// The Audits section of the <see cref="ThingBase"/>
         /// is retrieved.
         /// </summary>
         ///
@@ -49,27 +49,27 @@ namespace Microsoft.HealthVault.Thing
 
         /// <summary>
         /// The EffectivePermissions section is retrieved, showing the
-        /// permission granted to the caller of the <see cref="HealthRecordItem"/>.
+        /// permission granted to the caller of the <see cref="ThingBase"/>.
         /// </summary>
         ///
         EffectivePermissions = 0x4,
 
         /// <summary>
-        /// The BlobPayload section of the <see cref="HealthRecordItem"/>
+        /// The BlobPayload section of the <see cref="ThingBase"/>
         /// is retrieved.
         /// </summary>
         ///
         BlobPayload = 0x8,
 
         /// <summary>
-        /// The Signature section of the <see cref="HealthRecordItem"/>
+        /// The Signature section of the <see cref="ThingBase"/>
         /// is retrieved.
         /// </summary>
         ///
         Signature = 0x10,
 
         /// <summary>
-        /// The Tags section of the <see cref="HealthRecordItem"/>
+        /// The Tags section of the <see cref="ThingBase"/>
         /// is retrieved.
         /// </summary>
         ///
@@ -87,14 +87,14 @@ namespace Microsoft.HealthVault.Thing
         Xml = 0x1000000,
 
         /// <summary>
-        /// All sections of the <see cref="HealthRecordItem"/>
+        /// All sections of the <see cref="ThingBase"/>
         /// are retrieved.
         /// </summary>
         ///
         All = Core | Audits | EffectivePermissions | BlobPayload | Xml | Signature | Tags,
 
         /// <summary>
-        /// Default sections <see cref="HealthRecordItem"/>
+        /// Default sections <see cref="ThingBase"/>
         /// are retrieved.
         /// </summary>
         ///

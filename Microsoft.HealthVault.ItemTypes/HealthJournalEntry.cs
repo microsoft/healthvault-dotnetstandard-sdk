@@ -16,7 +16,7 @@ namespace Microsoft.HealthVault.ItemTypes
     /// Information related to a health journal entry.
     /// </summary>
     ///
-    public class HealthJournalEntry : HealthRecordItem
+    public class HealthJournalEntry : ThingBase
     {
         /// <summary>
         /// Creates a new instance of the <see cref="HealthJournalEntry"/> class with default values.
@@ -24,7 +24,7 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         /// <remarks>
         /// This item is not added to the health record until the
-        /// <see cref="HealthRecordAccessor.NewItem(HealthRecordItem)"/> method
+        /// <see cref="HealthRecordAccessor.NewItem(ThingBase)"/> method
         /// is called.
         /// </remarks>
         ///
@@ -40,7 +40,7 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         /// <remarks>
         /// This item is not added to the health record until the
-        /// <see cref="HealthRecordAccessor.NewItem(HealthRecordItem)"/> method
+        /// <see cref="HealthRecordAccessor.NewItem(ThingBase)"/> method
         /// is called.
         /// </remarks>
         ///

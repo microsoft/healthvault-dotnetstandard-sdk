@@ -39,11 +39,11 @@ namespace Microsoft.HealthVault.Helpers
                     parameterName);
         }
 
-        private static HealthRecordItemSerializationException HealthRecordItemSerializationException(
+        private static ThingSerializationException HealthRecordItemSerializationException(
             Assembly assembly,
             string resourceId)
         {
-            return new HealthRecordItemSerializationException(
+            return new ThingSerializationException(
                     GetResourceString(assembly, resourceId));
         }
 
@@ -82,7 +82,7 @@ namespace Microsoft.HealthVault.Helpers
             return ArgumentException(typeof(Validator).GetTypeInfo().Assembly, parameterName, resourceId);
         }
 
-        public static HealthRecordItemSerializationException HealthRecordItemSerializationException(string resourceId)
+        public static ThingSerializationException HealthRecordItemSerializationException(string resourceId)
         {
             return HealthRecordItemSerializationException(typeof(Validator).GetTypeInfo().Assembly, resourceId);
         }
@@ -147,11 +147,11 @@ namespace Microsoft.HealthVault.Helpers
                         webExceptionStatus);
         }
 
-        public static HealthRecordItemDeserializationException HealthRecordItemDeserializationException(
+        public static ThingDeserializationException HealthRecordItemDeserializationException(
             string resourceId,
             Exception innerException)
         {
-            return new HealthRecordItemDeserializationException(
+            return new ThingDeserializationException(
                     GetResourceString(typeof(Validator).GetTypeInfo().Assembly, resourceId),
                     innerException);
         }

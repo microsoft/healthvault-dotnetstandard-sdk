@@ -28,6 +28,6 @@ namespace Microsoft.HealthVault.Client
         /// <exception cref="InvalidOperationException">Thrown when called before calling <see cref="SetConfiguration"/> with required values.</exception>
         /// <remarks>This will perform any authentication needed to create the connection, including
         /// opening a web browser to prompt for credentials/consent.</remarks>
-        Task<IHealthVaultConnection> GetConnectionAsync();
+        Task<IClientHealthVaultConnection> GetConnectionAsync();
     }
 }

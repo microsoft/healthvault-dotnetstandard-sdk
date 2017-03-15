@@ -15,7 +15,7 @@ namespace Microsoft.HealthVault.ItemTypes
     /// <summary>
     /// The financial information related to a claim on an explanation of benefits.
     /// </summary>
-    public class ClaimAmounts : HealthRecordItemData
+    public class ClaimAmounts : ItemBase
     {
         /// <summary>
         /// Creates a new instance of the <see cref="ClaimAmounts"/> class with default values.
@@ -23,7 +23,7 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         /// <remarks>
         /// This item is not added to the health record until the
-        /// <see cref="HealthRecordAccessor.NewItemAsync(HealthRecordItem)"/> method
+        /// <see cref="HealthRecordAccessor.NewItemAsync(ThingBase)"/> method
         /// is called
         /// </remarks>
         public ClaimAmounts()
@@ -36,7 +36,7 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         /// <remarks>
         /// This item is not added to the health record until the
-        /// <see cref="HealthRecordAccessor.NewItemAsync(HealthRecordItem)"/> method
+        /// <see cref="HealthRecordAccessor.NewItemAsync(ThingBase)"/> method
         /// is called
         /// </remarks>
         ///

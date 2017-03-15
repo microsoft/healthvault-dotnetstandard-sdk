@@ -16,7 +16,7 @@ namespace Microsoft.HealthVault.ItemTypes
     /// A goal defines a target for a measurement.
     /// </summary>
     ///
-    public class CarePlanGoal : HealthRecordItemData
+    public class CarePlanGoal : ItemBase
     {
         /// <summary>
         /// Creates a new instance of the <see cref="CarePlanGoal"/> class with default values.

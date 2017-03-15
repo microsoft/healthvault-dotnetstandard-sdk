@@ -8,7 +8,7 @@ using System;
 namespace Microsoft.HealthVault.ItemTypes
 {
     /// <summary>
-    /// Represents a health record item type that encapsulates action plan
+    /// Represents a thing type that encapsulates action plan
     /// related object.
     /// </summary>
     public class ActionPlanWrapper : MshItemBase

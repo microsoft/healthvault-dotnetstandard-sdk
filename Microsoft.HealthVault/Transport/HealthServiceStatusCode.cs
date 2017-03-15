@@ -504,7 +504,7 @@ namespace Microsoft.HealthVault.Transport
         InvalidPersonOrGroupId = 67,
 
         /// <summary>
-        /// The size occupied by the <see cref="HealthRecordItem"/>s in the request will cause the
+        /// The size occupied by the <see cref="ThingBase"/>s in the request will cause the
         /// <see cref="HealthRecordInfo"/> to exceed the size quota allotted to it.
         /// </summary>
         ///
@@ -1119,7 +1119,7 @@ namespace Microsoft.HealthVault.Transport
         InvalidThingOrderSpecs = 180,
 
         /// <summary>
-        /// HealthRecordItem sort functionality is not enabled.
+        /// ThingBase sort functionality is not enabled.
         /// </summary>
         ThingSortNotEnabled = 181,
 

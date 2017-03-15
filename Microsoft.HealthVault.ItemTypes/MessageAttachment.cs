@@ -13,7 +13,7 @@ namespace Microsoft.HealthVault.ItemTypes
     /// An attachment to the message.
     /// </summary>
     ///
-    public class MessageAttachment : HealthRecordItemData
+    public class MessageAttachment : ItemBase
     {
         /// <summary>
         /// Creates a new instance of the <see cref="MessageAttachment"/> class with default values.

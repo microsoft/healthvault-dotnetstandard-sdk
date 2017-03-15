@@ -15,7 +15,7 @@ namespace Microsoft.HealthVault.ItemTypes
     /// Represents a grouping of heart rate zones by name.
     /// </summary>
     ///
-    public class HeartRateZoneGroup : HealthRecordItemData
+    public class HeartRateZoneGroup : ItemBase
     {
         /// <summary>
         /// Creates a new instance of the <see cref="HeartRateZoneGroup"/> class with

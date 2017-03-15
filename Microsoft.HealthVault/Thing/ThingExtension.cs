@@ -13,32 +13,32 @@ using Microsoft.HealthVault.Helpers;
 namespace Microsoft.HealthVault.Thing
 {
     /// <summary>
-    /// Represents an extension to a health record item.
+    /// Represents an extension to a thing.
     /// </summary>
     ///
     /// <remarks>
     /// Applications can augment the HealthVault defined data for a
-    /// health record item type with application or vendor specific data by
+    /// thing type with application or vendor specific data by
     /// implementing item extensions.
     /// <br/><br/>
-    /// Applications that implement a health record item extension should
+    /// Applications that implement a thing extension should
     /// derive from this class and register their extension by calling
     /// <see cref="ItemTypeManager.RegisterExtensionHandler(string, Type)"/>.
     /// Whenever the HealthVault SDK reads an extension with the specified
-    /// extension source an instance of the derived HealthRecordItemExtension will be
-    /// created and it's <see cref="HealthRecordItemExtension.ParseXml(IXPathNavigable)"/>
+    /// extension source an instance of the derived ThingExtension will be
+    /// created and it's <see cref="ThingExtension.ParseXml(IXPathNavigable)"/>
     /// method will be called to populate the data of the class from the
     /// web-service XML.
     /// Common portions of the item extension data will be parsed by the base
     /// class and exposed as properties.
     /// </remarks>
     ///
-    public class HealthRecordItemExtension
+    public class ThingExtension
     {
         #region ctors
 
         /// <summary>
-        /// Constructs a health record item extension for the specified source.
+        /// Constructs a thing extension for the specified source.
         /// </summary>
         ///
         /// <param name="source">
@@ -50,7 +50,7 @@ namespace Microsoft.HealthVault.Thing
         /// If <paramref name="source"/> is null or empty.
         /// </exception>
         ///
-        public HealthRecordItemExtension(string source)
+        public ThingExtension(string source)
             : this()
         {
             Validator.ThrowIfStringNullOrEmpty(source, "source");
@@ -61,7 +61,7 @@ namespace Microsoft.HealthVault.Thing
         /// Constructor used when creating an instance for XML deserialization.
         /// </summary>
         ///
-        public HealthRecordItemExtension()
+        public ThingExtension()
         {
             this.extensionData = new XDocument();
         }
@@ -134,7 +134,7 @@ namespace Microsoft.HealthVault.Thing
         /// The writer to write the extension XML to.
         /// </param>
         ///
-        /// <exception cref="HealthRecordItemSerializationException">
+        /// <exception cref="ThingSerializationException">
         /// If <see cref="Source"/> is null or empty.
         /// </exception>
         ///
@@ -248,7 +248,7 @@ namespace Microsoft.HealthVault.Thing
         /// <remarks>
         /// The logo is optional and will be ignored if set to null.
         /// <br/><br/>
-        /// In some applications a generic view of the health record item will be
+        /// In some applications a generic view of the thing will be
         /// shown. If a logo is provided on an extension those applications
         /// can embed the logo in the user interface to show the user that
         /// there is additional data. It can also be used along with the
@@ -266,7 +266,7 @@ namespace Microsoft.HealthVault.Thing
         /// <remarks>
         /// The transform is optional and will be ignored if set to null.
         /// <br/><br/>
-        /// In some applications a generic view of the health record item will be
+        /// In some applications a generic view of the thing will be
         /// shown. In such applications the extension data can be rendered as
         /// HTML using the specified transform. Applications should consider the
         /// security implications of running external transforms within the application

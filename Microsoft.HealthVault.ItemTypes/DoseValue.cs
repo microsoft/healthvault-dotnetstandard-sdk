@@ -13,7 +13,7 @@ namespace Microsoft.HealthVault.ItemTypes
     /// Represents a medicinal dose value.
     /// </summary>
     ///
-    public class DoseValue : HealthRecordItemData
+    public class DoseValue : ItemBase
     {
         /// <summary>
         /// Creates a new instance of the <see cref="DoseValue"/> class with empty values.

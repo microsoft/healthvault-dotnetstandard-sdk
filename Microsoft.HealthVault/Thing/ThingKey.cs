@@ -9,19 +9,19 @@ using Microsoft.HealthVault.Helpers;
 namespace Microsoft.HealthVault.Thing
 {
     /// <summary>
-    /// Uniquely identifies a health record item in the system.
+    /// Uniquely identifies a thing in the system.
     /// </summary>
     ///
-    public class HealthRecordItemKey
+    public class ThingKey
     {
         /// <summary>
-        /// Creates a new instance of the <see cref="HealthRecordItem"/>
+        /// Creates a new instance of the <see cref="ThingBase"/>
         /// class with the specified globally unique ID for the
-        /// <see cref="HealthRecordItem"/> and globally unique version stamp.
+        /// <see cref="ThingBase"/> and globally unique version stamp.
         /// </summary>
         ///
         /// <param name="id">
-        /// A globally unique identifier for the <see cref="HealthRecordItem"/>
+        /// A globally unique identifier for the <see cref="ThingBase"/>
         /// in the system.
         /// </param>
         ///
@@ -35,7 +35,7 @@ namespace Microsoft.HealthVault.Thing
         /// parameter is Guid.Empty.
         /// </exception>
         ///
-        public HealthRecordItemKey(Guid id, Guid versionStamp)
+        public ThingKey(Guid id, Guid versionStamp)
         {
             Validator.ThrowArgumentExceptionIf(
                 id == Guid.Empty,
@@ -52,9 +52,9 @@ namespace Microsoft.HealthVault.Thing
         }
 
         /// <summary>
-        /// Creates a new instance of the <see cref="HealthRecordItem"/>
+        /// Creates a new instance of the <see cref="ThingBase"/>
         /// class with the specified globally unique ID for the
-        /// <see cref="HealthRecordItem"/>.
+        /// <see cref="ThingBase"/>.
         /// </summary>
         ///
         /// <param name="id">
@@ -66,7 +66,7 @@ namespace Microsoft.HealthVault.Thing
         /// If <paramref name="id"/> is Guid.Empty.
         /// </exception>
         ///
-        public HealthRecordItemKey(Guid id)
+        public ThingKey(Guid id)
         {
             Validator.ThrowArgumentExceptionIf(
                 id == Guid.Empty,
@@ -77,11 +77,11 @@ namespace Microsoft.HealthVault.Thing
         }
 
         /// <summary>
-        /// Gets the unique identifier of the <see cref="HealthRecordItem"/>.
+        /// Gets the unique identifier of the <see cref="ThingBase"/>.
         /// </summary>
         ///
         /// <value>
-        /// A globally unique identifier for the <see cref="HealthRecordItem"/>,
+        /// A globally unique identifier for the <see cref="ThingBase"/>,
         /// issued when the item is created.
         /// </value>
         ///
@@ -90,17 +90,17 @@ namespace Microsoft.HealthVault.Thing
         private Guid thingId;
 
         /// <summary>
-        /// Gets the unique version stamp of the <see cref="HealthRecordItem"/>.
+        /// Gets the unique version stamp of the <see cref="ThingBase"/>.
         /// </summary>
         ///
         /// <value>
         /// A globally unique identifier that represents the version of the
-        /// <see cref="HealthRecordItem"/>. A new version stamp is issued each
+        /// <see cref="ThingBase"/>. A new version stamp is issued each
         /// time the item is changed.
         /// </value>
         ///
         /// <remarks>
-        /// The version stamp of the current version of a <see cref="HealthRecordItem"/>
+        /// The version stamp of the current version of a <see cref="ThingBase"/>
         /// is always equal to the <see cref="Id"/> of that item.
         /// </remarks>
         ///
@@ -127,22 +127,22 @@ namespace Microsoft.HealthVault.Thing
         }
 
         /// <summary>
-        /// Compares one <see cref="HealthRecordItemKey"/> to another.
+        /// Compares one <see cref="ThingKey"/> to another.
         /// </summary>
         ///
         /// <param name="obj">
-        /// The <see cref="HealthRecordItemKey"/> to compare against this.
+        /// The <see cref="ThingKey"/> to compare against this.
         /// </param>
         ///
         /// <returns>
-        /// <b>true</b> if both the health record item keys have
+        /// <b>true</b> if both the thing keys have
         /// the same ID and version stamp; otherwise, <b>false</b>.
         /// </returns>
         ///
         public override bool Equals(object obj)
         {
             bool result = false;
-            HealthRecordItemKey rVal = obj as HealthRecordItemKey;
+            ThingKey rVal = obj as ThingKey;
 
             if (rVal != null)
             {

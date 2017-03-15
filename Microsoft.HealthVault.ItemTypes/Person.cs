@@ -12,11 +12,11 @@ using Microsoft.HealthVault.Thing;
 namespace Microsoft.HealthVault.ItemTypes
 {
     /// <summary>
-    /// Represents a health record item type that encapsulates non-identifying
+    /// Represents a thing type that encapsulates non-identifying
     /// information about a person.
     /// </summary>
     ///
-    public class Person : HealthRecordItem
+    public class Person : ThingBase
     {
         /// <summary>
         /// Creates a new instance of the <see cref="Person"/> class with default values.
@@ -24,7 +24,7 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         /// <remarks>
         /// The item is not added to the health record until the
-        /// <see cref="HealthRecordAccessor.NewItem(HealthRecordItem)"/> method
+        /// <see cref="HealthRecordAccessor.NewItem(ThingBase)"/> method
         /// is called.
         /// </remarks>
         ///

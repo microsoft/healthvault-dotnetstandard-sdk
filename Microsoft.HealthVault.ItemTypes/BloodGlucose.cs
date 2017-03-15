@@ -13,19 +13,19 @@ using Microsoft.HealthVault.Thing;
 namespace Microsoft.HealthVault.ItemTypes
 {
     /// <summary>
-    /// Health record item type that represents a blood glucose measurement.
+    /// thing type that represents a blood glucose measurement.
     /// </summary>
     ///
-    public class BloodGlucose : HealthRecordItem
+    public class BloodGlucose : ThingBase
     {
         /// <summary>
-        /// Constructs a new BloodGlucose health record item instance with
+        /// Constructs a new BloodGlucose thing instance with
         /// default values.
         /// </summary>
         ///
         /// <remarks>
         /// The item isn't added to the health record until the
-        /// <see cref="HealthRecordAccessor.NewItem(HealthRecordItem)"/> method
+        /// <see cref="HealthRecordAccessor.NewItem(ThingBase)"/> method
         /// is called.
         /// </remarks>
         ///
@@ -35,7 +35,7 @@ namespace Microsoft.HealthVault.ItemTypes
         }
 
         /// <summary>
-        /// Constructs the new blood glucose health record item instance
+        /// Constructs the new blood glucose thing instance
         /// specifying the mandatory values.
         /// </summary>
         ///

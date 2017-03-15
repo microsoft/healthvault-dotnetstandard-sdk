@@ -3,6 +3,12 @@
 // see http://www.microsoft.com/resources/sharedsource/licensingbasics/sharedsourcelicenses.mspx.
 // All other rights reserved.
 
+using Microsoft.HealthVault.Connection;
+using Microsoft.HealthVault.Exceptions;
+using Microsoft.HealthVault.Helpers;
+using Microsoft.HealthVault.Person;
+using Microsoft.HealthVault.Record;
+using Microsoft.HealthVault.Transport;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -11,12 +17,6 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.XPath;
-using Microsoft.HealthVault.Connection;
-using Microsoft.HealthVault.Exceptions;
-using Microsoft.HealthVault.Helpers;
-using Microsoft.HealthVault.Person;
-using Microsoft.HealthVault.Record;
-using Microsoft.HealthVault.Transport;
 
 namespace Microsoft.HealthVault.Application
 {
@@ -184,14 +184,12 @@ namespace Microsoft.HealthVault.Application
                 "numResults",
                 "GetAuthorizedPeopleNumResultsNegative");
 
-            HealthServiceRequest request =
-                new HealthServiceRequest(connection, HealthVaultMethods.GetAuthorizedPeople, 1);
-            StringBuilder requestParameters = new StringBuilder(256);
+            StringBuilder parameters = new StringBuilder(256);
             XmlWriterSettings settings = SDKHelper.XmlUnicodeWriterSettings;
             settings.OmitXmlDeclaration = true;
             settings.ConformanceLevel = ConformanceLevel.Fragment;
 
-            using (XmlWriter writer = XmlWriter.Create(requestParameters, settings))
+            using (XmlWriter writer = XmlWriter.Create(parameters, settings))
             {
                 writer.WriteStartElement("parameters");
 
@@ -216,9 +214,7 @@ namespace Microsoft.HealthVault.Application
                 writer.Flush();
             }
 
-            request.Parameters = requestParameters.ToString();
-
-            HealthServiceResponseData responseData = await request.ExecuteAsync().ConfigureAwait(false);
+            HealthServiceResponseData responseData = await connection.ExecuteAsync(HealthVaultMethods.GetAuthorizedPeople, 1, parameters.ToString()).ConfigureAwait(false);
 
             Collection<PersonInfo> personInfos = new Collection<PersonInfo>();
 
@@ -289,15 +285,9 @@ namespace Microsoft.HealthVault.Application
             IConnectionInternal connection,
             bool allLanguages)
         {
-            HealthServiceRequest request =
-                new HealthServiceRequest(connection, HealthVaultMethods.GetApplicationInfo, 2);
+            string parameters = allLanguages ? "<all-languages>true</all-languages>" : null;
 
-            if (allLanguages)
-            {
-                request.Parameters += "<all-languages>true</all-languages>";
-            }
-
-            HealthServiceResponseData responseData = await request.ExecuteAsync().ConfigureAwait(false);
+            HealthServiceResponseData responseData = await connection.ExecuteAsync(HealthVaultMethods.GetApplicationInfo, 2, parameters).ConfigureAwait(false);
 
             XPathExpression xPathExpression = SDKHelper.GetInfoXPathExpressionForMethod(
                     responseData.InfoNavigator, "GetApplicationInfo");
@@ -340,12 +330,10 @@ namespace Microsoft.HealthVault.Application
             IConnectionInternal connection,
             DateTime? updatedDate)
         {
-            HealthServiceRequest request =
-                CreateGetUpdateRecordsForApplicationRequest(connection, updatedDate, 2);
+            string parameters = this.GetUpdateDateParameters(updatedDate);
 
-            HealthServiceResponseData responseData = await request.ExecuteAsync().ConfigureAwait(false);
-            IList<Guid> results = ParseGetUpdatedRecordsForApplicationResponseRecordIds(responseData);
-            return results;
+            HealthServiceResponseData responseData = await connection.ExecuteAsync(HealthVaultMethods.GetUpdatedRecordsForApplication, 2, parameters).ConfigureAwait(false);
+            return ParseGetUpdatedRecordsForApplicationResponseRecordIds(responseData);
         }
 
         /// <summary>
@@ -369,35 +357,15 @@ namespace Microsoft.HealthVault.Application
             IConnectionInternal connection,
             DateTime? updatedDate)
         {
-            HealthServiceRequest request =
-                CreateGetUpdateRecordsForApplicationRequest(connection, updatedDate, 2);
+            string parameters = this.GetUpdateDateParameters(updatedDate);
 
-            HealthServiceResponseData responseData = await request.ExecuteAsync().ConfigureAwait(false);
-            IList<HealthRecordUpdateInfo> results =
-                ParseGetUpdatedRecordsForApplicationResponseHealthRecordUpdateInfos(responseData);
-            return results;
+            HealthServiceResponseData responseData = await connection.ExecuteAsync(HealthVaultMethods.GetUpdatedRecordsForApplication, 2, parameters).ConfigureAwait(false);
+            return ParseGetUpdatedRecordsForApplicationResponseHealthRecordUpdateInfos(responseData);
         }
 
-        private static HealthServiceRequest CreateGetUpdateRecordsForApplicationRequest(
-            IConnectionInternal connection,
-            DateTime? updateDate,
-            int methodVersion)
+        private string GetUpdateDateParameters(DateTime? updateDate)
         {
-            HealthServiceRequest request =
-                new HealthServiceRequest(connection, HealthVaultMethods.GetUpdatedRecordsForApplication, methodVersion);
-
-            StringBuilder parameters = new StringBuilder();
-
-            if (updateDate != null)
-            {
-                parameters.Append("<update-date>");
-                parameters.Append(SDKHelper.XmlFromDateTime(updateDate.Value));
-                parameters.Append("</update-date>");
-            }
-
-            request.Parameters = parameters.ToString();
-
-            return request;
+            return updateDate == null ? null : $"<update-date>{SDKHelper.XmlFromDateTime(updateDate.Value)}</update-date>";
         }
 
         private static IList<Guid> ParseGetUpdatedRecordsForApplicationResponseRecordIds(HealthServiceResponseData response)
@@ -457,9 +425,7 @@ namespace Microsoft.HealthVault.Application
         ///
         public virtual async Task<string> NewSignupCodeAsync(IConnectionInternal connection)
         {
-            HealthServiceRequest request =
-                new HealthServiceRequest(connection, HealthVaultMethods.NewSignupCode, 1);
-            HealthServiceResponseData responseData = await request.ExecuteAsync().ConfigureAwait(false);
+            HealthServiceResponseData responseData = await connection.ExecuteAsync(HealthVaultMethods.NewSignupCode, 1).ConfigureAwait(false);
 
             XPathExpression infoPath = SDKHelper.GetInfoXPathExpressionForMethod(responseData.InfoNavigator, "NewSignupCode");
 

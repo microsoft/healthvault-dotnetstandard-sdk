@@ -23,7 +23,7 @@ namespace Microsoft.HealthVault.ItemTypes
     /// For adults, it might be used to record the date of an accident or progress through a rehabilitation.
     /// </remarks>
     ///
-    public class HealthEvent : HealthRecordItem
+    public class HealthEvent : ThingBase
     {
         /// <summary>
         /// Creates a new instance of the <see cref="HealthEvent"/> class with default values.
@@ -31,7 +31,7 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         /// <remarks>
         /// This item is not added to the health record until the
-        /// <see cref="HealthRecordAccessor.NewItem(HealthRecordItem)"/> method
+        /// <see cref="HealthRecordAccessor.NewItem(ThingBase)"/> method
         /// is called.
         /// </remarks>
         ///
@@ -47,7 +47,7 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         /// <remarks>
         /// This item is not added to the health record until the
-        /// <see cref="HealthRecordAccessor.NewItem(HealthRecordItem)"/> method
+        /// <see cref="HealthRecordAccessor.NewItem(ThingBase)"/> method
         /// is called.
         /// </remarks>
         ///

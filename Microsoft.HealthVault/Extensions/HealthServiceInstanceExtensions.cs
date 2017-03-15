@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.HealthVault.PlatformInformation;
+using Microsoft.HealthVault.Utilities;
 
 namespace Microsoft.HealthVault.Extensions
 {
@@ -19,17 +20,7 @@ namespace Microsoft.HealthVault.Extensions
         /// </remarks>
         public static Uri GetHealthVaultMethodUrl(this HealthServiceInstance serviceInstance)
         {
-            string newUri = serviceInstance.HealthServiceUrl.AbsoluteUri;
-            if (!newUri.EndsWith("/", StringComparison.Ordinal))
-            {
-                newUri = newUri + "/wildcat.ashx";
-            }
-            else
-            {
-                newUri = newUri + "wildcat.ashx";
-            }
-
-            return new Uri(newUri);
+            return UrlUtilities.GetFullPlatformUrl(serviceInstance.HealthServiceUrl);
         }
     }
 }

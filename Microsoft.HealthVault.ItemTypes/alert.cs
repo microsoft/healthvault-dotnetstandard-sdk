@@ -18,7 +18,7 @@ namespace Microsoft.HealthVault.ItemTypes
     /// Represents a weekly alert schedule.
     /// </summary>
     ///
-    public class Alert : HealthRecordItemData
+    public class Alert : ItemBase
     {
         /// <summary>
         /// Creates a new instance of the <see cref="Alert"/> class with default values.

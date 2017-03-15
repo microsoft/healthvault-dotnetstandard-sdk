@@ -18,7 +18,7 @@ namespace Microsoft.HealthVault.ItemTypes
     /// The amount of dietary nutrients and minerals consumed.
     /// </summary>
     ///
-    public class DietaryIntake : HealthRecordItem
+    public class DietaryIntake : ThingBase
     {
         /// <summary>
         /// Creates a new instance of the <see cref="DietaryIntake"/> class with default values.
@@ -26,7 +26,7 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         /// <remarks>
         /// This item is not added to the health record until the
-        /// <see cref="HealthRecordAccessor.NewItem(HealthRecordItem)"/> method
+        /// <see cref="HealthRecordAccessor.NewItem(ThingBase)"/> method
         /// is called.
         /// </remarks>
         ///
@@ -42,7 +42,7 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         /// <remarks>
         /// This item is not added to the health record until the
-        /// <see cref="HealthRecordAccessor.NewItem(HealthRecordItem)"/> method
+        /// <see cref="HealthRecordAccessor.NewItem(ThingBase)"/> method
         /// is called.
         /// </remarks>
         ///
@@ -125,7 +125,7 @@ namespace Microsoft.HealthVault.ItemTypes
         /// If <paramref name="writer"/> parameter is <b>null</b>.
         /// </exception>
         ///
-        /// <exception cref="HealthRecordItemSerializationException">
+        /// <exception cref="ThingSerializationException">
         /// If <see cref="FoodItem"/> is <b>null</b>.
         /// </exception>
         ///
@@ -141,7 +141,7 @@ namespace Microsoft.HealthVault.ItemTypes
 
             if (this.dietaryIntakeItem.FoodItem == null)
             {
-                throw new HealthRecordItemSerializationException(
+                throw new ThingSerializationException(
                     ResourceRetriever.GetResourceString(
                         "errors", "FoodItemNullValue"));
             }

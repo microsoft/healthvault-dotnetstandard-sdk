@@ -3,25 +3,46 @@ using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.XPath;
 using Microsoft.HealthVault.Connection;
+using Microsoft.HealthVault.PlatformInformation;
 
 namespace Microsoft.HealthVault.Web
 {
     /// <summary>
     /// Web connection
     /// </summary>
-    internal class WebConnection : ConnectionInternalBase
+    internal class WebConnection : HealthVaultConnectionBase
     {
-        public string SubCredential { get; set; }
+        private WebConfiguration config;
 
-        public WebConnection(IServiceLocator serviceLocator)
+        public WebConnection(
+            IServiceLocator serviceLocator,
+            WebConfiguration configuration)
             : base(serviceLocator)
         {
+            this.config = configuration;
+            this.ServiceInstance = new HealthServiceInstance
+            {
+
+            };
+
         }
+
+        public override Guid ApplicationId => this.config.MasterApplicationId;
+
+        public string SubCredential { get; set; }
 
         public override Task AuthenticateAsync()
         {
             // Do nothing for now.
             return Task.FromResult<object>(null);
+        }
+
+        protected override ISessionCredentialClient CreateSessionCredentialClient()
+        {
+            var sessionCredentialClient = this.ServiceLocator.GetInstance<ISessionCredentialClient>();
+            sessionCredentialClient.Connection = this;
+
+            return sessionCredentialClient;
         }
 
         public override void PrepareAuthSessionHeader(XmlWriter writer, Guid? recordId)

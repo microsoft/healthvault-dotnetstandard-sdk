@@ -3,6 +3,10 @@
 // see http://www.microsoft.com/resources/sharedsource/licensingbasics/sharedsourcelicenses.mspx.
 // All other rights reserved.
 
+using Microsoft.HealthVault.Connection;
+using Microsoft.HealthVault.Exceptions;
+using Microsoft.HealthVault.Helpers;
+using Microsoft.HealthVault.Transport;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -10,10 +14,6 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.XPath;
-using Microsoft.HealthVault.Connection;
-using Microsoft.HealthVault.Exceptions;
-using Microsoft.HealthVault.Helpers;
-using Microsoft.HealthVault.Transport;
 
 namespace Microsoft.HealthVault.Thing
 {
@@ -73,7 +73,7 @@ namespace Microsoft.HealthVault.Thing
         private static HealthVaultPlatformItem saved;
 
         /// <summary>
-        /// Creates new health record items associated with the record.
+        /// Creates new things associated with the record.
         /// </summary>
         ///
         /// <param name="connection">
@@ -85,7 +85,7 @@ namespace Microsoft.HealthVault.Thing
         /// </param>
         ///
         /// <param name="items">
-        /// The health record items from which to create new instances.
+        /// The things from which to create new instances.
         /// </param>
         ///
         /// <remarks>
@@ -100,18 +100,15 @@ namespace Microsoft.HealthVault.Thing
         /// </exception>
         ///
         /// <exception cref="ArgumentNullException">
-        /// At least one HealthRecordItem in the supplied list was null.
+        /// At least one ThingBase in the supplied list was null.
         /// </exception>
         ///
         public virtual async Task NewItemsAsync(
             IConnectionInternal connection,
             HealthRecordAccessor accessor,
-            IList<HealthRecordItem> items)
+            IList<ThingBase> items)
         {
             Validator.ThrowIfArgumentNull(items, "items", "NewItemsNullItem");
-
-            HealthServiceRequest request =
-                new HealthServiceRequest(connection, HealthVaultMethods.PutThings, 2);
 
             StringBuilder infoXml = new StringBuilder();
             XmlWriterSettings settings = SDKHelper.XmlUnicodeWriterSettings;
@@ -119,7 +116,7 @@ namespace Microsoft.HealthVault.Thing
             using (XmlWriter infoXmlWriter =
                 XmlWriter.Create(infoXml, settings))
             {
-                foreach (HealthRecordItem item in items)
+                foreach (ThingBase item in items)
                 {
                     Validator.ThrowIfArgumentNull(item, "items", "NewItemsNullItem");
 
@@ -129,11 +126,8 @@ namespace Microsoft.HealthVault.Thing
                 infoXmlWriter.Flush();
             }
 
-            // Add the XML to the request.
-            request.Parameters = infoXml.ToString();
-
             // Call the web-service
-            HealthServiceResponseData responseData = await request.ExecuteAsync().ConfigureAwait(false);
+            HealthServiceResponseData responseData = await connection.ExecuteAsync(HealthVaultMethods.PutThings, 2, infoXml.ToString()).ConfigureAwait(false);
 
             // Now update the Id for the new item
             XPathNodeIterator thingIds =
@@ -146,7 +140,7 @@ namespace Microsoft.HealthVault.Thing
                 if (items[thingIndex] != null)
                 {
                     items[thingIndex].Key =
-                        new HealthRecordItemKey(
+                        new ThingKey(
                             new Guid(thingIdNav.Value),
                             new Guid(thingIdNav.GetAttribute(
                                     "version-stamp", string.Empty)));
@@ -157,7 +151,7 @@ namespace Microsoft.HealthVault.Thing
         }
 
         /// <summary>
-        /// Updates the specified health record items in one batch call to
+        /// Updates the specified things in one batch call to
         /// the service.
         /// </summary>
         ///
@@ -170,7 +164,7 @@ namespace Microsoft.HealthVault.Thing
         /// </param>
         ///
         /// <param name="itemsToUpdate">
-        /// The health record items to be updated.
+        /// The things to be updated.
         /// </param>
         ///
         /// <remarks>
@@ -186,7 +180,7 @@ namespace Microsoft.HealthVault.Thing
         ///
         /// <exception cref="ArgumentException">
         /// The <paramref name="itemsToUpdate"/> contains a <b>null</b> member or
-        /// a <see cref="HealthRecordItem"/> instance that does not have an ID.
+        /// a <see cref="ThingBase"/> instance that does not have an ID.
         /// </exception>
         ///
         /// <exception cref="HealthServiceException">
@@ -199,7 +193,7 @@ namespace Microsoft.HealthVault.Thing
         public virtual async Task UpdateItemsAsync(
             IConnectionInternal connection,
             HealthRecordAccessor accessor,
-            IList<HealthRecordItem> itemsToUpdate)
+            IList<ThingBase> itemsToUpdate)
         {
             Validator.ThrowIfArgumentNull(itemsToUpdate, "itemsToUpdate", "UpdateItemsArgumentNull");
 
@@ -211,7 +205,7 @@ namespace Microsoft.HealthVault.Thing
             using (XmlWriter infoXmlWriter =
                 XmlWriter.Create(infoXml, settings))
             {
-                foreach (HealthRecordItem item in itemsToUpdate)
+                foreach (ThingBase item in itemsToUpdate)
                 {
                     Validator.ThrowIfArgumentNull(item, "items", "UpdateItemsArgumentNull");
 
@@ -231,13 +225,8 @@ namespace Microsoft.HealthVault.Thing
 
             if (somethingRequiresUpdate)
             {
-                HealthServiceRequest request =
-                    new HealthServiceRequest(connection, HealthVaultMethods.PutThings, 2) { Parameters = infoXml.ToString() };
-
-                // Add the XML to the request.
-
                 // Call the web-service
-                HealthServiceResponseData responseData = await request.ExecuteAsync().ConfigureAwait(false);
+                HealthServiceResponseData responseData = await connection.ExecuteAsync(HealthVaultMethods.PutThings, 2, infoXml.ToString()).ConfigureAwait(false);
 
                 XPathNodeIterator thingIds =
                     responseData.InfoNavigator.Select(
@@ -247,12 +236,12 @@ namespace Microsoft.HealthVault.Thing
 
                 foreach (XPathNavigator thingIdNav in thingIds)
                 {
-                    HealthRecordItem healthRecordItem = itemsToUpdate[index];
-                    healthRecordItem.Key = new HealthRecordItemKey(
+                    ThingBase thingBase = itemsToUpdate[index];
+                    thingBase.Key = new ThingKey(
                         new Guid(thingIdNav.Value),
                         new Guid(thingIdNav.GetAttribute(
                             "version-stamp", string.Empty)));
-                    healthRecordItem.ClearDirtyFlags();
+                    thingBase.ClearDirtyFlags();
                     ++index;
                 }
             }
@@ -285,7 +274,7 @@ namespace Microsoft.HealthVault.Thing
         }
 
         /// <summary>
-        /// Marks the specified health record item as deleted.
+        /// Marks the specified thing as deleted.
         /// </summary>
         ///
         /// <param name="connection">
@@ -303,7 +292,7 @@ namespace Microsoft.HealthVault.Thing
         /// <remarks>
         /// This method accesses the HealthVault service across the network.
         /// <br/><br/>
-        /// Health record items are never completely deleted. They are marked
+        /// things are never completely deleted. They are marked
         /// as deleted and are ignored for most normal operations. Items can
         /// be undeleted by contacting customer service.
         /// </remarks>
@@ -313,7 +302,7 @@ namespace Microsoft.HealthVault.Thing
         /// </exception>
         ///
         /// <exception cref="HealthServiceException">
-        /// Errors removed the health record items from the server.
+        /// Errors removed the things from the server.
         /// The exception's Error property will contain the index of the
         /// item on which the failure occurred in the ErrorInfo property. If any failures occur,
         /// no items will have been removed.
@@ -322,7 +311,7 @@ namespace Microsoft.HealthVault.Thing
         public virtual async Task RemoveItemsAsync(
             IConnectionInternal connection,
             HealthRecordAccessor accessor,
-            IList<HealthRecordItemKey> itemsToRemove)
+            IList<ThingKey> itemsToRemove)
         {
             Validator.ThrowArgumentExceptionIf(
                 itemsToRemove == null || itemsToRemove.Count == 0,
@@ -339,16 +328,13 @@ namespace Microsoft.HealthVault.Thing
                 parameters.Append("</thing-id>");
             }
 
-            HealthServiceRequest request =
-                new HealthServiceRequest(connection, HealthVaultMethods.RemoveThings, 1) { Parameters = parameters.ToString() };
-
-            await request.ExecuteAsync().ConfigureAwait(false);
+            await connection.ExecuteAsync(HealthVaultMethods.RemoveThings, 1, parameters.ToString()).ConfigureAwait(false);
         }
 
         #region GetThings
 
         /// <summary>
-        /// Gets the health record items that match the filters as specified by
+        /// Gets the things that match the filters as specified by
         /// the properties of this class.
         /// </summary>
         ///
@@ -365,7 +351,7 @@ namespace Microsoft.HealthVault.Thing
         /// </param>
         ///
         /// <returns>
-        /// A collection of health record items that match the applied filters.
+        /// A collection of things that match the applied filters.
         /// </returns>
         ///
         /// <remarks>
@@ -380,18 +366,18 @@ namespace Microsoft.HealthVault.Thing
         /// or contains invalid filters.
         /// </exception>
         ///
-        public virtual async Task<ReadOnlyCollection<HealthRecordItemCollection>> GetMatchingItemsAsync(
+        public virtual async Task<ReadOnlyCollection<ThingCollection>> GetMatchingItemsAsync(
             IConnectionInternal connection,
             HealthRecordAccessor accessor,
             HealthRecordSearcher searcher)
         {
             ValidateFilters(searcher);
 
-            return await ExecuteAsync(connection, accessor, searcher).ConfigureAwait(false);
+            return await this.ExecuteAsync(connection, accessor, searcher).ConfigureAwait(false);
         }
 
         /// <summary>
-        /// Gets the health record items that match the filters as specified by
+        /// Gets the things that match the filters as specified by
         /// the properties of this class.
         /// </summary>
         ///
@@ -415,7 +401,7 @@ namespace Microsoft.HealthVault.Thing
         /// This method accesses the HealthVault service across the network.
         /// <br/><br/>
         /// This method is typically used when the calling application wants to
-        /// handle the raw health record item XML directly instead of using the
+        /// handle the raw thing XML directly instead of using the
         /// object model.
         /// </remarks>
         ///
@@ -424,14 +410,13 @@ namespace Microsoft.HealthVault.Thing
             HealthRecordAccessor accessor,
             HealthRecordSearcher searcher)
         {
-            HealthServiceRequest request = PrepareRequest(connection, accessor, searcher);
-            HealthServiceResponseData responseData = await request.ExecuteAsync().ConfigureAwait(false);
+            HealthServiceResponseData responseData = await this.ExecuteGetThingsRequest(connection, accessor, searcher).ConfigureAwait(false);
 
             return responseData.InfoReader;
         }
 
         /// <summary>
-        /// Gets the health record items that match the filters as specified by
+        /// Gets the things that match the filters as specified by
         /// the properties of this class.
         /// </summary>
         ///
@@ -455,7 +440,7 @@ namespace Microsoft.HealthVault.Thing
         /// This method accesses the HealthVault service across the network.
         /// <br/><br/>
         /// This method is typically used when the calling application wants to
-        /// handle the raw health record item XML directly instead of using the
+        /// handle the raw thing XML directly instead of using the
         /// object model.
         /// </remarks>
         ///
@@ -464,8 +449,7 @@ namespace Microsoft.HealthVault.Thing
             HealthRecordAccessor accessor,
             HealthRecordSearcher searcher)
         {
-            HealthServiceRequest request = PrepareRequest(connection, accessor, searcher);
-            HealthServiceResponseData responseData = await request.ExecuteAsync().ConfigureAwait(false);
+            HealthServiceResponseData responseData = await this.ExecuteGetThingsRequest(connection, accessor, searcher).ConfigureAwait(false);
 
             return responseData.InfoNavigator;
         }
@@ -484,15 +468,12 @@ namespace Microsoft.HealthVault.Thing
         /// No filters have been specified.
         /// </exception>
         ///
-        private static HealthServiceRequest PrepareRequest(
+        private async Task<HealthServiceResponseData> ExecuteGetThingsRequest(
             IConnectionInternal connection,
             HealthRecordAccessor accessor,
             HealthRecordSearcher searcher)
         {
-            HealthServiceRequest request =
-                new HealthServiceRequest(connection, HealthVaultMethods.GetThings, 3) { Parameters = GetParametersXml(searcher) };
-
-            return request;
+            return await connection.ExecuteAsync(HealthVaultMethods.GetThings, 3, GetParametersXml(searcher)).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -536,19 +517,17 @@ namespace Microsoft.HealthVault.Thing
         /// HealthServiceStatusCode.OK, or no filters have been specified.
         /// </exception>
         ///
-        private static async Task<ReadOnlyCollection<HealthRecordItemCollection>> ExecuteAsync(
+        private async Task<ReadOnlyCollection<ThingCollection>> ExecuteAsync(
             IConnectionInternal connection,
             HealthRecordAccessor accessor,
             HealthRecordSearcher searcher)
         {
-            HealthServiceRequest request = PrepareRequest(connection, accessor, searcher);
-
-            HealthServiceResponseData responseData = await request.ExecuteAsync().ConfigureAwait(false);
+            HealthServiceResponseData responseData = await this.ExecuteGetThingsRequest(connection, accessor, searcher).ConfigureAwait(false);
 
             XmlReader infoReader = responseData.InfoReader;
 
-            Collection<HealthRecordItemCollection> result =
-                new Collection<HealthRecordItemCollection>();
+            Collection<ThingCollection> result =
+                new Collection<ThingCollection>();
 
             if ((infoReader != null) && infoReader.ReadToDescendant("group"))
             {
@@ -558,8 +537,8 @@ namespace Microsoft.HealthVault.Thing
                     {
                         groupReader.MoveToContent();
 
-                        HealthRecordItemCollection resultGroup =
-                            HealthRecordItemCollection.CreateResultGroupFromResponse(
+                        ThingCollection resultGroup =
+                            ThingCollection.CreateResultGroupFromResponse(
                                 accessor,
                                 groupReader,
                                 searcher.Filters);
@@ -578,7 +557,7 @@ namespace Microsoft.HealthVault.Thing
                 }
             }
 
-            return new ReadOnlyCollection<HealthRecordItemCollection>(result);
+            return new ReadOnlyCollection<ThingCollection>(result);
         }
 
         /// <summary>

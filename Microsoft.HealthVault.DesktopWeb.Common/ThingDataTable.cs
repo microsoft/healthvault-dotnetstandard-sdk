@@ -23,10 +23,10 @@ namespace Microsoft.HealthVault.DesktopWeb.Common
     /// </summary>
     ///
     [Serializable]
-    public class HealthRecordItemDataTable : DataTable
+    public class ThingDataTable : DataTable
     {
         /// <summary>
-        /// Creates a new instance of the <see cref="HealthRecordItemDataTable"/>
+        /// Creates a new instance of the <see cref="ThingDataTable"/>
         /// class with the specified table view and filter.
         /// </summary>
         ///
@@ -35,7 +35,7 @@ namespace Microsoft.HealthVault.DesktopWeb.Common
         /// </param>
         ///
         /// <param name="query">
-        /// The filter used to gather health record items from the HealthVault
+        /// The filter used to gather things from the HealthVault
         /// service.
         /// </param>
         ///
@@ -45,18 +45,18 @@ namespace Microsoft.HealthVault.DesktopWeb.Common
         ///
         /// <exception cref="ArgumentException">
         /// The <paramref name="view"/> parameter is
-        /// <see cref="HealthRecordItemDataTableView.SingleTypeTable"/> and
+        /// <see cref="ThingDataTableView.SingleTypeTable"/> and
         /// the <paramref name="query"/> parameter contains more than one type
         /// identifier.
         /// </exception>
-        public HealthRecordItemDataTable(
-            HealthRecordItemDataTableView view,
+        public ThingDataTable(
+            ThingDataTableView view,
             ThingQuery query)
         {
             Validator.ThrowIfArgumentNull(query, "filter", "DataTableFilterNull");
 
             Validator.ThrowArgumentExceptionIf(
-                view == HealthRecordItemDataTableView.SingleTypeTable &&
+                view == ThingDataTableView.SingleTypeTable &&
                 query.TypeIds.Count > 1,
                 "view",
                 "DataTableViewInvalid");
@@ -66,30 +66,30 @@ namespace Microsoft.HealthVault.DesktopWeb.Common
         }
 
         /// <summary>
-        /// Fills in the data table with data from a list of HealthRecordItem.
+        /// Fills in the data table with data from a list of ThingBase.
         /// </summary>
         /// <param name="record"/>
         /// <param name="items"/>
         /// <param name="startIndex"/>
         /// <param name="count"/>
-        public async Task GetDataAsync(HealthRecordAccessor record, IList<HealthRecordItem> items, int startIndex, int count)
+        public async Task GetDataAsync(HealthRecordAccessor record, IList<ThingBase> items, int startIndex, int count)
         {
-            HealthRecordItemDataTableView effectiveView =
+            ThingDataTableView effectiveView =
                 await this.ApplyEffectiveViewAsync(record.Connection).ConfigureAwait(false);
 
-            IDictionary<Guid, HealthRecordItemTypeDefinition> typeDefDict =
+            IDictionary<Guid, ThingTypeDefinition> typeDefDict =
                 await ItemTypeManager.GetHealthRecordItemTypeDefinitionAsync(query.TypeIds,
                     record.Connection).ConfigureAwait(false);
-            HealthRecordItemTypeDefinition sttTypeDef =
+            ThingTypeDefinition sttTypeDef =
                 typeDefDict.Count == 1 ? typeDefDict[query.TypeIds[0]] : null;
 
             bool firstRow = true;
             string transformName =
-                (effectiveView == HealthRecordItemDataTableView.SingleTypeTable) ? "stt" : "mtt";
+                (effectiveView == ThingDataTableView.SingleTypeTable) ? "stt" : "mtt";
 
             for (int i = startIndex; i < items.Count && i < count; ++i)
             {
-                HealthRecordItem item = items[i];
+                ThingBase item = items[i];
 
                 XPathNavigator itemTransformNav;
                 IDictionary<string, XDocument> transformedXmlData = item.TransformedXmlData;
@@ -102,8 +102,8 @@ namespace Microsoft.HealthVault.DesktopWeb.Common
                 else
                 {
                     string transform = (sttTypeDef == null) ?
-                        HealthRecordItemTypeDefinitionHelper.Create(typeDefDict[item.TypeId]).TransformItem(transformName, item) :
-                        HealthRecordItemTypeDefinitionHelper.Create(sttTypeDef).TransformItem(transformName, item);
+                        ThingTypeDefinitionHelper.Create(typeDefDict[item.TypeId]).TransformItem(transformName, item) :
+                        ThingTypeDefinitionHelper.Create(sttTypeDef).TransformItem(transformName, item);
 
                     XmlReaderSettings settings = new XmlReaderSettings()
                     {
@@ -203,13 +203,13 @@ namespace Microsoft.HealthVault.DesktopWeb.Common
         ///
         /// The default <see cref="GetData(HealthRecordAccessor)"/> implementation
         /// fills the data with complete information for all items matching
-        /// the filter. If the <see cref="HealthRecordItemDataTable"/> is being
+        /// the filter. If the <see cref="ThingDataTable"/> is being
         /// bound to a HealthServiceDataGrid or other such control that supports
         /// paging, this may not be the desired result as many calls to
         /// HealthVault may be required to fetch all the data.  This overload
         /// of GetData allows the caller to specify the index and the count of
         /// the full items to retrieve to match the page that is currently visible.
-        /// The <see cref="HealthRecordItemDataTable"/> will be filled with
+        /// The <see cref="ThingDataTable"/> will be filled with
         /// empty values except for the rows specified.
         /// </remarks>
         ///
@@ -222,12 +222,12 @@ namespace Microsoft.HealthVault.DesktopWeb.Common
             int startIndex,
             int count)
         {
-            HealthRecordItemDataTableView effectiveView =
+            ThingDataTableView effectiveView =
                 await this.ApplyEffectiveViewAsync(record.Connection).ConfigureAwait(false);
 
             // Need to specify the type version to ensure that the columns match when the app
             // supports multiple versions.
-            if (effectiveView == HealthRecordItemDataTableView.SingleTypeTable)
+            if (effectiveView == ThingDataTableView.SingleTypeTable)
             {
                 for (int index = 0; index < this.Query.TypeIds.Count; ++index)
                 {
@@ -252,7 +252,7 @@ namespace Microsoft.HealthVault.DesktopWeb.Common
 
             int numberOfFullThingsToRetrieve = AddRows(nav);
 
-            List<HealthRecordItemKey> partialThingKeys =
+            List<ThingKey> partialThingKeys =
                 GetPartialThingKeys(nav);
 
             int thingIndex = numberOfFullThingsToRetrieve;
@@ -361,7 +361,7 @@ namespace Microsoft.HealthVault.DesktopWeb.Common
             this.Rows.Add(row);
         }
 
-        private void AddPartialThingRow(HealthRecordItemKey key)
+        private void AddPartialThingRow(ThingKey key)
         {
             DataRow row = this.NewRow();
             foreach (DataColumn column in this.Columns)
@@ -404,39 +404,39 @@ namespace Microsoft.HealthVault.DesktopWeb.Common
             }
         }
 
-        private async Task<HealthRecordItemDataTableView> ApplyEffectiveViewAsync(
+        private async Task<ThingDataTableView> ApplyEffectiveViewAsync(
             IConnectionInternal connection)
         {
-            HealthRecordItemDataTableView effectiveView =
-                HealthRecordItemDataTableView.MultipleTypeTable;
+            ThingDataTableView effectiveView =
+                ThingDataTableView.MultipleTypeTable;
 
-            HealthRecordItemTypeDefinition typeDefinition = null;
+            ThingTypeDefinition typeDefinition = null;
 
             if (Query.TypeIds.Count == 1 &&
-                View != HealthRecordItemDataTableView.MultipleTypeTable)
+                View != ThingDataTableView.MultipleTypeTable)
             {
                 typeDefinition =
                     await ItemTypeManager.GetHealthRecordItemTypeDefinitionAsync(
                         this.Query.TypeIds[0],
                         connection).ConfigureAwait(false);
 
-                HealthRecordItemTypeDefinitionHelper healthRecordItemTypeDefinitionHelper = null;
+                ThingTypeDefinitionHelper thingTypeDefinitionHelper = null;
 
                 if (typeDefinition != null)
                 {
-                    healthRecordItemTypeDefinitionHelper = HealthRecordItemTypeDefinitionHelper.Create(typeDefinition);
+                    thingTypeDefinitionHelper = ThingTypeDefinitionHelper.Create(typeDefinition);
                 }
 
-                if (healthRecordItemTypeDefinitionHelper != null &&
-                    healthRecordItemTypeDefinitionHelper.ColumnDefinitions.Count > 0)
+                if (thingTypeDefinitionHelper != null &&
+                    thingTypeDefinitionHelper.ColumnDefinitions.Count > 0)
                 {
                     effectiveView
-                        = HealthRecordItemDataTableView.SingleTypeTable;
+                        = ThingDataTableView.SingleTypeTable;
                     _singleTypeDefinition = typeDefinition;
 
                     foreach (
                         ItemTypeDataColumn column in
-                        healthRecordItemTypeDefinitionHelper.ColumnDefinitions)
+                        thingTypeDefinitionHelper.ColumnDefinitions)
                     {
                         _displayColumns.Add(
                             column.ColumnName, column.Clone());
@@ -454,11 +454,11 @@ namespace Microsoft.HealthVault.DesktopWeb.Common
                         connection).ConfigureAwait(false);
 
                 effectiveView
-                    = HealthRecordItemDataTableView.MultipleTypeTable;
+                    = ThingDataTableView.MultipleTypeTable;
 
                 if (typeDefinition != null)
                 {
-                    var healthRecordItemTypeDefinitionHelper = HealthRecordItemTypeDefinitionHelper.Create(typeDefinition);
+                    var healthRecordItemTypeDefinitionHelper = ThingTypeDefinitionHelper.Create(typeDefinition);
 
                     foreach (
                         ItemTypeDataColumn column in
@@ -475,11 +475,11 @@ namespace Microsoft.HealthVault.DesktopWeb.Common
             return effectiveView;
         }
 
-        private static List<HealthRecordItemKey> GetPartialThingKeys(
+        private static List<ThingKey> GetPartialThingKeys(
             XPathNavigator nav)
         {
-            List<HealthRecordItemKey> partialThingKeys
-                = new List<HealthRecordItemKey>();
+            List<ThingKey> partialThingKeys
+                = new List<ThingKey>();
 
             XPathNodeIterator partialThingIterator =
                 nav.Select("//unprocessed-thing-key-info/thing-id");
@@ -488,8 +488,8 @@ namespace Microsoft.HealthVault.DesktopWeb.Common
                 string versionStamp
                     = partialThingNav.GetAttribute(
                         "version-stamp", String.Empty);
-                HealthRecordItemKey key
-                    = new HealthRecordItemKey(
+                ThingKey key
+                    = new ThingKey(
                         new Guid(partialThingNav.Value),
                         new Guid(versionStamp));
                 partialThingKeys.Add(key);
@@ -499,7 +499,7 @@ namespace Microsoft.HealthVault.DesktopWeb.Common
 
         private async Task<XPathNavigator> GetPartialThings(
             HealthRecordAccessor record,
-            IList<HealthRecordItemKey> thingKeys,
+            IList<ThingKey> thingKeys,
             int currentThingKeyIndex,
             int numberOfFullThingsToRetrieve)
         {
@@ -538,11 +538,11 @@ namespace Microsoft.HealthVault.DesktopWeb.Common
         /// shown.
         /// </remarks>
         ///
-        public HealthRecordItemTypeDefinition SingleTypeDefinition
+        public ThingTypeDefinition SingleTypeDefinition
         {
             get { return _singleTypeDefinition; }
         }
-        private HealthRecordItemTypeDefinition _singleTypeDefinition;
+        private ThingTypeDefinition _singleTypeDefinition;
 
         /// <summary>
         /// Gets the display columns for the table.
@@ -565,11 +565,11 @@ namespace Microsoft.HealthVault.DesktopWeb.Common
         /// Gets the view of the data that the table will show.
         /// </summary>
         ///
-        public HealthRecordItemDataTableView View
+        public ThingDataTableView View
         {
             get { return _view; }
         }
-        private HealthRecordItemDataTableView _view;
+        private ThingDataTableView _view;
 
         /// <summary>
         /// Gets or sets the filter to use when getting data from the

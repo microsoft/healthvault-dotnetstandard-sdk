@@ -21,7 +21,7 @@ namespace Microsoft.HealthVault.ItemTypes
     /// This information will usually be obtained from a
     /// defibrillator device.
     /// </remarks>
-    public class DefibrillatorEpisode : HealthRecordItem
+    public class DefibrillatorEpisode : ThingBase
     {
         /// <summary>
         /// Creates a new instance of the <see cref="DefibrillatorEpisode"/> class with default values.
@@ -29,7 +29,7 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         /// <remarks>
         /// The item is not added to the health record until the
-        /// <see cref="HealthRecordAccessor.NewItem(HealthRecordItem)"/>
+        /// <see cref="HealthRecordAccessor.NewItem(ThingBase)"/>
         /// method is called.
         /// </remarks>
         ///

@@ -11,7 +11,7 @@ using Microsoft.HealthVault.Helpers;
 namespace Microsoft.HealthVault.Thing
 {
     /// <summary>
-    /// Represents a loose relationship between health record item instances.
+    /// Represents a loose relationship between thing instances.
     /// </summary>
     ///
     /// <remarks>
@@ -20,47 +20,47 @@ namespace Microsoft.HealthVault.Thing
     /// and is in the same health record.
     /// </remarks>
     ///
-    public class HealthRecordItemRelationship
+    public class ThingRelationship
     {
         /// <summary>
-        /// Creates a new instance of the <see cref="HealthRecordItemRelationship"/>
+        /// Creates a new instance of the <see cref="ThingRelationship"/>
         /// instance with default values.
         /// </summary>
         ///
-        public HealthRecordItemRelationship()
+        public ThingRelationship()
         {
         }
 
         /// <summary>
-        /// Constructs a <see cref="HealthRecordItemRelationship" /> instance for a relationship
+        /// Constructs a <see cref="ThingRelationship" /> instance for a relationship
         /// to the item with the specified ID.
         /// </summary>
         ///
         /// <param name="itemId">
-        /// The unique identifier of the health record item to related to.
+        /// The unique identifier of the thing to related to.
         /// </param>
         ///
         /// <exception cref="ArgumentException">
         /// If <paramref name="itemId"/> is <see cref="System.Guid.Empty"/>.
         /// </exception>
         ///
-        public HealthRecordItemRelationship(Guid itemId)
+        public ThingRelationship(Guid itemId)
         {
             Validator.ThrowArgumentExceptionIf(
                 itemId == Guid.Empty,
                 "itemId",
                 "RelationshipItemIDNotSpecified");
 
-            this.ItemKey = new HealthRecordItemKey(itemId);
+            this.ItemKey = new ThingKey(itemId);
         }
 
         /// <summary>
-        /// Constructs a <see cref="HealthRecordItemRelationship" /> instance for a relationship
+        /// Constructs a <see cref="ThingRelationship" /> instance for a relationship
         /// to the item with the specified key.
         /// </summary>
         ///
         /// <param name="itemKey">
-        /// The unique key of the health record item to related to, including the item ID and
+        /// The unique key of the thing to related to, including the item ID and
         /// optionally the item version stamp.
         /// </param>
         ///
@@ -68,7 +68,7 @@ namespace Microsoft.HealthVault.Thing
         /// If <paramref name="itemKey"/> is <b>null</b>.
         /// </exception>
         ///
-        public HealthRecordItemRelationship(HealthRecordItemKey itemKey)
+        public ThingRelationship(ThingKey itemKey)
         {
             Validator.ThrowIfArgumentNull(itemKey, "itemKey", "RelationshipItemKeyNotSpecified");
 
@@ -76,31 +76,31 @@ namespace Microsoft.HealthVault.Thing
         }
 
         /// <summary>
-        /// Constructs a <see cref="HealthRecordItemRelationship" /> instance for a relationship
+        /// Constructs a <see cref="ThingRelationship" /> instance for a relationship
         /// to the item with the specified key.
         /// </summary>
         ///
         /// <param name="clientId">
-        /// A client assigned ID for the health record item to relate to.
+        /// A client assigned ID for the thing to relate to.
         /// </param>
         ///
         /// <exception cref="ArgumentException">
         /// If <paramref name="clientId"/> is <b>null</b> or <b>empty</b>.
         /// </exception>
         ///
-        public HealthRecordItemRelationship(string clientId)
+        public ThingRelationship(string clientId)
         {
             Validator.ThrowIfStringNullOrEmpty(clientId, "clientId");
             this.ClientId = clientId;
         }
 
         /// <summary>
-        /// Constructs a <see cref="HealthRecordItemRelationship" /> instance for a relationship
+        /// Constructs a <see cref="ThingRelationship" /> instance for a relationship
         /// to the item with the specified key and relationship type.
         /// </summary>
         ///
         /// <param name="itemKey">
-        /// The unique key of the health record item to related to, including the item ID and
+        /// The unique key of the thing to related to, including the item ID and
         /// optionally the item version stamp.
         /// </param>
         ///
@@ -114,19 +114,19 @@ namespace Microsoft.HealthVault.Thing
         /// If <paramref name="itemKey"/> is <b>null</b>.
         /// </exception>
         ///
-        public HealthRecordItemRelationship(HealthRecordItemKey itemKey, string relationshipType)
+        public ThingRelationship(ThingKey itemKey, string relationshipType)
             : this(itemKey)
         {
             this.RelationshipType = relationshipType;
         }
 
         /// <summary>
-        /// Constructs a <see cref="HealthRecordItemRelationship" /> instance for a relationship
+        /// Constructs a <see cref="ThingRelationship" /> instance for a relationship
         /// to the item with the specified client ID and relationship type.
         /// </summary>
         ///
         /// <param name="clientId">
-        /// A client assigned ID of the health record item to be related to.
+        /// A client assigned ID of the thing to be related to.
         /// </param>
         ///
         /// <param name="relationshipType">
@@ -139,7 +139,7 @@ namespace Microsoft.HealthVault.Thing
         /// If <paramref name="clientId"/> is <b>null</b>.
         /// </exception>
         ///
-        public HealthRecordItemRelationship(string clientId, string relationshipType)
+        public ThingRelationship(string clientId, string relationshipType)
             : this(clientId)
         {
             this.RelationshipType = relationshipType;
@@ -157,11 +157,11 @@ namespace Microsoft.HealthVault.Thing
                 {
                     Guid versionStamp = new Guid(versionStampNav.Value);
 
-                    this.ItemKey = new HealthRecordItemKey(itemId, versionStamp);
+                    this.ItemKey = new ThingKey(itemId, versionStamp);
                 }
                 else
                 {
-                    this.ItemKey = new HealthRecordItemKey(itemId);
+                    this.ItemKey = new ThingKey(itemId);
                 }
             }
             else
@@ -204,18 +204,18 @@ namespace Microsoft.HealthVault.Thing
         }
 
         /// <summary>
-        /// Gets or sets the key for the related <see cref="HealthRecordItem" />.
+        /// Gets or sets the key for the related <see cref="ThingBase" />.
         /// </summary>
         ///
         /// <value>
-        /// An instance of the <see cref="HealthRecordItemKey"/> class with the item ID specified
+        /// An instance of the <see cref="ThingKey"/> class with the item ID specified
         /// and optionally the item version stamp.
         /// </value>
         ///
-        public HealthRecordItemKey ItemKey { get; set; }
+        public ThingKey ItemKey { get; set; }
 
         /// <summary>
-        /// Gets and sets a client assigned identifier for the related <see cref="HealthRecordItem" />.
+        /// Gets and sets a client assigned identifier for the related <see cref="ThingBase" />.
         /// </summary>
         public string ClientId { get; set; }
 

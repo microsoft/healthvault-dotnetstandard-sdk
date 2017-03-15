@@ -3,6 +3,10 @@
 // see http://www.microsoft.com/resources/sharedsource/licensingbasics/sharedsourcelicenses.mspx.
 // All other rights reserved.
 
+using Microsoft.HealthVault.Exceptions;
+using Microsoft.HealthVault.Helpers;
+using Microsoft.HealthVault.ItemTypes;
+using Microsoft.HealthVault.Transport;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -12,16 +16,11 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using System.Xml.XPath;
-using Microsoft.HealthVault.Exceptions;
-using Microsoft.HealthVault.Helpers;
-using Microsoft.HealthVault.ItemTypes;
-using Microsoft.HealthVault.Transport;
-using Microsoft.HealthVault.Connection;
 
 namespace Microsoft.HealthVault.Thing
 {
     /// <summary>
-    /// A stream for sending and receiving binary data associated with a health record item.
+    /// A stream for sending and receiving binary data associated with a thing.
     /// </summary>
     ///
     /// <remarks>
@@ -889,9 +888,7 @@ namespace Microsoft.HealthVault.Thing
         ///
         private async Task<BlobPutParameters> BeginPutBlobAsync()
         {
-            HealthServiceRequest request =
-                new HealthServiceRequest(this.record.Connection, HealthVaultMethods.BeginPutBlob, 1);
-            HealthServiceResponseData responseData = await request.ExecuteAsync().ConfigureAwait(false);
+            HealthServiceResponseData responseData = await this.record.Connection.ExecuteAsync(HealthVaultMethods.BeginPutBlob, 1).ConfigureAwait(false);
 
             XPathExpression infoPath =
                 SDKHelper.GetInfoXPathExpressionForMethod(

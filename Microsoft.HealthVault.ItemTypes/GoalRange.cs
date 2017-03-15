@@ -17,7 +17,7 @@ namespace Microsoft.HealthVault.ItemTypes
     /// This represents a goal range associated with a goal.
     /// </summary>
     ///
-    public class GoalRange : HealthRecordItemData
+    public class GoalRange : ItemBase
     {
         /// <summary>
         /// Creates a new instance of the <see cref="GoalRange"/> class with default values.
@@ -96,7 +96,7 @@ namespace Microsoft.HealthVault.ItemTypes
         /// If <paramref name="writer"/> parameter is <b>null</b>.
         /// </exception>
         ///
-        /// <exception cref="HealthRecordItemSerializationException">
+        /// <exception cref="ThingSerializationException">
         /// If <see cref="Name"/> is <b>null</b>.
         /// </exception>
         ///
@@ -120,7 +120,7 @@ namespace Microsoft.HealthVault.ItemTypes
 
             if (this.name == null)
             {
-                throw new HealthRecordItemSerializationException(
+                throw new ThingSerializationException(
                     ResourceRetriever.GetResourceString(
                         "errors", "GoalRangeNameNullValue"));
             }
