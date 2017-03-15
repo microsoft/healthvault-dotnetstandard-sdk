@@ -1,5 +1,4 @@
 ﻿using Grace.DependencyInjection;
-using Microsoft.HealthVault.Configuration;
 using Microsoft.HealthVault.Connection;
 using Microsoft.HealthVault.Extensions;
 
@@ -28,12 +27,6 @@ namespace Microsoft.HealthVault.Web
             container.RegisterTransient<ISessionCredentialClient, WebSessionCredentialClient>();
             container.RegisterTransient<ICryptographer, WebCryptographer>();
             container.RegisterTransient<IConnectionInternal, WebConnection>();
-
-            WebConfiguration config = WebConfigurationFactory.CreateConfiguration();
-            container.Configure(c => c.ExportInstance(() => config));
-            container.Configure(c => c.ExportInstance<HealthVaultConfiguration>(() => config));
         }
-
-
     }
 }

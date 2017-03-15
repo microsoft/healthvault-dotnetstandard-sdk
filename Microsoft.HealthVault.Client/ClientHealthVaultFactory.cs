@@ -1,5 +1,4 @@
 ﻿using Microsoft.HealthVault.Configuration;
-using Microsoft.HealthVault.Connection;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -39,13 +38,24 @@ namespace Microsoft.HealthVault.Client
             }
         }
 
+        /// <summary>
+        /// Sets the configuration used to create connections.
+        /// </summary>
+        /// <exception cref="InvalidOperationException">
+        /// If <see cref="GetConnectionAsync"/> has been called already.
+        /// </exception>
         public void SetConfiguration(ClientConfiguration clientConfiguration)
         {
-            this.ThrowIfGetConnectionCalled();
-
+            this.ThrowIfAlreadyCreatedConnection(nameof(this.SetConfiguration));
             this.configuration = clientConfiguration;
         }
 
+        /// <summary>
+        /// Gets an <see cref="IClientHealthVaultConnection"/> used to connect to HealthVault.
+        /// </summary>
+        /// <exception cref="InvalidOperationException">
+        /// If called before calling <see cref="SetConfiguration(ClientConfiguration)"/>.
+        /// </exception>
         public async Task<IClientHealthVaultConnection> GetConnectionAsync()
         {
             this.GetConnectionCalled = true;
@@ -62,14 +72,16 @@ namespace Microsoft.HealthVault.Client
                     throw new InvalidOperationException("Cannot call GetConnectionAsync before calling SetConfiguration.");
                 }
 
+                var missingParameters = new List<string>();
+
                 if (this.configuration.MasterApplicationId == Guid.Empty)
                 {
-                    var requiredParameters = new List<string>
-                    {
-                        nameof(this.configuration.MasterApplicationId),
-                    };
+                    missingParameters.Add(nameof(this.configuration.MasterApplicationId));
+                }
 
-                    string requiredParametersString = string.Join(", ", requiredParameters);
+                if (missingParameters.Count > 0)
+                {
+                    string requiredParametersString = string.Join(", ", missingParameters);
                     throw new InvalidOperationException("Missing one or more required parameters on configuration. Required parameters: " + requiredParametersString);
                 }
 

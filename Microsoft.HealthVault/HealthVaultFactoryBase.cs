@@ -16,14 +16,15 @@ namespace Microsoft.HealthVault
         public void RegisterClientType<T>(Func<T, T> func)
             where T : IClient
         {
+            this.ThrowIfAlreadyCreatedConnection(nameof(this.RegisterClientType));
             Ioc.OverrideClientType(func);
         }
 
-        protected void ThrowIfGetConnectionCalled()
+        protected void ThrowIfAlreadyCreatedConnection(string methodName)
         {
             if (this.GetConnectionCalled)
             {
-                throw new InvalidOperationException("Cannot set configuration after calling GetConnectionAsync.");
+                throw new InvalidOperationException($"Cannot call {methodName} after creating a connection.");
             }
         }
     }
