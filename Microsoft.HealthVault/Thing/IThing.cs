@@ -48,9 +48,9 @@ namespace Microsoft.HealthVault.Thing
         /// <remarks>
         /// This is the only property that
         /// is guaranteed to be available regardless of how
-        /// <see cref="HealthRecordItem.Sections"/> is set.
+        /// <see cref="ThingBase.Sections"/> is set.
         /// </remarks>
         ///
-        HealthRecordItemKey Key { get; }
+        ThingKey Key { get; }
     }
 }

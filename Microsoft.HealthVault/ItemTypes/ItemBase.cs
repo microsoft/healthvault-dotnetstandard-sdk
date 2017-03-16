@@ -10,10 +10,10 @@ namespace Microsoft.HealthVault.ItemTypes
 {
     /// <summary>
     /// Abstract base class for all types that represent data that can
-    /// be serialized into a health record item.
+    /// be serialized into a thing.
     /// </summary>
     ///
-    public abstract class HealthRecordItemData
+    public abstract class ItemBase
     {
         /// <summary>
         /// Populates the data from the specified XML.

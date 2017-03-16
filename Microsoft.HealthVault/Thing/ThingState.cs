@@ -6,10 +6,10 @@
 namespace Microsoft.HealthVault.Thing
 {
     /// <summary>
-    /// Represents the state of the <see cref="HealthRecordItem"/>.
+    /// Represents the state of the <see cref="ThingBase"/>.
     /// </summary>
     ///
-    public enum HealthRecordItemState
+    public enum ThingState
     {
         /// <summary>
         /// The record item state returned from the server is not understood
@@ -19,24 +19,24 @@ namespace Microsoft.HealthVault.Thing
         Unknown = 0,
 
         /// <summary>
-        /// The health record item is active.
+        /// The thing is active.
         /// </summary>
         ///
         /// <remarks>
-        /// Active health record items are retrieved by default and can be
+        /// Active things are retrieved by default and can be
         /// updated.
         /// </remarks>
         ///
         Active = 1,
 
         /// <summary>
-        /// The health record item is deleted.
+        /// The thing is deleted.
         /// </summary>
         ///
         /// <remarks>
-        /// Deleted health record items are retrieved when specified in
+        /// Deleted things are retrieved when specified in
         /// <see cref="ThingQuery.States"/>.
-        /// Deleted health record items are useful to view for auditing
+        /// Deleted things are useful to view for auditing
         /// purposes and cannot be updated.
         /// </remarks>
         ///

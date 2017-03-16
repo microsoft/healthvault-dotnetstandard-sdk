@@ -18,7 +18,7 @@ namespace Microsoft.HealthVault.ItemTypes
     /// Represents a physical mailing address.
     /// </summary>
     ///
-    public class Address : HealthRecordItemData
+    public class Address : ItemBase
     {
         /// <summary>
         /// Creates a new instance of the <see cref="Address"/> class with default values.
@@ -181,7 +181,7 @@ namespace Microsoft.HealthVault.ItemTypes
         /// The <paramref name="writer"/> parameter is <b>null</b>.
         /// </exception>
         ///
-        /// <exception cref="HealthRecordItemSerializationException">
+        /// <exception cref="ThingSerializationException">
         /// The <see cref="Street"/> property is empty or <see cref="City"/>,
         /// <see cref="Country"/>, or <see cref="PostalCode"/> property has not been set.
         /// </exception>

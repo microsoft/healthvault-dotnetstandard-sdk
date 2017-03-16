@@ -17,7 +17,7 @@ namespace Microsoft.HealthVault.ItemTypes
     /// Information related to a nutrient consumed.
     /// </summary>
     ///
-    public class NutritionFact : HealthRecordItemData
+    public class NutritionFact : ItemBase
     {
         /// <summary>
         /// Creates a new instance of the <see cref="NutritionFact"/> class with default values.
@@ -94,7 +94,7 @@ namespace Microsoft.HealthVault.ItemTypes
         /// If <paramref name="writer"/> parameter is <b>null</b>.
         /// </exception>
         ///
-        /// <exception cref="HealthRecordItemSerializationException">
+        /// <exception cref="ThingSerializationException">
         /// If <see cref="Name"/> is <b>null</b>.
         /// </exception>
         ///
@@ -118,7 +118,7 @@ namespace Microsoft.HealthVault.ItemTypes
 
             if (this.name == null)
             {
-                throw new HealthRecordItemSerializationException(
+                throw new ThingSerializationException(
                     ResourceRetriever.GetResourceString(
                         "errors", "NutrientNameNullValue"));
             }

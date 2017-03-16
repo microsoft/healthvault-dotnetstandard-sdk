@@ -3,19 +3,18 @@
 // see http://www.microsoft.com/resources/sharedsource/licensingbasics/sharedsourcelicenses.mspx.
 // All other rights reserved.
 
+using Microsoft.HealthVault.Authentication;
+using Microsoft.HealthVault.Configuration;
+using Microsoft.HealthVault.Connection;
 using Microsoft.HealthVault.Exceptions;
+using Microsoft.HealthVault.Person;
+using Microsoft.HealthVault.PlatformInformation;
+using Microsoft.HealthVault.Record;
 using System;
 using System.Security;
 using System.Security.Permissions;
 using System.Text;
-using System.Threading.Tasks;
 using System.Web;
-using Microsoft.HealthVault.Authentication;
-using Microsoft.HealthVault.Configuration;
-using Microsoft.HealthVault.Connection;
-using Microsoft.HealthVault.Person;
-using Microsoft.HealthVault.PlatformInformation;
-using Microsoft.HealthVault.Record;
 
 namespace Microsoft.HealthVault.Web
 {
@@ -198,15 +197,10 @@ namespace Microsoft.HealthVault.Web
         {
             get
             {
-                if (_tier1AuthConnection == null)
-                {
-                    // TODO: IConnection-ify this.
-                    // _tier1AuthConnection = WebApplicationUtilities.GetApplicationConnection(ApplicationId);
-                }
-                return _tier1AuthConnection;
+                return this.appConnection ?? (this.appConnection = Ioc.Get<IHealthVaultConnection>());
             }
         }
-        private IHealthVaultConnection _tier1AuthConnection;
+        private IHealthVaultConnection appConnection;
 
         /// <summary>
         /// Gets a HealthVault connection without an authentication token.

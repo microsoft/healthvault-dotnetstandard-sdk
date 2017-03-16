@@ -23,7 +23,7 @@ namespace Microsoft.HealthVault.ItemTypes
     /// family medical history.
     /// </remarks>
     ///
-    public class FamilyHistoryRelativeV3 : HealthRecordItemData
+    public class FamilyHistoryRelativeV3 : ItemBase
     {
         /// <summary>
         /// Initialize a new instance of the <see cref="FamilyHistoryRelativeV3"/>
@@ -109,7 +109,7 @@ namespace Microsoft.HealthVault.ItemTypes
         /// If <paramref name="writer"/> is <b> null </b>.
         /// </exception>
         ///
-        /// <exception cref="HealthRecordItemSerializationException">
+        /// <exception cref="ThingSerializationException">
         /// If <see cref="Relationship"/> is <b> null </b>.
         /// </exception>
         ///

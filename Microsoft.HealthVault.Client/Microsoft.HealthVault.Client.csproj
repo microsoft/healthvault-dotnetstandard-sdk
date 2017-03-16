@@ -28,6 +28,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <CodeAnalysisRuleSet>..\CustomAnalysisRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -41,11 +42,14 @@
     <Compile Include="ClientConfiguration.cs" />
     <Compile Include="ClientHealthVaultConnection.cs" />
     <Compile Include="ClientHealthVaultFactory.cs" />
+    <Compile Include="ClientSessionCredentialClient.cs" />
     <Compile Include="Exceptions\BrowserAuthException.cs" />
     <Compile Include="Exceptions\ShellAuthException.cs" />
     <Compile Include="IBrowserAuthBroker.cs" />
     <Compile Include="ClientIoc.cs" />
+    <Compile Include="IClientHealthVaultConnection.cs" />
     <Compile Include="IClientHealthVaultFactory.cs" />
+    <Compile Include="IClientSessionCredentialClient.cs" />
     <Compile Include="IFileStore.cs" />
     <Compile Include="ILocalDataProtection.cs" />
     <Compile Include="ILocalObjectStore.cs" />

@@ -14,7 +14,7 @@ namespace Microsoft.HealthVault.ItemTypes
     /// A range of values indicating a status for a measurement.
     /// </summary>
     ///
-    public class CarePlanGoalRange : HealthRecordItemData
+    public class CarePlanGoalRange : ItemBase
     {
         /// <summary>
         /// Creates a new instance of the <see cref="CarePlanGoalRange"/> class with default values.

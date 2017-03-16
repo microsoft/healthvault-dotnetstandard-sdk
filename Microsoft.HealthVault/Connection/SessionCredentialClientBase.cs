@@ -1,23 +1,18 @@
-﻿using System;
+﻿using Microsoft.HealthVault.Configuration;
+using Microsoft.HealthVault.Helpers;
+using Microsoft.HealthVault.Transport;
+using System;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.XPath;
-using Microsoft.HealthVault.Configuration;
-using Microsoft.HealthVault.Helpers;
-using Microsoft.HealthVault.Transport;
 
 namespace Microsoft.HealthVault.Connection
 {
     internal abstract class SessionCredentialClientBase : ISessionCredentialClient
     {
         public IConnectionInternal Connection { get; set; }
-
-        protected SessionCredentialClientBase(IConnectionInternal connection)
-        {
-            this.Connection = connection;
-        }
 
         public async Task<SessionCredential> GetSessionCredentialAsync(CancellationToken token)
         {
@@ -26,13 +21,9 @@ namespace Microsoft.HealthVault.Connection
                 throw new NotSupportedException($"{nameof(this.Connection)} is required");
             }
 
-            HealthServiceRequest request = new HealthServiceRequest(
-                this.Connection, HealthVaultMethods.CreateAuthenticatedSessionToken, 2)
-            {
-                Parameters = this.ConstructCreateTokenInfoXml()
-            };
-
-            HealthServiceResponseData responseData = await request.ExecuteAsync().ConfigureAwait(false);
+            HealthServiceResponseData responseData = await this.Connection
+                .ExecuteAsync(HealthVaultMethods.CreateAuthenticatedSessionToken, 2, this.ConstructCreateTokenInfoXml())
+                .ConfigureAwait(false);
 
             return this.GetSessionCredential(responseData);
         }
@@ -151,11 +142,9 @@ namespace Microsoft.HealthVault.Connection
                 writer.WriteAttributeString("is-multi-record-app", "true");
             }
 
-            writer.WriteValue(this.ApplicationInstanceId.ToString());
+            writer.WriteValue(this.Connection.ApplicationId);
             writer.WriteEndElement();
         }
-
-        public abstract Guid ApplicationInstanceId { get; set; }
 
         public abstract void WriteInfoXml(XmlWriter writer);
     }

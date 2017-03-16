@@ -7,7 +7,7 @@ namespace Microsoft.HealthVault.Web
 {
     /// <summary>
     /// Indicates the type of the audit action template being used for a
-    /// <see cref="HealthRecordItemDataGrid"/>.
+    /// <see cref="ThingDataGrid"/>.
     /// </summary>
     ///
     public enum TemplateType

@@ -13,7 +13,7 @@ namespace Microsoft.HealthVault.ItemTypes
     /// Represents the language that a person speaks.
     /// </summary>
     ///
-    public class Language : HealthRecordItemData
+    public class Language : ItemBase
     {
         /// <summary>
         /// Creates a new instance of the <see cref="Language"/> class with empty values.

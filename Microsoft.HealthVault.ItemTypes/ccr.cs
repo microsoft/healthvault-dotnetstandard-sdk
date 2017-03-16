@@ -17,7 +17,7 @@ namespace Microsoft.HealthVault.ItemTypes
     /// The CCR XML can be accessed through the TypeSpecificXml property.
     /// </remarks>
     ///
-    public class CCR : HealthRecordItem
+    public class CCR : ThingBase
     {
         /// <summary>
         /// Initializes an instance of the <see cref="CCR"/> class,

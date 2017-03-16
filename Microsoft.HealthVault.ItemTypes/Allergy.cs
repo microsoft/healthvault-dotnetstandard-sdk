@@ -13,10 +13,10 @@ using Microsoft.HealthVault.Thing;
 namespace Microsoft.HealthVault.ItemTypes
 {
     /// <summary>
-    /// Represents a health record item type that encapsulates an allergy.
+    /// Represents a thing type that encapsulates an allergy.
     /// </summary>
     ///
-    public class Allergy : HealthRecordItem
+    public class Allergy : ThingBase
     {
         /// <summary>
         /// Creates a new instance of the <see cref="Allergy"/> class with default
@@ -25,7 +25,7 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         /// <remarks>
         /// The item is not added to the health record until the
-        /// <see cref="HealthRecordAccessor.NewItemAsync(HealthRecordItem)"/> method
+        /// <see cref="HealthRecordAccessor.NewItemAsync(ThingBase)"/> method
         /// is called.
         /// </remarks>
         ///
@@ -141,7 +141,7 @@ namespace Microsoft.HealthVault.ItemTypes
         /// If <paramref name="writer"/> is <b>null</b>.
         /// </exception>
         ///
-        /// <exception cref="HealthRecordItemSerializationException">
+        /// <exception cref="ThingSerializationException">
         /// If <see cref="Name"/> has an <b>null</b> Text property.
         /// </exception>
         ///

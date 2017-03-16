@@ -20,7 +20,7 @@ namespace Microsoft.HealthVault.ItemTypes
     /// including value, unit, reference, and toxic ranges.
     /// </remarks>
     ///
-    public class LabTestResultValue : HealthRecordItemData
+    public class LabTestResultValue : ItemBase
     {
         /// <summary>
         /// Initialize a new instance of the <see cref="LabTestResultValue"/>

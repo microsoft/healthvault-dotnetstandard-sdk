@@ -14,7 +14,7 @@ namespace Microsoft.HealthVault.ItemTypes
     /// Information related to a medication prescription.
     /// </summary>
     ///
-    public class Prescription : HealthRecordItemData
+    public class Prescription : ItemBase
     {
         /// <summary>
         /// Creates a new instance of the <see cref="Prescription"/> class with default

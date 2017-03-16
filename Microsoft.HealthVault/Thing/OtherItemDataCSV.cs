@@ -17,7 +17,7 @@ namespace Microsoft.HealthVault.Thing
     /// </summary>
     ///
     /// <remarks>
-    /// It is not used directly but through a derived class that is specific to a health record item type -
+    /// It is not used directly but through a derived class that is specific to a thing type -
     /// for example, the ExerciseSamplesData class.
     /// </remarks>
     public abstract class OtherItemDataCsv : OtherItemData

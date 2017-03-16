@@ -18,7 +18,7 @@ namespace Microsoft.HealthVault.ItemTypes
     /// An entity such as a hospital, a pharmacy,  or a doctor's office.
     /// </remarks>
     ///
-    public class Organization : HealthRecordItemData
+    public class Organization : ItemBase
     {
         /// <summary>
         /// It creates a new instance of the <see cref="Organization"/>

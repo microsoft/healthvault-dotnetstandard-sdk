@@ -29,7 +29,7 @@ namespace Microsoft.HealthVault.ItemTypes
     /// using the ExerciseSamplesData property.
     /// </remarks>
     ///
-    public class ExerciseSamples : HealthRecordItem
+    public class ExerciseSamples : ThingBase
     {
         /// <summary>
         /// Creates an instance of <see cref="ExerciseSamples"/> with default values.
@@ -38,7 +38,7 @@ namespace Microsoft.HealthVault.ItemTypes
         public ExerciseSamples()
             : base(TypeId)
         {
-            this.Sections |= HealthRecordItemSections.BlobPayload;
+            this.Sections |= ThingSections.BlobPayload;
         }
 
         /// <summary>
@@ -61,7 +61,7 @@ namespace Microsoft.HealthVault.ItemTypes
             this.Name = name;
             this.Unit = unit;
             this.SamplingInterval = samplingInterval;
-            this.Sections |= HealthRecordItemSections.BlobPayload;
+            this.Sections |= ThingSections.BlobPayload;
         }
 
         /// <summary>
@@ -116,7 +116,7 @@ namespace Microsoft.HealthVault.ItemTypes
         /// If <paramref name="writer"/> is <b>null</b>.
         /// </exception>
         ///
-        /// <exception cref="HealthRecordItemSerializationException">
+        /// <exception cref="ThingSerializationException">
         /// If <see cref="When"/> is <b>null</b>.
         /// </exception>
         ///

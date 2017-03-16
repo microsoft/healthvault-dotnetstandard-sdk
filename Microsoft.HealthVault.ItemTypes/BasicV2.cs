@@ -17,7 +17,7 @@ namespace Microsoft.HealthVault.ItemTypes
     /// Represents information about a health record that is not considered personally
     /// identifiable.
     /// </summary>
-    public class BasicV2 : HealthRecordItem
+    public class BasicV2 : ThingBase
     {
         /// <summary>
         /// Creates a new instance of the <see cref="BasicV2"/> class with default values.
@@ -25,7 +25,7 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         /// <remarks>
         /// The item is not added to the health record until the
-        /// <see cref="HealthRecordAccessor.NewItem(HealthRecordItem)"/> method
+        /// <see cref="HealthRecordAccessor.NewItem(ThingBase)"/> method
         /// is called.
         /// </remarks>
         ///

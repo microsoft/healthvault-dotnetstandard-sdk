@@ -16,13 +16,13 @@ using Microsoft.HealthVault.Transport;
 namespace Microsoft.HealthVault.Thing
 {
     /// <summary>
-    /// Searches for health record items in HealthVault records.
+    /// Searches for things in HealthVault records.
     /// </summary>
     ///
     /// <remarks>
     /// This class wraps up the logic for constructing a "GetThings" query
     /// against the HealthVault service.  It generates the necessary XML to
-    /// call the "GetThings" and retrieve health record items that match the specified
+    /// call the "GetThings" and retrieve things that match the specified
     /// criteria.
     /// </remarks>
     ///
@@ -44,7 +44,7 @@ namespace Microsoft.HealthVault.Thing
         }
 
         /// <summary>
-        /// Gets the health record that is being searched for health record items.
+        /// Gets the health record that is being searched for things.
         /// </summary>
         ///
         /// <value>
@@ -53,7 +53,7 @@ namespace Microsoft.HealthVault.Thing
         ///
         /// <remarks>
         /// The authenticated person must have
-        /// <see cref="HealthRecordItemPermissions.Read"/> access rights to the
+        /// <see cref="ThingPermissions.Read"/> access rights to the
         /// health record to get results from the query.
         /// </remarks>
         ///
@@ -71,12 +71,12 @@ namespace Microsoft.HealthVault.Thing
         public Collection<ThingQuery> Filters { get; } = new Collection<ThingQuery>();
 
         /// <summary>
-        /// Gets the health record items that match the filters as specified by
+        /// Gets the things that match the filters as specified by
         /// the properties of this class.
         /// </summary>
         ///
         /// <returns>
-        /// A collection of health record items that match the applied filters.
+        /// A collection of things that match the applied filters.
         /// </returns>
         ///
         /// <remarks>
@@ -91,13 +91,13 @@ namespace Microsoft.HealthVault.Thing
         /// or contains invalid filters.
         /// </exception>
         ///
-        internal async Task<ReadOnlyCollection<HealthRecordItemCollection>> GetMatchingItems()
+        internal async Task<ReadOnlyCollection<ThingCollection>> GetMatchingItems()
         {
             return await HealthVaultPlatform.GetMatchingItemsAsync(this.Record.Connection, this.Record, this).ConfigureAwait(false);
         }
 
         /// <summary>
-        /// Gets the health record items that match the filters as specified by
+        /// Gets the things that match the filters as specified by
         /// the properties of this class.
         /// </summary>
         ///
@@ -109,7 +109,7 @@ namespace Microsoft.HealthVault.Thing
         /// This method accesses the HealthVault service across the network.
         /// <br/><br/>
         /// This method is typically used when the calling application wants to
-        /// handle the raw health record item XML directly instead of using the
+        /// handle the raw thing XML directly instead of using the
         /// object model.
         /// </remarks>
         ///
@@ -119,7 +119,7 @@ namespace Microsoft.HealthVault.Thing
         }
 
         /// <summary>
-        /// Gets the health record items that match the filters as specified by
+        /// Gets the things that match the filters as specified by
         /// the properties of this class.
         /// </summary>
         ///
@@ -131,7 +131,7 @@ namespace Microsoft.HealthVault.Thing
         /// This method accesses the HealthVault service across the network.
         /// <br/><br/>
         /// This method is typically used when the calling application wants to
-        /// handle the raw health record item XML directly instead of using the
+        /// handle the raw thing XML directly instead of using the
         /// object model.
         /// </remarks>
         ///
@@ -141,21 +141,21 @@ namespace Microsoft.HealthVault.Thing
         }
 
         /// <summary>
-        /// Gets a single health record item from the associated record by
+        /// Gets a single thing from the associated record by
         /// using the item identifier.
         /// </summary>
         ///
         /// <param name="itemId">
-        /// The unique identifier for the health record item.
+        /// The unique identifier for the thing.
         /// </param>
         ///
         /// <param name="sections">
-        /// The data sections of the health record item that should be retrieved.
+        /// The data sections of the thing that should be retrieved.
         /// </param>
         ///
         /// <returns>
-        /// An instance of a <see cref="HealthRecordItem"/>
-        /// representing the health record item with the specified identifier.
+        /// An instance of a <see cref="ThingBase"/>
+        /// representing the thing with the specified identifier.
         /// </returns>
         ///
         /// <remarks>
@@ -175,7 +175,7 @@ namespace Microsoft.HealthVault.Thing
         ///
         public async Task<IThing> GetSingleItem(
             Guid itemId,
-            HealthRecordItemSections sections)
+            ThingSections sections)
         {
             // Create a new searcher to get the item.
             HealthRecordSearcher searcher = new HealthRecordSearcher(this.Record);
@@ -187,7 +187,7 @@ namespace Microsoft.HealthVault.Thing
 
             searcher.Filters.Add(query);
 
-            ReadOnlyCollection<HealthRecordItemCollection> resultSet =
+            ReadOnlyCollection<ThingCollection> resultSet =
                 await HealthVaultPlatform.GetMatchingItemsAsync(this.Record.Connection, this.Record, searcher).ConfigureAwait(false);
 
             // Check in case HealthVault returned invalid data.
@@ -209,7 +209,7 @@ namespace Microsoft.HealthVault.Thing
             IThing result = null;
             if (resultSet.Count == 1)
             {
-                HealthRecordItemCollection resultGroup = resultSet[0];
+                ThingCollection resultGroup = resultSet[0];
 
                 if (resultGroup.Count > 1)
                 {
@@ -236,7 +236,7 @@ namespace Microsoft.HealthVault.Thing
         }
 
         /// <summary>
-        /// Gets the health record items specified by the
+        /// Gets the things specified by the
         /// <see cref="Filters"/> and runs them through the specified
         /// transform.
         /// </summary>

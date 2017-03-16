@@ -14,7 +14,7 @@ namespace Microsoft.HealthVault.ItemTypes
     /// Represents a target heart rate zone.
     /// </summary>
     ///
-    public class HeartRateZone : HealthRecordItemData
+    public class HeartRateZone : ItemBase
     {
         /// <summary>
         /// Creates a new instance of the <see cref="HeartRateZone"/> class with default values.

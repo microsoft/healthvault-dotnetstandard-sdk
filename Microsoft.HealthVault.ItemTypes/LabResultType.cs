@@ -15,7 +15,7 @@ namespace Microsoft.HealthVault.ItemTypes
     /// Represents a clinical value within lab result.
     /// </summary>
     ///
-    public class LabResultType : HealthRecordItemData
+    public class LabResultType : ItemBase
     {
         /// <summary>
         /// Populates the data for the lab result type from the XML.

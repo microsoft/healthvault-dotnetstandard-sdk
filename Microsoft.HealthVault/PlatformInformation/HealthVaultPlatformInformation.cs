@@ -390,11 +390,11 @@ namespace Microsoft.HealthVault.PlatformInformation
             }
         }
 
-        private readonly Dictionary<string, Dictionary<HealthRecordItemTypeSections, Dictionary<Guid, HealthRecordItemTypeDefinition>>>
-            sectionCache = new Dictionary<string, Dictionary<HealthRecordItemTypeSections, Dictionary<Guid, HealthRecordItemTypeDefinition>>>();
+        private readonly Dictionary<string, Dictionary<ThingTypeSections, Dictionary<Guid, ThingTypeDefinition>>>
+            sectionCache = new Dictionary<string, Dictionary<ThingTypeSections, Dictionary<Guid, ThingTypeDefinition>>>();
 
         /// <summary>
-        /// Gets the definitions for one or more health record item type definitions
+        /// Gets the definitions for one or more thing type definitions
         /// supported by HealthVault.
         /// </summary>
         ///
@@ -404,7 +404,7 @@ namespace Microsoft.HealthVault.PlatformInformation
         /// </param>
         ///
         /// <param name="sections">
-        /// A collection of HealthRecordItemTypeSections enumeration values that indicate the type
+        /// A collection of ThingTypeSections enumeration values that indicate the type
         /// of details to be returned for the specified health item records(s).
         /// </param>
         ///
@@ -450,9 +450,9 @@ namespace Microsoft.HealthVault.PlatformInformation
         /// If <paramref name="connection"/> parameter is <b>null</b>.
         /// </exception>
         ///
-        public virtual async Task<IDictionary<Guid, HealthRecordItemTypeDefinition>> GetHealthRecordItemTypeDefinitionAsync(
+        public virtual async Task<IDictionary<Guid, ThingTypeDefinition>> GetHealthRecordItemTypeDefinitionAsync(
             IList<Guid> typeIds,
-            HealthRecordItemTypeSections sections,
+            ThingTypeSections sections,
             IList<string> imageTypes,
             DateTime? lastClientRefreshDate,
             IConnectionInternal connection)
@@ -482,9 +482,9 @@ namespace Microsoft.HealthVault.PlatformInformation
                 connection).ConfigureAwait(false);
         }
 
-        private async Task<IDictionary<Guid, HealthRecordItemTypeDefinition>> GetHealthRecordItemTypeDefinitionNoDateAsync(
+        private async Task<IDictionary<Guid, ThingTypeDefinition>> GetHealthRecordItemTypeDefinitionNoDateAsync(
             IList<Guid> typeIds,
-            HealthRecordItemTypeSections sections,
+            ThingTypeSections sections,
             IList<string> imageTypes,
             IConnectionInternal connection)
         {
@@ -493,7 +493,7 @@ namespace Microsoft.HealthVault.PlatformInformation
             settings.OmitXmlDeclaration = true;
             settings.ConformanceLevel = ConformanceLevel.Fragment;
 
-            Dictionary<Guid, HealthRecordItemTypeDefinition> cachedThingTypes = null;
+            Dictionary<Guid, ThingTypeDefinition> cachedThingTypes = null;
 
             string cultureName = CultureInfo.CurrentCulture.Name;
             bool sendRequest = false;
@@ -510,12 +510,12 @@ namespace Microsoft.HealthVault.PlatformInformation
                             {
                                 this.sectionCache.Add(
                                     cultureName,
-                                    new Dictionary<HealthRecordItemTypeSections, Dictionary<Guid, HealthRecordItemTypeDefinition>>());
+                                    new Dictionary<ThingTypeSections, Dictionary<Guid, ThingTypeDefinition>>());
                             }
 
                             if (!this.sectionCache[cultureName].ContainsKey(sections))
                             {
-                                this.sectionCache[cultureName].Add(sections, new Dictionary<Guid, HealthRecordItemTypeDefinition>());
+                                this.sectionCache[cultureName].Add(sections, new Dictionary<Guid, ThingTypeDefinition>());
                             }
 
                             if (this.sectionCache[cultureName][sections].ContainsKey(id))
@@ -523,7 +523,7 @@ namespace Microsoft.HealthVault.PlatformInformation
                                 if (cachedThingTypes == null)
                                 {
                                     cachedThingTypes =
-                                        new Dictionary<Guid, HealthRecordItemTypeDefinition>();
+                                        new Dictionary<Guid, ThingTypeDefinition>();
                                 }
 
                                 cachedThingTypes[id] = this.sectionCache[cultureName][sections][id];
@@ -549,12 +549,12 @@ namespace Microsoft.HealthVault.PlatformInformation
                         {
                             this.sectionCache.Add(
                                 cultureName,
-                                new Dictionary<HealthRecordItemTypeSections, Dictionary<Guid, HealthRecordItemTypeDefinition>>());
+                                new Dictionary<ThingTypeSections, Dictionary<Guid, ThingTypeDefinition>>());
                         }
 
                         if (!this.sectionCache[cultureName].ContainsKey(sections))
                         {
-                            this.sectionCache[cultureName].Add(sections, new Dictionary<Guid, HealthRecordItemTypeDefinition>());
+                            this.sectionCache[cultureName].Add(sections, new Dictionary<Guid, ThingTypeDefinition>());
                         }
                         else
                         {
@@ -591,7 +591,7 @@ namespace Microsoft.HealthVault.PlatformInformation
                     1,
                     requestParameters.ToString()).ConfigureAwait(false);
 
-                Dictionary<Guid, HealthRecordItemTypeDefinition> result =
+                Dictionary<Guid, ThingTypeDefinition> result =
                     this.CreateThingTypesFromResponse(
                         cultureName,
                         responseData,
@@ -610,9 +610,9 @@ namespace Microsoft.HealthVault.PlatformInformation
             }
         }
 
-        private async Task<IDictionary<Guid, HealthRecordItemTypeDefinition>> GetHealthRecordItemTypeDefinitionByDateAsync(
+        private async Task<IDictionary<Guid, ThingTypeDefinition>> GetHealthRecordItemTypeDefinitionByDateAsync(
             IList<Guid> typeIds,
-            HealthRecordItemTypeSections sections,
+            ThingTypeSections sections,
             IList<string> imageTypes,
             DateTime lastClientRefreshDate,
             IConnectionInternal connection)
@@ -661,7 +661,7 @@ namespace Microsoft.HealthVault.PlatformInformation
                     1,
                     requestParameters.ToString()).ConfigureAwait(false);
 
-                Dictionary<Guid, HealthRecordItemTypeDefinition> result =
+                Dictionary<Guid, ThingTypeDefinition> result =
                     this.CreateThingTypesFromResponse(
                         CultureInfo.CurrentCulture.Name,
                         responseData,
@@ -679,73 +679,73 @@ namespace Microsoft.HealthVault.PlatformInformation
 
         private static void WriteSectionSpecs(
             XmlWriter writer,
-            HealthRecordItemTypeSections sectionSpecs)
+            ThingTypeSections sectionSpecs)
         {
-            if ((sectionSpecs & HealthRecordItemTypeSections.Core) != HealthRecordItemTypeSections.None)
+            if ((sectionSpecs & ThingTypeSections.Core) != ThingTypeSections.None)
             {
                 writer.WriteStartElement("section");
-                writer.WriteString(HealthRecordItemTypeSections.Core.ToString().ToLowerInvariant());
+                writer.WriteString(ThingTypeSections.Core.ToString().ToLowerInvariant());
                 writer.WriteEndElement();
             }
 
-            if ((sectionSpecs & HealthRecordItemTypeSections.Xsd) != HealthRecordItemTypeSections.None)
+            if ((sectionSpecs & ThingTypeSections.Xsd) != ThingTypeSections.None)
             {
                 writer.WriteStartElement("section");
-                writer.WriteString(HealthRecordItemTypeSections.Xsd.ToString().ToLowerInvariant());
+                writer.WriteString(ThingTypeSections.Xsd.ToString().ToLowerInvariant());
                 writer.WriteEndElement();
             }
 
-            if ((sectionSpecs & HealthRecordItemTypeSections.Columns) != HealthRecordItemTypeSections.None)
+            if ((sectionSpecs & ThingTypeSections.Columns) != ThingTypeSections.None)
             {
                 writer.WriteStartElement("section");
-                writer.WriteString(HealthRecordItemTypeSections.Columns.ToString().ToLowerInvariant());
+                writer.WriteString(ThingTypeSections.Columns.ToString().ToLowerInvariant());
                 writer.WriteEndElement();
             }
 
-            if ((sectionSpecs & HealthRecordItemTypeSections.Transforms) != HealthRecordItemTypeSections.None)
+            if ((sectionSpecs & ThingTypeSections.Transforms) != ThingTypeSections.None)
             {
                 writer.WriteStartElement("section");
-                writer.WriteString(HealthRecordItemTypeSections.Transforms.ToString().ToLowerInvariant());
+                writer.WriteString(ThingTypeSections.Transforms.ToString().ToLowerInvariant());
                 writer.WriteEndElement();
             }
 
-            if ((sectionSpecs & HealthRecordItemTypeSections.TransformSource) != HealthRecordItemTypeSections.None)
+            if ((sectionSpecs & ThingTypeSections.TransformSource) != ThingTypeSections.None)
             {
                 writer.WriteStartElement("section");
-                writer.WriteString(HealthRecordItemTypeSections.TransformSource.ToString().ToLowerInvariant());
+                writer.WriteString(ThingTypeSections.TransformSource.ToString().ToLowerInvariant());
                 writer.WriteEndElement();
             }
 
-            if ((sectionSpecs & HealthRecordItemTypeSections.Versions) != HealthRecordItemTypeSections.None)
+            if ((sectionSpecs & ThingTypeSections.Versions) != ThingTypeSections.None)
             {
                 writer.WriteStartElement("section");
-                writer.WriteString(HealthRecordItemTypeSections.Versions.ToString().ToLowerInvariant());
+                writer.WriteString(ThingTypeSections.Versions.ToString().ToLowerInvariant());
                 writer.WriteEndElement();
             }
 
-            if ((sectionSpecs & HealthRecordItemTypeSections.EffectiveDateXPath) != HealthRecordItemTypeSections.None)
+            if ((sectionSpecs & ThingTypeSections.EffectiveDateXPath) != ThingTypeSections.None)
             {
                 writer.WriteStartElement("section");
-                writer.WriteString(HealthRecordItemTypeSections.EffectiveDateXPath.ToString().ToLowerInvariant());
+                writer.WriteString(ThingTypeSections.EffectiveDateXPath.ToString().ToLowerInvariant());
                 writer.WriteEndElement();
             }
         }
 
-        private Dictionary<Guid, HealthRecordItemTypeDefinition> CreateThingTypesFromResponse(
+        private Dictionary<Guid, ThingTypeDefinition> CreateThingTypesFromResponse(
             string cultureName,
             HealthServiceResponseData response,
-            HealthRecordItemTypeSections sections,
-            Dictionary<Guid, HealthRecordItemTypeDefinition> cachedThingTypes)
+            ThingTypeSections sections,
+            Dictionary<Guid, ThingTypeDefinition> cachedThingTypes)
         {
-            Dictionary<Guid, HealthRecordItemTypeDefinition> thingTypes;
+            Dictionary<Guid, ThingTypeDefinition> thingTypes;
 
             if (cachedThingTypes != null && cachedThingTypes.Count > 0)
             {
-                thingTypes = new Dictionary<Guid, HealthRecordItemTypeDefinition>(cachedThingTypes);
+                thingTypes = new Dictionary<Guid, ThingTypeDefinition>(cachedThingTypes);
             }
             else
             {
-                thingTypes = new Dictionary<Guid, HealthRecordItemTypeDefinition>();
+                thingTypes = new Dictionary<Guid, ThingTypeDefinition>();
             }
 
             XPathNodeIterator thingTypesIterator =
@@ -755,18 +755,18 @@ namespace Microsoft.HealthVault.PlatformInformation
             {
                 if (!this.sectionCache.ContainsKey(cultureName))
                 {
-                    this.sectionCache.Add(cultureName, new Dictionary<HealthRecordItemTypeSections, Dictionary<Guid, HealthRecordItemTypeDefinition>>());
+                    this.sectionCache.Add(cultureName, new Dictionary<ThingTypeSections, Dictionary<Guid, ThingTypeDefinition>>());
                 }
 
                 if (!this.sectionCache[cultureName].ContainsKey(sections))
                 {
-                    this.sectionCache[cultureName].Add(sections, new Dictionary<Guid, HealthRecordItemTypeDefinition>());
+                    this.sectionCache[cultureName].Add(sections, new Dictionary<Guid, ThingTypeDefinition>());
                 }
 
                 foreach (XPathNavigator navigator in thingTypesIterator)
                 {
-                    HealthRecordItemTypeDefinition thingType =
-                        HealthRecordItemTypeDefinition.CreateFromXml(navigator);
+                    ThingTypeDefinition thingType =
+                        ThingTypeDefinition.CreateFromXml(navigator);
 
                     this.sectionCache[cultureName][sections][thingType.TypeId] = thingType;
                     thingTypes[thingType.TypeId] = thingType;

@@ -652,7 +652,7 @@ namespace Microsoft.HealthVault.Record
         public DateTime DateUpdated { get; protected set; }
 
         /// <summary>
-        /// Gets the maximum total size in bytes that the <see cref="HealthRecordItem" />s in
+        /// Gets the maximum total size in bytes that the <see cref="ThingBase" />s in
         /// the <see cref="HealthRecordInfo" /> can occupy.
         /// </summary>
         ///
@@ -664,7 +664,7 @@ namespace Microsoft.HealthVault.Record
         public long? QuotaInBytes { get; protected set; }
 
         /// <summary>
-        /// Gets the total size in bytes that the <see cref="HealthRecordItem" />s in
+        /// Gets the total size in bytes that the <see cref="ThingBase" />s in
         /// the <see cref="HealthRecordInfo" /> currently occupy.
         /// </summary>
         ///
@@ -681,7 +681,7 @@ namespace Microsoft.HealthVault.Record
         ///
         /// <remarks>
         /// The record's operation sequence number is used when sync'ing data from a
-        /// record. Anytime an operation is performed against a health record item HealthVault
+        /// record. Anytime an operation is performed against a thing HealthVault
         /// stamps it with the next increment of the operation sequence number for the record.
         /// For example, the first item added to the record would be stamped with the sequence
         /// number 1, the next operation would stamp the thing with 2, etc. Applications can

@@ -22,7 +22,7 @@ namespace Microsoft.HealthVault.ItemTypes
     /// record.
     /// </remarks>
     ///
-    public class FamilyHistory : HealthRecordItem
+    public class FamilyHistory : ThingBase
     {
         /// <summary>
         /// Initialize a new instance of the <see cref="FamilyHistory"/>

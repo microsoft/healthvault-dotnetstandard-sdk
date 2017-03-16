@@ -8,10 +8,9 @@ namespace Microsoft.HealthVault
     /// <summary>
     /// The public HealthVault methods that are available for applications to call.
     /// </summary>
-    ///
-    /// Note, the numeric value is not important. These values don't map directly to the
-    /// platform method enum values.
-    ///
+    /// <remarks>The numeric value is not important. These values don't map directly to the
+    /// platform method enum values. The enum names are directly used as method names when
+    /// calling HealthVault, so do not rename them.</remarks>
     public enum HealthVaultMethods
     {
         /// <summary>
@@ -25,7 +24,7 @@ namespace Microsoft.HealthVault
         AssociateAlternateId,
 
         /// <summary>
-        /// Begin to stream binary data for a HealthRecordItem.
+        /// Begin to stream binary data for a ThingBase.
         /// </summary>
         BeginPutBlob,
 
@@ -112,6 +111,7 @@ namespace Microsoft.HealthVault
         /// <summary>
         /// Get Meaningful Use VDT Report.
         /// </summary>
+        // ReSharper disable once InconsistentNaming
         GetMeaningfulUseVDTReport,
 
         /// <summary>

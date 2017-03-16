@@ -28,7 +28,7 @@ namespace Microsoft.HealthVault.ItemTypes
     /// units ("12.25 pounds").
     /// </remarks>
     ///
-    public class DisplayValue : HealthRecordItemData
+    public class DisplayValue : ItemBase
     {
         /// <summary>
         /// Creates a new instance of the <see cref="DisplayValue"/> class with empty values.

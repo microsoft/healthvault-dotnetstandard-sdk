@@ -15,7 +15,7 @@ namespace Microsoft.HealthVault.ItemTypes
     /// Represents a lab test component, including the lab result value.
     /// </summary>
     ///
-    public class LabTestType : HealthRecordItemData
+    public class LabTestType : ItemBase
     {
         /// <summary>
         /// Constructs a new instance of the <see cref="LabTestType"/> class with

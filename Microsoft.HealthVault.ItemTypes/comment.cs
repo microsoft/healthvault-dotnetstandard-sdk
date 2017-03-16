@@ -16,7 +16,7 @@ namespace Microsoft.HealthVault.ItemTypes
     /// Information related to a comment.
     /// </summary>
     ///
-    public class Comment : HealthRecordItem
+    public class Comment : ThingBase
     {
         /// <summary>
         /// Creates a new instance of the <see cref="Comment"/> class with default values.
@@ -24,7 +24,7 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         /// <remarks>
         /// This item is not added to the health record until the
-        /// <see cref="HealthRecordAccessor.NewItem(HealthRecordItem)"/> method
+        /// <see cref="HealthRecordAccessor.NewItem(ThingBase)"/> method
         /// is called.
         /// </remarks>
         ///
@@ -40,7 +40,7 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         /// <remarks>
         /// This item is not added to the health record until the
-        /// <see cref="HealthRecordAccessor.NewItem(HealthRecordItem)"/> method
+        /// <see cref="HealthRecordAccessor.NewItem(ThingBase)"/> method
         /// is called.
         /// </remarks>
         ///

@@ -16,7 +16,7 @@ using Microsoft.HealthVault.Thing;
 namespace Microsoft.HealthVault.ItemTypes
 {
     /// <summary>
-    /// Represents a health record item that encapsulates an asthma inhaler.
+    /// Represents a thing that encapsulates an asthma inhaler.
     /// </summary>
     ///
     /// <remarks>
@@ -28,7 +28,7 @@ namespace Microsoft.HealthVault.ItemTypes
     /// item to be created.
     /// </remarks>
     ///
-    public class AsthmaInhaler : HealthRecordItem
+    public class AsthmaInhaler : ThingBase
     {
         /// <summary>
         /// Creates a new instance of the <see cref="AsthmaInhaler"/> class with
@@ -37,7 +37,7 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         /// <remarks>
         /// The item is not added to the health record until the
-        /// <see cref="HealthRecordAccessor.NewItemAsync(HealthRecordItem)"/> method
+        /// <see cref="HealthRecordAccessor.NewItemAsync(ThingBase)"/> method
         /// is called.
         /// </remarks>
         ///
@@ -218,7 +218,7 @@ namespace Microsoft.HealthVault.ItemTypes
         /// If <paramref name="writer"/> is <b>null</b>.
         /// </exception>
         ///
-        /// <exception cref="HealthRecordItemSerializationException">
+        /// <exception cref="ThingSerializationException">
         /// If <see cref="StartDate"/> is <b>null</b>, or
         /// <see cref="Drug"/> is <b>null</b> or empty.
         /// </exception>

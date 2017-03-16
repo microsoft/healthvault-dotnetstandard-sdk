@@ -19,7 +19,7 @@ namespace Microsoft.HealthVault.ItemTypes
     /// Exmaples: Waist size, head circumference, length (pediatric).
     /// </remarks>
     ///
-    public class BodyDimension : HealthRecordItem
+    public class BodyDimension : ThingBase
     {
         /// <summary>
         /// Stores a body dimension.

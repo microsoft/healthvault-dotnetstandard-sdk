@@ -99,11 +99,11 @@ BlobStreamNoData=A blob was created but no data was written to it.
 ConnectPackageConnectionNull=The connection cannot be null.
 
 #Package.cs
-PackageCreateHRIMissingMandatory=The friendly name, security question and answer, application patient ID, and a list of HealthRecordItems must all be specified when creating a package.
+PackageCreateHRIMissingMandatory=The friendly name, security question and answer, application patient ID, and a list of things must all be specified when creating a package.
 PackageCreateHRIAnswerLength=The specified answer must be at least 6 characters long.
 PackageCreatePPPMissingMandatory=The friendly name, security question, application patient ID, and a PasswordProtectedPackage must all be specified when creating a package.
-PackageCreateInvalidPackageContents=At least one of the HealthRecordItems in the package's contents was null. Please ensure none of the HealthRecordItems in the package contents are null.
-PackageCreateSignedWithStreamedBlobsNotSupported=Packages containing signed HealthRecordItems with streamed BLOBs is not supported.
+PackageCreateInvalidPackageContents=At least one of the things in the package's contents was null. Please ensure none of the things in the package contents are null.
+PackageCreateSignedWithStreamedBlobsNotSupported=Packages containing signed things with streamed BLOBs is not supported.
 PackageDeletePendingMissingMandatory=The application patient ID must be specified to remove a pending package.
 PackageUpdateApplicationPatientIdMissingMandatory=The old application patient ID and the new application patient ID must be specified to update the package.
 
@@ -172,29 +172,29 @@ InvalidPersonId = The person Id is empty.
 InvalidApplicationCertificate = The certificate for the application is invalid or not found.
 
 # HealthRecord.cs
-UpdateItemsArgumentNull=A valid enumeration of non-null health record items must be provided.
-UpdateItemNull=A valid health record item must be provided for update.
-RemoveItemsListNullOrEmpty=A valid enumeration of health record items must be provided for removal.
-RemoveItemNull=A valid health record item must be provided for removal.
-RemoveItemGuidEmpty=A valid health record item identifier must be provided for removal.
+UpdateItemsArgumentNull=A valid enumeration of non-null things must be provided.
+UpdateItemNull=A valid thing must be provided for update.
+RemoveItemsListNullOrEmpty=A valid enumeration of things must be provided for removal.
+RemoveItemNull=A valid thing must be provided for removal.
+RemoveItemGuidEmpty=A valid thing identifier must be provided for removal.
 CtorServiceArgumentNull=A valid connection instance must be provided.
 CtorIDArgumentEmpty=The record ID cannot be Guid.Empty.
 HealthRecordNotUpdated=The data for this property is not available until Refresh is called.
-NewItemNullItem=The health record item must be specified when creating a new item.
-NewItemsNullItem=A valid enumeration of non-null health record items mu	st be provided.
+NewItemNullItem=The thing must be specified when creating a new item.
+NewItemsNullItem=A valid enumeration of non-null things mu	st be provided.
 UpdateItemsWithNoId=An item cannot be updated without specifying it's unique identifier.
 InvalidConnectionType=The information for the record '{0}' could not be refreshed because the Connection is not an AuthenticatedConnection.
 
 # HealthRecordAccessor.cs 
-CtorhealthRecordItemTypesArgumentNull=A non null list of health record item types must be provided.
-CtorhealthRecordItemTypeIdsArgumentNull=A non null list of health record item type ids must be provided.
+CtorhealthRecordItemTypesArgumentNull=A non null list of thing types must be provided.
+CtorhealthRecordItemTypeIdsArgumentNull=A non null list of thing type ids must be provided.
 
 # HealthRecordInfo.cs
 ConnectionIsNeitherAuthenticatedNorOffline=The information for the record '{0}' could not be refreshed because the connection is neither an authenticated connection nor a offline web connection.
 
 # HealthRecordItem.cs
-ThingIdInvalid=The health record item id cannot be Guid.Empty;
-ThingVersionInvalid=The health record item version-stamp cannot be Guid.Empty.
+ThingIdInvalid=The thing id cannot be Guid.Empty;
+ThingVersionInvalid=The thing version-stamp cannot be Guid.Empty.
 ThingIdNotReturned=The response from the server did not include the unique identifier for the item.
 ThingDeserializationFailed=The type specific item data could not be parsed.
 ThingElementNameInvalid=The specified wrapper name cannot be null or empty.
@@ -203,11 +203,11 @@ OtherDataPutStreamRecreationNotAllowed=The stream to send the other data over HT
 OtherDataSizeLimitExceeded=The other data item cannot be larger than the largest size allowed by the HealthVault platform.
 CannotChangeImmutableFlag=Cannot change read-only flag to false if it is already true.
 # SignatureData.cs
-SignatureMethodUnsupported=The health record item signature method {0} is not supported.
-SignatureOnlyOneAllowed=A health record item may only have one signature.
-SignatureNoSignature=The health record item does not contain a signature.
-SignatureSigningFailed=Unable to sign the health record item. {0}
-SignatureValidationFailed=Unable to validate the signature of the health record item. {0}
+SignatureMethodUnsupported=The thing signature method {0} is not supported.
+SignatureOnlyOneAllowed=A thing may only have one signature.
+SignatureNoSignature=The thing does not contain a signature.
+SignatureSigningFailed=Unable to sign the thing. {0}
+SignatureValidationFailed=Unable to validate the signature of the thing. {0}
 SignatureDeserializationFailed=The signature could not be parsed. {0}
 SigningCertificateNull=The value of the signingCertificate property cannot be null.
 ThingDocNull=The value of the thingDoc property cannot be null.
@@ -254,10 +254,10 @@ ResultGroupRangeMinGreaterThanMax=The minimum index must be less than or equal t
 NoSectionsOrTransforms=At least one section or one transform must be specified for the view.
 
 # HealthRecordItemRelationship.cs
-RelationshipItemIDNotSpecified=The health record item identifier must be specified.
-RelationshipItemKeyNotSpecified=A health record item key must be specified.
+RelationshipItemIDNotSpecified=The thing identifier must be specified.
+RelationshipItemKeyNotSpecified=A thing key must be specified.
 RelationshipClientIdNotSpecified=A non null and non empty string must be specified for the client id.
-RelationshipItemKeyOrClientIdNotSpecified=A health record item key or a client id must be specified.
+RelationshipItemKeyOrClientIdNotSpecified=A thing key or a client id must be specified.
 
 # HealthServiceConnection.cs
 InvalidApplicationIdConfiguration=To use this constructor, the application ID must be specified in the web or application configuration file.

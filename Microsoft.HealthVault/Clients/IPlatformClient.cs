@@ -11,7 +11,7 @@ using Microsoft.HealthVault.Thing;
 namespace Microsoft.HealthVault.Clients
 {
     /// <summary>
-    /// An interface for the HealthVault platform client. Used to access information about the platform.
+    /// Methods to interact with the platform.
     /// </summary>
     public interface IPlatformClient : IClient
     {
@@ -226,7 +226,7 @@ namespace Microsoft.HealthVault.Clients
         Task<ServiceInfo> GetServiceDefinitionAsync(ServiceInfoSections responseSections, DateTime lastUpdatedTime);
 
         /// <summary>
-        /// Gets the definitions for one or more health record item type definitions
+        /// Gets the definitions for one or more thing type definitions
         /// supported by HealthVault.
         /// </summary>
         ///
@@ -236,7 +236,7 @@ namespace Microsoft.HealthVault.Clients
         /// </param>
         ///
         /// <param name="sections">
-        /// A collection of HealthRecordItemTypeSections enumeration values that indicate the type
+        /// A collection of ThingTypeSections enumeration values that indicate the type
         /// of details to be returned for the specified health item records(s).
         /// </param>
         ///
@@ -269,10 +269,16 @@ namespace Microsoft.HealthVault.Clients
         /// <see cref="System.Guid.Empty"/>.
         /// </exception>
         /// 
-        Task<IDictionary<Guid, HealthRecordItemTypeDefinition>> GetHealthRecordItemTypeDefinitionAsync(
+        Task<IDictionary<Guid, ThingTypeDefinition>> GetHealthRecordItemTypeDefinitionAsync(
             IList<Guid> typeIds,
-            HealthRecordItemTypeSections sections,
+            ThingTypeSections sections,
             IList<string> imageTypes,
             DateTime? lastClientRefreshDate);
+
+        /// <summary>
+        /// Creates a new application instance. This is the first step in the SODA authentication flow.
+        /// </summary>
+        /// <returns>Information about the newly created application instance.</returns>
+        Task<ApplicationCreationInfo> NewApplicationCreationInfoAsync();
     }
 }

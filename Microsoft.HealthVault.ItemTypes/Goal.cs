@@ -15,7 +15,7 @@ namespace Microsoft.HealthVault.ItemTypes
     /// Represents a goal.
     /// </summary>
     ///
-    public class Goal : HealthRecordItemData
+    public class Goal : ItemBase
     {
         /// <summary>
         /// Creates a new instance of the <see cref="Goal"/> class with default values.

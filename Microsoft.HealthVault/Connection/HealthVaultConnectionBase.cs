@@ -21,15 +21,13 @@ namespace Microsoft.HealthVault.Connection
     /// Base implementations of IConnection
     /// </summary>
     /// <seealso cref="IHealthVaultConnection" />
-    internal abstract class ConnectionInternalBase : IConnectionInternal
+    internal abstract class HealthVaultConnectionBase : IConnectionInternal
     {
         private readonly AsyncLock asyncLock = new AsyncLock();
 
-        private IServiceLocator serviceLocator;
-
-        public ConnectionInternalBase(IServiceLocator serviceLocator)
+        protected HealthVaultConnectionBase(IServiceLocator serviceLocator)
         {
-            this.serviceLocator = serviceLocator;
+            this.ServiceLocator = serviceLocator;
         }
 
         public static HashSet<HealthVaultMethods> AnonymousMethods => new HashSet<HealthVaultMethods>()
@@ -39,21 +37,20 @@ namespace Microsoft.HealthVault.Connection
             HealthVaultMethods.CreateAuthenticatedSessionToken
         };
 
-        // protected PersonInfo PersonInfoInternal { get; set; }
+        protected IServiceLocator ServiceLocator { get; }
 
         public HealthServiceInstance ServiceInstance { get; internal set; }
 
         public SessionCredential SessionCredential { get; internal set; }
 
-        // comment for now
-        // public PersonInfo PersonInfo => this.PersonInfoInternal;
+        public PersonInfo PersonInfo { get; internal set; }
 
-        public Guid ApplicationId { get; internal set; }
+        public abstract Guid ApplicationId { get; }
 
         public TClient GetClient<TClient>()
             where TClient : IClient
         {
-            TClient client = this.serviceLocator.GetInstance<TClient>();
+            TClient client = this.ServiceLocator.GetInstance<TClient>();
             client.Connection = this;
 
             return client;
@@ -141,14 +138,20 @@ namespace Microsoft.HealthVault.Connection
 
         protected virtual async Task RefreshCredentialsAsync(CancellationToken token)
         {
-            ISessionCredentialClient sessionCredentialClient = this.serviceLocator.GetInstance<ISessionCredentialClient>();
-            sessionCredentialClient.Connection = this;
+            ISessionCredentialClient sessionCredentialClient = this.CreateSessionCredentialClient();
 
             using (await this.asyncLock.LockAsync())
             {
                 this.SessionCredential = await sessionCredentialClient.GetSessionCredentialAsync(token).ConfigureAwait(false);
             }
         }
+
+        /// <summary>
+        /// Creates a session credential client with values populated from this connection.
+        /// </summary>
+        /// <returns>The session credential client.</returns>
+        /// <remarks>The values required to populate this client vary based on the authentication method.</remarks>
+        protected abstract ISessionCredentialClient CreateSessionCredentialClient();
 
         public virtual CryptoData GetAuthData(HealthVaultMethods method, byte[] data)
         {

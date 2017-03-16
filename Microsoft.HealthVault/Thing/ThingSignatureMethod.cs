@@ -6,9 +6,9 @@
 namespace Microsoft.HealthVault.Thing
 {
     /// <summary>
-    /// Defines the HealthRecordItem digital signature methods.
+    /// Defines the ThingBase digital signature methods.
     /// </summary>
-    internal enum HealthRecordItemSignatureMethod
+    internal enum ThingSignatureMethod
     {
         /// <summary>
         ///

@@ -37,7 +37,7 @@ namespace Microsoft.HealthVault
         private static void RegisterTypes(DependencyInjectionContainer container)
         {
             container.RegisterTransient<ICryptoConfiguration, BaseCryptoConfiguration>();
-            container.RegisterTransient<IConnectionInternal, ConnectionInternalBase>();
+            container.RegisterTransient<IConnectionInternal, HealthVaultConnectionBase>();
             container.RegisterTransient<ISessionCredentialClient, SessionCredentialClientBase>();
             container.RegisterSingleton<ICryptoService, CryptoService>();
             container.RegisterSingleton<IServiceLocator, ServiceLocator>();
@@ -46,7 +46,6 @@ namespace Microsoft.HealthVault
         public static void OverrideClientType<T>(Func<T, T> func)
             where T : IClient
         {
-            // TODO: Throw an exception if a connection has already been created.
             Container.Configure(c => c.ExportFactory(() => func(clientContainer.Locate<T>())));
         }
 

@@ -81,7 +81,7 @@ namespace Microsoft.HealthVault.Helpers
             XmlWriter writer,
             string elementName,
             DataType value)
-            where DataType : HealthRecordItemData, new()
+            where DataType : ItemBase, new()
         {
             if (value != null)
             {
@@ -135,7 +135,7 @@ namespace Microsoft.HealthVault.Helpers
         /// <param name="collection">The collection to write.</param>
         /// <param name="itemNodeName">The name of the item node element.</param>
         internal static void WriteXmlCollection<T>(XmlWriter writer, string enclosingElementName, Collection<T> collection, string itemNodeName)
-            where T : HealthRecordItemData
+            where T : ItemBase
         {
             if (collection == null || collection.Count == 0)
             {
@@ -157,7 +157,7 @@ namespace Microsoft.HealthVault.Helpers
         /// <param name="collection">The collection to write.</param>
         /// <param name="itemNodeName">The name of the item node element.</param>
         internal static void WriteXmlCollection<T>(XmlWriter writer, Collection<T> collection, string itemNodeName)
-            where T : HealthRecordItemData
+            where T : ItemBase
         {
             foreach (T item in collection)
             {

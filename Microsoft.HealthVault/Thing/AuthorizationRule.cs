@@ -41,22 +41,22 @@ namespace Microsoft.HealthVault.Thing
         /// </param>
         ///
         /// <param name="targetSets">
-        /// The set or sets of health record items to which this rule applies.
+        /// The set or sets of things to which this rule applies.
         /// </param>
         ///
         /// <param name="exceptionSets">
-        /// The set or sets of health record items to which this rule does not
+        /// The set or sets of things to which this rule does not
         /// apply even if contained in a set defined by
         /// <paramref name="targetSets"/>.
         /// </param>
         ///
         /// <exception cref="ArgumentException">
         /// The <paramref name="permissions"/> parameter is
-        /// <see cref="HealthRecordItemPermissions.None"/>.
+        /// <see cref="ThingPermissions.None"/>.
         /// </exception>
         ///
         public AuthorizationRule(
-            HealthRecordItemPermissions permissions,
+            ThingPermissions permissions,
             IList<AuthorizationSetDefinition> targetSets = null,
             IList<AuthorizationSetDefinition> exceptionSets = null)
             : this(null, null, permissions, targetSets, exceptionSets, false, AuthorizationRuleDisplayFlags.None)
@@ -82,11 +82,11 @@ namespace Microsoft.HealthVault.Thing
         /// </param>
         ///
         /// <param name="targetSets">
-        /// The set or sets of health record items to which this rule applies.
+        /// The set or sets of things to which this rule applies.
         /// </param>
         ///
         /// <param name="exceptionSets">
-        /// The set or sets of health record items to which this rule does not
+        /// The set or sets of things to which this rule does not
         /// apply even if contained in a set defined by
         /// <paramref name="targetSets"/>.
         /// </param>
@@ -101,13 +101,13 @@ namespace Microsoft.HealthVault.Thing
         ///
         /// <exception cref="ArgumentException">
         /// The <paramref name="permissions"/> parameter is
-        /// <see cref="HealthRecordItemPermissions.None"/>.
+        /// <see cref="ThingPermissions.None"/>.
         /// </exception>
         ///
         public AuthorizationRule(
             string name,
             string reason,
-            HealthRecordItemPermissions permissions,
+            ThingPermissions permissions,
             IList<AuthorizationSetDefinition> targetSets,
             IList<AuthorizationSetDefinition> exceptionSets,
             bool isOptional,
@@ -123,7 +123,7 @@ namespace Microsoft.HealthVault.Thing
             }
 
             Validator.ThrowArgumentExceptionIf(
-                permissions == HealthRecordItemPermissions.None,
+                permissions == ThingPermissions.None,
                 "permissions",
                 "AuthorizationRuleBadPermissions");
 
@@ -198,13 +198,13 @@ namespace Microsoft.HealthVault.Thing
         /// </summary>
         ///
         /// <value>
-        /// An instance of <see cref="HealthRecordItemPermissions"/>.
+        /// An instance of <see cref="ThingPermissions"/>.
         /// </value>
         ///
-        public HealthRecordItemPermissions Permissions { get; }
+        public ThingPermissions Permissions { get; }
 
         /// <summary>
-        /// Gets the sets of health record items to which this rule
+        /// Gets the sets of things to which this rule
         /// grants permission.
         /// </summary>
         ///
@@ -216,7 +216,7 @@ namespace Microsoft.HealthVault.Thing
         public ReadOnlyCollection<AuthorizationSetDefinition> TargetSets { get; }
 
         /// <summary>
-        /// Gets the sets of health record items that are excluded by this
+        /// Gets the sets of things that are excluded by this
         /// rule even if they are part of the <see cref="TargetSets"/>.
         /// </summary>
         ///
@@ -462,11 +462,11 @@ namespace Microsoft.HealthVault.Thing
 
         private void AppendPermissions(XmlWriter writer)
         {
-            foreach (HealthRecordItemPermissions permissionValue in
-                Enum.GetValues(typeof(HealthRecordItemPermissions)))
+            foreach (ThingPermissions permissionValue in
+                Enum.GetValues(typeof(ThingPermissions)))
             {
-                if (permissionValue != HealthRecordItemPermissions.All &&
-                    permissionValue != HealthRecordItemPermissions.None)
+                if (permissionValue != ThingPermissions.All &&
+                    permissionValue != ThingPermissions.None)
                 {
                     if ((permissionValue & this.Permissions) != 0)
                     {
@@ -571,16 +571,16 @@ namespace Microsoft.HealthVault.Thing
                 }
             }
 
-            HealthRecordItemPermissions permissions
-                = HealthRecordItemPermissions.None;
+            ThingPermissions permissions
+                = ThingPermissions.None;
             XPathNodeIterator permissionsIterator =
                 ruleNav.Select("permission");
 
             foreach (XPathNavigator permissionNav in permissionsIterator)
             {
                 permissions |=
-                    (HealthRecordItemPermissions)Enum.Parse(
-                            typeof(HealthRecordItemPermissions),
+                    (ThingPermissions)Enum.Parse(
+                            typeof(ThingPermissions),
                             permissionNav.Value);
             }
 

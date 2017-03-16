@@ -18,7 +18,7 @@ namespace Microsoft.HealthVault.ItemTypes
     /// Examples include 30 cc, 500 mg, 15 liters, 30 inches, etc.
     /// </remarks>
     ///
-    public class GeneralMeasurement : HealthRecordItemData
+    public class GeneralMeasurement : ItemBase
     {
         /// <summary>
         /// Initialize a new instance of the <see cref="GeneralMeasurement"/>

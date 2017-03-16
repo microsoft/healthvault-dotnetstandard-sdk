@@ -6,7 +6,7 @@
 namespace Microsoft.HealthVault.Rest
 {
     /// <summary>
-    /// Constants used for Rest calls to the REST Health Vault endpoint.
+    /// Constants used for Rest calls to the REST HealthVault endpoint.
     /// </summary>
     internal static class RestConstants
     {

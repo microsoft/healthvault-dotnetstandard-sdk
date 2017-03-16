@@ -13,17 +13,17 @@ using Microsoft.HealthVault.Thing;
 namespace Microsoft.HealthVault.ItemTypes
 {
     /// <summary>
-    /// Stores status information about a specific health record item.
+    /// Stores status information about a specific thing.
     /// </summary>
     ///
     /// <remarks>
-    /// Each status is related to one or more health record items which are stored as related items.
+    /// Each status is related to one or more things which are stored as related items.
     ///
     /// For example, the HealthVault shell creates a status item to indicate that a CCR or CCD document has
     /// been reconciled, and that document is linked using a related item.
     /// </remarks>
     ///
-    public class Status : HealthRecordItem
+    public class Status : ThingBase
     {
         /// <summary>
         /// Initializes an instance of the <see cref="Status"/> class,
@@ -100,7 +100,7 @@ namespace Microsoft.HealthVault.ItemTypes
         /// If <paramref name="writer"/> is <b>null</b>.
         /// </exception>
         ///
-        /// <exception cref="HealthRecordItemSerializationException">
+        /// <exception cref="ThingSerializationException">
         /// If <see cref="StatusType"/> is <b>null</b> or empty.
         /// </exception>
         ///

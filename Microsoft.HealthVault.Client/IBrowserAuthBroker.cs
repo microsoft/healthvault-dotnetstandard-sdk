@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Microsoft.HealthVault.Soda.Exceptions;
+using Microsoft.HealthVault.Client.Exceptions;
 
-namespace Microsoft.HealthVault.Soda
+namespace Microsoft.HealthVault.Client
 {
     /// <summary>
     /// Runs through authorization UI with a browser.
