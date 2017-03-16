@@ -16,19 +16,6 @@ namespace Microsoft.HealthVault.Transport
     public enum HealthServiceStatusCode
     {
         /// <summary>
-        /// The record specified in the request could not be found.
-        /// </summary>
-        ///
-        RecordNotFound = -3,
-
-        /// <summary>
-        /// Information about multiple record items was returned when only a
-        /// single result was expected.
-        /// </summary>
-        ///
-        MoreThanOneThingReturned = -2,
-
-        /// <summary>
         /// The error condition is not recognized by the client.
         /// </summary>
         ///

@@ -40,7 +40,7 @@ namespace Microsoft.HealthVault.PlatformInformation
         {
             if (serviceInfoXml == null)
             {
-                throw new ArgumentNullException("serviceInfoXml");
+                throw new ArgumentNullException(nameof(serviceInfoXml));
             }
 
             return CreateServiceInfo(serviceInfoXml.SelectSingleNode("service-info"));

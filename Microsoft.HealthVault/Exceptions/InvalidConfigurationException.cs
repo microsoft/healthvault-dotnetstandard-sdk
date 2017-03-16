@@ -13,7 +13,7 @@ namespace Microsoft.HealthVault.Exceptions
     /// </summary>
     ///
     [Serializable]
-    public class InvalidConfigurationException : Exception
+    public class InvalidConfigurationException : HealthVaultException
     {
         /// <summary>
         /// Creates an instance of the <see cref="InvalidConfigurationException"/>
@@ -48,18 +48,5 @@ namespace Microsoft.HealthVault.Exceptions
             : base(message, innerException)
         {
         }
-
-        #region FxCop required ctors
-
-        /// <summary>
-        /// Creates an instance of the <see cref="InvalidConfigurationException"/>
-        /// class with default values.
-        /// </summary>
-        ///
-        public InvalidConfigurationException()
-        {
-        }
-
-        #endregion FxCop required ctors
     }
 }

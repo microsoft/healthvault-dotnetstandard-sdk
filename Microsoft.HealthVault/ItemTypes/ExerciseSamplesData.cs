@@ -82,7 +82,7 @@ namespace Microsoft.HealthVault.ItemTypes
             }
             catch (FormatException)
             {
-                throw new InvalidOperationException("Data is not a Base64 string");
+                throw new InvalidOperationException(Resources.NotBase64String);
             }
 
             if (buffer == null)

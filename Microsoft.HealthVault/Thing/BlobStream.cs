@@ -301,7 +301,7 @@ namespace Microsoft.HealthVault.Thing
 
             if (this.disposed)
             {
-                throw new ObjectDisposedException("BlobStream");
+                throw new ObjectDisposedException(nameof(BlobStream));
             }
 
             if (buffer.Length - offset < count)
@@ -352,7 +352,7 @@ namespace Microsoft.HealthVault.Thing
 
             if (this.disposed)
             {
-                throw new ObjectDisposedException("BlobStream");
+                throw new ObjectDisposedException(nameof(BlobStream));
             }
 
             int result = -1;
@@ -595,12 +595,12 @@ namespace Microsoft.HealthVault.Thing
 
             if (this.disposed)
             {
-                throw new ObjectDisposedException("BlobStream");
+                throw new ObjectDisposedException(nameof(BlobStream));
             }
 
             if (this.record == null)
             {
-                throw new NotSupportedException("Currently blobs for records are only supported");
+                throw new NotSupportedException(Resources.BlobMustHaveRecord);
             }
 
             if (buffer.Length - offset < count)
@@ -779,7 +779,7 @@ namespace Microsoft.HealthVault.Thing
 
             if (this.disposed)
             {
-                throw new ObjectDisposedException("BlobStream");
+                throw new ObjectDisposedException(nameof(BlobStream));
             }
 
             this.AugmentBufferList(new BufferRequest(value));

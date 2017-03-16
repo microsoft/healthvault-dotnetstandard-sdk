@@ -15,7 +15,7 @@ namespace Microsoft.HealthVault.Exceptions
     /// </summary>
     ///
     [Serializable]
-    public class IncompatibleVersionException : Exception
+    public class IncompatibleVersionException : HealthVaultException
     {
         /// <summary>
         /// Creates a new instance of the <see cref="IncompatibleVersionException"/>
@@ -87,15 +87,6 @@ namespace Microsoft.HealthVault.Exceptions
         public string IncompatibleVersion { get; }
 
         #region FxCop required ctors
-
-        /// <summary>
-        /// Creates a new instance of the <see cref="IncompatibleVersionException"/>
-        /// class with default values.
-        /// </summary>
-        ///
-        public IncompatibleVersionException()
-        {
-        }
 
         /// <summary>
         /// Creates a new instance of the <see cref="IncompatibleVersionException"/>

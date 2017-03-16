@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Microsoft.HealthVault.Extensions;
 
 namespace Microsoft.HealthVault.Client
 {
@@ -69,20 +70,22 @@ namespace Microsoft.HealthVault.Client
 
                 if (this.configuration == null)
                 {
-                    throw new InvalidOperationException("Cannot call GetConnectionAsync before calling SetConfiguration.");
+                    throw new InvalidOperationException(Resources.CannotCallMethodBefore.FormatResource(
+                        nameof(this.GetConnectionAsync),
+                        nameof(this.SetConfiguration)));
                 }
 
-                var missingParameters = new List<string>();
+                var missingProperties = new List<string>();
 
                 if (this.configuration.MasterApplicationId == Guid.Empty)
                 {
-                    missingParameters.Add(nameof(this.configuration.MasterApplicationId));
+                    missingProperties.Add(nameof(this.configuration.MasterApplicationId));
                 }
 
-                if (missingParameters.Count > 0)
+                if (missingProperties.Count > 0)
                 {
-                    string requiredParametersString = string.Join(", ", missingParameters);
-                    throw new InvalidOperationException("Missing one or more required parameters on configuration. Required parameters: " + requiredParametersString);
+                    string requiredPropertiesString = string.Join(", ", missingProperties);
+                    throw new InvalidOperationException(Resources.MissingRequiredProperties.FormatResource(requiredPropertiesString));
                 }
 
                 this.configuration.Lock();

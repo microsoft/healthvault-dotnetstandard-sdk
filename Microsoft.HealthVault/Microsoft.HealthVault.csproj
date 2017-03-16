@@ -51,7 +51,9 @@
     <Compile Include="AsyncEnumerable.cs" />
     <Compile Include="AsyncLock.cs" />
     <Compile Include="Exceptions\CryptographicUnexpectedOperationException.cs" />
+    <Compile Include="Exceptions\HealthRecordNotFoundException.cs" />
     <Compile Include="Exceptions\HealthVaultException.cs" />
+    <Compile Include="Exceptions\MoreThanOneThingException.cs" />
     <Compile Include="Extensions\HealthServiceInstanceExtensions.cs" />
     <Compile Include="Extensions\StringExtensions.cs" />
     <Compile Include="HealthVaultConstants.cs" />

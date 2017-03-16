@@ -544,16 +544,7 @@ namespace Microsoft.HealthVault.Person
 
             if (selfRecord == null)
             {
-                HealthServiceResponseError error = new HealthServiceResponseError
-                {
-                    Message = Resources.SelfRecordNotFound
-                };
-
-                HealthServiceException e =
-                    HealthServiceExceptionHelper.GetHealthServiceException(
-                        HealthServiceStatusCode.RecordNotFound,
-                        error);
-                throw e;
+                throw new HealthRecordNotFoundException(Resources.SelfRecordNotFound);
             }
 
             return selfRecord;

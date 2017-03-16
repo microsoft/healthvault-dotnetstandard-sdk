@@ -980,6 +980,15 @@ namespace Microsoft.HealthVault {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Currently only blobs for records are supported..
+        /// </summary>
+        internal static string BlobMustHaveRecord {
+            get {
+                return ResourceManager.GetString("BlobMustHaveRecord", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The value of BlobName property cannot be null or empty..
         /// </summary>
         internal static string BlobNameMandatory {
@@ -1363,6 +1372,33 @@ namespace Microsoft.HealthVault {
         internal static string CalorieGuidelineUnexpectedNode {
             get {
                 return ResourceManager.GetString("CalorieGuidelineUnexpectedNode", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0} cannot be null or empty..
+        /// </summary>
+        internal static string CannotBeNullOrEmpty {
+            get {
+                return ResourceManager.GetString("CannotBeNullOrEmpty", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Cannot call {0} before calling {1}..
+        /// </summary>
+        internal static string CannotCallMethodBefore {
+            get {
+                return ResourceManager.GetString("CannotCallMethodBefore", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Changing app configuration values after initialization is not permitted..
+        /// </summary>
+        internal static string CannotChangeConfigurationAfterInit {
+            get {
+                return ResourceManager.GetString("CannotChangeConfigurationAfterInit", resourceCulture);
             }
         }
         
@@ -3752,6 +3788,15 @@ namespace Microsoft.HealthVault {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to HTTP status code returned error..
+        /// </summary>
+        internal static string HttpReturnedError {
+            get {
+                return ResourceManager.GetString("HttpReturnedError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The HypopneaIndex value cannot be negative..
         /// </summary>
         internal static string HypopneaIndexNegative {
@@ -4427,6 +4472,15 @@ namespace Microsoft.HealthVault {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Missing one or more required properties on configuration. Required properties: {0}.
+        /// </summary>
+        internal static string MissingRequiredProperties {
+            get {
+                return ResourceManager.GetString("MissingRequiredProperties", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Monday.
         /// </summary>
         internal static string Monday {
@@ -4522,6 +4576,15 @@ namespace Microsoft.HealthVault {
         internal static string NoSectionsOrTransforms {
             get {
                 return ResourceManager.GetString("NoSectionsOrTransforms", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Data is not a Base64 string..
+        /// </summary>
+        internal static string NotBase64String {
+            get {
+                return ResourceManager.GetString("NotBase64String", resourceCulture);
             }
         }
         
@@ -6079,6 +6142,15 @@ namespace Microsoft.HealthVault {
         internal static string TypeManagerConnectionNull {
             get {
                 return ResourceManager.GetString("TypeManagerConnectionNull", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to There was an unexpected error in the HealthVault SDK..
+        /// </summary>
+        internal static string UnexpectedError {
+            get {
+                return ResourceManager.GetString("UnexpectedError", resourceCulture);
             }
         }
         

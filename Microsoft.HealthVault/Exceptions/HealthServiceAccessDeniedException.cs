@@ -43,15 +43,6 @@ namespace Microsoft.HealthVault.Exceptions
 
         /// <summary>
         /// Creates an instance of the <see cref="HealthServiceAccessDeniedException"/>
-        /// class with default values.
-        /// </summary>
-        ///
-        public HealthServiceAccessDeniedException()
-        {
-        }
-
-        /// <summary>
-        /// Creates an instance of the <see cref="HealthServiceAccessDeniedException"/>
         /// class with the specified message.
         /// </summary>
         ///

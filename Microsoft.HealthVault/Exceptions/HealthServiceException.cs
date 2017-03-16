@@ -17,7 +17,7 @@ namespace Microsoft.HealthVault.Exceptions
     /// </summary>
     ///
     [Serializable]
-    public class HealthServiceException : Exception
+    public class HealthServiceException : HealthVaultException
     {
         /// <summary>
         /// Creates an instance of the <see cref="HealthServiceException"/>
@@ -84,15 +84,6 @@ namespace Microsoft.HealthVault.Exceptions
         }
 
         #region FxCop required ctors
-
-        /// <summary>
-        /// Creates an instance of the <see cref="HealthServiceException"/>
-        /// class with default values.
-        /// </summary>
-        ///
-        public HealthServiceException()
-        {
-        }
 
         /// <summary>
         /// Creates an instance of the <see cref="HealthServiceException"/>

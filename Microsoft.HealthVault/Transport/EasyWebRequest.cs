@@ -127,7 +127,7 @@ namespace Microsoft.HealthVault.Transport
                         // If we have a non-500 error or have run out of retries, throw.
                         if (!response.IsSuccessStatusCode)
                         {
-                            throw new HealthHttpException("Http status code returned error", response.StatusCode);
+                            throw new HealthHttpException(Resources.HttpReturnedError, response.StatusCode);
                         }
 
                         // If we have a successful response, return it.
@@ -140,7 +140,7 @@ namespace Microsoft.HealthVault.Transport
             }
 
             // We should never get here but we need to make the compiler happy.
-            throw new Exception("Unexpectedly got to the end of FetchAsync.");
+            throw new Exception(Resources.UnexpectedError);
         }
 
         private HttpClient CreateHttpClient()

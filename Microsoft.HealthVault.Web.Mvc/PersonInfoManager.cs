@@ -16,6 +16,7 @@ using System.Security.Principal;
 using System.Threading.Tasks;
 using System.Web;
 using Microsoft.HealthVault.Authentication;
+using Microsoft.HealthVault.Extensions;
 using Microsoft.HealthVault.Person;
 using Microsoft.HealthVault.Record;
 
@@ -56,7 +57,7 @@ namespace Microsoft.HealthVault.Web.Mvc
 
             if (string.IsNullOrEmpty(cookieName))
             {
-                throw new ArgumentException("cookieName cannot be empty or null", nameof(cookieName));
+                throw new ArgumentException(Resources.CannotBeNullOrEmpty.FormatResource(nameof(cookieName)), nameof(cookieName));
             }
 
             _context = context;

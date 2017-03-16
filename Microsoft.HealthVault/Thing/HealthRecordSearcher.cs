@@ -193,16 +193,7 @@ namespace Microsoft.HealthVault.Thing
             // Check in case HealthVault returned invalid data.
             if (resultSet.Count > 1)
             {
-                HealthServiceResponseError error = new HealthServiceResponseError
-                {
-                    Message = Resources.GetSingleThingTooManyResults
-                };
-
-                HealthServiceException e =
-                    HealthServiceExceptionHelper.GetHealthServiceException(
-                        HealthServiceStatusCode.MoreThanOneThingReturned,
-                        error);
-                throw e;
+                throw new MoreThanOneThingException(Resources.GetSingleThingTooManyResults);
             }
 
             IThing result = null;
@@ -212,16 +203,7 @@ namespace Microsoft.HealthVault.Thing
 
                 if (resultGroup.Count > 1)
                 {
-                    HealthServiceResponseError error = new HealthServiceResponseError
-                    {
-                        Message = Resources.GetSingleThingTooManyResults
-                    };
-
-                    HealthServiceException e =
-                        HealthServiceExceptionHelper.GetHealthServiceException(
-                            HealthServiceStatusCode.MoreThanOneThingReturned,
-                            error);
-                    throw e;
+                    throw new MoreThanOneThingException(Resources.GetSingleThingTooManyResults);
                 }
 
                 if (resultGroup.Count == 1)

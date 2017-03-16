@@ -61,15 +61,7 @@ namespace Microsoft.HealthVault.Clients
 
             if (resultSet.Count > 1 || resultSet[0].Count > 1)
             {
-                HealthServiceResponseError error = new HealthServiceResponseError
-                {
-                    Message = Resources.GetSingleThingTooManyResults
-                };
-
-                HealthServiceException e = HealthServiceExceptionHelper.GetHealthServiceException(
-                        HealthServiceStatusCode.MoreThanOneThingReturned,
-                        error);
-                throw e;
+                throw new MoreThanOneThingException(Resources.GetSingleThingTooManyResults);
             }
 
             if (resultSet.Count == 1)

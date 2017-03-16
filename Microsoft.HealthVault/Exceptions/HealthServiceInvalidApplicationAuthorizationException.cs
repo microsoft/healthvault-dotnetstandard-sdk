@@ -46,15 +46,6 @@ namespace Microsoft.HealthVault.Exceptions
 
         /// <summary>
         /// Creates an instance of the <see cref="HealthServiceInvalidApplicationAuthorizationException"/>
-        /// class with default values.
-        /// </summary>
-        ///
-        public HealthServiceInvalidApplicationAuthorizationException()
-        {
-        }
-
-        /// <summary>
-        /// Creates an instance of the <see cref="HealthServiceInvalidApplicationAuthorizationException"/>
         /// class with the specified message.
         /// </summary>
         ///

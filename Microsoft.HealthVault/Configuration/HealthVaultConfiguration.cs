@@ -493,7 +493,7 @@ namespace Microsoft.HealthVault.Configuration
         {
             if (this.IsLocked)
             {
-                throw new InvalidOperationException("Changing app configuration values after initialization is not permitted.");
+                throw new InvalidOperationException(Resources.CannotChangeConfigurationAfterInit);
             }
         }
     }

@@ -13,17 +13,8 @@ namespace Microsoft.HealthVault.Exceptions
     /// </summary>
     ///
     [Serializable]
-    public sealed class TypeHandlerAlreadyRegisteredException : Exception
+    public sealed class TypeHandlerAlreadyRegisteredException : HealthVaultException
     {
-        /// <summary>
-        /// Creates a new instance of the <see cref="TypeHandlerAlreadyRegisteredException"/>
-        /// class with default values.
-        /// </summary>
-        ///
-        public TypeHandlerAlreadyRegisteredException()
-        {
-        }
-
         /// <summary>
         /// Creates a new instance of the <see cref="TypeHandlerAlreadyRegisteredException"/>
         /// class with the specified message.

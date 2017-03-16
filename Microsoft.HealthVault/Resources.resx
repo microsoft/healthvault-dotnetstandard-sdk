@@ -2259,4 +2259,28 @@
   <data name="TimesInIntervalNull" xml:space="preserve">
     <value>The times in interval value cannot be null.</value>
   </data>
+  <data name="BlobMustHaveRecord" xml:space="preserve">
+    <value>Currently only blobs for records are supported.</value>
+  </data>
+  <data name="CannotBeNullOrEmpty" xml:space="preserve">
+    <value>{0} cannot be null or empty.</value>
+  </data>
+  <data name="CannotCallMethodBefore" xml:space="preserve">
+    <value>Cannot call {0} before calling {1}.</value>
+  </data>
+  <data name="CannotChangeConfigurationAfterInit" xml:space="preserve">
+    <value>Changing app configuration values after initialization is not permitted.</value>
+  </data>
+  <data name="HttpReturnedError" xml:space="preserve">
+    <value>HTTP status code returned error.</value>
+  </data>
+  <data name="MissingRequiredProperties" xml:space="preserve">
+    <value>Missing one or more required properties on configuration. Required properties: {0}</value>
+  </data>
+  <data name="NotBase64String" xml:space="preserve">
+    <value>Data is not a Base64 string.</value>
+  </data>
+  <data name="UnexpectedError" xml:space="preserve">
+    <value>There was an unexpected error in the HealthVault SDK.</value>
+  </data>
 </root>
