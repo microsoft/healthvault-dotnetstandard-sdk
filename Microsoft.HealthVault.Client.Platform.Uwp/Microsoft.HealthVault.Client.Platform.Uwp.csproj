@@ -110,9 +110,20 @@
     <None Include="project.json" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="UwpBrowserAuthBroker.cs" />
     <Compile Include="PlatformSodaIoc.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="Properties\Microsoft.HealthVault.Soda.Platform.Uwp.rd.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Microsoft.HealthVault.Client\Microsoft.HealthVault.Client.csproj">
+      <Project>{00e3b0d1-95be-4caa-a482-4629b10efbd7}</Project>
+      <Name>Microsoft.HealthVault.Client</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Microsoft.HealthVault\Microsoft.HealthVault.csproj">
+      <Project>{DBE2BA67-DBC3-479E-A374-1CE5EE33C453}</Project>
+      <Name>Microsoft.HealthVault</Name>
+    </ProjectReference>
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>
