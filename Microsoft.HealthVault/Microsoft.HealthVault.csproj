@@ -405,7 +405,7 @@
     <Compile Include="Record\HealthVaultPlatformRecord.cs" />
     <Compile Include="Diagnostics\HealthVaultPlatformTrace.cs" />
     <Compile Include="Transport\IHealthServiceRequest.cs" />
-    <Compile Include="Utilities\UrlUtilities.cs" />
+    <Compile Include="Helpers\UrlUtilities.cs" />
     <Compile Include="Transport\IHealthWebRequest.cs" />
     <Compile Include="Transport\HealthWebRequestFactory.cs" />
     <Compile Include="Transport\IHealthWebRequestFactory.cs" />
