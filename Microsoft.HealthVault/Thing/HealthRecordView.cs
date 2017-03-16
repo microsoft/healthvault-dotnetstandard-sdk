@@ -28,7 +28,7 @@ namespace Microsoft.HealthVault.Thing
     [DebuggerDisplay("Sections = {Sections}")]
     public class HealthRecordView
     {
-        private HealthVaultConfiguration configuration = Ioc.Get<HealthVaultConfiguration>();
+        private readonly HealthVaultConfiguration configuration;
 
         /// <summary>
         /// Gets or sets the sections that will be retrieved when the
@@ -70,6 +70,11 @@ namespace Microsoft.HealthVault.Thing
         /// </remarks>
         ///
         public Collection<string> TransformsToApply { get; } = new Collection<string>();
+
+        public HealthRecordView(HealthVaultConfiguration configuration)
+        {
+            this.configuration = configuration;
+        }
 
         /// <summary>
         /// Gets a collection of the version IDs for the types in which the results should be
@@ -151,9 +156,9 @@ namespace Microsoft.HealthVault.Thing
 
         #region internal helpers
 
-        internal static HealthRecordView CreateFromXml(XPathNavigator nav)
+        internal static HealthRecordView CreateFromXml(XPathNavigator nav, HealthVaultConfiguration configuration)
         {
-            HealthRecordView view = new HealthRecordView();
+            HealthRecordView view = new HealthRecordView(configuration);
             XPathNodeIterator sectionsIterator = nav.Select("section");
             foreach (XPathNavigator sectionNav in sectionsIterator)
             {

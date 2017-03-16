@@ -18,6 +18,7 @@ using System.Runtime.CompilerServices;
            InternalsVisibleTo("Microsoft.HealthVault.Web"),
            InternalsVisibleTo("Microsoft.HealthVault.Web.Mvc"),
            InternalsVisibleTo("Microsoft.HealthVault.Client"),
+           InternalsVisibleTo("DynamicProxyGenAssembly2"),
            InternalsVisibleTo("Microsoft.HealthVault.Client.Platform"),
            InternalsVisibleTo("Microsoft.HealthVault.Client.Platform.Uwp"),
            InternalsVisibleTo("Microsoft.HealthVault.UnitTest)]

@@ -18,7 +18,7 @@ using Microsoft.HealthVault.Helpers;
 
 namespace Microsoft.HealthVault.Transport
 {
-    internal class EasyWebRequest
+    internal class EasyWebRequest : IHealthWebRequest
     {
         private readonly byte[] xmlRequest; // utf8Encoded
         private readonly int xmlRequestLength;
@@ -45,7 +45,7 @@ namespace Microsoft.HealthVault.Transport
         /// Gets or sets the request compression method.
         /// </summary>
         ///
-        internal string RequestCompressionMethod
+        public string RequestCompressionMethod
         {
             get { return this.requestCompressionMethod; }
 
@@ -80,9 +80,9 @@ namespace Microsoft.HealthVault.Transport
         /// Gets the dictionary of headers that will be added to the web request.
         /// </summary>
         ///
-        internal Dictionary<string, string> Headers { get; } = new Dictionary<string, string>();
+        public Dictionary<string, string> Headers { get; } = new Dictionary<string, string>();
 
-        internal async Task<HttpResponseMessage> FetchAsync(Uri url, CancellationToken token)
+        public async Task<HttpResponseMessage> FetchAsync(Uri url, CancellationToken token)
         {
             HttpMethod method;
             if (this.xmlRequest == null)
@@ -143,7 +143,7 @@ namespace Microsoft.HealthVault.Transport
             throw new Exception(Resources.UnexpectedError);
         }
 
-        private HttpClient CreateHttpClient()
+        public HttpClient CreateHttpClient()
         {
             var handler = new HttpClientHandler
             {

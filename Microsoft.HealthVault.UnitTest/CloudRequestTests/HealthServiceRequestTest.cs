@@ -1,35 +1,61 @@
 ﻿// Copyright(c) Microsoft Corporation.
 
 using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Web;
-using Microsoft.HealthVault;
+using System.Security.Policy;
+using System.Threading.Tasks;
+using Microsoft.HealthVault.Configuration;
 using Microsoft.HealthVault.Connection;
+using Microsoft.HealthVault.PlatformInformation;
 using Microsoft.HealthVault.Transport;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NSubstitute;
 
-namespace Core
+namespace Microsoft.HealthVault.UnitTest.CloudRequestTests
 {
     [TestClass]
     public class HealthServiceRequestTest
     {
+        private IConnectionInternal connection;
+        private HealthVaultConfiguration config;
+        private IHealthWebRequestFactory webRequestFactory;
+        private HealthServiceInstance serviceInstance;
+
+        [TestInitialize]
+        public void InitializeTest()
+        {
+            this.connection = Substitute.For<IConnectionInternal>();
+            this.config = Substitute.For<HealthVaultConfiguration>();
+            this.webRequestFactory = Substitute.For<IHealthWebRequestFactory>();
+            this.serviceInstance = new HealthServiceInstance("id", "name", "description", new Uri("http://microsoft.com"), new Uri("http://microsoft.com"));
+            this.connection.ServiceInstance.Returns(this.serviceInstance);
+            this.webRequestFactory.CreateWebRequest(Arg.Any<byte[]>(), Arg.Any<int>())
+                .Returns(new TestHealthWebRequest());
+        }
+
+        private HealthServiceRequest CreateDefault()
+        {
+            return new HealthServiceRequest(
+                connection, 
+                HealthVaultMethods.GetPersonInfo, 
+                5, 
+                config: this.config, 
+                requestFactory: this.webRequestFactory);
+        }
+
         #region Ctor tests
 
-        [TestMethod]
-        public void Ctor()
-        {
-            IConnectionInternal mock = Substitute.For<IConnectionInternal>();
 
-            HealthServiceRequest req = new HealthServiceRequest(mock, HealthVaultMethods.GetPersonInfo, 5);
+        [TestMethod]
+        public void CreateServiceRequest()
+        {
+            var req = this.CreateDefault();
 
             Assert.AreEqual(req.Method, HealthVaultMethods.GetPersonInfo);
             Assert.AreEqual(req.MethodVersion, 5);
         }
 
         [TestMethod]
-        public void CtorNullConnection()
+        public void CreateInvalidServiceRequest()
         {
             try
             {
@@ -82,14 +108,16 @@ namespace Core
 
         #endregion Properties
 
-        #region Helpers
-        private HealthServiceRequest CreateDefault()
+        [TestMethod]
+        public async Task ExecuteMethod()
         {
-            IConnectionInternal mock = Substitute.For<IConnectionInternal>();
-            HealthServiceRequest req = new HealthServiceRequest(mock, HealthVaultMethods.GetPersonInfo, 5);
-            return req;
-        }
+            HealthServiceRequest req = CreateDefault();
+            HealthServiceResponseData response = await req.ExecuteAsync();
+            Assert.AreEqual(response.Code, HealthServiceStatusCode.Ok);
+            // TODO: add some validation of the response to make sure that it was parsed correctly for what we expect
 
-        #endregion Helpers
+            // Note: investigate this, as it does not seem to be working as expected
+            this.webRequestFactory.Received().CreateWebRequest(Arg.Any<byte[]>(), Arg.Any<int>());
+        }
     }
 }

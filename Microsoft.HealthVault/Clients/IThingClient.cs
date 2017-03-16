@@ -60,6 +60,6 @@ namespace Microsoft.HealthVault.Clients
         /// Removes a collection of things.
         /// </summary>
         /// <param name="things">The collection of things to put.</param>
-        Task RemoveThings(ICollection<IThing> things);
+        Task RemoveThingsAsync(ICollection<IThing> things);
     }
 }

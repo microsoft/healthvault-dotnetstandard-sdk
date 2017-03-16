@@ -215,7 +215,7 @@ namespace Microsoft.HealthVault.Clients
             }
         }
 
-        public async Task RemoveThings(ICollection<IThing> things)
+        public async Task RemoveThingsAsync(ICollection<IThing> things)
         {
             StringBuilder parameters = new StringBuilder();
             foreach (IThing item in things)
