@@ -51,10 +51,10 @@ namespace Microsoft.HealthVault.Thing
         public TypeIdSetDefinition(Guid typeId)
             : base(SetType.TypeIdSet)
         {
-            Validator.ThrowArgumentExceptionIf(
-                typeId == Guid.Empty,
-                "typeId",
-                "TypeIdSetGuidEmpty");
+            if (typeId == Guid.Empty)
+            {
+                throw new ArgumentException(Resources.TypeIdSetGuidEmpty, nameof(typeId));
+            }
 
             this.TypeId = typeId;
         }

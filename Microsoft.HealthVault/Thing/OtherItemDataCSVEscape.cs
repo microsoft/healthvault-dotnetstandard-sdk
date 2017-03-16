@@ -44,12 +44,12 @@ namespace Microsoft.HealthVault.Thing
 
             set
             {
-                Validator.ThrowIfArgumentNull(value, "Name", "CSVNameNull");
+                Validator.ThrowIfArgumentNull(value, nameof(Name), Resources.CSVNameNull);
 
-                Validator.ThrowArgumentExceptionIf(
-                    value.Contains("="),
-                    "Name",
-                    "CSVNameInvalid");
+                if (value.Contains("="))
+                {
+                    throw new ArgumentException(Resources.CSVNameInvalid, nameof(this.Name));
+                }
 
                 this.name = value;
             }
@@ -72,12 +72,12 @@ namespace Microsoft.HealthVault.Thing
 
             set
             {
-                Validator.ThrowIfArgumentNull(value, "Value", "CSVValueNull");
+                Validator.ThrowIfArgumentNull(value, nameof(Value), Resources.CSVValueNull);
 
-                Validator.ThrowArgumentExceptionIf(
-                    value.Contains("="),
-                    "Name",
-                    "CSVValueInvalid");
+                if (value.Contains("="))
+                {
+                    throw new ArgumentException(Resources.CSVValueInvalid, nameof(this.Value));
+                }
 
                 this.value = value;
             }

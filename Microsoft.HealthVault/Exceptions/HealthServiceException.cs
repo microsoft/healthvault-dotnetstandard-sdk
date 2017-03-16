@@ -5,6 +5,7 @@
 
 using System;
 using System.Globalization;
+using Microsoft.HealthVault.Extensions;
 using Microsoft.HealthVault.Helpers;
 using Microsoft.HealthVault.Transport;
 
@@ -20,19 +21,12 @@ namespace Microsoft.HealthVault.Exceptions
     {
         /// <summary>
         /// Creates an instance of the <see cref="HealthServiceException"/>
-        /// class with the specified error (status) code.
+        /// class with the specified unknown error (status) code.
         /// </summary>
-        ///
         /// <remarks>
-        /// This constructor is internal to the SDK. Application developers
-        /// using the SDK should catch instances of this exception instead of
-        /// throwing new exceptions of this type.
+        /// The exception message generated will say that the error code is not recognized.
         /// </remarks>
-        ///
-        /// <param name="errorCode">
-        /// The status code representing the error that occurred.
-        /// </param>
-        ///
+        /// <param name="errorCode">The status code representing the error that occurred.</param>
         internal HealthServiceException(HealthServiceStatusCode errorCode)
             : this((int)errorCode, null)
         {
@@ -42,22 +36,9 @@ namespace Microsoft.HealthVault.Exceptions
         /// Creates an instance of the <see cref="HealthServiceException"/>
         /// class with the specified error (status) code and error information.
         /// </summary>
-        ///
-        /// <remarks>
-        /// This constructor is internal to the SDK. Application developers
-        /// using the SDK should catch instances of this exception instead of
-        /// throwing new exceptions of this type.
-        /// </remarks>
-        ///
-        /// <param name="errorCode">
-        /// The status code representing the error.
-        /// </param>
-        ///
-        /// <param name="error">
-        /// Information about an error that occurred while processing
-        /// the request.
-        /// </param>
-        ///
+        /// <param name="errorCode">The status code representing the error.</param>
+        /// <param name="error">Information about an error that occurred while processing
+        /// the request.</param>
         internal HealthServiceException(
             HealthServiceStatusCode errorCode,
             HealthServiceResponseError error)
@@ -99,9 +80,7 @@ namespace Microsoft.HealthVault.Exceptions
             int errorCodeId,
             HealthServiceResponseError error)
         {
-            return error != null ? error.Message : ResourceRetriever.FormatResourceString(
-                        "HealthServiceExceptionNoResponseError",
-                        errorCodeId);
+            return error != null ? error.Message : Resources.HealthServiceExceptionNoResponseError.FormatResource(errorCodeId);
         }
 
         #region FxCop required ctors

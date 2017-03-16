@@ -63,7 +63,7 @@ namespace Microsoft.HealthVault.Clients
             {
                 HealthServiceResponseError error = new HealthServiceResponseError
                 {
-                    Message = ResourceRetriever.GetResourceString("GetSingleThingTooManyResults")
+                    Message = Resources.GetSingleThingTooManyResults
                 };
 
                 HealthServiceException e = HealthServiceExceptionHelper.GetHealthServiceException(
@@ -123,7 +123,7 @@ namespace Microsoft.HealthVault.Clients
 
         public async Task CreateNewThingsAsync(ICollection<IThing> things)
         {
-            Validator.ThrowIfArgumentNull(things, "things", "CreateNewThingsAsync");
+            Validator.ThrowIfArgumentNull(things, nameof(things), Resources.NewItemsNullItem);
 
             StringBuilder infoXml = new StringBuilder();
             XmlWriterSettings settings = SDKHelper.XmlUnicodeWriterSettings;
@@ -133,7 +133,7 @@ namespace Microsoft.HealthVault.Clients
             {
                 foreach (IThing thing in things)
                 {
-                    Validator.ThrowIfArgumentNull(thing, "thing", "CreateNewThingsAsync");
+                    Validator.ThrowIfArgumentNull(thing, nameof(thing), Resources.NewItemsNullItem);
 
                     thing.WriteXml(infoXmlWriter);
                 }
@@ -167,7 +167,7 @@ namespace Microsoft.HealthVault.Clients
 
         public async Task UpdateThingsAsync(ICollection<IThing> things)
         {
-            Validator.ThrowIfArgumentNull(things, "things", "PutThingsNull");
+            Validator.ThrowIfArgumentNull(things, nameof(things), Resources.UpdateItemNull);
 
             StringBuilder infoXml = new StringBuilder(128);
             XmlWriterSettings settings = SDKHelper.XmlUnicodeWriterSettings;
@@ -179,12 +179,12 @@ namespace Microsoft.HealthVault.Clients
             {
                 foreach (IThing thing in things)
                 {
-                    Validator.ThrowIfArgumentNull(thing, "things", "UpdateItemsArgumentNull");
+                    Validator.ThrowIfArgumentNull(thing, nameof(things), Resources.UpdateItemsArgumentNull);
 
-                    Validator.ThrowArgumentExceptionIf(
-                        thing.Key == null,
-                        "thingsToUpdate",
-                        "UpdateThingWithNoId");
+                    if (thing.Key == null)
+                    {
+                        throw new ArgumentException(Resources.UpdateThingWithNoId, nameof(things));
+                    }
 
                     if ((thing as ThingBase)?.WriteItemXml(infoXmlWriter, false) == true)
                     {
@@ -244,8 +244,7 @@ namespace Microsoft.HealthVault.Clients
             {
                 HealthServiceResponseError error = new HealthServiceResponseError
                 {
-                    Message = ResourceRetriever.GetResourceString(
-                        "HealthRecordSearcherNoFilters")
+                    Message = Resources.HealthRecordSearcherNoFilters
                 };
 
                 HealthServiceException e =

@@ -106,7 +106,7 @@ namespace Microsoft.HealthVault.Transport
             int methodVersion,
             Guid? recordId = null)
         {
-            Validator.ThrowIfArgumentNull(connectionInternal, "connection", "CtorServiceNull");
+            Validator.ThrowIfArgumentNull(connectionInternal, nameof(connectionInternal), Resources.CtorServiceNull);
 
             this.connectionInternal = connectionInternal;
 
@@ -183,7 +183,7 @@ namespace Microsoft.HealthVault.Transport
             catch (XmlException xmlException)
             {
                 throw new HealthServiceException(
-                    ResourceRetriever.GetResourceString("InvalidResponseFromXMLRequest"),
+                    Resources.InvalidResponseFromXMLRequest,
                     xmlException);
             }
         }
@@ -770,10 +770,10 @@ namespace Microsoft.HealthVault.Transport
 
             set
             {
-                Validator.ThrowArgumentOutOfRangeIf(
-                    value < 0,
-                    "TimeoutSeconds",
-                    "TimeoutMustBePositive");
+                if (value < 0)
+                {
+                    throw new ArgumentOutOfRangeException(nameof(this.TimeoutSeconds), Resources.TimeoutMustBePositive);
+                }
 
                 this.timeoutSeconds = value;
             }

@@ -28,7 +28,7 @@ namespace Microsoft.HealthVault.Web.Vocabulary
         /// </exception>
         public VocabularySearchParameters(VocabularyKey vocabulary)
         {
-            Validator.ThrowIfArgumentNull(vocabulary, "vocabulary", "VocabularyKeyNullOrEmpty");
+            Validator.ThrowIfArgumentNull(vocabulary, nameof(vocabulary), Resources.VocabularyKeyNullOrEmpty);
             this.Vocabulary = vocabulary;
         }
 
@@ -67,10 +67,11 @@ namespace Microsoft.HealthVault.Web.Vocabulary
 
             set
             {
-                Validator.ThrowArgumentOutOfRangeIf(
-                    value < 0,
-                    "MaxResults",
-                    "SearchMaxResultsInvalid");
+                if (value < 0)
+                {
+                    throw new ArgumentOutOfRangeException(nameof(this.MaxResults), Resources.SearchMaxResultsInvalid);
+                }
+
                 this.maxResults = value;
             }
         }

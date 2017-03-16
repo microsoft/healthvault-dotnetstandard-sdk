@@ -68,7 +68,7 @@ namespace Microsoft.HealthVault.Transport
                             "deflate",
                             StringComparison.OrdinalIgnoreCase))
                     {
-                        throw Validator.HealthServiceException("InvalidRequestCompressionMethod");
+                        throw new HealthServiceException(Resources.InvalidRequestCompressionMethod);
                     }
                 }
             }

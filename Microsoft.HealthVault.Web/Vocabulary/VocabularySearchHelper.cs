@@ -67,13 +67,13 @@ namespace Microsoft.HealthVault.Web.Vocabulary
             string jsonCallbackName,
             Guid serviceToken)
         {
-            Validator.ThrowIfArgumentNull(searchParameters, "searchParameters", "VocabularySearchParametersNull");
+            Validator.ThrowIfArgumentNull(searchParameters, nameof(searchParameters), Resources.VocabularySearchParametersNull);
             Validator.ThrowIfStringNullOrEmpty(jsonCallbackName, "jsonCallbackName");
 
-            Validator.ThrowArgumentExceptionIf(
-                serviceToken == Guid.Empty,
-                "serviceToken",
-                "ServiceTokenEmpty");
+            if (serviceToken == Guid.Empty)
+            {
+                throw new ArgumentException(Resources.ServiceTokenEmpty, nameof(serviceToken));
+            }
 
             StringBuilder queryString = new StringBuilder(1024);
             AppendVocabularySearchServiceParameters(queryString, jsonCallbackName);
@@ -120,7 +120,7 @@ namespace Microsoft.HealthVault.Web.Vocabulary
             string jsonCallbackName,
             int timeToLiveMinutes)
         {
-            Validator.ThrowIfArgumentNull(searchParameters, "searchParameters", "VocabularySearchParametersNull");
+            Validator.ThrowIfArgumentNull(searchParameters, nameof(searchParameters), Resources.VocabularySearchParametersNull);
             Validator.ThrowIfStringNullOrEmpty(jsonCallbackName, "jsonCallbackName");
 
             StringBuilder queryString = new StringBuilder(1024);

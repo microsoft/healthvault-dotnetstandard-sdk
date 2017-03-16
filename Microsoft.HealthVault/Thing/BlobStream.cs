@@ -139,7 +139,7 @@ namespace Microsoft.HealthVault.Thing
                 // an exception...
                 if (!this.triedToWrite)
                 {
-                    throw Validator.InvalidOperationException("BlobStreamNoData");
+                    throw new InvalidOperationException(Resources.BlobStreamNoData);
                 }
 
                 this.SendChunks(true);
@@ -192,7 +192,7 @@ namespace Microsoft.HealthVault.Thing
 
                 if (this.length == null)
                 {
-                    throw Validator.NotSupportedException("BlobStreamLengthNotSupported");
+                    throw new NotSupportedException(Resources.BlobStreamLengthNotSupported);
                 }
 
                 return this.length.Value;
@@ -304,10 +304,10 @@ namespace Microsoft.HealthVault.Thing
                 throw new ObjectDisposedException("BlobStream");
             }
 
-            Validator.ThrowArgumentExceptionIf(
-                buffer.Length - offset < count,
-                "buffer",
-                "BlobStreamBufferLengthTooSmall");
+            if (buffer.Length - offset < count)
+            {
+                throw new ArgumentException(Resources.BlobStreamBufferLengthTooSmall, nameof(buffer));
+            }
 
             int result = 0;
             if (this.inlineData != null)
@@ -497,7 +497,7 @@ namespace Microsoft.HealthVault.Thing
                 case SeekOrigin.End:
                     if (this.length == null)
                     {
-                        throw Validator.NotSupportedException("BlobStreamSeekFromEndNullLength");
+                        throw new NotSupportedException(Resources.BlobStreamSeekFromEndNullLength);
                     }
 
                     newPosition = (this.length.Value - 1) + offset;
@@ -506,12 +506,12 @@ namespace Microsoft.HealthVault.Thing
 
             if (newPosition < 0)
             {
-                throw Validator.IOException("BlobStreamPositionIsNegative");
+                throw new IOException(Resources.BlobStreamPositionIsNegative);
             }
 
             if (this.length != null && newPosition > this.length - 1)
             {
-                throw Validator.IOException("BlobStreamPositionPastEnd");
+                throw new IOException(Resources.BlobStreamPositionPastEnd);
             }
 
             this.position = newPosition;
@@ -603,10 +603,10 @@ namespace Microsoft.HealthVault.Thing
                 throw new NotSupportedException("Currently blobs for records are only supported");
             }
 
-            Validator.ThrowArgumentExceptionIf(
-                buffer.Length - offset < count,
-                "buffer",
-                "BlobStreamBufferLengthTooSmall");
+            if (buffer.Length - offset < count)
+            {
+                throw new ArgumentException(Resources.BlobStreamBufferLengthTooSmall, nameof(buffer));
+            }
 
             this.triedToWrite = true;
 

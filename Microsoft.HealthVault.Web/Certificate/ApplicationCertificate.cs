@@ -125,10 +125,10 @@ namespace Microsoft.HealthVault.Web.Certificate
             Guid applicationId,
             StoreLocation storeLocation = StoreLocation.CurrentUser)
         {
-            Validator.ThrowArgumentExceptionIf(
-                applicationId == Guid.Empty,
-                "applicationId",
-                "InvalidApplicationIdConfiguration");
+            if (applicationId == Guid.Empty)
+            {
+                throw new ArgumentException(Resources.InvalidApplicationIdConfiguration, nameof(applicationId));
+            }
 
             return CreateCertificate(
                 MakeCertName(applicationId),
@@ -174,10 +174,10 @@ namespace Microsoft.HealthVault.Web.Certificate
             bool persist,
             StoreLocation storeLocation)
         {
-            Validator.ThrowArgumentExceptionIf(
-                applicationId == Guid.Empty,
-                "applicationId",
-                "InvalidApplicationIdConfiguration");
+            if (applicationId == Guid.Empty)
+            {
+                throw new ArgumentException(Resources.InvalidApplicationIdConfiguration, nameof(applicationId));
+            }
 
             return CreateCertificate(
                 MakeCertName(applicationId),

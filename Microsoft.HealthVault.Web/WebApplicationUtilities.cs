@@ -22,6 +22,7 @@ using System.Threading.Tasks;
 using System.Web;
 using System.Xml;
 using System.Xml.XPath;
+using Microsoft.HealthVault.Extensions;
 
 namespace Microsoft.HealthVault.Web
 {
@@ -92,7 +93,7 @@ namespace Microsoft.HealthVault.Web
             HttpContext context,
             PersonInfo personInfo)
         {
-            Validator.ThrowInvalidIfNull(personInfo, "PersonNotLoggedIn");
+            Validator.ThrowInvalidIfNull(personInfo, WebResources.PersonNotLoggedIn);
 
             // TODO: Refactor the code as per new API
             // personInfo = await HealthVaultPlatform.GetPersonInfoAsync(personInfo.Connection).ConfigureAwait(false);
@@ -649,7 +650,7 @@ namespace Microsoft.HealthVault.Web
                 // TODO: fix the issue
                 // if (instanceId == null || !ServiceInfo.Current.ServiceInstances.ContainsKey(instanceId))
                 // {
-                // throw Validator.InvalidOperationException("InstanceIdNotFound");
+                //    	throw new InvalidOperationException(Resources.InstanceIdNotFound);
                 // }
                 // HealthServiceInstance serviceInstance = ServiceInfo.Current.ServiceInstances[instanceId];
 
@@ -754,10 +755,7 @@ namespace Microsoft.HealthVault.Web
                     personInfoXml = UnmarshalCookieVersion2(serializedPersonInfo);
                     break;
                 default:
-                    throw new ArgumentException(
-                        ResourceRetriever.FormatResourceString(
-                            "UnknownCookieVersion",
-                            serializationVersion));
+                    throw new ArgumentException(WebResources.UnknownCookieVersion.FormatResource(serializationVersion));
             }
 
             return personInfoXml;
@@ -850,9 +848,10 @@ namespace Microsoft.HealthVault.Web
         {
             if (String.IsNullOrEmpty(serializedPersonInfo)) return null;
 
-            Validator.ThrowInvalidIf(
-                serializedPersonInfo.Length > CookieMaxSize,
-                "CookieTooBig");
+            if (serializedPersonInfo.Length > CookieMaxSize)
+            {
+                throw new InvalidOperationException(WebResources.CookieTooBig);
+            }
 
             PersonInfo personInfo = null;
 
@@ -899,10 +898,10 @@ namespace Microsoft.HealthVault.Web
 
             int version;
 
-            Validator.ThrowArgumentExceptionIf(
-                !Int32.TryParse(versionString, out version),
-                "version",
-                "UnknownCookieVersion");
+            if (!int.TryParse(versionString, out version))
+            {
+                throw new ArgumentException(WebResources.UnknownCookieVersion, nameof(serializedPersonInfo));
+            }
 
             return version;
         }
@@ -1148,9 +1147,10 @@ namespace Microsoft.HealthVault.Web
 
                     if (nextByte != -1)
                     {
-                        Validator.ThrowInvalidIf(
-                            readBuffer.Length > 32768,
-                            "DecompressionSizeExceeded");
+                        if (readBuffer.Length > 32768)
+                        {
+                            throw new InvalidOperationException(WebResources.DecompressionSizeExceeded);
+                        }
 
                         byte[] temp = new byte[readBuffer.Length * 2];
                         Buffer.BlockCopy(readBuffer, 0, temp, 0, readBuffer.Length);
@@ -1213,10 +1213,7 @@ namespace Microsoft.HealthVault.Web
                 case 2:
                     return "2:" + MarshalCookieVersion2(personInfoXml);
                 default:
-                    throw new ArgumentException(
-                        ResourceRetriever.FormatResourceString(
-                            "UnknownCookieVersion",
-                            version));
+                    throw new ArgumentException(WebResources.UnknownCookieVersion.FormatResource(version));
             }
         }
 

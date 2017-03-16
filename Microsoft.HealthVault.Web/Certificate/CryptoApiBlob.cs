@@ -43,7 +43,7 @@ namespace Microsoft.HealthVault.Web.Certificate
         [SecurityCritical]
         internal CryptoApiBlob(byte[] data)
         {
-            Validator.ThrowIfArgumentNull(data, "data", "CryptoApiBlobNotNullData");
+            Validator.ThrowIfArgumentNull(data, nameof(data), Resources.CryptoApiBlobNotNullData);
 
             this.AllocateBlob(data.Length);
             Marshal.Copy(data, 0, this.pbData, data.Length);
@@ -85,10 +85,10 @@ namespace Microsoft.HealthVault.Web.Certificate
                     (this.pbData == IntPtr.Zero && this.cbData == 0) ||
                     (this.pbData != IntPtr.Zero && this.cbData != 0), "Crypto blob data not initialized");
 
-            Validator.ThrowArgumentOutOfRangeIf(
-                size < 0,
-                "size",
-                "CryptoApiBlobSizeGreaterThanZero");
+            if (size < 0)
+            {
+                throw new ArgumentOutOfRangeException(nameof(size), Resources.CryptoApiBlobSizeGreaterThanZero);
+            }
 
             // allocate the new memory block
             IntPtr newMemory = IntPtr.Zero;
@@ -97,9 +97,7 @@ namespace Microsoft.HealthVault.Web.Certificate
                 newMemory = Marshal.AllocHGlobal(size);
                 if (newMemory == IntPtr.Zero)
                 {
-                    throw new CryptographicException(
-                        ResourceRetriever.GetResourceString(
-                            "CryptoApiBlobUnableToAllocateBlob"));
+                    throw new CryptographicException(Resources.CryptoApiBlobUnableToAllocateBlob);
                 }
             }
 

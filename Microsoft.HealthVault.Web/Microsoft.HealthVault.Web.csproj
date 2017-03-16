@@ -113,14 +113,16 @@
     <Compile Include="WebConfigurationFactory.cs" />
     <Compile Include="WebCryptographer.cs" />
     <Compile Include="WebHealthVaultFactory.cs" />
+    <Compile Include="WebResources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>WebResources.resx</DependentUpon>
+    </Compile>
     <Compile Include="WebSessionCredentialClient.cs" />
     <Compile Include="WebConnection.cs" />
     <Compile Include="WebIoc.cs" />
     <Compile Include="WebApplicationUtilities.cs" />
     <Compile Include="WebConfiguration.cs" />
-    <EmbeddedResource Include="resources.restext">
-      <LogicalName>resources.resources</LogicalName>
-    </EmbeddedResource>
     <Compile Include="..\SharedVersionInfo.cs">
       <Link>Properties\SharedVersionInfo.cs</Link>
     </Compile>
@@ -128,6 +130,10 @@
     <Compile Include="GlobalSuppressions.cs">
       <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
     </Compile>
+    <EmbeddedResource Include="WebResources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>WebResources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

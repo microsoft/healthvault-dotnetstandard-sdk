@@ -58,10 +58,10 @@ namespace Microsoft.HealthVault.Thing
         public DateRangeSetDefinition(DateTime dateMin, DateTime dateMax)
             : base(SetType.DateRangeSet)
         {
-            Validator.ThrowArgumentExceptionIf(
-                dateMin > dateMax,
-                "dateMin",
-                "DateRangeMinLessThanMax");
+            if (dateMin > dateMax)
+            {
+                throw new ArgumentException(Resources.DateRangeMinLessThanMax, nameof(dateMin));
+            }
 
             this.DateMin = dateMin;
             this.DateMax = dateMax;

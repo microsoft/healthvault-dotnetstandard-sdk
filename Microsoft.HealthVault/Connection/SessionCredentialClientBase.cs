@@ -132,7 +132,7 @@ namespace Microsoft.HealthVault.Connection
 
         public virtual void ConstructCreateTokenInfoXmlAppIdPart(XmlWriter writer)
         {
-            Validator.ThrowIfArgumentNull(writer, "writer", "WriteXmlNullWriter");
+            Validator.ThrowIfArgumentNull(writer, nameof(writer), Resources.WriteXmlNullWriter);
             writer.WriteStartElement("app-id");
 
             var healthApplicationConfiguration = Ioc.Get<HealthVaultConfiguration>();

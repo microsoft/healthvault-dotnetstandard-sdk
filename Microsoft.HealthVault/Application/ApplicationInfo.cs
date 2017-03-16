@@ -59,10 +59,10 @@ namespace Microsoft.HealthVault.Application
         {
             Validator.ThrowIfStringNullOrEmpty(name, "name");
 
-            Validator.ThrowArgumentExceptionIf(
-                publicKeys == null || publicKeys.Count == 0,
-                "publicKeys",
-                "ApplicationInfoPublicKeysRequired");
+            if (publicKeys == null || publicKeys.Count == 0)
+            {
+                throw new ArgumentException(Resources.ApplicationInfoPublicKeysRequired, nameof(publicKeys));
+            }
 
             this.CultureSpecificNames.DefaultValue = name;
 
@@ -754,10 +754,11 @@ namespace Microsoft.HealthVault.Application
 
             set
             {
-                Validator.ThrowArgumentOutOfRangeIf(
-                    value <= 0,
-                    "PersistentTokenTtlInSeconds",
-                    "PersistentTokenTtlInSecondsNotPositive");
+                if (value <= 0)
+                {
+                    throw new ArgumentOutOfRangeException(nameof(this.PersistentTokenTtlInSeconds), Resources.PersistentTokenTtlInSecondsNotPositive);
+                }
+
                 this.persistentTokenTtlInSeconds = value;
             }
         }

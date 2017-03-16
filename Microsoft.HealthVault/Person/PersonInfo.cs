@@ -195,7 +195,7 @@ namespace Microsoft.HealthVault.Person
         ///
         public void Unmarshal(XmlReader reader)
         {
-            Validator.ThrowIfArgumentNull(reader, "reader", "XmlNullReader");
+            Validator.ThrowIfArgumentNull(reader, nameof(reader), Resources.XmlNullReader);
 
             this.ParseXml(new XPathDocument(reader).CreateNavigator());
         }
@@ -546,8 +546,7 @@ namespace Microsoft.HealthVault.Person
             {
                 HealthServiceResponseError error = new HealthServiceResponseError
                 {
-                    Message = ResourceRetriever.GetResourceString(
-                        "SelfRecordNotFound")
+                    Message = Resources.SelfRecordNotFound
                 };
 
                 HealthServiceException e =

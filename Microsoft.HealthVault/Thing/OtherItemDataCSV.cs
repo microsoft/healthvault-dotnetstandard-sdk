@@ -117,12 +117,12 @@ namespace Microsoft.HealthVault.Thing
         /// </exception>
         protected Collection<OtherItemDataCsvItem> GetAsString()
         {
-            Validator.ThrowArgumentExceptionIf(
-                this.ContentType != "text/csv",
-                "contentType",
-                "OtherItemDataFormat");
+            if (this.ContentType != "text/csv")
+            {
+                throw new ArgumentException(Resources.OtherItemDataFormat, nameof(this.ContentType));
+            }
 
-            Validator.ThrowIfArgumentNull(this.Data, "Data", "OtherItemDataNull");
+            Validator.ThrowIfArgumentNull(this.Data, nameof(this.Data), Resources.OtherItemDataNull);
 
             Collection<OtherItemDataCsvItem> values = new Collection<OtherItemDataCsvItem>();
 
@@ -183,7 +183,7 @@ namespace Microsoft.HealthVault.Thing
                     }
                     catch (FormatException)
                     {
-                        throw Validator.InvalidOperationException("OtherItemDataInvalidNumber");
+                        throw new InvalidOperationException(Resources.OtherItemDataInvalidNumber);
                     }
 
                     values.Add(new OtherItemDataCsvDouble(value));
@@ -210,7 +210,7 @@ namespace Microsoft.HealthVault.Thing
         /// </exception>
         protected void SetOtherData(IList<OtherItemDataCsvItem> values)
         {
-            Validator.ThrowIfArgumentNull(values, "values", "OtherItemDataValuesNull");
+            Validator.ThrowIfArgumentNull(values, nameof(values), Resources.OtherItemDataValuesNull);
 
             StringBuilder builder = new StringBuilder();
 

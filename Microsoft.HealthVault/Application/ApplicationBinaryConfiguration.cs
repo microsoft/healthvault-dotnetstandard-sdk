@@ -120,10 +120,7 @@ namespace Microsoft.HealthVault.Application
         ///
         public ApplicationBinaryConfiguration(Stream binaryConfigurationContent, string contentType)
         {
-            Validator.ThrowIfArgumentNull(
-                binaryConfigurationContent,
-                "binaryConfigurationContent",
-                "ApplicationBinaryConfigurationContentStreamRequired");
+            Validator.ThrowIfArgumentNull(binaryConfigurationContent, nameof(binaryConfigurationContent), Resources.ApplicationBinaryConfigurationContentStreamRequired);
 
             Validator.ThrowIfStringNullOrEmpty(contentType, "contentType");
 

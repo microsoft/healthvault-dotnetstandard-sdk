@@ -48,10 +48,11 @@ namespace Microsoft.HealthVault.Person
 
             set
             {
-                Validator.ThrowArgumentOutOfRangeIf(
-                    value < 0,
-                    "BatchSize",
-                    "GetAuthorizedPeopleSettingsBatchSizeNegative");
+                if (value < 0)
+                {
+                    throw new ArgumentOutOfRangeException(nameof(value), Resources.GetAuthorizedPeopleSettingsBatchSizeNegative);
+                }
+
                 this.batchSize = value;
             }
         }

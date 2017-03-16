@@ -32,48 +32,7 @@ namespace Microsoft.HealthVault.Application
     /// </remarks>
     internal class HealthVaultPlatformApplication
     {
-        /// <summary>
-        /// Enables mocking of calls to this class.
-        /// </summary>
-        ///
-        /// <remarks>
-        /// The calling class should pass in a class that derives from this
-        /// class and overrides the calls to be mocked.
-        /// </remarks>
-        ///
-        /// <param name="mock">The mocking class.</param>
-        ///
-        /// <exception cref="InvalidOperationException">
-        /// There is already a mock registered for this class.
-        /// </exception>
-        ///
-        public static void EnableMock(HealthVaultPlatformApplication mock)
-        {
-            Validator.ThrowInvalidIf(saved != null, "ClassAlreadyMocked");
-
-            saved = Current;
-            Current = mock;
-        }
-
-        /// <summary>
-        /// Removes mocking of calls to this class.
-        /// </summary>
-        ///
-        /// <exception cref="InvalidOperationException">
-        /// There is no mock registered for this class.
-        /// </exception>
-        ///
-        public static void DisableMock()
-        {
-            Validator.ThrowInvalidIfNull(saved, "ClassIsntMocked");
-
-            Current = saved;
-            saved = null;
-        }
-
         internal static HealthVaultPlatformApplication Current { get; private set; } = new HealthVaultPlatformApplication();
-
-        private static HealthVaultPlatformApplication saved;
 
         #region GetAuthorizedPeople
 
@@ -114,7 +73,7 @@ namespace Microsoft.HealthVault.Application
             IConnectionInternal connection,
             GetAuthorizedPeopleSettings settings)
         {
-            Validator.ThrowIfArgumentNull(settings, "settings", "GetAuthorizedPeopleSettingsNull");
+            Validator.ThrowIfArgumentNull(settings, nameof(settings), Resources.GetAuthorizedPeopleSettingsNull);
 
             bool moreResults = true;
             Guid cursor = settings.StartingPersonId;
@@ -182,10 +141,10 @@ namespace Microsoft.HealthVault.Application
             DateTime authCreatedSinceDate,
             int numResults)
         {
-            Validator.ThrowArgumentOutOfRangeIf(
-                numResults < 0,
-                "numResults",
-                "GetAuthorizedPeopleNumResultsNegative");
+            if (numResults < 0)
+            {
+                throw new ArgumentOutOfRangeException(nameof(numResults), Resources.GetAuthorizedPeopleNumResultsNegative);
+            }
 
             StringBuilder parameters = new StringBuilder(256);
             XmlWriterSettings settings = SDKHelper.XmlUnicodeWriterSettings;

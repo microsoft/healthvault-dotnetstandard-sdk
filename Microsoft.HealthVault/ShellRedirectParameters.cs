@@ -331,7 +331,7 @@ namespace Microsoft.HealthVault
             {
                 if (this.configuration.DefaultHealthVaultShellUrl == null)
                 {
-                    throw Validator.InvalidConfigurationException("ShellUrlRequired");
+                    throw new InvalidConfigurationException(Resources.ShellUrlRequired);
                 }
 
                 // get from config
@@ -368,7 +368,10 @@ namespace Microsoft.HealthVault
         ///
         public string ConstructRedirectorQueryString()
         {
-            Validator.ThrowInvalidIf(string.IsNullOrEmpty(this.TargetLocation), "ShellTargetRequired");
+            if (string.IsNullOrEmpty(this.TargetLocation))
+            {
+                throw new InvalidOperationException(Resources.ShellTargetRequired);
+            }
 
             var qs = new NameValueCollection();
             var targetQs = this.ConstructTargetQueryString();

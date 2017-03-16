@@ -7,6 +7,7 @@ using System.Security;
 using System.Security.Cryptography;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
+using Microsoft.HealthVault.Extensions;
 using Microsoft.HealthVault.Helpers;
 using Microsoft.HealthVault.Web.Certificate;
 
@@ -53,8 +54,7 @@ namespace Microsoft.HealthVault.Web
                             throw new CryptographicException(
                                 String.Format(
                                     CultureInfo.InvariantCulture,
-                                        ResourceRetriever.GetResourceString(
-                                            "ApplicationCertificateUnableToCreateCert"),
+                                        Resources.ApplicationCertificateUnableToCreateCert,
                                         Util.GetLastErrorMessage()));
                         }
                         else
@@ -147,13 +147,9 @@ namespace Microsoft.HealthVault.Web
             if (!ok)
             {
                 string lastError = Util.GetLastErrorMessage();
-                throw new CryptographicException(
-                    String.Format(
-                        CultureInfo.CurrentCulture,
-                        ResourceRetriever.GetResourceString(
-                            "CertificateNameConversionFailed"),
-                            lastError,
-                            errorString));
+                throw new CryptographicException(Resources.CertificateNameConversionFailed.FormatResource(
+                    lastError,
+                    errorString));
             }
 
             return encodedBytes;
@@ -196,11 +192,7 @@ namespace Microsoft.HealthVault.Web
                         NativeMethods.AddDisposition.ReplaceExisting,
                         out addedCert))
                 {
-                    throw new CryptographicException(String.Format(
-                        CultureInfo.InvariantCulture,
-                        ResourceRetriever.GetResourceString(
-                            "ApplicationCertificateUnableToAddCertToStore"),
-                            Util.GetLastErrorMessage()));
+                    throw new CryptographicException(Resources.ApplicationCertificateUnableToAddCertToStore.FormatResource(Util.GetLastErrorMessage()));
                 }
             }
             finally
@@ -259,10 +251,7 @@ namespace Microsoft.HealthVault.Web
                 {
                     Win32Exception win32Exception = new Win32Exception(Marshal.GetLastWin32Error());
 
-                    throw new CryptographicException(
-                            ResourceRetriever.GetResourceString(
-                                "ApplicationCertificateUnableToAcquireContext"),
-                                win32Exception.Message);
+                    throw new CryptographicException(Resources.ApplicationCertificateUnableToAcquireContext.FormatResource(win32Exception.Message));
                 }
 
                 // generate the key
@@ -273,10 +262,7 @@ namespace Microsoft.HealthVault.Web
                 {
                     Win32Exception win32Exception = new Win32Exception(Marshal.GetLastWin32Error());
 
-                    throw new CryptographicException(
-                        ResourceRetriever.GetResourceString(
-                            "ApplicationCertificateUnableToGenerateKey"),
-                        win32Exception.Message);
+                    throw new CryptographicException(Resources.ApplicationCertificateUnableToGenerateKey.FormatResource(win32Exception.Message));
                 }
             }
             finally

@@ -39,7 +39,7 @@ namespace Microsoft.HealthVault.Thing
         ///
         internal HealthRecordSearcher(HealthRecordAccessor record)
         {
-            Validator.ThrowIfArgumentNull(record, "record", "HealthRecordSearcherCtorArgumentNull");
+            Validator.ThrowIfArgumentNull(record, nameof(record), Resources.HealthRecordSearcherCtorArgumentNull);
             this.Record = record;
         }
 
@@ -195,8 +195,7 @@ namespace Microsoft.HealthVault.Thing
             {
                 HealthServiceResponseError error = new HealthServiceResponseError
                 {
-                    Message = ResourceRetriever.GetResourceString(
-                        "GetSingleThingTooManyResults")
+                    Message = Resources.GetSingleThingTooManyResults
                 };
 
                 HealthServiceException e =
@@ -215,8 +214,7 @@ namespace Microsoft.HealthVault.Thing
                 {
                     HealthServiceResponseError error = new HealthServiceResponseError
                     {
-                        Message = ResourceRetriever.GetResourceString(
-                            "GetSingleThingTooManyResults")
+                        Message = Resources.GetSingleThingTooManyResults
                     };
 
                     HealthServiceException e =
@@ -321,9 +319,7 @@ namespace Microsoft.HealthVault.Thing
             if (this.Filters.Count == 0)
             {
                 HealthServiceResponseError error = new HealthServiceResponseError();
-                error.Message =
-                    ResourceRetriever.GetResourceString(
-                        "HealthRecordSearcherNoFilters");
+                error.Message = Resources.HealthRecordSearcherNoFilters;
 
                 HealthServiceException e =
                     HealthServiceExceptionHelper.GetHealthServiceException(

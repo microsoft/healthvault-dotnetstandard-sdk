@@ -251,9 +251,10 @@ namespace Microsoft.HealthVault.Vocabulary
         {
             Validator.ThrowIfWriterNull(writer);
 
-            Validator.ThrowInvalidIf(
-                string.IsNullOrEmpty(this.Name),
-                "VocabularyNameNullOrEmpty");
+            if (string.IsNullOrEmpty(this.Name))
+            {
+                throw new InvalidOperationException(Resources.VocabularyNameNullOrEmpty);
+            }
 
             writer.WriteElementString("vocabulary-format-version", "1");
 

@@ -5,6 +5,7 @@ using System.Security.Cryptography;
 using System.Security.Cryptography.X509Certificates;
 using Microsoft.HealthVault.Configuration;
 using Microsoft.HealthVault.Diagnostics;
+using Microsoft.HealthVault.Extensions;
 using Microsoft.HealthVault.Helpers;
 
 namespace Microsoft.HealthVault.Application
@@ -57,10 +58,10 @@ namespace Microsoft.HealthVault.Application
         // This is here for compatibility with the previous relase and for testability.
         internal X509Certificate2 GetApplicationCertificate(Guid applicationId)
         {
-            Validator.ThrowArgumentExceptionIf(
-                applicationId == Guid.Empty,
-                "appId",
-                "GuidParameterEmpty");
+            if (applicationId == Guid.Empty)
+            {
+                throw new ArgumentException(Resources.GuidParameterEmpty, nameof(applicationId));
+            }
 
             // TODO: What to do here?
 
@@ -140,11 +141,7 @@ namespace Microsoft.HealthVault.Application
 
             if (rsaProvider == null || string.IsNullOrEmpty(thumbprint))
             {
-                throw new SecurityException(
-                        ResourceRetriever.FormatResourceString(
-                            "CertificateNotFound",
-                            certSubject,
-                            storeLocation));
+                throw new SecurityException(Resources.CertificateNotFound.FormatResource(certSubject, storeLocation));
             }
 
             return result;
@@ -165,7 +162,7 @@ namespace Microsoft.HealthVault.Application
                     "Cert file not found: {0}",
                     certFilename);
 
-                throw Validator.SecurityException("CertificateFileNotFound");
+                throw new SecurityException(Resources.CertificateFileNotFound);
             }
 
             // TODO: applicationcertificate password used to be driven from configuration
@@ -187,7 +184,7 @@ namespace Microsoft.HealthVault.Application
                     "Failed to load certificate: {0}",
                     e.ToString());
 
-                throw Validator.SecurityException("ErrorLoadingCertificateFile", e);
+                throw new SecurityException(Resources.ErrorLoadingCertificateFile, e);
             }
 
             HealthVaultPlatformTrace.LogCertLoading("Looking for private key");
@@ -197,7 +194,7 @@ namespace Microsoft.HealthVault.Application
                 HealthVaultPlatformTrace.LogCertLoading(
                     "Certificate did not contain a private key.");
 
-                throw Validator.SecurityException("CertificateMissingPrivateKey");
+                throw new SecurityException(Resources.CertificateMissingPrivateKey);
             }
 
             HealthVaultPlatformTrace.LogCertLoading(
@@ -210,7 +207,7 @@ namespace Microsoft.HealthVault.Application
 
             if (rsaProvider == null || string.IsNullOrEmpty(thumbprint))
             {
-                throw Validator.SecurityException("CertificateNotFound");
+                throw new SecurityException(Resources.CertificateNotFound);
             }
 
             return cert;

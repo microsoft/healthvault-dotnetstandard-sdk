@@ -223,11 +223,10 @@ namespace Microsoft.HealthVault.Thing
         {
             // First check to be sure we either have sections and/or
             // transforms defined.
-            Validator.ThrowArgumentExceptionIf(
-                this.Sections == ThingSections.None &&
-                this.TransformsToApply.Count == 0,
-                "sections",
-                "NoSectionsOrTransforms");
+            if (this.Sections == ThingSections.None && this.TransformsToApply.Count == 0)
+            {
+                throw new ArgumentException(Resources.NoSectionsOrTransforms, nameof(this.sections));
+            }
 
             // <format>
             writer.WriteStartElement("format");

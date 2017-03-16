@@ -381,10 +381,6 @@
     <WCFMetadata Include="Service References\" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Microsoft.HealthVault.ItemTypes\Microsoft.HealthVault.ItemTypes.csproj">
-      <Project>{105ac0fb-6fe4-475d-a4a6-6ef660337e5e}</Project>
-      <Name>Microsoft.HealthVault.ItemTypes</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Microsoft.HealthVault.Web.Mvc\Microsoft.HealthVault.Web.Mvc.csproj">
       <Project>{bac954f8-3137-4840-9ceb-9852709070b2}</Project>
       <Name>Microsoft.HealthVault.Web.Mvc</Name>

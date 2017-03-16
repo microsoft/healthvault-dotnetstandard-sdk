@@ -5,6 +5,7 @@
 
 using System;
 using System.Globalization;
+using Microsoft.HealthVault.Extensions;
 using Microsoft.HealthVault.Helpers;
 
 namespace Microsoft.HealthVault.Exceptions
@@ -35,10 +36,7 @@ namespace Microsoft.HealthVault.Exceptions
             : this(
                 compatibleVersions,
                 incompatibleVersion,
-                string.Format(
-                    CultureInfo.CurrentUICulture,
-                    ResourceRetriever.GetResourceString(
-                        "IncompatibleVersionExceptionMessageFormatString"),
+                Resources.IncompatibleVersionExceptionMessageFormatString.FormatResource(
                     compatibleVersions ?? string.Empty,
                     incompatibleVersion ?? string.Empty))
         {

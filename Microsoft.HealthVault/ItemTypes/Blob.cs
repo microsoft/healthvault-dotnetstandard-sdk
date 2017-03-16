@@ -101,8 +101,8 @@ namespace Microsoft.HealthVault.ItemTypes
             BlobHashInfo hashInfo,
             HealthRecordAccessor record)
         {
-            Validator.ThrowIfArgumentNull(name, "name", "StringNull");
-            Validator.ThrowIfArgumentNull(contentType, "contentType", "StringNull");
+            Validator.ThrowIfArgumentNull(name, nameof(name), Resources.StringNull);
+            Validator.ThrowIfArgumentNull(contentType, nameof(contentType), Resources.StringNull);
 
             this.Name = name;
             this.ContentType = contentType;
@@ -147,8 +147,8 @@ namespace Microsoft.HealthVault.ItemTypes
             string legacyContentEncoding,
             BlobHashInfo hashInfo)
         {
-            Validator.ThrowIfArgumentNull(name, "name", "StringNull");
-            Validator.ThrowIfArgumentNull(contentType, "contentType", "StringNull");
+            Validator.ThrowIfArgumentNull(name, nameof(name), Resources.StringNull);
+            Validator.ThrowIfArgumentNull(contentType, nameof(contentType), Resources.StringNull);
 
             this.Name = name;
             this.ContentType = contentType;
@@ -277,8 +277,8 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public void WriteInline(string data, Encoding encoding)
         {
-            Validator.ThrowIfArgumentNull(data, "data", "StringNull");
-            Validator.ThrowIfArgumentNull(encoding, "encoding", "ArgumentNull");
+            Validator.ThrowIfArgumentNull(data, nameof(data), Resources.StringNull);
+            Validator.ThrowIfArgumentNull(encoding, nameof(encoding), Resources.ArgumentNull);
 
             this.WriteNewInlineData(encoding.GetBytes(data));
         }
@@ -304,7 +304,7 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public void WriteInline(byte[] bytes)
         {
-            Validator.ThrowIfArgumentNull(bytes, "bytes", "ArgumentNull");
+            Validator.ThrowIfArgumentNull(bytes, nameof(bytes), Resources.ArgumentNull);
 
             this.WriteNewInlineData(bytes);
         }
@@ -344,7 +344,7 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public void Write(Stream stream)
         {
-            Validator.ThrowIfArgumentNull(stream, "stream", "ArgumentNull");
+            Validator.ThrowIfArgumentNull(stream, nameof(stream), Resources.ArgumentNull);
 
             int bufferSize = DefaultStreamBufferSize;
             if (stream.CanSeek)
@@ -435,7 +435,7 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             Validator.ThrowIfStringNullOrEmpty(fileName, "filename");
 
-            using (FileStream file = File.Open(fileName, mode, FileAccess.Write))
+            using (FileStream file = System.IO.File.Open(fileName, mode, FileAccess.Write))
             {
                 this.SaveToStream(file);
             }
@@ -467,7 +467,7 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public void SaveToStream(Stream stream)
         {
-            Validator.ThrowIfArgumentNull(stream, "stream", "ArgumentNull");
+            Validator.ThrowIfArgumentNull(stream, nameof(stream), Resources.ArgumentNull);
 
             using (BlobStream blob = this.GetReaderStream())
             {

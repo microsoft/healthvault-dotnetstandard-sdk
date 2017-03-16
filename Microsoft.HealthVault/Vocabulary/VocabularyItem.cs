@@ -196,8 +196,15 @@ namespace Microsoft.HealthVault.Vocabulary
             Validator.ThrowIfStringNullOrEmpty(nodeName, "nodeName");
             Validator.ThrowIfWriterNull(writer);
 
-            Validator.ThrowSerializationIf(string.IsNullOrEmpty(this.value), "ValueNotSet");
-            Validator.ThrowSerializationIf(string.IsNullOrEmpty(this.vocabName), "NameNotSet");
+            if (string.IsNullOrEmpty(this.value))
+            {
+                throw new ThingSerializationException(Resources.ValueNotSet);
+            }
+
+            if (string.IsNullOrEmpty(this.vocabName))
+            {
+                throw new ThingSerializationException(Resources.NameNotSet);
+            }
 
             writer.WriteStartElement(nodeName);
 
@@ -261,7 +268,7 @@ namespace Microsoft.HealthVault.Vocabulary
         /// <param name="infoXml"> the info XML for this item</param>
         public void SetInfoXml(string infoXml)
         {
-            Validator.ThrowIfArgumentNull(infoXml, "infoXml", "VocabularyItemInfoXmlNull");
+            Validator.ThrowIfArgumentNull(infoXml, nameof(infoXml), Resources.VocabularyItemInfoXmlNull);
 
             try
             {
@@ -418,7 +425,7 @@ namespace Microsoft.HealthVault.Vocabulary
             {
                 if (!string.IsNullOrEmpty(value) && string.IsNullOrEmpty(value.Trim()))
                 {
-                    throw Validator.ArgumentException("Family", "WhitespaceOnlyValue");
+                    throw new ArgumentException(Resources.WhitespaceOnlyValue, nameof(this.Family));
                 }
 
                 this.family = value;
@@ -478,7 +485,7 @@ namespace Microsoft.HealthVault.Vocabulary
             {
                 if (!string.IsNullOrEmpty(value) && string.IsNullOrEmpty(value.Trim()))
                 {
-                    throw Validator.ArgumentException("Version", "WhitespaceOnlyValue");
+                    throw new ArgumentException(Resources.WhitespaceOnlyValue, nameof(this.Version));
                 }
 
                 this.version = value;

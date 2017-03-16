@@ -121,8 +121,7 @@ namespace Microsoft.HealthVault.Thing
             {
                 HealthServiceResponseError error = new HealthServiceResponseError
                 {
-                    Message = ResourceRetriever.GetResourceString(
-                            "HealthRecordSearcherInvalidFilter")
+                    Message = Resources.HealthRecordSearcherInvalidFilter
                 };
 
                 HealthServiceException e =
@@ -143,8 +142,7 @@ namespace Microsoft.HealthVault.Thing
             {
                 HealthServiceResponseError error = new HealthServiceResponseError
                 {
-                    Message = ResourceRetriever.GetResourceString(
-                            "HealthRecordSearcherInvalidFilterIdsAndKeysSpecified")
+                    Message = Resources.HealthRecordSearcherInvalidFilterIdsAndKeysSpecified
                 };
 
                 HealthServiceException e = HealthServiceExceptionHelper.GetHealthServiceException(
@@ -157,8 +155,7 @@ namespace Microsoft.HealthVault.Thing
             {
                 HealthServiceResponseError error = new HealthServiceResponseError
                 {
-                    Message = ResourceRetriever.GetResourceString(
-                        "HealthRecordSearcherInvalidOrderSpecified")
+                    Message = Resources.HealthRecordSearcherInvalidOrderSpecified
                 };
 
                 HealthServiceException e =
@@ -214,10 +211,10 @@ namespace Microsoft.HealthVault.Thing
 
             set
             {
-                Validator.ThrowArgumentOutOfRangeIf(
-                    value < 0,
-                    "MaxItemsReturned",
-                    "ThingQueryMaxReturnsNegative");
+                if (value < 0)
+                {
+                    throw new ArgumentOutOfRangeException(nameof(this.MaxItemsReturned), Resources.ThingQueryMaxReturnsNegative);
+                }
 
                 this.maxItemsReturned = value;
             }
@@ -253,10 +250,10 @@ namespace Microsoft.HealthVault.Thing
 
             set
             {
-                Validator.ThrowArgumentOutOfRangeIf(
-                    value < 0,
-                    "MaxFullItemsReturnedPerRequest",
-                    "ThingQueryMaxFullItemsReturnedNegative");
+                if (value < 0)
+                {
+                    throw new ArgumentOutOfRangeException(nameof(this.MaxFullItemsReturnedPerRequest), Resources.ThingQueryMaxFullItemsReturnedNegative);
+                }
 
                 this.maxFullItemsReturnedPerRequest = value;
             }
@@ -283,7 +280,7 @@ namespace Microsoft.HealthVault.Thing
 
             set
             {
-                Validator.ThrowIfArgumentNull(value, "View", "ThingQueryViewNull");
+                Validator.ThrowIfArgumentNull(value, nameof(View), Resources.ThingQueryViewNull);
                 this.view = value;
             }
         }

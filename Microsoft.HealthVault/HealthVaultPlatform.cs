@@ -456,7 +456,7 @@ namespace Microsoft.HealthVault
             VocabularySearchType searchType,
             int? maxResults)
         {
-            Validator.ThrowIfArgumentNull(vocabularyKey, nameof(vocabularyKey), "VocabularyKeyNullOrEmpty");
+            Validator.ThrowIfArgumentNull(vocabularyKey, nameof(vocabularyKey), Resources.VocabularyKeyNullOrEmpty);
 
             return (await HealthVaultPlatformVocabulary.Current.SearchVocabularyAsync(
                 connection,

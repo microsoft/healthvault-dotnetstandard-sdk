@@ -36,10 +36,10 @@ namespace Microsoft.HealthVault.Thing
         ///
         public DateRange(DateTime start, DateTime end)
         {
-            Validator.ThrowArgumentExceptionIf(
-                start > end,
-                "dateMin",
-                "DateRangeMinLessThanMax");
+            if (start > end)
+            {
+                throw new ArgumentException(Resources.DateRangeMinLessThanMax, nameof(start));
+            }
 
             this.Start = start;
             this.End = end;

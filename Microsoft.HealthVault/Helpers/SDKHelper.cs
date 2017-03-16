@@ -137,10 +137,10 @@ namespace Microsoft.HealthVault.Helpers
         ///
         internal static string XmlFromUtcDateTime(DateTime dateTime)
         {
-            Validator.ThrowArgumentExceptionIf(
-                dateTime.Kind != DateTimeKind.Utc,
-                "dateTime",
-                "NonUTCDateTime");
+            if (dateTime.Kind != DateTimeKind.Utc)
+            {
+                throw new ArgumentException(Resources.NonUTCDateTime, nameof(dateTime));
+            }
 
             return XmlFromDateTime(dateTime);
         }
@@ -172,7 +172,7 @@ namespace Microsoft.HealthVault.Helpers
             XmlReader xmlReader,
             string elementName)
         {
-            Validator.ThrowIfArgumentNull(xmlReader, "xmlReader", "ArgumentNull");
+            Validator.ThrowIfArgumentNull(xmlReader, nameof(xmlReader), Resources.ArgumentNull);
             Validator.ThrowIfStringNullOrEmpty(elementName, "elementName");
 
             if (xmlReader.NodeType != XmlNodeType.Element ||
@@ -195,7 +195,7 @@ namespace Microsoft.HealthVault.Helpers
         ///
         internal static bool SkipToElement(XmlReader xmlReader)
         {
-            Validator.ThrowIfArgumentNull(xmlReader, "xmlReader", "ArgumentNull");
+            Validator.ThrowIfArgumentNull(xmlReader, nameof(xmlReader), Resources.ArgumentNull);
 
             while (xmlReader.NodeType != XmlNodeType.Element)
             {
