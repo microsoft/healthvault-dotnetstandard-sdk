@@ -9,6 +9,9 @@
 using System;
 using System.Collections.Generic;
 using System.Threading;
+using Microsoft.HealthVault.Exceptions;
+using Microsoft.HealthVault.ItemTypes;
+using Microsoft.HealthVault.Thing;
 
 namespace Microsoft.HealthVault.Configuration
 {
