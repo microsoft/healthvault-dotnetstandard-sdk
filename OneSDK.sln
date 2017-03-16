@@ -11,8 +11,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.HealthVault.Web",
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.HealthVault.Web.Mvc", "Microsoft.HealthVault.Web.Mvc\Microsoft.HealthVault.Web.Mvc.csproj", "{BAC954F8-3137-4840-9CEB-9852709070B2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.HealthVault.DesktopWeb.Common", "Microsoft.HealthVault.DesktopWeb.Common\Microsoft.HealthVault.DesktopWeb.Common.csproj", "{F269F61A-5CB2-4F81-BC24-E6825F261061}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.HealthVault.Client", "Microsoft.HealthVault.Client\Microsoft.HealthVault.Client.csproj", "{00E3B0D1-95BE-4CAA-A482-4629B10EFBD7}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.HealthVault.Client.Platform", "Microsoft.HealthVault.Client.Platform\Microsoft.HealthVault.Client.Platform.csproj", "{29A7078E-F90C-438A-BCC4-FFE9216D8405}"
@@ -99,22 +97,6 @@ Global
 		{BAC954F8-3137-4840-9CEB-9852709070B2}.Release|x64.Build.0 = Release|Any CPU
 		{BAC954F8-3137-4840-9CEB-9852709070B2}.Release|x86.ActiveCfg = Release|Any CPU
 		{BAC954F8-3137-4840-9CEB-9852709070B2}.Release|x86.Build.0 = Release|Any CPU
-		{F269F61A-5CB2-4F81-BC24-E6825F261061}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{F269F61A-5CB2-4F81-BC24-E6825F261061}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{F269F61A-5CB2-4F81-BC24-E6825F261061}.Debug|ARM.ActiveCfg = Debug|Any CPU
-		{F269F61A-5CB2-4F81-BC24-E6825F261061}.Debug|ARM.Build.0 = Debug|Any CPU
-		{F269F61A-5CB2-4F81-BC24-E6825F261061}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{F269F61A-5CB2-4F81-BC24-E6825F261061}.Debug|x64.Build.0 = Debug|Any CPU
-		{F269F61A-5CB2-4F81-BC24-E6825F261061}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{F269F61A-5CB2-4F81-BC24-E6825F261061}.Debug|x86.Build.0 = Debug|Any CPU
-		{F269F61A-5CB2-4F81-BC24-E6825F261061}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{F269F61A-5CB2-4F81-BC24-E6825F261061}.Release|Any CPU.Build.0 = Release|Any CPU
-		{F269F61A-5CB2-4F81-BC24-E6825F261061}.Release|ARM.ActiveCfg = Release|Any CPU
-		{F269F61A-5CB2-4F81-BC24-E6825F261061}.Release|ARM.Build.0 = Release|Any CPU
-		{F269F61A-5CB2-4F81-BC24-E6825F261061}.Release|x64.ActiveCfg = Release|Any CPU
-		{F269F61A-5CB2-4F81-BC24-E6825F261061}.Release|x64.Build.0 = Release|Any CPU
-		{F269F61A-5CB2-4F81-BC24-E6825F261061}.Release|x86.ActiveCfg = Release|Any CPU
-		{F269F61A-5CB2-4F81-BC24-E6825F261061}.Release|x86.Build.0 = Release|Any CPU
 		{00E3B0D1-95BE-4CAA-A482-4629B10EFBD7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{00E3B0D1-95BE-4CAA-A482-4629B10EFBD7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{00E3B0D1-95BE-4CAA-A482-4629B10EFBD7}.Debug|ARM.ActiveCfg = Debug|Any CPU

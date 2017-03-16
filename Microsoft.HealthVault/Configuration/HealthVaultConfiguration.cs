@@ -1,10 +1,16 @@
-﻿using System;
+﻿// Copyright (c) Microsoft Corporation.  All rights reserved. 
+// MIT License
+// Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the ""Software""), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+// 
+// The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED *AS IS*, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+using System;
 using System.Collections.Generic;
 using System.Threading;
-using Microsoft.HealthVault.Authentication;
 using Microsoft.HealthVault.Exceptions;
 using Microsoft.HealthVault.ItemTypes;
-using Microsoft.HealthVault.PlatformInformation;
 using Microsoft.HealthVault.Thing;
 
 namespace Microsoft.HealthVault.Configuration
@@ -112,81 +118,6 @@ namespace Microsoft.HealthVault.Configuration
         }
 
         private Guid masterAppId;
-
-        /// <summary>
-        /// Gets or sets the crypto configuration.
-        /// </summary>
-        /// <value>
-        /// The crypto configuration.
-        /// </value>
-        /// <remarks>
-        /// This property needs to be set as part of app initialization
-        /// </remarks>
-        public virtual ICryptoConfiguration CryptoConfiguration
-        {
-            get
-            {
-                return this.cryptoConfiguration ?? (this.cryptoConfiguration = new BaseCryptoConfiguration());
-            }
-
-            set
-            {
-                this.EnsureNotLocked();
-                this.cryptoConfiguration = value;
-            }
-        }
-
-        public string RequestCompressionMethod { get; set; }
-
-        private ICryptoConfiguration cryptoConfiguration;
-
-        /// <summary>
-        /// Gets or sets the application certificate password.
-        /// </summary>
-        public virtual string ApplicationCertificatePassword
-        {
-            get { return this.applicationCertificatePassword; }
-
-            set
-            {
-                this.EnsureNotLocked();
-                this.applicationCertificatePassword = value;
-            }
-        }
-
-        private string applicationCertificatePassword;
-
-        /// <summary>
-        /// Gets or sets the application certificate file name.
-        /// </summary>
-        public virtual string ApplicationCertificateFileName
-        {
-            get { return this.applicationCertificateFileName; }
-
-            set
-            {
-                this.EnsureNotLocked();
-                this.applicationCertificateFileName = value;
-            }
-        }
-
-        private string applicationCertificateFileName;
-
-        /// <summary>
-        /// Gets or sets the certificate subject.
-        /// </summary>
-        public virtual string CertSubject
-        {
-            get { return this.certSubject; }
-
-            set
-            {
-                this.EnsureNotLocked();
-                this.certSubject = value;
-            }
-        }
-
-        private string certSubject;
 
         #region web request/response configuration
 
@@ -440,7 +371,7 @@ namespace Microsoft.HealthVault.Configuration
         /// <remarks>
         /// Type versions support was initially determined by an applications base authorizations
         /// and/or the <see cref="HealthRecordView.TypeVersionFormat"/>. Some of these behaviors
-        /// were unexpected which led to changes to automatically put the <see cref="HealthRecordFilter.TypeIds"/>
+        /// were unexpected which led to changes to automatically put the <see cref="ThingQuery.TypeIds"/>
         /// and <see cref="HealthVaultConfiguration.SupportedTypeVersions"/> into the
         /// <see cref="HealthRecordView.TypeVersionFormat"/> automatically for developers. This
         /// exhibits the expected behavior for most applications. However, in some rare cases
@@ -504,194 +435,6 @@ namespace Microsoft.HealthVault.Configuration
         private volatile bool multiInstanceAware = true;
 
         /// <summary>
-        /// Gets the amount of time, in milliseconds, that the application's connection can
-        /// remain idle before the HealthVault framework closes the connection.
-        /// </summary>
-        ///
-        /// <remarks>
-        /// This default value is 110 seconds of inactivity.
-        /// <p>
-        /// This setting only applies when using HTTP Persistent Connections
-        /// <see cref="HealthVaultConfiguration.ConnectionUseHttpKeepAlive"/>.
-        /// </p>
-        /// <p>
-        /// Setting this property to -1 indicates the connection should never
-        /// time out.
-        /// </p>
-        /// <p>
-        /// This property corresponds to the "ConnectionMaxIdleTime" configuration value.
-        /// </p>
-        /// </remarks>
-        public virtual int ConnectionMaxIdleTime
-        {
-            get
-            {
-                if (!this.connectionMaxIdleTimeInitialized)
-                {
-                    this.connectionMaxIdleTime = 110 * 1000;
-                    this.connectionMaxIdleTimeInitialized = true;
-                }
-
-                return this.connectionMaxIdleTime;
-            }
-
-            set
-            {
-                this.EnsureNotLocked();
-                this.connectionMaxIdleTime = value;
-
-                if (this.connectionMaxIdleTime < -1)
-                {
-                    this.connectionMaxIdleTime = -1;
-                }
-
-                this.connectionMaxIdleTimeInitialized = true;
-            }
-        }
-
-        private volatile int connectionMaxIdleTime;
-        private volatile bool connectionMaxIdleTimeInitialized;
-
-        /// <summary>
-        /// Gets the amount of time, in milliseconds, that the application's connection can
-        /// remain open before the HealthVault framework closes the connection.
-        /// </summary>
-        ///
-        /// <remarks>
-        /// The default value is 5 minutes.
-        /// <p>
-        /// This setting only applies when using HTTP Persistent Connections
-        /// <see cref="HealthVaultConfiguration.ConnectionUseHttpKeepAlive"/>.
-        /// </p>
-        /// <p>
-        /// Using this property ensures that active connections do not remain open
-        /// indefinitely, even if actively used. This property is intended
-        /// when connections should be dropped and reestablished periodically, such
-        /// as load balancing scenarios.
-        /// </p>
-        /// <p>
-        /// Setting the property to -1 indicates connections should stay open idefinitely.
-        /// </p>
-        /// <p>
-        /// This property corresponds to the "ConnectionLeaseTimeout" configuration value.
-        /// </p>
-        /// </remarks>
-        public virtual int ConnectionLeaseTimeout
-        {
-            get
-            {
-                if (!this.connectionLeaseTimeoutInitialized)
-                {
-                    this.connectionLeaseTimeout = 5 * 60 * 1000;
-                    this.connectionLeaseTimeoutInitialized = true;
-                }
-
-                return this.connectionLeaseTimeout;
-            }
-
-            set
-            {
-                this.EnsureNotLocked();
-                this.connectionLeaseTimeout = value;
-
-                if (this.connectionLeaseTimeout < -1)
-                {
-                    this.connectionLeaseTimeout = -1;
-                }
-
-                this.connectionLeaseTimeoutInitialized = true;
-            }
-        }
-
-        private volatile int connectionLeaseTimeout;
-        private volatile bool connectionLeaseTimeoutInitialized;
-
-        /// <summary>
-        /// Gets a value that indicates whether the application uses Http 1.1 persistent
-        /// connections to HealthVault.
-        /// </summary>
-        ///
-        /// <remarks>
-        /// True to use persistent connections; otherwise false. The default is true.
-        /// <p>
-        /// This property corresponds to the "ConnectionUseHttpKeepAlive" configuration value.
-        /// </p>
-        /// </remarks>
-        public virtual bool ConnectionUseHttpKeepAlive
-        {
-            get
-            {
-                return this.connectionUseHttpKeepAlive;
-            }
-
-            set
-            {
-                this.EnsureNotLocked();
-                this.connectionUseHttpKeepAlive = value;
-            }
-        }
-
-        private volatile bool connectionUseHttpKeepAlive = true;
-
-        /// <summary>
-        /// Gets the value which specifies the period of time before the <see cref="P:ServiceInfo.Current"/> built-in cache is considered expired.
-        /// </summary>
-        ///
-        /// <remarks>
-        /// <p>
-        /// Default value is <b>24 hours</b>.  This property corresponds to the "ServiceInfoDefaultCacheTtlMilliseconds" configuration value.
-        /// </p>
-        /// <p>
-        /// The next request for the object after the cache is expired will result in a call to the HealthVault web-service
-        /// to obtain an up-to-date copy of the service information.
-        /// </p>
-        /// <p>
-        /// An application can override the entire caching and service info retrieval behavior
-        /// by passing its own implementation of <see cref="IServiceInfoProvider"/> to
-        /// <see cref="ServiceInfo.SetSingletonProvider(IServiceInfoProvider)"/>.  In such
-        /// a case this configuration is no longer applicable.
-        /// </p>
-        /// </remarks>
-        public TimeSpan ServiceInfoDefaultCacheTtl
-        {
-            get
-            {
-                // _serviceInfoDefaultCacheTtl cannot have volatile semantics because
-                // it's a struct type (it can't be guaranteed to be assigned atomically).
-                // So we will use a full lock here instead.
-                // (an alternative is to use Thread.MemoryBarrier after the value write
-                // but before the init flag write, and another barrier
-                // for the read.
-
-                lock (this.serviceInfoDefaultCacheTtlInitLock)
-                {
-                    if (!this.serviceInfoDefaultCacheTtlInitialized)
-                    {
-                        this.serviceInfoDefaultCacheTtl = TimeSpan.FromDays(1);
-                        this.serviceInfoDefaultCacheTtlInitialized = true;
-                    }
-
-                    return this.serviceInfoDefaultCacheTtl;
-                }
-            }
-
-            set
-            {
-                this.EnsureNotLocked();
-
-                lock (this.serviceInfoDefaultCacheTtlInitLock)
-                {
-                    this.serviceInfoDefaultCacheTtl = value;
-                    this.serviceInfoDefaultCacheTtlInitialized = true;
-                }
-            }
-        }
-
-        private TimeSpan serviceInfoDefaultCacheTtl;
-        private bool serviceInfoDefaultCacheTtlInitialized;
-        private readonly object serviceInfoDefaultCacheTtlInitLock = new object();
-
-        /// <summary>
         /// Gets the root URL for a default instance of the
         /// Rest HealthVault service
         /// </summary>
@@ -715,22 +458,6 @@ namespace Microsoft.HealthVault.Configuration
         }
 
         private volatile Uri restHealthVaultRootUrl;
-
-        public virtual int? RequestTimeoutSeconds
-        {
-            get
-            {
-                return this.requestTimeoutSeconds;
-            }
-
-            set
-            {
-                this.EnsureNotLocked();
-                this.requestTimeoutSeconds = value;
-            }
-        }
-
-        private int? requestTimeoutSeconds;
 
         public virtual bool IsMultiRecordApp
         {

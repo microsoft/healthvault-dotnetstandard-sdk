@@ -228,7 +228,7 @@ namespace Microsoft.HealthVault.Person
 
             XPathNavigator infoNav = responseData.InfoNavigator.SelectSingleNode(personPath);
 
-            return PersonInfo.CreateFromXml(connection, infoNav);
+            return PersonInfo.CreateFromXml(infoNav);
         }
 
         private static XPathExpression infoPersonPath =

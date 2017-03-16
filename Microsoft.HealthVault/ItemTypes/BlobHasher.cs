@@ -42,7 +42,7 @@ namespace Microsoft.HealthVault.ItemTypes
             switch (algorithm)
             {
                 case BlobHashAlgorithm.SHA256Block:
-                    this.baseHashAlgorithm = Ioc.Get<ICryptoService>().CreateHashAlgorithm("SHA256");
+                    this.baseHashAlgorithm = SHA256.Create();
                     break;
                 default:
                     throw new ArgumentException(

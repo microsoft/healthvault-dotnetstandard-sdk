@@ -1,11 +1,18 @@
-﻿using Microsoft.HealthVault.Application;
+﻿// Copyright (c) Microsoft Corporation.  All rights reserved. 
+// MIT License
+// Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the ""Software""), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+// 
+// The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED *AS IS*, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+using Microsoft.HealthVault.Application;
 using Microsoft.HealthVault.Exceptions;
 using Microsoft.HealthVault.PlatformInformation;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
+using Microsoft.HealthVault.Person;
 using Microsoft.HealthVault.Thing;
 
 namespace Microsoft.HealthVault.Clients
@@ -280,5 +287,57 @@ namespace Microsoft.HealthVault.Clients
         /// </summary>
         /// <returns>Information about the newly created application instance.</returns>
         Task<ApplicationCreationInfo> NewApplicationCreationInfoAsync();
+
+        /// <summary>
+        /// Gets information about people authorized for an application.
+        /// </summary>
+        ///
+        /// <remarks>
+        /// The returned IEnumerable iterator will access the HealthVault service
+        /// across the network. The default <see cref="GetAuthorizedPeopleSettings"/>
+        /// values are used.
+        /// </remarks>
+        ///
+        /// <returns>
+        /// An IEnumerable iterator of <see cref="PersonInfo"/> objects representing
+        /// people authorized for the application.
+        /// </returns>
+        ///
+        /// <exception cref="HealthServiceException">
+        /// The HealthVault service returned an error.
+        /// </exception>
+        IEnumerable<Task<PersonInfo>> GetAuthorizedPeople();
+
+        /// <summary>
+        /// Gets information about people authorized for an application.
+        /// </summary>
+        ///
+        /// <remarks>
+        /// The returned IEnumerable iterator will access the HealthVault service
+        /// across the network. See <see cref="GetAuthorizedPeopleSettings"/> for applicable
+        /// settings.
+        /// </remarks>
+        ///
+        /// <param name="settings">
+        /// The <see cref="GetAuthorizedPeopleSettings" /> object used to configure the
+        /// IEnumerable iterator returned by this method.
+        /// </param>
+        ///
+        /// <returns>
+        /// An IEnumerable iterator of <see cref="PersonInfo"/> objects representing
+        /// people authorized for the application.
+        /// </returns>
+        ///
+        /// <exception cref="HealthServiceException">
+        /// The HealthVault service returned an error. The retrieval can be retried from the
+        /// current position by calling this method again and using the last successfully
+        /// retrieved person Id for <see cref="GetAuthorizedPeopleSettings.StartingPersonId"/>.
+        /// </exception>
+        ///
+        /// <exception cref="ArgumentNullException">
+        /// <paramref name="settings"/> is null.
+        /// </exception>
+        ///
+        IEnumerable<Task<PersonInfo>> GetAuthorizedPeople(GetAuthorizedPeopleSettings settings);
     }
 }

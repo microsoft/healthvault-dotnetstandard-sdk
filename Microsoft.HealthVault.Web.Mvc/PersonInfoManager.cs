@@ -96,8 +96,12 @@ namespace Microsoft.HealthVault.Web.Mvc
                 await Task.FromResult<object>(null);
             }
 
+            // TODO: used to be 
+            // // await HealthVaultPlatform.GetPersonInfoAsync(PersonInfo.Connection).ConfigureAwait(false);
+            // fix as part of web api
             PersonInfo freshPersonInfo =
-                await HealthVaultPlatform.GetPersonInfoAsync(PersonInfo.Connection).ConfigureAwait(false);
+                await HealthVaultPlatform.GetPersonInfoAsync(null).ConfigureAwait(false);
+                
             if (freshPersonInfo == null)
             {
                 return;
@@ -163,8 +167,9 @@ namespace Microsoft.HealthVault.Web.Mvc
 
         private void InitializePersonInfo(PersonInfo personInfo)
         {
-            personInfo.ApplicationSettingsChanged +=
-                (o, e) => Save((PersonInfo)o);
+            // TODO: Fix as part of web api, there is no more event change for application setting changed event
+            // personInfo.ApplicationSettingsChanged +=
+               // (o, e) => Save((PersonInfo)o);
             personInfo.SelectedRecordChanged +=
                 (o, e) => Save((PersonInfo)o);
 
@@ -177,7 +182,8 @@ namespace Microsoft.HealthVault.Web.Mvc
 
             if (PersonInfo.SelectedRecord != null)
             {
-                authorizedRecords = await newPersonInfo.GetAuthorizedRecordsAsync().ConfigureAwait(false);
+                // TODO: fix as part of web api 
+                // authorizedRecords = await newPersonInfo.GetAuthorizedRecordsAsync().ConfigureAwait(false);
             }
 
             if (authorizedRecords != null && authorizedRecords.ContainsKey(PersonInfo.SelectedRecord.Id))

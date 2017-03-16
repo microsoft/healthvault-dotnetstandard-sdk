@@ -8,10 +8,10 @@ using System.Xml;
 using Microsoft.HealthVault.Connection;
 using Microsoft.HealthVault.Exceptions;
 using Microsoft.HealthVault.Extensions;
+using Microsoft.HealthVault.Helpers;
 using Microsoft.HealthVault.Person;
 using Microsoft.HealthVault.PlatformInformation;
 using Microsoft.HealthVault.Transport;
-using Microsoft.HealthVault.Utilities;
 
 namespace Microsoft.HealthVault.Client
 {

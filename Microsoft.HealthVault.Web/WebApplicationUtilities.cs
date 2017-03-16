@@ -65,296 +65,6 @@ namespace Microsoft.HealthVault.Web
 
         private static WebConfiguration configuration = Ioc.Get<WebConfiguration>();
 
-        #region OnInit
-
-        /// <summary>
-        /// Replicates the <see cref="HealthServicePage.OnInit"/> behavior by redirecting to a
-        /// secure version of the page if the URL requested is insecure and the application requires
-        /// a secure connection.
-        /// </summary>
-        ///
-        /// <param name="context">
-        /// The current request context.
-        /// </param>
-        ///
-        /// <param name="isPageSslSecure">
-        /// If true, the application requires all connections to this page be over a secure SSL
-        /// channel.
-        /// </param>
-        ///
-        /// <remarks>
-        /// Applications can require certain pages (or all pages) to be accessed only over a secure
-        /// SSL channel. To do this the application must set the "WCPage_SSLForSecure" config value
-        /// in the web.config file and pass "true" to <paramref name="isPageSslSecure"/>.
-        /// <br/><br/>
-        /// If the conditions above are true the user's browser will automatically be redirected
-        /// to a secure version of the page.
-        /// </remarks>
-        ///
-        public static void PageOnInit(System.Web.HttpContext context, bool isPageSslSecure)
-        {
-            if (isPageSslSecure)
-            {
-                string redirectUrl = GetSSLRedirectURL(context.Request);
-                if (redirectUrl != null)
-                {
-                    context.Response.Redirect(redirectUrl);
-                }
-            }
-        }
-
-        /// <summary>
-        ///
-        /// </summary>
-        /// <param name="request"></param>
-        /// <returns></returns>
-        ///
-        /// <remarks>
-        /// This is usually called during page initialization (<see cref="System.Web.UI.Page.OnInit"/>).
-        /// If a <see cref="System.Uri"/> is returned then the user should be redirected to the
-        /// specified URL.
-        /// </remarks>
-        ///
-        private static string GetSSLRedirectURL(HttpRequest request)
-        {
-            string result = null;
-            if (configuration.UseSslForSecurity)
-            {
-                if (!request.IsSecureConnection)
-                {
-                    //RedirectToSecure
-                    StringBuilder secureUrl = new StringBuilder();
-                    secureUrl.Append(
-                        configuration.SecureHttpScheme);
-                    secureUrl.Append(request.Url.Host);
-                    secureUrl.Append(request.Url.PathAndQuery);
-                    result = secureUrl.ToString();
-                }
-            }
-            else
-            {
-                if (request.IsSecureConnection)
-                {
-                    //RedirectToInsecure
-                    StringBuilder inSecureUrl = new StringBuilder();
-                    inSecureUrl.Append(
-                        configuration.InsecureHttpScheme);
-                    inSecureUrl.Append(request.Url.Host);
-                    inSecureUrl.Append(request.Url.PathAndQuery);
-                    result = inSecureUrl.ToString();
-                }
-            }
-            return result;
-        }
-
-        #endregion OnInit
-
-        #region OnPreLoad
-
-        /// <summary>
-        /// Ensures that the person is logged on if <paramref name="logOnRequired"/> is true.
-        /// </summary>
-        ///
-        /// <param name="context">
-        /// The current request context.
-        /// </param>
-        ///
-        /// <param name="logOnRequired">
-        /// True if the requested page requires the user to be logged on to HealthVault, or false
-        /// otherwise. If true and the user isn't logged on, the user's browser will be automatically
-        /// redirected to the HealthVault authentication page.
-        /// </param>
-        ///
-        /// <remarks>
-        /// It is recommended that HealthVault applications that cannot derive from
-        /// <see cref="HealthServicePage"/> call this method during their pages OnPreLoad. This
-        /// method will ensure that the HealthVault token is extracted from the URL query string,
-        /// the authenticated person's <see cref="PersonInfo"/> is retrieved and stored in a cookie.
-        /// This will make the person's information available through the cookie on all future
-        /// requests until they log off.
-        /// </remarks>
-        ///
-        public static async Task<PersonInfo> PageOnPreLoadAsync(System.Web.HttpContext context, bool logOnRequired)
-        {
-            return await PageOnPreLoad(
-                    context,
-                    logOnRequired,
-                    false,
-                    configuration.MasterApplicationId)
-                .ConfigureAwait(false);
-        }
-
-        /// <summary>
-        /// Ensures that the person is logged on if <paramref name="logOnRequired"/> is true.
-        /// </summary>
-        ///
-        /// <param name="context">
-        /// The current request context.
-        /// </param>
-        ///
-        /// <param name="logOnRequired">
-        /// True if the requested page requires the user to be logged on to HealthVault, or false
-        /// otherwise. If true and the user isn't logged on, the user's browser will be automatically
-        /// redirected to the HealthVault authentication page.
-        /// </param>
-        ///
-        /// <param name="appId">
-        /// The unique application identifier.
-        /// </param>
-        ///
-        /// <remarks>
-        /// It is recommended that HealthVault applications that cannot derive from
-        /// <see cref="HealthServicePage"/> call this method during their pages OnPreLoad. This
-        /// method will ensure that the HealthVault token is extracted from the URL query string,
-        /// the authenticated person's <see cref="PersonInfo"/> is retrieved and stored in a cookie.
-        /// This will make the person's information available through the cookie on all future
-        /// requests until they log off.
-        /// </remarks>
-        ///
-        public static async Task<PersonInfo> PageOnPreLoad(System.Web.HttpContext context, bool logOnRequired, Guid appId)
-        {
-            return await PageOnPreLoad(context, logOnRequired, false /* isMra */, appId).ConfigureAwait(false);
-        }
-
-        /// <summary>
-        /// Ensures that the person is logged on if <paramref name="logOnRequired"/> is true.
-        /// </summary>
-        ///
-        /// <param name="context">
-        /// The current request context.
-        /// </param>
-        ///
-        /// <param name="logOnRequired">
-        /// True if the requested page requires the user to be logged on to HealthVault, or false
-        /// otherwise. If true and the user isn't logged on, the user's browser will be automatically
-        /// redirected to the HealthVault authentication page.
-        /// </param>
-        ///
-        /// <param name="isMra">
-        /// Whether this application simultaneously deals with multiple records
-        /// for the same person.
-        /// </param>
-        ///
-        /// <remarks>
-        /// It is recommended that HealthVault applications that cannot derive from
-        /// <see cref="HealthServicePage"/> call this method during their pages OnPreLoad. This
-        /// method will ensure that the HealthVault token is extracted from the URL query string,
-        /// the authenticated person's <see cref="PersonInfo"/> is retrieved and stored in a cookie.
-        /// This will make the person's information available through the cookie on all future
-        /// requests until they log off.
-        /// </remarks>
-        ///
-        public static async Task<PersonInfo> PageOnPreLoadAsync(System.Web.HttpContext context, bool logOnRequired, bool isMra)
-        {
-            return await PageOnPreLoad(
-                    context,
-                    logOnRequired,
-                    isMra,
-                    configuration.MasterApplicationId)
-                .ConfigureAwait(false);
-        }
-
-        /// <summary>
-        /// Ensures that the person is logged on if <paramref name="logOnRequired"/> is true.
-        /// </summary>
-        ///
-        /// <param name="context">
-        /// The current request context.
-        /// </param>
-        ///
-        /// <param name="logOnRequired">
-        /// True if the requested page requires the user to be logged on to HealthVault, or false
-        /// otherwise. If true and the user isn't logged on, the user's browser will be automatically
-        /// redirected to the HealthVault authentication page.
-        /// </param>
-        ///
-        /// <param name="isMra">
-        /// Whether this application simultaneously deals with multiple records
-        /// for the same person.
-        /// </param>
-        ///
-        /// <param name="appId">
-        /// The unique identifier for the application.
-        /// </param>
-        ///
-        /// <remarks>
-        /// It is recommended that HealthVault applications that cannot derive from
-        /// <see cref="HealthServicePage"/> call this method during their pages OnPreLoad. This
-        /// method will ensure that the HealthVault token is extracted from the URL query string,
-        /// the authenticated person's <see cref="PersonInfo"/> is retrieved and stored in a cookie.
-        /// This will make the person's information available through the cookie on all future
-        /// requests until they log off.
-        /// </remarks>
-        ///
-        public static async Task<PersonInfo> PageOnPreLoad(
-            HttpContext context,
-            bool logOnRequired,
-            bool isMra,
-            Guid appId)
-        {
-            // this will redirect if needed
-            // NOTE: I reverted this code because it was spreading query
-            // string info around as it was previously.
-            await HandleTokenOnUrl(context, logOnRequired, appId).ConfigureAwait(false);
-
-            // Get whatever's in the cookie...
-            PersonInfo personInfo = await LoadPersonInfoFromCookie(context);
-
-            // If we didn't just authenticate and the cookie was blank and
-            // we ought to be logged in...
-            if (logOnRequired && personInfo == null)
-            {
-                // If we need a signup code for account creation, get it now
-                // and pass it to HealthVault.
-                string signupCode = null;
-                if (configuration.IsSignupCodeRequired)
-                {
-                    signupCode = HealthVaultPlatform.NewSignupCodeAsync(Ioc.Get<IConnectionInternal>()).Result;
-                }
-
-                RedirectToLogOn(context, isMra, context.Request.Url.PathAndQuery, signupCode);
-            }
-
-            SavePersonInfoToCookie(context, personInfo, false);
-            return personInfo;
-        }
-
-        #endregion OnPreLoad
-
-        /// <summary>
-        /// Gets a credential used to authenticate the web application to
-        /// HealthVault.
-        /// </summary>
-        public static WebApplicationCredential ApplicationAuthenticationCredential
-        {
-            get
-            {
-                return GetApplicationAuthenticationCredential(
-                    configuration.MasterApplicationId);
-            }
-        }
-
-        /// <summary>
-        /// Gets a credential used to authenticate the web application to
-        /// Microsoft HealthVault.
-        /// </summary>
-        ///
-        /// <param name="appId">
-        /// The unique application identifier to get the credential for.
-        /// </param>
-        ///
-        /// <returns>
-        /// The application credential for the specified application.
-        /// </returns>
-        ///
-        public static WebApplicationCredential GetApplicationAuthenticationCredential(Guid appId)
-        {
-            return
-                new WebApplicationCredential(
-                    appId,
-                    ApplicationCertificateStore.Current.ApplicationCertificate);
-        }
-
         /// <summary>
         /// Cleans the application's session of HealthVault information and
         /// then repopulates it.
@@ -384,7 +94,8 @@ namespace Microsoft.HealthVault.Web
         {
             Validator.ThrowInvalidIfNull(personInfo, "PersonNotLoggedIn");
 
-            personInfo = await HealthVaultPlatform.GetPersonInfoAsync(personInfo.Connection).ConfigureAwait(false);
+            // TODO: Refactor the code as per new API
+            // personInfo = await HealthVaultPlatform.GetPersonInfoAsync(personInfo.Connection).ConfigureAwait(false);
 
             SavePersonInfoToCookie(context, personInfo);
             return personInfo;
@@ -927,7 +638,7 @@ namespace Microsoft.HealthVault.Web
             return personInfo;
         }
 
-        private static async Task HandleTokenOnUrl(System.Web.HttpContext context, bool isLoginRequired, Guid appId)
+        private static async Task HandleTokenOnUrl(HttpContext context, bool isLoginRequired, Guid appId)
         {
             string authToken = context.Request.Params[QueryStringToken];
             string instanceId = context.Request.Params[QueryStringInstanceId];
@@ -935,11 +646,14 @@ namespace Microsoft.HealthVault.Web
             if (!String.IsNullOrEmpty(authToken))
             {
                 // map the instance id to an instance object containing the service URL.
-                if (instanceId == null || !ServiceInfo.Current.ServiceInstances.ContainsKey(instanceId))
-                {
-                    throw Validator.InvalidOperationException("InstanceIdNotFound");
-                }
-                HealthServiceInstance serviceInstance = ServiceInfo.Current.ServiceInstances[instanceId];
+                // TODO: fix the issue
+                // if (instanceId == null || !ServiceInfo.Current.ServiceInstances.ContainsKey(instanceId))
+                // {
+                // throw Validator.InvalidOperationException("InstanceIdNotFound");
+                // }
+                // HealthServiceInstance serviceInstance = ServiceInfo.Current.ServiceInstances[instanceId];
+
+                HealthServiceInstance serviceInstance = null;
 
                 PersonInfo personInfo = await GetPersonInfoAsync(authToken, appId, serviceInstance).ConfigureAwait(false);
 
@@ -1090,7 +804,8 @@ namespace Microsoft.HealthVault.Web
                 personInfo = await DeserializePersonInfo(serializedPersonInfo);
                 if (personInfo != null)
                 {
-                    personInfo.ApplicationSettingsChanged += new EventHandler(OnPersonInfoChanged);
+                    // TODO: Removed application settings changed event as part of OneSDK
+                    // personInfo.ApplicationSettingsChanged += new EventHandler(OnPersonInfoChanged);
                     personInfo.SelectedRecordChanged += new EventHandler(OnPersonInfoChanged);
                 }
             }
@@ -1151,11 +866,12 @@ namespace Microsoft.HealthVault.Web
                             new StringReader(personInfoXml),
                             SDKHelper.XmlReaderSettings));
 
-                personInfo =
-                    await PersonInfo.CreateFromXmlExcludeUrl(
-                        null,
-                        personDoc.CreateNavigator().SelectSingleNode(
-                            "person-info"));
+                // TODO: This code was removed from base PersonInfo, CreateFromXmlExcludeUrl 
+                //personInfo =
+                //    await PersonInfo.CreateFromXmlExcludeUrl(
+                //        null,
+                //        personDoc.CreateNavigator().SelectSingleNode(
+                //            "person-info"));
             }
             catch (Exception e)
             {
@@ -1166,6 +882,7 @@ namespace Microsoft.HealthVault.Web
                 personInfo = null;  // safety first
                 throw;
             }
+
             return personInfo;
         }
 
@@ -1453,7 +1170,7 @@ namespace Microsoft.HealthVault.Web
 
         private static string PersonInfoAsCookie(PersonInfo personInfo, bool keepSizeUnderLimit)
         {
-            string cookie = PersonInfoAsCookie(personInfo, PersonInfo.CookieOptions.Default);
+            string cookie = PersonInfoAsCookie(personInfo, PersonInfo.MarshalOptions.Default);
 
             if (cookie.Length <= CookieMaxSize || !keepSizeUnderLimit)
             {
@@ -1461,14 +1178,14 @@ namespace Microsoft.HealthVault.Web
             }
 
             // The cookie is too big to fit. Try it without app settings...
-            cookie = PersonInfoAsCookie(personInfo, PersonInfo.CookieOptions.MinimizeApplicationSettings);
+            cookie = PersonInfoAsCookie(personInfo, PersonInfo.MarshalOptions.MinimizeApplicationSettings);
             if (cookie.Length <= CookieMaxSize)
             {
                 return cookie;
             }
 
             // That didn't help. Try it with minimal records...
-            cookie = PersonInfoAsCookie(personInfo, PersonInfo.CookieOptions.MinimizeRecords);
+            cookie = PersonInfoAsCookie(personInfo, PersonInfo.MarshalOptions.MinimizeRecords);
             if (cookie.Length <= CookieMaxSize)
             {
                 return cookie;
@@ -1477,14 +1194,16 @@ namespace Microsoft.HealthVault.Web
             // Reduce both...
             cookie = PersonInfoAsCookie(
                             personInfo,
-                            PersonInfo.CookieOptions.MinimizeApplicationSettings |
-                            PersonInfo.CookieOptions.MinimizeRecords);
+                            PersonInfo.MarshalOptions.MinimizeApplicationSettings |
+                            PersonInfo.MarshalOptions.MinimizeRecords);
             return cookie;
         }
 
-        private static string PersonInfoAsCookie(PersonInfo personInfo, PersonInfo.CookieOptions cookieOptions)
+        private static string PersonInfoAsCookie(PersonInfo personInfo, PersonInfo.MarshalOptions marshalOptions)
         {
-            string personInfoXml = personInfo.GetXmlForCookie(cookieOptions);
+            // TODO: fix the issue where the core sdk doesn't strore personInfo in a cookie
+            // string personInfoXml = personInfo.GetXmlForCookie(marshalOptions);
+            string personInfoXml = null;
 
             int version = GetMarshalCookieVersion();
             switch (version)
