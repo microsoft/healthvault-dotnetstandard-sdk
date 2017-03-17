@@ -23,5 +23,12 @@ namespace Microsoft.HealthVault
         {
             internal static readonly string DirectoryName = "HealthVault-SDK";
         }
+
+        internal static class SdkTelemetryInformationCategories
+        {
+            internal static readonly string AndroidClient = "HV-Xamarin-Android";
+            internal static readonly string WindowsClient = "HV-Xamarin-Windows";
+            internal static readonly string Web = "HV-Web";
+        }
     }
 }

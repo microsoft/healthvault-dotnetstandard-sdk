@@ -4,7 +4,7 @@ using Microsoft.HealthVault.Helpers;
 
 namespace Microsoft.HealthVault.Client
 {
-    public class ClientConfiguration : HealthVaultConfiguration
+    public class ClientHealthVaultConfiguration : HealthVaultConfiguration
     {
         // Nothing here yet, but we may add something.
     }

@@ -1,6 +1,7 @@
 ﻿using Microsoft.HealthVault.Configuration;
 using System;
 using System.Collections.Generic;
+using System.Reflection;
 using System.Threading.Tasks;
 using Microsoft.HealthVault.Extensions;
 
@@ -19,7 +20,7 @@ namespace Microsoft.HealthVault.Client
 
         private IClientHealthVaultConnection cachedConnection;
 
-        private ClientConfiguration configuration;
+        private ClientHealthVaultConfiguration _healthVaultConfiguration;
 
         internal ClientHealthVaultFactory()
         {
@@ -45,17 +46,17 @@ namespace Microsoft.HealthVault.Client
         /// <exception cref="InvalidOperationException">
         /// If <see cref="GetConnectionAsync"/> has been called already.
         /// </exception>
-        public void SetConfiguration(ClientConfiguration clientConfiguration)
+        public void SetConfiguration(ClientHealthVaultConfiguration clientHealthVaultConfiguration)
         {
             this.ThrowIfAlreadyCreatedConnection(nameof(this.SetConfiguration));
-            this.configuration = clientConfiguration;
+            this._healthVaultConfiguration = clientHealthVaultConfiguration;
         }
 
         /// <summary>
         /// Gets an <see cref="IClientHealthVaultConnection"/> used to connect to HealthVault.
         /// </summary>
         /// <exception cref="InvalidOperationException">
-        /// If called before calling <see cref="SetConfiguration(ClientConfiguration)"/>.
+        /// If called before calling <see cref="SetConfiguration(ClientHealthVaultConfiguration)"/>.
         /// </exception>
         public async Task<IClientHealthVaultConnection> GetConnectionAsync()
         {
@@ -68,18 +69,18 @@ namespace Microsoft.HealthVault.Client
                     return this.cachedConnection;
                 }
 
-                if (this.configuration == null)
+                if (this._healthVaultConfiguration == null)
                 {
                     throw new InvalidOperationException(Resources.CannotCallMethodBefore.FormatResource(
                         nameof(this.GetConnectionAsync),
                         nameof(this.SetConfiguration)));
                 }
-
+               
                 var missingProperties = new List<string>();
 
-                if (this.configuration.MasterApplicationId == Guid.Empty)
+                if (this._healthVaultConfiguration.MasterApplicationId == Guid.Empty)
                 {
-                    missingProperties.Add(nameof(this.configuration.MasterApplicationId));
+                    missingProperties.Add(nameof(this._healthVaultConfiguration.MasterApplicationId));
                 }
 
                 if (missingProperties.Count > 0)
@@ -88,10 +89,10 @@ namespace Microsoft.HealthVault.Client
                     throw new InvalidOperationException(Resources.MissingRequiredProperties.FormatResource(requiredPropertiesString));
                 }
 
-                this.configuration.Lock();
+                this._healthVaultConfiguration.Lock();
 
-                Ioc.Container.Configure(c => c.ExportInstance(this.configuration).As<ClientConfiguration>());
-                Ioc.Container.Configure(c => c.ExportInstance(this.configuration).As<HealthVaultConfiguration>());
+                Ioc.Container.Configure(c => c.ExportInstance(this._healthVaultConfiguration).As<ClientHealthVaultConfiguration>());
+                Ioc.Container.Configure(c => c.ExportInstance(this._healthVaultConfiguration).As<HealthVaultConfiguration>());
 
                 ClientHealthVaultConnection newConnection = Ioc.Get<ClientHealthVaultConnection>();
                 await newConnection.AuthenticateAsync().ConfigureAwait(false);

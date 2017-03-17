@@ -15,11 +15,11 @@ namespace Microsoft.HealthVault.Client
         /// <summary>
         /// Sets the client configuration to use.
         /// </summary>
-        /// <param name="clientConfiguration">The configuration to use.</param>
+        /// <param name="clientHealthVaultConfiguration">The configuration to use.</param>
         /// <exception cref="InvalidOperationException">Thrown when called after calling <see cref="GetConnectionAsync"/>.</exception>
         /// <remarks>This can only be set before calling <see cref="GetConnectionAsync"/>. After calling it,
         /// this property cannot be set and no settings on the object can be changed.</remarks>
-        void SetConfiguration(ClientConfiguration clientConfiguration);
+        void SetConfiguration(ClientHealthVaultConfiguration clientHealthVaultConfiguration);
 
         /// <summary>
         /// Gets a connection to access HealthVault.

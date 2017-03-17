@@ -81,6 +81,7 @@
     <Compile Include="Extensions\UriExtensions.cs" />
     <Compile Include="IHealthVaultFactoryBase.cs" />
     <Compile Include="Ioc.cs" />
+    <Compile Include="SdkTelemetryInformation.cs" />
     <Compile Include="ItemTypes\ActionPlanWrapper.cs" />
     <Compile Include="ItemTypes\Address.cs" />
     <Compile Include="ItemTypes\AerobicBase.cs" />

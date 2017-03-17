@@ -50,35 +50,6 @@ namespace Microsoft.HealthVault.Transport
         private readonly IHealthWebRequestFactory requestFactory;
 
         /// <summary>
-        /// Constructs the version identifier for this version of the HealthVault .NET APIs.
-        /// </summary>
-        [SecuritySafeCritical]
-        private static string ConstructVersionString()
-        {
-            string fileVersion = "?";
-            string systemInfo = "Unknown";
-
-            // TODO: this is not currently accessible in .Net Standard 1.4- we should revisit once 2.0 is released.
-            // safe attempt to obtain the assembly file version, and system information
-            //            try
-            //            {
-            //                fileVersion = FileVersionInfo.GetVersionInfo(Assembly.GetExecutingAssembly().Location).FileVersion;
-            //                systemInfo = String.Format(
-            //                    CultureInfo.InvariantCulture,
-            //                    "{0}; CLR {1}",
-            //                    Environment.OSVersion.VersionString,
-            //                    Environment.Version);
-            //            }
-            //            catch (Exception)
-            //            {
-            //                // failure in obtaining version or system info should not
-            //                // prevent the initialzation from continuing.
-            //            }
-
-            return string.Format(CultureInfo.InvariantCulture, "HV-NET/{0} ({1})", fileVersion, systemInfo);
-        }
-
-        /// <summary>
         /// Creates a new instance of the <see cref="HealthServiceRequest"/>
         /// class for the specified method.
         /// </summary>
@@ -101,13 +72,15 @@ namespace Microsoft.HealthVault.Transport
         /// <param name="recordId">RecordId</param>
         /// <param name="config">The configuration to be used when assigning variables to this request</param>
         /// <param name="requestFactory">The factory for creating web requests from this service</param>
+        /// <param name="sdkTelemetryInformation">Telemetry Information</param>
         public HealthServiceRequest(
             IConnectionInternal connectionInternal,
             HealthVaultMethods method,
             int methodVersion,
             Guid? recordId = null,
             HealthVaultConfiguration config = null,
-            IHealthWebRequestFactory requestFactory = null)
+            IHealthWebRequestFactory requestFactory = null,
+            SdkTelemetryInformation sdkTelemetryInformation = null)
         {
             Validator.ThrowIfArgumentNull(connectionInternal, nameof(connectionInternal), Resources.CtorServiceNull);
 
@@ -121,6 +94,9 @@ namespace Microsoft.HealthVault.Transport
             this.TimeToLiveSeconds = config.DefaultRequestTimeToLive;
             this.CultureCode = CultureInfo.CurrentUICulture.Name;
             this.recordId = recordId.GetValueOrDefault(Guid.Empty);
+            sdkTelemetryInformation = sdkTelemetryInformation ?? Ioc.Get<SdkTelemetryInformation>();
+
+            this.Version = $"{sdkTelemetryInformation.Category}/{sdkTelemetryInformation.FileVersion} {sdkTelemetryInformation.OsInformation}";
         }
 
         /// <summary>
@@ -725,7 +701,7 @@ namespace Microsoft.HealthVault.Transport
         /// A string representing the version.
         /// </returns>
         ///
-        internal static string Version { get; } = ConstructVersionString();
+        internal string Version { get; }
 
         private string parameters = string.Empty;
 

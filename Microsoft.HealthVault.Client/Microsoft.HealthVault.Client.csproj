@@ -39,7 +39,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="ClientConfiguration.cs" />
+    <Compile Include="ClientHealthVaultConfiguration.cs" />
     <Compile Include="ClientHealthVaultConnection.cs" />
     <Compile Include="ClientHealthVaultFactory.cs" />
     <Compile Include="ClientResources.Designer.cs">

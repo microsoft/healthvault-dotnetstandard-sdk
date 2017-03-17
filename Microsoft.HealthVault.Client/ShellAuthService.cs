@@ -12,15 +12,15 @@ namespace Microsoft.HealthVault.Client
         private const string InstanceQueryParamKey = "instanceid=";
 
         private readonly IBrowserAuthBroker browserAuthBroker;
-        private readonly ClientConfiguration clientConfiguration;
+        private readonly ClientHealthVaultConfiguration clientHealthVaultConfiguration;
 
-        public ShellAuthService(IBrowserAuthBroker browserAuthBroker, ClientConfiguration clientConfiguration)
+        public ShellAuthService(IBrowserAuthBroker browserAuthBroker, ClientHealthVaultConfiguration clientHealthVaultConfiguration)
         {
             this.browserAuthBroker = browserAuthBroker;
-            this.clientConfiguration = clientConfiguration;
+            this.clientHealthVaultConfiguration = clientHealthVaultConfiguration;
         }
 
-        private string MraString => this.clientConfiguration.IsMultiRecordApp ? "true" : "false";
+        private string MraString => this.clientHealthVaultConfiguration.IsMultiRecordApp ? "true" : "false";
 
         public async Task<string> ProvisionApplicationAsync(Uri shellUrl, Guid masterAppId, string appCreationToken, string appInstanceId)
         {
@@ -40,7 +40,7 @@ namespace Microsoft.HealthVault.Client
             }
 
             string query = $"?appid={masterAppId}&appCreationToken={appCreationToken}&instanceName={appInstanceId}&ismra={this.MraString}";
-            if (this.clientConfiguration.MultiInstanceAware)
+            if (this.clientHealthVaultConfiguration.MultiInstanceAware)
             {
                 query += "&aib=true";
             }

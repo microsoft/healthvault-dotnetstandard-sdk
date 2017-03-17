@@ -24,16 +24,16 @@ namespace Microsoft.HealthVault.Client
 
         private readonly ILocalObjectStore localObjectStore;
         private readonly IShellAuthService shellAuthService;
-        private readonly ClientConfiguration clientConfiguration;
+        private readonly ClientHealthVaultConfiguration clientHealthVaultConfiguration;
 
         private readonly AsyncLock authenticateLock = new AsyncLock();
 
-        public ClientHealthVaultConnection(IServiceLocator serviceLocator, ILocalObjectStore localObjectStore, IShellAuthService shellAuthService, ClientConfiguration clientConfiguration)
+        public ClientHealthVaultConnection(IServiceLocator serviceLocator, ILocalObjectStore localObjectStore, IShellAuthService shellAuthService, ClientHealthVaultConfiguration clientHealthVaultConfiguration)
             : base(serviceLocator)
         {
             this.localObjectStore = localObjectStore;
             this.shellAuthService = shellAuthService;
-            this.clientConfiguration = clientConfiguration;
+            this.clientHealthVaultConfiguration = clientHealthVaultConfiguration;
         }
 
         public ApplicationCreationInfo ApplicationCreationInfo { get; internal set; }
@@ -82,7 +82,7 @@ namespace Microsoft.HealthVault.Client
             using (await this.authenticateLock.LockAsync().ConfigureAwait(false))
             {
                 // First run through shell with web browser to get additional records authorized.
-                await this.shellAuthService.AuthorizeAdditionalRecordsAsync(this.ServiceInstance.ShellUrl, this.clientConfiguration.MasterApplicationId).ConfigureAwait(false);
+                await this.shellAuthService.AuthorizeAdditionalRecordsAsync(this.ServiceInstance.ShellUrl, this.clientHealthVaultConfiguration.MasterApplicationId).ConfigureAwait(false);
 
                 // Update the person info to add the newly authorized records.
                 await this.GetAndSavePersonInfoAsync().ConfigureAwait(false); 
@@ -128,14 +128,14 @@ namespace Microsoft.HealthVault.Client
                 "1",
                 "Default",
                 "Default HealthVault instance",
-                UrlUtilities.GetFullPlatformUrl(this.clientConfiguration.DefaultHealthVaultUrl),
-                this.clientConfiguration.DefaultHealthVaultShellUrl);
+                UrlUtilities.GetFullPlatformUrl(this.clientHealthVaultConfiguration.DefaultHealthVaultUrl),
+                this.clientHealthVaultConfiguration.DefaultHealthVaultShellUrl);
 
             ApplicationCreationInfo newApplicationCreationInfo = await this.PlatformClient.NewApplicationCreationInfoAsync().ConfigureAwait(false);
 
             string environmentInstanceId = await this.shellAuthService.ProvisionApplicationAsync(
-                this.clientConfiguration.DefaultHealthVaultShellUrl,
-                this.clientConfiguration.MasterApplicationId,
+                this.clientHealthVaultConfiguration.DefaultHealthVaultShellUrl,
+                this.clientHealthVaultConfiguration.MasterApplicationId,
                 this.ApplicationCreationInfo.AppCreationToken,
                 this.ApplicationCreationInfo.AppInstanceId.ToString()).ConfigureAwait(false);
 
