@@ -53,7 +53,7 @@ namespace Microsoft.HealthVault.Client
 
                 if (this.SessionCredential == null)
                 {
-                    await this.GetAndSaveSessionCredential().ConfigureAwait(false);
+                    await this.RefreshSessionCredentialAsync(CancellationToken.None).ConfigureAwait(false);
                 }
 
                 if (this.PersonInfo == null)
@@ -156,7 +156,7 @@ namespace Microsoft.HealthVault.Client
             this.ApplicationCreationInfo = newApplicationCreationInfo;
         }
 
-        private async Task GetAndSaveSessionCredential()
+        protected override async Task RefreshSessionCredentialAsync(CancellationToken token)
         {
             IClientSessionCredentialClient sessionCredentialClient = this.ServiceLocator.GetInstance<IClientSessionCredentialClient>();
             sessionCredentialClient.Connection = this;
