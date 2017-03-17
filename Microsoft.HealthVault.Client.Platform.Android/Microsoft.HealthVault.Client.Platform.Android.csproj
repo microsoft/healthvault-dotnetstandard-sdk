@@ -14,8 +14,8 @@
     <FileAlignment>512</FileAlignment>
     <AndroidResgenFile>Resources\Resource.Designer.cs</AndroidResgenFile>
     <GenerateSerializationAssemblies>Off</GenerateSerializationAssemblies>
-    <AndroidUseLatestPlatformSdk>True</AndroidUseLatestPlatformSdk>
-    <TargetFrameworkVersion>v7.1</TargetFrameworkVersion>
+    <AndroidUseLatestPlatformSdk>False</AndroidUseLatestPlatformSdk>
+    <TargetFrameworkVersion>v7.0</TargetFrameworkVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -51,6 +51,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AndroidBrowserAuthBroker.cs" />
+    <Compile Include="AndroidSecretStore.cs" />
+    <Compile Include="EncryptionKeyService.cs" />
+    <Compile Include="IEncryptionKeyService.cs" />
     <Compile Include="PlatformSodaIoc.cs" />
     <Compile Include="Resources\Resource.Designer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -66,6 +69,10 @@
     <ProjectReference Include="..\Microsoft.HealthVault.Client\Microsoft.HealthVault.Client.csproj">
       <Project>{00e3b0d1-95be-4caa-a482-4629b10efbd7}</Project>
       <Name>Microsoft.HealthVault.Client</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Microsoft.HealthVault\Microsoft.HealthVault.csproj">
+      <Project>{dbe2ba67-dbc3-479e-a374-1ce5ee33c453}</Project>
+      <Name>Microsoft.HealthVault</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />

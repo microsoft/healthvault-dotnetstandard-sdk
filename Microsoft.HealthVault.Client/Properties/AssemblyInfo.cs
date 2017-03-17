@@ -14,9 +14,7 @@ using System.Runtime.CompilerServices;
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 [assembly: NeutralResourcesLanguage("en")]
-[assembly: InternalsVisibleTo("Microsoft.HealthVault.Client.Platform"),
-           InternalsVisibleTo("Microsoft.HealthVault.Client.Platform.Android"),
-           InternalsVisibleTo("Microsoft.HealthVault.Client.Platform.Uwp")]
+[assembly: InternalsVisibleTo("Microsoft.HealthVault.Client.Platform")]
 
 // Version information for an assembly consists of the following four values:
 //
