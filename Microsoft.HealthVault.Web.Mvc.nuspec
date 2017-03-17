@@ -1,9 +1,9 @@
 <?xml version="1.0"?>
 <package>
   <metadata>
-    <id>Microsoft.HealthVault.Web</id>
+    <id>Microsoft.HealthVault.Web.Mvc</id>
     <version>$version$</version>
-    <title>Microsoft HealthVault .NET Web SDK</title>
+    <title>Microsoft HealthVault .NET MVC SDK</title>
     <authors>Microsoft</authors>
     <owners>Microsoft</owners>
     <licenseUrl>https://config.healthvault-ppe.com/serviceAgreement.aspx</licenseUrl>
@@ -16,24 +16,18 @@
     <tags>HealthVault</tags>
     <dependencies>
       <group targetFramework="net461">
-        <dependency id="Microsoft.AspNet.Mvc" version="4.0.40804" />
-        <dependency id="Microsoft.AspNet.Razor" version="2.0.20710" />
-        <dependency id="Microsoft.AspNet.WebPages" version="2.0.20710" />
-        <dependency id="Microsoft.HealthVault.Core" version="$version$" />
-        <dependency id="Microsoft.Web.Infrastructure" version="1.0.0" />
+        <dependency id="Grace" version="5.1.0" />
+        <dependency id="Microsoft.AspNet.Mvc" version="5.2.3" />
         <dependency id="System.Collections.Specialized" version="4.3.0" />
         <dependency id="System.Data.Common" version="4.3.0" />
-        <dependency id="System.Security.Cryptography.Algorithms" version="4.3.0" />
-        <dependency id="System.Security.Cryptography.Encoding" version="4.3.0" />
-        <dependency id="System.Security.Cryptography.Primitives" version="4.3.0" />
         <dependency id="System.Security.Cryptography.X509Certificates" version="4.3.0" />
         <dependency id="System.Xml.XPath" version="4.3.0" />
       </group>
     </dependencies>
   </metadata>
   <files>
-    <file src="Microsoft.HealthVault.DesktopWeb.Common\bin\$configuration$\Microsoft.HealthVault.DesktopWeb.Common.dll" target="lib\net461" />
-    <file src="Microsoft.HealthVault.DesktopWeb.Common\bin\$configuration$\Microsoft.HealthVault.DesktopWeb.Common.pdb" target="lib\net461" />
+    <file src="Microsoft.HealthVault\bin\$configuration$\Microsoft.HealthVault.dll" target="lib\netstandard1.4" />
+    <file src="Microsoft.HealthVault\bin\$configuration$\Microsoft.HealthVault.pdb" target="lib\netstandard1.4" />
     <file src="Microsoft.HealthVault.Web\bin\$configuration$\Microsoft.HealthVault.Web.dll" target="lib\net461" />
     <file src="Microsoft.HealthVault.Web\bin\$configuration$\Microsoft.HealthVault.Web.pdb" target="lib\net461" />
     <file src="Microsoft.HealthVault.Web.Mvc\bin\$configuration$\Microsoft.HealthVault.Web.Mvc.dll" target="lib\net461" />

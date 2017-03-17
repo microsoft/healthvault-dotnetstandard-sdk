@@ -1,0 +1,70 @@
+<?xml version="1.0"?>
+<package>
+  <metadata>
+    <id>Microsoft.HealthVault.Client</id>
+    <version>$version$</version>
+    <title>Microsoft HealthVault .NET Standard Client SDK</title>
+    <authors>Microsoft</authors>
+    <owners>Microsoft</owners>
+    <licenseUrl>https://config.healthvault-ppe.com/serviceAgreement.aspx</licenseUrl>
+    <projectUrl>https://msdn.microsoft.com/HealthVault</projectUrl>
+    <iconUrl>http://msdn.microsoft.com/en-US/HealthVault/jj126730.HV-Logo-32x32.png</iconUrl>
+    <requireLicenseAcceptance>true</requireLicenseAcceptance>
+    <description>This library enables desktop and mobile applications to connect to Microsoft HealthVault. HealthVault is a cloud-based platform designed to put people in control of their health data.</description>
+    <releaseNotes>Targeting .NET Standard 1.4</releaseNotes>
+    <copyright>Copyright 2017</copyright>
+    <tags>HealthVault</tags>
+    <dependencies>
+      <group targetFramework="netstandard1.4">
+        <dependency id="Grace" version="5.1.0" />
+        <dependency id="Microsoft.NETCore.Portable.Compatibility" version="1.0.1" />
+        <dependency id="NETStandard.Library" version="1.6.1" />
+        <dependency id="StyleCop.Analyzers" version="1.0.0" />
+        <dependency id="System.Collections.Specialized" version="4.3.0" />
+        <dependency id="System.Data.Common" version="4.3.0" />
+        <dependency id="System.Diagnostics.TraceSource" version="4.3.0" />
+        <dependency id="System.Net.Http" version="4.3.0" />
+        <dependency id="System.Reflection" version="4.3.0" />
+        <dependency id="System.Runtime.Serialization.Formatters" version="4.3.0" />
+        <dependency id="System.Security.Cryptography.Algorithms" version="4.3.0" />
+        <dependency id="System.Security.Cryptography.Cng" version="4.3.0" />
+        <dependency id="System.Security.Cryptography.X509Certificates" version="4.3.0" />
+        <dependency id="System.Xml.ReaderWriter" version="4.3.0" />
+        <dependency id="System.Xml.XDocument" version="4.3.0" />
+        <dependency id="System.Xml.XPath" version="4.3.0" />
+        <dependency id="System.Xml.XPath.XDocument" version="4.3.0" />
+      </group>
+      <group targetFramework="MonoAndroid">
+        <dependency id="Grace" version="5.1.0" />
+        <dependency id="NETStandard.Library" version="1.6.1" />
+        <dependency id="System.Collections" version="4.3.0" />
+        <dependency id="System.Diagnostics.Debug" version="4.3.0" />
+        <dependency id="System.Linq" version="4.3.0" />
+        <dependency id="System.Linq.Expressions" version="4.3.0" />
+        <dependency id="System.Reflection" version="4.3.0" />
+        <dependency id="System.Reflection.Extensions" version="4.3.0" />
+        <dependency id="System.Runtime" version="4.3.0" />
+        <dependency id="System.Runtime.Extensions" version="4.3.0" />
+        <dependency id="System.Threading" version="4.3.0" />
+      </group>
+      <group targetFramework="uap">
+        <dependency id="Grace" version="5.1.0" />
+        <dependency id="Microsoft.NETCore.UniversalWindowsPlatform" version="5.2.2" />
+        <dependency id="NETStandard.Library" version="1.6.1" />
+      </group>
+      <group targetFramework="Xamarin.iOS10">
+        <!--Xamarin.iOS10 dependencies go here-->
+      </group>
+    </dependencies>
+  </metadata>
+  <files>
+    <file src="Microsoft.HealthVault\bin\$configuration$\Microsoft.HealthVault.dll" target="lib\netstandard1.4" />
+    <file src="Microsoft.HealthVault\bin\$configuration$\Microsoft.HealthVault.pdb" target="lib\netstandard1.4" />
+    <file src="Microsoft.HealthVault.Client\bin\$configuration$\Microsoft.HealthVault.Client.dll" target="lib\netstandard1.4" />
+    <file src="Microsoft.HealthVault.Client\bin\$configuration$\Microsoft.HealthVault.Client.pdb" target="lib\netstandard1.4" />
+    <file src="Microsoft.HealthVault.Client.Platform.Uwp\bin\$configuration$\Microsoft.HealthVault.Client.Platform.dll" target="lib\uap10.0" />
+    <file src="Microsoft.HealthVault.Client.Platform.Uwp\bin\$configuration$\Microsoft.HealthVault.Client.Platform.pdb" target="lib\uap10.0" />
+    <file src="Microsoft.HealthVault.Client.Platform.Android\bin\$configuration$\Microsoft.HealthVault.Client.Platform.dll" target="lib\monoandroid" />
+    <file src="Microsoft.HealthVault.Client.Platform.Android\bin\$configuration$\Microsoft.HealthVault.Client.Platform.pdb" target="lib\monoandroid" />
+  </files>
+</package>
