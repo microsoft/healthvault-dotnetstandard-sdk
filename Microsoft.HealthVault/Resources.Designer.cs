@@ -4607,6 +4607,15 @@ namespace Microsoft.HealthVault {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to LocalObjectStore was passed invalid parameters..
+        /// </summary>
+        internal static string ObjectStoreParametersEmpty {
+            get {
+                return ResourceManager.GetString("ObjectStoreParametersEmpty", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The value of the Minutes property must be greater than zero..
         /// </summary>
         internal static string OccurrenceMinutesMustBePositive {
