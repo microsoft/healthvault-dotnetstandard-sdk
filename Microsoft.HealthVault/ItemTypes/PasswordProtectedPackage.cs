@@ -7,6 +7,7 @@ using System;
 using System.Globalization;
 using System.Xml;
 using System.Xml.XPath;
+using Microsoft.HealthVault.Exceptions;
 using Microsoft.HealthVault.Helpers;
 using Microsoft.HealthVault.Thing;
 
@@ -120,7 +121,7 @@ namespace Microsoft.HealthVault.ItemTypes
                 typeSpecificXml.CreateNavigator().SelectSingleNode(
                     "password-protected-package/encrypt-algorithm");
 
-            Validator.ThrowInvalidIfNull(packageNav, "PackageUnexpectedNode");
+            Validator.ThrowInvalidIfNull(packageNav, Resources.PackageUnexpectedNode);
 
             this.algorithmName =
                 packageNav.SelectSingleNode("algorithm-name").Value;
@@ -170,14 +171,20 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             Validator.ThrowIfWriterNull(writer);
 
-            Validator.ThrowSerializationIf(
-                this.PasswordProtectAlgorithm == PasswordProtectAlgorithm.Unknown &&
-                this.algorithmName == null,
-                "PackageAlgorithmNotSet");
+            if (this.PasswordProtectAlgorithm == PasswordProtectAlgorithm.Unknown && this.algorithmName == null)
+            {
+                throw new ThingSerializationException(Resources.PackageAlgorithmNotSet);
+            }
 
-            Validator.ThrowSerializationIf(string.IsNullOrEmpty(this.salt), "PackageSaltNotSet");
+            if (string.IsNullOrEmpty(this.salt))
+            {
+                throw new ThingSerializationException(Resources.PackageSaltNotSet);
+            }
 
-            Validator.ThrowSerializationIf(this.keyLength < 1, "PackageKeyLengthNotSet");
+            if (this.keyLength < 1)
+            {
+                throw new ThingSerializationException(Resources.PackageKeyLengthNotSet);
+            }
 
             // <password-protected-package>
             writer.WriteStartElement("password-protected-package");
@@ -294,7 +301,11 @@ namespace Microsoft.HealthVault.ItemTypes
 
             set
             {
-                Validator.ThrowArgumentOutOfRangeIf(value <= 0, "HashIterations", "PackageHashIterationOutOfRange");
+                if (value <= 0)
+                {
+                    throw new ArgumentOutOfRangeException(nameof(this.HashIterations), Resources.PackageHashIterationOutOfRange);
+                }
+
                 this.hashIterations = value;
             }
         }
@@ -325,10 +336,11 @@ namespace Microsoft.HealthVault.ItemTypes
 
             set
             {
-                Validator.ThrowArgumentOutOfRangeIf(
-                    value < 1,
-                    "KeyLength",
-                    "PackageKeyLengthOutOfRange");
+                if (value < 1)
+                {
+                    throw new ArgumentOutOfRangeException(nameof(this.KeyLength), Resources.PackageKeyLengthOutOfRange);
+                }
+
                 this.keyLength = value;
             }
         }

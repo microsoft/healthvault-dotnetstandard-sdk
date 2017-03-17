@@ -64,7 +64,7 @@ namespace Microsoft.HealthVault.Thing
             XmlReader groupReader,
             IList<ThingQuery> filters)
         {
-            Validator.ThrowIfArgumentNull(record, "record", "ResponseRecordNull");
+            Validator.ThrowIfArgumentNull(record, nameof(record), Resources.ResponseRecordNull);
 
             // Name is optional
             ThingQuery matchingQuery = null;
@@ -365,7 +365,7 @@ namespace Microsoft.HealthVault.Thing
         ///
         public void Add(IThing item)
         {
-            throw Validator.NotSupportedException("ResultGroupIsReadOnly");
+            throw new NotSupportedException(Resources.ResultGroupIsReadOnly);
         }
 
         /// <summary>
@@ -383,7 +383,7 @@ namespace Microsoft.HealthVault.Thing
         ///
         int IList.Add(object value)
         {
-            throw Validator.NotSupportedException("ResultGroupIsReadOnly");
+            throw new NotSupportedException(Resources.ResultGroupIsReadOnly);
         }
 
         /// <summary>
@@ -397,7 +397,7 @@ namespace Microsoft.HealthVault.Thing
         ///
         public void Clear()
         {
-            throw Validator.NotSupportedException("ResultGroupIsReadOnly");
+            throw new NotSupportedException(Resources.ResultGroupIsReadOnly);
         }
 
         /// <summary>
@@ -516,7 +516,7 @@ namespace Microsoft.HealthVault.Thing
         ///
         public void CopyTo(IThing[] array, int arrayIndex)
         {
-            throw Validator.NotSupportedException("ResultGroupNotCopyable");
+            throw new NotSupportedException(Resources.ResultGroupNotCopyable);
         }
 
         /// <summary>
@@ -538,7 +538,7 @@ namespace Microsoft.HealthVault.Thing
         ///
         void ICollection.CopyTo(Array array, int index)
         {
-            throw Validator.NotSupportedException("ResultGroupNotCopyable");
+            throw new NotSupportedException(Resources.ResultGroupNotCopyable);
         }
 
         /// <summary>
@@ -556,7 +556,7 @@ namespace Microsoft.HealthVault.Thing
         ///
         public bool Remove(IThing item)
         {
-            throw Validator.NotSupportedException("ResultGroupIsReadOnly");
+            throw new NotSupportedException(Resources.ResultGroupIsReadOnly);
         }
 
         #endregion ICollection<IThing>
@@ -588,10 +588,10 @@ namespace Microsoft.HealthVault.Thing
         {
             get
             {
-                Validator.ThrowArgumentOutOfRangeIf(
-                    index < 0 || index >= this.abstractResults.Count,
-                    "index",
-                    "ResultGroupIndexOutOfRange");
+                if (index < 0 || index >= this.abstractResults.Count)
+                {
+                    throw new ArgumentOutOfRangeException(nameof(index), Resources.ResultGroupIndexOutOfRange);
+                }
 
                 lock (this.abstractResults)
                 {
@@ -608,7 +608,7 @@ namespace Microsoft.HealthVault.Thing
 
             set
             {
-                throw Validator.NotSupportedException("ResultGroupIsReadOnly");
+                throw new NotSupportedException(Resources.ResultGroupIsReadOnly);
             }
         }
 
@@ -637,7 +637,7 @@ namespace Microsoft.HealthVault.Thing
 
             set
             {
-                throw Validator.NotSupportedException("ResultGroupIsReadOnly");
+                throw new NotSupportedException(Resources.ResultGroupIsReadOnly);
             }
         }
 
@@ -756,7 +756,7 @@ namespace Microsoft.HealthVault.Thing
         ///
         public void Insert(int index, IThing item)
         {
-            throw Validator.NotSupportedException("ResultGroupIsReadOnly");
+            throw new NotSupportedException(Resources.ResultGroupIsReadOnly);
         }
 
         /// <summary>
@@ -778,7 +778,7 @@ namespace Microsoft.HealthVault.Thing
         ///
         void IList.Insert(int index, object value)
         {
-            throw Validator.NotSupportedException("ResultGroupIsReadOnly");
+            throw new NotSupportedException(Resources.ResultGroupIsReadOnly);
         }
 
         /// <summary>
@@ -797,7 +797,7 @@ namespace Microsoft.HealthVault.Thing
         ///
         public void RemoveAt(int index)
         {
-            throw Validator.NotSupportedException("ResultGroupIsReadOnly");
+            throw new NotSupportedException(Resources.ResultGroupIsReadOnly);
         }
 
         /// <summary>
@@ -816,7 +816,7 @@ namespace Microsoft.HealthVault.Thing
         ///
         void IList.Remove(object value)
         {
-            throw Validator.NotSupportedException("ResultGroupIsReadOnly");
+            throw new NotSupportedException(Resources.ResultGroupIsReadOnly);
         }
 
         /// <summary>
@@ -1176,20 +1176,20 @@ namespace Microsoft.HealthVault.Thing
             int minIndex,
             int maxIndex)
         {
-            Validator.ThrowArgumentOutOfRangeIf(
-                minIndex < 0,
-                "minIndex",
-                "ResultGroupRangeIndexesOutOfRange");
+            if (minIndex < 0)
+            {
+                throw new ArgumentOutOfRangeException(nameof(minIndex), Resources.ResultGroupRangeIndexesOutOfRange);
+            }
 
-            Validator.ThrowArgumentOutOfRangeIf(
-                maxIndex < 0 || maxIndex > this.Count - 1,
-                "maxIndex",
-                "ResultGroupRangeIndexesOutOfRange");
+            if (maxIndex < 0 || maxIndex > this.Count - 1)
+            {
+                throw new ArgumentOutOfRangeException(nameof(maxIndex), Resources.ResultGroupRangeIndexesOutOfRange);
+            }
 
-            Validator.ThrowArgumentOutOfRangeIf(
-                minIndex > maxIndex,
-                "minIndex",
-                "ResultGroupRangeMinGreaterThanMax");
+            if (minIndex > maxIndex)
+            {
+                throw new ArgumentOutOfRangeException(nameof(minIndex), Resources.ResultGroupRangeMinGreaterThanMax);
+            }
 
             Collection<IThing> result
                 = new Collection<IThing>();

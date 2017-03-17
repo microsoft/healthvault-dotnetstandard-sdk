@@ -208,22 +208,21 @@ namespace Microsoft.HealthVault.Thing
             Type itemTypeClass,
             bool overwriteExisting = false)
         {
-            Validator.ThrowArgumentExceptionIf(
-                typeId == Guid.Empty,
-                "typeId",
-                "TypeIdGuidEmpty");
+            if (typeId == Guid.Empty)
+            {
+                throw new ArgumentException(Resources.TypeIdGuidEmpty, nameof(typeId));
+            }
 
-            Validator.ThrowIfArgumentNull(itemTypeClass, "itemTypeClass", "ThingTypeClassNull");
+            Validator.ThrowIfArgumentNull(itemTypeClass, nameof(itemTypeClass), Resources.ThingTypeClassNull);
 
-            Validator.ThrowArgumentExceptionIf(
-                !itemTypeClass.GetTypeInfo().IsSubclassOf(typeof(ThingBase)),
-                "itemTypeClass",
-                "TypeClassNotThing");
+            if (!itemTypeClass.GetTypeInfo().IsSubclassOf(typeof(ThingBase)))
+            {
+                throw new ArgumentException(Resources.TypeClassNotThing, nameof(itemTypeClass));
+            }
 
             if (TypeHandlers.ContainsKey(typeId) && !overwriteExisting)
             {
-                throw new TypeHandlerAlreadyRegisteredException(
-                    ResourceRetriever.GetResourceString("TypeHandlerAlreadyRegistered"));
+                throw new TypeHandlerAlreadyRegisteredException(Resources.TypeHandlerAlreadyRegistered);
             }
 
             TypeHandlers[typeId] = new ThingTypeHandler(typeId, itemTypeClass);
@@ -388,13 +387,12 @@ namespace Microsoft.HealthVault.Thing
             bool overwriteExisting)
         {
             Validator.ThrowIfStringNullOrEmpty(extensionSource, "extensionSource");
-            Validator.ThrowIfArgumentNull(itemExtensionClass, "itemExtensionClass", "ItemExtensionClassNull");
+            Validator.ThrowIfArgumentNull(itemExtensionClass, nameof(itemExtensionClass), Resources.ItemExtensionClassNull);
 
             if (extensionHandlers.ContainsKey(extensionSource) &&
                 !overwriteExisting)
             {
-                throw new TypeHandlerAlreadyRegisteredException(
-                    ResourceRetriever.GetResourceString("ExtensionHandlerAlreadyRegistered"));
+                throw new TypeHandlerAlreadyRegisteredException(Resources.ExtensionHandlerAlreadyRegistered);
             }
 
             extensionHandlers[extensionSource] =
@@ -450,10 +448,10 @@ namespace Microsoft.HealthVault.Thing
             string subtypeTag,
             Type applicationSpecificHandlerClass)
         {
-            Validator.ThrowArgumentExceptionIf(
-                applicationId == Guid.Empty,
-                "applicationId",
-                "ApplicationIdGuidEmpty");
+            if (applicationId == Guid.Empty)
+            {
+                throw new ArgumentException(Resources.ApplicationIdGuidEmpty, nameof(applicationId));
+            }
 
             RegisterApplicationSpecificHandler(
                 applicationId.ToString(),
@@ -559,12 +557,12 @@ namespace Microsoft.HealthVault.Thing
         {
             Validator.ThrowIfStringNullOrEmpty(applicationId, "applicationId");
             Validator.ThrowIfStringNullOrEmpty(subtypeTag, "subtypeTag");
-            Validator.ThrowIfArgumentNull(applicationSpecificHandlerClass, "applicationSpecificHandlerClass", "AppDataHandlerClassMandatory");
+            Validator.ThrowIfArgumentNull(applicationSpecificHandlerClass, nameof(applicationSpecificHandlerClass), Resources.AppDataHandlerClassMandatory);
 
-            Validator.ThrowArgumentExceptionIf(
-                applicationSpecificHandlerClass.GetTypeInfo().BaseType.Name != "ApplicationSpecific",
-                "applicationSpecificHandlerClass",
-                "AppDataHandlerNotApplicationSpecific");
+            if (applicationSpecificHandlerClass.GetTypeInfo().BaseType.Name != nameof(ApplicationSpecific))
+            {
+                throw new ArgumentException(Resources.AppDataHandlerNotApplicationSpecific, nameof(applicationSpecificHandlerClass));
+            }
 
             Dictionary<string, ThingTypeHandler> handlerDictionary;
 
@@ -575,8 +573,7 @@ namespace Microsoft.HealthVault.Thing
                 if (handlerDictionary.ContainsKey(subtypeTag) &&
                     !overwriteExisting)
                 {
-                    throw new TypeHandlerAlreadyRegisteredException(
-                        ResourceRetriever.GetResourceString("AppDataHandlerAlreadyRegistered"));
+                    throw new TypeHandlerAlreadyRegisteredException(Resources.AppDataHandlerAlreadyRegistered);
                 }
             }
             else

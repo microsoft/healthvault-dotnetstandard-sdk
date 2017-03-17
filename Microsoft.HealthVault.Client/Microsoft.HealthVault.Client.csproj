@@ -42,6 +42,11 @@
     <Compile Include="ClientConfiguration.cs" />
     <Compile Include="ClientHealthVaultConnection.cs" />
     <Compile Include="ClientHealthVaultFactory.cs" />
+    <Compile Include="ClientResources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>ClientResources.resx</DependentUpon>
+    </Compile>
     <Compile Include="ClientSessionCredentialClient.cs" />
     <Compile Include="Exceptions\BrowserAuthException.cs" />
     <Compile Include="Exceptions\ShellAuthException.cs" />
@@ -50,7 +55,7 @@
     <Compile Include="IClientHealthVaultConnection.cs" />
     <Compile Include="IClientHealthVaultFactory.cs" />
     <Compile Include="IClientSessionCredentialClient.cs" />
-    <Compile Include="IFileStore.cs" />
+    <Compile Include="ISecretStore.cs" />
     <Compile Include="ILocalDataProtection.cs" />
     <Compile Include="ILocalObjectStore.cs" />
     <Compile Include="IShellAuthService.cs" />
@@ -70,6 +75,12 @@
       <Project>{dbe2ba67-dbc3-479e-a374-1ce5ee33c453}</Project>
       <Name>Microsoft.HealthVault</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="ClientResources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>ClientResources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

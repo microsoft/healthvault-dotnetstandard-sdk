@@ -4,6 +4,7 @@ using Microsoft.HealthVault.Clients;
 using Microsoft.HealthVault.Connection;
 using Microsoft.HealthVault.Extensions;
 using System;
+using Microsoft.HealthVault.Transport;
 
 namespace Microsoft.HealthVault
 {
@@ -32,14 +33,13 @@ namespace Microsoft.HealthVault
             container.RegisterTransient<IPersonClient, PersonClient>();
             container.RegisterTransient<IVocabularyClient, VocabularyClient>();
             container.RegisterTransient<IThingClient, ThingClient>();
+            container.RegisterTransient<IHealthWebRequestFactory, HealthWebRequestFactory>();
         }
 
         private static void RegisterTypes(DependencyInjectionContainer container)
         {
-            container.RegisterTransient<ICryptoConfiguration, BaseCryptoConfiguration>();
             container.RegisterTransient<IConnectionInternal, HealthVaultConnectionBase>();
             container.RegisterTransient<ISessionCredentialClient, SessionCredentialClientBase>();
-            container.RegisterSingleton<ICryptoService, CryptoService>();
             container.RegisterSingleton<IServiceLocator, ServiceLocator>();
         }
 

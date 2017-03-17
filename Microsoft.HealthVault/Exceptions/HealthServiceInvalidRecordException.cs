@@ -44,15 +44,6 @@ namespace Microsoft.HealthVault.Exceptions
 
         /// <summary>
         /// Creates an instance of the <see cref="HealthServiceInvalidRecordException"/>
-        /// class with default values.
-        /// </summary>
-        ///
-        public HealthServiceInvalidRecordException()
-        {
-        }
-
-        /// <summary>
-        /// Creates an instance of the <see cref="HealthServiceInvalidRecordException"/>
         /// class with the specified message.
         /// </summary>
         ///

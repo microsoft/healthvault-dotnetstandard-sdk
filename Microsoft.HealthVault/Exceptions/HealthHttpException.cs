@@ -14,7 +14,7 @@ namespace Microsoft.HealthVault.Exceptions
     /// </summary>
     ///
     [Serializable]
-    public class HealthHttpException : Exception
+    public class HealthHttpException : HealthVaultException
     {
         /// <summary>
         /// Creates an instance of the <see cref="HealthHttpException"/>
@@ -58,18 +58,5 @@ namespace Microsoft.HealthVault.Exceptions
         /// The error status code that was returned resulting in this exception
         /// </summary>
         public HttpStatusCode StatusCode { get; private set; }
-
-        #region FxCop required ctors
-
-        /// <summary>
-        /// Creates an instance of the <see cref="CertificateValidationException"/>
-        /// class with default values.
-        /// </summary>
-        ///
-        public HealthHttpException()
-        {
-        }
-
-        #endregion FxCop required ctors
     }
 }

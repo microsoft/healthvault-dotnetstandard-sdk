@@ -423,10 +423,10 @@ namespace Microsoft.HealthVault.Thing
 
             set
             {
-                Validator.ThrowInvalidIf(
-                    !value
-                    && (this.IsFlagSet(ThingFlags.ReadOnly) || this.IsImmutable),
-                    "CannotChangeImmutableFlag");
+                if (!value && (this.IsFlagSet(ThingFlags.ReadOnly) || this.IsImmutable))
+                {
+                    throw new InvalidOperationException(Resources.CannotChangeImmutableFlag);
+                }
 
                 if (value)
                 {
@@ -1271,8 +1271,7 @@ namespace Microsoft.HealthVault.Thing
                         {
                             // third-party call-out
                             throw new ThingDeserializationException(
-                            ResourceRetriever.GetResourceString(
-                                    "ThingDeserializationFailed"),
+                                Resources.ThingDeserializationFailed,
                                 e);
                         }
                     }

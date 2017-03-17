@@ -10,79 +10,11 @@ using Microsoft.HealthVault.Thing;
 namespace Microsoft.HealthVault.Transport
 {
     /// <summary>
-    /// Status codes for various conditions occurring in the SDK. Contains
-    /// status codes returned by HealthVault methods as Response.Code
-    /// and codes to represent errors in the SDK itself.
+    /// Status codes for various conditions returned by HealthVault
+    /// methods on the server.
     /// </summary>
-    ///
     public enum HealthServiceStatusCode
     {
-        /// <summary>
-        /// The other data item cannot be larger than the largest size allowed by the
-        /// HealthVault platform.
-        /// </summary>
-        OtherDataItemSizeLimitExceeded = -11,
-
-        /// <summary>
-        /// A record was not authorized for the application.
-        /// </summary>
-        ///
-        RecordAuthorizationFailure = -10,
-
-        /// <summary>
-        /// A required configuration value is missing or malformed for the key
-        /// supplied.
-        /// </summary>
-        ///
-        ConfigValueMissingOrMalformed = -9,
-
-        /// <summary>
-        /// The data element was not set, so it could not be retrieved.
-        /// </summary>
-        ///
-        CannotGetDataNotSet = -8,
-
-        /// <summary>
-        /// The record authorization data wasn't supplied to allow the update
-        /// to occur.
-        /// </summary>
-        ///
-        NoRecordAuthDataForUpdate = -7,
-
-        /// <summary>
-        /// A person other than a record custodian tried to perform a
-        /// privileged action.
-        /// </summary>
-        ///
-        NotRecordCustodian = -6,
-
-        /// <summary>
-        /// The application information could not be returned for the
-        /// specified application identifier.
-        /// </summary>
-        ///
-        NoApplicationInfoReturned = -5,
-
-        /// <summary>
-        /// Information about multiple persons was returned when only a single
-        /// result was expected.
-        /// </summary>
-        ///
-        MoreThanOnePersonReturned = -4,
-
-        /// <summary>
-        /// The record specified in the request could not be found.
-        /// </summary>
-        ///
-        RecordNotFound = -3,
-
-        /// <summary>
-        /// Information about multiple record items was returned when only a
-        /// single result was expected.
-        /// </summary>
-        ///
-        MoreThanOneThingReturned = -2,
-
         /// <summary>
         /// The error condition is not recognized by the client.
         /// </summary>

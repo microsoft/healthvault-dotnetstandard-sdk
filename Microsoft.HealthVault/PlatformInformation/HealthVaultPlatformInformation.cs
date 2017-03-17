@@ -28,48 +28,7 @@ namespace Microsoft.HealthVault.PlatformInformation
     /// </remarks>
     internal class HealthVaultPlatformInformation
     {
-        /// <summary>
-        /// Enables mocking of calls to this class.
-        /// </summary>
-        ///
-        /// <remarks>
-        /// The calling class should pass in a class that derives from this
-        /// class and overrides the calls to be mocked.
-        /// </remarks>
-        ///
-        /// <param name="mock">The mocking class.</param>
-        ///
-        /// <exception cref="InvalidOperationException">
-        /// There is already a mock registered for this class.
-        /// </exception>
-        ///
-        public static void EnableMock(HealthVaultPlatformInformation mock)
-        {
-            Validator.ThrowInvalidIf(saved != null, "ClassAlreadyMocked");
-
-            saved = Current;
-            Current = mock;
-        }
-
-        /// <summary>
-        /// Removes mocking of calls to this class.
-        /// </summary>
-        ///
-        /// <exception cref="InvalidOperationException">
-        /// There is no mock registered for this class.
-        /// </exception>
-        ///
-        public static void DisableMock()
-        {
-            Validator.ThrowInvalidIfNull(saved, "ClassIsntMocked");
-
-            Current = saved;
-            saved = null;
-        }
-
         internal static HealthVaultPlatformInformation Current { get; private set; } = new HealthVaultPlatformInformation();
-
-        private static HealthVaultPlatformInformation saved;
 
         #region GetServiceDefinitionAsync
 
@@ -113,7 +72,7 @@ namespace Microsoft.HealthVault.PlatformInformation
         ///
         public virtual async Task<ServiceInfo> GetServiceDefinitionAsync(IConnectionInternal connection)
         {
-            Validator.ThrowIfArgumentNull(connection, "connection", "ConnectionNull");
+            Validator.ThrowIfArgumentNull(connection, nameof(connection), Resources.ConnectionNull);
             return await GetServiceDefinitionAsync(connection, null).ConfigureAwait(false);
         }
 
@@ -166,7 +125,7 @@ namespace Microsoft.HealthVault.PlatformInformation
         ///
         public virtual async Task<ServiceInfo> GetServiceDefinitionAsync(IConnectionInternal connection, DateTime lastUpdatedTime)
         {
-            Validator.ThrowIfArgumentNull(connection, "connection", "ConnectionNull");
+            Validator.ThrowIfArgumentNull(connection, nameof(connection), Resources.ConnectionNull);
 
             StringBuilder requestBuilder = new StringBuilder();
             using (XmlWriter writer = XmlWriter.Create(requestBuilder, SDKHelper.XmlUnicodeWriterSettings))
@@ -234,7 +193,7 @@ namespace Microsoft.HealthVault.PlatformInformation
             IConnectionInternal connection,
             ServiceInfoSections responseSections)
         {
-            Validator.ThrowIfArgumentNull(connection, "connection", "ConnectionNull");
+            Validator.ThrowIfArgumentNull(connection, nameof(connection), Resources.ConnectionNull);
             string requestParams = CreateServiceDefinitionRequestParameters(responseSections, null);
             return await GetServiceDefinitionAsync(connection, requestParams).ConfigureAwait(false);
         }
@@ -302,7 +261,7 @@ namespace Microsoft.HealthVault.PlatformInformation
             ServiceInfoSections responseSections,
             DateTime lastUpdatedTime)
         {
-            Validator.ThrowIfArgumentNull(connection, "connection", "ConnectionNull");
+            Validator.ThrowIfArgumentNull(connection, nameof(connection), Resources.ConnectionNull);
             string requestParams = CreateServiceDefinitionRequestParameters(responseSections, lastUpdatedTime);
             return await GetServiceDefinitionAsync(connection, requestParams).ConfigureAwait(false);
         }
@@ -457,13 +416,13 @@ namespace Microsoft.HealthVault.PlatformInformation
             DateTime? lastClientRefreshDate,
             IConnectionInternal connection)
         {
-            Validator.ThrowIfArgumentNull(connection, "connection", "TypeManagerConnectionNull");
+            Validator.ThrowIfArgumentNull(connection, nameof(connection), Resources.TypeManagerConnectionNull);
 
-            Validator.ThrowArgumentExceptionIf(
-                (typeIds != null && typeIds.Contains(Guid.Empty)) ||
-                (typeIds != null && typeIds.Count == 0),
-                "typeIds",
-                "TypeIdEmpty");
+            if ((typeIds != null && typeIds.Contains(Guid.Empty)) ||
+                (typeIds != null && typeIds.Count == 0))
+            {
+                throw new ArgumentException(Resources.TypeIdEmpty, nameof(typeIds));
+            }
 
             if (lastClientRefreshDate != null)
             {
@@ -824,8 +783,8 @@ namespace Microsoft.HealthVault.PlatformInformation
             IConnectionInternal connection,
             Location preferredLocation)
         {
-            Validator.ThrowIfArgumentNull(connection, "connection", "TypeManagerConnectionNull");
-            Validator.ThrowIfArgumentNull(preferredLocation, "location", "SelectInstanceLocationRequired");
+            Validator.ThrowIfArgumentNull(connection, nameof(connection), Resources.TypeManagerConnectionNull);
+            Validator.ThrowIfArgumentNull(preferredLocation, nameof(preferredLocation), Resources.SelectInstanceLocationRequired);
 
             StringBuilder requestParameters = new StringBuilder();
             XmlWriterSettings settings = SDKHelper.XmlUnicodeWriterSettings;

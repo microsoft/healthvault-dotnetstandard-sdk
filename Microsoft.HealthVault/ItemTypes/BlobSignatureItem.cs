@@ -30,8 +30,8 @@ namespace Microsoft.HealthVault.ItemTypes
         /// </exception>
         internal BlobSignatureItem(string name, string contentType, BlobHashInfo hashInfo)
         {
-            Validator.ThrowIfArgumentNull(name, "name", "ArgumentNull");
-            Validator.ThrowIfArgumentNull(contentType, "contentType", "ArgumentNull");
+            Validator.ThrowIfArgumentNull(name, nameof(name), Resources.ArgumentNull);
+            Validator.ThrowIfArgumentNull(contentType, nameof(contentType), Resources.ArgumentNull);
 
             this.Name = name;
             this.ContentType = contentType;

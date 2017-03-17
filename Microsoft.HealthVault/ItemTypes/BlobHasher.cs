@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Security.Cryptography;
 using Microsoft.HealthVault.Authentication;
 using Microsoft.HealthVault.Configuration;
+using Microsoft.HealthVault.Extensions;
 using Microsoft.HealthVault.Helpers;
 
 namespace Microsoft.HealthVault.ItemTypes
@@ -42,24 +43,22 @@ namespace Microsoft.HealthVault.ItemTypes
             switch (algorithm)
             {
                 case BlobHashAlgorithm.SHA256Block:
-                    this.baseHashAlgorithm = Ioc.Get<ICryptoService>().CreateHashAlgorithm("SHA256");
+                    this.baseHashAlgorithm = SHA256.Create();
                     break;
                 default:
                     throw new ArgumentException(
-                        ResourceRetriever.FormatResourceString(
-                            "BlobHashAlgorithmUnsupported",
-                             algorithm),
+                        Resources.BlobHashAlgorithmUnsupported.FormatResource(algorithm),
                         nameof(algorithm));
             }
 
-            Validator.ThrowArgumentOutOfRangeIf(blockSize < 1, "blockSize", "BlockSizeMustBePositive");
+            if (blockSize < 1)
+            {
+                throw new ArgumentOutOfRangeException(nameof(blockSize), Resources.BlockSizeMustBePositive);
+            }
 
             if (this.baseHashAlgorithm.HashSize % 8 != 0)
             {
-                throw new CryptographicUnexpectedOperationException(
-                    ResourceRetriever.FormatResourceString(
-                        "AlgorithmHashSizePartialByteLength",
-                        this.baseHashAlgorithm.HashSize));
+                throw new CryptographicUnexpectedOperationException(Resources.AlgorithmHashSizePartialByteLength.FormatResource(this.baseHashAlgorithm.HashSize));
             }
 
             this.BlockSize = blockSize;
@@ -90,22 +89,22 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         internal IList<byte[]> CalculateBlockHashes(byte[] data, int offset, int count)
         {
-            Validator.ThrowIfArgumentNull(data, "data", "ArgumentNull");
+            Validator.ThrowIfArgumentNull(data, nameof(data), Resources.ArgumentNull);
 
-            Validator.ThrowArgumentOutOfRangeIf(
-                offset < 0,
-                "offset",
-                "CalculateBlockHashesOffsetNegative");
+            if (offset < 0)
+            {
+                throw new ArgumentOutOfRangeException(nameof(offset), Resources.CalculateBlockHashesOffsetNegative);
+            }
 
-            Validator.ThrowArgumentOutOfRangeIf(
-                count < 0,
-                "count",
-                "CalculateBlockHashesCountNegative");
+            if (count < 0)
+            {
+                throw new ArgumentOutOfRangeException(nameof(count), Resources.CalculateBlockHashesCountNegative);
+            }
 
-            Validator.ThrowArgumentExceptionIf(
-                data.Length - offset < count,
-                "data",
-                "CalculateBlockHashesDataLengthTooSmall");
+            if (data.Length - offset < count)
+            {
+                throw new ArgumentException(Resources.CalculateBlockHashesDataLengthTooSmall, nameof(data));
+            }
 
             int numBlocks = (int)Math.Ceiling((double)count / this.BlockSize);
             List<byte[]> blockHashes = new List<byte[]>(numBlocks);
@@ -141,12 +140,12 @@ namespace Microsoft.HealthVault.ItemTypes
         /// </exception>
         internal byte[] CalculateBlobHash(IList<byte[]> blockHashes)
         {
-            Validator.ThrowIfArgumentNull(blockHashes, "blockHashes", "ArgumentNull");
+            Validator.ThrowIfArgumentNull(blockHashes, nameof(blockHashes), Resources.ArgumentNull);
 
-            Validator.ThrowArgumentOutOfRangeIf(
-                blockHashes.Count < 1,
-                "blockHashes",
-                "CalculateBlobHashBlockHashCountMustBePositive");
+            if (blockHashes.Count < 1)
+            {
+                throw new ArgumentOutOfRangeException(nameof(blockHashes), Resources.CalculateBlobHashBlockHashCountMustBePositive);
+            }
 
             byte[] blockHashBuffer = new byte[blockHashes.Count * this.HashSizeBytes];
 

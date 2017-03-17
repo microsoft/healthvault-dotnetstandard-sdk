@@ -28,7 +28,7 @@ namespace Microsoft.HealthVault.Exceptions
         /// </remarks>
         ///
         internal HealthRecordReauthorizationRequiredException()
-            : base(ResourceRetriever.GetResourceString("RecordReauthorizationRequired"))
+            : base(Resources.RecordReauthorizationRequired)
         {
         }
 

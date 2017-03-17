@@ -13,7 +13,7 @@ namespace Microsoft.HealthVault.Exceptions
     /// </summary>
     ///
     [Serializable]
-    public class ConversionFailureException : Exception
+    public class ConversionFailureException : HealthVaultException
     {
         /// <summary>
         /// Creates an instance of the <see cref="ConversionFailureException"/>
@@ -48,17 +48,5 @@ namespace Microsoft.HealthVault.Exceptions
             : base(message, innerException)
         {
         }
-
-        #region FxCop required ctors
-
-        /// <summary>
-        /// Creates an instance of the <see cref="ConversionFailureException"/>
-        /// class with default values.
-        /// </summary>
-        public ConversionFailureException()
-        {
-        }
-
-        #endregion FxCop required ctors
     }
 }

@@ -37,15 +37,15 @@ namespace Microsoft.HealthVault.Thing
         ///
         public ThingKey(Guid id, Guid versionStamp)
         {
-            Validator.ThrowArgumentExceptionIf(
-                id == Guid.Empty,
-                "id",
-                "ThingIdInvalid");
+            if (id == Guid.Empty)
+            {
+                throw new ArgumentException(Resources.ThingIdInvalid, nameof(id));
+            }
 
-            Validator.ThrowArgumentExceptionIf(
-                versionStamp == Guid.Empty,
-                "versionStamp",
-                "ThingVersionInvalid");
+            if (versionStamp == Guid.Empty)
+            {
+                throw new ArgumentException(Resources.ThingVersionInvalid, nameof(versionStamp));
+            }
 
             this.thingId = id;
             this.versionStamp = versionStamp;
@@ -68,10 +68,10 @@ namespace Microsoft.HealthVault.Thing
         ///
         public ThingKey(Guid id)
         {
-            Validator.ThrowArgumentExceptionIf(
-                id == Guid.Empty,
-                "id",
-                "ThingIdInvalid");
+            if (id == Guid.Empty)
+            {
+                throw new ArgumentException(Resources.ThingIdInvalid, nameof(id));
+            }
 
             this.thingId = id;
         }

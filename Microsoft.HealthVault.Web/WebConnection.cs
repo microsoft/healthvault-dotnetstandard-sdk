@@ -20,11 +20,6 @@ namespace Microsoft.HealthVault.Web
             : base(serviceLocator)
         {
             this.config = configuration;
-            this.ServiceInstance = new HealthServiceInstance
-            {
-
-            };
-
         }
 
         public override Guid ApplicationId => this.config.MasterApplicationId;

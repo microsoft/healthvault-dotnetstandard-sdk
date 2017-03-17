@@ -140,9 +140,10 @@ namespace Microsoft.HealthVault.Thing
         ///
         internal void WriteExtensionXml(XmlWriter writer)
         {
-            Validator.ThrowSerializationIf(
-                string.IsNullOrEmpty(this.source),
-                "ExtensionSerializationSourceMissing");
+            if (string.IsNullOrEmpty(this.source))
+            {
+                throw new ThingSerializationException(Resources.ExtensionSerializationSourceMissing);
+            }
 
             // <extension>
             writer.WriteStartElement("extension");

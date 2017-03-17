@@ -1,7 +1,10 @@
-// Copyright(c) Microsoft Corporation.
-// This content is subject to the Microsoft Reference Source License,
-// see http://www.microsoft.com/resources/sharedsource/licensingbasics/sharedsourcelicenses.mspx.
-// All other rights reserved.
+// Copyright (c) Microsoft Corporation.  All rights reserved. 
+// MIT License
+// Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the ""Software""), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+// 
+// The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED *AS IS*, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 using System;
 using System.IO;
@@ -98,8 +101,8 @@ namespace Microsoft.HealthVault.ItemTypes
             BlobHashInfo hashInfo,
             HealthRecordAccessor record)
         {
-            Validator.ThrowIfArgumentNull(name, "name", "StringNull");
-            Validator.ThrowIfArgumentNull(contentType, "contentType", "StringNull");
+            Validator.ThrowIfArgumentNull(name, nameof(name), Resources.StringNull);
+            Validator.ThrowIfArgumentNull(contentType, nameof(contentType), Resources.StringNull);
 
             this.Name = name;
             this.ContentType = contentType;
@@ -144,8 +147,8 @@ namespace Microsoft.HealthVault.ItemTypes
             string legacyContentEncoding,
             BlobHashInfo hashInfo)
         {
-            Validator.ThrowIfArgumentNull(name, "name", "StringNull");
-            Validator.ThrowIfArgumentNull(contentType, "contentType", "StringNull");
+            Validator.ThrowIfArgumentNull(name, nameof(name), Resources.StringNull);
+            Validator.ThrowIfArgumentNull(contentType, nameof(contentType), Resources.StringNull);
 
             this.Name = name;
             this.ContentType = contentType;
@@ -274,8 +277,8 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public void WriteInline(string data, Encoding encoding)
         {
-            Validator.ThrowIfArgumentNull(data, "data", "StringNull");
-            Validator.ThrowIfArgumentNull(encoding, "encoding", "ArgumentNull");
+            Validator.ThrowIfArgumentNull(data, nameof(data), Resources.StringNull);
+            Validator.ThrowIfArgumentNull(encoding, nameof(encoding), Resources.ArgumentNull);
 
             this.WriteNewInlineData(encoding.GetBytes(data));
         }
@@ -301,7 +304,7 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public void WriteInline(byte[] bytes)
         {
-            Validator.ThrowIfArgumentNull(bytes, "bytes", "ArgumentNull");
+            Validator.ThrowIfArgumentNull(bytes, nameof(bytes), Resources.ArgumentNull);
 
             this.WriteNewInlineData(bytes);
         }
@@ -341,7 +344,7 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public void Write(Stream stream)
         {
-            Validator.ThrowIfArgumentNull(stream, "stream", "ArgumentNull");
+            Validator.ThrowIfArgumentNull(stream, nameof(stream), Resources.ArgumentNull);
 
             int bufferSize = DefaultStreamBufferSize;
             if (stream.CanSeek)
@@ -432,7 +435,7 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             Validator.ThrowIfStringNullOrEmpty(fileName, "filename");
 
-            using (FileStream file = File.Open(fileName, mode, FileAccess.Write))
+            using (FileStream file = System.IO.File.Open(fileName, mode, FileAccess.Write))
             {
                 this.SaveToStream(file);
             }
@@ -464,7 +467,7 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public void SaveToStream(Stream stream)
         {
-            Validator.ThrowIfArgumentNull(stream, "stream", "ArgumentNull");
+            Validator.ThrowIfArgumentNull(stream, nameof(stream), Resources.ArgumentNull);
 
             using (BlobStream blob = this.GetReaderStream())
             {

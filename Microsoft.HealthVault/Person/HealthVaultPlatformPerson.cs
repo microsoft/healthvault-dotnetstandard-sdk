@@ -27,48 +27,7 @@ namespace Microsoft.HealthVault.Person
     /// </remarks>
     internal class HealthVaultPlatformPerson
     {
-        /// <summary>
-        /// Enables mocking of calls to this class.
-        /// </summary>
-        ///
-        /// <remarks>
-        /// The calling class should pass in a class that derives from this
-        /// class and overrides the calls to be mocked.
-        /// </remarks>
-        ///
-        /// <param name="mock">The mocking class.</param>
-        ///
-        /// <exception cref="InvalidOperationException">
-        /// There is already a mock registered for this class.
-        /// </exception>
-        ///
-        public static void EnableMock(HealthVaultPlatformPerson mock)
-        {
-            Validator.ThrowInvalidIf(saved != null, "ClassAlreadyMocked");
-
-            saved = Current;
-            Current = mock;
-        }
-
-        /// <summary>
-        /// Removes mocking of calls to this class.
-        /// </summary>
-        ///
-        /// <exception cref="InvalidOperationException">
-        /// There is no mock registered for this class.
-        /// </exception>
-        ///
-        public static void DisableMock()
-        {
-            Validator.ThrowInvalidIfNull(saved, "ClassIsntMocked");
-
-            Current = saved;
-            saved = null;
-        }
-
         internal static HealthVaultPlatformPerson Current { get; private set; } = new HealthVaultPlatformPerson();
-
-        private static HealthVaultPlatformPerson saved;
 
         #region ApplicationSettings
 
@@ -228,7 +187,7 @@ namespace Microsoft.HealthVault.Person
 
             XPathNavigator infoNav = responseData.InfoNavigator.SelectSingleNode(personPath);
 
-            return PersonInfo.CreateFromXml(connection, infoNav);
+            return PersonInfo.CreateFromXml(infoNav);
         }
 
         private static XPathExpression infoPersonPath =

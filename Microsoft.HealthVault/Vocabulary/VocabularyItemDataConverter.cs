@@ -56,11 +56,11 @@ namespace Microsoft.HealthVault.Vocabulary
             VocabularyItem vocabularyItem,
             double value)
         {
-            Validator.ThrowIfArgumentNull(vocabularyItem, "vocabularyItem", "VocabularyItemNull");
+            Validator.ThrowIfArgumentNull(vocabularyItem, nameof(vocabularyItem), Resources.VocabularyItemNull);
 
             if (vocabularyItem.InfoXml == null)
             {
-                throw Validator.NotSupportedException("VocabularyItemConversionNotSupported");
+                throw new NotSupportedException(Resources.VocabularyItemConversionNotSupported);
             }
 
             XPathNavigator nav = vocabularyItem.InfoXml.CreateNavigator();
@@ -74,14 +74,12 @@ namespace Microsoft.HealthVault.Vocabulary
                 // want to expose xml parse issues here to the outside world
                 // as recommended by the .NET documentation for
                 // XPathNavigator
-                throw new ConversionFailureException(
-                    ResourceRetriever.GetResourceString(
-                        "VocabularyItemConversionGeneralException"));
+                throw new ConversionFailureException(Resources.VocabularyItemConversionGeneralException);
             }
 
             if (nav == null)
             {
-                throw Validator.NotSupportedException("VocabularyItemConversionNotSupported");
+                throw new NotSupportedException(Resources.VocabularyItemConversionNotSupported);
             }
 
             return DoConversion(nav, value);
@@ -93,9 +91,7 @@ namespace Microsoft.HealthVault.Vocabulary
             nav = nav.SelectSingleNode("linear-conversion");
             if (nav == null)
             {
-                throw new ConversionFailureException(
-                        ResourceRetriever.GetResourceString(
-                            "VocabularyItemUnsupportedConversion"));
+                throw new ConversionFailureException(Resources.VocabularyItemUnsupportedConversion);
             }
 
             return LinearConvert(nav, val);
@@ -107,9 +103,7 @@ namespace Microsoft.HealthVault.Vocabulary
             XPathNavigator localNav = nav.SelectSingleNode("multiplier");
             if (localNav == null)
             {
-                throw new ConversionFailureException(
-                       ResourceRetriever.GetResourceString(
-                           "VocabularyItemUnsupportedConversion"));
+                throw new ConversionFailureException(Resources.VocabularyItemUnsupportedConversion);
             }
 
             double multiplier = localNav.ValueAsDouble;
