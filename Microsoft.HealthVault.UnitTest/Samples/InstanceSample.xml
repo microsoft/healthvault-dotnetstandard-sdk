@@ -1,0 +1,15 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<response>
+  <status>
+    <code>0</code>
+  </status>
+  <wc:info xmlns:wc="urn:com.microsoft.wc.methods.response.SelectInstance">
+    <selected-instance>
+      <id>1</id>
+      <name>US</name>
+      <description>US instance</description>
+      <platform-url>https://platform.healthvault-ppe.com/platform/wildcat.ashx</platform-url>
+      <shell-url>https://account.healthvault-ppe.com/</shell-url>
+    </selected-instance>
+  </wc:info>
+</response>

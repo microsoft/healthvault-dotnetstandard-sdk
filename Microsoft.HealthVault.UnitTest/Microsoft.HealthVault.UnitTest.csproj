@@ -133,6 +133,7 @@
     <EmbeddedResource Include="Samples\VocabularySample.xml" />
     <EmbeddedResource Include="Samples\ThingSample.xml" />
     <EmbeddedResource Include="Samples\ServiceDefinitionSample.xml" />
+    <EmbeddedResource Include="Samples\InstanceSample.xml" />
   </ItemGroup>
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">
