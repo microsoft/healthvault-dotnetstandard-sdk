@@ -14,7 +14,7 @@ namespace Microsoft.HealthVault.Exceptions
     /// </summary>
     ///
     [Serializable]
-    public class ThingSerializationException : Exception
+    public class ThingSerializationException : HealthVaultException
     {
         /// <summary>
         /// Creates an instance of the <see cref="ThingSerializationException"/>
@@ -50,18 +50,5 @@ namespace Microsoft.HealthVault.Exceptions
             : base(message, innerException)
         {
         }
-
-        #region FxCop required ctors
-
-        /// <summary>
-        /// Creates an instance of the <see cref="ThingSerializationException"/>
-        /// class  with default values.
-        /// </summary>
-        ///
-        public ThingSerializationException()
-        {
-        }
-
-        #endregion FxCop required ctors
     }
 }

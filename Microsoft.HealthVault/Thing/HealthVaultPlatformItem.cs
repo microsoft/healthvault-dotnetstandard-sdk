@@ -29,48 +29,7 @@ namespace Microsoft.HealthVault.Thing
         private static readonly XPathExpression ThingIdPath =
             XPathExpression.Compile("/wc:info/thing-id");
 
-        /// <summary>
-        /// Enables mocking of calls to this class.
-        /// </summary>
-        ///
-        /// <remarks>
-        /// The calling class should pass in a class that derives from this
-        /// class and overrides the calls to be mocked.
-        /// </remarks>
-        ///
-        /// <param name="mock">The mocking class.</param>
-        ///
-        /// <exception cref="InvalidOperationException">
-        /// There is already a mock registered for this class.
-        /// </exception>
-        ///
-        public static void EnableMock(HealthVaultPlatformItem mock)
-        {
-            Validator.ThrowInvalidIf(saved != null, "ClassAlreadyMocked");
-
-            saved = Current;
-            Current = mock;
-        }
-
-        /// <summary>
-        /// Removes mocking of calls to this class.
-        /// </summary>
-        ///
-        /// <exception cref="InvalidOperationException">
-        /// There is no mock registered for this class.
-        /// </exception>
-        ///
-        public static void DisableMock()
-        {
-            Validator.ThrowInvalidIfNull(saved, "ClassIsntMocked");
-
-            Current = saved;
-            saved = null;
-        }
-
         internal static HealthVaultPlatformItem Current { get; private set; } = new HealthVaultPlatformItem();
-
-        private static HealthVaultPlatformItem saved;
 
         /// <summary>
         /// Creates new things associated with the record.
@@ -108,7 +67,7 @@ namespace Microsoft.HealthVault.Thing
             HealthRecordAccessor accessor,
             IList<ThingBase> items)
         {
-            Validator.ThrowIfArgumentNull(items, "items", "NewItemsNullItem");
+            Validator.ThrowIfArgumentNull(items, nameof(items), Resources.NewItemsNullItem);
 
             StringBuilder infoXml = new StringBuilder();
             XmlWriterSettings settings = SDKHelper.XmlUnicodeWriterSettings;
@@ -118,7 +77,7 @@ namespace Microsoft.HealthVault.Thing
             {
                 foreach (ThingBase item in items)
                 {
-                    Validator.ThrowIfArgumentNull(item, "items", "NewItemsNullItem");
+                    Validator.ThrowIfArgumentNull(item, nameof(items), Resources.NewItemsNullItem);
 
                     item.WriteItemXml(infoXmlWriter);
                 }
@@ -195,7 +154,7 @@ namespace Microsoft.HealthVault.Thing
             HealthRecordAccessor accessor,
             IList<ThingBase> itemsToUpdate)
         {
-            Validator.ThrowIfArgumentNull(itemsToUpdate, "itemsToUpdate", "UpdateItemsArgumentNull");
+            Validator.ThrowIfArgumentNull(itemsToUpdate, nameof(itemsToUpdate), Resources.UpdateItemsArgumentNull);
 
             StringBuilder infoXml = new StringBuilder(128);
             XmlWriterSettings settings = SDKHelper.XmlUnicodeWriterSettings;
@@ -207,12 +166,12 @@ namespace Microsoft.HealthVault.Thing
             {
                 foreach (ThingBase item in itemsToUpdate)
                 {
-                    Validator.ThrowIfArgumentNull(item, "items", "UpdateItemsArgumentNull");
+                    Validator.ThrowIfArgumentNull(item, nameof(itemsToUpdate), Resources.UpdateItemsArgumentNull);
 
-                    Validator.ThrowArgumentExceptionIf(
-                        item.Key == null,
-                        "itemsToUpdate",
-                        "UpdateItemsWithNoId");
+                    if (item.Key == null)
+                    {
+                        throw new ArgumentException(Resources.UpdateItemsWithNoId, nameof(itemsToUpdate));
+                    }
 
                     if (item.WriteItemXml(infoXmlWriter, false))
                     {
@@ -313,10 +272,10 @@ namespace Microsoft.HealthVault.Thing
             HealthRecordAccessor accessor,
             IList<ThingKey> itemsToRemove)
         {
-            Validator.ThrowArgumentExceptionIf(
-                itemsToRemove == null || itemsToRemove.Count == 0,
-                "itemsToRemove",
-                "RemoveItemsListNullOrEmpty");
+            if (itemsToRemove == null || itemsToRemove.Count == 0)
+            {
+                throw new ArgumentException(Resources.RemoveItemsListNullOrEmpty, nameof(itemsToRemove));
+            }
 
             StringBuilder parameters = new StringBuilder(128 * itemsToRemove.Count);
             for (int i = 0; i < itemsToRemove.Count; ++i)
@@ -491,8 +450,7 @@ namespace Microsoft.HealthVault.Thing
             {
                 HealthServiceResponseError error = new HealthServiceResponseError
                 {
-                    Message = ResourceRetriever.GetResourceString(
-                        "HealthRecordSearcherInvalidFilter")
+                    Message = Resources.HealthRecordSearcherInvalidFilter
                 };
 
                 HealthServiceException e =
@@ -578,8 +536,7 @@ namespace Microsoft.HealthVault.Thing
             {
                 HealthServiceResponseError error = new HealthServiceResponseError
                 {
-                    Message = ResourceRetriever.GetResourceString(
-                        "HealthRecordSearcherNoFilters")
+                    Message = Resources.HealthRecordSearcherNoFilters
                 };
 
                 HealthServiceException e =

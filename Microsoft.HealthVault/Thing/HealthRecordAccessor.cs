@@ -60,8 +60,8 @@ namespace Microsoft.HealthVault.Thing
             IConnectionInternal connection,
             XPathNavigator navigator)
         {
-            Validator.ThrowIfArgumentNull(connection, "connection", "PersonInfoConnectionNull");
-            Validator.ThrowIfArgumentNull(navigator, "navigator", "ParseXmlNavNull");
+            Validator.ThrowIfArgumentNull(connection, nameof(connection), Resources.PersonInfoConnectionNull);
+            Validator.ThrowIfArgumentNull(navigator, nameof(navigator), Resources.ParseXmlNavNull);
 
             HealthRecordAccessor recordInfo =
                 new HealthRecordAccessor(connection);
@@ -164,12 +164,12 @@ namespace Microsoft.HealthVault.Thing
             IConnectionInternal connection,
             Guid id)
         {
-            Validator.ThrowIfArgumentNull(connection, "connection", "CtorServiceArgumentNull");
+            Validator.ThrowIfArgumentNull(connection, nameof(connection), Resources.CtorServiceArgumentNull);
 
-            Validator.ThrowArgumentExceptionIf(
-                id == Guid.Empty,
-                "id",
-                "CtorIDArgumentEmpty");
+            if (id == Guid.Empty)
+            {
+                throw new ArgumentException(Resources.CtorIDArgumentEmpty, nameof(id));
+            }
 
             this.Connection = connection;
             this.recordId = id;
@@ -492,7 +492,7 @@ namespace Microsoft.HealthVault.Thing
         ///
         public async Task NewItemAsync(ThingBase item)
         {
-            Validator.ThrowIfArgumentNull(item, "item", "NewItemNullItem");
+            Validator.ThrowIfArgumentNull(item, nameof(item), Resources.NewItemNullItem);
 
             await this.NewItemsAsync(new[] { item }).ConfigureAwait(false);
         }
@@ -554,7 +554,7 @@ namespace Microsoft.HealthVault.Thing
         ///
         public async Task UpdateItemAsync(ThingBase item)
         {
-            Validator.ThrowIfArgumentNull(item, "item", "UpdateItemNull");
+            Validator.ThrowIfArgumentNull(item, nameof(item), Resources.UpdateItemNull);
 
             await this.UpdateItemsAsync(new[] { item }).ConfigureAwait(false);
         }
@@ -628,7 +628,7 @@ namespace Microsoft.HealthVault.Thing
         ///
         public async Task RemoveItem(ThingBase item)
         {
-            Validator.ThrowIfArgumentNull(item, "item", "RemoveItemNull");
+            Validator.ThrowIfArgumentNull(item, nameof(item), Resources.RemoveItemNull);
 
             await this.RemoveItemsAsync(new[] { item }).ConfigureAwait(false);
         }
@@ -662,10 +662,10 @@ namespace Microsoft.HealthVault.Thing
         ///
         public async Task RemoveItemsAsync(IList<ThingBase> itemsToRemove)
         {
-            Validator.ThrowArgumentExceptionIf(
-                itemsToRemove == null || itemsToRemove.Count == 0,
-                "itemsToRemove",
-                "RemoveItemsListNullOrEmpty");
+            if (itemsToRemove == null || itemsToRemove.Count == 0)
+            {
+                throw new ArgumentException(Resources.RemoveItemsListNullOrEmpty, nameof(itemsToRemove));
+            }
 
             List<ThingKey> keys = new List<ThingKey>();
 
@@ -741,7 +741,7 @@ namespace Microsoft.HealthVault.Thing
         ///
         public async Task RemoveItem(ThingKey itemId)
         {
-            Validator.ThrowIfArgumentNull(itemId, "itemId", "RemoveItemNull");
+            Validator.ThrowIfArgumentNull(itemId, nameof(itemId), Resources.RemoveItemNull);
 
             await this.RemoveItemsAsync(new[] { itemId }).ConfigureAwait(false);
         }
@@ -801,7 +801,7 @@ namespace Microsoft.HealthVault.Thing
         public async Task<Collection<ThingTypePermission>> QueryPermissions(
             IList<ThingTypeDefinition> healthRecordItemTypes)
         {
-            Validator.ThrowIfArgumentNull(healthRecordItemTypes, "healthRecordItemTypes", "CtorhealthRecordItemTypesArgumentNull");
+            Validator.ThrowIfArgumentNull(healthRecordItemTypes, nameof(healthRecordItemTypes), Resources.CtorhealthRecordItemTypesArgumentNull);
 
             List<Guid> thingTypeIds = new List<Guid>();
             foreach (ThingTypeDefinition definition in healthRecordItemTypes)

@@ -45,15 +45,6 @@ namespace Microsoft.HealthVault.Exceptions
 
         /// <summary>
         /// Creates an instance of the <see cref="HealthServiceApplicationDuplicateCredentialException"/>
-        /// class with default values.
-        /// </summary>
-        ///
-        public HealthServiceApplicationDuplicateCredentialException()
-        {
-        }
-
-        /// <summary>
-        /// Creates an instance of the <see cref="HealthServiceApplicationDuplicateCredentialException"/>
         /// class with the specified message.
         /// </summary>
         ///

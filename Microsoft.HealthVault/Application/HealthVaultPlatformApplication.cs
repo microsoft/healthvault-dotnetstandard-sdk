@@ -1,7 +1,10 @@
-// Copyright(c) Microsoft Corporation.
-// This content is subject to the Microsoft Reference Source License,
-// see http://www.microsoft.com/resources/sharedsource/licensingbasics/sharedsourcelicenses.mspx.
-// All other rights reserved.
+// Copyright (c) Microsoft Corporation.  All rights reserved. 
+// MIT License
+// Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the ""Software""), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+// 
+// The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED *AS IS*, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 using Microsoft.HealthVault.Connection;
 using Microsoft.HealthVault.Exceptions;
@@ -29,48 +32,7 @@ namespace Microsoft.HealthVault.Application
     /// </remarks>
     internal class HealthVaultPlatformApplication
     {
-        /// <summary>
-        /// Enables mocking of calls to this class.
-        /// </summary>
-        ///
-        /// <remarks>
-        /// The calling class should pass in a class that derives from this
-        /// class and overrides the calls to be mocked.
-        /// </remarks>
-        ///
-        /// <param name="mock">The mocking class.</param>
-        ///
-        /// <exception cref="InvalidOperationException">
-        /// There is already a mock registered for this class.
-        /// </exception>
-        ///
-        public static void EnableMock(HealthVaultPlatformApplication mock)
-        {
-            Validator.ThrowInvalidIf(saved != null, "ClassAlreadyMocked");
-
-            saved = Current;
-            Current = mock;
-        }
-
-        /// <summary>
-        /// Removes mocking of calls to this class.
-        /// </summary>
-        ///
-        /// <exception cref="InvalidOperationException">
-        /// There is no mock registered for this class.
-        /// </exception>
-        ///
-        public static void DisableMock()
-        {
-            Validator.ThrowInvalidIfNull(saved, "ClassIsntMocked");
-
-            Current = saved;
-            saved = null;
-        }
-
         internal static HealthVaultPlatformApplication Current { get; private set; } = new HealthVaultPlatformApplication();
-
-        private static HealthVaultPlatformApplication saved;
 
         #region GetAuthorizedPeople
 
@@ -111,7 +73,7 @@ namespace Microsoft.HealthVault.Application
             IConnectionInternal connection,
             GetAuthorizedPeopleSettings settings)
         {
-            Validator.ThrowIfArgumentNull(settings, "settings", "GetAuthorizedPeopleSettingsNull");
+            Validator.ThrowIfArgumentNull(settings, nameof(settings), Resources.GetAuthorizedPeopleSettingsNull);
 
             bool moreResults = true;
             Guid cursor = settings.StartingPersonId;
@@ -179,10 +141,10 @@ namespace Microsoft.HealthVault.Application
             DateTime authCreatedSinceDate,
             int numResults)
         {
-            Validator.ThrowArgumentOutOfRangeIf(
-                numResults < 0,
-                "numResults",
-                "GetAuthorizedPeopleNumResultsNegative");
+            if (numResults < 0)
+            {
+                throw new ArgumentOutOfRangeException(nameof(numResults), Resources.GetAuthorizedPeopleNumResultsNegative);
+            }
 
             StringBuilder parameters = new StringBuilder(256);
             XmlWriterSettings settings = SDKHelper.XmlUnicodeWriterSettings;
@@ -228,7 +190,7 @@ namespace Microsoft.HealthVault.Application
             {
                 do
                 {
-                    PersonInfo personInfo = PersonInfo.CreateFromXml(connection, nav);
+                    PersonInfo personInfo = PersonInfo.CreateFromXml(nav);
                     personInfos.Add(personInfo);
                 }
                 while (nav.MoveToNext("person-info", string.Empty));

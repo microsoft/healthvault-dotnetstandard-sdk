@@ -44,15 +44,6 @@ namespace Microsoft.HealthVault.Exceptions
 
         /// <summary>
         /// Creates an instance of the <see cref="HealthServiceMailAddressMalformedException"/>
-        /// class with default values.
-        /// </summary>
-        ///
-        public HealthServiceMailAddressMalformedException()
-        {
-        }
-
-        /// <summary>
-        /// Creates an instance of the <see cref="HealthServiceMailAddressMalformedException"/>
         /// class with the specified message.
         /// </summary>
         ///

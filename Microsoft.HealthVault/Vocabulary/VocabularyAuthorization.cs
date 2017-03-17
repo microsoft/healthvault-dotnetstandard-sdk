@@ -140,7 +140,7 @@ namespace Microsoft.HealthVault.Vocabulary
         public static VocabularyAuthorization ParseXml(
             XPathNavigator vocabularyAuthorizationXml)
         {
-            Validator.ThrowIfArgumentNull(vocabularyAuthorizationXml, "vocabularyAuthorizationXml", "VocabAuthNavIsNull");
+            Validator.ThrowIfArgumentNull(vocabularyAuthorizationXml, nameof(vocabularyAuthorizationXml), Resources.VocabAuthNavIsNull);
 
             string vocabularyFamily = vocabularyAuthorizationXml.SelectSingleNode("family").Value;
             XPathNavigator vocabularyNameNav =

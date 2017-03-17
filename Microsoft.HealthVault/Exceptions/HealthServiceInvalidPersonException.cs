@@ -44,15 +44,6 @@ namespace Microsoft.HealthVault.Exceptions
 
         /// <summary>
         /// Creates an instance of the <see cref="HealthServiceInvalidPersonException"/>
-        /// class with default values.
-        /// </summary>
-        ///
-        public HealthServiceInvalidPersonException()
-        {
-        }
-
-        /// <summary>
-        /// Creates an instance of the <see cref="HealthServiceInvalidPersonException"/>
         /// class with the specified message.
         /// </summary>
         ///

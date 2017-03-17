@@ -1,0 +1,23 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<wc:info xmlns:wc="urn:com.microsoft.wc.methods.response.SearchVocabulary">
+  <vocabulary xml:lang="en-GB">
+    <name>person-types</name>
+    <family>wc</family>
+    <version>1</version>
+    <code-item>
+      <code-value>1</code-value>
+      <display-text>Emergency Contact</display-text>
+      <abbreviation-text>Emergency Contact</abbreviation-text>
+    </code-item>
+    <code-item>
+      <code-value>2</code-value>
+      <display-text>Provider</display-text>
+      <abbreviation-text>Provider</abbreviation-text>
+    </code-item>
+    <code-item>
+      <code-value>3</code-value>
+      <display-text>Pharmacy</display-text>
+      <abbreviation-text>Pharmacy</abbreviation-text>
+    </code-item>
+  </vocabulary>
+</wc:info>

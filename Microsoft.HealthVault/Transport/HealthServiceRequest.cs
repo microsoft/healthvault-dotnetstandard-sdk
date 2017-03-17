@@ -45,10 +45,9 @@ namespace Microsoft.HealthVault.Transport
 
         private readonly object cancelLock = new object();
         private CancellationTokenSource cancellationTokenSource;
-        private bool pendingCancel;
 
-        // TODO: once unity is in, add CryptographyClient to the constructor and replace its usage with injection
-        private readonly ICryptographer cryptographyClient;
+        private readonly IConnectionInternal connectionInternal;
+        private readonly IHealthWebRequestFactory requestFactory;
 
         /// <summary>
         /// Constructs the version identifier for this version of the HealthVault .NET APIs.
@@ -83,7 +82,7 @@ namespace Microsoft.HealthVault.Transport
         /// Creates a new instance of the <see cref="HealthServiceRequest"/>
         /// class for the specified method.
         /// </summary>
-        ///
+        /// 
         /// <param name="connectionInternal">
         /// The client-side representation of the HealthVault service.
         /// </param>
@@ -100,20 +99,24 @@ namespace Microsoft.HealthVault.Transport
         /// The <paramref name="connectionInternal"/> parameter is <b>null</b>.
         /// </exception>
         /// <param name="recordId">RecordId</param>
+        /// <param name="config">The configuration to be used when assigning variables to this request</param>
+        /// <param name="requestFactory">The factory for creating web requests from this service</param>
         public HealthServiceRequest(
             IConnectionInternal connectionInternal,
             HealthVaultMethods method,
             int methodVersion,
-            Guid? recordId = null)
+            Guid? recordId = null,
+            HealthVaultConfiguration config = null,
+            IHealthWebRequestFactory requestFactory = null)
         {
-            Validator.ThrowIfArgumentNull(connectionInternal, "connection", "CtorServiceNull");
+            Validator.ThrowIfArgumentNull(connectionInternal, nameof(connectionInternal), Resources.CtorServiceNull);
 
             this.connectionInternal = connectionInternal;
 
-            HealthVaultConfiguration config = Ioc.Get<HealthVaultConfiguration>();
-
             this.Method = method;
             this.MethodVersion = methodVersion;
+            config = config ?? Ioc.Get<HealthVaultConfiguration>();
+            this.requestFactory = requestFactory ?? Ioc.Get<IHealthWebRequestFactory>();
             this.timeoutSeconds = config.DefaultRequestTimeout;
             this.TimeToLiveSeconds = config.DefaultRequestTimeToLive;
             this.CultureCode = CultureInfo.CurrentUICulture.Name;
@@ -141,7 +144,7 @@ namespace Microsoft.HealthVault.Transport
         {
             try
             {
-                EasyWebRequest easyWeb = this.BuildWebRequest(null);
+                IHealthWebRequest easyWeb = this.BuildWebRequest(null);
                 HttpResponseMessage response;
 
                 try
@@ -166,7 +169,9 @@ namespace Microsoft.HealthVault.Transport
                 // Platform returns a platform request id with the responses. This allows
                 // developers to have additional information if necessary for debugging/logging purposes.
                 Guid responseId;
-                if (response.Headers != null && Guid.TryParse(response.Headers.GetValues(ResponseIdContextKey)?.FirstOrDefault(), out responseId))
+                if (response.Headers != null 
+                    && response.Headers.Contains(ResponseIdContextKey) 
+                    && Guid.TryParse(response.Headers.GetValues(ResponseIdContextKey)?.FirstOrDefault(), out responseId))
                 {
                     this.ResponseId = responseId;
 
@@ -183,7 +188,7 @@ namespace Microsoft.HealthVault.Transport
             catch (XmlException xmlException)
             {
                 throw new HealthServiceException(
-                    ResourceRetriever.GetResourceString("InvalidResponseFromXMLRequest"),
+                    Resources.InvalidResponseFromXMLRequest,
                     xmlException);
             }
         }
@@ -199,9 +204,9 @@ namespace Microsoft.HealthVault.Transport
         /// </param>
         ///
         /// <returns>
-        /// An instance of <see cref="EasyWebRequest"/>.
+        /// An instance of <see cref="IHealthWebRequest"/>.
         /// </returns>
-        private EasyWebRequest BuildWebRequest(string transform)
+        private IHealthWebRequest BuildWebRequest(string transform)
         {
             // Core
             this.BuildRequestXml(transform);
@@ -209,8 +214,7 @@ namespace Microsoft.HealthVault.Transport
             // Do we need this log
             HealthVaultPlatformTrace.LogRequest(this.XmlRequest, this.CorrelationId);
 
-            // TODO: let's pass this in so that we can mock more easily
-            EasyWebRequest easyWeb = new EasyWebRequest(this.XmlRequest, this.XmlRequestLength);
+            IHealthWebRequest easyWeb = this.requestFactory.CreateWebRequest(this.XmlRequest, this.XmlRequestLength);
             if (this.CorrelationId != Guid.Empty)
             {
                 easyWeb.Headers.Add(CorrelationIdContextKey, this.CorrelationId.ToString());
@@ -490,9 +494,9 @@ namespace Microsoft.HealthVault.Transport
             }
             finally
             {
-                if (newStreamCreated && responseStream != null)
+                if (newStreamCreated)
                 {
-                    responseStream.Dispose();
+                    responseStream?.Dispose();
                 }
             }
 
@@ -770,15 +774,14 @@ namespace Microsoft.HealthVault.Transport
 
             set
             {
-                Validator.ThrowArgumentOutOfRangeIf(
-                    value < 0,
-                    "TimeoutSeconds",
-                    "TimeoutMustBePositive");
+                if (value < 0)
+                {
+                    throw new ArgumentOutOfRangeException(nameof(this.TimeoutSeconds), Resources.TimeoutMustBePositive);
+                }
 
                 this.timeoutSeconds = value;
             }
         }
-        private IConnectionInternal connectionInternal;
 
         internal Guid ResponseId
         {

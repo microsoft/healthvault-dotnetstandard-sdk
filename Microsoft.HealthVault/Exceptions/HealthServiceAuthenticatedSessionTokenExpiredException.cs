@@ -45,15 +45,6 @@ namespace Microsoft.HealthVault.Exceptions
 
         /// <summary>
         /// Creates an instance of the <see cref="HealthServiceAuthenticatedSessionTokenExpiredException"/>
-        /// class with default values.
-        /// </summary>
-        ///
-        public HealthServiceAuthenticatedSessionTokenExpiredException()
-        {
-        }
-
-        /// <summary>
-        /// Creates an instance of the <see cref="HealthServiceAuthenticatedSessionTokenExpiredException"/>
         /// class with the specified message.
         /// </summary>
         ///

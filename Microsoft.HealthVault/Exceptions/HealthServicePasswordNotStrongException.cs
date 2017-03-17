@@ -44,15 +44,6 @@ namespace Microsoft.HealthVault.Exceptions
 
         /// <summary>
         /// Creates an instance of the <see cref="HealthServicePasswordNotStrongException"/>
-        /// class with default values.
-        /// </summary>
-        ///
-        public HealthServicePasswordNotStrongException()
-        {
-        }
-
-        /// <summary>
-        /// Creates an instance of the <see cref="HealthServicePasswordNotStrongException"/>
         /// class with the specified message.
         /// </summary>
         ///

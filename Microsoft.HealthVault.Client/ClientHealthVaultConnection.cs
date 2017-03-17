@@ -8,10 +8,10 @@ using System.Xml;
 using Microsoft.HealthVault.Connection;
 using Microsoft.HealthVault.Exceptions;
 using Microsoft.HealthVault.Extensions;
+using Microsoft.HealthVault.Helpers;
 using Microsoft.HealthVault.Person;
 using Microsoft.HealthVault.PlatformInformation;
 using Microsoft.HealthVault.Transport;
-using Microsoft.HealthVault.Utilities;
 
 namespace Microsoft.HealthVault.Client
 {
@@ -102,22 +102,22 @@ namespace Microsoft.HealthVault.Client
         {
             if (this.ServiceInstance == null)
             {
-                this.ServiceInstance = await this.localObjectStore.ReadObjectAsync<HealthServiceInstance>(ServiceInstanceKey).ConfigureAwait(false);
+                this.ServiceInstance = await this.localObjectStore.ReadAsync<HealthServiceInstance>(ServiceInstanceKey).ConfigureAwait(false);
             }
 
             if (this.ApplicationCreationInfo == null)
             {
-                this.ApplicationCreationInfo = await this.localObjectStore.ReadEncryptedObjectAsync<ApplicationCreationInfo>(ApplicationCreationInfoKey).ConfigureAwait(false);
+                this.ApplicationCreationInfo = await this.localObjectStore.ReadAsync<ApplicationCreationInfo>(ApplicationCreationInfoKey).ConfigureAwait(false);
             }
 
             if (this.SessionCredential == null)
             {
-                this.SessionCredential = await this.localObjectStore.ReadEncryptedObjectAsync<SessionCredential>(SessionCredentialKey).ConfigureAwait(false);
+                this.SessionCredential = await this.localObjectStore.ReadAsync<SessionCredential>(SessionCredentialKey).ConfigureAwait(false);
             }
 
             if (this.PersonInfo == null)
             {
-                this.PersonInfo = await this.localObjectStore.ReadEncryptedObjectAsync<PersonInfo>(PersonInfoKey).ConfigureAwait(false);
+                this.PersonInfo = await this.localObjectStore.ReadAsync<PersonInfo>(PersonInfoKey).ConfigureAwait(false);
             }
         }
 
@@ -149,10 +149,10 @@ namespace Microsoft.HealthVault.Client
             }
 
             // We've successfully made it through the flow. Save all the information.
-            await this.localObjectStore.WriteObjectAsync(ServiceInstanceKey, bouncedHealthServiceInstance).ConfigureAwait(false);
+            await this.localObjectStore.WriteAsync(ServiceInstanceKey, bouncedHealthServiceInstance).ConfigureAwait(false);
             this.ServiceInstance = bouncedHealthServiceInstance;
 
-            await this.localObjectStore.WriteEncryptedObjectAsync(ApplicationCreationInfoKey, newApplicationCreationInfo).ConfigureAwait(false);
+            await this.localObjectStore.WriteAsync(ApplicationCreationInfoKey, newApplicationCreationInfo).ConfigureAwait(false);
             this.ApplicationCreationInfo = newApplicationCreationInfo;
         }
 
@@ -162,14 +162,14 @@ namespace Microsoft.HealthVault.Client
             sessionCredentialClient.Connection = this;
             sessionCredentialClient.AppSharedSecret = this.ApplicationCreationInfo.SharedSecret;
             SessionCredential newCredential = await sessionCredentialClient.GetSessionCredentialAsync(CancellationToken.None).ConfigureAwait(false);
-            await this.localObjectStore.WriteEncryptedObjectAsync(SessionCredentialKey, newCredential).ConfigureAwait(false);
+            await this.localObjectStore.WriteAsync(SessionCredentialKey, newCredential).ConfigureAwait(false);
             this.SessionCredential = newCredential;
         }
 
         private async Task GetAndSavePersonInfoAsync()
         {
             PersonInfo newPersonInfo = await this.PersonClient.GetPersonInfoAsync().ConfigureAwait(false);
-            await this.localObjectStore.WriteEncryptedObjectAsync(PersonInfoKey, newPersonInfo).ConfigureAwait(false);
+            await this.localObjectStore.WriteAsync(PersonInfoKey, newPersonInfo).ConfigureAwait(false);
             this.PersonInfo = newPersonInfo;
         }
     }

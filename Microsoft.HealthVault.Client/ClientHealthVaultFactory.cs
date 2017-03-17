@@ -1,8 +1,8 @@
 ﻿using Microsoft.HealthVault.Configuration;
-using Microsoft.HealthVault.Connection;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Microsoft.HealthVault.Extensions;
 
 namespace Microsoft.HealthVault.Client
 {
@@ -39,13 +39,24 @@ namespace Microsoft.HealthVault.Client
             }
         }
 
+        /// <summary>
+        /// Sets the configuration used to create connections.
+        /// </summary>
+        /// <exception cref="InvalidOperationException">
+        /// If <see cref="GetConnectionAsync"/> has been called already.
+        /// </exception>
         public void SetConfiguration(ClientConfiguration clientConfiguration)
         {
-            this.ThrowIfGetConnectionCalled();
-
+            this.ThrowIfAlreadyCreatedConnection(nameof(this.SetConfiguration));
             this.configuration = clientConfiguration;
         }
 
+        /// <summary>
+        /// Gets an <see cref="IClientHealthVaultConnection"/> used to connect to HealthVault.
+        /// </summary>
+        /// <exception cref="InvalidOperationException">
+        /// If called before calling <see cref="SetConfiguration(ClientConfiguration)"/>.
+        /// </exception>
         public async Task<IClientHealthVaultConnection> GetConnectionAsync()
         {
             this.GetConnectionCalled = true;
@@ -59,18 +70,22 @@ namespace Microsoft.HealthVault.Client
 
                 if (this.configuration == null)
                 {
-                    throw new InvalidOperationException("Cannot call GetConnectionAsync before calling SetConfiguration.");
+                    throw new InvalidOperationException(Resources.CannotCallMethodBefore.FormatResource(
+                        nameof(this.GetConnectionAsync),
+                        nameof(this.SetConfiguration)));
                 }
+
+                var missingProperties = new List<string>();
 
                 if (this.configuration.MasterApplicationId == Guid.Empty)
                 {
-                    var requiredParameters = new List<string>
-                    {
-                        nameof(this.configuration.MasterApplicationId),
-                    };
+                    missingProperties.Add(nameof(this.configuration.MasterApplicationId));
+                }
 
-                    string requiredParametersString = string.Join(", ", requiredParameters);
-                    throw new InvalidOperationException("Missing one or more required parameters on configuration. Required parameters: " + requiredParametersString);
+                if (missingProperties.Count > 0)
+                {
+                    string requiredPropertiesString = string.Join(", ", missingProperties);
+                    throw new InvalidOperationException(Resources.MissingRequiredProperties.FormatResource(requiredPropertiesString));
                 }
 
                 this.configuration.Lock();

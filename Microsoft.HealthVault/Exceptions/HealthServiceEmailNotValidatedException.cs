@@ -44,15 +44,6 @@ namespace Microsoft.HealthVault.Exceptions
 
         /// <summary>
         /// Creates an instance of the <see cref="HealthServiceEmailNotValidatedException"/>
-        /// class with default values.
-        /// </summary>
-        ///
-        public HealthServiceEmailNotValidatedException()
-        {
-        }
-
-        /// <summary>
-        /// Creates an instance of the <see cref="HealthServiceEmailNotValidatedException"/>
         /// class with the specified message.
         /// </summary>
         ///

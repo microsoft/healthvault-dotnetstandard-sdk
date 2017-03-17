@@ -1,7 +1,10 @@
-// Copyright(c) Microsoft Corporation.
-// This content is subject to the Microsoft Reference Source License,
-// see http://www.microsoft.com/resources/sharedsource/licensingbasics/sharedsourcelicenses.mspx.
-// All other rights reserved.
+// Copyright (c) Microsoft Corporation.  All rights reserved. 
+// MIT License
+// Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the ""Software""), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+// 
+// The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED *AS IS*, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 using System;
 using System.IO;
@@ -30,141 +33,13 @@ namespace Microsoft.HealthVault.Helpers
         //      ThrowSerializationIfNull(), for example
         //      It is acceptable to abbreviate the exception name as long as it is clear.
 
-        #region Private Exception Helpers
-
-        private static ArgumentException ArgumentException(Assembly assembly, string parameterName, string resourceId)
-        {
-            return new ArgumentException(
-                    GetResourceString(assembly, resourceId),
-                    parameterName);
-        }
-
-        private static ThingSerializationException HealthRecordItemSerializationException(
-            Assembly assembly,
-            string resourceId)
-        {
-            return new ThingSerializationException(
-                    GetResourceString(assembly, resourceId));
-        }
-
-        private static InvalidOperationException InvalidOperationException(
-            Assembly assembly,
-            string resourceId)
-        {
-            return new InvalidOperationException(
-                    GetResourceString(assembly, resourceId));
-        }
-
-        private static HealthServiceException HealthServiceException(
-            Assembly assembly,
-            string resourceId)
-        {
-            return new HealthServiceException(
-                    GetResourceString(assembly, resourceId));
-        }
-
-        private static ArgumentNullException ArgumentNullException(
-            Assembly assembly,
-            string argumentName,
-            string resourceId)
-        {
-            return new ArgumentNullException(
-                    argumentName,
-                    GetResourceString(assembly, resourceId));
-        }
-
-        #endregion
-
-        #region Exceptions
-
-        public static ArgumentException ArgumentException(string parameterName, string resourceId)
-        {
-            return ArgumentException(typeof(Validator).GetTypeInfo().Assembly, parameterName, resourceId);
-        }
-
-        public static ThingSerializationException HealthRecordItemSerializationException(string resourceId)
-        {
-            return HealthRecordItemSerializationException(typeof(Validator).GetTypeInfo().Assembly, resourceId);
-        }
-
-        public static InvalidOperationException InvalidOperationException(string resourceId)
-        {
-            return InvalidOperationException(typeof(Validator).GetTypeInfo().Assembly, resourceId);
-        }
-
-        public static HealthServiceException HealthServiceException(string resourceId)
-        {
-            return HealthServiceException(typeof(Validator).GetTypeInfo().Assembly, resourceId);
-        }
-
-        public static InvalidConfigurationException InvalidConfigurationException(string resourceId)
-        {
-            return new InvalidConfigurationException(
-                    GetResourceString(
-                        typeof(Validator).GetTypeInfo().Assembly,
-                        resourceId));
-        }
-
-        public static SecurityException SecurityException(string resourceId)
-        {
-            return new SecurityException(
-                    GetResourceString(
-                        typeof(Validator).GetTypeInfo().Assembly,
-                        resourceId));
-        }
-
-        public static SecurityException SecurityException(string resourceId, Exception innerException)
-        {
-            return new SecurityException(
-                    GetResourceString(
-                        typeof(Validator).GetTypeInfo().Assembly,
-                        resourceId),
-                        innerException);
-        }
-
-        public static NotSupportedException NotSupportedException(string resourceId)
-        {
-            return new NotSupportedException(
-                    GetResourceString(
-                        typeof(Validator).GetTypeInfo().Assembly,
-                        resourceId));
-        }
-
-        public static IOException IOException(string resourceId)
-        {
-            return new IOException(
-                    GetResourceString(
-                        typeof(Validator).GetTypeInfo().Assembly,
-                        resourceId));
-        }
-
-        public static HealthHttpException HealthWebException(string resourceId, HttpStatusCode webExceptionStatus)
-        {
-            return new HealthHttpException(
-                    GetResourceString(
-                        typeof(Validator).GetTypeInfo().Assembly,
-                        resourceId),
-                        webExceptionStatus);
-        }
-
-        public static ThingDeserializationException HealthRecordItemDeserializationException(
-            string resourceId,
-            Exception innerException)
-        {
-            return new ThingDeserializationException(
-                    GetResourceString(typeof(Validator).GetTypeInfo().Assembly, resourceId),
-                    innerException);
-        }
-
-        #endregion
-
         #region conditions
 
         public static void ThrowIfStringIsWhitespace(string value, string parameterName)
         {
             if (!string.IsNullOrEmpty(value) && string.IsNullOrEmpty(value.Trim()))
             {
-                throw ArgumentException(typeof(Validator).GetTypeInfo().Assembly, parameterName, "WhitespaceOnlyValue");
+                throw new ArgumentException(Resources.WhitespaceOnlyValue, parameterName);
             }
         }
 
@@ -172,7 +47,7 @@ namespace Microsoft.HealthVault.Helpers
         {
             if (value != null && string.IsNullOrEmpty(value.Trim()))
             {
-                throw ArgumentException(typeof(Validator).GetTypeInfo().Assembly, parameterName, "WhitespaceOnlyValue");
+                throw new ArgumentException(Resources.WhitespaceOnlyValue, parameterName);
             }
         }
 
@@ -180,15 +55,15 @@ namespace Microsoft.HealthVault.Helpers
         {
             if (string.IsNullOrEmpty(value))
             {
-                throw ArgumentException(typeof(Validator).GetTypeInfo().Assembly, parameterName, "StringNullOrEmpty");
+                throw new ArgumentException(Resources.StringNullOrEmpty, parameterName);
             }
         }
 
-        public static void ThrowIfArgumentNull(object argument, string argumentName, string resourceId)
+        public static void ThrowIfArgumentNull(object argument, string argumentName, string message)
         {
             if (argument == null)
             {
-                throw ArgumentNullException(typeof(Validator).GetTypeInfo().Assembly, argumentName, resourceId);
+                throw new ArgumentNullException(argumentName, message);
             }
         }
 
@@ -196,7 +71,7 @@ namespace Microsoft.HealthVault.Helpers
         {
             if (writer == null)
             {
-                throw ArgumentNullException(typeof(Validator).GetTypeInfo().Assembly, "writer", "WriteXmlNullWriter");
+                throw new ArgumentNullException(nameof(writer), Resources.WriteXmlNullWriter);
             }
         }
 
@@ -204,7 +79,7 @@ namespace Microsoft.HealthVault.Helpers
         {
             if (navigator == null)
             {
-                throw ArgumentNullException(typeof(Validator).GetTypeInfo().Assembly, "navigator", "ParseXmlNavNull");
+                throw new ArgumentNullException(nameof(navigator), Resources.ParseXmlNavNull);
             }
         }
 
@@ -212,70 +87,20 @@ namespace Microsoft.HealthVault.Helpers
 
         #region exception and conditions
 
-        public static void ThrowArgumentExceptionIf(
-            bool condition,
-            string argumentName,
-            string resourceId)
-        {
-            if (condition)
-            {
-                throw ArgumentException(typeof(Validator).GetTypeInfo().Assembly, argumentName, resourceId);
-            }
-        }
-
-        public static void ThrowArgumentOutOfRangeIf(
-            bool condition,
-            string argumentName,
-            string resourceId)
-        {
-            if (condition)
-            {
-                throw new ArgumentOutOfRangeException(
-                    argumentName,
-                    GetResourceString(
-                        typeof(Validator).GetTypeInfo().Assembly,
-                        resourceId));
-            }
-        }
-
-        public static void ThrowInvalidIfNull(object value, string resourceId)
+        public static void ThrowInvalidIfNull(object value, string message)
         {
             if (value == null)
             {
-                throw InvalidOperationException(typeof(Validator).GetTypeInfo().Assembly, resourceId);
+                throw new InvalidOperationException(message);
             }
         }
 
-        public static void ThrowInvalidIf(bool condition, string resourceId)
-        {
-            if (condition)
-            {
-                throw InvalidOperationException(typeof(Validator).GetTypeInfo().Assembly, resourceId);
-            }
-        }
-
-        public static void ThrowSerializationIfNull(object value, string resourceId)
+        public static void ThrowSerializationIfNull(object value, string message)
         {
             if (value == null)
             {
-                throw HealthRecordItemSerializationException(typeof(Validator).GetTypeInfo().Assembly, resourceId);
+                throw new ThingSerializationException(message);
             }
-        }
-
-        public static void ThrowSerializationIf(bool condition, string resourceId)
-        {
-            if (condition)
-            {
-                throw HealthRecordItemSerializationException(typeof(Validator).GetTypeInfo().Assembly, resourceId);
-            }
-        }
-
-        private static string GetResourceString(Assembly assembly, string resourceId)
-        {
-            return ResourceRetriever.GetResourceString(
-                        assembly,
-                        "resources",
-                        resourceId);
         }
 
         #endregion

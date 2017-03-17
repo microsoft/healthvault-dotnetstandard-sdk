@@ -1,10 +1,12 @@
-// Copyright(c) Microsoft Corporation.
-// This content is subject to the Microsoft Reference Source License,
-// see http://www.microsoft.com/resources/sharedsource/licensingbasics/sharedsourcelicenses.mspx.
-// All other rights reserved.
+// Copyright (c) Microsoft Corporation.  All rights reserved. 
+// MIT License
+// Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the ""Software""), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+// 
+// The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED *AS IS*, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 using System;
-using Microsoft.HealthVault.Connection;
 using Microsoft.HealthVault.Exceptions;
 using Microsoft.HealthVault.Helpers;
 
@@ -12,13 +14,13 @@ namespace Microsoft.HealthVault.Person
 {
     /// <summary>
     /// The settings for retrieving a set of <see cref="PersonInfo"/> objects through
-    /// <see cref="ApplicationConnection.GetAuthorizedPeople(GetAuthorizedPeopleSettings)"/>
+    /// <see cref="Microsoft.HealthVault.Clients.IPlatformClient.GetAuthorizedPeople(GetAuthorizedPeopleSettings)"/>
     /// </summary>
     ///
     /// <remarks>
     /// These settings allow specifying the behavior of data retrieval from the HealthVault
     /// service through
-    /// <see cref="ApplicationConnection.GetAuthorizedPeople(GetAuthorizedPeopleSettings)"/>.
+    /// <see cref="Microsoft.HealthVault.Clients.IPlatformClient.GetAuthorizedPeople(GetAuthorizedPeopleSettings)"/>.
     /// </remarks>
     public class GetAuthorizedPeopleSettings
     {
@@ -46,10 +48,11 @@ namespace Microsoft.HealthVault.Person
 
             set
             {
-                Validator.ThrowArgumentOutOfRangeIf(
-                    value < 0,
-                    "BatchSize",
-                    "GetAuthorizedPeopleSettingsBatchSizeNegative");
+                if (value < 0)
+                {
+                    throw new ArgumentOutOfRangeException(nameof(value), Resources.GetAuthorizedPeopleSettingsBatchSizeNegative);
+                }
+
                 this.batchSize = value;
             }
         }
@@ -59,7 +62,7 @@ namespace Microsoft.HealthVault.Person
         /// <summary>
         /// Get or sets the DateTime in UTC that will be used to filter authorized people
         /// from the returned list according to the date that the person was authorized for the application.
-        /// Calls to <see cref="ApplicationConnection.GetAuthorizedPeople(GetAuthorizedPeopleSettings)" />
+        /// Calls to <see cref="Microsoft.HealthVault.Clients.IPlatformClient.GetAuthorizedPeople(GetAuthorizedPeopleSettings)" />
         /// will only return people whose authorization was created after the given date and time.
         /// </summary>
         ///
@@ -77,7 +80,7 @@ namespace Microsoft.HealthVault.Person
         ///
         /// <remarks>
         /// The <see cref="PersonInfo"/> iterator returned by
-        /// <see cref="ApplicationConnection.GetAuthorizedPeople(GetAuthorizedPeopleSettings)" />
+        /// <see cref="Microsoft.HealthVault.Clients.IPlatformClient.GetAuthorizedPeople(GetAuthorizedPeopleSettings)" />
         /// will begin with the first authorized person <em>after</em> the person whose ID is
         /// specified by <b>StartingPersonId</b>.
         /// <br /><br />
@@ -87,7 +90,7 @@ namespace Microsoft.HealthVault.Person
         /// In case of a <see cref="HealthServiceException" /> while iterating through the results,
         /// the last successfully retrieved person id can be specified for this value and and used
         /// to retrieve a new iterator with
-        /// <see cref="ApplicationConnection.GetAuthorizedPeople(GetAuthorizedPeopleSettings)"/>.
+        /// <see cref="Microsoft.HealthVault.Clients.IPlatformClient.GetAuthorizedPeople(GetAuthorizedPeopleSettings)"/>.
         /// The new iterator will begin with the authorized person that follows the last successfully retrieved PersonInfo.
         /// </remarks>
         ///

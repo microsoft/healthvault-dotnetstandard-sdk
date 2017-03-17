@@ -13,7 +13,7 @@ namespace Microsoft.HealthVault.Exceptions
     /// </summary>
     ///
     [Serializable]
-    public class SignatureFailureException : Exception
+    public class SignatureFailureException : HealthVaultException
     {
         /// <summary>
         /// Creates an instance of the <see cref="SignatureFailureException"/>
@@ -48,17 +48,5 @@ namespace Microsoft.HealthVault.Exceptions
             : base(message, innerException)
         {
         }
-
-        #region FxCop required ctors
-
-        /// <summary>
-        /// Creates an instance of the <see cref="SignatureFailureException"/>
-        /// class with default values.
-        /// </summary>
-        public SignatureFailureException()
-        {
-        }
-
-        #endregion FxCop required ctors
     }
 }

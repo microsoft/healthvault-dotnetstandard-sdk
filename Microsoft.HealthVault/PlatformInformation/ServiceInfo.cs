@@ -1,17 +1,18 @@
-// Copyright(c) Microsoft Corporation.
-// This content is subject to the Microsoft Reference Source License,
-// see http://www.microsoft.com/resources/sharedsource/licensingbasics/sharedsourcelicenses.mspx.
-// All other rights reserved.
+// Copyright (c) Microsoft Corporation.  All rights reserved. 
+// MIT License
+// Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the ""Software""), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+// 
+// The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED *AS IS*, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Globalization;
 using System.Text;
-using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.XPath;
-using Microsoft.HealthVault.Configuration;
 using Microsoft.HealthVault.Helpers;
 
 namespace Microsoft.HealthVault.PlatformInformation
@@ -23,47 +24,6 @@ namespace Microsoft.HealthVault.PlatformInformation
     ///
     public class ServiceInfo
     {
-        private static IServiceInfoProvider defaultServiceInfoProvider = new CachedServiceInfoProvider();
-
-        /// <summary>
-        /// Gets the HealthVault service information.
-        /// </summary>
-        ///
-        /// <remarks>
-        /// <p>
-        /// By default, retrieval of <see cref="ServiceInfo"/> through this singleton property is thread-safe. It is obtained from the
-        /// configured default HealthVault web-service instance (<see cref="HealthVaultConfiguration.DefaultHealthVaultUrl"/>) on the
-        /// first get, and cached for a configured period of time (<see cref="HealthVaultConfiguration.ServiceInfoDefaultCacheTtl"/>).
-        /// The next get after this cache has expired will result in calling the HealthVault web-service to check for updates to the service
-        /// information, and retrieving the updated service information when there is an update.
-        /// </p>
-        ///
-        /// <p>
-        /// If you want to control the retrieval behavior of <see cref="ServiceInfo"/> objects through this singleton,
-        /// use the <see cref="SetSingletonProvider(IServiceInfoProvider)"/> method to set your own implementation of the provider.
-        /// </p>
-        /// </remarks>
-        ///
-        public static ServiceInfo Current => defaultServiceInfoProvider.GetServiceInfo();
-
-        public async Task<ServiceInfo> GetServiceInfoAsync()
-        {
-            return await defaultServiceInfoProvider.GetServiceInfoAsync().ConfigureAwait(false);
-        }
-
-        /// <summary>
-        /// Sets the provider to be used for the <see cref="P:CurrentInfo"/> singleton.
-        /// </summary>
-        ///
-        /// <param name="defaultProvider">
-        /// The service info provider to be used for the <see cref="P:CurrentInfo"/> singleton.
-        /// </param>
-        ///
-        public static void SetSingletonProvider(IServiceInfoProvider defaultProvider)
-        {
-            defaultServiceInfoProvider = defaultProvider;
-        }
-
         /// <summary>
         /// Creates a ServiceInfo instance out of the service definition XML.
         /// </summary>
@@ -80,7 +40,7 @@ namespace Microsoft.HealthVault.PlatformInformation
         {
             if (serviceInfoXml == null)
             {
-                throw new ArgumentNullException("serviceInfoXml");
+                throw new ArgumentNullException(nameof(serviceInfoXml));
             }
 
             return CreateServiceInfo(serviceInfoXml.SelectSingleNode("service-info"));
@@ -467,25 +427,6 @@ namespace Microsoft.HealthVault.PlatformInformation
         /// </summary>
         ///
         public HealthServiceShellInfo HealthServiceShellInfo { get; protected set; }
-
-        /// <summary>
-        /// Gets the latest information about the assemblies that represent
-        /// the HealthVault SDK.
-        /// </summary>
-        ///
-        /// <value>
-        /// A read-only collection of information about the .NET assemblies
-        /// that can be used as helpers for accessing the HealthVault service.
-        /// </value>
-        ///
-        /// <remarks>
-        /// This property is no longer supported and will always return an empty
-        /// collection.
-        /// </remarks>
-        ///
-        [Obsolete("No longer supported - remove references to this property.")]
-        public ReadOnlyCollection<HealthServiceAssemblyInfo> Assemblies => new ReadOnlyCollection<HealthServiceAssemblyInfo>(
-            new HealthServiceAssemblyInfo[] { });
 
         /// <summary>
         /// Gets or sets information about the methods that the HealthVault service

@@ -62,8 +62,8 @@ namespace Microsoft.HealthVault.Record
             IConnectionInternal connection,
             XPathNavigator navigator)
         {
-            Validator.ThrowIfArgumentNull(connection, "connection", "PersonInfoConnectionNull");
-            Validator.ThrowIfArgumentNull(navigator, "navigator", "ParseXmlNavNull");
+            Validator.ThrowIfArgumentNull(connection, nameof(connection), Resources.PersonInfoConnectionNull);
+            Validator.ThrowIfArgumentNull(navigator, nameof(navigator), Resources.ParseXmlNavNull);
 
             HealthRecordInfo recordInfo = new HealthRecordInfo(connection);
             recordInfo.ParseXml(navigator);
@@ -77,7 +77,7 @@ namespace Microsoft.HealthVault.Record
         /// <returns>HealthRecordInfo</returns>
         public static HealthRecordInfo CreateFromXml(XPathNavigator navigator)
         {
-            Validator.ThrowIfArgumentNull(navigator, "navigator", "ParseXmlNavNull");
+            Validator.ThrowIfArgumentNull(navigator, nameof(navigator), Resources.ParseXmlNavNull);
 
             HealthRecordInfo recordInfo = new HealthRecordInfo();
             recordInfo.ParseXml(navigator);
@@ -158,7 +158,7 @@ namespace Microsoft.HealthVault.Record
         ///
         public void Unmarshal(XmlReader reader)
         {
-            Validator.ThrowIfArgumentNull(reader, "reader", "XmlNullReader");
+            Validator.ThrowIfArgumentNull(reader, nameof(reader), Resources.XmlNullReader);
 
             XPathDocument healthRecordInfoDoc = new XPathDocument(reader);
             this.ParseXml(healthRecordInfoDoc.CreateNavigator());
@@ -201,7 +201,7 @@ namespace Microsoft.HealthVault.Record
         ///
         public void Marshal(XmlWriter writer)
         {
-            Validator.ThrowIfArgumentNull(writer, "writer", "WriteXmlNullWriter");
+            Validator.ThrowIfArgumentNull(writer, nameof(writer), Resources.WriteXmlNullWriter);
 
             this.WriteXml("record", writer);
         }
@@ -714,62 +714,6 @@ namespace Microsoft.HealthVault.Record
         /// </summary>
         public DateTime RecordAppAuthCreatedDate { get; protected set; }
 
-        #region Update
-
-        /// <summary>
-        /// Updates the <see cref="HealthRecordInfo"/> instance with data from
-        /// the server using the <see cref="HealthRecordAccessor.Id"/>.
-        /// </summary>
-        ///
-        /// <remarks>
-        /// This method accesses the HealthVault service across the network.
-        /// </remarks>
-        ///
-        /// <exception cref="InvalidOperationException">
-        /// This method is called and the
-        /// <see cref="HealthRecordAccessor.Connection"/>
-        /// object of the <see cref="HealthRecordInfo"/> is not an
-        /// <see cref="AuthenticatedConnection"/>.
-        /// </exception>
-        ///
-        public async Task Refresh()
-        {
-            Collection<HealthRecordInfo> records =
-                await HealthVaultPlatform.GetAuthorizedRecordsAsync(this.Connection, new[] { this.Id }).ConfigureAwait(false);
-
-            if (records.Count == 0)
-            {
-                HealthServiceResponseError error = new HealthServiceResponseError();
-                error.Message =
-                    ResourceRetriever.FormatResourceString(
-                        "RecordNotFoundException",
-                        this.Id);
-
-                HealthServiceException e =
-                    HealthServiceExceptionHelper.GetHealthServiceException(
-                        HealthServiceStatusCode.RecordNotFound,
-                        error);
-                throw e;
-            }
-
-            HealthRecordInfo thisRecord = records[0];
-            this.custodian = thisRecord.IsCustodian;
-            this.name = thisRecord.Name;
-            this.relationshipName = thisRecord.RelationshipName;
-            this.relationshipType = thisRecord.RelationshipType;
-            this.dateAuthorizationExpires = thisRecord.DateAuthorizationExpires;
-            this.QuotaInBytes = thisRecord.QuotaInBytes;
-            this.QuotaUsedInBytes = thisRecord.QuotaUsedInBytes;
-            this.State = thisRecord.State;
-            this.DateCreated = thisRecord.DateCreated;
-            this.displayName = thisRecord.DisplayName;
-            this.authExpired = thisRecord.HasAuthorizationExpired;
-
-            this.IsUpdated = true;
-        }
-
-        #endregion Update
-
         #endregion Public properties
 
         /// <summary>
@@ -787,9 +731,10 @@ namespace Microsoft.HealthVault.Record
 
         private void VerifyUpdated()
         {
-            Validator.ThrowInvalidIf(
-                !this.IsUpdated,
-                "HealthRecordNotUpdated");
+            if (!this.IsUpdated)
+            {
+                throw new InvalidOperationException(Resources.HealthRecordNotUpdated);
+            }
         }
 
         internal bool IsUpdated { get; private set; }

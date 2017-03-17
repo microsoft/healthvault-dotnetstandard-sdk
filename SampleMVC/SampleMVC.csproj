@@ -275,6 +275,15 @@
     <Reference Include="System.Net.Http.WebRequest">
     </Reference>
     <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Xml.ReaderWriter, Version=4.1.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\System.Xml.ReaderWriter.4.3.0\lib\net46\System.Xml.ReaderWriter.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Xml.XPath, Version=4.0.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\System.Xml.XPath.4.0.1\lib\net46\System.Xml.XPath.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Xml.XPath.XDocument, Version=4.0.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\System.Xml.XPath.XDocument.4.0.1\lib\net46\System.Xml.XPath.XDocument.dll</HintPath>
+    </Reference>
     <Reference Include="WebGrease, Version=1.5.2.14234, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\..\..\packages\WebGrease.1.5.2\lib\WebGrease.dll</HintPath>
       <Private>True</Private>
@@ -381,14 +390,6 @@
     <WCFMetadata Include="Service References\" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Microsoft.HealthVault.DesktopWeb.Common\Microsoft.HealthVault.DesktopWeb.Common.csproj">
-      <Project>{f269f61a-5cb2-4f81-bc24-e6825f261061}</Project>
-      <Name>Microsoft.HealthVault.DesktopWeb.Common</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Microsoft.HealthVault.ItemTypes\Microsoft.HealthVault.ItemTypes.csproj">
-      <Project>{105ac0fb-6fe4-475d-a4a6-6ef660337e5e}</Project>
-      <Name>Microsoft.HealthVault.ItemTypes</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Microsoft.HealthVault.Web.Mvc\Microsoft.HealthVault.Web.Mvc.csproj">
       <Project>{bac954f8-3137-4840-9ceb-9852709070b2}</Project>
       <Name>Microsoft.HealthVault.Web.Mvc</Name>

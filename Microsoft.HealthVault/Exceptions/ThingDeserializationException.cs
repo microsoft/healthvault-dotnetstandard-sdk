@@ -13,7 +13,7 @@ namespace Microsoft.HealthVault.Exceptions
     /// </summary>
     ///
     [Serializable]
-    public class ThingDeserializationException : Exception
+    public class ThingDeserializationException : HealthVaultException
     {
         /// <summary>
         /// Creates an instance of the <see cref="ThingDeserializationException"/>
@@ -37,15 +37,6 @@ namespace Microsoft.HealthVault.Exceptions
         }
 
         #region FxCop required ctors
-
-        /// <summary>
-        /// Creates an instance of the <see cref="ThingDeserializationException"/>
-        /// class with default values.
-        /// </summary>
-        ///
-        public ThingDeserializationException()
-        {
-        }
 
         /// <summary>
         /// Creates an instance of the <see cref="ThingDeserializationException"/>
