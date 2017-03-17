@@ -36,44 +36,42 @@ namespace Microsoft.HealthVault.Thing
         /// Creates a new instance of the <see cref="ThingQuery"/>
         /// class using default values.
         /// </summary>
-        ///
-        public ThingQuery()
-        {
-            this.typeIds = new TypeList(this.View);
-        }
-
-        /// <summary>
-        /// Creates a new instance of the <see cref="ThingQuery"/>
-        /// class with the specified name and maximum number of items to return.
-        /// </summary>
-        ///
         /// <param name="name">
         /// The name of the filter.
         /// </param>
-        ///
+        /// 
         /// <param name="maxItemsReturned">
         /// The maximum number of items to return that match the filter.
         /// </param>
-        ///
         /// <remarks>
         /// The name is used to distinguish results matching this filter as
         /// opposed to results matching other filters when multiple filters
         /// are applied to the same search.
         /// </remarks>
-        ///
+        /// 
         /// <exception cref="ArgumentException">
         /// The <paramref name="name"/> parameter is <b>null</b> or empty.
         /// </exception>
-        ///
+        /// 
         /// <exception cref="ArgumentOutOfRangeException">
         /// The <paramref name="maxItemsReturned"/> parameter is negative.
         /// </exception>
-        ///
         public ThingQuery(string name = null, int maxItemsReturned = 0)
-            : this()
         {
+            this.configuration = Ioc.Get<HealthVaultConfiguration>();
+            this.typeIds = new TypeList(this.View, this.configuration.UseLegacyTypeVersionSupport);
             this.Name = name;
             this.MaxItemsReturned = maxItemsReturned;
+        }
+
+        /// <summary>
+        /// This internal constructor is used to allow custom configurations to be set for testing purposes
+        /// </summary>
+        /// <param name="configuration">a custom configuration</param>
+        internal ThingQuery(HealthVaultConfiguration configuration)
+        {
+            this.configuration = configuration;
+            this.typeIds = new TypeList(this.View, this.configuration.UseLegacyTypeVersionSupport);
         }
 
         /// <summary>
@@ -276,7 +274,7 @@ namespace Microsoft.HealthVault.Thing
         ///
         public HealthRecordView View
         {
-            get { return this.view; }
+            get { return this.view ?? new HealthRecordView(this.configuration); }
 
             set
             {
@@ -285,7 +283,7 @@ namespace Microsoft.HealthVault.Thing
             }
         }
 
-        private HealthRecordView view = new HealthRecordView();
+        private HealthRecordView view;
 
         /// <summary>
         /// Gets or sets the ids identifying things for
@@ -793,6 +791,7 @@ namespace Microsoft.HealthVault.Thing
         }
 
         private DateTime? updatedEndDateMax;
+        private HealthVaultConfiguration configuration;
 
         /// <summary>
         /// The usage intentions for items that will be retrieved in
@@ -831,7 +830,7 @@ namespace Microsoft.HealthVault.Thing
 
         #region internal helpers
 
-        internal static ThingQuery CreateFromXml(XPathNavigator nav)
+        internal static ThingQuery CreateFromXml(XPathNavigator nav, HealthVaultConfiguration configuration)
         {
             ThingQuery filter = new ThingQuery();
 
@@ -878,7 +877,7 @@ namespace Microsoft.HealthVault.Thing
             }
 
             XPathNavigator viewNav = groupNav.SelectSingleNode("format");
-            filter.View = HealthRecordView.CreateFromXml(viewNav);
+            filter.View = HealthRecordView.CreateFromXml(viewNav, configuration);
             return filter;
         }
 
@@ -1327,12 +1326,13 @@ namespace Microsoft.HealthVault.Thing
 
         private class TypeList : IList<Guid>
         {
-            private HealthVaultConfiguration configuration = Ioc.Get<HealthVaultConfiguration>();
+            private readonly bool useLegacyTypeVersionSupport;
             private readonly HealthRecordView view;
             private readonly Collection<Guid> list = new Collection<Guid>();
 
-            public TypeList(HealthRecordView view)
+            public TypeList(HealthRecordView view, bool? configuration = null)
             {
+                this.useLegacyTypeVersionSupport = configuration ?? Ioc.Get<HealthVaultConfiguration>().UseLegacyTypeVersionSupport;
                 this.view = view;
             }
 
@@ -1340,7 +1340,7 @@ namespace Microsoft.HealthVault.Thing
             {
                 this.list.Add(item);
 
-                if (!this.configuration.UseLegacyTypeVersionSupport)
+                if (!this.useLegacyTypeVersionSupport)
                 {
                     this.view.TypeVersionFormat.Add(item);
                 }
@@ -1349,7 +1349,7 @@ namespace Microsoft.HealthVault.Thing
             public void Clear()
             {
                 this.list.Clear();
-                if (!this.configuration.UseLegacyTypeVersionSupport)
+                if (!this.useLegacyTypeVersionSupport)
                 {
                     this.view.TypeVersionFormat.Clear();
                 }
@@ -1383,7 +1383,7 @@ namespace Microsoft.HealthVault.Thing
             public void Insert(int index, Guid item)
             {
                 this.list.Insert(index, item);
-                if (!this.configuration.UseLegacyTypeVersionSupport)
+                if (!this.useLegacyTypeVersionSupport)
                 {
                     this.view.TypeVersionFormat.Add(item);
                 }
@@ -1392,7 +1392,7 @@ namespace Microsoft.HealthVault.Thing
             public bool Remove(Guid item)
             {
                 bool result = this.list.Remove(item);
-                if (result && !this.configuration.UseLegacyTypeVersionSupport)
+                if (result && !this.useLegacyTypeVersionSupport)
                 {
                     this.view.TypeVersionFormat.Remove(item);
                 }
@@ -1404,7 +1404,7 @@ namespace Microsoft.HealthVault.Thing
             {
                 Guid item = this.list[index];
                 this.list.RemoveAt(index);
-                if (!this.configuration.UseLegacyTypeVersionSupport)
+                if (!this.useLegacyTypeVersionSupport)
                 {
                     this.view.TypeVersionFormat.Remove(item);
                 }

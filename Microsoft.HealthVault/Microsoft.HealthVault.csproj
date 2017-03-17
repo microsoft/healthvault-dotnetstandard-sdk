@@ -405,8 +405,11 @@
     <Compile Include="Record\HealthVaultPlatformRecord.cs" />
     <Compile Include="Diagnostics\HealthVaultPlatformTrace.cs" />
     <Compile Include="Transport\IHealthServiceRequest.cs" />
-    <Compile Include="Helpers\ResourceUtilities.cs" />
     <Compile Include="Helpers\UrlUtilities.cs" />
+    <Compile Include="Transport\IHealthWebRequest.cs" />
+    <Compile Include="Transport\HealthWebRequestFactory.cs" />
+    <Compile Include="Transport\IHealthWebRequestFactory.cs" />
+    <Compile Include="Helpers\ResourceUtilities.cs" />
     <Compile Include="Vocabulary\HealthVaultPlatformVocabulary.cs" />
     <Compile Include="Diagnostics\HealthVaultTraceSource.cs" />
     <Compile Include="Transport\IEasyWebResponseHandler.cs" />

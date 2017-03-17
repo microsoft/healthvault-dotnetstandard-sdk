@@ -138,11 +138,10 @@ namespace Microsoft.HealthVault.Vocabulary
                 string methodNSSuffix,
                 HealthServiceResponseData response)
         {
-            XPathNavigator infoNav =
-                response.InfoNavigator.SelectSingleNode(
-                    Vocabulary.GetInfoXPathExpression(
-                        methodNSSuffix,
-                        response.InfoNavigator));
+            XPathExpression node = Vocabulary.GetInfoXPathExpression(
+                methodNSSuffix,
+                response.InfoNavigator);
+            XPathNavigator infoNav = response.InfoNavigator.SelectSingleNode(node);
 
             List<Vocabulary> vocabularies = new List<Vocabulary>();
 
