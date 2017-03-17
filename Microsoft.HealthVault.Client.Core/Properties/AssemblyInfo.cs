@@ -5,25 +5,16 @@ using System.Runtime.CompilerServices;
 // General Information about an assembly is controlled through the following
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("Microsoft.HealthVault")]
-[assembly: AssemblyDescription("Microsoft HealthVault SDK Assembly")]
+[assembly: AssemblyTitle("Microsoft.HealthVault.Client.Core")]
+[assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
+[assembly: AssemblyProduct("Microsoft.HealthVault.Client.Core")]
 [assembly: AssemblyCopyright("Copyright ©  2017")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 [assembly: NeutralResourcesLanguage("en")]
-[assembly: InternalsVisibleTo("Microsoft.HealthVault.DesktopWeb.Common"),
-           InternalsVisibleTo("Microsoft.HealthVault.ItemTypes"),
-           InternalsVisibleTo("Microsoft.HealthVault.Web"),
-           InternalsVisibleTo("Microsoft.HealthVault.Web.Mvc"),
-           InternalsVisibleTo("Microsoft.HealthVault.Client"),
-           InternalsVisibleTo("DynamicProxyGenAssembly2"),
-           InternalsVisibleTo("Microsoft.HealthVault.Client.Core"),
-           InternalsVisibleTo("Microsoft.HealthVault.Client.Bait"),
-           InternalsVisibleTo("Microsoft.HealthVault.Client.Android"),
-           InternalsVisibleTo("Microsoft.HealthVault.Client.Uwp"),
-           InternalsVisibleTo("Microsoft.HealthVault.UnitTest")]
+[assembly: InternalsVisibleTo("Microsoft.HealthVault.Client")]
 
 // Version information for an assembly consists of the following four values:
 //
