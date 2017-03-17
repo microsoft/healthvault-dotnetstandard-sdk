@@ -5,8 +5,11 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NSubstitute;
 using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Text;
 using System.Threading.Tasks;
 using System.Xml.XPath;
+using Microsoft.HealthVault.UnitTest.Samples;
 
 namespace Microsoft.HealthVault.UnitTest.Clients
 {
@@ -28,9 +31,8 @@ namespace Microsoft.HealthVault.UnitTest.Clients
 		{
             var response = new HealthServiceResponseData
             {
-                // TODO: Add samples to William's samples folder to be able to use this code below
-                // InfoNavigator = new XPathDocument(new StringReader(personInfoSample)).CreateNavigator(),
-                // ResponseText = new ArraySegment<byte>(Encoding.ASCII.GetBytes(personInfoSample))
+                InfoNavigator = new XPathDocument(new StringReader(SampleUtils.GetSampleContent("PersonInfoSample.xml"))).CreateNavigator(),
+                ResponseText = new ArraySegment<byte>(Encoding.ASCII.GetBytes(SampleUtils.GetSampleContent("PersonInfoSample.xml")))
             };
 
             connection.ExecuteAsync(HealthVaultMethods.GetPersonInfo, Arg.Any<int>()).Returns(response);
@@ -46,9 +48,8 @@ namespace Microsoft.HealthVault.UnitTest.Clients
 		{
             var response = new HealthServiceResponseData
             {
-                // TODO: Add samples to William's samples folder to be able to use this code below
-                // InfoNavigator = new XPathDocument(new StringReader(appSettingSample)).CreateNavigator(),
-                // ResponseText = new ArraySegment<byte>(Encoding.ASCII.GetBytes(appSettingSample))
+                InfoNavigator = new XPathDocument(new StringReader(SampleUtils.GetSampleContent("AppSettingsSample.xml"))).CreateNavigator(),
+                ResponseText = new ArraySegment<byte>(Encoding.ASCII.GetBytes(SampleUtils.GetSampleContent("AppSettingsSample.xml")))
             };
 
             connection.ExecuteAsync(HealthVaultMethods.GetApplicationSettings, Arg.Any<int>()).Returns(response);
@@ -62,7 +63,13 @@ namespace Microsoft.HealthVault.UnitTest.Clients
 		[TestMethod]
 		public async Task SetApplicationSettingsWitXPathNavTest()
 		{
-		    var nav = Substitute.For<IXPathNavigable>();
+            var response = new HealthServiceResponseData
+            {
+                InfoNavigator = new XPathDocument(new StringReader(SampleUtils.GetSampleContent("AppSettingsSample.xml"))).CreateNavigator(),
+                ResponseText = new ArraySegment<byte>(Encoding.ASCII.GetBytes(SampleUtils.GetSampleContent("AppSettingsSample.xml")))
+            };
+
+		    var nav = response.InfoNavigator;
 
             await personClient.SetApplicationSettingsAsync(nav).ConfigureAwait(false);
 
@@ -81,15 +88,15 @@ namespace Microsoft.HealthVault.UnitTest.Clients
         [TestMethod]
         public async Task GetAuthorizedRecordsAsyncTest()
         {
-            IList<Guid> recordIds = new List<Guid> { new Guid()};
+           
+            IList<Guid> recordIds = new List<Guid> { new Guid("7a231675-4e78-451f-b94d-1e05b2a24586") };
             var response = new HealthServiceResponseData
             {
-                // TODO: Add samples to William's samples folder to be able to use this code below
-                // InfoNavigator = new XPathDocument(new StringReader(authhorizedRecordsSample)).CreateNavigator(),
-                // ResponseText = new ArraySegment<byte>(Encoding.ASCII.GetBytes(authhorizedRecordsSample))
+                InfoNavigator = new XPathDocument(new StringReader(SampleUtils.GetSampleContent("AuthorizedRecordsSample.xml"))).CreateNavigator(),
+                ResponseText = new ArraySegment<byte>(Encoding.ASCII.GetBytes(SampleUtils.GetSampleContent("AuthorizedRecordsSample.xml")))
             };
 
-            connection.ExecuteAsync(HealthVaultMethods.GetAuthorizedRecords, Arg.Any<int>()).Returns(response);
+            connection.ExecuteAsync(HealthVaultMethods.GetAuthorizedRecords, Arg.Any<int>(), Arg.Any<string>()).Returns(response);
             var result = await personClient.GetAuthorizedRecordsAsync(recordIds).ConfigureAwait(false);
 
             await connection.Received().ExecuteAsync(HealthVaultMethods.GetAuthorizedRecords, Arg.Any<int>(), Arg.Any<string>());

@@ -103,6 +103,7 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
+    <Compile Include="Clients\PersonClientTests.cs" />
     <Compile Include="Clients\ThingClientTests.cs" />
     <Compile Include="Clients\VocabularyClientTests.cs" />
     <Compile Include="CloudRequestTests\HealthServiceRequestTest.cs" />
@@ -131,6 +132,9 @@
     <EmbeddedResource Include="Samples\VocabularySearchSample.xml" />
     <EmbeddedResource Include="Samples\VocabularySample.xml" />
     <EmbeddedResource Include="Samples\ThingSample.xml" />
+    <EmbeddedResource Include="Samples\PersonInfoSample.xml" />
+    <EmbeddedResource Include="Samples\AppSettingsSample.xml" />
+    <EmbeddedResource Include="Samples\AuthorizedRecordsSample.xml" />
   </ItemGroup>
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">

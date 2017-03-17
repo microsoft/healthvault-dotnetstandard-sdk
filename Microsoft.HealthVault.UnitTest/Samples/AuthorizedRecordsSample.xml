@@ -1,0 +1,9 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<response>
+  <status>
+    <code>0</code>
+  </status>
+  <wc:info xmlns:wc="urn:com.microsoft.wc.methods.response.GetAuthorizedRecords">
+    <record id="7a231675-4e78-451f-b94d-1e05b2a24586" record-custodian="true" rel-type="1" rel-name="Self" auth-expires="9999-12-31T23:59:59.999Z" display-name="Hatim" state="Active" date-created="2015-12-12T01:58:17.24Z" max-size-bytes="4294967296" size-bytes="7204" app-record-auth-action="NoActionRequired" app-specific-record-id="741934" location-country="US" date-updated="2017-03-17T19:00:02.177Z" latest-operation-sequence-number="36" record-app-auth-created-date="2017-03-17T19:00:02.177Z">Hatim Saleem</record>
+  </wc:info>
+</response>
