@@ -27,48 +27,7 @@ namespace Microsoft.HealthVault.Vocabulary
     /// </remarks>
     internal class HealthVaultPlatformVocabulary
     {
-        /// <summary>
-        /// Enables mocking of calls to this class.
-        /// </summary>
-        ///
-        /// <remarks>
-        /// The calling class should pass in a class that derives from this
-        /// class and overrides the calls to be mocked.
-        /// </remarks>
-        ///
-        /// <param name="mock">The mocking class.</param>
-        ///
-        /// <exception cref="InvalidOperationException">
-        /// There is already a mock registered for this class.
-        /// </exception>
-        ///
-        public static void EnableMock(HealthVaultPlatformVocabulary mock)
-        {
-            Validator.ThrowInvalidIf(saved != null, "ClassAlreadyMocked");
-
-            saved = Current;
-            Current = mock;
-        }
-
-        /// <summary>
-        /// Removes mocking of calls to this class.
-        /// </summary>
-        ///
-        /// <exception cref="InvalidOperationException">
-        /// There is no mock registered for this class.
-        /// </exception>
-        ///
-        public static void DisableMock()
-        {
-            Validator.ThrowInvalidIfNull(saved, "ClassIsntMocked");
-
-            Current = saved;
-            saved = null;
-        }
-
         internal static HealthVaultPlatformVocabulary Current { get; private set; } = new HealthVaultPlatformVocabulary();
-
-        private static HealthVaultPlatformVocabulary saved;
 
         /// <summary>
         /// Retrieves lists of vocabulary items for the specified
@@ -131,12 +90,12 @@ namespace Microsoft.HealthVault.Vocabulary
             IList<VocabularyKey> vocabularyKeys,
             bool cultureIsFixed)
         {
-            Validator.ThrowIfArgumentNull(vocabularyKeys, "vocabularyKeys", "VocabularyKeysNullOrEmpty");
+            Validator.ThrowIfArgumentNull(vocabularyKeys, nameof(vocabularyKeys), Resources.VocabularyKeysNullOrEmpty);
 
-            Validator.ThrowArgumentExceptionIf(
-                vocabularyKeys.Count == 0,
-                "vocabularyKeys",
-                "VocabularyKeysNullOrEmpty");
+            if (vocabularyKeys.Count == 0)
+            {
+                throw new ArgumentException(Resources.VocabularyKeysNullOrEmpty, nameof(vocabularyKeys));
+            }
 
             var method = HealthVaultMethods.GetVocabulary;
             int methodVersion = 2;
@@ -152,7 +111,7 @@ namespace Microsoft.HealthVault.Vocabulary
 
                 for (int i = 0; i < vocabularyKeys.Count; i++)
                 {
-                    Validator.ThrowIfArgumentNull(vocabularyKeys[i], "vocabularyKeys[i]", "VocabularyKeysNullOrEmpty");
+                    Validator.ThrowIfArgumentNull(vocabularyKeys[i], "vocabularyKeys[i]", Resources.VocabularyKeysNullOrEmpty);
 
                     vocabularyKeys[i].WriteXml(writer);
                 }
@@ -179,11 +138,10 @@ namespace Microsoft.HealthVault.Vocabulary
                 string methodNSSuffix,
                 HealthServiceResponseData response)
         {
-            XPathNavigator infoNav =
-                response.InfoNavigator.SelectSingleNode(
-                    Vocabulary.GetInfoXPathExpression(
-                        methodNSSuffix,
-                        response.InfoNavigator));
+            XPathExpression node = Vocabulary.GetInfoXPathExpression(
+                methodNSSuffix,
+                response.InfoNavigator);
+            XPathNavigator infoNav = response.InfoNavigator.SelectSingleNode(node);
 
             List<Vocabulary> vocabularies = new List<Vocabulary>();
 
@@ -320,20 +278,20 @@ namespace Microsoft.HealthVault.Vocabulary
             VocabularySearchType searchType,
             int? maxResults)
         {
-            Validator.ThrowArgumentExceptionIf(
-                string.IsNullOrEmpty(searchValue) || searchValue.Length > 255,
-                "searchString",
-                "VocabularySearchStringInvalid");
+            if (string.IsNullOrEmpty(searchValue) || searchValue.Length > 255)
+            {
+                throw new ArgumentException(Resources.VocabularySearchStringInvalid, nameof(searchValue));
+            }
 
-            Validator.ThrowArgumentExceptionIf(
-                !Enum.IsDefined(typeof(VocabularySearchType), searchType),
-                "searchType",
-                "VocabularySearchTypeUnknown");
+            if (!Enum.IsDefined(typeof(VocabularySearchType), searchType))
+            {
+                throw new ArgumentException(Resources.VocabularySearchTypeUnknown, nameof(searchType));
+            }
 
-            Validator.ThrowArgumentExceptionIf(
-                maxResults.HasValue && maxResults.Value < 1,
-                "maxResults",
-                "SearchMaxResultsInvalid");
+            if (maxResults.HasValue && maxResults.Value < 1)
+            {
+                throw new ArgumentException(Resources.SearchMaxResultsInvalid, nameof(maxResults));
+            }
 
             var method = HealthVaultMethods.SearchVocabulary;
             int methodVersion = 1;

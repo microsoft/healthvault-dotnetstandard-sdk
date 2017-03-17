@@ -44,15 +44,6 @@ namespace Microsoft.HealthVault.Exceptions
 
         /// <summary>
         /// Creates an instance of the <see cref="HealthServiceRecordQuotaExceededException"/>
-        /// class with default values.
-        /// </summary>
-        ///
-        public HealthServiceRecordQuotaExceededException()
-        {
-        }
-
-        /// <summary>
-        /// Creates an instance of the <see cref="HealthServiceRecordQuotaExceededException"/>
         /// class with the specified message.
         /// </summary>
         ///

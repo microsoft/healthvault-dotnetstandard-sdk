@@ -53,8 +53,7 @@ namespace Microsoft.HealthVault.DesktopWeb.Common
                             throw new CryptographicException(
                                 String.Format(
                                     CultureInfo.InvariantCulture,
-                                        ResourceRetriever.GetResourceString(
-                                            "ApplicationCertificateUnableToCreateCert"),
+                                        Resources.ApplicationCertificateUnableToCreateCert,
                                         Util.GetLastErrorMessage()));
                         }
                         else
@@ -150,8 +149,7 @@ namespace Microsoft.HealthVault.DesktopWeb.Common
                 throw new CryptographicException(
                     String.Format(
                         CultureInfo.CurrentCulture,
-                        ResourceRetriever.GetResourceString(
-                            "CertificateNameConversionFailed"),
+                        Resources.CertificateNameConversionFailed,
                             lastError,
                             errorString));
             }
@@ -198,8 +196,7 @@ namespace Microsoft.HealthVault.DesktopWeb.Common
                 {
                     throw new CryptographicException(String.Format(
                         CultureInfo.InvariantCulture,
-                        ResourceRetriever.GetResourceString(
-                            "ApplicationCertificateUnableToAddCertToStore"),
+                        Resources.ApplicationCertificateUnableToAddCertToStore,
                             Util.GetLastErrorMessage()));
                 }
             }
@@ -260,8 +257,7 @@ namespace Microsoft.HealthVault.DesktopWeb.Common
                     Win32Exception win32Exception = new Win32Exception(Marshal.GetLastWin32Error());
 
                     throw new CryptographicException(
-                            ResourceRetriever.GetResourceString(
-                                "ApplicationCertificateUnableToAcquireContext"),
+                            Resources.ApplicationCertificateUnableToAcquireContext,
                                 win32Exception.Message);
                 }
 
@@ -274,8 +270,7 @@ namespace Microsoft.HealthVault.DesktopWeb.Common
                     Win32Exception win32Exception = new Win32Exception(Marshal.GetLastWin32Error());
 
                     throw new CryptographicException(
-                        ResourceRetriever.GetResourceString(
-                            "ApplicationCertificateUnableToGenerateKey"),
+                        Resources.ApplicationCertificateUnableToGenerateKey,
                         win32Exception.Message);
                 }
             }

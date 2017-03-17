@@ -195,10 +195,10 @@ namespace Microsoft.HealthVault.Rest
 
             set
             {
-                Validator.ThrowArgumentOutOfRangeIf(
-                    value < 0,
-                    "TimeoutSeconds",
-                    "TimeoutMustBePositive");
+                if (value < 0)
+                {
+                    throw new ArgumentOutOfRangeException(nameof(this.TimeoutSeconds), Resources.TimeoutMustBePositive);
+                }
 
                 this.timeoutSeconds = value;
             }
@@ -251,9 +251,9 @@ namespace Microsoft.HealthVault.Rest
             string requestBody = null,
             IEnumerable<string> optionalHeaders = null)
         {
-            Validator.ThrowIfArgumentNull(connection, "connection", "CtorServiceNull");
+            Validator.ThrowIfArgumentNull(connection, nameof(connection), Resources.CtorServiceNull);
             Validator.ThrowIfStringNullOrEmpty(httpVerb.Method, "httpVerb");
-            Validator.ThrowIfArgumentNull(fullUri, "fullUri", "CtorServiceUrlNull");
+            Validator.ThrowIfArgumentNull(fullUri, nameof(fullUri), Resources.CtorServiceUrlNull);
 
             this.isContentRequest = IsContentVerb(httpVerb);
             this.connection = connection;

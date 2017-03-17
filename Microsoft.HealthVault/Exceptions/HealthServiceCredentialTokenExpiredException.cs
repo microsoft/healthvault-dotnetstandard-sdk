@@ -45,15 +45,6 @@ namespace Microsoft.HealthVault.Exceptions
 
         /// <summary>
         /// Creates an instance of the <see cref="HealthServiceCredentialTokenExpiredException"/>
-        /// class with default values.
-        /// </summary>
-        ///
-        public HealthServiceCredentialTokenExpiredException()
-        {
-        }
-
-        /// <summary>
-        /// Creates an instance of the <see cref="HealthServiceCredentialTokenExpiredException"/>
         /// class with the specified message.
         /// </summary>
         ///

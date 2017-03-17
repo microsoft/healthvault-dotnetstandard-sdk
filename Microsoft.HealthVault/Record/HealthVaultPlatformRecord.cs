@@ -27,48 +27,7 @@ namespace Microsoft.HealthVault.Record
     /// </remarks>
     internal class HealthVaultPlatformRecord
     {
-        /// <summary>
-        /// Enables mocking of calls to this class.
-        /// </summary>
-        ///
-        /// <remarks>
-        /// The calling class should pass in a class that derives from this
-        /// class and overrides the calls to be mocked.
-        /// </remarks>
-        ///
-        /// <param name="mock">The mocking class.</param>
-        ///
-        /// <exception cref="InvalidOperationException">
-        /// There is already a mock registered for this class.
-        /// </exception>
-        ///
-        public static void EnableMock(HealthVaultPlatformRecord mock)
-        {
-            Validator.ThrowInvalidIf(saved != null, "ClassAlreadyMocked");
-
-            saved = Current;
-            Current = mock;
-        }
-
-        /// <summary>
-        /// Removes mocking of calls to this class.
-        /// </summary>
-        ///
-        /// <exception cref="InvalidOperationException">
-        /// There is no mock registered for this class.
-        /// </exception>
-        ///
-        public static void DisableMock()
-        {
-            Validator.ThrowInvalidIfNull(saved, "ClassIsntMocked");
-
-            Current = saved;
-            saved = null;
-        }
-
         internal static HealthVaultPlatformRecord Current { get; private set; } = new HealthVaultPlatformRecord();
-
-        private static HealthVaultPlatformRecord saved;
 
         /// <summary>
         /// Releases the authorization of the application on the health record.
@@ -241,7 +200,7 @@ namespace Microsoft.HealthVault.Record
             HealthRecordAccessor accessor,
             IList<Guid> healthRecordItemTypeIds)
         {
-            Validator.ThrowIfArgumentNull(healthRecordItemTypeIds, "healthRecordItemTypeIds", "CtorhealthRecordItemTypeIdsArgumentNull");
+            Validator.ThrowIfArgumentNull(healthRecordItemTypeIds, nameof(healthRecordItemTypeIds), Resources.CtorhealthRecordItemTypeIdsArgumentNull);
 
             string parameters = GetQueryPermissionsParametersXml(healthRecordItemTypeIds);
 

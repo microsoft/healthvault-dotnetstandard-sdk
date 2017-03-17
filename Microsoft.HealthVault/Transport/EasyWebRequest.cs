@@ -1,4 +1,12 @@
-﻿using System;
+﻿// Copyright (c) Microsoft Corporation.  All rights reserved. 
+// MIT License
+// Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the ""Software""), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+// 
+// The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED *AS IS*, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
@@ -10,7 +18,7 @@ using Microsoft.HealthVault.Helpers;
 
 namespace Microsoft.HealthVault.Transport
 {
-    internal class EasyWebRequest
+    internal class EasyWebRequest : IHealthWebRequest
     {
         private readonly byte[] xmlRequest; // utf8Encoded
         private readonly int xmlRequestLength;
@@ -37,7 +45,7 @@ namespace Microsoft.HealthVault.Transport
         /// Gets or sets the request compression method.
         /// </summary>
         ///
-        internal string RequestCompressionMethod
+        public string RequestCompressionMethod
         {
             get { return this.requestCompressionMethod; }
 
@@ -60,7 +68,7 @@ namespace Microsoft.HealthVault.Transport
                             "deflate",
                             StringComparison.OrdinalIgnoreCase))
                     {
-                        throw Validator.HealthServiceException("InvalidRequestCompressionMethod");
+                        throw new HealthServiceException(Resources.InvalidRequestCompressionMethod);
                     }
                 }
             }
@@ -72,9 +80,9 @@ namespace Microsoft.HealthVault.Transport
         /// Gets the dictionary of headers that will be added to the web request.
         /// </summary>
         ///
-        internal Dictionary<string, string> Headers { get; } = new Dictionary<string, string>();
+        public Dictionary<string, string> Headers { get; } = new Dictionary<string, string>();
 
-        internal async Task<HttpResponseMessage> FetchAsync(Uri url, CancellationToken token)
+        public async Task<HttpResponseMessage> FetchAsync(Uri url, CancellationToken token)
         {
             HttpMethod method;
             if (this.xmlRequest == null)
@@ -119,7 +127,7 @@ namespace Microsoft.HealthVault.Transport
                         // If we have a non-500 error or have run out of retries, throw.
                         if (!response.IsSuccessStatusCode)
                         {
-                            throw new HealthHttpException("Http status code returned error", response.StatusCode);
+                            throw new HealthHttpException(Resources.HttpReturnedError, response.StatusCode);
                         }
 
                         // If we have a successful response, return it.
@@ -132,10 +140,10 @@ namespace Microsoft.HealthVault.Transport
             }
 
             // We should never get here but we need to make the compiler happy.
-            throw new Exception("Unexpectedly got to the end of FetchAsync.");
+            throw new Exception(Resources.UnexpectedError);
         }
 
-        private HttpClient CreateHttpClient()
+        public HttpClient CreateHttpClient()
         {
             var handler = new HttpClientHandler
             {

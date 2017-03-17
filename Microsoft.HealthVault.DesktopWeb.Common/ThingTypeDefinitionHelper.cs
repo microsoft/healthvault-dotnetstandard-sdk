@@ -8,6 +8,7 @@ using System.Text;
 using System.Xml;
 using System.Xml.XPath;
 using System.Xml.Xsl;
+using Microsoft.HealthVault.Extensions;
 using Microsoft.HealthVault.Helpers;
 using Microsoft.HealthVault.Thing;
 
@@ -229,8 +230,7 @@ namespace Microsoft.HealthVault.DesktopWeb.Common
         {
             if (!_transformSource.ContainsKey(transformName))
             {
-                throw new KeyNotFoundException(
-                    ResourceRetriever.FormatResourceString("TransformNameNotFound", transformName));
+                throw new KeyNotFoundException(Resources.TransformNameNotFound.FormatResource(transformName));
             }
 
             XslCompiledTransform transform = null;

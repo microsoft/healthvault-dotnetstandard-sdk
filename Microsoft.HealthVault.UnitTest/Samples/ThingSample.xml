@@ -1,0 +1,59 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<thing>
+  <thing-id version-stamp="e6ecfb7c-4cc9-4267-8fd5-a5e49af7d40f">60ed4338-0b1b-4061-aad4-effe2b8bbccd</thing-id>
+  <type-id name="Blood glucose">879e7c04-4e8a-4707-9ad3-b054df467ce4</type-id>
+  <thing-state>Active</thing-state>
+  <flags>0</flags>
+  <eff-date>2015-10-29T00:00:00Z</eff-date>
+  <created>
+    <timestamp>2015-12-02T18:49:00.007Z</timestamp>
+    <app-id name="Test Data">c6df61be-9944-43b0-83c1-2371501d28cf</app-id>
+    <person-id name="Test User">6c1b1c20-ecc1-40da-87f5-b93d083a6057</person-id>
+    <access-avenue>Offline</access-avenue>
+    <audit-action>Created</audit-action>
+    <master-app-id>6c1b1c20-ecc1-40da-87f5-b93d083a6057</master-app-id>
+  </created>
+  <updated>
+    <timestamp>2015-12-02T18:49:00.007Z</timestamp>
+    <app-id name="Test Data">c6df61be-9944-43b0-83c3-2371501d28cf</app-id>
+    <person-id name="Test User">6c1b1c20-ecc1-40da-87f5-b93d083a6057</person-id>
+    <access-avenue>Offline</access-avenue>
+    <audit-action>Created</audit-action>
+    <master-app-id>b6d73c26-28bb-44db-b91e-1ffc4311143e</master-app-id>
+  </updated>
+  <data-xml>
+    <blood-glucose>
+      <when>
+        <date>
+          <y>2015</y>
+          <m>10</m>
+          <d>29</d>
+        </date>
+        <time>
+          <h>0</h>
+          <m>0</m>
+          <s>0</s>
+        </time>
+      </when>
+      <value>
+        <mmolPerL>4</mmolPerL>
+        <display units="mg/dl">80</display>
+      </value>
+      <glucose-measurement-type>
+        <text>Blood</text>
+      </glucose-measurement-type>
+      <measurement-context>
+        <text>Fasting</text>
+        <code>
+          <value>fasting</value>
+          <family>wc</family>
+          <type>glucose-measurement-context</type>
+        </code>
+      </measurement-context>
+    </blood-glucose>
+    <common>
+      <note>Test Note</note>
+      <client-thing-id>dcd854e9-cd10-4a9a-8097-acac17f3265a</client-thing-id>
+    </common>
+  </data-xml>
+</thing>

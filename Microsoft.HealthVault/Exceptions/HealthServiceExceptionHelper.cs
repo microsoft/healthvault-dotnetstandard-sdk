@@ -89,9 +89,6 @@ namespace Microsoft.HealthVault.Exceptions
                 case HealthServiceStatusCode.RecordQuotaExceeded:
                     e = new HealthServiceRecordQuotaExceededException(error);
                     break;
-                case HealthServiceStatusCode.OtherDataItemSizeLimitExceeded:
-                    e = new HealthServiceOtherDataSizeLimitExceededException(error);
-                    break;
                 default:
                     e = new HealthServiceException(errorCode, error);
                     break;

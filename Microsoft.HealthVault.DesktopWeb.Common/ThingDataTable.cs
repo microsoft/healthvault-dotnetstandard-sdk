@@ -53,13 +53,12 @@ namespace Microsoft.HealthVault.DesktopWeb.Common
             ThingDataTableView view,
             ThingQuery query)
         {
-            Validator.ThrowIfArgumentNull(query, "filter", "DataTableFilterNull");
+            Validator.ThrowIfArgumentNull(query, nameof(query), Resources.DataTableFilterNull);
 
-            Validator.ThrowArgumentExceptionIf(
-                view == ThingDataTableView.SingleTypeTable &&
-                query.TypeIds.Count > 1,
-                "view",
-                "DataTableViewInvalid");
+            if (view == ThingDataTableView.SingleTypeTable && query.TypeIds.Count > 1)
+            {
+                throw new ArgumentException(Resources.DataTableViewInvalid, nameof(view));
+            }
 
             this.query = query;
             _view = view;
@@ -584,7 +583,7 @@ namespace Microsoft.HealthVault.DesktopWeb.Common
             }
             set
             {
-                Validator.ThrowIfArgumentNull(value, "Filter", "ArgumentNull");
+                Validator.ThrowIfArgumentNull(value, nameof(this.Query), Resources.ArgumentNull);
                 query = value;
             }
         }

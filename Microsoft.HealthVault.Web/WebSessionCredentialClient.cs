@@ -9,6 +9,7 @@ using System.Xml;
 using System.Xml.XPath;
 using Microsoft.HealthVault.Connection;
 using Microsoft.HealthVault.Diagnostics;
+using Microsoft.HealthVault.Extensions;
 using Microsoft.HealthVault.Helpers;
 using Microsoft.HealthVault.Transport;
 
@@ -139,11 +140,7 @@ namespace Microsoft.HealthVault.Web
 
             if (rsaProvider == null || string.IsNullOrEmpty(thumbprint))
             {
-                throw new SecurityException(
-                        ResourceRetriever.FormatResourceString(
-                            "CertificateNotFound",
-                            certSubject,
-                            storeLocation));
+                throw new SecurityException(Resources.CertificateNotFound.FormatResource(certSubject, storeLocation));
             }
 
             return result;

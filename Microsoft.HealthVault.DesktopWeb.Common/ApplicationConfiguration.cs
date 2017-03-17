@@ -369,7 +369,7 @@ namespace Microsoft.HealthVault.DesktopWeb.Common
                 }
                 else
                 {
-                    throw Validator.InvalidConfigurationException("InvalidSupportedTypeVersions");
+                    throw new InvalidConfigurationException(Resources.InvalidSupportedTypeVersions);
                 }
             }
 
@@ -689,7 +689,7 @@ namespace Microsoft.HealthVault.DesktopWeb.Common
                 {
                     if (String.IsNullOrEmpty(signatureCertStoreLocation))
                     {
-                        throw Validator.InvalidConfigurationException("SignatureCertStoreLocationMissing");
+                        throw new InvalidConfigurationException(Resources.SignatureCertStoreLocationMissing);
                     }
                 }
 

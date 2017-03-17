@@ -45,15 +45,7 @@ namespace Microsoft.HealthVault.Client
                 query += "&aib=true";
             }
 
-            UriBuilder builder = GetShellUriBuilder(shellUrl);
-            builder.Query = query;
-
-            Uri provisionUIUrl = builder.Uri;
-
-            Uri successUri = await this.browserAuthBroker.AuthenticateAsync(
-                provisionUIUrl,
-                url => { return url.ToString().Contains("application/complete"); }).ConfigureAwait(false);
-
+            Uri successUri = await this.AuthenticateInBrowserAsync(shellUrl, query).ConfigureAwait(false);
             string environmentInstanceId = ParseEnvironmentInstanceIdFromUri(successUri.ToString());
             if (environmentInstanceId == null)
             {
@@ -72,14 +64,20 @@ namespace Microsoft.HealthVault.Client
 
             string query = $"?appid={masterAppId}&ismra={this.MraString}";
 
-            UriBuilder builder = GetShellUriBuilder(shellUrl);
-            builder.Query = query;
+            await this.AuthenticateInBrowserAsync(shellUrl, query).ConfigureAwait(false);
+        }
 
-            Uri provisionUIUrl = builder.Uri;
+        private async Task<Uri> AuthenticateInBrowserAsync(Uri shellUrl, string query)
+        {
+            UriBuilder provisionBuilder = GetShellUriBuilder(shellUrl);
+            provisionBuilder.Query = query;
+            Uri provisionUIUrl = provisionBuilder.Uri;
 
-            await this.browserAuthBroker.AuthenticateAsync(
-                provisionUIUrl,
-                url => { return url.ToString().Contains("application/complete"); }).ConfigureAwait(false);
+            UriBuilder endUriBuilder = new UriBuilder(shellUrl);
+            endUriBuilder.Path = "application/complete";
+            Uri stopUrl = endUriBuilder.Uri;
+
+            return await this.browserAuthBroker.AuthenticateAsync(provisionUIUrl, stopUrl).ConfigureAwait(false);
         }
 
         private static UriBuilder GetShellUriBuilder(Uri shellUrl)

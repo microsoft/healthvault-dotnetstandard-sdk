@@ -122,10 +122,10 @@ namespace Microsoft.HealthVault.Thing
                 this.CultureSpecificReasons.DefaultValue = reason;
             }
 
-            Validator.ThrowArgumentExceptionIf(
-                permissions == ThingPermissions.None,
-                "permissions",
-                "AuthorizationRuleBadPermissions");
+            if (permissions == ThingPermissions.None)
+            {
+                throw new ArgumentException(Resources.AuthorizationRuleBadPermissions, nameof(permissions));
+            }
 
             this.Permissions = permissions;
 
@@ -259,7 +259,7 @@ namespace Microsoft.HealthVault.Thing
         ///
         public static string GetRulesXml(IList<AuthorizationRule> rules)
         {
-            Validator.ThrowIfArgumentNull(rules, "rules", "GetRulesXmlNullRules");
+            Validator.ThrowIfArgumentNull(rules, nameof(rules), Resources.GetRulesXmlNullRules);
 
             StringBuilder result = new StringBuilder();
             XmlWriterSettings settings = SDKHelper.XmlUnicodeWriterSettings;

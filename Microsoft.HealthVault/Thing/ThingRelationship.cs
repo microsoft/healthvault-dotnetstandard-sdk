@@ -6,6 +6,7 @@
 using System;
 using System.Xml;
 using System.Xml.XPath;
+using Microsoft.HealthVault.Exceptions;
 using Microsoft.HealthVault.Helpers;
 
 namespace Microsoft.HealthVault.Thing
@@ -46,10 +47,10 @@ namespace Microsoft.HealthVault.Thing
         ///
         public ThingRelationship(Guid itemId)
         {
-            Validator.ThrowArgumentExceptionIf(
-                itemId == Guid.Empty,
-                "itemId",
-                "RelationshipItemIDNotSpecified");
+            if (itemId == Guid.Empty)
+            {
+                throw new ArgumentException(Resources.RelationshipItemIDNotSpecified, nameof(itemId));
+            }
 
             this.ItemKey = new ThingKey(itemId);
         }
@@ -70,7 +71,7 @@ namespace Microsoft.HealthVault.Thing
         ///
         public ThingRelationship(ThingKey itemKey)
         {
-            Validator.ThrowIfArgumentNull(itemKey, "itemKey", "RelationshipItemKeyNotSpecified");
+            Validator.ThrowIfArgumentNull(itemKey, nameof(itemKey), Resources.RelationshipItemKeyNotSpecified);
 
             this.ItemKey = itemKey;
         }
@@ -179,9 +180,10 @@ namespace Microsoft.HealthVault.Thing
 
         internal void WriteXml(string nodeName, XmlWriter writer)
         {
-            Validator.ThrowSerializationIf(
-                this.ItemKey == null && string.IsNullOrEmpty(this.ClientId),
-                "RelationshipItemKeyOrClientIdNotSpecified");
+            if (this.ItemKey == null && string.IsNullOrEmpty(this.ClientId))
+            {
+                throw new ThingSerializationException(Resources.RelationshipItemKeyOrClientIdNotSpecified);
+            }
 
             writer.WriteStartElement(nodeName);
             if (this.ItemKey != null)

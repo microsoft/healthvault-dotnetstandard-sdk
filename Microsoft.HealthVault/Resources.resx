@@ -1,0 +1,2286 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="ListSeparator" xml:space="preserve">
+    <value>, </value>
+  </data>
+  <data name="ListFormat" xml:space="preserve">
+    <value>, {0}</value>
+  </data>
+  <data name="GroupSeparator" xml:space="preserve">
+    <value>;</value>
+  </data>
+  <data name="Range" xml:space="preserve">
+    <value>{0} - {1}</value>
+  </data>
+  <data name="DateRange" xml:space="preserve">
+    <value>{0} to {1}</value>
+  </data>
+  <data name="MeasurementRange" xml:space="preserve">
+    <value>{0} to {1}</value>
+  </data>
+  <data name="Ellipsis" xml:space="preserve">
+    <value>...</value>
+  </data>
+  <data name="Sunday" xml:space="preserve">
+    <value>Sunday</value>
+  </data>
+  <data name="Monday" xml:space="preserve">
+    <value>Monday</value>
+  </data>
+  <data name="Tuesday" xml:space="preserve">
+    <value>Tuesday</value>
+  </data>
+  <data name="Wednesday" xml:space="preserve">
+    <value>Wednesday</value>
+  </data>
+  <data name="Thursday" xml:space="preserve">
+    <value>Thursday</value>
+  </data>
+  <data name="Friday" xml:space="preserve">
+    <value>Friday</value>
+  </data>
+  <data name="Saturday" xml:space="preserve">
+    <value>Saturday</value>
+  </data>
+  <data name="Male" xml:space="preserve">
+    <value>male</value>
+  </data>
+  <data name="Female" xml:space="preserve">
+    <value>female</value>
+  </data>
+  <data name="True" xml:space="preserve">
+    <value>true</value>
+  </data>
+  <data name="False" xml:space="preserve">
+    <value>false</value>
+  </data>
+  <data name="WhitespaceOnlyValue" xml:space="preserve">
+    <value>The value cannot contain only white space.</value>
+  </data>
+  <data name="StringNullOrEmpty" xml:space="preserve">
+    <value>The string value cannot be null or the empty string.</value>
+  </data>
+  <data name="StringNull" xml:space="preserve">
+    <value>The string value cannot be null.</value>
+  </data>
+  <data name="ArgumentNull" xml:space="preserve">
+    <value>The argument value cannot be null.</value>
+  </data>
+  <data name="GuidParameterEmpty" xml:space="preserve">
+    <value>The parameter cannot be Guid.Empty.</value>
+  </data>
+  <data name="BlobStreamPositionIsNegative" xml:space="preserve">
+    <value>The position cannot be set before the start of the stream.</value>
+  </data>
+  <data name="BlobStreamPositionPastEnd" xml:space="preserve">
+    <value>The position cannot be set past the end of the stream.</value>
+  </data>
+  <data name="BlobStreamSeekFromEndNullLength" xml:space="preserve">
+    <value>Cannot seek from the end of the stream if the length of the stream is not known.</value>
+  </data>
+  <data name="BlobStreamLengthNotSupported" xml:space="preserve">
+    <value>The length of the stream is not known.</value>
+  </data>
+  <data name="CertificateNameConversionFailed" xml:space="preserve">
+    <value>Error {0} occurred at {1}.</value>
+  </data>
+  <data name="ApplicationBinaryConfigurationContentStreamRequired" xml:space="preserve">
+    <value>The binary configuration content stream must be specified.</value>
+  </data>
+  <data name="SelectInstanceLocationRequired" xml:space="preserve">
+    <value>The preferred location must be specified.</value>
+  </data>
+  <data name="GetAuthorizedPeopleSettingsBatchSizeNegative" xml:space="preserve">
+    <value>The batch size must be a non-negative number.</value>
+  </data>
+  <data name="GetAuthorizedPeopleSettingsNull" xml:space="preserve">
+    <value>The settings parameter cannot be null.</value>
+  </data>
+  <data name="GetAuthorizedPeopleNumResultsNegative" xml:space="preserve">
+    <value>The number of results must be a non-negative number.</value>
+  </data>
+  <data name="ApplicationInfoPublicKeysRequired" xml:space="preserve">
+    <value>At least one application public key must be specified.</value>
+  </data>
+  <data name="PersistentTokenTtlInSecondsNotPositive" xml:space="preserve">
+    <value>Persistent token ttl in seconds must be greater than zero.</value>
+  </data>
+  <data name="BlobHashAlgorithmUnsupported" xml:space="preserve">
+    <value>The BLOB hash algorithm {0} is not supported.</value>
+  </data>
+  <data name="BlockSizeMustBePositive" xml:space="preserve">
+    <value>The block size must be a positive value.</value>
+  </data>
+  <data name="AlgorithmHashSizePartialByteLength" xml:space="preserve">
+    <value>The algorithm hash size cannot be of partial byte length. The bit length is {0}.</value>
+  </data>
+  <data name="CalculateBlockHashesOffsetNegative" xml:space="preserve">
+    <value>The offset cannot be negative.</value>
+  </data>
+  <data name="CalculateBlockHashesCountNegative" xml:space="preserve">
+    <value>The count cannot be negative.</value>
+  </data>
+  <data name="CalculateBlockHashesDataLengthTooSmall" xml:space="preserve">
+    <value>The sum of the offset and count is greater than the buffer length.</value>
+  </data>
+  <data name="CalculateBlobHashBlockHashCountMustBePositive" xml:space="preserve">
+    <value>The block hash count must be greater than 0.</value>
+  </data>
+  <data name="BlobStreamBufferLengthTooSmall" xml:space="preserve">
+    <value>The sum of the offset and count is greater than the buffer length.</value>
+  </data>
+  <data name="BlobStreamNoData" xml:space="preserve">
+    <value>A blob was created but no data was written to it. </value>
+  </data>
+  <data name="CryptoApiBlobNotNullData" xml:space="preserve">
+    <value>The argument data cannot be null.</value>
+  </data>
+  <data name="CryptoApiBlobSizeGreaterThanZero" xml:space="preserve">
+    <value>Size must be greater than zero</value>
+  </data>
+  <data name="CryptoApiBlobUnableToAllocateBlob" xml:space="preserve">
+    <value>Unable to allocate CryptoAPI blob</value>
+  </data>
+  <data name="ApplicationCertificateUnableToAddCertToStore" xml:space="preserve">
+    <value>Could not add certificate to store: {0}.</value>
+  </data>
+  <data name="ApplicationCertificateUnableToCreateCert" xml:space="preserve">
+    <value>Could not create self signed certificate: {0}.</value>
+  </data>
+  <data name="ApplicationCertificateUnableToAcquireContext" xml:space="preserve">
+    <value>Could not acquire cryptographic context: {0}.</value>
+  </data>
+  <data name="ApplicationCertificateUnableToGenerateKey" xml:space="preserve">
+    <value>Could not generate a key for the certificate: {0}.</value>
+  </data>
+  <data name="UpdateItemsArgumentNull" xml:space="preserve">
+    <value>A valid enumeration of non-null things must be provided.</value>
+  </data>
+  <data name="UpdateItemNull" xml:space="preserve">
+    <value>A valid thing must be provided for update.</value>
+  </data>
+  <data name="RemoveItemsListNullOrEmpty" xml:space="preserve">
+    <value>A valid enumeration of things must be provided for removal.</value>
+  </data>
+  <data name="RemoveItemNull" xml:space="preserve">
+    <value>A valid thing must be provided for removal.</value>
+  </data>
+  <data name="CtorServiceArgumentNull" xml:space="preserve">
+    <value>A valid connection instance must be provided.</value>
+  </data>
+  <data name="CtorIDArgumentEmpty" xml:space="preserve">
+    <value>The record ID cannot be Guid.Empty.</value>
+  </data>
+  <data name="HealthRecordNotUpdated" xml:space="preserve">
+    <value>The data for this property is not available until Refresh is called.</value>
+  </data>
+  <data name="NewItemNullItem" xml:space="preserve">
+    <value>The things must be specified when creating a new item.</value>
+  </data>
+  <data name="NewItemsNullItem" xml:space="preserve">
+    <value>A valid enumeration of non-null things must be provided.</value>
+  </data>
+  <data name="UpdateItemsWithNoId" xml:space="preserve">
+    <value>An item cannot be updated without specifying it's unique identifier.</value>
+  </data>
+  <data name="CtorhealthRecordItemTypesArgumentNull" xml:space="preserve">
+    <value>A non null list of thing types must be provided.</value>
+  </data>
+  <data name="CtorhealthRecordItemTypeIdsArgumentNull" xml:space="preserve">
+    <value>A non null list of thing type ids must be provided.</value>
+  </data>
+  <data name="ThingIdInvalid" xml:space="preserve">
+    <value>The thing id cannot be Guid.Empty;</value>
+  </data>
+  <data name="ThingVersionInvalid" xml:space="preserve">
+    <value>The thing version-stamp cannot be Guid.Empty.</value>
+  </data>
+  <data name="ThingDeserializationFailed" xml:space="preserve">
+    <value>The type specific item data could not be parsed.</value>
+  </data>
+  <data name="CannotChangeImmutableFlag" xml:space="preserve">
+    <value>Cannot change read-only flag to false if it is already true.</value>
+  </data>
+  <data name="ConnectionNull" xml:space="preserve">
+    <value>The connection cannot be null.</value>
+  </data>
+  <data name="HealthRecordSearcherCtorArgumentNull" xml:space="preserve">
+    <value>A valid HealthRecord is required to search for items.</value>
+  </data>
+  <data name="GetSingleThingTooManyResults" xml:space="preserve">
+    <value>Expecting a single result but got more than one.</value>
+  </data>
+  <data name="HealthRecordSearcherNoFilters" xml:space="preserve">
+    <value>At least one valid filter must be present to search for items.</value>
+  </data>
+  <data name="HealthRecordSearcherInvalidFilter" xml:space="preserve">
+    <value>A filter must have at least one valid property, ItemId or ItemKey present to search for items.</value>
+  </data>
+  <data name="HealthRecordSearcherInvalidFilterIdsAndKeysSpecified" xml:space="preserve">
+    <value>A filter may only specify either ItemIds or ItemKeys or ClientItemIds, but not more than one of the three at the same time.</value>
+  </data>
+  <data name="HealthRecordSearcherInvalidOrderSpecified" xml:space="preserve">
+    <value>A filter may only specify two order by clauses.</value>
+  </data>
+  <data name="ThingQueryMaxReturnsNegative" xml:space="preserve">
+    <value>The maximum number of items returned must not be negative.</value>
+  </data>
+  <data name="ThingQueryMaxFullItemsReturnedNegative" xml:space="preserve">
+    <value>The maximum number of full items returned per request must not be negative.</value>
+  </data>
+  <data name="ThingQueryViewNull" xml:space="preserve">
+    <value>The view cannot be null.</value>
+  </data>
+  <data name="ResponseRecordNull" xml:space="preserve">
+    <value>A record must be provided for all responses.</value>
+  </data>
+  <data name="ResultGroupIsReadOnly" xml:space="preserve">
+    <value>The result group is read-only. The collection cannot be modified.</value>
+  </data>
+  <data name="ResultGroupNotCopyable" xml:space="preserve">
+    <value>The result group cannot be copied as that may cause unexpected network access.</value>
+  </data>
+  <data name="ResultGroupIndexOutOfRange" xml:space="preserve">
+    <value>The index is less than zero or greater than the size of the collection.</value>
+  </data>
+  <data name="ResultGroupRangeIndexesOutOfRange" xml:space="preserve">
+    <value>The minimum and maximum indexes must be greater than or equal to zero and less than the size of the collection.</value>
+  </data>
+  <data name="ResultGroupRangeMinGreaterThanMax" xml:space="preserve">
+    <value>The minimum index must be less than or equal to the maximum index.    </value>
+  </data>
+  <data name="NoSectionsOrTransforms" xml:space="preserve">
+    <value>At least one section or one transform must be specified for the view.</value>
+  </data>
+  <data name="RelationshipItemIDNotSpecified" xml:space="preserve">
+    <value>The thing identifier must be specified.</value>
+  </data>
+  <data name="RelationshipItemKeyNotSpecified" xml:space="preserve">
+    <value>A thing item key must be specified.</value>
+  </data>
+  <data name="RelationshipItemKeyOrClientIdNotSpecified" xml:space="preserve">
+    <value>A thing key or a client id must be specified.</value>
+  </data>
+  <data name="InvalidApplicationIdConfiguration" xml:space="preserve">
+    <value>To use this constructor, the application ID must be specified in the web or application configuration file.</value>
+  </data>
+  <data name="DataTableFilterNull" xml:space="preserve">
+    <value>A search filter must be provided.</value>
+  </data>
+  <data name="DataTableViewInvalid" xml:space="preserve">
+    <value>The single type table view can only be used when a single type is being requested through the filter.</value>
+  </data>
+  <data name="CtorServiceNull" xml:space="preserve">
+    <value>The connection instance must be provided.</value>
+  </data>
+  <data name="TimeoutMustBePositive" xml:space="preserve">
+    <value>The timeout must be greater than or equal to zero.</value>
+  </data>
+  <data name="CtorServiceUrlNull" xml:space="preserve">
+    <value>The HealthVault service URL must be provided.</value>
+  </data>
+  <data name="CertificateNotFound" xml:space="preserve">
+    <value>The specified certificate, {0}, could not be found in the {1} certificate store,or the certificate does not have a private key.</value>
+  </data>
+  <data name="InvalidResponseFromXMLRequest" xml:space="preserve">
+    <value>The response format was not valid XML. This may happen if the HealthServiceUrl used to connect to HealthVault is misconfigured.</value>
+  </data>
+  <data name="HealthServiceExceptionNoResponseError" xml:space="preserve">
+    <value>An unexpected error code was returned from HealthVault. {0}</value>
+  </data>
+  <data name="RecordAuthorizationRequired" xml:space="preserve">
+    <value>The specified user account has not authorized this application to a health record.</value>
+  </data>
+  <data name="RecordAuthorizationNotPossible" xml:space="preserve">
+    <value>The specified user account does not have access to a health record that meets the minimum authorization requirements of the application.</value>
+  </data>
+  <data name="RecordReauthorizationRequired" xml:space="preserve">
+    <value>The specified user account had authorized the application to a health record, but that authorization no longer meets the minimum requirements of the application or the application's minimum authorization requirements have changed. The user must reauthorize the application to the health record.</value>
+  </data>
+  <data name="SelfRecordNotFound" xml:space="preserve">
+    <value>The person has no records that are authorized with the "self" relationship.</value>
+  </data>
+  <data name="PersonInfoConnectionNull" xml:space="preserve">
+    <value>The connection must be specified.</value>
+  </data>
+  <data name="XmlNullReader" xml:space="preserve">
+    <value>The XML reader must be specified.</value>
+  </data>
+  <data name="InstanceIdNotFound" xml:space="preserve">
+    <value>No known HealthVault web-service instance with the given ID was found.</value>
+  </data>
+  <data name="InvalidRequestCompressionMethod" xml:space="preserve">
+    <value>Invalid requestCompressionMethod specified.</value>
+  </data>
+  <data name="SignatureCertStoreLocationMissing" xml:space="preserve">
+    <value>The signature certificate store location is not specified.</value>
+  </data>
+  <data name="CertificateFileNotFound" xml:space="preserve">
+    <value>The certificate file specified by ApplicationCertificateFileName was not found.</value>
+  </data>
+  <data name="CertificateMissingPrivateKey" xml:space="preserve">
+    <value>The certificate does not contain a private key.</value>
+  </data>
+  <data name="ErrorLoadingCertificateFile" xml:space="preserve">
+    <value>Error loading certificate. Is password specified using ApplicationCertificatePassword?</value>
+  </data>
+  <data name="InvalidSupportedTypeVersions" xml:space="preserve">
+    <value>Invalid supportedTypeVersions specified.</value>
+  </data>
+  <data name="NonUTCDateTime" xml:space="preserve">
+    <value>A non UTC DateTime has been provided when a UTC DateTime is expected.</value>
+  </data>
+  <data name="ThingTypeClassNull" xml:space="preserve">
+    <value>The type that implements the item type specific data must be specified.</value>
+  </data>
+  <data name="TypeClassNotThing" xml:space="preserve">
+    <value>The itemTypeClass must derive from ThingBase.</value>
+  </data>
+  <data name="TypeHandlerAlreadyRegistered" xml:space="preserve">
+    <value>An item type handler is already registered for the specified type ID.</value>
+  </data>
+  <data name="ItemExtensionClassNull" xml:space="preserve">
+    <value>The type that implements the item extension data must be specified.</value>
+  </data>
+  <data name="ExtensionHandlerAlreadyRegistered" xml:space="preserve">
+    <value>A item extension handler is already registered for the specified extension source.</value>
+  </data>
+  <data name="TypeIdEmpty" xml:space="preserve">
+    <value>A valid item type must be specified.</value>
+  </data>
+  <data name="TypeManagerConnectionNull" xml:space="preserve">
+    <value>A connection must be specified.</value>
+  </data>
+  <data name="TypeIdGuidEmpty" xml:space="preserve">
+    <value>The type identifier must be a non-empty Guid.</value>
+  </data>
+  <data name="ApplicationIdGuidEmpty" xml:space="preserve">
+    <value>The application identifier must be specified.</value>
+  </data>
+  <data name="AppDataHandlerClassMandatory" xml:space="preserve">
+    <value>The application specific data handler class must be specified.</value>
+  </data>
+  <data name="AppDataHandlerNotApplicationSpecific" xml:space="preserve">
+    <value>The type that implements the application specific data handler must derive from ApplicationSpecific.</value>
+  </data>
+  <data name="AppDataHandlerAlreadyRegistered" xml:space="preserve">
+    <value>An application specific data handler is already registered for the specified application ID and subtype tag.</value>
+  </data>
+  <data name="TransformNameNotFound" xml:space="preserve">
+    <value>A transform with the name '{0}' could not be found for this type.</value>
+  </data>
+  <data name="ParseXmlNavNull" xml:space="preserve">
+    <value>The XML navigator must be provided to parse the XML.</value>
+  </data>
+  <data name="WriteXmlNullWriter" xml:space="preserve">
+    <value>The XmlWriter must be specified.</value>
+  </data>
+  <data name="WriteXmlEmptyNodeName" xml:space="preserve">
+    <value>The containing node name must be specified.</value>
+  </data>
+  <data name="WhenNullValue" xml:space="preserve">
+    <value>The value of the When property cannot be null.</value>
+  </data>
+  <data name="SearchMaxResultsInvalid" xml:space="preserve">
+    <value>Max results must be a positive integer.</value>
+  </data>
+  <data name="VocabularyItemNull" xml:space="preserve">
+    <value>The vocabulary item cannot be null.</value>
+  </data>
+  <data name="VocabularyItemConversionNotSupported" xml:space="preserve">
+    <value>The vocabulary item doesn't support the requested conversion.</value>
+  </data>
+  <data name="VocabularyItemConversionGeneralException" xml:space="preserve">
+    <value>An error occurred during conversion.</value>
+  </data>
+  <data name="VocabularyItemUnsupportedConversion" xml:space="preserve">
+    <value>Encountered unknown or unsupported conversion.</value>
+  </data>
+  <data name="VocabularyItemInfoXmlNull" xml:space="preserve">
+    <value>The info xml cannot be null.</value>
+  </data>
+  <data name="TypeIdSetGuidEmpty" xml:space="preserve">
+    <value>The type identifier must be a non-empty Guid.</value>
+  </data>
+  <data name="DateRangeMinLessThanMax" xml:space="preserve">
+    <value>The dateMin must be less than or equal to dateMax.</value>
+  </data>
+  <data name="AuthorizationRuleBadPermissions" xml:space="preserve">
+    <value>The permissions 'None' and 'Unknown' cannot be specified when constructing an AuthorizationRule.</value>
+  </data>
+  <data name="GetRulesXmlNullRules" xml:space="preserve">
+    <value>A non-null list of authorizations must be specified.</value>
+  </data>
+  <data name="OtherItemDataFormat" xml:space="preserve">
+    <value>The other data ContentType must be text/csv.</value>
+  </data>
+  <data name="OtherItemDataNull" xml:space="preserve">
+    <value>The Data value cannot be null.</value>
+  </data>
+  <data name="OtherItemDataInvalidNumber" xml:space="preserve">
+    <value>string is not a valid floating-point number.</value>
+  </data>
+  <data name="OtherItemDataValuesNull" xml:space="preserve">
+    <value>List of values cannot be null.</value>
+  </data>
+  <data name="ShellUrlRequired" xml:space="preserve">
+    <value>A Shell URL must be supplied or configured.</value>
+  </data>
+  <data name="ShellTargetRequired" xml:space="preserve">
+    <value>A Shell redirect target location name must be specified.</value>
+  </data>
+  <data name="BrowserAuthException" xml:space="preserve">
+    <value>An error occurred while running authentication through the browser.</value>
+  </data>
+  <data name="IncompatibleVersionExceptionMessageFormatString" xml:space="preserve">
+    <value>The versions are not compatible. Supported versions: {0} . Encountered version: {1}</value>
+  </data>
+  <data name="WhenNotSet" xml:space="preserve">
+    <value>When property is not set. </value>
+  </data>
+  <data name="OpenParen" xml:space="preserve">
+    <value>(</value>
+  </data>
+  <data name="CloseParen" xml:space="preserve">
+    <value>)</value>
+  </data>
+  <data name="Percent" xml:space="preserve">
+    <value>{0}%</value>
+  </data>
+  <data name="NameAndValue" xml:space="preserve">
+    <value>{0}: {1}</value>
+  </data>
+  <data name="NameEqualsValue" xml:space="preserve">
+    <value>{0}={1}</value>
+  </data>
+  <data name="ApplicationDataReferenceUnexpectedNode" xml:space="preserve">
+    <value>The specified XML does not contain an application-data-reference node.</value>
+  </data>
+  <data name="ApplicationDataReferenceNameNotSet" xml:space="preserve">
+    <value>The name of the application data reference must be set before creating or updating the item.</value>
+  </data>
+  <data name="RenderFileNameEmptyValue" xml:space="preserve">
+    <value>The value of the RenderFileName property cannot be an empty string.</value>
+  </data>
+  <data name="AssessmentValueMandatory" xml:space="preserve">
+    <value>The value of the Value property cannot be null.</value>
+  </data>
+  <data name="AssessmentValueNotSet" xml:space="preserve">
+    <value>The assessment value must be set before creating or updating the item.</value>
+  </data>
+  <data name="AssessmentNameMandatory" xml:space="preserve">
+    <value>The value of the Name property cannot be null.</value>
+  </data>
+  <data name="AssessmentNameNotSet" xml:space="preserve">
+    <value>The name of the assessed area must be set before creating or updating the item.</value>
+  </data>
+  <data name="AssessmentToStringFormat" xml:space="preserve">
+    <value>{0}: {1}</value>
+  </data>
+  <data name="BabyToStringFormatWeightAndLength" xml:space="preserve">
+    <value>({0}, {1})</value>
+  </data>
+  <data name="BabyToStringFormatWeight" xml:space="preserve">
+    <value>({0})</value>
+  </data>
+  <data name="BabyToStringFormatLength" xml:space="preserve">
+    <value>({0})</value>
+  </data>
+  <data name="BasicUnexpectedNode" xml:space="preserve">
+    <value>The specified XML does not contain a basic node.</value>
+  </data>
+  <data name="BasicBirthYearOutOfRange" xml:space="preserve">
+    <value>The birth year must be between 1000 and 3000.</value>
+  </data>
+  <data name="BasicToStringFormatGenderAndBirthYear" xml:space="preserve">
+    <value>{0}; Born {1}</value>
+  </data>
+  <data name="BasicToStringFormatBirthYear" xml:space="preserve">
+    <value>Born {0}</value>
+  </data>
+  <data name="BasicToStringFormatPostalCodeAndCountry" xml:space="preserve">
+    <value>{0}, {1}</value>
+  </data>
+  <data name="BasicToStringSeeDetails" xml:space="preserve">
+    <value>See Details</value>
+  </data>
+  <data name="BodyCompositionUnexpectedNode" xml:space="preserve">
+    <value>The specified XML does not contain a body-composition node.</value>
+  </data>
+  <data name="BodyCompositionMeasurementNameNotSet" xml:space="preserve">
+    <value>The measurement name of body composition is not set. </value>
+  </data>
+  <data name="BodyCompositionValueNotSet" xml:space="preserve">
+    <value>The value of body composition is not set.</value>
+  </data>
+  <data name="BodyCompositionMeasurementNameNullValue" xml:space="preserve">
+    <value>The measurement name of body composition must be specified.  </value>
+  </data>
+  <data name="BodyCompositionValuePercentValueOutOfRange" xml:space="preserve">
+    <value>The percentage value of the body composition value is negative or bigger than 100%.</value>
+  </data>
+  <data name="BodyCompositionValueToStringFormatMassAndPercent" xml:space="preserve">
+    <value>{0}, {1}%</value>
+  </data>
+  <data name="BodyDimensionUnexpectedNode" xml:space="preserve">
+    <value>The specified XML does not contain a body-dimension node. </value>
+  </data>
+  <data name="BodyDimensionMeasurementNameNotSet" xml:space="preserve">
+    <value>The name of the body dimension measurement is not set. </value>
+  </data>
+  <data name="BodyDimensionValueNotSet" xml:space="preserve">
+    <value>The value of body dimension is not set. </value>
+  </data>
+  <data name="BodyDimensionMeasurementNameNullValue" xml:space="preserve">
+    <value>The name of the body dimension measurement is null. </value>
+  </data>
+  <data name="BodyDimensionValueNullValue" xml:space="preserve">
+    <value>The value of the body dimension measurement is null.</value>
+  </data>
+  <data name="BloodOxygenSaturationUnexpectedNode" xml:space="preserve">
+    <value>The specified XML does not contain a blood-oxygen-saturation node. </value>
+  </data>
+  <data name="BloodOxygenSaturationValueOutOfRange" xml:space="preserve">
+    <value>The percentage value of the blood oxygen saturation is negative or bigger than 100%.  </value>
+  </data>
+  <data name="BlueButtonTextFileUnexpectedNode" xml:space="preserve">
+    <value>The specified XML does not contain a blue-button-text-file node.</value>
+  </data>
+  <data name="BlueButtonTextFileNameNotSet" xml:space="preserve">
+    <value>The instance name must be set before creating or updating the item.</value>
+  </data>
+  <data name="BlueButtonFileContentTypeNotSet" xml:space="preserve">
+    <value>Content Type for the associated Blue Button file is not specified.</value>
+  </data>
+  <data name="BlueButtonStreamContentTypeNotSet" xml:space="preserve">
+    <value>Content Type for the record stream is not specified.</value>
+  </data>
+  <data name="CalorieGuidelineNameNotSet" xml:space="preserve">
+    <value>The name of the calorie guideline is not set. </value>
+  </data>
+  <data name="CalorieGuidelineCaloriesNotSet" xml:space="preserve">
+    <value>The number of calories of the calorie guideline is not set. </value>
+  </data>
+  <data name="CalorieGuidelineNameNullValue" xml:space="preserve">
+    <value>The name of the calorie guideline must be specified. </value>
+  </data>
+  <data name="CalorieGuidelineCaloriesNullValue" xml:space="preserve">
+    <value>The number of calories to support the guideline must be specified. </value>
+  </data>
+  <data name="CalorieGuidelineUnexpectedNode" xml:space="preserve">
+    <value>The specified XML does not contain a calorie-guideline node.</value>
+  </data>
+  <data name="CarePlanUnexpectedNode" xml:space="preserve">
+    <value>The specified XML does not contain a care-plan node.</value>
+  </data>
+  <data name="CarePlanNameNullOrEmpty" xml:space="preserve">
+    <value>The name property cannot be null or empty.</value>
+  </data>
+  <data name="CarePlanFormat" xml:space="preserve">
+    <value>{0} ({1})</value>
+  </data>
+  <data name="CarePlanGoalNameNull" xml:space="preserve">
+    <value>The name property cannot be null.</value>
+  </data>
+  <data name="CarePlanGoalFormat" xml:space="preserve">
+    <value>{0} ({1})</value>
+  </data>
+  <data name="CarePlanGoalDateInvalid" xml:space="preserve">
+    <value>The EndDate must be after the StartDate.</value>
+  </data>
+  <data name="CarePlanGoalGroupNameNull" xml:space="preserve">
+    <value>The name property cannot be null.</value>
+  </data>
+  <data name="CarePlanGoalGroupGroupsNull" xml:space="preserve">
+    <value>The Groups property cannot be null.</value>
+  </data>
+  <data name="CarePlanGoalGroupFormat" xml:space="preserve">
+    <value>{0} ({1})</value>
+  </data>
+  <data name="CarePlanGoalGroupGroupsEmpty" xml:space="preserve">
+    <value>The Groups property cannot be an empty collection.</value>
+  </data>
+  <data name="CarePlanGoalRangeFormatMinOnly" xml:space="preserve">
+    <value>&gt;= {0}</value>
+  </data>
+  <data name="CarePlanGoalRangeFormatMaxOnly" xml:space="preserve">
+    <value>&lt;= {0}</value>
+  </data>
+  <data name="CarePlanGoalRangeFormatMinMax" xml:space="preserve">
+    <value>{0}, {1}</value>
+  </data>
+  <data name="CarePlanGoalRangeFormat" xml:space="preserve">
+    <value>{0} ({1})</value>
+  </data>
+  <data name="CarePlanGoalRangeStatusIndicatorNegative" xml:space="preserve">
+    <value>The StatusIndicator property cannot be negative.</value>
+  </data>
+  <data name="CarePlanTaskNameNull" xml:space="preserve">
+    <value>The name property cannot be null.</value>
+  </data>
+  <data name="CarePlanTaskFormat" xml:space="preserve">
+    <value>{0} ({1})</value>
+  </data>
+  <data name="CarePlanTaskDateInvalid" xml:space="preserve">
+    <value>The EndDate must be after the StartDate.</value>
+  </data>
+  <data name="CarePlanTaskSequenceNumberInvalid" xml:space="preserve">
+    <value>The SequenceNumber property cannot be negative.</value>
+  </data>
+  <data name="CarePlanTaskRecurrenceFormat" xml:space="preserve">
+    <value>{0} times per {1}</value>
+  </data>
+  <data name="CarePlanTaskRecurrenceInvalidTimeInInterval" xml:space="preserve">
+    <value>The TimesInInterval value must be a positive integer.</value>
+  </data>
+  <data name="CarePlanTaskRecurrenceIntervalAndTimesBothSet" xml:space="preserve">
+    <value>The Interval and TimesInInterval properties must both be set.</value>
+  </data>
+  <data name="ClaimAmountsToStringFormat" xml:space="preserve">
+    <value>Charged={0}, negotiated={1}, copay={2}, deductible={3}, not covered={4}, eligible={5}, percentage={6}, coinsurance={7}, adjustments={8}, benefits={9}, patient responsibility={10}</value>
+  </data>
+  <data name="CommentUnexpectedNode" xml:space="preserve">
+    <value>The specified XML does not contain a comment node.</value>
+  </data>
+  <data name="CommentContentMandatory" xml:space="preserve">
+    <value>The value of the Content property cannot be null or empty.</value>
+  </data>
+  <data name="ConcernUnexpectedNode" xml:space="preserve">
+    <value>The specified XML does not contain a concern node.</value>
+  </data>
+  <data name="ConcernDescriptionNotSet" xml:space="preserve">
+    <value>The description of a concern is not set. </value>
+  </data>
+  <data name="ConcernDescriptionMandatory" xml:space="preserve">
+    <value>The description of a concern is mandatory. </value>
+  </data>
+  <data name="ConditionEntryNameMandatory" xml:space="preserve">
+    <value>The name of a condition entry must be specified.</value>
+  </data>
+  <data name="ConditionEntryNameNotSet" xml:space="preserve">
+    <value>The name of a conditon entry is not set. </value>
+  </data>
+  <data name="ContraindicationUnexpectedNode" xml:space="preserve">
+    <value>The specified XML does not contain a contraindication node.</value>
+  </data>
+  <data name="ContraindicationSubstanceNotSet" xml:space="preserve">
+    <value>The substance for the contraindication must be set before creating or updating the item.</value>
+  </data>
+  <data name="ContraindicationStatusNotSet" xml:space="preserve">
+    <value>The status for the contraindication must be set before creating or updating the item.</value>
+  </data>
+  <data name="ContraindicationSubstanceMandatory" xml:space="preserve">
+    <value>A contraindication must always have a substance.</value>
+  </data>
+  <data name="ContraindicationStatusMandatory" xml:space="preserve">
+    <value>A contraindication must always have a status.</value>
+  </data>
+  <data name="DefibrillatorEpisodeWhenNullValue" xml:space="preserve">
+    <value>The value of When property cannot be null.</value>
+  </data>
+  <data name="DefibrillatorEpisodeFieldUnexpectedNode" xml:space="preserve">
+    <value>The specified XML does not contain a defibrillator episode field node.</value>
+  </data>
+  <data name="DefibrillatorEpisodeFieldNameNullValue" xml:space="preserve">
+    <value>Name property of episode field cannot be null.</value>
+  </data>
+  <data name="DefibrillatorEpisodeFieldValueNullValue" xml:space="preserve">
+    <value>Value property of episode field cannot be null.</value>
+  </data>
+  <data name="DeliveryLaborDurationMustBePositive" xml:space="preserve">
+    <value>The labor duration must be greater than zero.</value>
+  </data>
+  <data name="DietaryIntakeUnexpectedNode" xml:space="preserve">
+    <value>The specified XML does not contain a dietary-intake node.</value>
+  </data>
+  <data name="FoodItemNullValue" xml:space="preserve">
+    <value>The food item name must always have a value.</value>
+  </data>
+  <data name="DietaryIntakeServingSizeServingConsumedFormat" xml:space="preserve">
+    <value>{0} ({1}, {2})</value>
+  </data>
+  <data name="DietaryIntakeServingSizeFormat" xml:space="preserve">
+    <value>{0} ({1})</value>
+  </data>
+  <data name="EncounterUnexpectedNode" xml:space="preserve">
+    <value>The specified XML does not contain an encounter node.</value>
+  </data>
+  <data name="ExerciseUnexpectedNode" xml:space="preserve">
+    <value>The specified XML does not contain a exercise node.</value>
+  </data>
+  <data name="ExerciseActivityMandatory" xml:space="preserve">
+    <value>An exercise must always specify an activity.</value>
+  </data>
+  <data name="ExerciseActivityNotSet" xml:space="preserve">
+    <value>The exercise activity must be set before creating or updating the item.</value>
+  </data>
+  <data name="ExerciseDurationNotPositive" xml:space="preserve">
+    <value>The duration for an exercise must be positive.</value>
+  </data>
+  <data name="ExerciseToStringFormatDuration" xml:space="preserve">
+    <value>, {0} min.</value>
+  </data>
+  <data name="ExerciseDetailNameNotSet" xml:space="preserve">
+    <value>The name value must be set before creating or updating the item.</value>
+  </data>
+  <data name="ExerciseDetailValueNotSet" xml:space="preserve">
+    <value>The value must be set before creating or updating the item.</value>
+  </data>
+  <data name="ExerciseDetailNameNullValue" xml:space="preserve">
+    <value>The value of the Name property cannot be null.</value>
+  </data>
+  <data name="OffsetMustBePositive" xml:space="preserve">
+    <value>The value for OffsetInSeconds must be a positive value.</value>
+  </data>
+  <data name="ExerciseSampleOneValueToStringFormat" xml:space="preserve">
+    <value>t={0}, v={1}</value>
+  </data>
+  <data name="SamplingIntervalMustBePositive" xml:space="preserve">
+    <value>The value for the sampling interval must be a positive value.</value>
+  </data>
+  <data name="SamplingIntervalMustBeSet" xml:space="preserve">
+    <value>The sampling interval must be set before adding samples.</value>
+  </data>
+  <data name="ExerciseSamplesUnexpectedNode" xml:space="preserve">
+    <value>The specified XML does not contain a exercise-samples node.</value>
+  </data>
+  <data name="ExerciseSampleNameNotSet" xml:space="preserve">
+    <value>The name value must be set before creating or updating the item.</value>
+  </data>
+  <data name="ExerciseSampleUnitNotSet" xml:space="preserve">
+    <value>The unit value must be set before creating or updating the item.</value>
+  </data>
+  <data name="ExerciseSampleSamplingIntervalNotSet" xml:space="preserve">
+    <value>The sampling interval value must be set before creating or updating the item.</value>
+  </data>
+  <data name="ExerciseSampleNameMandatory" xml:space="preserve">
+    <value>The exercise sample must always specify a name.</value>
+  </data>
+  <data name="ExerciseSampleUnitMandatory" xml:space="preserve">
+    <value>The exercise sample must always specify a unit.</value>
+  </data>
+  <data name="OneAndTwoValuedSamples" xml:space="preserve">
+    <value>Exercise sample data must contain either SingleValuedSamples or TwoValuedSamples, but cannot contain both.</value>
+  </data>
+  <data name="ExerciseSampleTwoValueToStringFormat" xml:space="preserve">
+    <value>t={0}, v1={1}, v2={2}</value>
+  </data>
+  <data name="ExerciseSegmentActivityNotSet" xml:space="preserve">
+    <value>The activity for the exercise segment must be set before creating or updating the item.</value>
+  </data>
+  <data name="ExerciseSegmentToStringFormat" xml:space="preserve">
+    <value>{0} ({1})</value>
+  </data>
+  <data name="ExerciseOffsetNotPositive" xml:space="preserve">
+    <value>The offset must be positive.</value>
+  </data>
+  <data name="ServicesMandatory" xml:space="preserve">
+    <value>The services must be set before creating or updating the item.</value>
+  </data>
+  <data name="ExplanationOfBenefitsUnexpectedNode" xml:space="preserve">
+    <value>The specified XML does not contain an explanation-of-benefits node.</value>
+  </data>
+  <data name="DateSubmittedNullValue" xml:space="preserve">
+    <value>The value of the DateSubmitted property cannot be null.</value>
+  </data>
+  <data name="PatientNullValue" xml:space="preserve">
+    <value>The value of the Patient property cannot be null.</value>
+  </data>
+  <data name="PlanNullValue" xml:space="preserve">
+    <value>The value of the Plan property cannot be null.</value>
+  </data>
+  <data name="MemberIdNullOrEmptyValue" xml:space="preserve">
+    <value>The value of the MemberId property cannot be null or empty.</value>
+  </data>
+  <data name="ClaimTypeNullValue" xml:space="preserve">
+    <value>The value of the ClaimType property cannot be null.</value>
+  </data>
+  <data name="ClaimIdNullOrEmptyValue" xml:space="preserve">
+    <value>The value of the ClaimId property cannot be null or empty.</value>
+  </data>
+  <data name="SubmittedByNullValue" xml:space="preserve">
+    <value>The value of the SubmittedBy property cannot be null.</value>
+  </data>
+  <data name="ProviderNullValue" xml:space="preserve">
+    <value>The value of the Provider property cannot be null.</value>
+  </data>
+  <data name="CurrencyNullValue" xml:space="preserve">
+    <value>The value of the Currency property cannot be null.</value>
+  </data>
+  <data name="ClaimTotalsNullValue" xml:space="preserve">
+    <value>The value of the ClaimTotals property cannot be null.</value>
+  </data>
+  <data name="ExplanationOfBenefitsToStringFormat" xml:space="preserve">
+    <value>{0}, {1}, {2} ({3})</value>
+  </data>
+  <data name="FamilyHistoryUnexpectedNode" xml:space="preserve">
+    <value>The specified XML does not contain a family-history node.</value>
+  </data>
+  <data name="FamilyHistoryConditionNotSet" xml:space="preserve">
+    <value>The condition for the family history must be set before creating or updating the item.</value>
+  </data>
+  <data name="FamilyHistoryConditionMandatory" xml:space="preserve">
+    <value>A family history must always have a condition.</value>
+  </data>
+  <data name="FamilyHistoryToStringFormat" xml:space="preserve">
+    <value>{0} ({1})</value>
+  </data>
+  <data name="FamilyHistoryConditionUnexpectedNode" xml:space="preserve">
+    <value>The specified XML does not contain a family history condition node.</value>
+  </data>
+  <data name="FamilyHistoryConditionConditionNotSet" xml:space="preserve">
+    <value>The condition of family history condition must be set before creating or updating the item. </value>
+  </data>
+  <data name="FamilyHistoryConditionConditionMandatory" xml:space="preserve">
+    <value>A family history condition must always have a condition. </value>
+  </data>
+  <data name="FamilyHistoryPersonUnexpectedNode" xml:space="preserve">
+    <value>The specified XML does not contain a family-history-condition node. </value>
+  </data>
+  <data name="FamilyHistoryPersonRelativeNameNotSet" xml:space="preserve">
+    <value>The relative name for family history person must be set before creating or updating the item.</value>
+  </data>
+  <data name="FamilyHistoryPersonRelativeNameMandatory" xml:space="preserve">
+    <value>A family history person must always have a relative name.  </value>
+  </data>
+  <data name="FamilyHistoryRelativeToStringFormatNameAndRelationship" xml:space="preserve">
+    <value>{0} ({1})</value>
+  </data>
+  <data name="RelationshipNullValue" xml:space="preserve">
+    <value>The relationship between the relative and the record owner must be set.</value>
+  </data>
+  <data name="FoodEnergyValueFormat" xml:space="preserve">
+    <value>{0} kCal</value>
+  </data>
+  <data name="GeneralMeasurementDisplayNotSet" xml:space="preserve">
+    <value>The display for general measurement must be set before creating or updating the item. </value>
+  </data>
+  <data name="ChromosomeNotSet" xml:space="preserve">
+    <value>The chromosome for genetic snp results must be set before creating or updating the item. </value>
+  </data>
+  <data name="GeneticSnpResultsUnexpectedNode" xml:space="preserve">
+    <value>The specified XML does not contain a genetic snp results node.</value>
+  </data>
+  <data name="GenomeBuildNotSet" xml:space="preserve">
+    <value>The genome build for genetic snp results must be set before creating or updating the item.</value>
+  </data>
+  <data name="InvalidNumberingScheme" xml:space="preserve">
+    <value>The genome numbering scheme must be either 0 based or 1 based. </value>
+  </data>
+  <data name="GeneticSnpResultsToStringFormat" xml:space="preserve">
+    <value>Chromosome {0}, {1}</value>
+  </data>
+  <data name="AssociatedThingTypeVersionIdNullorEmpty" xml:space="preserve">
+    <value>The thing type version id must always have a value.</value>
+  </data>
+  <data name="GoalRangeNameNullValue" xml:space="preserve">
+    <value>The range name must always have a value.</value>
+  </data>
+  <data name="GoalRangeWithMinAndMaxFormat" xml:space="preserve">
+    <value>Min: {0} Max: {1}</value>
+  </data>
+  <data name="GoalRangeWithMinFormat" xml:space="preserve">
+    <value>Min: {0}</value>
+  </data>
+  <data name="GoalRangeWithMaxFormat" xml:space="preserve">
+    <value>Max: {0}</value>
+  </data>
+  <data name="GoalRecurrenceIntervalNullValue" xml:space="preserve">
+    <value>The recurrence interval must always have a value.</value>
+  </data>
+  <data name="GoalRecurrenceFormat" xml:space="preserve">
+    <value>{0} times per {1}</value>
+  </data>
+  <data name="GroupMembershipUnexpectedNode" xml:space="preserve">
+    <value>The specified XML does not contain a group-membership node.</value>
+  </data>
+  <data name="GroupMembershipActivityUnexpectedNode" xml:space="preserve">
+    <value>The specified XML does not contain a group-membership-activity node.</value>
+  </data>
+  <data name="GroupMembershipActivityWhenNotSet" xml:space="preserve">
+    <value>The date when the group membership activity occurred must be set before creating or updating the item.</value>
+  </data>
+  <data name="GroupMembershipActivityActivityNotSet" xml:space="preserve">
+    <value>The activity that occurred for the group membership must be set before creating or updating the item.</value>
+  </data>
+  <data name="GroupMembershipActivityActivityMandatory" xml:space="preserve">
+    <value>The value of the Activity property cannot be null.    </value>
+  </data>
+  <data name="GroupMembershipTypeNameMandatory" xml:space="preserve">
+    <value>The value of the Name property cannot be null or empty.</value>
+  </data>
+  <data name="GroupMembershipTypeNameNotSet" xml:space="preserve">
+    <value>The group membership name must be set before creating or updating the item.</value>
+  </data>
+  <data name="GroupMembershipTypeValueMandatory" xml:space="preserve">
+    <value>The value of the Value property cannot be null or empty.</value>
+  </data>
+  <data name="HealthAssessmentUnexpectedNode" xml:space="preserve">
+    <value>The specified XML does not contain a health-assessment node.</value>
+  </data>
+  <data name="HealthAssessmentNameNotSet" xml:space="preserve">
+    <value>The health assessment name must be set before creating or updating the item.</value>
+  </data>
+  <data name="HealthAssessmentCategoryNotSet" xml:space="preserve">
+    <value>The health assessment category must be set before creating or updating the item.</value>
+  </data>
+  <data name="HealthAssessmentCategoryMandatory" xml:space="preserve">
+    <value>The value of the Category property cannot be null.</value>
+  </data>
+  <data name="HealthAssessmentResultNotSet" xml:space="preserve">
+    <value>The health assessment result must contain at least one assessment before creating or updating the item.</value>
+  </data>
+  <data name="HealthAssessmentResultMandatory" xml:space="preserve">
+    <value>The value of the Result property cannot be null and must contain at least on assessment.</value>
+  </data>
+  <data name="HealthEventUnexpectedNode" xml:space="preserve">
+    <value>The specified XML does not contain a health-event node.</value>
+  </data>
+  <data name="EventNullValue" xml:space="preserve">
+    <value>The value of the Event property cannot be null.</value>
+  </data>
+  <data name="HealthGoalUnexpectedNode" xml:space="preserve">
+    <value>The specified XML does not contain a health-goal node.</value>
+  </data>
+  <data name="GoalNameNullValue" xml:space="preserve">
+    <value>The goal name must always have a value.</value>
+  </data>
+  <data name="HealthGoalFormat" xml:space="preserve">
+    <value>{0} {1}</value>
+  </data>
+  <data name="HealthGoalWithTargetRangeAndRecurrenceFormat" xml:space="preserve">
+    <value>{0} {1} {2}</value>
+  </data>
+  <data name="HealthJournalEntryUnexpectedNode" xml:space="preserve">
+    <value>The specified XML does not contain a health-journal-entry node.</value>
+  </data>
+  <data name="HealthJournalEntryContentMandatory" xml:space="preserve">
+    <value>The value of the Content property cannot be null or empty.</value>
+  </data>
+  <data name="HeartRateUnexpectedNode" xml:space="preserve">
+    <value>The specified XML does not contain a heart-rate node.</value>
+  </data>
+  <data name="HeartRateValueNegative" xml:space="preserve">
+    <value>The value of heart rate cannot be negative.</value>
+  </data>
+  <data name="HeartRateToStringFormat" xml:space="preserve">
+    <value>{0} BPM</value>
+  </data>
+  <data name="ImmunizationUnexpectedNode" xml:space="preserve">
+    <value>The specified XML does not contain an immunization node.</value>
+  </data>
+  <data name="ImmunizationNameMandatory" xml:space="preserve">
+    <value>The value of the Name property cannot be null.</value>
+  </data>
+  <data name="ImmunizationNameNotSet" xml:space="preserve">
+    <value>The immunization name must be set before creating or updating the item.</value>
+  </data>
+  <data name="ImmunizationToStringFormat" xml:space="preserve">
+    <value>{0} ({1})</value>
+  </data>
+  <data name="LabTestResultsUnexpectedNode" xml:space="preserve">
+    <value>The specified XML does not contain a lab-test-results node.</value>
+  </data>
+  <data name="LabTestResultsLabGroupNotSet" xml:space="preserve">
+    <value>A lab test results must always have at least one lab group. </value>
+  </data>
+  <data name="LabTestResultsLabGroupMandatory" xml:space="preserve">
+    <value>A lab test results must always have at least one lab group. </value>
+  </data>
+  <data name="LabTestResultsGroupTypeGroupNameNotSet" xml:space="preserve">
+    <value>A lab test results group type group name must be set before creating or updating the item. </value>
+  </data>
+  <data name="LabTestResultsGroupTypeGroupNameMandatory" xml:space="preserve">
+    <value>A lab test results group type must always have a group name. </value>
+  </data>
+  <data name="LabTestResultValueTypeMeasurementNotSet" xml:space="preserve">
+    <value>A lab test result value type must always have a measurement.</value>
+  </data>
+  <data name="MealDefinitionNameNullValue" xml:space="preserve">
+    <value>Meal definition name must always have a value.</value>
+  </data>
+  <data name="MealDefinitionUnexpectedNode" xml:space="preserve">
+    <value>The specified XML does not contain a meal-definition node.</value>
+  </data>
+  <data name="MedicalImageStudySeriesMandatory" xml:space="preserve">
+    <value>The value of the Series collection cannot be null or empty.</value>
+  </data>
+  <data name="MedicalImageStudyUnexpectedNode" xml:space="preserve">
+    <value>The specified XML does not contain a medical-image-study node.</value>
+  </data>
+  <data name="AcquisitionDateTimeMandatory" xml:space="preserve">
+    <value>The value of the AcquisitionDateTime property cannot be null.</value>
+  </data>
+  <data name="ImagesMandatory" xml:space="preserve">
+    <value>The value of the Images property cannot be null or empty.</value>
+  </data>
+  <data name="ImageBlobNameMandatory" xml:space="preserve">
+    <value>The value of the ImageBlobName property cannot be null.</value>
+  </data>
+  <data name="MedicationNameNotSet" xml:space="preserve">
+    <value>A medication name must be set before creating or updating the item.</value>
+  </data>
+  <data name="MedicationNameMandatory" xml:space="preserve">
+    <value>A medication must always have a name.</value>
+  </data>
+  <data name="MedicationUnexpectedNode" xml:space="preserve">
+    <value>The specified XML does not contain a medication node.</value>
+  </data>
+  <data name="MedicationToStringFormatGenericName" xml:space="preserve">
+    <value>({0})</value>
+  </data>
+  <data name="MenstruationUnexpectedNode" xml:space="preserve">
+    <value>The specified XML does not contain a menstrual-flow node.</value>
+  </data>
+  <data name="MessageUnexpectedNode" xml:space="preserve">
+    <value>The specified XML does not contain a message node.</value>
+  </data>
+  <data name="MessageSizeOutOfRange" xml:space="preserve">
+    <value>The Size property must be positive.</value>
+  </data>
+  <data name="MessageNameMandatory" xml:space="preserve">
+    <value>The value of the Name property cannot be null or empty.</value>
+  </data>
+  <data name="BlobNameMandatory" xml:space="preserve">
+    <value>The value of BlobName property cannot be null or empty.</value>
+  </data>
+  <data name="MedicationFillUnexpectedNode" xml:space="preserve">
+    <value>The specified XML does not contain a medication-fill node.</value>
+  </data>
+  <data name="MedicationFillNameMandatory" xml:space="preserve">
+    <value>A medication fill must always have a name.</value>
+  </data>
+  <data name="MedicationFillNameNotSet" xml:space="preserve">
+    <value>A medication fill name must be set before creating or updating the item.</value>
+  </data>
+  <data name="MedicationFillToStringFormat" xml:space="preserve">
+    <value>{0}, {1}</value>
+  </data>
+  <data name="NutrientNameNullValue" xml:space="preserve">
+    <value>The nutrient name must always have a value.</value>
+  </data>
+  <data name="NutritionValueFormat" xml:space="preserve">
+    <value>{0} {1}</value>
+  </data>
+  <data name="OrganizationNameNotSet" xml:space="preserve">
+    <value>The name of the organization must be specified. </value>
+  </data>
+  <data name="PapSessionUnexpectedNode" xml:space="preserve">
+    <value>The specified XML does not contain a pap-session node.</value>
+  </data>
+  <data name="DurationMinutesNegative" xml:space="preserve">
+    <value>The DurationMinutes value cannot be negative.</value>
+  </data>
+  <data name="ApneaHypopneaIndexNegative" xml:space="preserve">
+    <value>The ApneaHypopneaIndex value cannot be negative.</value>
+  </data>
+  <data name="ApneaIndexNegative" xml:space="preserve">
+    <value>The ApneaIndex value cannot be negative.</value>
+  </data>
+  <data name="HypopneaIndexNegative" xml:space="preserve">
+    <value>The HypopneaIndex value cannot be negative.</value>
+  </data>
+  <data name="OxygenDesaturationIndexNegative" xml:space="preserve">
+    <value>The OxygenDesaturationIndex value cannot be negative.</value>
+  </data>
+  <data name="PapSessionToStringFormat" xml:space="preserve">
+    <value>Apnea-Hypopnea Index: {0}</value>
+  </data>
+  <data name="MeanToStringFormat" xml:space="preserve">
+    <value>Mean: {0}</value>
+  </data>
+  <data name="MedianToStringFormat" xml:space="preserve">
+    <value>Median: {0}</value>
+  </data>
+  <data name="MaximumToStringFormat" xml:space="preserve">
+    <value>Maximum: {0}</value>
+  </data>
+  <data name="Percentile95thToStringFormat" xml:space="preserve">
+    <value>95th Percentile: {0}</value>
+  </data>
+  <data name="Percentile90thToStringFormat" xml:space="preserve">
+    <value>90th Percentile: {0}</value>
+  </data>
+  <data name="PeakFlowUnexpectedNode" xml:space="preserve">
+    <value>The specific XML does not contain a peak-flow node.</value>
+  </data>
+  <data name="PeakFlowWhenNotSet" xml:space="preserve">
+    <value>The date when the peak flow reading occurred must be set before creating or updating the item.</value>
+  </data>
+  <data name="PeakFlowToStringFormatPefFev1Fev6" xml:space="preserve">
+    <value>PEF: {0}; FEV1: {1}; FEV6: {2}</value>
+  </data>
+  <data name="PeakFlowToStringFormatPefFev1" xml:space="preserve">
+    <value>PEF: {0}; FEV1: {1}</value>
+  </data>
+  <data name="PeakFlowToStringFormatPefFev6" xml:space="preserve">
+    <value>PEF: {0}; FEV6: {1}</value>
+  </data>
+  <data name="PeakFlowToStringFormatFev1Fev6" xml:space="preserve">
+    <value>FEV1: {0}; FEV6: {1}</value>
+  </data>
+  <data name="PeakFlowToStringFormatPef" xml:space="preserve">
+    <value>PEF: {0}</value>
+  </data>
+  <data name="PeakFlowToStringFormatFev1" xml:space="preserve">
+    <value>FEV1: {0}</value>
+  </data>
+  <data name="PeakFlowToStringFormatFev6" xml:space="preserve">
+    <value>FEV6: {0}</value>
+  </data>
+  <data name="PregnancyUnexpectedNode" xml:space="preserve">
+    <value>The specified XML does not contain a pregnancy node.</value>
+  </data>
+  <data name="PregnancyFetusCountMustBeNonNegative" xml:space="preserve">
+    <value>The fetus count must be greater than or equal to zero.</value>
+  </data>
+  <data name="PrescriptionPrescribedByNotSet" xml:space="preserve">
+    <value>The prescriber must be set before creating or updating the item.</value>
+  </data>
+  <data name="PrescriptionPrescribedByNameMandatory" xml:space="preserve">
+    <value>The prescription must always have the prescribed by property set.</value>
+  </data>
+  <data name="PressureNotPositive" xml:space="preserve">
+    <value>The pressure measurement must be greater than or equal to zero.</value>
+  </data>
+  <data name="ProcedureUnexpectedNode" xml:space="preserve">
+    <value>The specified XML does not contain a procedure node.</value>
+  </data>
+  <data name="ProcedureNameNotSet" xml:space="preserve">
+    <value>The name of the procedure must be set before creating or updating the item.</value>
+  </data>
+  <data name="ProcedureNameNullValue" xml:space="preserve">
+    <value>The value of the Name property cannot be null.</value>
+  </data>
+  <data name="ProcedureToStringFormatNameAndLocation" xml:space="preserve">
+    <value>{0} ({1})</value>
+  </data>
+  <data name="ProcedureToStringFormatLocation" xml:space="preserve">
+    <value>({0})</value>
+  </data>
+  <data name="QuestionAnswerUnexpectedNode" xml:space="preserve">
+    <value>The specified XML does not contain a question-answer node.</value>
+  </data>
+  <data name="QuestionAnswerQuestionNotSet" xml:space="preserve">
+    <value>The question must be set before creating or updating the item.</value>
+  </data>
+  <data name="QuestionAnswerQuestionMandatory" xml:space="preserve">
+    <value>A question/answer must always have a question.</value>
+  </data>
+  <data name="RespiratoryRateNotPositive" xml:space="preserve">
+    <value>The respiratory rate measurement must be greater than or equal to zero.</value>
+  </data>
+  <data name="ServiceTypeNullValue" xml:space="preserve">
+    <value>The service type must be set before creating or updating the item.</value>
+  </data>
+  <data name="ServiceDatesNullValue" xml:space="preserve">
+    <value>The service dates must be set before creating or updating the item.</value>
+  </data>
+  <data name="ClaimAmountsNullValue" xml:space="preserve">
+    <value>The claim amounts must be set before creating or updating the item.</value>
+  </data>
+  <data name="SnpItemsNotSet" xml:space="preserve">
+    <value>SNP items must be set before creating or updating the item.</value>
+  </data>
+  <data name="ExtraCsvItemToParse" xml:space="preserve">
+    <value>There are extra CSV item in other data that cannot be parsed into SNP item.</value>
+  </data>
+  <data name="SnpItemToStringFormatReferenceSnpId" xml:space="preserve">
+    <value>reference SNP ID : {0} </value>
+  </data>
+  <data name="SnpItemToStringFormatStrandOrientation" xml:space="preserve">
+    <value>Strand Orientation : {0} </value>
+  </data>
+  <data name="SnpItemToStringFormatResult" xml:space="preserve">
+    <value>Result : {0} </value>
+  </data>
+  <data name="SnpItemToStringFormatAssayId" xml:space="preserve">
+    <value>Assay ID : {0} </value>
+  </data>
+  <data name="SnpItemToStringFormatStartAndEnd" xml:space="preserve">
+    <value>Start position : {0} End position : {1}</value>
+  </data>
+  <data name="StatusUnexpectedNode" xml:space="preserve">
+    <value>The specified XML does not contain a status node.</value>
+  </data>
+  <data name="StatusTypeNotSet" xml:space="preserve">
+    <value>The status type of a status is not set. </value>
+  </data>
+  <data name="StatusTypeMandatory" xml:space="preserve">
+    <value>The status type of a status is mandatory.</value>
+  </data>
+  <data name="StructuredMeasurementUnitsNotSet" xml:space="preserve">
+    <value>The units for structured measurement must be set before creating or updating the item.</value>
+  </data>
+  <data name="StructuredMeasurementToStringFormat" xml:space="preserve">
+    <value>{0} {1}</value>
+  </data>
+  <data name="TestResultRangeRangeTypeNotSet" xml:space="preserve">
+    <value>The type of test result range must be set before creating or updating the item.</value>
+  </data>
+  <data name="TestResultRangeTextNotSet" xml:space="preserve">
+    <value>The value of test result range must be set before creating or updating the item. </value>
+  </data>
+  <data name="TestResultRangeToStringFormat" xml:space="preserve">
+    <value>{0}, {1}</value>
+  </data>
+  <data name="TestResultRangeValueToStringFormat" xml:space="preserve">
+    <value>{0}-{1}</value>
+  </data>
+  <data name="AddressCityMandatory" xml:space="preserve">
+    <value>The value of the City property cannot be null.</value>
+  </data>
+  <data name="AddressCityNotSet" xml:space="preserve">
+    <value>The city must be set before creating or updating the item.</value>
+  </data>
+  <data name="AddressCountryMandatory" xml:space="preserve">
+    <value>The value of the Country property cannot be null.</value>
+  </data>
+  <data name="AddressCountryNotSet" xml:space="preserve">
+    <value>The country must be set before creating or updating the item.</value>
+  </data>
+  <data name="AddressPostalCodeMandatory" xml:space="preserve">
+    <value>The value of the PostalCode property cannot be null.</value>
+  </data>
+  <data name="AddressPostalCodeNotSet" xml:space="preserve">
+    <value>The postal code must be set before creating or updating the item.</value>
+  </data>
+  <data name="AddressStreetNotSet" xml:space="preserve">
+    <value>The street must contain at least one value before creating or updating the item.</value>
+  </data>
+  <data name="AddressStreetMandatory" xml:space="preserve">
+    <value>The value of the Street property cannot be null and must contain at least one value.</value>
+  </data>
+  <data name="IsPrimary" xml:space="preserve">
+    <value>(Primary)</value>
+  </data>
+  <data name="AerobicDataToStringFormatDistanceAndDuration" xml:space="preserve">
+    <value>{0}, {1} minute(s)</value>
+  </data>
+  <data name="AerobicDataToStringFormatDuration" xml:space="preserve">
+    <value>{0} minute(s)</value>
+  </data>
+  <data name="AerobicDataToStringFormatDistance" xml:space="preserve">
+    <value>{0}</value>
+  </data>
+  <data name="AerobicProfileMaxHRFormat" xml:space="preserve">
+    <value>{0}max </value>
+  </data>
+  <data name="AerobicProfileRestingHRFormat" xml:space="preserve">
+    <value>{0}resting </value>
+  </data>
+  <data name="AerobicProfileAnaerobicThresholdFormat" xml:space="preserve">
+    <value>{0}AT </value>
+  </data>
+  <data name="AerobicProfileRelativeVO2MaxFormat" xml:space="preserve">
+    <value>{0} VO2max </value>
+  </data>
+  <data name="AerobicSessionDurationNotPositive" xml:space="preserve">
+    <value>The duration must be greater than zero.</value>
+  </data>
+  <data name="AerobicSessionPeakHrNotPositive" xml:space="preserve">
+    <value>The peak heart rate must be greater than zero.</value>
+  </data>
+  <data name="AerobicSessionAvgHrNotPositive" xml:space="preserve">
+    <value>The average heart rate must be greater than zero.</value>
+  </data>
+  <data name="AerobicSessionMinHrNotPositive" xml:space="preserve">
+    <value>The minimum heart rate must be greater than zero.</value>
+  </data>
+  <data name="AerobicSessionEnergyNotPositive" xml:space="preserve">
+    <value>The energy consumed must be greater than zero.</value>
+  </data>
+  <data name="AerobicSessionEnergyFromFatNotPositive" xml:space="preserve">
+    <value>The energy from fat consumed must be greater than zero.</value>
+  </data>
+  <data name="AerobicSessionLeftRightBalanceNotPercentage" xml:space="preserve">
+    <value>The left-right balance must be between zero and one inclusive.</value>
+  </data>
+  <data name="AerobicSessionPeakCadenceNotPositive" xml:space="preserve">
+    <value>The peak cadence must be greater than zero.</value>
+  </data>
+  <data name="AerobicSessionAvgCadenceNotPositive" xml:space="preserve">
+    <value>The average cadence must be greater than zero.</value>
+  </data>
+  <data name="AerobicSessionMinCadenceNotPositive" xml:space="preserve">
+    <value>The minimum cadence must be greater than zero.</value>
+  </data>
+  <data name="AerobicWeeklyUnexpectedNode" xml:space="preserve">
+    <value>The specific XML does not contain an aerobic-weekly node.</value>
+  </data>
+  <data name="AerobicWeeklySessionNull" xml:space="preserve">
+    <value>The AerobicSession is mandatory and cannot be set to null.</value>
+  </data>
+  <data name="AerobicWeeklySessionNotSet" xml:space="preserve">
+    <value>The aerobic session must be set before creating or updating the item.</value>
+  </data>
+  <data name="AerobicWeeklyRecurrenceNotPositive" xml:space="preserve">
+    <value>The recurrence must be greater than zero.</value>
+  </data>
+  <data name="AerobicWeeklyGoalToStringFormat" xml:space="preserve">
+    <value>{0}, {1} time(s) per week</value>
+  </data>
+  <data name="AerobicProfileUnexpectedNode" xml:space="preserve">
+    <value>The specific XML does not contain an aerobic-profile node.</value>
+  </data>
+  <data name="AlertDaysNotSet" xml:space="preserve">
+    <value>The alert days must be set before creating or updating the item.</value>
+  </data>
+  <data name="AlertTimesNotSet" xml:space="preserve">
+    <value>The alert times must be set before creating or updating the item.</value>
+  </data>
+  <data name="AlertDOWNull" xml:space="preserve">
+    <value>The alert days cannot be null or empty.</value>
+  </data>
+  <data name="AlertTimesNull" xml:space="preserve">
+    <value>The alert times cannot be null or empty.</value>
+  </data>
+  <data name="AlertTimeFormat" xml:space="preserve">
+    <value>@ {0}</value>
+  </data>
+  <data name="AlertToStringFormat" xml:space="preserve">
+    <value>{0} {1}</value>
+  </data>
+  <data name="AllergicEpisodeUnexpectedNode" xml:space="preserve">
+    <value>The specified XML does not contain an allergic-episode node.</value>
+  </data>
+  <data name="AllergyNameMandatory" xml:space="preserve">
+    <value>An allergy item must always have a name.</value>
+  </data>
+  <data name="AllergyUnexpectedNode" xml:space="preserve">
+    <value>The specified XML does not contain an allergy node.</value>
+  </data>
+  <data name="AnnotationUnexpectedNode" xml:space="preserve">
+    <value>The specified XML does not contain an annotation node.</value>
+  </data>
+  <data name="AnnotationWhenNotSet" xml:space="preserve">
+    <value>The date when the annotation was taken must be set before creating or updating the item.</value>
+  </data>
+  <data name="AnnotationAuthorFormat" xml:space="preserve">
+    <value>Author: {0}</value>
+  </data>
+  <data name="AnnotationDateFormat" xml:space="preserve">
+    <value>Date: {0}</value>
+  </data>
+  <data name="AppSpecificUnexpectedNode" xml:space="preserve">
+    <value>The specified XML does not contain an app-specific node.</value>
+  </data>
+  <data name="AppSpecificAppIdMandatory" xml:space="preserve">
+    <value>The application identifier must be set before creating or updating the item.</value>
+  </data>
+  <data name="AppSpecificTagMandatory" xml:space="preserve">
+    <value>The subtype tag must be set before creating or updating the item.</value>
+  </data>
+  <data name="AppSpecificDescriptionMandatory" xml:space="preserve">
+    <value>The description must be set before creating or updating the item.</value>
+  </data>
+  <data name="AppointmentUnexpectedNode" xml:space="preserve">
+    <value>The specified XML does not contain an appointment node.</value>
+  </data>
+  <data name="ApproximateDateTimeMissingMandatory" xml:space="preserve">
+    <value>Either the ApproximateDate or the Description must be specified.</value>
+  </data>
+  <data name="ApproximateDateTimeDateNull" xml:space="preserve">
+    <value>The approximate date cannot be null.</value>
+  </data>
+  <data name="AsthmaInhalerUnexpectedNode" xml:space="preserve">
+    <value>The specific XML does not contain an asthma-inhaler node.</value>
+  </data>
+  <data name="AsthmaInhalerStartDateNotSet" xml:space="preserve">
+    <value>The inhaler start date must be set before creating or updating the item.</value>
+  </data>
+  <data name="AsthmaInhalerStartDateMandatory" xml:space="preserve">
+    <value>The StartDate is mandatory and cannot be set to null.</value>
+  </data>
+  <data name="AsthmaInhalerUseUnexpectedNode" xml:space="preserve">
+    <value>The specific XML does not contain an asthma-inhaler-use node.</value>
+  </data>
+  <data name="AsthmaInhalerUseWhenNotSet" xml:space="preserve">
+    <value>The date when the use occurred must be set before creating or updating the item.</value>
+  </data>
+  <data name="AsthmaInhalerDrugNotSet" xml:space="preserve">
+    <value>The drug being inhaled must be set before creating or updating the item.</value>
+  </data>
+  <data name="AsthmaInhalerDoseCountNotSet" xml:space="preserve">
+    <value>The dosage count must be set before creating or updating the item.</value>
+  </data>
+  <data name="AsthmaInhalerUseDrugMandatory" xml:space="preserve">
+    <value>The Drug property is mandatory and cannot be set to null or empty.</value>
+  </data>
+  <data name="AsthmaInhalerUseToStringFormatWithDrug" xml:space="preserve">
+    <value>{0}, {1} dose(s)</value>
+  </data>
+  <data name="AsthmaInhalerUseToStringFormat" xml:space="preserve">
+    <value>{0} dose(s)</value>
+  </data>
+  <data name="BGUnexpectedNode" xml:space="preserve">
+    <value>The specified XML does not contain a blood-glucose node.</value>
+  </data>
+  <data name="BGValueMandatory" xml:space="preserve">
+    <value>The value of the Value property cannot be null.</value>
+  </data>
+  <data name="BGValueNotSet" xml:space="preserve">
+    <value>The blood glucose value must be set before creating or updating the blood glucose item.</value>
+  </data>
+  <data name="BGMeasurementTypeMandatory" xml:space="preserve">
+    <value>The value of the GlucoseMeasurementType property cannot be null.</value>
+  </data>
+  <data name="BGMeasurementTypeNotSet" xml:space="preserve">
+    <value>The blood glucose measurement type must be set before creating or updating the blood glucose item.</value>
+  </data>
+  <data name="BloodGlucoseNotPositive" xml:space="preserve">
+    <value>The blood glucose value must be greater than zero.</value>
+  </data>
+  <data name="BPUnexpectedNode" xml:space="preserve">
+    <value>The specified XML does not contain a blood-pressure node.</value>
+  </data>
+  <data name="BPSystolicNegative" xml:space="preserve">
+    <value>The systolic pressure must not be negative.</value>
+  </data>
+  <data name="BPSystolicNotSet" xml:space="preserve">
+    <value>The systolic pressure must be set before creating or updating the blood pressure item.</value>
+  </data>
+  <data name="BPDiastolicNegative" xml:space="preserve">
+    <value>The diastolic pressure must not be negative.</value>
+  </data>
+  <data name="BPDiastolicNotSet" xml:space="preserve">
+    <value>The diastolic pressure must be set before creating or updating the blood pressure item.</value>
+  </data>
+  <data name="BPPulseNegative" xml:space="preserve">
+    <value>The pulse must not be negative.</value>
+  </data>
+  <data name="BPToStringFormat" xml:space="preserve">
+    <value>Systolic {0}, Diastolic {1}</value>
+  </data>
+  <data name="CardiacProfileUnexpectedNode" xml:space="preserve">
+    <value>The specific XML does not contain a cardiac-profile node.</value>
+  </data>
+  <data name="CardiacProfileToStringFormatHasPersonalStrokeHistory" xml:space="preserve">
+    <value>Has personal stroke history = {0}</value>
+  </data>
+  <data name="CardiacProfileToStringFormatHasPersonalHeartDiseaseHistory" xml:space="preserve">
+    <value>Has personal heart disease history = {0}</value>
+  </data>
+  <data name="CardiacProfileToStringFormatHasFamlyStrokeHistory" xml:space="preserve">
+    <value>Has family stroke history = {0}</value>
+  </data>
+  <data name="CardiacProfileToStringFormatHasFamlyHeartDiseaseHistory" xml:space="preserve">
+    <value>Has family heart disease history = {0}</value>
+  </data>
+  <data name="CardiacProfileToStringFormatDiabetesDiagnosed" xml:space="preserve">
+    <value>Diabetes diagnosed = {0}</value>
+  </data>
+  <data name="CardiacProfileToStringFormatRenalFailureDiagnosed" xml:space="preserve">
+    <value>Renal failure diagnosed = {0}</value>
+  </data>
+  <data name="CardiacProfileToStringFormatOnHypertensionMeds" xml:space="preserve">
+    <value>On hypertension medication = {0}</value>
+  </data>
+  <data name="CardiacProfileToStringFormatOnHypertensionDiet" xml:space="preserve">
+    <value>On hypertension diet = {0}</value>
+  </data>
+  <data name="CholesterolProfileUnexpectedNode" xml:space="preserve">
+    <value>The specific XML does not contain a cholesterol-profile node.</value>
+  </data>
+  <data name="CholesterolProfileToStringFormatTotal" xml:space="preserve">
+    <value>{0} mg/dL</value>
+  </data>
+  <data name="CholesterolProfileToStringFormatLDLAndHDL" xml:space="preserve">
+    <value>{0}/{1} (LDL/HDL in mg/dL)</value>
+  </data>
+  <data name="CholesterolProfileToStringFormatLDL" xml:space="preserve">
+    <value>{0} (LDL in mg/dL)</value>
+  </data>
+  <data name="CholesterolProfileToStringFormatHDL" xml:space="preserve">
+    <value>{0} (HDL in mg/dL)</value>
+  </data>
+  <data name="CholesterolProfileToStringFormatTriglyceride" xml:space="preserve">
+    <value>{0} (triglyceride in mg/dL)</value>
+  </data>
+  <data name="CholesterolProfileV2UnexpectedNode" xml:space="preserve">
+    <value>The specific XML does not contain a cholesterol-profile node.</value>
+  </data>
+  <data name="CholesterolProfileV2ToStringFormatLDLAndHDL" xml:space="preserve">
+    <value>{0}/{1} (LDL/HDL)</value>
+  </data>
+  <data name="CholesterolProfileV2ToStringFormatLDL" xml:space="preserve">
+    <value>{0} (LDL in mmol/L)</value>
+  </data>
+  <data name="ContactInformationUnexpectedNode" xml:space="preserve">
+    <value>The specified XML does not contain a contact node.</value>
+  </data>
+  <data name="ContactInformationMandatory" xml:space="preserve">
+    <value>The value of the ContactInformation property cannot be null.</value>
+  </data>
+  <data name="ContactInformationNotSet" xml:space="preserve">
+    <value>The contact information must be set before creating or updating the contact item.</value>
+  </data>
+  <data name="ContactInformationToStringSeeDetails" xml:space="preserve">
+    <value>See Details</value>
+  </data>
+  <data name="ContactInfoFormatPrimary" xml:space="preserve">
+    <value>{0} (Primary)</value>
+  </data>
+  <data name="CodableValueNullText" xml:space="preserve">
+    <value>The value of the Text property cannot be null or empty.</value>
+  </data>
+  <data name="ValueNotSet" xml:space="preserve">
+    <value>The code value must be set before creating or updating the item.</value>
+  </data>
+  <data name="NameNotSet" xml:space="preserve">
+    <value>The code name must be set before creating or updating the item.</value>
+  </data>
+  <data name="VocabularyKeyMandatory" xml:space="preserve">
+    <value>The value of the Vocabulary key cannot be null.</value>
+  </data>
+  <data name="ConditionUnexpectedNode" xml:space="preserve">
+    <value>The specified XML does not contain a condition node.</value>
+  </data>
+  <data name="ConditionNameMandatory" xml:space="preserve">
+    <value>A condition item must always have a name.</value>
+  </data>
+  <data name="ConditionNameNotSet" xml:space="preserve">
+    <value>The condition name must be set before creating or updating the item.</value>
+  </data>
+  <data name="DeviceUnexpectedNode" xml:space="preserve">
+    <value>The specified XML does not contain an device node.</value>
+  </data>
+  <data name="DeviceWhenNotSet" xml:space="preserve">
+    <value>The date when the device was used must be set before creating or updating the item.</value>
+  </data>
+  <data name="DiabeticProfileUnexpectedNode" xml:space="preserve">
+    <value>The specific XML does not contain a diabetic-profile node.</value>
+  </data>
+  <data name="DiabeticProfileMaxHbA1CRange" xml:space="preserve">
+    <value>The maximum HbA1C must be between 0.0 and 1.0, inclusive.</value>
+  </data>
+  <data name="DiabeticProfileToStringFormatPercent" xml:space="preserve">
+    <value>{0}%</value>
+  </data>
+  <data name="DietaryDailyIntakeUnexpectedNode" xml:space="preserve">
+    <value>The specified XML does not contain a dietary-intake-daily node.</value>
+  </data>
+  <data name="DietaryDailyIntakeToStringFormatCalories" xml:space="preserve">
+    <value>{0} kCal</value>
+  </data>
+  <data name="DietaryDailyIntakeToStringFormatTotalFat" xml:space="preserve">
+    <value>fat:{0}{1}</value>
+  </data>
+  <data name="DietaryDailyIntakeToStringFormatProtein" xml:space="preserve">
+    <value>protein:{0}{1}</value>
+  </data>
+  <data name="DietaryDailyIntakeToStringFormatTotalCarbs" xml:space="preserve">
+    <value>carbs:{0}{1}</value>
+  </data>
+  <data name="DietaryDailyIntakeToStringUnitGrams" xml:space="preserve">
+    <value>g</value>
+  </data>
+  <data name="DailyMedicationUsageUnexpectedNode" xml:space="preserve">
+    <value>The specified XML does not contain a daily-medication-usage node.</value>
+  </data>
+  <data name="DailyMedicationUsageDrugNameNull" xml:space="preserve">
+    <value>The drug name must always have a value.</value>
+  </data>
+  <data name="DailyMedicationUsageDrugNameNotSet" xml:space="preserve">
+    <value>The drug name must be set before creating or updating the item.</value>
+  </data>
+  <data name="DailyMedUsageToStringFormatDrug" xml:space="preserve">
+    <value>Drug: {0}</value>
+  </data>
+  <data name="DailyMedUsageToStringFormatPurpose" xml:space="preserve">
+    <value>, Purpose: {0}</value>
+  </data>
+  <data name="DailyMedUsageToStringFormatDosesWithIntended" xml:space="preserve">
+    <value>, Doses (taken/intended): {0}/{1}</value>
+  </data>
+  <data name="DailyMedUsageToStringFormatDosesWithIntendedUnknown" xml:space="preserve">
+    <value>, Doses (taken/intended): {0}/?</value>
+  </data>
+  <data name="DailyMedUsageToStringFormatSingleDoseDescription" xml:space="preserve">
+    <value>, Description: {0}</value>
+  </data>
+  <data name="DirectiveUnexpectedNode" xml:space="preserve">
+    <value>The specified XML does not contain a directive node.</value>
+  </data>
+  <data name="DirectiveStartDateMandatory" xml:space="preserve">
+    <value>A directive item must always have a start date.</value>
+  </data>
+  <data name="DirectiveStartDateNotSet" xml:space="preserve">
+    <value>The directive start date must be set before creating or updating the item.</value>
+  </data>
+  <data name="DirectiveStopDateMandatory" xml:space="preserve">
+    <value>A directive item must always have a stop date.</value>
+  </data>
+  <data name="DirectiveStopDateNotSet" xml:space="preserve">
+    <value>The directive stop date must be set before creating or updating the item.</value>
+  </data>
+  <data name="DischargeSummaryUnexpectedNode" xml:space="preserve">
+    <value>The specified XML does not contain an discharge-summary node.</value>
+  </data>
+  <data name="DischargeSummaryWhenNotSet" xml:space="preserve">
+    <value>The date when the discharge summary was made must be set before creating or updating the item.</value>
+  </data>
+  <data name="DisplayValueToStringFormatWithUnits" xml:space="preserve">
+    <value>{0} {1}</value>
+  </data>
+  <data name="DisplayValueUnitsMandatory" xml:space="preserve">
+    <value>The value of the Units property cannot be null.</value>
+  </data>
+  <data name="DoseValueMustBePositive" xml:space="preserve">
+    <value>The dose value must be greater than zero.</value>
+  </data>
+  <data name="DoseValueToStringDoseMinAndMax" xml:space="preserve">
+    <value>{0}-{1}</value>
+  </data>
+  <data name="DoseValueToStringDoseMin" xml:space="preserve">
+    <value>{0}-?</value>
+  </data>
+  <data name="DoseValueToStringDoseMax" xml:space="preserve">
+    <value>?-{0}</value>
+  </data>
+  <data name="DoseValueTOStringDoseNeither" xml:space="preserve">
+    <value>?-?</value>
+  </data>
+  <data name="DurationValueStartDateNotSet" xml:space="preserve">
+    <value>The duration start date must be set before creating or updating the item.</value>
+  </data>
+  <data name="DurationValueStartDateMandatory" xml:space="preserve">
+    <value>A duration value must always have a start date.</value>
+  </data>
+  <data name="EmailAddressNotSet" xml:space="preserve">
+    <value>The e-mail address must be set before creating or updating the item.</value>
+  </data>
+  <data name="EmotionUnexpectedNode" xml:space="preserve">
+    <value>The specified XML does not contain an emotion node.</value>
+  </data>
+  <data name="EmotionToStringFormatMood" xml:space="preserve">
+    <value>Mood {0}/5</value>
+  </data>
+  <data name="EmotionToStringFormatStress" xml:space="preserve">
+    <value>, Stress {0}/5</value>
+  </data>
+  <data name="EmotionToStringFormatWellbeing" xml:space="preserve">
+    <value>, Well Being {0}/5</value>
+  </data>
+  <data name="FileUnexpectedNode" xml:space="preserve">
+    <value>The specified XML does not contain a file node.</value>
+  </data>
+  <data name="FileSizeNotPositive" xml:space="preserve">
+    <value>The file size must be greater than zero.</value>
+  </data>
+  <data name="FileSizeNotSet" xml:space="preserve">
+    <value>The file size must be set before creating or updating the item.</value>
+  </data>
+  <data name="FileNameNotSet" xml:space="preserve">
+    <value>The name must be set before creating or updating the item.</value>
+  </data>
+  <data name="FileContentTypeMustBeSpecified" xml:space="preserve">
+    <value>The file contenty type must be specified to set the content of the file item.</value>
+  </data>
+  <data name="FileStreamMustBeSpecified" xml:space="preserve">
+    <value>The stream must be specified to set the content of the file item.</value>
+  </data>
+  <data name="FileRecordMustBeSpecified" xml:space="preserve">
+    <value>The record must be specified to set the content of the file item using a stream.</value>
+  </data>
+  <data name="FlowNotPositive" xml:space="preserve">
+    <value>The flow measurement must be greater than zero.</value>
+  </data>
+  <data name="HbA1CUnexpectedNode" xml:space="preserve">
+    <value>The specified XML does not contain a HbA1C node.</value>
+  </data>
+  <data name="HbA1CValueRange" xml:space="preserve">
+    <value>The value must be a percentage between 0.0 and 1.0.</value>
+  </data>
+  <data name="HbA1CToStringFormatPercent" xml:space="preserve">
+    <value>{0}%</value>
+  </data>
+  <data name="HbA1CV2UnexpectedNode" xml:space="preserve">
+    <value>The specified XML does not contain a HbA1C node.</value>
+  </data>
+  <data name="HbA1CV2ValueMandatory" xml:space="preserve">
+    <value>The value of the Value property cannot be null.</value>
+  </data>
+  <data name="HeartRateZoneNoLowerBoundary" xml:space="preserve">
+    <value>The lower boundary for the heart rate zone must be defined before creating or updating the item.</value>
+  </data>
+  <data name="HeartRateZoneNoUpperBoundary" xml:space="preserve">
+    <value>The upper boundary for the heart rate zone must be defined before creating or updating the item.</value>
+  </data>
+  <data name="HeartRateZoneGroupNoZones" xml:space="preserve">
+    <value>At least one target heart rate zone must be defined before creating or updating the item.</value>
+  </data>
+  <data name="HeightUnexpectedNode" xml:space="preserve">
+    <value>The specified XML does not contain a height node.</value>
+  </data>
+  <data name="HeightValueMandatory" xml:space="preserve">
+    <value>The value of the Value property cannot be null.</value>
+  </data>
+  <data name="HeightValueNotSet" xml:space="preserve">
+    <value>The height value must be set before creating or updating the height item.</value>
+  </data>
+  <data name="HealthcareProxyUnexpectedNode" xml:space="preserve">
+    <value>The specified XML does not contain an healthcare-proxy node.</value>
+  </data>
+  <data name="HealthcareProxyWhenNotSet" xml:space="preserve">
+    <value>The date when the healthcare proxy occurred must be set before creating or updating the item.</value>
+  </data>
+  <data name="InsulinInjectionTypeMandatory" xml:space="preserve">
+    <value>The insulin injection type cannot be null.</value>
+  </data>
+  <data name="InsulinInjectionTypeNotSet" xml:space="preserve">
+    <value>The insulin type must be set before creating or updating the item.</value>
+  </data>
+  <data name="InsulinInjectionAmountNotSet" xml:space="preserve">
+    <value>The insulin amount must be set before creating or updating the item.</value>
+  </data>
+  <data name="InsulinInjectionAmountMandatory" xml:space="preserve">
+    <value>The insulin amount cannot be null.</value>
+  </data>
+  <data name="InsulinInjectionUnexpectedNode" xml:space="preserve">
+    <value>The specified XML does not contain an insulin-injection node.</value>
+  </data>
+  <data name="InsulinInjectionToStringFormat" xml:space="preserve">
+    <value>{0} {1}</value>
+  </data>
+  <data name="InsulinInjectionNotPositive" xml:space="preserve">
+    <value>The insulin injection value must be greater than zero.</value>
+  </data>
+  <data name="InsulinInjectionUseUnexpectedNode" xml:space="preserve">
+    <value>The specified XML does not contain an diabetes-insulin-injection-use node.</value>
+  </data>
+  <data name="InsulinInjectionWhenNotSet" xml:space="preserve">
+    <value>The date when the use occurred must be set before creating or updating the item.</value>
+  </data>
+  <data name="LabResultsWhenNotSet" xml:space="preserve">
+    <value>The time when the lab results occurred must be set before creating or updating the item.</value>
+  </data>
+  <data name="LabResultTypeToStringFormatValueAndUnit" xml:space="preserve">
+    <value>{0} {1}</value>
+  </data>
+  <data name="LifeGoalUnexpectedNode" xml:space="preserve">
+    <value>The specified XML does not contain a life-goal node.</value>
+  </data>
+  <data name="LifeGoalDescriptionNotSet" xml:space="preserve">
+    <value>The life goal description must be set before creating or updating the item.</value>
+  </data>
+  <data name="LifeGoalToStringFormat" xml:space="preserve">
+    <value>{0} by {1}</value>
+  </data>
+  <data name="LengthNotPositive" xml:space="preserve">
+    <value>The length value must be greater than zero.</value>
+  </data>
+  <data name="LengthToStringFormatMeters" xml:space="preserve">
+    <value>{0} m</value>
+  </data>
+  <data name="LinkUnexpectedNode" xml:space="preserve">
+    <value>The specified XML does not contain a link node.</value>
+  </data>
+  <data name="LinkUrlNotSet" xml:space="preserve">
+    <value>The URL must be set before creating or updating the item.</value>
+  </data>
+  <data name="LinkUrlMandatory" xml:space="preserve">
+    <value>The value of the Url property cannot be null.</value>
+  </data>
+  <data name="ValueNotPositive" xml:space="preserve">
+    <value>The value must be greater than zero.</value>
+  </data>
+  <data name="MicrobiologyLabResultsUnexpectedNode" xml:space="preserve">
+    <value>The specified XML does not contain a microbiology-lab-results node.</value>
+  </data>
+  <data name="FullNotSet" xml:space="preserve">
+    <value>The full name must be set before creating or updating the item.</value>
+  </data>
+  <data name="FullMandatory" xml:space="preserve">
+    <value>The value of the Full property cannot be null or empty.</value>
+  </data>
+  <data name="NameToStringFormat" xml:space="preserve">
+    <value>{0} {1} {2} {3} {4}, {5}</value>
+  </data>
+  <data name="OccurrenceWhenNotSet" xml:space="preserve">
+    <value>The time when of occurrence must be set before creating or updating the item.</value>
+  </data>
+  <data name="OccurrenceMinutesNotSet" xml:space="preserve">
+    <value>The duration in minutes of the occurrence must be set before creating or updating the item.</value>
+  </data>
+  <data name="OccurrenceWhenMandatory" xml:space="preserve">
+    <value>The value of the When property cannot be null.</value>
+  </data>
+  <data name="OccurrenceMinutesMustBePositive" xml:space="preserve">
+    <value>The value of the Minutes property must be greater than zero.</value>
+  </data>
+  <data name="PaceNotPositive" xml:space="preserve">
+    <value>The pace value must be greater than zero.</value>
+  </data>
+  <data name="PayerUnexpectedNode" xml:space="preserve">
+    <value>The specified XML does not contain a payer node.</value>
+  </data>
+  <data name="PayerPlanNameNotSet" xml:space="preserve">
+    <value>The plan name must be set before creating or updating the payer item.</value>
+  </data>
+  <data name="PayerToStringFormat" xml:space="preserve">
+    <value>{0} {1}</value>
+  </data>
+  <data name="PackageUnexpectedNode" xml:space="preserve">
+    <value>The specified XML does not contain a password-protected-package node.</value>
+  </data>
+  <data name="PackageKeyLengthOutOfRange" xml:space="preserve">
+    <value>The KeyLength must be greater than zero and should match the length for the specified algorithm.</value>
+  </data>
+  <data name="PackageHashIterationOutOfRange" xml:space="preserve">
+    <value>The HashIterations must be greater than zero.</value>
+  </data>
+  <data name="PackageAlgorithmNotSet" xml:space="preserve">
+    <value>The algorithm must be set before creating or updating the password protected package.</value>
+  </data>
+  <data name="PackageSaltNotSet" xml:space="preserve">
+    <value>The salt must be set before creating or updating the password protected package.</value>
+  </data>
+  <data name="PackageKeyLengthNotSet" xml:space="preserve">
+    <value>The key length must be set before creating or updating the password protected package.</value>
+  </data>
+  <data name="PersonUnexpectedNode" xml:space="preserve">
+    <value>The specified XML does not contain a person node.</value>
+  </data>
+  <data name="PersonNameMandatory" xml:space="preserve">
+    <value>The value of the Name property cannot be null.</value>
+  </data>
+  <data name="PersonNameNotSet" xml:space="preserve">
+    <value>The person's name must be set before creating or updating the contact item.</value>
+  </data>
+  <data name="PersonToStringFormat" xml:space="preserve">
+    <value>{0} ({1})</value>
+  </data>
+  <data name="PersonalUnexpectedNode" xml:space="preserve">
+    <value>The specified XML does not contain a personal node.</value>
+  </data>
+  <data name="PersonalToStringFormatBirthDateAndEthnicity" xml:space="preserve">
+    <value>{0}; {1}</value>
+  </data>
+  <data name="PersonalToStringFormatSeeDetails" xml:space="preserve">
+    <value>See Details</value>
+  </data>
+  <data name="ImageStreamNull" xml:space="preserve">
+    <value>The image stream must be specified.</value>
+  </data>
+  <data name="ImageStreamToLarge" xml:space="preserve">
+    <value>The image must be less than 2GB in size.</value>
+  </data>
+  <data name="PhoneNumberNotSet" xml:space="preserve">
+    <value>The telephone number must be set before creating or updating the item.</value>
+  </data>
+  <data name="PowerNotPositive" xml:space="preserve">
+    <value>The power value must be greater than or equal to zero.</value>
+  </data>
+  <data name="ProblemUnexpectedNode" xml:space="preserve">
+    <value>The specified XML does not contain a problem node.</value>
+  </data>
+  <data name="ProblemWhenNotSet" xml:space="preserve">
+    <value>The time when the problem occurred must be set before creating or updating the item.</value>
+  </data>
+  <data name="ProblemImportanceOutOfRange" xml:space="preserve">
+    <value>The Problem importance must be between 1 and 5 inclusive.</value>
+  </data>
+  <data name="RadiologyLabResultsUnexpectedNode" xml:space="preserve">
+    <value>The specified XML does not contain a radiology-lab-results node.</value>
+  </data>
+  <data name="RadiologyLabResultsWhenNotSet" xml:space="preserve">
+    <value>The time when the lab results occurred must be set before creating or updating the item.</value>
+  </data>
+  <data name="RespiratoryProfileUnexpectedNode" xml:space="preserve">
+    <value>The specific XML does not contain a respiratory-profile node.</value>
+  </data>
+  <data name="RespiratoryProfileToStringEFRedZoneUpper" xml:space="preserve">
+    <value>Red: 0 - {0}</value>
+  </data>
+  <data name="RespiratoryProfileToStringEFOrangeZone" xml:space="preserve">
+    <value>Orange: {0} - {1}</value>
+  </data>
+  <data name="RespiratoryProfileToStringEFOrangeZoneUpper" xml:space="preserve">
+    <value>Orange: ? - {0}</value>
+  </data>
+  <data name="RespiratoryProfileToStringEFYellowZone" xml:space="preserve">
+    <value>Yellow: {0} - {1}</value>
+  </data>
+  <data name="RespiratoryProfileToStringEFYellowZoneUpper" xml:space="preserve">
+    <value>Yellow: ? - {0}</value>
+  </data>
+  <data name="SleepJournalAMUnexpectedNode" xml:space="preserve">
+    <value>The specified XML does not contain a sleep-am node.</value>
+  </data>
+  <data name="SleepJournalAMWhenMandatory" xml:space="preserve">
+    <value>The value of the When property cannot be null.</value>
+  </data>
+  <data name="SleepJournalAMWhenNotSet" xml:space="preserve">
+    <value>When the sleep occurred must be set before creating or updating the item.</value>
+  </data>
+  <data name="SleepJournalAMBedTimeMandatory" xml:space="preserve">
+    <value>The value of the Bedtime property cannot be null.</value>
+  </data>
+  <data name="SleepJournalAMBedTimeNotSet" xml:space="preserve">
+    <value>The bed time must be set before creating or updating the item.</value>
+  </data>
+  <data name="SleepJournalAMWakeTimeMandatory" xml:space="preserve">
+    <value>The value of the WakeTime property cannot be null.</value>
+  </data>
+  <data name="SleepJournalAMWakeTimeNotSet" xml:space="preserve">
+    <value>The wake time must be set before creating or updating the item.</value>
+  </data>
+  <data name="SleepJournalAMWakeStateNotSet" xml:space="preserve">
+    <value>The wake state must be set before creating or updating the item.</value>
+  </data>
+  <data name="SleepJournalAMSleepMinutesNotPositive" xml:space="preserve">
+    <value>The value of the SleepMinutes property must be greater than zero.</value>
+  </data>
+  <data name="SleepJournalAMSleepMinutesNotSet" xml:space="preserve">
+    <value>The minutes spent sleeping must be set before creating or updating the item.</value>
+  </data>
+  <data name="SleepJournalAMSettlingMinutesMandatory" xml:space="preserve">
+    <value>The value of the SettlingMinutes property must be greater than zero.</value>
+  </data>
+  <data name="SleepJournalAMSettlingMinutesNotSet" xml:space="preserve">
+    <value>The minutes spent settling must be set before creating or updating the item.</value>
+  </data>
+  <data name="SleepJournalAmToStringFormat" xml:space="preserve">
+    <value>{0}, {1}minutes</value>
+  </data>
+  <data name="SleepJournalPMUnexpectedNode" xml:space="preserve">
+    <value>The specified XML does not contain a sleep-pm node.</value>
+  </data>
+  <data name="SleepJournalPMWhenMandatory" xml:space="preserve">
+    <value>The value of the When property cannot be null.</value>
+  </data>
+  <data name="SleepJournalPMWhenNotSet" xml:space="preserve">
+    <value>When the sleep occurred must be set before creating or updating the item.</value>
+  </data>
+  <data name="SleepJournalPMSleepinessNotSet" xml:space="preserve">
+    <value>The sleepiness must be set before creating or updating the item.</value>
+  </data>
+  <data name="SpeedNotPositive" xml:space="preserve">
+    <value>The speed measurement must be greater than zero.</value>
+  </data>
+  <data name="GlucoseZoneRelativeBoundaryRange" xml:space="preserve">
+    <value>The relative zone boundary must be between 0.0 and 1.0, inclusive.</value>
+  </data>
+  <data name="GlucoseZoneNoLowerBoundary" xml:space="preserve">
+    <value>The lower boundary for the glucose zone must be defined before creating or updating the item.</value>
+  </data>
+  <data name="GlucoseZoneNoUpperBoundary" xml:space="preserve">
+    <value>The upper boundary for the glucose zone must be defined before creating or updating the item.</value>
+  </data>
+  <data name="TemperatureNotPositive" xml:space="preserve">
+    <value>The temperature value must be greater than zero.</value>
+  </data>
+  <data name="TorqueNotPositive" xml:space="preserve">
+    <value>The torque value must be greater than or equal to zero.</value>
+  </data>
+  <data name="UnitConversionFormat" xml:space="preserve">
+    <value>* {0} + {1}</value>
+  </data>
+  <data name="VitalSignResultTitleNotSet" xml:space="preserve">
+    <value>The title of the vital sign result must be set before creating or updating the item.</value>
+  </data>
+  <data name="VitalSignResultTitleMandatory" xml:space="preserve">
+    <value>The value of the Title property cannot be null.</value>
+  </data>
+  <data name="VitalSignResultToStringFormatValue" xml:space="preserve">
+    <value>: {0}</value>
+  </data>
+  <data name="VitalSignResultToStringFormatUnit" xml:space="preserve">
+    <value>{0}</value>
+  </data>
+  <data name="VitalSignsUnexpectedNode" xml:space="preserve">
+    <value>The specified XML does not contain a vital-signs node.</value>
+  </data>
+  <data name="VitalSignsWhenNotSet" xml:space="preserve">
+    <value>The date when the vital signs were taken must be set before creating or updating the item.</value>
+  </data>
+  <data name="VolumeNotPositive" xml:space="preserve">
+    <value>The volume measurement must be greater than or equal to zero.</value>
+  </data>
+  <data name="WeightNotPositive" xml:space="preserve">
+    <value>The weight value must be greater than or equal to zero.</value>
+  </data>
+  <data name="WeightResultNotPositive" xml:space="preserve">
+    <value>The resulting weight value must be greater than or equal to zero.</value>
+  </data>
+  <data name="WeightUnexpectedNode" xml:space="preserve">
+    <value>The specified XML does not contain a weight node.</value>
+  </data>
+  <data name="WeightValueMandatory" xml:space="preserve">
+    <value>The value of the Value property cannot be null.</value>
+  </data>
+  <data name="WeightValueNotSet" xml:space="preserve">
+    <value>The weight value must be set before creating or updating the weight item.</value>
+  </data>
+  <data name="WeightGoalUnexpectedNode" xml:space="preserve">
+    <value>The specified XML does not contain a weight-goal node.</value>
+  </data>
+  <data name="WeightGoalToStringFormatMin" xml:space="preserve">
+    <value>At least {0}</value>
+  </data>
+  <data name="MeasurementRangeWithDate" xml:space="preserve">
+    <value>{0} to {1} by {2}</value>
+  </data>
+  <data name="WeightGoalToStringFormatMinWithDate" xml:space="preserve">
+    <value>At least {0} by {1}</value>
+  </data>
+  <data name="WeightGoalToStringFormatMaxWithDate" xml:space="preserve">
+    <value>{0} by {1}</value>
+  </data>
+  <data name="HealthServiceDateTimeDateNull" xml:space="preserve">
+    <value>The date cannot be null.</value>
+  </data>
+  <data name="DateCompareToInvalidType" xml:space="preserve">
+    <value>A HealthServiceDate object can only be compared with HealthServiceDate and DateTime objects.</value>
+  </data>
+  <data name="TimeCompareToInvalidType" xml:space="preserve">
+    <value>An ApproximateTime object can only be compared with another ApproximateTime object.</value>
+  </data>
+  <data name="ApproximateDateCompareToInvalidType" xml:space="preserve">
+    <value>An ApproximateDate object can only be compared with ApproximateDate and DateTime objects.</value>
+  </data>
+  <data name="TimeMillisecondsOutOfRange" xml:space="preserve">
+    <value>The milliseconds must be between 0 and 999.</value>
+  </data>
+  <data name="TimeSecondsOutOfRange" xml:space="preserve">
+    <value>The seconds must be between 0 and 59.</value>
+  </data>
+  <data name="TimeMinutesOutOfRange" xml:space="preserve">
+    <value>The minute must be between 0 and 59.</value>
+  </data>
+  <data name="TimeHoursOutOfRange" xml:space="preserve">
+    <value>The hour must be between 0 and 23.</value>
+  </data>
+  <data name="DateDayOutOfRange" xml:space="preserve">
+    <value>The day must be between 1 and 31.</value>
+  </data>
+  <data name="DateMonthOutOfRange" xml:space="preserve">
+    <value>The month must be between 1 and 12.</value>
+  </data>
+  <data name="DateYearOutOfRange" xml:space="preserve">
+    <value>The year must be between 1000 and 9999.</value>
+  </data>
+  <data name="ExtensionSerializationSourceMissing" xml:space="preserve">
+    <value>The extension source must be set before creating or updating a item.</value>
+  </data>
+  <data name="VocabularyKeyNullOrEmpty" xml:space="preserve">
+    <value>A valid vocabulary key must be specified.</value>
+  </data>
+  <data name="VocabularyKeysNullOrEmpty" xml:space="preserve">
+    <value>At least one valid vocabulary key must be specified.</value>
+  </data>
+  <data name="VocabularyNameNullOrEmpty" xml:space="preserve">
+    <value>A non-null and non-empty vocabulary name must be specified.</value>
+  </data>
+  <data name="VocabularySearchStringInvalid" xml:space="preserve">
+    <value>A non-null search string between 1 and 255 characters must be specified.</value>
+  </data>
+  <data name="VocabularySearchTypeUnknown" xml:space="preserve">
+    <value>A valid search type must be specified.</value>
+  </data>
+  <data name="CSVNameNull" xml:space="preserve">
+    <value>The name of the escape cannot be null.</value>
+  </data>
+  <data name="CSVNameInvalid" xml:space="preserve">
+    <value>Name cannot contain the '=' character.</value>
+  </data>
+  <data name="CSVValueNull" xml:space="preserve">
+    <value>The value of the escape cannot be null.</value>
+  </data>
+  <data name="CSVValueInvalid" xml:space="preserve">
+    <value>Value cannot contain the '=' character.</value>
+  </data>
+  <data name="VocabAuthNavIsNull" xml:space="preserve">
+    <value>The vocabularyAuthorization navigator cannot be null.</value>
+  </data>
+  <data name="VocabularySearchParametersNull" xml:space="preserve">
+    <value>A valid vocabulary search parameters object must be specified.</value>
+  </data>
+  <data name="ServiceTokenEmpty" xml:space="preserve">
+    <value>The service token must be a non empty valid Guid.</value>
+  </data>
+  <data name="InsightUnexpectedNode" xml:space="preserve">
+    <value>The specific XML does not contain an insight node.</value>
+  </data>
+  <data name="InsightIdNullValue" xml:space="preserve">
+    <value>Raised Insight Id cannot be null.</value>
+  </data>
+  <data name="InsightCatalogIdNullValue" xml:space="preserve">
+    <value>Catalog Id cannot be null.</value>
+  </data>
+  <data name="InsightExpirationDateNullValue" xml:space="preserve">
+    <value>Expiration date cannot be null.</value>
+  </data>
+  <data name="InsightSummaryText" xml:space="preserve">
+    <value>{0}, {1}</value>
+  </data>
+  <data name="InsightAttributionNameNullValue" xml:space="preserve">
+    <value>Attribution name cannot be null.</value>
+  </data>
+  <data name="MshRecordUnexpectedNode" xml:space="preserve">
+    <value>The specific XML does not contain an action-plan node.</value>
+  </data>
+  <data name="WrappedTypeNameNullValue" xml:space="preserve">
+    <value>Wrapped type name cannot be null.</value>
+  </data>
+  <data name="WrappedInstanceJsonNullValue" xml:space="preserve">
+    <value>Wrapped instance json cannot be null.</value>
+  </data>
+  <data name="MshItemSummaryText" xml:space="preserve">
+    <value>{0}, {1}</value>
+  </data>
+  <data name="UpdateThingWithNoId" xml:space="preserve">
+    <value>Cannot update; ID is missing on thing.</value>
+  </data>
+  <data name="PregnancyGestationalAgeMustBePositive" xml:space="preserve">
+    <value>Gestational age must be positive.</value>
+  </data>
+  <data name="AppointmentWhenNotSet" xml:space="preserve">
+    <value>The when value on the appointment must be specified.</value>
+  </data>
+  <data name="TimesInIntervalNull" xml:space="preserve">
+    <value>The times in interval value cannot be null.</value>
+  </data>
+  <data name="BlobMustHaveRecord" xml:space="preserve">
+    <value>Currently only blobs for records are supported.</value>
+  </data>
+  <data name="CannotBeNullOrEmpty" xml:space="preserve">
+    <value>{0} cannot be null or empty.</value>
+  </data>
+  <data name="CannotCallMethodBefore" xml:space="preserve">
+    <value>Cannot call {0} before calling {1}.</value>
+  </data>
+  <data name="CannotChangeConfigurationAfterInit" xml:space="preserve">
+    <value>Changing app configuration values after initialization is not permitted.</value>
+  </data>
+  <data name="HttpReturnedError" xml:space="preserve">
+    <value>HTTP status code returned error.</value>
+  </data>
+  <data name="MissingRequiredProperties" xml:space="preserve">
+    <value>Missing one or more required properties on configuration. Required properties: {0}</value>
+  </data>
+  <data name="NotBase64String" xml:space="preserve">
+    <value>Data is not a Base64 string.</value>
+  </data>
+  <data name="UnexpectedError" xml:space="preserve">
+    <value>There was an unexpected error in the HealthVault SDK.</value>
+  </data>
+</root>
