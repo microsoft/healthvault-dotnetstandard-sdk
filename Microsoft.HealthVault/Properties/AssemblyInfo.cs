@@ -21,8 +21,8 @@ using System.Runtime.CompilerServices;
            InternalsVisibleTo("DynamicProxyGenAssembly2"),
            InternalsVisibleTo("Microsoft.HealthVault.Client.Core"),
            InternalsVisibleTo("Microsoft.HealthVault.Client.Bait"),
-           InternalsVisibleTo("Microsoft.HealthVault.Client.Android"),
            InternalsVisibleTo("Microsoft.HealthVault.Client.Uwp"),
+           InternalsVisibleTo("Microsoft.HealthVault.Client.Android"),
            InternalsVisibleTo("Microsoft.HealthVault.UnitTest")]
 
 // Version information for an assembly consists of the following four values:

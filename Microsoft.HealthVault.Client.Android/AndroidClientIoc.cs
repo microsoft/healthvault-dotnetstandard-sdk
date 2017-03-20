@@ -17,7 +17,10 @@ namespace Microsoft.HealthVault.Client
 
         private static void RegisterPlatformTypes(DependencyInjectionContainer container)
         {
-            container.RegisterSingleton<IBrowserAuthBroker, AndroidBrowserAuthBroker>();
+            AndroidBrowserAuthBroker authBroker = container.Locate<AndroidBrowserAuthBroker>();
+            container.Configure(c => c.ExportInstance(authBroker).As<IAndroidBrowserAuthBroker>());
+            container.Configure(c => c.ExportInstance(authBroker).As<IBrowserAuthBroker>());
+			
             container.RegisterSingleton<ISecretStore, AndroidSecretStore>();
             container.RegisterSingleton<IEncryptionKeyService, EncryptionKeyService>();
 

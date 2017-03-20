@@ -105,5 +105,14 @@ namespace Microsoft.HealthVault.Client {
                 return ResourceManager.GetString("FileAccessErrorMessage", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Login Failed.
+        /// </summary>
+        internal static string LoginError {
+            get {
+                return ResourceManager.GetString("LoginError", resourceCulture);
+            }
+        }
     }
 }

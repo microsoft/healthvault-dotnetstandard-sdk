@@ -37,14 +37,43 @@ namespace Microsoft.HealthVault.Client
 			}
 		}
 		
+		public partial class Id
+		{
+			
+			// aapt resource value: 0x7f040000
+			public static int SignInWebView = 2130968576;
+			
+			static Id()
+			{
+				global::Android.Runtime.ResourceIdManager.UpdateIdValues();
+			}
+			
+			private Id()
+			{
+			}
+		}
+		
+		public partial class Layout
+		{
+			
+			// aapt resource value: 0x7f020000
+			public static int SignInActivity = 2130837504;
+			
+			static Layout()
+			{
+				global::Android.Runtime.ResourceIdManager.UpdateIdValues();
+			}
+			
+			private Layout()
+			{
+			}
+		}
+		
 		public partial class String
 		{
 			
-			// aapt resource value: 0x7f020001
-			public static int ApplicationName = 2130837505;
-			
-			// aapt resource value: 0x7f020000
-			public static int Hello = 2130837504;
+			// aapt resource value: 0x7f030000
+			public static int ApplicationName = 2130903040;
 			
 			static String()
 			{

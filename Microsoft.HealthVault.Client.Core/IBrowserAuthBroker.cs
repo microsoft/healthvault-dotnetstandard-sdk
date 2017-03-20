@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
+using Microsoft.HealthVault.Client.Exceptions;
 
 namespace Microsoft.HealthVault.Client
 {

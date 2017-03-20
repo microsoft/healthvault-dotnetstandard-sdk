@@ -139,4 +139,7 @@
 %0 - The attempted action.  e.g., read, write, or delete
 %1 - The name of the file</comment>
   </data>
+  <data name="LoginError" xml:space="preserve">
+    <value>Login Failed</value>
+  </data>
 </root>
