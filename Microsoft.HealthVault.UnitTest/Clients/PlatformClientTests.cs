@@ -43,6 +43,8 @@ namespace Microsoft.HealthVault.UnitTest.Clients
             await this.connection.Received()
                 .ExecuteAsync(HealthVaultMethods.SelectInstance, Arg.Any<int>(), Arg.Any<string>());
 
+            Assert.IsTrue(result.Description == "US instance");
+
         }
 
         [TestMethod]
