@@ -13,9 +13,9 @@ using Microsoft.HealthVault.UnitTest.Samples;
 
 namespace Microsoft.HealthVault.UnitTest.Clients
 {
-	[TestClass]
-	public class PersonClientTests
-	{
+    [TestClass]
+    public class PersonClientTests
+    {
         private IConnectionInternal connection;
         private PersonClient personClient;
 
@@ -23,17 +23,13 @@ namespace Microsoft.HealthVault.UnitTest.Clients
         public void InitializeTest()
         {
             connection = Substitute.For<IConnectionInternal>();
-            personClient = new PersonClient { Connection = this.connection};
+            personClient = new PersonClient {Connection = this.connection};
         }
 
         [TestMethod]
-		public async Task GetPersonInfoTest()
-		{
-            var response = new HealthServiceResponseData
-            {
-                InfoNavigator = new XPathDocument(new StringReader(SampleUtils.GetSampleContent("PersonInfoSample.xml"))).CreateNavigator(),
-                ResponseText = new ArraySegment<byte>(Encoding.ASCII.GetBytes(SampleUtils.GetSampleContent("PersonInfoSample.xml")))
-            };
+        public async Task GetPersonInfoTest()
+        {
+            var response = GetResponseData("PersonInfoSample.xml");
 
             connection.ExecuteAsync(HealthVaultMethods.GetPersonInfo, Arg.Any<int>()).Returns(response);
 
@@ -44,13 +40,9 @@ namespace Microsoft.HealthVault.UnitTest.Clients
         }
 
         [TestMethod]
-		public async Task GetApplicationSettingsTest()
-		{
-            var response = new HealthServiceResponseData
-            {
-                InfoNavigator = new XPathDocument(new StringReader(SampleUtils.GetSampleContent("AppSettingsSample.xml"))).CreateNavigator(),
-                ResponseText = new ArraySegment<byte>(Encoding.ASCII.GetBytes(SampleUtils.GetSampleContent("AppSettingsSample.xml")))
-            };
+        public async Task GetApplicationSettingsTest()
+        {
+            var response = GetResponseData("AppSettingsSample.xml");
 
             connection.ExecuteAsync(HealthVaultMethods.GetApplicationSettings, Arg.Any<int>()).Returns(response);
 
@@ -60,46 +52,56 @@ namespace Microsoft.HealthVault.UnitTest.Clients
             Assert.IsNotNull(result.SelectedRecordId);
         }
 
-		[TestMethod]
-		public async Task SetApplicationSettingsWitXPathNavTest()
-		{
-            var response = new HealthServiceResponseData
-            {
-                InfoNavigator = new XPathDocument(new StringReader(SampleUtils.GetSampleContent("AppSettingsSample.xml"))).CreateNavigator(),
-                ResponseText = new ArraySegment<byte>(Encoding.ASCII.GetBytes(SampleUtils.GetSampleContent("AppSettingsSample.xml")))
-            };
+        [TestMethod]
+        public async Task SetApplicationSettingsWitXPathNavTest()
+        {
+            var response = GetResponseData("AppSettingsSample.xml");
 
-		    var nav = response.InfoNavigator;
+            var nav = response.InfoNavigator;
 
             await personClient.SetApplicationSettingsAsync(nav).ConfigureAwait(false);
 
-            await connection.Received().ExecuteAsync(HealthVaultMethods.SetApplicationSettings, Arg.Any<int>(), Arg.Any<string>());
+            await connection.Received()
+                .ExecuteAsync(HealthVaultMethods.SetApplicationSettings, Arg.Any<int>(), Arg.Any<string>());
         }
 
         [TestMethod]
-		public async Task SetApplicationSettingsWithRequestParametersTest()
-		{
+        public async Task SetApplicationSettingsWithRequestParametersTest()
+        {
             string requestParameters = "<app-settings />";
             await personClient.SetApplicationSettingsAsync(requestParameters).ConfigureAwait(false);
 
-            await connection.Received().ExecuteAsync(HealthVaultMethods.SetApplicationSettings, Arg.Any<int>(), Arg.Any<string>());
+            await connection.Received()
+                .ExecuteAsync(HealthVaultMethods.SetApplicationSettings, Arg.Any<int>(), Arg.Any<string>());
         }
 
         [TestMethod]
         public async Task GetAuthorizedRecordsAsyncTest()
         {
-           
-            IList<Guid> recordIds = new List<Guid> { new Guid("7a231675-4e78-451f-b94d-1e05b2a24586") };
-            var response = new HealthServiceResponseData
-            {
-                InfoNavigator = new XPathDocument(new StringReader(SampleUtils.GetSampleContent("AuthorizedRecordsSample.xml"))).CreateNavigator(),
-                ResponseText = new ArraySegment<byte>(Encoding.ASCII.GetBytes(SampleUtils.GetSampleContent("AuthorizedRecordsSample.xml")))
-            };
 
-            connection.ExecuteAsync(HealthVaultMethods.GetAuthorizedRecords, Arg.Any<int>(), Arg.Any<string>()).Returns(response);
+            IList<Guid> recordIds = new List<Guid> {new Guid("7a231675-4e78-451f-b94d-1e05b2a24586")};
+
+            var response = GetResponseData("AuthorizedRecordsSample.xml");
+
+            connection.ExecuteAsync(HealthVaultMethods.GetAuthorizedRecords, Arg.Any<int>(), Arg.Any<string>())
+                .Returns(response);
             var result = await personClient.GetAuthorizedRecordsAsync(recordIds).ConfigureAwait(false);
 
-            await connection.Received().ExecuteAsync(HealthVaultMethods.GetAuthorizedRecords, Arg.Any<int>(), Arg.Any<string>());
+            await connection.Received()
+                .ExecuteAsync(HealthVaultMethods.GetAuthorizedRecords, Arg.Any<int>(), Arg.Any<string>());
+        }
+
+        private HealthServiceResponseData GetResponseData(string fileName)
+        {
+            return new HealthServiceResponseData
+            {
+                InfoNavigator =
+                    new XPathDocument(new StringReader(SampleUtils.GetSampleContent(fileName)))
+                        .CreateNavigator(),
+                ResponseText =
+                    new ArraySegment<byte>(
+                        Encoding.ASCII.GetBytes(SampleUtils.GetSampleContent(fileName)))
+            };
         }
     }
 }
