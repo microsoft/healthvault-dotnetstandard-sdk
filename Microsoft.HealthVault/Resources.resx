@@ -2283,4 +2283,7 @@
   <data name="UnexpectedError" xml:space="preserve">
     <value>There was an unexpected error in the HealthVault SDK.</value>
   </data>
+  <data name="ObjectStoreParametersEmpty" xml:space="preserve">
+    <value>LocalObjectStore was passed invalid parameters.</value>
+  </data>
 </root>

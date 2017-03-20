@@ -1,0 +1,36 @@
+<?xml version="1.0"?>
+<package>
+  <metadata>
+    <id>Microsoft.HealthVault.Web.Mvc</id>
+    <version>$version$</version>
+    <title>Microsoft HealthVault .NET MVC SDK</title>
+    <authors>Microsoft</authors>
+    <owners>Microsoft</owners>
+    <licenseUrl>https://config.healthvault-ppe.com/serviceAgreement.aspx</licenseUrl>
+    <projectUrl>https://msdn.microsoft.com/HealthVault</projectUrl>
+    <iconUrl>http://msdn.microsoft.com/en-US/HealthVault/jj126730.HV-Logo-32x32.png</iconUrl>
+    <requireLicenseAcceptance>true</requireLicenseAcceptance>
+    <description>This library enables web applications to connect to Microsoft HealthVault. HealthVault is a cloud-based platform designed to put people in control of their health data.</description>
+    <releaseNotes>Targeting .NET 4.6.1</releaseNotes>
+    <copyright>Copyright 2017</copyright>
+    <tags>HealthVault</tags>
+    <dependencies>
+      <group targetFramework="net461">
+        <dependency id="Grace" version="5.1.0" />
+        <dependency id="Microsoft.AspNet.Mvc" version="5.2.3" />
+        <dependency id="System.Collections.Specialized" version="4.3.0" />
+        <dependency id="System.Data.Common" version="4.3.0" />
+        <dependency id="System.Security.Cryptography.X509Certificates" version="4.3.0" />
+        <dependency id="System.Xml.XPath" version="4.3.0" />
+      </group>
+    </dependencies>
+  </metadata>
+  <files>
+    <file src="Microsoft.HealthVault\bin\$configuration$\Microsoft.HealthVault.dll" target="lib\netstandard1.4" />
+    <file src="Microsoft.HealthVault\bin\$configuration$\Microsoft.HealthVault.pdb" target="lib\netstandard1.4" />
+    <file src="Microsoft.HealthVault.Web\bin\$configuration$\Microsoft.HealthVault.Web.dll" target="lib\net461" />
+    <file src="Microsoft.HealthVault.Web\bin\$configuration$\Microsoft.HealthVault.Web.pdb" target="lib\net461" />
+    <file src="Microsoft.HealthVault.Web.Mvc\bin\$configuration$\Microsoft.HealthVault.Web.Mvc.dll" target="lib\net461" />
+    <file src="Microsoft.HealthVault.Web.Mvc\bin\$configuration$\Microsoft.HealthVault.Web.Mvc.pdb" target="lib\net461" />
+  </files>
+</package>

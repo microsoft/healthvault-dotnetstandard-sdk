@@ -27,7 +27,9 @@ namespace Microsoft.HealthVault.Connection
     /// <seealso cref="IHealthVaultConnection" />
     internal abstract class HealthVaultConnectionBase : IConnectionInternal
     {
-        private readonly AsyncLock asyncLock = new AsyncLock();
+        private const int SessionCredentialCallThresholdMinutes = 5;
+        private readonly AsyncLock sessionCredentialLock = new AsyncLock();
+        private DateTimeOffset lastRefreshedSessionCredential;
 
         protected HealthVaultConnectionBase(IServiceLocator serviceLocator)
         {
@@ -130,24 +132,33 @@ namespace Microsoft.HealthVault.Connection
             }
             catch (HealthServiceAuthenticatedSessionTokenExpiredException)
             {
-                if (this.SessionCredential != null)
+                using (await this.sessionCredentialLock.LockAsync().ConfigureAwait(false))
                 {
-                    await this.RefreshCredentialsAsync(CancellationToken.None).ConfigureAwait(false);
-                    return await request.ExecuteAsync().ConfigureAwait(false);
-                }
+                    if (this.SessionCredential != null)
+                    {
+                        // SessionCredential should last for a day.
+                        // So, check if we the refresh happened within 5 mins.
+                        // If we just refreshed then there is no reason to go to fetch the session credential from
+                        // server again.
+                        if (DateTimeOffset.Now.Subtract(this.lastRefreshedSessionCredential) > TimeSpan.FromMinutes(SessionCredentialCallThresholdMinutes))
+                        {
+                            await this.RefreshSessionCredentialAsync(CancellationToken.None).ConfigureAwait(false);
 
-                throw;
+                            this.lastRefreshedSessionCredential = DateTimeOffset.Now;
+                        }
+
+                        return await request.ExecuteAsync().ConfigureAwait(false);
+                    }
+
+                    throw;
+                }
             }
         }
 
-        protected virtual async Task RefreshCredentialsAsync(CancellationToken token)
+        protected virtual async Task RefreshSessionCredentialAsync(CancellationToken token)
         {
             ISessionCredentialClient sessionCredentialClient = this.CreateSessionCredentialClient();
-
-            using (await this.asyncLock.LockAsync())
-            {
-                this.SessionCredential = await sessionCredentialClient.GetSessionCredentialAsync(token).ConfigureAwait(false);
-            }
+            this.SessionCredential = await sessionCredentialClient.GetSessionCredentialAsync(token).ConfigureAwait(false);
         }
 
         /// <summary>

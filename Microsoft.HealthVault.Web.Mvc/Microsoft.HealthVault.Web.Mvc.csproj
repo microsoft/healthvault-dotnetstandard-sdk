@@ -70,10 +70,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Microsoft.HealthVault.Client\Microsoft.HealthVault.Client.csproj">
-      <Project>{00E3B0D1-95BE-4CAA-A482-4629B10EFBD7}</Project>
-      <Name>Microsoft.HealthVault.Client</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Microsoft.HealthVault.Web\Microsoft.HealthVault.Web.csproj">
       <Project>{05961ef8-aff3-4f65-b71a-65176224be9d}</Project>
       <Name>Microsoft.HealthVault.Web</Name>

@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.26228.4
+# Visual Studio 14
+VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.HealthVault", "Microsoft.HealthVault\Microsoft.HealthVault.csproj", "{DBE2BA67-DBC3-479E-A374-1CE5EE33C453}"
 EndProject
@@ -9,19 +9,19 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.HealthVault.Web",
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.HealthVault.Web.Mvc", "Microsoft.HealthVault.Web.Mvc\Microsoft.HealthVault.Web.Mvc.csproj", "{BAC954F8-3137-4840-9CEB-9852709070B2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.HealthVault.Client", "Microsoft.HealthVault.Client\Microsoft.HealthVault.Client.csproj", "{00E3B0D1-95BE-4CAA-A482-4629B10EFBD7}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.HealthVault.Client.Bait", "Microsoft.HealthVault.Client.Bait\Microsoft.HealthVault.Client.Bait.csproj", "{29A7078E-F90C-438A-BCC4-FFE9216D8405}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.HealthVault.Client.Platform", "Microsoft.HealthVault.Client.Platform\Microsoft.HealthVault.Client.Platform.csproj", "{29A7078E-F90C-438A-BCC4-FFE9216D8405}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.HealthVault.Client.Android", "Microsoft.HealthVault.Client.Android\Microsoft.HealthVault.Client.Android.csproj", "{55F66A25-EAEC-48E2-B396-D824470E8C81}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.HealthVault.Client.Platform.Android", "Microsoft.HealthVault.Client.Platform.Android\Microsoft.HealthVault.Client.Platform.Android.csproj", "{55F66A25-EAEC-48E2-B396-D824470E8C81}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.HealthVault.Client.Platform.Uwp", "Microsoft.HealthVault.Client.Platform.Uwp\Microsoft.HealthVault.Client.Platform.Uwp.csproj", "{713A0A22-0AD9-41A9-B808-70FC88431FB5}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.HealthVault.Client.Uwp", "Microsoft.HealthVault.Client.Uwp\Microsoft.HealthVault.Client.Uwp.csproj", "{713A0A22-0AD9-41A9-B808-70FC88431FB5}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.HealthVault.UnitTest", "Microsoft.HealthVault.UnitTest\Microsoft.HealthVault.UnitTest.csproj", "{43EEDD43-150C-4F41-8D37-FE6D602E3D4E}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SampleMVC", "SampleMVC\SampleMVC.csproj", "{8F645A68-C6C5-4134-9EA3-300130343232}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.HealthVault.UnitTest", "Microsoft.HealthVault.UnitTest\Microsoft.HealthVault.UnitTest.csproj", "{43EEDD43-150C-4F41-8D37-FE6D602E3D4E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.HealthVault.Client.Core", "Microsoft.HealthVault.Client.Core\Microsoft.HealthVault.Client.Core.csproj", "{5C7EC9D4-88B9-4EA2-BEA1-3BF3F17858B4}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -83,22 +83,6 @@ Global
 		{BAC954F8-3137-4840-9CEB-9852709070B2}.Release|x64.Build.0 = Release|Any CPU
 		{BAC954F8-3137-4840-9CEB-9852709070B2}.Release|x86.ActiveCfg = Release|Any CPU
 		{BAC954F8-3137-4840-9CEB-9852709070B2}.Release|x86.Build.0 = Release|Any CPU
-		{00E3B0D1-95BE-4CAA-A482-4629B10EFBD7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{00E3B0D1-95BE-4CAA-A482-4629B10EFBD7}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{00E3B0D1-95BE-4CAA-A482-4629B10EFBD7}.Debug|ARM.ActiveCfg = Debug|Any CPU
-		{00E3B0D1-95BE-4CAA-A482-4629B10EFBD7}.Debug|ARM.Build.0 = Debug|Any CPU
-		{00E3B0D1-95BE-4CAA-A482-4629B10EFBD7}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{00E3B0D1-95BE-4CAA-A482-4629B10EFBD7}.Debug|x64.Build.0 = Debug|Any CPU
-		{00E3B0D1-95BE-4CAA-A482-4629B10EFBD7}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{00E3B0D1-95BE-4CAA-A482-4629B10EFBD7}.Debug|x86.Build.0 = Debug|Any CPU
-		{00E3B0D1-95BE-4CAA-A482-4629B10EFBD7}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{00E3B0D1-95BE-4CAA-A482-4629B10EFBD7}.Release|Any CPU.Build.0 = Release|Any CPU
-		{00E3B0D1-95BE-4CAA-A482-4629B10EFBD7}.Release|ARM.ActiveCfg = Release|Any CPU
-		{00E3B0D1-95BE-4CAA-A482-4629B10EFBD7}.Release|ARM.Build.0 = Release|Any CPU
-		{00E3B0D1-95BE-4CAA-A482-4629B10EFBD7}.Release|x64.ActiveCfg = Release|Any CPU
-		{00E3B0D1-95BE-4CAA-A482-4629B10EFBD7}.Release|x64.Build.0 = Release|Any CPU
-		{00E3B0D1-95BE-4CAA-A482-4629B10EFBD7}.Release|x86.ActiveCfg = Release|Any CPU
-		{00E3B0D1-95BE-4CAA-A482-4629B10EFBD7}.Release|x86.Build.0 = Release|Any CPU
 		{29A7078E-F90C-438A-BCC4-FFE9216D8405}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{29A7078E-F90C-438A-BCC4-FFE9216D8405}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{29A7078E-F90C-438A-BCC4-FFE9216D8405}.Debug|ARM.ActiveCfg = Debug|Any CPU
@@ -195,6 +179,22 @@ Global
 		{43EEDD43-150C-4F41-8D37-FE6D602E3D4E}.Release|x64.Build.0 = Release|Any CPU
 		{43EEDD43-150C-4F41-8D37-FE6D602E3D4E}.Release|x86.ActiveCfg = Release|Any CPU
 		{43EEDD43-150C-4F41-8D37-FE6D602E3D4E}.Release|x86.Build.0 = Release|Any CPU
+		{5C7EC9D4-88B9-4EA2-BEA1-3BF3F17858B4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5C7EC9D4-88B9-4EA2-BEA1-3BF3F17858B4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5C7EC9D4-88B9-4EA2-BEA1-3BF3F17858B4}.Debug|ARM.ActiveCfg = Debug|Any CPU
+		{5C7EC9D4-88B9-4EA2-BEA1-3BF3F17858B4}.Debug|ARM.Build.0 = Debug|Any CPU
+		{5C7EC9D4-88B9-4EA2-BEA1-3BF3F17858B4}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{5C7EC9D4-88B9-4EA2-BEA1-3BF3F17858B4}.Debug|x64.Build.0 = Debug|Any CPU
+		{5C7EC9D4-88B9-4EA2-BEA1-3BF3F17858B4}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{5C7EC9D4-88B9-4EA2-BEA1-3BF3F17858B4}.Debug|x86.Build.0 = Debug|Any CPU
+		{5C7EC9D4-88B9-4EA2-BEA1-3BF3F17858B4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5C7EC9D4-88B9-4EA2-BEA1-3BF3F17858B4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5C7EC9D4-88B9-4EA2-BEA1-3BF3F17858B4}.Release|ARM.ActiveCfg = Release|Any CPU
+		{5C7EC9D4-88B9-4EA2-BEA1-3BF3F17858B4}.Release|ARM.Build.0 = Release|Any CPU
+		{5C7EC9D4-88B9-4EA2-BEA1-3BF3F17858B4}.Release|x64.ActiveCfg = Release|Any CPU
+		{5C7EC9D4-88B9-4EA2-BEA1-3BF3F17858B4}.Release|x64.Build.0 = Release|Any CPU
+		{5C7EC9D4-88B9-4EA2-BEA1-3BF3F17858B4}.Release|x86.ActiveCfg = Release|Any CPU
+		{5C7EC9D4-88B9-4EA2-BEA1-3BF3F17858B4}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
