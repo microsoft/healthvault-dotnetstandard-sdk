@@ -20,14 +20,12 @@ namespace Microsoft.HealthVault.UnitTest.Clients
     {
         private IConnectionInternal connection;
         private PlatformClient platformClient;
-        private HealthServiceResponseData responseDate;
 
         [TestInitialize]
         public void InitializeTest()
         {
             connection = Substitute.For<IConnectionInternal>();
-            platformClient = new PlatformClient { Connection = this.connection };
-            responseDate = GetDefinition();
+            platformClient = new PlatformClient {Connection = this.connection};
         }
 
         [TestMethod]
@@ -35,17 +33,15 @@ namespace Microsoft.HealthVault.UnitTest.Clients
         {
             var location = new Location("US", "WA");
 
-            var response = new HealthServiceResponseData
-            {
-                InfoNavigator = new XPathDocument(new StringReader(SampleUtils.GetSampleContent("InstanceSample.xml"))).CreateNavigator(),
-                ResponseText = new ArraySegment<byte>(Encoding.ASCII.GetBytes(SampleUtils.GetSampleContent("InstanceSample.xml")))
-            };
+            var response = GetResponseData("InstanceSample.xml");
 
-            connection.ExecuteAsync(HealthVaultMethods.SelectInstance, Arg.Any<int>(), Arg.Any<string>()).Returns(response);
+            connection.ExecuteAsync(HealthVaultMethods.SelectInstance, Arg.Any<int>(), Arg.Any<string>())
+                .Returns(response);
 
             var result = await platformClient.SelectInstanceAsync(location).ConfigureAwait(false);
 
-            await this.connection.Received().ExecuteAsync(HealthVaultMethods.SelectInstance, Arg.Any<int>(), Arg.Any<string>());
+            await this.connection.Received()
+                .ExecuteAsync(HealthVaultMethods.SelectInstance, Arg.Any<int>(), Arg.Any<string>());
 
         }
 
@@ -54,13 +50,10 @@ namespace Microsoft.HealthVault.UnitTest.Clients
         {
             Location location = null;
 
-            var response = new HealthServiceResponseData
-            {
-                InfoNavigator = new XPathDocument(new StringReader(SampleUtils.GetSampleContent("InstanceSample.xml"))).CreateNavigator(),
-                ResponseText = new ArraySegment<byte>(Encoding.ASCII.GetBytes(SampleUtils.GetSampleContent("InstanceSample.xml")))
-            };
+            var response = GetResponseData("InstanceSample.xml");
 
-            connection.ExecuteAsync(HealthVaultMethods.SelectInstance, Arg.Any<int>(), Arg.Any<string>()).Returns(response);
+            connection.ExecuteAsync(HealthVaultMethods.SelectInstance, Arg.Any<int>(), Arg.Any<string>())
+                .Returns(response);
             try
             {
                 var result = await platformClient.SelectInstanceAsync(location).ConfigureAwait(false);
@@ -78,12 +71,14 @@ namespace Microsoft.HealthVault.UnitTest.Clients
         [TestMethod]
         public async Task GetServiceDefinitionTest()
         {
-            var response = GetDefinition();
+            var response = GetResponseData("ServiceDefinitionSample.xml");
 
-            connection.ExecuteAsync(HealthVaultMethods.GetServiceDefinition, Arg.Any<int>(), Arg.Any<string>()).Returns(response);
+            connection.ExecuteAsync(HealthVaultMethods.GetServiceDefinition, Arg.Any<int>(), Arg.Any<string>())
+                .Returns(response);
 
             var result = await platformClient.GetServiceDefinitionAsync().ConfigureAwait(false);
-            await this.connection.Received().ExecuteAsync(HealthVaultMethods.GetServiceDefinition, Arg.Any<int>(), Arg.Any<string>());
+            await this.connection.Received()
+                .ExecuteAsync(HealthVaultMethods.GetServiceDefinition, Arg.Any<int>(), Arg.Any<string>());
 
             Assert.AreEqual(result.LastUpdated.ToString(), "3/17/2017 3:24:19 AM");
         }
@@ -91,11 +86,13 @@ namespace Microsoft.HealthVault.UnitTest.Clients
         [TestMethod]
         public async Task GetServiceDefinitionWithSectionsTest()
         {
-            var response = GetDefinition();
+            var response = GetResponseData("ServiceDefinitionSample.xml");
 
-            connection.ExecuteAsync(HealthVaultMethods.GetServiceDefinition, Arg.Any<int>(), Arg.Any<string>()).Returns(response);
+            connection.ExecuteAsync(HealthVaultMethods.GetServiceDefinition, Arg.Any<int>(), Arg.Any<string>())
+                .Returns(response);
             var result = await platformClient.GetServiceDefinitionAsync(ServiceInfoSections.All).ConfigureAwait(false);
-            await this.connection.Received().ExecuteAsync(HealthVaultMethods.GetServiceDefinition, Arg.Any<int>(), Arg.Any<string>());
+            await this.connection.Received()
+                .ExecuteAsync(HealthVaultMethods.GetServiceDefinition, Arg.Any<int>(), Arg.Any<string>());
 
             Assert.AreEqual(result.LastUpdated.ToString(), "3/17/2017 3:24:19 AM");
         }
@@ -104,12 +101,14 @@ namespace Microsoft.HealthVault.UnitTest.Clients
         public async Task GetServiceDefinitionWithDateTimeTest()
         {
             DateTime lastUpdatedTime = new DateTime(2017, 03, 17, 03, 24, 19);
-            var response = GetDefinition();
+            var response = GetResponseData("ServiceDefinitionSample.xml");
 
-            connection.ExecuteAsync(HealthVaultMethods.GetServiceDefinition, Arg.Any<int>(), Arg.Any<string>()).Returns(response);
+            connection.ExecuteAsync(HealthVaultMethods.GetServiceDefinition, Arg.Any<int>(), Arg.Any<string>())
+                .Returns(response);
 
             var result = await platformClient.GetServiceDefinitionAsync(lastUpdatedTime).ConfigureAwait(false);
-            await this.connection.Received().ExecuteAsync(HealthVaultMethods.GetServiceDefinition, Arg.Any<int>(), Arg.Any<string>());
+            await this.connection.Received()
+                .ExecuteAsync(HealthVaultMethods.GetServiceDefinition, Arg.Any<int>(), Arg.Any<string>());
 
             Assert.AreEqual(result.LastUpdated, lastUpdatedTime);
         }
@@ -118,27 +117,32 @@ namespace Microsoft.HealthVault.UnitTest.Clients
         public async Task GetServiceDefinitionWithSectionsDateTimeTest()
         {
             DateTime lastUpdatedTime = new DateTime(2017, 03, 17, 03, 24, 19);
-            var response = GetDefinition();
+            var response = GetResponseData("ServiceDefinitionSample.xml");
 
-            connection.ExecuteAsync(HealthVaultMethods.GetServiceDefinition, Arg.Any<int>(), Arg.Any<string>()).Returns(response);
+            connection.ExecuteAsync(HealthVaultMethods.GetServiceDefinition, Arg.Any<int>(), Arg.Any<string>())
+                .Returns(response);
 
-            var result = await platformClient.GetServiceDefinitionAsync(ServiceInfoSections.All, lastUpdatedTime).ConfigureAwait(false);
-            await this.connection.Received().ExecuteAsync(HealthVaultMethods.GetServiceDefinition, Arg.Any<int>(), Arg.Any<string>());
+            var result =
+                await platformClient.GetServiceDefinitionAsync(ServiceInfoSections.All, lastUpdatedTime)
+                    .ConfigureAwait(false);
+            await this.connection.Received()
+                .ExecuteAsync(HealthVaultMethods.GetServiceDefinition, Arg.Any<int>(), Arg.Any<string>());
 
             Assert.AreEqual(result.LastUpdated, lastUpdatedTime);
         }
 
-        private HealthServiceResponseData GetDefinition()
+        private HealthServiceResponseData GetResponseData(string fileName)
         {
-            if (responseDate == null)
+            return new HealthServiceResponseData
             {
-                responseDate = new HealthServiceResponseData
-                {
-                    InfoNavigator = new XPathDocument(new StringReader(SampleUtils.GetSampleContent("ServiceDefinitionSample.xml"))).CreateNavigator(),
-                    ResponseText = new ArraySegment<byte>(Encoding.ASCII.GetBytes(SampleUtils.GetSampleContent("ServiceDefinitionSample.xml")))
-                };
-            }
-            return responseDate;
+                InfoNavigator =
+                    new XPathDocument(new StringReader(SampleUtils.GetSampleContent(fileName)))
+                        .CreateNavigator(),
+                ResponseText =
+                    new ArraySegment<byte>(
+                        Encoding.ASCII.GetBytes(SampleUtils.GetSampleContent(fileName)))
+            };
         }
+
     }
 }
