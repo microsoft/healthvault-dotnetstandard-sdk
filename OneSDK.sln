@@ -19,8 +19,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.HealthVault.UnitT
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SampleMVC", "SampleMVC\SampleMVC.csproj", "{8F645A68-C6C5-4134-9EA3-300130343232}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.HealthVault.UnitTest", "Microsoft.HealthVault.UnitTest\Microsoft.HealthVault.UnitTest.csproj", "{43EEDD43-150C-4F41-8D37-FE6D602E3D4E}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.HealthVault.Client.Core", "Microsoft.HealthVault.Client.Core\Microsoft.HealthVault.Client.Core.csproj", "{5C7EC9D4-88B9-4EA2-BEA1-3BF3F17858B4}"
 EndProject
 Global
