@@ -51,6 +51,7 @@ namespace Microsoft.HealthVault.UnitTest.Clients
         public async Task SelectInstanceLocationNullArgumrentTest()
         {
             Location location = null;
+            bool exceptionThrown = false;
 
             var response = SampleUtils.GetResponseData("InstanceSample.xml");
 
@@ -59,17 +60,13 @@ namespace Microsoft.HealthVault.UnitTest.Clients
             try
             {
                 var result = await platformClient.SelectInstanceAsync(location).ConfigureAwait(false);
-
-                await this.connection.Received()
-                    .ExecuteAsync(HealthVaultMethods.SelectInstance, Arg.Any<int>(), Arg.Any<string>());
             }
             catch (ArgumentNullException e)
             {
-                //Pass: exception expected
-                Assert.AreEqual(e.Message,
-                    "The preferred location must be specified.\r\nParameter name: preferredLocation");
-
+                exceptionThrown = true;
             }
+
+            Assert.AreEqual(exceptionThrown, true);
 
         }
 

@@ -76,7 +76,7 @@ namespace Microsoft.HealthVault.UnitTest.Clients
             await personClient.SetApplicationSettingsAsync(requestParameters).ConfigureAwait(false);
 
             await connection.Received()
-                .ExecuteAsync(HealthVaultMethods.SetApplicationSettings, Arg.Any<int>(), Arg.Any<string>());
+                .ExecuteAsync(HealthVaultMethods.SetApplicationSettings, Arg.Any<int>(), Arg.Is<string>(x=> x.Contains(requestParameters)));
         }
 
         [TestMethod]
