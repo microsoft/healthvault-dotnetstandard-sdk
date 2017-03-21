@@ -33,7 +33,7 @@ namespace Microsoft.HealthVault.UnitTest.Clients
         {
             var location = new Location("US", "WA");
 
-            var response = GetResponseData("InstanceSample.xml");
+            var response = SampleUtils.GetResponseData("InstanceSample.xml");
 
             connection.ExecuteAsync(HealthVaultMethods.SelectInstance, Arg.Any<int>(), Arg.Any<string>())
                 .Returns(response);
@@ -43,7 +43,7 @@ namespace Microsoft.HealthVault.UnitTest.Clients
             await this.connection.Received()
                 .ExecuteAsync(HealthVaultMethods.SelectInstance, Arg.Any<int>(), Arg.Any<string>());
 
-            Assert.IsTrue(result.Description == "US instance");
+            Assert.AreEqual(result.Description, "US instance");
 
         }
 
@@ -52,7 +52,7 @@ namespace Microsoft.HealthVault.UnitTest.Clients
         {
             Location location = null;
 
-            var response = GetResponseData("InstanceSample.xml");
+            var response = SampleUtils.GetResponseData("InstanceSample.xml");
 
             connection.ExecuteAsync(HealthVaultMethods.SelectInstance, Arg.Any<int>(), Arg.Any<string>())
                 .Returns(response);
@@ -63,9 +63,9 @@ namespace Microsoft.HealthVault.UnitTest.Clients
                 await this.connection.Received()
                     .ExecuteAsync(HealthVaultMethods.SelectInstance, Arg.Any<int>(), Arg.Any<string>());
             }
-            catch (ArgumentNullException e)
+            catch (ArgumentNullException)
             {
-                Assert.IsTrue(e != null);
+                //Pass: exception expected
             }
 
         }
@@ -73,7 +73,7 @@ namespace Microsoft.HealthVault.UnitTest.Clients
         [TestMethod]
         public async Task GetServiceDefinitionTest()
         {
-            var response = GetResponseData("ServiceDefinitionSample.xml");
+            var response = SampleUtils.GetResponseData("ServiceDefinitionSample.xml");
 
             connection.ExecuteAsync(HealthVaultMethods.GetServiceDefinition, Arg.Any<int>(), Arg.Any<string>())
                 .Returns(response);
@@ -88,7 +88,7 @@ namespace Microsoft.HealthVault.UnitTest.Clients
         [TestMethod]
         public async Task GetServiceDefinitionWithSectionsTest()
         {
-            var response = GetResponseData("ServiceDefinitionSample.xml");
+            var response = SampleUtils.GetResponseData("ServiceDefinitionSample.xml");
 
             connection.ExecuteAsync(HealthVaultMethods.GetServiceDefinition, Arg.Any<int>(), Arg.Any<string>())
                 .Returns(response);
@@ -103,7 +103,7 @@ namespace Microsoft.HealthVault.UnitTest.Clients
         public async Task GetServiceDefinitionWithDateTimeTest()
         {
             DateTime lastUpdatedTime = new DateTime(2017, 03, 17, 03, 24, 19);
-            var response = GetResponseData("ServiceDefinitionSample.xml");
+            var response = SampleUtils.GetResponseData("ServiceDefinitionSample.xml");
 
             connection.ExecuteAsync(HealthVaultMethods.GetServiceDefinition, Arg.Any<int>(), Arg.Any<string>())
                 .Returns(response);
@@ -119,7 +119,7 @@ namespace Microsoft.HealthVault.UnitTest.Clients
         public async Task GetServiceDefinitionWithSectionsDateTimeTest()
         {
             DateTime lastUpdatedTime = new DateTime(2017, 03, 17, 03, 24, 19);
-            var response = GetResponseData("ServiceDefinitionSample.xml");
+            var response = SampleUtils.GetResponseData("ServiceDefinitionSample.xml");
 
             connection.ExecuteAsync(HealthVaultMethods.GetServiceDefinition, Arg.Any<int>(), Arg.Any<string>())
                 .Returns(response);
@@ -132,19 +132,5 @@ namespace Microsoft.HealthVault.UnitTest.Clients
 
             Assert.AreEqual(result.LastUpdated, lastUpdatedTime);
         }
-
-        private HealthServiceResponseData GetResponseData(string fileName)
-        {
-            return new HealthServiceResponseData
-            {
-                InfoNavigator =
-                    new XPathDocument(new StringReader(SampleUtils.GetSampleContent(fileName)))
-                        .CreateNavigator(),
-                ResponseText =
-                    new ArraySegment<byte>(
-                        Encoding.ASCII.GetBytes(SampleUtils.GetSampleContent(fileName)))
-            };
-        }
-
     }
 }

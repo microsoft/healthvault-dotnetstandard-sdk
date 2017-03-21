@@ -20,7 +20,7 @@ namespace Microsoft.HealthVault.Transport
     public class HealthServiceResponseData
     {
         // Prevents creation of an instance.
-        public HealthServiceResponseData()
+        internal HealthServiceResponseData()
         {
         }
 

@@ -25,9 +25,9 @@ namespace Microsoft.HealthVault.Clients
     /// </summary>
     public class PersonClient : IPersonClient
     {
-        private static readonly XPathExpression InfoPersonAppSettingsPath = XPathExpression.Compile("//wc:info");
-        private static readonly XPathExpression InfoPersonPath = XPathExpression.Compile("//wc:info/person-info");
-        private static readonly XPathExpression InfoRecordPath = XPathExpression.Compile("//wc:info/record");
+        private static readonly XPathExpression InfoPersonAppSettingsPath = XPathExpression.Compile("/wc:info");
+        private static readonly XPathExpression InfoPersonPath = XPathExpression.Compile("/wc:info/person-info");
+        private static readonly XPathExpression InfoRecordPath = XPathExpression.Compile("/wc:info/record");
 
         public IConnectionInternal Connection { get; set; }
 

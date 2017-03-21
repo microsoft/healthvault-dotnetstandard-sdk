@@ -6,6 +6,7 @@ using NSubstitute;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml.XPath;
@@ -23,26 +24,28 @@ namespace Microsoft.HealthVault.UnitTest.Clients
         public void InitializeTest()
         {
             connection = Substitute.For<IConnectionInternal>();
-            personClient = new PersonClient {Connection = this.connection};
+            personClient = new PersonClient { Connection = this.connection };
         }
 
         [TestMethod]
         public async Task GetPersonInfoTest()
         {
-            var response = GetResponseData("PersonInfoSample.xml");
+            var personId = new Guid("f2455640-2294-4e8f-99b0-a386fd478699");
+
+            var response = SampleUtils.GetResponseData("PersonInfoSample.xml");
 
             connection.ExecuteAsync(HealthVaultMethods.GetPersonInfo, Arg.Any<int>()).Returns(response);
 
             var result = await personClient.GetPersonInfoAsync();
 
             await this.connection.Received().ExecuteAsync(HealthVaultMethods.GetPersonInfo, Arg.Any<int>());
-            Assert.IsNotNull(result.PersonId);
+            Assert.AreEqual(result.PersonId, personId);
         }
 
         [TestMethod]
         public async Task GetApplicationSettingsTest()
         {
-            var response = GetResponseData("AppSettingsSample.xml");
+            var response = SampleUtils.GetResponseData("AppSettingsSample.xml");
 
             connection.ExecuteAsync(HealthVaultMethods.GetApplicationSettings, Arg.Any<int>()).Returns(response);
 
@@ -55,20 +58,21 @@ namespace Microsoft.HealthVault.UnitTest.Clients
         [TestMethod]
         public async Task SetApplicationSettingsWitXPathNavTest()
         {
-            var response = GetResponseData("AppSettingsSample.xml");
+            var response = SampleUtils.GetResponseData("AppSettingsSample.xml");
 
             var nav = response.InfoNavigator;
 
             await personClient.SetApplicationSettingsAsync(nav).ConfigureAwait(false);
 
             await connection.Received()
-                .ExecuteAsync(HealthVaultMethods.SetApplicationSettings, Arg.Any<int>(), Arg.Any<string>());
+                .ExecuteAsync(HealthVaultMethods.SetApplicationSettings, Arg.Any<int>(), Arg.Is<string>(x => x.Contains("7a231675-4e78-451f-b94d-1e05b2a24586")));
         }
 
         [TestMethod]
         public async Task SetApplicationSettingsWithRequestParametersTest()
         {
             string requestParameters = "<app-settings />";
+
             await personClient.SetApplicationSettingsAsync(requestParameters).ConfigureAwait(false);
 
             await connection.Received()
@@ -78,10 +82,11 @@ namespace Microsoft.HealthVault.UnitTest.Clients
         [TestMethod]
         public async Task GetAuthorizedRecordsAsyncTest()
         {
+            var appSpecificId = "741934";
 
             IList<Guid> recordIds = new List<Guid> {new Guid("7a231675-4e78-451f-b94d-1e05b2a24586")};
 
-            var response = GetResponseData("AuthorizedRecordsSample.xml");
+            var response = SampleUtils.GetResponseData("AuthorizedRecordsSample.xml");
 
             connection.ExecuteAsync(HealthVaultMethods.GetAuthorizedRecords, Arg.Any<int>(), Arg.Any<string>())
                 .Returns(response);
@@ -89,19 +94,8 @@ namespace Microsoft.HealthVault.UnitTest.Clients
 
             await connection.Received()
                 .ExecuteAsync(HealthVaultMethods.GetAuthorizedRecords, Arg.Any<int>(), Arg.Any<string>());
-        }
 
-        private HealthServiceResponseData GetResponseData(string fileName)
-        {
-            return new HealthServiceResponseData
-            {
-                InfoNavigator =
-                    new XPathDocument(new StringReader(SampleUtils.GetSampleContent(fileName)))
-                        .CreateNavigator(),
-                ResponseText =
-                    new ArraySegment<byte>(
-                        Encoding.ASCII.GetBytes(SampleUtils.GetSampleContent(fileName)))
-            };
+            Assert.AreEqual(result.FirstOrDefault().ApplicationSpecificRecordId, appSpecificId);
         }
     }
 }
