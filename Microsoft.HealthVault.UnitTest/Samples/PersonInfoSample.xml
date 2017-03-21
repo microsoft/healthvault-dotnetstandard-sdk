@@ -1,9 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
-<response>
-  <status>
-    <code>0</code>
-  </status>
-  <wc:info xmlns:wc="urn:com.microsoft.wc.methods.response.GetPersonInfo">
+﻿<wc:info xmlns:wc="urn:com.microsoft.wc.methods.response.GetPersonInfo">
     <person-info>
       <person-id>f2455640-2294-4e8f-99b0-a386fd478699</person-id>
       <name>Hatim Saleem</name>
@@ -19,5 +14,4 @@
         <country>US</country>
       </location>
     </person-info>
-  </wc:info>
-</response>
+</wc:info>

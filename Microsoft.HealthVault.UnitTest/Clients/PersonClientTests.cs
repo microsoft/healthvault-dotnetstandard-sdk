@@ -84,7 +84,7 @@ namespace Microsoft.HealthVault.UnitTest.Clients
         {
             var appSpecificId = "741934";
 
-            IList<Guid> recordIds = new List<Guid> {new Guid("7a231675-4e78-451f-b94d-1e05b2a24586")};
+            IList<Guid> recordIds = new List<Guid> { new Guid("7a231675-4e78-451f-b94d-1e05b2a24586") };
 
             var response = SampleUtils.GetResponseData("AuthorizedRecordsSample.xml");
 

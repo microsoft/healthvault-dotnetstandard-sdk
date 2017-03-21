@@ -63,9 +63,12 @@ namespace Microsoft.HealthVault.UnitTest.Clients
                 await this.connection.Received()
                     .ExecuteAsync(HealthVaultMethods.SelectInstance, Arg.Any<int>(), Arg.Any<string>());
             }
-            catch (ArgumentNullException)
+            catch (ArgumentNullException e)
             {
                 //Pass: exception expected
+                Assert.AreEqual(e.Message,
+                    "The preferred location must be specified.\r\nParameter name: preferredLocation");
+
             }
 
         }

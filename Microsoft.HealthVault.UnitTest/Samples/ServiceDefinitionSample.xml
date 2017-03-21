@@ -1,9 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
-<response>
-  <status>
-    <code>0</code>
-  </status>
-  <wc:info xmlns:wc="urn:com.microsoft.wc.methods.response.GetServiceDefinition2">
+﻿  <wc:info xmlns:wc="urn:com.microsoft.wc.methods.response.GetServiceDefinition2">
     <instances current-instance-id="1">
       <instance>
         <id>1</id>
@@ -22,4 +17,3 @@
     </instances>
     <updated-date>2017-03-17T03:24:19</updated-date>
   </wc:info>
-</response>

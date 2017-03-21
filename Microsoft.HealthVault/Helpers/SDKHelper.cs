@@ -229,7 +229,7 @@ namespace Microsoft.HealthVault.Helpers
             return parts;
         }
 
-        private static XPathExpression infoPath = XPathExpression.Compile("//wc:info");
+        private static XPathExpression infoPath = XPathExpression.Compile("/wc:info");
 
         internal static XPathExpression GetInfoXPathExpressionForMethod(
             XPathNavigator infoNav,

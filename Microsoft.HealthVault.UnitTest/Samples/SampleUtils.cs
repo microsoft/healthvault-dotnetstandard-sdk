@@ -32,15 +32,17 @@ namespace Microsoft.HealthVault.UnitTest.Samples
 
         public static HealthServiceResponseData GetResponseData(string fileName)
         {
-            return new HealthServiceResponseData
+            var response = new HealthServiceResponseData
             {
                 InfoNavigator =
-                    new XPathDocument(new StringReader(SampleUtils.GetSampleContent(fileName)))
+                    new XPathDocument(new StringReader(GetSampleContent(fileName)))
                         .CreateNavigator(),
                 ResponseText =
                     new ArraySegment<byte>(
-                        Encoding.ASCII.GetBytes(SampleUtils.GetSampleContent(fileName)))
+                        Encoding.ASCII.GetBytes(GetSampleContent(fileName)))
             };
+
+            return response;
         }
     }
 }
