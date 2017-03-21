@@ -39,7 +39,7 @@ namespace Microsoft.HealthVault.Client
                 throw new ArgumentNullException(nameof(appInstanceId));
             }
 
-            string query = $"?appid={masterAppId}&appCreationToken={appCreationToken}&instanceName={appInstanceId}&ismra={this.MraString}";
+            string query = $"?appid={masterAppId}&appCreationToken={Uri.EscapeDataString(appCreationToken)}&instanceName={Uri.EscapeDataString(appInstanceId)}&ismra={this.MraString}";
             if (this.clientHealthVaultConfiguration.MultiInstanceAware)
             {
                 query += "&aib=true";
@@ -70,7 +70,8 @@ namespace Microsoft.HealthVault.Client
         private async Task<Uri> AuthenticateInBrowserAsync(Uri shellUrl, string query)
         {
             UriBuilder provisionBuilder = GetShellUriBuilder(shellUrl);
-            provisionBuilder.Query = query;
+            string fullQuery = "target=CREATEAPPLICATION&targetqs=" + Uri.EscapeDataString(query);
+            provisionBuilder.Query = fullQuery;
             Uri provisionUIUrl = provisionBuilder.Uri;
 
             UriBuilder endUriBuilder = new UriBuilder(shellUrl);

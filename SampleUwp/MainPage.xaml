@@ -1,0 +1,16 @@
+﻿<Page
+    x:Class="SampleUwp.MainPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:SampleUwp"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+
+    <StackPanel Orientation="Vertical" Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+        <Button Name="ConnectButton" Click="Connect_OnClick">Connect</Button>
+        <Button Name="GetBP" Click="Get_BP_OnClick">Get BP</Button>
+        <Button Name="SetBP" Click="SetBP_OnClick">Set BP</Button>
+        <TextBlock Name="OutputBlock"></TextBlock>
+    </StackPanel>
+</Page>

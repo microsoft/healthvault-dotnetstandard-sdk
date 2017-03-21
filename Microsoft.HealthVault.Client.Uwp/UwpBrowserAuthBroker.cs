@@ -12,30 +12,35 @@ namespace Microsoft.HealthVault.Client
     {
         public async Task<Uri> AuthenticateAsync(Uri startUrl, Uri stopUrlPrefix)
         {
-            try
+            return await DispatcherUtilities.RunOnUIThreadAsync(async () =>
             {
-                WebAuthenticationResult authResult = await WebAuthenticationBroker.AuthenticateAsync(WebAuthenticationOptions.None, startUrl, stopUrlPrefix);
-
-                switch (authResult.ResponseStatus)
+                try
                 {
-                    case WebAuthenticationStatus.Success:
-                        return new Uri(authResult.ResponseData);
+                    WebAuthenticationResult authResult = await WebAuthenticationBroker.AuthenticateAsync(WebAuthenticationOptions.None, startUrl, stopUrlPrefix)
+                        .AsTask()
+                        .ConfigureAwait(false);
 
-                    case WebAuthenticationStatus.UserCancel:
-                        throw new OperationCanceledException();
+                    switch (authResult.ResponseStatus)
+                    {
+                        case WebAuthenticationStatus.Success:
+                            return new Uri(authResult.ResponseData);
 
-                    case WebAuthenticationStatus.ErrorHttp:
-                        throw new BrowserAuthException((int)authResult.ResponseErrorDetail);
+                        case WebAuthenticationStatus.UserCancel:
+                            throw new OperationCanceledException();
 
-                    default:
-                        throw new BrowserAuthException(null);
+                        case WebAuthenticationStatus.ErrorHttp:
+                            throw new BrowserAuthException((int)authResult.ResponseErrorDetail);
+
+                        default:
+                            throw new BrowserAuthException(null);
+                    }
                 }
-            }
-            catch (Exception)
-            {
-                // Bad Parameter, SSL/TLS Errors and Network Unavailable errors are to be handled here.
-                throw new BrowserAuthException(null);
-            }
+                catch (Exception)
+                {
+                    // Bad Parameter, SSL/TLS Errors and Network Unavailable errors are to be handled here.
+                    throw new BrowserAuthException(null);
+                }
+            }).ConfigureAwait(false);
         }
     }
 }

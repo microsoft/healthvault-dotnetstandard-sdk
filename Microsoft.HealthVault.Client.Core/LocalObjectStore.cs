@@ -23,8 +23,12 @@ namespace Microsoft.HealthVault.Client
             }
 
             var json = await this.secretStore.ReadAsync(key).ConfigureAwait(false);
+            if (json == null)
+            {
+                return default(T);
+            }
 
-            return JsonConvert.DeserializeObject<T>(json, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
+            return JsonConvert.DeserializeObject<T>(json);
         }
 
         public async Task WriteAsync(string key, object value)

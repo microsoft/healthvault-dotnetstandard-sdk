@@ -10,6 +10,7 @@ using System;
 using System.Threading.Tasks;
 using Microsoft.HealthVault.Clients;
 using Microsoft.HealthVault.Configuration;
+using Microsoft.HealthVault.Person;
 using Microsoft.HealthVault.PlatformInformation;
 using Microsoft.HealthVault.Record;
 using Microsoft.HealthVault.Transport;
@@ -42,6 +43,12 @@ namespace Microsoft.HealthVault.Connection
         /// The application identifier.
         /// </value>
         Guid ApplicationId { get; }
+
+        /// <summary>
+        /// Gets the person information for this account.
+        /// </summary>
+        /// <remarks>This includes the list of authorized records for the application instance.</remarks>
+        PersonInfo PersonInfo { get; }
 
         /// <summary>
         /// Gets a client of a given type.

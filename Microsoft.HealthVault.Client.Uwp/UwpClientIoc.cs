@@ -33,7 +33,11 @@ namespace Microsoft.HealthVault.Client
             var sdkTelemetryInformation = new SdkTelemetryInformation
             {
                 Category = HealthVaultConstants.SdkTelemetryInformationCategories.WindowsClient,
-                FileVersion = new AssemblyName(typeof(ClientIoc).AssemblyQualifiedName).Version.ToString(),
+
+                // TODO: This is a temporary workaround, we need to figure out the assembly resolution issues.
+                FileVersion = "1.0.0.0",
+                //FileVersion = new AssemblyName(typeof(ClientIoc).AssemblyQualifiedName).Version.ToString(),
+
                 OsInformation = $"Windows {hostOsVersionInfo}"
             };
 

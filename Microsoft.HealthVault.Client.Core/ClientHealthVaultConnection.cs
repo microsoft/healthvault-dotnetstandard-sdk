@@ -136,8 +136,8 @@ namespace Microsoft.HealthVault.Client
             string environmentInstanceId = await this.shellAuthService.ProvisionApplicationAsync(
                 this.clientHealthVaultConfiguration.DefaultHealthVaultShellUrl,
                 this.clientHealthVaultConfiguration.MasterApplicationId,
-                this.ApplicationCreationInfo.AppCreationToken,
-                this.ApplicationCreationInfo.AppInstanceId.ToString()).ConfigureAwait(false);
+                newApplicationCreationInfo.AppCreationToken,
+                newApplicationCreationInfo.AppInstanceId.ToString()).ConfigureAwait(false);
 
             ServiceInfo serviceInfo = await this.PlatformClient.GetServiceDefinitionAsync(ServiceInfoSections.Topology).ConfigureAwait(false);
 
