@@ -5,6 +5,8 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.XPath;
+using Microsoft.HealthVault.Transport;
 
 namespace Microsoft.HealthVault.UnitTest.Samples
 {
@@ -26,6 +28,21 @@ namespace Microsoft.HealthVault.UnitTest.Samples
                     return reader.ReadToEnd();
                 }
             }
+        }
+
+        public static HealthServiceResponseData GetResponseData(string fileName)
+        {
+            var response = new HealthServiceResponseData
+            {
+                InfoNavigator =
+                    new XPathDocument(new StringReader(GetSampleContent(fileName)))
+                        .CreateNavigator(),
+                ResponseText =
+                    new ArraySegment<byte>(
+                        Encoding.ASCII.GetBytes(GetSampleContent(fileName)))
+            };
+
+            return response;
         }
     }
 }

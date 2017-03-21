@@ -1,0 +1,19 @@
+﻿  <wc:info xmlns:wc="urn:com.microsoft.wc.methods.response.GetServiceDefinition2">
+    <instances current-instance-id="1">
+      <instance>
+        <id>1</id>
+        <name>US</name>
+        <description>US instance</description>
+        <platform-url>https://platform.hvazads03.healthvault-test.com/platform/wildcat.ashx</platform-url>
+        <shell-url>https://account.hvazads03.healthvault-test.com/</shell-url>
+      </instance>
+      <instance>
+        <id>2</id>
+        <name>EU</name>
+        <description>EU Instance</description>
+        <platform-url>https://platform.hvazads04.healthvault-test.com/platform/wildcat.ashx</platform-url>
+        <shell-url>https://account.hvazads04.healthvault-test.com/</shell-url>
+      </instance>
+    </instances>
+    <updated-date>2017-03-17T03:24:19</updated-date>
+  </wc:info>
