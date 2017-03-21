@@ -49,6 +49,8 @@ namespace Microsoft.HealthVault.Transport
         private readonly IConnectionInternal connectionInternal;
         private readonly IHealthWebRequestFactory requestFactory;
 
+        private readonly HealthVaultConfiguration config;
+
         /// <summary>
         /// Creates a new instance of the <see cref="HealthServiceRequest"/>
         /// class for the specified method.
@@ -88,10 +90,8 @@ namespace Microsoft.HealthVault.Transport
 
             this.Method = method;
             this.MethodVersion = methodVersion;
-            config = config ?? Ioc.Get<HealthVaultConfiguration>();
+            this.config = config ?? Ioc.Get<HealthVaultConfiguration>();
             this.requestFactory = requestFactory ?? Ioc.Get<IHealthWebRequestFactory>();
-            this.timeoutSeconds = config.DefaultRequestTimeout;
-            this.TimeToLiveSeconds = config.DefaultRequestTimeToLive;
             this.CultureCode = CultureInfo.CurrentUICulture.Name;
             this.recordId = recordId.GetValueOrDefault(Guid.Empty);
             sdkTelemetryInformation = sdkTelemetryInformation ?? Ioc.Get<SdkTelemetryInformation>();
@@ -125,7 +125,7 @@ namespace Microsoft.HealthVault.Transport
 
                 try
                 {
-                    this.cancellationTokenSource = new CancellationTokenSource(TimeSpan.FromSeconds(this.timeoutSeconds));
+                    this.cancellationTokenSource = new CancellationTokenSource(TimeSpan.FromSeconds(this.config.DefaultRequestTimeout));
                     response = await easyWeb.FetchAsync(
                         this.connectionInternal.ServiceInstance.GetHealthVaultMethodUrl(),
                         this.cancellationTokenSource.Token).ConfigureAwait(false);
@@ -396,7 +396,21 @@ namespace Microsoft.HealthVault.Transport
                     }
                     else
                     {
-                        writer.WriteElementString("app-id", this.connectionInternal.ApplicationId.ToString());
+                        // TODO: We should group the methods that use the masterappid into an anonymous client.
+                        Guid appId;
+                        if (this.Method == HealthVaultMethods.NewApplicationCreationInfo || this.Method == HealthVaultMethods.GetServiceDefinition)
+                        {
+                            // These always use the Master app ID from configuration
+                            appId = this.config.MasterApplicationId;
+                        }
+                        else
+                        {
+                            // Otherwise use app instance ID from connection.
+                            appId = this.connectionInternal.ApplicationId;
+                        }
+
+                        writer.WriteElementString("app-id", appId.ToString());
+
                     }
 
                     if (this.CultureCode != null)
@@ -411,7 +425,7 @@ namespace Microsoft.HealthVault.Transport
 
                     writer.WriteElementString("msg-time", SDKHelper.XmlFromNow());
                     writer.WriteElementString(
-                        "msg-ttl", this.TimeToLiveSeconds.ToString(CultureInfo.InvariantCulture));
+                        "msg-ttl", this.config.DefaultRequestTimeToLive.ToString(CultureInfo.InvariantCulture));
 
                     writer.WriteElementString("version", Version);
 
@@ -764,13 +778,6 @@ namespace Microsoft.HealthVault.Transport
             get; set;
         }
         #endregion
-
-        /// <summary>
-        /// This is a test hook so that testing class can set different time
-        /// to live to verify if HealthVault checks for it.
-        /// </summary>
-        ///
-        internal int TimeToLiveSeconds { get; }
 
         /// <summary>
         /// This is a test hook so that the derived testing class can

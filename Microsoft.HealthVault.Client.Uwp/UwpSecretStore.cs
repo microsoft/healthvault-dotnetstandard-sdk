@@ -103,7 +103,7 @@ namespace Microsoft.HealthVault.Client
         private async Task<IBuffer> Protect(string input)
         {
             var buffer = CryptographicBuffer.ConvertStringToBinary(input, BinaryStringEncoding.Utf8);
-            var protectedbuffer = await this.protector.UnprotectAsync(buffer);
+            var protectedbuffer = await this.protector.ProtectAsync(buffer);
             return protectedbuffer;
         }
 

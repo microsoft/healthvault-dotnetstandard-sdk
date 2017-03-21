@@ -113,7 +113,8 @@ namespace Microsoft.HealthVault.Clients
             return new ReadOnlyCollection<T>(things);
         }
 
-        public async Task CreateNewThingsAsync(ICollection<IThing> things)
+        public async Task CreateNewThingsAsync<T>(ICollection<T> things)
+            where T : IThing
         {
             Validator.ThrowIfArgumentNull(things, nameof(things), Resources.NewItemsNullItem);
 
@@ -157,7 +158,8 @@ namespace Microsoft.HealthVault.Clients
             }
         }
 
-        public async Task UpdateThingsAsync(ICollection<IThing> things)
+        public async Task UpdateThingsAsync<T>(ICollection<T> things)
+            where T : IThing
         {
             Validator.ThrowIfArgumentNull(things, nameof(things), Resources.UpdateItemNull);
 
@@ -215,7 +217,8 @@ namespace Microsoft.HealthVault.Clients
             }
         }
 
-        public async Task RemoveThingsAsync(ICollection<IThing> things)
+        public async Task RemoveThingsAsync<T>(ICollection<T> things)
+            where T : IThing
         {
             StringBuilder parameters = new StringBuilder();
             foreach (IThing item in things)

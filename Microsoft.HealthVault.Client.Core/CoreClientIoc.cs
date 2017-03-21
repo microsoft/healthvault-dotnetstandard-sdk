@@ -29,6 +29,9 @@ namespace Microsoft.HealthVault.Client
         {
             container.RegisterSingleton<IClientHealthVaultConnection, ClientHealthVaultConnection>();
             container.RegisterSingleton<IClientHealthVaultFactory, ClientHealthVaultFactoryBase>();
+            container.RegisterSingleton<ILocalObjectStore, LocalObjectStore>();
+            container.RegisterSingleton<IShellAuthService, ShellAuthService>();
+            container.RegisterTransient<IClientSessionCredentialClient, ClientSessionCredentialClient>();
         }
     }
 }
