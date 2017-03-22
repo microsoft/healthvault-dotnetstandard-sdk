@@ -47,9 +47,9 @@ namespace SampleUwp
         private async void Get_BP_OnClick(object sender, RoutedEventArgs e)
         {
             HealthRecordInfo recordInfo = this.connection.PersonInfo.GetSelfRecord();
-            IThingClient thingClient = this.connection.GetThingClient(recordInfo);
+            IThingClient thingClient = this.connection.GetThingClient();
 
-            var bloodPressures = await thingClient.GetThingsAsync<BloodPressure>();
+            var bloodPressures = await thingClient.GetThingsAsync<BloodPressure>(recordInfo);
             BloodPressure firstBloodPressure = bloodPressures.First();
 
             this.OutputBlock.Text = firstBloodPressure.Systolic + "/" + firstBloodPressure.Diastolic;
@@ -57,8 +57,7 @@ namespace SampleUwp
 
         private async void SetBP_OnClick(object sender, RoutedEventArgs e)
         {
-            HealthRecordInfo recordInfo = this.connection.PersonInfo.GetSelfRecord();
-            IThingClient thingClient = this.connection.GetThingClient(recordInfo);
+            IThingClient thingClient = this.connection.GetThingClient();
 
             await thingClient.CreateNewThingsAsync(new List<BloodPressure> { new BloodPressure(new HealthServiceDateTime(DateTime.Now), 117, 70) });
 

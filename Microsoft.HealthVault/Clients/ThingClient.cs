@@ -24,7 +24,7 @@ using Microsoft.HealthVault.Transport;
 namespace Microsoft.HealthVault.Clients
 {
     /// <summary>
-    /// An interface for the HealthVault thing client. Used to access things associated with a particular record.
+    /// An interface for the HealthVault thing client
     /// </summary>
     public class ThingClient : IThingClient
     {
@@ -32,15 +32,11 @@ namespace Microsoft.HealthVault.Clients
 
         public Guid CorrelationId { get; set; }
 
-        public Guid LastResponseId { get; }
-
-        public HealthRecordInfo Record { get; set; }
-
-        public async Task<T> GetThingAsync<T>(Guid thingId)
+        public async Task<T> GetThingAsync<T>(HealthRecordInfo record, Guid thingId)
             where T : IThing
         {
             // Create a new searcher to get the item.
-            HealthRecordSearcher searcher = new HealthRecordSearcher(this.Record);
+            HealthRecordSearcher searcher = new HealthRecordSearcher(record);
 
             ThingQuery query = new ThingQuery();
             query.ItemIds.Add(thingId);
@@ -51,7 +47,7 @@ namespace Microsoft.HealthVault.Clients
 
             HealthServiceResponseData result = await this.Connection.ExecuteAsync(HealthVaultMethods.GetThings, 3, GetParametersXml(searcher));
 
-            ReadOnlyCollection<ThingCollection> resultSet = this.ParseThings(result, searcher);
+            ReadOnlyCollection<ThingCollection> resultSet = ParseThings(record, result, searcher);
 
             // Check in case HealthVault returned invalid data.
             if (resultSet.Count == 0)
@@ -77,17 +73,17 @@ namespace Microsoft.HealthVault.Clients
             return default(T);
         }
 
-        public async Task<IReadOnlyCollection<ThingCollection>> GetThingsAsync(ThingQuery query) 
+        public async Task<IReadOnlyCollection<ThingCollection>> GetThingsAsync(HealthRecordInfo record, ThingQuery query) 
         {
-            HealthServiceResponseData response = await this.GetRequestWithParameters(query);
-            HealthRecordSearcher searcher = new HealthRecordSearcher(this.Record);
+            HealthServiceResponseData response = await this.GetRequestWithParameters(record, query);
+            HealthRecordSearcher searcher = new HealthRecordSearcher(record);
             ReadOnlyCollection<ThingCollection> resultSet = 
-                this.ParseThings(response, searcher);
+                ParseThings(record, response, searcher);
 
             return resultSet;
         }
 
-        public async Task<IReadOnlyCollection<T>> GetThingsAsync<T>(ThingQuery query = null)
+        public async Task<IReadOnlyCollection<T>> GetThingsAsync<T>(HealthRecordInfo record, ThingQuery query = null)
             where T : IThing
         {
             // Ensure that we have a query that requests the correct type
@@ -96,7 +92,7 @@ namespace Microsoft.HealthVault.Clients
             query.TypeIds.Clear();
             query.TypeIds.Add(thing.TypeId);
 
-            IReadOnlyCollection<ThingCollection> resultSet = await this.GetThingsAsync(query);
+            IReadOnlyCollection<ThingCollection> resultSet = await this.GetThingsAsync(record, query);
 
             IList<T> things = new Collection<T>();
             foreach (ThingCollection results in resultSet)
@@ -266,7 +262,7 @@ namespace Microsoft.HealthVault.Clients
             return parameters.ToString();
         }
 
-        private ReadOnlyCollection<ThingCollection> ParseThings(HealthServiceResponseData responseData, HealthRecordSearcher query)
+        private static ReadOnlyCollection<ThingCollection> ParseThings(HealthRecordInfo record, HealthServiceResponseData responseData, HealthRecordSearcher query)
         {
             XmlReader infoReader = responseData.InfoReader;
 
@@ -283,7 +279,7 @@ namespace Microsoft.HealthVault.Clients
 
                         ThingCollection resultGroup =
                             ThingCollection.CreateResultGroupFromResponse(
-                                this.Record,
+                                record, 
                                 groupReader,
                                 query.Filters);
 
@@ -304,9 +300,9 @@ namespace Microsoft.HealthVault.Clients
             return new ReadOnlyCollection<ThingCollection>(result);
         }
 
-        private async Task<HealthServiceResponseData> GetRequestWithParameters(ThingQuery query)
+        private async Task<HealthServiceResponseData> GetRequestWithParameters(HealthRecordInfo record, ThingQuery query)
         {
-            HealthRecordSearcher searcher = new HealthRecordSearcher(this.Record);
+            HealthRecordSearcher searcher = new HealthRecordSearcher(record);
             searcher.Filters.Add(query);
             return await this.Connection.ExecuteAsync(HealthVaultMethods.GetThings, 3, GetParametersXml(searcher));
         }

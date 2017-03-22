@@ -80,28 +80,24 @@ namespace Microsoft.HealthVault.Connection
         /// <summary>
         /// Gets a client that can be used to access things associated with a particular record.
         /// </summary>
-        /// <param name="record">The record to associate the thing client with</param>
         /// <returns>
         /// An instance implementing IThingClient
         /// </returns>
-        public IThingClient GetThingClient(HealthRecordInfo record)
+        public IThingClient GetThingClient()
         {
             IThingClient thingClient = this.GetClient<IThingClient>();
-            thingClient.Record = record;
             return thingClient;
         }
 
         /// <summary>
         /// Gets a client that can be used to access action plans associated with a particular record
         /// </summary>
-        /// <param name="record">The record to associate the action plan client with</param>
         /// <returns>
         /// An instance implementing IActionPlanClient
         /// </returns>
-        public IActionPlanClient GetActionPlanClient(HealthRecordInfo record)
+        public IActionPlanClient GetActionPlanClient()
         {
             IActionPlanClient actionPlanClient = this.GetClient<IActionPlanClient>();
-            actionPlanClient.Record = record;
             return actionPlanClient;
         }
 

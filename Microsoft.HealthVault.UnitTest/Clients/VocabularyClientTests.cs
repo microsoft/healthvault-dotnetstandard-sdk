@@ -44,7 +44,6 @@ namespace Microsoft.HealthVault.UnitTest.Clients
             var guid = Guid.NewGuid();
             this.client.CorrelationId = guid;
             Assert.IsTrue(this.client.CorrelationId == guid);
-            Assert.IsTrue(this.client.LastResponseId == Guid.Empty);
             Assert.IsTrue(client.Connection == connection);
         }
 

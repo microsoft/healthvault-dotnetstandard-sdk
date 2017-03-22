@@ -6,11 +6,11 @@
 //
 // THE SOFTWARE IS PROVIDED *AS IS*, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-using Microsoft.HealthVault.Record;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.HealthVault.Thing;
+using Microsoft.HealthVault.Record;
 
 namespace Microsoft.HealthVault.Clients
 {
@@ -19,29 +19,30 @@ namespace Microsoft.HealthVault.Clients
     /// </summary>
     public interface IThingClient : IClient
     {
-        HealthRecordInfo Record { get; set; }
-
         /// <summary>
         /// Gets a ThingBase by its unique identifier
         /// </summary>
+        /// <param name="record">The health record for which we get the item</param>
         /// <param name="thingId">The unique identifier of the thing</param>
         /// <returns>The thing requested</returns>
-        Task<T> GetThingAsync<T>(Guid thingId)
+        Task<T> GetThingAsync<T>(HealthRecordInfo record, Guid thingId)
             where T : IThing;
 
         /// <summary>
         /// Gets a collection of Things that match a given query. 
         /// </summary>
+        /// <param name="record">The health record for which we get the item</param>
         /// <param name="query">An instance of <see cref="ThingQuery"/>.  Use this query to identify parameters for the search.</param>
         /// <returns>ICollection of ThingBase</returns>
-        Task<IReadOnlyCollection<ThingCollection>> GetThingsAsync(ThingQuery query);
+        Task<IReadOnlyCollection<ThingCollection>> GetThingsAsync(HealthRecordInfo record, ThingQuery query);
 
         /// <summary>
         /// Gets a collection of Things of the specific type. 
         /// </summary>
+        /// <param name="record">The health record for which we get the item</param>
         /// <param name="query">An instance of <see cref="ThingQuery"/>.  If you leave this null, it will return all things of the specified type.</param>
         /// <returns>ICollection of ThingBase</returns>
-        Task<IReadOnlyCollection<T>> GetThingsAsync<T>(ThingQuery query = null)
+        Task<IReadOnlyCollection<T>> GetThingsAsync<T>(HealthRecordInfo record, ThingQuery query = null)
                         where T : IThing;
 
         /// <summary>

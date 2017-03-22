@@ -9,10 +9,8 @@
 using System;
 using System.Threading.Tasks;
 using Microsoft.HealthVault.Clients;
-using Microsoft.HealthVault.Configuration;
 using Microsoft.HealthVault.Person;
 using Microsoft.HealthVault.PlatformInformation;
-using Microsoft.HealthVault.Record;
 using Microsoft.HealthVault.Transport;
 
 namespace Microsoft.HealthVault.Connection
@@ -76,16 +74,14 @@ namespace Microsoft.HealthVault.Connection
         /// <summary>
         /// Gets a client that can be used to access things associated with a particular record.
         /// </summary>
-        /// <param name="record">The record to associate the thing client with</param>
         /// <returns>An instance implementing IThingClient</returns>
-        IThingClient GetThingClient(HealthRecordInfo record);
+        IThingClient GetThingClient();
 
         /// <summary>
         /// Gets a client that can be used to access action plans associated with a particular record
         /// </summary>
-        /// <param name="record">The record to associate the action plan client with</param>
         /// <returns>An instance implementing IActionPlanClient</returns>
-        IActionPlanClient GetActionPlanClient(HealthRecordInfo record);
+        IActionPlanClient GetActionPlanClient();
 
         /// <summary>
         /// Authenticates the connection.

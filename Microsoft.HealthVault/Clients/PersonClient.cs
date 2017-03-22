@@ -33,8 +33,6 @@ namespace Microsoft.HealthVault.Clients
 
         public Guid CorrelationId { get; set; }
 
-        public Guid LastResponseId { get; set; }
-
         public virtual async Task<ApplicationSettings> GetApplicationSettingsAsync()
         {
             HealthServiceResponseData responseData = await this.Connection

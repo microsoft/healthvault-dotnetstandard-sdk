@@ -25,8 +25,6 @@ namespace Microsoft.HealthVault.Clients
 
         public Guid CorrelationId { get; set; }
 
-        public Guid LastResponseId { get; }
-
         public async Task<IReadOnlyCollection<VocabularyKey>> GetVocabularyKeysAsync()
         {
             return await HealthVaultPlatformVocabulary.Current.GetVocabularyKeysAsync(this.Connection);

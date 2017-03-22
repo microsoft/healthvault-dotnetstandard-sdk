@@ -46,7 +46,6 @@ namespace Microsoft.HealthVault.UnitTest.Clients
             var guid = Guid.NewGuid();
             this.client.CorrelationId = guid;
             Assert.IsTrue(this.client.CorrelationId == guid);
-            Assert.IsTrue(this.client.LastResponseId == Guid.Empty);
             Assert.IsTrue(client.Connection == connection);
         }
 
@@ -72,7 +71,7 @@ namespace Microsoft.HealthVault.UnitTest.Clients
         {
             this.initializeResponse(SampleUtils.GetSampleContent("ThingSampleBloodPressure.xml"));
             ThingQuery query = this.GetThingQuery();
-            var result = await client.GetThingsAsync(query);
+            var result = await client.GetThingsAsync(record, query);
 
             // ensure that the connection was called with the proper values
             await connection.Received().ExecuteAsync(HealthVaultMethods.GetThings, Arg.Any<int>(), Arg.Is<string>(x => x.Contains(BloodPressure.TypeId.ToString())));
@@ -119,7 +118,7 @@ namespace Microsoft.HealthVault.UnitTest.Clients
         {
             this.initializeResponse(SampleUtils.GetSampleContent("ThingSampleBloodPressure.xml"));
             var query = this.GetThingQuery();
-            var result = await client.GetThingsAsync<BloodPressure>(query);
+            var result = await client.GetThingsAsync<BloodPressure>(record, query);
             await connection.Received().ExecuteAsync(HealthVaultMethods.GetThings, Arg.Any<int>(), Arg.Is<string>(x => x.Contains(BloodPressure.TypeId.ToString())));
 
             // Assert that non-Blood Pressure results were filtered
@@ -148,7 +147,6 @@ namespace Microsoft.HealthVault.UnitTest.Clients
             this.client = new ThingClient
             {
                 Connection = connection,
-                Record = record
             };
 
             var response = new HealthServiceResponseData

@@ -12,7 +12,6 @@ using System.Threading.Tasks;
 using Microsoft.HealthVault.PlatformInformation;
 using Microsoft.HealthVault.Connection;
 using Microsoft.HealthVault.Application;
-using Microsoft.HealthVault.Exceptions;
 using Microsoft.HealthVault.Person;
 using Microsoft.HealthVault.Thing;
 using Microsoft.HealthVault.Transport;
@@ -27,8 +26,6 @@ namespace Microsoft.HealthVault.Clients
         public IConnectionInternal Connection { get; set; }
 
         public Guid CorrelationId { get; set; }
-
-        public Guid LastResponseId { get; set; }
 
         public Task<HealthServiceInstance> SelectInstanceAsync(Location preferredLocation)
         {
