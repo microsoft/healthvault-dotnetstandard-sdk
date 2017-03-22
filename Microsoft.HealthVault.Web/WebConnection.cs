@@ -58,25 +58,5 @@ namespace Microsoft.HealthVault.Web
                 writer.WriteEndElement();
             }
         }
-
-        public override void StoreSessionCredentialInCookieXml(XmlWriter writer)
-        {
-            writer.WriteStartElement("appserver");
-            writer.WriteElementString("auth-token", this.SessionCredential.Token);
-            writer.WriteElementString("shared-secret", this.SessionCredential.SharedSecret);
-            writer.WriteElementString("user-auth-token", this.SubCredential);
-            writer.WriteEndElement();
-        }
-
-        public override void SetSessionCredentialFromCookieXml(XPathNavigator navigator)
-        {
-            XPathNavigator credNavigator = navigator.SelectSingleNode("appserver");
-
-            var authToken = credNavigator?.SelectSingleNode("auth-token")?.Value;
-            var sharedSecret = credNavigator?.SelectSingleNode("shared-secret")?.Value;
-
-            this.SubCredential = credNavigator?.SelectSingleNode("user-auth-token")?.Value;
-            this.SessionCredential = new SessionCredential { SharedSecret = sharedSecret, Token = authToken };
-        }
     }
 }

@@ -41,7 +41,7 @@ namespace Microsoft.HealthVault
             container.RegisterTransient<IConnectionInternal, HealthVaultConnectionBase>();
             container.RegisterTransient<ISessionCredentialClient, SessionCredentialClientBase>();
             container.RegisterSingleton<IServiceLocator, ServiceLocator>();
-            container.RegisterTransient<ICryptographer, Cryptographer>();
+            container.RegisterSingleton<ICryptographer, Cryptographer>();
         }
 
         public static void OverrideClientType<T>(Func<T, T> func)

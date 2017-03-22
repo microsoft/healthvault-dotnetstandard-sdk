@@ -323,7 +323,6 @@ namespace Microsoft.HealthVault.Transport
 
         #region AuthData
 
-        // TODO: Find hash-data header
         private string GetCryptoDataInnerXml(CryptoData crytpoData)
         {
             StringBuilder builder = new StringBuilder(256);

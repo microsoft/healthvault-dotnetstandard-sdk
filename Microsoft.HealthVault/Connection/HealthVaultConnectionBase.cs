@@ -188,14 +188,5 @@ namespace Microsoft.HealthVault.Connection
         }
 
         public abstract void PrepareAuthSessionHeader(XmlWriter writer, Guid? recordId);
-
-        // TODO: temp fix
-        public virtual void StoreSessionCredentialInCookieXml(XmlWriter writer)
-        {
-        }
-
-        public virtual void SetSessionCredentialFromCookieXml(XPathNavigator navigator)
-        {
-        }
     }
 }

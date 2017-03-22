@@ -20,7 +20,7 @@ namespace Microsoft.HealthVault.Application
         /// <summary>
         /// Constructs a default instance of a location with no country or state/province.
         /// </summary>
-        internal Location()
+        public Location()
         {
         }
 
