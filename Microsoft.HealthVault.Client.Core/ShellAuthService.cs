@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using Microsoft.HealthVault.Client.Exceptions;
 
@@ -39,7 +36,7 @@ namespace Microsoft.HealthVault.Client
                 throw new ArgumentNullException(nameof(appInstanceId));
             }
 
-            string query = $"?appid={masterAppId}&appCreationToken={Uri.EscapeDataString(appCreationToken)}&instanceName={Uri.EscapeDataString(appInstanceId)}&ismra={this.MraString}";
+            string query = $"appid={masterAppId}&appCreationToken={Uri.EscapeDataString(appCreationToken)}&instanceName={Uri.EscapeDataString(appInstanceId)}&ismra={this.MraString}&mobile=true";
             if (this.clientHealthVaultConfiguration.MultiInstanceAware)
             {
                 query += "&aib=true";

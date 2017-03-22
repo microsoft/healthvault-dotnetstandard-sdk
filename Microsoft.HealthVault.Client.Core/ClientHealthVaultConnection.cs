@@ -67,7 +67,7 @@ namespace Microsoft.HealthVault.Client
         {
             writer.WriteStartElement("auth-session");
             writer.WriteElementString("auth-token", this.SessionCredential.Token);
-            if (recordId != null)
+            if (recordId != null && recordId != Guid.Empty)
             {
                 writer.WriteStartElement("offline-person-info");
                 writer.WriteElementString("offline-person-id", this.PersonInfo.PersonId.ToString());

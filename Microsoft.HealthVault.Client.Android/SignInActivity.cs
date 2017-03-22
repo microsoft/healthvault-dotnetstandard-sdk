@@ -15,7 +15,7 @@ namespace Microsoft.HealthVault.Client.Platform.Android
         public const string EndUrl = "endUrl";
         private WebView webView;
         private IAndroidBrowserAuthBroker authBroker;
-        private bool successful;
+        private bool isComplete;
 
         protected override void OnCreate(Bundle savedInstanceState)
         {
@@ -36,9 +36,12 @@ namespace Microsoft.HealthVault.Client.Platform.Android
 
         private void onLoadCompleted(Uri uri)
         {
-            this.authBroker.OnLoginSucceeded(uri);
-            this.successful = true;
-            this.Finish();
+            if (!this.isComplete)
+            {
+                this.authBroker.OnLoginSucceeded(uri);
+                this.isComplete = true;
+                this.Finish();
+            }
         }
 
         public override void OnBackPressed()
@@ -56,7 +59,7 @@ namespace Microsoft.HealthVault.Client.Platform.Android
 
         protected override void OnDestroy()
         {
-            if (!successful)
+            if (!this.isComplete)
             {
                 OnLoadCanceled();
             }
@@ -66,6 +69,7 @@ namespace Microsoft.HealthVault.Client.Platform.Android
 
         private void OnLoadCanceled()
         {
+            this.isComplete = true;
             this.authBroker.OnLoginFailed(new System.OperationCanceledException());
         }
 

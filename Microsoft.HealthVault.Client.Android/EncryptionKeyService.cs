@@ -13,8 +13,24 @@ namespace Microsoft.HealthVault.Client
     /// </summary>
     internal class EncryptionKeyService : IEncryptionKeyService
     {
-        private const string KeyStoreFileName = "HealthVault.Android.keystore";
+        private const string keyStoreFileName = "HealthVault.Android.keystore";
+        private string keyStoreDirectory;
         private AsyncLock keystoreLock = new AsyncLock();
+
+        public EncryptionKeyService()
+        {
+            string storageDir;
+            if (Android.OS.Build.VERSION.SdkInt >= Android.OS.BuildVersionCodes.Lollipop)
+            {
+                storageDir = AndroidApp.Application.Context.NoBackupFilesDir.AbsolutePath;
+            }
+            else
+            {
+                storageDir = AndroidApp.Application.Context.FilesDir.AbsolutePath;
+            }
+
+            this.keyStoreDirectory = Path.Combine(storageDir, HealthVaultConstants.Storage.DirectoryName);
+        }
 
         #region IEncryptionKeyService
 
@@ -136,15 +152,17 @@ namespace Microsoft.HealthVault.Client
 
         private Task<Stream> OpenKeyStoreFileForOutputAsync()
         {
-            string directory = AndroidApp.Application.Context.NoBackupFilesDir.AbsolutePath;
-            return Task.FromResult((Stream)File.Create(Path.Combine(directory, KeyStoreFileName)));
+            if (!Directory.Exists(this.keyStoreDirectory))
+            {
+                Directory.CreateDirectory(this.keyStoreDirectory);
+            }
+
+            return Task.FromResult((Stream)File.Create(Path.Combine(this.keyStoreDirectory, keyStoreFileName)));
         }
 
         private Task<Stream> OpenKeyStoreFileForInputAsync()
         {
-            string directory = AndroidApp.Application.Context.NoBackupFilesDir.AbsolutePath;
-            string storeFile = Path.Combine(directory, KeyStoreFileName);
-            return Task.FromResult((Stream)File.OpenRead(storeFile));
+            return Task.FromResult((Stream)File.OpenRead(Path.Combine(this.keyStoreDirectory, keyStoreFileName)));
         }
 
         private string GetDeviceId()

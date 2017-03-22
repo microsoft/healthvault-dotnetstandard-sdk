@@ -20,12 +20,24 @@ namespace Microsoft.HealthVault.Client
         private IEncryptionKeyService keyService;
         private Dictionary<string, AsyncLock> fileLocks = new Dictionary<string, AsyncLock>();
         private AsyncLock globalLock = new AsyncLock();
-        private string storePath = Path.Combine(AndroidApp.Application.Context.NoBackupFilesDir.AbsolutePath, "HealthVaultStore");
+        private string storePath;
         private byte[] encryptionKey;
 
         public AndroidSecretStore(IEncryptionKeyService keyService)
         {
             this.keyService = keyService;
+
+            string storageDir;
+            if (Android.OS.Build.VERSION.SdkInt >= Android.OS.BuildVersionCodes.Lollipop)
+            {
+                storageDir = AndroidApp.Application.Context.NoBackupFilesDir.AbsolutePath;
+            }
+            else
+            {
+                storageDir = AndroidApp.Application.Context.FilesDir.AbsolutePath;
+            }
+
+            this.storePath = Path.Combine(new[] { storageDir, HealthVaultConstants.Storage.DirectoryName });
         }
 
         public async Task DeleteAsync(string key)
@@ -61,6 +73,10 @@ namespace Microsoft.HealthVault.Client
 
                     return Encoding.UTF8.GetString(decrypted);
                 }
+            }
+            catch (FileNotFoundException)
+            {
+                return null;
             }
             catch (Exception e) when (!(e is IOException))
             {

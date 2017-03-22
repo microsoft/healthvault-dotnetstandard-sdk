@@ -92,7 +92,7 @@ namespace Microsoft.HealthVault.PlatformInformation
         /// A string uniquely identifying the instance.
         /// </value>
         ///
-        public string Id { get; private set; }
+        public string Id { get; set; }
 
         /// <summary>
         /// Gets the instance name.
@@ -102,7 +102,7 @@ namespace Microsoft.HealthVault.PlatformInformation
         /// A friendly name for the instance.
         /// </value>
         ///
-        public string Name { get; private set; }
+        public string Name { get; set; }
 
         /// <summary>
         /// Gets a description of the instance.
@@ -112,7 +112,7 @@ namespace Microsoft.HealthVault.PlatformInformation
         /// A friendly description of the instance.
         /// </value>
         ///
-        public string Description { get; private set; }
+        public string Description { get; set; }
 
         /// <summary>
         /// Gets the HealthVault URL.
@@ -127,7 +127,7 @@ namespace Microsoft.HealthVault.PlatformInformation
         /// HealthVault XML methods.
         /// </remarks>
         ///
-        public Uri HealthServiceUrl { get; private set; }
+        public Uri HealthServiceUrl { get; set; }
 
         /// <summary>
         /// Gets the Shell URL.
@@ -136,6 +136,6 @@ namespace Microsoft.HealthVault.PlatformInformation
         /// <value>
         /// A Uri representing the URL to access the HealthVault Shell.
         /// </value>
-        public Uri ShellUrl { get; private set; }
+        public Uri ShellUrl { get; set; }
     }
 }

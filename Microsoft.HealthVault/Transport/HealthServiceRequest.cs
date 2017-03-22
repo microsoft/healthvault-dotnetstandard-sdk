@@ -344,7 +344,15 @@ namespace Microsoft.HealthVault.Transport
                 throw new ArgumentNullException(nameof(writer));
             }
 
-            writer.WriteStartElement("hash-data"); // TODO: what is this StartElementName
+            if (cryptoData.Algorithm == HealthVaultConstants.Cryptography.HmacAlgorithm)
+            {
+                writer.WriteStartElement("hmac-data");
+            }
+            else
+            {
+                writer.WriteStartElement("hash-data");
+            }
+
             writer.WriteAttributeString("algName", cryptoData.Algorithm);
             writer.WriteString(cryptoData.Value);
             writer.WriteEndElement();

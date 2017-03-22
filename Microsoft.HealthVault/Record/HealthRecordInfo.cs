@@ -35,6 +35,109 @@ namespace Microsoft.HealthVault.Record
     ///
     public class HealthRecordInfo : HealthRecordAccessor, IMarshallable
     {
+        #region Contrsuctors
+
+        /// <summary>
+        /// Copy constructor
+        /// </summary>
+        ///
+        /// <param name="recordInfo">
+        /// The record info object which is to be used as the source
+        /// for the data.
+        /// </param>
+        ///
+        internal HealthRecordInfo(HealthRecordInfo recordInfo)
+            : this(
+                recordInfo.Connection,
+                recordInfo.Id)
+        {
+            if (recordInfo.IsUpdated)
+            {
+                this.custodian = recordInfo.IsCustodian;
+                this.dateAuthorizationExpires = recordInfo.DateAuthorizationExpires;
+                this.name = recordInfo.Name;
+                this.relationshipType = recordInfo.RelationshipType;
+                this.relationshipName = recordInfo.RelationshipName;
+                this.displayName = recordInfo.DisplayName;
+
+                if (recordInfo.Location != null)
+                {
+                    this.Location = new Location(recordInfo.Location.Country, recordInfo.Location.StateProvince);
+                }
+
+                this.IsUpdated = true;
+            }
+        }
+
+        /// <summary>
+        /// Creates a new instance of the <see cref="HealthRecordInfo"/> class,
+        /// providing a new view of a personal health record.
+        /// </summary>
+        ///
+        /// <param name="connection">
+        /// An instance of a <see cref="ApplicationConnection"/>
+        /// to which the record operations are directed.
+        /// </param>
+        ///
+        /// <param name="id">
+        /// The unique identifier for the record.
+        /// </param>
+        ///
+        /// <remarks>
+        /// With this constructor, none of the data held in the properties
+        /// is valid except the
+        /// <see cref="HealthRecordAccessor.Id"/>
+        /// property. The ID is not validated with the service and the data
+        /// is not retrieved until
+        /// <see cref="HealthRecordInfo.Refresh"/>
+        /// is called. However, any of the methods can be called without
+        /// Update being called.
+        /// </remarks>
+        ///
+        /// <exception cref="ArgumentNullException">
+        /// The <paramref name="connection"/> parameter is <b>null</b>.
+        /// </exception>
+        ///
+        /// <exception cref="ArgumentException">
+        /// The <paramref name="id"/> parameter is Guid.Empty.
+        /// </exception>
+        ///
+        public HealthRecordInfo(
+            IConnectionInternal connection,
+            Guid id)
+            : base(connection, id)
+        {
+        }
+
+        /// <summary>
+        /// Creates a new instance of the <see cref="HealthRecordInfo"/> class
+        /// for deserialization purposes.
+        /// </summary>
+        ///
+        /// <param name="connection">
+        /// An instance of a <see cref="ApplicationConnection"/>
+        /// to which the record operations are directed.
+        /// </param>
+        ///
+        /// <remarks>
+        /// This constructor is only useful if ParseXml is called.
+        /// </remarks>
+        ///
+        /// <exception cref="ArgumentNullException">
+        /// The <paramref name="connection"/> parameter is <b>null</b>.
+        /// </exception>
+        ///
+        internal HealthRecordInfo(IConnectionInternal connection)
+            : base(connection)
+        {
+        }
+
+        public HealthRecordInfo()
+        {
+        }
+
+        #endregion
+
         /// <summary>
         /// Creates an instance of a HealthRecordInfo object using
         /// the specified XML.
@@ -83,6 +186,8 @@ namespace Microsoft.HealthVault.Record
             recordInfo.ParseXml(navigator);
             return recordInfo;
         }
+
+        #region Xml
 
         /// <summary>
         /// Parses HealthRecordInfo member data from the specified XPathNavigator.
@@ -281,104 +386,7 @@ namespace Microsoft.HealthVault.Record
             writer.WriteEndElement();
         }
 
-        /// <summary>
-        /// Copy constructor
-        /// </summary>
-        ///
-        /// <param name="recordInfo">
-        /// The record info object which is to be used as the source
-        /// for the data.
-        /// </param>
-        ///
-        internal HealthRecordInfo(HealthRecordInfo recordInfo)
-            : this(
-                recordInfo.Connection,
-                recordInfo.Id)
-        {
-            if (recordInfo.IsUpdated)
-            {
-                this.custodian = recordInfo.IsCustodian;
-                this.dateAuthorizationExpires = recordInfo.DateAuthorizationExpires;
-                this.name = recordInfo.Name;
-                this.relationshipType = recordInfo.RelationshipType;
-                this.relationshipName = recordInfo.RelationshipName;
-                this.displayName = recordInfo.DisplayName;
-
-                if (recordInfo.Location != null)
-                {
-                    this.Location = new Location(recordInfo.Location.Country, recordInfo.Location.StateProvince);
-                }
-
-                this.IsUpdated = true;
-            }
-        }
-
-        /// <summary>
-        /// Creates a new instance of the <see cref="HealthRecordInfo"/> class,
-        /// providing a new view of a personal health record.
-        /// </summary>
-        ///
-        /// <param name="connection">
-        /// An instance of a <see cref="ApplicationConnection"/>
-        /// to which the record operations are directed.
-        /// </param>
-        ///
-        /// <param name="id">
-        /// The unique identifier for the record.
-        /// </param>
-        ///
-        /// <remarks>
-        /// With this constructor, none of the data held in the properties
-        /// is valid except the
-        /// <see cref="HealthRecordAccessor.Id"/>
-        /// property. The ID is not validated with the service and the data
-        /// is not retrieved until
-        /// <see cref="HealthRecordInfo.Refresh"/>
-        /// is called. However, any of the methods can be called without
-        /// Update being called.
-        /// </remarks>
-        ///
-        /// <exception cref="ArgumentNullException">
-        /// The <paramref name="connection"/> parameter is <b>null</b>.
-        /// </exception>
-        ///
-        /// <exception cref="ArgumentException">
-        /// The <paramref name="id"/> parameter is Guid.Empty.
-        /// </exception>
-        ///
-        public HealthRecordInfo(
-            IConnectionInternal connection,
-            Guid id)
-            : base(connection, id)
-        {
-        }
-
-        /// <summary>
-        /// Creates a new instance of the <see cref="HealthRecordInfo"/> class
-        /// for deserialization purposes.
-        /// </summary>
-        ///
-        /// <param name="connection">
-        /// An instance of a <see cref="ApplicationConnection"/>
-        /// to which the record operations are directed.
-        /// </param>
-        ///
-        /// <remarks>
-        /// This constructor is only useful if ParseXml is called.
-        /// </remarks>
-        ///
-        /// <exception cref="ArgumentNullException">
-        /// The <paramref name="connection"/> parameter is <b>null</b>.
-        /// </exception>
-        ///
-        internal HealthRecordInfo(IConnectionInternal connection)
-            : base(connection)
-        {
-        }
-
-        internal HealthRecordInfo()
-        {
-        }
+        #endregion
 
         #region Public properties
 
@@ -411,7 +419,7 @@ namespace Microsoft.HealthVault.Record
                 return this.custodian;
             }
 
-            protected set
+            set
             {
                 this.custodian = value;
                 this.IsUpdated = true;
@@ -450,7 +458,7 @@ namespace Microsoft.HealthVault.Record
                 return this.dateAuthorizationExpires;
             }
 
-            protected set
+            set
             {
                 this.dateAuthorizationExpires = value;
                 this.IsUpdated = true;
@@ -472,7 +480,7 @@ namespace Microsoft.HealthVault.Record
                 return this.authExpired;
             }
 
-            protected set
+            set
             {
                 this.authExpired = value;
                 this.IsUpdated = true;
@@ -509,7 +517,7 @@ namespace Microsoft.HealthVault.Record
                 return this.name;
             }
 
-            protected set
+            set
             {
                 this.name = value;
                 this.IsUpdated = true;
@@ -546,7 +554,7 @@ namespace Microsoft.HealthVault.Record
                 return this.relationshipType;
             }
 
-            protected set
+            set
             {
                 this.relationshipType = value;
                 this.IsUpdated = true;
@@ -585,7 +593,7 @@ namespace Microsoft.HealthVault.Record
                 return this.relationshipName;
             }
 
-            protected set
+            set
             {
                 this.relationshipName = value;
                 this.IsUpdated = true;
@@ -624,7 +632,7 @@ namespace Microsoft.HealthVault.Record
                 return this.displayName;
             }
 
-            protected set
+            set
             {
                 this.displayName = value;
                 this.IsUpdated = true;
@@ -643,13 +651,13 @@ namespace Microsoft.HealthVault.Record
         /// Gets the date the record was created, in UTC.
         /// </summary>
         ///
-        public DateTime DateCreated { get; protected set; }
+        public DateTime DateCreated { get; set; }
 
         /// <summary>
         /// Gets the date the record was updated, in UTC.
         /// </summary>
         ///
-        public DateTime DateUpdated { get; protected set; }
+        public DateTime DateUpdated { get; set; }
 
         /// <summary>
         /// Gets the maximum total size in bytes that the <see cref="ThingBase" />s in
@@ -661,7 +669,7 @@ namespace Microsoft.HealthVault.Record
         /// fetched from the HealthVault platform as opposed to created on the fly.
         /// </remarks>
         ///
-        public long? QuotaInBytes { get; protected set; }
+        public long? QuotaInBytes { get; set; }
 
         /// <summary>
         /// Gets the total size in bytes that the <see cref="ThingBase" />s in
@@ -673,7 +681,7 @@ namespace Microsoft.HealthVault.Record
         /// fetched from the HealthVault platform as opposed to created on the fly.
         /// </remarks>
         ///
-        public long? QuotaUsedInBytes { get; protected set; }
+        public long? QuotaUsedInBytes { get; set; }
 
         /// <summary>
         /// Gets the record's latest operation sequence number.
@@ -689,7 +697,7 @@ namespace Microsoft.HealthVault.Record
         /// GetRecordOperations and passing the sequence number of the known point.
         /// </remarks>
         ///
-        public long LatestOperationSequenceNumber { get; protected set; }
+        public long LatestOperationSequenceNumber { get; set; }
 
         /// <summary>
         /// Gets the <see cref="HealthRecordAuthorizationStatus"/> for the record.
@@ -700,19 +708,19 @@ namespace Microsoft.HealthVault.Record
         /// requires user intervention in HealthVault before the application may
         /// successfully access the record.
         /// </remarks>
-        public HealthRecordAuthorizationStatus HealthRecordAuthorizationStatus { get; protected set; }
+        public HealthRecordAuthorizationStatus HealthRecordAuthorizationStatus { get; set; }
 
         /// <summary>
         /// Gets the application specific record id for the specified
         /// record and application.
         /// </summary>
         ///
-        public string ApplicationSpecificRecordId { get; protected set; }
+        public string ApplicationSpecificRecordId { get; set; }
 
         /// <summary>
         /// Gets the date when the user authorized the application to the record, in UTC.
         /// </summary>
-        public DateTime RecordAppAuthCreatedDate { get; protected set; }
+        public DateTime RecordAppAuthCreatedDate { get; set; }
 
         #endregion Public properties
 

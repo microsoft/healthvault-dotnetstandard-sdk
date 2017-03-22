@@ -43,13 +43,15 @@ namespace Microsoft.HealthVault.Client
             XmlWriterSettings settings = SDKHelper.XmlUtf8WriterSettings;
 
             using (MemoryStream contentMemoryStream = new MemoryStream())
-            using (XmlWriter writer = XmlWriter.Create(contentMemoryStream, settings))
             {
-                writer.WriteStartElement("content");
-                writer.WriteElementString("app-id", this.Connection.ApplicationId.ToString());
-                writer.WriteElementString("hmac", HealthVaultConstants.Cryptography.HmacAlgorithm);
-                writer.WriteElementString("signing-time", DateTimeOffset.UtcNow.ToString("u"));
-                writer.WriteEndElement(); // content
+                using (XmlWriter writer = XmlWriter.Create(contentMemoryStream, settings))
+                {
+                    writer.WriteStartElement("content");
+                    writer.WriteElementString("app-id", this.Connection.ApplicationId.ToString());
+                    writer.WriteElementString("hmac", HealthVaultConstants.Cryptography.HmacAlgorithm);
+                    writer.WriteElementString("signing-time", DateTimeOffset.UtcNow.ToString("o"));
+                    writer.WriteEndElement(); // content
+                }
 
                 return contentMemoryStream.ToArray();
             }

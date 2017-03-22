@@ -13,31 +13,30 @@ namespace Microsoft.HealthVault.Client
     {
         private readonly TaskCompletionSource<Uri> loginCompletionSource = new TaskCompletionSource<Uri>();
         private Exception loginException;
-        static readonly SemaphoreSlim semaphore = new SemaphoreSlim(0, 1);
+        static readonly AsyncLock asyncLock = new AsyncLock();
 
         public async Task<Uri> AuthenticateAsync(Uri startUrl, Uri endUrl)
         {
             // Wait here for any future threads until the current one is finished
-            await semaphore.WaitAsync();
-
-            Intent intent = new Intent(Android.App.Application.Context, typeof(SignInActivity));
-            intent.AddFlags(ActivityFlags.NewTask);
-            intent.AddFlags(ActivityFlags.ExcludeFromRecents);
-            intent.PutExtra(SignInActivity.StartUrl, startUrl.AbsolutePath);
-            intent.PutExtra(SignInActivity.EndUrl, endUrl.AbsolutePath);
-            Android.App.Application.Context.StartActivity(intent);
-
-            var task = this.loginCompletionSource.Task;
-
-            Uri loginUri = await task;
-
-            semaphore.Release();
-
-            if (loginUri == null)
+            using (await asyncLock.LockAsync())
             {
-                throw loginException ?? new HealthServiceException(ClientResources.LoginError);
+                Intent intent = new Intent(Android.App.Application.Context, typeof(SignInActivity));
+                intent.AddFlags(ActivityFlags.NewTask);
+                intent.AddFlags(ActivityFlags.ExcludeFromRecents);
+                intent.PutExtra(SignInActivity.StartUrl, startUrl.AbsoluteUri);
+                intent.PutExtra(SignInActivity.EndUrl, endUrl.AbsoluteUri);
+                Android.App.Application.Context.StartActivity(intent);
+
+                var task = this.loginCompletionSource.Task;
+
+                Uri loginUri = await task;
+
+                if (loginUri == null)
+                {
+                    throw loginException ?? new HealthServiceException(ClientResources.LoginError);
+                }
+                return loginUri;
             }
-            return loginUri;
         }
 
         public void OnLoginSucceeded(Uri uri)

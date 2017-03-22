@@ -14,7 +14,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.HealthVault.Configuration;
 using Microsoft.HealthVault.Exceptions;
-using Microsoft.HealthVault.Helpers;
 
 namespace Microsoft.HealthVault.Transport
 {

@@ -77,9 +77,11 @@ namespace Microsoft.HealthVault.Person
         /// Constructs an new instance of the <see cref="PersonInfo"/> class for testing purposes.
         /// </summary>
         ///
-        protected PersonInfo()
+        public PersonInfo()
         {
         }
+
+        #region XMl
 
         /// <summary>
         /// Populates the class members with data from the specified
@@ -355,6 +357,8 @@ namespace Microsoft.HealthVault.Person
             }
         }
 
+        #endregion
+
         #region public properties
 
         /// <summary>
@@ -372,7 +376,7 @@ namespace Microsoft.HealthVault.Person
                 return this.personId;
             }
 
-            protected set { this.personId = value; }
+            set { this.personId = value; }
         }
 
         private Guid personId;
@@ -390,7 +394,7 @@ namespace Microsoft.HealthVault.Person
         /// HealthVault Shell.
         /// </remarks>
         ///
-        public string Name { get; protected set; }
+        public string Name { get; set; }
 
         /// <summary>
         /// Gets or sets the underlying application settings document.
@@ -481,7 +485,7 @@ namespace Microsoft.HealthVault.Person
         /// The preferred culture should be used when formatting date/time, numbers, collating, etc.
         /// </remarks>
         ///
-        public string PreferredCulture { get; protected set; }
+        public string PreferredCulture { get; set; }
 
         /// <summary>
         /// Gets or sets the user's preferred UI culture.
@@ -492,13 +496,13 @@ namespace Microsoft.HealthVault.Person
         /// to the user.
         /// </remarks>
         ///
-        public string PreferredUICulture { get; protected set; }
+        public string PreferredUICulture { get; set; }
 
         /// <summary>
         /// Gets the location of the user account.
         /// </summary>
         ///
-        public Location Location { get; private set; }
+        public Location Location { get; set; }
         
         #endregion public properties
 

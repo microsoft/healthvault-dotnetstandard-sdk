@@ -50,6 +50,7 @@
   <ItemGroup>
     <Compile Include="AsyncEnumerable.cs" />
     <Compile Include="AsyncLock.cs" />
+    <Compile Include="Cryptographer.cs" />
     <Compile Include="Exceptions\CryptographicUnexpectedOperationException.cs" />
     <Compile Include="Exceptions\HealthRecordNotFoundException.cs" />
     <Compile Include="Exceptions\HealthVaultException.cs" />

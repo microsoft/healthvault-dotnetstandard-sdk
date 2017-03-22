@@ -17,6 +17,8 @@ using System.Xml.XPath;
 using System.Xml;
 using System.Collections.ObjectModel;
 using Microsoft.HealthVault.Record;
+using Microsoft.HealthVault.Application;
+using System.Linq;
 
 namespace Microsoft.HealthVault.Clients
 {
@@ -67,13 +69,15 @@ namespace Microsoft.HealthVault.Clients
 
         public virtual async Task<PersonInfo> GetPersonInfoAsync()
         {
-            HealthServiceResponseData responseData = await this.Connection.ExecuteAsync(HealthVaultMethods.GetPersonInfo, 1).ConfigureAwait(false);
+            // TODO: We are going through the HealthVaultPlatformApplication for now to get things working. We should fix this.
 
-            XPathExpression personPath = this.GetPersonXPathExpression(responseData.InfoNavigator);
+            //HealthServiceResponseData responseData = await this.Connection.ExecuteAsync(HealthVaultMethods.GetAuthorizedPeople, 1).ConfigureAwait(false);
+            //XPathExpression personPath = this.GetPersonXPathExpression(responseData.InfoNavigator);
+            //XPathNavigator infoNav = responseData.InfoNavigator.SelectSingleNode(personPath);
+            //return PersonInfo.CreateFromXml(infoNav);
 
-            XPathNavigator infoNav = responseData.InfoNavigator.SelectSingleNode(personPath);
-
-            return PersonInfo.CreateFromXml(infoNav);
+            IList<PersonInfo> people = await HealthVaultPlatformApplication.Current.EnsureGetAuthorizedPeopleAsync(this.Connection, new GetAuthorizedPeopleSettings());
+            return people.FirstOrDefault();
         }
 
         public virtual async Task<Collection<HealthRecordInfo>> GetAuthorizedRecordsAsync(IList<Guid> recordIds)

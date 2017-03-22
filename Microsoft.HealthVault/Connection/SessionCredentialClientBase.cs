@@ -142,7 +142,7 @@ namespace Microsoft.HealthVault.Connection
                 writer.WriteAttributeString("is-multi-record-app", "true");
             }
 
-            writer.WriteValue(this.Connection.ApplicationId);
+            writer.WriteValue(this.Connection.ApplicationId.ToString());
             writer.WriteEndElement();
         }
 
