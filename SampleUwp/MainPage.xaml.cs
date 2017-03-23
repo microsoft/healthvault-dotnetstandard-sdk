@@ -1,18 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.IO;
 using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Data;
-using Windows.UI.Xaml.Input;
-using Windows.UI.Xaml.Media;
-using Windows.UI.Xaml.Navigation;
 using Microsoft.HealthVault.Client;
 using Microsoft.HealthVault.Clients;
 using Microsoft.HealthVault.ItemTypes;
@@ -38,7 +28,12 @@ namespace SampleUwp
         {
             this.OutputBlock.Text = "Connecting...";
 
-            ClientHealthVaultFactory.Current.SetConfiguration(new ClientHealthVaultConfiguration { MasterApplicationId = Guid.Parse("d6318dff-5352-4a10-a140-6c82c6536a3b") });
+            var configuration = new ClientHealthVaultConfiguration
+            {
+                MasterApplicationId = Guid.Parse("d6318dff-5352-4a10-a140-6c82c6536a3b")
+            };
+
+            ClientHealthVaultFactory.Current.SetConfiguration(configuration);
             this.connection = await ClientHealthVaultFactory.Current.GetConnectionAsync();
 
             this.OutputBlock.Text = "Connected.";

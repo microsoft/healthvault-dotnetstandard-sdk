@@ -58,7 +58,7 @@
     <Compile Include="Extensions\HealthServiceInstanceExtensions.cs" />
     <Compile Include="Extensions\StringExtensions.cs" />
     <Compile Include="HealthVaultConstants.cs" />
-    <Compile Include="HealthVaultFactoryBase.cs" />
+    <Compile Include="ConnectionState.cs" />
     <Compile Include="Clients\ActionPlanClient.cs" />
     <Compile Include="Clients\PersonClient.cs" />
     <Compile Include="Clients\ThingClient.cs" />
@@ -80,7 +80,6 @@
     <Compile Include="Connection\SessionCredentialClientBase.cs" />
     <Compile Include="Extensions\DependencyInjectionContainerExtensions.cs" />
     <Compile Include="Extensions\UriExtensions.cs" />
-    <Compile Include="IHealthVaultFactoryBase.cs" />
     <Compile Include="Ioc.cs" />
     <Compile Include="SdkTelemetryInformation.cs" />
     <Compile Include="ItemTypes\ActionPlanWrapper.cs" />

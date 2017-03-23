@@ -1,16 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
-using Microsoft.HealthVault.Connection;
 
 namespace Microsoft.HealthVault.Client
 {
     /// <summary>
     /// Factory for creating client connections to HealthVault.
     /// </summary>
-    public interface IClientHealthVaultFactory : IHealthVaultFactoryBase
+    public interface IClientHealthVaultFactory 
     {
         /// <summary>
         /// Sets the client configuration to use.

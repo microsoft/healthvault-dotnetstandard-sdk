@@ -14,14 +14,16 @@
             {
                 lock (InstanceLock)
                 {
-                    return current ?? (current = new ClientHealthVaultFactory());
+                    if (current == null)
+                    {
+                        ClientIoc.EnsureTypesRegistered();
+                        current = new ClientHealthVaultFactory();
+                    }
+
+                    return current;
                 }
             }
         }
 
-        protected override void EnsureIocInitialized()
-        {
-            ClientIoc.EnsureTypesRegistered();
-        }
     }
 }

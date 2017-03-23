@@ -44,12 +44,6 @@ namespace Microsoft.HealthVault
             container.RegisterSingleton<ICryptographer, Cryptographer>();
         }
 
-        public static void OverrideClientType<T>(Func<T, T> func)
-            where T : IClient
-        {
-            Container.Configure(c => c.ExportFactory(() => func(clientContainer.Locate<T>())));
-        }
-
         public static T Get<T>()
         {
             return Container.Locate<T>();

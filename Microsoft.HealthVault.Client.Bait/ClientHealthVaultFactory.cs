@@ -15,8 +15,5 @@ namespace Microsoft.HealthVault.Client
             }
         }
 
-        protected override void EnsureIocInitialized()
-        {
-        }
     }
 }

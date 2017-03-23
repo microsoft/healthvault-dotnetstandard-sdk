@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace Microsoft.HealthVault.Web
 {
-    public class WebHealthVaultFactory : HealthVaultFactoryBase
+    public class WebHealthVaultFactory
     {
         private static readonly object InstanceLock = new object();
         private static WebHealthVaultFactory current;
@@ -13,6 +13,8 @@ namespace Microsoft.HealthVault.Web
         private readonly AsyncLock connectionLock = new AsyncLock();
         private WebConfiguration configuration;
         private IHealthVaultConnection cachedWebApplicationConnection;
+
+        private readonly ConnectionState connectionState = new ConnectionState();
 
         /// <summary>
         /// Gets the current WebHealthVaultFactory instance.
@@ -40,13 +42,13 @@ namespace Microsoft.HealthVault.Web
         /// </exception>
         public void SetConfiguration(WebConfiguration configuration)
         {
-            this.ThrowIfAlreadyCreatedConnection(nameof(this.SetConfiguration));
+            this.connectionState.ThrowIfAlreadyCreatedConnection(nameof(this.SetConfiguration));
             this.configuration = configuration;
         }
 
         public async Task<IHealthVaultConnection> GetWebApplicationConnectionAsync()
         {
-            this.GetConnectionCalled = true;
+            this.connectionState.MarkConnectionCalled();
             using (await (this.connectionLock.LockAsync().ConfigureAwait(false)))
             {
                 if (this.cachedWebApplicationConnection != null)

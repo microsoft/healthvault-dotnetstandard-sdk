@@ -6,34 +6,26 @@
 //
 // THE SOFTWARE IS PROVIDED *AS IS*, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-using Microsoft.HealthVault.Clients;
 using System;
 
 namespace Microsoft.HealthVault
 {
-    public abstract class HealthVaultFactoryBase : IHealthVaultFactoryBase
+    public class ConnectionState
     {
         private volatile bool getConnectionCalled;
 
-        protected bool GetConnectionCalled
+        public void MarkConnectionCalled()
         {
-            get { return this.getConnectionCalled; }
-            set { this.getConnectionCalled = value; }
+            getConnectionCalled = true;
         }
 
-        public void RegisterClientType<T>(Func<T, T> func)
-            where T : IClient
+        public void ThrowIfAlreadyCreatedConnection(string methodName)
         {
-            this.ThrowIfAlreadyCreatedConnection(nameof(this.RegisterClientType));
-            Ioc.OverrideClientType(func);
-        }
-
-        protected void ThrowIfAlreadyCreatedConnection(string methodName)
-        {
-            if (this.GetConnectionCalled)
+            if (this.getConnectionCalled)
             {
                 throw new InvalidOperationException($"Cannot call {methodName} after creating a connection.");
             }
         }
+
     }
 }
