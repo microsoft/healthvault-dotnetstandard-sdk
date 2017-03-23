@@ -66,16 +66,7 @@ namespace Microsoft.HealthVault.Thing
 
             try
             {
-                Assembly itemTypeAssembly =
-                    GetItemTypesAssembly("Microsoft.HealthVault.ItemTypes");
-
-                Type registrarType =
-                    itemTypeAssembly?.GetType("Microsoft.HealthVault.ItemTypes.ItemTypeRegistrar");
-
-                MethodInfo registrarMethod =
-                    registrarType?.GetTypeInfo().GetDeclaredMethod("RegisterAssemblyHealthRecordItemTypes");
-
-                registrarMethod?.Invoke(null, null);
+                ItemTypeRegistrar.RegisterAssemblyHealthRecordItemTypes();
             }
             catch (Exception)
             {

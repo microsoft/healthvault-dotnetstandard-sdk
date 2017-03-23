@@ -164,7 +164,7 @@ namespace Microsoft.HealthVault.Person
                 HealthRecordInfo record = HealthRecordInfo.CreateFromXml(recordNav);
                 if (record != null)
                 {
-                    this.authorizedRecords.Add(record.Id, record);
+                    this.AuthorizedRecords.Add(record.Id, record);
                 }
             }
 
@@ -301,7 +301,7 @@ namespace Microsoft.HealthVault.Person
             // If we are removing records because they make the serialized xml too big, we remove all except
             // the currently-selected record...
             bool skippedRecords = false;
-            foreach (HealthRecordInfo record in this.authorizedRecords.Values)
+            foreach (HealthRecordInfo record in this.AuthorizedRecords.Values)
             {
                 if ((marshalOptions & MarshalOptions.MinimizeRecords) == 0)
                 {
@@ -435,9 +435,9 @@ namespace Microsoft.HealthVault.Person
                 if (this.selectedRecord == null)
                 {
                     if (this.selectedRecordId != Guid.Empty &&
-                        this.authorizedRecords.ContainsKey(this.selectedRecordId))
+                        this.AuthorizedRecords.ContainsKey(this.selectedRecordId))
                     {
-                        this.selectedRecord = this.authorizedRecords[this.selectedRecordId];
+                        this.selectedRecord = this.AuthorizedRecords[this.selectedRecordId];
                     }
                 }
 
@@ -474,8 +474,10 @@ namespace Microsoft.HealthVault.Person
         ///
         public event EventHandler SelectedRecordChanged;
 
-        private Dictionary<Guid, HealthRecordInfo> authorizedRecords =
-            new Dictionary<Guid, HealthRecordInfo>();
+        /// <summary>
+        /// Gets a dictionary of all the authorized records.
+        /// </summary>
+        public IDictionary<Guid, HealthRecordInfo> AuthorizedRecords { get; } = new Dictionary<Guid, HealthRecordInfo>();
 
         /// <summary>
         /// Gets or sets the user's preferred culture.
@@ -536,7 +538,7 @@ namespace Microsoft.HealthVault.Person
         {
             HealthRecordInfo selfRecord = null;
 
-            foreach (HealthRecordInfo authRecord in this.authorizedRecords.Values)
+            foreach (HealthRecordInfo authRecord in this.AuthorizedRecords.Values)
             {
                 if (authRecord.RelationshipType == RelationshipType.Self
                     && authRecord.DateAuthorizationExpires > DateTime.UtcNow)

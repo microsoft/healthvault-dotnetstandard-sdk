@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:minWidth="25px"
+    android:minHeight="25px"
+    android:gravity="center">
+
+    <TextView
+          android:id="@+id/StatusText"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:layout_marginLeft="@dimen/SmallMargin"
+          android:layout_marginTop="@dimen/SmallMargin" />
+
+    <ListView android:id="@+id/ListView"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1">
+    </ListView>
+
+    <Button
+          android:id="@+id/ConnectButton"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:text="@string/Connect"/>
+
+    <LinearLayout
+          android:id="@+id/ControlLayout"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:orientation="horizontal"
+          android:visibility="gone">
+
+      <Button
+            android:id="@+id/CreateButton"
+            android:layout_width="@dimen/ButtonWidth"
+            android:layout_height="wrap_content"
+            android:text="@string/CreateBP"
+            android:textSize="12sp"/>
+      <Button
+            android:id="@+id/GetButton"
+            android:layout_width="@dimen/ButtonWidth"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/SmallMargin"
+            android:text="@string/GetBP"
+            android:textSize="12sp"/>
+      
+    </LinearLayout>
+  
+</LinearLayout>

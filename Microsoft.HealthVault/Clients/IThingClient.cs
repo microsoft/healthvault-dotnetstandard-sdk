@@ -48,22 +48,25 @@ namespace Microsoft.HealthVault.Clients
         /// <summary>
         /// Creates a new collection of things.
         /// </summary>
+        /// <param name="record">The health record for which new things are create</param>
         /// <param name="things">The collection of things to create.</param>
-        Task CreateNewThingsAsync<T>(ICollection<T> things)
+        Task CreateNewThingsAsync<T>(HealthRecordInfo record, ICollection<T> things)
             where T : IThing;
 
         /// <summary>
         /// Updates a collection of things that already exists.
         /// </summary>
+        /// <param name="record">The health record for which things are updated</param>
         /// <param name="things">The collection of things to update.</param>
-        Task UpdateThingsAsync<T>(ICollection<T> things)
+        Task UpdateThingsAsync<T>(HealthRecordInfo record, ICollection<T> things)
             where T : IThing;
 
         /// <summary>
         /// Removes a collection of things.
         /// </summary>
+        /// <param name="record">The health record for which things are removed</param>
         /// <param name="things">The collection of things to put.</param>
-        Task RemoveThingsAsync<T>(ICollection<T> things)
+        Task RemoveThingsAsync<T>(HealthRecordInfo record, ICollection<T> things)
             where T : IThing;
     }
 }

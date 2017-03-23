@@ -718,6 +718,11 @@ namespace Microsoft.HealthVault.Thing
             return thingXml.ToString();
         }
 
+        public bool WriteItemXml(XmlWriter infoXmlWriter)
+        {
+            return this.WriteItemXml(infoXmlWriter, true);
+        }
+
         internal bool WriteItemXml(XmlWriter infoXmlWriter, string elementName)
         {
             return this.WriteItemXml(infoXmlWriter, true, elementName);

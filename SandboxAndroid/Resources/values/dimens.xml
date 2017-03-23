@@ -1,0 +1,4 @@
+﻿<resources>
+  <dimen name="ButtonWidth">200dp</dimen>
+  <dimen name="SmallMargin">10dp</dimen>
+</resources>
