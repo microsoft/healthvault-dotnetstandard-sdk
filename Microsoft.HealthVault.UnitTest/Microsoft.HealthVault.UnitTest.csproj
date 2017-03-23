@@ -140,6 +140,7 @@
     <EmbeddedResource Include="Samples\AuthorizedRecordsSample.xml" />
     <EmbeddedResource Include="Samples\ServiceDefinitionSample.xml" />
     <EmbeddedResource Include="Samples\InstanceSample.xml" />
+    <EmbeddedResource Include="Samples\AuthorizedPeopleSample.xml" />
   </ItemGroup>
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">

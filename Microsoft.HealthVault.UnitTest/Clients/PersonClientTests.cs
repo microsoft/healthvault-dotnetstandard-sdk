@@ -30,15 +30,16 @@ namespace Microsoft.HealthVault.UnitTest.Clients
         [TestMethod]
         public async Task GetPersonInfoTest()
         {
-            var personId = new Guid("f2455640-2294-4e8f-99b0-a386fd478699");
+            string requestParameters = "<parameters />";
+            var personId = new Guid("2d44d876-3bde-482b-a2af-ba133bc41fa9");
+            
+            var response = SampleUtils.GetResponseData("AuthorizedPeopleSample.xml");
 
-            var response = SampleUtils.GetResponseData("PersonInfoSample.xml");
-
-            connection.ExecuteAsync(HealthVaultMethods.GetPersonInfo, Arg.Any<int>()).Returns(response);
-
+            connection.ExecuteAsync(HealthVaultMethods.GetAuthorizedPeople, Arg.Any<int>(), Arg.Any<string>()).Returns(response);
             var result = await personClient.GetPersonInfoAsync();
 
-            await this.connection.Received().ExecuteAsync(HealthVaultMethods.GetPersonInfo, Arg.Any<int>());
+            await this.connection.Received().ExecuteAsync(HealthVaultMethods.GetAuthorizedPeople, Arg.Any<int>(), Arg.Is<string>(x=> x.Contains(requestParameters)));
+
             Assert.AreEqual(result.PersonId, personId);
         }
 
