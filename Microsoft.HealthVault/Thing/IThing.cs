@@ -17,7 +17,8 @@ namespace Microsoft.HealthVault.Thing
         /// The XML writer into which the contact information should be
         /// written.
         /// </param>
-        void WriteXml(XmlWriter writer);
+        /// <returns>A bool indicating if an update is required.</returns>
+        bool WriteItemXml(XmlWriter writer);
 
         /// <summary>
         /// Gets the type identifier for the thing type.

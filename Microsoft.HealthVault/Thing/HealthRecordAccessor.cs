@@ -81,7 +81,7 @@ namespace Microsoft.HealthVault.Thing
         internal virtual void ParseXml(XPathNavigator navigator)
         {
             string id = navigator.GetAttribute("id", string.Empty);
-            this.recordId = new Guid(id);
+            this.Id = new Guid(id);
 
             string country = navigator.GetAttribute("location-country", string.Empty);
             string state = navigator.GetAttribute("location-state-province", string.Empty);
@@ -123,7 +123,7 @@ namespace Microsoft.HealthVault.Thing
 
         internal void WriteXml(XmlWriter writer)
         {
-            writer.WriteAttributeString("id", this.recordId.ToString());
+            writer.WriteAttributeString("id", this.Id.ToString());
 
             if (this.Location != null)
             {
@@ -172,7 +172,7 @@ namespace Microsoft.HealthVault.Thing
             }
 
             this.Connection = connection;
-            this.recordId = id;
+            this.Id = id;
         }
 
         /// <summary>
@@ -217,9 +217,7 @@ namespace Microsoft.HealthVault.Thing
         /// the account automatically creates a self record as well.
         /// </remarks>
         ///
-        public Guid Id => this.recordId;
-
-        private Guid recordId;
+        public Guid Id { get; set; }
 
         /// <summary>
         /// Gets the location of the person that this record is for.
