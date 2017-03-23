@@ -1,0 +1,132 @@
+﻿using System;
+using System.Threading.Tasks;
+using Foundation;
+using Microsoft.HealthVault.Exceptions;
+using UIKit;
+using WebKit;
+using Security;
+
+namespace Microsoft.HealthVault.Client
+{
+    internal class IosBrowserAuthBroker : NSObject, IBrowserAuthBroker, ISignInNavigationHandler
+    {
+        private static readonly Object taskLockObject = new Object();
+        private bool isTaskComplete = false;
+        private readonly TaskCompletionSource<Uri> loginCompletionSource = new TaskCompletionSource<Uri>();
+        private string endUrlString;
+
+        public async Task<Uri> AuthenticateAsync(Uri startUrl, Uri endUrl)
+        {
+            using (await new AsyncLock().LockAsync())
+            {
+                this.endUrlString = endUrl.AbsolutePath;
+
+                SignInViewController signInViewController = new SignInViewController(this, startUrl.AbsolutePath);
+                IUIApplicationDelegate appDelegate = UIApplication.SharedApplication.Delegate;
+                UIViewController rootViewController = appDelegate.GetWindow().RootViewController;
+                rootViewController.PresentViewController(signInViewController, true, null);
+
+                Uri loginUri = await this.loginCompletionSource.Task;
+                Exception exception = this.loginCompletionSource.Task.Exception;
+
+                signInViewController.DismissViewController(false, null);
+
+                if (exception != null)
+                {
+                    throw exception;
+                }
+
+                return loginUri;
+            } 
+        }
+
+        private void SetTaskResult(Uri url, Exception ex)
+        {
+            lock(taskLockObject)
+            {
+                if (this.isTaskComplete == false)
+                {
+                    this.isTaskComplete = true;
+
+                    if (ex != null)
+                    {
+                        this.loginCompletionSource.SetException(ex);
+                    }
+
+                    this.loginCompletionSource.SetResult(url);
+                }
+            }
+        }
+
+        public void SignInCancelled()
+        {
+            this.SetTaskResult(null, new OperationCanceledException());
+        }
+
+        private void NavigationFailedWithError(NSError error)
+        {
+            if (error.Domain == NSError.NSUrlErrorDomain && error.Code == (int)NSUrlError.Cancelled)
+            {
+                // Double tapping a link in a webview will cause the first navigation to be cancelled. Ignore the cancellation of the first request.
+                return;
+            }
+
+            this.SetTaskResult(null, new HealthServiceException(ClientResources.LoginError));
+        }
+
+        public void DecidePolicy(WKWebView webView, WKNavigationResponse navigationResponse, Action<WKNavigationResponsePolicy> decisionHandler)
+        {
+
+           if (navigationResponse.Response.GetType() == typeof(NSHttpUrlResponse))
+           {
+                NSHttpUrlResponse response = (NSHttpUrlResponse)navigationResponse.Response;
+                if (response.StatusCode >= 400)
+                {
+                    // The navigation request resulted in an error.
+                    this.SetTaskResult(null, new HealthServiceException(ClientResources.LoginError));
+
+                    return;
+                }
+
+                string url = response.Url.AbsoluteString;
+
+                if (url.Contains(this.endUrlString))
+                {
+                    this.SetTaskResult(new Uri(url), null);
+                }
+           }
+
+            decisionHandler(WKNavigationResponsePolicy.Allow);
+        }
+
+        public void DidReceiveAuthenticationChallenge(WKWebView webView, NSUrlAuthenticationChallenge challenge, Action<NSUrlSessionAuthChallengeDisposition, NSUrlCredential> completionHandler)
+        {
+            SecTrustResult result = challenge.ProtectionSpace.ServerSecTrust.Evaluate();
+
+            if (result == SecTrustResult.Unspecified || result == SecTrustResult.Proceed)
+            {
+                completionHandler(NSUrlSessionAuthChallengeDisposition.PerformDefaultHandling, null);
+            }
+            else
+            {
+                completionHandler(NSUrlSessionAuthChallengeDisposition.CancelAuthenticationChallenge, null);
+            }
+        }
+
+        public void DidFailProvisionalNavigation(WKWebView webView, WKNavigation navigation, NSError error)
+        {
+            this.NavigationFailedWithError(error);
+        }
+
+        public void DidFailNavigation(WKWebView webView, WKNavigation navigation, NSError error)
+        {
+            this.NavigationFailedWithError(error);
+        }
+
+        public void ContentProcessDidTerminate(WKWebView webView)
+        {
+            this.SetTaskResult(null, new HealthServiceException(ClientResources.LoginError));
+        }
+
+    }
+}
