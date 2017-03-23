@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <string name="Connect">Connect</string>
-    <string name="Disconnect">Disconnect</string>
-    <string name="CreateBP">Create new blood pressure</string>
-    <string name="GetBP">Get blood pressures</string>
-    <string name="ApplicationName">SampleAndroid</string>
-</resources>
