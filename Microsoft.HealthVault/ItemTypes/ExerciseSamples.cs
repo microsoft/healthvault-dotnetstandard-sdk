@@ -197,7 +197,7 @@ namespace Microsoft.HealthVault.ItemTypes
 
             set
             {
-                Validator.ThrowIfArgumentNull(value, nameof(When), Resources.WhenNullValue);
+                Validator.ThrowIfArgumentNull(value, nameof(this.When), Resources.WhenNullValue);
                 this.when = value;
             }
         }
@@ -239,7 +239,7 @@ namespace Microsoft.HealthVault.ItemTypes
 
             set
             {
-                Validator.ThrowIfArgumentNull(value, nameof(Name), Resources.ExerciseSampleNameMandatory);
+                Validator.ThrowIfArgumentNull(value, nameof(this.Name), Resources.ExerciseSampleNameMandatory);
                 this.name = value;
             }
         }
@@ -266,7 +266,7 @@ namespace Microsoft.HealthVault.ItemTypes
 
             set
             {
-                Validator.ThrowIfArgumentNull(value, nameof(Unit), Resources.ExerciseSampleUnitMandatory);
+                Validator.ThrowIfArgumentNull(value, nameof(this.Unit), Resources.ExerciseSampleUnitMandatory);
                 this.unit = value;
             }
         }
@@ -421,7 +421,8 @@ namespace Microsoft.HealthVault.ItemTypes
                 sampleData = new ExerciseSamplesData(
                     blob.ReadAsString(),
                     blob.ContentEncoding,
-                    blob.ContentType) { SamplingInterval = this.SamplingInterval };
+                    blob.ContentType)
+                { SamplingInterval = this.SamplingInterval };
             }
 
             return sampleData;

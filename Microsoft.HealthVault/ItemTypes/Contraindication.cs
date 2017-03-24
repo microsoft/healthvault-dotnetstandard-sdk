@@ -168,7 +168,7 @@ namespace Microsoft.HealthVault.ItemTypes
 
             set
             {
-                Validator.ThrowIfArgumentNull(value, nameof(Substance), Resources.ContraindicationSubstanceMandatory);
+                Validator.ThrowIfArgumentNull(value, nameof(this.Substance), Resources.ContraindicationSubstanceMandatory);
                 this.substance = value;
             }
         }
@@ -193,7 +193,7 @@ namespace Microsoft.HealthVault.ItemTypes
 
             set
             {
-                Validator.ThrowIfArgumentNull(value, nameof(Status), Resources.ContraindicationStatusMandatory);
+                Validator.ThrowIfArgumentNull(value, nameof(this.Status), Resources.ContraindicationStatusMandatory);
                 this.status = value;
             }
         }

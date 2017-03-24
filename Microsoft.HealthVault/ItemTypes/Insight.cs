@@ -262,7 +262,7 @@ namespace Microsoft.HealthVault.ItemTypes
 
             set
             {
-                Validator.ThrowIfArgumentNull(value, nameof(RaisedInsightId), Resources.InsightIdNullValue);
+                Validator.ThrowIfArgumentNull(value, nameof(this.RaisedInsightId), Resources.InsightIdNullValue);
                 Validator.ThrowIfStringIsEmptyOrWhitespace(value, "RaisedInsightId");
                 this.raisedInsightId = value;
             }
@@ -286,7 +286,7 @@ namespace Microsoft.HealthVault.ItemTypes
 
             set
             {
-                Validator.ThrowIfArgumentNull(value, nameof(CatalogId), Resources.InsightCatalogIdNullValue);
+                Validator.ThrowIfArgumentNull(value, nameof(this.CatalogId), Resources.InsightCatalogIdNullValue);
                 Validator.ThrowIfStringIsEmptyOrWhitespace(value, "CatalogId");
                 this.catalogId = value;
             }
@@ -316,7 +316,7 @@ namespace Microsoft.HealthVault.ItemTypes
 
             set
             {
-                Validator.ThrowIfArgumentNull(value, nameof(When), Resources.WhenNullValue);
+                Validator.ThrowIfArgumentNull(value, nameof(this.When), Resources.WhenNullValue);
                 this.when = value;
             }
         }
@@ -339,7 +339,7 @@ namespace Microsoft.HealthVault.ItemTypes
 
             set
             {
-                Validator.ThrowIfArgumentNull(value, nameof(ExpirationDate), Resources.InsightExpirationDateNullValue);
+                Validator.ThrowIfArgumentNull(value, nameof(this.ExpirationDate), Resources.InsightExpirationDateNullValue);
                 this.expirationDate = value;
             }
         }

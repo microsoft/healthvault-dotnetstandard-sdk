@@ -158,7 +158,7 @@ namespace Microsoft.HealthVault.ItemTypes
 
             set
             {
-                Validator.ThrowIfArgumentNull(value, nameof(AerobicSession), Resources.AerobicWeeklySessionNull);
+                Validator.ThrowIfArgumentNull(value, nameof(this.AerobicSession), Resources.AerobicWeeklySessionNull);
                 this.session = value;
             }
         }

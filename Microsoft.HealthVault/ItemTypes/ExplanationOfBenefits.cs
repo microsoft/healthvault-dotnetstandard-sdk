@@ -279,7 +279,7 @@ namespace Microsoft.HealthVault.ItemTypes
 
             set
             {
-                Validator.ThrowIfArgumentNull(value, nameof(DateSubmitted), Resources.DateSubmittedNullValue);
+                Validator.ThrowIfArgumentNull(value, nameof(this.DateSubmitted), Resources.DateSubmittedNullValue);
                 this.dateSubmitted = value;
             }
         }
@@ -300,7 +300,7 @@ namespace Microsoft.HealthVault.ItemTypes
 
             set
             {
-                Validator.ThrowIfArgumentNull(value, nameof(Patient), Resources.PatientNullValue);
+                Validator.ThrowIfArgumentNull(value, nameof(this.Patient), Resources.PatientNullValue);
                 this.patient = value;
             }
         }
@@ -336,7 +336,7 @@ namespace Microsoft.HealthVault.ItemTypes
 
             set
             {
-                Validator.ThrowIfArgumentNull(value, nameof(Plan), Resources.PlanNullValue);
+                Validator.ThrowIfArgumentNull(value, nameof(this.Plan), Resources.PlanNullValue);
                 this.plan = value;
             }
         }
@@ -385,7 +385,7 @@ namespace Microsoft.HealthVault.ItemTypes
 
             set
             {
-                Validator.ThrowIfArgumentNull(value, nameof(MemberId), Resources.MemberIdNullOrEmptyValue);
+                Validator.ThrowIfArgumentNull(value, nameof(this.MemberId), Resources.MemberIdNullOrEmptyValue);
                 Validator.ThrowIfStringIsEmptyOrWhitespace(value, "MemberId");
                 this.memberId = value;
             }
@@ -407,7 +407,7 @@ namespace Microsoft.HealthVault.ItemTypes
 
             set
             {
-                Validator.ThrowIfArgumentNull(value, nameof(ClaimType), Resources.ClaimTypeNullValue);
+                Validator.ThrowIfArgumentNull(value, nameof(this.ClaimType), Resources.ClaimTypeNullValue);
                 this.claimType = value;
             }
         }
@@ -432,7 +432,7 @@ namespace Microsoft.HealthVault.ItemTypes
 
             set
             {
-                Validator.ThrowIfArgumentNull(value, nameof(ClaimId), Resources.ClaimIdNullOrEmptyValue);
+                Validator.ThrowIfArgumentNull(value, nameof(this.ClaimId), Resources.ClaimIdNullOrEmptyValue);
                 Validator.ThrowIfStringIsEmptyOrWhitespace(value, "ClaimId");
                 this.claimId = value;
             }
@@ -454,7 +454,7 @@ namespace Microsoft.HealthVault.ItemTypes
 
             set
             {
-                Validator.ThrowIfArgumentNull(value, nameof(SubmittedBy), Resources.SubmittedByNullValue);
+                Validator.ThrowIfArgumentNull(value, nameof(this.SubmittedBy), Resources.SubmittedByNullValue);
                 this.submittedBy = value;
             }
         }
@@ -475,7 +475,7 @@ namespace Microsoft.HealthVault.ItemTypes
 
             set
             {
-                Validator.ThrowIfArgumentNull(value, nameof(Provider), Resources.ProviderNullValue);
+                Validator.ThrowIfArgumentNull(value, nameof(this.Provider), Resources.ProviderNullValue);
                 this.provider = value;
             }
         }
@@ -496,7 +496,7 @@ namespace Microsoft.HealthVault.ItemTypes
 
             set
             {
-                Validator.ThrowIfArgumentNull(value, nameof(Currency), Resources.CurrencyNullValue);
+                Validator.ThrowIfArgumentNull(value, nameof(this.Currency), Resources.CurrencyNullValue);
                 this.currency = value;
             }
         }
@@ -517,7 +517,7 @@ namespace Microsoft.HealthVault.ItemTypes
 
             set
             {
-                Validator.ThrowIfArgumentNull(value, nameof(ClaimTotals), Resources.ClaimTotalsNullValue);
+                Validator.ThrowIfArgumentNull(value, nameof(this.ClaimTotals), Resources.ClaimTotalsNullValue);
                 this.claimTotals = value;
             }
         }

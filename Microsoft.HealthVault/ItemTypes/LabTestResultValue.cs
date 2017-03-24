@@ -163,7 +163,7 @@ namespace Microsoft.HealthVault.ItemTypes
 
             set
             {
-                Validator.ThrowIfArgumentNull(value, nameof(Measurement), Resources.LabTestResultValueTypeMeasurementNotSet);
+                Validator.ThrowIfArgumentNull(value, nameof(this.Measurement), Resources.LabTestResultValueTypeMeasurementNotSet);
                 this.measurement = value;
             }
         }

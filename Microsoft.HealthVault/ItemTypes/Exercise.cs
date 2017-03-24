@@ -211,7 +211,7 @@ namespace Microsoft.HealthVault.ItemTypes
 
             set
             {
-                Validator.ThrowIfArgumentNull(value, nameof(When), Resources.WhenNullValue);
+                Validator.ThrowIfArgumentNull(value, nameof(this.When), Resources.WhenNullValue);
                 this.when = value;
             }
         }
@@ -239,7 +239,7 @@ namespace Microsoft.HealthVault.ItemTypes
 
             set
             {
-                Validator.ThrowIfArgumentNull(value, nameof(Activity), Resources.ExerciseActivityMandatory);
+                Validator.ThrowIfArgumentNull(value, nameof(this.Activity), Resources.ExerciseActivityMandatory);
                 this.activity = value;
             }
         }

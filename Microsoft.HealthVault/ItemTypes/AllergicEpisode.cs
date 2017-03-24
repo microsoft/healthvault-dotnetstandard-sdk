@@ -168,7 +168,7 @@ namespace Microsoft.HealthVault.ItemTypes
 
             set
             {
-                Validator.ThrowIfArgumentNull(value, nameof(Name), Resources.AllergyNameMandatory);
+                Validator.ThrowIfArgumentNull(value, nameof(this.Name), Resources.AllergyNameMandatory);
                 this.name = value;
             }
         }
@@ -194,7 +194,7 @@ namespace Microsoft.HealthVault.ItemTypes
 
             set
             {
-                Validator.ThrowIfArgumentNull(value, nameof(When), Resources.WhenNullValue);
+                Validator.ThrowIfArgumentNull(value, nameof(this.When), Resources.WhenNullValue);
                 this.when = value;
             }
         }

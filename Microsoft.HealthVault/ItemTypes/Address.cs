@@ -314,8 +314,8 @@ namespace Microsoft.HealthVault.ItemTypes
 
             set
             {
-                Validator.ThrowIfArgumentNull(value, nameof(City), Resources.AddressCityMandatory);
-                Validator.ThrowIfStringIsWhitespace(value, "City");
+                Validator.ThrowIfArgumentNull(value, nameof(this.City), Resources.AddressCityMandatory);
+                Validator.ThrowIfStringIsWhitespace(value, nameof(this.City));
                 this.city = value;
             }
         }
@@ -370,8 +370,8 @@ namespace Microsoft.HealthVault.ItemTypes
 
             set
             {
-                Validator.ThrowIfArgumentNull(value, nameof(Country), Resources.AddressCountryMandatory);
-                Validator.ThrowIfStringIsWhitespace(value, "Country");
+                Validator.ThrowIfArgumentNull(value, nameof(this.Country), Resources.AddressCountryMandatory);
+                Validator.ThrowIfStringIsWhitespace(value, nameof(this.Country));
                 this.country = value;
             }
         }
@@ -397,8 +397,8 @@ namespace Microsoft.HealthVault.ItemTypes
 
             set
             {
-                Validator.ThrowIfArgumentNull(value, nameof(PostalCode), Resources.AddressPostalCodeMandatory);
-                Validator.ThrowIfStringIsWhitespace(value, "PostalCode");
+                Validator.ThrowIfArgumentNull(value, nameof(this.PostalCode), Resources.AddressPostalCodeMandatory);
+                Validator.ThrowIfStringIsWhitespace(value, nameof(this.PostalCode));
                 this.postalCode = value;
             }
         }

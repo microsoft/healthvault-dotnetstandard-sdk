@@ -260,7 +260,7 @@ namespace Microsoft.HealthVault.ItemTypes
 
             set
             {
-                Validator.ThrowIfArgumentNull(value, nameof(Units), Resources.DisplayValueUnitsMandatory);
+                Validator.ThrowIfArgumentNull(value, nameof(this.Units), Resources.DisplayValueUnitsMandatory);
                 this.units = value;
             }
         }

@@ -121,7 +121,7 @@ namespace Microsoft.HealthVault.ItemTypes
 
             set
             {
-                Validator.ThrowIfArgumentNull(value, nameof(Name), Resources.DefibrillatorEpisodeFieldNameNullValue);
+                Validator.ThrowIfArgumentNull(value, nameof(this.Name), Resources.DefibrillatorEpisodeFieldNameNullValue);
                 this.name = value;
             }
         }
@@ -141,7 +141,7 @@ namespace Microsoft.HealthVault.ItemTypes
 
             set
             {
-                Validator.ThrowIfArgumentNull(value, nameof(Value), Resources.DefibrillatorEpisodeFieldValueNullValue);
+                Validator.ThrowIfArgumentNull(value, nameof(this.Value), Resources.DefibrillatorEpisodeFieldValueNullValue);
                 this.value = value;
             }
         }

@@ -39,7 +39,7 @@ namespace Microsoft.HealthVault.Thing
         /// <param name="name">
         /// The name of the filter.
         /// </param>
-        /// 
+        ///
         /// <param name="maxItemsReturned">
         /// The maximum number of items to return that match the filter.
         /// </param>
@@ -48,11 +48,11 @@ namespace Microsoft.HealthVault.Thing
         /// opposed to results matching other filters when multiple filters
         /// are applied to the same search.
         /// </remarks>
-        /// 
+        ///
         /// <exception cref="ArgumentException">
         /// The <paramref name="name"/> parameter is <b>null</b> or empty.
         /// </exception>
-        /// 
+        ///
         /// <exception cref="ArgumentOutOfRangeException">
         /// The <paramref name="maxItemsReturned"/> parameter is negative.
         /// </exception>
@@ -278,7 +278,7 @@ namespace Microsoft.HealthVault.Thing
 
             set
             {
-                Validator.ThrowIfArgumentNull(value, nameof(View), Resources.ThingQueryViewNull);
+                Validator.ThrowIfArgumentNull(value, nameof(this.View), Resources.ThingQueryViewNull);
                 this.view = value;
             }
         }

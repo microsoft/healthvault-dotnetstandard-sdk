@@ -240,7 +240,7 @@ namespace Microsoft.HealthVault.ItemTypes
 
             set
             {
-                Validator.ThrowIfArgumentNull(value, nameof(When), Resources.SleepJournalAMWhenMandatory);
+                Validator.ThrowIfArgumentNull(value, nameof(this.When), Resources.SleepJournalAMWhenMandatory);
                 this.when = value;
             }
         }
@@ -265,7 +265,7 @@ namespace Microsoft.HealthVault.ItemTypes
 
             set
             {
-                Validator.ThrowIfArgumentNull(value, nameof(Bedtime), Resources.SleepJournalAMBedTimeMandatory);
+                Validator.ThrowIfArgumentNull(value, nameof(this.Bedtime), Resources.SleepJournalAMBedTimeMandatory);
                 this.bedtime = value;
             }
         }
@@ -290,7 +290,7 @@ namespace Microsoft.HealthVault.ItemTypes
 
             set
             {
-                Validator.ThrowIfArgumentNull(value, nameof(WakeTime), Resources.SleepJournalAMWakeTimeMandatory);
+                Validator.ThrowIfArgumentNull(value, nameof(this.WakeTime), Resources.SleepJournalAMWakeTimeMandatory);
                 this.wakeTime = value;
             }
         }

@@ -345,7 +345,7 @@ namespace Microsoft.HealthVault.ItemTypes
 
             set
             {
-                Validator.ThrowIfArgumentNull(value, nameof(StartDate), Resources.DirectiveStartDateMandatory);
+                Validator.ThrowIfArgumentNull(value, nameof(this.StartDate), Resources.DirectiveStartDateMandatory);
                 this.startDate = value;
             }
         }
@@ -372,7 +372,7 @@ namespace Microsoft.HealthVault.ItemTypes
 
             set
             {
-                Validator.ThrowIfArgumentNull(value, nameof(StopDate), Resources.DirectiveStopDateMandatory);
+                Validator.ThrowIfArgumentNull(value, nameof(this.StopDate), Resources.DirectiveStopDateMandatory);
                 this.stopDate = value;
             }
         }

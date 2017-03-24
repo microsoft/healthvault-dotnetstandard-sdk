@@ -218,7 +218,7 @@ namespace Microsoft.HealthVault.ItemTypes
 
             set
             {
-                Validator.ThrowIfArgumentNull(value, nameof(Name), Resources.MedicationNameMandatory);
+                Validator.ThrowIfArgumentNull(value, nameof(this.Name), Resources.MedicationNameMandatory);
                 this.name = value;
             }
         }

@@ -14,6 +14,5 @@ namespace Microsoft.HealthVault.Client
                 throw new NotImplementedException(ClientResources.BaitWithoutSwitchError);
             }
         }
-
     }
 }

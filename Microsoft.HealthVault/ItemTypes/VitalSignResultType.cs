@@ -199,7 +199,7 @@ namespace Microsoft.HealthVault.ItemTypes
 
             set
             {
-                Validator.ThrowIfArgumentNull(value, nameof(Title), Resources.VitalSignResultTitleMandatory);
+                Validator.ThrowIfArgumentNull(value, nameof(this.Title), Resources.VitalSignResultTitleMandatory);
                 this.title = value;
             }
         }

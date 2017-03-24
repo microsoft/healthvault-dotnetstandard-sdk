@@ -136,7 +136,7 @@ namespace Microsoft.HealthVault.ItemTypes
 
             set
             {
-                Validator.ThrowIfArgumentNull(value, nameof(StatusType), Resources.StatusTypeMandatory);
+                Validator.ThrowIfArgumentNull(value, nameof(this.StatusType), Resources.StatusTypeMandatory);
                 this.statusType = value;
             }
         }

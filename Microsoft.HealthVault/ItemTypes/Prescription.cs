@@ -192,7 +192,7 @@ namespace Microsoft.HealthVault.ItemTypes
 
             set
             {
-                Validator.ThrowIfArgumentNull(value, nameof(PrescribedBy), Resources.PrescriptionPrescribedByNameMandatory);
+                Validator.ThrowIfArgumentNull(value, nameof(this.PrescribedBy), Resources.PrescriptionPrescribedByNameMandatory);
                 this.prescribedBy = value;
             }
         }

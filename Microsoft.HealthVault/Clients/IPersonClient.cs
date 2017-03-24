@@ -1,19 +1,19 @@
-﻿// Copyright (c) Microsoft Corporation.  All rights reserved. 
+﻿// Copyright (c) Microsoft Corporation.  All rights reserved.
 // MIT License
 // Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the ""Software""), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 //
 // THE SOFTWARE IS PROVIDED *AS IS*, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-using Microsoft.HealthVault.Exceptions;
-using Microsoft.HealthVault.Person;
-using Microsoft.HealthVault.Record;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using System.Xml.XPath;
+using Microsoft.HealthVault.Exceptions;
+using Microsoft.HealthVault.Person;
+using Microsoft.HealthVault.Record;
 
 namespace Microsoft.HealthVault.Clients
 {
@@ -40,9 +40,6 @@ namespace Microsoft.HealthVault.Clients
         /// person.
         /// </summary>
         ///
-        /// <param name="connection">The connection to use to perform the operation. This connection
-        /// must be authenticated. </param>
-        ///
         /// <param name="applicationSettings">
         /// The application settings XML.
         /// </param>
@@ -58,9 +55,6 @@ namespace Microsoft.HealthVault.Clients
         /// Sets the application settings for the current application and
         /// person.
         /// </summary>
-        ///
-        /// <param name="connection">The connection to use to perform the operation. This connection
-        /// must be authenticated. </param>
         ///
         /// <param name="requestParameters">
         /// The request parameters.
@@ -80,9 +74,6 @@ namespace Microsoft.HealthVault.Clients
         /// <summary>
         /// Gets the information about the person specified.
         /// </summary>
-        ///
-        /// <param name="connection">The connection to use to perform the operation. This connection
-        /// must be authenticated. </param>
         ///
         /// <returns>
         /// Information about the person's HealthVault account.
@@ -109,9 +100,6 @@ namespace Microsoft.HealthVault.Clients
         /// Gets the <see cref="HealthRecordInfo"/> for the records identified
         /// by the specified <paramref name="recordIds"/>.
         /// </summary>
-        ///
-        /// <param name="connection">The connection to use to perform the operation. This connection
-        /// must be authenticated. </param>
         ///
         /// <param name="recordIds">
         /// The unique identifiers for the records to retrieve.

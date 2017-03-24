@@ -160,7 +160,7 @@ namespace Microsoft.HealthVault.ItemTypes
 
             set
             {
-                Validator.ThrowIfArgumentNull(value, nameof(StartDate), Resources.DurationValueStartDateMandatory);
+                Validator.ThrowIfArgumentNull(value, nameof(this.StartDate), Resources.DurationValueStartDateMandatory);
                 this.startDate = value;
             }
         }

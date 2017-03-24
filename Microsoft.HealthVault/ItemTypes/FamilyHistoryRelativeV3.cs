@@ -167,7 +167,7 @@ namespace Microsoft.HealthVault.ItemTypes
 
             set
             {
-                Validator.ThrowIfArgumentNull(value, nameof(Relationship), Resources.RelationshipNullValue);
+                Validator.ThrowIfArgumentNull(value, nameof(this.Relationship), Resources.RelationshipNullValue);
                 this.relationship = value;
             }
         }

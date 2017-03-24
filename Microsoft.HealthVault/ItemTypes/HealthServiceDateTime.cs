@@ -300,7 +300,7 @@ namespace Microsoft.HealthVault.ItemTypes
 
             set
             {
-                Validator.ThrowIfArgumentNull(value, nameof(Date), Resources.HealthServiceDateTimeDateNull);
+                Validator.ThrowIfArgumentNull(value, nameof(this.Date), Resources.HealthServiceDateTimeDateNull);
                 this.date = value;
             }
         }

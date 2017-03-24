@@ -77,10 +77,11 @@ namespace Microsoft.HealthVault.ItemTypes
         /// override root element name within thing xml
         /// </summary>
         protected abstract string RootElementName { get; }
+
         #endregion
 
         #region props
-        
+
         /// <summary>
         /// Gets the header information associated with this item.
         /// </summary>
@@ -98,7 +99,7 @@ namespace Microsoft.HealthVault.ItemTypes
 
             set
             {
-                Validator.ThrowIfArgumentNull(value, nameof(WrappedTypeName), Resources.WrappedTypeNameNullValue);
+                Validator.ThrowIfArgumentNull(value, nameof(this.WrappedTypeName), Resources.WrappedTypeNameNullValue);
                 Validator.ThrowIfStringIsEmptyOrWhitespace(value, "WrappedTypeName");
                 this.wrappedTypeName = value;
             }
@@ -118,13 +119,14 @@ namespace Microsoft.HealthVault.ItemTypes
 
             set
             {
-                Validator.ThrowIfArgumentNull(value, nameof(WrappedInstanceJson), Resources.WrappedInstanceJsonNullValue);
+                Validator.ThrowIfArgumentNull(value, nameof(this.WrappedInstanceJson), Resources.WrappedInstanceJsonNullValue);
                 Validator.ThrowIfStringIsEmptyOrWhitespace(value, "WrappedInstanceJson");
                 this.wrappedInstanceJson = value;
             }
         }
 
         private string wrappedInstanceJson;
+
         #endregion
 
         #region Overrides of ThingBase

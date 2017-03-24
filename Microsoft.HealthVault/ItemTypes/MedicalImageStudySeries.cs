@@ -196,7 +196,7 @@ namespace Microsoft.HealthVault.ItemTypes
 
             set
             {
-                Validator.ThrowIfArgumentNull(value, nameof(AcquisitionDateTime), Resources.AcquisitionDateTimeMandatory);
+                Validator.ThrowIfArgumentNull(value, nameof(this.AcquisitionDateTime), Resources.AcquisitionDateTimeMandatory);
                 this.acquisitionDateTime = value;
             }
         }

@@ -152,7 +152,7 @@ namespace Microsoft.HealthVault.ItemTypes
 
             set
             {
-                Validator.ThrowIfArgumentNull(value, nameof(Url), Resources.LinkUrlMandatory);
+                Validator.ThrowIfArgumentNull(value, nameof(this.Url), Resources.LinkUrlMandatory);
                 this.url = value;
             }
         }

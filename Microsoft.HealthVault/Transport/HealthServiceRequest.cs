@@ -55,7 +55,7 @@ namespace Microsoft.HealthVault.Transport
         /// Creates a new instance of the <see cref="HealthServiceRequest"/>
         /// class for the specified method.
         /// </summary>
-        /// 
+        ///
         /// <param name="connectionInternal">
         /// The client-side representation of the HealthVault service.
         /// </param>
@@ -145,8 +145,8 @@ namespace Microsoft.HealthVault.Transport
                 // Platform returns a platform request id with the responses. This allows
                 // developers to have additional information if necessary for debugging/logging purposes.
                 Guid responseId;
-                if (response.Headers != null 
-                    && response.Headers.Contains(ResponseIdContextKey) 
+                if (response.Headers != null
+                    && response.Headers.Contains(ResponseIdContextKey)
                     && Guid.TryParse(response.Headers.GetValues(ResponseIdContextKey)?.FirstOrDefault(), out responseId))
                 {
                     this.ResponseId = responseId;
@@ -417,7 +417,6 @@ namespace Microsoft.HealthVault.Transport
                         }
 
                         writer.WriteElementString("app-id", appId.ToString());
-
                     }
 
                     if (this.CultureCode != null)
@@ -434,7 +433,7 @@ namespace Microsoft.HealthVault.Transport
                     writer.WriteElementString(
                         "msg-ttl", this.config.DefaultRequestTimeToLive.ToString(CultureInfo.InvariantCulture));
 
-                    writer.WriteElementString("version", Version);
+                    writer.WriteElementString("version", this.Version);
 
                     // if we are not using an authenticated connection,
                     // then do not include the info-hash because we cannot protect it
@@ -784,6 +783,7 @@ namespace Microsoft.HealthVault.Transport
         {
             get; set;
         }
+
         #endregion
 
         /// <summary>

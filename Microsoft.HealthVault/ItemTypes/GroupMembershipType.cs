@@ -165,7 +165,7 @@ namespace Microsoft.HealthVault.ItemTypes
 
             set
             {
-                Validator.ThrowIfArgumentNull(value, nameof(Name), Resources.GroupMembershipTypeNameMandatory);
+                Validator.ThrowIfArgumentNull(value, nameof(this.Name), Resources.GroupMembershipTypeNameMandatory);
                 Validator.ThrowIfStringNullOrEmpty(value.Text, "Name");
                 this.name = value;
             }
@@ -191,7 +191,7 @@ namespace Microsoft.HealthVault.ItemTypes
 
             set
             {
-                Validator.ThrowIfArgumentNull(value, nameof(Value), Resources.GroupMembershipTypeValueMandatory);
+                Validator.ThrowIfArgumentNull(value, nameof(this.Value), Resources.GroupMembershipTypeValueMandatory);
                 Validator.ThrowIfStringIsWhitespace(value, "Value");
                 this.value = value;
             }

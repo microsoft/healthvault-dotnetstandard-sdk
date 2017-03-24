@@ -129,7 +129,7 @@ namespace Microsoft.HealthVault.ItemTypes
 
             set
             {
-                Validator.ThrowIfArgumentNull(value, nameof(RelativeCondition), Resources.FamilyHistoryConditionConditionMandatory);
+                Validator.ThrowIfArgumentNull(value, nameof(this.RelativeCondition), Resources.FamilyHistoryConditionConditionMandatory);
                 this.relativeCondition = value;
             }
         }

@@ -136,7 +136,7 @@ namespace Microsoft.HealthVault.ItemTypes
 
             set
             {
-                Validator.ThrowIfArgumentNull(value, nameof(When), Resources.OccurrenceWhenMandatory);
+                Validator.ThrowIfArgumentNull(value, nameof(this.When), Resources.OccurrenceWhenMandatory);
                 this.when = value;
             }
         }
