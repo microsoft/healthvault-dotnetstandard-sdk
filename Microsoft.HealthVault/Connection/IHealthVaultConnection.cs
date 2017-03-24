@@ -22,19 +22,6 @@ namespace Microsoft.HealthVault.Connection
     public interface IHealthVaultConnection
     {
         /// <summary>
-        /// The HealthVault web-service instance.
-        /// </summary>
-        HealthServiceInstance ServiceInstance { get; }
-
-        /// <summary>
-        /// Gets or sets the session credential.
-        /// </summary>
-        /// <value>
-        /// The session credential.
-        /// </value>
-        SessionCredential SessionCredential { get; }
-
-        /// <summary>
         /// Gets the application identifier.
         /// </summary>
         /// <value>
@@ -46,7 +33,7 @@ namespace Microsoft.HealthVault.Connection
         /// Gets the person information for this account.
         /// </summary>
         /// <remarks>This includes the list of authorized records for the application instance.</remarks>
-        PersonInfo PersonInfo { get; }
+        Task<PersonInfo> GetPersonInfoAsync();
 
         /// <summary>
         /// Gets a client of a given type.

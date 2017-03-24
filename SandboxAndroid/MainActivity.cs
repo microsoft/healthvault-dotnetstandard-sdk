@@ -12,6 +12,7 @@ using Microsoft.HealthVault.ItemTypes;
 using System.Collections.Generic;
 using Microsoft.HealthVault.Record;
 using System.Collections;
+using Microsoft.HealthVault.Person;
 
 namespace SandboxAndroid
 {
@@ -23,6 +24,7 @@ namespace SandboxAndroid
 
         TextView statusView;
         Button connectionButton;
+        Button disconnectButton;
         Button createButton;
         Button getButton;
         LinearLayout controlsLayout;
@@ -41,13 +43,23 @@ namespace SandboxAndroid
 
             // Get our buttons from the layout resource,
             this.connectionButton = FindViewById<Button>(Resource.Id.ConnectButton);
+            this.disconnectButton = FindViewById<Button>(Resource.Id.DisconnectButton);
             this.getButton = FindViewById<Button>(Resource.Id.GetButton);
             this.createButton = FindViewById<Button>(Resource.Id.CreateButton);
 
             // attach the actions
             this.connectionButton.Click += delegate { this.ConnectToHealthVaultAsync(); };
+            this.disconnectButton.Click += this.DisconnectButtonOnClick;
             this.getButton.Click += delegate { this.GetBloodPressures(); };
             this.createButton.Click += delegate { this.CreateBloodPressure(); };
+
+            // create a configuration for our HealthVault application
+            ClientHealthVaultFactory.Current.SetConfiguration(new ClientHealthVaultConfiguration
+            {
+                MasterApplicationId = Guid.Parse("cf0cb893-d411-495c-b66f-9d72b4fd2b97"),
+                DefaultHealthVaultShellUrl = new Uri("https://account.healthvault-ppe.com"),
+                DefaultHealthVaultUrl = new Uri("https://platform.healthvault-ppe.com/platform")
+            });
         }
 
         private async Task ConnectToHealthVaultAsync()
@@ -56,16 +68,9 @@ namespace SandboxAndroid
 
             try
             {
-                // create a configuration for our HealthVault application
-                ClientHealthVaultFactory.Current.SetConfiguration(new ClientHealthVaultConfiguration
-                {
-                    MasterApplicationId = Guid.Parse("cf0cb893-d411-495c-b66f-9d72b4fd2b97"),
-                    DefaultHealthVaultShellUrl = new Uri("https://account.healthvault-ppe.com"),
-                    DefaultHealthVaultUrl = new Uri("https://platform.healthvault-ppe.com/platform")
-                });
-
                 // get a connection to HealthVault
-                this.connection = await ClientHealthVaultFactory.Current.GetConnectionAsync();
+                this.connection = ClientHealthVaultFactory.Current.GetConnection();
+                await this.connection.AuthenticateAsync();
             }
             catch (Exception e)
             {
@@ -75,10 +80,23 @@ namespace SandboxAndroid
             // get a thing client
             this.thingClient = connection.GetThingClient();
 
+            PersonInfo personInfo = await this.connection.GetPersonInfoAsync();
+
             // update visual state
             this.connectionButton.Visibility = ViewStates.Gone;
             this.controlsLayout.Visibility = ViewStates.Visible;
-            this.statusView.Text = $"Hello {this.connection.PersonInfo.Name}";
+            this.disconnectButton.Visibility = ViewStates.Visible;
+            this.statusView.Text = $"Hello {personInfo.Name}";
+        }
+
+        private async void DisconnectButtonOnClick(object sender, EventArgs eventArgs)
+        {
+            await this.connection.DeauthorizeApplicationAsync();
+            this.statusView.Text = "Disconnected.";
+
+            this.connectionButton.Visibility = ViewStates.Visible;
+            this.disconnectButton.Visibility = ViewStates.Gone;
+            this.controlsLayout.Visibility = ViewStates.Gone;
         }
 
         private async Task CreateBloodPressure()
@@ -92,13 +110,15 @@ namespace SandboxAndroid
             };
 
             // use our thing client to creat the new blood pressure 
-            await thingClient.CreateNewThingsAsync(connection.PersonInfo.SelectedRecord, new List<BloodPressure>() { bp });
+            PersonInfo personInfo = await this.connection.GetPersonInfoAsync();
+            await thingClient.CreateNewThingsAsync(personInfo.SelectedRecord, new List<BloodPressure>() { bp });
         }
 
         private async Task GetBloodPressures()
         {
             // use our thing client to get all things of type blood pressure
-            IReadOnlyCollection<BloodPressure> bloodPressures = await this.thingClient.GetThingsAsync<BloodPressure>(connection.PersonInfo.SelectedRecord);
+            PersonInfo personInfo = await this.connection.GetPersonInfoAsync();
+            IReadOnlyCollection<BloodPressure> bloodPressures = await this.thingClient.GetThingsAsync<BloodPressure>(personInfo.SelectedRecord);
             this.listView.Adapter = new ArrayAdapter(this, Android.Resource.Layout.SimpleListItem1, new List<BloodPressure>(bloodPressures));
         }
     }

@@ -13,6 +13,7 @@ using Microsoft.HealthVault.PlatformInformation;
 using Microsoft.HealthVault.Connection;
 using Microsoft.HealthVault.Application;
 using Microsoft.HealthVault.Person;
+using Microsoft.HealthVault.Record;
 using Microsoft.HealthVault.Thing;
 using Microsoft.HealthVault.Transport;
 
@@ -75,6 +76,11 @@ namespace Microsoft.HealthVault.Clients
         public IEnumerable<Task<PersonInfo>> GetAuthorizedPeople(GetAuthorizedPeopleSettings settings)
         {
             return HealthVaultPlatform.GetAuthorizedPeopleAsync(this.Connection, settings);
+        }
+
+        public async Task RemoveApplicationRecordAuthorizationAsync(Guid recordId)
+        {
+            await this.Connection.ExecuteAsync(HealthVaultMethods.RemoveApplicationRecordAuthorization, 1, recordId: recordId).ConfigureAwait(false);
         }
     }
 }

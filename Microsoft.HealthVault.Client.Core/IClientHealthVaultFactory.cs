@@ -12,8 +12,8 @@ namespace Microsoft.HealthVault.Client
         /// Sets the client configuration to use.
         /// </summary>
         /// <param name="clientHealthVaultConfiguration">The configuration to use.</param>
-        /// <exception cref="InvalidOperationException">Thrown when called after calling <see cref="GetConnectionAsync"/>.</exception>
-        /// <remarks>This can only be set before calling <see cref="GetConnectionAsync"/>. After calling it,
+        /// <exception cref="InvalidOperationException">Thrown when called after calling <see cref="GetConnection"/>.</exception>
+        /// <remarks>This can only be set before calling <see cref="GetConnection"/>. After calling it,
         /// this property cannot be set and no settings on the object can be changed.</remarks>
         void SetConfiguration(ClientHealthVaultConfiguration clientHealthVaultConfiguration);
 
@@ -24,6 +24,6 @@ namespace Microsoft.HealthVault.Client
         /// <exception cref="InvalidOperationException">Thrown when called before calling <see cref="SetConfiguration"/> with required values.</exception>
         /// <remarks>This will perform any authentication needed to create the connection, including
         /// opening a web browser to prompt for credentials/consent.</remarks>
-        Task<IClientHealthVaultConnection> GetConnectionAsync();
+        IClientHealthVaultConnection GetConnection();
     }
 }

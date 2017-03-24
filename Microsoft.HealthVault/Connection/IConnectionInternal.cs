@@ -8,11 +8,25 @@
 
 using System;
 using System.Xml;
+using Microsoft.HealthVault.PlatformInformation;
 
 namespace Microsoft.HealthVault.Connection
 {
     public interface IConnectionInternal : IHealthVaultConnection
     {
+        /// <summary>
+        /// The HealthVault web-service instance.
+        /// </summary>
+        HealthServiceInstance ServiceInstance { get; }
+
+        /// <summary>
+        /// Gets or sets the session credential.
+        /// </summary>
+        /// <value>
+        /// The session credential.
+        /// </value>
+        SessionCredential SessionCredential { get; }
+
         CryptoData GetAuthData(HealthVaultMethods method, byte[] data);
 
         CryptoData GetInfoHash(byte[] data);

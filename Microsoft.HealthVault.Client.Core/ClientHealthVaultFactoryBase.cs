@@ -11,7 +11,7 @@ namespace Microsoft.HealthVault.Client
     /// </summary>
     public abstract class ClientHealthVaultFactoryBase : IClientHealthVaultFactory
     {
-        private readonly AsyncLock connectionLock = new AsyncLock();
+        private readonly object connectionLock = new object();
 
         private IClientHealthVaultConnection cachedConnection;
 
@@ -23,7 +23,7 @@ namespace Microsoft.HealthVault.Client
         /// Sets the configuration used to create connections.
         /// </summary>
         /// <exception cref="InvalidOperationException">
-        /// If <see cref="GetConnectionAsync"/> has been called already.
+        /// If <see cref="GetConnection"/> has been called already.
         /// </exception>
         public void SetConfiguration(ClientHealthVaultConfiguration clientHealthVaultConfiguration)
         {
@@ -37,11 +37,11 @@ namespace Microsoft.HealthVault.Client
         /// <exception cref="InvalidOperationException">
         /// If called before calling <see cref="SetConfiguration(ClientHealthVaultConfiguration)"/>.
         /// </exception>
-        public async Task<IClientHealthVaultConnection> GetConnectionAsync()
+        public IClientHealthVaultConnection GetConnection()
         {
             this.connectionState.MarkConnectionCalled();
 
-            using (await this.connectionLock.LockAsync().ConfigureAwait(false))
+            lock (this.connectionLock)
             {
                 if (this.cachedConnection != null)
                 {
@@ -51,7 +51,7 @@ namespace Microsoft.HealthVault.Client
                 if (this.healthVaultConfiguration == null)
                 {
                     throw new InvalidOperationException(Resources.CannotCallMethodBefore.FormatResource(
-                        nameof(this.GetConnectionAsync),
+                        nameof(this.GetConnection),
                         nameof(this.SetConfiguration)));
                 }
 
@@ -75,7 +75,6 @@ namespace Microsoft.HealthVault.Client
                 Ioc.Container.Configure(c => c.ExportInstance(this.healthVaultConfiguration).As<HealthVaultConfiguration>());
 
                 ClientHealthVaultConnection newConnection = Ioc.Get<ClientHealthVaultConnection>();
-                await newConnection.AuthenticateAsync().ConfigureAwait(false);
 
                 this.cachedConnection = newConnection;
                 return newConnection;

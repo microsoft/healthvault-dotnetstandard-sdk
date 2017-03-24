@@ -11,6 +11,7 @@ using Microsoft.HealthVault.Extensions;
 using Microsoft.HealthVault.Helpers;
 using Microsoft.HealthVault.Person;
 using Microsoft.HealthVault.PlatformInformation;
+using Microsoft.HealthVault.Record;
 using Microsoft.HealthVault.Transport;
 
 namespace Microsoft.HealthVault.Client
@@ -27,6 +28,8 @@ namespace Microsoft.HealthVault.Client
         private readonly ClientHealthVaultConfiguration clientHealthVaultConfiguration;
 
         private readonly AsyncLock authenticateLock = new AsyncLock();
+
+        private PersonInfo personInfo;
 
         public ClientHealthVaultConnection(IServiceLocator serviceLocator, ILocalObjectStore localObjectStore, IShellAuthService shellAuthService, ClientHealthVaultConfiguration clientHealthVaultConfiguration)
             : base(serviceLocator)
@@ -56,7 +59,7 @@ namespace Microsoft.HealthVault.Client
                     await this.RefreshSessionCredentialAsync(CancellationToken.None).ConfigureAwait(false);
                 }
 
-                if (this.PersonInfo == null)
+                if (this.personInfo == null)
                 {
                     await this.GetAndSavePersonInfoAsync().ConfigureAwait(false);
                 }
@@ -70,7 +73,7 @@ namespace Microsoft.HealthVault.Client
             if (recordId != null && recordId != Guid.Empty)
             {
                 writer.WriteStartElement("offline-person-info");
-                writer.WriteElementString("offline-person-id", this.PersonInfo.PersonId.ToString());
+                writer.WriteElementString("offline-person-id", this.personInfo.PersonId.ToString());
                 writer.WriteEndElement();
             }
 
@@ -86,6 +89,40 @@ namespace Microsoft.HealthVault.Client
 
                 // Update the person info to add the newly authorized records.
                 await this.GetAndSavePersonInfoAsync().ConfigureAwait(false); 
+            }
+        }
+
+        public async Task DeauthorizeApplicationAsync()
+        {
+            using (await this.authenticateLock.LockAsync().ConfigureAwait(false))
+            {
+                if (this.personInfo == null)
+                {
+                    // We are not yet connected.
+                    return;
+                }
+
+                await this.localObjectStore.DeleteAsync(ServiceInstanceKey).ConfigureAwait(false);
+                await this.localObjectStore.DeleteAsync(ApplicationCreationInfoKey).ConfigureAwait(false);
+                await this.localObjectStore.DeleteAsync(SessionCredentialKey).ConfigureAwait(false);
+                await this.localObjectStore.DeleteAsync(PersonInfoKey).ConfigureAwait(false);
+
+                foreach (HealthRecordInfo record in this.personInfo.AuthorizedRecords.Values)
+                {
+                    try
+                    {
+                        await this.PlatformClient.RemoveApplicationRecordAuthorizationAsync(record.Id).ConfigureAwait(false);
+                    }
+                    catch (Exception)
+                    {
+                        // Ignore, this is a non-essential cleanup step
+                    }
+                }
+
+                this.ServiceInstance = null;
+                this.ApplicationCreationInfo = null;
+                this.SessionCredential = null;
+                this.personInfo = null;
             }
         }
 
@@ -115,9 +152,9 @@ namespace Microsoft.HealthVault.Client
                 this.SessionCredential = await this.localObjectStore.ReadAsync<SessionCredential>(SessionCredentialKey).ConfigureAwait(false);
             }
 
-            if (this.PersonInfo == null)
+            if (this.personInfo == null)
             {
-                this.PersonInfo = await this.localObjectStore.ReadAsync<PersonInfo>(PersonInfoKey).ConfigureAwait(false);
+                this.personInfo = await this.localObjectStore.ReadAsync<PersonInfo>(PersonInfoKey).ConfigureAwait(false);
             }
         }
 
@@ -170,7 +207,17 @@ namespace Microsoft.HealthVault.Client
         {
             PersonInfo newPersonInfo = await this.PersonClient.GetPersonInfoAsync().ConfigureAwait(false);
             await this.localObjectStore.WriteAsync(PersonInfoKey, newPersonInfo).ConfigureAwait(false);
-            this.PersonInfo = newPersonInfo;
+            this.personInfo = newPersonInfo;
+        }
+
+        public override async Task<PersonInfo> GetPersonInfoAsync()
+        {
+            if (this.personInfo == null)
+            {
+                await this.AuthenticateAsync().ConfigureAwait(false);
+            }
+
+            return this.personInfo;
         }
     }
 }

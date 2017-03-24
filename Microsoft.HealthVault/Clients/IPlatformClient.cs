@@ -13,6 +13,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.HealthVault.Person;
+using Microsoft.HealthVault.Record;
 using Microsoft.HealthVault.Thing;
 
 namespace Microsoft.HealthVault.Clients
@@ -339,5 +340,11 @@ namespace Microsoft.HealthVault.Clients
         /// </exception>
         ///
         IEnumerable<Task<PersonInfo>> GetAuthorizedPeople(GetAuthorizedPeopleSettings settings);
+
+        /// <summary>
+        /// Removes authorization for the given record.
+        /// </summary>
+        /// <param name="recordId">The record to remove authorization for.</param>
+        Task RemoveApplicationRecordAuthorizationAsync(Guid recordId);
     }
 }
