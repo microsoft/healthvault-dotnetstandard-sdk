@@ -177,7 +177,7 @@ namespace Microsoft.HealthVault.ItemTypes
 
             set
             {
-                Validator.ThrowIfArgumentNull(value, nameof(GroupName), Resources.LabTestResultsGroupTypeGroupNameMandatory);
+                Validator.ThrowIfArgumentNull(value, nameof(this.GroupName), Resources.LabTestResultsGroupTypeGroupNameMandatory);
                 this.groupName = value;
             }
         }

@@ -11,6 +11,7 @@
         <Button Name="ConnectButton" Click="Connect_OnClick">Connect</Button>
         <Button Name="GetBP" Click="Get_BP_OnClick">Get BP</Button>
         <Button Name="SetBP" Click="SetBP_OnClick">Set BP</Button>
+        <Button Name="DeleteConnectionInfo" Click="DeleteConnectionInfo_OnClick">Delete connection info</Button>
         <TextBlock Name="OutputBlock"></TextBlock>
     </StackPanel>
 </Page>

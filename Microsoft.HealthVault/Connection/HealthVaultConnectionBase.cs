@@ -49,7 +49,7 @@ namespace Microsoft.HealthVault.Connection
 
         public SessionCredential SessionCredential { get; internal set; }
 
-        public PersonInfo PersonInfo { get; internal set; }
+        public abstract Task<PersonInfo> GetPersonInfoAsync();
 
         public abstract Guid ApplicationId { get; }
 

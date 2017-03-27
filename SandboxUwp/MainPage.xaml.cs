@@ -6,6 +6,7 @@ using Windows.UI.Xaml.Controls;
 using Microsoft.HealthVault.Client;
 using Microsoft.HealthVault.Clients;
 using Microsoft.HealthVault.ItemTypes;
+using Microsoft.HealthVault.Person;
 using Microsoft.HealthVault.Record;
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x409
@@ -22,26 +23,29 @@ namespace SandboxUwp
         public MainPage()
         {
             this.InitializeComponent();
+
+            var configuration = new ClientHealthVaultConfiguration
+            {
+                MasterApplicationId = Guid.Parse("d6318dff-5352-4a10-a140-6c82c6536a3b"),
+                IsMultiRecordApp = true
+            };
+            ClientHealthVaultFactory.Current.SetConfiguration(configuration);
         }
 
         private async void Connect_OnClick(object sender, RoutedEventArgs e)
         {
             this.OutputBlock.Text = "Connecting...";
 
-            var configuration = new ClientHealthVaultConfiguration
-            {
-                MasterApplicationId = Guid.Parse("d6318dff-5352-4a10-a140-6c82c6536a3b")
-            };
-
-            ClientHealthVaultFactory.Current.SetConfiguration(configuration);
-            this.connection = await ClientHealthVaultFactory.Current.GetConnectionAsync();
+            this.connection = ClientHealthVaultFactory.Current.GetConnection();
+            await this.connection.AuthenticateAsync();
 
             this.OutputBlock.Text = "Connected.";
         }
 
         private async void Get_BP_OnClick(object sender, RoutedEventArgs e)
         {
-            HealthRecordInfo recordInfo = this.connection.PersonInfo.SelectedRecord;
+            PersonInfo personInfo = await this.connection.GetPersonInfoAsync();
+            HealthRecordInfo recordInfo = personInfo.GetSelfRecord();
             IThingClient thingClient = this.connection.GetThingClient();
 
             var bloodPressures = await thingClient.GetThingsAsync<BloodPressure>(recordInfo);
@@ -58,12 +62,19 @@ namespace SandboxUwp
 
         private async void SetBP_OnClick(object sender, RoutedEventArgs e)
         {
-            HealthRecordInfo recordInfo = this.connection.PersonInfo.SelectedRecord;
+            PersonInfo personInfo = await this.connection.GetPersonInfoAsync();
+            HealthRecordInfo recordInfo = personInfo.GetSelfRecord();
             IThingClient thingClient = this.connection.GetThingClient();
 
             await thingClient.CreateNewThingsAsync(recordInfo, new List<BloodPressure> { new BloodPressure(new HealthServiceDateTime(DateTime.Now), 117, 70) });
 
             this.OutputBlock.Text = "Created blood pressure.";
+        }
+
+        private async void DeleteConnectionInfo_OnClick(object sender, RoutedEventArgs e)
+        {
+            await this.connection.DeauthorizeApplicationAsync();
+            this.OutputBlock.Text = "Deleted connection information.";
         }
     }
 }

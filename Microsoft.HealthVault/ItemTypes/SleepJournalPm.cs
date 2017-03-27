@@ -226,7 +226,7 @@ namespace Microsoft.HealthVault.ItemTypes
 
             set
             {
-                Validator.ThrowIfArgumentNull(value, nameof(When), Resources.SleepJournalPMWhenMandatory);
+                Validator.ThrowIfArgumentNull(value, nameof(this.When), Resources.SleepJournalPMWhenMandatory);
                 this.when = value;
             }
         }

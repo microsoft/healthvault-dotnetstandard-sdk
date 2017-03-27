@@ -144,7 +144,7 @@ namespace Microsoft.HealthVault.ItemTypes
 
             set
             {
-                Validator.ThrowIfArgumentNull(value, nameof(Name), Resources.AssessmentNameMandatory);
+                Validator.ThrowIfArgumentNull(value, nameof(this.Name), Resources.AssessmentNameMandatory);
                 this.name = value;
             }
         }
@@ -173,7 +173,7 @@ namespace Microsoft.HealthVault.ItemTypes
 
             set
             {
-                Validator.ThrowIfArgumentNull(value, nameof(Value), Resources.AssessmentValueMandatory);
+                Validator.ThrowIfArgumentNull(value, nameof(this.Value), Resources.AssessmentValueMandatory);
                 this.value = value;
             }
         }

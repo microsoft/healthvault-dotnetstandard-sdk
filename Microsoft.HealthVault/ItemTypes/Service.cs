@@ -167,7 +167,7 @@ namespace Microsoft.HealthVault.ItemTypes
 
             set
             {
-                Validator.ThrowIfArgumentNull(value, nameof(ServiceType), Resources.ServiceTypeNullValue);
+                Validator.ThrowIfArgumentNull(value, nameof(this.ServiceType), Resources.ServiceTypeNullValue);
                 this.serviceType = value;
             }
         }
@@ -220,7 +220,7 @@ namespace Microsoft.HealthVault.ItemTypes
 
             set
             {
-                Validator.ThrowIfArgumentNull(value, nameof(ServiceDates), Resources.ServiceDatesNullValue);
+                Validator.ThrowIfArgumentNull(value, nameof(this.ServiceDates), Resources.ServiceDatesNullValue);
                 this.serviceDates = value;
             }
         }
@@ -241,7 +241,7 @@ namespace Microsoft.HealthVault.ItemTypes
 
             set
             {
-                Validator.ThrowIfArgumentNull(value, nameof(ClaimAmounts), Resources.ClaimAmountsNullValue);
+                Validator.ThrowIfArgumentNull(value, nameof(this.ClaimAmounts), Resources.ClaimAmountsNullValue);
                 this.claimAmounts = value;
             }
         }

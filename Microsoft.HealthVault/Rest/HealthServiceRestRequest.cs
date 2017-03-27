@@ -41,6 +41,7 @@ namespace Microsoft.HealthVault.Rest
     {
         //// TODO: GCorvera Hook up response id
         private const string ResponseIdContextKey = "WC_ResponseId";
+
         private const string Optional = "Optional Headers";
         private CancellationTokenSource cancellationTokenSource;
 
@@ -103,7 +104,8 @@ namespace Microsoft.HealthVault.Rest
             var fullUri =
                 new UriBuilder(apiRoot ??
                                this.configuration.RestHealthVaultUrl ??
-                               new Uri(RestConstants.DefaultMshhvRoot)) { Path = path };
+                               new Uri(RestConstants.DefaultMshhvRoot))
+                { Path = path };
 
             IDictionary<string, string> queryAsDictionary = fullUri.Uri.ParseQuery();
 
@@ -267,6 +269,7 @@ namespace Microsoft.HealthVault.Rest
         private async Task<HealthServiceRestResponseData> FetchAsync()
         {
             return await this.FetchInternalAsync(this.uri).ConfigureAwait(false);
+
             // TODO: IConnection-ify this.
             /*
             try
@@ -502,6 +505,7 @@ namespace Microsoft.HealthVault.Rest
                 case "PUT":
                 case "PATCH":
                     return true;
+
                 default:
                     return false;
             }

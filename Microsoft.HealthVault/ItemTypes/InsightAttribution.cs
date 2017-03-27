@@ -121,7 +121,7 @@ namespace Microsoft.HealthVault.ItemTypes
 
             set
             {
-                Validator.ThrowIfArgumentNull(value, nameof(Name), Resources.InsightAttributionNameNullValue);
+                Validator.ThrowIfArgumentNull(value, nameof(this.Name), Resources.InsightAttributionNameNullValue);
                 Validator.ThrowIfStringIsEmptyOrWhitespace(value, "Name");
                 this.name = value;
             }

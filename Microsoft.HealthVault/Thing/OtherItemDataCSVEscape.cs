@@ -44,7 +44,7 @@ namespace Microsoft.HealthVault.Thing
 
             set
             {
-                Validator.ThrowIfArgumentNull(value, nameof(Name), Resources.CSVNameNull);
+                Validator.ThrowIfArgumentNull(value, nameof(this.Name), Resources.CSVNameNull);
 
                 if (value.Contains("="))
                 {
@@ -72,7 +72,7 @@ namespace Microsoft.HealthVault.Thing
 
             set
             {
-                Validator.ThrowIfArgumentNull(value, nameof(Value), Resources.CSVValueNull);
+                Validator.ThrowIfArgumentNull(value, nameof(this.Value), Resources.CSVValueNull);
 
                 if (value.Contains("="))
                 {

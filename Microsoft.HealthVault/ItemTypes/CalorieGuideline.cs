@@ -167,7 +167,7 @@ namespace Microsoft.HealthVault.ItemTypes
 
             set
             {
-                Validator.ThrowIfArgumentNull(value, nameof(When), Resources.WhenNullValue);
+                Validator.ThrowIfArgumentNull(value, nameof(this.When), Resources.WhenNullValue);
                 this.when = value;
             }
         }
@@ -197,7 +197,7 @@ namespace Microsoft.HealthVault.ItemTypes
 
             set
             {
-                Validator.ThrowIfArgumentNull(value, nameof(Name), Resources.CalorieGuidelineNameNullValue);
+                Validator.ThrowIfArgumentNull(value, nameof(this.Name), Resources.CalorieGuidelineNameNullValue);
                 this.name = value;
             }
         }
@@ -232,7 +232,7 @@ namespace Microsoft.HealthVault.ItemTypes
 
             set
             {
-                Validator.ThrowIfArgumentNull(value, nameof(Calories), Resources.CalorieGuidelineCaloriesNullValue);
+                Validator.ThrowIfArgumentNull(value, nameof(this.Calories), Resources.CalorieGuidelineCaloriesNullValue);
                 this.calories = value;
             }
         }

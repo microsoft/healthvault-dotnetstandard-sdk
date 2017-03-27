@@ -27,6 +27,10 @@
         <dependency id="Grace" version="5.1.0" />
         <dependency id="Newtonsoft.Json" version="9.0.1" />
         <dependency id="Microsoft.NETCore.UniversalWindowsPlatform" version="5.2.2" />
+        <dependency id="System.Diagnostics.TraceSource" version="4.3.0" />
+        <dependency id="System.Net.Http" version="4.3.0" />
+        <dependency id="System.Xml.ReaderWriter" version="4.3.0" />
+        <dependency id="System.Xml.XPath" version="4.3.0" />
       </group>
       <group targetFramework="Xamarin.iOS10">
         <!--Xamarin.iOS dependencies go here-->

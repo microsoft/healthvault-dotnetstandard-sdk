@@ -29,7 +29,8 @@ namespace Microsoft.HealthVault.Client
             {
                 using (await this.LockAndInitialize(key).ConfigureAwait(false))
                 {
-                    await this.folder.DeleteAsync(StorageDeleteOption.PermanentDelete).AsTask().ConfigureAwait(false);
+                    var file = await this.folder.GetFileAsync(key).AsTask().ConfigureAwait(false);
+                    await file.DeleteAsync(StorageDeleteOption.PermanentDelete).AsTask().ConfigureAwait(false);
                 }
             }
             catch (Exception e) when (!(e is IOException))

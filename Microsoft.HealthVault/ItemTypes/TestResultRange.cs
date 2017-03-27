@@ -161,7 +161,7 @@ namespace Microsoft.HealthVault.ItemTypes
 
             set
             {
-                Validator.ThrowIfArgumentNull(value, nameof(RangeType), Resources.TestResultRangeRangeTypeNotSet);
+                Validator.ThrowIfArgumentNull(value, nameof(this.RangeType), Resources.TestResultRangeRangeTypeNotSet);
                 this.rangeType = value;
             }
         }
@@ -198,7 +198,7 @@ namespace Microsoft.HealthVault.ItemTypes
 
             set
             {
-                Validator.ThrowIfArgumentNull(value, nameof(Text), Resources.TestResultRangeTextNotSet);
+                Validator.ThrowIfArgumentNull(value, nameof(this.Text), Resources.TestResultRangeTextNotSet);
                 this.text = value;
             }
         }

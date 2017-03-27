@@ -132,7 +132,7 @@ namespace Microsoft.HealthVault.ItemTypes
 
             set
             {
-                Validator.ThrowIfArgumentNull(value, nameof(Units), Resources.StructuredMeasurementUnitsNotSet);
+                Validator.ThrowIfArgumentNull(value, nameof(this.Units), Resources.StructuredMeasurementUnitsNotSet);
                 this.units = value;
             }
         }

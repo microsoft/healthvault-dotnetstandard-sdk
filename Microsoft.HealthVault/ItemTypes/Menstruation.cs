@@ -48,7 +48,7 @@ namespace Microsoft.HealthVault.ItemTypes
         public Menstruation(HealthServiceDateTime when)
             : base(TypeId)
         {
-            Validator.ThrowIfArgumentNull(when, nameof(When), Resources.WhenNullValue);
+            Validator.ThrowIfArgumentNull(when, nameof(this.When), Resources.WhenNullValue);
             this.when = when;
         }
 
@@ -87,7 +87,7 @@ namespace Microsoft.HealthVault.ItemTypes
 
             set
             {
-                Validator.ThrowIfArgumentNull(value, nameof(When), Resources.WhenNullValue);
+                Validator.ThrowIfArgumentNull(value, nameof(this.When), Resources.WhenNullValue);
                 this.when = value;
             }
         }

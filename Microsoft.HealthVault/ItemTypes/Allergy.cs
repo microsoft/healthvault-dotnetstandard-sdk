@@ -220,7 +220,7 @@ namespace Microsoft.HealthVault.ItemTypes
 
             set
             {
-                Validator.ThrowIfArgumentNull(value, nameof(Name), Resources.AllergyNameMandatory);
+                Validator.ThrowIfArgumentNull(value, nameof(this.Name), Resources.AllergyNameMandatory);
                 this.name = value;
             }
         }

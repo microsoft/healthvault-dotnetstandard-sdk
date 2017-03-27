@@ -192,7 +192,7 @@ namespace Microsoft.HealthVault.ItemTypes
 
             set
             {
-                Validator.ThrowIfArgumentNull(value, nameof(When), Resources.DefibrillatorEpisodeWhenNullValue);
+                Validator.ThrowIfArgumentNull(value, nameof(this.When), Resources.DefibrillatorEpisodeWhenNullValue);
                 this.when = value;
             }
         }

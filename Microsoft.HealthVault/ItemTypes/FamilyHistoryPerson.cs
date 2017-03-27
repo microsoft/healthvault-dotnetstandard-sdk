@@ -159,7 +159,7 @@ namespace Microsoft.HealthVault.ItemTypes
 
             set
             {
-                Validator.ThrowIfArgumentNull(value, nameof(RelativeName), Resources.FamilyHistoryPersonRelativeNameMandatory);
+                Validator.ThrowIfArgumentNull(value, nameof(this.RelativeName), Resources.FamilyHistoryPersonRelativeNameMandatory);
                 this.relativeName = value;
             }
         }

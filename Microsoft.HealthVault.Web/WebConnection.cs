@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.XPath;
 using Microsoft.HealthVault.Connection;
+using Microsoft.HealthVault.Person;
 using Microsoft.HealthVault.PlatformInformation;
 
 namespace Microsoft.HealthVault.Web
@@ -57,6 +58,11 @@ namespace Microsoft.HealthVault.Web
 
                 writer.WriteEndElement();
             }
+        }
+
+        public override Task<PersonInfo> GetPersonInfoAsync()
+        {
+            throw new NotImplementedException();
         }
     }
 }

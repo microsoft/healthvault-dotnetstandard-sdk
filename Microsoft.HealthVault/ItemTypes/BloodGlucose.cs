@@ -216,7 +216,7 @@ namespace Microsoft.HealthVault.ItemTypes
 
             set
             {
-                Validator.ThrowIfArgumentNull(value, nameof(When), Resources.WhenNullValue);
+                Validator.ThrowIfArgumentNull(value, nameof(this.When), Resources.WhenNullValue);
                 this.when = value;
             }
         }
@@ -244,7 +244,7 @@ namespace Microsoft.HealthVault.ItemTypes
 
             set
             {
-                Validator.ThrowIfArgumentNull(value, nameof(Value), Resources.BGValueMandatory);
+                Validator.ThrowIfArgumentNull(value, nameof(this.Value), Resources.BGValueMandatory);
                 this.value = value;
             }
         }
@@ -274,7 +274,7 @@ namespace Microsoft.HealthVault.ItemTypes
 
             set
             {
-                Validator.ThrowIfArgumentNull(value, nameof(GlucoseMeasurementType), Resources.BGMeasurementTypeMandatory);
+                Validator.ThrowIfArgumentNull(value, nameof(this.GlucoseMeasurementType), Resources.BGMeasurementTypeMandatory);
                 this.glucoseMeasurementType = value;
             }
         }

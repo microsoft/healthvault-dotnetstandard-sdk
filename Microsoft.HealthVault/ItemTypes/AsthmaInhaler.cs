@@ -336,7 +336,7 @@ namespace Microsoft.HealthVault.ItemTypes
 
             set
             {
-                Validator.ThrowIfArgumentNull(value, nameof(StartDate), Resources.AsthmaInhalerStartDateMandatory);
+                Validator.ThrowIfArgumentNull(value, nameof(this.StartDate), Resources.AsthmaInhalerStartDateMandatory);
                 this.startDate = value;
             }
         }
@@ -365,7 +365,7 @@ namespace Microsoft.HealthVault.ItemTypes
 
             set
             {
-                Validator.ThrowIfArgumentNull(value, nameof(Drug), Resources.AsthmaInhalerUseDrugMandatory);
+                Validator.ThrowIfArgumentNull(value, nameof(this.Drug), Resources.AsthmaInhalerUseDrugMandatory);
                 this.drug = value;
             }
         }

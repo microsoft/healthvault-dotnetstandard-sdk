@@ -189,7 +189,7 @@ namespace Microsoft.HealthVault.ItemTypes
 
             set
             {
-                Validator.ThrowIfArgumentNull(value, nameof(When), Resources.WhenNullValue);
+                Validator.ThrowIfArgumentNull(value, nameof(this.When), Resources.WhenNullValue);
                 this.when = value;
             }
         }
@@ -218,7 +218,7 @@ namespace Microsoft.HealthVault.ItemTypes
 
             set
             {
-                Validator.ThrowIfArgumentNull(value, nameof(InsulinType), Resources.InsulinInjectionTypeMandatory);
+                Validator.ThrowIfArgumentNull(value, nameof(this.InsulinType), Resources.InsulinInjectionTypeMandatory);
                 this.insulinType = value;
             }
         }
@@ -239,7 +239,7 @@ namespace Microsoft.HealthVault.ItemTypes
 
             set
             {
-                Validator.ThrowIfArgumentNull(value, nameof(Amount), Resources.InsulinInjectionAmountMandatory);
+                Validator.ThrowIfArgumentNull(value, nameof(this.Amount), Resources.InsulinInjectionAmountMandatory);
                 this.amount = value;
             }
         }
