@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 using Microsoft.HealthVault.Configuration;
 using Microsoft.HealthVault.Extensions;
 
@@ -9,7 +8,7 @@ namespace Microsoft.HealthVault.Client
     /// <summary>
     /// Factory for creating client connections to HealthVault.
     /// </summary>
-    public abstract class ClientHealthVaultFactoryBase : IClientHealthVaultFactory
+    public abstract class ConnectionHealthVaultFactoryBase : IConnectionHealthVaultFactory
     {
         private readonly object connectionLock = new object();
 

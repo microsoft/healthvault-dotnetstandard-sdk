@@ -63,7 +63,7 @@ namespace Microsoft.HealthVault.Thing
         /// </exception>
         ///
         public virtual async Task NewItemsAsync(
-            IConnectionInternal connection,
+            IHealthVaultConnection connection,
             HealthRecordAccessor accessor,
             IList<ThingBase> items)
         {
@@ -150,7 +150,7 @@ namespace Microsoft.HealthVault.Thing
         /// </exception>
         ///
         public virtual async Task UpdateItemsAsync(
-            IConnectionInternal connection,
+            IHealthVaultConnection connection,
             HealthRecordAccessor accessor,
             IList<ThingBase> itemsToUpdate)
         {
@@ -268,7 +268,7 @@ namespace Microsoft.HealthVault.Thing
         /// </exception>
         ///
         public virtual async Task RemoveItemsAsync(
-            IConnectionInternal connection,
+            IHealthVaultConnection connection,
             HealthRecordAccessor accessor,
             IList<ThingKey> itemsToRemove)
         {
@@ -326,7 +326,7 @@ namespace Microsoft.HealthVault.Thing
         /// </exception>
         ///
         public virtual async Task<ReadOnlyCollection<ThingCollection>> GetMatchingItemsAsync(
-            IConnectionInternal connection,
+            IHealthVaultConnection connection,
             HealthRecordAccessor accessor,
             HealthRecordSearcher searcher)
         {
@@ -365,7 +365,7 @@ namespace Microsoft.HealthVault.Thing
         /// </remarks>
         ///
         public virtual async Task<XmlReader> GetMatchingItemsReaderAsync(
-            IConnectionInternal connection,
+            IHealthVaultConnection connection,
             HealthRecordAccessor accessor,
             HealthRecordSearcher searcher)
         {
@@ -404,7 +404,7 @@ namespace Microsoft.HealthVault.Thing
         /// </remarks>
         ///
         public virtual async Task<XPathNavigator> GetMatchingItemsRawAsync(
-            IConnectionInternal connection,
+            IHealthVaultConnection connection,
             HealthRecordAccessor accessor,
             HealthRecordSearcher searcher)
         {
@@ -428,7 +428,7 @@ namespace Microsoft.HealthVault.Thing
         /// </exception>
         ///
         private async Task<HealthServiceResponseData> ExecuteGetThingsRequest(
-            IConnectionInternal connection,
+            IHealthVaultConnection connection,
             HealthRecordAccessor accessor,
             HealthRecordSearcher searcher)
         {
@@ -476,7 +476,7 @@ namespace Microsoft.HealthVault.Thing
         /// </exception>
         ///
         private async Task<ReadOnlyCollection<ThingCollection>> ExecuteAsync(
-            IConnectionInternal connection,
+            IHealthVaultConnection connection,
             HealthRecordAccessor accessor,
             HealthRecordSearcher searcher)
         {

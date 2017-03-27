@@ -13,7 +13,6 @@ using Microsoft.HealthVault.PlatformInformation;
 using Microsoft.HealthVault.Connection;
 using Microsoft.HealthVault.Application;
 using Microsoft.HealthVault.Person;
-using Microsoft.HealthVault.Record;
 using Microsoft.HealthVault.Thing;
 using Microsoft.HealthVault.Transport;
 
@@ -24,33 +23,38 @@ namespace Microsoft.HealthVault.Clients
     /// </summary>
     internal class PlatformClient : IPlatformClient
     {
-        public IConnectionInternal Connection { get; set; }
+        private readonly IHealthVaultConnection connection;
+
+        public PlatformClient(IHealthVaultConnection connection)
+        {
+            this.connection = connection;
+        }
 
         public Guid CorrelationId { get; set; }
 
         public Task<HealthServiceInstance> SelectInstanceAsync(Location preferredLocation)
         {
-            return HealthVaultPlatformInformation.Current.SelectInstanceAsync(this.Connection, preferredLocation);
+            return HealthVaultPlatformInformation.Current.SelectInstanceAsync(this.connection, preferredLocation);
         }
 
         public Task<ServiceInfo> GetServiceDefinitionAsync()
         {
-            return HealthVaultPlatformInformation.Current.GetServiceDefinitionAsync(this.Connection);
+            return HealthVaultPlatformInformation.Current.GetServiceDefinitionAsync(this.connection);
         }
 
         public Task<ServiceInfo> GetServiceDefinitionAsync(ServiceInfoSections responseSections)
         {
-            return HealthVaultPlatformInformation.Current.GetServiceDefinitionAsync(this.Connection, responseSections);
+            return HealthVaultPlatformInformation.Current.GetServiceDefinitionAsync(this.connection, responseSections);
         }
 
         public Task<ServiceInfo> GetServiceDefinitionAsync(DateTime lastUpdatedTime)
         {
-            return HealthVaultPlatformInformation.Current.GetServiceDefinitionAsync(this.Connection, lastUpdatedTime);
+            return HealthVaultPlatformInformation.Current.GetServiceDefinitionAsync(this.connection, lastUpdatedTime);
         }
 
         public Task<ServiceInfo> GetServiceDefinitionAsync(ServiceInfoSections responseSections, DateTime lastUpdatedTime)
         {
-            return HealthVaultPlatformInformation.Current.GetServiceDefinitionAsync(this.Connection, responseSections, lastUpdatedTime);
+            return HealthVaultPlatformInformation.Current.GetServiceDefinitionAsync(this.connection, responseSections, lastUpdatedTime);
         }
 
         public Task<IDictionary<Guid, ThingTypeDefinition>> GetHealthRecordItemTypeDefinitionAsync(
@@ -59,12 +63,12 @@ namespace Microsoft.HealthVault.Clients
             IList<string> imageTypes,
             DateTime? lastClientRefreshDate)
         {
-            return HealthVaultPlatformInformation.Current.GetHealthRecordItemTypeDefinitionAsync(typeIds, sections, imageTypes, lastClientRefreshDate, this.Connection);
+            return HealthVaultPlatformInformation.Current.GetHealthRecordItemTypeDefinitionAsync(typeIds, sections, imageTypes, lastClientRefreshDate, this.connection);
         }
 
         public async Task<ApplicationCreationInfo> NewApplicationCreationInfoAsync()
         {
-            HealthServiceResponseData responseData = await this.Connection.ExecuteAsync(HealthVaultMethods.NewApplicationCreationInfo, 1).ConfigureAwait(false);
+            HealthServiceResponseData responseData = await this.connection.ExecuteAsync(HealthVaultMethods.NewApplicationCreationInfo, 1).ConfigureAwait(false);
             return ApplicationCreationInfo.Create(responseData.InfoNavigator);
         }
 
@@ -75,12 +79,12 @@ namespace Microsoft.HealthVault.Clients
 
         public IEnumerable<Task<PersonInfo>> GetAuthorizedPeople(GetAuthorizedPeopleSettings settings)
         {
-            return HealthVaultPlatform.GetAuthorizedPeopleAsync(this.Connection, settings);
+            return HealthVaultPlatform.GetAuthorizedPeopleAsync(this.connection, settings);
         }
 
         public async Task RemoveApplicationRecordAuthorizationAsync(Guid recordId)
         {
-            await this.Connection.ExecuteAsync(HealthVaultMethods.RemoveApplicationRecordAuthorization, 1, recordId: recordId).ConfigureAwait(false);
+            await this.connection.ExecuteAsync(HealthVaultMethods.RemoveApplicationRecordAuthorization, 1, recordId: recordId).ConfigureAwait(false);
         }
     }
 }

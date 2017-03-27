@@ -26,9 +26,14 @@ namespace Microsoft.HealthVault.Clients
     /// <summary>
     /// An interface for the HealthVault thing client
     /// </summary>
-    public class ThingClient : IThingClient
+    internal class ThingClient : IThingClient
     {
-        public IConnectionInternal Connection { get; set; }
+        private readonly IHealthVaultConnection connection;
+
+        public ThingClient(IHealthVaultConnection connection)
+        {
+            this.connection = connection;
+        }
 
         public Guid CorrelationId { get; set; }
 
@@ -47,7 +52,7 @@ namespace Microsoft.HealthVault.Clients
 
             searcher.Filters.Add(query);
 
-            HealthServiceResponseData result = await this.Connection.ExecuteAsync(HealthVaultMethods.GetThings, 3, GetParametersXml(searcher));
+            HealthServiceResponseData result = await this.connection.ExecuteAsync(HealthVaultMethods.GetThings, 3, GetParametersXml(searcher));
 
             ReadOnlyCollection<ThingCollection> resultSet = ParseThings(record, result, searcher);
 
@@ -138,7 +143,7 @@ namespace Microsoft.HealthVault.Clients
                 infoXmlWriter.Flush();
             }
 
-            HealthServiceResponseData responseData = await this.Connection.ExecuteAsync(HealthVaultMethods.PutThings, 2, infoXml.ToString(), record.Id);
+            HealthServiceResponseData responseData = await this.connection.ExecuteAsync(HealthVaultMethods.PutThings, 2, infoXml.ToString(), record.Id);
 
             // Now update the Id for the new item
             XPathNodeIterator thingIds =
@@ -195,7 +200,7 @@ namespace Microsoft.HealthVault.Clients
 
             if (somethingRequiresUpdate)
             {
-                HealthServiceResponseData response = await this.Connection.ExecuteAsync(HealthVaultMethods.PutThings, 2, infoXml.ToString(), record.Id);
+                HealthServiceResponseData response = await this.connection.ExecuteAsync(HealthVaultMethods.PutThings, 2, infoXml.ToString(), record.Id);
 
                 XPathNodeIterator thingIds =
                     response.InfoNavigator.Select(
@@ -234,7 +239,7 @@ namespace Microsoft.HealthVault.Clients
                 parameters.Append("</thing-id>");
             }
 
-            await this.Connection.ExecuteAsync(HealthVaultMethods.RemoveThings, 1, parameters.ToString(), record.Id);
+            await this.connection.ExecuteAsync(HealthVaultMethods.RemoveThings, 1, parameters.ToString(), record.Id);
         }
 
         internal static string GetParametersXml(HealthRecordSearcher searcher)
@@ -312,7 +317,7 @@ namespace Microsoft.HealthVault.Clients
         {
             HealthRecordSearcher searcher = new HealthRecordSearcher(record);
             searcher.Filters.Add(query);
-            return await this.Connection.ExecuteAsync(HealthVaultMethods.GetThings, 3, GetParametersXml(searcher), record.Id);
+            return await this.connection.ExecuteAsync(HealthVaultMethods.GetThings, 3, GetParametersXml(searcher), record.Id);
         }
 
         /// <summary>

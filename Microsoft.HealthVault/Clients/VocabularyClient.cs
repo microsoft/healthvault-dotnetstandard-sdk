@@ -19,15 +19,20 @@ namespace Microsoft.HealthVault.Clients
     /// <summary>
     /// Imlementation of <seealso cref="IVocabularyClient"/>
     /// </summary>
-    public class VocabularyClient : IVocabularyClient
+    internal class VocabularyClient : IVocabularyClient
     {
-        public IConnectionInternal Connection { get; set; }
+        private readonly IHealthVaultConnection connection;
+
+        public VocabularyClient(IHealthVaultConnection connection)
+        {
+            this.connection = connection;
+        }
 
         public Guid CorrelationId { get; set; }
 
         public async Task<IReadOnlyCollection<VocabularyKey>> GetVocabularyKeysAsync()
         {
-            return await HealthVaultPlatformVocabulary.Current.GetVocabularyKeysAsync(this.Connection);
+            return await HealthVaultPlatformVocabulary.Current.GetVocabularyKeysAsync(this.connection);
         }
 
         public async Task<Vocabulary.Vocabulary> GetVocabularyAsync(string vocabularyId, bool cultureIsFixed = false)
@@ -44,14 +49,14 @@ namespace Microsoft.HealthVault.Clients
             }
 
             return await HealthVaultPlatformVocabulary.Current.GetVocabularyAsync(
-                this.Connection,
+                this.connection,
                 keys,
                 cultureIsFixed).ConfigureAwait(false);
         }
 
         public async Task<ReadOnlyCollection<VocabularyKey>> SearchVocabularyAsync(string searchValue, VocabularySearchType searchType, int? maxResults)
         {
-            return (await HealthVaultPlatformVocabulary.Current.SearchVocabularyAsync(this.Connection, null, searchValue, searchType, maxResults).ConfigureAwait(false)).MatchingKeys;
+            return (await HealthVaultPlatformVocabulary.Current.SearchVocabularyAsync(this.connection, null, searchValue, searchType, maxResults).ConfigureAwait(false)).MatchingKeys;
         }
     }
 }

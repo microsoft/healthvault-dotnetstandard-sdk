@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Threading.Tasks;
 using System.Xml;
-using System.Xml.XPath;
 using Microsoft.HealthVault.Connection;
 using Microsoft.HealthVault.Person;
-using Microsoft.HealthVault.PlatformInformation;
 
 namespace Microsoft.HealthVault.Web
 {
@@ -13,7 +11,7 @@ namespace Microsoft.HealthVault.Web
     /// </summary>
     internal class WebConnection : HealthVaultConnectionBase
     {
-        private WebConfiguration config;
+        private readonly WebConfiguration config;
 
         public WebConnection(
             IServiceLocator serviceLocator,

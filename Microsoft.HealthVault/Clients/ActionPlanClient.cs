@@ -11,9 +11,14 @@ using Microsoft.HealthVault.Connection;
 
 namespace Microsoft.HealthVault.Clients
 {
-    public class ActionPlanClient : IActionPlanClient
+    internal class ActionPlanClient : IActionPlanClient
     {
-        public IConnectionInternal Connection { get; set; }
+        private readonly IHealthVaultConnection connection;
+
+        public ActionPlanClient(IHealthVaultConnection connection)
+        {
+            this.connection = connection;
+        }
 
         public Guid CorrelationId { get; set; }
     }

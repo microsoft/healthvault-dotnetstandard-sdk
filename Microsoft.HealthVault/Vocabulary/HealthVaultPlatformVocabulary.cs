@@ -86,7 +86,7 @@ namespace Microsoft.HealthVault.Vocabulary
         /// </exception>
         ///
         public virtual async Task<ReadOnlyCollection<Vocabulary>> GetVocabularyAsync(
-            IConnectionInternal connection,
+            IHealthVaultConnection connection,
             IList<VocabularyKey> vocabularyKeys,
             bool cultureIsFixed)
         {
@@ -171,7 +171,7 @@ namespace Microsoft.HealthVault.Vocabulary
         /// A collection of keys identifying the vocabularies in the system.
         /// </returns>
         ///
-        public virtual async Task<ReadOnlyCollection<VocabularyKey>> GetVocabularyKeysAsync(IConnectionInternal connection)
+        public virtual async Task<ReadOnlyCollection<VocabularyKey>> GetVocabularyKeysAsync(IHealthVaultConnection connection)
         {
             var method = HealthVaultMethods.GetVocabulary;
             int methodVersion = 1;
@@ -272,7 +272,7 @@ namespace Microsoft.HealthVault.Vocabulary
         /// </exception>
         ///
         public virtual async Task<VocabularySearchResult> SearchVocabularyAsync(
-            IConnectionInternal connection,
+            IHealthVaultConnection connection,
             VocabularyKey vocabularyKey,
             string searchValue,
             VocabularySearchType searchType,

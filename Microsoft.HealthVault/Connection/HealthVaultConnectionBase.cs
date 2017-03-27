@@ -11,12 +11,9 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Xml;
-using System.Xml.XPath;
-using Microsoft.HealthVault.Clients;
 using Microsoft.HealthVault.Exceptions;
 using Microsoft.HealthVault.Person;
 using Microsoft.HealthVault.PlatformInformation;
-using Microsoft.HealthVault.Record;
 using Microsoft.HealthVault.Transport;
 
 namespace Microsoft.HealthVault.Connection
@@ -52,54 +49,6 @@ namespace Microsoft.HealthVault.Connection
         public abstract Task<PersonInfo> GetPersonInfoAsync();
 
         public abstract Guid ApplicationId { get; }
-
-        public TClient GetClient<TClient>()
-            where TClient : IClient
-        {
-            TClient client = this.ServiceLocator.GetInstance<TClient>();
-            client.Connection = this;
-
-            return client;
-        }
-
-        /// <summary>
-        /// A client that can be used to access information about the platform.
-        /// </summary>
-        public IPlatformClient PlatformClient => this.GetClient<IPlatformClient>();
-
-        /// <summary>
-        /// A client that can be used to access information and records associated with the currently athenticated user.
-        /// </summary>
-        public IPersonClient PersonClient => this.GetClient<IPersonClient>();
-
-        /// <summary>
-        /// A client that can be used to access vocabularies.
-        /// </summary>
-        public IVocabularyClient VocabularyClient => this.GetClient<IVocabularyClient>();
-
-        /// <summary>
-        /// Gets a client that can be used to access things associated with a particular record.
-        /// </summary>
-        /// <returns>
-        /// An instance implementing IThingClient
-        /// </returns>
-        public IThingClient GetThingClient()
-        {
-            IThingClient thingClient = this.GetClient<IThingClient>();
-            return thingClient;
-        }
-
-        /// <summary>
-        /// Gets a client that can be used to access action plans associated with a particular record
-        /// </summary>
-        /// <returns>
-        /// An instance implementing IActionPlanClient
-        /// </returns>
-        public IActionPlanClient GetActionPlanClient()
-        {
-            IActionPlanClient actionPlanClient = this.GetClient<IActionPlanClient>();
-            return actionPlanClient;
-        }
 
         public abstract Task AuthenticateAsync();
 

@@ -29,14 +29,14 @@ namespace SandboxUwp
                 MasterApplicationId = Guid.Parse("d6318dff-5352-4a10-a140-6c82c6536a3b"),
                 IsMultiRecordApp = true
             };
-            ClientHealthVaultFactory.Current.SetConfiguration(configuration);
+            ConnectionHealthVaultFactory.Current.SetConfiguration(configuration);
         }
 
         private async void Connect_OnClick(object sender, RoutedEventArgs e)
         {
             this.OutputBlock.Text = "Connecting...";
 
-            this.connection = ClientHealthVaultFactory.Current.GetConnection();
+            this.connection = ConnectionHealthVaultFactory.Current.GetConnection();
             await this.connection.AuthenticateAsync();
 
             this.OutputBlock.Text = "Connected.";
@@ -46,7 +46,7 @@ namespace SandboxUwp
         {
             PersonInfo personInfo = await this.connection.GetPersonInfoAsync();
             HealthRecordInfo recordInfo = personInfo.GetSelfRecord();
-            IThingClient thingClient = this.connection.GetThingClient();
+            IThingClient thingClient = ClientHealthVaultFactory.GetThingClient(this.connection);
 
             var bloodPressures = await thingClient.GetThingsAsync<BloodPressure>(recordInfo);
             BloodPressure firstBloodPressure = bloodPressures.FirstOrDefault();
@@ -64,7 +64,7 @@ namespace SandboxUwp
         {
             PersonInfo personInfo = await this.connection.GetPersonInfoAsync();
             HealthRecordInfo recordInfo = personInfo.GetSelfRecord();
-            IThingClient thingClient = this.connection.GetThingClient();
+            IThingClient thingClient = ClientHealthVaultFactory.GetThingClient(this.connection);
 
             await thingClient.CreateNewThingsAsync(recordInfo, new List<BloodPressure> { new BloodPressure(new HealthServiceDateTime(DateTime.Now), 117, 70) });
 

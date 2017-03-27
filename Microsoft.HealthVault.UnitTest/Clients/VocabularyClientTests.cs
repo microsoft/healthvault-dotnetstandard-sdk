@@ -24,7 +24,7 @@ namespace Microsoft.HealthVault.UnitTest.Clients
         public void InitializeTest()
         {
             this.connection = Substitute.For<IConnectionInternal>();
-            this.client = new VocabularyClient { Connection = connection };
+            this.client = new VocabularyClient(connection);
 
             var response = new HealthServiceResponseData
             {
@@ -44,7 +44,6 @@ namespace Microsoft.HealthVault.UnitTest.Clients
             var guid = Guid.NewGuid();
             this.client.CorrelationId = guid;
             Assert.IsTrue(this.client.CorrelationId == guid);
-            Assert.IsTrue(client.Connection == connection);
         }
 
         /// <summary>

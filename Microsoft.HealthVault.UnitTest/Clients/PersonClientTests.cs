@@ -1,15 +1,11 @@
 ﻿using Microsoft.HealthVault.Clients;
 using Microsoft.HealthVault.Connection;
-using Microsoft.HealthVault.Transport;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NSubstitute;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
-using System.Xml.XPath;
 using Microsoft.HealthVault.UnitTest.Samples;
 
 namespace Microsoft.HealthVault.UnitTest.Clients
@@ -24,7 +20,7 @@ namespace Microsoft.HealthVault.UnitTest.Clients
         public void InitializeTest()
         {
             connection = Substitute.For<IConnectionInternal>();
-            personClient = new PersonClient { Connection = this.connection };
+            personClient = new PersonClient(connection);
         }
 
         [TestMethod]

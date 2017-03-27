@@ -51,7 +51,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AndroidBrowserAuthBroker.cs" />
-    <Compile Include="AndroidClientHealthVaultFactory.cs" />
+    <Compile Include="AndroidConnectionHealthVaultFactory.cs" />
     <Compile Include="AndroidSecretStore.cs" />
     <Compile Include="EncryptionKeyService.cs" />
     <Compile Include="IAndroidBrowserAuthBroker.cs" />

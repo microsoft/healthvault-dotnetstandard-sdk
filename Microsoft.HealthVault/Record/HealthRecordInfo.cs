@@ -4,9 +4,7 @@
 // All other rights reserved.
 
 using System;
-using System.Collections.ObjectModel;
 using System.Text;
-using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.XPath;
 using Microsoft.HealthVault.Application;
@@ -15,7 +13,6 @@ using Microsoft.HealthVault.Exceptions;
 using Microsoft.HealthVault.Helpers;
 using Microsoft.HealthVault.Person;
 using Microsoft.HealthVault.Thing;
-using Microsoft.HealthVault.Transport;
 
 namespace Microsoft.HealthVault.Record
 {
@@ -103,7 +100,7 @@ namespace Microsoft.HealthVault.Record
         /// </exception>
         ///
         public HealthRecordInfo(
-            IConnectionInternal connection,
+            IHealthVaultConnection connection,
             Guid id)
             : base(connection, id)
         {
@@ -127,7 +124,7 @@ namespace Microsoft.HealthVault.Record
         /// The <paramref name="connection"/> parameter is <b>null</b>.
         /// </exception>
         ///
-        internal HealthRecordInfo(IConnectionInternal connection)
+        internal HealthRecordInfo(IHealthVaultConnection connection)
             : base(connection)
         {
         }
@@ -162,7 +159,7 @@ namespace Microsoft.HealthVault.Record
         /// </exception>
         ///
         public static new HealthRecordInfo CreateFromXml(
-            IConnectionInternal connection,
+            IHealthVaultConnection connection,
             XPathNavigator navigator)
         {
             Validator.ThrowIfArgumentNull(connection, nameof(connection), Resources.PersonInfoConnectionNull);

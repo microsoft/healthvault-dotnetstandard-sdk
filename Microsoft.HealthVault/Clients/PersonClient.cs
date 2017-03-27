@@ -25,19 +25,24 @@ namespace Microsoft.HealthVault.Clients
     /// <summary>
     /// A HealthVault person client. Used to access information and records associated with the currently athenticated user.
     /// </summary>
-    public class PersonClient : IPersonClient
+    internal class PersonClient : IPersonClient
     {
         private static readonly XPathExpression InfoPersonAppSettingsPath = XPathExpression.Compile("/wc:info");
         private static readonly XPathExpression InfoPersonPath = XPathExpression.Compile("/wc:info/person-info");
         private static readonly XPathExpression InfoRecordPath = XPathExpression.Compile("/wc:info/record");
 
-        public IConnectionInternal Connection { get; set; }
+        private readonly IHealthVaultConnection connection;
+
+        public PersonClient(IHealthVaultConnection connection)
+        {
+            this.connection = connection;
+        }
 
         public Guid CorrelationId { get; set; }
 
         public virtual async Task<ApplicationSettings> GetApplicationSettingsAsync()
         {
-            HealthServiceResponseData responseData = await this.Connection
+            HealthServiceResponseData responseData = await this.connection
                 .ExecuteAsync(HealthVaultMethods.GetApplicationSettings, 1, null)
                 .ConfigureAwait(false);
 
@@ -64,7 +69,7 @@ namespace Microsoft.HealthVault.Clients
 
         public virtual async Task SetApplicationSettingsAsync(string requestParameters)
         {
-            await this.Connection.ExecuteAsync(HealthVaultMethods.SetApplicationSettings, 1, requestParameters).ConfigureAwait(false);
+            await this.connection.ExecuteAsync(HealthVaultMethods.SetApplicationSettings, 1, requestParameters).ConfigureAwait(false);
         }
 
         public virtual async Task<PersonInfo> GetPersonInfoAsync()
@@ -76,7 +81,7 @@ namespace Microsoft.HealthVault.Clients
             // XPathNavigator infoNav = responseData.InfoNavigator.SelectSingleNode(personPath);
             // return PersonInfo.CreateFromXml(infoNav);
 
-            IList<PersonInfo> people = await HealthVaultPlatformApplication.Current.EnsureGetAuthorizedPeopleAsync(this.Connection, new GetAuthorizedPeopleSettings());
+            IList<PersonInfo> people = await HealthVaultPlatformApplication.Current.EnsureGetAuthorizedPeopleAsync(this.connection, new GetAuthorizedPeopleSettings());
             return people.FirstOrDefault();
         }
 
@@ -89,7 +94,7 @@ namespace Microsoft.HealthVault.Clients
                     "<id>" + id + "</id>");
             }
 
-            HealthServiceResponseData responseData = await this.Connection.ExecuteAsync(
+            HealthServiceResponseData responseData = await this.connection.ExecuteAsync(
                     HealthVaultMethods.GetAuthorizedRecords,
                     1,
                     parameters.ToString())
@@ -101,7 +106,7 @@ namespace Microsoft.HealthVault.Clients
 
             foreach (XPathNavigator recordNav in records)
             {
-                results.Add(HealthRecordInfo.CreateFromXml(this.Connection, recordNav));
+                results.Add(HealthRecordInfo.CreateFromXml(this.connection, recordNav));
             }
 
             return results;

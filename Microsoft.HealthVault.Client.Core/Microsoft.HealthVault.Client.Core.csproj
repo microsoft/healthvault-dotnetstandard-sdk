@@ -41,7 +41,7 @@
   <ItemGroup>
     <Compile Include="ClientHealthVaultConfiguration.cs" />
     <Compile Include="ClientHealthVaultConnection.cs" />
-    <Compile Include="ClientHealthVaultFactoryBase.cs" />
+    <Compile Include="ConnectionHealthVaultFactoryBase.cs" />
     <Compile Include="CoreClientIoc.cs" />
     <Compile Include="ClientResources.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -53,7 +53,7 @@
     <Compile Include="Exceptions\ShellAuthException.cs" />
     <Compile Include="IBrowserAuthBroker.cs" />
     <Compile Include="IClientHealthVaultConnection.cs" />
-    <Compile Include="IClientHealthVaultFactory.cs" />
+    <Compile Include="IConnectionHealthVaultFactory.cs" />
     <Compile Include="IClientSessionCredentialClient.cs" />
     <Compile Include="ILocalDataProtection.cs" />
     <Compile Include="ILocalObjectStore.cs" />

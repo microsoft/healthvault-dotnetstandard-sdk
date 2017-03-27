@@ -1,7 +1,5 @@
 ﻿using System;
 using Android.App;
-using Android.Content;
-using Android.Runtime;
 using Android.Views;
 using Android.Widget;
 using Android.OS;
@@ -10,8 +8,6 @@ using System.Threading.Tasks;
 using Microsoft.HealthVault.Clients;
 using Microsoft.HealthVault.ItemTypes;
 using System.Collections.Generic;
-using Microsoft.HealthVault.Record;
-using System.Collections;
 using Microsoft.HealthVault.Person;
 
 namespace SandboxAndroid
@@ -54,7 +50,7 @@ namespace SandboxAndroid
             this.createButton.Click += delegate { this.CreateBloodPressure(); };
 
             // create a configuration for our HealthVault application
-            ClientHealthVaultFactory.Current.SetConfiguration(new ClientHealthVaultConfiguration
+            ConnectionHealthVaultFactory.Current.SetConfiguration(new ClientHealthVaultConfiguration
             {
                 MasterApplicationId = Guid.Parse("cf0cb893-d411-495c-b66f-9d72b4fd2b97"),
                 DefaultHealthVaultShellUrl = new Uri("https://account.healthvault-ppe.com"),
@@ -69,7 +65,7 @@ namespace SandboxAndroid
             try
             {
                 // get a connection to HealthVault
-                this.connection = ClientHealthVaultFactory.Current.GetConnection();
+                this.connection = ConnectionHealthVaultFactory.Current.GetConnection();
                 await this.connection.AuthenticateAsync();
             }
             catch (Exception e)
@@ -78,7 +74,8 @@ namespace SandboxAndroid
             }
 
             // get a thing client
-            this.thingClient = connection.GetThingClient();
+            
+            this.thingClient = ClientHealthVaultFactory.GetThingClient(connection);
 
             PersonInfo personInfo = await this.connection.GetPersonInfoAsync();
 

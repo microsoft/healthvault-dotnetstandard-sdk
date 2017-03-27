@@ -1,12 +1,11 @@
 ﻿using System;
-using System.Threading.Tasks;
 
 namespace Microsoft.HealthVault.Client
 {
     /// <summary>
     /// Factory for creating client connections to HealthVault.
     /// </summary>
-    public interface IClientHealthVaultFactory 
+    public interface IConnectionHealthVaultFactory 
     {
         /// <summary>
         /// Sets the client configuration to use.

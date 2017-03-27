@@ -2,12 +2,12 @@
 
 namespace Microsoft.HealthVault.Client
 {
-    public class ClientHealthVaultFactory : ClientHealthVaultFactoryBase
+    public class ConnectionHealthVaultFactory : ConnectionHealthVaultFactoryBase
     {
         /// <summary>
-        /// Gets the current IClientHealthVaultFactory instance.
+        /// Gets the current IConnectionHealthVaultFactory instance.
         /// </summary>
-        public static IClientHealthVaultFactory Current
+        public static IConnectionHealthVaultFactory Current
         {
             get
             {

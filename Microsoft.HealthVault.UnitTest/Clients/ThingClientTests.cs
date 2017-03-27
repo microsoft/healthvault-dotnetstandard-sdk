@@ -1,7 +1,6 @@
 ﻿using Microsoft.HealthVault.Clients;
 using Microsoft.HealthVault.Connection;
 using Microsoft.HealthVault.Transport;
-using Microsoft.HealthVault.Vocabulary;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NSubstitute;
 using System;
@@ -11,14 +10,12 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Xml;
 using System.Xml.XPath;
 using Microsoft.HealthVault.Configuration;
 using Microsoft.HealthVault.ItemTypes;
 using Microsoft.HealthVault.Record;
 using Microsoft.HealthVault.Thing;
 using Microsoft.HealthVault.UnitTest.Samples;
-using Enumerable = System.Linq.Enumerable;
 
 namespace Microsoft.HealthVault.UnitTest.Clients
 {
@@ -50,7 +47,6 @@ namespace Microsoft.HealthVault.UnitTest.Clients
             var guid = Guid.NewGuid();
             this.client.CorrelationId = guid;
             Assert.IsTrue(this.client.CorrelationId == guid);
-            Assert.IsTrue(client.Connection == connection);
         }
 
         /// <summary>
@@ -148,10 +144,7 @@ namespace Microsoft.HealthVault.UnitTest.Clients
 
         private void initializeResponse(string sample)
         {
-            this.client = new ThingClient
-            {
-                Connection = connection,
-            };
+            this.client = new ThingClient(connection);
 
             var response = new HealthServiceResponseData
             {

@@ -42,7 +42,7 @@
     <None Include="project.json" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ClientHealthVaultFactory.cs" />
+    <Compile Include="ConnectionHealthVaultFactory.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

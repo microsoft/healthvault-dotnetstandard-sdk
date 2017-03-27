@@ -43,7 +43,7 @@ namespace Microsoft.HealthVault.Person
         /// The complete set application settings including the XML settings, selected record ID, etc.
         /// </returns>
         ///
-        public virtual async Task<ApplicationSettings> GetApplicationSettingsAsync(IConnectionInternal connection)
+        public virtual async Task<ApplicationSettings> GetApplicationSettingsAsync(IHealthVaultConnection connection)
         {
             HealthServiceResponseData responseData = await connection.ExecuteAsync(HealthVaultMethods.GetApplicationSettings, 1).ConfigureAwait(false);
 
@@ -79,7 +79,7 @@ namespace Microsoft.HealthVault.Person
         /// </remarks>
         ///
         public virtual async Task SetApplicationSettingsAsync(
-            IConnectionInternal connection,
+            IHealthVaultConnection connection,
             IXPathNavigable applicationSettings)
         {
             string requestParameters =
@@ -106,7 +106,7 @@ namespace Microsoft.HealthVault.Person
         /// </remarks>
         ///
         public virtual async Task SetApplicationSettingsAsync(
-            IConnectionInternal connection,
+            IHealthVaultConnection connection,
             string requestParameters)
         {
             await connection.ExecuteAsync(HealthVaultMethods.SetApplicationSettings, 1, requestParameters).ConfigureAwait(false);
@@ -179,7 +179,7 @@ namespace Microsoft.HealthVault.Person
         /// The HealthVault service returned an error.
         /// </exception>
         ///
-        public virtual async Task<PersonInfo> GetPersonInfoAsync(IConnectionInternal connection)
+        public virtual async Task<PersonInfo> GetPersonInfoAsync(IHealthVaultConnection connection)
         {
             HealthServiceResponseData responseData = await connection.ExecuteAsync(HealthVaultMethods.GetPersonInfo, 1).ConfigureAwait(false);
 
@@ -242,7 +242,7 @@ namespace Microsoft.HealthVault.Person
         /// </remarks>
         ///
         public virtual async Task<Collection<HealthRecordInfo>> GetAuthorizedRecordsAsync(
-            IConnectionInternal connection,
+            IHealthVaultConnection connection,
             IList<Guid> recordIds)
         {
             StringBuilder parameters = new StringBuilder(128);
