@@ -15,6 +15,11 @@ namespace Microsoft.HealthVault.Client
 
         public Task DeleteAsync(string key)
         {
+            if (string.IsNullOrEmpty(key))
+            {
+                throw new ArgumentException(Resources.ObjectStoreParametersEmpty);
+            }
+
             SecStatusCode status = SecKeyChain.Remove(this.NewSecRecordForKey(key));
 
             if (status != SecStatusCode.Success)
@@ -27,6 +32,11 @@ namespace Microsoft.HealthVault.Client
 
         public Task<string> ReadAsync(string key)
         {
+            if (string.IsNullOrEmpty(key))
+            {
+                throw new ArgumentException(Resources.ObjectStoreParametersEmpty);
+            }
+
             SecRecord record = this.ExistingSecRecordForKey(key);
 
             if (record != null)
@@ -39,6 +49,11 @@ namespace Microsoft.HealthVault.Client
 
         public Task WriteAsync(string key, string contents)
         {
+            if (string.IsNullOrEmpty(key) || contents == null)
+            {
+                throw new ArgumentException(Resources.ObjectStoreParametersEmpty);
+            }
+
             SecStatusCode status = SecStatusCode.IO;
 
             try

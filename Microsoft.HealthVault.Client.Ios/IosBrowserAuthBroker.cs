@@ -12,7 +12,7 @@ namespace Microsoft.HealthVault.Client
     {
         private readonly TaskCompletionSource<Uri> loginCompletionSource = new TaskCompletionSource<Uri>();
         private readonly AsyncLock asyncLock = new AsyncLock();
-        private readonly object taskLockObject = new Object();
+        private readonly object taskLockObject = new object();
         private SignInViewController signInViewController;
         private bool isTaskComplete = false;
         private string endUrlString;
