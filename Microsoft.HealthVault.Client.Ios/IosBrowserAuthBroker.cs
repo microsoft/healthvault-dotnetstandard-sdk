@@ -10,16 +10,16 @@ namespace Microsoft.HealthVault.Client
 {
     internal class IosBrowserAuthBroker : NSObject, IBrowserAuthBroker, ISignInNavigationHandler
     {
-        private static readonly Object taskLockObject = new Object();
-        static readonly AsyncLock asyncLock = new AsyncLock();
-        private bool isTaskComplete = false;
         private readonly TaskCompletionSource<Uri> loginCompletionSource = new TaskCompletionSource<Uri>();
-        private string endUrlString;
+        private readonly AsyncLock asyncLock = new AsyncLock();
+        private readonly object taskLockObject = new Object();
         private SignInViewController signInViewController;
+        private bool isTaskComplete = false;
+        private string endUrlString;
 
         public async Task<Uri> AuthenticateAsync(Uri startUrl, Uri endUrl)
         {
-            using (await asyncLock.LockAsync())
+            using (await asyncLock.LockAsync().ConfigureAwait(false))
             {
                 try
                 {
