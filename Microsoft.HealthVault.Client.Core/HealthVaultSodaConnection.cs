@@ -13,7 +13,7 @@ using Microsoft.HealthVault.Transport;
 
 namespace Microsoft.HealthVault.Client
 {
-    internal class ClientHealthVaultConnection : HealthVaultConnectionBase, IClientHealthVaultConnection
+    internal class HealthVaultSodaConnection : HealthVaultConnectionBase, IHealthVaultSodaConnection
     {
         private const string ServiceInstanceKey = "ServiceInstance";
         private const string ApplicationCreationInfoKey = "ApplicationCreationInfo";
@@ -28,7 +28,7 @@ namespace Microsoft.HealthVault.Client
 
         private PersonInfo personInfo;
 
-        public ClientHealthVaultConnection(IServiceLocator serviceLocator, ILocalObjectStore localObjectStore, IShellAuthService shellAuthService, ClientHealthVaultConfiguration clientHealthVaultConfiguration)
+        public HealthVaultSodaConnection(IServiceLocator serviceLocator, ILocalObjectStore localObjectStore, IShellAuthService shellAuthService, ClientHealthVaultConfiguration clientHealthVaultConfiguration)
             : base(serviceLocator)
         {
             this.localObjectStore = localObjectStore;

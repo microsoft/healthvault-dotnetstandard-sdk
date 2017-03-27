@@ -1,14 +1,14 @@
 ﻿namespace Microsoft.HealthVault.Client
 {
-    public class ConnectionHealthVaultFactory : ConnectionHealthVaultFactoryBase
+    public class HealthVaultConnectionFactory : HealthVaultConnectionFactoryBase
     {
         private static readonly object InstanceLock = new object();
-        private static IConnectionHealthVaultFactory current;
+        private static IHealthVaultConnectionFactory current;
 
         /// <summary>
-        /// Gets the current IConnectionHealthVaultFactory instance.
+        /// Gets the current factory instance.
         /// </summary>
-        public static IConnectionHealthVaultFactory Current
+        public static IHealthVaultConnectionFactory Current
         {
             get
             {
@@ -17,7 +17,7 @@
                     if (current == null)
                     {
                         ClientIoc.EnsureTypesRegistered();
-                        current = new ConnectionHealthVaultFactory();
+                        current = new HealthVaultConnectionFactory();
                     }
 
                     return current;

@@ -15,7 +15,7 @@ namespace SandboxAndroid
     [Activity(Label = "SandboxAndroid", MainLauncher = true, Icon = "@drawable/icon")]
     public class MainActivity : Activity
     {
-        private IClientHealthVaultConnection connection;
+        private IHealthVaultSodaConnection connection;
         private IThingClient thingClient;
 
         TextView statusView;
@@ -50,7 +50,7 @@ namespace SandboxAndroid
             this.createButton.Click += delegate { this.CreateBloodPressure(); };
 
             // create a configuration for our HealthVault application
-            ConnectionHealthVaultFactory.Current.SetConfiguration(new ClientHealthVaultConfiguration
+            HealthVaultConnectionFactory.Current.SetConfiguration(new ClientHealthVaultConfiguration
             {
                 MasterApplicationId = Guid.Parse("cf0cb893-d411-495c-b66f-9d72b4fd2b97"),
                 DefaultHealthVaultShellUrl = new Uri("https://account.healthvault-ppe.com"),
@@ -65,7 +65,7 @@ namespace SandboxAndroid
             try
             {
                 // get a connection to HealthVault
-                this.connection = ConnectionHealthVaultFactory.Current.GetConnection();
+                this.connection = HealthVaultConnectionFactory.Current.GetSodaConnection();
                 await this.connection.AuthenticateAsync();
             }
             catch (Exception e)

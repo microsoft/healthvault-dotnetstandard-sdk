@@ -6,7 +6,7 @@ namespace Microsoft.HealthVault.Client
     /// <summary>
     /// A client connection to HealthVault.
     /// </summary>
-    public interface IClientHealthVaultConnection : IHealthVaultConnection
+    public interface IHealthVaultSodaConnection : IHealthVaultConnection
     {
         /// <summary>
         /// Prompt the user to authorize additional records for use in this app.

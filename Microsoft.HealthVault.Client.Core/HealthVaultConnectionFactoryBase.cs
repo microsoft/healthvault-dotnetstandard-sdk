@@ -8,11 +8,11 @@ namespace Microsoft.HealthVault.Client
     /// <summary>
     /// Factory for creating client connections to HealthVault.
     /// </summary>
-    public abstract class ConnectionHealthVaultFactoryBase : IConnectionHealthVaultFactory
+    public abstract class HealthVaultConnectionFactoryBase : IHealthVaultConnectionFactory
     {
         private readonly object connectionLock = new object();
 
-        private IClientHealthVaultConnection cachedConnection;
+        private IHealthVaultSodaConnection cachedConnection;
 
         private ClientHealthVaultConfiguration healthVaultConfiguration;
 
@@ -22,7 +22,7 @@ namespace Microsoft.HealthVault.Client
         /// Sets the configuration used to create connections.
         /// </summary>
         /// <exception cref="InvalidOperationException">
-        /// If <see cref="GetConnection"/> has been called already.
+        /// If <see cref="GetSodaConnection"/> has been called already.
         /// </exception>
         public void SetConfiguration(ClientHealthVaultConfiguration clientHealthVaultConfiguration)
         {
@@ -31,12 +31,12 @@ namespace Microsoft.HealthVault.Client
         }
 
         /// <summary>
-        /// Gets an <see cref="IClientHealthVaultConnection"/> used to connect to HealthVault.
+        /// Gets an <see cref="IHealthVaultSodaConnection"/> used to connect to HealthVault.
         /// </summary>
         /// <exception cref="InvalidOperationException">
         /// If called before calling <see cref="SetConfiguration(ClientHealthVaultConfiguration)"/>.
         /// </exception>
-        public IClientHealthVaultConnection GetConnection()
+        public IHealthVaultSodaConnection GetSodaConnection()
         {
             this.connectionState.MarkConnectionCalled();
 
@@ -50,7 +50,7 @@ namespace Microsoft.HealthVault.Client
                 if (this.healthVaultConfiguration == null)
                 {
                     throw new InvalidOperationException(Resources.CannotCallMethodBefore.FormatResource(
-                        nameof(this.GetConnection),
+                        nameof(this.GetSodaConnection),
                         nameof(this.SetConfiguration)));
                 }
 
@@ -73,7 +73,7 @@ namespace Microsoft.HealthVault.Client
                 Ioc.Container.Configure(c => c.ExportInstance(this.healthVaultConfiguration).As<ClientHealthVaultConfiguration>());
                 Ioc.Container.Configure(c => c.ExportInstance(this.healthVaultConfiguration).As<HealthVaultConfiguration>());
 
-                ClientHealthVaultConnection newConnection = Ioc.Get<ClientHealthVaultConnection>();
+                HealthVaultSodaConnection newConnection = Ioc.Get<HealthVaultSodaConnection>();
 
                 this.cachedConnection = newConnection;
                 return newConnection;

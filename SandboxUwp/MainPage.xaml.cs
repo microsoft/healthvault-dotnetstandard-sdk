@@ -18,7 +18,7 @@ namespace SandboxUwp
     /// </summary>
     public sealed partial class MainPage : Page
     {
-        private IClientHealthVaultConnection connection;
+        private IHealthVaultSodaConnection connection;
 
         public MainPage()
         {
@@ -29,14 +29,14 @@ namespace SandboxUwp
                 MasterApplicationId = Guid.Parse("d6318dff-5352-4a10-a140-6c82c6536a3b"),
                 IsMultiRecordApp = true
             };
-            ConnectionHealthVaultFactory.Current.SetConfiguration(configuration);
+            HealthVaultConnectionFactory.Current.SetConfiguration(configuration);
         }
 
         private async void Connect_OnClick(object sender, RoutedEventArgs e)
         {
             this.OutputBlock.Text = "Connecting...";
 
-            this.connection = ConnectionHealthVaultFactory.Current.GetConnection();
+            this.connection = HealthVaultConnectionFactory.Current.GetSodaConnection();
             await this.connection.AuthenticateAsync();
 
             this.OutputBlock.Text = "Connected.";
