@@ -41,7 +41,7 @@ namespace Microsoft.HealthVault.Client
 
             if (record != null)
             {
-                 Task.FromResult(this.ExistingSecRecordForKey(key).ValueData.ToString());
+                 return Task.FromResult(this.ExistingSecRecordForKey(key).ValueData.ToString());
             }
 
             return Task.FromResult<string>(null);

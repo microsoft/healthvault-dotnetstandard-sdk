@@ -25,7 +25,7 @@ namespace Microsoft.HealthVault.Client
                 {
                     this.endUrlString = endUrl.AbsoluteUri;
 
-                    InvokeOnMainThread(() =>
+                    BeginInvokeOnMainThread(() =>
                     {
                         signInViewController = new SignInViewController(this, startUrl.AbsoluteUri);
                         IUIApplicationDelegate appDelegate = UIApplication.SharedApplication.Delegate;
@@ -34,13 +34,13 @@ namespace Microsoft.HealthVault.Client
                         rootViewController.PresentViewController(signInViewController, true, null);
                     });
 
-                    Uri loginUri = await this.loginCompletionSource.Task;
+                    Uri loginUri = await this.loginCompletionSource.Task.ConfigureAwait(false);
 
                     return loginUri;
                 }
                 finally
                 {
-                    InvokeOnMainThread(() =>
+                    BeginInvokeOnMainThread(() =>
                     {
                         signInViewController.DismissViewController(false, null);
                     });

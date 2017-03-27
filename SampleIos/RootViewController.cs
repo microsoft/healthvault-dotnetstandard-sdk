@@ -19,24 +19,34 @@ namespace SampleIos
         public override void DidReceiveMemoryWarning()
         {
             base.DidReceiveMemoryWarning();
-
-            // Release any cached data, images, etc that aren't in use.
         }
 
         public override void ViewDidLoad()
         {
             base.ViewDidLoad();
 
-            // Perform any additional setup after loading the view, typically from a nib.
+            this.statusLabel.Text = "Status: Not Connected";
         }
 
         partial void ConnectButtonPressed()
         {
-            this.ConnectToHealthVaultAsync();
+            this.connectButton.Enabled = false;
+
+            if (this.connection == null)
+            {
+                this.ConnectToHealthVaultAsync();
+            }
+            else
+            {
+                this.DisconnectFromHealthVaultAsync();
+            }
         }
 
         private async Task ConnectToHealthVaultAsync()
         {
+            this.activityIndicator.StartAnimating();
+            this.statusLabel.Text = "Connecting. Please wait.";
+
             try
             {
                 ClientHealthVaultFactory.Current.SetConfiguration(new ClientHealthVaultConfiguration
@@ -48,12 +58,21 @@ namespace SampleIos
 
                 this.connection = await ClientHealthVaultFactory.Current.GetConnectionAsync();
 
-                //this.statusView.Text = $"Hello {this.connection.PersonInfo.Name}";
+                this.connectButton.Enabled = true;
+                this.connectButton.SetTitle("Disconnect", UIControlState.Normal);
+                this.activityIndicator.StopAnimating();
+
+                this.statusLabel.Text = $"Hello {this.connection.PersonInfo.Name}";
             }
             catch (Exception e)
             {
-                var x = e;
+                this.statusLabel.Text = $"Error connecting... {e.ToString()}";
             }
+        }
+
+        private async Task DisconnectFromHealthVaultAsync()
+        {
+
         }
     }
 }

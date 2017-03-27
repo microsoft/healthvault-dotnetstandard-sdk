@@ -157,8 +157,8 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <InterfaceDefinition Include="Resources\LaunchScreen.xib" />
     <Content Include="Entitlements.plist" />
-    <InterfaceDefinition Include="RootViewController.xib" />
     <None Include="packages.config" />
+    <InterfaceDefinition Include="RootViewController.xib" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Grace, Version=5.1.0.0, Culture=neutral, processorArchitecture=MSIL">
