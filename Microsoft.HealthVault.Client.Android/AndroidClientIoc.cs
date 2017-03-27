@@ -3,6 +3,7 @@ using System.Reflection;
 using System.Text.RegularExpressions;
 using Android.OS;
 using Grace.DependencyInjection;
+using Microsoft.HealthVault.Connection;
 using Microsoft.HealthVault.Extensions;
 
 namespace Microsoft.HealthVault.Client
@@ -23,6 +24,7 @@ namespace Microsoft.HealthVault.Client
 			
             container.RegisterSingleton<ISecretStore, AndroidSecretStore>();
             container.RegisterSingleton<IEncryptionKeyService, EncryptionKeyService>();
+            container.RegisterSingleton<IMessageHandlerFactory, AndroidMessageHandlerFactory>();
 
             RegisterTelemetryInformation(container);
         }

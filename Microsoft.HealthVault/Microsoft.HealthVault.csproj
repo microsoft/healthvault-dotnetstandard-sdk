@@ -51,6 +51,8 @@
     <Compile Include="AsyncEnumerable.cs" />
     <Compile Include="AsyncLock.cs" />
     <Compile Include="Clients\ClientHealthVaultFactory.cs" />
+    <Compile Include="Connection\MessageHandlerFactory.cs" />
+    <Compile Include="Connection\IMessageHandlerFactory.cs" />
     <Compile Include="Cryptographer.cs" />
     <Compile Include="Exceptions\CryptographicUnexpectedOperationException.cs" />
     <Compile Include="Exceptions\HealthRecordNotFoundException.cs" />

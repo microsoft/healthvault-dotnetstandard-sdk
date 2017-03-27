@@ -40,8 +40,17 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
+    <Reference Include="ModernHttpClient, Version=2.4.2.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\modernhttpclient.2.4.2\lib\MonoAndroid\ModernHttpClient.dll</HintPath>
+    </Reference>
     <Reference Include="Mono.Android" />
     <Reference Include="mscorlib" />
+    <Reference Include="Newtonsoft.Json, Version=9.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\Newtonsoft.Json.9.0.1\lib\portable-net45+wp80+win8+wpa81\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="OkHttp, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\modernhttpclient.2.4.2\lib\MonoAndroid\OkHttp.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.IO.Compression" />
@@ -52,6 +61,7 @@
   <ItemGroup>
     <Compile Include="AndroidBrowserAuthBroker.cs" />
     <Compile Include="AndroidConnectionHealthVaultFactory.cs" />
+    <Compile Include="AndroidMessageHandlerFactory.cs" />
     <Compile Include="AndroidSecretStore.cs" />
     <Compile Include="EncryptionKeyService.cs" />
     <Compile Include="IAndroidBrowserAuthBroker.cs" />
@@ -72,10 +82,6 @@
     <ProjectReference Include="..\Microsoft.HealthVault.Client.Core\Microsoft.HealthVault.Client.Core.csproj">
       <Project>{5c7ec9d4-88b9-4ea2-bea1-3bf3f17858b4}</Project>
       <Name>Microsoft.HealthVault.Client.Core</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Microsoft.HealthVault\Microsoft.HealthVault.csproj">
-      <Project>{dbe2ba67-dbc3-479e-a374-1ce5ee33c453}</Project>
-      <Name>Microsoft.HealthVault</Name>
     </ProjectReference>
     <ProjectReference Include="..\Microsoft.HealthVault\Microsoft.HealthVault.csproj">
       <Project>{dbe2ba67-dbc3-479e-a374-1ce5ee33c453}</Project>
