@@ -178,18 +178,7 @@ namespace Microsoft.HealthVault.Thing
         /// The <paramref name="value"/> parameter is <b>null</b> or empty.
         /// </exception>
         ///
-        public string Name
-        {
-            get { return this.name; }
-
-            set
-            {
-                Validator.ThrowIfStringNullOrEmpty(value, "Name");
-                this.name = value;
-            }
-        }
-
-        private string name;
+        public string Name { get; set; }
 
         /// <summary>
         /// Gets or sets the maximum number of things to return.

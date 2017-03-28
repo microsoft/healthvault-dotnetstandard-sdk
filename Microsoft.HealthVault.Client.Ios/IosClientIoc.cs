@@ -7,7 +7,7 @@ using UIKit;
 
 namespace Microsoft.HealthVault.Client
 {
-    class ClientIoc
+    internal static class ClientIoc
     {
         internal static void EnsureTypesRegistered()
         {

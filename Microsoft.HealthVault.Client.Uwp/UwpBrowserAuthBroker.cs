@@ -8,7 +8,7 @@ namespace Microsoft.HealthVault.Client
     /// <summary>
     /// The Uwp implementation of IBrowserAuthBroker
     /// </summary>
-    public class UwpBrowserAuthBroker : IBrowserAuthBroker
+    internal class UwpBrowserAuthBroker : IBrowserAuthBroker
     {
         public async Task<Uri> AuthenticateAsync(Uri startUrl, Uri stopUrlPrefix)
         {

@@ -46,7 +46,7 @@ namespace Microsoft.HealthVault.Clients
             HealthRecordAccessor accessor = new HealthRecordAccessor(this.connection, recordId);
             HealthRecordSearcher searcher = new HealthRecordSearcher(accessor);
 
-            ThingQuery query = new ThingQuery(Guid.NewGuid().ToString());
+            ThingQuery query = new ThingQuery();
             query.ItemIds.Add(thingId);
             query.View.Sections = ThingSections.Default;
             query.CurrentVersionOnly = true;
@@ -102,7 +102,7 @@ namespace Microsoft.HealthVault.Clients
 
             // Ensure that we have a query that requests the correct type
             T thing = (T)Activator.CreateInstance(typeof(T));
-            query = query ?? new ThingQuery(Guid.NewGuid().ToString());
+            query = query ?? new ThingQuery();
             query.TypeIds.Clear();
             query.TypeIds.Add(thing.TypeId);
 
