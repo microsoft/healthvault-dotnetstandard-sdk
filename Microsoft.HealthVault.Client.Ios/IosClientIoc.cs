@@ -1,6 +1,7 @@
 ﻿using System.Diagnostics;
 using System.Reflection;
 using Grace.DependencyInjection;
+using Microsoft.HealthVault.Connection;
 using Microsoft.HealthVault.Extensions;
 using UIKit;
 
@@ -21,6 +22,7 @@ namespace Microsoft.HealthVault.Client
             container.Configure(c => c.ExportInstance(authBroker).As<IBrowserAuthBroker>());
 
             container.RegisterSingleton<ISecretStore, IosSecretStore>();
+            container.RegisterSingleton<IMessageHandlerFactory, IosMessageHandlerFactory>();
 
             RegisterTelemetryInformation(container);
         }
