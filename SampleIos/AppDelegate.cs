@@ -21,7 +21,7 @@ namespace SampleIos
     public override bool FinishedLaunching(UIApplication application, NSDictionary launchOptions)
         {
             // Configure HealthHault
-            ClientHealthVaultFactory.Current.SetConfiguration(new ClientHealthVaultConfiguration
+            HealthVaultConnectionFactory.Current.SetConfiguration(new ClientHealthVaultConfiguration
             {
                 MasterApplicationId = Guid.Parse("cf0cb893-d411-495c-b66f-9d72b4fd2b97"),
                 DefaultHealthVaultShellUrl = new Uri("https://account.healthvault-ppe.com"),

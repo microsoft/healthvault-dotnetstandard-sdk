@@ -11,7 +11,7 @@ namespace SampleIos
 {
     public partial class RootViewController : UIViewController
     {
-        private IClientHealthVaultConnection connection;
+        private IHealthVaultSodaConnection connection;
         private IThingClient thingClient;
 
         public RootViewController() :
@@ -52,10 +52,10 @@ namespace SampleIos
 
             try
             {
-                this.connection = ClientHealthVaultFactory.Current.GetConnection();
+                this.connection = HealthVaultConnectionFactory.Current.GetSodaConnection();
                 await this.connection.AuthenticateAsync();
 
-                this.thingClient = connection.GetThingClient();
+                this.thingClient = ClientHealthVaultFactory.GetThingClient(this.connection);
                 PersonInfo personInfo = await this.connection.GetPersonInfoAsync();
 
                 this.connectButton.SetTitle("Disconnect", UIControlState.Normal);

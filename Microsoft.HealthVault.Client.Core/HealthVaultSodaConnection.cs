@@ -104,13 +104,13 @@ namespace Microsoft.HealthVault.Client
                     this.SessionCredential != null &&
                     this.personInfo != null)
                 {
-					var platformClient = ClientHealthVaultFactory.GetPlatformClient(this);
-				
+                    var platformClient = ClientHealthVaultFactory.GetPlatformClient(this);
+
                     foreach (HealthRecordInfo record in this.personInfo.AuthorizedRecords.Values)
                     {
                         try
                         {
-                        	await platformClient.RemoveApplicationRecordAuthorizationAsync(record.Id).ConfigureAwait(false);
+                            await platformClient.RemoveApplicationRecordAuthorizationAsync(record.Id).ConfigureAwait(false);
                         }
                         catch (Exception)
                         {
