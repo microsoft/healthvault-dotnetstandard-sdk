@@ -15,6 +15,8 @@ using System.Runtime.CompilerServices;
 [assembly: AssemblyCulture("")]
 [assembly: NeutralResourcesLanguage("en")]
 [assembly: InternalsVisibleTo("Microsoft.HealthVault.Client")]
+[assembly: InternalsVisibleTo("Microsoft.HealthVault.UnitTest")]
+[assembly: InternalsVisibleTo("DynamicProxyGenAssembly2")]
 
 // Version information for an assembly consists of the following four values:
 //

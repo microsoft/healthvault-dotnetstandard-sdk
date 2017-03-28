@@ -59,7 +59,7 @@ namespace Microsoft.HealthVault.Client
                 Guid masterApplicationId = this.healthVaultConfiguration.MasterApplicationId;
                 if (masterApplicationId == Guid.Empty)
                 {
-                    missingProperties.Add(nameof(masterApplicationId));
+                    missingProperties.Add(nameof(this.healthVaultConfiguration.MasterApplicationId));
                 }
 
                 if (missingProperties.Count > 0)

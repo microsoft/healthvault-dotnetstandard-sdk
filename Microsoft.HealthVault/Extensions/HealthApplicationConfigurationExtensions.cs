@@ -12,9 +12,9 @@ using Microsoft.HealthVault.Configuration;
 namespace Microsoft.HealthVault.Extensions
 {
     /// <summary>
-    /// Extension methods for IConfiguration.
+    /// Extension methods for HealthVaultConfiguration.
     /// </summary>
-    internal static class HealthApplicationConfigurationExtensions
+    internal static class HealthVaultConfigurationExtensions
     {
         /// <summary>
         /// Gets the HealthVault client service URL for

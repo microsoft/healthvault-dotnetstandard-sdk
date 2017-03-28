@@ -21,8 +21,7 @@ namespace Microsoft.HealthVault.Client
         /// </summary>
         /// <returns>A connection to access HealthVault.</returns>
         /// <exception cref="InvalidOperationException">Thrown when called before calling <see cref="SetConfiguration"/> with required values.</exception>
-        /// <remarks>This will perform any authentication needed to create the connection, including
-        /// opening a web browser to prompt for credentials/consent.</remarks>
+        /// <remarks>This will not perform any authentication. Authentication happens on the first call to AuthenticateAsync or when the first method is called.</remarks>
         IHealthVaultSodaConnection GetSodaConnection();
     }
 }
