@@ -370,7 +370,7 @@ namespace Microsoft.HealthVault.ItemTypes
 
             set
             {
-                // The following if statements cannot be combined with && becuase
+                // The following if statements cannot be combined with && because
                 // it would throw an exception if value == null.
                 if (value != null)
                 {

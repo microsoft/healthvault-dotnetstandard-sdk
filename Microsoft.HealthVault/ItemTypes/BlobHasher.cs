@@ -23,7 +23,7 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <summary>
         /// Constructs the BlobHasher for calculating BLOB hashes.
         /// </summary>
-        /// <param name="algorithm">The algorith to use to calculate the blob hasher</param>
+        /// <param name="algorithm">The algorithm to use to calculate the blob hasher</param>
         /// <param name="blockSize">The block size to use in bytes</param>
         ///
         /// <exception cref="ArgumentException">

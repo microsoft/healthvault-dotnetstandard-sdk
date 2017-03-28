@@ -135,7 +135,7 @@
   </data>
   <data name="FileAccessErrorMessage" xml:space="preserve">
     <value>An error occurred while attempting to {0} file: {1}</value>
-    <comment>{NumberedPlaceholder="{0}","{1}"}, Error message thrown when an error occured during file IO.
+    <comment>{NumberedPlaceholder="{0}","{1}"}, Error message thrown when an error occurred during file IO.
 %0 - The attempted action.  e.g., read, write, or delete
 %1 - The name of the file</comment>
   </data>

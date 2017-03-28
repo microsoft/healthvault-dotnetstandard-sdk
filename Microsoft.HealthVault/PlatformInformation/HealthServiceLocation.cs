@@ -26,7 +26,7 @@ namespace Microsoft.HealthVault.PlatformInformation
         /// </summary>
         ///
         /// <param name="redirectParameters">
-        /// Parameters used to contruct the redirect URL.
+        /// Parameters used to construct the redirect URL.
         /// </param>
         /// <returns>
         /// The constructed URL.

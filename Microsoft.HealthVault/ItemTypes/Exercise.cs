@@ -131,7 +131,7 @@ namespace Microsoft.HealthVault.ItemTypes
         /// </summary>
         ///
         /// <param name="writer">
-        /// The XmlWriter to write the exericse data to.
+        /// The XmlWriter to write the exercise data to.
         /// </param>
         ///
         /// <exception cref="ArgumentNullException">

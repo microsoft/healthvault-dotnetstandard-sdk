@@ -12,7 +12,7 @@ using Microsoft.HealthVault.Helpers;
 namespace Microsoft.HealthVault.ItemTypes
 {
     /// <summary>
-    /// Encapsulates the the details of PAP session measurements.
+    /// Encapsulates the details of PAP session measurements.
     /// </summary>
     /// <typeparam name="T">The type of the measurement.</typeparam>
     ///
@@ -43,7 +43,7 @@ namespace Microsoft.HealthVault.ItemTypes
         }
 
         /// <summary>
-        /// Writes the XML representation of the PAP session measurments into
+        /// Writes the XML representation of the PAP session measurements into
         /// the specified XML writer.
         /// </summary>
         ///

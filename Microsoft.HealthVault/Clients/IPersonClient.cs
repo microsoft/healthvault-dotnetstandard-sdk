@@ -18,7 +18,7 @@ using Microsoft.HealthVault.Record;
 namespace Microsoft.HealthVault.Clients
 {
     /// <summary>
-    /// An interface for the HealthVault person client. Used to access information and records associated with the currently athenticated user.
+    /// An interface for the HealthVault person client. Used to access information and records associated with the currently authenticated user.
     /// </summary>
     public interface IPersonClient : IClient
     {

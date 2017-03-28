@@ -380,7 +380,7 @@ namespace Microsoft.HealthVault.ItemTypes
         /// </summary>
         ///
         /// <returns>
-        /// A string representation fo the aerobic profile item.
+        /// A string representation for the aerobic profile item.
         /// </returns>
         ///
         public override string ToString()

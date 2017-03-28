@@ -72,7 +72,7 @@ namespace Microsoft.HealthVault.Transport
         InvalidApp = 6,
 
         /// <summary>
-        /// credntial token has expired, need a new one.
+        /// credential token has expired, need a new one.
         /// </summary>
         ///
         CredentialTokenExpired = 7,
@@ -216,7 +216,7 @@ namespace Microsoft.HealthVault.Transport
         InvalidContactEmail = 30,
 
         /// <summary>
-        /// Invalid logon name.
+        /// Invalid login name.
         /// </summary>
         ///
         InvalidLogOnName = 31,
@@ -800,7 +800,7 @@ namespace Microsoft.HealthVault.Transport
         InvalidDirectoryState = 128,
 
         /// <summary>
-        /// The vocbulary authorization is invalid.
+        /// The vocabulary authorization is invalid.
         /// </summary>
         InvalidVocabularyAuthorization = 129,
 

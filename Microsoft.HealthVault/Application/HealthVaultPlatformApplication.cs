@@ -113,7 +113,7 @@ namespace Microsoft.HealthVault.Application
         }
 
         /// <summary>
-        /// Ensures all the authozed people for the application are returned
+        /// Ensures all the authorized people for the application are returned
         /// </summary>
         ///
         /// <param name="connection">Connection</param>

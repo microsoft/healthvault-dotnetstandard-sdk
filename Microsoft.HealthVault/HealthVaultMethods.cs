@@ -217,7 +217,7 @@ namespace Microsoft.HealthVault
         SetApplicationSettings,
 
         /// <summary>
-        /// Subscripe to an event.
+        /// Subscribe to an event.
         /// </summary>
         SubscribeToEvent,
 

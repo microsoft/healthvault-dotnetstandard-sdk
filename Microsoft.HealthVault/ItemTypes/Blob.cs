@@ -585,7 +585,7 @@ namespace Microsoft.HealthVault.ItemTypes
         /// </remarks>
         ///
         /// <exception cref="NotSupportedException">
-        /// If the Blob was retieved inline or the Blob was created for writing.
+        /// If the Blob was retrieved inline or the Blob was created for writing.
         /// </exception>
         ///
         public Uri Url { get; internal set; }

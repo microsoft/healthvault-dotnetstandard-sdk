@@ -88,7 +88,7 @@ namespace Microsoft.HealthVault.Person
         /// The default value is <see cref="Guid.Empty" />.
         /// <br/><br/>
         /// In case of a <see cref="HealthServiceException" /> while iterating through the results,
-        /// the last successfully retrieved person id can be specified for this value and and used
+        /// the last successfully retrieved person id can be specified for this value and used
         /// to retrieve a new iterator with
         /// <see cref="Microsoft.HealthVault.Clients.IPlatformClient.GetAuthorizedPeople(GetAuthorizedPeopleSettings)"/>.
         /// The new iterator will begin with the authorized person that follows the last successfully retrieved PersonInfo.

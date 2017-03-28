@@ -12,7 +12,7 @@ using Microsoft.HealthVault.Thing;
 namespace Microsoft.HealthVault.ItemTypes
 {
     /// <summary>
-    /// Stores suggested calorie intak guidelines.
+    /// Stores suggested calorie intake guidelines.
     /// </summary>
     ///
     public class CalorieGuideline : ThingBase
@@ -45,7 +45,7 @@ namespace Microsoft.HealthVault.ItemTypes
         /// </param>
         ///
         /// <param name="name">
-        /// The name definies the guideline.
+        /// The name defines the guideline.
         /// </param>
         ///
         /// <param name="calories">
@@ -85,7 +85,7 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         /// <exception cref="InvalidOperationException">
         /// If the first node in <paramref name="typeSpecificXml"/> is not
-        /// a "carolie-guideline" node.
+        /// a "calorie-guideline" node.
         /// </exception>
         ///
         protected override void ParseXml(IXPathNavigable typeSpecificXml)

@@ -289,7 +289,7 @@ namespace Microsoft.HealthVault.Record
         /// Applications then need a away to query for valid group memberships.
         /// <br/>
         /// Valid group memberships are those memberships which are not expired, and whose
-        /// last updating application is authorized by the the last updating person to
+        /// last updating application is authorized by the last updating person to
         /// read and delete the membership.
         /// </remarks>
         /// <param name="connection">

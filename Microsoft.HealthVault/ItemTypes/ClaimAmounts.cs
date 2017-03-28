@@ -245,7 +245,7 @@ namespace Microsoft.HealthVault.ItemTypes
         private decimal eligibleForBenefits;
 
         /// <summary>
-        /// Gets or sets the percentage of the eligable amount that is covered by the payer.
+        /// Gets or sets the percentage of the eligible amount that is covered by the payer.
         /// </summary>
         ///
         /// <remarks>

@@ -85,8 +85,8 @@ namespace Microsoft.HealthVault.ItemTypes
             // <name>
             writer.WriteElementString("name", this.name);
 
-            // <attributon-required>
-            XmlWriterHelper.WriteOptBool(writer, "attributon-required", this.attributionRequired);
+            // <attribution-required>
+            XmlWriterHelper.WriteOptBool(writer, "attribution-required", this.attributionRequired);
 
             writer.WriteEndElement();
         }

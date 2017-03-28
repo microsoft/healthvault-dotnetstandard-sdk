@@ -739,7 +739,7 @@ namespace Microsoft.HealthVault.Transport
             get
             {
                 // We can't return null - we use the return value for setting
-                // xml element's innter text - we'd have to do the value check
+                // xml element's inner text - we'd have to do the value check
                 // in several places in the code...
                 return this.parameters ?? (this.parameters = string.Empty);
             }

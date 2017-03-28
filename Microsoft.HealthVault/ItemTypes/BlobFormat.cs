@@ -26,7 +26,7 @@ namespace Microsoft.HealthVault.ItemTypes
         Information,
 
         /// <summary>
-        /// The BLOB informat and data is returned inline with the response XML.
+        /// The BLOB information and data is returned inline with the response XML.
         /// </summary>
         ///
         Inline,

@@ -1084,7 +1084,7 @@ namespace Microsoft.HealthVault.ItemTypes
         private Length elevationGain;
 
         /// <summary>
-        /// Gets or sets the elevation lossed, in meters, during the session.
+        /// Gets or sets the elevation loss, in meters, during the session.
         /// </summary>
         ///
         /// <remarks>

@@ -34,7 +34,7 @@ namespace Microsoft.HealthVault.ItemTypes
     ///  result: the result of the test.
     ///  assay id: platform dependent probe set id.
     ///  start position: start position on the chromosome.
-    ///  end posiition: end position on the chromosome.
+    ///  end position: end position on the chromosome.
     ///
     /// Example: rs1891906,-,GT, SNP_C-315533, 940106, 940107
     ///

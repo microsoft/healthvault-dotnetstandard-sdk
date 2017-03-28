@@ -124,8 +124,8 @@ namespace Microsoft.HealthVault.Thing
         /// </summary>
         ///
         /// <param name="disposing">
-        /// true to release both managed and unmanaged resoures; false to release only unmanaged
-        /// resoureces.
+        /// true to release both managed and unmanaged resources; false to release only unmanaged
+        /// resources.
         /// </param>
         ///
         /// <exception cref="InvalidOperationException">
@@ -454,7 +454,7 @@ namespace Microsoft.HealthVault.Thing
         /// </summary>
         ///
         /// <param name="offset">
-        /// A byte offset releative to the <paramref name="origin"/> parameter.
+        /// A byte offset relative to the <paramref name="origin"/> parameter.
         /// </param>
         ///
         /// <param name="origin">
@@ -763,7 +763,7 @@ namespace Microsoft.HealthVault.Thing
         /// </exception>
         ///
         /// <exception cref="ObjectDisposedException">
-        /// Methods were called after the stram was closed.
+        /// Methods were called after the stream was closed.
         /// </exception>
         ///
         /// <exception cref="HealthServiceException">

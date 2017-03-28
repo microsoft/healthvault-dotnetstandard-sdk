@@ -19,7 +19,7 @@ namespace Microsoft.HealthVault.ItemTypes
     /// </summary>
     ///
     /// <remarks>
-    /// Application specific data can only ever be read or updared by the application
+    /// Application specific data can only ever be read or updated by the application
     /// that created.
     ///
     /// This type is not all that interesting by itself but used as a base class

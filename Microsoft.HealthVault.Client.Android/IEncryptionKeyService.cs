@@ -22,7 +22,7 @@ namespace Microsoft.HealthVault.Client
         Task<byte[]> CreateAndStoreEncryptionKeyAsync(string keyName);
 
         /// <summary>
-        /// Gets the encryption key with the provided name or creats and stores it if it does not exist.
+        /// Gets the encryption key with the provided name or creates and stores it if it does not exist.
         /// </summary>
         /// <param name="keyName">The name of the key</param>
         /// <returns></returns>

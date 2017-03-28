@@ -26,7 +26,7 @@ namespace Microsoft.HealthVault.ItemTypes
     /// one family member and another. These codes are stored as
     /// related items for both parent and child data instances.
     ///
-    /// The flexibity of having both condition and relative be optional
+    /// The flexibility of having both condition and relative be optional
     /// allows applications to give the users the ability to just put in
     /// the details they know at the time they want to create the tree.
     /// If they just know the name of the relative, or a particular condition

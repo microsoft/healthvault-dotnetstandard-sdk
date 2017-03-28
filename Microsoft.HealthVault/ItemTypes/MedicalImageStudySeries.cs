@@ -347,7 +347,7 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <remarks>
         /// This value corresponds to DICOM tag (0020,000E)
         ///
-        /// If there is no series instnace UID, the value should be set to <b>null</b>.
+        /// If there is no series instance UID, the value should be set to <b>null</b>.
         /// </remarks>
         ///
         /// <exception cref="ArgumentException">

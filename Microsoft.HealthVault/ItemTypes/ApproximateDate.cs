@@ -564,8 +564,7 @@ namespace Microsoft.HealthVault.ItemTypes
         }
 
         /// <summary>
-        /// Gets a value indicating whether the specified date is less than the s
-        /// pecified
+        /// Gets a value indicating whether the specified date is less than the specified
         /// object.
         /// </summary>
         ///

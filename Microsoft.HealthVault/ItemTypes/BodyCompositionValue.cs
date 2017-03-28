@@ -32,7 +32,7 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             Validator.ThrowIfNavigatorNull(navigator);
 
-            // mass-value (t:weigth-value)
+            // mass-value (t:weight-value)
             this.massValue = XPathHelper.GetOptNavValue<WeightValue>(navigator, "mass-value");
 
             // percent-value (t:percentage)

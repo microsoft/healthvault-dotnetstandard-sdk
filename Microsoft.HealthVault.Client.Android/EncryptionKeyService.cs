@@ -9,7 +9,7 @@ using AndroidApp = Android.App;
 namespace Microsoft.HealthVault.Client
 {
     /// <summary>
-    /// Inplementation of IEncryptionKeyService
+    /// Implementation of IEncryptionKeyService
     /// </summary>
     internal class EncryptionKeyService : IEncryptionKeyService
     {

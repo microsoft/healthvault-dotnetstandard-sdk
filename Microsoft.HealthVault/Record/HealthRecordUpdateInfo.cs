@@ -38,7 +38,7 @@ namespace Microsoft.HealthVault.Record
         public Guid RecordId { get; protected set; }
 
         /// <summary>
-        /// Gets or sets the timestamp when an addition, deletion or update occured to the
+        /// Gets or sets the timestamp when an addition, deletion or update occurred to the
         /// <see cref="ThingBase"/>s in the <see cref="HealthRecordAccessor"/>
         /// </summary>
         public DateTime LastUpdateDate { get; protected set; }
@@ -53,7 +53,7 @@ namespace Microsoft.HealthVault.Record
         /// </summary>
         ///
         /// <remarks>
-        /// The record's operation sequence number is used when sync'ing data from a
+        /// The record's operation sequence number is used when syncing data from a
         /// record. Anytime an operation is performed against a thing HealthVault
         /// stamps it with the next increment of the operation sequence number for the record.
         /// For example, the first item added to the record would be stamped with the sequence

@@ -249,7 +249,7 @@ namespace Microsoft.HealthVault.ItemTypes
         /// </value>
         ///
         /// <remarks>
-        /// Set the value to <b>null</b> if the classification should not be fstored.
+        /// Set the value to <b>null</b> if the classification should not be stored.
         /// </remarks>
         ///
         /// <exception cref="ArgumentException">

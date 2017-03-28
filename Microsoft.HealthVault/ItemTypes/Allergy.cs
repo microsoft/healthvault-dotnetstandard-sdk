@@ -357,7 +357,7 @@ namespace Microsoft.HealthVault.ItemTypes
         /// </summary>
         ///
         /// <remarks>
-        /// <b>true</b> if the allergic reation is negated with treatment;
+        /// <b>true</b> if the allergic reaction is negated with treatment;
         /// otherwise, <b>false</b>.
         /// </remarks>
         ///

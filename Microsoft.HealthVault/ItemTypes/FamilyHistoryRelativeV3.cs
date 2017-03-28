@@ -36,7 +36,7 @@ namespace Microsoft.HealthVault.ItemTypes
 
         /// <summary>
         /// Initialize a new instance of the <see cref="FamilyHistoryRelativeV3"/>
-        /// class with the specified relatinship.
+        /// class with the specified relationship.
         /// </summary>
         ///
         /// <param name="relationship">

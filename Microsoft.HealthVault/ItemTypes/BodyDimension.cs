@@ -16,7 +16,7 @@ namespace Microsoft.HealthVault.ItemTypes
     /// </summary>
     ///
     /// <remarks>
-    /// Exmaples: Waist size, head circumference, length (pediatric).
+    /// Examples: Waist size, head circumference, length (pediatric).
     /// </remarks>
     ///
     public class BodyDimension : ThingBase
