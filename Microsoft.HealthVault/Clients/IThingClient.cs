@@ -22,51 +22,51 @@ namespace Microsoft.HealthVault.Clients
         /// <summary>
         /// Gets a ThingBase by its unique identifier
         /// </summary>
-        /// <param name="record">The health record for which we get the item</param>
+        /// <param name="recordId">The health record's ID.</param>
         /// <param name="thingId">The unique identifier of the thing</param>
         /// <returns>The thing requested</returns>
-        Task<T> GetThingAsync<T>(HealthRecordInfo record, Guid thingId)
+        Task<T> GetThingAsync<T>(Guid recordId, Guid thingId)
             where T : IThing;
 
         /// <summary>
         /// Gets a collection of Things that match a given query. 
         /// </summary>
-        /// <param name="record">The health record for which we get the item</param>
+        /// <param name="recordId">The health record's ID.</param>
         /// <param name="query">An instance of <see cref="ThingQuery"/>.  Use this query to identify parameters for the search.</param>
         /// <returns>ICollection of ThingBase</returns>
-        Task<IReadOnlyCollection<ThingCollection>> GetThingsAsync(HealthRecordInfo record, ThingQuery query);
+        Task<IReadOnlyCollection<ThingCollection>> GetThingsAsync(Guid recordId, ThingQuery query);
 
         /// <summary>
         /// Gets a collection of Things of the specific type. 
         /// </summary>
-        /// <param name="record">The health record for which we get the item</param>
+        /// <param name="recordId">The health record's ID.</param>
         /// <param name="query">An instance of <see cref="ThingQuery"/>.  If you leave this null, it will return all things of the specified type.</param>
         /// <returns>ICollection of ThingBase</returns>
-        Task<IReadOnlyCollection<T>> GetThingsAsync<T>(HealthRecordInfo record, ThingQuery query = null)
+        Task<IReadOnlyCollection<T>> GetThingsAsync<T>(Guid recordId, ThingQuery query = null)
                         where T : IThing;
 
         /// <summary>
         /// Creates a new collection of things.
         /// </summary>
-        /// <param name="record">The health record for which new things are create</param>
+        /// <param name="recordId">The health record's ID.</param>
         /// <param name="things">The collection of things to create.</param>
-        Task CreateNewThingsAsync<T>(HealthRecordInfo record, ICollection<T> things)
+        Task CreateNewThingsAsync<T>(Guid recordId, ICollection<T> things)
             where T : IThing;
 
         /// <summary>
         /// Updates a collection of things that already exists.
         /// </summary>
-        /// <param name="record">The health record for which things are updated</param>
+        /// <param name="recordId">The health record's ID.</param>
         /// <param name="things">The collection of things to update.</param>
-        Task UpdateThingsAsync<T>(HealthRecordInfo record, ICollection<T> things)
+        Task UpdateThingsAsync<T>(Guid recordId, ICollection<T> things)
             where T : IThing;
 
         /// <summary>
         /// Removes a collection of things.
         /// </summary>
-        /// <param name="record">The health record for which things are removed</param>
+        /// <param name="recordId">The health record's ID.</param>
         /// <param name="things">The collection of things to put.</param>
-        Task RemoveThingsAsync<T>(HealthRecordInfo record, ICollection<T> things)
+        Task RemoveThingsAsync<T>(Guid recordId, ICollection<T> things)
             where T : IThing;
     }
 }

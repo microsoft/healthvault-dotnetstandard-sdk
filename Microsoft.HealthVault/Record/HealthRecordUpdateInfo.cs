@@ -11,7 +11,7 @@ namespace Microsoft.HealthVault.Record
     /// <summary>
     /// Encapsulates information about an updated record and the person associated with that record.
     /// </summary>
-    public class HealthRecordUpdateInfo
+    internal class HealthRecordUpdateInfo
     {
         /// <summary>
         /// Create a new instance of the <see cref="HealthRecordUpdateInfo"/> class for testing purposes.

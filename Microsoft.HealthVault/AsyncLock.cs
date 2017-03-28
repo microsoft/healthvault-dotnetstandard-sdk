@@ -4,8 +4,10 @@ using System.Threading.Tasks;
 
 namespace Microsoft.HealthVault
 {
-    // TODO: Comment this class.
-    public sealed class AsyncLock
+    /// <summary>
+    /// An asynchronous lock.
+    /// </summary>
+    internal sealed class AsyncLock
     {
         private readonly SemaphoreSlim semaphore = new SemaphoreSlim(1, 1);
         private readonly Task<IDisposable> releaser;

@@ -25,7 +25,7 @@ namespace Microsoft.HealthVault.Application
     /// content type for that configuration.
     /// </remarks>
     ///
-    public class ApplicationBinaryConfiguration
+    internal class ApplicationBinaryConfiguration
     {
         /// <summary>
         /// Constructs a <see cref="ApplicationBinaryConfiguration"/> with default values.

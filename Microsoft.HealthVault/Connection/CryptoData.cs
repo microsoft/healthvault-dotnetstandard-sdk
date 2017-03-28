@@ -8,7 +8,7 @@
 
 namespace Microsoft.HealthVault.Connection
 {
-    public class CryptoData
+    internal class CryptoData
     {
         public string Algorithm { get; set; }
 

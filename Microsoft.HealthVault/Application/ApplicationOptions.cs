@@ -19,7 +19,7 @@ namespace Microsoft.HealthVault.Application
     /// </remarks>
     ///
     [Flags]
-    public enum ApplicationOptions
+    internal enum ApplicationOptions
     {
         /// <summary>
         /// No optional application settings specified.

@@ -26,7 +26,7 @@ namespace Microsoft.HealthVault.Thing
     /// criteria.
     /// </remarks>
     ///
-    public class HealthRecordSearcher
+    internal class HealthRecordSearcher
     {
         /// <summary>
         /// Creates a new instance of the <see cref="HealthRecordSearcher"/>

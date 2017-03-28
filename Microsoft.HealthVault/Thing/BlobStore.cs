@@ -26,7 +26,7 @@ namespace Microsoft.HealthVault.Thing
     /// <see cref="NewBlob(string, string)"/> method.
     /// </remarks>
     ///
-    public class BlobStore : IDictionary<string, Blob>
+    internal class BlobStore : IDictionary<string, Blob>
     {
         internal BlobStore(ThingBase item, HealthRecordAccessor record)
         {

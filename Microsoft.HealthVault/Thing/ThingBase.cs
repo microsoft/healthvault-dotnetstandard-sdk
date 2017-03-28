@@ -530,7 +530,7 @@ namespace Microsoft.HealthVault.Thing
         /// A <see cref="BlobStore"/> instance related to this thing.
         /// </returns>
         ///
-        public BlobStore GetBlobStore(HealthRecordAccessor record)
+        internal BlobStore GetBlobStore(HealthRecordAccessor record)
         {
             if (this.blobStore == null)
             {

@@ -23,7 +23,7 @@ namespace Microsoft.HealthVault.Thing
     /// <seealso cref="DateRangeSetDefinition"/>
     /// <seealso cref="TypeIdSetDefinition"/>
     ///
-    public abstract class AuthorizationSetDefinition
+    internal abstract class AuthorizationSetDefinition
     {
         internal AuthorizationSetDefinition(SetType setType)
         {

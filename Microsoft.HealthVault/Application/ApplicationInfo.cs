@@ -24,7 +24,7 @@ namespace Microsoft.HealthVault.Application
     /// Defines the configuration for a HealthVault application.
     /// </summary>
     ///
-    public class ApplicationInfo
+    internal class ApplicationInfo
     {
         /// <summary>
         /// Constructs an <see cref="ApplicationInfo"/> instance with default values.

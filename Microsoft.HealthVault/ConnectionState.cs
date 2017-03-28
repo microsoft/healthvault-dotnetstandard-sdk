@@ -10,7 +10,7 @@ using System;
 
 namespace Microsoft.HealthVault
 {
-    public class ConnectionState
+    internal class ConnectionState
     {
         private volatile bool getConnectionCalled;
 

@@ -29,7 +29,7 @@ namespace Microsoft.HealthVault.Thing
     /// using the Shell pages to authorize records.
     /// </remarks>
     ///
-    public class AuthorizationRule
+    internal class AuthorizationRule
     {
         /// <summary>
         /// Creates a new instance of the <see cref="AuthorizationRule"/> class

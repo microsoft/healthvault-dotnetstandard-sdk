@@ -30,7 +30,7 @@ namespace Microsoft.HealthVault.Record
     /// wife's health record which she shared with him.
     /// </remarks>
     ///
-    public class HealthRecordInfo : HealthRecordAccessor, IMarshallable
+    public class HealthRecordInfo : IMarshallable
     {
         #region Constructors
 
@@ -44,91 +44,28 @@ namespace Microsoft.HealthVault.Record
         /// </param>
         ///
         internal HealthRecordInfo(HealthRecordInfo recordInfo)
-            : this(
-                recordInfo.Connection,
-                recordInfo.Id)
         {
-            if (recordInfo.IsUpdated)
+            this.Id = recordInfo.Id;
+            this.custodian = recordInfo.IsCustodian;
+            this.dateAuthorizationExpires = recordInfo.DateAuthorizationExpires;
+            this.name = recordInfo.Name;
+            this.relationshipType = recordInfo.RelationshipType;
+            this.relationshipName = recordInfo.RelationshipName;
+            this.displayName = recordInfo.DisplayName;
+
+            if (recordInfo.Location != null)
             {
-                this.custodian = recordInfo.IsCustodian;
-                this.dateAuthorizationExpires = recordInfo.DateAuthorizationExpires;
-                this.name = recordInfo.Name;
-                this.relationshipType = recordInfo.RelationshipType;
-                this.relationshipName = recordInfo.RelationshipName;
-                this.displayName = recordInfo.DisplayName;
-
-                if (recordInfo.Location != null)
-                {
-                    this.Location = new Location(recordInfo.Location.Country, recordInfo.Location.StateProvince);
-                }
-
-                this.IsUpdated = true;
+                this.Location = new Location(recordInfo.Location.Country, recordInfo.Location.StateProvince);
             }
-        }
-
-        /// <summary>
-        /// Creates a new instance of the <see cref="HealthRecordInfo"/> class,
-        /// providing a new view of a personal health record.
-        /// </summary>
-        ///
-        /// <param name="connection">
-        /// An instance of a <see cref="ApplicationConnection"/>
-        /// to which the record operations are directed.
-        /// </param>
-        ///
-        /// <param name="id">
-        /// The unique identifier for the record.
-        /// </param>
-        ///
-        /// <remarks>
-        /// With this constructor, none of the data held in the properties
-        /// is valid except the
-        /// <see cref="HealthRecordAccessor.Id"/>
-        /// property. The ID is not validated with the service and the data
-        /// is not retrieved until
-        /// <see cref="HealthRecordInfo.Refresh"/>
-        /// is called. However, any of the methods can be called without
-        /// Update being called.
-        /// </remarks>
-        ///
-        /// <exception cref="ArgumentNullException">
-        /// The <paramref name="connection"/> parameter is <b>null</b>.
-        /// </exception>
-        ///
-        /// <exception cref="ArgumentException">
-        /// The <paramref name="id"/> parameter is Guid.Empty.
-        /// </exception>
-        ///
-        public HealthRecordInfo(
-            IHealthVaultConnection connection,
-            Guid id)
-            : base(connection, id)
-        {
         }
 
         /// <summary>
         /// Creates a new instance of the <see cref="HealthRecordInfo"/> class
         /// for deserialization purposes.
         /// </summary>
-        ///
-        /// <param name="connection">
-        /// An instance of a <see cref="ApplicationConnection"/>
-        /// to which the record operations are directed.
-        /// </param>
-        ///
         /// <remarks>
         /// This constructor is only useful if ParseXml is called.
         /// </remarks>
-        ///
-        /// <exception cref="ArgumentNullException">
-        /// The <paramref name="connection"/> parameter is <b>null</b>.
-        /// </exception>
-        ///
-        internal HealthRecordInfo(IHealthVaultConnection connection)
-            : base(connection)
-        {
-        }
-
         public HealthRecordInfo()
         {
         }
@@ -158,17 +95,38 @@ namespace Microsoft.HealthVault.Record
         /// parameter is <b>null</b>.
         /// </exception>
         ///
-        public static new HealthRecordInfo CreateFromXml(
+        public static HealthRecordInfo CreateFromXml(
             IHealthVaultConnection connection,
             XPathNavigator navigator)
         {
             Validator.ThrowIfArgumentNull(connection, nameof(connection), Resources.PersonInfoConnectionNull);
             Validator.ThrowIfArgumentNull(navigator, nameof(navigator), Resources.ParseXmlNavNull);
 
-            HealthRecordInfo recordInfo = new HealthRecordInfo(connection);
+            HealthRecordInfo recordInfo = new HealthRecordInfo();
             recordInfo.ParseXml(navigator);
             return recordInfo;
         }
+
+        /// <summary>
+        /// Gets the record identifier.
+        /// </summary>
+        ///
+        /// <value>
+        /// A globally unique identifier (GUID) for the record.
+        /// </value>
+        ///
+        /// <remarks>
+        /// The record identifier is issued when the record is created. Creating
+        /// the account automatically creates a self record as well.
+        /// </remarks>
+        ///
+        public Guid Id { get; set; }
+
+        /// <summary>
+        /// Gets the location of the person that this record is for.
+        /// </summary>
+        ///
+        public Location Location { get; protected set; }
 
         /// <summary>
         /// Creates an instance of a HealthRecordInfo object using  the specified XML.
@@ -194,9 +152,17 @@ namespace Microsoft.HealthVault.Record
         /// The XML containing the record information.
         /// </param>
         ///
-        internal override void ParseXml(XPathNavigator navigator)
+        internal void ParseXml(XPathNavigator navigator)
         {
-            base.ParseXml(navigator);
+            string id = navigator.GetAttribute("id", string.Empty);
+            this.Id = new Guid(id);
+
+            string country = navigator.GetAttribute("location-country", string.Empty);
+            string state = navigator.GetAttribute("location-state-province", string.Empty);
+            if (!string.IsNullOrEmpty(country))
+            {
+                this.Location = new Location(country, string.IsNullOrEmpty(state) ? null : state);
+            }
 
             this.custodian = XPathHelper.ParseAttributeAsBoolean(navigator, "record-custodian", false);
 
@@ -241,8 +207,6 @@ namespace Microsoft.HealthVault.Record
             this.LatestOperationSequenceNumber = XPathHelper.ParseAttributeAsLong(navigator, "latest-operation-sequence-number", 0).Value;
 
             this.RecordAppAuthCreatedDate = XPathHelper.ParseAttributeAsDateTime(navigator, "record-app-auth-created-date", DateTime.MinValue);
-
-            this.IsUpdated = true;
         }
 
         /// <summary>
@@ -274,7 +238,7 @@ namespace Microsoft.HealthVault.Record
         /// A string containing the XML representation of the HealthRecordInfo.
         /// </returns>
         ///
-        public override string GetXml()
+        public string GetXml()
         {
             StringBuilder recordInfoXml = new StringBuilder(128);
 
@@ -308,11 +272,20 @@ namespace Microsoft.HealthVault.Record
             this.WriteXml("record", writer);
         }
 
-        internal override void WriteXml(string nodeName, XmlWriter writer)
+        internal void WriteXml(string nodeName, XmlWriter writer)
         {
             writer.WriteStartElement(nodeName);
 
-            this.WriteXml(writer);
+            writer.WriteAttributeString("id", this.Id.ToString());
+
+            if (this.Location != null)
+            {
+                writer.WriteAttributeString("location-country", this.Location.Country);
+                if (!string.IsNullOrEmpty(this.Location.StateProvince))
+                {
+                    writer.WriteAttributeString("location-state-province", this.Location.StateProvince);
+                }
+            }
 
             writer.WriteAttributeString(
                 "record-custodian",
@@ -402,24 +375,16 @@ namespace Microsoft.HealthVault.Record
         /// ownership of the record. The owner can give ownership to another
         /// as an explicit action when sharing the record.
         /// </remarks>
-        ///
-        /// <exception cref="InvalidOperationException">
-        /// The record was constructed using the record ID and
-        /// <see cref="Refresh"/> has not been called.
-        /// </exception>
-        ///
         public bool IsCustodian
         {
             get
             {
-                this.VerifyUpdated();
                 return this.custodian;
             }
 
             set
             {
                 this.custodian = value;
-                this.IsUpdated = true;
             }
         }
 
@@ -443,22 +408,19 @@ namespace Microsoft.HealthVault.Record
         /// </remarks>
         ///
         /// <exception cref="InvalidOperationException">
-        /// The record was constructed using the record ID and
-        /// <see cref="Refresh"/> has not been called.
+        /// The record was constructed using the record ID.
         /// </exception>
         ///
         public DateTime DateAuthorizationExpires
         {
             get
             {
-                this.VerifyUpdated();
                 return this.dateAuthorizationExpires;
             }
 
             set
             {
                 this.dateAuthorizationExpires = value;
-                this.IsUpdated = true;
             }
         }
 
@@ -473,14 +435,12 @@ namespace Microsoft.HealthVault.Record
         {
             get
             {
-                this.VerifyUpdated();
                 return this.authExpired;
             }
 
             set
             {
                 this.authExpired = value;
-                this.IsUpdated = true;
             }
         }
 
@@ -502,22 +462,19 @@ namespace Microsoft.HealthVault.Record
         /// </remarks>
         ///
         /// <exception cref="InvalidOperationException">
-        /// The record was constructed using the record ID and
-        /// <see cref="Refresh"/> has not been called.
+        /// The record was constructed using the record ID.
         /// </exception>
         ///
         public string Name
         {
             get
             {
-                this.VerifyUpdated();
                 return this.name;
             }
 
             set
             {
                 this.name = value;
-                this.IsUpdated = true;
             }
         }
 
@@ -539,22 +496,19 @@ namespace Microsoft.HealthVault.Record
         /// </remarks>
         ///
         /// <exception cref="InvalidOperationException">
-        /// The record was constructed using the record ID and
-        /// <see cref="Refresh"/> has not been called.
+        /// The record was constructed using the record ID.
         /// </exception>
         ///
         public RelationshipType RelationshipType
         {
             get
             {
-                this.VerifyUpdated();
                 return this.relationshipType;
             }
 
             set
             {
                 this.relationshipType = value;
-                this.IsUpdated = true;
             }
         }
 
@@ -578,22 +532,19 @@ namespace Microsoft.HealthVault.Record
         /// </remarks>
         ///
         /// <exception cref="InvalidOperationException">
-        /// The record was constructed using the record ID and
-        /// <see cref="Refresh"/> has not been called.
+        /// The record was constructed using the record ID.
         /// </exception>
         ///
         public string RelationshipName
         {
             get
             {
-                this.VerifyUpdated();
                 return this.relationshipName;
             }
 
             set
             {
                 this.relationshipName = value;
-                this.IsUpdated = true;
             }
         }
 
@@ -617,22 +568,19 @@ namespace Microsoft.HealthVault.Record
         /// </remarks>
         ///
         /// <exception cref="InvalidOperationException">
-        /// The record was constructed using the record ID and
-        /// <see cref="Refresh"/> has not been called.
+        /// The record was constructed using the record ID.
         /// </exception>
         ///
         public string DisplayName
         {
             get
             {
-                this.VerifyUpdated();
                 return this.displayName;
             }
 
             set
             {
                 this.displayName = value;
-                this.IsUpdated = true;
             }
         }
 
@@ -733,15 +681,5 @@ namespace Microsoft.HealthVault.Record
         {
             return this.Name;
         }
-
-        private void VerifyUpdated()
-        {
-            if (!this.IsUpdated)
-            {
-                throw new InvalidOperationException(Resources.HealthRecordNotUpdated);
-            }
-        }
-
-        internal bool IsUpdated { get; private set; }
     }
 }

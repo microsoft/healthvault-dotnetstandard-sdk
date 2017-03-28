@@ -48,7 +48,7 @@ namespace SandboxUwp
             HealthRecordInfo recordInfo = personInfo.GetSelfRecord();
             IThingClient thingClient = ClientHealthVaultFactory.GetThingClient(this.connection);
 
-            var bloodPressures = await thingClient.GetThingsAsync<BloodPressure>(recordInfo);
+            var bloodPressures = await thingClient.GetThingsAsync<BloodPressure>(recordInfo.Id);
             BloodPressure firstBloodPressure = bloodPressures.FirstOrDefault();
             if (firstBloodPressure == null)
             {
@@ -66,7 +66,7 @@ namespace SandboxUwp
             HealthRecordInfo recordInfo = personInfo.GetSelfRecord();
             IThingClient thingClient = ClientHealthVaultFactory.GetThingClient(this.connection);
 
-            await thingClient.CreateNewThingsAsync(recordInfo, new List<BloodPressure> { new BloodPressure(new HealthServiceDateTime(DateTime.Now), 117, 70) });
+            await thingClient.CreateNewThingsAsync(recordInfo.Id, new List<BloodPressure> { new BloodPressure(new HealthServiceDateTime(DateTime.Now), 117, 70) });
 
             this.OutputBlock.Text = "Created blood pressure.";
         }

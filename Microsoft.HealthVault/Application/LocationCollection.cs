@@ -16,7 +16,7 @@ namespace Microsoft.HealthVault.Application
     /// <summary>
     /// A location defined by country and state/province ISO 3166 codes.
     /// </summary>
-    public class LocationCollection : Collection<Location>
+    internal class LocationCollection : Collection<Location>
     {
         /// <summary>
         /// Gets or sets if location collection supports all locations.

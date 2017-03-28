@@ -25,7 +25,7 @@ namespace Microsoft.HealthVault.Thing
     /// <seealso cref="AuthorizationSetDefinition"/>
     /// <seealso cref="DateRangeSetDefinition"/>
     ///
-    public class TypeIdSetDefinition : AuthorizationSetDefinition
+    internal class TypeIdSetDefinition : AuthorizationSetDefinition
     {
         /// <summary>
         /// Creates a new instance of the <see cref="TypeIdSetDefinition"/> class

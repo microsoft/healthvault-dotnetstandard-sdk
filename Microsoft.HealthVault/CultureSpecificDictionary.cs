@@ -18,7 +18,7 @@ namespace Microsoft.HealthVault
     /// The key is the language-country string such as "en-US", and the value is whatever type is
     /// necessary, usually either string or byte[].
     /// </remarks>
-    public abstract class CultureSpecificDictionary<TValue> : Dictionary<string, TValue>
+    internal abstract class CultureSpecificDictionary<TValue> : Dictionary<string, TValue>
     {
         internal delegate TValue ConvertToType(string xmlValue);
 
@@ -169,7 +169,7 @@ namespace Microsoft.HealthVault
     /// <remarks>
     /// The key is the language-country string such as "en-US", and the value is of type string.
     /// </remarks>
-    public class CultureSpecificStringDictionary : CultureSpecificDictionary<string>
+    internal class CultureSpecificStringDictionary : CultureSpecificDictionary<string>
     {
         /// <summary>
         /// Creates a delegate for converting an xml string to a string.
@@ -268,7 +268,7 @@ namespace Microsoft.HealthVault
     /// <remarks>
     /// The key is the language-country string such as "en-US", and the value is of type byte[].
     /// </remarks>
-    public class CultureSpecificByteArrayDictionary : CultureSpecificDictionary<byte[]>
+    internal class CultureSpecificByteArrayDictionary : CultureSpecificDictionary<byte[]>
     {
         /// <summary>
         /// Creates a delegate for converting an xml string to a byte array.

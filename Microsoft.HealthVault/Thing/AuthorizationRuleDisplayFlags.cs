@@ -17,7 +17,7 @@ namespace Microsoft.HealthVault.Thing
     /// </remarks>
     ///
     [Flags]
-    public enum AuthorizationRuleDisplayFlags
+    internal enum AuthorizationRuleDisplayFlags
     {
         /// <summary>
         /// No special display handling configured

@@ -108,14 +108,14 @@ namespace SandboxAndroid
 
             // use our thing client to creat the new blood pressure 
             PersonInfo personInfo = await this.connection.GetPersonInfoAsync();
-            await thingClient.CreateNewThingsAsync(personInfo.SelectedRecord, new List<BloodPressure>() { bp });
+            await thingClient.CreateNewThingsAsync(personInfo.SelectedRecord.Id, new List<BloodPressure>() { bp });
         }
 
         private async Task GetBloodPressures()
         {
             // use our thing client to get all things of type blood pressure
             PersonInfo personInfo = await this.connection.GetPersonInfoAsync();
-            IReadOnlyCollection<BloodPressure> bloodPressures = await this.thingClient.GetThingsAsync<BloodPressure>(personInfo.SelectedRecord);
+            IReadOnlyCollection<BloodPressure> bloodPressures = await this.thingClient.GetThingsAsync<BloodPressure>(personInfo.SelectedRecord.Id);
             this.listView.Adapter = new ArrayAdapter(this, Android.Resource.Layout.SimpleListItem1, new List<BloodPressure>(bloodPressures));
         }
     }

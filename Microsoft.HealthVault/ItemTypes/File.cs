@@ -90,57 +90,6 @@ namespace Microsoft.HealthVault.ItemTypes
         }
 
         /// <summary>
-        /// Creates a <see cref="File"/> item instance using the specified stream and content
-        /// type.
-        /// </summary>
-        ///
-        /// <param name="record">
-        /// The record to stream the data to.
-        /// </param>
-        ///
-        /// <param name="stream">
-        /// The stream containing the data to associate with this <see cref="File"/> instance.
-        /// </param>
-        ///
-        /// <param name="name">
-        /// The name of the file instance.
-        /// </param>
-        ///
-        /// <param name="contentType">
-        /// The content type of the file. This is usually something like "image/jpg", "application/csv",
-        /// or other mime type.
-        /// </param>
-        ///
-        /// <returns>
-        /// A new instance of the <see cref="File"/> thing with data populated from the
-        /// specified stream.
-        /// </returns>
-        ///
-        /// <exception cref="ArgumentException">
-        /// If <paramref name="name"/> is <b>null</b> or empty.
-        /// </exception>
-        ///
-        /// <exception cref="ArgumentNullException">
-        /// If <paramref name="record"/>, <paramref name="stream"/>, or
-        /// <paramref name="contentType"/> is <b>null</b>.
-        /// </exception>
-        ///
-        /// <exception cref="HealthServiceException">
-        /// If a failure occurs streaming the data to HealthVault.
-        /// </exception>
-        ///
-        public static File CreateFromStream(
-            HealthRecordAccessor record,
-            Stream stream,
-            string name,
-            CodableValue contentType)
-        {
-            File file = new File();
-            file.SetContent(record, stream, name, contentType);
-            return file;
-        }
-
-        /// <summary>
         /// Creates a new instance of the <see cref="File"/> class with default
         /// values.
         /// </summary>
@@ -470,62 +419,6 @@ namespace Microsoft.HealthVault.ItemTypes
 
             byte[] content = System.IO.File.ReadAllBytes(path);
             blob.WriteInline(content);
-        }
-
-        /// <summary>
-        /// Sets the content of the file instance using the specified stream.
-        /// </summary>
-        ///
-        /// <param name="record">
-        /// The record to stream the data to.
-        /// </param>
-        ///
-        /// <param name="stream">
-        /// The stream containing the data to associate with this <see cref="File"/> instance.
-        /// </param>
-        ///
-        /// <param name="name">
-        /// The name of the file instance.
-        /// </param>
-        ///
-        /// <param name="contentType">
-        /// The content type of the file.
-        /// </param>
-        ///
-        /// <exception cref="ArgumentException">
-        /// If <paramref name="name"/> is <b>null</b> or empty.
-        /// </exception>
-        ///
-        /// <exception cref="ArgumentNullException">
-        /// If <paramref name="record"/>, <paramref name="stream"/> or <paramref name="contentType"/> is <b>null</b>.
-        /// </exception>
-        ///
-        /// <exception cref="HealthServiceException">
-        /// If a failure occurs streaming the data to HealthVault.
-        /// </exception>
-        ///
-        public void SetContent(
-            HealthRecordAccessor record,
-            Stream stream,
-            string name,
-            CodableValue contentType)
-        {
-            Validator.ThrowIfArgumentNull(record, nameof(record), Resources.FileRecordMustBeSpecified);
-            Validator.ThrowIfArgumentNull(stream, nameof(stream), Resources.FileStreamMustBeSpecified);
-            Validator.ThrowIfStringNullOrEmpty(name, "name");
-            Validator.ThrowIfArgumentNull(contentType, nameof(contentType), Resources.FileContentTypeMustBeSpecified);
-
-            if (stream.CanSeek)
-            {
-                this.Size = stream.Length;
-            }
-
-            this.Name = name;
-            this.ContentType = contentType;
-
-            BlobStore store = this.GetBlobStore(record);
-            Blob blob = store.NewBlob(string.Empty, this.ContentType.Text);
-            blob.Write(stream);
         }
     }
 }

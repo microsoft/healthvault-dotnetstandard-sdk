@@ -12,7 +12,7 @@ using Microsoft.HealthVault.PlatformInformation;
 
 namespace Microsoft.HealthVault.Connection
 {
-    public interface IConnectionInternal : IHealthVaultConnection
+    internal interface IConnectionInternal : IHealthVaultConnection
     {
         /// <summary>
         /// The HealthVault web-service instance.
