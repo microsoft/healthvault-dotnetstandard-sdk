@@ -8,9 +8,7 @@
 
 using System;
 using System.Threading.Tasks;
-using Microsoft.HealthVault.Clients;
 using Microsoft.HealthVault.Person;
-using Microsoft.HealthVault.PlatformInformation;
 using Microsoft.HealthVault.Transport;
 
 namespace Microsoft.HealthVault.Connection
@@ -34,41 +32,6 @@ namespace Microsoft.HealthVault.Connection
         /// </summary>
         /// <remarks>This includes the list of authorized records for the application instance.</remarks>
         Task<PersonInfo> GetPersonInfoAsync();
-
-        /// <summary>
-        /// Gets a client of a given type.
-        /// </summary>
-        /// <typeparam name="TClient">The type of the client to retrieve</typeparam>
-        /// <returns>A client instance</returns>
-        TClient GetClient<TClient>()
-            where TClient : IClient;
-
-        /// <summary>
-        /// A client that can be used to access information about the platform.
-        /// </summary>
-        IPlatformClient PlatformClient { get; }
-
-        /// <summary>
-        /// A client that can be used to access information and records associated with the currently athenticated user.
-        /// </summary>
-        IPersonClient PersonClient { get; }
-
-        /// <summary>
-        /// A client that can be used to access vocabularies.
-        /// </summary>
-        IVocabularyClient VocabularyClient { get; }
-
-        /// <summary>
-        /// Gets a client that can be used to access things associated with a particular record.
-        /// </summary>
-        /// <returns>An instance implementing IThingClient</returns>
-        IThingClient GetThingClient();
-
-        /// <summary>
-        /// Gets a client that can be used to access action plans associated with a particular record
-        /// </summary>
-        /// <returns>An instance implementing IActionPlanClient</returns>
-        IActionPlanClient GetActionPlanClient();
 
         /// <summary>
         /// Authenticates the connection.

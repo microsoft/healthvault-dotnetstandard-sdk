@@ -3,8 +3,6 @@
 // see http://www.microsoft.com/resources/sharedsource/licensingbasics/sharedsourcelicenses.mspx.
 // All other rights reserved.
 
-using Microsoft.HealthVault.Application;
-using Microsoft.HealthVault.Authentication;
 using Microsoft.HealthVault.Clients;
 using Microsoft.HealthVault.Connection;
 using Microsoft.HealthVault.Exceptions;
@@ -632,7 +630,7 @@ namespace Microsoft.HealthVault.Web
         public static async Task<PersonInfo> GetPersonInfoAsync(string authToken, Guid appId, HealthServiceInstance serviceInstance)
         {
             IHealthVaultConnection connection = Ioc.Get<IHealthVaultConnection>();
-            IPersonClient personClient = connection.PersonClient;
+            IPersonClient personClient = ClientHealthVaultFactory.GetPersonClient(connection);
 
             PersonInfo personInfo = await personClient.GetPersonInfoAsync();
 

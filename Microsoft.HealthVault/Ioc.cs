@@ -42,6 +42,7 @@ namespace Microsoft.HealthVault
             container.RegisterTransient<ISessionCredentialClient, SessionCredentialClientBase>();
             container.RegisterSingleton<IServiceLocator, ServiceLocator>();
             container.RegisterSingleton<ICryptographer, Cryptographer>();
+            container.RegisterSingleton<IMessageHandlerFactory, MessageHandlerFactory>();
         }
 
         public static T Get<T>()

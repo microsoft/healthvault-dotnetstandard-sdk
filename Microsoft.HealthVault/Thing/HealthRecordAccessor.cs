@@ -161,7 +161,7 @@ namespace Microsoft.HealthVault.Thing
         /// </exception>
         ///
         public HealthRecordAccessor(
-            IConnectionInternal connection,
+            IHealthVaultConnection connection,
             Guid id)
         {
             Validator.ThrowIfArgumentNull(connection, nameof(connection), Resources.CtorServiceArgumentNull);
@@ -193,7 +193,7 @@ namespace Microsoft.HealthVault.Thing
         /// </exception>
         ///
         internal HealthRecordAccessor(
-            IConnectionInternal connection)
+            IHealthVaultConnection connection)
         {
             this.Connection = connection;
         }
@@ -230,7 +230,7 @@ namespace Microsoft.HealthVault.Thing
         /// created this <see cref="HealthRecordAccessor"/>.
         /// </summary>
         ///
-        public IConnectionInternal Connection { get; internal set; }
+        public IHealthVaultConnection Connection { get; internal set; }
 
         #endregion Public properties
 

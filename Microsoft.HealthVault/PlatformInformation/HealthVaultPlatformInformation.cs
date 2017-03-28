@@ -70,7 +70,7 @@ namespace Microsoft.HealthVault.PlatformInformation
         /// One or more URL strings returned by HealthVault is invalid.
         /// </exception>
         ///
-        public virtual async Task<ServiceInfo> GetServiceDefinitionAsync(IConnectionInternal connection)
+        public virtual async Task<ServiceInfo> GetServiceDefinitionAsync(IHealthVaultConnection connection)
         {
             Validator.ThrowIfArgumentNull(connection, nameof(connection), Resources.ConnectionNull);
             return await GetServiceDefinitionAsync(connection, null).ConfigureAwait(false);
@@ -123,7 +123,7 @@ namespace Microsoft.HealthVault.PlatformInformation
         /// One or more URL strings returned by HealthVault is invalid.
         /// </exception>
         ///
-        public virtual async Task<ServiceInfo> GetServiceDefinitionAsync(IConnectionInternal connection, DateTime lastUpdatedTime)
+        public virtual async Task<ServiceInfo> GetServiceDefinitionAsync(IHealthVaultConnection connection, DateTime lastUpdatedTime)
         {
             Validator.ThrowIfArgumentNull(connection, nameof(connection), Resources.ConnectionNull);
 
@@ -190,7 +190,7 @@ namespace Microsoft.HealthVault.PlatformInformation
         /// </exception>
         ///
         public virtual async Task<ServiceInfo> GetServiceDefinitionAsync(
-            IConnectionInternal connection,
+            IHealthVaultConnection connection,
             ServiceInfoSections responseSections)
         {
             Validator.ThrowIfArgumentNull(connection, nameof(connection), Resources.ConnectionNull);
@@ -257,7 +257,7 @@ namespace Microsoft.HealthVault.PlatformInformation
         /// </exception>
         ///
         public virtual async Task<ServiceInfo> GetServiceDefinitionAsync(
-            IConnectionInternal connection,
+            IHealthVaultConnection connection,
             ServiceInfoSections responseSections,
             DateTime lastUpdatedTime)
         {
@@ -315,7 +315,7 @@ namespace Microsoft.HealthVault.PlatformInformation
             return requestBuilder.ToString();
         }
 
-        private static async Task<ServiceInfo> GetServiceDefinitionAsync(IConnectionInternal connection, string parameters)
+        private static async Task<ServiceInfo> GetServiceDefinitionAsync(IHealthVaultConnection connection, string parameters)
         {
             HealthServiceResponseData responseData = await connection.ExecuteAsync(HealthVaultMethods.GetServiceDefinition, 2, parameters).ConfigureAwait(false);
 
@@ -414,7 +414,7 @@ namespace Microsoft.HealthVault.PlatformInformation
             ThingTypeSections sections,
             IList<string> imageTypes,
             DateTime? lastClientRefreshDate,
-            IConnectionInternal connection)
+            IHealthVaultConnection connection)
         {
             Validator.ThrowIfArgumentNull(connection, nameof(connection), Resources.TypeManagerConnectionNull);
 
@@ -445,7 +445,7 @@ namespace Microsoft.HealthVault.PlatformInformation
             IList<Guid> typeIds,
             ThingTypeSections sections,
             IList<string> imageTypes,
-            IConnectionInternal connection)
+            IHealthVaultConnection connection)
         {
             StringBuilder requestParameters = new StringBuilder();
             XmlWriterSettings settings = SDKHelper.XmlUnicodeWriterSettings;
@@ -574,7 +574,7 @@ namespace Microsoft.HealthVault.PlatformInformation
             ThingTypeSections sections,
             IList<string> imageTypes,
             DateTime lastClientRefreshDate,
-            IConnectionInternal connection)
+            IHealthVaultConnection connection)
         {
             StringBuilder requestParameters = new StringBuilder();
             XmlWriterSettings settings = SDKHelper.XmlUnicodeWriterSettings;
@@ -780,7 +780,7 @@ namespace Microsoft.HealthVault.PlatformInformation
         /// If <paramref name="connection"/> parameter is <b>null</b>.
         /// </exception>
         public virtual async Task<HealthServiceInstance> SelectInstanceAsync(
-            IConnectionInternal connection,
+            IHealthVaultConnection connection,
             Location preferredLocation)
         {
             Validator.ThrowIfArgumentNull(connection, nameof(connection), Resources.TypeManagerConnectionNull);

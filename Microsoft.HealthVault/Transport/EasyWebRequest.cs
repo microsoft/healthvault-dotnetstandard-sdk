@@ -13,6 +13,7 @@ using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.HealthVault.Configuration;
+using Microsoft.HealthVault.Connection;
 using Microsoft.HealthVault.Exceptions;
 
 namespace Microsoft.HealthVault.Transport
@@ -22,6 +23,7 @@ namespace Microsoft.HealthVault.Transport
         private readonly byte[] xmlRequest; // utf8Encoded
         private readonly int xmlRequestLength;
         private HealthVaultConfiguration configuration = Ioc.Get<HealthVaultConfiguration>();
+        private IMessageHandlerFactory messageHandlerFactory = Ioc.Get<IMessageHandlerFactory>();
 
         internal EasyWebRequest()
         {
@@ -144,10 +146,8 @@ namespace Microsoft.HealthVault.Transport
 
         public HttpClient CreateHttpClient()
         {
-            var handler = new HttpClientHandler
-            {
-                AutomaticDecompression = DecompressionMethods.GZip | DecompressionMethods.Deflate
-            };
+            HttpClientHandler handler = this.messageHandlerFactory.Create();
+            handler.AutomaticDecompression = DecompressionMethods.GZip | DecompressionMethods.Deflate;
 
             if (this.WebProxy != null)
             {
