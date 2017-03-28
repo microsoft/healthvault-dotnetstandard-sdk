@@ -96,26 +96,27 @@ namespace Microsoft.HealthVault.Client
         {
             using (await this.authenticateLock.LockAsync().ConfigureAwait(false))
             {
-                if (this.personInfo == null)
-                {
-                    // We are not yet connected.
-                    return;
-                }
-
+                // Delete session data from store to ensure we will always be in a clean state
                 await this.localObjectStore.DeleteAsync(ServiceInstanceKey).ConfigureAwait(false);
                 await this.localObjectStore.DeleteAsync(ApplicationCreationInfoKey).ConfigureAwait(false);
                 await this.localObjectStore.DeleteAsync(SessionCredentialKey).ConfigureAwait(false);
                 await this.localObjectStore.DeleteAsync(PersonInfoKey).ConfigureAwait(false);
 
-                foreach (HealthRecordInfo record in this.personInfo.AuthorizedRecords.Values)
+                if (this.ServiceInstance != null &&
+                    this.ApplicationCreationInfo != null &&
+                    this.SessionCredential != null &&
+                    this.personInfo != null)
                 {
-                    try
+                    foreach (HealthRecordInfo record in this.personInfo.AuthorizedRecords.Values)
                     {
-                        await this.PlatformClient.RemoveApplicationRecordAuthorizationAsync(record.Id).ConfigureAwait(false);
-                    }
-                    catch (Exception)
-                    {
-                        // Ignore, this is a non-essential cleanup step
+                        try
+                        {
+                            await this.PlatformClient.RemoveApplicationRecordAuthorizationAsync(record.Id).ConfigureAwait(false);
+                        }
+                        catch (Exception)
+                        {
+                            // Ignore, this is a non-essential cleanup step
+                        }
                     }
                 }
 

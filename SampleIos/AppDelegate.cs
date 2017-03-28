@@ -1,4 +1,6 @@
 ﻿using Foundation;
+using Microsoft.HealthVault.Client;
+using System;
 using UIKit;
 
 namespace SampleIos
@@ -18,6 +20,14 @@ namespace SampleIos
 
     public override bool FinishedLaunching(UIApplication application, NSDictionary launchOptions)
         {
+            // Configure HealthHault
+            ClientHealthVaultFactory.Current.SetConfiguration(new ClientHealthVaultConfiguration
+            {
+                MasterApplicationId = Guid.Parse("cf0cb893-d411-495c-b66f-9d72b4fd2b97"),
+                DefaultHealthVaultShellUrl = new Uri("https://account.healthvault-ppe.com"),
+                DefaultHealthVaultUrl = new Uri("https://platform.healthvault-ppe.com/platform")
+            });
+
             // create a new window instance based on the screen size
             Window = new UIWindow(UIScreen.MainScreen.Bounds);
 

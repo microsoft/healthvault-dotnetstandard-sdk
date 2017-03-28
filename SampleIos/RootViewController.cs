@@ -4,12 +4,15 @@ using UIKit;
 using Microsoft.HealthVault.Client;
 using System.Threading.Tasks;
 using Foundation;
+using Microsoft.HealthVault.Person;
+using Microsoft.HealthVault.Clients;
 
 namespace SampleIos
 {
     public partial class RootViewController : UIViewController
     {
         private IClientHealthVaultConnection connection;
+        private IThingClient thingClient;
 
         public RootViewController() :
             base("RootViewController", null)
@@ -45,34 +48,53 @@ namespace SampleIos
         private async Task ConnectToHealthVaultAsync()
         {
             this.activityIndicator.StartAnimating();
-            this.statusLabel.Text = "Connecting. Please wait.";
+            this.statusLabel.Text = "Connecting...";
 
             try
             {
-                ClientHealthVaultFactory.Current.SetConfiguration(new ClientHealthVaultConfiguration
-                {
-                    MasterApplicationId = Guid.Parse("cf0cb893-d411-495c-b66f-9d72b4fd2b97"),
-                    DefaultHealthVaultShellUrl = new Uri("https://account.healthvault-ppe.com"),
-                    DefaultHealthVaultUrl = new Uri("https://platform.healthvault-ppe.com/platform")
-                });
+                this.connection = ClientHealthVaultFactory.Current.GetConnection();
+                await this.connection.AuthenticateAsync();
 
-                this.connection = await ClientHealthVaultFactory.Current.GetConnectionAsync();
+                this.thingClient = connection.GetThingClient();
+                PersonInfo personInfo = await this.connection.GetPersonInfoAsync();
 
-                this.connectButton.Enabled = true;
                 this.connectButton.SetTitle("Disconnect", UIControlState.Normal);
-                this.activityIndicator.StopAnimating();
-
-                this.statusLabel.Text = $"Hello {this.connection.PersonInfo.Name}";
+                this.SetStatusLabelText($"Hello {personInfo.Name}");
             }
             catch (Exception e)
             {
-                this.statusLabel.Text = $"Error connecting... {e.ToString()}";
+                this.SetStatusLabelText($"Error connecting... {e.ToString()}");
+                this.connectButton.SetTitle("Retry", UIControlState.Normal);
             }
         }
 
         private async Task DisconnectFromHealthVaultAsync()
         {
+            this.activityIndicator.StartAnimating();
+            this.statusLabel.Text = "Disconnecting...";
 
+            try
+            {
+                await this.connection.DeauthorizeApplicationAsync();
+
+                this.thingClient = null;
+                this.connection = null;
+
+                this.connectButton.SetTitle("Connect", UIControlState.Normal);
+                this.SetStatusLabelText("Status: Not Connected");
+            }
+            catch (Exception e)
+            {
+                this.SetStatusLabelText($"Error connecting... {e.ToString()}");
+                this.connectButton.SetTitle("Retry", UIControlState.Normal);
+            }
+        }
+
+        private void SetStatusLabelText(string text)
+        {
+            this.statusLabel.Text = text;
+            this.activityIndicator.StopAnimating();
+            this.connectButton.Enabled = true;
         }
     }
 }

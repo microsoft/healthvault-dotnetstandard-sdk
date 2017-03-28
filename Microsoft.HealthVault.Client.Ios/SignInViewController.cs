@@ -39,6 +39,11 @@ namespace Microsoft.HealthVault.Client
             this.LoadWebView(this.startUrlString);
         }
 
+        public override bool PrefersStatusBarHidden()
+        {
+            return true;
+        }
+
         private void LoadWebView(string url)
         {
             if (this.webView == null)

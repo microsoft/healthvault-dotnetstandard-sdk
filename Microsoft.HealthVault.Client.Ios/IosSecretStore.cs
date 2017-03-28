@@ -22,7 +22,7 @@ namespace Microsoft.HealthVault.Client
 
             SecStatusCode status = SecKeyChain.Remove(this.NewSecRecordForKey(key));
 
-            if (status != SecStatusCode.Success)
+            if (status != SecStatusCode.Success && status != SecStatusCode.ItemNotFound)
             {
                 throw new IOException(string.Format(ClientResources.FileAccessErrorMessage, ClientResources.FileAccessActionDelete, key, status.ToString()));
             }
@@ -41,7 +41,7 @@ namespace Microsoft.HealthVault.Client
 
             if (record != null)
             {
-                 return Task.FromResult(this.ExistingSecRecordForKey(key).ValueData.ToString());
+                return Task.FromResult(this.ExistingSecRecordForKey(key).ValueData.ToString());
             }
 
             return Task.FromResult<string>(null);
