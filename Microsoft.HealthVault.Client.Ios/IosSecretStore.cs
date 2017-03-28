@@ -78,12 +78,14 @@ namespace Microsoft.HealthVault.Client
                     status = SecKeyChain.Update(newRecord, update);
                 }
             }
-            finally
+            catch (Exception e)
             {
-                if (status != SecStatusCode.Success)
-                {
-                    throw new IOException(string.Format(ClientResources.FileAccessErrorMessage, ClientResources.FileAccessActionWrite, key, status.ToString()));
-                }
+                throw new IOException(string.Format(ClientResources.FileAccessErrorMessage, ClientResources.FileAccessActionWrite, key), e);
+            }
+
+            if (status != SecStatusCode.Success)
+            {
+                throw new IOException(string.Format(ClientResources.FileAccessErrorMessage, ClientResources.FileAccessActionWrite, key, status.ToString()));
             }
 
             return Task.CompletedTask;
