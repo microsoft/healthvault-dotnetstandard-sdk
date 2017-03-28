@@ -51,6 +51,8 @@
     <Compile Include="AsyncEnumerable.cs" />
     <Compile Include="AsyncLock.cs" />
     <Compile Include="Clients\ClientHealthVaultFactory.cs" />
+    <Compile Include="Connection\HttpClientFactory.cs" />
+    <Compile Include="Connection\IHttpClientFactory.cs" />
     <Compile Include="Connection\MessageHandlerFactory.cs" />
     <Compile Include="Connection\IMessageHandlerFactory.cs" />
     <Compile Include="Cryptographer.cs" />
@@ -302,6 +304,8 @@
     </Compile>
     <Compile Include="Rest\HealthServiceRestRequest.cs" />
     <Compile Include="Rest\HealthServiceRestResponseData.cs" />
+    <Compile Include="Services\DateTimeService.cs" />
+    <Compile Include="Services\IDateTimeService.cs" />
     <Compile Include="Thing\AuthorizationRule.cs" />
     <Compile Include="Thing\AuthorizationRuleDisplayFlags.cs" />
     <Compile Include="Thing\AuthorizationSetDefinition.cs" />

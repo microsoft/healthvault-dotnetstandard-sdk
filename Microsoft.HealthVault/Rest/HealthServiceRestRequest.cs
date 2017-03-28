@@ -46,6 +46,7 @@ namespace Microsoft.HealthVault.Rest
         private CancellationTokenSource cancellationTokenSource;
 
         private HealthVaultConfiguration configuration = Ioc.Get<HealthVaultConfiguration>();
+        private IHttpClientFactory httpClientFactory = Ioc.Get<IHttpClientFactory>();
 
         /// <summary>
         /// Creates a new instance of the <see cref="HealthServiceRestRequest"/>
@@ -312,22 +313,10 @@ namespace Microsoft.HealthVault.Rest
                 }
             }
 
-            using (HttpClient client = this.CreateHttpClient())
-            {
-                response = await client.SendAsync(httpRequest, this.cancellationTokenSource.Token).ConfigureAwait(false);
-            }
+            HttpClient client = this.httpClientFactory.GetFreshClient();
+            response = await client.SendAsync(httpRequest, this.cancellationTokenSource.Token).ConfigureAwait(false);
 
             return await this.GetResponseAsync(response).ConfigureAwait(false);
-        }
-
-        private HttpClient CreateHttpClient()
-        {
-            var handler = new HttpClientHandler
-            {
-                AutomaticDecompression = DecompressionMethods.GZip | DecompressionMethods.Deflate
-            };
-
-            return new HttpClient(handler);
         }
 
         private HttpRequestMessage CreateRequest(Uri uri)

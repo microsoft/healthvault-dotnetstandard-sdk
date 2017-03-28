@@ -4,6 +4,7 @@ using Microsoft.HealthVault.Clients;
 using Microsoft.HealthVault.Connection;
 using Microsoft.HealthVault.Extensions;
 using System;
+using Microsoft.HealthVault.Services;
 using Microsoft.HealthVault.Transport;
 
 namespace Microsoft.HealthVault
@@ -43,6 +44,8 @@ namespace Microsoft.HealthVault
             container.RegisterSingleton<IServiceLocator, ServiceLocator>();
             container.RegisterSingleton<ICryptographer, Cryptographer>();
             container.RegisterSingleton<IMessageHandlerFactory, MessageHandlerFactory>();
+            container.RegisterSingleton<IHttpClientFactory, HttpClientFactory>();
+            container.RegisterSingleton<IDateTimeService, DateTimeService>();
         }
 
         public static T Get<T>()

@@ -23,7 +23,7 @@ namespace Microsoft.HealthVault.Transport
         private readonly byte[] xmlRequest; // utf8Encoded
         private readonly int xmlRequestLength;
         private HealthVaultConfiguration configuration = Ioc.Get<HealthVaultConfiguration>();
-        private IMessageHandlerFactory messageHandlerFactory = Ioc.Get<IMessageHandlerFactory>();
+        private IHttpClientFactory httpClientFactory = Ioc.Get<IHttpClientFactory>();
 
         internal EasyWebRequest()
         {
@@ -34,13 +34,6 @@ namespace Microsoft.HealthVault.Transport
             this.xmlRequest = utf8EncodedXml;
             this.xmlRequestLength = length;
         }
-
-        /// <summary>
-        /// Sets the proxy to use with this instance of
-        /// EasyWebRequest. To disable proxy usage, set this property to null.
-        /// </summary>
-        /// 
-        internal IWebProxy WebProxy { get; set; }
 
         /// <summary>
         /// Gets or sets the request compression method.
@@ -109,52 +102,36 @@ namespace Microsoft.HealthVault.Transport
 
             message.Content = content;
 
-            // TODO: Investigate singleton for HttpClient?
-            using (HttpClient client = this.CreateHttpClient())
+            HttpClient client = this.httpClientFactory.GetFreshClient();
+            int retryCount = this.configuration.RetryOnInternal500Count;
+            do
             {
-                int retryCount = this.configuration.RetryOnInternal500Count;
-                do
+                HttpResponseMessage response = await client.SendAsync(message, token).ConfigureAwait(false);
+                if (response.StatusCode == HttpStatusCode.InternalServerError && retryCount > 0)
                 {
-                    HttpResponseMessage response = await client.SendAsync(message, token).ConfigureAwait(false);
-                    if (response.StatusCode == HttpStatusCode.InternalServerError && retryCount > 0)
-                    {
-                        // If we have a 500 and have retries left, retry.
-                        await Task.Delay(
-                            TimeSpan.FromSeconds(this.configuration.RetryOnInternal500SleepSeconds),
-                            token).ConfigureAwait(false);
-                    }
-                    else
-                    {
-                        // If we have a non-500 error or have run out of retries, throw.
-                        if (!response.IsSuccessStatusCode)
-                        {
-                            throw new HealthHttpException(Resources.HttpReturnedError, response.StatusCode);
-                        }
-
-                        // If we have a successful response, return it.
-                        return response;
-                    }
-
-                    retryCount--;
+                    // If we have a 500 and have retries left, retry.
+                    await Task.Delay(
+                        TimeSpan.FromSeconds(this.configuration.RetryOnInternal500SleepSeconds),
+                        token).ConfigureAwait(false);
                 }
-                while (retryCount >= 0);
+                else
+                {
+                    // If we have a non-500 error or have run out of retries, throw.
+                    if (!response.IsSuccessStatusCode)
+                    {
+                        throw new HealthHttpException(Resources.HttpReturnedError, response.StatusCode);
+                    }
+
+                    // If we have a successful response, return it.
+                    return response;
+                }
+
+                retryCount--;
             }
+            while (retryCount >= 0);
 
             // We should never get here but we need to make the compiler happy.
             throw new Exception(Resources.UnexpectedError);
-        }
-
-        public HttpClient CreateHttpClient()
-        {
-            HttpClientHandler handler = this.messageHandlerFactory.Create();
-            handler.AutomaticDecompression = DecompressionMethods.GZip | DecompressionMethods.Deflate;
-
-            if (this.WebProxy != null)
-            {
-                handler.Proxy = this.WebProxy;
-            }
-
-            return new HttpClient(handler);
         }
     }
 }

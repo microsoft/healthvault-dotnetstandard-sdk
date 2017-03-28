@@ -21,7 +21,5 @@ namespace Microsoft.HealthVault.Transport
         Dictionary<string, string> Headers { get; }
 
         Task<HttpResponseMessage> FetchAsync(Uri url, CancellationToken token);
-
-        HttpClient CreateHttpClient();
     }
 }

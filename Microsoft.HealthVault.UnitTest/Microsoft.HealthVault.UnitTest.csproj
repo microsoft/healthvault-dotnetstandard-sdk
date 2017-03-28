@@ -112,6 +112,7 @@
     <Compile Include="Clients\VocabularyClientTests.cs" />
     <Compile Include="CloudRequestTests\HealthServiceRequestTest.cs" />
     <Compile Include="CloudRequestTests\TestHealthWebRequest.cs" />
+    <Compile Include="Connection\HttpClientFactoryTests.cs" />
     <Compile Include="LocalObjectStoreTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Samples\SampleUtils.cs" />
