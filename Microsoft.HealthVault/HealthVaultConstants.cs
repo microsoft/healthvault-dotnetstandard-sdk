@@ -28,6 +28,7 @@ namespace Microsoft.HealthVault
         {
             internal static readonly string AndroidClient = "HV-Xamarin-Android";
             internal static readonly string WindowsClient = "HV-Xamarin-Windows";
+            internal static readonly string IosClient = "HV-Xamarin-Ios";
             internal static readonly string Web = "HV-Web";
         }
     }
