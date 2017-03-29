@@ -146,19 +146,43 @@
     <MtouchFloat32>False</MtouchFloat32>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="BloodPressureCell.cs" />
+    <Compile Include="BloodPressureCell.designer.cs">
+      <DependentUpon>BloodPressureCell.cs</DependentUpon>
+    </Compile>
+    <Compile Include="BloodPressureEntryViewController.cs" />
+    <Compile Include="BloodPressureEntryViewController.designer.cs">
+      <DependentUpon>BloodPressureEntryViewController.cs</DependentUpon>
+    </Compile>
+    <Compile Include="IThingCell.cs" />
     <Compile Include="Main.cs" />
     <Compile Include="AppDelegate.cs" />
     <Compile Include="RootViewController.cs" />
     <Compile Include="RootViewController.designer.cs">
       <DependentUpon>RootViewController.cs</DependentUpon>
     </Compile>
+    <Compile Include="ThingListViewController.cs" />
+    <Compile Include="ThingListViewController.designer.cs">
+      <DependentUpon>ThingListViewController.cs</DependentUpon>
+    </Compile>
+    <InterfaceDefinition Include="BloodPressureEntryViewController.xib">
+      <SubType>Designer</SubType>
+    </InterfaceDefinition>
+    <InterfaceDefinition Include="BloodPressureCell.xib">
+      <SubType>Designer</SubType>
+    </InterfaceDefinition>
     <None Include="GettingStarted.Xamarin" />
     <None Include="Info.plist" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <InterfaceDefinition Include="Resources\LaunchScreen.xib" />
     <Content Include="Entitlements.plist" />
     <None Include="packages.config" />
-    <InterfaceDefinition Include="RootViewController.xib" />
+    <InterfaceDefinition Include="RootViewController.xib">
+      <SubType>Designer</SubType>
+    </InterfaceDefinition>
+    <InterfaceDefinition Include="ThingListViewController.xib">
+      <SubType>Designer</SubType>
+    </InterfaceDefinition>
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Grace, Version=5.1.0.0, Culture=neutral, processorArchitecture=MSIL">

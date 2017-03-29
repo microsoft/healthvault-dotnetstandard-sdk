@@ -260,10 +260,10 @@ namespace Microsoft.HealthVault.Transport
                     {
                         CryptoData crytpoData = this.connectionInternal.GetAuthData(this.Method, headerXml);
 
-                        string authInnerXml = this.GetCryptoDataInnerXml(crytpoData);
-
-                        if (!string.IsNullOrEmpty(authInnerXml))
+                        if (crytpoData != null)
                         {
+                            string authInnerXml = this.GetCryptoDataInnerXml(crytpoData);
+
                             writer.WriteStartElement("auth");
                             writer.WriteRaw(authInnerXml);
                             writer.WriteEndElement();

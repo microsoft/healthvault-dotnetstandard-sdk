@@ -3,7 +3,7 @@ using Microsoft.HealthVault.Client;
 using System;
 using UIKit;
 
-namespace SampleIos
+namespace SandboxIos
 {
     // The UIApplicationDelegate for the application. This class is responsible for launching the
     // User Interface of the application, as well as listening (and optionally responding) to application events from iOS.
@@ -31,12 +31,13 @@ namespace SampleIos
             // create a new window instance based on the screen size
             Window = new UIWindow(UIScreen.MainScreen.Bounds);
 
-            Window.RootViewController = new RootViewController();
+            Window.RootViewController = new UINavigationController(new RootViewController());
 
             // make the window visible
             Window.MakeKeyAndVisible();
-
-
+            
+            // Hide back button titles
+            //UIBarButtonItem.Appearance.SetBackButtonTitlePositionAdjustment(new UIOffset(-60, -60), UIBarMetrics.Default);
 
             return true;
         }

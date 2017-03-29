@@ -6,13 +6,17 @@ using System.Threading.Tasks;
 using Foundation;
 using Microsoft.HealthVault.Person;
 using Microsoft.HealthVault.Clients;
+using SandboxIos;
+using Microsoft.HealthVault.ItemTypes;
 
-namespace SampleIos
+namespace SandboxIos
 {
     public partial class RootViewController : UIViewController
     {
         private IHealthVaultSodaConnection connection;
         private IThingClient thingClient;
+
+        private const string notConnectedMessage = "Tap \"Connect\" to log in";
 
         public RootViewController() :
             base("RootViewController", null)
@@ -28,7 +32,16 @@ namespace SampleIos
         {
             base.ViewDidLoad();
 
-            this.statusLabel.Text = "Status: Not Connected";
+            UIBarButtonItem backButton = new UIBarButtonItem("Back", UIBarButtonItemStyle.Plain, null, null);
+            this.NavigationItem.BackBarButtonItem = backButton;
+
+            this.statusLabel.Text = notConnectedMessage;
+            this.UpdateTitle("Not Connected");
+        }
+
+        partial void BloodPressureButtonPressed()
+        {
+            this.NavigationController.PushViewController(new ThingListViewController<BloodPressure>(this.connection), true);
         }
 
         partial void ConnectButtonPressed()
@@ -48,7 +61,8 @@ namespace SampleIos
         private async Task ConnectToHealthVaultAsync()
         {
             this.activityIndicator.StartAnimating();
-            this.statusLabel.Text = "Connecting...";
+            this.UpdateTitle("Connecting...");
+            this.statusLabel.Text = "";
 
             try
             {
@@ -59,19 +73,23 @@ namespace SampleIos
                 PersonInfo personInfo = await this.connection.GetPersonInfoAsync();
 
                 this.connectButton.SetTitle("Disconnect", UIControlState.Normal);
-                this.SetStatusLabelText($"Hello {personInfo.Name}");
+                this.SetStatusLabelText("");
+                this.UpdateTitle(personInfo.Name);
+                this.controlView.Hidden = false;
             }
             catch (Exception e)
             {
-                this.SetStatusLabelText($"Error connecting... {e.ToString()}");
+                this.UpdateTitle("Error");
+                this.SetStatusLabelText(e.ToString());
                 this.connectButton.SetTitle("Retry", UIControlState.Normal);
             }
         }
 
         private async Task DisconnectFromHealthVaultAsync()
         {
+            this.controlView.Hidden = true;
             this.activityIndicator.StartAnimating();
-            this.statusLabel.Text = "Disconnecting...";
+            this.UpdateTitle("Disconnecting...");
 
             try
             {
@@ -81,13 +99,20 @@ namespace SampleIos
                 this.connection = null;
 
                 this.connectButton.SetTitle("Connect", UIControlState.Normal);
-                this.SetStatusLabelText("Status: Not Connected");
+                this.UpdateTitle("Not Connected");
+                this.SetStatusLabelText(notConnectedMessage);
             }
             catch (Exception e)
             {
-                this.SetStatusLabelText($"Error connecting... {e.ToString()}");
+                this.UpdateTitle("Error");
+                this.SetStatusLabelText(e.ToString());
                 this.connectButton.SetTitle("Retry", UIControlState.Normal);
             }
+        }
+
+        private void UpdateTitle(string title)
+        {
+            this.NavigationController.NavigationBar.TopItem.Title = title;
         }
 
         private void SetStatusLabelText(string text)
