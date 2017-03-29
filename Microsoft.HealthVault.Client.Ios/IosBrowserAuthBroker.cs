@@ -33,7 +33,7 @@ namespace Microsoft.HealthVault.Client
                         IUIApplicationDelegate appDelegate = UIApplication.SharedApplication.Delegate;
                         UIViewController rootViewController = appDelegate.GetWindow().RootViewController;
 
-                        rootViewController.PresentViewController(signInViewController, true, null);
+                        rootViewController.PresentViewController(new UINavigationController(signInViewController), true, null);
                     });
 
                     Uri loginUri = await this.loginCompletionSource.Task.ConfigureAwait(false);

@@ -30,6 +30,15 @@ namespace Microsoft.HealthVault.Client
         public override void ViewDidLoad()
         {
             base.ViewDidLoad();
+
+            // Add a cancel button to the navigation bar
+            this.NavigationItem.SetLeftBarButtonItem(
+                new UIBarButtonItem(UIBarButtonSystemItem.Cancel,
+                (sender, args) =>
+                {
+                    this.navigationHandler.SignInCancelled();
+                }),
+                false);
         }
 
         public override void ViewWillAppear(bool animated)
@@ -37,11 +46,6 @@ namespace Microsoft.HealthVault.Client
             base.ViewWillAppear(animated);
 
             this.LoadWebView(this.startUrlString);
-        }
-
-        public override bool PrefersStatusBarHidden()
-        {
-            return true;
         }
 
         private void LoadWebView(string url)
@@ -61,15 +65,10 @@ namespace Microsoft.HealthVault.Client
                 this.webView.TranslatesAutoresizingMaskIntoConstraints = false;
                 var subviews = NSDictionary.FromObjectAndKey(this.webView, new NSString(webViewKey));
                 this.View.AddConstraints(NSLayoutConstraint.FromVisualFormat("|[" + webViewKey + "]|", NSLayoutFormatOptions.DirectionLeadingToTrailing, new NSDictionary(), subviews));
-                this.View.AddConstraints(NSLayoutConstraint.FromVisualFormat("V:|-44-[" + webViewKey + "]|", NSLayoutFormatOptions.DirectionLeadingToTrailing, new NSDictionary(), subviews));
+                this.View.AddConstraints(NSLayoutConstraint.FromVisualFormat("V:|[" + webViewKey + "]|", NSLayoutFormatOptions.DirectionLeadingToTrailing, new NSDictionary(), subviews));
 
                 this.webView.LoadRequest(new NSUrlRequest(new NSUrl(url)));
             }
-        }
-
-        partial void CancelButtonPressed()
-        {
-            this.navigationHandler.SignInCancelled();
         }
     }
 }

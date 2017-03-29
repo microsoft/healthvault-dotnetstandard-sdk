@@ -35,9 +35,6 @@ namespace SandboxIos
 
             // make the window visible
             Window.MakeKeyAndVisible();
-            
-            // Hide back button titles
-            //UIBarButtonItem.Appearance.SetBackButtonTitlePositionAdjustment(new UIOffset(-60, -60), UIBarMetrics.Default);
 
             return true;
         }
