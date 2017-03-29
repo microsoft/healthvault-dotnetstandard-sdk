@@ -35,7 +35,7 @@ namespace SandboxIos
 
         public CGSize GetSize(IThing thing)
         {
-            return new CGSize(168, 168);
+            return new CGSize(188, 188);
         }
     }
 }
