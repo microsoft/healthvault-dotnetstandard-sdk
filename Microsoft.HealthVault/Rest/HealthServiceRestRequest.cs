@@ -94,7 +94,7 @@ namespace Microsoft.HealthVault.Rest
         /// </exception>
         ///
         public HealthServiceRestRequest(
-            IHealthVaultConnection connection,
+            IConnectionInternal connection,
             HttpMethod httpVerb,
             string path,
             NameValueCollection queryStringParameters = null,
@@ -164,7 +164,7 @@ namespace Microsoft.HealthVault.Rest
         /// </exception>
         ///
         public HealthServiceRestRequest(
-            IHealthVaultConnection connection,
+            IConnectionInternal connection,
             HttpMethod httpVerb,
             Uri fullUri,
             string requestBody = null,
@@ -248,7 +248,7 @@ namespace Microsoft.HealthVault.Rest
         }
 
         private void Initialize(
-            IHealthVaultConnection connection,
+            IConnectionInternal connection,
             HttpMethod httpVerb,
             Uri fullUri,
             string requestBody = null,
@@ -302,7 +302,7 @@ namespace Microsoft.HealthVault.Rest
             HttpResponseMessage response = null;
             this.cancellationTokenSource = new CancellationTokenSource(TimeSpan.FromSeconds(this.timeoutSeconds));
 
-            await this.SetHeadersAsync(httpRequest);
+            this.SetHeaders(httpRequest);
 
             if (this.isContentRequest)
             {
@@ -329,10 +329,13 @@ namespace Microsoft.HealthVault.Rest
             return httpRequest;
         }
 
-        private async Task SetHeadersAsync(HttpRequestMessage request)
+        private void SetHeaders(HttpRequestMessage request)
         {
-            var authHeader = await this.GetAuthorizationHeaderAsync().ConfigureAwait(false);
-            request.Headers.Add(RestConstants.AuthorizationHeaderName, authHeader);
+            var authHeader = this.connection.GetRestAuthSessionHeader(this.RecordId);
+            if (!string.IsNullOrEmpty(authHeader))
+            {
+                request.Headers.Add(RestConstants.AuthorizationHeaderName, authHeader);
+            }
 
             if (this.isContentRequest)
             {
@@ -434,40 +437,6 @@ namespace Microsoft.HealthVault.Rest
             return result;
         }
 
-        private async Task<string> GetAuthorizationHeaderAsync()
-        {
-            List<string> tokens = new List<string>();
-
-            // TODO: IConnection-ify this.
-            /*
-            if (this.connection.Credential != null)
-            {
-                await this.connection.Credential.AuthenticateIfRequiredAsync(this.connection, this.connection.ApplicationConfiguration.ApplicationId).ConfigureAwait(false);
-            }
-
-            if (this.connection.Credential != null && !string.IsNullOrEmpty(this.connection.AuthenticationToken))
-            {
-                this.connection.Credential.AddRestAuthorizationHeaderToken(tokens, this.connection.ApplicationConfiguration.ApplicationId);
-
-                OfflineWebApplicationConnection offlineConnection = this.connection as OfflineWebApplicationConnection;
-                if (offlineConnection != null)
-                {
-                    if (offlineConnection.OfflinePersonId != Guid.Empty)
-                    {
-                        tokens.Add(string.Format(CultureInfo.InvariantCulture, RestConstants.AuthorizationHeaderElement, RestConstants.OfflinePersonId, offlineConnection.OfflinePersonId.ToString()));
-                    }
-                }
-            }
-            */
-
-            if (this.RecordId != Guid.Empty)
-            {
-                tokens.Add(string.Format(CultureInfo.InvariantCulture, RestConstants.AuthorizationHeaderElement, RestConstants.RecordId, this.RecordId));
-            }
-
-            return string.Format(CultureInfo.InvariantCulture, RestConstants.MSHV1HeaderFormat, string.Join(",", tokens.ToArray<string>()));
-        }
-
         private string GetHmacHeader(HttpRequestMessage request)
         {
             AuthenticationHeaderValue authHeader = request.Headers.Authorization;
@@ -520,7 +489,7 @@ namespace Microsoft.HealthVault.Rest
         [ThreadStatic]
         private static Guid correlationId;
 
-        private IHealthVaultConnection connection;
+        private IConnectionInternal connection;
         private HttpMethod verb;
         private string body;
         private Uri uri;

@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Globalization;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Xml;
@@ -9,6 +11,7 @@ using Microsoft.HealthVault.Helpers;
 using Microsoft.HealthVault.Person;
 using Microsoft.HealthVault.PlatformInformation;
 using Microsoft.HealthVault.Record;
+using Microsoft.HealthVault.Rest;
 using Microsoft.HealthVault.Transport;
 
 namespace Microsoft.HealthVault.Client
@@ -77,6 +80,30 @@ namespace Microsoft.HealthVault.Client
             writer.WriteEndElement();
         }
 
+        public override string GetRestAuthSessionHeader(Guid? recordId)
+        {
+            string authToken = this.SessionCredential.Token;
+            if (string.IsNullOrEmpty(authToken))
+            {
+                return string.Empty;
+            }
+
+            List<string> tokens = new List<string>();
+            tokens.Add(this.FormatRestHeaderToken(RestConstants.AppToken, authToken));
+            if (recordId.HasValue && recordId != Guid.Empty)
+            {
+                tokens.Add(this.FormatRestHeaderToken(RestConstants.OfflinePersonId, this.personInfo.PersonId.ToString()));
+                tokens.Add(this.FormatRestHeaderToken(RestConstants.RecordId, recordId.Value.ToString()));
+            }
+
+            return string.Format(CultureInfo.InvariantCulture, RestConstants.MSHV1HeaderFormat, string.Join(",", tokens));
+        }
+
+        private string FormatRestHeaderToken(string name, string value)
+        {
+            return string.Format(CultureInfo.InvariantCulture, RestConstants.AuthorizationHeaderElement, name, value);
+        }
+
         public async Task AuthorizeAdditionalRecordsAsync()
         {
             using (await this.authenticateLock.LockAsync().ConfigureAwait(false))
@@ -85,7 +112,7 @@ namespace Microsoft.HealthVault.Client
                 await this.shellAuthService.AuthorizeAdditionalRecordsAsync(this.ServiceInstance.ShellUrl, this.clientHealthVaultConfiguration.MasterApplicationId).ConfigureAwait(false);
 
                 // Update the person info to add the newly authorized records.
-                await this.GetAndSavePersonInfoAsync().ConfigureAwait(false); 
+                await this.GetAndSavePersonInfoAsync().ConfigureAwait(false);
             }
         }
 
@@ -208,6 +235,7 @@ namespace Microsoft.HealthVault.Client
         private async Task GetAndSavePersonInfoAsync()
         {
             var personClient = ClientHealthVaultFactory.GetPersonClient(this);
+
             // TODO: Eliminate circular call. This method is called from AuthenticateAsync. PersonClient is calling HealthVaultConnectionBase.ExecuteAsync, which is calling AuthenticateAsync
             PersonInfo newPersonInfo = await personClient.GetPersonInfoAsync().ConfigureAwait(false);
             await this.localObjectStore.WriteAsync(PersonInfoKey, newPersonInfo).ConfigureAwait(false);

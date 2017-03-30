@@ -286,7 +286,7 @@ namespace Microsoft.HealthVault.ItemTypes
         /// </returns>
         ///
         /// <exception cref="ArgumentOutOfRangeException">
-        /// If the <paramref name="SamplingInterval"/> parameter is less than or equal to zero.
+        /// If the <paramref name="value"/> parameter is less than or equal to zero.
         /// </exception>
         ///
         public double SamplingInterval

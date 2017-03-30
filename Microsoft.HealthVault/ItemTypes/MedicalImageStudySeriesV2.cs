@@ -112,7 +112,7 @@ namespace Microsoft.HealthVault.ItemTypes
         /// If <paramref name="writer"/> parameter is <b>null</b>.
         /// </exception>
         ///
-        /// <exception cref="HealthRecordItemSerializationException">
+        /// <exception cref="ThingSerializationException">
         /// If <see cref="AcquisitionDateTime"/> is <b>null</b>.
         /// If <see cref="Images"/> is <b>null</b> or doesn't contain any image.
         /// </exception>

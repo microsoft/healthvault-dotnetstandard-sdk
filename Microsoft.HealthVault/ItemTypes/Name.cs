@@ -6,6 +6,7 @@
 using System;
 using System.Xml;
 using System.Xml.XPath;
+using Microsoft.HealthVault.Exceptions;
 using Microsoft.HealthVault.Helpers;
 
 namespace Microsoft.HealthVault.ItemTypes
@@ -197,7 +198,7 @@ namespace Microsoft.HealthVault.ItemTypes
         /// The <paramref name="writer"/> parameter is <b>null</b>.
         /// </exception>
         ///
-        /// <exception cref="HealthRecordItemSerializationException">
+        /// <exception cref="ThingSerializationException">
         /// The <see cref="Full"/> property has not been set.
         /// </exception>
         ///

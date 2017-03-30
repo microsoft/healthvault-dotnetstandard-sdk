@@ -3,6 +3,7 @@
 // see http://www.microsoft.com/resources/sharedsource/licensingbasics/sharedsourcelicenses.mspx.
 // All other rights reserved.
 
+using System;
 using System.Globalization;
 using System.Xml;
 using System.Xml.XPath;
@@ -170,11 +171,9 @@ namespace Microsoft.HealthVault.ItemTypes
         /// If <paramref name="writer"/> is <b>null</b>.
         /// </exception>
         ///
-        /// <exception cref="HealthRecordItemSerializationException">
-        /// If the <see cref="RelativeLowerBoundary"/>,
-        /// <see cref="AbsoluteLowerBoundary"/>,
-        /// or <see cref="RelativeUpperBoundary"/>, or
-        /// <see cref="AbsoluteUpperBoundary"/> property is not set.
+        /// <exception cref="ThingSerializationException">
+        /// If the <see cref="RelativeLowerBoundary"/>, <see cref="AbsoluteLowerBoundary"/>,
+        /// or <see cref="RelativeUpperBoundary"/>, or <see cref="AbsoluteUpperBoundary"/> property is not set.
         /// </exception>
         ///
         public override void WriteXml(string nodeName, XmlWriter writer)

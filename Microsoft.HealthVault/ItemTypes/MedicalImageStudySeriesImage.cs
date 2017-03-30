@@ -3,6 +3,7 @@
 // see http://www.microsoft.com/resources/sharedsource/licensingbasics/sharedsourcelicenses.mspx.
 // All other rights reserved.
 
+using System;
 using System.Text;
 using System.Xml;
 using System.Xml.XPath;
@@ -83,7 +84,7 @@ namespace Microsoft.HealthVault.ItemTypes
         /// The <paramref name="writer"/> parameter is <b>null</b>.
         /// </exception>
         ///
-        /// <exception cref="HealthRecordItemSerializationException">
+        /// <exception cref="ThingSerializationException">
         /// If <see cref="ImageBlobName"/> is <b>null</b> or empty or contains only whitespace.
         /// </exception>
         ///

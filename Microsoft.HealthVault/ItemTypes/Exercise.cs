@@ -9,6 +9,7 @@ using System.Collections.ObjectModel;
 using System.Text;
 using System.Xml;
 using System.Xml.XPath;
+using Microsoft.HealthVault.Exceptions;
 using Microsoft.HealthVault.Helpers;
 using Microsoft.HealthVault.Thing;
 
@@ -138,7 +139,7 @@ namespace Microsoft.HealthVault.ItemTypes
         /// If <paramref name="writer"/> is <b>null</b>.
         /// </exception>
         ///
-        /// <exception cref="HealthRecordItemSerializationException">
+        /// <exception cref="ThingSerializationException">
         /// If <see cref="When"/> is <b>null</b>.
         /// If <see cref="Activity"/> is <b>null</b>.
         /// </exception>
@@ -230,7 +231,7 @@ namespace Microsoft.HealthVault.ItemTypes
         /// </remarks>
         ///
         /// <exception cref="ArgumentNullException">
-        /// If <paramref name="Activity"/> is <b>null</b>.
+        /// If <paramref name="value"/> is <b>null</b>.
         /// </exception>
         ///
         public CodableValue Activity

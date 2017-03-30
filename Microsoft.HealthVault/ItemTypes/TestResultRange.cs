@@ -6,6 +6,7 @@
 using System;
 using System.Xml;
 using System.Xml.XPath;
+using Microsoft.HealthVault.Exceptions;
 using Microsoft.HealthVault.Helpers;
 
 namespace Microsoft.HealthVault.ItemTypes
@@ -102,7 +103,7 @@ namespace Microsoft.HealthVault.ItemTypes
         /// If <paramref name="writer"/> is <b> null </b>.
         /// </exception>
         ///
-        /// <exception cref="HealthRecordItemSerializationException">
+        /// <exception cref="ThingSerializationException">
         /// If <see cref="Type"/> or <see cref="Text"/> is <b> null </b>.
         /// </exception>
         ///
@@ -152,7 +153,7 @@ namespace Microsoft.HealthVault.ItemTypes
         /// </summary>
         ///
         /// <exception cref="ArgumentNullException">
-        /// If <paramref name="RangeType"/> is <b>null</b>.
+        /// If <paramref name="value"/> is <b>null</b>.
         /// </exception>
         ///
         public CodableValue RangeType
@@ -189,7 +190,7 @@ namespace Microsoft.HealthVault.ItemTypes
         /// </remarks>
         ///
         /// <exception cref="ArgumentNullException">
-        /// If <paramref name="Text"/> is <b>null</b>.
+        /// If <paramref name="value"/> is <b>null</b>.
         /// </exception>
         ///
         public CodableValue Text

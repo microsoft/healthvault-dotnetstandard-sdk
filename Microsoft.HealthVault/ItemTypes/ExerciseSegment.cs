@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Xml;
 using System.Xml.XPath;
+using Microsoft.HealthVault.Exceptions;
 using Microsoft.HealthVault.Helpers;
 
 namespace Microsoft.HealthVault.ItemTypes
@@ -112,7 +113,7 @@ namespace Microsoft.HealthVault.ItemTypes
         /// The <paramref name="nodeName"/> parameter is <b>null</b> or empty.
         /// </exception>
         ///
-        /// <exception cref="HealthRecordItemSerializationException">
+        /// <exception cref="ThingSerializationException">
         /// The Activity property is <b>null</b>.
         /// </exception>
         ///
@@ -173,7 +174,7 @@ namespace Microsoft.HealthVault.ItemTypes
         /// </remarks>
         ///
         /// <exception cref="ArgumentNullException">
-        /// If <paramref name="Activity"/> is <b>null</b>.
+        /// If <paramref name="value"/> is <b>null</b>.
         /// </exception>
         ///
         public CodableValue Activity

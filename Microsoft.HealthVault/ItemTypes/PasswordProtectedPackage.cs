@@ -4,9 +4,11 @@
 // All other rights reserved.
 
 using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.Xml;
 using System.Xml.XPath;
+using Microsoft.HealthVault.Clients;
 using Microsoft.HealthVault.Exceptions;
 using Microsoft.HealthVault.Helpers;
 using Microsoft.HealthVault.Thing;
@@ -38,9 +40,7 @@ namespace Microsoft.HealthVault.ItemTypes
         /// </summary>
         ///
         /// <remarks>
-        /// The item is not added to the health record until the
-        /// <see cref="HealthRecordAccessor.NewItemAsync(ThingBase)"/>
-        /// method is called.
+        /// The item is not added to the health record until the <see cref="IThingClient.CreateNewThingsAsync{ThingBase}(Guid, ICollection{ThingBase})"/> method is called.
         /// </remarks>
         ///
         public PasswordProtectedPackage()

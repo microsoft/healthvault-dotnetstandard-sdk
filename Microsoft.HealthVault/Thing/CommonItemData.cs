@@ -39,7 +39,9 @@ namespace Microsoft.HealthVault.Thing
             XPathNavigator tagsNav = commonNav.SelectSingleNode("tags");
             if (tagsNav != null)
             {
+#pragma warning disable CS0618 // Type or member is obsolete
                 this.Tags = tagsNav.Value;
+#pragma warning restore CS0618 // Type or member is obsolete
             }
 
             XPathNodeIterator extensionIterator = commonNav.Select("extension");
@@ -106,11 +108,15 @@ namespace Microsoft.HealthVault.Thing
                 writer.WriteElementString("note", this.Note);
             }
 
+#pragma warning disable CS0618 // Type or member is obsolete
+
             // Please leave this code until the data-xml/common/tags gets removed.
             if (!string.IsNullOrEmpty(this.Tags))
             {
                 writer.WriteElementString("tags", this.Tags);
             }
+
+#pragma warning restore CS0618 // Type or member is obsolete
 
             foreach (ThingExtension extension in this.Extensions)
             {

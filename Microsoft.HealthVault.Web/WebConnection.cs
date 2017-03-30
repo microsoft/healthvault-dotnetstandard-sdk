@@ -1,8 +1,11 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Globalization;
 using System.Threading.Tasks;
 using System.Xml;
 using Microsoft.HealthVault.Connection;
 using Microsoft.HealthVault.Person;
+using Microsoft.HealthVault.Rest;
 
 namespace Microsoft.HealthVault.Web
 {
@@ -56,6 +59,29 @@ namespace Microsoft.HealthVault.Web
 
                 writer.WriteEndElement();
             }
+        }
+
+        public override string GetRestAuthSessionHeader(Guid? recordId)
+        {
+            string authToken = this.SessionCredential.Token;
+            if (string.IsNullOrEmpty(authToken))
+            {
+                return string.Empty;
+            }
+
+            List<string> tokens = new List<string>();
+            tokens.Add(this.FormatRestHeaderToken(RestConstants.AppToken, authToken));
+            if (recordId.HasValue && recordId != Guid.Empty)
+            {
+                tokens.Add(this.FormatRestHeaderToken(RestConstants.RecordId, recordId.Value.ToString()));
+            }
+
+            return string.Format(CultureInfo.InvariantCulture, RestConstants.MSHV1HeaderFormat, string.Join(",", tokens));
+        }
+
+        private string FormatRestHeaderToken(string name, string value)
+        {
+            return string.Format(CultureInfo.InvariantCulture, RestConstants.AuthorizationHeaderElement, name, value);
         }
 
         public override Task<PersonInfo> GetPersonInfoAsync()

@@ -4,7 +4,6 @@
 // All other rights reserved.
 
 using System;
-using Microsoft.HealthVault.Helpers;
 
 namespace Microsoft.HealthVault.ItemTypes
 {
@@ -35,7 +34,7 @@ namespace Microsoft.HealthVault.ItemTypes
         /// </value>
         ///
         /// <exception cref="ArgumentOutOfRangeException">
-        /// The <paramref name="OffsetInSeconds"/> value is less than zero.
+        /// The <paramref name="value"/> value is less than zero.
         /// </exception>
         public double OffsetInSeconds
         {

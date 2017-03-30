@@ -169,9 +169,8 @@ namespace Microsoft.HealthVault.ItemTypes
         /// The <paramref name="writer"/> parameter is <b>null</b>.
         /// </exception>
         ///
-        /// <exception cref="HealthRecordItemSerializationException">
-        /// The <see cref="Value"/> or <see cref="VocabularyName"/> property
-        /// is <b>null</b>.
+        /// <exception cref="ThingSerializationException">
+        /// The <see cref="Value"/> or <see cref="VocabularyName"/> property is <b>null</b>.
         /// </exception>
         ///
         public override void WriteXml(string nodeName, XmlWriter writer)

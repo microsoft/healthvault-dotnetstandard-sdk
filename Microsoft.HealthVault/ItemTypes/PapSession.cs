@@ -4,10 +4,13 @@
 // All other rights reserved.
 
 using System;
+using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Xml;
 using System.Xml.XPath;
+using Microsoft.HealthVault.Clients;
+using Microsoft.HealthVault.Exceptions;
 using Microsoft.HealthVault.Helpers;
 using Microsoft.HealthVault.Thing;
 
@@ -28,9 +31,7 @@ namespace Microsoft.HealthVault.ItemTypes
         /// </summary>
         ///
         /// <remarks>
-        /// This item is not added to the health record until the
-        /// <see cref="HealthRecordAccessor.NewItem(ThingBase)"/> method
-        /// is called.
+        /// This item is not added to the health record until the <see cref="IThingClient.CreateNewThingsAsync{ThingBase}(Guid, ICollection{ThingBase})"/> method is called.
         /// </remarks>
         ///
         public PapSession()
@@ -43,9 +44,7 @@ namespace Microsoft.HealthVault.ItemTypes
         /// </summary>
         ///
         /// <remarks>
-        /// This item is not added to the health record until the
-        /// <see cref="HealthRecordAccessor.NewItem(ThingBase)"/> method
-        /// is called.
+        /// This item is not added to the health record until the <see cref="IThingClient.CreateNewThingsAsync{ThingBase}(Guid, ICollection{ThingBase})"/> method is called.
         /// </remarks>
         ///
         /// <param name="when">
@@ -144,7 +143,7 @@ namespace Microsoft.HealthVault.ItemTypes
         /// If <paramref name="writer"/> parameter is <b>null</b>.
         /// </exception>
         ///
-        /// <exception cref="HealthRecordItemSerializationException">
+        /// <exception cref="ThingSerializationException">
         /// If <see cref="When"/> is <b>null</b>.
         /// </exception>
         ///

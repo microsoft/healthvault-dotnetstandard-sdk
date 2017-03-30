@@ -6,6 +6,7 @@
 using System;
 using System.Xml;
 using System.Xml.XPath;
+using Microsoft.HealthVault.Exceptions;
 using Microsoft.HealthVault.Helpers;
 
 namespace Microsoft.HealthVault.ItemTypes
@@ -35,7 +36,7 @@ namespace Microsoft.HealthVault.ItemTypes
         /// </param>
         ///
         /// <exception cref="ArgumentNullException">
-        /// The <paramref name="person"/> parameter is <b>null</b>.
+        /// The <paramref name="prescribedBy"/> parameter is <b>null</b>.
         /// </exception>
         ///
         public Prescription(PersonItem prescribedBy)
@@ -52,8 +53,7 @@ namespace Microsoft.HealthVault.ItemTypes
         /// </param>
         ///
         /// <exception cref="InvalidOperationException">
-        /// The first node in <paramref name="typeSpecificXml"/> is not
-        /// a prescription node.
+        /// The first node indicated by <paramref name="navigator"/> is not a prescription node.
         /// </exception>
         ///
         public override void ParseXml(XPathNavigator navigator)
@@ -113,7 +113,7 @@ namespace Microsoft.HealthVault.ItemTypes
         /// The <paramref name="writer"/> parameter is <b>null</b>.
         /// </exception>
         ///
-        /// <exception cref="HealthRecordItemSerializationException">
+        /// <exception cref="ThingSerializationException">
         /// The <see cref="PrescribedBy"/> property has not been set.
         /// </exception>
         ///

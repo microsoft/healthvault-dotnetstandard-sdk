@@ -573,5 +573,14 @@ namespace Microsoft.HealthVault.ItemTypes
 
             return dt.ToString("d", formatProvider);
         }
+
+        /// <summary>
+        /// See the base class documentation.
+        /// </summary>
+        ///
+        public override int GetHashCode()
+        {
+            return base.GetHashCode();
+        }
     }
 }

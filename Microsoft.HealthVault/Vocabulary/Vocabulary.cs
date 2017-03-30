@@ -123,19 +123,7 @@ namespace Microsoft.HealthVault.Vocabulary
         /// there could be more <see cref="VocabularyItem"/>s in the <see cref="Vocabulary"/>.
         /// </summary>
         ///
-        [Obsolete("Use Vocabulary.IsTruncated instead.")]
-        public bool IsTruncted { get; private set; }
-
-        /// <summary>
-        /// Gets if the set vocabulary items in the <see cref="Vocabulary"/> has been truncated i.e.
-        /// there could be more <see cref="VocabularyItem"/>s in the <see cref="Vocabulary"/>.
-        /// </summary>
-        ///
-        public bool IsTruncated
-        {
-            get { return this.IsTruncted; }
-            set { this.IsTruncted = value; }
-        }
+        public bool IsTruncated { get; set; }
 
         /// <summary>
         /// Adds a vocabulary item to the vocabulary.
@@ -178,7 +166,7 @@ namespace Microsoft.HealthVault.Vocabulary
             }
 
             XPathNavigator isTruncatedNav = vocabularyNav.SelectSingleNode("is-vocab-truncated");
-            this.IsTruncted = isTruncatedNav != null ? isTruncatedNav.ValueAsBoolean : false;
+            this.IsTruncated = isTruncatedNav != null ? isTruncatedNav.ValueAsBoolean : false;
         }
 
         private static XPathExpression infoPath = XPathExpression.Compile("/wc:info");

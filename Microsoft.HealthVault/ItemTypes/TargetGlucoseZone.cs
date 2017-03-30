@@ -180,10 +180,9 @@ namespace Microsoft.HealthVault.ItemTypes
         /// The <paramref name="writer"/> parameter is null.
         /// </exception>
         ///
-        /// <exception cref="HealthRecordItemSerializationException">
+        /// <exception cref="ThingSerializationException">
         /// The <see cref="RelativeLowerBoundary"/>, <see cref="AbsoluteLowerBoundary"/>,
-        /// <see cref="RelativeUpperBoundary"/>, or <see cref="AbsoluteUpperBoundary"/>
-        /// parameter is not set.
+        /// <see cref="RelativeUpperBoundary"/>, or <see cref="AbsoluteUpperBoundary"/> parameter is not set.
         /// </exception>
         ///
         public override void WriteXml(string nodeName, XmlWriter writer)

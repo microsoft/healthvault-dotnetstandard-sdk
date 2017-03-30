@@ -204,7 +204,7 @@ namespace Microsoft.HealthVault.Vocabulary
         /// </value>
         ///
         /// <remarks>
-        /// Use the <see cref="HealthVaultPlatform.GetVocabularyAsync(HealthServiceConnection, VocabularyKey, bool)"/>
+        /// Use the <see cref="HealthVaultPlatform.GetVocabularyAsync(IHealthVaultConnection, VocabularyKey, bool)"/>
         /// method and a
         /// <see cref="VocabularyKey"/> to retrieve <see cref="VocabularyItem"/>
         /// objects. The GetVocabulary method returns a
@@ -221,7 +221,7 @@ namespace Microsoft.HealthVault.Vocabulary
         /// use a vocabulary key that has a code value equal to the code value of
         /// the last vocabulary item returned from the previous call.
         /// </remarks>
-        /// <seealso cref="HealthVaultPlatform.GetVocabularyAsync(HealthServiceConnection, VocabularyKey, bool)">
+        /// <seealso cref="HealthVaultPlatform.GetVocabularyAsync(IHealthVaultConnection, VocabularyKey, bool)">
         /// HealthVaultPlatform.GetVocabulary Method</seealso>
         /// <seealso cref="Vocabulary">Vocabulary Class</seealso>
         /// <seealso cref="VocabularyItem">VocabularyItem Class</seealso>
@@ -299,7 +299,7 @@ namespace Microsoft.HealthVault.Vocabulary
                 writer.WriteElementString("code-value", this.CodeValue);
             }
 
-            writer.WriteEndElement(); 
+            writer.WriteEndElement();
         }
 
         internal void ParseXml(XPathNavigator vocabularyKeyNav)

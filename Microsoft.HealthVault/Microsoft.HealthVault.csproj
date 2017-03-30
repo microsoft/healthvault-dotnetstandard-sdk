@@ -16,6 +16,7 @@
     <SignAssembly>false</SignAssembly>
     <TargetFrameworkProfile />
     <TargetFrameworkVersion>v5.0</TargetFrameworkVersion>
+    <CodeAnalysisRuleSet>..\CustomAnalysisRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -25,8 +26,6 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <CodeAnalysisRuleSet>..\CustomAnalysisRules.ruleset</CodeAnalysisRuleSet>
-    <RunCodeAnalysis>true</RunCodeAnalysis>
     <CodeAnalysisIgnoreGeneratedCode>true</CodeAnalysisIgnoreGeneratedCode>
     <DocumentationFile>bin\Debug\Microsoft.HealthVault.XML</DocumentationFile>
   </PropertyGroup>
@@ -352,7 +351,6 @@
     <Compile Include="Exceptions\TypeHandlerAlreadyRegisteredException.cs" />
     <Compile Include="Extensions\HealthApplicationConfigurationExtensions.cs" />
     <Compile Include="Person\GetAuthorizedPeopleSettings.cs" />
-    <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="Thing\HealthRecordAccessor.cs" />
     <Compile Include="Exceptions\HealthRecordAuthorizationNotPossibleException.cs" />
     <Compile Include="Record\HealthRecordAuthorizationStatus.cs" />

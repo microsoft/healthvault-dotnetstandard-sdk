@@ -3,6 +3,7 @@
 // see http://www.microsoft.com/resources/sharedsource/licensingbasics/sharedsourcelicenses.mspx.
 // All other rights reserved.
 
+using System;
 using System.Collections.ObjectModel;
 using System.Text;
 using System.Xml;
@@ -95,7 +96,7 @@ namespace Microsoft.HealthVault.ItemTypes
         /// </summary>
         ///
         /// <value>
-        /// A <see cref="Double"/> representing the value of the lab result, or <b>null</b> if
+        /// A <see cref="double"/> representing the value of the lab result, or <b>null</b> if
         /// no lab result is available.
         /// </value>
         ///

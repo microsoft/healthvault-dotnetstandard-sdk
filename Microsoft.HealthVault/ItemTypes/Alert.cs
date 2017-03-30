@@ -120,9 +120,8 @@ namespace Microsoft.HealthVault.ItemTypes
         /// The <paramref name="writer"/> parameter is <b>null</b>.
         /// </exception>
         ///
-        /// <exception cref="HealthRecordItemSerializationException">
-        /// The <see cref="DaysOfWeek"/> property has no days set, or the
-        /// <see cref="Times"/> property contains no times.
+        /// <exception cref="ThingSerializationException">
+        /// The <see cref="DaysOfWeek"/> property has no days set, or the <see cref="Times"/> property contains no times.
         /// </exception>
         ///
         public override void WriteXml(string nodeName, XmlWriter writer)

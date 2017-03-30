@@ -4,9 +4,12 @@
 // All other rights reserved.
 
 using System;
+using System.Collections.Generic;
 using System.Text;
 using System.Xml;
 using System.Xml.XPath;
+using Microsoft.HealthVault.Clients;
+using Microsoft.HealthVault.Exceptions;
 using Microsoft.HealthVault.Helpers;
 using Microsoft.HealthVault.Thing;
 
@@ -24,9 +27,7 @@ namespace Microsoft.HealthVault.ItemTypes
         /// </summary>
         ///
         /// <remarks>
-        /// The item isn't added to the health record until the
-        /// <see cref="HealthRecordAccessor.NewItem(ThingBase)"/> method
-        /// is called.
+        /// The item isn't added to the health record until the <see cref="IThingClient.CreateNewThingsAsync{ThingBase}(Guid, ICollection{ThingBase})"/> method is called.
         /// </remarks>
         ///
         public HealthcareProxy()
@@ -128,7 +129,7 @@ namespace Microsoft.HealthVault.ItemTypes
         /// If <paramref name="writer"/> is <b>null</b>.
         /// </exception>
         ///
-        /// <exception cref="HealthRecordItemSerializationException">
+        /// <exception cref="ThingSerializationException">
         /// The <see cref="When"/> property has not been set.
         /// </exception>
         ///

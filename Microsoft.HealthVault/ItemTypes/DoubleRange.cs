@@ -3,19 +3,19 @@
 // see http://www.microsoft.com/resources/sharedsource/licensingbasics/sharedsourcelicenses.mspx.
 // All other rights reserved.
 
+using System;
 using System.Xml;
 using System.Xml.XPath;
-using Microsoft.HealthVault.Helpers;
 
 namespace Microsoft.HealthVault.ItemTypes
 {
     /// <summary>
-    /// Represents a data range based on the <see cref="Double"/> type.
+    /// Represents a data range based on the <see cref="double"/> type.
     /// </summary>
     ///
     /// <remarks>
     /// A range consists of a minimum range value and a maximum range value of type
-    /// <see cref="Double"/>
+    /// <see cref="double"/>
     /// </remarks>
     ///
     public class DoubleRange : Range<double>
@@ -96,7 +96,7 @@ namespace Microsoft.HealthVault.ItemTypes
         /// </summary>
         ///
         /// <returns>
-        /// <see cref="Double.MinValue"/>
+        /// <see cref="double.MinValue"/>
         /// </returns>
         ///
         protected override double DefaultMinValue => double.MinValue;
@@ -106,7 +106,7 @@ namespace Microsoft.HealthVault.ItemTypes
         /// </summary>
         ///
         /// <returns>
-        /// <see cref="Double.MaxValue"/>
+        /// <see cref="double.MaxValue"/>
         /// </returns>
         ///
         protected override double DefaultMaxValue => double.MaxValue;

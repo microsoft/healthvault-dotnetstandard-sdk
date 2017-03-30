@@ -3,6 +3,7 @@
 // see http://www.microsoft.com/resources/sharedsource/licensingbasics/sharedsourcelicenses.mspx.
 // All other rights reserved.
 
+using System;
 using System.Xml;
 using System.Xml.XPath;
 using Microsoft.HealthVault.Exceptions;
@@ -124,7 +125,7 @@ namespace Microsoft.HealthVault.ItemTypes
         /// The <paramref name="writer"/> parameter is <b>null</b>.
         /// </exception>
         ///
-        /// <exception cref="HealthRecordItemSerializationException">
+        /// <exception cref="ThingSerializationException">
         /// If <see cref="Name"/>  or <see cref="Value"/> is <b>null</b> or empty.
         /// </exception>
         ///
@@ -152,11 +153,11 @@ namespace Microsoft.HealthVault.ItemTypes
         /// </summary>
         ///
         /// <exception cref="ArgumentNullException">
-        /// If <paramref name="name"/> is <b>null</b>.
+        /// If <paramref name="value"/> is <b>null</b>.
         /// </exception>
         ///
         /// <exception cref="ArgumentException">
-        /// If <paramref name="name"/> is empty.
+        /// If <paramref name="value"/> is empty.
         /// </exception>
         ///
         public CodableValue Name

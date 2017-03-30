@@ -7,9 +7,7 @@ using System;
 using System.Collections.Specialized;
 using System.Text;
 using Microsoft.HealthVault.Configuration;
-using Microsoft.HealthVault.Connection;
 using Microsoft.HealthVault.Exceptions;
-using Microsoft.HealthVault.Helpers;
 
 namespace Microsoft.HealthVault
 {

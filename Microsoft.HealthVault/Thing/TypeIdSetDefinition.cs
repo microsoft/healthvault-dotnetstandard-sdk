@@ -4,7 +4,7 @@
 // All other rights reserved.
 
 using System;
-using Microsoft.HealthVault.Helpers;
+using Microsoft.HealthVault.Connection;
 
 namespace Microsoft.HealthVault.Thing
 {
@@ -40,7 +40,7 @@ namespace Microsoft.HealthVault.Thing
         /// The <paramref name="typeId"/> must be the identifier for a health
         /// record item type. See
         /// <see
-        /// cref="ItemTypeManager.GetHealthRecordItemTypeDefinitionAsync(System.Guid,HealthServiceConnection)"/>
+        /// cref="ItemTypeManager.GetHealthRecordItemTypeDefinitionAsync(Guid,IConnectionInternal)"/>
         /// for information on getting the value thing types.
         /// </remarks>
         ///
@@ -72,7 +72,7 @@ namespace Microsoft.HealthVault.Thing
         /// The value must be the identifier for a thing
         /// type.
         /// <see
-        /// cref="ItemTypeManager.GetHealthRecordItemTypeDefinitionAsync(System.Guid,HealthServiceConnection)"/>
+        /// cref="ItemTypeManager.GetHealthRecordItemTypeDefinitionAsync(Guid,IConnectionInternal)"/>
         /// for information on getting the value thing types.
         /// </remarks>
         ///

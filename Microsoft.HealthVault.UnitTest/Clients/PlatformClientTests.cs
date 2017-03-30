@@ -1,12 +1,12 @@
-﻿using Microsoft.HealthVault.Application;
+﻿using System;
+using System.Threading.Tasks;
+using Microsoft.HealthVault.Application;
 using Microsoft.HealthVault.Clients;
 using Microsoft.HealthVault.Connection;
 using Microsoft.HealthVault.PlatformInformation;
 using Microsoft.HealthVault.UnitTest.Samples;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NSubstitute;
-using System;
-using System.Threading.Tasks;
 
 namespace Microsoft.HealthVault.UnitTest.Clients
 {
@@ -19,8 +19,8 @@ namespace Microsoft.HealthVault.UnitTest.Clients
         [TestInitialize]
         public void InitializeTest()
         {
-            connection = Substitute.For<IConnectionInternal>();
-            platformClient = new PlatformClient(connection);
+            this.connection = Substitute.For<IConnectionInternal>();
+            this.platformClient = new PlatformClient(this.connection);
         }
 
         [TestMethod]
@@ -30,16 +30,15 @@ namespace Microsoft.HealthVault.UnitTest.Clients
 
             var response = SampleUtils.GetResponseData("InstanceSample.xml");
 
-            connection.ExecuteAsync(HealthVaultMethods.SelectInstance, Arg.Any<int>(), Arg.Any<string>())
+            this.connection.ExecuteAsync(HealthVaultMethods.SelectInstance, Arg.Any<int>(), Arg.Any<string>())
                 .Returns(response);
 
-            var result = await platformClient.SelectInstanceAsync(location).ConfigureAwait(false);
+            var result = await this.platformClient.SelectInstanceAsync(location).ConfigureAwait(false);
 
             await this.connection.Received()
                 .ExecuteAsync(HealthVaultMethods.SelectInstance, Arg.Any<int>(), Arg.Any<string>());
 
             Assert.AreEqual(result.Description, "US instance");
-
         }
 
         [TestMethod]
@@ -50,19 +49,18 @@ namespace Microsoft.HealthVault.UnitTest.Clients
 
             var response = SampleUtils.GetResponseData("InstanceSample.xml");
 
-            connection.ExecuteAsync(HealthVaultMethods.SelectInstance, Arg.Any<int>(), Arg.Any<string>())
+            this.connection.ExecuteAsync(HealthVaultMethods.SelectInstance, Arg.Any<int>(), Arg.Any<string>())
                 .Returns(response);
             try
             {
-                var result = await platformClient.SelectInstanceAsync(location).ConfigureAwait(false);
+                var result = await this.platformClient.SelectInstanceAsync(location).ConfigureAwait(false);
             }
-            catch (ArgumentNullException e)
+            catch
             {
                 exceptionThrown = true;
             }
 
             Assert.AreEqual(exceptionThrown, true);
-
         }
 
         [TestMethod]
@@ -70,10 +68,10 @@ namespace Microsoft.HealthVault.UnitTest.Clients
         {
             var response = SampleUtils.GetResponseData("ServiceDefinitionSample.xml");
 
-            connection.ExecuteAsync(HealthVaultMethods.GetServiceDefinition, Arg.Any<int>(), Arg.Any<string>())
+            this.connection.ExecuteAsync(HealthVaultMethods.GetServiceDefinition, Arg.Any<int>(), Arg.Any<string>())
                 .Returns(response);
 
-            var result = await platformClient.GetServiceDefinitionAsync().ConfigureAwait(false);
+            var result = await this.platformClient.GetServiceDefinitionAsync().ConfigureAwait(false);
             await this.connection.Received()
                 .ExecuteAsync(HealthVaultMethods.GetServiceDefinition, Arg.Any<int>(), Arg.Any<string>());
 
@@ -85,9 +83,9 @@ namespace Microsoft.HealthVault.UnitTest.Clients
         {
             var response = SampleUtils.GetResponseData("ServiceDefinitionSample.xml");
 
-            connection.ExecuteAsync(HealthVaultMethods.GetServiceDefinition, Arg.Any<int>(), Arg.Any<string>())
+            this.connection.ExecuteAsync(HealthVaultMethods.GetServiceDefinition, Arg.Any<int>(), Arg.Any<string>())
                 .Returns(response);
-            var result = await platformClient.GetServiceDefinitionAsync(ServiceInfoSections.All).ConfigureAwait(false);
+            var result = await this.platformClient.GetServiceDefinitionAsync(ServiceInfoSections.All).ConfigureAwait(false);
             await this.connection.Received()
                 .ExecuteAsync(HealthVaultMethods.GetServiceDefinition, Arg.Any<int>(), Arg.Any<string>());
 
@@ -100,10 +98,10 @@ namespace Microsoft.HealthVault.UnitTest.Clients
             DateTime lastUpdatedTime = new DateTime(2017, 03, 17, 03, 24, 19);
             var response = SampleUtils.GetResponseData("ServiceDefinitionSample.xml");
 
-            connection.ExecuteAsync(HealthVaultMethods.GetServiceDefinition, Arg.Any<int>(), Arg.Any<string>())
+            this.connection.ExecuteAsync(HealthVaultMethods.GetServiceDefinition, Arg.Any<int>(), Arg.Any<string>())
                 .Returns(response);
 
-            var result = await platformClient.GetServiceDefinitionAsync(lastUpdatedTime).ConfigureAwait(false);
+            var result = await this.platformClient.GetServiceDefinitionAsync(lastUpdatedTime).ConfigureAwait(false);
             await this.connection.Received()
                 .ExecuteAsync(HealthVaultMethods.GetServiceDefinition, Arg.Any<int>(), Arg.Any<string>());
 
@@ -116,11 +114,11 @@ namespace Microsoft.HealthVault.UnitTest.Clients
             DateTime lastUpdatedTime = new DateTime(2017, 03, 17, 03, 24, 19);
             var response = SampleUtils.GetResponseData("ServiceDefinitionSample.xml");
 
-            connection.ExecuteAsync(HealthVaultMethods.GetServiceDefinition, Arg.Any<int>(), Arg.Any<string>())
+            this.connection.ExecuteAsync(HealthVaultMethods.GetServiceDefinition, Arg.Any<int>(), Arg.Any<string>())
                 .Returns(response);
 
             var result =
-                await platformClient.GetServiceDefinitionAsync(ServiceInfoSections.All, lastUpdatedTime)
+                await this.platformClient.GetServiceDefinitionAsync(ServiceInfoSections.All, lastUpdatedTime)
                     .ConfigureAwait(false);
             await this.connection.Received()
                 .ExecuteAsync(HealthVaultMethods.GetServiceDefinition, Arg.Any<int>(), Arg.Any<string>());

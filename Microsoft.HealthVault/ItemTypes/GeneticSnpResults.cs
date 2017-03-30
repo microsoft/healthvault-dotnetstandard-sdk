@@ -7,6 +7,7 @@ using System;
 using System.Xml;
 using System.Xml.XPath;
 using Microsoft.Health.ItemTypes;
+using Microsoft.HealthVault.Exceptions;
 using Microsoft.HealthVault.Helpers;
 using Microsoft.HealthVault.Thing;
 
@@ -178,7 +179,7 @@ namespace Microsoft.HealthVault.ItemTypes
         /// If <paramref name="writer"/> is <b>null</b>.
         /// </exception>
         ///
-        /// <exception cref="HealthRecordItemSerializationException">
+        /// <exception cref="ThingSerializationException">
         /// If <see cref="When"/> or <see cref="GenomeBuild"/> or <see cref="Chromosome" />
         /// is <b>null</b>.
         /// </exception>

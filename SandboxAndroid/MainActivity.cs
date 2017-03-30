@@ -1,13 +1,12 @@
 ﻿using System;
+using System.Collections.Generic;
 using Android.App;
+using Android.OS;
 using Android.Views;
 using Android.Widget;
-using Android.OS;
 using Microsoft.HealthVault.Client;
-using System.Threading.Tasks;
 using Microsoft.HealthVault.Clients;
 using Microsoft.HealthVault.ItemTypes;
-using System.Collections.Generic;
 using Microsoft.HealthVault.Person;
 
 namespace SandboxAndroid
@@ -18,13 +17,13 @@ namespace SandboxAndroid
         private IHealthVaultSodaConnection connection;
         private IThingClient thingClient;
 
-        TextView statusView;
-        Button connectionButton;
-        Button disconnectButton;
-        Button createButton;
-        Button getButton;
-        LinearLayout controlsLayout;
-        ListView listView;
+        private TextView statusView;
+        private Button connectionButton;
+        private Button disconnectButton;
+        private Button createButton;
+        private Button getButton;
+        private LinearLayout controlsLayout;
+        private ListView listView;
 
         protected override void OnCreate(Bundle bundle)
         {
@@ -44,10 +43,10 @@ namespace SandboxAndroid
             this.createButton = FindViewById<Button>(Resource.Id.CreateButton);
 
             // attach the actions
-            this.connectionButton.Click += delegate { this.ConnectToHealthVaultAsync(); };
+            this.connectionButton.Click += this.ConnectToHealthVaultAsync;
             this.disconnectButton.Click += this.DisconnectButtonOnClick;
-            this.getButton.Click += delegate { this.GetBloodPressures(); };
-            this.createButton.Click += delegate { this.CreateBloodPressure(); };
+            this.getButton.Click += this.GetBloodPressures;
+            this.createButton.Click += this.CreateBloodPressure;
 
             // create a configuration for our HealthVault application
             HealthVaultConnectionFactory.Current.SetConfiguration(new ClientHealthVaultConfiguration
@@ -58,7 +57,7 @@ namespace SandboxAndroid
             });
         }
 
-        private async Task ConnectToHealthVaultAsync()
+        private async void ConnectToHealthVaultAsync(object sender, EventArgs eventArgs)
         {
             this.statusView.Text = "Connecting...";
 
@@ -74,7 +73,7 @@ namespace SandboxAndroid
             }
 
             // get a thing client
-            
+
             this.thingClient = ClientHealthVaultFactory.GetThingClient(connection);
 
             PersonInfo personInfo = await this.connection.GetPersonInfoAsync();
@@ -96,7 +95,7 @@ namespace SandboxAndroid
             this.controlsLayout.Visibility = ViewStates.Gone;
         }
 
-        private async Task CreateBloodPressure()
+        private async void CreateBloodPressure(object sender, EventArgs eventArgs)
         {
             // Create a new blood pressure object with random values
             Random rand = new Random();
@@ -106,12 +105,12 @@ namespace SandboxAndroid
                 Systolic = rand.Next(80, 120)
             };
 
-            // use our thing client to creat the new blood pressure 
+            // use our thing client to creat the new blood pressure
             PersonInfo personInfo = await this.connection.GetPersonInfoAsync();
             await thingClient.CreateNewThingsAsync(personInfo.SelectedRecord.Id, new List<BloodPressure>() { bp });
         }
 
-        private async Task GetBloodPressures()
+        private async void GetBloodPressures(object sender, EventArgs eventArgs)
         {
             // use our thing client to get all things of type blood pressure
             PersonInfo personInfo = await this.connection.GetPersonInfoAsync();
@@ -120,4 +119,3 @@ namespace SandboxAndroid
         }
     }
 }
-

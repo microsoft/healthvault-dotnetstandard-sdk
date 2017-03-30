@@ -161,7 +161,7 @@ namespace Microsoft.HealthVault.ItemTypes
         /// </summary>
         ///
         /// <exception cref="ArgumentNullException">
-        /// If <paramref name="Name"/> is <b>null</b>.
+        /// If <paramref name="value"/> is <b>null</b>.
         /// </exception>
         ///
         public CodableValue Name

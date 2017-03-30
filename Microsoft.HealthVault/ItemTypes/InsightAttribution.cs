@@ -3,6 +3,7 @@
 // see http://www.microsoft.com/resources/sharedsource/licensingbasics/sharedsourcelicenses.mspx.
 // All other rights reserved.
 
+using System;
 using System.Xml;
 using System.Xml.XPath;
 using Microsoft.HealthVault.Helpers;
@@ -24,9 +25,9 @@ namespace Microsoft.HealthVault.ItemTypes
         }
 
         /// <summary>
-        /// Constructs a new instance of the <see cref="InsightAttribution"/> with the specified name
+        /// Constructs a new instance of the <see cref="InsightAttribution"/> with the specified name.
         /// </summary>
-        /// <param name="name"></param>
+        /// <param name="name">The name of the <see cref="InsightAttribution"/>.</param>
         ///
         public InsightAttribution(string name)
         {

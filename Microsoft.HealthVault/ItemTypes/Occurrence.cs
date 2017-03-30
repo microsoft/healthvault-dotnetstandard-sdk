@@ -6,6 +6,7 @@
 using System;
 using System.Xml;
 using System.Xml.XPath;
+using Microsoft.HealthVault.Exceptions;
 using Microsoft.HealthVault.Helpers;
 
 namespace Microsoft.HealthVault.ItemTypes
@@ -97,9 +98,8 @@ namespace Microsoft.HealthVault.ItemTypes
         /// The <paramref name="writer"/> parameter is <b>null</b>.
         /// </exception>
         ///
-        /// <exception cref="HealthRecordItemSerializationException">
-        /// The <see cref="When"/> property is <b>null</b>, or the <see cref="Minutes"/>
-        /// property is less than or equal to zero.
+        /// <exception cref="ThingSerializationException">
+        /// The <see cref="When"/> property is <b>null</b>, or the <see cref="Minutes"/> property is less than or equal to zero.
         /// </exception>
         ///
         public override void WriteXml(string nodeName, XmlWriter writer)

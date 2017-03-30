@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Xml;
+using Microsoft.HealthVault.Connection;
 
 namespace Microsoft.HealthVault.Thing
 {
@@ -29,10 +30,7 @@ namespace Microsoft.HealthVault.Thing
         /// </value>
         ///
         /// <remarks>
-        /// The types available can be queried using
-        /// <see
-        /// cref="ItemTypeManager.GetHealthRecordItemTypeDefinitionAsync(System.Guid,HealthServiceConnection)"/>
-        /// .
+        /// The types available can be queried using <see cref="ItemTypeManager.GetHealthRecordItemTypeDefinitionAsync(System.Guid,IConnectionInternal)"/>.
         /// </remarks>
         Guid TypeId { get; }
 

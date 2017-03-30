@@ -11,8 +11,8 @@ namespace Microsoft.HealthVault.PlatformInformation
     /// <summary>
     /// Represents the categories of information that can be specified when creating a
     /// <see cref="ServiceInfo"/> object via
-    /// <see cref="HealthVaultPlatformInformation.GetServiceDefinitionAsync(HealthServiceConnection, ServiceInfoSections)"/> or
-    /// <see cref="HealthVaultPlatformInformation.GetServiceDefinitionAsync(HealthServiceConnection, ServiceInfoSections, DateTime)"/>.
+    /// <see cref="HealthVaultPlatformInformation.GetServiceDefinitionAsync(IHealthVaultConnection, ServiceInfoSections)"/> or
+    /// <see cref="HealthVaultPlatformInformation.GetServiceDefinitionAsync(IHealthVaultConnection, ServiceInfoSections, DateTime)"/>.
     /// If any categories are specified, only the information corresponding to those categories
     /// will be filled out in the <see cref="ServiceInfo"/> object; otherwise, all information
     /// will be filled out.
