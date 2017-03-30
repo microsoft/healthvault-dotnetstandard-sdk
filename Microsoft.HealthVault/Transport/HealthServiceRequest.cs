@@ -254,13 +254,12 @@ namespace Microsoft.HealthVault.Transport
                     writer.WriteStartElement("wc-request", "request", "urn:com.microsoft.wc.request");
 
                     // <auth>
-                    // If we have an authenticated section, then construct the auth data otherwise do
-                    // not include an auth section.
-                    if (this.connectionInternal.SessionCredential != null)
+                    // If this is not an anonymous method then we need to include the auth section
+                    if (!HealthVaultConnectionBase.AnonymousMethods.Contains(this.Method))
                     {
-                        CryptoData crytpoData = this.connectionInternal.GetAuthData(this.Method, headerXml);
+                        CryptoData cryptoData = this.connectionInternal.GetAuthData(this.Method, headerXml);
 
-                        string authInnerXml = this.GetCryptoDataInnerXml(crytpoData);
+                        string authInnerXml = this.GetCryptoDataInnerXml(cryptoData);
 
                         if (!string.IsNullOrEmpty(authInnerXml))
                         {

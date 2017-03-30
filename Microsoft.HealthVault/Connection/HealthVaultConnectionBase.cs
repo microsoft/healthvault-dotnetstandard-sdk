@@ -81,10 +81,8 @@ namespace Microsoft.HealthVault.Connection
                 {
                     if (this.SessionCredential != null)
                     {
-                        // SessionCredential should last for a day.
-                        // So, check if we the refresh happened within 5 mins.
-                        // If we just refreshed then there is no reason to go to fetch the session credential from
-                        // server again.
+                        // To prevent multiple token refresh calls being made from simultaneous requests, we check if the token has been refreshed in the last 
+                        // {SessionCredentialCallThresholdMinutes} minutes and if so we do not make the call again.
                         if (DateTimeOffset.Now.Subtract(this.lastRefreshedSessionCredential) > TimeSpan.FromMinutes(SessionCredentialCallThresholdMinutes))
                         {
                             await this.RefreshSessionCredentialAsync(CancellationToken.None).ConfigureAwait(false);
@@ -115,12 +113,6 @@ namespace Microsoft.HealthVault.Connection
 
         public virtual CryptoData GetAuthData(HealthVaultMethods method, byte[] data)
         {
-            // No need to create auth headers for anonymous methods
-            if (AnonymousMethods.Contains(method))
-            {
-                return null;
-            }
-
             if (this.SessionCredential == null)
             {
                 throw new NotSupportedException($"{nameof(this.SessionCredential)} is required to prepare auth header");
