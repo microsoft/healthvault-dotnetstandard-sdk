@@ -6,7 +6,6 @@ using System.Threading.Tasks;
 using Foundation;
 using Microsoft.HealthVault.Person;
 using Microsoft.HealthVault.Clients;
-using SandboxIos;
 using Microsoft.HealthVault.ItemTypes;
 
 namespace SandboxIos
