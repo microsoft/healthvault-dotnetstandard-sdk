@@ -258,12 +258,12 @@ namespace Microsoft.HealthVault.Transport
                     // not include an auth section.
                     if (this.connectionInternal.SessionCredential != null)
                     {
-                        CryptoData cryptoData = this.connectionInternal.GetAuthData(this.Method, headerXml);
+                        CryptoData crytpoData = this.connectionInternal.GetAuthData(this.Method, headerXml);
 
-                        if (cryptoData != null)
+                        string authInnerXml = this.GetCryptoDataInnerXml(crytpoData);
+
+                        if (!string.IsNullOrEmpty(authInnerXml))
                         {
-                            string authInnerXml = this.GetCryptoDataInnerXml(cryptoData);
-
                             writer.WriteStartElement("auth");
                             writer.WriteRaw(authInnerXml);
                             writer.WriteEndElement();
