@@ -21,6 +21,7 @@ using System.Web;
 using System.Xml;
 using System.Xml.XPath;
 using Microsoft.HealthVault.Extensions;
+using System.Linq;
 
 namespace Microsoft.HealthVault.Web
 {
@@ -632,7 +633,7 @@ namespace Microsoft.HealthVault.Web
             IHealthVaultConnection connection = Ioc.Get<IHealthVaultConnection>();
             IPersonClient personClient = ClientHealthVaultFactory.GetPersonClient(connection);
 
-            PersonInfo personInfo = await personClient.GetPersonInfoAsync();
+            PersonInfo personInfo = (await personClient.GetAuthorizedPeopleAsync().ConfigureAwait(false)).FirstOrDefault();
 
             return personInfo;
         }

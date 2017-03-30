@@ -76,7 +76,7 @@ namespace Microsoft.HealthVault.Clients
         /// </summary>
         ///
         /// <returns>
-        /// Information about the person's HealthVault account.
+        /// Information about the authorized people.
         /// </returns>
         ///
         /// <remarks>
@@ -90,7 +90,7 @@ namespace Microsoft.HealthVault.Clients
         /// The HealthVault service returned an error.
         /// </exception>
         ///
-        Task<PersonInfo> GetPersonInfoAsync();
+        Task<IReadOnlyCollection<PersonInfo>> GetAuthorizedPeopleAsync();
 
         #endregion GetPersonInfo
 

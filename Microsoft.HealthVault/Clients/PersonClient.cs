@@ -18,7 +18,6 @@ using System.Xml;
 using System.Collections.ObjectModel;
 using Microsoft.HealthVault.Record;
 using Microsoft.HealthVault.Application;
-using System.Linq;
 
 namespace Microsoft.HealthVault.Clients
 {
@@ -72,7 +71,7 @@ namespace Microsoft.HealthVault.Clients
             await this.connection.ExecuteAsync(HealthVaultMethods.SetApplicationSettings, 1, requestParameters).ConfigureAwait(false);
         }
 
-        public virtual async Task<PersonInfo> GetPersonInfoAsync()
+        public virtual async Task<IReadOnlyCollection<PersonInfo>> GetAuthorizedPeopleAsync()
         {
             // TODO: We are going through the HealthVaultPlatformApplication for now to get things working. We should fix this.
 
@@ -82,7 +81,7 @@ namespace Microsoft.HealthVault.Clients
             // return PersonInfo.CreateFromXml(infoNav);
 
             IList<PersonInfo> people = await HealthVaultPlatformApplication.Current.EnsureGetAuthorizedPeopleAsync(this.connection, new GetAuthorizedPeopleSettings());
-            return people.FirstOrDefault();
+            return (IReadOnlyCollection<PersonInfo>)people;
         }
 
         public virtual async Task<Collection<HealthRecordInfo>> GetAuthorizedRecordsAsync(IList<Guid> recordIds)

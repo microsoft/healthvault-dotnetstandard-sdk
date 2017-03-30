@@ -13,6 +13,7 @@ using Microsoft.HealthVault.PlatformInformation;
 using Microsoft.HealthVault.Record;
 using Microsoft.HealthVault.Rest;
 using Microsoft.HealthVault.Transport;
+using System.Linq;
 
 namespace Microsoft.HealthVault.Client
 {
@@ -237,7 +238,7 @@ namespace Microsoft.HealthVault.Client
             var personClient = ClientHealthVaultFactory.GetPersonClient(this);
 
             // TODO: Eliminate circular call. This method is called from AuthenticateAsync. PersonClient is calling HealthVaultConnectionBase.ExecuteAsync, which is calling AuthenticateAsync
-            PersonInfo newPersonInfo = await personClient.GetPersonInfoAsync().ConfigureAwait(false);
+            PersonInfo newPersonInfo = (await personClient.GetAuthorizedPeopleAsync().ConfigureAwait(false)).FirstOrDefault();
             await this.localObjectStore.WriteAsync(PersonInfoKey, newPersonInfo).ConfigureAwait(false);
             this.personInfo = newPersonInfo;
         }
