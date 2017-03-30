@@ -1,9 +1,6 @@
 ﻿using Grace.DependencyInjection;
-using Microsoft.HealthVault.Authentication;
-using Microsoft.HealthVault.Clients;
 using Microsoft.HealthVault.Connection;
 using Microsoft.HealthVault.Extensions;
-using System;
 using Microsoft.HealthVault.Services;
 using Microsoft.HealthVault.Transport;
 
@@ -11,42 +8,21 @@ namespace Microsoft.HealthVault
 {
     internal static class Ioc
     {
-        private static DependencyInjectionContainer clientContainer;
-
         static Ioc()
         {
-            clientContainer = new DependencyInjectionContainer();
             Container = new DependencyInjectionContainer();
 
-            // register the clients in the main container and the client container
-            RegisterClients(clientContainer);
-            RegisterClients(Container);
-
-            // register all other types in the main container only
-            RegisterTypes(Container);
+            Container.RegisterTransient<IHealthWebRequestFactory, HealthWebRequestFactory>();
+            Container.RegisterTransient<IConnectionInternal, HealthVaultConnectionBase>();
+            Container.RegisterTransient<ISessionCredentialClient, SessionCredentialClientBase>();
+            Container.RegisterSingleton<IServiceLocator, ServiceLocator>();
+            Container.RegisterSingleton<ICryptographer, Cryptographer>();
+            Container.RegisterSingleton<IMessageHandlerFactory, MessageHandlerFactory>();
+            Container.RegisterSingleton<IHttpClientFactory, HttpClientFactory>();
+            Container.RegisterSingleton<IDateTimeService, DateTimeService>();
         }
 
-        public static DependencyInjectionContainer Container { get; private set; }
-
-        private static void RegisterClients(DependencyInjectionContainer container)
-        {
-            container.RegisterTransient<IPlatformClient, PlatformClient>();
-            container.RegisterTransient<IPersonClient, PersonClient>();
-            container.RegisterTransient<IVocabularyClient, VocabularyClient>();
-            container.RegisterTransient<IThingClient, ThingClient>();
-            container.RegisterTransient<IHealthWebRequestFactory, HealthWebRequestFactory>();
-        }
-
-        private static void RegisterTypes(DependencyInjectionContainer container)
-        {
-            container.RegisterTransient<IConnectionInternal, HealthVaultConnectionBase>();
-            container.RegisterTransient<ISessionCredentialClient, SessionCredentialClientBase>();
-            container.RegisterSingleton<IServiceLocator, ServiceLocator>();
-            container.RegisterSingleton<ICryptographer, Cryptographer>();
-            container.RegisterSingleton<IMessageHandlerFactory, MessageHandlerFactory>();
-            container.RegisterSingleton<IHttpClientFactory, HttpClientFactory>();
-            container.RegisterSingleton<IDateTimeService, DateTimeService>();
-        }
+        public static DependencyInjectionContainer Container { get; }
 
         public static T Get<T>()
         {

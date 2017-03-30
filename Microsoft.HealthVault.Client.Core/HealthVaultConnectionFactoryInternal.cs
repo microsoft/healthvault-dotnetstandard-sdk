@@ -8,7 +8,7 @@ namespace Microsoft.HealthVault.Client
     /// <summary>
     /// Factory for creating client connections to HealthVault.
     /// </summary>
-    public abstract class HealthVaultConnectionFactoryBase : IHealthVaultConnectionFactory
+    internal class HealthVaultConnectionFactoryInternal : IHealthVaultConnectionFactory
     {
         private readonly object connectionLock = new object();
 

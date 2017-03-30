@@ -41,7 +41,7 @@
   <ItemGroup>
     <Compile Include="ClientHealthVaultConfiguration.cs" />
     <Compile Include="HealthVaultSodaConnection.cs" />
-    <Compile Include="HealthVaultConnectionFactoryBase.cs" />
+    <Compile Include="HealthVaultConnectionFactoryInternal.cs" />
     <Compile Include="CoreClientIoc.cs" />
     <Compile Include="ClientResources.Designer.cs">
       <AutoGen>True</AutoGen>

@@ -2,7 +2,7 @@
 
 namespace Microsoft.HealthVault.Client
 {
-    public class HealthVaultConnectionFactory : HealthVaultConnectionFactoryBase
+    public class HealthVaultConnectionFactory
     {
         /// <summary>
         /// Gets the current factory instance.

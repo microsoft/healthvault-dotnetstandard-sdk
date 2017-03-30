@@ -27,7 +27,6 @@ namespace Microsoft.HealthVault.Client
 
         private static void RegisterTypes(DependencyInjectionContainer container)
         {
-            container.RegisterSingleton<IHealthVaultConnectionFactory, HealthVaultConnectionFactoryBase>();
             container.RegisterSingleton<ILocalObjectStore, LocalObjectStore>();
             container.RegisterSingleton<IShellAuthService, ShellAuthService>();
             container.RegisterTransient<IClientSessionCredentialClient, ClientSessionCredentialClient>();
