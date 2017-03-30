@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="11762" systemVersion="16D32" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="11757"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" id="cZE-iV-UFb" customClass="BloodPressureCell">
+            <rect key="frame" x="0.0" y="0.0" width="172" height="172"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+            <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
+                <rect key="frame" x="0.0" y="0.0" width="172" height="172"/>
+                <autoresizingMask key="autoresizingMask"/>
+                <subviews>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="999" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="JjQ-Ni-owZ">
+                        <rect key="frame" x="10" y="10" width="69" height="43"/>
+                        <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="36"/>
+                        <nil key="textColor"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Systolic" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="oab-HR-BZZ">
+                        <rect key="frame" x="26" y="50.5" width="45" height="15"/>
+                        <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                        <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="/" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ZVw-U1-Qj1">
+                        <rect key="frame" x="79" y="10" width="14" height="60"/>
+                        <fontDescription key="fontDescription" type="system" weight="light" pointSize="50"/>
+                        <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Diastolic" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Akz-2k-9aR">
+                        <rect key="frame" x="101" y="19" width="49" height="15"/>
+                        <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                        <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="999" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="zgZ-zL-zZC">
+                        <rect key="frame" x="93" y="28" width="69" height="43"/>
+                        <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="36"/>
+                        <nil key="textColor"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Pulse" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="nga-IR-Ue5">
+                        <rect key="frame" x="70.5" y="78" width="31" height="15"/>
+                        <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                        <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="999" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="SEt-XR-CGw">
+                        <rect key="frame" x="51.5" y="90" width="69" height="43"/>
+                        <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="36"/>
+                        <nil key="textColor"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Date" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Hw9-9v-OFV">
+                        <rect key="frame" x="10" y="125" width="27" height="14"/>
+                        <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                        <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="15" adjustsLetterSpacingToFitWidth="YES" translatesAutoresizingMaskIntoConstraints="NO" id="phh-4f-NTq">
+                        <rect key="frame" x="10" y="162" width="152" height="0.0"/>
+                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                        <nil key="textColor"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                </subviews>
+            </view>
+            <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
+            <constraints>
+                <constraint firstAttribute="trailing" secondItem="phh-4f-NTq" secondAttribute="trailing" constant="10" id="8VP-SF-cdl"/>
+                <constraint firstItem="oab-HR-BZZ" firstAttribute="baseline" secondItem="ZVw-U1-Qj1" secondAttribute="baseline" constant="5" id="CVx-DR-P7D"/>
+                <constraint firstAttribute="bottom" secondItem="Hw9-9v-OFV" secondAttribute="bottom" constant="33" id="Dr0-ru-fb7"/>
+                <constraint firstItem="ZVw-U1-Qj1" firstAttribute="leading" secondItem="oab-HR-BZZ" secondAttribute="trailing" constant="8" id="E09-Qu-mjg"/>
+                <constraint firstItem="SEt-XR-CGw" firstAttribute="top" secondItem="nga-IR-Ue5" secondAttribute="bottom" constant="-3" id="E9T-ii-WyF"/>
+                <constraint firstItem="ZVw-U1-Qj1" firstAttribute="top" secondItem="cZE-iV-UFb" secondAttribute="top" constant="10" id="FfZ-Xy-6FB"/>
+                <constraint firstItem="JjQ-Ni-owZ" firstAttribute="top" secondItem="cZE-iV-UFb" secondAttribute="top" constant="10" id="KbS-VB-zbB"/>
+                <constraint firstItem="zgZ-zL-zZC" firstAttribute="leading" secondItem="ZVw-U1-Qj1" secondAttribute="trailing" id="Q2U-TV-N9V"/>
+                <constraint firstItem="Hw9-9v-OFV" firstAttribute="leading" secondItem="cZE-iV-UFb" secondAttribute="leading" constant="10" id="QYn-Xx-Ec1"/>
+                <constraint firstItem="nga-IR-Ue5" firstAttribute="top" secondItem="ZVw-U1-Qj1" secondAttribute="bottom" constant="8" id="R2U-OX-pUU"/>
+                <constraint firstAttribute="bottom" secondItem="phh-4f-NTq" secondAttribute="bottom" constant="10" id="TeO-TA-ueG"/>
+                <constraint firstItem="SEt-XR-CGw" firstAttribute="centerX" secondItem="nga-IR-Ue5" secondAttribute="centerX" id="V6i-cn-vQz"/>
+                <constraint firstItem="Akz-2k-9aR" firstAttribute="leading" secondItem="ZVw-U1-Qj1" secondAttribute="trailing" constant="8" id="aiN-wB-MUe"/>
+                <constraint firstItem="ZVw-U1-Qj1" firstAttribute="leading" secondItem="JjQ-Ni-owZ" secondAttribute="trailing" id="cXm-re-PDj"/>
+                <constraint firstItem="nga-IR-Ue5" firstAttribute="centerX" secondItem="cZE-iV-UFb" secondAttribute="centerX" id="oLa-yB-Jvn"/>
+                <constraint firstItem="Akz-2k-9aR" firstAttribute="top" secondItem="ZVw-U1-Qj1" secondAttribute="top" constant="9" id="pJq-gk-GRN"/>
+                <constraint firstItem="ZVw-U1-Qj1" firstAttribute="centerX" secondItem="cZE-iV-UFb" secondAttribute="centerX" id="tXj-0S-T7g"/>
+                <constraint firstItem="phh-4f-NTq" firstAttribute="leading" secondItem="cZE-iV-UFb" secondAttribute="leading" constant="10" id="upF-Pq-9s6"/>
+                <constraint firstItem="zgZ-zL-zZC" firstAttribute="top" secondItem="ZVw-U1-Qj1" secondAttribute="top" constant="18" id="z1W-z1-xcB"/>
+            </constraints>
+            <size key="customSize" width="168" height="167"/>
+            <connections>
+                <outlet property="dateLabel" destination="phh-4f-NTq" id="name-outlet-41"/>
+                <outlet property="diastolicLabel" destination="zgZ-zL-zZC" id="name-outlet-21"/>
+                <outlet property="pulseLabel" destination="SEt-XR-CGw" id="name-outlet-40"/>
+                <outlet property="systolicLabel" destination="JjQ-Ni-owZ" id="name-outlet-5"/>
+            </connections>
+            <point key="canvasLocation" x="4" y="-110"/>
+        </collectionViewCell>
+    </objects>
+</document>

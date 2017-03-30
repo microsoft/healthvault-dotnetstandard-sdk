@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="11762" systemVersion="16D32" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="11757"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="ThingListViewController">
+            <connections>
+                <outlet property="activityIndicator" destination="W4H-h7-eJO" id="4"/>
+                <outlet property="collectionView" destination="vat-W4-kwn" id="3"/>
+                <outlet property="messageLabel" destination="WUJ-Yh-Ywe" id="5"/>
+                <outlet property="view" destination="2" id="RRd-Eg-VrN"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" id="2">
+            <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+            <subviews>
+                <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="none" translatesAutoresizingMaskIntoConstraints="NO" id="vat-W4-kwn">
+                    <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="X46-mR-FQL">
+                        <size key="itemSize" width="50" height="50"/>
+                        <size key="headerReferenceSize" width="0.0" height="0.0"/>
+                        <size key="footerReferenceSize" width="0.0" height="0.0"/>
+                        <inset key="sectionInset" minX="10" minY="10" maxX="10" maxY="0.0"/>
+                    </collectionViewFlowLayout>
+                    <connections>
+                        <outlet property="dataSource" destination="-1" id="TTN-em-ofn"/>
+                        <outlet property="delegate" destination="-1" id="Cuy-UA-HsR"/>
+                    </connections>
+                </collectionView>
+                <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="W4H-h7-eJO">
+                    <rect key="frame" x="290" y="310" width="20" height="20"/>
+                </activityIndicatorView>
+                <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="WUJ-Yh-Ywe">
+                    <rect key="frame" x="187.5" y="299.5" width="226.5" height="41"/>
+                    <string key="text">No Data Available.
+Tap "+" to create a new entry.</string>
+                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                    <nil key="textColor"/>
+                    <nil key="highlightedColor"/>
+                </label>
+            </subviews>
+            <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <constraints>
+                <constraint firstItem="WUJ-Yh-Ywe" firstAttribute="centerX" secondItem="2" secondAttribute="centerX" id="BHV-RT-t63"/>
+                <constraint firstAttribute="bottom" secondItem="vat-W4-kwn" secondAttribute="bottom" id="OIT-HZ-n9c"/>
+                <constraint firstItem="W4H-h7-eJO" firstAttribute="centerX" secondItem="2" secondAttribute="centerX" id="REh-yK-Pmq"/>
+                <constraint firstItem="WUJ-Yh-Ywe" firstAttribute="centerY" secondItem="2" secondAttribute="centerY" constant="20" id="U5S-5K-2BE"/>
+                <constraint firstItem="vat-W4-kwn" firstAttribute="top" secondItem="2" secondAttribute="top" id="ahr-2K-bBT"/>
+                <constraint firstItem="W4H-h7-eJO" firstAttribute="centerY" secondItem="2" secondAttribute="centerY" constant="20" id="j8p-6Y-Uik"/>
+                <constraint firstItem="vat-W4-kwn" firstAttribute="leading" secondItem="2" secondAttribute="leading" id="kgS-Ey-JJf"/>
+                <constraint firstAttribute="trailing" secondItem="vat-W4-kwn" secondAttribute="trailing" id="uN0-D5-RvE"/>
+            </constraints>
+            <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" prompted="NO"/>
+            <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+            <point key="canvasLocation" x="178" y="-9"/>
+        </view>
+    </objects>
+</document>

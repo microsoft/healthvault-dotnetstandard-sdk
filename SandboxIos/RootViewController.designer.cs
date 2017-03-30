@@ -8,7 +8,7 @@ using Foundation;
 using System;
 using System.CodeDom.Compiler;
 
-namespace SampleIos
+namespace SandboxIos
 {
     [Register ("RootViewController")]
     partial class RootViewController
@@ -23,11 +23,19 @@ namespace SampleIos
 
         [Outlet]
         [GeneratedCode ("iOS Designer", "1.0")]
+        UIKit.UIView controlView { get; set; }
+
+        [Outlet]
+        [GeneratedCode ("iOS Designer", "1.0")]
         UIKit.UILabel statusLabel { get; set; }
 
         [Action ("ConnectButtonPressed")]
         [GeneratedCode ("iOS Designer", "1.0")]
         partial void ConnectButtonPressed ();
+
+        [Action("BloodPressureButtonPressed")]
+        [GeneratedCode("iOS Designer", "1.0")]
+        partial void BloodPressureButtonPressed();
 
         void ReleaseDesignerOutlets ()
         {
@@ -39,6 +47,11 @@ namespace SampleIos
             if (connectButton != null) {
                 connectButton.Dispose ();
                 connectButton = null;
+            }
+
+            if (controlView != null) {
+                controlView.Dispose ();
+                controlView = null;
             }
 
             if (statusLabel != null) {

@@ -14,10 +14,6 @@ namespace Microsoft.HealthVault.Client
     [Register ("SignInViewController")]
     partial class SignInViewController
     {
-        [Action ("CancelButtonPressed")]
-        [GeneratedCode ("iOS Designer", "1.0")]
-        partial void CancelButtonPressed ();
-
         void ReleaseDesignerOutlets ()
         {
         }
