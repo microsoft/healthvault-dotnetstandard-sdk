@@ -1,6 +1,6 @@
 ﻿{
   "dependencies": {
-    "Grace": "5.1.0",
+    "Grace": "6.0.1",
     "Microsoft.NETCore.UniversalWindowsPlatform": "5.2.2",
     "NETStandard.Library": "1.6.1"
   },
