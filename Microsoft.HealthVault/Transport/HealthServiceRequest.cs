@@ -3,12 +3,6 @@
 // see http://www.microsoft.com/resources/sharedsource/licensingbasics/sharedsourcelicenses.mspx.
 // All other rights reserved.
 
-using Microsoft.HealthVault.Configuration;
-using Microsoft.HealthVault.Connection;
-using Microsoft.HealthVault.Diagnostics;
-using Microsoft.HealthVault.Exceptions;
-using Microsoft.HealthVault.Extensions;
-using Microsoft.HealthVault.Helpers;
 using System;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
@@ -19,11 +13,16 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
-using System.Security;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Xml;
+using Microsoft.HealthVault.Configuration;
+using Microsoft.HealthVault.Connection;
+using Microsoft.HealthVault.Diagnostics;
+using Microsoft.HealthVault.Exceptions;
+using Microsoft.HealthVault.Extensions;
+using Microsoft.HealthVault.Helpers;
 
 namespace Microsoft.HealthVault.Transport
 {
@@ -125,10 +124,12 @@ namespace Microsoft.HealthVault.Transport
 
                 try
                 {
-                    this.cancellationTokenSource = new CancellationTokenSource(TimeSpan.FromSeconds(this.config.DefaultRequestTimeout));
+                    this.cancellationTokenSource = this.config.DefaultRequestTimeoutDuration.HasValue ?
+                        new CancellationTokenSource(this.config.DefaultRequestTimeoutDuration.Value) :
+                        null;
                     response = await easyWeb.FetchAsync(
                         this.connectionInternal.ServiceInstance.GetHealthVaultMethodUrl(),
-                        this.cancellationTokenSource.Token).ConfigureAwait(false);
+                        (CancellationToken)this.cancellationTokenSource?.Token).ConfigureAwait(false);
                 }
                 finally
                 {
@@ -429,8 +430,7 @@ namespace Microsoft.HealthVault.Transport
                     }
 
                     writer.WriteElementString("msg-time", SDKHelper.XmlFromNow());
-                    writer.WriteElementString(
-                        "msg-ttl", this.config.DefaultRequestTimeToLive.ToString(CultureInfo.InvariantCulture));
+                    writer.WriteElementString("msg-ttl", ((int)this.config.DefaultRequestTimeToLiveDuration.TotalSeconds).ToString(CultureInfo.InvariantCulture));
 
                     writer.WriteElementString("version", this.Version);
 

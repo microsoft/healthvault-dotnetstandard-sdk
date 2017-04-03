@@ -2286,4 +2286,7 @@
   <data name="ObjectStoreParametersEmpty" xml:space="preserve">
     <value>LocalObjectStore was passed invalid parameters.</value>
   </data>
+  <data name="ConfigValueAbsentOrInvalid" xml:space="preserve">
+    <value>The value for the config key '{0}' is either absent in the config settings or is invalid.</value>
+  </data>
 </root>

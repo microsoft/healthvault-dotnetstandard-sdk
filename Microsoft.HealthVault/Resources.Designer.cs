@@ -1970,6 +1970,15 @@ namespace Microsoft.HealthVault {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The value for the config key &apos;{0}&apos; is either absent in the config settings or is invalid..
+        /// </summary>
+        internal static string ConfigValueAbsentOrInvalid {
+            get {
+                return ResourceManager.GetString("ConfigValueAbsentOrInvalid", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The connection cannot be null..
         /// </summary>
         internal static string ConnectionNull {

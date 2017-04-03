@@ -5,7 +5,7 @@ using System.Web;
 using System.Web.Mvc;
 using System.Web.Optimization;
 using System.Web.Routing;
-using Microsoft.HealthVault.Web.Mvc;
+using Microsoft.HealthVault.Web;
 
 namespace SandboxMvc
 {
@@ -15,7 +15,7 @@ namespace SandboxMvc
         {
             AreaRegistration.RegisterAllAreas();
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
-            HealthVault.RegisterRoutes(RouteTable.Routes);
+            // HealthVault.RegisterRoutes(RouteTable.Routes);
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);
         }

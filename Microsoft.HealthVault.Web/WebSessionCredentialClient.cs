@@ -1,62 +1,51 @@
-﻿using System;
-using System.Security;
-using System.Security.Cryptography;
-using System.Security.Cryptography.X509Certificates;
+﻿// Copyright (c) Microsoft Corporation.  All rights reserved. 
+// MIT License
+// Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the ""Software""), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+// 
+// The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED *AS IS*, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+using System;
 using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
 using System.Xml;
-using System.Xml.XPath;
 using Microsoft.HealthVault.Connection;
-using Microsoft.HealthVault.Diagnostics;
-using Microsoft.HealthVault.Extensions;
 using Microsoft.HealthVault.Helpers;
-using Microsoft.HealthVault.Transport;
+using Microsoft.HealthVault.Web.Configuration;
+using Microsoft.HealthVault.Web.Providers;
 
 namespace Microsoft.HealthVault.Web
 {
-    internal class WebSessionCredentialClient : SessionCredentialClientBase
+    internal class WebSessionCredentialClient : SessionCredentialClientBase, IWebSessionCredentialClient
     {
-        private readonly WebConfiguration configuration;
-        private X509Certificate2 certificate;
+        private readonly IServiceLocator serviceLocator;
+        private readonly WebHealthVaultConfiguration webHealthVaultConfiguration;
 
-        private const string DigestMethod = "RSA-SHA1";
-
-        private const string SignMethod = "SHA1";
-
-        // TODO: Find how to get cert from IoC or refactor to get cert information in some other fashion
-        public WebSessionCredentialClient(WebConfiguration configuration, X509Certificate2 cert)
+        public WebSessionCredentialClient(
+            IServiceLocator serviceLocator,
+            IConnectionInternal connection,
+            ICertificateInfoProvider certificateInfoProvider)
         {
-            if (cert == null)
-            {
-                throw new ArgumentException(nameof(cert));
-            }
+            this.serviceLocator = serviceLocator;
+            this.Connection = connection;
+            this.CertificateInfoProvider = certificateInfoProvider;
 
-            this.configuration = configuration;
-            this.certificate = cert;
+            this.webHealthVaultConfiguration = this.serviceLocator.GetInstance<WebHealthVaultConfiguration>();
         }
 
-        internal RSACng RsaProvider => (RSACng)this.certificate.GetRSAPrivateKey();
+        public ICertificateInfoProvider CertificateInfoProvider { get; set; }
 
         public override void WriteInfoXml(XmlWriter writer)
         {
-            if (this.certificate == null)
-            {
-                this.certificate = this.GetApplicationCertificate(
-                    this.Connection.ApplicationId,
-                    StoreLocation.LocalMachine,
-                    null);
-            }
- 
             writer.WriteStartElement("appserver2");
 
             string requestXml = this.GetContentSection();
 
             // SIG
             writer.WriteStartElement("sig");
-            writer.WriteAttributeString("digestMethod", DigestMethod); // this.DigestMethod 
-            writer.WriteAttributeString("sigMethod", SignMethod); // this.SignMethod // hardcoding for now
-            writer.WriteAttributeString("thumbprint", this.certificate.Thumbprint);
+            writer.WriteAttributeString("digestMethod", HealthVaultConstants.Cryptography.DigestAlgorithm);
+            writer.WriteAttributeString("sigMethod", HealthVaultConstants.Cryptography.SignatureAlgorithmName);
+            writer.WriteAttributeString("thumbprint", this.CertificateInfoProvider.Thumbprint);
             writer.WriteString(this.SignRequestXml(requestXml));
             writer.WriteEndElement(); // sig
 
@@ -66,131 +55,43 @@ namespace Microsoft.HealthVault.Web
             writer.WriteEndElement();
         }
 
-        private X509Certificate2 GetApplicationCertificate(
-            Guid applicationId,
-            StoreLocation storeLocation,
-            string certSubject)
+        public string SignRequestXml(string requestXml)
         {
-            var cert = this.GetApplicationCertificateFromStore(applicationId, storeLocation, certSubject);
-            return cert;
-        }
+            UTF8Encoding encoding = new UTF8Encoding();
 
-        private X509Certificate2 GetApplicationCertificateFromStore(Guid applicationId, StoreLocation storeLocation, string certSubject)
-        {
-            if (certSubject == null)
-            {
-                certSubject = "CN=" + this.GetApplicationCertificateSubject(applicationId);
-            }
+            Byte[] paramBlob = encoding.GetBytes(requestXml);
+            Byte[] sigBlob = this.CertificateInfoProvider.PrivateKey.SignData(paramBlob, HealthVaultConstants.Cryptography.DigestAlgorithm);
 
-            HealthVaultPlatformTrace.LogCertLoading(
-                "Opening cert store (read-only): {0}",
-                storeLocation.ToString());
-
-            RSACng rsaProvider = null;
-            string thumbprint = null;
-
-            X509Certificate2 result = null;
-
-            // Note- .NET SDK invokes X509Store(storeLocation),
-            // as .NET standard doesn't have similar method yet (tho, available in 2.0) 
-            // we will create the store with store name "MY" which is similar
-            // to .NET SDK version
-            X509Store store = new X509Store(StoreName.My, storeLocation);
-
-            store.Open(OpenFlags.ReadOnly);
-
-            try
-            {
-                HealthVaultPlatformTrace.LogCertLoading(
-                    "Looking for matching cert with subject: {0}",
-                    certSubject);
-
-                foreach (X509Certificate2 cert in store.Certificates)
-                {
-                    if (string.Equals(
-                            cert.Subject,
-                            certSubject,
-                            StringComparison.OrdinalIgnoreCase))
-                    {
-                        HealthVaultPlatformTrace.LogCertLoading(
-                            "Found matching cert subject with thumbprint: {0}",
-                            cert.Thumbprint);
-
-                        thumbprint = cert.Thumbprint;
-
-                        HealthVaultPlatformTrace.LogCertLoading("Looking for private key");
-                        rsaProvider = (RSACng)cert.GetRSAPrivateKey();
-                        HealthVaultPlatformTrace.LogCertLoading("Private key found");
-
-                        result = cert;
-                        break;
-                    }
-                }
-            }
-            catch (CryptographicException e)
-            {
-                HealthVaultPlatformTrace.LogCertLoading(
-                    "Failed to retrieve private key for certificate: {0}",
-                    e.ToString());
-            }
-            finally
-            {
-                store.Dispose();
-            }
-
-            if (rsaProvider == null || string.IsNullOrEmpty(thumbprint))
-            {
-                throw new SecurityException(Resources.CertificateNotFound.FormatResource(certSubject, storeLocation));
-            }
-
-            return result;
-        }
-
-        private string GetApplicationCertificateSubject(Guid applicationId)
-        {
-            string result = this.configuration.CertSubject;
-
-            if (result == null)
-            {
-                result = "WildcatApp-" + applicationId;
-
-                HealthVaultPlatformTrace.LogCertLoading(
-                    "Using default cert subject: {0}",
-                    result);
-            }
-            else
-            {
-                HealthVaultPlatformTrace.LogCertLoading(
-                    "Using custom cert subject: {0}",
-                    result);
-            }
-
-            return result;
+            return Convert.ToBase64String(sigBlob);
         }
 
 
         /// <summary>
         /// Generate the to-be signed content for the credential.
         /// </summary>
-        ///
+        /// 
         /// <returns>
         /// Raw XML representing the ContentSection of the info secttion.
         /// </returns>
-        ///
+        /// 
         internal string GetContentSection()
         {
             StringBuilder requestXml = new StringBuilder(2048);
             XmlWriterSettings settings = SDKHelper.XmlUnicodeWriterSettings;
 
-            using (XmlWriter writer = XmlWriter.Create(requestXml, settings))
+            XmlWriter writer = null;
+
+            try
             {
+                writer = XmlWriter.Create(requestXml, settings);
+
                 writer.WriteStartElement("content");
 
                 writer.WriteStartElement("app-id");
-                writer.WriteString(this.Connection.ApplicationId.ToString());
+                writer.WriteString(this.webHealthVaultConfiguration.MasterApplicationId.ToString());
                 writer.WriteEndElement();
 
-                writer.WriteElementString("hmac", "HMACSHA256");
+                writer.WriteElementString("hmac", HealthVaultConstants.Cryptography.HmacAlgorithm);
 
                 writer.WriteStartElement("signing-time");
                 writer.WriteValue(DateTime.Now.ToUniversalTime());
@@ -198,22 +99,12 @@ namespace Microsoft.HealthVault.Web
 
                 writer.WriteEndElement(); // content
             }
+            finally
+            {
+                writer?.Close();
+            }
 
             return requestXml.ToString();
-        }
-
-        /// <summary>
-        /// Compute and apply the signature to the request XML.
-        /// </summary>
-        ///
-        private string SignRequestXml(string requestXml)
-        {
-            UTF8Encoding encoding = new UTF8Encoding();
-
-            byte[] paramBlob = encoding.GetBytes(requestXml);
-            byte[] sigBlob = this.RsaProvider.SignData(paramBlob, new HashAlgorithmName(DigestMethod), RSASignaturePadding.Pkcs1); // SignData(paramBlob, DigestMethod);
-
-            return Convert.ToBase64String(sigBlob);
         }
     }
 }

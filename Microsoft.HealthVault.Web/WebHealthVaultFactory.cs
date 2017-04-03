@@ -1,73 +1,98 @@
-﻿using Microsoft.HealthVault.Configuration;
-using Microsoft.HealthVault.Connection;
+﻿// Copyright (c) Microsoft Corporation.  All rights reserved. 
+// MIT License
+// Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the ""Software""), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+// 
+// The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED *AS IS*, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
 using System;
+using System.Security.Principal;
 using System.Threading.Tasks;
+using System.Web;
+using Microsoft.HealthVault.Connection;
+using Microsoft.HealthVault.PlatformInformation;
+using Microsoft.HealthVault.Web.Connection;
+using Microsoft.HealthVault.Web.Providers;
 
 namespace Microsoft.HealthVault.Web
 {
+    /// <summary>
+    /// Factory class to create Web/Offline connections
+    /// </summary>
     public class WebHealthVaultFactory
     {
-        private static readonly object InstanceLock = new object();
-        private static WebHealthVaultFactory current;
-
-        private readonly AsyncLock connectionLock = new AsyncLock();
-        private WebConfiguration configuration;
-        private IHealthVaultConnection cachedWebApplicationConnection;
-
-        private readonly ConnectionState connectionState = new ConnectionState();
-
         /// <summary>
-        /// Gets the current WebHealthVaultFactory instance.
+        /// Creates an authenticated web connection when the reuest 
+        /// has been authenticated using [RequireSignIn] attribute.
+        /// In case the request has not been authenticated, an anonymous
+        /// connection is created.
         /// </summary>
-        public static WebHealthVaultFactory Current
-        {
-            get
-            {
-                lock (InstanceLock)
-                {
-                    return current ?? (current = new WebHealthVaultFactory());
-                }
-            }
-        }
-
-        private WebHealthVaultFactory()
-        {
-        }
-
-        /// <summary>
-        /// Sets the configuration used to create connections.
-        /// </summary>
-        /// <exception cref="InvalidOperationException">
-        /// If <see cref="GetWebApplicationConnectionAsync"/> has been called already.
+        /// <returns>IWebHealthVaultConnection</returns>
+        /// <exception cref="NotSupportedException">
+        ///     WebConnectionInfo is expected for authenticated connections
         /// </exception>
-        public void SetConfiguration(WebConfiguration configuration)
+        public static async Task<IWebHealthVaultConnection> CreateWebConnectionAsync()
         {
-            this.connectionState.ThrowIfAlreadyCreatedConnection(nameof(this.SetConfiguration));
-            this.configuration = configuration;
+            IPrincipal principal = HttpContext.Current.User;
+            HealthVaultIdentity identity = principal?.Identity as HealthVaultIdentity;
+
+            IServiceLocator serviceLocator = Ioc.Get<IServiceLocator>();
+
+            if (identity == null)
+            {
+                IWebHealthVaultConnection anonymousWebConnection = serviceLocator.GetInstance<IWebHealthVaultConnection>();
+                return anonymousWebConnection;
+            }
+
+            var webConnectionInfo = identity.WebConnectionInfo;
+
+            if (webConnectionInfo == null)
+            {
+                throw new NotSupportedException("WebConnectionInfo is expected for authenticated connections");
+            }
+
+            // Get ServiceInstance
+            IServiceInstanceProvider serviceInstanceProvider = serviceLocator.GetInstance<IServiceInstanceProvider>();
+            HealthServiceInstance serviceInstance = await serviceInstanceProvider.GetHealthServiceInstanceAsync(webConnectionInfo.ServiceInstanceId);
+
+            // Get AuthInformation
+            SessionCredential sessionCredentialToken = webConnectionInfo.SessionCredential;
+            string token = webConnectionInfo.UserAuthToken;
+
+            IWebHealthVaultConnection webConnection = Ioc.Container.Locate<IWebHealthVaultConnection>(
+                new { serviceLocator, serviceInstance, sessionCredentialToken, token });
+
+            return webConnection;
         }
 
-        public async Task<IHealthVaultConnection> GetWebApplicationConnectionAsync()
+        /// <summary>
+        /// Creates the offline connection.
+        /// </summary>
+        /// <param name="offlinePersonId">The offline person identifier.</param>
+        /// <param name="instanceId">The instance identifier.</param>
+        /// <param name="sessionCredential">The session credential.</param>
+        /// <returns></returns>
+        public static async Task<IOfflineHealthVaultConnection> CreateOfflineConnectionAsync(
+            string offlinePersonId, 
+            string instanceId = null, 
+            SessionCredential sessionCredential = null)
         {
-            this.connectionState.MarkConnectionCalled();
-            using (await (this.connectionLock.LockAsync().ConfigureAwait(false)))
+            IServiceLocator serviceLocator = Ioc.Get<IServiceLocator>();
+
+            // Get ServiceInstance
+            IServiceInstanceProvider serviceInstanceProvider = serviceLocator.GetInstance<IServiceInstanceProvider>();
+            HealthServiceInstance serviceInstance = await serviceInstanceProvider.GetHealthServiceInstanceAsync(instanceId);
+
+            IOfflineHealthVaultConnection offlineHealthVaultConnection = Ioc.Container.Locate<IOfflineHealthVaultConnection>(new 
             {
-                if (this.cachedWebApplicationConnection != null)
-                {
-                    return this.cachedWebApplicationConnection;
-                }
+                serviceLocator,
+                serviceInstance,
+                sessionCredential,
+                offlinePersonId
+            });
 
-                WebIoc.EnsureTypesRegistered();
-
-                var config = this.configuration ?? WebConfigurationFactory.CreateConfiguration();
-                Ioc.Container.Configure(c => c.ExportInstance(() => config));
-                Ioc.Container.Configure(c => c.ExportInstance<HealthVaultConfiguration>(() => config));
-                config.Lock();
-
-                IHealthVaultConnection connection = Ioc.Get<IConnectionInternal>();
-                await connection.AuthenticateAsync().ConfigureAwait(false);
-                this.cachedWebApplicationConnection = connection;
-                return connection;
-            }
+            return offlineHealthVaultConnection;
         }
     }
 }

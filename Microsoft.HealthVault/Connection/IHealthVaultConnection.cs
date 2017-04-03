@@ -53,5 +53,10 @@ namespace Microsoft.HealthVault.Connection
             int methodVersion,
             string parameters = null,
             Guid? recordId = null);
+
+        /// <summary>
+        /// Gets SessionCredential
+        /// </summary>
+        SessionCredential SessionCredential { get; }
     }
 }

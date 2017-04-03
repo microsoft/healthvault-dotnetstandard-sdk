@@ -9,7 +9,7 @@
     /// When the token expires, requests will fail with access denied.
     /// Connections will automatically refresh the token when expired 
     /// </remarks>
-    internal class SessionCredential
+    public class SessionCredential
     {
         /// <summary>
         /// Gets or sets the token.

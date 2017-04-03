@@ -178,32 +178,32 @@ namespace Microsoft.HealthVault.Rest
         /// </summary>
         public Guid RecordId { get; set; }
 
-        private int timeoutSeconds;
+        private TimeSpan? timeoutDuration;
 
         /// <summary>
-        /// Gets or sets the timeout for the request, in seconds.
+        /// Gets or sets the timeout duration for the request.
         /// </summary>
         ///
         /// <returns>
-        /// An integer representing the timeout, in seconds.
+        /// A TimeSpan representing the timeout.
         /// </returns>
         ///
         /// <exception cref="ArgumentOutOfRangeException">
         /// The timeout value is set to less than 0.
         /// </exception>
         ///
-        public int TimeoutSeconds
+        public TimeSpan? TimeoutDuration
         {
-            get { return this.timeoutSeconds; }
+            get { return this.timeoutDuration; }
 
             set
             {
-                if (value < 0)
+                if (value.HasValue && value.Value.TotalSeconds < 0)
                 {
-                    throw new ArgumentOutOfRangeException(nameof(this.TimeoutSeconds), Resources.TimeoutMustBePositive);
+                    throw new ArgumentOutOfRangeException(nameof(this.TimeoutDuration), Resources.TimeoutMustBePositive);
                 }
 
-                this.timeoutSeconds = value;
+                this.timeoutDuration = value;
             }
         }
 
@@ -213,7 +213,7 @@ namespace Microsoft.HealthVault.Rest
         public async Task<HealthServiceRestResponseData> ExecuteAsync()
         {
             int retryCount = this.configuration.RetryOnInternal500Count;
-            int retrySleepSeconds = this.configuration.RetryOnInternal500SleepSeconds;
+            TimeSpan retrySleepDuration = this.configuration.RetryOnInternal500SleepDuration;
 
             HealthServiceRestResponseData responseData = null;
 
@@ -232,7 +232,7 @@ namespace Microsoft.HealthVault.Rest
                     if (response != null && response.StatusCode == HttpStatusCode.InternalServerError && retryCount > 0)
                     {
                         // The retry sleep is measured in seconds
-                        await Task.Delay(TimeSpan.FromSeconds(retrySleepSeconds * 1000));
+                        await Task.Delay(retrySleepDuration);
                     }
                     else
                     {
@@ -264,7 +264,7 @@ namespace Microsoft.HealthVault.Rest
             this.uri = fullUri;
             this.body = this.isContentRequest ? requestBody ?? string.Empty : null;
             this.optionalheaders = optionalHeaders;
-            this.timeoutSeconds = this.configuration.DefaultRequestTimeout;
+            this.timeoutDuration = this.configuration.DefaultRequestTimeoutDuration;
         }
 
         private async Task<HealthServiceRestResponseData> FetchAsync()
@@ -300,7 +300,7 @@ namespace Microsoft.HealthVault.Rest
         {
             var httpRequest = this.CreateRequest(uri);
             HttpResponseMessage response = null;
-            this.cancellationTokenSource = new CancellationTokenSource(TimeSpan.FromSeconds(this.timeoutSeconds));
+            this.cancellationTokenSource = this.timeoutDuration.HasValue ? new CancellationTokenSource(this.timeoutDuration.Value) : null;
 
             this.SetHeaders(httpRequest);
 

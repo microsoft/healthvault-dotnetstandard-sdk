@@ -1,7 +1,7 @@
-﻿// Copyright (c) Microsoft Corporation.  All rights reserved. 
+﻿// Copyright (c) Microsoft Corporation.  All rights reserved.
 // MIT License
 // Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the ""Software""), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 //
 // THE SOFTWARE IS PROVIDED *AS IS*, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
@@ -24,12 +24,12 @@ namespace Microsoft.HealthVault.Configuration
         /// <summary>
         /// The default number of internal retries.
         /// </summary>
-        protected const int DefaultRetryOnInternal500Count = 2;
+        internal const int DefaultRetryOnInternal500Count = 2;
 
         /// <summary>
         /// Default sleep duration in seconds.
         /// </summary>
-        protected const int DefaultRetryOnInternal500SleepSeconds = 1;
+        internal static readonly TimeSpan DefaultRetryOnInternal500SleepDuration = TimeSpan.FromMinutes(1);
 
         /// <summary>
         /// Base class for the app, web and soda configurations
@@ -37,12 +37,12 @@ namespace Microsoft.HealthVault.Configuration
         /// <summary>
         /// The default request time to live value.
         /// </summary>
-        protected const int DefaultDefaultRequestTimeToLive = 30 * 60;
+        internal static readonly TimeSpan DefaultDefaultRequestTimeToLiveDuration = TimeSpan.FromSeconds(30 * 60);
 
         /// <summary>
         /// The default request time out value.
         /// </summary>
-        protected const int DefaultDefaultRequestTimeout = 30;
+        internal static readonly TimeSpan DefaultDefaultRequestTimeoutDuration = TimeSpan.FromSeconds(30);
 
         /// <summary>
         /// Gets or sets a value indicating whether the configuration is locked.
@@ -77,7 +77,10 @@ namespace Microsoft.HealthVault.Configuration
         /// the configured default instance of the HealthVault web-service.
         /// ( ex: https://account.healthvault.com )
         /// </summary>
-        /// <remarks> This may be overwritten if an environment instance bounce happens.</remarks>
+        /// <remarks>
+        /// This may be overwritten if an environment instance bounce happens.
+        /// This property corresponds to the "HV_ShellUrl" configuration value when reading from web.config.
+        /// </remarks>
         public virtual Uri DefaultHealthVaultShellUrl
         {
             get
@@ -99,8 +102,7 @@ namespace Microsoft.HealthVault.Configuration
         /// </summary>
         ///
         /// <remarks>
-        /// This property corresponds to the "ApplicationId" configuration
-        /// value.
+        /// This property corresponds to the "HV_ApplicationId" configuration value when reading from web.config.
         /// </remarks>
         ///
         public virtual Guid MasterApplicationId
@@ -124,92 +126,92 @@ namespace Microsoft.HealthVault.Configuration
         /// <summary>
         /// Gets the request timeout in seconds.
         /// </summary>
-        /// 
+        ///
         /// <remarks>
-        /// This value is used to set the <see cref="Timeout"/> property 
-        /// when making the request to HealthVault. The timeout is the number of seconds that a 
+        /// This value is used to set the <see cref="Timeout"/> property
+        /// when making the request to HealthVault. The timeout is the number of seconds that a
         /// request will wait for a response from HealtVault. If the method response is not
         /// returned within the time-out period the request will throw a <see cref="HealthHttpException"/>
         /// with the <see cref="HealthHttpException.StatusCode">Status</see> property set to
         /// <see cref="Timeout"/>.
-        /// This property corresponds to the "defaultRequestTimeout" configuration
-        /// value. The value defaults to 30 seconds.
+        /// This property corresponds to the "HV_DefaultRequestTimeoutSeconds" configuration value when reading from web.config.
+        /// The value defaults to 30 seconds.
         /// </remarks>
         ///
-        public virtual int DefaultRequestTimeout
+        public TimeSpan? DefaultRequestTimeoutDuration
         {
             get
             {
-                if (!this.configurationRequestTimeoutInitialized)
+                if (!this.configurationRequestDurationInitialized)
                 {
-                    this.configuredRequestTimeout = DefaultDefaultRequestTimeout;
-                    this.configurationRequestTimeoutInitialized = true;
+                    this.configuredRequestTimeoutDuration = DefaultDefaultRequestTimeoutDuration;
+                    this.configurationRequestDurationInitialized = true;
                 }
 
-                return this.configuredRequestTimeout;
+                return this.configuredRequestTimeoutDuration;
             }
 
             set
             {
                 this.EnsureNotLocked();
 
-                int tempRequestTimeout = value;
+                TimeSpan? tempRequestTimeout = value;
 
-                // Note, -1 signifies an infinite timeout so that is OK.
-                if (tempRequestTimeout < -1)
+                // Note, null signifies an infinite timeout so that is OK.
+                if (tempRequestTimeout.HasValue && tempRequestTimeout.Value.TotalSeconds < 0)
                 {
-                    tempRequestTimeout = DefaultDefaultRequestTimeout;
+                    tempRequestTimeout = DefaultDefaultRequestTimeoutDuration;
                 }
 
-                this.configuredRequestTimeout = tempRequestTimeout;
-                this.configurationRequestTimeoutInitialized = true;
+                this.configuredRequestTimeoutDuration = tempRequestTimeout;
+                this.configurationRequestDurationInitialized = true;
             }
         }
 
-        private volatile int configuredRequestTimeout;
-        private volatile bool configurationRequestTimeoutInitialized;
+        private TimeSpan? configuredRequestTimeoutDuration;
+        private volatile bool configurationRequestDurationInitialized;
 
         /// <summary>
-        /// Gets the request time to live in seconds.
+        /// Gets the request time to live.
         /// </summary>
         ///
         /// <remarks>
         /// This property defines the "msg-ttl" in the HealthVault request header XML. It determines
         /// how long the same XML can be used before HealthVault determines the request invalid.
-        /// This property corresponds to the "defaultRequestTimeToLive" configuration
-        /// value. The value defaults to 1800 seconds.
+        /// This property corresponds to the "HV_DefaultRequestTimeToLiveSeconds" configuration value when reading from web.config.
+        /// The value defaults to 1800 seconds.
         /// </remarks>
         ///
-        public virtual int DefaultRequestTimeToLive
+        public TimeSpan DefaultRequestTimeToLiveDuration
         {
             get
             {
                 if (!this.configuredRequestTimeToLiveInitialized)
                 {
-                    this.configuredRequestTimeToLive = DefaultDefaultRequestTimeToLive;
+                    this.configuredRequestTimeToLiveDuration = DefaultDefaultRequestTimeToLiveDuration;
                     this.configuredRequestTimeToLiveInitialized = true;
                 }
 
-                return this.configuredRequestTimeToLive;
+                return this.configuredRequestTimeToLiveDuration;
             }
 
             set
             {
                 this.EnsureNotLocked();
 
-                int tempRequestTimeToLive = value;
+                TimeSpan tempRequestTimeToLive = value;
 
-                if (tempRequestTimeToLive < -1)
+                if (tempRequestTimeToLive.TotalSeconds < 0)
                 {
-                    tempRequestTimeToLive = DefaultDefaultRequestTimeToLive;
+                    tempRequestTimeToLive = DefaultDefaultRequestTimeToLiveDuration;
                 }
 
-                this.configuredRequestTimeToLive = tempRequestTimeToLive;
+                this.configuredRequestTimeToLiveDuration = tempRequestTimeToLive;
                 this.configuredRequestTimeToLiveInitialized = true;
             }
         }
 
-        private volatile int configuredRequestTimeToLive;
+        private TimeSpan configuredRequestTimeToLiveDuration;
         private volatile bool configuredRequestTimeToLiveInitialized;
 
         /// <summary>
@@ -218,8 +220,8 @@ namespace Microsoft.HealthVault.Configuration
         /// </summary>
         ///
         /// <remarks>
-        /// This property corresponds to the "RequestRetryOnInternal500" configuration
-        /// value. The value defaults to 2.
+        /// This property corresponds to the "HV_RequestRetryOnInternal500Count" configuration value when reading from web.config.
+        /// The value defaults to 2.
         /// </remarks>
         ///
         public virtual int RetryOnInternal500Count
@@ -253,34 +255,34 @@ namespace Microsoft.HealthVault.Configuration
         /// </summary>
         ///
         /// <remarks>
-        /// This property corresponds to the "RequestRetryOnInternal500SleepSeconds" configuration
-        /// value. The value defaults to 1 second.
+        /// This property corresponds to the "HV_RequestRetryOnInternal500SleepSeconds" configuration value when reading from web.config.
+        /// The value defaults to 1 second.
         /// </remarks>
         ///
-        public virtual int RetryOnInternal500SleepSeconds
+        public TimeSpan RetryOnInternal500SleepDuration
         {
             get
             {
-                if (!this.retryOnInternal500SleepSecondsInitialized)
+                if (!this.retryOnInternal500SleepDurationInitialized)
                 {
-                    this.retryOnInternal500SleepSeconds = DefaultRetryOnInternal500SleepSeconds;
-                    this.retryOnInternal500SleepSecondsInitialized = true;
+                    this.retryOnInternal500SleepDuration = DefaultRetryOnInternal500SleepDuration;
+                    this.retryOnInternal500SleepDurationInitialized = true;
                 }
 
-                return this.retryOnInternal500SleepSeconds;
+                return this.retryOnInternal500SleepDuration;
             }
 
             set
             {
                 this.EnsureNotLocked();
 
-                this.retryOnInternal500SleepSeconds = value;
-                this.retryOnInternal500SleepSecondsInitialized = true;
+                this.retryOnInternal500SleepDuration = value;
+                this.retryOnInternal500SleepDurationInitialized = true;
             }
         }
 
-        private volatile int retryOnInternal500SleepSeconds;
-        private volatile bool retryOnInternal500SleepSecondsInitialized;
+        private TimeSpan retryOnInternal500SleepDuration;
+        private volatile bool retryOnInternal500SleepDurationInitialized;
 
         #endregion web request/response configuration
 
@@ -289,8 +291,8 @@ namespace Microsoft.HealthVault.Configuration
         /// </summary>
         ///
         /// <remarks>
-        /// This property corresponds to the "defaultInlineBlobHashBlockSize" configuration
-        /// value. The value defaults to 2MB.
+        /// This property corresponds to the "HV_DefaultInlineBlobHashBlockSize" configuration value when reading from web.config.
+        /// The value defaults to 2MB.
         /// </remarks>
         ///
         public virtual int InlineBlobHashBlockSize
@@ -330,6 +332,7 @@ namespace Microsoft.HealthVault.Configuration
         /// </summary>
         ///
         /// <remarks>
+        /// This property corresponds to the "HV_SupportedTypeVersions" configuration value when reading from web.config.
         /// Although most applications don't need this configuration setting, if an application
         /// calls <see cref="HealthRecordAccessor.GetItemAsync(System.Guid,ThingSections)"/> or makes any query to HealthVault
         /// that doesn't specify the type identifier in the filter, this configuration setting
@@ -378,7 +381,7 @@ namespace Microsoft.HealthVault.Configuration
         /// applications may need to revert back to the original behavior. When this property
         /// returns true the original behavior will be observed. If false, the new behavior will
         /// be observed. This property defaults to false and can be changed in the web.config file
-        /// "UseLegacyTypeVersionSupport" setting.
+        /// "HV_UseLegacyTypeVersionSupport" setting.
         /// </remarks>
         ///
         public virtual bool UseLegacyTypeVersionSupport
@@ -404,7 +407,7 @@ namespace Microsoft.HealthVault.Configuration
         ///
         /// <remarks>
         /// This setting defaults to <b>true</b> and can be set in an application
-        /// configuration file, using the "MultiInstanceAware" setting key.
+        /// configuration file, using the "HV_MultiInstanceAware" setting key.
         /// <p>
         /// Applications in HealthVault can be configured to support more than one instance of the HealthVault web-service.
         /// In such a case, and when the MultiInstanceAware configuration is set to <b>true</b>, all redirects generated
@@ -440,7 +443,7 @@ namespace Microsoft.HealthVault.Configuration
         /// </summary>
         ///
         /// <remarks>
-        /// This property corresponds to the "RestHealthServiceUrl" configuration.
+        /// This property corresponds to the "HV_RestHealthServiceUrl" configuration value when reading from web.config.
         /// </remarks>
         ///
         public virtual Uri RestHealthVaultUrl
@@ -459,6 +462,12 @@ namespace Microsoft.HealthVault.Configuration
 
         private volatile Uri restHealthVaultRootUrl;
 
+        /// <summary>
+        /// Gets a value indicating whethor or not the app supports accessing multiple records.
+        /// </summary>
+        /// <remarks>
+        /// This property corresponds to the "HV_IsMRA" configuration value when reading from web.config.
+        /// </remarks>
         public virtual bool IsMultiRecordApp
         {
             get

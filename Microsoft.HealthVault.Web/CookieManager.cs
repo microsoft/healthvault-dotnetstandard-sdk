@@ -1,37 +1,42 @@
-﻿// Copyright (c) Microsoft Corporation.  All rights reserved.
+﻿// Copyright (c) Microsoft Corporation.  All rights reserved. 
 // MIT License
 // Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the ""Software""), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
-//
+// 
 // The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 //
 // THE SOFTWARE IS PROVIDED *AS IS*, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-namespace Microsoft.HealthVault
+using System.Web;
+using Microsoft.HealthVault.Web.Configuration;
+
+namespace Microsoft.HealthVault.Web
 {
-    /// <summary>
-    /// Constants used by the HealthVault SDK
-    /// </summary>
-    internal static class HealthVaultConstants
+    // TODO: To be implemented
+    internal class CookieManager : ICookieManager
     {
-        internal static class Cryptography
+        private readonly IServiceLocator serviceLocator;
+        private readonly WebHealthVaultConfiguration webHealthVaultConfiguration;
+
+        public CookieManager(IServiceLocator serviceLocator)
         {
-            internal static readonly string HashAlgorithm = "SHA256";
-            internal static readonly string HmacAlgorithm = "HMACSHA256";
-            internal static readonly string SignatureAlgorithmName = "RSA-SHA1";
-            internal static readonly string DigestAlgorithm = "SHA1";
+            this.serviceLocator = serviceLocator;
+
+            this.webHealthVaultConfiguration = this.serviceLocator.GetInstance<WebHealthVaultConfiguration>();
         }
 
-        internal static class Storage
+        public void Save(HttpContextBase httpConext, WebConnectionInfo connectionInfo)
         {
-            internal static readonly string DirectoryName = "HealthVault-SDK";
+            throw new System.NotImplementedException();
         }
 
-        internal static class SdkTelemetryInformationCategories
+        public WebConnectionInfo Load(HttpContextBase httpContext)
         {
-            internal static readonly string AndroidClient = "HV-Xamarin-Android";
-            internal static readonly string WindowsClient = "HV-Xamarin-Windows";
-            internal static readonly string IosClient = "HV-Xamarin-Ios";
-            internal static readonly string Web = "HV-Web";
+            throw new System.NotImplementedException();
+        }
+
+        public void Clear(HttpContextBase httpContext)
+        {
+            throw new System.NotImplementedException();
         }
     }
 }
