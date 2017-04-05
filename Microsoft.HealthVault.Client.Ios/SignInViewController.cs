@@ -15,7 +15,7 @@ namespace Microsoft.HealthVault.Client
         private WKWebView webView;
 
         public SignInViewController(ISignInNavigationHandler navigationHandler, string startUrlString) :
-            base("SignInViewController", NSBundle.FromClass(new Class("SignInViewController")))
+            base()
         {
             // Cancel and web view navigation is handeld by ISignInNavigationHandler
             this.navigationHandler = navigationHandler;
