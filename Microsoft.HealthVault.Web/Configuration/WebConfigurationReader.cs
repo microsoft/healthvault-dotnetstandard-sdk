@@ -6,7 +6,6 @@ using System.Linq;
 using System.Web;
 using System.Web.Configuration;
 using Microsoft.HealthVault.Configuration;
-using Microsoft.HealthVault.Diagnostics;
 using Microsoft.HealthVault.Exceptions;
 using Microsoft.HealthVault.ItemTypes;
 using Microsoft.HealthVault.Thing;
@@ -34,22 +33,28 @@ namespace Microsoft.HealthVault.Web.Configuration
             {
                 // Base HealthVaultConfiguration properties
                 MasterApplicationId = appSettings.GetGuid(ConfigKeys.AppId),
-                DefaultHealthVaultShellUrl = appSettings.GetUrl(ConfigKeys.ShellUrl, true),
-                DefaultHealthVaultUrl = appSettings.GetUrl(ConfigKeys.HealthServiceUrl, true),
-                DefaultRequestTimeoutDuration = appSettings.GetTimeSpanFromSeconds(ConfigKeys.DefaultRequestTimeoutSeconds, HealthVaultConfiguration.DefaultDefaultRequestTimeoutDuration),
-                DefaultRequestTimeToLiveDuration = appSettings.GetTimeSpanFromSeconds(
+                HealthVaultShellUrl = appSettings.GetUrl(ConfigKeys.ShellUrl, true),
+                HealthVaultUrl = appSettings.GetUrl(ConfigKeys.HealthServiceUrl, true),
+
+                RequestTimeoutDuration = appSettings.GetTimeSpanFromSeconds(
+                    ConfigKeys.DefaultRequestTimeoutSeconds, 
+                    HealthVaultConfigurationDefaults.RequestTimeoutDuration) ?? 
+                    HealthVaultConfigurationDefaults.RequestTimeoutDuration,
+
+                RequestTimeToLiveDuration = appSettings.GetTimeSpanFromSeconds(
                     ConfigKeys.DefaultRequestTimeToLiveSeconds,
-                    HealthVaultConfiguration.DefaultDefaultRequestTimeToLiveDuration) ??
-                    HealthVaultConfiguration.DefaultDefaultRequestTimeToLiveDuration,
+                    HealthVaultConfigurationDefaults.RequestTimeToLiveDuration) ??
+                    HealthVaultConfigurationDefaults.RequestTimeToLiveDuration,
+
                 InlineBlobHashBlockSize = appSettings.GetTypedValue(ConfigKeys.DefaultInlineBlobHashBlockSize, BlobHasher.DefaultInlineBlobHashBlockSizeBytes),
                 IsMultiRecordApp = appSettings.GetTypedValue(ConfigKeys.IsMra, ConfigDefaults.IsMra),
                 MultiInstanceAware = appSettings.GetTypedValue(ConfigKeys.MultiInstanceAware, true),
                 RestHealthVaultUrl = appSettings.GetUrl(ConfigKeys.RestHealthServiceUrl, true),
-                RetryOnInternal500Count = appSettings.GetTypedValue(ConfigKeys.RequestRetryOnInternal500Count, HealthVaultConfiguration.DefaultRetryOnInternal500Count),
+                RetryOnInternal500Count = appSettings.GetTypedValue(ConfigKeys.RequestRetryOnInternal500Count, HealthVaultConfigurationDefaults.RetryOnInternal500Count),
                 RetryOnInternal500SleepDuration = appSettings.GetTimeSpanFromSeconds(
                     ConfigKeys.RequestRetryOnInternal500SleepSeconds,
-                    HealthVaultConfiguration.DefaultRetryOnInternal500SleepDuration) ??
-                    HealthVaultConfiguration.DefaultRetryOnInternal500SleepDuration,
+                    HealthVaultConfigurationDefaults.RetryOnInternal500SleepDuration) ??
+                    HealthVaultConfigurationDefaults.RetryOnInternal500SleepDuration,
                 SupportedTypeVersions = GetSupportedTypeVersions(appSettings[ConfigKeys.SupportedType]),
                 UseLegacyTypeVersionSupport = appSettings.GetTypedValue(ConfigKeys.UseLegacyTypeVersionSupport, false),
 
@@ -78,7 +83,7 @@ namespace Microsoft.HealthVault.Web.Configuration
             Collection<Guid> supportedTypeVersions = new Collection<Guid>();
 
             typeVersionsString = typeVersionsString ?? string.Empty;
-            string[] typeVersions = typeVersionsString.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
+            string[] typeVersions = typeVersionsString.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
 
             foreach (string typeVersionClassName in typeVersions)
             {
@@ -108,7 +113,6 @@ namespace Microsoft.HealthVault.Web.Configuration
                     encryptionKey = HexToBytes(encryptionKeyString);
                     if (encryptionKey.Length != 32)
                     {
-                        encryptionKey = null;
                         throw new HealthServiceException(string.Format(Resources.ConfigValueAbsentOrInvalid, ConfigKeys.CookieEncryptionKey));
                     }
                 }

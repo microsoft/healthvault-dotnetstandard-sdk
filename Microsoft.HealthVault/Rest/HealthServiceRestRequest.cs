@@ -264,7 +264,7 @@ namespace Microsoft.HealthVault.Rest
             this.uri = fullUri;
             this.body = this.isContentRequest ? requestBody ?? string.Empty : null;
             this.optionalheaders = optionalHeaders;
-            this.timeoutDuration = this.configuration.DefaultRequestTimeoutDuration;
+            this.timeoutDuration = this.configuration.RequestTimeoutDuration;
         }
 
         private async Task<HealthServiceRestResponseData> FetchAsync()

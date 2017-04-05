@@ -96,8 +96,9 @@ namespace SandboxIos
                 return true;
             }
 
+            int n;
             // Allow only 3 characters per field, and allow only numbers
-            if (range.Location + range.Length >= 3 || !int.TryParse(text, out int n))
+            if (range.Location + range.Length >= 3 || !int.TryParse(text, out n))
             {
                 return false;
             }

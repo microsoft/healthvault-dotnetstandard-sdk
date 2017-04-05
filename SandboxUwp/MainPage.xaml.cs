@@ -5,10 +5,10 @@ using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Microsoft.HealthVault.Client;
 using Microsoft.HealthVault.Clients;
+using Microsoft.HealthVault.Configuration;
 using Microsoft.HealthVault.ItemTypes;
 using Microsoft.HealthVault.Person;
 using Microsoft.HealthVault.Record;
-using Microsoft.HealthVault.Thing;
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x409
 
@@ -24,19 +24,17 @@ namespace SandboxUwp
         public MainPage()
         {
             this.InitializeComponent();
-
-            var configuration = new ClientHealthVaultConfiguration
-            {
-                MasterApplicationId = Guid.Parse("d6318dff-5352-4a10-a140-6c82c6536a3b")
-            };
-            HealthVaultConnectionFactory.Current.SetConfiguration(configuration);
         }
 
         private async void Connect_OnClick(object sender, RoutedEventArgs e)
         {
             this.OutputBlock.Text = "Connecting...";
 
-            this.connection = HealthVaultConnectionFactory.Current.GetSodaConnection();
+            var configuration = new HealthVaultConfiguration
+            {
+                MasterApplicationId = Guid.Parse("d6318dff-5352-4a10-a140-6c82c6536a3b")
+            };
+            this.connection = HealthVaultConnectionFactory.Current.GetOrCreateSodaConnection(configuration);
             await this.connection.AuthenticateAsync();
 
             this.OutputBlock.Text = "Connected.";

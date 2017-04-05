@@ -60,7 +60,7 @@ namespace Microsoft.HealthVault
         /// </p>
         ///
         /// <p>
-        /// If not specified, the value of the <see cref="HealthVaultConfiguration.DefaultHealthVaultShellUrl"/> configuration is
+        /// If not specified, the value of the <see cref="HealthVaultConfiguration.HealthVaultShellUrl"/> configuration is
         /// used for constructing the Shell redirect URL.
         /// </p>
         /// </remarks>
@@ -314,7 +314,7 @@ namespace Microsoft.HealthVault
         /// <exception cref="InvalidConfigurationException">
         /// No <see cref="ShellRedirectorUrl"/> specified or
         /// Shell URL configured for the application
-        /// (<see cref="HealthVaultConfiguration.DefaultHealthVaultShellUrl"/>).
+        /// (<see cref="HealthVaultConfiguration.HealthVaultShellUrl"/>).
         /// </exception>
         ///
         /// <exception cref="UriFormatException">
@@ -327,13 +327,13 @@ namespace Microsoft.HealthVault
             string shellRedirectorUrl = this.ShellRedirectorUrl;
             if (string.IsNullOrEmpty(shellRedirectorUrl))
             {
-                if (this.configuration.DefaultHealthVaultShellUrl == null)
+                if (this.configuration.HealthVaultShellUrl == null)
                 {
                     throw new InvalidConfigurationException(Resources.ShellUrlRequired);
                 }
 
                 // get from config
-                shellRedirectorUrl = this.configuration.DefaultHealthVaultShellUrl.OriginalString;
+                shellRedirectorUrl = this.configuration.HealthVaultShellUrl.OriginalString;
             }
 
             if (!shellRedirectorUrl.EndsWith(ShellRedirectPage, StringComparison.OrdinalIgnoreCase))

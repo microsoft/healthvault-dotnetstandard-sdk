@@ -6,6 +6,7 @@ using Android.Views;
 using Android.Widget;
 using Microsoft.HealthVault.Client;
 using Microsoft.HealthVault.Clients;
+using Microsoft.HealthVault.Configuration;
 using Microsoft.HealthVault.ItemTypes;
 using Microsoft.HealthVault.Person;
 
@@ -47,24 +48,19 @@ namespace SandboxAndroid
             this.disconnectButton.Click += this.DisconnectButtonOnClick;
             this.getButton.Click += this.GetBloodPressures;
             this.createButton.Click += this.CreateBloodPressure;
-
-            // create a configuration for our HealthVault application
-            HealthVaultConnectionFactory.Current.SetConfiguration(new ClientHealthVaultConfiguration
-            {
-                MasterApplicationId = Guid.Parse("cf0cb893-d411-495c-b66f-9d72b4fd2b97"),
-                DefaultHealthVaultShellUrl = new Uri("https://account.healthvault-ppe.com"),
-                DefaultHealthVaultUrl = new Uri("https://platform.healthvault-ppe.com/platform")
-            });
         }
 
         private async void ConnectToHealthVaultAsync(object sender, EventArgs eventArgs)
         {
             this.statusView.Text = "Connecting...";
 
+            // create a configuration for our HealthVault application
+            var configuration = GetPpeConfiguration();
+
             try
             {
                 // get a connection to HealthVault
-                this.connection = HealthVaultConnectionFactory.Current.GetSodaConnection();
+                this.connection = HealthVaultConnectionFactory.Current.GetOrCreateSodaConnection(configuration);
                 await this.connection.AuthenticateAsync();
             }
             catch (Exception e)
@@ -83,6 +79,17 @@ namespace SandboxAndroid
             this.controlsLayout.Visibility = ViewStates.Visible;
             this.disconnectButton.Visibility = ViewStates.Visible;
             this.statusView.Text = $"Hello {personInfo.Name}";
+        }
+
+        private static HealthVaultConfiguration GetPpeConfiguration()
+        {
+            var configuration = new HealthVaultConfiguration
+            {
+                MasterApplicationId = Guid.Parse("cf0cb893-d411-495c-b66f-9d72b4fd2b97"),
+                HealthVaultShellUrl = new Uri("https://account.healthvault-ppe.com"),
+                HealthVaultUrl = new Uri("https://platform.healthvault-ppe.com/platform")
+            };
+            return configuration;
         }
 
         private async void DisconnectButtonOnClick(object sender, EventArgs eventArgs)

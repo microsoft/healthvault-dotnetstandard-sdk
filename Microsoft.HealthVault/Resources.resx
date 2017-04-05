@@ -2265,8 +2265,8 @@
   <data name="CannotBeNullOrEmpty" xml:space="preserve">
     <value>{0} cannot be null or empty.</value>
   </data>
-  <data name="CannotCallMethodBefore" xml:space="preserve">
-    <value>Cannot call {0} before calling {1}.</value>
+  <data name="CannotAuthWithDifferentMasterApplicationId" xml:space="preserve">
+    <value>Cannot call {0} with different application id. Current: {1}, New: {2}</value>
   </data>
   <data name="CannotChangeConfigurationAfterInit" xml:space="preserve">
     <value>Changing app configuration values after initialization is not permitted.</value>

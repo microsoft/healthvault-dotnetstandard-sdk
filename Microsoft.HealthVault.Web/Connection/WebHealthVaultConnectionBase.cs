@@ -38,8 +38,8 @@ namespace Microsoft.HealthVault.Web.Connection
                     "1",
                     "Default",
                     "Default HealthVault instance",
-                    UrlUtilities.GetFullPlatformUrl(this.webHealthVaultConfiguration.DefaultHealthVaultUrl),
-                    this.webHealthVaultConfiguration.DefaultHealthVaultShellUrl);
+                    UrlUtilities.GetFullPlatformUrl(this.webHealthVaultConfiguration.HealthVaultUrl),
+                    this.webHealthVaultConfiguration.HealthVaultShellUrl);
             }
 
             this.SessionCredential = sessionCredential;

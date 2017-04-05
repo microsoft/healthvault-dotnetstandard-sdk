@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Foundation;
 using Microsoft.HealthVault.Person;
 using Microsoft.HealthVault.Clients;
+using Microsoft.HealthVault.Configuration;
 using Microsoft.HealthVault.ItemTypes;
 
 namespace SandboxIos
@@ -65,7 +66,9 @@ namespace SandboxIos
 
             try
             {
-                this.connection = HealthVaultConnectionFactory.Current.GetSodaConnection();
+                var configuration = GetPpeConfiguration();
+
+                this.connection = HealthVaultConnectionFactory.Current.GetOrCreateSodaConnection(configuration);
                 await this.connection.AuthenticateAsync();
 
                 this.thingClient = ClientHealthVaultFactory.GetThingClient(this.connection);
@@ -82,6 +85,17 @@ namespace SandboxIos
                 this.SetStatusLabelText(e.ToString());
                 this.connectButton.SetTitle("Retry", UIControlState.Normal);
             }
+        }
+
+        private static HealthVaultConfiguration GetPpeConfiguration()
+        {
+            var configuration = new HealthVaultConfiguration
+            {
+                MasterApplicationId = Guid.Parse("cf0cb893-d411-495c-b66f-9d72b4fd2b97"),
+                HealthVaultShellUrl = new Uri("https://account.healthvault-ppe.com"),
+                HealthVaultUrl = new Uri("https://platform.healthvault-ppe.com/platform")
+            };
+            return configuration;
         }
 
         private async Task DisconnectFromHealthVaultAsync()

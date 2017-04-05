@@ -73,7 +73,7 @@ namespace Microsoft.HealthVault.PlatformInformation
         ///
         public static Uri GetHealthServiceShellUrl(string targetLocation)
         {
-            return GetHealthServiceShellUrl(configuration.DefaultHealthVaultShellUrl, targetLocation);
+            return GetHealthServiceShellUrl(configuration.HealthVaultShellUrl, targetLocation);
         }
 
         /// <summary>
@@ -148,7 +148,7 @@ namespace Microsoft.HealthVault.PlatformInformation
             string targetQuery)
         {
             return GetHealthServiceShellUrl(
-                configuration.DefaultHealthVaultShellUrl,
+                configuration.HealthVaultShellUrl,
                 targetLocation,
                 targetQuery);
         }
