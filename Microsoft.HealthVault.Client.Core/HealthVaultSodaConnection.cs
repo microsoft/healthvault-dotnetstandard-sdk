@@ -14,6 +14,7 @@ using Microsoft.HealthVault.Record;
 using Microsoft.HealthVault.Rest;
 using Microsoft.HealthVault.Transport;
 using System.Linq;
+using Microsoft.HealthVault.Configuration;
 
 namespace Microsoft.HealthVault.Client
 {
@@ -26,21 +27,26 @@ namespace Microsoft.HealthVault.Client
 
         private readonly ILocalObjectStore localObjectStore;
         private readonly IShellAuthService shellAuthService;
-        private readonly ClientHealthVaultConfiguration clientHealthVaultConfiguration;
 
         private readonly AsyncLock authenticateLock = new AsyncLock();
 
         private PersonInfo personInfo;
 
-        public HealthVaultSodaConnection(IServiceLocator serviceLocator, ILocalObjectStore localObjectStore, IShellAuthService shellAuthService, ClientHealthVaultConfiguration clientHealthVaultConfiguration)
+        public HealthVaultSodaConnection(
+            IServiceLocator serviceLocator,
+            ILocalObjectStore localObjectStore,
+            IShellAuthService shellAuthService,
+            HealthVaultConfiguration configuration)
             : base(serviceLocator)
         {
             this.localObjectStore = localObjectStore;
             this.shellAuthService = shellAuthService;
-            this.clientHealthVaultConfiguration = clientHealthVaultConfiguration;
+            this.Configuration = configuration;
         }
 
         public ApplicationCreationInfo ApplicationCreationInfo { get; internal set; }
+
+        public HealthVaultConfiguration Configuration { get; }
 
         public override Guid ApplicationId => this.ApplicationCreationInfo.AppInstanceId;
 
@@ -110,7 +116,8 @@ namespace Microsoft.HealthVault.Client
             using (await this.authenticateLock.LockAsync().ConfigureAwait(false))
             {
                 // First run through shell with web browser to get additional records authorized.
-                await this.shellAuthService.AuthorizeAdditionalRecordsAsync(this.ServiceInstance.ShellUrl, this.clientHealthVaultConfiguration.MasterApplicationId).ConfigureAwait(false);
+                var masterApplicationId = this.Configuration.MasterApplicationId;
+                await this.shellAuthService.AuthorizeAdditionalRecordsAsync(this.ServiceInstance.ShellUrl, masterApplicationId).ConfigureAwait(false);
 
                 // Update the person info to add the newly authorized records.
                 await this.GetAndSavePersonInfoAsync().ConfigureAwait(false);
@@ -189,20 +196,24 @@ namespace Microsoft.HealthVault.Client
         private async Task ProvisionForSodaAuthAsync()
         {
             // Set a temporary service instance for the NewApplicationCreationInfo and GetServiceDefinition calls.
+            var defaultHealthVaultUrl = this.Configuration.HealthVaultUrl;
+            var defaultHealthVaultShellUrl = this.Configuration.HealthVaultShellUrl;
+            var masterApplicationId = this.Configuration.MasterApplicationId;
+
             this.ServiceInstance = new HealthServiceInstance(
                 "1",
                 "Default",
                 "Default HealthVault instance",
-                UrlUtilities.GetFullPlatformUrl(this.clientHealthVaultConfiguration.DefaultHealthVaultUrl),
-                this.clientHealthVaultConfiguration.DefaultHealthVaultShellUrl);
+                UrlUtilities.GetFullPlatformUrl(defaultHealthVaultUrl),
+                defaultHealthVaultShellUrl);
 
             // TODO: Eliminate circular call. This method is called from AuthenticateAsync. PlatformClient is calling HealthVaultConnectionBase.ExecuteAsync, which is calling AuthenticateAsync
             IPlatformClient platformClient = ClientHealthVaultFactory.GetPlatformClient(this);
             ApplicationCreationInfo newApplicationCreationInfo = await platformClient.NewApplicationCreationInfoAsync().ConfigureAwait(false);
 
             string environmentInstanceId = await this.shellAuthService.ProvisionApplicationAsync(
-                this.clientHealthVaultConfiguration.DefaultHealthVaultShellUrl,
-                this.clientHealthVaultConfiguration.MasterApplicationId,
+                defaultHealthVaultShellUrl,
+                masterApplicationId,
                 newApplicationCreationInfo.AppCreationToken,
                 newApplicationCreationInfo.AppInstanceId.ToString()).ConfigureAwait(false);
 
@@ -239,6 +250,7 @@ namespace Microsoft.HealthVault.Client
 
             // TODO: Eliminate circular call. This method is called from AuthenticateAsync. PersonClient is calling HealthVaultConnectionBase.ExecuteAsync, which is calling AuthenticateAsync
             PersonInfo newPersonInfo = (await personClient.GetAuthorizedPeopleAsync().ConfigureAwait(false)).FirstOrDefault();
+
             await this.localObjectStore.WriteAsync(PersonInfoKey, newPersonInfo).ConfigureAwait(false);
             this.personInfo = newPersonInfo;
         }

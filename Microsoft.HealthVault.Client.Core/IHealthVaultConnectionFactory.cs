@@ -1,4 +1,5 @@
 ﻿using System;
+using Microsoft.HealthVault.Configuration;
 
 namespace Microsoft.HealthVault.Client
 {
@@ -8,20 +9,13 @@ namespace Microsoft.HealthVault.Client
     public interface IHealthVaultConnectionFactory 
     {
         /// <summary>
-        /// Sets the client configuration to use.
+        /// Gets an <see cref="IHealthVaultSodaConnection"/> used to connect to HealthVault.
         /// </summary>
-        /// <param name="clientHealthVaultConfiguration">The configuration to use.</param>
-        /// <exception cref="InvalidOperationException">Thrown when called after calling <see cref="GetSodaConnection"/>.</exception>
-        /// <remarks>This can only be set before calling <see cref="GetSodaConnection"/>. After calling it,
-        /// this property cannot be set and no settings on the object can be changed.</remarks>
-        void SetConfiguration(ClientHealthVaultConfiguration clientHealthVaultConfiguration);
-
-        /// <summary>
-        /// Gets a connection to access HealthVault.
-        /// </summary>
-        /// <returns>A connection to access HealthVault.</returns>
-        /// <exception cref="InvalidOperationException">Thrown when called before calling <see cref="SetConfiguration"/> with required values.</exception>
-        /// <remarks>This will not perform any authentication. Authentication happens on the first call to AuthenticateAsync or when the first method is called.</remarks>
-        IHealthVaultSodaConnection GetSodaConnection();
+        /// <param name="configuration">Configuration required for authenticating the connection</param>
+        /// <returns>Connection object to be used by the Client classes</returns>
+        /// <exception cref="InvalidOperationException">
+        /// If <see cref="GetOrCreateSodaConnection"/> has been called already with a different MasterApplicationId.
+        /// </exception>
+        IHealthVaultSodaConnection GetOrCreateSodaConnection(HealthVaultConfiguration configuration);
     }
 }

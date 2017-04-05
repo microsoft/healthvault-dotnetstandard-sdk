@@ -12,54 +12,32 @@ namespace Microsoft.HealthVault.Client
     {
         private readonly object connectionLock = new object();
 
-        private IHealthVaultSodaConnection cachedConnection;
-
-        private ClientHealthVaultConfiguration healthVaultConfiguration;
-
-        private readonly ConnectionState connectionState = new ConnectionState();
-
-        /// <summary>
-        /// Sets the configuration used to create connections.
-        /// </summary>
-        /// <exception cref="InvalidOperationException">
-        /// If <see cref="GetSodaConnection"/> has been called already.
-        /// </exception>
-        public void SetConfiguration(ClientHealthVaultConfiguration clientHealthVaultConfiguration)
-        {
-            this.connectionState.ThrowIfAlreadyCreatedConnection(nameof(this.SetConfiguration));
-            this.healthVaultConfiguration = clientHealthVaultConfiguration;
-        }
+        private HealthVaultSodaConnection cachedConnection;
 
         /// <summary>
         /// Gets an <see cref="IHealthVaultSodaConnection"/> used to connect to HealthVault.
         /// </summary>
+        /// <param name="configuration">Configuration required for authenticating the connection</param>
+        /// <returns>Connection object to be used by the Client classes</returns>
         /// <exception cref="InvalidOperationException">
-        /// If called before calling <see cref="SetConfiguration(ClientHealthVaultConfiguration)"/>.
+        /// If <see cref="GetOrCreateSodaConnection"/> has been called already with a different MasterApplicationId.
         /// </exception>
-        public IHealthVaultSodaConnection GetSodaConnection()
+        public IHealthVaultSodaConnection GetOrCreateSodaConnection(HealthVaultConfiguration configuration)
         {
-            this.connectionState.MarkConnectionCalled();
-
             lock (this.connectionLock)
             {
                 if (this.cachedConnection != null)
                 {
+                    ValidateConfiguration(this.cachedConnection.Configuration, configuration);
                     return this.cachedConnection;
                 }
 
-                if (this.healthVaultConfiguration == null)
-                {
-                    throw new InvalidOperationException(Resources.CannotCallMethodBefore.FormatResource(
-                        nameof(this.GetSodaConnection),
-                        nameof(this.SetConfiguration)));
-                }
+               var missingProperties = new List<string>();
 
-                var missingProperties = new List<string>();
-
-                Guid masterApplicationId = this.healthVaultConfiguration.MasterApplicationId;
+                Guid masterApplicationId = configuration.MasterApplicationId;
                 if (masterApplicationId == Guid.Empty)
                 {
-                    missingProperties.Add(nameof(this.healthVaultConfiguration.MasterApplicationId));
+                    missingProperties.Add(nameof(configuration.MasterApplicationId));
                 }
 
                 if (missingProperties.Count > 0)
@@ -68,15 +46,24 @@ namespace Microsoft.HealthVault.Client
                     throw new InvalidOperationException(Resources.MissingRequiredProperties.FormatResource(requiredPropertiesString));
                 }
 
-                this.healthVaultConfiguration.Lock();
-
-                Ioc.Container.Configure(c => c.ExportInstance(this.healthVaultConfiguration).As<ClientHealthVaultConfiguration>());
-                Ioc.Container.Configure(c => c.ExportInstance(this.healthVaultConfiguration).As<HealthVaultConfiguration>());
+                Ioc.Container.Configure(c => c.ExportInstance(configuration).As<HealthVaultConfiguration>());
 
                 HealthVaultSodaConnection newConnection = Ioc.Get<HealthVaultSodaConnection>();
 
                 this.cachedConnection = newConnection;
                 return newConnection;
+            }
+        }
+
+        private static void ValidateConfiguration(HealthVaultConfiguration currentConfiguration, HealthVaultConfiguration configuration)
+        {
+            if (currentConfiguration.MasterApplicationId != configuration.MasterApplicationId)
+            {
+                throw new InvalidOperationException(Resources.CannotAuthWithDifferentMasterApplicationId.FormatResource(
+                    nameof(GetOrCreateSodaConnection),
+                    currentConfiguration.MasterApplicationId,
+                    configuration.MasterApplicationId));
+
             }
         }
     }

@@ -50,6 +50,7 @@
     <Compile Include="AsyncEnumerable.cs" />
     <Compile Include="AsyncLock.cs" />
     <Compile Include="Clients\ClientHealthVaultFactory.cs" />
+    <Compile Include="Configuration\HealthVaultConfigurationDefaults.cs" />
     <Compile Include="Connection\HttpClientFactory.cs" />
     <Compile Include="Connection\IHttpClientFactory.cs" />
     <Compile Include="Connection\MessageHandlerFactory.cs" />
@@ -62,7 +63,6 @@
     <Compile Include="Extensions\HealthServiceInstanceExtensions.cs" />
     <Compile Include="Extensions\StringExtensions.cs" />
     <Compile Include="HealthVaultConstants.cs" />
-    <Compile Include="ConnectionState.cs" />
     <Compile Include="Clients\ActionPlanClient.cs" />
     <Compile Include="Clients\PersonClient.cs" />
     <Compile Include="Clients\ThingClient.cs" />

@@ -1376,20 +1376,20 @@ namespace Microsoft.HealthVault {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Cannot call {0} with different application id. Current: {1}, New: {2}.
+        /// </summary>
+        internal static string CannotAuthWithDifferentMasterApplicationId {
+            get {
+                return ResourceManager.GetString("CannotAuthWithDifferentMasterApplicationId", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to {0} cannot be null or empty..
         /// </summary>
         internal static string CannotBeNullOrEmpty {
             get {
                 return ResourceManager.GetString("CannotBeNullOrEmpty", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Cannot call {0} before calling {1}..
-        /// </summary>
-        internal static string CannotCallMethodBefore {
-            get {
-                return ResourceManager.GetString("CannotCallMethodBefore", resourceCulture);
             }
         }
         

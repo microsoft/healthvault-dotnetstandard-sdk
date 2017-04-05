@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Microsoft.HealthVault.Client.Exceptions;
+using Microsoft.HealthVault.Configuration;
 
 namespace Microsoft.HealthVault.Client
 {
@@ -9,9 +10,9 @@ namespace Microsoft.HealthVault.Client
         private const string InstanceQueryParamKey = "instanceid=";
 
         private readonly IBrowserAuthBroker browserAuthBroker;
-        private readonly ClientHealthVaultConfiguration clientHealthVaultConfiguration;
+        private readonly HealthVaultConfiguration clientHealthVaultConfiguration;
 
-        public ShellAuthService(IBrowserAuthBroker browserAuthBroker, ClientHealthVaultConfiguration clientHealthVaultConfiguration)
+        public ShellAuthService(IBrowserAuthBroker browserAuthBroker, HealthVaultConfiguration clientHealthVaultConfiguration)
         {
             this.browserAuthBroker = browserAuthBroker;
             this.clientHealthVaultConfiguration = clientHealthVaultConfiguration;

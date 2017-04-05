@@ -119,7 +119,8 @@ namespace Microsoft.HealthVault.Web.Extensions
         {
             string resultString = collection[key];
 
-            if (int.TryParse(resultString, out int result))
+            int result;
+            if (int.TryParse(resultString, out result))
             {
                 if (result == -1)
                 {

@@ -124,9 +124,7 @@ namespace Microsoft.HealthVault.Transport
 
                 try
                 {
-                    this.cancellationTokenSource = this.config.DefaultRequestTimeoutDuration.HasValue ?
-                        new CancellationTokenSource(this.config.DefaultRequestTimeoutDuration.Value) :
-                        null;
+                    this.cancellationTokenSource = new CancellationTokenSource(this.config.RequestTimeoutDuration);
                     response = await easyWeb.FetchAsync(
                         this.connectionInternal.ServiceInstance.GetHealthVaultMethodUrl(),
                         (CancellationToken)this.cancellationTokenSource?.Token).ConfigureAwait(false);
@@ -430,7 +428,7 @@ namespace Microsoft.HealthVault.Transport
                     }
 
                     writer.WriteElementString("msg-time", SDKHelper.XmlFromNow());
-                    writer.WriteElementString("msg-ttl", ((int)this.config.DefaultRequestTimeToLiveDuration.TotalSeconds).ToString(CultureInfo.InvariantCulture));
+                    writer.WriteElementString("msg-ttl", ((int)this.config.RequestTimeToLiveDuration.TotalSeconds).ToString(CultureInfo.InvariantCulture));
 
                     writer.WriteElementString("version", this.Version);
 
