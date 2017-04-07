@@ -58,9 +58,6 @@
     <Compile Include="ISignInNavigationHandler.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SignInViewController.cs" />
-    <Compile Include="SignInViewController.designer.cs">
-      <DependentUpon>SignInViewController.cs</DependentUpon>
-    </Compile>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Microsoft.HealthVault.Client.Core\Microsoft.HealthVault.Client.Core.csproj">
@@ -71,9 +68,6 @@
       <Project>{dbe2ba67-dbc3-479e-a374-1ce5ee33c453}</Project>
       <Name>Microsoft.HealthVault</Name>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <InterfaceDefinition Include="SignInViewController.xib" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
