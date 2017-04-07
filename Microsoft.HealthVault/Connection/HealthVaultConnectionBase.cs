@@ -61,7 +61,7 @@ namespace Microsoft.HealthVault.Connection
             // Make sure that session credential is set for method calls requiring
             // authentication
             if (!AnonymousMethods.Contains(method)
-                && this.SessionCredential == null)
+                && string.IsNullOrEmpty(this.SessionCredential?.Token))
             {
                 await this.AuthenticateAsync().ConfigureAwait(false);
             }
@@ -113,11 +113,6 @@ namespace Microsoft.HealthVault.Connection
 
         public virtual CryptoData GetAuthData(HealthVaultMethods method, byte[] data)
         {
-            if (this.SessionCredential == null)
-            {
-                throw new NotSupportedException($"{nameof(this.SessionCredential)} is required to prepare auth header");
-            }
-
             var cryptographer = Ioc.Get<ICryptographer>();
             return cryptographer.Hmac(this.SessionCredential.SharedSecret, data);
         }

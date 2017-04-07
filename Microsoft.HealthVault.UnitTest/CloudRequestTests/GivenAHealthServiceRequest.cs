@@ -1,8 +1,8 @@
 ﻿// Copyright(c) Microsoft Corporation.
 
 using System;
-using System.Security.Policy;
 using System.Threading.Tasks;
+using System.Xml;
 using Microsoft.HealthVault.Configuration;
 using Microsoft.HealthVault.Connection;
 using Microsoft.HealthVault.PlatformInformation;
@@ -13,7 +13,7 @@ using NSubstitute;
 namespace Microsoft.HealthVault.UnitTest.CloudRequestTests
 {
     [TestClass]
-    public class HealthServiceRequestTest
+    public class GivenAHealthServiceRequest
     {
         private IConnectionInternal connection;
         private HealthVaultConfiguration config;
@@ -24,6 +24,7 @@ namespace Microsoft.HealthVault.UnitTest.CloudRequestTests
         public void InitializeTest()
         {
             this.connection = Substitute.For<IConnectionInternal>();
+            this.connection.GetAuthData(Arg.Any<HealthVaultMethods>(), Arg.Any<byte[]>()).Returns(new CryptoData { Algorithm = HealthVaultConstants.Cryptography.HmacAlgorithm, Value = Guid.NewGuid().ToString() });
             this.config = Substitute.For<HealthVaultConfiguration>();
             this.webRequestFactory = Substitute.For<IHealthWebRequestFactory>();
             this.serviceInstance = new HealthServiceInstance("id", "name", "description", new Uri("http://microsoft.com"), new Uri("http://microsoft.com"));
@@ -35,18 +36,15 @@ namespace Microsoft.HealthVault.UnitTest.CloudRequestTests
         private HealthServiceRequest CreateDefault()
         {
             return new HealthServiceRequest(
-                connection, 
-                HealthVaultMethods.GetPersonInfo, 
-                5, 
-                config: this.config, 
+                connection,
+                HealthVaultMethods.GetPersonInfo,
+                5,
+                config: this.config,
                 requestFactory: this.webRequestFactory);
         }
 
-        #region Ctor tests
-
-
         [TestMethod]
-        public void CreateServiceRequest()
+        public void WhenCreated_ShouldHaveTheCorrectValuesSet()
         {
             var req = this.CreateDefault();
 
@@ -55,41 +53,22 @@ namespace Microsoft.HealthVault.UnitTest.CloudRequestTests
         }
 
         [TestMethod]
-        public void CreateInvalidServiceRequest()
+        [ExpectedException(typeof(ArgumentNullException), "Expecting an ArgumentNullException.")]
+        public void WhenCreatedWithoutAConnection_ShouldThrowAnException()
         {
-            try
-            {
-                HealthServiceRequest req = new HealthServiceRequest(null, HealthVaultMethods.GetPersonInfo, 5);
-                Assert.Fail("Expecting an ArgumentNullException.");
-            }
-            catch (ArgumentNullException)
-            {
-                // pass
-            }
+            HealthServiceRequest req = new HealthServiceRequest(null, HealthVaultMethods.GetPersonInfo, 5);
         }
 
-        #endregion Ctor tests
-
-        #region Properties
-
         [TestMethod]
-        public void TimeoutSeconds_setNegative()
+        [ExpectedException(typeof(ArgumentOutOfRangeException), "Expecting an ArgumentOutOfRangeException")]
+        public void WhenSettingTimoutAsANegative_ShouldThrowAnException()
         {
             HealthServiceRequest req = CreateDefault();
-
-            try
-            {
-                req.TimeoutSeconds = -1;
-                Assert.Fail("Expecting an ArgumentOutOfRangeException");
-            }
-            catch (ArgumentOutOfRangeException)
-            {
-                // pass
-            }
+            req.TimeoutSeconds = -1;
         }
 
         [TestMethod]
-        public void TimeoutSeconds_setZero()
+        public void WhenSettingTimeoutToZero_ShouldHaveTheCorrectValueSet()
         {
             HealthServiceRequest req = CreateDefault();
 
@@ -98,7 +77,7 @@ namespace Microsoft.HealthVault.UnitTest.CloudRequestTests
         }
 
         [TestMethod]
-        public void TimeoutSeconds_setPositive()
+        public void WhenSettingTimeoutTo1_ShouldHaveTheCorrectValueSet()
         {
             HealthServiceRequest req = CreateDefault();
 
@@ -106,10 +85,8 @@ namespace Microsoft.HealthVault.UnitTest.CloudRequestTests
             Assert.AreEqual(req.TimeoutSeconds, 1, "TimeoutSeconds");
         }
 
-        #endregion Properties
-
         [TestMethod]
-        public async Task ExecuteMethod()
+        public async Task WhenExecutingGetPersonInfo_ShouldHaveAValidResponse()
         {
             HealthServiceRequest req = CreateDefault();
             HealthServiceResponseData response = await req.ExecuteAsync();
@@ -117,6 +94,28 @@ namespace Microsoft.HealthVault.UnitTest.CloudRequestTests
             // TODO: add some validation of the response to make sure that it was parsed correctly for what we expect
 
             // Note: investigate this, as it does not seem to be working as expected
+            this.webRequestFactory.Received().CreateWebRequest(Arg.Any<byte[]>(), Arg.Any<int>());
+        }
+
+        [TestMethod]
+        public async Task WhenCreatingASessionToken_ThenExistingAuthSessionIsNotPopulated()
+        {
+            HealthServiceRequest req = new HealthServiceRequest(
+                connection,
+                HealthVaultMethods.CreateAuthenticatedSessionToken,
+                5,
+                config: this.config,
+                requestFactory: this.webRequestFactory);
+
+            // Give an invalid (expired token)
+            this.connection.GetInfoHash(Arg.Any<byte[]>()).Returns(new CryptoData { Algorithm = HealthVaultConstants.Cryptography.HmacAlgorithm, Value = Guid.NewGuid().ToString() });
+            this.connection.SessionCredential.Returns(new SessionCredential { Token = Guid.NewGuid().ToString() });
+
+            HealthServiceResponseData response = await req.ExecuteAsync();
+            Assert.AreEqual(response.Code, HealthServiceStatusCode.Ok);
+
+            //Anonymous methods should not add auth session
+            this.connection.DidNotReceive().PrepareAuthSessionHeader(Arg.Any<XmlWriter>(), Arg.Any<Guid?>());
             this.webRequestFactory.Received().CreateWebRequest(Arg.Any<byte[]>(), Arg.Any<int>());
         }
     }

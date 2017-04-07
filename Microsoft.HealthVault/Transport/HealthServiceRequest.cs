@@ -394,8 +394,7 @@ namespace Microsoft.HealthVault.Transport
 
                     // header based on the kind of connection we have...
 
-                    if (this.connectionInternal.SessionCredential != null &&
-                        !string.IsNullOrEmpty(this.connectionInternal.SessionCredential.Token))
+                    if (!HealthVaultConnectionBase.AnonymousMethods.Contains(this.Method))
                     {
                         this.connectionInternal.PrepareAuthSessionHeader(writer, this.RecordId);
                     }
