@@ -53,5 +53,12 @@ namespace Microsoft.HealthVault.Web.Constants
             internal const string HealthClientServiceSuffix = "hvclientservice.ashx";
             internal const string TypeSchemaSuffix = "type-xsd/";
         }
+
+        internal static class ShellTargetQsReturnParameters
+        {
+            internal const string WcToken = "wctoken";
+            internal const string InstanceId = "instanceid";
+            internal const string SuggestedTokenTtl = "suggestedtokenttl";
+        }
     }
 }

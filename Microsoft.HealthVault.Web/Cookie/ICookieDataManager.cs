@@ -6,37 +6,33 @@
 //
 // THE SOFTWARE IS PROVIDED *AS IS*, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-using System.Web;
-using Microsoft.HealthVault.Web.Configuration;
-
-namespace Microsoft.HealthVault.Web
+namespace Microsoft.HealthVault.Web.Cookie
 {
-    // TODO: To be implemented
-    internal class CookieManager : ICookieManager
+    /// <summary>
+    /// Provides functionality to compress and decompress the cookie data
+    /// </summary>
+    interface ICookieDataManager
     {
-        private readonly IServiceLocator serviceLocator;
-        private readonly WebHealthVaultConfiguration webHealthVaultConfiguration;
+        /// <summary>
+        /// Compress string
+        /// </summary>
+        /// <param name="data">data to be compressed</param>
+        /// <param name="bufferLength">length of the compressed data</param>
+        /// <returns></returns>
+        string Compress(string data, out int bufferLength);
 
-        public CookieManager(IServiceLocator serviceLocator)
-        {
-            this.serviceLocator = serviceLocator;
-
-            this.webHealthVaultConfiguration = this.serviceLocator.GetInstance<WebHealthVaultConfiguration>();
-        }
-
-        public void Save(HttpContextBase httpConext, WebConnectionInfo connectionInfo)
-        {
-            throw new System.NotImplementedException();
-        }
-
-        public WebConnectionInfo Load(HttpContextBase httpContext)
-        {
-            throw new System.NotImplementedException();
-        }
-
-        public void Clear(HttpContextBase httpContext)
-        {
-            throw new System.NotImplementedException();
-        }
+        /// <summary>
+        /// Decompress a compressed string.
+        /// </summary>
+        /// 
+        /// <param name="compressedData">
+        /// Base 64 string of compressed data.
+        /// </param>
+        /// 
+        /// <returns>
+        /// Uncompressed string.
+        /// </returns>
+        ///
+        string Decompress(string compressedData);
     }
 }

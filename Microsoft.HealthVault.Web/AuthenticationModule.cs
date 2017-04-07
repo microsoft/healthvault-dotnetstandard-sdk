@@ -18,6 +18,8 @@ using Microsoft.HealthVault.Person;
 using Microsoft.HealthVault.PlatformInformation;
 using Microsoft.HealthVault.Web.Configuration;
 using Microsoft.HealthVault.Web.Connection;
+using Microsoft.HealthVault.Web.Constants;
+using Microsoft.HealthVault.Web.Cookie;
 using Microsoft.HealthVault.Web.Providers;
 
 namespace Microsoft.HealthVault.Web
@@ -58,38 +60,37 @@ namespace Microsoft.HealthVault.Web
             ICookieManager cookieManager = Ioc.Container.Locate<ICookieManager>();
             WebConnectionInfo webConnectionInfo;
 
+            // In case the app is not authentiated yet, then the user is directed to 
+            // shell for authentication purposes. The redirected URL from shell will contain
+            // wctoken and instanceId. Below we will check if the query contains those specific
+            // query params.
             if (hasAuthTokenInQuery)
             {
                 webConnectionInfo = await CreateWebConnectionInfoAsync(processAuthToken.Item1, processAuthToken.Item2);
                 cookieManager.Save(context, webConnectionInfo);
-            }
-            else
-            {
-                webConnectionInfo = cookieManager.Load(context);
+                Redirect(context);
+
+                return;
             }
 
-            if (webConnectionInfo == null)
-            {
-                cookieManager.Clear(context);
-                context.User = new GenericPrincipal(new HealthVaultIdentity(), null);
-            }
-            else
+            // In case the request doesn't contain the query params, try to load from the request context
+            webConnectionInfo = cookieManager.TryLoad(context);
+
+            // Set user context for cases where we were able to load the cookie
+            if (webConnectionInfo != null)
             {
                 context.User = new GenericPrincipal(
                     new HealthVaultIdentity { WebConnectionInfo = webConnectionInfo },
                     null);
             }
-
-            if (hasAuthTokenInQuery)
-            {
-                Redirect(context);
-            }
         }
 
         private static Tuple<string, string> ProcessAuthToken(HttpContextBase context)
         {
-            string authToken = context.Request.Params["wctoken"];
-            string instanceId = context.Request.Params["instanceid"];
+            var httpRequestBase = context.Request;
+
+            string authToken = httpRequestBase.Params[HealthVaultWebConstants.ShellTargetQsReturnParameters.WcToken];
+            string instanceId = httpRequestBase.Params[HealthVaultWebConstants.ShellTargetQsReturnParameters.InstanceId];
 
             return new Tuple<string, string>(authToken, instanceId);
         }
@@ -104,8 +105,9 @@ namespace Microsoft.HealthVault.Web
         private static void Redirect(HttpContextBase context)
         {
             NameValueCollection query = HttpUtility.ParseQueryString(context.Request.Url.Query);
-            query.Remove("wctoken");
-            query.Remove("suggestedtokenttl");
+
+            query.Remove(HealthVaultWebConstants.ShellTargetQsReturnParameters.WcToken);
+            query.Remove(HealthVaultWebConstants.ShellTargetQsReturnParameters.SuggestedTokenTtl);
 
             UriBuilder newUrl = new UriBuilder(context.Request.Url) { Query = query.ToString() };
 

@@ -8,14 +8,31 @@
 
 using System.Web;
 
-namespace Microsoft.HealthVault.Web
+namespace Microsoft.HealthVault.Web.Cookie
 {
+    /// <summary>
+    /// Manages Cookie related to HealthVault authentication
+    /// </summary>
     internal interface ICookieManager
     {
-        void Save(HttpContextBase httpConext, WebConnectionInfo connectionInfo);
+        /// <summary>
+        /// Save webconnectioninfo to a cookie
+        /// </summary>
+        /// <param name="httpConext">httpcontext</param>
+        /// <param name="webConnectionInfo">webconnectionInfo</param>
+        void Save(HttpContextBase httpConext, WebConnectionInfo webConnectionInfo);
 
-        WebConnectionInfo Load(HttpContextBase httpContext);
+        /// <summary>
+        /// Load WebConnectionInfo from the request conext cookie
+        /// </summary>
+        /// <param name="httpContext">httpcontext</param>
+        /// <returns>WebConnectionInfo stroed in the cookie. Can return null in case the cookie is not present</returns>
+        WebConnectionInfo TryLoad(HttpContextBase httpContext);
 
+        /// <summary>
+        /// Clear the cookie contianing webconnectioninfo
+        /// </summary>
+        /// <param name="httpContext">httpContext</param>
         void Clear(HttpContextBase httpContext);
     }
 }

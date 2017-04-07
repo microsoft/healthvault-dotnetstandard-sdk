@@ -68,7 +68,7 @@ namespace Microsoft.HealthVault.Client
         private async Task<Uri> AuthenticateInBrowserAsync(Uri shellUrl, string query)
         {
             UriBuilder provisionBuilder = GetShellUriBuilder(shellUrl);
-            string fullQuery = "target=CREATEAPPLICATION&targetqs=" + Uri.EscapeDataString(query);
+            string fullQuery = $"target={HealthVaultConstants.ShellRedirectTargets.CreateApplication}&targetqs=" + Uri.EscapeDataString(query);
             provisionBuilder.Query = fullQuery;
             Uri provisionUIUrl = provisionBuilder.Uri;
 

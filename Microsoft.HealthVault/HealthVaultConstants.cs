@@ -33,5 +33,17 @@ namespace Microsoft.HealthVault
             internal static readonly string IosClient = "HV-Xamarin-Ios";
             internal static readonly string Web = "HV-Web";
         }
+
+        internal static class ShellRedirectTargets
+        {
+            internal const string Auth = "AUTH";
+            internal const string AppSignOut = "APPSIGNOUT";
+            internal const string CreateApplication = "CREATEAPPLICATION";
+        }
+
+        internal static class ShellRedirectTargetQueryStrings
+        {
+            internal const string CredentialToken = "credtoken";
+        }
     }
 }

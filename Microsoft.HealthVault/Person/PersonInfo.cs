@@ -24,11 +24,8 @@ namespace Microsoft.HealthVault.Person
     /// Provides information about a person's HealthVault account.
     /// </summary>
     ///
-    public class PersonInfo : IMarshallable
+    public class PersonInfo
     {
-        private bool moreRecords;  // AuthorizedRecords collection does not contain the full set of records...
-        private bool moreAppSettings;  // ApplicationSettings does not contain the app settings xml...
-
         /// <summary>
         /// Creates a new instance of the PersonInfo class using
         /// the specified XML.
@@ -171,54 +168,14 @@ namespace Microsoft.HealthVault.Person
             XPathNavigator navMoreRecords = navigator.SelectSingleNode("more-records");
             if (navMoreRecords != null)
             {
-                this.moreRecords = true;
+                this.HasMoreRecords = true;
             }
 
             XPathNavigator navMoreAppSettings = navigator.SelectSingleNode("more-app-settings");
             if (navMoreAppSettings != null)
             {
-                this.moreAppSettings = true;
+                this.HasMoreApplicationSettings = true;
             }
-        }
-
-        /// <summary>
-        /// Populates the data of the class from the XML in
-        /// the specified reader.
-        /// </summary>
-        ///
-        /// <param name="reader">
-        /// The reader to get the data for the class instance
-        /// from.
-        /// </param>
-        ///
-        /// <exception cref="ArgumentNullException">
-        /// The <paramref name="reader"/> is <b>null</b>.
-        /// </exception>
-        ///
-        public void Unmarshal(XmlReader reader)
-        {
-            Validator.ThrowIfArgumentNull(reader, nameof(reader), Resources.XmlNullReader);
-
-            this.ParseXml(new XPathDocument(reader).CreateNavigator());
-        }
-
-        /// <summary>
-        /// Writes the person information into the specified writer as XML.
-        /// </summary>
-        ///
-        /// <param name="writer">
-        /// The XMLWriter receiving the XML.
-        /// </param>
-        ///
-        /// <exception cref="ArgumentNullException">
-        /// The <paramref name="writer"/> is <b>null</b>.
-        /// </exception>
-        ///
-        public void Marshal(XmlWriter writer)
-        {
-            Validator.ThrowIfWriterNull(writer);
-
-            this.WriteXml("person-info", writer, MarshalOptions.Default);
         }
 
         /// <summary>
@@ -236,34 +193,20 @@ namespace Microsoft.HealthVault.Person
         /// 
         public string GetXml()
         {
-            return this.GetXml(MarshalOptions.Default);
-        }
-
-        /// <summary>
-        /// Gets the XML representation of the <see cref="PersonInfo"/>
-        /// that is appropriate for storing.
-        /// </summary>
-        /// 
-        /// <returns>
-        /// A XML string containing the person information.
-        /// </returns>
-        ///
-        internal string GetXml(MarshalOptions marshalOptions)
-        {
             StringBuilder personInfoXml = new StringBuilder(128);
 
             XmlWriterSettings settings = SDKHelper.XmlUnicodeWriterSettings;
 
             using (XmlWriter writer = XmlWriter.Create(personInfoXml, settings))
             {
-                this.WriteXml("person-info", writer, marshalOptions);
+                this.WriteXml("person-info", writer);
                 writer.Flush();
             }
 
             return personInfoXml.ToString();
         }
 
-        private void WriteXml(string nodeName, XmlWriter writer, MarshalOptions marshalOptions)
+        private void WriteXml(string nodeName, XmlWriter writer)
         {
             bool writeContainingNode = false;
             if (!string.IsNullOrEmpty(nodeName))
@@ -277,16 +220,10 @@ namespace Microsoft.HealthVault.Person
 
             if (this.ApplicationSettingsDocument != null)
             {
-                if ((marshalOptions & MarshalOptions.MinimizeApplicationSettings) == 0)
-                {
-                    writer.WriteRaw(this.ApplicationSettingsDocument.CreateNavigator().OuterXml);
-                }
-                else
-                {
-                    writer.WriteElementString("more-app-settings", string.Empty);
-                }
+                writer.WriteRaw(this.ApplicationSettingsDocument.CreateNavigator().OuterXml);
             }
-            else if (this.moreAppSettings)
+
+            if (this.HasMoreApplicationSettings)
             {
                 writer.WriteElementString("more-app-settings", string.Empty);
             }
@@ -297,31 +234,13 @@ namespace Microsoft.HealthVault.Person
                     "selected-record-id",
                     this.selectedRecordId.ToString());
             }
-            
-            // If we are removing records because they make the serialized xml too big, we remove all except
-            // the currently-selected record...
-            bool skippedRecords = false;
+
             foreach (HealthRecordInfo record in this.AuthorizedRecords.Values)
             {
-                if ((marshalOptions & MarshalOptions.MinimizeRecords) == 0)
-                {
-                    record.WriteXml("record", writer);
-                }
-                else
-                {
-                    if (this.selectedRecordId != Guid.Empty &&
-                        record.Id == this.selectedRecordId)
-                    {
-                        record.WriteXml("record", writer);
-                    }
-                    else
-                    {
-                        skippedRecords = true;
-                    }
-                }
+                record.WriteXml("record", writer);
             }
 
-            if (skippedRecords || this.moreRecords)
+            if (this.HasMoreRecords)
             {
                 writer.WriteElementString("more-records", string.Empty);
             }
@@ -399,10 +318,7 @@ namespace Microsoft.HealthVault.Person
         /// <summary>
         /// Gets or sets the underlying application settings document.
         /// </summary>
-        /// <remarks>
-        /// This property should only be used for testing.
-        /// </remarks>
-        protected XDocument ApplicationSettingsDocument { get; set; }
+        public XDocument ApplicationSettingsDocument { get; set; }
 
         /// <summary>
         /// Gets or sets the record the person has chosen to use as the default
@@ -477,7 +393,7 @@ namespace Microsoft.HealthVault.Person
         /// <summary>
         /// Gets a dictionary of all the authorized records.
         /// </summary>
-        public IDictionary<Guid, HealthRecordInfo> AuthorizedRecords { get; } = new Dictionary<Guid, HealthRecordInfo>();
+        public IDictionary<Guid, HealthRecordInfo> AuthorizedRecords { get; set; } = new Dictionary<Guid, HealthRecordInfo>();
 
         /// <summary>
         /// Gets or sets the user's preferred culture.
@@ -506,6 +422,10 @@ namespace Microsoft.HealthVault.Person
         ///
         public Location Location { get; set; }
         
+        public bool HasMoreRecords { get; set; }
+
+        public bool HasMoreApplicationSettings { get; set; }
+
         #endregion public properties
 
         /// <summary>
@@ -554,14 +474,6 @@ namespace Microsoft.HealthVault.Person
             }
 
             return selfRecord;
-        }
-
-        [Flags]
-        internal enum MarshalOptions
-        {
-            Default = 0,
-            MinimizeRecords = 1,
-            MinimizeApplicationSettings = 2
         }
     }
 }

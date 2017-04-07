@@ -12,6 +12,7 @@ using Microsoft.HealthVault.Connection;
 using Microsoft.HealthVault.Extensions;
 using Microsoft.HealthVault.Web.Configuration;
 using Microsoft.HealthVault.Web.Connection;
+using Microsoft.HealthVault.Web.Cookie;
 using Microsoft.HealthVault.Web.Providers;
 
 namespace Microsoft.HealthVault.Web
@@ -37,6 +38,9 @@ namespace Microsoft.HealthVault.Web
         private static void RegisterTypes(DependencyInjectionContainer container)
         {
             RegisterConfiguration(container);
+
+            container.RegisterSingleton<ICookieDataManager, CookieDataManager>();
+            container.RegisterSingleton<ICookieManager, CookieManager>();
 
             container.RegisterSingleton<ICertificateInfoProvider, CertificateInfoProvider>();
             container.RegisterSingleton<IServiceInstanceProvider, ServiceInstanceProvider>();

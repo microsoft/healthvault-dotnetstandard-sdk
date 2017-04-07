@@ -30,7 +30,7 @@ namespace Microsoft.HealthVault.Record
     /// wife's health record which she shared with him.
     /// </remarks>
     ///
-    public class HealthRecordInfo : IMarshallable
+    public class HealthRecordInfo
     {
         #region Constructors
 
@@ -210,27 +210,6 @@ namespace Microsoft.HealthVault.Record
         }
 
         /// <summary>
-        /// Populates the data of the class from the XML in
-        /// the specified reader.
-        /// </summary>
-        ///
-        /// <param name="reader">
-        /// The reader from which to get the data for the class instance.
-        /// </param>
-        ///
-        /// <exception cref="ArgumentNullException">
-        /// The <paramref name="reader"/> parameter is <b>null</b>.
-        /// </exception>
-        ///
-        public void Unmarshal(XmlReader reader)
-        {
-            Validator.ThrowIfArgumentNull(reader, nameof(reader), Resources.XmlNullReader);
-
-            XPathDocument healthRecordInfoDoc = new XPathDocument(reader);
-            this.ParseXml(healthRecordInfoDoc.CreateNavigator());
-        }
-
-        /// <summary>
         /// Gets the XML representation of the HealthRecordInfo.
         /// </summary>
         ///
@@ -251,25 +230,6 @@ namespace Microsoft.HealthVault.Record
             }
 
             return recordInfoXml.ToString();
-        }
-
-        /// <summary>
-        /// Writes the record information into the specified writer as XML.
-        /// </summary>
-        ///
-        /// <param name="writer">
-        /// The writer that receives the record information.
-        /// </param>
-        ///
-        /// <exception cref="ArgumentNullException">
-        /// The <paramref name="writer"/> is <b>null</b>.
-        /// </exception>
-        ///
-        public void Marshal(XmlWriter writer)
-        {
-            Validator.ThrowIfArgumentNull(writer, nameof(writer), Resources.WriteXmlNullWriter);
-
-            this.WriteXml("record", writer);
         }
 
         internal void WriteXml(string nodeName, XmlWriter writer)

@@ -9,6 +9,7 @@
 using System.Security.Principal;
 using System.Web.Mvc;
 using System.Web.Routing;
+using Microsoft.HealthVault.Web.Cookie;
 using Microsoft.HealthVault.Web.Utilities;
 
 namespace Microsoft.HealthVault.Web.Providers
@@ -36,7 +37,7 @@ namespace Microsoft.HealthVault.Web.Providers
         /// <returns>A redirect result to the HealthVault Shell sign in page</returns>
         public static RedirectResult SignIn(ControllerContext context, object parameters)
         {
-            return new RedirectResult(ShellUrls.Url(context, "AUTH", parameters));
+            return new RedirectResult(ShellUrls.Url(context, HealthVaultConstants.ShellRedirectTargets.Auth, parameters));
         }
 
         /// <summary>
@@ -61,7 +62,7 @@ namespace Microsoft.HealthVault.Web.Providers
 
             var httpContextBase = context.HttpContext;
 
-            WebConnectionInfo webConnectionInfo = cookieManager.Load(httpContextBase);
+            WebConnectionInfo webConnectionInfo = cookieManager.TryLoad(httpContextBase);
             string userAuthToken = webConnectionInfo.UserAuthToken;
 
             cookieManager.Clear(httpContextBase);
@@ -69,11 +70,11 @@ namespace Microsoft.HealthVault.Web.Providers
 
             if (!string.IsNullOrEmpty(userAuthToken))
             {
-                var parameterValues = new RouteValueDictionary(parameters) { ["credtoken"] = userAuthToken };
-                return new RedirectResult(ShellUrls.Url(context, "APPSIGNOUT", parameterValues));
+                var parameterValues = new RouteValueDictionary(parameters) { [HealthVaultConstants.ShellRedirectTargetQueryStrings.CredentialToken] = userAuthToken };
+                return new RedirectResult(ShellUrls.Url(context, HealthVaultConstants.ShellRedirectTargets.AppSignOut, parameterValues));
             }
 
-            return new RedirectResult(ShellUrls.Url(context, "APPSIGNOUT", parameters));
+            return new RedirectResult(ShellUrls.Url(context, HealthVaultConstants.ShellRedirectTargets.AppSignOut, parameters));
         }
     }
 }

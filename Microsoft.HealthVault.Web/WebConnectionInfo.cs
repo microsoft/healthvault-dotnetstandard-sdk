@@ -15,5 +15,9 @@ namespace Microsoft.HealthVault.Web
         public SessionCredential SessionCredential { get; set; }
 
         public string UserAuthToken { get; set; }
+
+        public bool MinimizedPersonInfoRecords { get; set; }
+
+        public bool MinimizedPersonInfoApplicationSettings { get; set; }
     }
 }

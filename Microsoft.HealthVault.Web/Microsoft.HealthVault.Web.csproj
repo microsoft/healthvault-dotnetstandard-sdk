@@ -40,6 +40,9 @@
       <HintPath>..\..\..\packages\Microsoft.Web.Infrastructure.1.0.0.0\lib\net40\Microsoft.Web.Infrastructure.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="Newtonsoft.Json, Version=9.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\Newtonsoft.Json.9.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.Composition" />
     <Reference Include="System.Core" />
@@ -74,9 +77,14 @@
   <ItemGroup>
     <Compile Include="Attributes\SignOutAttribute.cs" />
     <Compile Include="AuthenticationModule.cs" />
+    <Compile Include="Cookie\CookieDataManager.cs" />
+    <Compile Include="Cookie\ICookieDataManager.cs" />
+    <Compile Include="Cookie\WebConnectionInfoConverter.cs" />
+    <Compile Include="Exceptions\UserNotFoundException.cs" />
+    <Compile Include="Extensions\WebConnectionInfoExtensions.cs" />
     <Compile Include="HealthVaultIdentity.cs" />
-    <Compile Include="ICookieManager.cs" />
-    <Compile Include="CookieManager.cs" />
+    <Compile Include="Cookie\ICookieManager.cs" />
+    <Compile Include="Cookie\CookieManager.cs" />
     <Compile Include="Utilities\ShellUrlBuilder.cs" />
     <Compile Include="Configuration\WebConfigurationReader.cs" />
     <Compile Include="Configuration\WebHealthVaultConfiguration.cs" />
