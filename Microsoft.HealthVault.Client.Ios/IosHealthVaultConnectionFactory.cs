@@ -6,7 +6,7 @@
         private static IHealthVaultConnectionFactory current;
 
         /// <summary>
-        /// Gets the current IClientHealthVaultFactory instance.
+        /// Gets the current IHealthVaultConnectionFactory instance.
         /// </summary>
         public static IHealthVaultConnectionFactory Current
         {

@@ -70,7 +70,7 @@ namespace SandboxAndroid
 
             // get a thing client
 
-            this.thingClient = ClientHealthVaultFactory.GetThingClient(connection);
+            this.thingClient = connection.CreateThingClient();
 
             PersonInfo personInfo = await this.connection.GetPersonInfoAsync();
 

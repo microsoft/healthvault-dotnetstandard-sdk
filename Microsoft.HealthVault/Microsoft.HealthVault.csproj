@@ -49,7 +49,6 @@
   <ItemGroup>
     <Compile Include="AsyncEnumerable.cs" />
     <Compile Include="AsyncLock.cs" />
-    <Compile Include="Clients\ClientHealthVaultFactory.cs" />
     <Compile Include="Configuration\HealthVaultConfigurationDefaults.cs" />
     <Compile Include="Connection\HttpClientFactory.cs" />
     <Compile Include="Connection\IHttpClientFactory.cs" />
@@ -57,6 +56,7 @@
     <Compile Include="Connection\IMessageHandlerFactory.cs" />
     <Compile Include="Cryptographer.cs" />
     <Compile Include="Exceptions\CryptographicUnexpectedOperationException.cs" />
+    <Compile Include="Exceptions\HealthAuthorizedConnectionRequiredException.cs" />
     <Compile Include="Exceptions\HealthRecordNotFoundException.cs" />
     <Compile Include="Exceptions\HealthVaultException.cs" />
     <Compile Include="Exceptions\MoreThanOneThingException.cs" />

@@ -139,7 +139,7 @@ namespace Microsoft.HealthVault.Client
                     this.SessionCredential != null &&
                     this.personInfo != null)
                 {
-                    var platformClient = ClientHealthVaultFactory.GetPlatformClient(this);
+                    var platformClient = this.CreatePlatformClient();
 
                     foreach (HealthRecordInfo record in this.personInfo.AuthorizedRecords.Values)
                     {
@@ -208,7 +208,7 @@ namespace Microsoft.HealthVault.Client
                 defaultHealthVaultShellUrl);
 
             // TODO: Eliminate circular call. This method is called from AuthenticateAsync. PlatformClient is calling HealthVaultConnectionBase.ExecuteAsync, which is calling AuthenticateAsync
-            IPlatformClient platformClient = ClientHealthVaultFactory.GetPlatformClient(this);
+            IPlatformClient platformClient = this.CreatePlatformClient();
             ApplicationCreationInfo newApplicationCreationInfo = await platformClient.NewApplicationCreationInfoAsync().ConfigureAwait(false);
 
             string environmentInstanceId = await this.shellAuthService.ProvisionApplicationAsync(
@@ -246,7 +246,7 @@ namespace Microsoft.HealthVault.Client
 
         private async Task GetAndSavePersonInfoAsync()
         {
-            var personClient = ClientHealthVaultFactory.GetPersonClient(this);
+            var personClient = this.CreatePersonClient();
 
             // TODO: Eliminate circular call. This method is called from AuthenticateAsync. PersonClient is calling HealthVaultConnectionBase.ExecuteAsync, which is calling AuthenticateAsync
             PersonInfo newPersonInfo = (await personClient.GetAuthorizedPeopleAsync().ConfigureAwait(false)).FirstOrDefault();

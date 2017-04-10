@@ -71,7 +71,7 @@ namespace SandboxIos
                 this.connection = HealthVaultConnectionFactory.Current.GetOrCreateSodaConnection(configuration);
                 await this.connection.AuthenticateAsync();
 
-                this.thingClient = ClientHealthVaultFactory.GetThingClient(this.connection);
+                this.thingClient = this.connection.CreateThingClient();
                 PersonInfo personInfo = await this.connection.GetPersonInfoAsync();
 
                 this.connectButton.SetTitle("Disconnect", UIControlState.Normal);

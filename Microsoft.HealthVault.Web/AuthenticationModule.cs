@@ -125,7 +125,7 @@ namespace Microsoft.HealthVault.Web
             IWebHealthVaultConnection webHealthVaultConnection = Ioc.Container.Locate<IWebHealthVaultConnection>(
                 new { serviceLocator, webHealthVaultConfiguration, serviceInstance, token });
 
-            IPersonClient personClient = ClientHealthVaultFactory.GetPersonClient(webHealthVaultConnection);
+            IPersonClient personClient = webHealthVaultConnection.CreatePersonClient();
 
             PersonInfo personInfo = (await personClient.GetAuthorizedPeopleAsync()).FirstOrDefault();
 

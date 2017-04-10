@@ -8,6 +8,8 @@
 
 using System;
 using System.Threading.Tasks;
+using Microsoft.HealthVault.Clients;
+using Microsoft.HealthVault.Exceptions;
 using Microsoft.HealthVault.Person;
 using Microsoft.HealthVault.Transport;
 
@@ -58,5 +60,70 @@ namespace Microsoft.HealthVault.Connection
         /// Gets SessionCredential
         /// </summary>
         SessionCredential SessionCredential { get; }
+
+        /// <summary>
+        /// Gets a client that can be used to access things associated with a particular record.
+        /// </summary>
+        /// 
+        /// <returns>
+        /// An instance implementing IThingClient
+        /// </returns>
+        /// 
+        /// <exception cref="HealthAuthorizedConnectionRequiredException">
+        /// ThingClient can only be created when the connection has been authenticated.
+        /// Exception is raised when the connection is not yet authenticated.
+        /// </exception>
+        IThingClient CreateThingClient();
+
+        /// <summary>
+        /// A client that can be used to access vocabularies.
+        /// </summary>
+        /// 
+        /// <returns>
+        /// An instance implementing IVocabularyClient
+        /// </returns>
+        /// 
+        /// <exception cref="HealthAuthorizedConnectionRequiredException">
+        /// VocabularyClient can only be created when the connection has been authenticated.
+        /// Exception is raised when the connection is not yet authenticated.
+        /// </exception>
+        IVocabularyClient CreateVocabularyClient();
+
+        /// <summary>
+        /// A client that can be used to access information and records associated with the currently athenticated user.
+        /// </summary>
+        /// 
+        /// <returns>
+        /// An instance implementing IPersonClient
+        /// </returns>
+        /// 
+        /// <exception cref="HealthAuthorizedConnectionRequiredException">
+        /// PersonClient can only be created when the connection has been authenticated.
+        /// Exception is raised when the connection is not yet authenticated.
+        /// </exception>
+        IPersonClient CreatePersonClient();
+
+        /// <summary>
+        /// A client that can be used to access information and records associated with the currently athenticated user.
+        /// </summary>
+        /// 
+        /// <returns>
+        /// An instance implementing IPlatformClient
+        /// </returns>
+        IPlatformClient CreatePlatformClient();
+
+        /// <summary>
+        /// Gets a client that can be used to access action plans associated with a particular record
+        /// </summary>
+        /// 
+        /// <returns>
+        /// An instance implementing IActionPlanClient
+        /// </returns>
+        /// 
+        /// <exception cref="HealthAuthorizedConnectionRequiredException">
+        /// ActionPlanClient can only be created when the connection has been authenticated.
+        /// Exception is raised when the connection is not yet authenticated.
+        /// </exception>
+        IActionPlanClient CreateActionPlanClient();
     }
 }

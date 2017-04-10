@@ -11,6 +11,7 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Xml;
+using Microsoft.HealthVault.Clients;
 using Microsoft.HealthVault.Exceptions;
 using Microsoft.HealthVault.Person;
 using Microsoft.HealthVault.PlatformInformation;
@@ -126,5 +127,68 @@ namespace Microsoft.HealthVault.Connection
         public abstract void PrepareAuthSessionHeader(XmlWriter writer, Guid? recordId);
 
         public abstract string GetRestAuthSessionHeader(Guid? recordId);
+
+        /// <summary>
+        /// A client that can be used to access information about the platform.
+        /// </summary>
+        public IPlatformClient CreatePlatformClient() => new PlatformClient(this);
+
+        /// <summary>
+        /// A client that can be used to access information and records associated with the currently athenticated user.
+        /// </summary>
+        public IPersonClient CreatePersonClient()
+        {
+            if (this.SessionCredential == null)
+            {
+                throw new HealthAuthorizedConnectionRequiredException();
+            }
+
+            return new PersonClient(this);
+        }
+
+        /// <summary>
+        /// A client that can be used to access vocabularies.
+        /// </summary>
+        public IVocabularyClient CreateVocabularyClient()
+        {
+            if (this.SessionCredential == null)
+            {
+                throw new HealthAuthorizedConnectionRequiredException();
+            }
+
+            return new VocabularyClient(this);
+        }
+
+        /// <summary>
+        /// Gets a client that can be used to access things associated with a particular record.
+        /// </summary>
+        /// <returns>
+        /// An instance implementing IThingClient
+        /// </returns>
+        public IThingClient CreateThingClient()
+        {
+            if (this.SessionCredential == null)
+            {
+                throw new HealthAuthorizedConnectionRequiredException();
+            }
+
+            return new ThingClient(this);
+        }
+
+        /// <summary>
+        /// Gets a client that can be used to access action plans associated with a particular record
+        /// </summary>
+        /// <returns>
+        /// An instance implementing IActionPlanClient
+        /// </returns>
+        public IActionPlanClient CreateActionPlanClient()
+        {
+            if (this.SessionCredential == null)
+            {
+                throw new HealthAuthorizedConnectionRequiredException();
+            }
+
+            return new ActionPlanClient(this);
+        }
     }
 }

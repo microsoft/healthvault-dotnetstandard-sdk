@@ -78,7 +78,7 @@ namespace Microsoft.HealthVault.Web.Connection
                     // as a cookie, we will restore the application settings and authorized documents from the server.
                     if (webConnectionInfo.MinimizedPersonInfoApplicationSettings || webConnectionInfo.MinimizedPersonInfoRecords)
                     {
-                        IPersonClient personClient = ClientHealthVaultFactory.GetPersonClient(this);
+                        IPersonClient personClient = this.CreatePersonClient();
                         IReadOnlyCollection<PersonInfo> personInfoCollection = await personClient.GetAuthorizedPeopleAsync().ConfigureAwait(false);
 
                         // By default we pick the first authorized person for the app.

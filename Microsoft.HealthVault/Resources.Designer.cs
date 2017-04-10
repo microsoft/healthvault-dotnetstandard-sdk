@@ -836,6 +836,15 @@ namespace Microsoft.HealthVault {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Authenticate the connection.
+        /// </summary>
+        internal static string AuthenticatedConnectionRequired {
+            get {
+                return ResourceManager.GetString("AuthenticatedConnectionRequired", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The permissions &apos;None&apos; and &apos;Unknown&apos; cannot be specified when constructing an AuthorizationRule..
         /// </summary>
         internal static string AuthorizationRuleBadPermissions {

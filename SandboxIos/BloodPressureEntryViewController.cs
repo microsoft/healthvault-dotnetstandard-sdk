@@ -74,7 +74,7 @@ namespace SandboxIos
                 When = new HealthServiceDateTime(DateTime.Now)
             };
 
-            IThingClient thingClient = ClientHealthVaultFactory.GetThingClient(this.connection);
+            IThingClient thingClient = this.connection.CreateThingClient();
             PersonInfo personInfo = await this.connection.GetPersonInfoAsync();
             await thingClient.CreateNewThingsAsync(personInfo.SelectedRecord.Id, new List<BloodPressure>() { bp });
 

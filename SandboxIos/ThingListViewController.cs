@@ -96,7 +96,7 @@ namespace SandboxIos
             this.activityIndicator.StartAnimating();
             this.messageLabel.Hidden = true;
 
-            IThingClient thingClient = ClientHealthVaultFactory.GetThingClient(this.connection);
+            IThingClient thingClient = this.connection.CreateThingClient();
             PersonInfo personInfo = await this.connection.GetPersonInfoAsync();
             this.collection = (IReadOnlyCollection<IThing>)await thingClient.GetThingsAsync<TThing>(personInfo.SelectedRecord.Id);
 

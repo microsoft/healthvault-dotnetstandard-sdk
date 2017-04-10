@@ -44,7 +44,7 @@ namespace SandboxUwp
         {
             PersonInfo personInfo = await this.connection.GetPersonInfoAsync();
             HealthRecordInfo recordInfo = personInfo.SelectedRecord;
-            IThingClient thingClient = ClientHealthVaultFactory.GetThingClient(this.connection);
+            IThingClient thingClient = this.connection.CreateThingClient();
 
             var bloodPressures = await thingClient.GetThingsAsync<BloodPressure>(recordInfo.Id);
             BloodPressure firstBloodPressure = bloodPressures.FirstOrDefault();
@@ -62,7 +62,7 @@ namespace SandboxUwp
         {
             PersonInfo personInfo = await this.connection.GetPersonInfoAsync();
             HealthRecordInfo recordInfo = personInfo.SelectedRecord;
-            IThingClient thingClient = ClientHealthVaultFactory.GetThingClient(this.connection);
+            IThingClient thingClient = this.connection.CreateThingClient();
 
             await thingClient.CreateNewThingsAsync(recordInfo.Id, new List<BloodPressure> { new BloodPressure(new HealthServiceDateTime(DateTime.Now), 117, 70) });
 
