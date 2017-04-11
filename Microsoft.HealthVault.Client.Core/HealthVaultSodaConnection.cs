@@ -15,6 +15,7 @@ using Microsoft.HealthVault.Rest;
 using Microsoft.HealthVault.Transport;
 using System.Linq;
 using Microsoft.HealthVault.Configuration;
+using Microsoft.HealthVault.Transport.MessageFormatters.SessionFormatters;
 
 namespace Microsoft.HealthVault.Client
 {
@@ -48,7 +49,9 @@ namespace Microsoft.HealthVault.Client
 
         public HealthVaultConfiguration Configuration { get; }
 
-        public override Guid ApplicationId => this.ApplicationCreationInfo.AppInstanceId;
+        public override Guid? ApplicationId => this.ApplicationCreationInfo?.AppInstanceId;
+
+        protected override SessionFormatter SessionFormatter => new OfflineSessionFormatter(this.SessionCredential?.Token, () => this.personInfo?.PersonId);
 
         public override async Task AuthenticateAsync()
         {
@@ -71,20 +74,6 @@ namespace Microsoft.HealthVault.Client
                     await this.GetAndSavePersonInfoAsync().ConfigureAwait(false);
                 }
             }
-        }
-
-        public override void PrepareAuthSessionHeader(XmlWriter writer, Guid? recordId)
-        {
-            writer.WriteStartElement("auth-session");
-            writer.WriteElementString("auth-token", this.SessionCredential.Token);
-            if (recordId != null && recordId != Guid.Empty)
-            {
-                writer.WriteStartElement("offline-person-info");
-                writer.WriteElementString("offline-person-id", this.personInfo.PersonId.ToString());
-                writer.WriteEndElement();
-            }
-
-            writer.WriteEndElement();
         }
 
         public override string GetRestAuthSessionHeader(Guid? recordId)

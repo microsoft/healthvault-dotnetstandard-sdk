@@ -1,32 +1,34 @@
 ﻿// Copyright (c) Microsoft Corporation.  All rights reserved.
 // MIT License
 // Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the ""Software""), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
-//
+// 
 // The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-//
+// 
 // THE SOFTWARE IS PROVIDED *AS IS*, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-namespace Microsoft.HealthVault.Connection
-{
-    /// <summary>
-    /// Provides crypto services for constructing authorized 
-    /// xml to send to healthvault
-    /// </summary>
-    internal interface ICryptographer
-    {
-        /// <summary>
-        /// Hmacs the specified key material.
-        /// </summary>
-        /// <param name="keyMaterial">The key material.</param>
-        /// <param name="data">The data.</param>
-        /// <returns>CryptoHmac</returns>
-        CryptoData Hmac(string keyMaterial, byte[] data);
+using System.IO;
+using System.Text;
+using System.Xml;
+using Microsoft.HealthVault.Helpers;
 
-        /// <summary>
-        /// Hashes the specified text.
-        /// </summary>
-        /// <param name="data">The data.</param>
-        /// <returns>CryptoHash</returns>
-        CryptoData Hash(byte[] data);
+namespace Microsoft.HealthVault.Transport.MessageFormatters
+{
+    internal static class MessageWriterExtensions
+    {
+        public static byte[] AsBytes(this IMessageFormatter message)
+        {
+            using (MemoryStream xmlHeader = new MemoryStream())
+            using (XmlWriter writer = XmlWriter.Create(xmlHeader, SDKHelper.XmlUtf8WriterSettings))
+            {
+                message.Write(writer);
+                writer.Flush();
+                return xmlHeader.ToArray();
+            }
+        }
+
+        public static string AsXmlString(this IMessageFormatter message)
+        {
+            return Encoding.UTF8.GetString(message.AsBytes());
+        }
     }
 }

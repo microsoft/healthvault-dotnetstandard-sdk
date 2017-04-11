@@ -15,19 +15,12 @@ namespace Microsoft.HealthVault.Client
     /// </summary>
     internal class ClientSessionCredentialClient : SessionCredentialClientBase, IClientSessionCredentialClient
     {
-        private readonly ICryptographer cryptographer;
-
-        public ClientSessionCredentialClient(ICryptographer cryptographer)
-        {
-            this.cryptographer = cryptographer;
-        }
-
         public string AppSharedSecret { get; set; }
 
         public override void WriteInfoXml(XmlWriter writer)
         {
             byte[] hmacContentBytes = this.GetHmacContentBytes();
-            CryptoData hmacResult = this.cryptographer.Hmac(this.AppSharedSecret, hmacContentBytes);
+            CryptoData hmacResult = Cryptographer.Hmac(this.AppSharedSecret, hmacContentBytes);
 
             writer.WriteStartElement("appserver2");
             writer.WriteStartElement("hmacSig");

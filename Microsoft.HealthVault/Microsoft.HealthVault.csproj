@@ -47,6 +47,7 @@
     <!-- A reference to the entire .NET Framework is automatically included -->
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AnonymousMethodAttribute.cs" />
     <Compile Include="AsyncEnumerable.cs" />
     <Compile Include="AsyncLock.cs" />
     <Compile Include="Configuration\HealthVaultConfigurationDefaults.cs" />
@@ -71,7 +72,6 @@
     <Compile Include="Connection\HealthVaultConnectionBase.cs" />
     <Compile Include="Connection\CryptoData.cs" />
     <Compile Include="Connection\IHealthVaultConnection.cs" />
-    <Compile Include="Connection\ICryptographer.cs" />
     <Compile Include="Clients\IActionPlanClient.cs" />
     <Compile Include="Clients\IClient.cs" />
     <Compile Include="Clients\IPersonClient.cs" />
@@ -84,6 +84,7 @@
     <Compile Include="Connection\SessionCredentialClientBase.cs" />
     <Compile Include="Extensions\DependencyInjectionContainerExtensions.cs" />
     <Compile Include="Extensions\UriExtensions.cs" />
+    <Compile Include="Connection\ICryptographer.cs" />
     <Compile Include="Ioc.cs" />
     <Compile Include="SdkTelemetryInformation.cs" />
     <Compile Include="ItemTypes\ActionPlanWrapper.cs" />
@@ -326,7 +327,7 @@
     <Compile Include="CultureSpecificDictionary.cs" />
     <Compile Include="Thing\DateRange.cs" />
     <Compile Include="Thing\DateRangeSetDefinition.cs" />
-    <Compile Include="Transport\EasyWebRequest.cs" />
+    <Compile Include="Transport\HealthWebRequestClient.cs" />
     <Compile Include="Exceptions\HealthHttpException.cs" />
     <Compile Include="Exceptions\ConversionFailureException.cs" />
     <Compile Include="Exceptions\HealthRecordAuthorizationRequiredException.cs" />
@@ -389,7 +390,7 @@
     <Compile Include="PlatformInformation\HealthServiceLocation.cs" />
     <Compile Include="PlatformInformation\HealthServiceMethodInfo.cs" />
     <Compile Include="PlatformInformation\HealthServiceMethodVersionInfo.cs" />
-    <Compile Include="Transport\HealthServiceRequest.cs" />
+    <Compile Include="Transport\HealthServiceMessage.cs" />
     <Compile Include="Transport\HealthServiceResponseData.cs" />
     <Compile Include="Transport\HealthServiceResponseError.cs" />
     <Compile Include="PlatformInformation\HealthServiceShellInfo.cs" />
@@ -404,12 +405,22 @@
     <Compile Include="Person\HealthVaultPlatformPerson.cs" />
     <Compile Include="Record\HealthVaultPlatformRecord.cs" />
     <Compile Include="Diagnostics\HealthVaultPlatformTrace.cs" />
-    <Compile Include="Transport\IHealthServiceRequest.cs" />
     <Compile Include="Helpers\UrlUtilities.cs" />
-    <Compile Include="Transport\IHealthWebRequest.cs" />
-    <Compile Include="Transport\HealthWebRequestFactory.cs" />
-    <Compile Include="Transport\IHealthWebRequestFactory.cs" />
+    <Compile Include="Transport\IHealthWebRequestClient.cs" />
     <Compile Include="Helpers\ResourceUtilities.cs" />
+    <Compile Include="Transport\MessageFormatters\AuthenticationFormatters\CryptoDataFormatter.cs" />
+    <Compile Include="Transport\MessageFormatters\HeaderFormatters\AppIdFormatter.cs" />
+    <Compile Include="Transport\MessageFormatters\AuthenticationFormatters\AuthenticationFormatter.cs" />
+    <Compile Include="Transport\MessageFormatters\AuthenticationFormatters\NoAuthenticationFormatter.cs" />
+    <Compile Include="Transport\MessageFormatters\HeaderFormatters\HeaderFormatter.cs" />
+    <Compile Include="Transport\MessageFormatters\HeaderFormatters\IAuthSessionOrAppId.cs" />
+    <Compile Include="Transport\MessageFormatters\InfoFormatters\InfoFormatter.cs" />
+    <Compile Include="Transport\MessageFormatters\MessageFormatter.cs" />
+    <Compile Include="Transport\MessageFormatters\MessageWriterExtensions.cs" />
+    <Compile Include="Transport\MessageFormatters\SessionFormatters\SessionFormatter.cs" />
+    <Compile Include="Transport\MessageFormatters\SessionFormatters\OfflineSessionFormatter.cs" />
+    <Compile Include="Transport\MessageFormatters\SessionFormatters\TokenSessionFormatter.cs" />
+    <Compile Include="Transport\MessageFormatters\TagWriter.cs" />
     <Compile Include="Vocabulary\HealthVaultPlatformVocabulary.cs" />
     <Compile Include="Diagnostics\HealthVaultTraceSource.cs" />
     <Compile Include="Transport\IEasyWebResponseHandler.cs" />
@@ -452,6 +463,7 @@
     <Compile Include="Helpers\XPathHelper.cs" />
     <Compile Include="Vocabulary\VocabularySearchType.cs" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

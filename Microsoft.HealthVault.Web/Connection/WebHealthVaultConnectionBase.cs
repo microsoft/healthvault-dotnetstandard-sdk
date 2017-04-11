@@ -42,7 +42,7 @@ namespace Microsoft.HealthVault.Web.Connection
             this.SessionCredential = sessionCredential;
         }
 
-        public override Guid ApplicationId => this.webHealthVaultConfiguration.MasterApplicationId;
+        public override Guid? ApplicationId => this.webHealthVaultConfiguration.MasterApplicationId;
 
         public override async Task AuthenticateAsync()
         {

@@ -6,27 +6,12 @@
 //
 // THE SOFTWARE IS PROVIDED *AS IS*, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-namespace Microsoft.HealthVault.Connection
-{
-    /// <summary>
-    /// Provides crypto services for constructing authorized 
-    /// xml to send to healthvault
-    /// </summary>
-    internal interface ICryptographer
-    {
-        /// <summary>
-        /// Hmacs the specified key material.
-        /// </summary>
-        /// <param name="keyMaterial">The key material.</param>
-        /// <param name="data">The data.</param>
-        /// <returns>CryptoHmac</returns>
-        CryptoData Hmac(string keyMaterial, byte[] data);
+using System.Xml;
 
-        /// <summary>
-        /// Hashes the specified text.
-        /// </summary>
-        /// <param name="data">The data.</param>
-        /// <returns>CryptoHash</returns>
-        CryptoData Hash(byte[] data);
+namespace Microsoft.HealthVault.Transport.MessageFormatters
+{
+    internal interface IMessageFormatter
+    {
+        void Write(XmlWriter writer);
     }
 }

@@ -313,7 +313,7 @@ namespace Microsoft.HealthVault.Rest
                 }
             }
 
-            HttpClient client = this.httpClientFactory.GetFreshClient();
+            HttpClient client = this.httpClientFactory.GetOrCreateClient();
             response = await client.SendAsync(httpRequest, this.cancellationTokenSource.Token).ConfigureAwait(false);
 
             return await this.GetResponseAsync(response).ConfigureAwait(false);

@@ -6,27 +6,30 @@
 //
 // THE SOFTWARE IS PROVIDED *AS IS*, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-namespace Microsoft.HealthVault.Connection
-{
-    /// <summary>
-    /// Provides crypto services for constructing authorized 
-    /// xml to send to healthvault
-    /// </summary>
-    internal interface ICryptographer
-    {
-        /// <summary>
-        /// Hmacs the specified key material.
-        /// </summary>
-        /// <param name="keyMaterial">The key material.</param>
-        /// <param name="data">The data.</param>
-        /// <returns>CryptoHmac</returns>
-        CryptoData Hmac(string keyMaterial, byte[] data);
+using System.Xml;
+using Microsoft.HealthVault.Connection;
+using Microsoft.HealthVault.Transport.MessageFormatters.HeaderFormatters;
 
-        /// <summary>
-        /// Hashes the specified text.
-        /// </summary>
-        /// <param name="data">The data.</param>
-        /// <returns>CryptoHash</returns>
-        CryptoData Hash(byte[] data);
+namespace Microsoft.HealthVault.Transport.MessageFormatters.AuthenticationFormatters
+{
+    internal class AuthenticationFormatter
+    {
+        private readonly string sharedSecret;
+
+        public AuthenticationFormatter(string sharedSecret)
+        {
+            this.sharedSecret = sharedSecret;
+        }
+
+        public virtual void Write(XmlWriter writer, HeaderFormatter section)
+        {
+            CryptoData crytpoData = Cryptographer.Hmac(this.sharedSecret, section.AsBytes());
+            var cryptoFormatter = new CryptoDataFormatter(crytpoData);
+
+            using (new TagWriter(writer, "auth"))
+            {
+                cryptoFormatter.Write(writer);
+            }
+        }
     }
 }

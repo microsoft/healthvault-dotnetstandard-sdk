@@ -27,7 +27,7 @@ namespace Microsoft.HealthVault.Connection
         /// <value>
         /// The application identifier.
         /// </value>
-        Guid ApplicationId { get; }
+        Guid? ApplicationId { get; }
 
         /// <summary>
         /// Gets the person information for this account.
@@ -50,11 +50,7 @@ namespace Microsoft.HealthVault.Connection
         /// <param name="parameters">Method parameters</param>
         /// <param name="recordId">Record Id</param>
         /// <returns>HealthServiceResponseData</returns>
-        Task<HealthServiceResponseData> ExecuteAsync(
-            HealthVaultMethods method,
-            int methodVersion,
-            string parameters = null,
-            Guid? recordId = null);
+        Task<HealthServiceResponseData> ExecuteAsync(HealthVaultMethods method, int methodVersion, string parameters = null, Guid? recordId = null);
 
         /// <summary>
         /// Gets SessionCredential

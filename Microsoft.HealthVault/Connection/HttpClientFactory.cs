@@ -33,7 +33,7 @@ namespace Microsoft.HealthVault.Connection
             this.dateTimeService = dateTimeService;
         }
 
-        public HttpClient GetFreshClient()
+        public HttpClient GetOrCreateClient()
         {
             DateTimeOffset now = this.dateTimeService.UtcNow;
             if (!this.NeedsRefresh(now))

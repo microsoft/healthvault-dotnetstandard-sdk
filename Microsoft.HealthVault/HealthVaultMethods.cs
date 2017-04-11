@@ -36,7 +36,7 @@ namespace Microsoft.HealthVault
         /// <summary>
         /// Creates an application session token for use with the HealthVault service.
         /// </summary>
-        ///
+        [AnonymousMethod]
         CreateAuthenticatedSessionToken,
 
         /// <summary>
@@ -123,7 +123,7 @@ namespace Microsoft.HealthVault
         /// <summary>
         /// Gets generic service information about the HealthVault service.
         /// </summary>
-        ///
+        [AnonymousMethod]
         GetServiceDefinition,
 
         /// <summary>
@@ -158,6 +158,7 @@ namespace Microsoft.HealthVault
         /// <summary>
         /// Create a new application instance information from a master app id.  First step in SODA authentication.
         /// </summary>
+        [AnonymousMethod]
         NewApplicationCreationInfo,
 
         /// <summary>

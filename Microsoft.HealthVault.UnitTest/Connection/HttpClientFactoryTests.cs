@@ -32,8 +32,8 @@ namespace Microsoft.HealthVault.UnitTest.Connection
 
             HttpClientFactory factory = this.CreateFactory();
 
-            HttpClient firstClient = factory.GetFreshClient();
-            HttpClient secondClient = factory.GetFreshClient();
+            HttpClient firstClient = factory.GetOrCreateClient();
+            HttpClient secondClient = factory.GetOrCreateClient();
 
             Assert.AreEqual(firstClient, secondClient);
         }
@@ -50,8 +50,8 @@ namespace Microsoft.HealthVault.UnitTest.Connection
 
             HttpClientFactory factory = this.CreateFactory();
 
-            HttpClient firstClient = factory.GetFreshClient();
-            HttpClient secondClient = factory.GetFreshClient();
+            HttpClient firstClient = factory.GetOrCreateClient();
+            HttpClient secondClient = factory.GetOrCreateClient();
 
             Assert.AreNotEqual(firstClient, secondClient);
         }

@@ -14,10 +14,10 @@ using NSubstitute;
 
 namespace Microsoft.HealthVault.UnitTest.CloudRequestTests
 {
-    class TestHealthWebRequest : IHealthWebRequest
+    class TestHealthWebRequestClient : IHealthWebRequestClient
     {
         public string RequestCompressionMethod { get; set; }
-        
+
         public HttpResponseMessage message = Substitute.For<HttpResponseMessage>();
 
         public Dictionary<string, string> Headers { get; }
@@ -27,7 +27,12 @@ namespace Microsoft.HealthVault.UnitTest.CloudRequestTests
             return new HttpClient();
         }
 
-        public async Task<HttpResponseMessage> FetchAsync(Uri url, CancellationToken token)
+        public Task<HttpResponseMessage> SendAsync(Uri url, byte[] utf8EncodedXml, int utf8EncodedXmlLength, IDictionary<string, string> headers, CancellationToken token)
+        {
+            return SendAsync(url, token);
+        }
+
+        public async Task<HttpResponseMessage> SendAsync(Uri url, CancellationToken token)
         {
             var content = Substitute.For<HttpContent>();
             content.ReadAsStreamAsync().Returns(new MemoryStream(Encoding.UTF8.GetBytes(SampleUtils.GetSampleContent("ThingSampleBloodPressure.xml"))));

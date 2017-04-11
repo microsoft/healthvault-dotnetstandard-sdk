@@ -18,21 +18,15 @@ using Microsoft.HealthVault.Exceptions;
 
 namespace Microsoft.HealthVault.Transport
 {
-    internal class EasyWebRequest : IHealthWebRequest
+    internal class HealthWebRequestClient : IHealthWebRequestClient
     {
-        private readonly byte[] xmlRequest; // utf8Encoded
-        private readonly int xmlRequestLength;
-        private HealthVaultConfiguration configuration = Ioc.Get<HealthVaultConfiguration>();
-        private IHttpClientFactory httpClientFactory = Ioc.Get<IHttpClientFactory>();
+        private readonly HealthVaultConfiguration configuration;
+        private readonly IHttpClientFactory httpClientFactory;
 
-        internal EasyWebRequest()
+        public HealthWebRequestClient(HealthVaultConfiguration config, IHttpClientFactory httpClientFactory)
         {
-        }
-
-        internal EasyWebRequest(byte[] utf8EncodedXml, int length)
-        {
-            this.xmlRequest = utf8EncodedXml;
-            this.xmlRequestLength = length;
+            this.configuration = config;
+            this.httpClientFactory = httpClientFactory;
         }
 
         /// <summary>
@@ -70,16 +64,10 @@ namespace Microsoft.HealthVault.Transport
 
         private string requestCompressionMethod = "gzip";
 
-        /// <summary>
-        /// Gets the dictionary of headers that will be added to the web request.
-        /// </summary>
-        ///
-        public Dictionary<string, string> Headers { get; } = new Dictionary<string, string>();
-
-        public async Task<HttpResponseMessage> FetchAsync(Uri url, CancellationToken token)
+        public async Task<HttpResponseMessage> SendAsync(Uri url, byte[] utf8EncodedXml, int utf8EncodedXmlLength, IDictionary<string, string> headers, CancellationToken token)
         {
             HttpMethod method;
-            if (this.xmlRequest == null)
+            if (utf8EncodedXml == null)
             {
                 method = HttpMethod.Get;
             }
@@ -89,12 +77,12 @@ namespace Microsoft.HealthVault.Transport
             }
 
             HttpRequestMessage message = new HttpRequestMessage(method, url);
-            foreach (KeyValuePair<string, string> headerPair in this.Headers)
+            foreach (KeyValuePair<string, string> headerPair in headers)
             {
                 message.Headers.Add(headerPair.Key, headerPair.Value);
             }
 
-            HttpContent content = new ByteArrayContent(this.xmlRequest, 0, this.xmlRequestLength);
+            HttpContent content = new ByteArrayContent(utf8EncodedXml, 0, utf8EncodedXmlLength);
             if (!string.IsNullOrEmpty(this.RequestCompressionMethod))
             {
                 content = new CompressedContent(content, this.RequestCompressionMethod);
@@ -102,7 +90,7 @@ namespace Microsoft.HealthVault.Transport
 
             message.Content = content;
 
-            HttpClient client = this.httpClientFactory.GetFreshClient();
+            HttpClient client = this.httpClientFactory.GetOrCreateClient();
             int retryCount = this.configuration.RetryOnInternal500Count;
             do
             {

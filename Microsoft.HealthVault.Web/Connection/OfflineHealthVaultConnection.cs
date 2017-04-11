@@ -12,6 +12,7 @@ using System.Xml;
 using Microsoft.HealthVault.Connection;
 using Microsoft.HealthVault.Person;
 using Microsoft.HealthVault.PlatformInformation;
+using Microsoft.HealthVault.Transport.MessageFormatters.SessionFormatters;
 
 namespace Microsoft.HealthVault.Web.Connection
 {
@@ -26,11 +27,12 @@ namespace Microsoft.HealthVault.Web.Connection
         /// <param name="serviceLocator">The service locator.</param>
         /// <param name="serviceInstance">The service instance.</param>
         /// <param name="sessionCredential">The session credential.</param>
-        /// <param name="offlinePersionId">The offline persion identifier.</param>
-        public OfflineHealthVaultConnection(IServiceLocator serviceLocator,
+        /// <param name="offlinePersionId">The offline person identifier.</param>
+        public OfflineHealthVaultConnection(
+            IServiceLocator serviceLocator,
             HealthServiceInstance serviceInstance = null,
             SessionCredential sessionCredential = null,
-            string offlinePersionId = null) 
+            string offlinePersionId = null)
             : base(serviceLocator, serviceInstance, sessionCredential)
         {
             Guid offlinePersonId;
@@ -43,36 +45,9 @@ namespace Microsoft.HealthVault.Web.Connection
             Ioc.Container.Configure(c => c.ExportInstance(this).As<IConnectionInternal>());
         }
 
-        /// <summary>
-        /// Gets or sets the unique identifier of the offline person who granted
-        /// permissions to the calling application to perform certain
-        /// operations.
-        /// </summary>
-        public Guid OfflinePersonId { get; internal set; }
+        public Guid OfflinePersonId { get; }
 
-        public override void PrepareAuthSessionHeader(XmlWriter writer, Guid? recordId)
-        {
-            writer.WriteStartElement("auth-session");
-            writer.WriteElementString("auth-token", this.SessionCredential.Token);
-
-            if (this.OfflinePersonId != Guid.Empty)
-            {
-                // person-specific request, but person is offline as far as
-                // HealthVault is concerned, so pass in offline info...
-                // <offline-person-info>
-                writer.WriteStartElement("offline-person-info");
-
-                // <offline-person-id>
-                writer.WriteElementString(
-                    "offline-person-id",
-                    this.OfflinePersonId.ToString());
-
-                // </offline-person-info>
-                writer.WriteEndElement();
-            }
-
-            writer.WriteEndElement();
-        }
+        protected override SessionFormatter SessionFormatter => new OfflineSessionFormatter(this.SessionCredential.Token, () => this.OfflinePersonId);
 
         public override Task<PersonInfo> GetPersonInfoAsync()
         {

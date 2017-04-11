@@ -28,7 +28,7 @@ namespace Microsoft.HealthVault.Web
             this.httpClient = new HttpClient(handler);
         }
 
-        public HttpClient GetFreshClient()
+        public HttpClient GetOrCreateClient()
         {
             return this.httpClient;
         }

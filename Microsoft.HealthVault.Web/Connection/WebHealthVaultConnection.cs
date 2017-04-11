@@ -18,6 +18,7 @@ using Microsoft.HealthVault.Clients;
 using Microsoft.HealthVault.Connection;
 using Microsoft.HealthVault.Person;
 using Microsoft.HealthVault.PlatformInformation;
+using Microsoft.HealthVault.Transport.MessageFormatters.SessionFormatters;
 using Microsoft.HealthVault.Record;
 using Microsoft.HealthVault.Web.Exceptions;
 
@@ -26,7 +27,6 @@ namespace Microsoft.HealthVault.Web.Connection
     internal class WebHealthVaultConnection : WebHealthVaultConnectionBase, IWebHealthVaultConnection
     {
         private readonly AsyncLock personInfoLock = new AsyncLock();
-
         private PersonInfo personInfo;
 
         public WebHealthVaultConnection(IServiceLocator serviceLocator,
@@ -40,20 +40,9 @@ namespace Microsoft.HealthVault.Web.Connection
             Ioc.Container.Configure(c => c.ExportInstance(this).As<IConnectionInternal>());
         }
 
-        public string UserAuthToken { get; internal set; }
+        public string UserAuthToken { get; set; }
 
-        public override void PrepareAuthSessionHeader(XmlWriter writer, Guid? recordId)
-        {
-            writer.WriteStartElement("auth-session");
-            writer.WriteElementString("auth-token", this.SessionCredential.Token);
-
-            if (!string.IsNullOrEmpty(UserAuthToken))
-            {
-                writer.WriteElementString("user-auth-token", this.UserAuthToken);
-            }
-
-            writer.WriteEndElement();
-        }
+        protected override SessionFormatter SessionFormatter => new TokenSessionFormatter(this.SessionCredential.Token, this.UserAuthToken);
 
         /// <summary>
         /// Get PersonInfo for the authenticated connection.

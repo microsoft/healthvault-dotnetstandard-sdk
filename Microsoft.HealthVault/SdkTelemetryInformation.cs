@@ -4,7 +4,7 @@ namespace Microsoft.HealthVault
 {
     /// <summary>
     /// Telemetry information that will be logged from clients
-    /// using the SDK as part of the method call to HealthVault Platform <see cref="HealthServiceRequest.BuildRequestXml()"/>
+    /// using the SDK as part of the method call to HealthVault Platform <see cref="HealthServiceMessage.BuildRequestXml()"/>
     /// </summary>
     /// <remarks>
     /// Request from Clients are of format - {Category} / {FileVersion} {OsInformation}
