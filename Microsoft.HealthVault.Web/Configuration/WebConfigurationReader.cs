@@ -60,7 +60,7 @@ namespace Microsoft.HealthVault.Web.Configuration
 
                 // WebHealthVaultConfiguration properties
                 ActionPageUrls = GetActionUrls(appSettings),
-                ActionUrlRedirectOverride = appSettings.GetUrl(ConfigKeys.NonProductionActionUrlRedirectOverride, false),
+                ActionUrlRedirectOverride = TryReadingActionUrlRedirectOverride(appSettings),
                 AllowedRedirectSites = appSettings[ConfigKeys.AllowedRedirectSites],
                 ApplicationCertificateFileName = appSettings[ConfigKeys.ApplicationCertificateFileName],
                 ApplicationCertificatePassword = appSettings[ConfigKeys.ApplicationCertificatePassword],
@@ -76,6 +76,13 @@ namespace Microsoft.HealthVault.Web.Configuration
             };
 
             return config;
+        }
+
+        private static Uri TryReadingActionUrlRedirectOverride(NameValueCollection appSettings)
+        {
+            return String.IsNullOrEmpty(appSettings[ConfigKeys.NonProductionActionUrlRedirectOverride])
+                ? null 
+                : new Uri(appSettings[ConfigKeys.NonProductionActionUrlRedirectOverride], UriKind.RelativeOrAbsolute);
         }
 
         private static IList<Guid> GetSupportedTypeVersions(string typeVersionsString)

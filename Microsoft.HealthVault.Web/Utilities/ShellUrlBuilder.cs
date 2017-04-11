@@ -26,19 +26,9 @@ namespace Microsoft.HealthVault.Web.Utilities
             HttpContextBase context,
             string target,
             IDictionary<string, object> parameters)
-        {   
-            if (context == null)
-            {
-                throw new ArgumentNullException(nameof(context));
-            }
-
-            if (target == null)
-            {
-                throw new ArgumentNullException(nameof(target));
-            }
-
-            this.context = context;
-            this.target = target;
+        {
+            this.context = context ?? throw new ArgumentNullException(nameof(context));
+            this.target = target ?? throw new ArgumentNullException(nameof(target));
             this.parameters = parameters;
 
             this.webHealthVaultConfiguration = Ioc.Get<WebHealthVaultConfiguration>();
@@ -85,8 +75,8 @@ namespace Microsoft.HealthVault.Web.Utilities
 
         private void EnsureBaseParameters()
         {
-            EnsureAppID();
-            EnsureAppQS();
+            EnsureAppId();
+            EnsureAppQs();
             EnsureRedirect();
             EnsureAib();
         }
@@ -117,7 +107,7 @@ namespace Microsoft.HealthVault.Web.Utilities
             return builder;
         }
 
-        private void EnsureAppID()
+        private void EnsureAppId()
         {
             if (!this.parameters.ContainsKey("appid"))
             {
@@ -125,7 +115,7 @@ namespace Microsoft.HealthVault.Web.Utilities
             }
         }
 
-        private void EnsureAppQS()
+        private void EnsureAppQs()
         {
             if (!this.parameters.ContainsKey("actionqs"))
             {

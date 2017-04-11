@@ -39,6 +39,8 @@ namespace Microsoft.HealthVault.Web.Connection
             {
                 this.OfflinePersonId = offlinePersonId;
             }
+
+            Ioc.Container.Configure(c => c.ExportInstance(this).As<IConnectionInternal>());
         }
 
         /// <summary>

@@ -60,8 +60,7 @@ namespace Microsoft.HealthVault.Web
             SessionCredential sessionCredentialToken = webConnectionInfo.SessionCredential;
             string token = webConnectionInfo.UserAuthToken;
 
-            IWebHealthVaultConnection webConnection = Ioc.Container.Locate<IWebHealthVaultConnection>(
-                new { serviceLocator, serviceInstance, sessionCredentialToken, token });
+            IWebHealthVaultConnection webConnection = new WebHealthVaultConnection(serviceLocator, serviceInstance, sessionCredentialToken, token);
 
             return webConnection;
         }
@@ -84,13 +83,11 @@ namespace Microsoft.HealthVault.Web
             IServiceInstanceProvider serviceInstanceProvider = serviceLocator.GetInstance<IServiceInstanceProvider>();
             HealthServiceInstance serviceInstance = await serviceInstanceProvider.GetHealthServiceInstanceAsync(instanceId);
 
-            IOfflineHealthVaultConnection offlineHealthVaultConnection = Ioc.Container.Locate<IOfflineHealthVaultConnection>(new 
-            {
+            IOfflineHealthVaultConnection offlineHealthVaultConnection = new OfflineHealthVaultConnection( 
                 serviceLocator,
                 serviceInstance,
                 sessionCredential,
-                offlinePersonId
-            });
+                offlinePersonId);
 
             return offlineHealthVaultConnection;
         }

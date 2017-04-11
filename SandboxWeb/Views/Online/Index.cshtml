@@ -1,0 +1,37 @@
+﻿@model IReadOnlyCollection<Microsoft.HealthVault.ItemTypes.Weight>
+
+@{
+    ViewBag.Title = "title";
+}
+
+<h3>Weights</h3>
+
+@using (Html.BeginForm("CreateWeight", "Online"))
+{
+    @Html.AntiForgeryToken()
+
+    <input type="submit" value="Create New Weight" class="btn btn-primary" />
+}
+
+<br/>
+
+<table class="table table-striped">
+    @if (Model != null)
+    {
+        <tr>
+            <td>
+                value
+            </td>
+            <td>
+                when
+            </td>
+        </tr>
+        foreach (var weight in Model)
+        {
+            <tr>
+                <td>@weight.Value</td>
+                <td>@weight.When.ToDateTime()</td>
+            </tr>
+        }
+    }
+</table>

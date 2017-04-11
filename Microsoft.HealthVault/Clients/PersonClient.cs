@@ -84,6 +84,16 @@ namespace Microsoft.HealthVault.Clients
             return (IReadOnlyCollection<PersonInfo>)people;
         }
 
+        public virtual async Task<PersonInfo> GetPersonInfoAsync()
+        {
+            HealthServiceResponseData responseData = await this.connection.ExecuteAsync(HealthVaultMethods.GetPersonInfo, 1).ConfigureAwait(false);
+
+            XPathExpression personPath = this.GetPersonXPathExpression(responseData.InfoNavigator);
+            XPathNavigator infoNav = responseData.InfoNavigator.SelectSingleNode(personPath);
+
+            return PersonInfo.CreateFromXml(infoNav);
+        }
+
         public virtual async Task<Collection<HealthRecordInfo>> GetAuthorizedRecordsAsync(IList<Guid> recordIds)
         {
             StringBuilder parameters = new StringBuilder(128);

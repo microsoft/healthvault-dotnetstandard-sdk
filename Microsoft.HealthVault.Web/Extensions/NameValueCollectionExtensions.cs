@@ -40,20 +40,16 @@ namespace Microsoft.HealthVault.Web.Extensions
             {
                 return null;
             }
-            else
+
+            if (appendSlash)
             {
-                if (appendSlash)
-                {
-                    return
-                        new Uri(resultString.EndsWith("/", StringComparison.Ordinal)
-                            ? resultString
-                            : (resultString + "/"));
-                }
-                else
-                {
-                    return new Uri(resultString);
-                }
+                return
+                    new Uri(resultString.EndsWith("/", StringComparison.Ordinal)
+                        ? resultString
+                        : (resultString + "/"));
             }
+
+            return new Uri(resultString);
         }
 
         /// <summary>

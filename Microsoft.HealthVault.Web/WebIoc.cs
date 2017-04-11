@@ -45,8 +45,8 @@ namespace Microsoft.HealthVault.Web
             container.RegisterSingleton<ICertificateInfoProvider, CertificateInfoProvider>();
             container.RegisterSingleton<IServiceInstanceProvider, ServiceInstanceProvider>();
 
-            container.RegisterTransient<ISessionCredentialClient, WebSessionCredentialClient>();
-        
+            container.RegisterTransient<IWebSessionCredentialClient, WebSessionCredentialClient>();
+
             container.RegisterTransient<IWebHealthVaultConnection, WebHealthVaultConnection>();
 
             container.RegisterTransient<IOfflineHealthVaultConnection, OfflineHealthVaultConnection>();

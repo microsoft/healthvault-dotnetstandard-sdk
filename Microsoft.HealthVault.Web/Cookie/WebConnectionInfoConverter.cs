@@ -55,7 +55,7 @@ namespace Microsoft.HealthVault.Web.Cookie
 
             return serializedPersonInfo == null 
                 ? null 
-                : JsonConvert.DeserializeObject(serializedPersonInfo);
+                : JsonConvert.DeserializeObject(serializedPersonInfo, objectType);
         }
 
         public override bool CanConvert(Type objectType)

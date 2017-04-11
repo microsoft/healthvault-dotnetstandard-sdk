@@ -77,6 +77,7 @@
   <ItemGroup>
     <Compile Include="Attributes\SignOutAttribute.cs" />
     <Compile Include="AuthenticationModule.cs" />
+    <Compile Include="Controllers\HealthVaultActionRedirectController.cs" />
     <Compile Include="Cookie\CookieDataManager.cs" />
     <Compile Include="Cookie\ICookieDataManager.cs" />
     <Compile Include="Cookie\WebConnectionInfoConverter.cs" />
@@ -85,6 +86,8 @@
     <Compile Include="HealthVaultIdentity.cs" />
     <Compile Include="Cookie\ICookieManager.cs" />
     <Compile Include="Cookie\CookieManager.cs" />
+    <Compile Include="Helpers\ActionRedirectHelper.cs" />
+    <Compile Include="WebHttpClientFactory.cs" />
     <Compile Include="Utilities\ShellUrlBuilder.cs" />
     <Compile Include="Configuration\WebConfigurationReader.cs" />
     <Compile Include="Configuration\WebHealthVaultConfiguration.cs" />

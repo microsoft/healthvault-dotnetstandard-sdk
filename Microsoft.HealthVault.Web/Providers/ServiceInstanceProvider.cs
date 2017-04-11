@@ -48,7 +48,8 @@ namespace Microsoft.HealthVault.Web.Providers
 
         private async Task<ServiceInfo> GetFromServiceAsync()
         {
-            IWebHealthVaultConnection webHealthVaultConnection = serviceLocator.GetInstance<IWebHealthVaultConnection>();
+            
+            IWebHealthVaultConnection webHealthVaultConnection = new WebHealthVaultConnection(serviceLocator);
             IPlatformClient platformClient = webHealthVaultConnection.CreatePlatformClient();
 
             ServiceInfo serviceInfo = await platformClient.GetServiceDefinitionAsync(ServiceInfoSections.Topology).ConfigureAwait(false);

@@ -32,15 +32,12 @@ namespace Microsoft.HealthVault.Web.Connection
         {
             this.webHealthVaultConfiguration = this.ServiceLocator.GetInstance<WebHealthVaultConfiguration>();
 
-            if (healthServiceInstance == null)
-            {
-                this.ServiceInstance = new HealthServiceInstance(
-                    "1",
-                    "Default",
-                    "Default HealthVault instance",
-                    UrlUtilities.GetFullPlatformUrl(this.webHealthVaultConfiguration.HealthVaultUrl),
-                    this.webHealthVaultConfiguration.HealthVaultShellUrl);
-            }
+            this.ServiceInstance = healthServiceInstance ?? new HealthServiceInstance(
+                "1",
+                "Default",
+                "Default HealthVault instance",
+                UrlUtilities.GetFullPlatformUrl(this.webHealthVaultConfiguration.HealthVaultUrl),
+                this.webHealthVaultConfiguration.HealthVaultShellUrl);
 
             this.SessionCredential = sessionCredential;
         }

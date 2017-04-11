@@ -13,10 +13,12 @@ using System.Security.Principal;
 using System.Threading.Tasks;
 using System.Web;
 using System.Xml;
+using System.Xml.Linq;
 using Microsoft.HealthVault.Clients;
 using Microsoft.HealthVault.Connection;
 using Microsoft.HealthVault.Person;
 using Microsoft.HealthVault.PlatformInformation;
+using Microsoft.HealthVault.Record;
 using Microsoft.HealthVault.Web.Exceptions;
 
 namespace Microsoft.HealthVault.Web.Connection
@@ -34,6 +36,8 @@ namespace Microsoft.HealthVault.Web.Connection
             : base(serviceLocator, healthServiceInstance, sessionCredential)
         {
             this.UserAuthToken = userAuthToken;
+
+            Ioc.Container.Configure(c => c.ExportInstance(this).As<IConnectionInternal>());
         }
 
         public string UserAuthToken { get; internal set; }
@@ -59,6 +63,11 @@ namespace Microsoft.HealthVault.Web.Connection
         /// <exception cref="UserNotFoundException">When the request is not authenticated, the method will throw exception</exception>
         public override async Task<PersonInfo> GetPersonInfoAsync()
         {
+            if (this.personInfo != null)
+            {
+                return this.personInfo;
+            }
+
             using (await this.personInfoLock.LockAsync())
             {
                 if (this.personInfo == null)
@@ -72,25 +81,32 @@ namespace Microsoft.HealthVault.Web.Connection
                     }
 
                     WebConnectionInfo webConnectionInfo = user.WebConnectionInfo;
-                    this.personInfo = webConnectionInfo.PersonInfo;
+                    var personInfoFromCookie = webConnectionInfo.PersonInfo;
+
+                    XDocument applicationSettingsDocument = null;
+                    IDictionary<Guid, HealthRecordInfo> authorizedRecords = null;
 
                     // In case application settings/records are minimized due to size constraints in storing the webconnectionInfo object
                     // as a cookie, we will restore the application settings and authorized documents from the server.
                     if (webConnectionInfo.MinimizedPersonInfoApplicationSettings || webConnectionInfo.MinimizedPersonInfoRecords)
                     {
                         IPersonClient personClient = this.CreatePersonClient();
-                        IReadOnlyCollection<PersonInfo> personInfoCollection = await personClient.GetAuthorizedPeopleAsync().ConfigureAwait(false);
+                        var personInfoFromServer = await personClient.GetPersonInfoAsync();
 
-                        // By default we pick the first authorized person for the app.
-                        var personInfoFromServer = personInfoCollection.FirstOrDefault();
+                        applicationSettingsDocument = personInfoFromServer.ApplicationSettingsDocument;
+                        authorizedRecords = personInfoFromServer.AuthorizedRecords;
+                    }
 
-                        if (personInfoFromServer == null)
-                        {
-                            throw new UserNotFoundException("Authenticated user for the app cannot be found");
-                        }
+                    this.personInfo = personInfoFromCookie;
 
-                        this.personInfo.ApplicationSettingsDocument = personInfoFromServer.ApplicationSettingsDocument;
-                        this.personInfo.AuthorizedRecords = personInfoFromServer.AuthorizedRecords;
+                    if (applicationSettingsDocument != null)
+                    {
+                        this.personInfo.ApplicationSettingsDocument = applicationSettingsDocument;
+                    }
+
+                    if (authorizedRecords != null)
+                    {
+                        this.personInfo.AuthorizedRecords = authorizedRecords;
                     }
                 }
 

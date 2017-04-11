@@ -206,16 +206,7 @@ namespace Microsoft.HealthVault.Web.Cookie
         private string UnmarshalCookieVersion1(string serializedWebConnectionInfo)
         {
             string[] lengthAndData = serializedWebConnectionInfo.Split(new[] { '-' }, 2);
-
-            int expectedCompressedDataLength = Int32.Parse(lengthAndData[0], CultureInfo.InvariantCulture);
-
             string compressedData = lengthAndData[1];
-            var compressedDataLength = compressedData.Length;
-
-            if (compressedDataLength != expectedCompressedDataLength)
-            {
-                throw new Exception($"Excpected compressed data length: {expectedCompressedDataLength} should match actual compressed data length {compressedDataLength}");
-            }
 
             return this.cookieDataManager.Decompress(compressedData);
         }

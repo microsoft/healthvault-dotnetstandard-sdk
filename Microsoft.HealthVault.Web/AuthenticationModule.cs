@@ -10,12 +10,15 @@ using System;
 using System.Collections.Specialized;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
+using System.Net;
 using System.Security.Principal;
 using System.Threading.Tasks;
 using System.Web;
 using Microsoft.HealthVault.Clients;
+using Microsoft.HealthVault.Configuration;
 using Microsoft.HealthVault.Person;
 using Microsoft.HealthVault.PlatformInformation;
+using Microsoft.HealthVault.Thing;
 using Microsoft.HealthVault.Web.Configuration;
 using Microsoft.HealthVault.Web.Connection;
 using Microsoft.HealthVault.Web.Constants;
@@ -40,6 +43,9 @@ namespace Microsoft.HealthVault.Web
             context.AddOnAuthenticateRequestAsync(wrapper.BeginEventHandler, wrapper.EndEventHandler);
 
             WebIoc.EnsureTypesRegistered();
+
+            // Set socket to be refreshed for default healthvault platform end point
+            SetConnectionLeaseTimeOut(Ioc.Get<HealthVaultConfiguration>().HealthVaultUrl);
         }
 
         /// <summary>
@@ -55,7 +61,7 @@ namespace Microsoft.HealthVault.Web
             var context = new HttpContextWrapper(app.Context);
 
             var processAuthToken = ProcessAuthToken(context);
-            bool hasAuthTokenInQuery = string.IsNullOrEmpty(processAuthToken.Item1);
+            bool hasAuthTokenInQuery = !string.IsNullOrEmpty(processAuthToken.Item1);
 
             ICookieManager cookieManager = Ioc.Container.Locate<ICookieManager>();
             WebConnectionInfo webConnectionInfo;
@@ -122,21 +128,37 @@ namespace Microsoft.HealthVault.Web
 
             WebHealthVaultConfiguration webHealthVaultConfiguration = Ioc.Get<WebHealthVaultConfiguration>();
 
-            IWebHealthVaultConnection webHealthVaultConnection = Ioc.Container.Locate<IWebHealthVaultConnection>(
-                new { serviceLocator, webHealthVaultConfiguration, serviceInstance, token });
+            IWebHealthVaultConnection webHealthVaultConnection = new WebHealthVaultConnection(serviceLocator, serviceInstance, null, token);
+
+            var serviceInstanceHealthServiceUrl = serviceInstance.HealthServiceUrl;
+
+            // Set socket to be refreshed in case the end point has been changed based on the healthvault service instance
+            if (!webHealthVaultConfiguration.HealthVaultUrl.Equals(serviceInstanceHealthServiceUrl))
+            {
+                SetConnectionLeaseTimeOut(serviceInstanceHealthServiceUrl);
+            }
 
             IPersonClient personClient = webHealthVaultConnection.CreatePersonClient();
 
-            PersonInfo personInfo = (await personClient.GetAuthorizedPeopleAsync()).FirstOrDefault();
+            var personInfo = await personClient.GetPersonInfoAsync();
 
             WebConnectionInfo webConnectionInfo = new WebConnectionInfo()
             {
                 PersonInfo = personInfo,
                 ServiceInstanceId = instanceId,
                 SessionCredential = webHealthVaultConnection.SessionCredential,
+                UserAuthToken = token
             };
 
             return webConnectionInfo;
+        }
+
+        // We are using a singleton httpclient via <see cref="WebHttpClientFactory">, however, the tcp socket needs be
+        // refreshed to honor DNS changes. More information here http://byterot.blogspot.co.uk/2016/07/singleton-httpclient-dns.html.
+        private static void SetConnectionLeaseTimeOut(Uri healthVaultUrl)
+        {
+            var sp = ServicePointManager.FindServicePoint(healthVaultUrl);
+            sp.ConnectionLeaseTimeout = 60 * 1000; // 1 minute
         }
     }
 }

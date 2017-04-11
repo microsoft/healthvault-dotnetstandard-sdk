@@ -69,30 +69,40 @@ namespace Microsoft.HealthVault.Clients
 
         #endregion
 
-        #region GetPersonInfo
+        /// <summary>
+        /// Gets information about people authorized for an application.
+        /// </summary>
+        ///
+        /// <returns>
+        /// Collection of <see cref="PersonInfo"/> objects representing 
+        /// people authorized for the application.
+        /// </returns>
+        /// 
+        /// <exception cref="HealthServiceException">
+        /// The HealthVault service returned an error.
+        /// </exception>
+        Task<IReadOnlyCollection<PersonInfo>> GetAuthorizedPeopleAsync();
 
         /// <summary>
         /// Gets the information about the person specified.
         /// </summary>
-        ///
+        /// 
         /// <returns>
-        /// Information about the authorized people.
+        /// Information about the person's HealthVault account.
         /// </returns>
-        ///
+        /// 
         /// <remarks>
-        /// This method always calls the HealthVault service to get the latest
-        /// information. It is recommended that the calling application cache
-        /// the return value and only call this method again if it needs to
+        /// This method always calls the HealthVault service to get the latest 
+        /// information. It is recommended that the calling application cache 
+        /// the return value and only call this method again if it needs to 
         /// refresh the cache.
         /// </remarks>
-        ///
+        /// 
         /// <exception cref="HealthServiceException">
         /// The HealthVault service returned an error.
         /// </exception>
-        ///
-        Task<IReadOnlyCollection<PersonInfo>> GetAuthorizedPeopleAsync();
-
-        #endregion GetPersonInfo
+        /// 
+        Task<PersonInfo> GetPersonInfoAsync();
 
         #region GetAuthorizedRecords
 

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Microsoft.HealthVault.Web.Configuration;
 using static Microsoft.HealthVault.Web.Constants.HealthVaultWebConstants;
 
@@ -74,8 +75,17 @@ namespace Microsoft.HealthVault.Web.Extensions
         ///
         /// <remarks>
         /// This property corresponds to the "HV_Action*" configuration values when reading from web.config.
+        /// Returns null in case Action is not specified in web.config.
         /// </remarks>
-        public static Uri GetActionUrl(this WebHealthVaultConfiguration config, string action) => config.ActionPageUrls[action];
+        public static Uri TryGetActionUrl(this WebHealthVaultConfiguration config, string action)
+        {
+            Uri actionUri;
+
+            Dictionary<string, Uri> actionPageUrls = config.ActionPageUrls;
+            actionPageUrls.TryGetValue(action, out actionUri);
+
+            return actionUri;
+        }
 
         // Helpers
 
