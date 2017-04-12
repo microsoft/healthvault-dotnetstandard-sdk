@@ -26,8 +26,6 @@ namespace Microsoft.HealthVault.Transport
     /// This class is not thread safe. A new instance should be created when multiple requests
     /// must execute concurrently.
     /// </remarks>
-    ///
-    /// TODO: DO NOT USE OUTSIDE OF ConnectionInternalBase
     internal class HealthServiceMessage
     {
         private readonly AuthenticationFormatter authenticationFormatter;
@@ -102,7 +100,7 @@ namespace Microsoft.HealthVault.Transport
                 this.RecordId,
                 this.TargetPersonId,
                 transform,
-                this.requestTtl, 
+                this.requestTtl,
                 this.authSessionOrAppId,
                 info);
 

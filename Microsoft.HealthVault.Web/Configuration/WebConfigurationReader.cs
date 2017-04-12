@@ -37,8 +37,8 @@ namespace Microsoft.HealthVault.Web.Configuration
                 HealthVaultUrl = appSettings.GetUrl(ConfigKeys.HealthServiceUrl, true),
 
                 RequestTimeoutDuration = appSettings.GetTimeSpanFromSeconds(
-                    ConfigKeys.DefaultRequestTimeoutSeconds, 
-                    HealthVaultConfigurationDefaults.RequestTimeoutDuration) ?? 
+                    ConfigKeys.DefaultRequestTimeoutSeconds,
+                    HealthVaultConfigurationDefaults.RequestTimeoutDuration) ??
                     HealthVaultConfigurationDefaults.RequestTimeoutDuration,
 
                 RequestTimeToLiveDuration = appSettings.GetTimeSpanFromSeconds(
@@ -80,8 +80,8 @@ namespace Microsoft.HealthVault.Web.Configuration
 
         private static Uri TryReadingActionUrlRedirectOverride(NameValueCollection appSettings)
         {
-            return String.IsNullOrEmpty(appSettings[ConfigKeys.NonProductionActionUrlRedirectOverride])
-                ? null 
+            return string.IsNullOrEmpty(appSettings[ConfigKeys.NonProductionActionUrlRedirectOverride])
+                ? null
                 : new Uri(appSettings[ConfigKeys.NonProductionActionUrlRedirectOverride], UriKind.RelativeOrAbsolute);
         }
 

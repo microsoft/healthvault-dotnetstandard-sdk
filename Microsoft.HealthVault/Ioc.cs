@@ -2,12 +2,10 @@
 using Microsoft.HealthVault.Connection;
 using Microsoft.HealthVault.Extensions;
 using Microsoft.HealthVault.Services;
-using Microsoft.HealthVault.Transport;
 using System;
 
 namespace Microsoft.HealthVault
 {
-
     internal static class Ioc
     {
         static Ioc()

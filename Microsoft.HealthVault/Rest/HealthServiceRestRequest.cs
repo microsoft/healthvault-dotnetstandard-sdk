@@ -269,10 +269,6 @@ namespace Microsoft.HealthVault.Rest
 
         private async Task<HealthServiceRestResponseData> FetchAsync()
         {
-            return await this.FetchInternalAsync(this.uri).ConfigureAwait(false);
-
-            // TODO: IConnection-ify this.
-            /*
             try
             {
                 return await this.FetchInternalAsync(this.uri).ConfigureAwait(false);
@@ -283,9 +279,9 @@ namespace Microsoft.HealthVault.Rest
                 // new token from the user and retry the call again
                 var response = we.InnerException as HealthHttpException;
                 if (response != null &&
-                response.StatusCode == HttpStatusCode.Unauthorized &&
-                    this.connection.Credential.ExpireAuthenticationResult(this.connection.ApplicationConfiguration.ApplicationId))
+                response.StatusCode == HttpStatusCode.Unauthorized)
                 {
+                    await this.connection.AuthenticateAsync().ConfigureAwait(false);
                     return await this.FetchInternalAsync(this.uri).ConfigureAwait(false);
                 }
                 else
@@ -293,7 +289,6 @@ namespace Microsoft.HealthVault.Rest
                     throw;
                 }
             }
-            */
         }
 
         private async Task<HealthServiceRestResponseData> FetchInternalAsync(Uri uri)

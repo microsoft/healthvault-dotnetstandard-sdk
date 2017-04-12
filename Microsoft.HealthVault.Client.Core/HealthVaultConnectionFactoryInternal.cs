@@ -32,7 +32,7 @@ namespace Microsoft.HealthVault.Client
                     return this.cachedConnection;
                 }
 
-               var missingProperties = new List<string>();
+                var missingProperties = new List<string>();
 
                 Guid masterApplicationId = configuration.MasterApplicationId;
                 if (masterApplicationId == Guid.Empty)
@@ -63,7 +63,6 @@ namespace Microsoft.HealthVault.Client
                     nameof(GetOrCreateSodaConnection),
                     currentConfiguration.MasterApplicationId,
                     configuration.MasterApplicationId));
-
             }
         }
     }

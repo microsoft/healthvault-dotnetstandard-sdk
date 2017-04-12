@@ -1,12 +1,10 @@
 ﻿// Copyright(c) Microsoft Corporation.
 
 using System;
-using System.Threading.Tasks;
 using System.Text;
 using Microsoft.HealthVault.Transport;
 using Microsoft.HealthVault.Transport.MessageFormatters.AuthenticationFormatters;
 using Microsoft.HealthVault.Transport.MessageFormatters.HeaderFormatters;
-using Microsoft.HealthVault.Transport.MessageFormatters.SessionFormatters;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Microsoft.HealthVault.UnitTest.CloudRequestTests
@@ -60,7 +58,7 @@ namespace Microsoft.HealthVault.UnitTest.CloudRequestTests
         }
 
         [TestMethod]
-        public async Task WhenCreatingASessionToken_ThenExistingAuthSessionIsNotPopulated()
+        public void WhenCreatingASessionToken_ThenExistingAuthSessionIsNotPopulated()
         {
             HealthVaultMethods method = HealthVaultMethods.CreateAuthenticatedSessionToken;
             HealthServiceMessage req = new HealthServiceMessage(

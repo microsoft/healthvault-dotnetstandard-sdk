@@ -9,7 +9,6 @@ using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Xml;
 using System.Xml.XPath;
-using Microsoft.HealthVault.Clients;
 using Microsoft.HealthVault.Exceptions;
 using Microsoft.HealthVault.Helpers;
 using Microsoft.HealthVault.Thing;

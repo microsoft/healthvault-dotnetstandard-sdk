@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Xml;
 using Microsoft.HealthVault.Clients;
+using Microsoft.HealthVault.Configuration;
 using Microsoft.HealthVault.Connection;
 using Microsoft.HealthVault.Exceptions;
 using Microsoft.HealthVault.Helpers;
@@ -13,8 +14,6 @@ using Microsoft.HealthVault.PlatformInformation;
 using Microsoft.HealthVault.Record;
 using Microsoft.HealthVault.Rest;
 using Microsoft.HealthVault.Transport;
-using System.Linq;
-using Microsoft.HealthVault.Configuration;
 using Microsoft.HealthVault.Transport.MessageFormatters.SessionFormatters;
 
 namespace Microsoft.HealthVault.Client
@@ -196,7 +195,9 @@ namespace Microsoft.HealthVault.Client
                 UrlUtilities.GetFullPlatformUrl(defaultHealthVaultUrl),
                 defaultHealthVaultShellUrl);
 
-            // TODO: Eliminate circular call. This method is called from AuthenticateAsync. PlatformClient is calling HealthVaultConnectionBase.ExecuteAsync, which is calling AuthenticateAsync
+            // Note: This apparent circular call is intentional. This method is called from AuthenticateAsync.
+            // PlatformClient is calling HealthVaultConnectionBase.ExecuteAsync("NewApplicationCreationInfo"),
+            // which avoids calling AuthenticateAsync because "NewApplicationCreationInfo" is an anonymous method.
             IPlatformClient platformClient = this.CreatePlatformClient();
             ApplicationCreationInfo newApplicationCreationInfo = await platformClient.NewApplicationCreationInfoAsync().ConfigureAwait(false);
 
@@ -237,7 +238,8 @@ namespace Microsoft.HealthVault.Client
         {
             var personClient = this.CreatePersonClient();
 
-            // TODO: Eliminate circular call. This method is called from AuthenticateAsync. PersonClient is calling HealthVaultConnectionBase.ExecuteAsync, which is calling AuthenticateAsync
+            // Note: This apparent circular call is intentional. This method is called from AuthenticateAsync. PersonClient is calling HealthVaultConnectionBase.ExecuteAsync,
+            // which would call AuthenticateAsync again if not for the fact that Authenticate filled in its SessionCredential.Token before calling this method the first time through.
             PersonInfo newPersonInfo = (await personClient.GetAuthorizedPeopleAsync().ConfigureAwait(false)).FirstOrDefault();
 
             await this.localObjectStore.WriteAsync(PersonInfoKey, newPersonInfo).ConfigureAwait(false);
