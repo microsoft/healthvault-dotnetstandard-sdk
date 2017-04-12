@@ -381,28 +381,12 @@ namespace Microsoft.HealthVault.Connection
         /// <summary>
         /// A client that can be used to access information and records associated with the currently athenticated user.
         /// </summary>
-        public IPersonClient CreatePersonClient()
-        {
-            if (this.SessionCredential == null)
-            {
-                throw new HealthAuthorizedConnectionRequiredException();
-            }
-
-            return new PersonClient(this);
-        }
+        public IPersonClient CreatePersonClient() => new PersonClient(this);
 
         /// <summary>
         /// A client that can be used to access vocabularies.
         /// </summary>
-        public IVocabularyClient CreateVocabularyClient()
-        {
-            if (this.SessionCredential == null)
-            {
-                throw new HealthAuthorizedConnectionRequiredException();
-            }
-
-            return new VocabularyClient(this);
-        }
+        public IVocabularyClient CreateVocabularyClient() => new VocabularyClient(this);
 
         /// <summary>
         /// Gets a client that can be used to access things associated with a particular record.
@@ -410,15 +394,7 @@ namespace Microsoft.HealthVault.Connection
         /// <returns>
         /// An instance implementing IThingClient
         /// </returns>
-        public IThingClient CreateThingClient()
-        {
-            if (this.SessionCredential == null)
-            {
-                throw new HealthAuthorizedConnectionRequiredException();
-            }
-
-            return new ThingClient(this);
-        }
+        public IThingClient CreateThingClient() => new ThingClient(this);
 
         /// <summary>
         /// Gets a client that can be used to access action plans associated with a particular record
@@ -426,14 +402,6 @@ namespace Microsoft.HealthVault.Connection
         /// <returns>
         /// An instance implementing IActionPlanClient
         /// </returns>
-        public IActionPlanClient CreateActionPlanClient()
-        {
-            if (this.SessionCredential == null)
-            {
-                throw new HealthAuthorizedConnectionRequiredException();
-            }
-
-            return new ActionPlanClient(this);
-        }
+        public IActionPlanClient CreateActionPlanClient() => new ActionPlanClient(this);
     }
 }

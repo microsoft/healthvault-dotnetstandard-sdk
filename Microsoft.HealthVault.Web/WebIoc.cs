@@ -42,6 +42,8 @@ namespace Microsoft.HealthVault.Web
             container.RegisterSingleton<ICookieDataManager, CookieDataManager>();
             container.RegisterSingleton<ICookieManager, CookieManager>();
 
+            container.RegisterSingleton<IHttpClientFactory, WebHttpClientFactory>();
+
             container.RegisterSingleton<ICertificateInfoProvider, CertificateInfoProvider>();
             container.RegisterSingleton<IServiceInstanceProvider, ServiceInstanceProvider>();
 

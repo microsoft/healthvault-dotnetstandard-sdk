@@ -64,11 +64,6 @@ namespace Microsoft.HealthVault.Connection
         /// <returns>
         /// An instance implementing IThingClient
         /// </returns>
-        /// 
-        /// <exception cref="HealthAuthorizedConnectionRequiredException">
-        /// ThingClient can only be created when the connection has been authenticated.
-        /// Exception is raised when the connection is not yet authenticated.
-        /// </exception>
         IThingClient CreateThingClient();
 
         /// <summary>
@@ -78,11 +73,6 @@ namespace Microsoft.HealthVault.Connection
         /// <returns>
         /// An instance implementing IVocabularyClient
         /// </returns>
-        /// 
-        /// <exception cref="HealthAuthorizedConnectionRequiredException">
-        /// VocabularyClient can only be created when the connection has been authenticated.
-        /// Exception is raised when the connection is not yet authenticated.
-        /// </exception>
         IVocabularyClient CreateVocabularyClient();
 
         /// <summary>
@@ -92,11 +82,6 @@ namespace Microsoft.HealthVault.Connection
         /// <returns>
         /// An instance implementing IPersonClient
         /// </returns>
-        /// 
-        /// <exception cref="HealthAuthorizedConnectionRequiredException">
-        /// PersonClient can only be created when the connection has been authenticated.
-        /// Exception is raised when the connection is not yet authenticated.
-        /// </exception>
         IPersonClient CreatePersonClient();
 
         /// <summary>
@@ -115,11 +100,6 @@ namespace Microsoft.HealthVault.Connection
         /// <returns>
         /// An instance implementing IActionPlanClient
         /// </returns>
-        /// 
-        /// <exception cref="HealthAuthorizedConnectionRequiredException">
-        /// ActionPlanClient can only be created when the connection has been authenticated.
-        /// Exception is raised when the connection is not yet authenticated.
-        /// </exception>
         IActionPlanClient CreateActionPlanClient();
     }
 }
