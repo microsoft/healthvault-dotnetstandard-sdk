@@ -1,9 +1,9 @@
 <?xml version="1.0"?>
 <package>
   <metadata>
-    <id>Microsoft.HealthVault.Web.Mvc</id>
+    <id>Microsoft.HealthVault.Web</id>
     <version>$version$</version>
-    <title>Microsoft HealthVault .NET MVC SDK</title>
+    <title>Microsoft HealthVault Web SDK</title>
     <authors>Microsoft</authors>
     <owners>Microsoft</owners>
     <licenseUrl>https://config.healthvault-ppe.com/serviceAgreement.aspx</licenseUrl>
@@ -18,6 +18,10 @@
       <group targetFramework="net461">
         <dependency id="Grace" version="6.0.1" />
         <dependency id="Microsoft.AspNet.Mvc" version="5.2.3" />
+        <dependency id="System.Diagnostics.TraceSource" version="4.3.0" />
+        <dependency id="System.Net.Http" version="4.1.1" />
+        <dependency id="System.Xml.ReaderWriter" version="4.3.0" />
+        <dependency id="System.Xml.XPath" version="4.3.0" />
       </group>
     </dependencies>
   </metadata>
