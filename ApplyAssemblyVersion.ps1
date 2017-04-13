@@ -31,6 +31,7 @@ $revision = $parts[3];
 $AssemblyVersion = "1.$sprint.0.0"
 $AssemblyFileVersion = "1.$sprint.$build.$revision"
 Write-Host "##vso[task.setvariable variable=AssemblyFileVersion;]$AssemblyFileVersion";
+Write-Host "##vso[task.setvariable variable=PreviewFileVersion;]${AssemblyFileVersion}-preview";
 
 $file = Join-Path -Path $SourcesPath -ChildPath 'SharedVersionInfo.cs'
 Set-ItemProperty $file -Name IsReadOnly -Value $false
