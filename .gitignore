@@ -1,0 +1,62 @@
+_ReSharper*
+[Bb]in
+obj
+objd
+/out/
+/target/
+/tmp/
+App_Data
+*.user
+*.sln.cache
+*.suo
+TestResults
+[Tt]humbs.db
+buildd.*
+build.*
+buildout.*
+*.log
+*.bak
+OACRTemp/
+build_logs/
+lock
+Resource.Designer.cs
+/public/inc/bldver.cpp
+/public/inc/bldver.cs
+/public/inc/bldver.h
+/public/inc/bldver.vb
+/public/inc/sources.ver
+/data
+/Symbols
+/drop
+/.corext/.pkg/
+/.corext/gen/
+.vs/
+
+#pacman
+packages
+
+# quickbuild.exe
+/version/
+/VersionGeneratingLogs/
+QLogs
+QLocal
+QTestLogs
+
+# bad tlb/chm generators in nmake tree
+*.tlb
+*.chm
+
+# dumb silverlight
+ClientBin/
+
+# dumb azure
+*.build.csdef
+csx/
+project.lock.json
+*.orig
+StyleCop.Cache
+_site
+log.txt
+
+# Mac OS system files
+*.DS_Store
