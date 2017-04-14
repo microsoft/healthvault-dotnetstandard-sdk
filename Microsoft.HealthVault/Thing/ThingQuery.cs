@@ -263,7 +263,7 @@ namespace Microsoft.HealthVault.Thing
         ///
         public HealthRecordView View
         {
-            get { return this.view ?? new HealthRecordView(this.configuration); }
+            get { return this.view ?? (this.view = new HealthRecordView(this.configuration)); }
 
             set
             {

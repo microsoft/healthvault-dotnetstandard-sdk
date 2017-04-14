@@ -80,6 +80,8 @@ namespace Microsoft.HealthVault.Thing
         private readonly List<byte[]> blockHashes = new List<byte[]>();
         private BlobHasher blobHasher;
 
+        private Stream responseStream;
+
         /// <summary>
         /// Gets a value indicating whether the current stream supports reading.
         /// </summary>
@@ -408,21 +410,19 @@ namespace Microsoft.HealthVault.Thing
 
         private int ReadStreamedData(byte[] buffer, int offset, int count)
         {
-            int totalBytesRead = 0;
+            if (this.responseStream == null)
+            {
+                HttpResponseMessage responseMessage = this.ExecuteGetRequest();
 
-            HttpResponseMessage request = this.ExecuteGetRequest(this.position, count);
-            if (request.IsSuccessStatusCode)
-            {
-                HttpContent responseStream = request.Content;
-                var array = responseStream.ReadAsByteArrayAsync().Result;
-                array.CopyTo(buffer, offset);
-            }
-            else
-            {
-                this.ThrowRequestFailedException(request);
+                if (!responseMessage.IsSuccessStatusCode)
+                {
+                    this.ThrowRequestFailedException(responseMessage);
+                }
+
+                this.responseStream = responseMessage.Content.ReadAsStreamAsync().Result;
             }
 
-            return totalBytesRead;
+            return this.responseStream.Read(buffer, offset, count);
         }
 
         #endregion Read helpers
@@ -709,16 +709,9 @@ namespace Microsoft.HealthVault.Thing
             this.position += chunkSizeToWrite;
         }
 
-        private void ThrowRequestFailedException(HttpResponseMessage request)
+        private void ThrowRequestFailedException(HttpResponseMessage response)
         {
-            HttpStatusCode response = request.StatusCode;
-
-            // RequestedRangeNotSatisfiable means that we have finished reading the blob,
-            // so ignore the error.
-            if (response != HttpStatusCode.RequestedRangeNotSatisfiable)
-            {
-                throw new HttpRequestException($"Request failed with status code {response}");
-            }
+            throw new HttpRequestException($"Request failed with status code {response.StatusCode}");
         }
 
         private List<BufferRequest> bufferList = new List<BufferRequest>();
@@ -804,13 +797,11 @@ namespace Microsoft.HealthVault.Thing
 
         #region Helpers
 
-        private HttpResponseMessage ExecuteGetRequest(long position, int count)
+        private HttpResponseMessage ExecuteGetRequest()
         {
             HttpMessageHandler handler = new HttpClientHandler();
-            HttpRequestMessage message = new HttpRequestMessage(HttpMethod.Get, this.blobPutParameters.Url);
+            HttpRequestMessage message = new HttpRequestMessage(HttpMethod.Get, this.url);
             HttpClient request = new HttpClient(handler);
-
-            message.Headers.Range = new RangeHeaderValue((int)position, (int)position + count);
 
             if (this.readTimeout > 0)
             {

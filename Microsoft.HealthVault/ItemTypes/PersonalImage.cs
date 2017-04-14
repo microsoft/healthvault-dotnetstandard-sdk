@@ -171,7 +171,7 @@ namespace Microsoft.HealthVault.ItemTypes
                 return null;
             }
 
-            return new MemoryStream(blob.ReadAllBytes());
+            return blob.GetReaderStream();
         }
     }
 }
