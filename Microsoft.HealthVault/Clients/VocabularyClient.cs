@@ -35,22 +35,16 @@ namespace Microsoft.HealthVault.Clients
             return await HealthVaultPlatformVocabulary.Current.GetVocabularyKeysAsync(this.connection);
         }
 
-        public async Task<Vocabulary.Vocabulary> GetVocabularyAsync(string vocabularyId, bool cultureIsFixed = false)
+        public async Task<Vocabulary.Vocabulary> GetVocabularyAsync(VocabularyKey key, bool cultureIsFixed = false)
         {
-            return (await this.GetVocabulariesAsync(new[] { vocabularyId }, cultureIsFixed).ConfigureAwait(false)).FirstOrDefault();
+            return (await this.GetVocabulariesAsync(new[] { key }, cultureIsFixed).ConfigureAwait(false)).FirstOrDefault();
         }
 
-        public async Task<IList<Vocabulary.Vocabulary>> GetVocabulariesAsync(IList<string> vocabularyKeys, bool cultureIsFixed = false)
+        public async Task<IList<Vocabulary.Vocabulary>> GetVocabulariesAsync(IList<VocabularyKey> vocabularyKeys, bool cultureIsFixed = false)
         {
-            IList<VocabularyKey> keys = new List<VocabularyKey>();
-            foreach (var key in vocabularyKeys)
-            {
-                keys.Add(new VocabularyKey(key));
-            }
-
             return await HealthVaultPlatformVocabulary.Current.GetVocabularyAsync(
                 this.connection,
-                keys,
+                vocabularyKeys,
                 cultureIsFixed).ConfigureAwait(false);
         }
 

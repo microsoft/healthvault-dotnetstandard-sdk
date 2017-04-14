@@ -33,7 +33,7 @@ namespace Microsoft.HealthVault.Clients
         /// <summary>
         /// Retrieves lists of vocabulary items for the specified vocabulary in the user's current culture.
         /// </summary>
-        /// <param name="vocabularyId">the string representing the vocabulary to fetch</param>
+        /// <param name="key">The key for the vocabulary to fetch</param>
         /// <param name="cultureIsFixed">
         /// HealthVault looks for the vocabulary items for the culture info
         /// specified by the system.
@@ -63,7 +63,7 @@ namespace Microsoft.HealthVault.Clients
         /// <br></br>
         /// There is an error loading the vocabulary.
         /// </exception>
-        Task<Vocabulary.Vocabulary> GetVocabularyAsync(string vocabularyId, bool cultureIsFixed = false);
+        Task<Vocabulary.Vocabulary> GetVocabularyAsync(VocabularyKey key, bool cultureIsFixed = false);
 
         /// <summary>
         /// Retrieves lists of vocabulary items for the specified vocabularies in the user's current culture.
@@ -100,7 +100,7 @@ namespace Microsoft.HealthVault.Clients
         /// <br></br>
         /// There is an error loading the vocabularies.
         /// </exception>
-        Task<IList<Vocabulary.Vocabulary>> GetVocabulariesAsync(IList<string> vocabularyKeys, bool cultureIsFixed = false);
+        Task<IList<Vocabulary.Vocabulary>> GetVocabulariesAsync(IList<VocabularyKey> vocabularyKeys, bool cultureIsFixed = false);
 
         /// <summary>
         /// Searches a specific vocabulary and retrieves the matching vocabulary items.

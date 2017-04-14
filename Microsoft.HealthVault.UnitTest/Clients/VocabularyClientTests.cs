@@ -64,11 +64,13 @@ namespace Microsoft.HealthVault.UnitTest.Clients
         [TestMethod]
         public async Task GetVocabularyTest()
         {
-            var vocabulariesString = "vocabularies";
-            var vocabularies = await client.GetVocabularyAsync(vocabulariesString);
+            var vocabName = "vocabName";
+            var vocabFamily = "vocabFamily";
+            var vocabVersion = "vocabVersion";
+            var vocabularies = await this.client.GetVocabularyAsync(new VocabularyKey(vocabName, vocabFamily, vocabVersion));
 
             // ensure that the connection was called with the proper values
-            await connection.Received().ExecuteAsync(HealthVaultMethods.GetVocabulary, Arg.Any<int>(), Arg.Is<string>(x => x.Contains(vocabulariesString)));
+            await this.connection.Received().ExecuteAsync(HealthVaultMethods.GetVocabulary, Arg.Any<int>(), Arg.Is<string>(x => x.Contains(vocabName) && x.Contains(vocabFamily) && x.Contains(vocabVersion)));
 
             // Ensure that the vocabularies returned were parsed correctly
             Assert.AreEqual(vocabularies.Family, "wc");
@@ -82,10 +84,17 @@ namespace Microsoft.HealthVault.UnitTest.Clients
         [TestMethod]
         public async Task GetVocabulariesTest()
         {
-            var firstKey = "firstVocabularyKey";
-            var secondKey = "secondVocabularyKey";
-            var vocabularies = await client.GetVocabulariesAsync(new [] { firstKey, secondKey});
-            await connection.Received().ExecuteAsync(HealthVaultMethods.GetVocabulary, Arg.Any<int>(), Arg.Is<string>(x => x.Contains(firstKey) && x.Contains(secondKey)));
+            var vocabName1 = "vocabName1";
+            var vocabFamily1 = "vocabFamily1";
+            var vocabVersion1 = "vocabVersion1";
+            var vocabName2 = "vocabName2";
+            var vocabFamily2 = "vocabFamily2";
+            var vocabVersion2 = "vocabVersion2";
+
+            var key1 = new VocabularyKey(vocabName1, vocabFamily1, vocabVersion1);
+            var key2 = new VocabularyKey(vocabName2, vocabFamily2, vocabVersion2);
+            var vocabularies = await this.client.GetVocabulariesAsync(new [] { key1, key2});
+            await this.connection.Received().ExecuteAsync(HealthVaultMethods.GetVocabulary, Arg.Any<int>(), Arg.Is<string>(x => x.Contains(vocabName1) && x.Contains(vocabName2) && x.Contains(vocabFamily1) && x.Contains(vocabVersion2)));
 
             // Ensure that the vocabularies returned were parsed correctly
             Assert.AreEqual(vocabularies.Count, 1);
