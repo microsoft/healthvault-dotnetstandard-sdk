@@ -64,7 +64,6 @@
     <Compile Include="Extensions\HealthServiceInstanceExtensions.cs" />
     <Compile Include="Extensions\StringExtensions.cs" />
     <Compile Include="HealthVaultConstants.cs" />
-    <Compile Include="Clients\ActionPlanClient.cs" />
     <Compile Include="Clients\PersonClient.cs" />
     <Compile Include="Clients\ThingClient.cs" />
     <Compile Include="Clients\VocabularyClient.cs" />
@@ -72,7 +71,7 @@
     <Compile Include="Connection\HealthVaultConnectionBase.cs" />
     <Compile Include="Connection\CryptoData.cs" />
     <Compile Include="Connection\IHealthVaultConnection.cs" />
-    <Compile Include="Clients\IActionPlanClient.cs" />
+    <Compile Include="Clients\IHealthVaultRestClient.cs" />
     <Compile Include="Clients\IClient.cs" />
     <Compile Include="Clients\IPersonClient.cs" />
     <Compile Include="Clients\IPlatformClient.cs" />
@@ -86,6 +85,11 @@
     <Compile Include="Extensions\UriExtensions.cs" />
     <Compile Include="Connection\ICryptographer.cs" />
     <Compile Include="Ioc.cs" />
+    <Compile Include="Rest\HealthVaultRestClient.cs" />
+    <Compile Include="Rest\HealthVaultRestContentMessage.cs" />
+    <Compile Include="Rest\HealthVaultRestMessage.cs" />
+    <Compile Include="Rest\IHealthVaultRestMessage.cs" />
+    <Compile Include="Rest\IHealthVaultRestMessageContent.cs" />
     <Compile Include="SdkTelemetryInformation.cs" />
     <Compile Include="ItemTypes\ActionPlanWrapper.cs" />
     <Compile Include="ItemTypes\Address.cs" />
@@ -302,8 +306,6 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <Compile Include="Rest\HealthServiceRestRequest.cs" />
-    <Compile Include="Rest\HealthServiceRestResponseData.cs" />
     <Compile Include="Services\DateTimeService.cs" />
     <Compile Include="Services\IDateTimeService.cs" />
     <Compile Include="Thing\AuthorizationRule.cs" />

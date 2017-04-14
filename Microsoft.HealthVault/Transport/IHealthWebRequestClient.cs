@@ -18,5 +18,10 @@ namespace Microsoft.HealthVault.Transport
         /// Sends a request asynchronously to the specified url.
         /// </summary>
         Task<HttpResponseMessage> SendAsync(Uri url, byte[] utf8EncodedXml, int utf8EncodedXmlLength, IDictionary<string, string> headers, CancellationToken token);
+
+        /// <summary>
+        /// Sends the request async with retry logic.
+        /// </summary>
+        Task<HttpResponseMessage> SendAsync(HttpRequestMessage message, CancellationToken token, bool throwExceptionOnFailure = true);
     }
 }

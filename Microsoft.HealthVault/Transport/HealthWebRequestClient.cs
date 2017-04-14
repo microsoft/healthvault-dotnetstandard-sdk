@@ -90,6 +90,11 @@ namespace Microsoft.HealthVault.Transport
 
             message.Content = content;
 
+            return await this.SendAsync(message, token);
+        }
+
+        public async Task<HttpResponseMessage> SendAsync(HttpRequestMessage message, CancellationToken token, bool throwExceptionOnFailure = true)
+        {
             HttpClient client = this.httpClientFactory.GetOrCreateClient();
             int retryCount = this.configuration.RetryOnInternal500Count;
             do
@@ -98,14 +103,12 @@ namespace Microsoft.HealthVault.Transport
                 if (response.StatusCode == HttpStatusCode.InternalServerError && retryCount > 0)
                 {
                     // If we have a 500 and have retries left, retry.
-                    await Task.Delay(
-                        this.configuration.RetryOnInternal500SleepDuration,
-                        token).ConfigureAwait(false);
+                    await Task.Delay(this.configuration.RetryOnInternal500SleepDuration, token).ConfigureAwait(false);
                 }
                 else
                 {
                     // If we have a non-500 error or have run out of retries, throw.
-                    if (!response.IsSuccessStatusCode)
+                    if (!response.IsSuccessStatusCode && throwExceptionOnFailure)
                     {
                         throw new HealthHttpException(Resources.HttpReturnedError, response.StatusCode);
                     }

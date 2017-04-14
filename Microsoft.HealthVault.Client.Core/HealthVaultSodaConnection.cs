@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -75,28 +73,9 @@ namespace Microsoft.HealthVault.Client
             }
         }
 
-        public override string GetRestAuthSessionHeader(Guid? recordId)
+        public override string GetRestAuthSessionHeader()
         {
-            string authToken = this.SessionCredential.Token;
-            if (string.IsNullOrEmpty(authToken))
-            {
-                return string.Empty;
-            }
-
-            List<string> tokens = new List<string>();
-            tokens.Add(this.FormatRestHeaderToken(RestConstants.AppToken, authToken));
-            if (recordId.HasValue && recordId != Guid.Empty)
-            {
-                tokens.Add(this.FormatRestHeaderToken(RestConstants.OfflinePersonId, this.personInfo.PersonId.ToString()));
-                tokens.Add(this.FormatRestHeaderToken(RestConstants.RecordId, recordId.Value.ToString()));
-            }
-
-            return string.Format(CultureInfo.InvariantCulture, RestConstants.MSHV1HeaderFormat, string.Join(",", tokens));
-        }
-
-        private string FormatRestHeaderToken(string name, string value)
-        {
-            return string.Format(CultureInfo.InvariantCulture, RestConstants.AuthorizationHeaderElement, name, value);
+            return $"{RestConstants.OfflinePersonId}={this.personInfo.PersonId}";
         }
 
         public async Task AuthorizeAdditionalRecordsAsync()

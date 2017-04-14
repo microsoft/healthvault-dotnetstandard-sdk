@@ -8,11 +8,9 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Security.Principal;
 using System.Threading.Tasks;
 using System.Web;
-using System.Xml;
 using System.Xml.Linq;
 using Microsoft.HealthVault.Clients;
 using Microsoft.HealthVault.Connection;
@@ -103,9 +101,9 @@ namespace Microsoft.HealthVault.Web.Connection
             }
         }
 
-        public override string GetRestAuthSessionHeader(Guid? recordId)
+        public override string GetRestAuthSessionHeader()
         {
-            throw new NotImplementedException();
+            return $"user-token={this.UserAuthToken}";
         }
     }
 }

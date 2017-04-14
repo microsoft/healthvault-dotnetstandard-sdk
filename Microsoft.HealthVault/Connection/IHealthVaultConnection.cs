@@ -9,7 +9,6 @@
 using System;
 using System.Threading.Tasks;
 using Microsoft.HealthVault.Clients;
-using Microsoft.HealthVault.Exceptions;
 using Microsoft.HealthVault.Person;
 using Microsoft.HealthVault.Transport;
 
@@ -94,12 +93,8 @@ namespace Microsoft.HealthVault.Connection
         IPlatformClient CreatePlatformClient();
 
         /// <summary>
-        /// Gets a client that can be used to access action plans associated with a particular record
+        /// Creates a new rest client for communicating with HealthVault
         /// </summary>
-        /// 
-        /// <returns>
-        /// An instance implementing IActionPlanClient
-        /// </returns>
-        IActionPlanClient CreateActionPlanClient();
+        IHealthVaultRestClient CreateRestClient();
     }
 }

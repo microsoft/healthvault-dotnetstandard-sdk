@@ -1081,7 +1081,7 @@ namespace Microsoft.HealthVault.Transport
         MshUserIdPaired = 186,
 
         /// <summary>
-        /// Invalid Microsoft Heath User ID
+        /// Invalid Microsoft Health User ID
         /// </summary>
         InvalidMshUserId = 187,
 

@@ -2,7 +2,7 @@
 using Microsoft.HealthVault.Connection;
 using Microsoft.HealthVault.Extensions;
 using Microsoft.HealthVault.Services;
-using System;
+using Microsoft.HealthVault.Transport;
 
 namespace Microsoft.HealthVault
 {
@@ -17,6 +17,7 @@ namespace Microsoft.HealthVault
             Container.RegisterSingleton<IServiceLocator, ServiceLocator>();
             Container.RegisterSingleton<IMessageHandlerFactory, MessageHandlerFactory>();
             Container.RegisterSingleton<IHttpClientFactory, HttpClientFactory>();
+            Container.RegisterSingleton<IHealthWebRequestClient, HealthWebRequestClient>();
             Container.RegisterSingleton<IDateTimeService, DateTimeService>();
         }
 

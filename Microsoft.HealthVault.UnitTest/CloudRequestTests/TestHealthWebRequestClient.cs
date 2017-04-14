@@ -32,6 +32,11 @@ namespace Microsoft.HealthVault.UnitTest.CloudRequestTests
             return SendAsync(url, token);
         }
 
+        public Task<HttpResponseMessage> SendAsync(HttpRequestMessage message, CancellationToken token, bool throwExceptionOnFailure = true)
+        {
+            throw new NotImplementedException();
+        }
+
         public async Task<HttpResponseMessage> SendAsync(Uri url, CancellationToken token)
         {
             var content = Substitute.For<HttpContent>();

@@ -28,6 +28,7 @@ using Microsoft.HealthVault.Extensions;
 using Microsoft.HealthVault.Helpers;
 using Microsoft.HealthVault.Person;
 using Microsoft.HealthVault.PlatformInformation;
+using Microsoft.HealthVault.Rest;
 using Microsoft.HealthVault.Transport;
 using Microsoft.HealthVault.Transport.MessageFormatters.AuthenticationFormatters;
 using Microsoft.HealthVault.Transport.MessageFormatters.HeaderFormatters;
@@ -46,14 +47,14 @@ namespace Microsoft.HealthVault.Connection
         private const string ResponseIdContextKey = "WC_ResponseId";
         private readonly AsyncLock sessionCredentialLock = new AsyncLock();
         private readonly HealthVaultConfiguration config;
-        private readonly HealthWebRequestClient webRequestClient;
+        private readonly IHealthWebRequestClient webRequestClient;
         private DateTimeOffset lastRefreshedSessionCredential;
 
         protected HealthVaultConnectionBase(IServiceLocator serviceLocator)
         {
             this.ServiceLocator = serviceLocator;
             this.config = serviceLocator.GetInstance<HealthVaultConfiguration>();
-            this.webRequestClient = new HealthWebRequestClient(this.config, serviceLocator.GetInstance<IHttpClientFactory>());
+            this.webRequestClient = serviceLocator.GetInstance<IHealthWebRequestClient>(); 
         }
 
         protected IServiceLocator ServiceLocator { get; }
@@ -69,6 +70,8 @@ namespace Microsoft.HealthVault.Connection
         protected abstract SessionFormatter SessionFormatter { get; }
 
         public abstract Task AuthenticateAsync();
+
+        public abstract string GetRestAuthSessionHeader();
 
         public async Task<HealthServiceResponseData> ExecuteAsync(HealthVaultMethods method, int methodVersion, string parameters = null, Guid? recordId = null)
         {
@@ -206,8 +209,6 @@ namespace Microsoft.HealthVault.Connection
         /// <returns>The session credential client.</returns>
         /// <remarks>The values required to populate this client vary based on the authentication method.</remarks>
         protected abstract ISessionCredentialClient CreateSessionCredentialClient();
-
-        public abstract string GetRestAuthSessionHeader(Guid? recordId);
 
         /// <summary>
         /// Handles the data retrieved by making the web request.
@@ -397,11 +398,8 @@ namespace Microsoft.HealthVault.Connection
         public IThingClient CreateThingClient() => new ThingClient(this);
 
         /// <summary>
-        /// Gets a client that can be used to access action plans associated with a particular record
+        /// Creates a rest client that commmunicates with HealthVault
         /// </summary>
-        /// <returns>
-        /// An instance implementing IActionPlanClient
-        /// </returns>
-        public IActionPlanClient CreateActionPlanClient() => new ActionPlanClient(this);
+        public IHealthVaultRestClient CreateRestClient() => new HealthVaultRestClient(this.config, this, this.webRequestClient);
     }
 }
