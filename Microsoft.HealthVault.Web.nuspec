@@ -5,14 +5,14 @@
     <version>$version$</version>
     <title>Microsoft HealthVault Web SDK</title>
     <authors>Microsoft</authors>
-    <owners>Microsoft</owners>
+    <owners>microsoft,healthvault</owners>
     <licenseUrl>https://config.healthvault-ppe.com/serviceAgreement.aspx</licenseUrl>
     <projectUrl>https://msdn.microsoft.com/HealthVault</projectUrl>
     <iconUrl>https://account.healthvault.com/favicon-32x32.png</iconUrl>
     <requireLicenseAcceptance>true</requireLicenseAcceptance>
     <description>This library enables web applications to connect to Microsoft HealthVault. HealthVault is a cloud-based platform designed to put people in control of their health data.</description>
     <releaseNotes>Targeting .NET 4.6.1</releaseNotes>
-    <copyright>Copyright 2017</copyright>
+    <copyright>© Microsoft Corporation. All rights reserved.</copyright>
     <tags>HealthVault</tags>
     <dependencies>
       <group targetFramework="net461">
