@@ -9,6 +9,7 @@ namespace Microsoft.HealthVault.Client
         /// </summary>
         public static IHealthVaultConnectionFactory Current
         {
+            // code change
             get
             {
                 throw new NotImplementedException(ClientResources.BaitWithoutSwitchError);
