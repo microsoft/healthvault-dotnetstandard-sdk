@@ -36,10 +36,7 @@ namespace Microsoft.HealthVault.UnitTest.Samples
             {
                 InfoNavigator =
                     new XPathDocument(new StringReader(GetSampleContent(fileName)))
-                        .CreateNavigator(),
-                ResponseText =
-                    new ArraySegment<byte>(
-                        Encoding.ASCII.GetBytes(GetSampleContent(fileName)))
+                        .CreateNavigator()
             };
 
             return response;
