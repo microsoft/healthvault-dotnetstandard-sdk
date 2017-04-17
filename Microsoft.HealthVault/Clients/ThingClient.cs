@@ -14,10 +14,10 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.XPath;
+using Microsoft.HealthVault.Clients.Deserializers;
 using Microsoft.HealthVault.Connection;
 using Microsoft.HealthVault.Exceptions;
 using Microsoft.HealthVault.Helpers;
-using Microsoft.HealthVault.Record;
 using Microsoft.HealthVault.Thing;
 using Microsoft.HealthVault.Transport;
 
@@ -29,10 +29,14 @@ namespace Microsoft.HealthVault.Clients
     internal class ThingClient : IThingClient
     {
         private readonly IHealthVaultConnection connection;
+        private readonly IThingDeserializer thingDeserializer;
 
-        public ThingClient(IHealthVaultConnection connection)
+        public ThingClient(
+            IHealthVaultConnection connection,
+            IThingDeserializer thingDeserializer)
         {
             this.connection = connection;
+            this.thingDeserializer = thingDeserializer;
         }
 
         public Guid CorrelationId { get; set; }
@@ -55,7 +59,7 @@ namespace Microsoft.HealthVault.Clients
 
             HealthServiceResponseData result = await this.connection.ExecuteAsync(HealthVaultMethods.GetThings, 3, GetParametersXml(searcher));
 
-            ReadOnlyCollection<ThingCollection> resultSet = ParseThings(accessor, result, searcher);
+            IReadOnlyCollection<ThingCollection> resultSet = this.thingDeserializer.Deserialize(result, searcher);
 
             // Check in case HealthVault returned invalid data.
             if (resultSet.Count == 0)
@@ -63,14 +67,14 @@ namespace Microsoft.HealthVault.Clients
                 return default(T);
             }
 
-            if (resultSet.Count > 1 || resultSet[0].Count > 1)
+            if (resultSet.Count > 1 || resultSet.ElementAt(0).Count > 1)
             {
                 throw new MoreThanOneThingException(Resources.GetSingleThingTooManyResults);
             }
 
             if (resultSet.Count == 1)
             {
-                ThingCollection resultGroup = resultSet[0];
+                ThingCollection resultGroup = resultSet.ElementAt(0);
 
                 if (resultGroup.Count == 1)
                 {
@@ -81,16 +85,16 @@ namespace Microsoft.HealthVault.Clients
             return default(T);
         }
 
-        public async Task<IReadOnlyCollection<ThingCollection>> GetThingsAsync(Guid recordId, ThingQuery query) 
+        public async Task<IReadOnlyCollection<ThingCollection>> GetThingsAsync(Guid recordId, ThingQuery query)
         {
             Validator.ThrowIfArgumentNull(recordId, nameof(recordId), Resources.NewItemsNullItem);
             Validator.ThrowIfArgumentNull(query, nameof(query), Resources.NewItemsNullItem);
 
             HealthRecordAccessor accessor = new HealthRecordAccessor(this.connection, recordId);
             HealthRecordSearcher searcher = new HealthRecordSearcher(accessor);
+
             HealthServiceResponseData response = await this.GetRequestWithParameters(recordId, searcher, query);
-            ReadOnlyCollection<ThingCollection> resultSet = 
-                ParseThings(accessor, response, searcher);
+            IReadOnlyCollection<ThingCollection> resultSet = this.thingDeserializer.Deserialize(response, searcher);
 
             return resultSet;
         }
@@ -145,12 +149,16 @@ namespace Microsoft.HealthVault.Clients
                 infoXmlWriter.Flush();
             }
 
-            HealthServiceResponseData responseData = await this.connection.ExecuteAsync(HealthVaultMethods.PutThings, 2, infoXml.ToString(), recordId);
+            HealthServiceResponseData responseData = await this.connection.ExecuteAsync(
+                HealthVaultMethods.PutThings,
+                2, 
+                infoXml.ToString(), 
+                recordId);
 
             // Now update the Id for the new item
             XPathNodeIterator thingIds =
                 responseData.InfoNavigator.Select(
-                    HealthVaultPlatformItem.GetThingIdXPathExpression(responseData.InfoNavigator));
+                    GetThingIdXPathExpression(responseData.InfoNavigator));
 
             int thingIndex = 0;
             foreach (XPathNavigator thingIdNav in thingIds)
@@ -275,44 +283,6 @@ namespace Microsoft.HealthVault.Clients
             }
 
             return parameters.ToString();
-        }
-
-        private static ReadOnlyCollection<ThingCollection> ParseThings(HealthRecordAccessor accessor, HealthServiceResponseData responseData, HealthRecordSearcher query)
-        {
-            XmlReader infoReader = responseData.InfoReader;
-
-            Collection<ThingCollection> result =
-                new Collection<ThingCollection>();
-
-            if ((infoReader != null) && infoReader.ReadToDescendant("group"))
-            {
-                while (infoReader.Name == "group")
-                {
-                    using (XmlReader groupReader = infoReader.ReadSubtree())
-                    {
-                        groupReader.MoveToContent();
-
-                        ThingCollection resultGroup =
-                            ThingCollection.CreateResultGroupFromResponse(
-                                accessor, 
-                                groupReader,
-                                query.Filters);
-
-                        // infoReader will normally be at the end element of
-                        // the group at this point, and needs a read to get to
-                        // the next element. If the group was empty, infoReader
-                        // will be at the beginning of the group, and a
-                        // single read will still move to the next element.
-                        infoReader.Read();
-                        if (resultGroup != null)
-                        {
-                            result.Add(resultGroup);
-                        }
-                    }
-                }
-            }
-
-            return new ReadOnlyCollection<ThingCollection>(result);
         }
 
         private async Task<HealthServiceResponseData> GetRequestWithParameters(Guid recordId, HealthRecordSearcher searcher, ThingQuery query)

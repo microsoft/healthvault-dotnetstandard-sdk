@@ -1,4 +1,5 @@
 ﻿using Grace.DependencyInjection;
+using Microsoft.HealthVault.Clients.Deserializers;
 using Microsoft.HealthVault.Connection;
 using Microsoft.HealthVault.Extensions;
 using Microsoft.HealthVault.Services;
@@ -6,6 +7,7 @@ using Microsoft.HealthVault.Transport;
 
 namespace Microsoft.HealthVault
 {
+
     internal static class Ioc
     {
         static Ioc()
@@ -14,11 +16,15 @@ namespace Microsoft.HealthVault
 
             Container.RegisterTransient<IConnectionInternal, HealthVaultConnectionBase>();
             Container.RegisterTransient<ISessionCredentialClient, SessionCredentialClientBase>();
+
             Container.RegisterSingleton<IServiceLocator, ServiceLocator>();
             Container.RegisterSingleton<IMessageHandlerFactory, MessageHandlerFactory>();
             Container.RegisterSingleton<IHttpClientFactory, HttpClientFactory>();
-            Container.RegisterSingleton<IHealthWebRequestClient, HealthWebRequestClient>();
             Container.RegisterSingleton<IDateTimeService, DateTimeService>();
+            Container.RegisterSingleton<IHealthServiceResponseParser, HealthServiceResponseParser>();
+            Container.RegisterSingleton<IThingDeserializer, ThingDeserializer>();
+
+            Container.RegisterSingleton<IHealthWebRequestClient, HealthWebRequestClient>();
         }
 
         public static DependencyInjectionContainer Container { get; }

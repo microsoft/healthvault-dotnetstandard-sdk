@@ -13,6 +13,8 @@ using System.Xml;
 using System.Xml.XPath;
 using Microsoft.HealthVault.Helpers;
 using System.Linq;
+using Microsoft.HealthVault.Clients;
+using Microsoft.HealthVault.Connection;
 
 namespace Microsoft.HealthVault.Thing
 {
@@ -31,174 +33,7 @@ namespace Microsoft.HealthVault.Thing
         IList<IThing>,
         IList
     {
-        #region Factory methods & ctor
-
-        /// <summary>
-        /// Creates a result group from the response XML.
-        /// </summary>
-        ///
-        /// <param name="record">
-        /// The health record to which all result items are associated.
-        /// </param>
-        ///
-        /// <param name="groupReader">
-        /// An XML reader targeted at the group element of the
-        /// "GetThings" response.
-        /// </param>
-        ///
-        /// <param name="filters">
-        /// The possible filters that were used to get the group.
-        /// </param>
-        ///
-        /// <returns>
-        /// An instance of a result group containing the things
-        /// in the response.
-        /// </returns>
-        ///
-        /// <exception cref="ArgumentNullException">
-        /// The <paramref name="record"/> parameter is <b>null</b>.
-        /// </exception>
-        ///
-        internal static ThingCollection CreateResultGroupFromResponse(
-            HealthRecordAccessor record,
-            XmlReader groupReader,
-            IList<ThingQuery> filters)
-        {
-            Validator.ThrowIfArgumentNull(record, nameof(record), Resources.ResponseRecordNull);
-
-            // Name is optional
-            ThingQuery matchingQuery = null;
-            string name = string.Empty;
-            if (groupReader.MoveToAttribute("name"))
-            {
-                name = groupReader.Value;
-                groupReader.MoveToElement();
-            }
-
-            foreach (ThingQuery filter in filters)
-            {
-                if (string.IsNullOrEmpty(filter.Name) &&
-                    string.IsNullOrEmpty(name))
-                {
-                    matchingQuery = filter;
-                    break;
-                }
-
-                if (string.Equals(
-                        filter.Name,
-                        name,
-                        StringComparison.Ordinal))
-                {
-                    matchingQuery = filter;
-                    break;
-                }
-            }
-
-            return GetResultGroupFromResponse(name, record, matchingQuery, groupReader);
-        }
-
-        private static ThingCollection GetResultGroupFromResponse(string name, HealthRecordAccessor record, ThingQuery matchingQuery, XmlReader groupReader)
-        {
-            ThingCollection result =
-                new ThingCollection(name, record, matchingQuery);
-
-            int maxResultsPerRequest = 0;
-
-            bool boolEndLoop = false;
-            groupReader.Read();
-            if (groupReader.NodeType != XmlNodeType.None)
-            {
-                while (!boolEndLoop)
-                {
-                    switch (groupReader.NodeType)
-                    {
-                        case XmlNodeType.Element:
-                            if (groupReader.Name == "thing")
-                            {
-                                XmlReader thingReader = groupReader.ReadSubtree();
-                                thingReader.MoveToContent();
-
-                                ThingBase resultThingBase =
-                                    ItemTypeManager.DeserializeItem(thingReader);
-                                thingReader.Dispose();
-
-                                // groupReader will normally be at the end element of
-                                // the group at this point, and needs a read to get to
-                                // the next element. If the group was empty, groupReader
-                                // will be at the beginning of the group, and a
-                                // single read will still move to the next element.
-                                groupReader.Read();
-
-                                if (resultThingBase != null)
-                                {
-                                    result.AddResult(resultThingBase);
-                                    maxResultsPerRequest++;
-                                }
-                            }
-                            else if (groupReader.Name == "unprocessed-thing-key-info")
-                            {
-                                using (XmlReader unprocessedThingReader = groupReader.ReadSubtree())
-                                {
-                                    unprocessedThingReader.ReadToDescendant("thing-id");
-
-                                    string versionStamp = string.Empty;
-                                    if (unprocessedThingReader.MoveToAttribute("version-stamp"))
-                                    {
-                                        versionStamp = unprocessedThingReader.Value;
-                                        unprocessedThingReader.MoveToElement();
-                                    }
-
-                                    Guid thingId =
-                                        new Guid(unprocessedThingReader.ReadElementContentAsString());
-
-                                    ThingKey key =
-                                        new ThingKey(thingId, new Guid(versionStamp));
-
-                                    result.AddResult(key);
-
-                                    groupReader.Read();
-                                }
-                            }
-                            else if (groupReader.Name == "filtered")
-                            {
-                                result.WasFiltered = groupReader.ReadElementContentAsBoolean();
-                            }
-                            else if (groupReader.Name == "order-by-culture")
-                            {
-                                result.OrderByCulture = groupReader.ReadElementContentAsString();
-                            }
-                            else
-                            {
-                                // Unrecognized element. There are no other elements allowed by
-                                // the xsd file, so should never get here. Just skip the element.
-                                using (XmlReader unknownElementReader = groupReader.ReadSubtree())
-                                {
-                                    unknownElementReader.Read();
-                                }
-
-                                groupReader.Read();
-                            }
-
-                            break;
-                        case XmlNodeType.EndElement:
-                            // Must be the end of the group element
-                            boolEndLoop = true;
-                            break;
-                        default:
-                            // Skip over white space.
-                            groupReader.Read();
-                            break;
-                    } // Switch
-                } // While
-            } // If
-
-            if (maxResultsPerRequest > 0)
-            {
-                result.MaxResultsPerRequest = maxResultsPerRequest;
-            }
-
-            return result;
-        }
+        #region ctor
 
         /// <summary>
         /// Create an instance of the <see cref="ThingCollection"/> class with a specific set of items.
@@ -217,17 +52,19 @@ namespace Microsoft.HealthVault.Thing
             }
         }
 
-        private ThingCollection(
+        internal ThingCollection(
             string name,
             HealthRecordAccessor record,
-            ThingQuery query)
+            ThingQuery query,
+            IHealthVaultConnection healthVaultConnection)
         {
             this.Name = name;
             this.Record = record;
             this.Query = query;
+            this.Connection = healthVaultConnection;
         }
 
-        #endregion Factory methods & ctor
+        #endregion ctor
 
         #region Public properties
 
@@ -257,7 +94,7 @@ namespace Microsoft.HealthVault.Thing
         /// to the callers permissions; otherwise, <b>false</b>.
         /// </value>
         ///
-        public bool WasFiltered { get; private set; }
+        public bool WasFiltered { get; internal set; }
 
         /// <summary>
         /// Gets the value indicating the culture that order by values were sorted in.
@@ -267,7 +104,7 @@ namespace Microsoft.HealthVault.Thing
         /// The culture may not be the same culture as requested in request header.  It is the closest match HealthVault supports.
         /// </remarks>
         ///
-        public string OrderByCulture { get; private set; }
+        public string OrderByCulture { get; internal set; }
 
         /// <summary>
         /// Gets the health record that the items were retrieved from.
@@ -276,6 +113,8 @@ namespace Microsoft.HealthVault.Thing
         internal HealthRecordAccessor Record { get; }
 
         internal ThingQuery Query { get; }
+
+        internal IHealthVaultConnection Connection { get; }
 
         // This collection contains a combination of the full IThing
         // results as well as any partial thing IDs that were returned
@@ -1236,11 +1075,12 @@ namespace Microsoft.HealthVault.Thing
                 }
             }
 
-            Collection<ThingBase> things = await this.GetPartialThingsAsync(partialThings).ConfigureAwait(false);
+            IReadOnlyCollection<ThingCollection> thingCollection = await this.GetPartialThingsAsync(partialThings).ConfigureAwait(false);
+            ThingCollection things = thingCollection.FirstOrDefault();
 
             bool atEndOfPartialThings = false;
             int newThingIndex = index;
-            foreach (ThingBase thing in things)
+            foreach (IThing thing in things)
             {
                 // We need to start at the current index but look until
                 // we find a matching thing ID.  It is possible that the
@@ -1276,14 +1116,12 @@ namespace Microsoft.HealthVault.Thing
             }
         }
 
-        private async Task<Collection<ThingBase>> GetPartialThingsAsync(
+        private async Task<IReadOnlyCollection<ThingCollection>> GetPartialThingsAsync(
             IList<ThingKey> partialThings)
         {
-            Collection<ThingBase> results = new Collection<ThingBase>();
+           IThingClient thingClient = this.Connection.CreateThingClient();
 
-            // Create the searcher
-            HealthRecordSearcher searcher = this.Record.CreateSearcher();
-            ThingQuery query = new ThingQuery();
+           ThingQuery query = new ThingQuery();
 
             foreach (ThingKey key in partialThings)
             {
@@ -1302,63 +1140,17 @@ namespace Microsoft.HealthVault.Thing
                 }
             }
 
-            searcher.Filters.Add(query);
-
-            // Get the partial things
-            XmlReader infoReader = await searcher.GetMatchingItemsReader().ConfigureAwait(false);
-
-            if (infoReader != null)
-            {
-                infoReader.ReadToDescendant("thing");
-                while (infoReader.Name == "thing")
-                {
-                    using (XmlReader thingReader = infoReader.ReadSubtree())
-                    {
-                        thingReader.MoveToContent();
-                        ThingBase resultThingBase = ItemTypeManager.DeserializeItem(thingReader);
-                        infoReader.Read();
-
-                        if (resultThingBase != null)
-                        {
-                            results.Add(resultThingBase);
-                        }
-                    }
-                }
-            }
+            IReadOnlyCollection<ThingCollection> results = await thingClient.GetThingsAsync(this.Record.Id, query).ConfigureAwait(false);
 
             return results;
         }
 
-        private static XPathExpression infoGroupPath =
-            XPathExpression.Compile("/wc:info/group");
-
-        private static XPathExpression GetGroupXPathExpression(
-            XPathNavigator infoNav)
-        {
-            XmlNamespaceManager infoXmlNamespaceManager =
-                new XmlNamespaceManager(infoNav.NameTable);
-
-            infoXmlNamespaceManager.AddNamespace(
-                "wc",
-                "urn:com.microsoft.wc.methods.response.GetThings3");
-
-            XPathExpression infoGroupPathClone = null;
-            lock (infoGroupPath)
-            {
-                infoGroupPathClone = infoGroupPath.Clone();
-            }
-
-            infoGroupPathClone.SetContext(infoXmlNamespaceManager);
-
-            return infoGroupPathClone;
-        }
-
-        private void AddResult(ThingBase result)
+        internal void AddResult(ThingBase result)
         {
             this.abstractResults.Add(result);
         }
 
-        private void AddResult(ThingKey thingKey)
+        internal void AddResult(ThingKey thingKey)
         {
             this.abstractResults.Add(thingKey);
         }
