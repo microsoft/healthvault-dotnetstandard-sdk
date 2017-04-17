@@ -29,7 +29,6 @@ namespace Microsoft.HealthVault.UnitTest.Clients
             var response = new HealthServiceResponseData
             {
                 InfoNavigator = new XPathDocument(new StringReader(SampleUtils.GetSampleContent("VocabularySample.xml"))).CreateNavigator(),
-                ResponseText = new ArraySegment<byte>(Encoding.ASCII.GetBytes(SampleUtils.GetSampleContent("VocabularySample.xml")))
             };
             connection.ExecuteAsync(Arg.Any<HealthVaultMethods>(), Arg.Any<int>(), Arg.Any<string>())
                 .Returns(response);
@@ -111,8 +110,7 @@ namespace Microsoft.HealthVault.UnitTest.Clients
         {
             var response = new HealthServiceResponseData
             {
-                InfoNavigator = new XPathDocument(new StringReader(SampleUtils.GetSampleContent("VocabularySearchSample.xml"))).CreateNavigator(),
-                ResponseText = new ArraySegment<byte>(Encoding.ASCII.GetBytes(SampleUtils.GetSampleContent("VocabularySearchSample.xml")))
+                InfoNavigator = new XPathDocument(new StringReader(SampleUtils.GetSampleContent("VocabularySearchSample.xml"))).CreateNavigator()
             };
 
             connection.ExecuteAsync(Arg.Any<HealthVaultMethods>(), Arg.Any<int>(), Arg.Any<string>())

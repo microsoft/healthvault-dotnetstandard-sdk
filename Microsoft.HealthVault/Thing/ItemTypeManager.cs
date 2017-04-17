@@ -640,28 +640,23 @@ namespace Microsoft.HealthVault.Thing
         /// constructor.
         /// </exception>
         ///
-        [SuppressMessage("Microsoft.Usage", "CA2202:Do not dispose objects multiple times", Justification = "StringReader can be disposed multiple times. Usings block makes the code more readable")]
+        [SuppressMessage("Microsoft.Usage", "CA2202:Do not dispose objects multiple times", Justification =
+            "StringReader can be disposed multiple times. Usings block makes the code more readable")]
         internal static ThingBase DeserializeItem(XmlReader thingReader)
         {
-            ThingBase result;
-
             string thingString = thingReader.ReadOuterXml();
+            XmlReader reader = XmlReader.Create(new StringReader(thingString), SDKHelper.XmlReaderSettings);
 
-            XmlReaderSettings settings = SDKHelper.XmlReaderSettings;
-            settings.IgnoreWhitespace = false;
+            XPathNavigator thingNav = new XPathDocument(reader).CreateNavigator();
 
-            XPathNavigator thingNav;
-            using (StringReader stringReader = new StringReader(thingString))
-            {
-                using (XmlReader reader =
-                        XmlReader.Create(stringReader, settings))
-                {
-                    thingNav = new XPathDocument(reader, XmlSpace.Preserve).CreateNavigator();
-                }
-            }
+            ThingBase thingBase = DeserializeItem(thingNav);
 
-            thingNav.MoveToFirstChild();
+            return thingBase;
+        }
 
+        internal static ThingBase DeserializeItem(XPathNavigator thingNav)
+        {
+            ThingBase result;
             Guid typeId = GetTypeId(thingNav);
 
             ThingTypeHandler handler = null;
@@ -701,7 +696,8 @@ namespace Microsoft.HealthVault.Thing
                 result = new ThingBase(typeId);
             }
 
-            result.ParseXml(thingNav, thingString);
+            result.ParseXml(thingNav, thingNav.OuterXml);
+
             return result;
         }
 
