@@ -6,6 +6,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.XPath;
 using Microsoft.HealthVault.Clients;
@@ -161,7 +162,7 @@ namespace Microsoft.HealthVault.ItemTypes
         /// image has no data...
         /// </returns>
         ///
-        public Stream ReadImage()
+        public async Task<Stream> ReadImageAsync()
         {
             BlobStore store = this.GetBlobStore(default(HealthRecordAccessor));
             Blob blob = store[string.Empty];
@@ -171,7 +172,7 @@ namespace Microsoft.HealthVault.ItemTypes
                 return null;
             }
 
-            return blob.GetReaderStream();
+            return await blob.GetReaderStreamAsync().ConfigureAwait(false);
         }
     }
 }

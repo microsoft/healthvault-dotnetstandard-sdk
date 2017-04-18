@@ -9,6 +9,7 @@
 using System;
 using System.IO;
 using System.Text;
+using System.Threading.Tasks;
 using Microsoft.HealthVault.Exceptions;
 using Microsoft.HealthVault.Helpers;
 using Microsoft.HealthVault.Thing;
@@ -382,7 +383,7 @@ namespace Microsoft.HealthVault.ItemTypes
         /// If there is no data to read from the BLOB.
         /// </exception>
         ///
-        public BlobStream GetReaderStream()
+        public Task<BlobStream> GetReaderStreamAsync()
         {
             BlobStream stream;
             if (this.Url != null)

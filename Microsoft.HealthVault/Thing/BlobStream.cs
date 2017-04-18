@@ -14,6 +14,7 @@ using System.IO;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Xml.XPath;
 
@@ -144,7 +145,9 @@ namespace Microsoft.HealthVault.Thing
                     throw new InvalidOperationException(Resources.BlobStreamNoData);
                 }
 
-                this.SendChunks(true);
+                this.SendChunksAsync(true).Wait();
+
+                this.responseStream?.Dispose();
             }
 
             this.disposed = true;
@@ -163,16 +166,18 @@ namespace Microsoft.HealthVault.Thing
         }
 
         /// <summary>
-        /// Clears all buffers for this stream and causes any buffered data to be written to
-        /// HealthVault.
+        /// This method performs no action.
         /// </summary>
-        ///
-        /// <exception cref="HealthServiceException">
-        /// If a failure occurs calling HealthVault.
-        /// </exception>
-        ///
         public override void Flush()
         {
+        }
+
+        /// <summary>
+        /// This method performs no action.
+        /// </summary>
+        public override Task FlushAsync(CancellationToken cancellationToken)
+        {
+            return Task.FromResult(true);
         }
 
         /// <summary>
@@ -281,6 +286,62 @@ namespace Microsoft.HealthVault.Thing
         ///
         public override int Read(byte[] buffer, int offset, int count)
         {
+            return this.ReadAsync(buffer, offset, count).Result;
+        }
+
+        /// <summary>
+        /// Reads a sequence of bytes from the current stream and advances the position within the
+        /// stream by the number of bytes read.
+        /// </summary>
+        ///
+        /// <param name="buffer">
+        /// An array of bytes. When this method returns, the buffer contains the specified byte
+        /// array with the values between offset and (offset + count - 1) replaced by the bytes
+        /// read from the current source.
+        /// </param>
+        ///
+        /// <param name="offset">
+        /// The zero-based byte offset in buffer at which to begin storing the data read from
+        /// the current stream.
+        /// </param>
+        ///
+        /// <param name="count">
+        /// The maximum number of bytes to be read from the current stream.
+        /// </param>
+        /// <param name="cancellationToken">A token to cancel the operation.</param>
+        ///
+        /// <returns>
+        /// The total number of bytes read into the buffer. This can be less than the number of
+        /// bytes requested if that many bytes are not currently available, or zero (0) if the
+        /// end of the stream has been reached.
+        /// </returns>
+        ///
+        /// <exception cref="NotSupportedException">
+        /// If the stream does not support reading.
+        /// </exception>
+        ///
+        /// <exception cref="ArgumentNullException">
+        /// <paramref name="buffer"/> is <b>null</b>.
+        /// </exception>
+        ///
+        /// <exception cref="ArgumentException">
+        /// The sum of <paramref name="offset"/> and <paramref name="count"/> is greater than the
+        /// <paramref name="buffer"/> length.
+        /// </exception>
+        ///
+        /// <exception cref="ArgumentOutOfRangeException">
+        /// <paramref name="offset"/> or <paramref name="count"/> is negative.
+        /// </exception>
+        ///
+        /// <exception cref="ObjectDisposedException">
+        /// Methods were called after the stream was closed.
+        /// </exception>
+        ///
+        /// <exception cref="HealthServiceException">
+        /// If there was a failure reading the data from HealthVault.
+        /// </exception>
+        public override async Task<int> ReadAsync(byte[] buffer, int offset, int count, CancellationToken cancellationToken)
+        {
             if (!this.CanRead)
             {
                 throw new NotSupportedException();
@@ -318,7 +379,7 @@ namespace Microsoft.HealthVault.Thing
             }
             else if (this.url != null)
             {
-                result = this.ReadStreamedData(buffer, offset, count);
+                result = await this.ReadStreamedDataAsync(buffer, offset, count);
             }
 
             return result;
@@ -408,21 +469,21 @@ namespace Microsoft.HealthVault.Thing
             return bytesToRead;
         }
 
-        private int ReadStreamedData(byte[] buffer, int offset, int count)
+        private async Task<int> ReadStreamedDataAsync(byte[] buffer, int offset, int count)
         {
             if (this.responseStream == null)
             {
-                HttpResponseMessage responseMessage = this.ExecuteGetRequest();
+                HttpResponseMessage responseMessage = await this.ExecuteGetRequestAsync().ConfigureAwait(false);
 
                 if (!responseMessage.IsSuccessStatusCode)
                 {
                     this.ThrowRequestFailedException(responseMessage);
                 }
 
-                this.responseStream = responseMessage.Content.ReadAsStreamAsync().Result;
+                this.responseStream = await responseMessage.Content.ReadAsStreamAsync().ConfigureAwait(false);
             }
 
-            return this.responseStream.Read(buffer, offset, count);
+            return await this.responseStream.ReadAsync(buffer, offset, count).ConfigureAwait(false);
         }
 
         #endregion Read helpers
@@ -573,6 +634,55 @@ namespace Microsoft.HealthVault.Thing
         ///
         public override void Write(byte[] buffer, int offset, int count)
         {
+            this.WriteAsync(buffer, offset, count, CancellationToken.None).Wait();
+        }
+
+        /// <summary>
+        /// Writes a sequence of bytes to the current stream and advances the current position
+        /// within this stream by the number of bytes written.
+        /// </summary>
+        ///
+        /// <param name="buffer">
+        /// An array of bytes. This method copies count bytes from buffer to the current stream.
+        /// </param>
+        ///
+        /// <param name="offset">
+        /// The zero-based byte offset in buffer at which to begin copying bytes to the current
+        /// stream.
+        /// </param>
+        ///
+        /// <param name="count">
+        /// The number of bytes to be written to the current stream.
+        /// </param>
+        /// <param name="cancellationToken">A token to cancel the request.</param>
+        ///
+        /// <exception cref="ArgumentNullException">
+        /// If <paramref name="buffer"/> is <b>null</b>.
+        /// </exception>
+        ///
+        /// <exception cref="ArgumentException">
+        /// The sum of <paramref name="offset"/> and <paramref name="count"/> is greater than the
+        /// <paramref name="buffer"/> length.
+        /// </exception>
+        ///
+        /// <exception cref="ArgumentOutOfRangeException">
+        /// <paramref name="offset"/> or <paramref name="count"/> is negative.
+        /// </exception>
+        ///
+        /// <exception cref="NotSupportedException">
+        /// If the stream does not support writing.
+        /// </exception>
+        ///
+        /// <exception cref="ObjectDisposedException">
+        /// Methods were called after the stream was closed.
+        /// </exception>
+        ///
+        /// <exception cref="HealthServiceException">
+        /// If there was a failure writing the data to HealthVault.
+        /// </exception>
+        ///
+        public override async Task WriteAsync(byte[] buffer, int offset, int count, CancellationToken cancellationToken)
+        {
             if (!this.CanWrite)
             {
                 throw new NotSupportedException();
@@ -612,7 +722,7 @@ namespace Microsoft.HealthVault.Thing
 
             this.EnsureBeginPutBlob();
             this.AugmentBufferList(new BufferRequest(buffer, offset, count));
-            this.SendChunks(false);
+            await this.SendChunksAsync(false).ConfigureAwait(false);
         }
 
         private void AugmentBufferList(BufferRequest buffer)
@@ -621,14 +731,14 @@ namespace Microsoft.HealthVault.Thing
             this.bytesInBuffer += buffer.Count;
         }
 
-        private void SendChunks(bool sendPartialChunk)
+        private async Task SendChunksAsync(bool sendPartialChunk)
         {
             if (this.bytesInBuffer > 0)
             {
                 this.EnsureBeginPutBlob();
                 while (this.bytesInBuffer >= this.blobPutParameters.ChunkSize)
                 {
-                    this.WriteChunk(this.blobPutParameters.ChunkSize, false);
+                    await this.WriteChunkAsync(this.blobPutParameters.ChunkSize, false).ConfigureAwait(false);
                 }
             }
 
@@ -636,12 +746,12 @@ namespace Microsoft.HealthVault.Thing
             {
                 this.EnsureBeginPutBlob();
 
-                this.WriteChunk(this.bytesInBuffer, true);
+                await this.WriteChunkAsync(this.bytesInBuffer, true).ConfigureAwait(false);
                 this.CalculateBlobHash();
             }
         }
 
-        private void WriteChunk(int chunkSizeToWrite, bool uploadComplete)
+        private async Task WriteChunkAsync(int chunkSizeToWrite, bool uploadComplete)
         {
             int bytesInWebRequest = 0;
             long start = 0;
@@ -697,7 +807,7 @@ namespace Microsoft.HealthVault.Thing
 
             if (webRequestBuffer != null)
             {
-                HttpResponseMessage request = this.ExecutePutRequest(start, bytesInWebRequest, uploadComplete, webRequestBuffer);
+                HttpResponseMessage request = await this.ExecutePutRequestAsync(start, bytesInWebRequest, uploadComplete, webRequestBuffer).ConfigureAwait(false);
                 if (!request.IsSuccessStatusCode)
                 {
                     this.ThrowRequestFailedException(request);
@@ -776,7 +886,7 @@ namespace Microsoft.HealthVault.Thing
             }
 
             this.AugmentBufferList(new BufferRequest(value));
-            this.SendChunks(false);
+            this.SendChunksAsync(false).Wait();
         }
 
         /// <summary>
@@ -797,21 +907,21 @@ namespace Microsoft.HealthVault.Thing
 
         #region Helpers
 
-        private HttpResponseMessage ExecuteGetRequest()
+        private async Task<HttpResponseMessage> ExecuteGetRequestAsync()
         {
             HttpMessageHandler handler = new HttpClientHandler();
             HttpRequestMessage message = new HttpRequestMessage(HttpMethod.Get, this.url);
             HttpClient request = new HttpClient(handler);
 
-            if (this.readTimeout > 0)
+            if (this.ReadTimeout > 0)
             {
                 request.Timeout = new TimeSpan(this.writeTimeout);
             }
 
-            return request.SendAsync(message).Result;
+            return await request.SendAsync(message).ConfigureAwait(false);
         }
 
-        private HttpResponseMessage ExecutePutRequest(
+        private async Task<HttpResponseMessage> ExecutePutRequestAsync(
             long startPosition,
             int count,
             bool uploadComplete,
@@ -846,7 +956,7 @@ namespace Microsoft.HealthVault.Thing
                 message.Headers.Add("x-hv-blob-complete", "1");
             }
 
-            return request.SendAsync(message).Result;
+            return await request.SendAsync(message).ConfigureAwait(false);
         }
 
         private void EnsureBeginPutBlob()
