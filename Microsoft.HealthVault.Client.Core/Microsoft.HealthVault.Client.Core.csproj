@@ -11,6 +11,7 @@
     <Authors>DDX</Authors>
     <AssemblyVersion>1.0.0.1</AssemblyVersion>
     <FileVersion>1.0.0.1</FileVersion>
+    <DocumentationFile>bin\$(Configuration)\netstandard1.4\Microsoft.HealthVault.Client.Core.xml</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Grace" Version="6.0.1" />

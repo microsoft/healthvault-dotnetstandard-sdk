@@ -13,6 +13,7 @@
     <RootNamespace>Microsoft.HealthVault.Client</RootNamespace>
     <AssemblyVersion>1.0.0.1</AssemblyVersion>
     <FileVersion>1.0.0.1</FileVersion>
+    <DocumentationFile>bin\$(Configuration)\netstandard1.4\Microsoft.HealthVault.Client.xml</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="..\Microsoft.HealthVault.Client.Core\Microsoft.HealthVault.Client.Core.csproj" />
