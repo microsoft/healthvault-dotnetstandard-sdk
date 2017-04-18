@@ -26,8 +26,8 @@
     </dependencies>
   </metadata>
   <files>
-    <file src="Microsoft.HealthVault\bin\$configuration$\Microsoft.HealthVault.dll" target="lib\net461" />
-    <file src="Microsoft.HealthVault\bin\$configuration$\Microsoft.HealthVault.pdb" target="lib\net461" />
+    <file src="Microsoft.HealthVault\bin\$configuration$\netstandard1.4\Microsoft.HealthVault.dll" target="lib\net461" />
+    <file src="Microsoft.HealthVault\bin\$configuration$\netstandard1.4\Microsoft.HealthVault.pdb" target="lib\net461" />
     <file src="Microsoft.HealthVault.Web\bin\$configuration$\Microsoft.HealthVault.Web.dll" target="lib\net461" />
     <file src="Microsoft.HealthVault.Web\bin\$configuration$\Microsoft.HealthVault.Web.pdb" target="lib\net461" />
   </files>

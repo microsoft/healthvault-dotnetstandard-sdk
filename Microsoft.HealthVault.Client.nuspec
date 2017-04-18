@@ -42,34 +42,34 @@
   </metadata>
   <files>
     <!-- Bait -->
-    <file src="Microsoft.HealthVault\bin\$configuration$\Microsoft.HealthVault.dll" target="lib\netstandard1.4\Microsoft.HealthVault.dll" />
-    <file src="Microsoft.HealthVault\bin\$configuration$\Microsoft.HealthVault.pdb" target="lib\netstandard1.4\Microsoft.HealthVault.pdb" />
-    <file src="Microsoft.HealthVault.Client.Core\bin\$configuration$\Microsoft.HealthVault.Client.Core.dll" target="lib\netstandard1.4\Microsoft.HealthVault.Client.Core.dll" />
-    <file src="Microsoft.HealthVault.Client.Core\bin\$configuration$\Microsoft.HealthVault.Client.Core.pdb" target="lib\netstandard1.4\Microsoft.HealthVault.Client.Core.pdb" />
-    <file src="Microsoft.HealthVault.Client.Bait\bin\$configuration$\Microsoft.HealthVault.Client.dll" target="lib\netstandard1.4\Microsoft.HealthVault.Client.dll" />
-    <file src="Microsoft.HealthVault.Client.Bait\bin\$configuration$\Microsoft.HealthVault.Client.pdb" target="lib\netstandard1.4\Microsoft.HealthVault.Client.pdb" />
+    <file src="Microsoft.HealthVault\bin\$configuration$\netstandard1.4\Microsoft.HealthVault.dll" target="lib\netstandard1.4\Microsoft.HealthVault.dll" />
+    <file src="Microsoft.HealthVault\bin\$configuration$\netstandard1.4\Microsoft.HealthVault.pdb" target="lib\netstandard1.4\Microsoft.HealthVault.pdb" />
+    <file src="Microsoft.HealthVault.Client.Core\bin\$configuration$\netstandard1.4\Microsoft.HealthVault.Client.Core.dll" target="lib\netstandard1.4\Microsoft.HealthVault.Client.Core.dll" />
+    <file src="Microsoft.HealthVault.Client.Core\bin\$configuration$\netstandard1.4\Microsoft.HealthVault.Client.Core.pdb" target="lib\netstandard1.4\Microsoft.HealthVault.Client.Core.pdb" />
+    <file src="Microsoft.HealthVault.Client.Bait\bin\$configuration$\netstandard1.4\Microsoft.HealthVault.Client.dll" target="lib\netstandard1.4\Microsoft.HealthVault.Client.dll" />
+    <file src="Microsoft.HealthVault.Client.Bait\bin\$configuration$\netstandard1.4\Microsoft.HealthVault.Client.pdb" target="lib\netstandard1.4\Microsoft.HealthVault.Client.pdb" />
 
     <!-- UWP -->
-    <file src="Microsoft.HealthVault\bin\$configuration$\Microsoft.HealthVault.dll" target="lib\uap10.0\Microsoft.HealthVault.dll" />
-    <file src="Microsoft.HealthVault\bin\$configuration$\Microsoft.HealthVault.pdb" target="lib\uap10.0\Microsoft.HealthVault.pdb" />
-    <file src="Microsoft.HealthVault.Client.Core\bin\$configuration$\Microsoft.HealthVault.Client.Core.dll" target="lib\uap10.0\Microsoft.HealthVault.Client.Core.dll" />
-    <file src="Microsoft.HealthVault.Client.Core\bin\$configuration$\Microsoft.HealthVault.Client.Core.pdb" target="lib\uap10.0\Microsoft.HealthVault.Client.Core.pdb" />
+    <file src="Microsoft.HealthVault\bin\$configuration$\netstandard1.4\Microsoft.HealthVault.dll" target="lib\uap10.0\Microsoft.HealthVault.dll" />
+    <file src="Microsoft.HealthVault\bin\$configuration$\netstandard1.4\Microsoft.HealthVault.pdb" target="lib\uap10.0\Microsoft.HealthVault.pdb" />
+    <file src="Microsoft.HealthVault.Client.Core\bin\$configuration$\netstandard1.4\Microsoft.HealthVault.Client.Core.dll" target="lib\uap10.0\Microsoft.HealthVault.Client.Core.dll" />
+    <file src="Microsoft.HealthVault.Client.Core\bin\$configuration$\netstandard1.4\Microsoft.HealthVault.Client.Core.pdb" target="lib\uap10.0\Microsoft.HealthVault.Client.Core.pdb" />
     <file src="Microsoft.HealthVault.Client.Uwp\bin\$configuration$\Microsoft.HealthVault.Client.dll" target="lib\uap10.0\Microsoft.HealthVault.Client.dll" />
     <file src="Microsoft.HealthVault.Client.Uwp\bin\$configuration$\Microsoft.HealthVault.Client.pdb" target="lib\uap10.0\Microsoft.HealthVault.Client.pdb" />
 
     <!-- Android -->
-    <file src="Microsoft.HealthVault\bin\$configuration$\Microsoft.HealthVault.dll" target="lib\monoandroid\Microsoft.HealthVault.dll" />
-    <file src="Microsoft.HealthVault\bin\$configuration$\Microsoft.HealthVault.pdb" target="lib\monoandroid\Microsoft.HealthVault.pdb" />
-    <file src="Microsoft.HealthVault.Client.Core\bin\$configuration$\Microsoft.HealthVault.Client.Core.dll" target="lib\monoandroid\Microsoft.HealthVault.Client.Core.dll" />
-    <file src="Microsoft.HealthVault.Client.Core\bin\$configuration$\Microsoft.HealthVault.Client.Core.pdb" target="lib\monoandroid\Microsoft.HealthVault.Client.Core.pdb" />
+    <file src="Microsoft.HealthVault\bin\$configuration$\netstandard1.4\Microsoft.HealthVault.dll" target="lib\monoandroid\Microsoft.HealthVault.dll" />
+    <file src="Microsoft.HealthVault\bin\$configuration$\netstandard1.4\Microsoft.HealthVault.pdb" target="lib\monoandroid\Microsoft.HealthVault.pdb" />
+    <file src="Microsoft.HealthVault.Client.Core\bin\$configuration$\netstandard1.4\Microsoft.HealthVault.Client.Core.dll" target="lib\monoandroid\Microsoft.HealthVault.Client.Core.dll" />
+    <file src="Microsoft.HealthVault.Client.Core\bin\$configuration$\netstandard1.4\Microsoft.HealthVault.Client.Core.pdb" target="lib\monoandroid\Microsoft.HealthVault.Client.Core.pdb" />
     <file src="Microsoft.HealthVault.Client.Android\bin\$configuration$\Microsoft.HealthVault.Client.dll" target="lib\monoandroid\Microsoft.HealthVault.Client.dll" />
     <file src="Microsoft.HealthVault.Client.Android\bin\$configuration$\Microsoft.HealthVault.Client.pdb" target="lib\monoandroid\Microsoft.HealthVault.Client.pdb" />
 
     <!-- iOS -->
-    <file src="Microsoft.HealthVault\bin\$configuration$\Microsoft.HealthVault.dll" target="lib\xamarinios\Microsoft.HealthVault.dll" />
-    <file src="Microsoft.HealthVault\bin\$configuration$\Microsoft.HealthVault.pdb" target="lib\xamarinios\Microsoft.HealthVault.pdb" />
-    <file src="Microsoft.HealthVault.Client.Core\bin\$configuration$\Microsoft.HealthVault.Client.Core.dll" target="lib\xamarinios\Microsoft.HealthVault.Client.Core.dll" />
-    <file src="Microsoft.HealthVault.Client.Core\bin\$configuration$\Microsoft.HealthVault.Client.Core.pdb" target="lib\xamarinios\Microsoft.HealthVault.Client.Core.pdb" />
+    <file src="Microsoft.HealthVault\bin\$configuration$\netstandard1.4\Microsoft.HealthVault.dll" target="lib\xamarinios\Microsoft.HealthVault.dll" />
+    <file src="Microsoft.HealthVault\bin\$configuration$\netstandard1.4\Microsoft.HealthVault.pdb" target="lib\xamarinios\Microsoft.HealthVault.pdb" />
+    <file src="Microsoft.HealthVault.Client.Core\bin\$configuration$\netstandard1.4\Microsoft.HealthVault.Client.Core.dll" target="lib\xamarinios\Microsoft.HealthVault.Client.Core.dll" />
+    <file src="Microsoft.HealthVault.Client.Core\bin\$configuration$\netstandard1.4\Microsoft.HealthVault.Client.Core.pdb" target="lib\xamarinios\Microsoft.HealthVault.Client.Core.pdb" />
     <file src="Microsoft.HealthVault.Client.Ios\bin\$configuration$\Microsoft.HealthVault.Client.dll" target="lib\xamarinios\Microsoft.HealthVault.Client.dll" />
     <file src="Microsoft.HealthVault.Client.Ios\bin\$configuration$\Microsoft.HealthVault.Client.pdb" target="lib\xamarinios\Microsoft.HealthVault.Client.pdb" />
   </files>

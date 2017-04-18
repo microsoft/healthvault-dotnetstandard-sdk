@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.26228.9
+VisualStudioVersion = 15.0.26403.7
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.HealthVault", "Microsoft.HealthVault\Microsoft.HealthVault.csproj", "{DBE2BA67-DBC3-479E-A374-1CE5EE33C453}"
 EndProject
@@ -33,6 +33,12 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.HealthVault.Web", "Microsoft.HealthVault.Web\Microsoft.HealthVault.Web.csproj", "{7A84F34E-2CB2-49C8-B374-F6FDDB24BA6C}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SandboxWeb", "SandboxWeb\SandboxWeb.csproj", "{B14BA363-7FEA-4A80-8B76-849D0F792117}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "nuspec", "nuspec", "{1510A5CC-064B-4881-8C12-1DBF64F07F50}"
+	ProjectSection(SolutionItems) = preProject
+		Microsoft.HealthVault.Client.nuspec = Microsoft.HealthVault.Client.nuspec
+		Microsoft.HealthVault.Web.nuspec = Microsoft.HealthVault.Web.nuspec
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
