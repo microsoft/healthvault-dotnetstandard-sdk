@@ -162,7 +162,7 @@ namespace Microsoft.HealthVault.ItemTypes
         /// image has no data...
         /// </returns>
         ///
-        public async Task<Stream> ReadImageAsync()
+        public Stream ReadImage()
         {
             BlobStore store = this.GetBlobStore(default(HealthRecordAccessor));
             Blob blob = store[string.Empty];
@@ -172,7 +172,7 @@ namespace Microsoft.HealthVault.ItemTypes
                 return null;
             }
 
-            return await blob.GetReaderStreamAsync().ConfigureAwait(false);
+            return blob.GetReaderStream();
         }
     }
 }

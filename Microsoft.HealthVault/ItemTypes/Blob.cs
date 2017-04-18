@@ -383,7 +383,7 @@ namespace Microsoft.HealthVault.ItemTypes
         /// If there is no data to read from the BLOB.
         /// </exception>
         ///
-        public Task<BlobStream> GetReaderStreamAsync()
+        public BlobStream GetReaderStream()
         {
             BlobStream stream;
             if (this.Url != null)
