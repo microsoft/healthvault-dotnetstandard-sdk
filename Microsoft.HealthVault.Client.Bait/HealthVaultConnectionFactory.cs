@@ -11,6 +11,7 @@ namespace Microsoft.HealthVault.Client
         {
             get
             {
+                // non-functional code change
                 throw new NotImplementedException(ClientResources.BaitWithoutSwitchError);
             }
         }
