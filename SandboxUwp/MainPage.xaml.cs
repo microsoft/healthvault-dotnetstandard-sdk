@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -9,6 +10,7 @@ using Microsoft.HealthVault.Configuration;
 using Microsoft.HealthVault.ItemTypes;
 using Microsoft.HealthVault.Person;
 using Microsoft.HealthVault.Record;
+using Microsoft.HealthVault.Thing;
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x409
 
@@ -67,6 +69,24 @@ namespace SandboxUwp
             await thingClient.CreateNewThingsAsync(recordInfo.Id, new List<BloodPressure> { new BloodPressure(new HealthServiceDateTime(DateTime.Now), 117, 70) });
 
             this.OutputBlock.Text = "Created blood pressure.";
+        }
+
+        private async void GetUserImage_OnClick(object sender, RoutedEventArgs e)
+        {
+            PersonInfo personInfo = await this.connection.GetPersonInfoAsync();
+            HealthRecordInfo recordInfo = personInfo.SelectedRecord;
+
+            IThingClient thingClient = this.connection.CreateThingClient();
+            ThingQuery query = new ThingQuery();
+            query.View.Sections = ThingSections.Default | ThingSections.BlobPayload;
+            var theThings = await thingClient.GetThingsAsync<PersonalImage>(recordInfo.Id, query);
+
+            Stream imageStream = theThings.First().ReadImage();
+            using (MemoryStream memoryStream = new MemoryStream())
+            {
+                await imageStream.CopyToAsync(memoryStream);
+                this.OutputBlock.Text = $"Image has {memoryStream.Length} bytes";
+            }
         }
 
         private async void DeleteConnectionInfo_OnClick(object sender, RoutedEventArgs e)
