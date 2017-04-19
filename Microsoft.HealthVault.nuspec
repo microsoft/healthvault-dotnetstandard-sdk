@@ -10,7 +10,7 @@
     <projectUrl>https://msdn.microsoft.com/HealthVault</projectUrl>
     <iconUrl>https://account.healthvault.com/favicon-32x32.png</iconUrl>
     <requireLicenseAcceptance>true</requireLicenseAcceptance>
-    <description>This library enables desktop and mobile applications to connect to Microsoft HealthVault. HealthVault is a cloud-based platform designed to put people in control of their health data.</description>
+    <description>This library enables applications to connect to Microsoft HealthVault. HealthVault is a cloud-based platform designed to put people in control of their health data.</description>
     <releaseNotes>Targeting .NET Standard 1.4</releaseNotes>
     <copyright>© Microsoft Corporation. All rights reserved.</copyright>
     <tags>HealthVault</tags>
