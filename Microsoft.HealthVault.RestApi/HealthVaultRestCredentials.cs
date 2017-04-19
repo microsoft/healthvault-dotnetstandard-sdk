@@ -15,7 +15,7 @@ using Microsoft.Rest;
 
 namespace Microsoft.HealthVault.RestApi
 {
-    public class HealthVaultRestCredentials : ServiceClientCredentials
+    internal class HealthVaultRestCredentials : ServiceClientCredentials
     {
         private readonly IHealthVaultRestClient client;
         private readonly Guid recordId;

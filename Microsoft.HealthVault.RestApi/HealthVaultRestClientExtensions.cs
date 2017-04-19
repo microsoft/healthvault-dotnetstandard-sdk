@@ -7,22 +7,26 @@
 // THE SOFTWARE IS PROVIDED *AS IS*, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 using System;
-using Microsoft.HealthVault.Clients;
 using Microsoft.HealthVault.Connection;
 using Microsoft.HealthVault.RestApi.Generated;
 
 namespace Microsoft.HealthVault.RestApi
 {
+    /// <summary>
+    /// Provides extension methods for creating <see cref="IMicrosoftHealthVaultRestApi"/>
+    /// </summary>
     public static class HealthVaultRestClientExtensions
     {
-        public static IMicrosoftHealthVaultRestApi CreateMicrosoftHealthVaultRestApi(this IHealthVaultRestClient client, Uri restServiceBaseUrl, Guid recordId)
-        {
-            return new MicrosoftHealthVaultRestApi(restServiceBaseUrl, new HealthVaultRestCredentials(client, recordId));
-        }
-
+        /// <summary>
+        /// Creates a client for accessing the Microsoft HealthVault REST API.
+        /// </summary>
+        /// <param name="client">The client.</param>
+        /// <param name="restServiceBaseUrl">The rest service base URL.</param>
+        /// <param name="recordId">The record identifier.</param>
+        /// <returns></returns>
         public static IMicrosoftHealthVaultRestApi CreateMicrosoftHealthVaultRestApi(this IHealthVaultConnection client, Uri restServiceBaseUrl, Guid recordId)
         {
-            return CreateMicrosoftHealthVaultRestApi(client.CreateRestClient(), restServiceBaseUrl, recordId);
+            return new MicrosoftHealthVaultRestApi(restServiceBaseUrl, new HealthVaultRestCredentials(client.CreateRestClient(), recordId));
         }
     }
 }
