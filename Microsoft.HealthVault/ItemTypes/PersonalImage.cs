@@ -6,6 +6,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.XPath;
 using Microsoft.HealthVault.Clients;
@@ -171,7 +172,7 @@ namespace Microsoft.HealthVault.ItemTypes
                 return null;
             }
 
-            return new MemoryStream(blob.ReadAllBytes());
+            return blob.GetReaderStream();
         }
     }
 }
