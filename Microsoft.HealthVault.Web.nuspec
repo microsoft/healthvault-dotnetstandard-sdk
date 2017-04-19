@@ -16,6 +16,7 @@
     <tags>HealthVault</tags>
     <dependencies>
       <group targetFramework="net461">
+      	<dependency id="Microsoft.HealthVault" version="(1.0,)" />
         <dependency id="Grace" version="6.0.1" />
         <dependency id="Microsoft.AspNet.Mvc" version="5.2.3" />
         <dependency id="System.Diagnostics.TraceSource" version="4.3.0" />
@@ -26,9 +27,6 @@
     </dependencies>
   </metadata>
   <files>
-    <file src="Microsoft.HealthVault\bin\$configuration$\netstandard1.4\Microsoft.HealthVault.dll" target="lib\net461" />
-    <file src="Microsoft.HealthVault\bin\$configuration$\netstandard1.4\Microsoft.HealthVault.pdb" target="lib\net461" />
-    <file src="Microsoft.HealthVault\bin\$configuration$\netstandard1.4\Microsoft.HealthVault.xml" target="lib\net461" />
     <file src="Microsoft.HealthVault.Web\bin\$configuration$\Microsoft.HealthVault.Web.dll" target="lib\net461" />
     <file src="Microsoft.HealthVault.Web\bin\$configuration$\Microsoft.HealthVault.Web.pdb" target="lib\net461" />
     <file src="Microsoft.HealthVault.Web\bin\$configuration$\Microsoft.HealthVault.Web.xml" target="lib\net461" />
