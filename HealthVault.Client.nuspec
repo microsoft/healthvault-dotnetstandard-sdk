@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<package>
+  <metadata>
+    <id>HealthVault.Client</id>
+    <version>$version$</version>
+    <title>Microsoft HealthVault Web SDK</title>
+    <authors>Microsoft</authors>
+    <owners>microsoft,healthvault</owners>
+    <licenseUrl>https://config.healthvault-ppe.com/serviceAgreement.aspx</licenseUrl>
+    <projectUrl>https://msdn.microsoft.com/HealthVault</projectUrl>
+    <iconUrl>https://account.healthvault.com/favicon-32x32.png</iconUrl>
+    <requireLicenseAcceptance>true</requireLicenseAcceptance>
+    <description>This library provides a client for accessing the HealthVault REST API.</description>
+    <releaseNotes>Targeting .NET Standard 1.4</releaseNotes>
+    <copyright>© Microsoft Corporation. All rights reserved.</copyright>
+    <tags>HealthVault</tags>
+    <dependencies>
+      <group targetFramework="netstandard1.4">
+        <dependency id="Microsoft.HealthVault.Client" version="(1.0,)" />
+      </group>
+    </dependencies>
+  </metadata>
+  <files>
+    <file src="Autorest\HealthVault.Client\bin\$configuration$\netstandard1.4\HealthVault.Client.dll" target="lib\netstandard1.4" />
+    <file src="Autorest\HealthVault.Client\bin\$configuration$\netstandard1.4\HealthVault.Client.pdb" target="lib\netstandard1.4" />
+  </files>
+</package>
