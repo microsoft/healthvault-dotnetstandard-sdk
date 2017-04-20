@@ -20,13 +20,13 @@ namespace Microsoft.HealthVault.RestApi
         /// <summary>
         /// Creates a client for accessing the Microsoft HealthVault REST API.
         /// </summary>
-        /// <param name="client">The client.</param>
+        /// <param name="connection">The client.</param>
         /// <param name="restServiceBaseUrl">The rest service base URL.</param>
         /// <param name="recordId">The record identifier.</param>
         /// <returns></returns>
-        public static IMicrosoftHealthVaultRestApi CreateMicrosoftHealthVaultRestApi(this IHealthVaultConnection client, Uri restServiceBaseUrl, Guid recordId)
+        public static IMicrosoftHealthVaultRestApi CreateMicrosoftHealthVaultRestApi(this IHealthVaultConnection connection, Uri restServiceBaseUrl, Guid recordId)
         {
-            return new MicrosoftHealthVaultRestApi(restServiceBaseUrl, new HealthVaultRestCredentials(client.CreateRestClient(), recordId));
+            return new MicrosoftHealthVaultRestApi(restServiceBaseUrl, new HealthVaultRestCredentials(connection.CreateRestClient(), recordId));
         }
     }
 }
