@@ -6,30 +6,10 @@
 //
 // THE SOFTWARE IS PROVIDED *AS IS*, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-using System.Xml;
-using Microsoft.HealthVault.Connection;
-using Microsoft.HealthVault.Transport.MessageFormatters.HeaderFormatters;
-
-namespace Microsoft.HealthVault.Transport.MessageFormatters.AuthenticationFormatters
+namespace Microsoft.HealthVault.Transport.Serializers
 {
-    internal class AuthenticationFormatter
+    internal interface IRequestMessageSerializer<in T>
     {
-        private readonly string sharedSecret;
-
-        public AuthenticationFormatter(string sharedSecret)
-        {
-            this.sharedSecret = sharedSecret;
-        }
-
-        public virtual void Write(XmlWriter writer, HeaderFormatter section)
-        {
-            CryptoData crytpoData = Cryptographer.Hmac(this.sharedSecret, section.AsBytes());
-            var cryptoFormatter = new CryptoDataFormatter(crytpoData);
-
-            using (new TagWriter(writer, "auth"))
-            {
-                cryptoFormatter.Write(writer);
-            }
-        }
+        string Serialize(T toSerialize);
     }
 }

@@ -12,8 +12,6 @@ using Microsoft.HealthVault.Configuration;
 using Microsoft.HealthVault.Helpers;
 using Microsoft.HealthVault.Transport.MessageFormatters;
 using Microsoft.HealthVault.Transport.MessageFormatters.AuthenticationFormatters;
-using Microsoft.HealthVault.Transport.MessageFormatters.HeaderFormatters;
-using Microsoft.HealthVault.Transport.MessageFormatters.InfoFormatters;
 
 namespace Microsoft.HealthVault.Transport
 {
@@ -92,9 +90,9 @@ namespace Microsoft.HealthVault.Transport
         [SuppressMessage("Microsoft.Usage", "CA2202:Do not dispose objects multiple times", Justification = "MemoryStream can be disposed multiple times. Usings block makes the code more readable")]
         public void BuildRequestXml(string transform = null)
         {
-            InfoFormatter info = new InfoFormatter(this.parameters);
+            InfoSerializer info = new InfoSerializer(this.parameters);
 
-            HeaderFormatter headerSection = new HeaderFormatter(
+            HeaderSerializer headerSection = new HeaderSerializer(
                 this.Method,
                 this.MethodVersion?.ToString(),
                 this.CultureCode,
