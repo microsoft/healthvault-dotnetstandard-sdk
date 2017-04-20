@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+<package>
+  <metadata>
+    <id>Microsoft.HealthVault</id>
+    <version>$version$</version>
+    <title>Microsoft HealthVault .NET Standard SDK</title>
+    <authors>Microsoft</authors>
+    <owners>microsoft,healthvault</owners>
+    <licenseUrl>https://config.healthvault-ppe.com/serviceAgreement.aspx</licenseUrl>
+    <projectUrl>https://msdn.microsoft.com/HealthVault</projectUrl>
+    <iconUrl>https://account.healthvault.com/favicon-32x32.png</iconUrl>
+    <requireLicenseAcceptance>true</requireLicenseAcceptance>
+    <description>This library enables applications to connect to Microsoft HealthVault. HealthVault is a cloud-based platform designed to put people in control of their health data.</description>
+    <releaseNotes>Targeting .NET Standard 1.4</releaseNotes>
+    <copyright>© Microsoft Corporation. All rights reserved.</copyright>
+    <tags>HealthVault</tags>
+    <dependencies>
+      <group targetFramework="netstandard1.4">
+        <dependency id="Grace" version="6.0.1" />
+        <dependency id="Microsoft.Rest.ClientRuntime" version="2.3.6" />
+        <dependency id="Newtonsoft.Json" version="10.0.2" />
+      </group>
+    </dependencies>
+  </metadata>
+  <files>
+    <file src="Microsoft.HealthVault\bin\$configuration$\netstandard1.4\Microsoft.HealthVault.dll" target="lib\netstandard1.4" />
+    <file src="Microsoft.HealthVault\bin\$configuration$\netstandard1.4\Microsoft.HealthVault.pdb" target="lib\netstandard1.4" />
+    <file src="Microsoft.HealthVault\bin\$configuration$\netstandard1.4\Microsoft.HealthVault.xml" target="lib\netstandard1.4" />
+    <file src="Microsoft.HealthVault.RestApi\bin\$configuration$\netstandard1.4\Microsoft.HealthVault.RestApi.dll" target="lib\netstandard1.4" />
+    <file src="Microsoft.HealthVault.RestApi\bin\$configuration$\netstandard1.4\Microsoft.HealthVault.RestApi.pdb" target="lib\netstandard1.4" />
+    <file src="Microsoft.HealthVault.RestApi\bin\$configuration$\netstandard1.4\Microsoft.HealthVault.RestApi.xml" target="lib\netstandard1.4" />
+  </files>
+</package>
