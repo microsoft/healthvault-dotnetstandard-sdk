@@ -7,28 +7,31 @@
 // THE SOFTWARE IS PROVIDED *AS IS*, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 using System.IO;
-using System.Text;
 using System.Xml;
 using Microsoft.HealthVault.Helpers;
+using Microsoft.HealthVault.Transport.Serializers;
 
 namespace Microsoft.HealthVault.Transport.MessageFormatters
 {
-    internal static class MessageWriterExtensions
+    internal class InfoSerializer : IRequestMessageSerializer<string>
     {
-        public static byte[] AsBytes(this IMessageFormatter message)
+        public string Serialize(string infoToSerialize)
         {
-            using (MemoryStream xmlHeader = new MemoryStream())
-            using (XmlWriter writer = XmlWriter.Create(xmlHeader, SDKHelper.XmlUtf8WriterSettings))
+            string result;
+            using (StringWriter infoXml = new StringWriter())
             {
-                message.Write(writer);
-                writer.Flush();
-                return xmlHeader.ToArray();
-            }
-        }
+                using (XmlWriter writer = XmlWriter.Create(infoXml, SDKHelper.XmlUtf8WriterSettings))
+                {
+                    using (new TagWriter(writer, "info"))
+                    {
+                        writer.WriteRaw(infoToSerialize);
+                    }
+                }
 
-        public static string AsXmlString(this IMessageFormatter message)
-        {
-            return Encoding.UTF8.GetString(message.AsBytes());
+                result = infoXml.ToString();
+            }
+
+            return result;
         }
     }
 }

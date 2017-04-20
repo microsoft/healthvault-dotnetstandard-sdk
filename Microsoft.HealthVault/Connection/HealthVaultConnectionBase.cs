@@ -27,7 +27,6 @@ using Microsoft.HealthVault.PlatformInformation;
 using Microsoft.HealthVault.Rest;
 using Microsoft.HealthVault.Transport;
 using Microsoft.HealthVault.Transport.MessageFormatters.AuthenticationFormatters;
-using Microsoft.HealthVault.Transport.MessageFormatters.HeaderFormatters;
 using Microsoft.HealthVault.Transport.MessageFormatters.SessionFormatters;
 
 namespace Microsoft.HealthVault.Connection

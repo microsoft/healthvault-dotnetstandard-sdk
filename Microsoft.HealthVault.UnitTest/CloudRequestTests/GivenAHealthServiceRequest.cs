@@ -4,7 +4,6 @@ using System;
 using System.Text;
 using Microsoft.HealthVault.Transport;
 using Microsoft.HealthVault.Transport.MessageFormatters.AuthenticationFormatters;
-using Microsoft.HealthVault.Transport.MessageFormatters.HeaderFormatters;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Microsoft.HealthVault.UnitTest.CloudRequestTests
