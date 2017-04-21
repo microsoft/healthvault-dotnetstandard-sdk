@@ -48,8 +48,9 @@ namespace Microsoft.HealthVault.Connection
         /// <param name="methodVersion">The method version.</param>
         /// <param name="parameters">Method parameters</param>
         /// <param name="recordId">Record Id</param>
+        /// <param name="correlationId">correlationId</param>
         /// <returns>HealthServiceResponseData</returns>
-        Task<HealthServiceResponseData> ExecuteAsync(HealthVaultMethods method, int methodVersion, string parameters = null, Guid? recordId = null);
+        Task<HealthServiceResponseData> ExecuteAsync(HealthVaultMethods method, int methodVersion, string parameters = null, Guid? recordId = null, Guid? correlationId = null);
 
         /// <summary>
         /// Gets SessionCredential

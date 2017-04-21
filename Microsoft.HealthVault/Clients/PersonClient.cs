@@ -37,7 +37,7 @@ namespace Microsoft.HealthVault.Clients
             this.connection = connection;
         }
 
-        public Guid CorrelationId { get; set; }
+        public Guid? CorrelationId { get; set; }
 
         public virtual async Task<ApplicationSettings> GetApplicationSettingsAsync()
         {

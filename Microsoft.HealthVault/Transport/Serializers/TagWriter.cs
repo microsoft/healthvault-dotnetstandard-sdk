@@ -9,8 +9,11 @@
 using System;
 using System.Xml;
 
-namespace Microsoft.HealthVault.Transport.MessageFormatters
+namespace Microsoft.HealthVault.Transport.Serializers
 {
+    /// <summary>
+    /// Given a element name, writes start and end xml tags for the element
+    /// </summary>
     internal class TagWriter : IDisposable
     {
         private readonly XmlWriter writer;

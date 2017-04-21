@@ -13,11 +13,13 @@ using System.Xml;
 using Microsoft.HealthVault.Configuration;
 using Microsoft.HealthVault.Connection;
 using Microsoft.HealthVault.Helpers;
-using Microsoft.HealthVault.Transport.MessageFormatters;
 using Microsoft.HealthVault.Transport.Serializers;
 
 namespace Microsoft.HealthVault.Transport
 {
+    /// <summary>
+    /// <see cref="IRequestMessageCreator"/>
+    /// </summary>
     internal class RequestMessageCreator : IRequestMessageCreator
     {
         private readonly IConnectionInternal connectionInternal;
@@ -37,6 +39,9 @@ namespace Microsoft.HealthVault.Transport
             this.cryptographer = serviceLocator.GetInstance<ICryptographer>();
         }
 
+        /// <summary>
+        /// <see cref="IRequestMessageCreator.Create"/>
+        /// </summary>
         public string Create(
             HealthVaultMethods method,
             int methodVersion,
@@ -45,23 +50,12 @@ namespace Microsoft.HealthVault.Transport
             Guid? recordId = null,
             Guid? appId = null)
         {
-            Request request = new Request();
+            Request request = new Request { Info = new RequestInfo { InfoXml = parameters } };
 
-            if (!string.IsNullOrEmpty(parameters))
-            {
-                request.Info = new RequestInfo();
-            }
+            // Serialize info part of the request message
+            string infoXml = this.Serialize(new RequestInfoSerializer(),  request.Info.InfoXml);
 
-            // Set info
-            this.SetInfo(
-                parameters,
-                request);
-
-            // Serialize
-            string infoXml = this.Serialize(new InfoSerializer(),  request.Info.InfoXml);
-
-            // CreateHeader
-            this.SetHeader(
+            this.SetRequestHeader(
                 method,
                 methodVersion,
                 isMethodAnonymous,
@@ -70,22 +64,23 @@ namespace Microsoft.HealthVault.Transport
                 infoXml,
                 request);
 
-            //Serialize Header
-            string headerXml = this.Serialize(new HeaderSerializer(), request.Header);
+            //Serialize header part of the request message
+            string headerXml = this.Serialize(new RequestHeaderSerializer(), request.Header);
 
             string authXml = null;
+
+            // in case the method is anonymous, there is no need to set auth
             if (!isMethodAnonymous)
             {
                 this.SetAuth(headerXml, request);
-                authXml = this.Serialize(new AuthSerializer(), request.Auth);
+                authXml = this.Serialize(new RequestAuthSerializer(), request.Auth);
             }
 
             string requestXml = this.SerializeRequest(authXml, headerXml, infoXml);
-
             return requestXml;
         }
 
-        private void SetHeader(
+        public void SetRequestHeader(
             HealthVaultMethods method,
             int methodVersion,
             bool isAnonymous,
@@ -105,6 +100,7 @@ namespace Microsoft.HealthVault.Transport
                 request.Header.RecordId = recordId.Value.ToString();
             }
 
+            // in case the method is anonymous - set app id, else set auth session
             if (isAnonymous)
             {
                 request.Header.AppId = appId.HasValue
@@ -128,14 +124,14 @@ namespace Microsoft.HealthVault.Transport
             };
         }
 
-        private void SetInfo(
+        public void SetRequestInfo(
             string parameters,
             Request request)
         {
             request.Info = new RequestInfo { InfoXml = parameters };
         }
 
-        private void SetAuth(string headerXml, Request request)
+        public void SetAuth(string headerXml, Request request)
         {
             request.Auth = new RequestAuth
             {
@@ -145,23 +141,10 @@ namespace Microsoft.HealthVault.Transport
             };
         }
 
-        //private string SerializeInfo(Request request)
-        //{
-        //    InfoFormatter infoFormatter = new InfoFormatter(request.Info.InfoXml);
-        //    return infoFormatter.Serialize();
-        //}
-
-        //private string SerializeHeader(Request request)
-        //{
-        //    HeaderFormatter headerFormatter = new HeaderFormatter(request.Header);
-        //    return  headerFormatter.Serialize();
-        //}
-
-        //private string SerializeAuth(Request request)
-        //{
-        //    AuthFormmater authFormmater = new AuthFormmater(request.Auth);
-        //    return authFormmater.Serialize();
-        //}
+        private string Serialize<T>(IRequestMessageSerializer<T> requestMessageSerializer, T objectToSerialize)
+        {
+            return requestMessageSerializer.Serialize(objectToSerialize);
+        }
 
         private string SerializeRequest(string authXml, string headerXml, string infoXml)
         {
@@ -183,11 +166,6 @@ namespace Microsoft.HealthVault.Transport
 
                 return requestXml.ToString();
             }
-        }
-
-        private string Serialize<T>(IRequestMessageSerializer<T> requestMessageSerializer, T objectToSerialize)
-        {
-            return requestMessageSerializer.Serialize(objectToSerialize);
         }
     }
 }

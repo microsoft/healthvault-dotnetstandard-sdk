@@ -22,6 +22,10 @@ namespace Microsoft.HealthVault.Connection
 
         string GetRestAuthSessionHeader();
 
+        /// <summary>
+        /// Provide AuthSession header for XML over Http protocol
+        /// </summary>
+        /// <returns>AuthSession</returns>
         AuthSession GetAuthSessionHeader();
     }
 }

@@ -18,6 +18,6 @@ namespace Microsoft.HealthVault.Clients
         /// <summary>
         /// An optional identifier that can be used to correlate a request.
         /// </summary>
-        Guid CorrelationId { get; set; }
+        Guid? CorrelationId { get; set; }
     }
 }
