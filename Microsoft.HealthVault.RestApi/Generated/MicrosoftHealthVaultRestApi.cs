@@ -2178,7 +2178,7 @@ namespace Microsoft.HealthVault.RestApi.Generated
         /// <return>
         /// A response object containing the response body and response headers.
         /// </return>
-        public async Task<HttpOperationResponse<ActionPlanTasksResponseActionPlanTaskInstance>> GetActionPlanTasksByIdWithHttpMessagesAsync(string actionPlanTaskId, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<HttpOperationResponse<ActionPlanTaskInstance>> GetActionPlanTasksByIdWithHttpMessagesAsync(string actionPlanTaskId, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
         {
             if (actionPlanTaskId == null)
             {
@@ -2271,7 +2271,7 @@ namespace Microsoft.HealthVault.RestApi.Generated
                 throw ex;
             }
             // Create Result
-            var _result = new HttpOperationResponse<ActionPlanTasksResponseActionPlanTaskInstance>();
+            var _result = new HttpOperationResponse<ActionPlanTaskInstance>();
             _result.Request = _httpRequest;
             _result.Response = _httpResponse;
             // Deserialize Response
@@ -2280,7 +2280,7 @@ namespace Microsoft.HealthVault.RestApi.Generated
                 _responseContent = await _httpResponse.Content.ReadAsStringAsync().ConfigureAwait(false);
                 try
                 {
-                    _result.Body = SafeJsonConvert.DeserializeObject<ActionPlanTasksResponseActionPlanTaskInstance>(_responseContent, this.DeserializationSettings);
+                    _result.Body = SafeJsonConvert.DeserializeObject<ActionPlanTaskInstance>(_responseContent, DeserializationSettings);
                 }
                 catch (JsonException ex)
                 {

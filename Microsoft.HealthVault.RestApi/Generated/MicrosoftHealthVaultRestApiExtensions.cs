@@ -467,7 +467,7 @@ namespace Microsoft.HealthVault.RestApi.Generated
             /// </param>
             /// <param name='actionPlanTaskId'>
             /// </param>
-            public static ActionPlanTasksResponseActionPlanTaskInstance GetActionPlanTasksById(this IMicrosoftHealthVaultRestApi operations, string actionPlanTaskId)
+            public static ActionPlanTaskInstance GetActionPlanTasksById(this IMicrosoftHealthVaultRestApi operations, string actionPlanTaskId)
             {
                 return operations.GetActionPlanTasksByIdAsync(actionPlanTaskId).GetAwaiter().GetResult();
             }
@@ -483,7 +483,7 @@ namespace Microsoft.HealthVault.RestApi.Generated
             /// <param name='cancellationToken'>
             /// The cancellation token.
             /// </param>
-            public static async Task<ActionPlanTasksResponseActionPlanTaskInstance> GetActionPlanTasksByIdAsync(this IMicrosoftHealthVaultRestApi operations, string actionPlanTaskId, CancellationToken cancellationToken = default(CancellationToken))
+            public static async Task<ActionPlanTaskInstance> GetActionPlanTasksByIdAsync(this IMicrosoftHealthVaultRestApi operations, string actionPlanTaskId, CancellationToken cancellationToken = default(CancellationToken))
             {
                 using (var _result = await operations.GetActionPlanTasksByIdWithHttpMessagesAsync(actionPlanTaskId, null, cancellationToken).ConfigureAwait(false))
                 {
