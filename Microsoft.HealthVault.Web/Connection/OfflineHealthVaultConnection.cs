@@ -12,7 +12,7 @@ using Microsoft.HealthVault.Connection;
 using Microsoft.HealthVault.Person;
 using Microsoft.HealthVault.PlatformInformation;
 using Microsoft.HealthVault.Rest;
-using Microsoft.HealthVault.Transport.MessageFormatters.SessionFormatters;
+using Microsoft.HealthVault.Transport;
 
 namespace Microsoft.HealthVault.Web.Connection
 {
@@ -47,8 +47,6 @@ namespace Microsoft.HealthVault.Web.Connection
 
         public Guid OfflinePersonId { get; }
 
-        protected override SessionFormatter SessionFormatter => new OfflineSessionFormatter(this.SessionCredential.Token, () => this.OfflinePersonId);
-
         public override Task<PersonInfo> GetPersonInfoAsync()
         {
             throw new NotSupportedException("OfflineHealthVaultConnection is a specialized anonymous connection with no PersonInfo");
@@ -57,6 +55,17 @@ namespace Microsoft.HealthVault.Web.Connection
         public override string GetRestAuthSessionHeader()
         {
             return $"{RestConstants.OfflinePersonId}={this.OfflinePersonId}";
+        }
+
+        public override AuthSession GetAuthSessionHeader()
+        {
+            AuthSession authSession = new AuthSession
+            {
+                AuthToken = this.SessionCredential.Token,
+                Person = new OfflinePersonInfo() { OfflinePersonId = this.OfflinePersonId }
+            };
+
+            return authSession;
         }
     }
 }

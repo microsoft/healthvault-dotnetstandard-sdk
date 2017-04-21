@@ -21,10 +21,13 @@ namespace Microsoft.HealthVault
             Container.RegisterSingleton<IMessageHandlerFactory, MessageHandlerFactory>();
             Container.RegisterSingleton<IHttpClientFactory, HttpClientFactory>();
             Container.RegisterSingleton<IDateTimeService, DateTimeService>();
+
+            Container.RegisterSingleton<IRequestMessageCreator, RequestMessageCreator>();
             Container.RegisterSingleton<IHealthServiceResponseParser, HealthServiceResponseParser>();
             Container.RegisterSingleton<IThingDeserializer, ThingDeserializer>();
 
             Container.RegisterSingleton<IHealthWebRequestClient, HealthWebRequestClient>();
+            Container.RegisterSingleton<ICryptographer, Cryptographer>();
         }
 
         public static DependencyInjectionContainer Container { get; }

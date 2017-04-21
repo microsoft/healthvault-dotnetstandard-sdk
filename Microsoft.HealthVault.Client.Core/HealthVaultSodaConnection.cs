@@ -12,7 +12,6 @@ using Microsoft.HealthVault.PlatformInformation;
 using Microsoft.HealthVault.Record;
 using Microsoft.HealthVault.Rest;
 using Microsoft.HealthVault.Transport;
-using Microsoft.HealthVault.Transport.MessageFormatters.SessionFormatters;
 
 namespace Microsoft.HealthVault.Client
 {
@@ -48,8 +47,6 @@ namespace Microsoft.HealthVault.Client
 
         public override Guid? ApplicationId => this.ApplicationCreationInfo?.AppInstanceId;
 
-        protected override SessionFormatter SessionFormatter => new OfflineSessionFormatter(this.SessionCredential?.Token, () => this.personInfo?.PersonId);
-
         public override async Task AuthenticateAsync()
         {
             using (await this.authenticateLock.LockAsync().ConfigureAwait(false))
@@ -76,6 +73,22 @@ namespace Microsoft.HealthVault.Client
         public override string GetRestAuthSessionHeader()
         {
             return $"{RestConstants.OfflinePersonId}={this.personInfo.PersonId}";
+        }
+
+        public override AuthSession GetAuthSessionHeader()
+        {
+            AuthSession authSession = new AuthSession
+            {
+                AuthToken = this.SessionCredential.Token
+            };
+
+            // Person info will be null for "GetAuthorizedPeople" method.
+            if (this.personInfo != null)
+            {
+                authSession.Person = new OfflinePersonInfo { OfflinePersonId = this.personInfo.PersonId };
+            }
+
+            return authSession;
         }
 
         public async Task AuthorizeAdditionalRecordsAsync()

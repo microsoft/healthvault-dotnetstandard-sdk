@@ -10,13 +10,27 @@ using System;
 
 namespace Microsoft.HealthVault.Transport
 {
+    /// <summary>
+    /// Creates request xml which will be used to send to HealthVault service
+    /// </summary>
     interface IRequestMessageCreator
     {
+        /// <summary>
+        /// Create request xml
+        /// </summary>
+        /// <param name="method">HealthVault method</param>
+        /// <param name="methodVersion">HealhtVault method version</param>
+        /// <param name="isMethodAnonymous">In case the method is anonymous, then the request xml won't put any auth information</param>
+        /// <param name="parameters">Method parameters, which will become infoxml</param>
+        /// <param name="recordId">RecordId, in case the method is record specfic, like "GetThings"</param>
+        /// <param name="appId">ApplicationId, will be used when the method doesn't need authentication, like NewApplicationInfo, GetServiceDefintion methods</param>
+        /// <returns></returns>
         string Create(
             HealthVaultMethods method,
             int methodVersion,
-            bool isAnonymous = false,
+            bool isMethodAnonymous,
             string parameters = null,
-            Guid? recordId = null);
+            Guid? recordId = null,
+            Guid? appId = null);
     }
 }

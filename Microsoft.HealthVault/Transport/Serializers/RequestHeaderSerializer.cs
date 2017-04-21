@@ -10,17 +10,19 @@ using System;
 using System.IO;
 using System.Xml;
 using Microsoft.HealthVault.Helpers;
-using Microsoft.HealthVault.Transport.Serializers;
 
-namespace Microsoft.HealthVault.Transport.MessageFormatters
+namespace Microsoft.HealthVault.Transport.Serializers
 {
-    internal class HeaderSerializer : IRequestMessageSerializer<RequestHeader>
+    /// <summary>
+    /// Serializes Header section of the request
+    /// </summary>
+    internal class RequestHeaderSerializer : IRequestMessageSerializer<RequestHeader>
     {
-        public string Serialize(RequestHeader header)
+        public string Serialize(RequestHeader requestHeader)
         {
-            if (header == null)
+            if (requestHeader == null)
             {
-                throw new ArgumentException(nameof(header));
+                throw new ArgumentException(nameof(requestHeader));
             }
 
             string result;
@@ -32,65 +34,68 @@ namespace Microsoft.HealthVault.Transport.MessageFormatters
                     using (new TagWriter(writer, "header"))
                     {
                         // <method>
-                        writer.WriteElementString("method", header.Method);
+                        writer.WriteElementString("method", requestHeader.Method);
 
-                        if (header.MethodVersion > 0)
+                        if (requestHeader.MethodVersion > 0)
                         {
                             // <method-version>
-                            writer.WriteElementString("method-version", header.MethodVersion.ToString());
+                            writer.WriteElementString("method-version", requestHeader.MethodVersion.ToString());
                         }
 
-                        if (!string.IsNullOrEmpty(header.TargetPersonId))
+                        if (!string.IsNullOrEmpty(requestHeader.TargetPersonId))
                         {
                             // <target-person-id>
-                            writer.WriteElementString("target-person-id", header.TargetPersonId);
+                            writer.WriteElementString("target-person-id", requestHeader.TargetPersonId);
                         }
 
-                        if (!string.IsNullOrEmpty(header.RecordId))
+                        if (!string.IsNullOrEmpty(requestHeader.RecordId))
                         {
                             // <record-id>
-                            writer.WriteElementString("record-id", header.RecordId);
+                            writer.WriteElementString("record-id", requestHeader.RecordId);
                         }
 
-                        if (header.HasAuthSession)
+                        if (requestHeader.HasAuthSession)
                         {
-                            writer.WriteStartElement("auth-session");
-                            writer.WriteElementString("auth-token", header.AuthSession.AuthToken);
-
-                            if (header.HasOfflinePersonInfo)
+                            using (new TagWriter(writer, "auth-session"))
                             {
-                                writer.WriteStartElement("offline-person-info");
+                                writer.WriteElementString("auth-token", requestHeader.AuthSession.AuthToken);
 
-                                // <offline-person-id>
-                                writer.WriteElementString(
-                                    "offline-person-id",
-                                    header.AuthSession.Person.OfflinePersonId.ToString());
+                                if (requestHeader.HasOfflinePersonInfo)
+                                {
+                                    writer.WriteStartElement("offline-person-info");
 
-                                // </offline-person-info>
-                                writer.WriteEndElement();
-                            }
-                            else
-                            {
-                                writer.WriteElementString("user-auth-token", header.AuthSession.UserAuthToken);
+                                    // <offline-person-id>
+                                    writer.WriteElementString(
+                                        "offline-person-id",
+                                        requestHeader.AuthSession.Person.OfflinePersonId.ToString());
+
+                                    // </offline-person-info>
+                                    writer.WriteEndElement();
+                                }
+                                else if(requestHeader.HasUserAuthToken)
+                                {
+                                    writer.WriteElementString("user-auth-token",
+                                        requestHeader.AuthSession.UserAuthToken);
+                                }
                             }
                         }
                         // In case auth session is not present, appid will be sent
                         else
                         {
-                            writer.WriteElementString("app-id", header.AppId);
+                            writer.WriteElementString("app-id", requestHeader.AppId);
                         }
 
-                        if (string.IsNullOrEmpty(header.CultureCode))
+                        if (!string.IsNullOrEmpty(requestHeader.CultureCode))
                         {
-                            writer.WriteElementString("culture-code", header.CultureCode);
+                            writer.WriteElementString("culture-code", requestHeader.CultureCode);
                         }
 
                         writer.WriteElementString("msg-time", SDKHelper.XmlFromNow());
-                        writer.WriteElementString("msg-ttl", header.MessageTtl.ToString());
+                        writer.WriteElementString("msg-ttl", requestHeader.MessageTtl.ToString());
 
-                        writer.WriteElementString("version", header.Version);
+                        writer.WriteElementString("version", requestHeader.Version);
 
-                        InfoHash infoHash = header.InfoHash;
+                        InfoHash infoHash = requestHeader.InfoHash;
 
                         if (infoHash != null)
                         {

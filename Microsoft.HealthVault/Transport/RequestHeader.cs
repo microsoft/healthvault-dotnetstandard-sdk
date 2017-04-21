@@ -35,5 +35,7 @@ namespace Microsoft.HealthVault.Transport
         public bool HasAuthSession => AuthSession != null;
 
         public bool HasOfflinePersonInfo => HasAuthSession && this.AuthSession.Person != null;
+
+        public bool HasUserAuthToken => HasAuthSession && !string.IsNullOrEmpty(this.AuthSession.UserAuthToken);
     }
 }

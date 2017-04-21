@@ -26,8 +26,6 @@ using Microsoft.HealthVault.Person;
 using Microsoft.HealthVault.PlatformInformation;
 using Microsoft.HealthVault.Rest;
 using Microsoft.HealthVault.Transport;
-using Microsoft.HealthVault.Transport.MessageFormatters.AuthenticationFormatters;
-using Microsoft.HealthVault.Transport.MessageFormatters.SessionFormatters;
 
 namespace Microsoft.HealthVault.Connection
 {
@@ -45,17 +43,20 @@ namespace Microsoft.HealthVault.Connection
         private readonly AsyncLock sessionCredentialLock = new AsyncLock();
         private HashSet<HealthVaultMethods> anonymousMethodSet = new HashSet<HealthVaultMethods>();
 
-        private readonly HealthVaultConfiguration config;
+        private readonly HealthVaultConfiguration configuration;
         private readonly HealthWebRequestClient webRequestClient;
         private readonly IHealthServiceResponseParser healthServiceResponseParser;
+        private readonly IRequestMessageCreator requestMessageCreator;
 
         protected HealthVaultConnectionBase(IServiceLocator serviceLocator)
         {
             this.ServiceLocator = serviceLocator;
 
-            this.config = this.ServiceLocator.GetInstance<HealthVaultConfiguration>();
-            this.webRequestClient = new HealthWebRequestClient(this.config, this.ServiceLocator.GetInstance<IHttpClientFactory>());
+            this.configuration = this.ServiceLocator.GetInstance<HealthVaultConfiguration>();
+            this.webRequestClient = new HealthWebRequestClient(this.configuration, this.ServiceLocator.GetInstance<IHttpClientFactory>());
             this.healthServiceResponseParser = serviceLocator.GetInstance<IHealthServiceResponseParser>();
+
+            this.requestMessageCreator = new RequestMessageCreator(this, serviceLocator);
         }
 
         public HealthServiceInstance ServiceInstance { get; internal set; }
@@ -66,13 +67,13 @@ namespace Microsoft.HealthVault.Connection
 
         protected IServiceLocator ServiceLocator { get; }
 
-        protected abstract SessionFormatter SessionFormatter { get; }
-
         public abstract Task<PersonInfo> GetPersonInfoAsync();
 
         public abstract Task AuthenticateAsync();
 
         public abstract string GetRestAuthSessionHeader();
+
+        public abstract AuthSession GetAuthSessionHeader();
 
         #region Clients
 
@@ -102,7 +103,7 @@ namespace Microsoft.HealthVault.Connection
         /// <summary>
         /// Creates a rest client that commmunicates with HealthVault
         /// </summary>
-        public IHealthVaultRestClient CreateRestClient() => new HealthVaultRestClient(this.config, this, this.webRequestClient);
+        public IHealthVaultRestClient CreateRestClient() => new HealthVaultRestClient(this.configuration, this, this.webRequestClient);
 
         #endregion
 
@@ -110,36 +111,38 @@ namespace Microsoft.HealthVault.Connection
             HealthVaultMethods method, 
             int methodVersion,
             string parameters = null, 
-            Guid? recordId = null)
+            Guid? recordId = null,
+            Guid? correlationId = null)
         {
-            bool allowAnonymous = this.IsMethodAnonymous(method);
+            bool isMethodAnonymous = this.IsMethodAnonymous(method);
 
             // Make sure that session credential is set for method calls requiring
             // authentication
-            if (!allowAnonymous && string.IsNullOrEmpty(this.SessionCredential?.Token))
+            if (!isMethodAnonymous && string.IsNullOrEmpty(this.SessionCredential?.Token))
             {
                 await this.AuthenticateAsync().ConfigureAwait(false);
             }
 
-            // Create the message using a Func in case we need to re-generate it for a retry later
-            Func<HealthServiceMessage> messageCreator = () => new HealthServiceMessage(
-                method,
+            Func<HealthServiceMessage> messageCreator = () => this.requestMessageCreator.Create(
+                method, 
                 methodVersion,
+                isMethodAnonymous,
                 parameters,
                 recordId,
-                authenticationFormatter: this.GetAuthenticationFormatter(allowAnonymous),
-                authSessionOrAppId: this.GetAuthSessionOrAppId(allowAnonymous, method));
+                isMethodAnonymous && method == HealthVaultMethods.CreateAuthenticatedSessionToken
+                    ? this.ApplicationId 
+                    : this.configuration.MasterApplicationId);
 
-            var message = messageCreator();
+            var requestXml = messageCreator();
 
             HealthServiceResponseData responseData = null;
             try
             {
-                responseData = await this.SendMessageAsync(message);
+                responseData = await this.SendRequestAsync(requestXml, correlationId);
             }
             catch (HealthServiceAuthenticatedSessionTokenExpiredException)
             {
-                if (!allowAnonymous)
+                if (!isMethodAnonymous)
                 {
                     using (await this.sessionCredentialLock.LockAsync().ConfigureAwait(false))
                     {
@@ -156,7 +159,7 @@ namespace Microsoft.HealthVault.Connection
 
                             // Re-generate the message so it pulls in the new SessionCredential
                             message = messageCreator();
-                            return await this.SendMessageAsync(message).ConfigureAwait(false);
+                            return await this.SendRequestAsync(requestXml, correlationId).ConfigureAwait(false);
                         }
 
                         throw;
@@ -180,27 +183,25 @@ namespace Microsoft.HealthVault.Connection
         /// <remarks>The values required to populate this client vary based on the authentication method.</remarks>
         protected abstract ISessionCredentialClient CreateSessionCredentialClient();
 
-        private async Task<HealthServiceResponseData> SendRequestAsync(HealthServiceMessage message)
+        private async Task<HealthServiceResponseData> SendRequestAsync(string requestXml, Guid? correlationId = null)
         {
             try
             {
-                message.BuildRequestXml();
+                Debug.WriteLine($"Sent message: {requestXml}");
 
-                Debug.WriteLine($"Sent message: {Encoding.UTF8.GetString(message.XmlRequest)}");
-
-                // Do we need this log
-                HealthVaultPlatformTrace.LogRequest(message.XmlRequest, message.CorrelationId);
+                byte[] requestXmlBytes = Encoding.UTF8.GetBytes(requestXml);
 
                 CancellationTokenSource cancellationTokenSource = null;
                 HttpResponseMessage response;
                 try
                 {
-                    cancellationTokenSource = new CancellationTokenSource(this.config.RequestTimeoutDuration);
+                    cancellationTokenSource = new CancellationTokenSource(this.configuration.RequestTimeoutDuration);
+
                     response = await this.webRequestClient.SendAsync(
                         this.ServiceInstance.GetHealthVaultMethodUrl(),
-                        message.XmlRequest,
-                        message.XmlRequestLength,
-                        new Dictionary<string, string> { { CorrelationIdContextKey, message.CorrelationId.ToString() } },
+                        requestXmlBytes,
+                        requestXml.Length,
+                        new Dictionary<string, string> { { CorrelationIdContextKey, correlationId.GetValueOrDefault(Guid.NewGuid()).ToString() } },
                         (CancellationToken)cancellationTokenSource?.Token).ConfigureAwait(false);
                 }
                 finally
@@ -215,8 +216,7 @@ namespace Microsoft.HealthVault.Connection
                     && response.Headers.Contains(ResponseIdContextKey)
                     && Guid.TryParse(response.Headers.GetValues(ResponseIdContextKey)?.FirstOrDefault(), out responseId))
                 {
-                    message.ResponseId = responseId;
-
+                    // TODO: Provide a plug in for applications to plug in their telemetry
                     if (HealthVaultPlatformTrace.LoggingEnabled)
                     {
                         HealthVaultPlatformTrace.Log(TraceEventType.Information, "Response Id: {0}", responseId);
@@ -233,16 +233,6 @@ namespace Microsoft.HealthVault.Connection
                     Resources.InvalidResponseFromXMLRequest,
                     xmlException);
             }
-        }
-
-        private IAuthSessionOrAppId GetAuthSessionOrAppId(bool allowAnonymous, HealthVaultMethods method)
-        {
-            return allowAnonymous ? (IAuthSessionOrAppId)new AppIdFormatter(method, this.config.MasterApplicationId, this.ApplicationId) : this.SessionFormatter;
-        }
-
-        private AuthenticationFormatter GetAuthenticationFormatter(bool allowAnonymous)
-        {
-            return allowAnonymous ? new NoAuthenticationFormatter() : new AuthenticationFormatter(this.SessionCredential.SharedSecret);
         }
 
         private bool IsMethodAnonymous(HealthVaultMethods method)

@@ -8,8 +8,12 @@
 
 namespace Microsoft.HealthVault.Transport.Serializers
 {
-    internal interface IRequestMessageSerializer<in T>
+    /// <summary>
+    /// Provides capability to serialize request property (RequestAuth, RequestHeader and RequestInfo)
+    /// </summary>
+    /// <typeparam name="TRequestProperty">Request property type that this implementer serializes</typeparam>
+    internal interface IRequestMessageSerializer<in TRequestProperty>
     {
-        string Serialize(T toSerialize);
+        string Serialize(TRequestProperty requestHeader);
     }
 }
