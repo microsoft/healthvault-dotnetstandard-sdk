@@ -1,41 +1,29 @@
-﻿// Copyright (c) Microsoft Corporation.  All rights reserved.
+﻿// Copyright (c) Microsoft Corporation.  All rights reserved. 
 // MIT License
 // Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the ""Software""), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
 // 
 // The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED *AS IS*, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-using System;
 using System.IO;
-using System.Xml;
-using Microsoft.HealthVault.Helpers;
+using System.Xml.XPath;
 
-namespace Microsoft.HealthVault.Transport.Serializers
+namespace Microsoft.HealthVault.UnitTest.Transport
 {
-    /// <summary>
-    /// Serializes Info section of the Request
-    /// </summary>
-    internal class RequestInfoSerializer : IRequestMessageSerializer<string>
+    public static class StringExtensions
     {
-        public string Serialize(string infoParameterToSerialize)
+        /// <summary>
+        /// Provides helper method to create XpathNavigator out of a string
+        /// </summary>
+        /// <param name="xml">xml</param>
+        /// <returns>XPathNavigator</returns>
+        public static XPathNavigator AsXPathNavigator(this string xml)
         {
-            string result;
-            using (StringWriter infoXml = new StringWriter())
-            {
-                using (XmlWriter writer = XmlWriter.Create(infoXml, SDKHelper.XmlUtf8WriterSettings))
-                {
-                    using (new TagWriter(writer, "info"))
-                    {
-                        // we need info section, even when paramerters are null
-                        writer.WriteRaw(infoParameterToSerialize ?? string.Empty);
-                    }
-                }
-
-                result = infoXml.ToString();
-            }
-
-            return result;
+            XPathDocument xPathDocument = new XPathDocument(new StringReader(xml));
+            XPathNavigator navigator = xPathDocument.CreateNavigator();
+            navigator.MoveToFirstChild();
+            return navigator;
         }
     }
 }

@@ -126,6 +126,11 @@
     <Compile Include="Rest\GivenARestRequest.cs" />
     <Compile Include="Rest\RestClientBuilder.cs" />
     <Compile Include="Samples\SampleUtils.cs" />
+    <Compile Include="Transport\RequestAuthSerializerTests.cs" />
+    <Compile Include="Transport\RequestHeaderSerializerTests.cs" />
+    <Compile Include="Transport\RequestInfoSerializerTests.cs" />
+    <Compile Include="Transport\RequestMessageCreatorTests.cs" />
+    <Compile Include="Transport\StringExtensions.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config">
@@ -158,6 +163,7 @@
     <EmbeddedResource Include="Samples\InstanceSample.xml" />
     <EmbeddedResource Include="Samples\AuthorizedPeopleSample.xml" />
   </ItemGroup>
+  <ItemGroup />
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">
       <ItemGroup>
