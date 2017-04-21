@@ -123,7 +123,8 @@ namespace Microsoft.HealthVault.Connection
                 await this.AuthenticateAsync().ConfigureAwait(false);
             }
 
-            Func<HealthServiceMessage> messageCreator = () => this.requestMessageCreator.Create(
+            // Create the message using a Func in case we need to re-generate it for a retry later
+            Func <string> requestXmlCreator = () => this.requestMessageCreator.Create(
                 method, 
                 methodVersion,
                 isMethodAnonymous,
@@ -133,7 +134,7 @@ namespace Microsoft.HealthVault.Connection
                     ? this.ApplicationId 
                     : this.configuration.MasterApplicationId);
 
-            var requestXml = messageCreator();
+            var requestXml = requestXmlCreator();
 
             HealthServiceResponseData responseData = null;
             try
@@ -158,7 +159,7 @@ namespace Microsoft.HealthVault.Connection
                             }
 
                             // Re-generate the message so it pulls in the new SessionCredential
-                            message = messageCreator();
+                            requestXml = requestXmlCreator();
                             return await this.SendRequestAsync(requestXml, correlationId).ConfigureAwait(false);
                         }
 

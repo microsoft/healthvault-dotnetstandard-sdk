@@ -124,13 +124,6 @@ namespace Microsoft.HealthVault.Transport
             };
         }
 
-        public void SetRequestInfo(
-            string parameters,
-            Request request)
-        {
-            request.Info = new RequestInfo { InfoXml = parameters };
-        }
-
         public void SetAuth(string headerXml, Request request)
         {
             request.Auth = new RequestAuth
