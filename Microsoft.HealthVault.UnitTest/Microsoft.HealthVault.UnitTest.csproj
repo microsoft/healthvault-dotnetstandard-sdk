@@ -117,6 +117,7 @@
     <Compile Include="Clients\PersonClientTests.cs" />
     <Compile Include="Clients\ThingClientTests.cs" />
     <Compile Include="Clients\PlatformClientTests.cs" />
+    <Compile Include="Clients\ThingDeserializerTests.cs" />
     <Compile Include="Clients\VocabularyClientTests.cs" />
     <Compile Include="CloudRequestTests\GivenAHealthServiceRequest.cs" />
     <Compile Include="CloudRequestTests\TestHealthWebRequestClient.cs" />
