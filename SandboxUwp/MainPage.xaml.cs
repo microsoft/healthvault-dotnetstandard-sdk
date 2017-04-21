@@ -11,6 +11,7 @@ using Microsoft.HealthVault.ItemTypes;
 using Microsoft.HealthVault.Person;
 using Microsoft.HealthVault.Record;
 using Microsoft.HealthVault.Thing;
+using Microsoft.HealthVault.Vocabulary;
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x409
 
@@ -86,6 +87,28 @@ namespace SandboxUwp
             {
                 await imageStream.CopyToAsync(memoryStream);
                 this.OutputBlock.Text = $"Image has {memoryStream.Length} bytes";
+            }
+        }
+
+        private async void GetVocab_OnClick(object sender, RoutedEventArgs e)
+        {
+            var vocabClient = this.connection.CreateVocabularyClient();
+            IList<VocabularyKey> keys = (await vocabClient.GetVocabularyKeysAsync()).ToList();
+
+            VocabularyKey key = keys[4];
+
+            Vocabulary vocab = await vocabClient.GetVocabularyAsync(key);
+
+            if (vocab.IsTruncated)
+            {
+                VocabularyKey key2 = new VocabularyKey(key.Name, key.Family, key.Version, vocab.Values.Last().Value);
+                Vocabulary vocab2 = await vocabClient.GetVocabularyAsync(key2);
+
+                this.OutputBlock.Text = $"There are {vocab2.Count} items on the second call";
+            }
+            else
+            {
+                this.OutputBlock.Text = $"There are {vocab.Count} items";
             }
         }
 

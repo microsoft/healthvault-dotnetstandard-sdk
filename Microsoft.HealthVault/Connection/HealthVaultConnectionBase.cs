@@ -84,7 +84,8 @@ namespace Microsoft.HealthVault.Connection
                 await this.AuthenticateAsync().ConfigureAwait(false);
             }
 
-            var request = new HealthServiceMessage(
+            // Create the message using a Func in case we need to re-generate it for a retry later
+            Func<HealthServiceMessage> messageCreator = () => new HealthServiceMessage(
                 method,
                 methodVersion,
                 parameters,
@@ -92,10 +93,12 @@ namespace Microsoft.HealthVault.Connection
                 authenticationFormatter: this.GetAuthenticationFormatter(allowAnonymous),
                 authSessionOrAppId: this.GetAuthSessionOrAppId(allowAnonymous, method));
 
+            var message = messageCreator();
+
             HealthServiceResponseData responseData = null;
             try
             {
-                responseData = await this.SendRequestAsync(request);
+                responseData = await this.SendMessageAsync(message);
             }
             catch (HealthServiceAuthenticatedSessionTokenExpiredException)
             {
@@ -114,7 +117,9 @@ namespace Microsoft.HealthVault.Connection
                                 this.lastRefreshedSessionCredential = DateTimeOffset.Now;
                             }
 
-                            return await this.SendRequestAsync(request).ConfigureAwait(false);
+                            // Re-generate the message so it pulls in the new SessionCredential
+                            message = messageCreator();
+                            return await this.SendMessageAsync(message).ConfigureAwait(false);
                         }
 
                         throw;
@@ -125,7 +130,7 @@ namespace Microsoft.HealthVault.Connection
             return responseData;
         }
 
-        private async Task<HealthServiceResponseData> SendRequestAsync(HealthServiceMessage message)
+        private async Task<HealthServiceResponseData> SendMessageAsync(HealthServiceMessage message)
         {
             try
             {
