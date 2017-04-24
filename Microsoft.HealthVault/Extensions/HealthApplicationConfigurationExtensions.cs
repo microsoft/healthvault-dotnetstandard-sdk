@@ -27,9 +27,9 @@ namespace Microsoft.HealthVault.Extensions
         /// </remarks>
         public static Uri GetHealthClientServiceUrl(this HealthVaultConfiguration configuration)
         {
-            if (configuration.HealthVaultUrl != null)
+            if (configuration.DefaultHealthVaultUrl != null)
             {
-                return new Uri(configuration.HealthVaultUrl, "hvclientservice.ashx");
+                return new Uri(configuration.DefaultHealthVaultUrl, "hvclientservice.ashx");
             }
 
             return null;

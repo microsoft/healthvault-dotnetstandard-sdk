@@ -17,10 +17,10 @@ namespace Microsoft.HealthVault.Client
 {
     internal class HealthVaultSodaConnection : HealthVaultConnectionBase, IHealthVaultSodaConnection
     {
-        private const string ServiceInstanceKey = "ServiceInstance";
-        private const string ApplicationCreationInfoKey = "ApplicationCreationInfo";
-        private const string SessionCredentialKey = "SessionCredential";
-        private const string PersonInfoKey = "PersonInfo";
+        internal const string ServiceInstanceKey = "ServiceInstance";
+        internal const string ApplicationCreationInfoKey = "ApplicationCreationInfo";
+        internal const string SessionCredentialKey = "SessionCredential";
+        internal const string PersonInfoKey = "PersonInfo";
 
         private readonly ILocalObjectStore localObjectStore;
         private readonly IShellAuthService shellAuthService;
@@ -31,10 +31,11 @@ namespace Microsoft.HealthVault.Client
 
         public HealthVaultSodaConnection(
             IServiceLocator serviceLocator,
+            IHealthWebRequestClient healthWebRequestClient,
             ILocalObjectStore localObjectStore,
             IShellAuthService shellAuthService,
             HealthVaultConfiguration configuration)
-            : base(serviceLocator)
+            : base(serviceLocator, healthWebRequestClient, configuration)
         {
             this.localObjectStore = localObjectStore;
             this.shellAuthService = shellAuthService;
@@ -95,6 +96,13 @@ namespace Microsoft.HealthVault.Client
         {
             using (await this.authenticateLock.LockAsync().ConfigureAwait(false))
             {
+                await this.ReadPropertiesFromLocalStorageAsync().ConfigureAwait(false);
+
+                if (this.SessionCredential == null || this.ApplicationCreationInfo == null)
+                {
+                    throw new InvalidOperationException(Resources.CannotCallAuthorizeAdditionalRecords);
+                }
+
                 // First run through shell with web browser to get additional records authorized.
                 var masterApplicationId = this.Configuration.MasterApplicationId;
                 await this.shellAuthService.AuthorizeAdditionalRecordsAsync(this.ServiceInstance.ShellUrl, masterApplicationId).ConfigureAwait(false);
@@ -176,8 +184,8 @@ namespace Microsoft.HealthVault.Client
         private async Task ProvisionForSodaAuthAsync()
         {
             // Set a temporary service instance for the NewApplicationCreationInfo and GetServiceDefinition calls.
-            var defaultHealthVaultUrl = this.Configuration.HealthVaultUrl;
-            var defaultHealthVaultShellUrl = this.Configuration.HealthVaultShellUrl;
+            var defaultHealthVaultUrl = this.Configuration.DefaultHealthVaultUrl;
+            var defaultHealthVaultShellUrl = this.Configuration.DefaultHealthVaultShellUrl;
             var masterApplicationId = this.Configuration.MasterApplicationId;
 
             this.ServiceInstance = new HealthServiceInstance(

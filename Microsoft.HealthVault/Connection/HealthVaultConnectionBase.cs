@@ -48,12 +48,12 @@ namespace Microsoft.HealthVault.Connection
         private readonly IHealthServiceResponseParser healthServiceResponseParser;
         private readonly IRequestMessageCreator requestMessageCreator;
 
-        protected HealthVaultConnectionBase(IServiceLocator serviceLocator)
+        protected HealthVaultConnectionBase(IServiceLocator serviceLocator, IHealthWebRequestClient healthWebRequestClient, HealthVaultConfiguration configuration)
         {
             this.ServiceLocator = serviceLocator;
 
-            this.configuration = this.ServiceLocator.GetInstance<HealthVaultConfiguration>();
-            this.webRequestClient = new HealthWebRequestClient(this.configuration, this.ServiceLocator.GetInstance<IHttpClientFactory>());
+            this.config = configuration;
+            this.webRequestClient = healthWebRequestClient; 
             this.healthServiceResponseParser = serviceLocator.GetInstance<IHealthServiceResponseParser>();
 
             this.requestMessageCreator = new RequestMessageCreator(this, serviceLocator);
@@ -199,7 +199,7 @@ namespace Microsoft.HealthVault.Connection
                     cancellationTokenSource = new CancellationTokenSource(this.configuration.RequestTimeoutDuration);
 
                     response = await this.webRequestClient.SendAsync(
-                        this.ServiceInstance.GetHealthVaultMethodUrl(),
+                        this.ServiceInstance.HealthServiceUrl,
                         requestXmlBytes,
                         requestXml.Length,
                         new Dictionary<string, string> { { CorrelationIdContextKey, correlationId.GetValueOrDefault(Guid.NewGuid()).ToString() } },

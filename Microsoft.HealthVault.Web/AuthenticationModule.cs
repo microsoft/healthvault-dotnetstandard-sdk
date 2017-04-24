@@ -45,7 +45,7 @@ namespace Microsoft.HealthVault.Web
             WebIoc.EnsureTypesRegistered();
 
             // Set socket to be refreshed for default healthvault platform end point
-            SetConnectionLeaseTimeOut(Ioc.Get<HealthVaultConfiguration>().HealthVaultUrl);
+            SetConnectionLeaseTimeOut(Ioc.Get<HealthVaultConfiguration>().DefaultHealthVaultUrl);
         }
 
         /// <summary>
@@ -133,7 +133,7 @@ namespace Microsoft.HealthVault.Web
             var serviceInstanceHealthServiceUrl = serviceInstance.HealthServiceUrl;
 
             // Set socket to be refreshed in case the end point has been changed based on the healthvault service instance
-            if (!webHealthVaultConfiguration.HealthVaultUrl.Equals(serviceInstanceHealthServiceUrl))
+            if (!webHealthVaultConfiguration.DefaultHealthVaultUrl.Equals(serviceInstanceHealthServiceUrl))
             {
                 SetConnectionLeaseTimeOut(serviceInstanceHealthServiceUrl);
             }
