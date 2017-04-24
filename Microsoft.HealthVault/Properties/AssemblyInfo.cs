@@ -6,6 +6,7 @@ using System.Runtime.CompilerServices;
            InternalsVisibleTo("Microsoft.HealthVault.ItemTypes"),
            InternalsVisibleTo("Microsoft.HealthVault.Web"),
            InternalsVisibleTo("Microsoft.HealthVault.Web.Mvc"),
+           InternalsVisibleTo("Microsoft.HealthVault.AspNetCore"),
            InternalsVisibleTo("Microsoft.HealthVault.Client"),
            InternalsVisibleTo("Microsoft.HealthVault.RestApi"),
            InternalsVisibleTo("DynamicProxyGenAssembly2"),
