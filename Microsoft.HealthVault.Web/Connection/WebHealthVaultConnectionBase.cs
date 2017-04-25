@@ -9,9 +9,11 @@
 using System;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.HealthVault.Configuration;
 using Microsoft.HealthVault.Connection;
 using Microsoft.HealthVault.Helpers;
 using Microsoft.HealthVault.PlatformInformation;
+using Microsoft.HealthVault.Transport;
 using Microsoft.HealthVault.Web.Configuration;
 
 namespace Microsoft.HealthVault.Web.Connection
@@ -26,9 +28,11 @@ namespace Microsoft.HealthVault.Web.Connection
 
         protected WebHealthVaultConnectionBase(
             IServiceLocator serviceLocator,
+            IHealthWebRequestClient healthWebRequestClient,
+            HealthVaultConfiguration configuration,
             HealthServiceInstance healthServiceInstance = null,
             SessionCredential sessionCredential = null)
-            : base(serviceLocator)
+            : base(serviceLocator, healthWebRequestClient, configuration)
         {
             this.webHealthVaultConfiguration = this.ServiceLocator.GetInstance<WebHealthVaultConfiguration>();
 

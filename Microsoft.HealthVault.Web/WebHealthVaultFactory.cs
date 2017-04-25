@@ -10,8 +10,10 @@ using System;
 using System.Security.Principal;
 using System.Threading.Tasks;
 using System.Web;
+using Microsoft.HealthVault.Configuration;
 using Microsoft.HealthVault.Connection;
 using Microsoft.HealthVault.PlatformInformation;
+using Microsoft.HealthVault.Transport;
 using Microsoft.HealthVault.Web.Connection;
 using Microsoft.HealthVault.Web.Providers;
 
@@ -37,7 +39,7 @@ namespace Microsoft.HealthVault.Web
             IPrincipal principal = HttpContext.Current.User;
             HealthVaultIdentity identity = principal?.Identity as HealthVaultIdentity;
 
-            IServiceLocator serviceLocator = Ioc.Get<IServiceLocator>();
+            IServiceLocator serviceLocator = new ServiceLocator();
 
             if (identity == null)
             {
@@ -60,7 +62,13 @@ namespace Microsoft.HealthVault.Web
             SessionCredential sessionCredentialToken = webConnectionInfo.SessionCredential;
             string token = webConnectionInfo.UserAuthToken;
 
-            IWebHealthVaultConnection webConnection = new WebHealthVaultConnection(serviceLocator, serviceInstance, sessionCredentialToken, token);
+            IWebHealthVaultConnection webConnection = new WebHealthVaultConnection(
+                serviceLocator,
+                serviceLocator.GetInstance<IHealthWebRequestClient>(),
+                serviceLocator.GetInstance<HealthVaultConfiguration>(),
+                serviceInstance, 
+                sessionCredentialToken,
+                token);
 
             return webConnection;
         }
@@ -77,7 +85,7 @@ namespace Microsoft.HealthVault.Web
             string instanceId = null, 
             SessionCredential sessionCredential = null)
         {
-            IServiceLocator serviceLocator = Ioc.Get<IServiceLocator>();
+            IServiceLocator serviceLocator = new ServiceLocator();
 
             // Get ServiceInstance
             IServiceInstanceProvider serviceInstanceProvider = serviceLocator.GetInstance<IServiceInstanceProvider>();
@@ -85,6 +93,8 @@ namespace Microsoft.HealthVault.Web
 
             IOfflineHealthVaultConnection offlineHealthVaultConnection = new OfflineHealthVaultConnection( 
                 serviceLocator,
+                serviceLocator.GetInstance<IHealthWebRequestClient>(),
+                serviceLocator.GetInstance<HealthVaultConfiguration>(),
                 serviceInstance,
                 sessionCredential,
                 offlinePersonId);

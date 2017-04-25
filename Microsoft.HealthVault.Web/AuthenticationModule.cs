@@ -19,6 +19,7 @@ using Microsoft.HealthVault.Configuration;
 using Microsoft.HealthVault.Person;
 using Microsoft.HealthVault.PlatformInformation;
 using Microsoft.HealthVault.Thing;
+using Microsoft.HealthVault.Transport;
 using Microsoft.HealthVault.Web.Configuration;
 using Microsoft.HealthVault.Web.Connection;
 using Microsoft.HealthVault.Web.Constants;
@@ -122,13 +123,19 @@ namespace Microsoft.HealthVault.Web
 
         private static async Task<WebConnectionInfo> CreateWebConnectionInfoAsync(string token, string instanceId)
         {
-            IServiceLocator serviceLocator = Ioc.Get<IServiceLocator>();
+            IServiceLocator serviceLocator = new ServiceLocator();
             IServiceInstanceProvider serviceInstanceProvider = serviceLocator.GetInstance<IServiceInstanceProvider>();
             HealthServiceInstance serviceInstance = await serviceInstanceProvider.GetHealthServiceInstanceAsync(instanceId);
 
             WebHealthVaultConfiguration webHealthVaultConfiguration = Ioc.Get<WebHealthVaultConfiguration>();
 
-            IWebHealthVaultConnection webHealthVaultConnection = new WebHealthVaultConnection(serviceLocator, serviceInstance, null, token);
+            IWebHealthVaultConnection webHealthVaultConnection = new WebHealthVaultConnection(
+                serviceLocator,
+                serviceLocator.GetInstance<IHealthWebRequestClient>(),
+                serviceLocator.GetInstance<HealthVaultConfiguration>(),
+                serviceInstance, 
+                null,
+                token);
 
             var serviceInstanceHealthServiceUrl = serviceInstance.HealthServiceUrl;
 

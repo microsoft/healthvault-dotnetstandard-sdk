@@ -13,6 +13,7 @@ using System.Threading.Tasks;
 using System.Web;
 using System.Xml.Linq;
 using Microsoft.HealthVault.Clients;
+using Microsoft.HealthVault.Configuration;
 using Microsoft.HealthVault.Connection;
 using Microsoft.HealthVault.Person;
 using Microsoft.HealthVault.PlatformInformation;
@@ -27,11 +28,14 @@ namespace Microsoft.HealthVault.Web.Connection
         private readonly AsyncLock personInfoLock = new AsyncLock();
         private PersonInfo personInfo;
 
-        public WebHealthVaultConnection(IServiceLocator serviceLocator,
+        public WebHealthVaultConnection(
+            IServiceLocator serviceLocator,
+            IHealthWebRequestClient healthWebRequestClient,
+            HealthVaultConfiguration configuration,
             HealthServiceInstance healthServiceInstance = null,
             SessionCredential sessionCredential = null,
             string userAuthToken = null)
-            : base(serviceLocator, healthServiceInstance, sessionCredential)
+            : base(serviceLocator, healthWebRequestClient, configuration, healthServiceInstance, sessionCredential)
         {
             this.UserAuthToken = userAuthToken;
 

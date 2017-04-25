@@ -138,8 +138,6 @@ namespace Microsoft.HealthVault.UnitTest
                     Arg.Is<object>(o => ((PersonInfo)o).Name == "David Rickard"));
         }
 
-
-
         [TestMethod]
         public async Task WhenAuthenticateCalledWithStoredInfo_ThenSessionCredentialPopulated()
         {

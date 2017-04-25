@@ -123,6 +123,7 @@ namespace Microsoft.HealthVault.UnitTest
 
             return true;
         }
+
         private ShellAuthService CreateService()
         {
             return new ShellAuthService(

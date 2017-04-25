@@ -8,11 +8,13 @@
 
 using System;
 using System.Threading.Tasks;
+using Microsoft.HealthVault.Configuration;
 using Microsoft.HealthVault.Connection;
 using Microsoft.HealthVault.Person;
 using Microsoft.HealthVault.PlatformInformation;
 using Microsoft.HealthVault.Rest;
 using Microsoft.HealthVault.Transport;
+using Microsoft.HealthVault.Transport.MessageFormatters.SessionFormatters;
 
 namespace Microsoft.HealthVault.Web.Connection
 {
@@ -25,15 +27,19 @@ namespace Microsoft.HealthVault.Web.Connection
         /// Initializes a new instance of the <see cref="OfflineHealthVaultConnection"/> class.
         /// </summary>
         /// <param name="serviceLocator">The service locator.</param>
+        /// <param name="healthWebRequestClient">A client to make a HealthVault request.</param>
+        /// <param name="configuration">The configuration to use.</param>
         /// <param name="serviceInstance">The service instance.</param>
         /// <param name="sessionCredential">The session credential.</param>
         /// <param name="offlinePersionId">The offline person identifier.</param>
         public OfflineHealthVaultConnection(
             IServiceLocator serviceLocator,
+            IHealthWebRequestClient healthWebRequestClient,
+            HealthVaultConfiguration configuration,
             HealthServiceInstance serviceInstance = null,
             SessionCredential sessionCredential = null,
             string offlinePersionId = null)
-            : base(serviceLocator, serviceInstance, sessionCredential)
+            : base(serviceLocator, healthWebRequestClient, configuration, serviceInstance, sessionCredential)
         {
             Guid offlinePersonId;
 
