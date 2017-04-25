@@ -7,6 +7,7 @@
 // THE SOFTWARE IS PROVIDED *AS IS*, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 using System;
+using Microsoft.HealthVault.Configuration;
 using Microsoft.HealthVault.Connection;
 using Microsoft.HealthVault.RestApi.Generated;
 
@@ -20,13 +21,11 @@ namespace Microsoft.HealthVault.RestApi
         /// <summary>
         /// Creates a client for accessing the Microsoft HealthVault REST API.
         /// </summary>
-        /// <param name="connection">The client.</param>
-        /// <param name="restServiceBaseUrl">The rest service base URL.</param>
+        /// <param name="connection">The HealthVault connection.</param>
         /// <param name="recordId">The record identifier.</param>
-        /// <returns></returns>
-        public static IMicrosoftHealthVaultRestApi CreateMicrosoftHealthVaultRestApi(this IHealthVaultConnection connection, Uri restServiceBaseUrl, Guid recordId)
+        public static IMicrosoftHealthVaultRestApi CreateMicrosoftHealthVaultRestApi(this IHealthVaultConnection connection, Guid recordId)
         {
-            return new MicrosoftHealthVaultRestApi(restServiceBaseUrl, new HealthVaultRestCredentials(connection.CreateRestClient(), recordId));
+            return new MicrosoftHealthVaultRestApi(Ioc.Get<HealthVaultConfiguration>().RestHealthVaultUrl, new HealthVaultRestCredentials(connection.CreateRestClient(), recordId));
         }
     }
 }

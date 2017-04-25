@@ -8,9 +8,10 @@
 
 using System.Threading.Tasks;
 using System.Web.Mvc;
+using Microsoft.HealthVault.RestApi;
+using Microsoft.HealthVault.RestApi.Generated;
 using Microsoft.HealthVault.Web;
 using Microsoft.HealthVault.Web.Attributes;
-using SandboxWeb.Models.Rest;
 
 namespace SandboxWeb.Controllers
 {
@@ -21,11 +22,10 @@ namespace SandboxWeb.Controllers
         {
             var webHealthVaultConnection = await WebHealthVaultFactory.CreateWebConnectionAsync();
             await webHealthVaultConnection.AuthenticateAsync();
-
             var personInfo = await webHealthVaultConnection.GetPersonInfoAsync();
-            var restClient = webHealthVaultConnection.CreateRestClient();
 
-            ActionPlansResponseModel plans = await restClient.ExecuteAsync(new GetActionPlansRequest(personInfo.GetSelfRecord().Id));
+            var restClient = webHealthVaultConnection.CreateMicrosoftHealthVaultRestApi(personInfo.GetSelfRecord().Id);
+            var plans = await restClient.GetActionPlansAsync();
 
             return this.View(plans);
         }
