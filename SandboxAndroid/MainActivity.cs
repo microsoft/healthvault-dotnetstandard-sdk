@@ -86,8 +86,8 @@ namespace SandboxAndroid
             var configuration = new HealthVaultConfiguration
             {
                 MasterApplicationId = Guid.Parse("cf0cb893-d411-495c-b66f-9d72b4fd2b97"),
-                HealthVaultShellUrl = new Uri("https://account.healthvault-ppe.com"),
-                HealthVaultUrl = new Uri("https://platform.healthvault-ppe.com/platform")
+                DefaultHealthVaultShellUrl = new Uri("https://account.healthvault-ppe.com"),
+                DefaultHealthVaultUrl = new Uri("https://platform.healthvault-ppe.com/platform")
             };
             return configuration;
         }

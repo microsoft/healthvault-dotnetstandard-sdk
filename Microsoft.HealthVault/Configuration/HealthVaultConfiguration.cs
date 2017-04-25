@@ -21,8 +21,8 @@ namespace Microsoft.HealthVault.Configuration
     /// </summary>
     public class HealthVaultConfiguration
     {
-        private Uri shellUrl;
-        private Uri healthVaultRootUrl;
+        private Uri defaultHealthVaultShellUrl;
+        private Uri defaultHealthVaultUrl;
         private Uri restHealthVaultRootUrl;
 
         /// <summary>
@@ -30,8 +30,8 @@ namespace Microsoft.HealthVault.Configuration
         /// </summary>
         public HealthVaultConfiguration()
         {
-            this.shellUrl = HealthVaultConfigurationDefaults.ShellUrl;
-            this.HealthVaultUrl = HealthVaultConfigurationDefaults.HealthVaultRootUrl;
+            this.DefaultHealthVaultUrl = HealthVaultConfigurationDefaults.HealthVaultRootUrl;
+            this.DefaultHealthVaultShellUrl = HealthVaultConfigurationDefaults.ShellUrl;
             this.RequestTimeoutDuration = HealthVaultConfigurationDefaults.RequestTimeoutDuration;
             this.RequestTimeToLiveDuration = HealthVaultConfigurationDefaults.RequestTimeToLiveDuration;
             this.RetryOnInternal500Count = HealthVaultConfigurationDefaults.RetryOnInternal500Count;
@@ -47,10 +47,10 @@ namespace Microsoft.HealthVault.Configuration
         /// This may be overwritten if an environment instance bounce happens.
         /// This property corresponds to the "HV_HealthServiceUrl" configuration value when reading from web.config.
         /// </remarks>
-        public Uri HealthVaultUrl
+        public Uri DefaultHealthVaultUrl
         {
-            get { return this.healthVaultRootUrl; }
-            set { this.healthVaultRootUrl = EnsureTrailingSlash(value); }
+            get { return this.defaultHealthVaultUrl; }
+            set { this.defaultHealthVaultUrl = EnsureTrailingSlash(value); }
         }
 
         /// <summary>
@@ -62,10 +62,10 @@ namespace Microsoft.HealthVault.Configuration
         /// This may be overwritten if an environment instance bounce happens.
         /// This property corresponds to the "HV_ShellUrl" configuration value when reading from web.config.
         /// </remarks>
-        public Uri HealthVaultShellUrl
+        public Uri DefaultHealthVaultShellUrl
         {
-            get { return this.shellUrl; }
-            set { this.shellUrl = EnsureTrailingSlash(value); }
+            get { return this.defaultHealthVaultShellUrl; }
+            set { this.defaultHealthVaultShellUrl = EnsureTrailingSlash(value); }
         }
 
         /// <summary>

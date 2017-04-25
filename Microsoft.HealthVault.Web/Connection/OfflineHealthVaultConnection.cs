@@ -8,6 +8,7 @@
 
 using System;
 using System.Threading.Tasks;
+using Microsoft.HealthVault.Configuration;
 using Microsoft.HealthVault.Connection;
 using Microsoft.HealthVault.Person;
 using Microsoft.HealthVault.PlatformInformation;

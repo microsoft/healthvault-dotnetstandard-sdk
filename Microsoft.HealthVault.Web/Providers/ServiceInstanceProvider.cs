@@ -8,6 +8,7 @@
 
 using System.Threading.Tasks;
 using Microsoft.HealthVault.Clients;
+using Microsoft.HealthVault.Configuration;
 using Microsoft.HealthVault.Exceptions;
 using Microsoft.HealthVault.PlatformInformation;
 using Microsoft.HealthVault.Transport;
@@ -49,7 +50,7 @@ namespace Microsoft.HealthVault.Web.Providers
         private async Task<ServiceInfo> GetFromServiceAsync()
         {
             
-            IWebHealthVaultConnection webHealthVaultConnection = new WebHealthVaultConnection(serviceLocator);
+            IWebHealthVaultConnection webHealthVaultConnection = new WebHealthVaultConnection(this.serviceLocator);
             IPlatformClient platformClient = webHealthVaultConnection.CreatePlatformClient();
 
             ServiceInfo serviceInfo = await platformClient.GetServiceDefinitionAsync(ServiceInfoSections.Topology).ConfigureAwait(false);

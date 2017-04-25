@@ -9,9 +9,11 @@
 using System;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.HealthVault.Configuration;
 using Microsoft.HealthVault.Connection;
 using Microsoft.HealthVault.Helpers;
 using Microsoft.HealthVault.PlatformInformation;
+using Microsoft.HealthVault.Transport;
 using Microsoft.HealthVault.Web.Configuration;
 
 namespace Microsoft.HealthVault.Web.Connection
@@ -36,8 +38,8 @@ namespace Microsoft.HealthVault.Web.Connection
                 "1",
                 "Default",
                 "Default HealthVault instance",
-                UrlUtilities.GetFullPlatformUrl(this.webHealthVaultConfiguration.HealthVaultUrl),
-                this.webHealthVaultConfiguration.HealthVaultShellUrl);
+                UrlUtilities.GetFullPlatformUrl(this.webHealthVaultConfiguration.DefaultHealthVaultUrl),
+                this.webHealthVaultConfiguration.DefaultHealthVaultShellUrl);
 
             this.SessionCredential = sessionCredential;
         }

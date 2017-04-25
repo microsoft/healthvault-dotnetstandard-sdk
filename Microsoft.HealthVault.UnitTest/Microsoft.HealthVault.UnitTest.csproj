@@ -121,11 +121,14 @@
     <Compile Include="Clients\VocabularyClientTests.cs" />
     <Compile Include="CloudRequestTests\TestHealthWebRequestClient.cs" />
     <Compile Include="Connection\HttpClientFactoryTests.cs" />
+    <Compile Include="HealthVaultConnectionFactoryInternalTests.cs" />
+    <Compile Include="HealthVaultSodaConnectionTests.cs" />
     <Compile Include="LocalObjectStoreTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Rest\GivenARestRequest.cs" />
     <Compile Include="Rest\RestClientBuilder.cs" />
     <Compile Include="Samples\SampleUtils.cs" />
+    <Compile Include="ShellAuthServiceTests.cs" />
     <Compile Include="Transport\RequestAuthSerializerTests.cs" />
     <Compile Include="Transport\RequestHeaderSerializerTests.cs" />
     <Compile Include="Transport\RequestInfoSerializerTests.cs" />
@@ -162,8 +165,10 @@
     <EmbeddedResource Include="Samples\ServiceDefinitionSample.xml" />
     <EmbeddedResource Include="Samples\InstanceSample.xml" />
     <EmbeddedResource Include="Samples\AuthorizedPeopleSample.xml" />
+    <EmbeddedResource Include="Samples\NewApplicationCreationInfoResult.xml" />
+    <EmbeddedResource Include="Samples\GetServiceDefinitionResult.xml" />
+    <EmbeddedResource Include="Samples\GetAuthorizedPeopleResult.xml" />
   </ItemGroup>
-  <ItemGroup />
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">
       <ItemGroup>

@@ -2292,4 +2292,7 @@
   <data name="AuthenticatedConnectionRequired" xml:space="preserve">
     <value>Authenticate the connection</value>
   </data>
+  <data name="CannotCallAuthorizeAdditionalRecords" xml:space="preserve">
+    <value>Cannot call authorize additional records. First authorization is not yet complete.</value>
+  </data>
 </root>

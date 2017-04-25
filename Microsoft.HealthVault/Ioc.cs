@@ -30,7 +30,7 @@ namespace Microsoft.HealthVault
             Container.RegisterSingleton<ICryptographer, Cryptographer>();
         }
 
-        public static DependencyInjectionContainer Container { get; }
+        public static DependencyInjectionContainer Container { get; internal set; }
 
         public static T Get<T>()
         {
