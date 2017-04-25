@@ -131,8 +131,6 @@ namespace Microsoft.HealthVault.Web
 
             IWebHealthVaultConnection webHealthVaultConnection = new WebHealthVaultConnection(
                 serviceLocator,
-                serviceLocator.GetInstance<IHealthWebRequestClient>(),
-                serviceLocator.GetInstance<HealthVaultConfiguration>(),
                 serviceInstance, 
                 null,
                 token);

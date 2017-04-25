@@ -30,12 +30,10 @@ namespace Microsoft.HealthVault.Web.Connection
 
         public WebHealthVaultConnection(
             IServiceLocator serviceLocator,
-            IHealthWebRequestClient healthWebRequestClient,
-            HealthVaultConfiguration configuration,
             HealthServiceInstance healthServiceInstance = null,
             SessionCredential sessionCredential = null,
             string userAuthToken = null)
-            : base(serviceLocator, healthWebRequestClient, configuration, healthServiceInstance, sessionCredential)
+            : base(serviceLocator, healthServiceInstance, sessionCredential)
         {
             this.UserAuthToken = userAuthToken;
 

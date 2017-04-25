@@ -64,8 +64,6 @@ namespace Microsoft.HealthVault.Web
 
             IWebHealthVaultConnection webConnection = new WebHealthVaultConnection(
                 serviceLocator,
-                serviceLocator.GetInstance<IHealthWebRequestClient>(),
-                serviceLocator.GetInstance<HealthVaultConfiguration>(),
                 serviceInstance, 
                 sessionCredentialToken,
                 token);
@@ -93,8 +91,6 @@ namespace Microsoft.HealthVault.Web
 
             IOfflineHealthVaultConnection offlineHealthVaultConnection = new OfflineHealthVaultConnection( 
                 serviceLocator,
-                serviceLocator.GetInstance<IHealthWebRequestClient>(),
-                serviceLocator.GetInstance<HealthVaultConfiguration>(),
                 serviceInstance,
                 sessionCredential,
                 offlinePersonId);

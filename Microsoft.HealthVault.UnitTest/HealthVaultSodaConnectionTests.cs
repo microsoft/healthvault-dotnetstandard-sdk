@@ -39,7 +39,7 @@ namespace Microsoft.HealthVault.UnitTest
         private ILocalObjectStore subLocalObjectStore;
         private IShellAuthService subShellAuthService;
         private IClientSessionCredentialClient subClientSessionCredentialClient;
-        private HealthVaultConfiguration subHealthVaultConfiguration;
+        private HealthVaultConfiguration healthVaultConfiguration;
 
         private static readonly Guid MasterApplicationId = new Guid("30945bac-d221-4f89-8197-6983a390066d");
 
@@ -51,12 +51,18 @@ namespace Microsoft.HealthVault.UnitTest
             this.subLocalObjectStore = Substitute.For<ILocalObjectStore>();
             this.subShellAuthService = Substitute.For<IShellAuthService>();
             this.subClientSessionCredentialClient = Substitute.For<IClientSessionCredentialClient>();
-            this.subHealthVaultConfiguration = new HealthVaultConfiguration
+            this.healthVaultConfiguration = new HealthVaultConfiguration
             {
                 MasterApplicationId = MasterApplicationId,
                 DefaultHealthVaultUrl = new Uri("https://platform2.healthvault.com/platform/"),
                 DefaultHealthVaultShellUrl = new Uri("https://account.healthvault.com")
             };
+
+            this.subServiceLocator.GetInstance<HealthVaultConfiguration>().Returns(this.healthVaultConfiguration);
+            this.subServiceLocator.GetInstance<IHealthWebRequestClient>().Returns(this.subHealthWebRequestClient);
+            this.subServiceLocator.GetInstance<SdkTelemetryInformation>().Returns(new SdkTelemetryInformation { FileVersion = "1.0.0.0" });
+            this.subServiceLocator.GetInstance<ICryptographer>().Returns(new Cryptographer());
+            this.subServiceLocator.GetInstance<IHealthServiceResponseParser>().Returns(new HealthServiceResponseParser());
         }
 
         [TestMethod]
@@ -64,7 +70,7 @@ namespace Microsoft.HealthVault.UnitTest
         {
             this.SetupEmptyLocalStore();
 
-            this.subHealthVaultConfiguration.MasterApplicationId = MasterApplicationId;
+            this.healthVaultConfiguration.MasterApplicationId = MasterApplicationId;
 
             var responseMessage1 = GenerateResponseMessage("NewApplicationCreationInfoResult.xml");
             var responseMessage2 = GenerateResponseMessage("GetServiceDefinitionResult.xml");
@@ -260,10 +266,8 @@ namespace Microsoft.HealthVault.UnitTest
         {
             return new HealthVaultSodaConnection(
                 this.subServiceLocator,
-                this.subHealthWebRequestClient,
                 this.subLocalObjectStore,
-                this.subShellAuthService,
-                this.subHealthVaultConfiguration);
+                this.subShellAuthService);
         }
     }
 }

@@ -28,11 +28,9 @@ namespace Microsoft.HealthVault.Web.Connection
 
         protected WebHealthVaultConnectionBase(
             IServiceLocator serviceLocator,
-            IHealthWebRequestClient healthWebRequestClient,
-            HealthVaultConfiguration configuration,
             HealthServiceInstance healthServiceInstance = null,
             SessionCredential sessionCredential = null)
-            : base(serviceLocator, healthWebRequestClient, configuration)
+            : base(serviceLocator)
         {
             this.webHealthVaultConfiguration = this.ServiceLocator.GetInstance<WebHealthVaultConfiguration>();
 

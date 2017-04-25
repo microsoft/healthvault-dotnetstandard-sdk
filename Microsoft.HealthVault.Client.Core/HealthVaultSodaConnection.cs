@@ -31,20 +31,15 @@ namespace Microsoft.HealthVault.Client
 
         public HealthVaultSodaConnection(
             IServiceLocator serviceLocator,
-            IHealthWebRequestClient healthWebRequestClient,
             ILocalObjectStore localObjectStore,
-            IShellAuthService shellAuthService,
-            HealthVaultConfiguration configuration)
-            : base(serviceLocator, healthWebRequestClient, configuration)
+            IShellAuthService shellAuthService)
+            : base(serviceLocator)
         {
             this.localObjectStore = localObjectStore;
             this.shellAuthService = shellAuthService;
-            this.Configuration = configuration;
         }
 
         public ApplicationCreationInfo ApplicationCreationInfo { get; internal set; }
-
-        public HealthVaultConfiguration Configuration { get; }
 
         public override Guid? ApplicationId => this.ApplicationCreationInfo?.AppInstanceId;
 

@@ -2,7 +2,9 @@ using System;
 using Grace.DependencyInjection;
 using Microsoft.HealthVault.Client;
 using Microsoft.HealthVault.Configuration;
+using Microsoft.HealthVault.Connection;
 using Microsoft.HealthVault.Extensions;
+using Microsoft.HealthVault.Transport;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NSubstitute;
 
@@ -15,7 +17,11 @@ namespace Microsoft.HealthVault.UnitTest
         public void TestInitialize()
         {
             Ioc.Container = new DependencyInjectionContainer();
-            Ioc.Container.Configure(c => c.ExportFactory(() => new HealthVaultSodaConnection(null, null, null, null, CreateConfig())).As<HealthVaultSodaConnection>());
+            Ioc.Container.Configure(c => c.ExportInstance(CreateConfig()).As<HealthVaultConfiguration>());
+            RegisterStubIoc<IHealthWebRequestClient>();
+            RegisterStubIoc<IHealthServiceResponseParser>();
+            RegisterStubIoc<ICryptographer>();
+            Ioc.Container.Configure(c => c.ExportFactory(() => new HealthVaultSodaConnection(new ServiceLocator(), null, null)).As<HealthVaultSodaConnection>());
         }
 
         [TestMethod]
@@ -62,6 +68,11 @@ namespace Microsoft.HealthVault.UnitTest
             {
                 MasterApplicationId = new Guid("4f274efe-c7b2-488d-a0d1-b1686866dec7")
             };
+        }
+
+        private static void RegisterStubIoc<T>() where T : class
+        {
+            Ioc.Container.Configure(c => c.ExportInstance(Substitute.For<T>()).As<T>());
         }
     }
 }

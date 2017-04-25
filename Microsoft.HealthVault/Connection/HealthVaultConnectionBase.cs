@@ -43,17 +43,16 @@ namespace Microsoft.HealthVault.Connection
         private readonly AsyncLock sessionCredentialLock = new AsyncLock();
         private HashSet<HealthVaultMethods> anonymousMethodSet = new HashSet<HealthVaultMethods>();
 
-        private readonly HealthVaultConfiguration configuration;
-        private readonly HealthWebRequestClient webRequestClient;
+        private readonly IHealthWebRequestClient webRequestClient;
         private readonly IHealthServiceResponseParser healthServiceResponseParser;
         private readonly IRequestMessageCreator requestMessageCreator;
 
-        protected HealthVaultConnectionBase(IServiceLocator serviceLocator, IHealthWebRequestClient healthWebRequestClient, HealthVaultConfiguration configuration)
+        protected HealthVaultConnectionBase(IServiceLocator serviceLocator)
         {
             this.ServiceLocator = serviceLocator;
 
-            this.config = configuration;
-            this.webRequestClient = healthWebRequestClient; 
+            this.Configuration = serviceLocator.GetInstance<HealthVaultConfiguration>();
+            this.webRequestClient = serviceLocator.GetInstance<IHealthWebRequestClient>();
             this.healthServiceResponseParser = serviceLocator.GetInstance<IHealthServiceResponseParser>();
 
             this.requestMessageCreator = new RequestMessageCreator(this, serviceLocator);
@@ -64,6 +63,8 @@ namespace Microsoft.HealthVault.Connection
         public SessionCredential SessionCredential { get; internal set; }
 
         public abstract Guid? ApplicationId { get; }
+
+        internal HealthVaultConfiguration Configuration { get; }
 
         protected IServiceLocator ServiceLocator { get; }
 
@@ -103,7 +104,7 @@ namespace Microsoft.HealthVault.Connection
         /// <summary>
         /// Creates a rest client that commmunicates with HealthVault
         /// </summary>
-        public IHealthVaultRestClient CreateRestClient() => new HealthVaultRestClient(this.configuration, this, this.webRequestClient);
+        public IHealthVaultRestClient CreateRestClient() => new HealthVaultRestClient(this.Configuration, this, this.webRequestClient);
 
         #endregion
 
@@ -132,7 +133,7 @@ namespace Microsoft.HealthVault.Connection
                 recordId,
                 isMethodAnonymous && method == HealthVaultMethods.CreateAuthenticatedSessionToken
                     ? this.ApplicationId 
-                    : this.configuration.MasterApplicationId);
+                    : this.Configuration.MasterApplicationId);
 
             var requestXml = requestXmlCreator();
 
@@ -196,7 +197,7 @@ namespace Microsoft.HealthVault.Connection
                 HttpResponseMessage response;
                 try
                 {
-                    cancellationTokenSource = new CancellationTokenSource(this.configuration.RequestTimeoutDuration);
+                    cancellationTokenSource = new CancellationTokenSource(this.Configuration.RequestTimeoutDuration);
 
                     response = await this.webRequestClient.SendAsync(
                         this.ServiceInstance.HealthServiceUrl,
