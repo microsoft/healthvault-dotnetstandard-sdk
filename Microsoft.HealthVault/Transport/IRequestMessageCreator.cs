@@ -8,16 +8,29 @@
 
 using System;
 
-namespace Microsoft.HealthVault.Clients
+namespace Microsoft.HealthVault.Transport
 {
     /// <summary>
-    /// The base interface for HealthVault clients
+    /// Creates request xml which will be used to send to HealthVault service
     /// </summary>
-    public interface IClient
+    interface IRequestMessageCreator
     {
         /// <summary>
-        /// An optional identifier that can be used to correlate a request.
+        /// Create request xml
         /// </summary>
-        Guid? CorrelationId { get; set; }
+        /// <param name="method">HealthVault method</param>
+        /// <param name="methodVersion">HealhtVault method version</param>
+        /// <param name="isMethodAnonymous">In case the method is anonymous, then the request xml won't put any auth information</param>
+        /// <param name="parameters">Method parameters, which will become infoxml</param>
+        /// <param name="recordId">RecordId, in case the method is record specfic, like "GetThings"</param>
+        /// <param name="appId">ApplicationId, will be used when the method doesn't need authentication, like NewApplicationInfo, GetServiceDefintion methods</param>
+        /// <returns></returns>
+        string Create(
+            HealthVaultMethods method,
+            int methodVersion,
+            bool isMethodAnonymous,
+            string parameters = null,
+            Guid? recordId = null,
+            Guid? appId = null);
     }
 }

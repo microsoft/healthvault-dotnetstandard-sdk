@@ -28,7 +28,7 @@ namespace Microsoft.HealthVault.Clients
             this.connection = connection;
         }
 
-        public Guid CorrelationId { get; set; }
+        public Guid? CorrelationId { get; set; }
 
         public async Task<IReadOnlyCollection<VocabularyKey>> GetVocabularyKeysAsync()
         {

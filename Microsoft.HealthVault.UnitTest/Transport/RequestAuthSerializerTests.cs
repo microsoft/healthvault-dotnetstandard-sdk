@@ -6,18 +6,38 @@
 //
 // THE SOFTWARE IS PROVIDED *AS IS*, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-using System;
+using System.Xml.XPath;
+using Microsoft.HealthVault.Connection;
+using Microsoft.HealthVault.Transport;
+using Microsoft.HealthVault.Transport.Serializers;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace Microsoft.HealthVault.Clients
+namespace Microsoft.HealthVault.UnitTest.Transport
 {
     /// <summary>
-    /// The base interface for HealthVault clients
+    /// Contains Tests for auth section of the request
     /// </summary>
-    public interface IClient
+    [TestClass]
+    public class RequestAuthSerializerTests
     {
-        /// <summary>
-        /// An optional identifier that can be used to correlate a request.
-        /// </summary>
-        Guid? CorrelationId { get; set; }
+        [TestMethod]
+        public void WhenRequestAuthIsSerialized()
+        {
+            RequestAuth requestAuth = new RequestAuth { HmacData = new CryptoData() { Algorithm = "someAlg", Value = "someValue" } };
+
+            RequestAuthSerializer requestAuthSerializer = new RequestAuthSerializer();
+            string authXml = requestAuthSerializer.Serialize(requestAuth);
+
+            XPathNavigator authNavigator = authXml
+                .AsXPathNavigator()
+                .SelectSingleNode("child::hmac-data");
+
+            string algName = authNavigator
+                .GetAttribute("algName", "");
+            string hmacDataValue = authNavigator.Value;
+
+            Assert.AreEqual("someAlg", algName);
+            Assert.AreEqual("someValue", hmacDataValue);
+        }
     }
 }
