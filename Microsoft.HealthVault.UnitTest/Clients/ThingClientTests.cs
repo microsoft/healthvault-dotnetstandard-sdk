@@ -42,7 +42,7 @@ namespace Microsoft.HealthVault.UnitTest.Clients
         [TestMethod]
         public void CreateClientTest()
         {
-            this.InitializeResponse(SampleUtils.GetSampleContent("ThingSampleBloodPressure.xml"));
+            this.InitializeResponse(SampleUtils.GetSampleContent("ThingsSampleBloodPressure.xml"));
             var guid = Guid.NewGuid();
             this.client.CorrelationId = guid;
             Assert.IsTrue(this.client.CorrelationId == guid);
@@ -55,7 +55,7 @@ namespace Microsoft.HealthVault.UnitTest.Clients
         [TestMethod]
         public async Task CreateNewThingsTest()
         {
-            this.InitializeResponse(SampleUtils.GetSampleContent("ThingSampleBloodPressure.xml"));
+            this.InitializeResponse(SampleUtils.GetSampleContent("ThingsSampleBloodPressure.xml"));
             ICollection<IThing> things = new Collection<IThing> { this.CreateSampleBloodGlucose() };
             await this.client.CreateNewThingsAsync(this.recordId, things);
             await this.connection.Received().ExecuteAsync(HealthVaultMethods.PutThings, Arg.Any<int>(), Arg.Is<string>(x => x.Contains("blood-glucose")), Arg.Is<Guid>((x) => x == this.recordId));
@@ -68,17 +68,45 @@ namespace Microsoft.HealthVault.UnitTest.Clients
         [TestMethod]
         public async Task GetThingsTest()
         {
-            this.InitializeResponse(SampleUtils.GetSampleContent("ThingSampleBloodPressure.xml"));
+            this.InitializeResponse(SampleUtils.GetSampleContent("ThingsSampleBloodPressure.xml"));
             ThingQuery query = this.GetThingQuery();
             var result = await this.client.GetThingsAsync(this.recordId, query);
 
             // ensure that the connection was called with the proper values
-            await this.connection.Received().ExecuteAsync(HealthVaultMethods.GetThings, Arg.Any<int>(), Arg.Is<string>(x => x.Contains(BloodPressure.TypeId.ToString())), Arg.Is<Guid>((x) => x == this.recordId));
+            await this.connection.Received().ExecuteAsync(
+                HealthVaultMethods.GetThings, 
+                Arg.Any<int>(), 
+                Arg.Is<string>(x => x.Contains(BloodPressure.TypeId.ToString())),
+                Arg.Is<Guid>((x) => x == this.recordId));
 
             // Assert that all results are parsed, grouped, and returned correctly.
             // Note that the sample data was not from this exact call, so it includes some other types of things in the results
             Assert.AreEqual(1, result.Count);
             Assert.AreEqual(33, result.FirstOrDefault()?.Count);
+        }
+
+        /// <summary>
+        /// Tests that the request to get thing is called correctly and returns the correct values
+        /// </summary>
+        /// <returns></returns>
+        [TestMethod]
+        public async Task GetThingTest()
+        {
+            this.InitializeResponse(SampleUtils.GetSampleContent("ThingSampleBloodPressure.xml"));
+
+            Guid correlationid = Guid.NewGuid();
+            this.client.CorrelationId = correlationid;
+            BloodPressure bloodPressure = await this.client.GetThingAsync<BloodPressure>(this.recordId, Guid.NewGuid());
+
+            // ensure that the connection was called with the proper values
+            await this.connection.Received().ExecuteAsync(
+                method: HealthVaultMethods.GetThings,
+                methodVersion: 3,
+                parameters: Arg.Any<string>(),
+                recordId: Arg.Is<Guid>(x => x == this.recordId),
+                correlationId: correlationid);
+
+            Assert.IsNotNull(bloodPressure);
         }
 
         /// <summary>
@@ -88,7 +116,7 @@ namespace Microsoft.HealthVault.UnitTest.Clients
         [TestMethod]
         public async Task RemoveThingsTest()
         {
-            this.InitializeResponse(SampleUtils.GetSampleContent("ThingSampleBloodPressure.xml"));
+            this.InitializeResponse(SampleUtils.GetSampleContent("ThingsSampleBloodPressure.xml"));
             var thing = this.CreateSampleBloodGlucose();
             ICollection<IThing> things = new Collection<IThing> { thing };
             await this.client.RemoveThingsAsync(this.recordId, things);
@@ -102,7 +130,7 @@ namespace Microsoft.HealthVault.UnitTest.Clients
         [TestMethod]
         public async Task UpdateThings()
         {
-            this.InitializeResponse(SampleUtils.GetSampleContent("ThingSampleBloodPressure.xml"));
+            this.InitializeResponse(SampleUtils.GetSampleContent("ThingsSampleBloodPressure.xml"));
             ICollection<IThing> things = new Collection<IThing> { this.CreateSampleBloodGlucose() };
             await this.client.UpdateThingsAsync(this.recordId, things);
             await this.connection.Received().ExecuteAsync(HealthVaultMethods.PutThings, Arg.Any<int>(), Arg.Is<string>(x => x.Contains(BloodGlucose.TypeId.ToString())), Arg.Is<Guid>((x) => x == this.recordId));
@@ -115,7 +143,7 @@ namespace Microsoft.HealthVault.UnitTest.Clients
         [TestMethod]
         public async Task GetTypedThings()
         {
-            this.InitializeResponse(SampleUtils.GetSampleContent("ThingSampleBloodPressure.xml"));
+            this.InitializeResponse(SampleUtils.GetSampleContent("ThingsSampleBloodPressure.xml"));
             var query = this.GetThingQuery();
             var result = await this.client.GetThingsAsync<BloodPressure>(this.recordId, query);
             await this.connection.Received().ExecuteAsync(HealthVaultMethods.GetThings, Arg.Any<int>(), Arg.Is<string>(x => x.Contains(BloodPressure.TypeId.ToString())), Arg.Is<Guid>((x) => x == this.recordId));

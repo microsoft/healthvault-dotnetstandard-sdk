@@ -57,7 +57,7 @@ namespace Microsoft.HealthVault.Clients
 
             searcher.Filters.Add(query);
 
-            HealthServiceResponseData result = await this.connection.ExecuteAsync(HealthVaultMethods.GetThings, 3, GetParametersXml(searcher), correlationId: this.CorrelationId);
+            HealthServiceResponseData result = await this.GetRequestWithParameters(recordId, searcher, query);
 
             IReadOnlyCollection<ThingCollection> resultSet = this.thingDeserializer.Deserialize(result, searcher);
 
