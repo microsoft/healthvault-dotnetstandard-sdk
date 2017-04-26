@@ -155,6 +155,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Samples\ThingsSampleBloodPressure.xml" />
     <EmbeddedResource Include="Samples\ThingSampleBloodPressure.xml" />
     <EmbeddedResource Include="Samples\VocabularySearchSample.xml" />
     <EmbeddedResource Include="Samples\VocabularySample.xml" />
