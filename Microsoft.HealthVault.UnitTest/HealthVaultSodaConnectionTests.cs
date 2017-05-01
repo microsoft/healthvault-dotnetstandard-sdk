@@ -8,8 +8,10 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.HealthVault;
 using Microsoft.HealthVault.Client;
+using Microsoft.HealthVault.Clients;
 using Microsoft.HealthVault.Configuration;
 using Microsoft.HealthVault.Connection;
+using Microsoft.HealthVault.Extensions;
 using Microsoft.HealthVault.Person;
 using Microsoft.HealthVault.PlatformInformation;
 using Microsoft.HealthVault.Transport;
@@ -63,6 +65,8 @@ namespace Microsoft.HealthVault.UnitTest
             this.subServiceLocator.GetInstance<SdkTelemetryInformation>().Returns(new SdkTelemetryInformation { FileVersion = "1.0.0.0" });
             this.subServiceLocator.GetInstance<ICryptographer>().Returns(new Cryptographer());
             this.subServiceLocator.GetInstance<IHealthServiceResponseParser>().Returns(new HealthServiceResponseParser());
+
+            Ioc.Container.RegisterTransient<IPersonClient, PersonClient>();
         }
 
         [TestMethod]

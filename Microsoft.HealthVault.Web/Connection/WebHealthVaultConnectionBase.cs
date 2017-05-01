@@ -9,12 +9,11 @@
 using System;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.HealthVault.Configuration;
 using Microsoft.HealthVault.Connection;
 using Microsoft.HealthVault.Helpers;
 using Microsoft.HealthVault.PlatformInformation;
-using Microsoft.HealthVault.Transport;
 using Microsoft.HealthVault.Web.Configuration;
+using Microsoft.HealthVault.Web.Providers;
 
 namespace Microsoft.HealthVault.Web.Connection
 {
@@ -27,21 +26,17 @@ namespace Microsoft.HealthVault.Web.Connection
         protected readonly WebHealthVaultConfiguration webHealthVaultConfiguration;
 
         protected WebHealthVaultConnectionBase(
-            IServiceLocator serviceLocator,
-            HealthServiceInstance healthServiceInstance = null,
-            SessionCredential sessionCredential = null)
+            IServiceLocator serviceLocator)
             : base(serviceLocator)
         {
             this.webHealthVaultConfiguration = this.ServiceLocator.GetInstance<WebHealthVaultConfiguration>();
 
-            this.ServiceInstance = healthServiceInstance ?? new HealthServiceInstance(
+            this.ServiceInstance = new HealthServiceInstance(
                 "1",
                 "Default",
                 "Default HealthVault instance",
                 UrlUtilities.GetFullPlatformUrl(this.webHealthVaultConfiguration.DefaultHealthVaultUrl),
                 this.webHealthVaultConfiguration.DefaultHealthVaultShellUrl);
-
-            this.SessionCredential = sessionCredential;
         }
 
         public override Guid? ApplicationId => this.webHealthVaultConfiguration.MasterApplicationId;
@@ -53,7 +48,15 @@ namespace Microsoft.HealthVault.Web.Connection
 
         protected override ISessionCredentialClient CreateSessionCredentialClient()
         {
-            return this.ServiceLocator.GetInstance<IWebSessionCredentialClient>();
+            IWebSessionCredentialClient webSessionCredentialClient = Ioc.Container.Locate<IWebSessionCredentialClient>(
+                    extraData: new
+                    {
+                        serviceLocator= this.ServiceLocator,
+                        connection = this,
+                        certificateInfoProvider = Ioc.Container.Locate<ICertificateInfoProvider>()
+                    });
+
+            return webSessionCredentialClient;
         }
     }
 }

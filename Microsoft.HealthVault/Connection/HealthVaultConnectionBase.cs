@@ -86,7 +86,7 @@ namespace Microsoft.HealthVault.Connection
         /// <summary>
         /// A client that can be used to access information and records associated with the currently athenticated user.
         /// </summary>
-        public IPersonClient CreatePersonClient() => new PersonClient(this);
+        public IPersonClient CreatePersonClient() => Ioc.Container.Locate<IPersonClient>(extraData: new { connection = this });
 
         /// <summary>
         /// A client that can be used to access vocabularies.
@@ -109,9 +109,9 @@ namespace Microsoft.HealthVault.Connection
         #endregion
 
         public async Task<HealthServiceResponseData> ExecuteAsync(
-            HealthVaultMethods method, 
+            HealthVaultMethods method,
             int methodVersion,
-            string parameters = null, 
+            string parameters = null,
             Guid? recordId = null,
             Guid? correlationId = null)
         {
@@ -125,15 +125,15 @@ namespace Microsoft.HealthVault.Connection
             }
 
             // Create the message using a Func in case we need to re-generate it for a retry later
-            Func <string> requestXmlCreator = () => this.requestMessageCreator.Create(
-                method, 
-                methodVersion,
-                isMethodAnonymous,
-                parameters,
-                recordId,
-                isMethodAnonymous && method == HealthVaultMethods.CreateAuthenticatedSessionToken
-                    ? this.ApplicationId 
-                    : this.Configuration.MasterApplicationId);
+            Func<string> requestXmlCreator = () => this.requestMessageCreator.Create(
+               method,
+               methodVersion,
+               isMethodAnonymous,
+               parameters,
+               recordId,
+               isMethodAnonymous && method == HealthVaultMethods.CreateAuthenticatedSessionToken
+                   ? this.ApplicationId
+                   : this.Configuration.MasterApplicationId);
 
             var requestXml = requestXmlCreator();
 

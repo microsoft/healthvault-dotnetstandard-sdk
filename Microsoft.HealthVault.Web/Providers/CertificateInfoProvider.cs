@@ -49,11 +49,11 @@ namespace Microsoft.HealthVault.Web.Providers
 
         public RSACryptoServiceProvider PrivateKey { get; internal set; }
         
-        private X509Certificate2 GetApplicationCertificate()
+        internal X509Certificate2 GetApplicationCertificate()
         {
             string applicationCertificateFilename = this.configuration.ApplicationCertificateFileName;
 
-            var cert = applicationCertificateFilename == null 
+            var cert = string.IsNullOrEmpty(applicationCertificateFilename) 
                 ? this.GetApplicationCertificateFromStore() 
                 : this.GetApplicationCertificateFromFile(applicationCertificateFilename);
 
