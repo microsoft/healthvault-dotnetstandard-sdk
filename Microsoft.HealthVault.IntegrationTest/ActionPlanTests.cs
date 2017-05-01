@@ -19,8 +19,10 @@ namespace Microsoft.HealthVault.IntegrationTest
     {
         private const string PlanName = "Manage your weight";
 
+        // TODO: Re-enable this after cloud problems are resolved and Action Plans stops giving HTTP 500, tracked by bug #54862
+        [Ignore]
         [TestMethod]
-        public async Task BasicActionPlans()
+        public async Task SimpleActionPlans()
         {
             IHealthVaultSodaConnection connection = HealthVaultConnectionFactory.Current.GetOrCreateSodaConnection(Constants.Configuration);
             PersonInfo personInfo = await connection.GetPersonInfoAsync();
