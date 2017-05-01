@@ -39,12 +39,14 @@ namespace Microsoft.HealthVault.IntegrationTest
 
             var bloodPressure1 = new BloodPressure
             {
+                EffectiveDate = DateTime.Now,
                 Systolic = 110,
                 Diastolic = 90,
             };
 
             var bloodPressure2 = new BloodPressure
             {
+                EffectiveDate = DateTime.Now.AddHours(-1),
                 Systolic = 111,
                 Diastolic = 91,
             };
