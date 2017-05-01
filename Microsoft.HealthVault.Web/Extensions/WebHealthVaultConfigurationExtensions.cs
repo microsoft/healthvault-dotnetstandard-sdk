@@ -18,7 +18,7 @@ namespace Microsoft.HealthVault.Web.Extensions
         ///  When reading from web.config, this property corresponds to the "HealthVaultUrl" configuration
         /// value with the path modified to the appropriate handler.
         /// </remarks>
-        public static Uri BlobStreamUrl(this WebHealthVaultConfiguration config) => config.HealthVaultUrl?.ReplacePath(Urls.BlobStreamUrlSuffix);
+        public static Uri BlobStreamUrl(this WebHealthVaultConfiguration config) => config.DefaultHealthVaultUrl?.ReplacePath(Urls.BlobStreamUrlSuffix);
 
         /// <summary>
         /// Gets the HealthVault client service URL for
@@ -30,7 +30,7 @@ namespace Microsoft.HealthVault.Web.Extensions
         ///  When reading from web.config, this property corresponds to the "HV_HealthVaultUrl" configuration
         /// value with the path modified to the appropriate handler.
         /// </remarks>
-        public static Uri HealthClientServiceUrl(this WebHealthVaultConfiguration config) => config.HealthVaultUrl?.Append(Urls.HealthClientServiceSuffix);
+        public static Uri HealthClientServiceUrl(this WebHealthVaultConfiguration config) => config.DefaultHealthVaultUrl?.Append(Urls.HealthClientServiceSuffix);
 
         /// <summary>
         /// Gets the URL of the HealthVault Shell authentication page.
@@ -43,7 +43,7 @@ namespace Microsoft.HealthVault.Web.Extensions
         ///
         public static Uri HealthVaultShellAuthenticationUrl(this WebHealthVaultConfiguration config)
         {
-            var redirect = new ShellRedirectParameters(config.HealthVaultShellUrl.OriginalString)
+            var redirect = new ShellRedirectParameters(config.DefaultHealthVaultShellUrl.OriginalString)
             {
                 TargetLocation = AuthTarget,
                 ApplicationId = config.MasterApplicationId,
@@ -61,13 +61,13 @@ namespace Microsoft.HealthVault.Web.Extensions
         /// This property corresponds to the "HV_HealthServiceUrl" configuration value when reading from web.config.
         /// </remarks>
         ///
-        public static Uri HealthVaultTypeSchemaUrl(this WebHealthVaultConfiguration config) => new Uri(config.HealthVaultUrl, Urls.TypeSchemaSuffix);
+        public static Uri HealthVaultTypeSchemaUrl(this WebHealthVaultConfiguration config) => new Uri(config.DefaultHealthVaultUrl, Urls.TypeSchemaSuffix);
 
         /// <summary>
         /// Shell redirector url, derived from web config.
         /// </summary>
         ///
-        public static Uri ShellRedirectorUrl(this WebHealthVaultConfiguration config) => config.HealthVaultShellUrl?.Append(ConfigDefaults.ShellRedirectorLocation);
+        public static Uri ShellRedirectorUrl(this WebHealthVaultConfiguration config) => config.DefaultHealthVaultShellUrl?.Append(ConfigDefaults.ShellRedirectorLocation);
 
         /// <summary>
         /// Gets the URL of the page corresponding to the action.

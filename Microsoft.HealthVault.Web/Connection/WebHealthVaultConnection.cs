@@ -13,11 +13,12 @@ using System.Threading.Tasks;
 using System.Web;
 using System.Xml.Linq;
 using Microsoft.HealthVault.Clients;
+using Microsoft.HealthVault.Configuration;
 using Microsoft.HealthVault.Connection;
 using Microsoft.HealthVault.Person;
 using Microsoft.HealthVault.PlatformInformation;
-using Microsoft.HealthVault.Transport.MessageFormatters.SessionFormatters;
 using Microsoft.HealthVault.Record;
+using Microsoft.HealthVault.Transport;
 using Microsoft.HealthVault.Web.Exceptions;
 
 namespace Microsoft.HealthVault.Web.Connection
@@ -27,7 +28,8 @@ namespace Microsoft.HealthVault.Web.Connection
         private readonly AsyncLock personInfoLock = new AsyncLock();
         private PersonInfo personInfo;
 
-        public WebHealthVaultConnection(IServiceLocator serviceLocator,
+        public WebHealthVaultConnection(
+            IServiceLocator serviceLocator,
             HealthServiceInstance healthServiceInstance = null,
             SessionCredential sessionCredential = null,
             string userAuthToken = null)
@@ -39,8 +41,6 @@ namespace Microsoft.HealthVault.Web.Connection
         }
 
         public string UserAuthToken { get; set; }
-
-        protected override SessionFormatter SessionFormatter => new TokenSessionFormatter(this.SessionCredential.Token, this.UserAuthToken);
 
         /// <summary>
         /// Get PersonInfo for the authenticated connection.
@@ -104,6 +104,17 @@ namespace Microsoft.HealthVault.Web.Connection
         public override string GetRestAuthSessionHeader()
         {
             return $"user-token={this.UserAuthToken}";
+        }
+
+        public override AuthSession GetAuthSessionHeader()
+        {
+            AuthSession authSession = new AuthSession
+            {
+                AuthToken = this.SessionCredential.Token,
+                UserAuthToken = this.UserAuthToken
+            };
+
+            return authSession;
         }
     }
 }

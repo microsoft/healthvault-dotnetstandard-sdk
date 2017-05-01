@@ -1,0 +1,25 @@
+﻿<response>
+  <status>
+    <code>0</code>
+  </status>
+  <wc:info xmlns:wc="urn:com.microsoft.wc.methods.response.GetAuthorizedPeople">
+    <response-results>
+      <person-info>
+        <person-id>cc5e5771-4da7-4961-a758-d7714223d9ab</person-id>
+        <name>David Rickard</name>
+        <selected-record-id>9c863988-e2aa-440e-8c11-7ba4750ba4c8</selected-record-id>
+        <record id="9c863988-e2aa-440e-8c11-7ba4750ba4c8" record-custodian="true" rel-type="1" rel-name="Self" auth-expires="9999-12-31T23:59:59.999Z" display-name="David" state="Active" date-created="2016-07-12T22:14:36.69Z" max-size-bytes="4294967296" size-bytes="4189" app-record-auth-action="NoActionRequired" app-specific-record-id="782411" location-country="US" date-updated="2017-04-21T22:20:42.08Z" latest-operation-sequence-number="51" record-app-auth-created-date="2017-04-21T22:20:42.08Z">David Rickard</record>
+        <preferred-culture>
+          <language>en-US</language>
+        </preferred-culture>
+        <preferred-uiculture>
+          <language>en-US</language>
+        </preferred-uiculture>
+        <location>
+          <country>US</country>
+        </location>
+      </person-info>
+      <more-results>false</more-results>
+    </response-results>
+  </wc:info>
+</response>

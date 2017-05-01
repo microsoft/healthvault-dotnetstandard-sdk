@@ -1403,6 +1403,15 @@ namespace Microsoft.HealthVault {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Cannot call authorize additional records. First authorization is not yet complete..
+        /// </summary>
+        internal static string CannotCallAuthorizeAdditionalRecords {
+            get {
+                return ResourceManager.GetString("CannotCallAuthorizeAdditionalRecords", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Changing app configuration values after initialization is not permitted..
         /// </summary>
         internal static string CannotChangeConfigurationAfterInit {

@@ -19,6 +19,7 @@ using Microsoft.HealthVault.Configuration;
 using Microsoft.HealthVault.Person;
 using Microsoft.HealthVault.PlatformInformation;
 using Microsoft.HealthVault.Thing;
+using Microsoft.HealthVault.Transport;
 using Microsoft.HealthVault.Web.Configuration;
 using Microsoft.HealthVault.Web.Connection;
 using Microsoft.HealthVault.Web.Constants;
@@ -45,7 +46,7 @@ namespace Microsoft.HealthVault.Web
             WebIoc.EnsureTypesRegistered();
 
             // Set socket to be refreshed for default healthvault platform end point
-            SetConnectionLeaseTimeOut(Ioc.Get<HealthVaultConfiguration>().HealthVaultUrl);
+            SetConnectionLeaseTimeOut(Ioc.Get<HealthVaultConfiguration>().DefaultHealthVaultUrl);
         }
 
         /// <summary>
@@ -122,18 +123,22 @@ namespace Microsoft.HealthVault.Web
 
         private static async Task<WebConnectionInfo> CreateWebConnectionInfoAsync(string token, string instanceId)
         {
-            IServiceLocator serviceLocator = Ioc.Get<IServiceLocator>();
+            IServiceLocator serviceLocator = new ServiceLocator();
             IServiceInstanceProvider serviceInstanceProvider = serviceLocator.GetInstance<IServiceInstanceProvider>();
             HealthServiceInstance serviceInstance = await serviceInstanceProvider.GetHealthServiceInstanceAsync(instanceId);
 
             WebHealthVaultConfiguration webHealthVaultConfiguration = Ioc.Get<WebHealthVaultConfiguration>();
 
-            IWebHealthVaultConnection webHealthVaultConnection = new WebHealthVaultConnection(serviceLocator, serviceInstance, null, token);
+            IWebHealthVaultConnection webHealthVaultConnection = new WebHealthVaultConnection(
+                serviceLocator,
+                serviceInstance, 
+                null,
+                token);
 
             var serviceInstanceHealthServiceUrl = serviceInstance.HealthServiceUrl;
 
             // Set socket to be refreshed in case the end point has been changed based on the healthvault service instance
-            if (!webHealthVaultConfiguration.HealthVaultUrl.Equals(serviceInstanceHealthServiceUrl))
+            if (!webHealthVaultConfiguration.DefaultHealthVaultUrl.Equals(serviceInstanceHealthServiceUrl))
             {
                 SetConnectionLeaseTimeOut(serviceInstanceHealthServiceUrl);
             }

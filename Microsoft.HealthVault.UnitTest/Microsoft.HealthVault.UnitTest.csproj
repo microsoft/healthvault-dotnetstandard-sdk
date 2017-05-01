@@ -117,15 +117,23 @@
     <Compile Include="Clients\PersonClientTests.cs" />
     <Compile Include="Clients\ThingClientTests.cs" />
     <Compile Include="Clients\PlatformClientTests.cs" />
+    <Compile Include="Clients\ThingDesrializerTests.cs" />
     <Compile Include="Clients\VocabularyClientTests.cs" />
-    <Compile Include="CloudRequestTests\GivenAHealthServiceRequest.cs" />
     <Compile Include="CloudRequestTests\TestHealthWebRequestClient.cs" />
     <Compile Include="Connection\HttpClientFactoryTests.cs" />
+    <Compile Include="HealthVaultConnectionFactoryInternalTests.cs" />
+    <Compile Include="HealthVaultSodaConnectionTests.cs" />
     <Compile Include="LocalObjectStoreTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Rest\GivenARestRequest.cs" />
     <Compile Include="Rest\RestClientBuilder.cs" />
     <Compile Include="Samples\SampleUtils.cs" />
+    <Compile Include="ShellAuthServiceTests.cs" />
+    <Compile Include="Transport\RequestAuthSerializerTests.cs" />
+    <Compile Include="Transport\RequestHeaderSerializerTests.cs" />
+    <Compile Include="Transport\RequestInfoSerializerTests.cs" />
+    <Compile Include="Transport\RequestMessageCreatorTests.cs" />
+    <Compile Include="Transport\StringExtensions.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config">
@@ -147,6 +155,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Samples\ThingsSampleBloodPressure.xml" />
     <EmbeddedResource Include="Samples\ThingSampleBloodPressure.xml" />
     <EmbeddedResource Include="Samples\VocabularySearchSample.xml" />
     <EmbeddedResource Include="Samples\VocabularySample.xml" />
@@ -157,6 +166,9 @@
     <EmbeddedResource Include="Samples\ServiceDefinitionSample.xml" />
     <EmbeddedResource Include="Samples\InstanceSample.xml" />
     <EmbeddedResource Include="Samples\AuthorizedPeopleSample.xml" />
+    <EmbeddedResource Include="Samples\NewApplicationCreationInfoResult.xml" />
+    <EmbeddedResource Include="Samples\GetServiceDefinitionResult.xml" />
+    <EmbeddedResource Include="Samples\GetAuthorizedPeopleResult.xml" />
   </ItemGroup>
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">

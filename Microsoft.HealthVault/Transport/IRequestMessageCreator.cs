@@ -7,24 +7,30 @@
 // THE SOFTWARE IS PROVIDED *AS IS*, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 using System;
-using Microsoft.HealthVault.Helpers;
-using Microsoft.HealthVault.PlatformInformation;
 
-namespace Microsoft.HealthVault.Extensions
+namespace Microsoft.HealthVault.Transport
 {
-    internal static class HealthServiceInstanceExtensions
+    /// <summary>
+    /// Creates request xml which will be used to send to HealthVault service
+    /// </summary>
+    interface IRequestMessageCreator
     {
         /// <summary>
-        /// Gets the HealthVault method request URL for
-        /// the configured default instance of the HealthVault web-service.
+        /// Create request xml
         /// </summary>
-        /// <remarks>
-        /// This property is based on the "HealthVaultUrl" configuration
-        /// value.
-        /// </remarks>
-        public static Uri GetHealthVaultMethodUrl(this HealthServiceInstance serviceInstance)
-        {
-            return UrlUtilities.GetFullPlatformUrl(serviceInstance.HealthServiceUrl);
-        }
+        /// <param name="method">HealthVault method</param>
+        /// <param name="methodVersion">HealhtVault method version</param>
+        /// <param name="isMethodAnonymous">In case the method is anonymous, then the request xml won't put any auth information</param>
+        /// <param name="parameters">Method parameters, which will become infoxml</param>
+        /// <param name="recordId">RecordId, in case the method is record specfic, like "GetThings"</param>
+        /// <param name="appId">ApplicationId, will be used when the method doesn't need authentication, like NewApplicationInfo, GetServiceDefintion methods</param>
+        /// <returns></returns>
+        string Create(
+            HealthVaultMethods method,
+            int methodVersion,
+            bool isMethodAnonymous,
+            string parameters = null,
+            Guid? recordId = null,
+            Guid? appId = null);
     }
 }

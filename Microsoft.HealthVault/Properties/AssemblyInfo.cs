@@ -4,6 +4,7 @@
            InternalsVisibleTo("Microsoft.HealthVault.Web"),
            InternalsVisibleTo("Microsoft.HealthVault.Web.Mvc"),
            InternalsVisibleTo("Microsoft.HealthVault.Client"),
+           InternalsVisibleTo("Microsoft.HealthVault.RestApi"),
            InternalsVisibleTo("DynamicProxyGenAssembly2"),
            InternalsVisibleTo("Microsoft.HealthVault.Client.Core"),
            InternalsVisibleTo("Microsoft.HealthVault.Client.Bait"),

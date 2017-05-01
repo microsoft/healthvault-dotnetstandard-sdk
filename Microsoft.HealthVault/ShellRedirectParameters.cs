@@ -327,13 +327,13 @@ namespace Microsoft.HealthVault
             string shellRedirectorUrl = this.ShellRedirectorUrl;
             if (string.IsNullOrEmpty(shellRedirectorUrl))
             {
-                if (this.configuration.HealthVaultShellUrl == null)
+                if (this.configuration.DefaultHealthVaultShellUrl == null)
                 {
                     throw new InvalidConfigurationException(Resources.ShellUrlRequired);
                 }
 
                 // get from config
-                shellRedirectorUrl = this.configuration.HealthVaultShellUrl.OriginalString;
+                shellRedirectorUrl = this.configuration.DefaultHealthVaultShellUrl.OriginalString;
             }
 
             if (!shellRedirectorUrl.EndsWith(ShellRedirectPage, StringComparison.OrdinalIgnoreCase))

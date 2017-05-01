@@ -76,81 +76,12 @@ namespace Microsoft.HealthVault.Transport
         /// <summary>
         /// Gets the info section of the response XML.
         /// </summary>
-        ///
-        public XPathNavigator InfoNavigator
-        {
-            get
-            {
-                if (this.infoNavigator == null && this.InfoReader != null)
-                {
-                    this.infoNavigator = new XPathDocument(this.NewInfoReader).CreateNavigator();
-                    this.infoNavigator.MoveToFirstChild();
-                }
-
-                return this.infoNavigator;
-            }
-
-            internal set { this.infoNavigator = value; }
-        }
-
-        private XPathNavigator infoNavigator;
-
-        /// <summary>
-        /// Gets the info section of the response XML.
-        /// </summary>
-        ///
-        public XmlReader InfoReader
-        {
-            get { return this.infoReader ?? (this.infoReader = this.NewInfoReader); }
-
-            internal set { this.infoReader = value; }
-        }
-
-        private XmlReader infoReader;
+        /// 
+        public XPathNavigator InfoNavigator { get; internal set; }
 
         /// <summary>
         /// Gets the headers on the response.
         /// </summary>
         public HttpResponseHeaders ResponseHeaders { get; internal set; }
-
-        internal XmlReader NewInfoReader
-        {
-            get
-            {
-                XmlReader reader = null;
-                MemoryStream ms = null;
-
-                try
-                {
-                    if (this.ResponseText.Array != null && this.ResponseText.Count > 0)
-                    {
-                        ms =
-                            new MemoryStream(
-                                this.ResponseText.Array,
-                                this.ResponseText.Offset,
-                                this.ResponseText.Count,
-                                false);
-
-                        reader = XmlReader.Create(ms, SDKHelper.XmlReaderSettings);
-                        reader.NameTable.Add("wc");
-                        reader.ReadToFollowing("wc:info");
-                    }
-
-                    return reader;
-                }
-                catch
-                {
-                    ms?.Dispose();
-
-                    throw;
-                }
-            }
-        }
-
-        /// <summary>
-        /// Gets or sets the cached response results text (UTF8 encoded).
-        /// </summary>
-        ///
-        internal ArraySegment<byte> ResponseText { get; set; }
     }
 }

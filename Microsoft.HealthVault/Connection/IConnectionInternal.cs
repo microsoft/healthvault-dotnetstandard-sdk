@@ -9,6 +9,7 @@
 using System;
 using System.Collections.Generic;
 using Microsoft.HealthVault.PlatformInformation;
+using Microsoft.HealthVault.Transport;
 
 namespace Microsoft.HealthVault.Connection
 {
@@ -20,5 +21,11 @@ namespace Microsoft.HealthVault.Connection
         HealthServiceInstance ServiceInstance { get; }
 
         string GetRestAuthSessionHeader();
+
+        /// <summary>
+        /// Provide AuthSession header for XML over Http protocol
+        /// </summary>
+        /// <returns>AuthSession</returns>
+        AuthSession GetAuthSessionHeader();
     }
 }

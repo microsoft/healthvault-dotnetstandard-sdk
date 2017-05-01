@@ -33,8 +33,8 @@ namespace Microsoft.HealthVault.Web.Configuration
             {
                 // Base HealthVaultConfiguration properties
                 MasterApplicationId = appSettings.GetGuid(ConfigKeys.AppId),
-                HealthVaultShellUrl = appSettings.GetUrl(ConfigKeys.ShellUrl, true),
-                HealthVaultUrl = appSettings.GetUrl(ConfigKeys.HealthServiceUrl, true),
+                DefaultHealthVaultShellUrl = appSettings.GetUrl(ConfigKeys.ShellUrl, true),
+                DefaultHealthVaultUrl = appSettings.GetUrl(ConfigKeys.HealthServiceUrl, true),
 
                 RequestTimeoutDuration = appSettings.GetTimeSpanFromSeconds(
                     ConfigKeys.DefaultRequestTimeoutSeconds,

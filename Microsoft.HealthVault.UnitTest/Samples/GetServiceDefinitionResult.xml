@@ -1,0 +1,24 @@
+﻿<response>
+  <status>
+    <code>0</code>
+  </status>
+  <wc:info xmlns:wc="urn:com.microsoft.wc.methods.response.GetServiceDefinition2">
+    <instances current-instance-id="1">
+      <instance>
+        <id>1</id>
+        <name>US</name>
+        <description>US instance</description>
+        <platform-url>https://platform.healthvault-ppe.com/platform/wildcat.ashx</platform-url>
+        <shell-url>https://account.healthvault-ppe.com/</shell-url>
+      </instance>
+      <instance>
+        <id>2</id>
+        <name>EU</name>
+        <description>EU Instance</description>
+        <platform-url>https://platform.healthvault-ppe.co.uk/platform/wildcat.ashx</platform-url>
+        <shell-url>https://account.healthvault-ppe.co.uk/</shell-url>
+      </instance>
+    </instances>
+    <updated-date>2017-04-20T21:53:19</updated-date>
+  </wc:info>
+</response>

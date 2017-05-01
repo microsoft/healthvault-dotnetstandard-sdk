@@ -12,16 +12,15 @@ using Microsoft.HealthVault.PlatformInformation;
 using Microsoft.HealthVault.Record;
 using Microsoft.HealthVault.Rest;
 using Microsoft.HealthVault.Transport;
-using Microsoft.HealthVault.Transport.MessageFormatters.SessionFormatters;
 
 namespace Microsoft.HealthVault.Client
 {
     internal class HealthVaultSodaConnection : HealthVaultConnectionBase, IHealthVaultSodaConnection
     {
-        private const string ServiceInstanceKey = "ServiceInstance";
-        private const string ApplicationCreationInfoKey = "ApplicationCreationInfo";
-        private const string SessionCredentialKey = "SessionCredential";
-        private const string PersonInfoKey = "PersonInfo";
+        internal const string ServiceInstanceKey = "ServiceInstance";
+        internal const string ApplicationCreationInfoKey = "ApplicationCreationInfo";
+        internal const string SessionCredentialKey = "SessionCredential";
+        internal const string PersonInfoKey = "PersonInfo";
 
         private readonly ILocalObjectStore localObjectStore;
         private readonly IShellAuthService shellAuthService;
@@ -33,22 +32,16 @@ namespace Microsoft.HealthVault.Client
         public HealthVaultSodaConnection(
             IServiceLocator serviceLocator,
             ILocalObjectStore localObjectStore,
-            IShellAuthService shellAuthService,
-            HealthVaultConfiguration configuration)
+            IShellAuthService shellAuthService)
             : base(serviceLocator)
         {
             this.localObjectStore = localObjectStore;
             this.shellAuthService = shellAuthService;
-            this.Configuration = configuration;
         }
 
         public ApplicationCreationInfo ApplicationCreationInfo { get; internal set; }
 
-        public HealthVaultConfiguration Configuration { get; }
-
         public override Guid? ApplicationId => this.ApplicationCreationInfo?.AppInstanceId;
-
-        protected override SessionFormatter SessionFormatter => new OfflineSessionFormatter(this.SessionCredential?.Token, () => this.personInfo?.PersonId);
 
         public override async Task AuthenticateAsync()
         {
@@ -78,10 +71,33 @@ namespace Microsoft.HealthVault.Client
             return $"{RestConstants.OfflinePersonId}={this.personInfo.PersonId}";
         }
 
+        public override AuthSession GetAuthSessionHeader()
+        {
+            AuthSession authSession = new AuthSession
+            {
+                AuthToken = this.SessionCredential.Token
+            };
+
+            // Person info will be null for "GetAuthorizedPeople" method.
+            if (this.personInfo != null)
+            {
+                authSession.Person = new OfflinePersonInfo { OfflinePersonId = this.personInfo.PersonId };
+            }
+
+            return authSession;
+        }
+
         public async Task AuthorizeAdditionalRecordsAsync()
         {
             using (await this.authenticateLock.LockAsync().ConfigureAwait(false))
             {
+                await this.ReadPropertiesFromLocalStorageAsync().ConfigureAwait(false);
+
+                if (this.SessionCredential == null || this.ApplicationCreationInfo == null)
+                {
+                    throw new InvalidOperationException(Resources.CannotCallAuthorizeAdditionalRecords);
+                }
+
                 // First run through shell with web browser to get additional records authorized.
                 var masterApplicationId = this.Configuration.MasterApplicationId;
                 await this.shellAuthService.AuthorizeAdditionalRecordsAsync(this.ServiceInstance.ShellUrl, masterApplicationId).ConfigureAwait(false);
@@ -163,8 +179,8 @@ namespace Microsoft.HealthVault.Client
         private async Task ProvisionForSodaAuthAsync()
         {
             // Set a temporary service instance for the NewApplicationCreationInfo and GetServiceDefinition calls.
-            var defaultHealthVaultUrl = this.Configuration.HealthVaultUrl;
-            var defaultHealthVaultShellUrl = this.Configuration.HealthVaultShellUrl;
+            var defaultHealthVaultUrl = this.Configuration.DefaultHealthVaultUrl;
+            var defaultHealthVaultShellUrl = this.Configuration.DefaultHealthVaultShellUrl;
             var masterApplicationId = this.Configuration.MasterApplicationId;
 
             this.ServiceInstance = new HealthServiceInstance(

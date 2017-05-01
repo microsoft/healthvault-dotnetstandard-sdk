@@ -41,7 +41,7 @@ namespace Microsoft.HealthVault.Rest
             this.client = client;
         }
 
-        public Guid CorrelationId { get; set; }
+        public Guid? CorrelationId { get; set; }
 
         public void AuthorizeRestRequest(HttpRequestMessage message, Guid recordId)
         {
