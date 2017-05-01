@@ -17,18 +17,11 @@ namespace Microsoft.HealthVault.IntegrationTest
         [TestMethod]
         public async Task SimpleBloodPressure()
         {
-            var config = new HealthVaultConfiguration
-            {
-                MasterApplicationId = new Guid("cf0cb893-d411-495c-b66f-9d72b4fd2b97"),
-                DefaultHealthVaultShellUrl = new Uri("https://account.healthvault-ppe.com"),
-                DefaultHealthVaultUrl = new Uri("https://platform.healthvault-ppe.com/platform")
-            };
-
-            IHealthVaultSodaConnection connection = HealthVaultConnectionFactory.Current.GetOrCreateSodaConnection(config);
+            IHealthVaultSodaConnection connection = HealthVaultConnectionFactory.Current.GetOrCreateSodaConnection(Constants.Configuration);
             IThingClient thingClient = connection.CreateThingClient();
             PersonInfo personInfo = await connection.GetPersonInfoAsync();
 
-            await this.RemoveAllBloodPressuresAsync(thingClient, personInfo.SelectedRecord.Id);
+            await TestUtilities.RemoveAllThingsAsync<BloodPressure>(thingClient, personInfo.SelectedRecord.Id);
 
             // Create a new blood pressure object with random values
             Random rand = new Random();
@@ -49,12 +42,6 @@ namespace Microsoft.HealthVault.IntegrationTest
             BloodPressure bp = bloodPressures.First();
             Assert.AreEqual(newBloodPressure.Systolic, bp.Systolic);
             Assert.AreEqual(newBloodPressure.Diastolic, bp.Diastolic);
-        }
-
-        private async Task RemoveAllBloodPressuresAsync(IThingClient thingClient, Guid recordId)
-        {
-            IReadOnlyCollection<BloodPressure> bloodPressures = await thingClient.GetThingsAsync<BloodPressure>(recordId);
-            await thingClient.RemoveThingsAsync(recordId, bloodPressures.ToList());
         }
     }
 }
