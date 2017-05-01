@@ -10,28 +10,24 @@ using System;
 using System.Security.Cryptography;
 using System.Text;
 using System.Xml;
-using Microsoft.HealthVault.AspNetCore.Internal;
 using Microsoft.HealthVault.Configuration;
 using Microsoft.HealthVault.Connection;
 using Microsoft.HealthVault.Helpers;
 
-namespace Microsoft.HealthVault.AspNetCore
+namespace Microsoft.HealthVault.AspNetCore.Internal
 {
     internal class WebSessionCredentialClient : SessionCredentialClientBase, IWebSessionCredentialClient
     {
-        private readonly IServiceLocator serviceLocator;
         private readonly HealthVaultConfiguration webHealthVaultConfiguration;
 
         public WebSessionCredentialClient(
-            IServiceLocator serviceLocator,
+            HealthVaultConfiguration configuration,
             IConnectionInternal connection,
             ICertificateInfoProvider certificateInfoProvider)
         {
-            this.serviceLocator = serviceLocator;
             this.Connection = connection;
             this.CertificateInfoProvider = certificateInfoProvider;
-
-            this.webHealthVaultConfiguration = this.serviceLocator.GetInstance<HealthVaultConfiguration>();
+            this.webHealthVaultConfiguration = configuration;
         }
 
         public ICertificateInfoProvider CertificateInfoProvider { get; set; }

@@ -24,16 +24,14 @@ namespace Microsoft.HealthVault.AspNetCore.Connection
         /// <summary>
         /// Initializes a new instance of the <see cref="OfflineHealthVaultConnection"/> class.
         /// </summary>
-        /// <param name="serviceLocator">The service locator.</param>
         /// <param name="serviceInstance">The service instance.</param>
         /// <param name="sessionCredential">The session credential.</param>
         /// <param name="offlinePersionId">The offline person identifier.</param>
         public OfflineHealthVaultConnection(
-            IServiceLocator serviceLocator,
             HealthServiceInstance serviceInstance = null,
             SessionCredential sessionCredential = null,
             string offlinePersionId = null)
-            : base(serviceLocator, serviceInstance, sessionCredential)
+            : base(serviceInstance, sessionCredential)
         {
             Guid offlinePersonId;
 

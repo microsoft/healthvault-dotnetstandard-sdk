@@ -9,13 +9,11 @@
 using Grace.DependencyInjection;
 using Microsoft.AspNetCore.Http;
 using Microsoft.HealthVault.AspNetCore.Connection;
-using Microsoft.HealthVault.AspNetCore.Internal;
-using Microsoft.HealthVault.AspNetCore.Providers;
 using Microsoft.HealthVault.Configuration;
 using Microsoft.HealthVault.Connection;
 using Microsoft.HealthVault.Extensions;
 
-namespace Microsoft.HealthVault.AspNetCore
+namespace Microsoft.HealthVault.AspNetCore.Internal
 {
     internal static class WebIoc
     {

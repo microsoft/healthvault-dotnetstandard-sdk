@@ -9,6 +9,7 @@
 using System;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.HealthVault.AspNetCore.Internal;
 using Microsoft.HealthVault.Configuration;
 using Microsoft.HealthVault.Connection;
 using Microsoft.HealthVault.Helpers;
@@ -25,10 +26,9 @@ namespace Microsoft.HealthVault.AspNetCore.Connection
         protected readonly HealthVaultConfiguration webHealthVaultConfiguration;
 
         protected WebHealthVaultConnectionBase(
-            IServiceLocator serviceLocator,
             HealthServiceInstance healthServiceInstance = null,
             SessionCredential sessionCredential = null)
-            : base(serviceLocator)
+            : base(Ioc.Get<IServiceLocator>())
         {
             this.webHealthVaultConfiguration = this.ServiceLocator.GetInstance<HealthVaultConfiguration>();
 

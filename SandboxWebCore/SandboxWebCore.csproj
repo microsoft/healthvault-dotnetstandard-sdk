@@ -23,5 +23,8 @@
     <ProjectReference Include="..\Microsoft.HealthVault.AspNetCore\Microsoft.HealthVault.AspNetCore.csproj" />
     <ProjectReference Include="..\Microsoft.HealthVault\Microsoft.HealthVault.csproj" />
   </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Views\Offline\" />
+  </ItemGroup>
 
 </Project>

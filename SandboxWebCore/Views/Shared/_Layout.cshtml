@@ -34,6 +34,12 @@
                 <ul class="nav navbar-nav">
                     <li><a asp-area="" asp-controller="Home" asp-action="Index">Home</a></li>
                     <li><a asp-area="" asp-controller="Online" asp-action="Index">Online Connection</a></li>
+                    <li><a asp-area="" asp-controller="Offline" asp-action="Index">Offline Connection</a></li>
+                    <li><a asp-area="" asp-controller="Rest" asp-action="Index">Rest Api</a></li>
+                    @if (User.Identity.IsAuthenticated)
+                    {
+                        <li><a href="/Logout">Logout</a></li>
+                    }
                 </ul>
             </div>
         </div>

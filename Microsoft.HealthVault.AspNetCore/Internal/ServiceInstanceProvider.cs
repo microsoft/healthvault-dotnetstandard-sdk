@@ -7,27 +7,22 @@
 // THE SOFTWARE IS PROVIDED *AS IS*, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
 using Microsoft.HealthVault.AspNetCore.Connection;
 using Microsoft.HealthVault.Clients;
 using Microsoft.HealthVault.Exceptions;
 using Microsoft.HealthVault.PlatformInformation;
 using Microsoft.HealthVault.Transport;
 
-namespace Microsoft.HealthVault.AspNetCore.Providers
+namespace Microsoft.HealthVault.AspNetCore.Internal
 {
     internal class ServiceInstanceProvider : IServiceInstanceProvider
     {
         private readonly AsyncLock seriviceInstanceLock;
-        private readonly IServiceLocator serviceLocator;
-        private readonly IHttpContextAccessor httpContextAccessor;
 
         private HealthServiceInstance cachedServiceInstance;
 
-        public ServiceInstanceProvider(IServiceLocator serviceLocator, IHttpContextAccessor httpContextAccessor)
+        public ServiceInstanceProvider()
         {
-            this.serviceLocator = serviceLocator;
-            this.httpContextAccessor = httpContextAccessor;
             this.seriviceInstanceLock = new AsyncLock();
         }
  
@@ -52,7 +47,7 @@ namespace Microsoft.HealthVault.AspNetCore.Providers
         private async Task<ServiceInfo> GetFromServiceAsync()
         {
             
-            IWebHealthVaultConnection webHealthVaultConnection = new WebHealthVaultConnection(this.serviceLocator, this.httpContextAccessor);
+            IWebHealthVaultConnection webHealthVaultConnection = new WebHealthVaultConnection(null);
             IPlatformClient platformClient = webHealthVaultConnection.CreatePlatformClient();
 
             ServiceInfo serviceInfo = await platformClient.GetServiceDefinitionAsync(ServiceInfoSections.Topology).ConfigureAwait(false);

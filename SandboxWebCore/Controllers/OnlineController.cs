@@ -12,13 +12,13 @@ using Microsoft.HealthVault.AspNetCore.Connection;
 
 namespace SandboxWeb.Controllers
 {
-    [Authorize]
+    [Authorize(ActiveAuthenticationSchemes = HealthVaultAuthenticationMiddleware.AuthenticationScheme)]
     public class OnlineController : Controller
     {
         // GET: HealthVault
         public async Task<ActionResult> Index()
         {
-           IWebHealthVaultConnection webHealthVaultConnection =  await HttpContext.CreateWebConnectionAsync();
+           IWebHealthVaultConnection webHealthVaultConnection =  await WebHealthVaultFactory.CreateWebConnectionAsync(HttpContext);
 
            PersonInfo personInfo =  await webHealthVaultConnection.GetPersonInfoAsync();
 
