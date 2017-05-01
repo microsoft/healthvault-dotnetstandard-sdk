@@ -8,16 +8,22 @@
 
 using System;
 using System.Globalization;
+using System.Threading.Tasks;
 using System.Web;
+using Microsoft.HealthVault.Clients;
+using Microsoft.HealthVault.Connection;
+using Microsoft.HealthVault.PlatformInformation;
 using Microsoft.HealthVault.Web.Configuration;
+using Microsoft.HealthVault.Web.Connection;
+using Microsoft.HealthVault.Web.Cookie;
 using Newtonsoft.Json;
 
-namespace Microsoft.HealthVault.Web.Cookie
+namespace Microsoft.HealthVault.Web.Providers
 {
     /// <summary>
-    /// <see cref="ICookieManager"/>
+    /// <see cref="IWebConnectionInfoProvider"/>
     /// </summary>
-    internal class CookieManager : ICookieManager
+    internal class WebConnectionInfoProvider : IWebConnectionInfoProvider
     {
         private const string HvTokenExpiration = "e";
         private const string HvTokenWebConnectionInfo = "w";
@@ -33,7 +39,7 @@ namespace Microsoft.HealthVault.Web.Cookie
 
         private readonly JsonSerializerSettings serializerSettings;
 
-        public CookieManager(IServiceLocator serviceLocator)
+        public WebConnectionInfoProvider(IServiceLocator serviceLocator)
         {
             this.serviceLocator = serviceLocator;
 
@@ -47,22 +53,35 @@ namespace Microsoft.HealthVault.Web.Cookie
             serializerSettings.Converters.Add(new WebConnectionInfoConverter());
         }
 
-        public void Save(HttpContextBase httpConext, WebConnectionInfo webConnectionInfo)
+        public async Task<WebConnectionInfo> CreateWebConnectionInfoAsync(string token, string instanceId)
         {
-            if (httpConext == null)
+            IServiceInstanceProvider serviceInstanceProvider = this.serviceLocator.GetInstance<IServiceInstanceProvider>();
+            HealthServiceInstance serviceInstance = await serviceInstanceProvider.GetHealthServiceInstanceAsync(instanceId);
+
+            IWebHealthVaultConnection connection = Ioc.Container.Locate<IWebHealthVaultConnection>(
+                extraData:
+                new
+                {
+                    serviceLocator = serviceLocator
+                });
+
+            WebHealthVaultConnection  webHealthVaultConnection = connection as WebHealthVaultConnection;
+            webHealthVaultConnection.ServiceInstance = serviceInstance;
+            webHealthVaultConnection.UserAuthToken = token;
+
+            IPersonClient personClient = webHealthVaultConnection.CreatePersonClient();
+
+            var personInfo = await personClient.GetPersonInfoAsync();
+
+            WebConnectionInfo webConnectionInfo = new WebConnectionInfo
             {
-                throw new ArgumentException(nameof(httpConext));
-            }
+                PersonInfo = personInfo,
+                ServiceInstanceId = instanceId,
+                SessionCredential = webHealthVaultConnection.SessionCredential,
+                UserAuthToken = token
+            };
 
-            if (webConnectionInfo == null)
-            {
-                throw new ArgumentException(nameof(webConnectionInfo));
-            }
-
-            string serializedWebConnectionInfo = JsonConvert.SerializeObject(webConnectionInfo, serializerSettings);
-            string marshalledCookie = CookieVersion + this.MarshalCookieVersion1(serializedWebConnectionInfo);
-
-            this.SetCookie(httpConext, marshalledCookie);
+            return webConnectionInfo;
         }
 
         public WebConnectionInfo TryLoad(HttpContextBase httpContext)
@@ -88,6 +107,24 @@ namespace Microsoft.HealthVault.Web.Cookie
             WebConnectionInfo webConnectionInfo = JsonConvert.DeserializeObject<WebConnectionInfo>(cookieData, serializerSettings);
 
             return webConnectionInfo;
+        }
+
+        public void Save(HttpContextBase httpConext, WebConnectionInfo webConnectionInfo)
+        {
+            if (httpConext == null)
+            {
+                throw new ArgumentException(nameof(httpConext));
+            }
+
+            if (webConnectionInfo == null)
+            {
+                throw new ArgumentException(nameof(webConnectionInfo));
+            }
+
+            string serializedWebConnectionInfo = JsonConvert.SerializeObject(webConnectionInfo, serializerSettings);
+            string marshalledCookie = CookieVersion + this.MarshalCookieVersion1(serializedWebConnectionInfo);
+
+            this.SetCookie(httpConext, marshalledCookie);
         }
 
         public void Clear(HttpContextBase httpContext)

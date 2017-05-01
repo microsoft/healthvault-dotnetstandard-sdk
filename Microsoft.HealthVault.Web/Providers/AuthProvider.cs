@@ -9,7 +9,6 @@
 using System.Security.Principal;
 using System.Web.Mvc;
 using System.Web.Routing;
-using Microsoft.HealthVault.Web.Cookie;
 using Microsoft.HealthVault.Web.Utilities;
 
 namespace Microsoft.HealthVault.Web.Providers
@@ -58,7 +57,7 @@ namespace Microsoft.HealthVault.Web.Providers
         /// <returns>A redirect result to the HealthVault Shell sign out page</returns>
         public static RedirectResult SignOut(ControllerContext context, object parameters)
         {
-            var cookieManager = Ioc.Get<ICookieManager>();
+            var cookieManager = Ioc.Get<IWebConnectionInfoProvider>();
 
             var httpContextBase = context.HttpContext;
 
