@@ -10,4 +10,5 @@
            InternalsVisibleTo("Microsoft.HealthVault.Client.Bait"),
            InternalsVisibleTo("Microsoft.HealthVault.Client.Uwp"),
            InternalsVisibleTo("Microsoft.HealthVault.Client.Android"),
-           InternalsVisibleTo("Microsoft.HealthVault.UnitTest")]
+           InternalsVisibleTo("Microsoft.HealthVault.UnitTest"),
+           InternalsVisibleTo("Microsoft.HealthVault.IntegrationTest")]
