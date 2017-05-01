@@ -26,7 +26,7 @@ namespace Microsoft.HealthVault.IntegrationTest
 
             List<Weight> weightList = new List<Weight>();
             weightList.Add(new Weight(
-                new HealthServiceDateTime(DateTime.Now),
+                new HealthServiceDateTime(DateTime.Now.AddHours(-1)),
                 new WeightValue(81, new DisplayValue(81, "KG", "kg"))));
 
             weightList.Add(new Weight(
