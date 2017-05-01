@@ -18,7 +18,7 @@ namespace Microsoft.HealthVault.IntegrationTest
             HealthRecordInfo record = personInfo.SelectedRecord;
 
             Assert.AreEqual("HealthVault SDK Integration Test", record.Name);
-            Assert.AreEqual(new Guid("ea5b4b21-b2de-4da6-bf5a-3e551cd0c54e"), record.Id);
+            Assert.AreEqual(new Guid("2d4e32e6-9511-42b3-8ac2-5f6524b305a2"), record.Id);
             Assert.AreEqual(RelationshipType.Self, record.RelationshipType);
         }
     }
