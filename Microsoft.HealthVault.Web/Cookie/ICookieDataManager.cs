@@ -11,7 +11,7 @@ namespace Microsoft.HealthVault.Web.Cookie
     /// <summary>
     /// Provides functionality to compress and decompress the cookie data
     /// </summary>
-    interface ICookieDataManager
+    internal interface ICookieDataManager
     {
         /// <summary>
         /// Compress string

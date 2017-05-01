@@ -10,10 +10,8 @@ using System;
 using System.Security.Principal;
 using System.Threading.Tasks;
 using System.Web;
-using Microsoft.HealthVault.Configuration;
 using Microsoft.HealthVault.Connection;
 using Microsoft.HealthVault.PlatformInformation;
-using Microsoft.HealthVault.Transport;
 using Microsoft.HealthVault.Web.Connection;
 using Microsoft.HealthVault.Web.Providers;
 
@@ -62,11 +60,12 @@ namespace Microsoft.HealthVault.Web
             SessionCredential sessionCredentialToken = webConnectionInfo.SessionCredential;
             string token = webConnectionInfo.UserAuthToken;
 
-            IWebHealthVaultConnection webConnection = new WebHealthVaultConnection(
-                serviceLocator,
-                serviceInstance, 
-                sessionCredentialToken,
-                token);
+            IWebHealthVaultConnection webConnection = Ioc.Container.Locate<IWebHealthVaultConnection>(extraData: new { serviceLocator = serviceLocator});
+
+            WebHealthVaultConnection connection = webConnection as WebHealthVaultConnection;
+            connection.UserAuthToken = token;
+            connection.ServiceInstance = serviceInstance;
+            connection.SessionCredential = sessionCredentialToken;
 
             return webConnection;
         }
@@ -83,17 +82,34 @@ namespace Microsoft.HealthVault.Web
             string instanceId = null, 
             SessionCredential sessionCredential = null)
         {
+            Guid parsedOfflinePersonId;
+            if (!Guid.TryParse(offlinePersonId, out parsedOfflinePersonId))
+            {
+                throw new ArgumentException("Unable to parse offline person id to Guid", nameof(offlinePersonId));
+            }
+
             IServiceLocator serviceLocator = new ServiceLocator();
 
-            // Get ServiceInstance
-            IServiceInstanceProvider serviceInstanceProvider = serviceLocator.GetInstance<IServiceInstanceProvider>();
-            HealthServiceInstance serviceInstance = await serviceInstanceProvider.GetHealthServiceInstanceAsync(instanceId);
+            HealthServiceInstance serviceInstance = null;
+            if (!string.IsNullOrEmpty(instanceId))
+            {
+                // Get ServiceInstance
+                IServiceInstanceProvider serviceInstanceProvider = serviceLocator.GetInstance<IServiceInstanceProvider>();
+                serviceInstance = await serviceInstanceProvider.GetHealthServiceInstanceAsync(instanceId);
+            }
 
-            IOfflineHealthVaultConnection offlineHealthVaultConnection = new OfflineHealthVaultConnection( 
-                serviceLocator,
-                serviceInstance,
-                sessionCredential,
-                offlinePersonId);
+            IOfflineHealthVaultConnection offlineHealthVaultConnection = Ioc.Container.Locate<IOfflineHealthVaultConnection>(
+                extraData: new { serviceLocator = serviceLocator});
+
+            OfflineHealthVaultConnection connection = offlineHealthVaultConnection as OfflineHealthVaultConnection;
+            connection.SessionCredential = sessionCredential;
+            connection.OfflinePersonId = parsedOfflinePersonId;
+
+            // By default, service instance is "US", so do not override in case the instance id is not set
+            if (serviceInstance != null)
+            {
+                connection.ServiceInstance = serviceInstance;
+            }
 
             return offlineHealthVaultConnection;
         }
