@@ -95,6 +95,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\SharedVersionInfo.cs">
+      <Link>Properties\SharedVersionInfo.cs</Link>
+    </Compile>
     <Compile Include="Attributes\SignOutAttribute.cs" />
     <Compile Include="AuthenticationModule.cs" />
     <Compile Include="Controllers\HealthVaultActionRedirectController.cs" />
