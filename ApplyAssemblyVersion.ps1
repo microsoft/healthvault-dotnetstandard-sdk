@@ -16,6 +16,16 @@ param
    [string]$SourcesPath
 )
 
+function ReplaceVersionXml($content2, $name, $version) {
+    $startTag = '<' + $name + '>'
+    $endTag = '</' + $name + '>'
+    return $content2 -replace ($startTag + '[\d\.]+' + $endTag), ($startTag + $version + $endTag)
+}
+
+function ReplaceVersionCs($content, $name, $version) {
+    return $content -replace ($name + '\("[\d\.]+"\)'), ($name + '("' + $version + '")')
+}
+
 $parts = $BuildNumber.Split('.');
 
 $sprint = 0;
@@ -33,10 +43,18 @@ $AssemblyFileVersion = "1.$sprint.$build.$revision"
 Write-Host "##vso[task.setvariable variable=AssemblyFileVersion;]$AssemblyFileVersion";
 Write-Host "##vso[task.setvariable variable=PreviewFileVersion;]${AssemblyFileVersion}-preview";
 
-$file = Join-Path -Path $SourcesPath -ChildPath 'SharedVersionInfo.cs'
-Set-ItemProperty $file -Name IsReadOnly -Value $false
+$sharedVersionFile = Join-Path -Path $SourcesPath -ChildPath 'SharedVersionInfo.cs'
+Set-ItemProperty $sharedVersionFile -Name IsReadOnly -Value $false
 
-$content = Get-Content $file
-$content = $content -replace "1.0.0.0", $AssemblyVersion
-$content = $content -replace "1.0.1.1", $AssemblyFileVersion
-Set-Content -Encoding Default -Path $file -Value $content
+$content = Get-Content $sharedVersionFile
+$content = ReplaceVersionCs $content 'AssemblyVersion' $AssemblyVersion
+$content = ReplaceVersionCs $content 'AssemblyFileVersion' $AssemblyFileVersion
+Set-Content -Encoding Default -Path $sharedVersionFile -Value $content
+
+$commonTargetsFile = Join-Path -Path $SourcesPath -ChildPath 'NetStandard.Common.targets'
+Set-ItemProperty $commonTargetsFile -Name IsReadOnly -Value $false
+
+$content = Get-Content $commonTargetsFile
+$content = ReplaceVersionXml $content 'AssemblyVersion' $AssemblyVersion
+$content = ReplaceVersionXml $content 'FileVersion' $AssemblyFileVersion
+Set-Content -Encoding Default -Path $commonTargetsFile -Value $content

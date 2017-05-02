@@ -59,6 +59,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\SharedVersionInfo.cs">
+      <Link>Properties\SharedVersionInfo.cs</Link>
+    </Compile>
     <Compile Include="AndroidBrowserAuthBroker.cs" />
     <Compile Include="AndroidMessageHandlerFactory.cs" />
     <Compile Include="AndroidHealthVaultConnectionFactory.cs" />

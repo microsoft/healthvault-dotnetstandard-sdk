@@ -1,16 +1,12 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
+  <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), NetStandard.Common.targets))\NetStandard.Common.targets" />
   <PropertyGroup>
     <TargetFramework>netstandard1.4</TargetFramework>
     <PackageTargetFallback>$(PackageTargetFallback);portable-win+net45+wp8+win81+wpa8</PackageTargetFallback>
   </PropertyGroup>
   <PropertyGroup>
     <DebugType>full</DebugType>
-    <Company>Microsoft</Company>
     <Description>Microsoft HealthVault Client Core SDK Assembly</Description>
-    <Copyright>Copyright © 2017</Copyright>
-    <Authors>DDX</Authors>
-    <AssemblyVersion>1.0.0.1</AssemblyVersion>
-    <FileVersion>1.0.0.1</FileVersion>
     <DocumentationFile>bin\$(Configuration)\netstandard1.4\Microsoft.HealthVault.Client.Core.xml</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
