@@ -13,11 +13,9 @@ using System.Net;
 using System.Security.Principal;
 using System.Threading.Tasks;
 using System.Web;
-using Microsoft.HealthVault.Clients;
 using Microsoft.HealthVault.Configuration;
 using Microsoft.HealthVault.PlatformInformation;
 using Microsoft.HealthVault.Web.Configuration;
-using Microsoft.HealthVault.Web.Connection;
 using Microsoft.HealthVault.Web.Constants;
 using Microsoft.HealthVault.Web.Providers;
 
@@ -121,12 +119,10 @@ namespace Microsoft.HealthVault.Web
 
         internal async Task ResetConnectionLeaseTimeOutAsync(WebConnectionInfo webConnectionInfo)
         {
-            IServiceLocator serviceLocator = new ServiceLocator();
-            IServiceInstanceProvider serviceInstanceProvider = serviceLocator.GetInstance<IServiceInstanceProvider>();
-            HealthServiceInstance serviceInstance =
-                await serviceInstanceProvider.GetHealthServiceInstanceAsync(webConnectionInfo.ServiceInstanceId);
+            IServiceInstanceProvider serviceInstanceProvider = Ioc.Get<IServiceInstanceProvider>();
+            HealthServiceInstance serviceInstance = await serviceInstanceProvider.GetHealthServiceInstanceAsync(webConnectionInfo.ServiceInstanceId);
 
-            WebHealthVaultConfiguration webHealthVaultConfiguration = serviceLocator.GetInstance<WebHealthVaultConfiguration>();
+            WebHealthVaultConfiguration webHealthVaultConfiguration = Ioc.Get<WebHealthVaultConfiguration>();
             var serviceInstanceHealthServiceUrl = serviceInstance.HealthServiceUrl;
 
             // Set socket to be refreshed in case the end point has been changed based on the healthvault service instance

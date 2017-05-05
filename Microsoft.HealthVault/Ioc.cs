@@ -15,9 +15,6 @@ namespace Microsoft.HealthVault
         {
             Container = new DependencyInjectionContainer();
 
-            // Container.RegisterTransient<IConnectionInternal, HealthVaultConnectionBase>();
-            // Container.RegisterTransient<ISessionCredentialClient, SessionCredentialClientBase>();
-
             Container.RegisterSingleton<IServiceLocator, ServiceLocator>();
             Container.RegisterSingleton<IMessageHandlerFactory, MessageHandlerFactory>();
             Container.RegisterSingleton<IHttpClientFactory, HttpClientFactory>();
