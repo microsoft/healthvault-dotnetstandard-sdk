@@ -32,6 +32,8 @@ namespace Microsoft.HealthVault.Web.UnitTest.Providers
         [TestInitialize]
         public void TestInitialize()
         {
+            Ioc.Container = new DependencyInjectionContainer();
+
             // Arrange
             Ioc.Container = new DependencyInjectionContainer();
             IServiceLocator serviceLocator = Substitute.For<IServiceLocator>();
