@@ -36,14 +36,14 @@ namespace Microsoft.HealthVault.Web.UnitTest.Connections
             Ioc.Container = new DependencyInjectionContainer();
 
             IServiceLocator serviceLocator = Substitute.For<IServiceLocator>();
-            serviceLocator.GetInstance<WebHealthVaultConfiguration>().Returns(new WebHealthVaultConfiguration()
+            serviceLocator.GetInstance<WebHealthVaultConfiguration>().Returns(new WebHealthVaultConfiguration
             {
                 DefaultHealthVaultUrl = new Uri("http://www.bing.com"),
                 DefaultHealthVaultShellUrl = new Uri("http://www.bing.com")
             });
 
-            HealthServiceInstance healthServiceInstance = Substitute.For<HealthServiceInstance>();
-            SessionCredential sessionCredential = Substitute.For<SessionCredential>();
+            HealthServiceInstance healthServiceInstance = new HealthServiceInstance();
+            SessionCredential sessionCredential = new SessionCredential();
             offlinePersonId = Guid.NewGuid();
 
             offlineHealthVaultConnection =
