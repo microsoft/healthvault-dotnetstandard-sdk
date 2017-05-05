@@ -50,7 +50,7 @@ namespace Microsoft.HealthVault.Web.UnitTest.Helpers
         [TestMethod]
         public void WhenActionUrlWithQueryStringIsSet()
         {
-            IServiceLocator serviceLocator = Substitute.For<ServiceLocator>();
+            IServiceLocator serviceLocator = Substitute.For<IServiceLocator>();
 
             WebHealthVaultConfiguration webHealthVaultConfiguration = new WebHealthVaultConfiguration
             {

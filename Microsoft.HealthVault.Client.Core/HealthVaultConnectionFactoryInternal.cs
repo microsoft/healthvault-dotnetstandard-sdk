@@ -52,7 +52,7 @@ namespace Microsoft.HealthVault.Client
 
                 this.cachedConnection = newConnection;
                 return newConnection;
-            }// 
+            }
         }
 
         private static void ValidateConfiguration(HealthVaultConfiguration currentConfiguration, HealthVaultConfiguration configuration)

@@ -2,7 +2,7 @@
 {
     internal class ServiceLocator : IServiceLocator
     {
-        public virtual T GetInstance<T>()
+        public T GetInstance<T>()
         {
             return Ioc.Get<T>();
         }
