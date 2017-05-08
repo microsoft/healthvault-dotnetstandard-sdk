@@ -6,20 +6,26 @@
 //
 // THE SOFTWARE IS PROVIDED *AS IS*, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-using System;
 using System.Security.Principal;
+using System.Web;
 
-namespace Microsoft.HealthVault.Web
+namespace Microsoft.HealthVault.Web.Providers
 {
-    [Serializable]
-    internal class HealthVaultIdentity : MarshalByRefObject, IIdentity
+    /// <summary>
+    /// <see cref="IHealthVaultIdentityProvider"/>
+    /// </summary>
+    internal class HealthVaultIdentityProvider : IHealthVaultIdentityProvider
     {
-        public WebConnectionInfo WebConnectionInfo { get; set; }
+        /// <summary>
+        /// Gets current user from httpcontext 
+        /// </summary>
+        /// <returns>HealthVaultIdentity</returns>
+        public HealthVaultIdentity TryGetIdentity()
+        {
+            IPrincipal principal = HttpContext.Current.User;
+            HealthVaultIdentity identity = principal?.Identity as HealthVaultIdentity;
 
-        public string AuthenticationType => "HealthVault";
-
-        public bool IsAuthenticated => WebConnectionInfo.PersonInfo != null;
-
-        public string Name => WebConnectionInfo?.PersonInfo != null ? WebConnectionInfo.PersonInfo.Name : string.Empty;
+            return identity;
+        }
     }
 }
