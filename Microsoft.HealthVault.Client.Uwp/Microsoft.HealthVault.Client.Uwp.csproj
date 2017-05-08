@@ -112,6 +112,9 @@
     <None Include="project.json" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\SharedVersionInfo.cs">
+      <Link>Properties\SharedVersionInfo.cs</Link>
+    </Compile>
     <Compile Include="DispatcherUtilities.cs" />
     <Compile Include="UwpBrowserAuthBroker.cs" />
     <Compile Include="UwpHealthVaultConnectionFactory.cs" />

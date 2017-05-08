@@ -51,6 +51,9 @@
     <Folder Include="Resources\" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\SharedVersionInfo.cs">
+      <Link>Properties\SharedVersionInfo.cs</Link>
+    </Compile>
     <Compile Include="IosBrowserAuthBroker.cs" />
     <Compile Include="IosHealthVaultConnectionFactory.cs" />
     <Compile Include="IosClientIoc.cs" />
