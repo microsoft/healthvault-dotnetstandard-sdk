@@ -1,5 +1,5 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-
+  <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), NetStandard.Common.targets))\NetStandard.Common.targets" />
   <PropertyGroup>
     <TargetFramework>netstandard1.4</TargetFramework>
 	<DocumentationFile>bin\$(Configuration)\netstandard1.4\Microsoft.HealthVault.RestApi.xml</DocumentationFile>
