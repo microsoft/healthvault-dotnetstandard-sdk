@@ -6,6 +6,7 @@ using System.Net.Http;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using Grace.DependencyInjection;
 using Microsoft.HealthVault;
 using Microsoft.HealthVault.Client;
 using Microsoft.HealthVault.Clients;
@@ -18,6 +19,7 @@ using Microsoft.HealthVault.Transport;
 using Microsoft.HealthVault.UnitTest.Samples;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NSubstitute;
+using Arg = NSubstitute.Arg;
 
 namespace Microsoft.HealthVault.UnitTest
 {
@@ -48,6 +50,8 @@ namespace Microsoft.HealthVault.UnitTest
         [TestInitialize]
         public void TestInitialize()
         {
+            Ioc.Container = new DependencyInjectionContainer();
+
             this.subServiceLocator = Substitute.For<IServiceLocator>();
             this.subHealthWebRequestClient = Substitute.For<IHealthWebRequestClient>();
             this.subLocalObjectStore = Substitute.For<ILocalObjectStore>();
