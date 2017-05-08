@@ -26,10 +26,10 @@ namespace Microsoft.HealthVault.Web.UnitTest.Helpers
         /// is returned when requested for that specific action key (here "Test")
         /// </summary>
         [TestMethod]
-        public void WhenActionUrlIsSetInConfiguration()
+        public void WhenSpecificActionRequested_ThenActionUrlSetInConfigurationIsReturned()
         {
             // Arrange
-            IServiceLocator serviceLocator = Substitute.For<ServiceLocator>();
+            IServiceLocator serviceLocator = Substitute.For<IServiceLocator>();
 
             WebHealthVaultConfiguration webHealthVaultConfiguration = new WebHealthVaultConfiguration
             {
@@ -48,8 +48,9 @@ namespace Microsoft.HealthVault.Web.UnitTest.Helpers
         }
 
         [TestMethod]
-        public void WhenActionUrlWithQueryStringIsSet()
+        public void WhenSpecificActionRequestedWithQueryString_ThenActionUrlSetInConfigurationIsReturned()
         {
+            // Arrange
             IServiceLocator serviceLocator = Substitute.For<IServiceLocator>();
 
             WebHealthVaultConfiguration webHealthVaultConfiguration = new WebHealthVaultConfiguration
@@ -60,15 +61,21 @@ namespace Microsoft.HealthVault.Web.UnitTest.Helpers
             serviceLocator.GetInstance<WebHealthVaultConfiguration>().Returns(webHealthVaultConfiguration);
 
             ActionRedirectHelper actionRedirectHelper = new ActionRedirectHelper(serviceLocator);
-            string targetLocation = actionRedirectHelper.TryGetTargetLocation("Test", "query=test");
 
+            // Act
+            string targetLocation = actionRedirectHelper.TryGetTargetLocation(
+                action: "Test",
+                actionQueryString:  "query=test");
+
+            // Asssert
             Assert.AreEqual("/Test?query=test", targetLocation);
         }
 
         [TestMethod]
-        public void WhenActionUrlWithSyntaxQueryStringIsSet()
+        public void WhenSpecificActionRequestedWithFormattedQueryString_ThenActionUrlSetInConfigurationIsReturned()
         {
-            IServiceLocator serviceLocator = Substitute.For<ServiceLocator>();
+            // Arrange
+            IServiceLocator serviceLocator = Substitute.For<IServiceLocator>();
 
             WebHealthVaultConfiguration webHealthVaultConfiguration = new WebHealthVaultConfiguration
             {
@@ -78,8 +85,13 @@ namespace Microsoft.HealthVault.Web.UnitTest.Helpers
             serviceLocator.GetInstance<WebHealthVaultConfiguration>().Returns(webHealthVaultConfiguration);
 
             ActionRedirectHelper actionRedirectHelper = new ActionRedirectHelper(serviceLocator);
-            string targetLocation = actionRedirectHelper.TryGetTargetLocation("Test", "?query=test");
 
+            // Act
+            string targetLocation = actionRedirectHelper.TryGetTargetLocation(
+                action: "Test", 
+                actionQueryString: "?query=test");
+
+            // Assert
             Assert.AreEqual("/Test?query=test", targetLocation);
         }
     }
