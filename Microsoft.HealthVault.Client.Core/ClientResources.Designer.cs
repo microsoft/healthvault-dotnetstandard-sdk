@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace Microsoft.HealthVault.Client {
+namespace Microsoft.HealthVault.Client.Core {
     using System;
     using System.Reflection;
     
@@ -40,7 +40,7 @@ namespace Microsoft.HealthVault.Client {
         internal static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("Microsoft.HealthVault.Client.ClientResources", typeof(ClientResources).GetTypeInfo().Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("Microsoft.HealthVault.Client.Core.ClientResources", typeof(ClientResources).GetTypeInfo().Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
