@@ -12,7 +12,6 @@ namespace Microsoft.HealthVault.Exceptions
     /// conversion operation.
     /// </summary>
     ///
-    [Serializable]
     public class ConversionFailureException : HealthVaultException
     {
         /// <summary>

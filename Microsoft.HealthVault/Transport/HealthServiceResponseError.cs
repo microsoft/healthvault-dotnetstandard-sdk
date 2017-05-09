@@ -12,7 +12,6 @@ namespace Microsoft.HealthVault.Transport
     /// than <see cref="HealthServiceStatusCode.Ok"/>.
     /// </summary>
     ///
-    [Serializable]
     public class HealthServiceResponseError
     {
         /// <summary>
@@ -57,7 +56,6 @@ namespace Microsoft.HealthVault.Transport
             set { this.context = value; }
         }
 
-        [NonSerialized]
         private HealthServiceErrorContext context;
 
         /// <summary>

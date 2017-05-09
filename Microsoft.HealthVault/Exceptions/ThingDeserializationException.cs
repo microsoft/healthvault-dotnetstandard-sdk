@@ -12,7 +12,6 @@ namespace Microsoft.HealthVault.Exceptions
     /// type-specific thing fails.
     /// </summary>
     ///
-    [Serializable]
     public class ThingDeserializationException : HealthVaultException
     {
         /// <summary>

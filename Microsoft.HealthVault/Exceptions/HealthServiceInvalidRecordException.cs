@@ -13,7 +13,6 @@ namespace Microsoft.HealthVault.Exceptions
     /// <see cref = "HealthServiceStatusCode.InvalidRecord"/>.
     /// </summary>
     ///
-    [Serializable]
     public sealed class HealthServiceInvalidRecordException : HealthServiceException
     {
         /// <summary>

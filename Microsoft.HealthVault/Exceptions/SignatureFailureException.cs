@@ -12,7 +12,6 @@ namespace Microsoft.HealthVault.Exceptions
     /// signature operation.
     /// </summary>
     ///
-    [Serializable]
     public class SignatureFailureException : HealthVaultException
     {
         /// <summary>

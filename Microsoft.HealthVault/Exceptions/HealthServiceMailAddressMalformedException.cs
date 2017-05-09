@@ -13,7 +13,6 @@ namespace Microsoft.HealthVault.Exceptions
     /// <see cref = "HealthServiceStatusCode.MailAddressMalformed"/>.
     /// </summary>
     ///
-    [Serializable]
     public sealed class HealthServiceMailAddressMalformedException : HealthServiceException
     {
         /// <summary>

@@ -13,7 +13,6 @@ namespace Microsoft.HealthVault.Exceptions
     /// <see cref = "HealthServiceStatusCode.AccessDenied"/>
     /// </summary>
     ///
-    [Serializable]
     public sealed class HealthServiceAccessDeniedException : HealthServiceException
     {
         /// <summary>

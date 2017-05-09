@@ -13,7 +13,6 @@ namespace Microsoft.HealthVault.Exceptions
     /// a health record that meets the minimum authorization requirements for the application.
     /// </summary>
     ///
-    [Serializable]
     public sealed class HealthRecordAuthorizationNotPossibleException :
         HealthServiceException
     {
