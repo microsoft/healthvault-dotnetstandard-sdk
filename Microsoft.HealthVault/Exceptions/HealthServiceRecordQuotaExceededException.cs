@@ -13,7 +13,6 @@ namespace Microsoft.HealthVault.Exceptions
     /// <see cref = "HealthServiceStatusCode.RecordQuotaExceeded"/>.
     /// </summary>
     ///
-    [Serializable]
     public sealed class HealthServiceRecordQuotaExceededException : HealthServiceException
     {
         /// <summary>

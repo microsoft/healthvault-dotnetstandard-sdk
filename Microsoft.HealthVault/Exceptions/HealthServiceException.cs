@@ -16,7 +16,6 @@ namespace Microsoft.HealthVault.Exceptions
     /// thrown by the SDK.
     /// </summary>
     ///
-    [Serializable]
     public class HealthServiceException : HealthVaultException
     {
         /// <summary>

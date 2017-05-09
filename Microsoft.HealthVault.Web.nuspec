@@ -18,10 +18,10 @@
       <group targetFramework="net461">
       	<dependency id="Microsoft.HealthVault" version="$version$" exclude="Build,Analyzers" />
         <dependency id="Microsoft.AspNet.Mvc" version="5.2.3" exclude="Build,Analyzers" />
-        <dependency id="System.Diagnostics.TraceSource" version="4.3.0" exclude="Build,Analyzers" />
-        <dependency id="System.Net.Http" version="4.1.1" exclude="Build,Analyzers" />
-        <dependency id="System.Xml.ReaderWriter" version="4.3.0" exclude="Build,Analyzers" />
-        <dependency id="System.Xml.XPath" version="4.3.0" exclude="Build,Analyzers" />
+        <dependency id="System.Diagnostics.TraceSource" version="[4.0.0]" exclude="Build,Analyzers" />
+        <dependency id="System.Net.Http" version="[4.1.1]" exclude="Build,Analyzers" />
+        <dependency id="System.Xml.ReaderWriter" version="[4.0.11]" exclude="Build,Analyzers" />
+        <dependency id="System.Xml.XPath" version="[4.0.1]" exclude="Build,Analyzers" />
       </group>
     </dependencies>
   </metadata>

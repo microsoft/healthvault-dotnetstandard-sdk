@@ -13,7 +13,6 @@ namespace Microsoft.HealthVault.Exceptions
     /// <see cref = "HealthServiceStatusCode.PasswordNotStrong"/>.
     /// </summary>
     ///
-    [Serializable]
     public sealed class HealthServicePasswordNotStrongException : HealthServiceException
     {
         /// <summary>

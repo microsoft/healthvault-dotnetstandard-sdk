@@ -13,7 +13,6 @@ namespace Microsoft.HealthVault.Exceptions
     /// cloud call.
     /// </summary>
     ///
-    [Serializable]
     public class HealthHttpException : HealthVaultException
     {
         /// <summary>
