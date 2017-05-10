@@ -18,7 +18,7 @@ namespace Microsoft.HealthVault.Web
 
         public string AuthenticationType => "HealthVault";
 
-        public bool IsAuthenticated => WebConnectionInfo.PersonInfo != null;
+        public bool IsAuthenticated => WebConnectionInfo?.PersonInfo != null;
 
         public string Name => WebConnectionInfo?.PersonInfo != null ? WebConnectionInfo.PersonInfo.Name : string.Empty;
     }
