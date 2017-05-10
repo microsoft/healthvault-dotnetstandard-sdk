@@ -61,6 +61,7 @@
     <ProjectReference Include="..\..\Microsoft.HealthVault.Client.Bait\Microsoft.HealthVault.Client.Bait.csproj">
       <Project>{29a7078e-f90c-438a-bcc4-ffe9216d8405}</Project>
       <Name>Microsoft.HealthVault.Client.Bait</Name>
+      <Private>True</Private>
     </ProjectReference>
     <ProjectReference Include="..\..\Microsoft.HealthVault.Client.Core\Microsoft.HealthVault.Client.Core.csproj">
       <Project>{5c7ec9d4-88b9-4ea2-bea1-3bf3f17858b4}</Project>

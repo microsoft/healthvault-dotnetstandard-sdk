@@ -114,5 +114,14 @@ namespace Microsoft.HealthVault.Client.Core {
                 return ResourceManager.GetString("LoginError", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to HealthVault Sign In.
+        /// </summary>
+        internal static string SignInActivityTitle {
+            get {
+                return ResourceManager.GetString("SignInActivityTitle", resourceCulture);
+            }
+        }
     }
 }

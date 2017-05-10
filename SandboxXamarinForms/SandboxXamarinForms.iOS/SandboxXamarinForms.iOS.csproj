@@ -166,4 +166,7 @@
     </PropertyGroup>
     <Error Condition="!Exists('..\..\..\packages\Xamarin.Forms.2.3.4.224\build\portable-win+net45+wp80+win81+wpa81+MonoAndroid10+Xamarin.iOS10+xamarinmac20\Xamarin.Forms.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\..\packages\Xamarin.Forms.2.3.4.224\build\portable-win+net45+wp80+win81+wpa81+MonoAndroid10+Xamarin.iOS10+xamarinmac20\Xamarin.Forms.targets'))" />
   </Target>
+  <PropertyGroup>
+    <PostBuildEvent>xcopy "$(SolutionDir)Microsoft.HealthVault.Client.Ios\bin\$(Configuration)\Microsoft.HealthVault.Client.dll" "$(ProjectDir)$(OutputPath)Microsoft.HealthVault.Client.dll" /y /f</PostBuildEvent>
+  </PropertyGroup>
 </Project>

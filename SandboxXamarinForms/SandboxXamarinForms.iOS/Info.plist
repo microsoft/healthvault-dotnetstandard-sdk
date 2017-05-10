@@ -47,6 +47,8 @@
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
 	<key>CFBundleIdentifier</key>
-	<string>com.Microsoft.SandboxXamarinForms</string>
+	<string>com.microsoft.health.SandboxXamarinForms</string>
+	<key>CFBundleShortVersionString</key>
+	<string></string>
 </dict>
 </plist>

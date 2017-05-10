@@ -5,7 +5,9 @@
              x:Class="SandboxXamarinForms.MainPage">
 
 	<StackLayout>
-        <Button Clicked="Button_OnClicked" Text="Connect" />
+        <Button Clicked="Connect_OnClicked" Text="Connect" />
+        <Button Clicked="SetBP_OnClicked" Text="Add BP" />
+        <Button Clicked="GetBP_OnClicked" Text="Get BP" />
         <Label x:Name="OutputLabel" />
     </StackLayout>
 </ContentPage>

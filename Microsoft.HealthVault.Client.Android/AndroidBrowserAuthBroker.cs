@@ -1,6 +1,7 @@
 using System;
 using System.Threading.Tasks;
 using Android.Content;
+using Microsoft.HealthVault.Client.Core;
 using Microsoft.HealthVault.Client.Platform.Android;
 using Microsoft.HealthVault.Exceptions;
 

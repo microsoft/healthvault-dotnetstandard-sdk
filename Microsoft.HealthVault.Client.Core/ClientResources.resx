@@ -142,4 +142,7 @@
   <data name="LoginError" xml:space="preserve">
     <value>Login Failed</value>
   </data>
+  <data name="SignInActivityTitle" xml:space="preserve">
+    <value>HealthVault Sign In</value>
+  </data>
 </root>
