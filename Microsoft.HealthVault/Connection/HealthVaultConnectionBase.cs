@@ -109,9 +109,9 @@ namespace Microsoft.HealthVault.Connection
         #endregion
 
         public async Task<HealthServiceResponseData> ExecuteAsync(
-            HealthVaultMethods method, 
+            HealthVaultMethods method,
             int methodVersion,
-            string parameters = null, 
+            string parameters = null,
             Guid? recordId = null,
             Guid? correlationId = null)
         {
@@ -125,15 +125,15 @@ namespace Microsoft.HealthVault.Connection
             }
 
             // Create the message using a Func in case we need to re-generate it for a retry later
-            Func <string> requestXmlCreator = () => this.requestMessageCreator.Create(
-                method, 
-                methodVersion,
-                isMethodAnonymous,
-                parameters,
-                recordId,
-                isMethodAnonymous && method == HealthVaultMethods.CreateAuthenticatedSessionToken
-                    ? this.ApplicationId 
-                    : this.Configuration.MasterApplicationId);
+            Func<string> requestXmlCreator = () => this.requestMessageCreator.Create(
+               method,
+               methodVersion,
+               isMethodAnonymous,
+               parameters,
+               recordId,
+               isMethodAnonymous && method == HealthVaultMethods.CreateAuthenticatedSessionToken
+                   ? this.ApplicationId
+                   : this.Configuration.MasterApplicationId);
 
             var requestXml = requestXmlCreator();
 
@@ -146,30 +146,29 @@ namespace Microsoft.HealthVault.Connection
             {
                 if (!isMethodAnonymous)
                 {
-                    using (await this.sessionCredentialLock.LockAsync().ConfigureAwait(false))
-                    {
-                        if (this.SessionCredential != null)
-                        {
-                            // To prevent multiple token refresh calls being made from simultaneous requests, we check if the token has been refreshed in the last 
-                            // {SessionCredentialCallThresholdMinutes} minutes and if so we do not make the call again.
-                            if (DateTimeOffset.Now.Subtract(this.lastRefreshedSessionCredential) > TimeSpan.FromMinutes(SessionCredentialCallThresholdMinutes))
-                            {
-                                await this.RefreshSessionCredentialAsync(CancellationToken.None).ConfigureAwait(false);
+                    await this.RefreshSessionAsync(CancellationToken.None);
 
-                                this.lastRefreshedSessionCredential = DateTimeOffset.Now;
-                            }
-
-                            // Re-generate the message so it pulls in the new SessionCredential
-                            requestXml = requestXmlCreator();
-                            return await this.SendRequestAsync(requestXml, correlationId).ConfigureAwait(false);
-                        }
-
-                        throw;
-                    }
+                    // Re-generate the message so it pulls in the new SessionCredential
+                    requestXml = requestXmlCreator();
+                    return await this.SendRequestAsync(requestXml, correlationId).ConfigureAwait(false);
                 }
             }
 
             return responseData;
+        }
+
+        public async Task RefreshSessionAsync(CancellationToken token)
+        {
+            using (await this.sessionCredentialLock.LockAsync().ConfigureAwait(false))
+            {
+                // To prevent multiple token refresh calls being made from simultaneous requests, we check if the token has been refreshed in the last 
+                // {SessionCredentialCallThresholdMinutes} minutes and if so we do not make the call again.
+                if (DateTimeOffset.Now.Subtract(this.lastRefreshedSessionCredential) > TimeSpan.FromMinutes(SessionCredentialCallThresholdMinutes))
+                {
+                    await this.RefreshSessionCredentialAsync(token).ConfigureAwait(false);
+                    this.lastRefreshedSessionCredential = DateTimeOffset.Now;
+                }
+            }
         }
 
         protected virtual async Task RefreshSessionCredentialAsync(CancellationToken token)
