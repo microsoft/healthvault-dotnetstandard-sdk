@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Javax.Crypto;
 using Javax.Crypto.Spec;
+using Microsoft.HealthVault.Client.Core;
 using AndroidApp = Android.App;
 
 namespace Microsoft.HealthVault.Client

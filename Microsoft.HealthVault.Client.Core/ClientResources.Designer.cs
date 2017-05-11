@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace Microsoft.HealthVault.Client {
+namespace Microsoft.HealthVault.Client.Core {
     using System;
     using System.Reflection;
     
@@ -40,7 +40,7 @@ namespace Microsoft.HealthVault.Client {
         internal static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("Microsoft.HealthVault.Client.ClientResources", typeof(ClientResources).GetTypeInfo().Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("Microsoft.HealthVault.Client.Core.ClientResources", typeof(ClientResources).GetTypeInfo().Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
@@ -112,6 +112,15 @@ namespace Microsoft.HealthVault.Client {
         internal static string LoginError {
             get {
                 return ResourceManager.GetString("LoginError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to HealthVault Sign In.
+        /// </summary>
+        internal static string SignInActivityTitle {
+            get {
+                return ResourceManager.GetString("SignInActivityTitle", resourceCulture);
             }
         }
     }

@@ -2,13 +2,14 @@ using System;
 using Android.App;
 using Android.OS;
 using Android.Webkit;
+using Microsoft.HealthVault.Client.Core;
 
 namespace Microsoft.HealthVault.Client.Platform.Android
 {
     /// <summary>
     /// This activity manages the MSA sign in process for the HealthVault Xamarin Android SDK
     /// </summary>
-    [Activity(Label = "SignInActivity")]
+    [Activity]
     public class SignInActivity : Activity
     {
         public const string StartUrl = "startUrl";
@@ -20,6 +21,8 @@ namespace Microsoft.HealthVault.Client.Platform.Android
         protected override void OnCreate(Bundle savedInstanceState)
         {
             base.OnCreate(savedInstanceState);
+            this.Title = ClientResources.SignInActivityTitle;
+
             SetContentView(Resource.Layout.SignInActivity);
 
             this.authBroker = Ioc.Get<IAndroidBrowserAuthBroker>();

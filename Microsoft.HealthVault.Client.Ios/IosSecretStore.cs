@@ -1,4 +1,5 @@
 ﻿using Foundation;
+using Microsoft.HealthVault.Client.Core;
 using System;
 using System.Threading.Tasks;
 using Security;
