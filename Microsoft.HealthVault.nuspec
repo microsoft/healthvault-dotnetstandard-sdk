@@ -16,26 +16,19 @@
     <tags>HealthVault</tags>
     <dependencies>
       <group targetFramework="netstandard1.4">
-        <!-- Fix for bug# 54673: NuGet Package no longer installs on Visual Studio for Mac Preview -->
-        <!-- 
-            Nuget restore on client platforms (xamarin android and xamarin ios) is restoring a higher version of Microsoft.Rest.ClientRuntime
-            which require a higher .NET Core version than what xamarin supports. Fix is to restore the exact version of Microsoft.Rest.ClientRuntime - 2.3.6.
-            However, Microsoft.Rest.ClientRuntime version 2.3.6, restricts the Newtonsoft version to be 9.0.1 (greater than 9 and less than 10).
-        -->
-        <dependency id="Newtonsoft.Json" version="[9.0.1]" exclude="Build,Analyzers" />
-        <dependency id="Microsoft.Rest.ClientRuntime" version="[2.3.6]" exclude="Build,Analyzers" />
-        <dependency id="System.Net.Http" version="[4.1.1]" exclude="Build,Analyzers" />
-        <dependency id="System.Xml.XPath" version="[4.0.1]" exclude="Build,Analyzers" />
-        <dependency id="System.Diagnostics.TraceSource" version="[4.0.0]" exclude="Build,Analyzers" />
-        <dependency id="System.Xml.XDocument" version="[4.0.11]" exclude="Build,Analyzers" />
-        <dependency id="System.Security.Cryptography.Cng" version="[4.2.0]" exclude="Build,Analyzers" />
-        <dependency id="System.Xml.ReaderWriter" version="[4.0.11]" exclude="Build,Analyzers" />
-        <dependency id="NETStandard.Library" version="[1.6.0]" exclude="Build,Analyzers" />
-        <dependency id="System.Security.Cryptography.X509Certificates" version="[4.1.0]" exclude="Build,Analyzers" />
         <dependency id="Grace" version="6.0.1" exclude="Build,Analyzers" />
-        <dependency id="System.Xml.XPath.XDocument" version="[4.0.1]" exclude="Build,Analyzers" />
+        <dependency id="NETStandard.Library" version="1.6.1" exclude="Build,Analyzers" />
+        <dependency id="Newtonsoft.Json" version="10.0.2" exclude="Build,Analyzers" />
+        <dependency id="Microsoft.Rest.ClientRuntime" version="2.3.7" exclude="Build,Analyzers" />
+        <dependency id="System.Collections.Specialized" version="4.3.0" exclude="Build,Analyzers" />
         <dependency id="System.Data.Common" version="4.3.0" exclude="Build,Analyzers" />
-        <dependency id="System.Collections.Specialized" version="[4.0.1]" exclude="Build,Analyzers" />
+        <dependency id="System.Diagnostics.TraceSource" version="4.3.0" exclude="Build,Analyzers" />
+        <dependency id="System.Net.Http" version="4.3.2" exclude="Build,Analyzers" />
+        <dependency id="System.Security.Cryptography.X509Certificates" version="4.3.0" exclude="Build,Analyzers" />
+        <dependency id="System.Xml.ReaderWriter" version="4.3.0" exclude="Build,Analyzers" />
+        <dependency id="System.Xml.XDocument" version="4.3.0" exclude="Build,Analyzers" />
+        <dependency id="System.Xml.XPath" version="4.3.0" exclude="Build,Analyzers" />
+        <dependency id="System.Xml.XPath.XDocument" version="4.3.0" exclude="Build,Analyzers" />
       </group>
     </dependencies>
   </metadata>
