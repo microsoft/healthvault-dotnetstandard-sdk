@@ -2,7 +2,7 @@
   "dependencies": {
     "Grace": "6.0.1",
     "Microsoft.NETCore.UniversalWindowsPlatform": "5.3.3",
-    "NETStandard.Library": "1.6.0"
+    "NETStandard.Library": "1.6.1"
   },
   "frameworks": {
     "uap10.0": {}
