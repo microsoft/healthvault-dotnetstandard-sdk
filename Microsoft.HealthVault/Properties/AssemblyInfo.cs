@@ -1,4 +1,6 @@
-﻿using System.Runtime.CompilerServices;
+﻿using System.Resources;
+using System.Runtime.CompilerServices;
+[assembly: NeutralResourcesLanguage("en")]
 [assembly: InternalsVisibleTo("Microsoft.HealthVault.DesktopWeb.Common"),
            InternalsVisibleTo("Microsoft.HealthVault.ItemTypes"),
            InternalsVisibleTo("Microsoft.HealthVault.Web"),
