@@ -63,7 +63,7 @@ namespace Microsoft.HealthVault.AspNetCore.Internal
 
         private StringBuilder GetShellUrl()
         {
-            string shellUrl = this.webHealthVaultConfiguration.HealthVaultShellUrl.OriginalString;
+            string shellUrl = this.webHealthVaultConfiguration.DefaultHealthVaultShellUrl.OriginalString;
 
             StringBuilder targetUrl = new StringBuilder(shellUrl);
             if (!shellUrl.EndsWith("/", StringComparison.OrdinalIgnoreCase))

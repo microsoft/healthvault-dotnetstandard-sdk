@@ -55,8 +55,8 @@ namespace SandboxWebCore
             app.UseHealthVault(new HealthVaultConfiguration
             {
                 MasterApplicationId = Guid.Parse("79aec84a-1131-435d-bdcc-40de9b870c35"),
-                HealthVaultShellUrl = new Uri("https://account.healthvault-ppe.com/"),
-                HealthVaultUrl = new Uri("https://platform.healthvault-ppe.com/platform/"),
+                DefaultHealthVaultShellUrl = new Uri("https://account.healthvault-ppe.com/"),
+                DefaultHealthVaultUrl = new Uri("https://platform.healthvault-ppe.com/platform/"),
                 RestHealthVaultUrl = new Uri("https://data.ppe.microsofthealth.net")
             });
 

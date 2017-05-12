@@ -12,7 +12,7 @@ using Microsoft.HealthVault.AspNetCore.Internal;
 using Microsoft.HealthVault.Connection;
 using Microsoft.HealthVault.Person;
 using Microsoft.HealthVault.PlatformInformation;
-using Microsoft.HealthVault.Transport.MessageFormatters.SessionFormatters;
+using Microsoft.HealthVault.Transport;
 
 namespace Microsoft.HealthVault.AspNetCore.Connection
 {
@@ -36,11 +36,20 @@ namespace Microsoft.HealthVault.AspNetCore.Connection
             return Task.FromResult(this.identity.GetConnectionInfo().PersonInfo);
         }
 
-        protected override SessionFormatter SessionFormatter => new TokenSessionFormatter(this.SessionCredential.Token, this.UserAuthToken);
-
         public override string GetRestAuthSessionHeader()
         {
             return $"user-token={this.UserAuthToken}";
+        }
+
+        public override AuthSession GetAuthSessionHeader()
+        {
+            AuthSession authSession = new AuthSession
+            {
+                AuthToken = this.SessionCredential.Token,
+                UserAuthToken = this.UserAuthToken
+            };
+
+            return authSession;
         }
     }
 }

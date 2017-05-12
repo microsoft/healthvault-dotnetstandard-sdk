@@ -129,7 +129,7 @@ namespace Microsoft.HealthVault.AspNetCore.Internal
                 "Opening cert store (read-only): {0}",
                 this.storeLocation.ToString());
 
-            RSACng rsaProvider = null;
+            RSA rsaProvider = null;
             string thumbprint = null;
 
             X509Certificate2 result = null;
@@ -156,7 +156,7 @@ namespace Microsoft.HealthVault.AspNetCore.Internal
                         thumbprint = cert.Thumbprint;
 
                         HealthVaultPlatformTrace.LogCertLoading("Looking for private key");
-                        rsaProvider = (RSACng)cert.GetRSAPrivateKey();
+                        rsaProvider = cert.GetRSAPrivateKey();
                         HealthVaultPlatformTrace.LogCertLoading("Private key found");
 
                         result = cert;
