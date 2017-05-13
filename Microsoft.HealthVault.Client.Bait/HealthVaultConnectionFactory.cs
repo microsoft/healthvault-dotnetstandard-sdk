@@ -12,6 +12,7 @@ namespace Microsoft.HealthVault.Client
         {
             get
             {
+                // a third non-functional code change
                 throw new NotImplementedException(ClientResources.BaitWithoutSwitchError);
             }
         }
