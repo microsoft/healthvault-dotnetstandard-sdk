@@ -4,11 +4,8 @@
 // All other rights reserved.
 
 using System;
-using System.IO;
 using System.Net.Http.Headers;
-using System.Xml;
 using System.Xml.XPath;
-using Microsoft.HealthVault.Helpers;
 
 namespace Microsoft.HealthVault.Transport
 {
@@ -38,7 +35,7 @@ namespace Microsoft.HealthVault.Transport
         /// to get more information about the error.
         /// </remarks>
         ///
-        public HealthServiceStatusCode Code => HealthServiceStatusCodeManager.GetStatusCode(this.CodeId);
+        public HealthServiceStatusCode Code => HealthServiceStatusCodeManager.GetStatusCode(CodeId);
 
         /// <summary>
         /// Gets the integer identifier of the status code in the HealthVault
@@ -76,7 +73,7 @@ namespace Microsoft.HealthVault.Transport
         /// <summary>
         /// Gets the info section of the response XML.
         /// </summary>
-        /// 
+        ///
         public XPathNavigator InfoNavigator { get; internal set; }
 
         /// <summary>

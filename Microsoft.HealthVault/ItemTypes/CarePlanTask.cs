@@ -42,7 +42,7 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public CarePlanTask(CodableValue name)
         {
-            this.Name = name;
+            Name = name;
         }
 
         /// <summary>
@@ -61,16 +61,16 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             Validator.ThrowIfNavigatorNull(navigator);
 
-            this.name = new CodableValue();
-            this.name.ParseXml(navigator.SelectSingleNode("name"));
-            this.description = XPathHelper.GetOptNavValue(navigator, "description");
-            this.startDate = XPathHelper.GetOptNavValue<ApproximateDateTime>(navigator, "start-date");
-            this.endDate = XPathHelper.GetOptNavValue<ApproximateDateTime>(navigator, "end-date");
-            this.targetCompletionDate = XPathHelper.GetOptNavValue<ApproximateDateTime>(navigator, "target-completion-date");
-            this.sequenceNumber = XPathHelper.GetOptNavValueAsInt(navigator, "sequence-number");
-            this.taskAssociatedTypeInfo = XPathHelper.GetOptNavValue<AssociatedTypeInfo>(navigator, "associated-type-info");
-            this.recurrence = XPathHelper.GetOptNavValue<CarePlanTaskRecurrence>(navigator, "recurrence");
-            this.referenceId = XPathHelper.GetOptNavValue(navigator, "reference-id");
+            _name = new CodableValue();
+            _name.ParseXml(navigator.SelectSingleNode("name"));
+            _description = XPathHelper.GetOptNavValue(navigator, "description");
+            _startDate = XPathHelper.GetOptNavValue<ApproximateDateTime>(navigator, "start-date");
+            _endDate = XPathHelper.GetOptNavValue<ApproximateDateTime>(navigator, "end-date");
+            _targetCompletionDate = XPathHelper.GetOptNavValue<ApproximateDateTime>(navigator, "target-completion-date");
+            _sequenceNumber = XPathHelper.GetOptNavValueAsInt(navigator, "sequence-number");
+            _taskAssociatedTypeInfo = XPathHelper.GetOptNavValue<AssociatedTypeInfo>(navigator, "associated-type-info");
+            _recurrence = XPathHelper.GetOptNavValue<CarePlanTaskRecurrence>(navigator, "recurrence");
+            _referenceId = XPathHelper.GetOptNavValue(navigator, "reference-id");
         }
 
         /// <summary>
@@ -104,19 +104,19 @@ namespace Microsoft.HealthVault.ItemTypes
             Validator.ThrowIfStringNullOrEmpty(nodeName, "WriteXmlEmptyNodeName");
             Validator.ThrowIfWriterNull(writer);
 
-            Validator.ThrowSerializationIfNull(this.name, Resources.CarePlanTaskNameNull);
+            Validator.ThrowSerializationIfNull(_name, Resources.CarePlanTaskNameNull);
 
             writer.WriteStartElement("task");
             {
-                this.name.WriteXml("name", writer);
-                XmlWriterHelper.WriteOptString(writer, "description", this.description);
-                XmlWriterHelper.WriteOpt(writer, "start-date", this.startDate);
-                XmlWriterHelper.WriteOpt(writer, "end-date", this.endDate);
-                XmlWriterHelper.WriteOpt(writer, "target-completion-date", this.targetCompletionDate);
-                XmlWriterHelper.WriteOptInt(writer, "sequence-number", this.sequenceNumber);
-                XmlWriterHelper.WriteOpt(writer, "associated-type-info", this.taskAssociatedTypeInfo);
-                XmlWriterHelper.WriteOpt(writer, "recurrence", this.recurrence);
-                XmlWriterHelper.WriteOptString(writer, "reference-id", this.referenceId);
+                _name.WriteXml("name", writer);
+                XmlWriterHelper.WriteOptString(writer, "description", _description);
+                XmlWriterHelper.WriteOpt(writer, "start-date", _startDate);
+                XmlWriterHelper.WriteOpt(writer, "end-date", _endDate);
+                XmlWriterHelper.WriteOpt(writer, "target-completion-date", _targetCompletionDate);
+                XmlWriterHelper.WriteOptInt(writer, "sequence-number", _sequenceNumber);
+                XmlWriterHelper.WriteOpt(writer, "associated-type-info", _taskAssociatedTypeInfo);
+                XmlWriterHelper.WriteOpt(writer, "recurrence", _recurrence);
+                XmlWriterHelper.WriteOptString(writer, "reference-id", _referenceId);
             }
 
             writer.WriteEndElement();
@@ -139,17 +139,17 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             get
             {
-                return this.name;
+                return _name;
             }
 
             set
             {
-                Validator.ThrowIfArgumentNull(value, nameof(this.Name), Resources.CarePlanTaskNameNull);
-                this.name = value;
+                Validator.ThrowIfArgumentNull(value, nameof(Name), Resources.CarePlanTaskNameNull);
+                _name = value;
             }
         }
 
-        private CodableValue name;
+        private CodableValue _name;
 
         /// <summary>
         /// Gets or sets description of the task.
@@ -167,17 +167,17 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             get
             {
-                return this.description;
+                return _description;
             }
 
             set
             {
                 Validator.ThrowIfStringIsEmptyOrWhitespace(value, "Description");
-                this.description = value;
+                _description = value;
             }
         }
 
-        private string description;
+        private string _description;
 
         private static void ValidateDates(
             ApproximateDateTime startDate,
@@ -207,17 +207,17 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             get
             {
-                return this.startDate;
+                return _startDate;
             }
 
             set
             {
-                ValidateDates(value, this.endDate);
-                this.startDate = value;
+                ValidateDates(value, _endDate);
+                _startDate = value;
             }
         }
 
-        private ApproximateDateTime startDate;
+        private ApproximateDateTime _startDate;
 
         /// <summary>
         /// Gets or sets the end date for the task.
@@ -231,17 +231,17 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             get
             {
-                return this.endDate;
+                return _endDate;
             }
 
             set
             {
-                ValidateDates(this.startDate, value);
-                this.endDate = value;
+                ValidateDates(_startDate, value);
+                _endDate = value;
             }
         }
 
-        private ApproximateDateTime endDate;
+        private ApproximateDateTime _endDate;
 
         /// <summary>
         /// Gets or sets the date user intends to complete the task.
@@ -255,16 +255,16 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             get
             {
-                return this.targetCompletionDate;
+                return _targetCompletionDate;
             }
 
             set
             {
-                this.targetCompletionDate = value;
+                _targetCompletionDate = value;
             }
         }
 
-        private ApproximateDateTime targetCompletionDate;
+        private ApproximateDateTime _targetCompletionDate;
 
         /// <summary>
         /// Gets or sets sequence number associated with the task.
@@ -278,21 +278,21 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             get
             {
-                return this.sequenceNumber;
+                return _sequenceNumber;
             }
 
             set
             {
                 if (value < 0)
                 {
-                    throw new ArgumentException(Resources.CarePlanTaskSequenceNumberInvalid, nameof(this.SequenceNumber));
+                    throw new ArgumentException(Resources.CarePlanTaskSequenceNumberInvalid, nameof(SequenceNumber));
                 }
 
-                this.sequenceNumber = value;
+                _sequenceNumber = value;
             }
         }
 
-        private int? sequenceNumber;
+        private int? _sequenceNumber;
 
         /// <summary>
         /// Gets or sets HealthVault type information related to this task.
@@ -306,16 +306,16 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             get
             {
-                return this.taskAssociatedTypeInfo;
+                return _taskAssociatedTypeInfo;
             }
 
             set
             {
-                this.taskAssociatedTypeInfo = value;
+                _taskAssociatedTypeInfo = value;
             }
         }
 
-        private AssociatedTypeInfo taskAssociatedTypeInfo;
+        private AssociatedTypeInfo _taskAssociatedTypeInfo;
 
         /// <summary>
         /// Gets or sets recurrence of the task.
@@ -329,16 +329,16 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             get
             {
-                return this.recurrence;
+                return _recurrence;
             }
 
             set
             {
-                this.recurrence = value;
+                _recurrence = value;
             }
         }
 
-        private CarePlanTaskRecurrence recurrence;
+        private CarePlanTaskRecurrence _recurrence;
 
         /// <summary>
         /// Gets or sets an unique id to distinguish one task from another.
@@ -356,17 +356,17 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             get
             {
-                return this.referenceId;
+                return _referenceId;
             }
 
             set
             {
                 Validator.ThrowIfStringIsEmptyOrWhitespace(value, "ReferenceId");
-                this.referenceId = value;
+                _referenceId = value;
             }
         }
 
-        private string referenceId;
+        private string _referenceId;
 
         /// <summary>
         /// Gets a string representation of the CarePlanTask.
@@ -380,17 +380,17 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             string result;
 
-            if (this.description == null)
+            if (_description == null)
             {
-                result = this.name.Text;
+                result = _name.Text;
             }
             else
             {
                 result = string.Format(
                     CultureInfo.CurrentUICulture,
                     Resources.CarePlanTaskFormat,
-                    this.name.Text,
-                    this.description);
+                    _name.Text,
+                    _description);
             }
 
             return result;

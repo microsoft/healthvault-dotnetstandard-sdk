@@ -47,8 +47,8 @@ namespace Microsoft.HealthVault.ItemTypes
         public HeartRate(HealthServiceDateTime when, int value)
             : base(TypeId)
         {
-            this.When = when;
-            this.Value = value;
+            When = when;
+            Value = value;
         }
 
         /// <summary>
@@ -78,22 +78,22 @@ namespace Microsoft.HealthVault.ItemTypes
             Validator.ThrowInvalidIfNull(itemNav, Resources.HeartRateUnexpectedNode);
 
             // when
-            this.when = new HealthServiceDateTime();
-            this.when.ParseXml(itemNav.SelectSingleNode("when"));
+            _when = new HealthServiceDateTime();
+            _when.ParseXml(itemNav.SelectSingleNode("when"));
 
             // value
-            this.value = itemNav.SelectSingleNode("value").ValueAsInt;
+            _value = itemNav.SelectSingleNode("value").ValueAsInt;
 
             // measurement-method
-            this.measurementMethod =
+            _measurementMethod =
                 XPathHelper.GetOptNavValue<CodableValue>(itemNav, "measurement-method");
 
             // measurement-condition
-            this.measurementConditions =
+            _measurementConditions =
                 XPathHelper.GetOptNavValue<CodableValue>(itemNav, "measurement-conditions");
 
             // measurement-flags
-            this.measurementFlags =
+            _measurementFlags =
                 XPathHelper.GetOptNavValue<CodableValue>(itemNav, "measurement-flags");
         }
 
@@ -116,36 +116,36 @@ namespace Microsoft.HealthVault.ItemTypes
         public override void WriteXml(XmlWriter writer)
         {
             Validator.ThrowIfWriterNull(writer);
-            Validator.ThrowSerializationIfNull(this.when, Resources.WhenNullValue);
+            Validator.ThrowSerializationIfNull(_when, Resources.WhenNullValue);
 
             // <heart-rate>
             writer.WriteStartElement("heart-rate");
 
             // <when>
-            this.when.WriteXml("when", writer);
+            _when.WriteXml("when", writer);
 
             // <value>
             writer.WriteElementString(
                 "value",
-                this.value.ToString(CultureInfo.InvariantCulture));
+                _value.ToString(CultureInfo.InvariantCulture));
 
             // <measurement-method>
             XmlWriterHelper.WriteOpt(
                 writer,
                 "measurement-method",
-                this.measurementMethod);
+                _measurementMethod);
 
             // <measurement-conditions>
             XmlWriterHelper.WriteOpt(
                 writer,
                 "measurement-conditions",
-                this.measurementConditions);
+                _measurementConditions);
 
             // <measurement-flags>
             XmlWriterHelper.WriteOpt(
                 writer,
                 "measurement-flags",
-                this.measurementFlags);
+                _measurementFlags);
 
             // </heart-rate>
             writer.WriteEndElement();
@@ -166,16 +166,16 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public HealthServiceDateTime When
         {
-            get { return this.when; }
+            get { return _when; }
 
             set
             {
-                Validator.ThrowIfArgumentNull(value, nameof(this.When), Resources.WhenNullValue);
-                this.when = value;
+                Validator.ThrowIfArgumentNull(value, nameof(When), Resources.WhenNullValue);
+                _when = value;
             }
         }
 
-        private HealthServiceDateTime when;
+        private HealthServiceDateTime _when;
 
         /// <summary>
         /// Gets or sets the heart rate in beats per minutes (BPM).
@@ -191,20 +191,20 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public int Value
         {
-            get { return this.value; }
+            get { return _value; }
 
             set
             {
                 if (value < 0)
                 {
-                    throw new ArgumentOutOfRangeException(nameof(this.Value), Resources.HeartRateValueNegative);
+                    throw new ArgumentOutOfRangeException(nameof(Value), Resources.HeartRateValueNegative);
                 }
 
-                this.value = value;
+                _value = value;
             }
         }
 
-        private int value;
+        private int _value;
 
         /// <summary>
         /// Gets or sets the technique used to obtain the measurement.
@@ -221,11 +221,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public CodableValue MeasurementMethod
         {
-            get { return this.measurementMethod; }
-            set { this.measurementMethod = value; }
+            get { return _measurementMethod; }
+            set { _measurementMethod = value; }
         }
 
-        private CodableValue measurementMethod;
+        private CodableValue _measurementMethod;
 
         /// <summary>
         /// Gets or sets the conditions under which the heart rate was measured.
@@ -242,11 +242,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public CodableValue MeasurementConditions
         {
-            get { return this.measurementConditions; }
-            set { this.measurementConditions = value; }
+            get { return _measurementConditions; }
+            set { _measurementConditions = value; }
         }
 
-        private CodableValue measurementConditions;
+        private CodableValue _measurementConditions;
 
         /// <summary>
         /// Gets or sets the additional information about the measurement.
@@ -264,11 +264,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public CodableValue MeasurementFlags
         {
-            get { return this.measurementFlags; }
-            set { this.measurementFlags = value; }
+            get { return _measurementFlags; }
+            set { _measurementFlags = value; }
         }
 
-        private CodableValue measurementFlags;
+        private CodableValue _measurementFlags;
 
         /// <summary>
         /// Gets the description of a heart rate instance.
@@ -283,7 +283,7 @@ namespace Microsoft.HealthVault.ItemTypes
             return
                 string.Format(
                     Resources.HeartRateToStringFormat,
-                    this.value.ToString(CultureInfo.InvariantCulture));
+                    _value.ToString(CultureInfo.InvariantCulture));
         }
     }
 }

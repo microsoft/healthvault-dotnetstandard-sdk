@@ -4,7 +4,6 @@
 // All other rights reserved.
 
 using System;
-using Microsoft.HealthVault.Helpers;
 
 namespace Microsoft.HealthVault.Exceptions
 {

@@ -30,19 +30,19 @@ namespace Microsoft.HealthVault.Thing
     {
         internal BlobStore(ThingBase item, HealthRecordAccessor record)
         {
-            this.item = item;
-            this.Record = record;
+            _item = item;
+            Record = record;
         }
 
         internal BlobStore(
             ThingBase item)
         {
-            this.item = item;
+            _item = item;
         }
 
         internal HealthRecordAccessor Record { get; set; }
 
-        private ThingBase item;
+        private ThingBase _item;
 
         #region IDictionary implementation
 
@@ -50,7 +50,7 @@ namespace Microsoft.HealthVault.Thing
         /// Gets the count of BLOBs associated with the thing.
         /// </summary>
         ///
-        public int Count => this.blobs.Count;
+        public int Count => blobs.Count;
 
         /// <summary>
         /// Not supported.
@@ -84,7 +84,7 @@ namespace Microsoft.HealthVault.Thing
         ///
         public void Clear()
         {
-            this.blobs.Clear();
+            blobs.Clear();
         }
 
         /// <summary>
@@ -106,7 +106,7 @@ namespace Microsoft.HealthVault.Thing
         ///
         public bool Contains(Blob blob)
         {
-            return this.blobs.ContainsValue(blob);
+            return blobs.ContainsValue(blob);
         }
 
         /// <summary>
@@ -127,8 +127,8 @@ namespace Microsoft.HealthVault.Thing
         ///
         public bool ContainsKey(string key)
         {
-            key = this.MapNullKey(key);
-            return this.blobs.ContainsKey(key);
+            key = MapNullKey(key);
+            return blobs.ContainsKey(key);
         }
 
         /// <summary>
@@ -141,7 +141,7 @@ namespace Microsoft.HealthVault.Thing
         ///
         IEnumerator IEnumerable.GetEnumerator()
         {
-            return this.blobs.GetEnumerator();
+            return blobs.GetEnumerator();
         }
 
         /// <summary>
@@ -154,7 +154,7 @@ namespace Microsoft.HealthVault.Thing
         ///
         IEnumerator<KeyValuePair<string, Blob>> IEnumerable<KeyValuePair<string, Blob>>.GetEnumerator()
         {
-            return this.blobs.GetEnumerator();
+            return blobs.GetEnumerator();
         }
 
         /// <summary>
@@ -178,10 +178,10 @@ namespace Microsoft.HealthVault.Thing
         ///
         bool ICollection<KeyValuePair<string, Blob>>.Remove(KeyValuePair<string, Blob> item)
         {
-            bool result = this.blobs.Remove(item.Key);
+            bool result = blobs.Remove(item.Key);
             if (result)
             {
-                this.RemovedBlobs[item.Key] = item.Value;
+                RemovedBlobs[item.Key] = item.Value;
             }
 
             return result;
@@ -205,7 +205,7 @@ namespace Microsoft.HealthVault.Thing
             KeyValuePair<string, Blob>[] array,
             int arrayIndex)
         {
-            ((ICollection<KeyValuePair<string, Blob>>)this.blobs).CopyTo(array, arrayIndex);
+            ((ICollection<KeyValuePair<string, Blob>>)blobs).CopyTo(array, arrayIndex);
         }
 
         /// <summary>
@@ -222,7 +222,7 @@ namespace Microsoft.HealthVault.Thing
         ///
         bool ICollection<KeyValuePair<string, Blob>>.Contains(KeyValuePair<string, Blob> item)
         {
-            return this.blobs.ContainsKey(item.Key);
+            return blobs.ContainsKey(item.Key);
         }
 
         /// <summary>
@@ -238,13 +238,13 @@ namespace Microsoft.HealthVault.Thing
         /// Gets an ICollection&lt;Blob&gt; containing the values in the BlobStore.
         /// </summary>
         ///
-        public ICollection<Blob> Values => this.blobs.Values;
+        public ICollection<Blob> Values => blobs.Values;
 
         /// <summary>
         /// Gets an ICollection&lt;string&gt; containing the Blob names in the BlobStore.
         /// </summary>
         ///
-        public ICollection<string> Keys => this.blobs.Keys;
+        public ICollection<string> Keys => blobs.Keys;
 
         /// <summary>
         /// Gets the value associated with the specified key.
@@ -266,8 +266,8 @@ namespace Microsoft.HealthVault.Thing
         ///
         public bool TryGetValue(string key, out Blob value)
         {
-            key = this.MapNullKey(key);
-            return this.blobs.TryGetValue(key, out value);
+            key = MapNullKey(key);
+            return blobs.TryGetValue(key, out value);
         }
 
         /// <summary>
@@ -284,14 +284,14 @@ namespace Microsoft.HealthVault.Thing
         ///
         public bool Remove(string key)
         {
-            key = this.MapNullKey(key);
+            key = MapNullKey(key);
 
-            if (this.blobs.ContainsKey(key))
+            if (blobs.ContainsKey(key))
             {
-                this.RemovedBlobs[key] = this.blobs[key];
+                RemovedBlobs[key] = blobs[key];
             }
 
-            return this.blobs.Remove(key);
+            return blobs.Remove(key);
         }
 
         #endregion IDictionary implementation
@@ -313,12 +313,12 @@ namespace Microsoft.HealthVault.Thing
         {
             get
             {
-                name = this.MapNullKey(name);
+                name = MapNullKey(name);
 
                 Blob result = null;
-                if (this.blobs.ContainsKey(name))
+                if (blobs.ContainsKey(name))
                 {
-                    result = this.blobs[name];
+                    result = blobs[name];
                 }
 
                 return result;
@@ -365,7 +365,7 @@ namespace Microsoft.HealthVault.Thing
         ///
         public void WriteInline(string blobName, string contentType, byte[] bytes)
         {
-            Blob blob = this.NewBlob(blobName, contentType);
+            Blob blob = NewBlob(blobName, contentType);
             blob.WriteInline(bytes);
         }
 
@@ -403,7 +403,7 @@ namespace Microsoft.HealthVault.Thing
             string contentType,
             Stream stream)
         {
-            Blob blob = this.NewBlob(blobName, contentType);
+            Blob blob = NewBlob(blobName, contentType);
             blob.Write(stream);
         }
 
@@ -434,9 +434,9 @@ namespace Microsoft.HealthVault.Thing
         ///
         public Blob NewBlob(string blobName, string contentType)
         {
-            Blob blob = new Blob(blobName, contentType, null, null, this.Record);
-            this.blobs.Add(blobName, blob);
-            this.item.Sections |= ThingSections.BlobPayload;
+            Blob blob = new Blob(blobName, contentType, null, null, Record);
+            blobs.Add(blobName, blob);
+            _item.Sections |= ThingSections.BlobPayload;
             return blob;
         }
 
@@ -488,10 +488,10 @@ namespace Microsoft.HealthVault.Thing
             BlobHashInfo hashInfo,
             Uri blobUrl)
         {
-            Blob blob = new Blob(blobName, contentType, null, null, hashInfo, this.Record) { Url = blobUrl };
+            Blob blob = new Blob(blobName, contentType, null, null, hashInfo, Record) { Url = blobUrl };
 
-            this.blobs.Add(blobName, blob);
-            this.item.Sections |= ThingSections.BlobPayload;
+            blobs.Add(blobName, blob);
+            _item.Sections |= ThingSections.BlobPayload;
             return blob;
         }
 
@@ -534,7 +534,7 @@ namespace Microsoft.HealthVault.Thing
                     currentContentEncoding,
                     legacyContentEncoding,
                     hashInfo,
-                    this.Record);
+                    Record);
 
                 XPathNavigator lengthNav = blobNav.SelectSingleNode("content-length");
                 if (lengthNav != null)
@@ -554,7 +554,7 @@ namespace Microsoft.HealthVault.Thing
                     blob.Url = new Uri(urlNav.Value);
                 }
 
-                this.blobs[blob.Name] = blob;
+                blobs[blob.Name] = blob;
             }
         }
 
@@ -562,7 +562,7 @@ namespace Microsoft.HealthVault.Thing
         {
             bool containingNodeWritten = false;
 
-            foreach (Blob blob in this.blobs.Values)
+            foreach (Blob blob in blobs.Values)
             {
                 if (blob.IsDirty)
                 {
@@ -610,9 +610,9 @@ namespace Microsoft.HealthVault.Thing
                 }
             }
 
-            foreach (Blob blob in this.RemovedBlobs.Values)
+            foreach (Blob blob in RemovedBlobs.Values)
             {
-                if (!this.blobs.ContainsKey(blob.Name))
+                if (!blobs.ContainsKey(blob.Name))
                 {
                     if (!containingNodeWritten)
                     {

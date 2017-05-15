@@ -66,9 +66,9 @@ namespace Microsoft.HealthVault.ItemTypes
             Length value)
             : base(TypeId)
         {
-            this.When = when;
-            this.MeasurementName = measurementName;
-            this.Value = value;
+            When = when;
+            MeasurementName = measurementName;
+            Value = value;
         }
 
         /// <summary>
@@ -99,16 +99,16 @@ namespace Microsoft.HealthVault.ItemTypes
             Validator.ThrowInvalidIfNull(itemNav, Resources.BodyDimensionUnexpectedNode);
 
             // when (approxi-date-time, mandatory)
-            this.when = new ApproximateDateTime();
-            this.when.ParseXml(itemNav.SelectSingleNode("when"));
+            _when = new ApproximateDateTime();
+            _when.ParseXml(itemNav.SelectSingleNode("when"));
 
             // measurement-name (codable-value, mandatory)
-            this.measurementName = new CodableValue();
-            this.measurementName.ParseXml(itemNav.SelectSingleNode("measurement-name"));
+            _measurementName = new CodableValue();
+            _measurementName.ParseXml(itemNav.SelectSingleNode("measurement-name"));
 
             // value (Length, mandatory)
-            this.value = new Length();
-            this.value.ParseXml(itemNav.SelectSingleNode("value"));
+            _value = new Length();
+            _value.ParseXml(itemNav.SelectSingleNode("value"));
         }
 
         /// <summary>
@@ -130,21 +130,21 @@ namespace Microsoft.HealthVault.ItemTypes
         public override void WriteXml(XmlWriter writer)
         {
             Validator.ThrowIfWriterNull(writer);
-            Validator.ThrowSerializationIfNull(this.when, Resources.WhenNullValue);
-            Validator.ThrowSerializationIfNull(this.measurementName, Resources.BodyDimensionMeasurementNameNotSet);
-            Validator.ThrowSerializationIfNull(this.value, Resources.BodyDimensionValueNotSet);
+            Validator.ThrowSerializationIfNull(_when, Resources.WhenNullValue);
+            Validator.ThrowSerializationIfNull(_measurementName, Resources.BodyDimensionMeasurementNameNotSet);
+            Validator.ThrowSerializationIfNull(_value, Resources.BodyDimensionValueNotSet);
 
             // <body-dimension>
             writer.WriteStartElement("body-dimension");
 
             // <when>
-            this.when.WriteXml("when", writer);
+            _when.WriteXml("when", writer);
 
             // <measurement-name>
-            this.measurementName.WriteXml("measurement-name", writer);
+            _measurementName.WriteXml("measurement-name", writer);
 
             // <value>
-            this.value.WriteXml("value", writer);
+            _value.WriteXml("value", writer);
 
             // </body-dimension>
             writer.WriteEndElement();
@@ -165,16 +165,16 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public ApproximateDateTime When
         {
-            get { return this.when; }
+            get { return _when; }
 
             set
             {
-                Validator.ThrowIfArgumentNull(value, nameof(this.When), Resources.WhenNullValue);
-                this.when = value;
+                Validator.ThrowIfArgumentNull(value, nameof(When), Resources.WhenNullValue);
+                _when = value;
             }
         }
 
-        private ApproximateDateTime when;
+        private ApproximateDateTime _when;
 
         /// <summary>
         /// Gets or sets the name of this measurement.
@@ -197,16 +197,16 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public CodableValue MeasurementName
         {
-            get { return this.measurementName; }
+            get { return _measurementName; }
 
             set
             {
-                Validator.ThrowIfArgumentNull(value, nameof(this.MeasurementName), Resources.BodyDimensionMeasurementNameNullValue);
-                this.measurementName = value;
+                Validator.ThrowIfArgumentNull(value, nameof(MeasurementName), Resources.BodyDimensionMeasurementNameNullValue);
+                _measurementName = value;
             }
         }
 
-        private CodableValue measurementName;
+        private CodableValue _measurementName;
 
         /// <summary>
         /// Gets or sets the value of this measurement.
@@ -223,16 +223,16 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public Length Value
         {
-            get { return this.value; }
+            get { return _value; }
 
             set
             {
-                Validator.ThrowIfArgumentNull(value, nameof(this.Value), Resources.BodyDimensionValueNullValue);
-                this.value = value;
+                Validator.ThrowIfArgumentNull(value, nameof(Value), Resources.BodyDimensionValueNullValue);
+                _value = value;
             }
         }
 
-        private Length value;
+        private Length _value;
 
         /// <summary>
         /// Gets the representation of a body dimension instance.
@@ -244,22 +244,22 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public override string ToString()
         {
-            if (this.measurementName != null && this.value != null)
+            if (_measurementName != null && _value != null)
             {
                 return string.Format(
                         Resources.NameAndValue,
-                        this.measurementName.ToString(),
-                        this.value.ToString());
+                        _measurementName.ToString(),
+                        _value.ToString());
             }
 
-            if (this.measurementName != null)
+            if (_measurementName != null)
             {
-                return this.measurementName.ToString();
+                return _measurementName.ToString();
             }
 
-            if (this.value != null)
+            if (_value != null)
             {
-                return this.value.ToString();
+                return _value.ToString();
             }
 
             return string.Empty;

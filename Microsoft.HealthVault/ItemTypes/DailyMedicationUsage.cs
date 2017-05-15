@@ -64,9 +64,9 @@ namespace Microsoft.HealthVault.ItemTypes
             int dosesConsumed)
             : base(TypeId)
         {
-            this.When = when;
-            this.DrugName = drugName;
-            this.DosesConsumed = dosesConsumed;
+            When = when;
+            DrugName = drugName;
+            DosesConsumed = dosesConsumed;
         }
 
         /// <summary>
@@ -102,31 +102,31 @@ namespace Microsoft.HealthVault.ItemTypes
 
             Validator.ThrowInvalidIfNull(itemNav, Resources.DailyMedicationUsageUnexpectedNode);
 
-            this.when = new HealthServiceDate();
-            this.when.ParseXml(itemNav.SelectSingleNode("when"));
+            _when = new HealthServiceDate();
+            _when.ParseXml(itemNav.SelectSingleNode("when"));
 
-            this.drugName = new CodableValue();
-            this.drugName.ParseXml(itemNav.SelectSingleNode("drug-name"));
+            _drugName = new CodableValue();
+            _drugName.ParseXml(itemNav.SelectSingleNode("drug-name"));
 
-            this.dosesConsumed =
+            _dosesConsumed =
                 itemNav.SelectSingleNode("number-doses-consumed-in-day").ValueAsInt;
 
-            this.purposeOfUse =
+            _purposeOfUse =
                 XPathHelper.GetOptNavValue<CodableValue>(itemNav, "purpose-of-use");
 
-            this.intendedDoses =
+            _intendedDoses =
                 XPathHelper.GetOptNavValueAsInt(itemNav, "number-doses-intended-in-day");
 
-            this.usageSchedule =
+            _usageSchedule =
                 XPathHelper.GetOptNavValue<CodableValue>(itemNav, "medication-usage-schedule");
 
-            this.drugForm =
+            _drugForm =
                 XPathHelper.GetOptNavValue<CodableValue>(itemNav, "drug-form");
 
-            this.prescriptionType =
+            _prescriptionType =
                 XPathHelper.GetOptNavValue<CodableValue>(itemNav, "prescription-type");
 
-            this.singleDoseDescription =
+            _singleDoseDescription =
                 XPathHelper.GetOptNavValue<CodableValue>(itemNav, "single-dose-description");
         }
 
@@ -149,49 +149,49 @@ namespace Microsoft.HealthVault.ItemTypes
         public override void WriteXml(XmlWriter writer)
         {
             Validator.ThrowIfWriterNull(writer);
-            Validator.ThrowSerializationIfNull(this.drugName, Resources.DailyMedicationUsageDrugNameNotSet);
+            Validator.ThrowSerializationIfNull(_drugName, Resources.DailyMedicationUsageDrugNameNotSet);
 
             // <daily-medication-usage>
             writer.WriteStartElement("daily-medication-usage");
 
             // <when>
-            this.when.WriteXml("when", writer);
+            _when.WriteXml("when", writer);
 
-            this.drugName.WriteXml("drug-name", writer);
+            _drugName.WriteXml("drug-name", writer);
 
             writer.WriteElementString(
                 "number-doses-consumed-in-day",
-                this.dosesConsumed.ToString(CultureInfo.InvariantCulture));
+                _dosesConsumed.ToString(CultureInfo.InvariantCulture));
 
             XmlWriterHelper.WriteOpt(
                 writer,
                 "purpose-of-use",
-                this.purposeOfUse);
+                _purposeOfUse);
 
             XmlWriterHelper.WriteOptInt(
                 writer,
                 "number-doses-intended-in-day",
-                this.intendedDoses);
+                _intendedDoses);
 
             XmlWriterHelper.WriteOpt(
                 writer,
                 "medication-usage-schedule",
-                this.usageSchedule);
+                _usageSchedule);
 
             XmlWriterHelper.WriteOpt(
                 writer,
                 "drug-form",
-                this.drugForm);
+                _drugForm);
 
             XmlWriterHelper.WriteOpt(
                 writer,
                 "prescription-type",
-                this.prescriptionType);
+                _prescriptionType);
 
             XmlWriterHelper.WriteOpt(
                 writer,
                 "single-dose-description",
-                this.singleDoseDescription);
+                _singleDoseDescription);
 
             // </daily-medication-usage>
             writer.WriteEndElement();
@@ -215,16 +215,16 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public HealthServiceDate When
         {
-            get { return this.when; }
+            get { return _when; }
 
             set
             {
-                Validator.ThrowIfArgumentNull(value, nameof(this.When), Resources.WhenNullValue);
-                this.when = value;
+                Validator.ThrowIfArgumentNull(value, nameof(When), Resources.WhenNullValue);
+                _when = value;
             }
         }
 
-        private HealthServiceDate when = new HealthServiceDate();
+        private HealthServiceDate _when = new HealthServiceDate();
 
         /// <summary>
         /// Gets or sets the name of the drug.
@@ -240,16 +240,16 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public CodableValue DrugName
         {
-            get { return this.drugName; }
+            get { return _drugName; }
 
             set
             {
-                Validator.ThrowIfArgumentNull(value, nameof(this.DrugName), Resources.DailyMedicationUsageDrugNameNull);
-                this.drugName = value;
+                Validator.ThrowIfArgumentNull(value, nameof(DrugName), Resources.DailyMedicationUsageDrugNameNull);
+                _drugName = value;
             }
         }
 
-        private CodableValue drugName;
+        private CodableValue _drugName;
 
         /// <summary>
         /// Gets or sets the number of doses of the drug consumed in the day.
@@ -262,11 +262,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public int DosesConsumed
         {
-            get { return this.dosesConsumed; }
-            set { this.dosesConsumed = value; }
+            get { return _dosesConsumed; }
+            set { _dosesConsumed = value; }
         }
 
-        private int dosesConsumed;
+        private int _dosesConsumed;
 
         /// <summary>
         /// Gets or sets the purpose of the medication or supplement.
@@ -279,11 +279,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public CodableValue PurposeOfUse
         {
-            get { return this.purposeOfUse; }
-            set { this.purposeOfUse = value; }
+            get { return _purposeOfUse; }
+            set { _purposeOfUse = value; }
         }
 
-        private CodableValue purposeOfUse;
+        private CodableValue _purposeOfUse;
 
         /// <summary>
         /// Gets or sets the intended number of doses the person should take in a day.
@@ -296,11 +296,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public int? IntendedDoses
         {
-            get { return this.intendedDoses; }
-            set { this.intendedDoses = value; }
+            get { return _intendedDoses; }
+            set { _intendedDoses = value; }
         }
 
-        private int? intendedDoses;
+        private int? _intendedDoses;
 
         /// <summary>
         /// Gets or sets the usage schedule.
@@ -312,11 +312,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public CodableValue UsageSchedule
         {
-            get { return this.usageSchedule; }
-            set { this.usageSchedule = value; }
+            get { return _usageSchedule; }
+            set { _usageSchedule = value; }
         }
 
-        private CodableValue usageSchedule;
+        private CodableValue _usageSchedule;
 
         /// <summary>
         /// Gets or sets the form by which the drug/supplement is taken.
@@ -329,11 +329,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public CodableValue DrugForm
         {
-            get { return this.drugForm; }
-            set { this.drugForm = value; }
+            get { return _drugForm; }
+            set { _drugForm = value; }
         }
 
-        private CodableValue drugForm;
+        private CodableValue _drugForm;
 
         /// <summary>
         /// Gets or sets the means by which the drug was determined to be needed.
@@ -346,11 +346,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public CodableValue PrescriptionType
         {
-            get { return this.prescriptionType; }
-            set { this.prescriptionType = value; }
+            get { return _prescriptionType; }
+            set { _prescriptionType = value; }
         }
 
-        private CodableValue prescriptionType;
+        private CodableValue _prescriptionType;
 
         /// <summary>
         /// Gets or sets a description of a single dose.
@@ -363,11 +363,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public CodableValue SingleDoseDescription
         {
-            get { return this.singleDoseDescription; }
-            set { this.singleDoseDescription = value; }
+            get { return _singleDoseDescription; }
+            set { _singleDoseDescription = value; }
         }
 
-        private CodableValue singleDoseDescription;
+        private CodableValue _singleDoseDescription;
 
         /// <summary>
         /// Gets a string representation of the daily medication usage.
@@ -383,21 +383,21 @@ namespace Microsoft.HealthVault.ItemTypes
 
             result.AppendFormat(
                 Resources.DailyMedUsageToStringFormatDrug,
-                this.DrugName.Text);
+                DrugName.Text);
 
-            if (this.PurposeOfUse != null)
+            if (PurposeOfUse != null)
             {
                 result.AppendFormat(
                     Resources.DailyMedUsageToStringFormatPurpose,
-                    this.PurposeOfUse.Text);
+                    PurposeOfUse.Text);
             }
 
-            if (this.IntendedDoses != null)
+            if (IntendedDoses != null)
             {
                 result.AppendFormat(
                     Resources.DailyMedUsageToStringFormatDosesWithIntended,
-                    this.DosesConsumed,
-                    this.IntendedDoses.Value);
+                    DosesConsumed,
+                    IntendedDoses.Value);
             }
             else
             {
@@ -405,11 +405,11 @@ namespace Microsoft.HealthVault.ItemTypes
                     Resources.DailyMedUsageToStringFormatDosesWithIntendedUnknown);
             }
 
-            if (this.SingleDoseDescription != null)
+            if (SingleDoseDescription != null)
             {
                 result.AppendFormat(
                     Resources.DailyMedUsageToStringFormatSingleDoseDescription,
-                    this.SingleDoseDescription);
+                    SingleDoseDescription);
             }
 
             return result.ToString();

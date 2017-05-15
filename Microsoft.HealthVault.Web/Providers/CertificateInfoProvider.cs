@@ -1,7 +1,7 @@
-﻿// Copyright (c) Microsoft Corporation.  All rights reserved. 
+﻿// Copyright (c) Microsoft Corporation.  All rights reserved.
 // MIT License
 // Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the ""Software""), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 //
 // THE SOFTWARE IS PROVIDED *AS IS*, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
@@ -21,41 +21,40 @@ namespace Microsoft.HealthVault.Web.Providers
     /// </summary>
     internal class CertificateInfoProvider : ICertificateInfoProvider
     {
-        private WebHealthVaultConfiguration configuration;
-        private Guid applicationId;
+        private WebHealthVaultConfiguration _configuration;
+        private Guid _applicationId;
 
-        private StoreLocation storeLocation;
-        private string certSubject;
+        private StoreLocation _storeLocation;
+        private string _certSubject;
 
-        private X509Certificate2 x509Certificate2;
+        private X509Certificate2 _x509Certificate2;
 
         public CertificateInfoProvider(WebHealthVaultConfiguration configuration)
         {
-            this.configuration = configuration;
-            this.applicationId = this.configuration.MasterApplicationId;
+            _configuration = configuration;
+            _applicationId = configuration.MasterApplicationId;
 
+            _storeLocation = StoreLocation.LocalMachine;
+            _certSubject = "CN=" + GetApplicationCertificateSubject();
 
-            this.storeLocation = StoreLocation.LocalMachine;
-            this.certSubject = "CN=" + this.GetApplicationCertificateSubject();
+            _x509Certificate2 = GetApplicationCertificate();
 
-            this.x509Certificate2 = this.GetApplicationCertificate();
+            Thumbprint = _x509Certificate2.Thumbprint;
 
-            this.Thumbprint = this.x509Certificate2.Thumbprint;
-
-            this.PrivateKey = (RSACryptoServiceProvider)this.x509Certificate2.PrivateKey;
+            PrivateKey = (RSACryptoServiceProvider)_x509Certificate2.PrivateKey;
         }
 
         public string Thumbprint { get; internal set; }
 
         public RSACryptoServiceProvider PrivateKey { get; internal set; }
-        
+
         internal X509Certificate2 GetApplicationCertificate()
         {
-            string applicationCertificateFilename = this.configuration.ApplicationCertificateFileName;
+            string applicationCertificateFilename = _configuration.ApplicationCertificateFileName;
 
-            var cert = string.IsNullOrEmpty(applicationCertificateFilename) 
-                ? this.GetApplicationCertificateFromStore() 
-                : this.GetApplicationCertificateFromFile(applicationCertificateFilename);
+            var cert = string.IsNullOrEmpty(applicationCertificateFilename)
+                ? GetApplicationCertificateFromStore()
+                : GetApplicationCertificateFromFile(applicationCertificateFilename);
 
             return cert;
         }
@@ -77,7 +76,7 @@ namespace Microsoft.HealthVault.Web.Providers
                 throw new ArgumentException("CertificateFileNotFound");
             }
 
-            string password = this.configuration.ApplicationCertificatePassword;
+            string password = _configuration.ApplicationCertificatePassword;
 
             X509Certificate2 cert;
 
@@ -128,26 +127,26 @@ namespace Microsoft.HealthVault.Web.Providers
         {
             HealthVaultPlatformTrace.LogCertLoading(
                 "Opening cert store (read-only): {0}",
-                storeLocation.ToString());
+                _storeLocation.ToString());
 
             RSACng rsaProvider = null;
             string thumbprint = null;
 
             X509Certificate2 result = null;
-            X509Store store = new X509Store(storeLocation);
+            X509Store store = new X509Store(_storeLocation);
             store.Open(OpenFlags.ReadOnly);
 
             try
             {
                 HealthVaultPlatformTrace.LogCertLoading(
                     "Looking for matching cert with subject: {0}",
-                    certSubject);
+                    _certSubject);
 
                 foreach (X509Certificate2 cert in store.Certificates)
                 {
                     if (string.Equals(
                         cert.Subject,
-                        certSubject,
+                        _certSubject,
                         StringComparison.OrdinalIgnoreCase))
                     {
                         HealthVaultPlatformTrace.LogCertLoading(
@@ -186,11 +185,11 @@ namespace Microsoft.HealthVault.Web.Providers
 
         private string GetApplicationCertificateSubject()
         {
-            string result = this.configuration.CertSubject;
+            string result = _configuration.CertSubject;
 
             if (result == null)
             {
-                result = "WildcatApp-" + this.applicationId;
+                result = "WildcatApp-" + _applicationId;
 
                 HealthVaultPlatformTrace.LogCertLoading(
                     "Using default cert subject: {0}",

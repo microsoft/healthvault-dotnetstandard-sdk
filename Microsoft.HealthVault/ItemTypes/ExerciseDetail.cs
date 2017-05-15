@@ -44,8 +44,8 @@ namespace Microsoft.HealthVault.ItemTypes
         /// </exception>
         public ExerciseDetail(CodedValue name, StructuredMeasurement value)
         {
-            this.Name = name;
-            this.Value = value;
+            Name = name;
+            Value = value;
         }
 
         /// <summary>
@@ -64,10 +64,10 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             Validator.ThrowIfNavigatorNull(navigator);
 
-            this.name =
+            _name =
                 XPathHelper.GetOptNavValue<CodedValue>(navigator, "name");
 
-            this.value =
+            _value =
                 XPathHelper.GetOptNavValue<StructuredMeasurement>(navigator, "value");
         }
 
@@ -94,20 +94,20 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             Validator.ThrowIfStringNullOrEmpty(nodeName, "nodeName");
             Validator.ThrowIfWriterNull(writer);
-            Validator.ThrowSerializationIfNull(this.name, Resources.ExerciseDetailNameNotSet);
-            Validator.ThrowSerializationIfNull(this.value, Resources.ExerciseDetailValueNotSet);
+            Validator.ThrowSerializationIfNull(_name, Resources.ExerciseDetailNameNotSet);
+            Validator.ThrowSerializationIfNull(_value, Resources.ExerciseDetailValueNotSet);
 
             writer.WriteStartElement(nodeName);
 
             XmlWriterHelper.WriteOpt(
                 writer,
                 "name",
-                this.name);
+                _name);
 
             XmlWriterHelper.WriteOpt(
                 writer,
                 "value",
-                this.value);
+                _value);
 
             writer.WriteEndElement();
         }
@@ -131,16 +131,16 @@ namespace Microsoft.HealthVault.ItemTypes
         /// </exception>
         public CodedValue Name
         {
-            get { return this.name; }
+            get { return _name; }
 
             set
             {
-                Validator.ThrowIfArgumentNull(value, nameof(this.Name), Resources.ExerciseDetailNameNullValue);
-                this.name = value;
+                Validator.ThrowIfArgumentNull(value, nameof(Name), Resources.ExerciseDetailNameNullValue);
+                _name = value;
             }
         }
 
-        private CodedValue name;
+        private CodedValue _name;
 
         /// <summary>
         /// Gets or sets the value of the exercise detail.
@@ -160,16 +160,16 @@ namespace Microsoft.HealthVault.ItemTypes
         /// </exception>
         public StructuredMeasurement Value
         {
-            get { return this.value; }
+            get { return _value; }
 
             set
             {
-                Validator.ThrowIfArgumentNull(value, nameof(this.Value), Resources.ExerciseDetailNameNullValue);
-                this.value = value;
+                Validator.ThrowIfArgumentNull(value, nameof(Value), Resources.ExerciseDetailNameNullValue);
+                _value = value;
             }
         }
 
-        private StructuredMeasurement value;
+        private StructuredMeasurement _value;
 
         /// <summary>
         /// Gets a string representation of the ExerciseDetail item.
@@ -184,8 +184,8 @@ namespace Microsoft.HealthVault.ItemTypes
             return
                 string.Format(
                     Resources.NameEqualsValue,
-                    this.name.ToString(),
-                    this.value.ToString());
+                    _name.ToString(),
+                    _value.ToString());
         }
 
         /// <summary>

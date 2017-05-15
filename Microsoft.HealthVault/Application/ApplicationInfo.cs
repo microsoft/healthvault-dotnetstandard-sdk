@@ -1,7 +1,7 @@
-// Copyright (c) Microsoft Corporation.  All rights reserved. 
+// Copyright (c) Microsoft Corporation.  All rights reserved.
 // MIT License
 // Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the ""Software""), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 //
 // THE SOFTWARE IS PROVIDED *AS IS*, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
@@ -64,13 +64,13 @@ namespace Microsoft.HealthVault.Application
                 throw new ArgumentException(Resources.ApplicationInfoPublicKeysRequired, nameof(publicKeys));
             }
 
-            this.CultureSpecificNames.DefaultValue = name;
+            CultureSpecificNames.DefaultValue = name;
 
-            this.PublicKeys.Clear();
+            PublicKeys.Clear();
 
             foreach (byte[] publicKey in publicKeys)
             {
-                this.PublicKeys.Add(publicKey);
+                PublicKeys.Add(publicKey);
             }
         }
 
@@ -113,14 +113,14 @@ namespace Microsoft.HealthVault.Application
             appInfo.DomainName = XPathHelper.GetOptNavValue(app, "domain-name");
 
             appInfo.LargeLogo = ApplicationBinaryConfiguration.CreateFromXml(
-                app, 
+                app,
                 "large-logo",
-                "logo", 
+                "logo",
                 "content-type");
             appInfo.SmallLogo = ApplicationBinaryConfiguration.CreateFromXml(
-                app, 
+                app,
                 "small-logo",
-                "logo", 
+                "logo",
                 "content-type");
 
             XPathNavigator persistentTokensNav = app.SelectSingleNode("persistent-tokens");
@@ -156,13 +156,13 @@ namespace Microsoft.HealthVault.Application
 
             appInfo.PrivacyStatement = ApplicationBinaryConfiguration.CreateFromXml(
                 app,
-                "privacy-statement", 
-                "statement", 
+                "privacy-statement",
+                "statement",
                 "content-type");
             appInfo.TermsOfUse = ApplicationBinaryConfiguration.CreateFromXml(
                 app,
-                "terms-of-use", 
-                "statement", 
+                "terms-of-use",
+                "statement",
                 "content-type");
             appInfo.DtcSuccessMessage = ApplicationBinaryConfiguration.CreateFromXml(
                 app,
@@ -236,13 +236,13 @@ namespace Microsoft.HealthVault.Application
 
         private void SetApplicationOptions(ApplicationOptions options)
         {
-            if (this.ConfigurationOptions == null)
+            if (ConfigurationOptions == null)
             {
-                this.ConfigurationOptions = options;
+                ConfigurationOptions = options;
             }
             else
             {
-                this.ConfigurationOptions |= options;
+                ConfigurationOptions |= options;
             }
         }
 
@@ -258,13 +258,13 @@ namespace Microsoft.HealthVault.Application
                     writer.WriteElementString("id", appId.ToString());
                 }
 
-                this.CultureSpecificNames.AppendLocalizedElements(writer, "name");
+                CultureSpecificNames.AppendLocalizedElements(writer, "name");
 
-                if (this.PublicKeys.Count > 0)
+                if (PublicKeys.Count > 0)
                 {
                     writer.WriteStartElement("public-keys");
 
-                    foreach (byte[] publicKey in this.PublicKeys)
+                    foreach (byte[] publicKey in PublicKeys)
                     {
                         string hexString = BitConverter.ToString(publicKey);
                         hexString = hexString.Replace("-", string.Empty);
@@ -275,25 +275,25 @@ namespace Microsoft.HealthVault.Application
                     writer.WriteEndElement();
                 }
 
-                if (this.OnlineBaseAuthorizations.Count > 0)
+                if (OnlineBaseAuthorizations.Count > 0)
                 {
                     writer.WriteStartElement("person-online-base-auth");
-                    writer.WriteRaw(AuthorizationRule.GetRulesXml(this.OnlineBaseAuthorizations));
+                    writer.WriteRaw(AuthorizationRule.GetRulesXml(OnlineBaseAuthorizations));
                     writer.WriteEndElement();
                 }
 
-                if (this.OfflineBaseAuthorizations.Count > 0)
+                if (OfflineBaseAuthorizations.Count > 0)
                 {
                     writer.WriteStartElement("person-offline-base-auth");
-                    writer.WriteRaw(AuthorizationRule.GetRulesXml(this.OfflineBaseAuthorizations));
+                    writer.WriteRaw(AuthorizationRule.GetRulesXml(OfflineBaseAuthorizations));
                     writer.WriteEndElement();
                 }
 
-                if (this.CallableMethods.Count > 0)
+                if (CallableMethods.Count > 0)
                 {
                     string methodString = string.Empty;
                     bool methodAdded = false;
-                    foreach (HealthVaultMethods method in this.CallableMethods)
+                    foreach (HealthVaultMethods method in CallableMethods)
                     {
                         if (methodAdded)
                         {
@@ -309,66 +309,66 @@ namespace Microsoft.HealthVault.Application
                     writer.WriteElementString("methods", methodString);
                 }
 
-                if (this.ActionUrl != null)
+                if (ActionUrl != null)
                 {
-                    writer.WriteElementString("action-url", this.ActionUrl.OriginalString);
+                    writer.WriteElementString("action-url", ActionUrl.OriginalString);
                 }
 
-                this.CultureSpecificDescriptions.AppendLocalizedElements(
+                CultureSpecificDescriptions.AppendLocalizedElements(
                     writer, "description");
 
-                this.CultureSpecificAuthorizationReasons.AppendLocalizedElements(
+                CultureSpecificAuthorizationReasons.AppendLocalizedElements(
                     writer, "auth-reason");
 
-                if (!string.IsNullOrEmpty(this.DomainName))
+                if (!string.IsNullOrEmpty(DomainName))
                 {
-                    writer.WriteElementString("domain-name", this.DomainName);
+                    writer.WriteElementString("domain-name", DomainName);
                 }
 
-                this.LargeLogo?.AppendRequestParameters(writer, "large-logo", "logo");
+                LargeLogo?.AppendRequestParameters(writer, "large-logo", "logo");
 
-                this.SmallLogo?.AppendRequestParameters(writer, "small-logo", "logo");
+                SmallLogo?.AppendRequestParameters(writer, "small-logo", "logo");
 
-                if ((this.ConfigurationOptions & ApplicationOptions.PersistentTokensAllowed) ==
+                if ((ConfigurationOptions & ApplicationOptions.PersistentTokensAllowed) ==
                         ApplicationOptions.PersistentTokensAllowed &&
-                    this.PersistentTokenTtlInSeconds != null)
+                    PersistentTokenTtlInSeconds != null)
                 {
                     writer.WriteStartElement("persistent-tokens");
 
                     writer.WriteElementString("enabled", "true");
-                    writer.WriteElementString("token-ttl-seconds", this.PersistentTokenTtlInSeconds.Value.ToString());
+                    writer.WriteElementString("token-ttl-seconds", PersistentTokenTtlInSeconds.Value.ToString());
 
                     writer.WriteEndElement();
                 }
 
-                this.PrivacyStatement?.AppendRequestParameters(writer, "privacy-statement", "statement");
+                PrivacyStatement?.AppendRequestParameters(writer, "privacy-statement", "statement");
 
-                this.TermsOfUse?.AppendRequestParameters(writer, "terms-of-use", "statement");
+                TermsOfUse?.AppendRequestParameters(writer, "terms-of-use", "statement");
 
-                if ((this.ConfigurationOptions & ApplicationOptions.ApplicationAuthorizationRequired) ==
+                if ((ConfigurationOptions & ApplicationOptions.ApplicationAuthorizationRequired) ==
                         ApplicationOptions.ApplicationAuthorizationRequired)
                 {
                     writer.WriteElementString("app-auth-required", "true");
                 }
 
-                if ((this.ConfigurationOptions & ApplicationOptions.RestrictApplicationUsers) == ApplicationOptions.RestrictApplicationUsers)
+                if ((ConfigurationOptions & ApplicationOptions.RestrictApplicationUsers) == ApplicationOptions.RestrictApplicationUsers)
                 {
                     writer.WriteElementString("restrict-app-users", "true");
                 }
 
-                if ((this.ConfigurationOptions & ApplicationOptions.PublishApplication) ==
+                if ((ConfigurationOptions & ApplicationOptions.PublishApplication) ==
                         ApplicationOptions.PublishApplication)
                 {
                     writer.WriteElementString("is-published", "true");
                 }
 
-                this.DtcSuccessMessage?.AppendRequestParameters(
+                DtcSuccessMessage?.AppendRequestParameters(
                     writer, "dtc-success-message", "statement");
 
-                if (this.ApplicationAttributes.Count != 0)
+                if (ApplicationAttributes.Count != 0)
                 {
                     writer.WriteStartElement("app-attributes");
-                    foreach (string attribute in this.ApplicationAttributes)
+                    foreach (string attribute in ApplicationAttributes)
                     {
                         if (!string.IsNullOrEmpty(attribute))
                         {
@@ -379,15 +379,15 @@ namespace Microsoft.HealthVault.Application
                     writer.WriteEndElement();
                 }
 
-                if (!string.IsNullOrEmpty(this.ValidIPPrefixes))
+                if (!string.IsNullOrEmpty(ValidIPPrefixes))
                 {
-                    writer.WriteElementString("valid-ip-prefixes", this.ValidIPPrefixes);
+                    writer.WriteElementString("valid-ip-prefixes", ValidIPPrefixes);
                 }
 
-                if (this.VocabularyAuthorizations.Count > 0)
+                if (VocabularyAuthorizations.Count > 0)
                 {
                     writer.WriteStartElement("vocabulary-authorizations");
-                    foreach (VocabularyAuthorization auth in this.VocabularyAuthorizations)
+                    foreach (VocabularyAuthorization auth in VocabularyAuthorizations)
                     {
                         auth.WriteXml(writer);
                     }
@@ -395,19 +395,19 @@ namespace Microsoft.HealthVault.Application
                     writer.WriteEndElement();
                 }
 
-                this.SupportedRecordLocations.WriteXml(writer, "supported-record-locations");
+                SupportedRecordLocations.WriteXml(writer, "supported-record-locations");
 
-                if (this.SupportedHealthVaultInstances.Count > 0 || this.SupportAllHealthVaultInstances)
+                if (SupportedHealthVaultInstances.Count > 0 || SupportAllHealthVaultInstances)
                 {
                     writer.WriteStartElement("supported-instances");
 
-                    if (this.SupportAllHealthVaultInstances)
+                    if (SupportAllHealthVaultInstances)
                     {
-                        writer.WriteAttributeString("support-all-instances", SDKHelper.XmlFromBool(this.SupportAllHealthVaultInstances));
+                        writer.WriteAttributeString("support-all-instances", SDKHelper.XmlFromBool(SupportAllHealthVaultInstances));
                     }
                     else
                     {
-                        foreach (string instanceId in this.SupportedHealthVaultInstances)
+                        foreach (string instanceId in SupportedHealthVaultInstances)
                         {
                             writer.WriteElementString("instance-id", instanceId);
                         }
@@ -416,10 +416,10 @@ namespace Microsoft.HealthVault.Application
                     writer.WriteEndElement();
                 }
 
-                if (this.MeaningfulUseSources.Count > 0)
+                if (MeaningfulUseSources.Count > 0)
                 {
                     writer.WriteStartElement("meaningful-use-sources");
-                    foreach (string source in this.MeaningfulUseSources)
+                    foreach (string source in MeaningfulUseSources)
                     {
                         writer.WriteElementString("source", source);
                     }
@@ -455,12 +455,12 @@ namespace Microsoft.HealthVault.Application
         {
             get
             {
-                return this.CultureSpecificNames.BestValue;
+                return CultureSpecificNames.BestValue;
             }
 
             set
             {
-                this.CultureSpecificNames.DefaultValue = value;
+                CultureSpecificNames.DefaultValue = value;
             }
         }
 
@@ -568,12 +568,12 @@ namespace Microsoft.HealthVault.Application
         {
             get
             {
-                return this.CultureSpecificDescriptions.BestValue;
+                return CultureSpecificDescriptions.BestValue;
             }
 
             set
             {
-                this.CultureSpecificDescriptions.DefaultValue = value;
+                CultureSpecificDescriptions.DefaultValue = value;
             }
         }
 
@@ -599,12 +599,12 @@ namespace Microsoft.HealthVault.Application
         {
             get
             {
-                return this.CultureSpecificAuthorizationReasons.BestValue;
+                return CultureSpecificAuthorizationReasons.BestValue;
             }
 
             set
             {
-                this.CultureSpecificAuthorizationReasons.DefaultValue = value;
+                CultureSpecificAuthorizationReasons.DefaultValue = value;
             }
         }
 
@@ -750,20 +750,20 @@ namespace Microsoft.HealthVault.Application
         ///
         public int? PersistentTokenTtlInSeconds
         {
-            get { return this.persistentTokenTtlInSeconds; }
+            get { return _persistentTokenTtlInSeconds; }
 
             set
             {
                 if (value <= 0)
                 {
-                    throw new ArgumentOutOfRangeException(nameof(this.PersistentTokenTtlInSeconds), Resources.PersistentTokenTtlInSecondsNotPositive);
+                    throw new ArgumentOutOfRangeException(nameof(PersistentTokenTtlInSeconds), Resources.PersistentTokenTtlInSecondsNotPositive);
                 }
 
-                this.persistentTokenTtlInSeconds = value;
+                _persistentTokenTtlInSeconds = value;
             }
         }
 
-        private int? persistentTokenTtlInSeconds;
+        private int? _persistentTokenTtlInSeconds;
 
         /// <summary>
         /// Gets or sets the IP address masks from which the application can
@@ -786,7 +786,7 @@ namespace Microsoft.HealthVault.Application
         /// </summary>
         public LocationCollection SupportedRecordLocations
         {
-            get { return this.supportedRecordLocations; }
+            get { return _supportedRecordLocations; }
 
             private set
             {
@@ -795,11 +795,11 @@ namespace Microsoft.HealthVault.Application
                     throw new ArgumentNullException(nameof(value));
                 }
 
-                this.supportedRecordLocations = value;
+                _supportedRecordLocations = value;
             }
         }
 
-        private LocationCollection supportedRecordLocations = new LocationCollection();
+        private LocationCollection _supportedRecordLocations = new LocationCollection();
 
         /// <summary>
         /// Gets the instance identifiers for the HealthVault instances the application supports.

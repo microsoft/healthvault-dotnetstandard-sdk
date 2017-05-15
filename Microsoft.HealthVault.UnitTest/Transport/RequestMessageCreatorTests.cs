@@ -1,7 +1,7 @@
-﻿// Copyright (c) Microsoft Corporation.  All rights reserved. 
+﻿// Copyright (c) Microsoft Corporation.  All rights reserved.
 // MIT License
 // Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the ""Software""), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 //
 // THE SOFTWARE IS PROVIDED *AS IS*, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
@@ -22,28 +22,28 @@ namespace Microsoft.HealthVault.UnitTest.Transport
     [TestClass]
     public class RequestMessageCreatorTests
     {
-        private IConnectionInternal connection;
-        private IServiceLocator serviceLocator;
+        private IConnectionInternal _connection;
+        private IServiceLocator _serviceLocator;
 
         [TestInitialize]
         public void InitializeTest()
         {
-            this.connection = Substitute.For<IConnectionInternal>();
-            this.serviceLocator = Substitute.For<IServiceLocator>();
+            _connection = Substitute.For<IConnectionInternal>();
+            _serviceLocator = Substitute.For<IServiceLocator>();
 
-            this.serviceLocator.GetInstance<HealthVaultConfiguration>()
+            _serviceLocator.GetInstance<HealthVaultConfiguration>()
                 .Returns(new HealthVaultConfiguration
                 {
                     MasterApplicationId = Guid.NewGuid(),
                     RequestTimeToLiveDuration = new TimeSpan(hours: 0, minutes: 1, seconds: 5)
                 });
 
-            this.serviceLocator.GetInstance<SdkTelemetryInformation>()
+            _serviceLocator.GetInstance<SdkTelemetryInformation>()
                 .Returns(
                     new SdkTelemetryInformation() { Category = "test", FileVersion = "test", OsInformation = "test" });
 
             ICryptographer mockCryptographer = Substitute.For<ICryptographer>();
-            CryptoData mockCryptoData = new CryptoData() {Algorithm = "some", Value = "some"};
+            CryptoData mockCryptoData = new CryptoData() { Algorithm = "some", Value = "some" };
 
             mockCryptographer.Hmac(Arg.Any<string>(), Arg.Any<byte[]>())
                 .Returns(mockCryptoData);
@@ -51,10 +51,10 @@ namespace Microsoft.HealthVault.UnitTest.Transport
             mockCryptographer.Hash(Arg.Any<byte[]>())
                 .Returns(mockCryptoData);
 
-            this.serviceLocator.GetInstance<ICryptographer>().Returns(mockCryptographer);
+            _serviceLocator.GetInstance<ICryptographer>().Returns(mockCryptographer);
 
-            this.connection.SessionCredential.Returns(
-                new SessionCredential() {SharedSecret = "someSharedSecret", Token = "someToken"});
+            _connection.SessionCredential.Returns(
+                new SessionCredential() { SharedSecret = "someSharedSecret", Token = "someToken" });
         }
 
         /// <summary>
@@ -73,9 +73,9 @@ namespace Microsoft.HealthVault.UnitTest.Transport
                 UserAuthToken = "test-user-token"
             };
 
-            this.connection.GetAuthSessionHeader().Returns(authSession);
+            _connection.GetAuthSessionHeader().Returns(authSession);
 
-            RequestMessageCreator creator = new RequestMessageCreator(this.connection, this.serviceLocator);
+            RequestMessageCreator creator = new RequestMessageCreator(_connection, _serviceLocator);
 
             Request request = new Request();
 
@@ -101,7 +101,7 @@ namespace Microsoft.HealthVault.UnitTest.Transport
         [TestMethod]
         public void WhenRequestMethodIsAnonymous_ThenAppIdIsSetInRequestHeader()
         {
-            RequestMessageCreator creator = new RequestMessageCreator(this.connection, this.serviceLocator);
+            RequestMessageCreator creator = new RequestMessageCreator(_connection, _serviceLocator);
 
             Guid appid = Guid.NewGuid();
 
@@ -129,9 +129,9 @@ namespace Microsoft.HealthVault.UnitTest.Transport
                 UserAuthToken = "test-user-token"
             };
 
-            this.connection.GetAuthSessionHeader().Returns(authSession);
+            _connection.GetAuthSessionHeader().Returns(authSession);
 
-            RequestMessageCreator creator = new RequestMessageCreator(this.connection, this.serviceLocator);
+            RequestMessageCreator creator = new RequestMessageCreator(_connection, _serviceLocator);
 
             Guid appid = Guid.NewGuid();
 

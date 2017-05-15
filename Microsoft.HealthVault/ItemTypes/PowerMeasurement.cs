@@ -7,7 +7,6 @@ using System;
 using System.Globalization;
 using System.Xml;
 using System.Xml.XPath;
-using Microsoft.HealthVault.Helpers;
 
 namespace Microsoft.HealthVault.ItemTypes
 {
@@ -104,7 +103,7 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         protected override void ParseValueXml(XPathNavigator navigator)
         {
-            this.Value = navigator.SelectSingleNode("watts").ValueAsDouble;
+            Value = navigator.SelectSingleNode("watts").ValueAsDouble;
         }
 
         /// <summary>
@@ -119,7 +118,7 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             writer.WriteElementString(
                 "watts",
-                XmlConvert.ToString(this.Value));
+                XmlConvert.ToString(Value));
         }
 
         /// <summary>

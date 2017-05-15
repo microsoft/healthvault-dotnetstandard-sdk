@@ -15,9 +15,8 @@ namespace Microsoft.HealthVault.UnitTest
         private const string ApplicationCreationToken =
             "AiAAACH/OO7nZ9ZOtOr7JE7RzhC7rPSay87cX4LyKDyVka/dDC62cR9c2Jzk3HpJjkRAZuAAAADGGYShB8PnpleM+P7OWr9I0WLuqLfcRPBUzqtJrjiMlpzsnyIwOJ2iqp+99Lj6SrlcAf3s5Ea8eMqi5xQDOljUcqbkhTVTavsWUSwT1GdfGvu2VwCRW6gnrGWriGV4dn+SMQru2xDH+u1ZubLIFkLy4Omw7n0LXWaVFjNmtH7AQjheGornC5QidP3p5WCSuT+V4ye+sH51ie9rfx5ZZRSclFdIWTVxGhquQciSnBaX31X9PHY+VikmNFJwY5CAA2IRxrNWzETquZZzxLoIbpiTTcC4azwSp1I44uH0bsqHmSAAAAB4hhVJRM5ftA7iYjnKPtw0hK2lSHtZ88p9H/DpB9CDZCAAAAB4hhVJRM5ftA7iYjnKPtw0hK2lSHtZ88p9H/DpB9CDZA==";
 
-
-        private IBrowserAuthBroker subBrowserAuthBroker;
-        private HealthVaultConfiguration healthVaultConfiguration;
+        private IBrowserAuthBroker _subBrowserAuthBroker;
+        private HealthVaultConfiguration _healthVaultConfiguration;
 
         private static readonly Uri ShellUrl = new Uri("https://contoso.com/shell");
 
@@ -26,23 +25,23 @@ namespace Microsoft.HealthVault.UnitTest
         [TestInitialize]
         public void TestInitialize()
         {
-            this.subBrowserAuthBroker = Substitute.For<IBrowserAuthBroker>();
-            this.healthVaultConfiguration = new HealthVaultConfiguration();
+            _subBrowserAuthBroker = Substitute.For<IBrowserAuthBroker>();
+            _healthVaultConfiguration = new HealthVaultConfiguration();
         }
 
         [TestMethod]
         public async Task WhenCallingProvisionApplicationAsync_ThenBrowserUrlIsConstructedCorrectly()
         {
-            await this.TestProvisionApplicationAsync();
+            await TestProvisionApplicationAsync();
         }
 
         [TestMethod]
         public async Task WhenCallingProvisionApplicationAsyncWithAlternateSettings_ThenBrowserUrlIsConstructedCorrectly()
         {
-            this.healthVaultConfiguration.IsMultiRecordApp = true;
-            this.healthVaultConfiguration.MultiInstanceAware = false;
+            _healthVaultConfiguration.IsMultiRecordApp = true;
+            _healthVaultConfiguration.MultiInstanceAware = false;
 
-            await this.TestProvisionApplicationAsync();
+            await TestProvisionApplicationAsync();
         }
 
         [TestMethod]
@@ -50,14 +49,14 @@ namespace Microsoft.HealthVault.UnitTest
         {
             Uri successUri = new Uri("https://contoso.com/success?instanceid=3");
 
-            this.subBrowserAuthBroker
-                .AuthenticateAsync(Arg.Is<Uri>(url => this.CheckStartUrlAdditionalRecords(url)), Arg.Any<Uri>())
+            _subBrowserAuthBroker
+                .AuthenticateAsync(Arg.Is<Uri>(url => CheckStartUrlAdditionalRecords(url)), Arg.Any<Uri>())
                 .Returns(successUri);
 
-            ShellAuthService service = this.CreateService();
+            ShellAuthService service = CreateService();
             await service.AuthorizeAdditionalRecordsAsync(ShellUrl, MasterApplicationId);
 
-            await this.subBrowserAuthBroker
+            await _subBrowserAuthBroker
                 .Received()
                 .AuthenticateAsync(Arg.Any<Uri>(), Arg.Any<Uri>());
         }
@@ -66,11 +65,11 @@ namespace Microsoft.HealthVault.UnitTest
         {
             Uri successUri = new Uri("https://contoso.com/success?instanceid=3");
 
-            this.subBrowserAuthBroker
-                .AuthenticateAsync(Arg.Is<Uri>(url => this.CheckStartUrlProvisionApplication(url)), Arg.Any<Uri>())
+            _subBrowserAuthBroker
+                .AuthenticateAsync(Arg.Is<Uri>(url => CheckStartUrlProvisionApplication(url)), Arg.Any<Uri>())
                 .Returns(successUri);
 
-            ShellAuthService service = this.CreateService();
+            ShellAuthService service = CreateService();
             string instanceId = await service.ProvisionApplicationAsync(ShellUrl, MasterApplicationId, ApplicationCreationToken, ApplicationInstanceId);
 
             Assert.AreEqual("3", instanceId);
@@ -80,7 +79,7 @@ namespace Microsoft.HealthVault.UnitTest
         {
             string urlString = url.AbsoluteUri;
 
-            if (this.healthVaultConfiguration.IsMultiRecordApp)
+            if (_healthVaultConfiguration.IsMultiRecordApp)
             {
                 Assert.IsTrue(urlString.Contains(Uri.EscapeDataString("ismra=true")));
             }
@@ -89,7 +88,7 @@ namespace Microsoft.HealthVault.UnitTest
                 Assert.IsTrue(urlString.Contains(Uri.EscapeDataString("ismra=false")));
             }
 
-            if (this.healthVaultConfiguration.MultiInstanceAware)
+            if (_healthVaultConfiguration.MultiInstanceAware)
             {
                 Assert.IsTrue(urlString.Contains(Uri.EscapeDataString("aib=true")));
             }
@@ -109,7 +108,7 @@ namespace Microsoft.HealthVault.UnitTest
         {
             string urlString = url.AbsoluteUri;
 
-            if (this.healthVaultConfiguration.IsMultiRecordApp)
+            if (_healthVaultConfiguration.IsMultiRecordApp)
             {
                 Assert.IsTrue(urlString.Contains(Uri.EscapeDataString("ismra=true")));
             }
@@ -127,8 +126,8 @@ namespace Microsoft.HealthVault.UnitTest
         private ShellAuthService CreateService()
         {
             return new ShellAuthService(
-                this.subBrowserAuthBroker,
-                this.healthVaultConfiguration);
+                _subBrowserAuthBroker,
+                _healthVaultConfiguration);
         }
     }
 }

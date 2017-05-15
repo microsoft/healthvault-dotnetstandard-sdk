@@ -50,7 +50,7 @@ namespace Microsoft.HealthVault.ItemTypes
         public Appointment(HealthServiceDateTime when)
             : base(TypeId)
         {
-            this.When = when;
+            When = when;
         }
 
         /// <summary>
@@ -85,11 +85,11 @@ namespace Microsoft.HealthVault.ItemTypes
             Validator.ThrowInvalidIfNull(appointmentNav, Resources.AppointmentUnexpectedNode);
 
             // <when>
-            this.when = new HealthServiceDateTime();
-            this.when.ParseXml(appointmentNav.SelectSingleNode("when"));
+            _when = new HealthServiceDateTime();
+            _when.ParseXml(appointmentNav.SelectSingleNode("when"));
 
             // <duration>
-            this.duration =
+            _duration =
                 XPathHelper.GetOptNavValue<DurationValue>(
                     appointmentNav,
                     "duration");
@@ -99,8 +99,8 @@ namespace Microsoft.HealthVault.ItemTypes
                 appointmentNav.SelectSingleNode("service");
             if (serviceNav != null)
             {
-                this.service = new CodableValue();
-                this.service.ParseXml(serviceNav);
+                _service = new CodableValue();
+                _service.ParseXml(serviceNav);
             }
 
             // <clinic>
@@ -109,8 +109,8 @@ namespace Microsoft.HealthVault.ItemTypes
 
             if (clinicNav != null)
             {
-                this.clinic = new PersonItem();
-                this.clinic.ParseXml(clinicNav);
+                _clinic = new PersonItem();
+                _clinic.ParseXml(clinicNav);
             }
 
             // <specialty>
@@ -118,8 +118,8 @@ namespace Microsoft.HealthVault.ItemTypes
                 appointmentNav.SelectSingleNode("specialty");
             if (specialtyNav != null)
             {
-                this.specialty = new CodableValue();
-                this.specialty.ParseXml(specialtyNav);
+                _specialty = new CodableValue();
+                _specialty.ParseXml(specialtyNav);
             }
 
             // <status>
@@ -127,8 +127,8 @@ namespace Microsoft.HealthVault.ItemTypes
                 appointmentNav.SelectSingleNode("status");
             if (statusNav != null)
             {
-                this.status = new CodableValue();
-                this.status.ParseXml(statusNav);
+                _status = new CodableValue();
+                _status.ParseXml(statusNav);
             }
 
             // <care-class>
@@ -136,8 +136,8 @@ namespace Microsoft.HealthVault.ItemTypes
                 appointmentNav.SelectSingleNode("care-class");
             if (careClassNav != null)
             {
-                this.careClass = new CodableValue();
-                this.careClass.ParseXml(careClassNav);
+                _careClass = new CodableValue();
+                _careClass.ParseXml(careClassNav);
             }
         }
 
@@ -156,34 +156,34 @@ namespace Microsoft.HealthVault.ItemTypes
         public override void WriteXml(XmlWriter writer)
         {
             Validator.ThrowIfArgumentNull(writer, nameof(writer), Resources.WriteXmlNullWriter);
-            Validator.ThrowSerializationIfNull(this.when, Resources.AppointmentWhenNotSet);
+            Validator.ThrowSerializationIfNull(_when, Resources.AppointmentWhenNotSet);
 
             // <appointment>
             writer.WriteStartElement("appointment");
 
             // <when>
-            this.when.WriteXml("when", writer);
+            _when.WriteXml("when", writer);
 
             // <duration>
             XmlWriterHelper.WriteOpt(
                 writer,
                 "duration",
-                this.duration);
+                _duration);
 
             // <service>
-            this.Service?.WriteXml("service", writer);
+            Service?.WriteXml("service", writer);
 
             // <clinic>
-            this.Clinic?.WriteXml("clinic", writer);
+            Clinic?.WriteXml("clinic", writer);
 
             // <specialty>
-            this.Specialty?.WriteXml("specialty", writer);
+            Specialty?.WriteXml("specialty", writer);
 
             // <status>
-            this.Status?.WriteXml("status", writer);
+            Status?.WriteXml("status", writer);
 
             // <care-class>
-            this.CareClass?.WriteXml("care-class", writer);
+            CareClass?.WriteXml("care-class", writer);
 
             // </appointment>
             writer.WriteEndElement();
@@ -204,16 +204,16 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public HealthServiceDateTime When
         {
-            get { return this.when; }
+            get { return _when; }
 
             set
             {
-                Validator.ThrowIfArgumentNull(value, nameof(this.When), Resources.WhenNullValue);
-                this.when = value;
+                Validator.ThrowIfArgumentNull(value, nameof(When), Resources.WhenNullValue);
+                _when = value;
             }
         }
 
-        private HealthServiceDateTime when = new HealthServiceDateTime();
+        private HealthServiceDateTime _when = new HealthServiceDateTime();
 
         /// <summary>
         /// Gets or sets the duration of the appointment.
@@ -229,11 +229,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public DurationValue Duration
         {
-            get { return this.duration; }
-            set { this.duration = value; }
+            get { return _duration; }
+            set { _duration = value; }
         }
 
-        private DurationValue duration;
+        private DurationValue _duration;
 
         /// <summary>
         /// Gets or sets the service for the appointment.
@@ -250,11 +250,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public CodableValue Service
         {
-            get { return this.service; }
-            set { this.service = value; }
+            get { return _service; }
+            set { _service = value; }
         }
 
-        private CodableValue service;
+        private CodableValue _service;
 
         /// <summary>
         /// Gets or sets the clinic information.
@@ -271,11 +271,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public PersonItem Clinic
         {
-            get { return this.clinic; }
-            set { this.clinic = value; }
+            get { return _clinic; }
+            set { _clinic = value; }
         }
 
-        private PersonItem clinic;
+        private PersonItem _clinic;
 
         /// <summary>
         /// Gets or sets the specialty for the appointment.
@@ -292,11 +292,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public CodableValue Specialty
         {
-            get { return this.specialty; }
-            set { this.specialty = value; }
+            get { return _specialty; }
+            set { _specialty = value; }
         }
 
-        private CodableValue specialty;
+        private CodableValue _specialty;
 
         /// <summary>
         /// Gets or sets the status for the appointment.
@@ -313,11 +313,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public CodableValue Status
         {
-            get { return this.status; }
-            set { this.status = value; }
+            get { return _status; }
+            set { _status = value; }
         }
 
-        private CodableValue status;
+        private CodableValue _status;
 
         /// <summary>
         /// Gets or sets the care class for the appointment.
@@ -334,11 +334,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public CodableValue CareClass
         {
-            get { return this.careClass; }
-            set { this.careClass = value; }
+            get { return _careClass; }
+            set { _careClass = value; }
         }
 
-        private CodableValue careClass;
+        private CodableValue _careClass;
 
         /// <summary>
         /// Gets a string representation of the appointment item.
@@ -352,34 +352,34 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             StringBuilder result = new StringBuilder(200);
 
-            result.Append(this.When);
+            result.Append(When);
 
-            if (this.Duration != null)
+            if (Duration != null)
             {
                 result.AppendFormat(
                     Resources.ListFormat,
-                    this.Duration.ToString());
+                    Duration.ToString());
             }
 
-            if (this.Clinic != null)
+            if (Clinic != null)
             {
                 result.AppendFormat(
                     Resources.ListFormat,
-                    this.Clinic.ToString());
+                    Clinic.ToString());
             }
 
-            if (this.Status != null)
+            if (Status != null)
             {
                 result.AppendFormat(
                     Resources.ListFormat,
-                    this.Status.Text);
+                    Status.Text);
             }
 
-            if (this.Service != null)
+            if (Service != null)
             {
                 result.AppendFormat(
                     Resources.ListFormat,
-                    this.Service.Text);
+                    Service.Text);
             }
 
             return result.ToString();

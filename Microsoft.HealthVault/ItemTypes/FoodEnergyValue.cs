@@ -7,7 +7,6 @@ using System;
 using System.Globalization;
 using System.Xml;
 using System.Xml.XPath;
-using Microsoft.HealthVault.Helpers;
 
 namespace Microsoft.HealthVault.ItemTypes
 {
@@ -91,7 +90,7 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         protected override void ParseValueXml(XPathNavigator navigator)
         {
-            this.Value = navigator.SelectSingleNode("calories").ValueAsDouble;
+            Value = navigator.SelectSingleNode("calories").ValueAsDouble;
         }
 
         /// <summary>
@@ -104,7 +103,7 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         protected override void WriteValueXml(XmlWriter writer)
         {
-            writer.WriteElementString("calories", XmlConvert.ToString(this.Value));
+            writer.WriteElementString("calories", XmlConvert.ToString(Value));
         }
 
         /// <summary>
@@ -117,8 +116,8 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public double Calories
         {
-            get { return this.Value; }
-            set { this.Value = value; }
+            get { return Value; }
+            set { Value = value; }
         }
 
         /// <summary>
@@ -138,7 +137,7 @@ namespace Microsoft.HealthVault.ItemTypes
             return string.Format(
                 CultureInfo.CurrentCulture,
                 Resources.FoodEnergyValueFormat,
-                this.Calories.ToString(CultureInfo.CurrentCulture));
+                Calories.ToString(CultureInfo.CurrentCulture));
         }
     }
 }

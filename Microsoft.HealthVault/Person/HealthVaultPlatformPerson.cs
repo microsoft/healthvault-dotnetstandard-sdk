@@ -3,11 +3,6 @@
 // see http://www.microsoft.com/resources/sharedsource/licensingbasics/sharedsourcelicenses.mspx.
 // All other rights reserved.
 
-using Microsoft.HealthVault.Connection;
-using Microsoft.HealthVault.Exceptions;
-using Microsoft.HealthVault.Helpers;
-using Microsoft.HealthVault.Record;
-using Microsoft.HealthVault.Transport;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -15,6 +10,10 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.XPath;
+using Microsoft.HealthVault.Connection;
+using Microsoft.HealthVault.Exceptions;
+using Microsoft.HealthVault.Record;
+using Microsoft.HealthVault.Transport;
 
 namespace Microsoft.HealthVault.Person
 {
@@ -85,7 +84,7 @@ namespace Microsoft.HealthVault.Person
             string requestParameters =
                 GetSetApplicationSettingsParameters(applicationSettings);
 
-            await this.SetApplicationSettingsAsync(connection, requestParameters).ConfigureAwait(false);
+            await SetApplicationSettingsAsync(connection, requestParameters).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -128,7 +127,7 @@ namespace Microsoft.HealthVault.Person
             return result;
         }
 
-        private static XPathExpression infoPersonAppSettingsPath =
+        private static XPathExpression s_infoPersonAppSettingsPath =
             XPathExpression.Compile("/wc:info");
 
         private static XPathExpression GetPersonAppSettingsXPathExpression(
@@ -142,10 +141,10 @@ namespace Microsoft.HealthVault.Person
                 "urn:com.microsoft.wc.methods.response.GetApplicationSettings");
 
             XPathExpression infoPersonAppSettingsPathClone = null;
-            lock (infoPersonAppSettingsPath)
+            lock (s_infoPersonAppSettingsPath)
             {
                 infoPersonAppSettingsPathClone
-                    = infoPersonAppSettingsPath.Clone();
+                    = s_infoPersonAppSettingsPath.Clone();
             }
 
             infoPersonAppSettingsPathClone.SetContext(infoXmlNamespaceManager);
@@ -190,7 +189,7 @@ namespace Microsoft.HealthVault.Person
             return PersonInfo.CreateFromXml(infoNav);
         }
 
-        private static XPathExpression infoPersonPath =
+        private static XPathExpression s_infoPersonPath =
             XPathExpression.Compile("/wc:info/person-info");
 
         private static XPathExpression GetPersonXPathExpression(
@@ -204,9 +203,9 @@ namespace Microsoft.HealthVault.Person
                 "urn:com.microsoft.wc.methods.response.GetPersonInfo");
 
             XPathExpression infoPersonPathClone = null;
-            lock (infoPersonPath)
+            lock (s_infoPersonPath)
             {
-                infoPersonPathClone = infoPersonPath.Clone();
+                infoPersonPathClone = s_infoPersonPath.Clone();
             }
 
             infoPersonPathClone.SetContext(infoXmlNamespaceManager);
@@ -269,7 +268,7 @@ namespace Microsoft.HealthVault.Person
             return results;
         }
 
-        private static XPathExpression infoRecordPath =
+        private static XPathExpression s_infoRecordPath =
             XPathExpression.Compile("/wc:info/record");
 
         private static XPathExpression GetRecordXPathExpression(
@@ -282,9 +281,9 @@ namespace Microsoft.HealthVault.Person
                 "urn:com.microsoft.wc.methods.response.GetAuthorizedRecords");
 
             XPathExpression infoRecordPathClone = null;
-            lock (infoRecordPath)
+            lock (s_infoRecordPath)
             {
-                infoRecordPathClone = infoRecordPath.Clone();
+                infoRecordPathClone = s_infoRecordPath.Clone();
             }
 
             infoRecordPathClone.SetContext(infoXmlNamespaceManager);

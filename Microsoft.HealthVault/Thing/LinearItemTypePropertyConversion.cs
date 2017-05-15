@@ -25,8 +25,8 @@ namespace Microsoft.HealthVault.Thing
         /// </param>
         public LinearItemTypePropertyConversion(double multiplier, double offset)
         {
-            this.Multiplier = multiplier;
-            this.Offset = offset;
+            Multiplier = multiplier;
+            Offset = offset;
         }
 
         /// <summary>
@@ -55,7 +55,7 @@ namespace Microsoft.HealthVault.Thing
         /// </returns>
         public double Convert(double value)
         {
-            return (value * this.Multiplier) + this.Offset;
+            return (value * Multiplier) + Offset;
         }
 
         /// <summary>

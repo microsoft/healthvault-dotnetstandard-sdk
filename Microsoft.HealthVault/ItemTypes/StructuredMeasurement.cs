@@ -45,8 +45,8 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public StructuredMeasurement(double value, CodableValue units)
         {
-            this.Value = value;
-            this.Units = units;
+            Value = value;
+            Units = units;
         }
 
         /// <summary>
@@ -66,10 +66,10 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             Validator.ThrowIfNavigatorNull(navigator);
 
-            this.value = navigator.SelectSingleNode("value").ValueAsDouble;
+            _value = navigator.SelectSingleNode("value").ValueAsDouble;
 
-            this.units = new CodableValue();
-            this.units.ParseXml(navigator.SelectSingleNode("units"));
+            _units = new CodableValue();
+            _units.ParseXml(navigator.SelectSingleNode("units"));
         }
 
         /// <summary>
@@ -100,16 +100,16 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             Validator.ThrowIfStringNullOrEmpty(nodeName, "nodeName");
             Validator.ThrowIfWriterNull(writer);
-            Validator.ThrowSerializationIfNull(this.units, Resources.StructuredMeasurementUnitsNotSet);
+            Validator.ThrowSerializationIfNull(_units, Resources.StructuredMeasurementUnitsNotSet);
 
             // <structured-measurement>
             writer.WriteStartElement(nodeName);
 
             // value
-            writer.WriteElementString("value", XmlConvert.ToString(this.value));
+            writer.WriteElementString("value", XmlConvert.ToString(_value));
 
             // units
-            this.units.WriteXml("units", writer);
+            _units.WriteXml("units", writer);
 
             writer.WriteEndElement();
         }
@@ -129,16 +129,16 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public CodableValue Units
         {
-            get { return this.units; }
+            get { return _units; }
 
             set
             {
-                Validator.ThrowIfArgumentNull(value, nameof(this.Units), Resources.StructuredMeasurementUnitsNotSet);
-                this.units = value;
+                Validator.ThrowIfArgumentNull(value, nameof(Units), Resources.StructuredMeasurementUnitsNotSet);
+                _units = value;
             }
         }
 
-        private CodableValue units;
+        private CodableValue _units;
 
         /// <summary>
         /// Gets or sets value.
@@ -146,11 +146,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public double Value
         {
-            get { return this.value; }
-            set { this.value = value; }
+            get { return _value; }
+            set { _value = value; }
         }
 
-        private double value;
+        private double _value;
 
         /// <summary>
         /// Gets a string representation of the structured measurement item.
@@ -165,8 +165,8 @@ namespace Microsoft.HealthVault.ItemTypes
             return
                 string.Format(
                     Resources.StructuredMeasurementToStringFormat,
-                    this.value.ToString(),
-                    this.units.ToString());
+                    _value.ToString(),
+                    _units.ToString());
         }
     }
 }

@@ -58,8 +58,8 @@ namespace Microsoft.HealthVault.ItemTypes
         public Contraindication(CodableValue substance, CodableValue status)
             : base(TypeId)
         {
-            this.Substance = substance;
-            this.Status = status;
+            Substance = substance;
+            Status = status;
         }
 
         /// <summary>
@@ -90,21 +90,21 @@ namespace Microsoft.HealthVault.ItemTypes
             Validator.ThrowInvalidIfNull(itemNav, Resources.ContraindicationUnexpectedNode);
 
             // <substance>
-            this.substance = new CodableValue();
-            this.substance.ParseXml(itemNav.SelectSingleNode("substance"));
+            _substance = new CodableValue();
+            _substance.ParseXml(itemNav.SelectSingleNode("substance"));
 
             // <status>
-            this.status = new CodableValue();
-            this.status.ParseXml(itemNav.SelectSingleNode("status"));
+            _status = new CodableValue();
+            _status.ParseXml(itemNav.SelectSingleNode("status"));
 
             // <source>
-            this.source = XPathHelper.GetOptNavValue<CodableValue>(itemNav, "source");
+            _source = XPathHelper.GetOptNavValue<CodableValue>(itemNav, "source");
 
             // <documenter>
-            this.documenter = XPathHelper.GetOptNavValue<PersonItem>(itemNav, "documenter");
+            _documenter = XPathHelper.GetOptNavValue<PersonItem>(itemNav, "documenter");
 
             // <documented-date>
-            this.documentedDate = XPathHelper.GetOptNavValue<ApproximateDateTime>(itemNav, "documented-date");
+            _documentedDate = XPathHelper.GetOptNavValue<ApproximateDateTime>(itemNav, "documented-date");
         }
 
         /// <summary>
@@ -126,26 +126,26 @@ namespace Microsoft.HealthVault.ItemTypes
         public override void WriteXml(XmlWriter writer)
         {
             Validator.ThrowIfWriterNull(writer);
-            Validator.ThrowSerializationIfNull(this.substance, Resources.ContraindicationSubstanceNotSet);
-            Validator.ThrowSerializationIfNull(this.status, Resources.ContraindicationStatusNotSet);
+            Validator.ThrowSerializationIfNull(_substance, Resources.ContraindicationSubstanceNotSet);
+            Validator.ThrowSerializationIfNull(_status, Resources.ContraindicationStatusNotSet);
 
             // <contraindication>
             writer.WriteStartElement("contraindication");
 
             // <substance>
-            this.substance.WriteXml("substance", writer);
+            _substance.WriteXml("substance", writer);
 
             // <status>
-            this.status.WriteXml("status", writer);
+            _status.WriteXml("status", writer);
 
             // <source>
-            XmlWriterHelper.WriteOpt(writer, "source", this.source);
+            XmlWriterHelper.WriteOpt(writer, "source", _source);
 
             // <documenter>
-            XmlWriterHelper.WriteOpt(writer, "documenter", this.documenter);
+            XmlWriterHelper.WriteOpt(writer, "documenter", _documenter);
 
             // <documented-date>
-            XmlWriterHelper.WriteOpt(writer, "documented-date", this.documentedDate);
+            XmlWriterHelper.WriteOpt(writer, "documented-date", _documentedDate);
 
             // </contraindication>
             writer.WriteEndElement();
@@ -165,16 +165,16 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public CodableValue Substance
         {
-            get { return this.substance; }
+            get { return _substance; }
 
             set
             {
-                Validator.ThrowIfArgumentNull(value, nameof(this.Substance), Resources.ContraindicationSubstanceMandatory);
-                this.substance = value;
+                Validator.ThrowIfArgumentNull(value, nameof(Substance), Resources.ContraindicationSubstanceMandatory);
+                _substance = value;
             }
         }
 
-        private CodableValue substance;
+        private CodableValue _substance;
 
         /// <summary>
         /// Gets or sets the status of the contraindication.
@@ -190,16 +190,16 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public CodableValue Status
         {
-            get { return this.status; }
+            get { return _status; }
 
             set
             {
-                Validator.ThrowIfArgumentNull(value, nameof(this.Status), Resources.ContraindicationStatusMandatory);
-                this.status = value;
+                Validator.ThrowIfArgumentNull(value, nameof(Status), Resources.ContraindicationStatusMandatory);
+                _status = value;
             }
         }
 
-        private CodableValue status;
+        private CodableValue _status;
 
         /// <summary>
         /// Gets or sets the source of the contraindication.
@@ -217,11 +217,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public CodableValue Source
         {
-            get { return this.source; }
-            set { this.source = value; }
+            get { return _source; }
+            set { _source = value; }
         }
 
-        private CodableValue source;
+        private CodableValue _source;
 
         /// <summary>
         /// Gets or sets the documenter of the contraindication.
@@ -240,11 +240,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public PersonItem Documenter
         {
-            get { return this.documenter; }
-            set { this.documenter = value; }
+            get { return _documenter; }
+            set { _documenter = value; }
         }
 
-        private PersonItem documenter;
+        private PersonItem _documenter;
 
         /// <summary>
         /// Gets or sets the date the contraindication was documented.
@@ -256,11 +256,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public ApproximateDateTime DocumentedDate
         {
-            get { return this.documentedDate; }
-            set { this.documentedDate = value; }
+            get { return _documentedDate; }
+            set { _documentedDate = value; }
         }
 
-        private ApproximateDateTime documentedDate;
+        private ApproximateDateTime _documentedDate;
 
         /// <summary>
         /// Gets a string representation of the contraindication item.
@@ -272,7 +272,7 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public override string ToString()
         {
-            return this.Substance != null ? this.Substance.Text : string.Empty;
+            return Substance != null ? Substance.Text : string.Empty;
         }
     }
 }

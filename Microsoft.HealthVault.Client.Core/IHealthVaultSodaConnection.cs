@@ -1,5 +1,4 @@
 ﻿using System.Threading.Tasks;
-using Microsoft.HealthVault.Configuration;
 using Microsoft.HealthVault.Connection;
 
 namespace Microsoft.HealthVault.Client

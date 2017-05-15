@@ -26,10 +26,10 @@ namespace Microsoft.HealthVault.Record
             Guid personId,
             long latestOperationSequenceNumber)
         {
-            this.RecordId = recordId;
-            this.LastUpdateDate = lastUpdateDate;
-            this.PersonId = personId;
-            this.LatestOperationSequenceNumber = latestOperationSequenceNumber;
+            RecordId = recordId;
+            LastUpdateDate = lastUpdateDate;
+            PersonId = personId;
+            LatestOperationSequenceNumber = latestOperationSequenceNumber;
         }
 
         /// <summary>

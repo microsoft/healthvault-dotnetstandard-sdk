@@ -51,7 +51,7 @@ namespace Microsoft.HealthVault.ItemTypes
         public Status(CodableValue statusType)
             : base(TypeId)
         {
-            this.StatusType = statusType;
+            StatusType = statusType;
         }
 
         /// <summary>
@@ -81,10 +81,10 @@ namespace Microsoft.HealthVault.ItemTypes
 
             Validator.ThrowInvalidIfNull(itemNav, Resources.StatusUnexpectedNode);
 
-            this.statusType = new CodableValue();
-            this.statusType.ParseXml(itemNav.SelectSingleNode("status-type"));
+            _statusType = new CodableValue();
+            _statusType.ParseXml(itemNav.SelectSingleNode("status-type"));
 
-            this.text =
+            _text =
                 XPathHelper.GetOptNavValue(itemNav, "text");
         }
 
@@ -107,17 +107,17 @@ namespace Microsoft.HealthVault.ItemTypes
         public override void WriteXml(XmlWriter writer)
         {
             Validator.ThrowIfWriterNull(writer);
-            Validator.ThrowSerializationIfNull(this.statusType, Resources.StatusTypeNotSet);
-            Validator.ThrowSerializationIfNull(this.statusType.Text, Resources.CodableValueNullText);
+            Validator.ThrowSerializationIfNull(_statusType, Resources.StatusTypeNotSet);
+            Validator.ThrowSerializationIfNull(_statusType.Text, Resources.CodableValueNullText);
 
             writer.WriteStartElement("status");
 
-            this.statusType.WriteXml("status-type", writer);
+            _statusType.WriteXml("status-type", writer);
 
             XmlWriterHelper.WriteOptString(
                 writer,
                 "text",
-                this.text);
+                _text);
 
             writer.WriteEndElement();
         }
@@ -132,16 +132,16 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public CodableValue StatusType
         {
-            get { return this.statusType; }
+            get { return _statusType; }
 
             set
             {
-                Validator.ThrowIfArgumentNull(value, nameof(this.StatusType), Resources.StatusTypeMandatory);
-                this.statusType = value;
+                Validator.ThrowIfArgumentNull(value, nameof(StatusType), Resources.StatusTypeMandatory);
+                _statusType = value;
             }
         }
 
-        private CodableValue statusType = new CodableValue();
+        private CodableValue _statusType = new CodableValue();
 
         /// <summary>
         /// Gets or sets additional information about the status.
@@ -149,16 +149,16 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public string Text
         {
-            get { return this.text; }
+            get { return _text; }
 
             set
             {
                 Validator.ThrowIfStringIsEmptyOrWhitespace(value, "Text");
-                this.text = value;
+                _text = value;
             }
         }
 
-        private string text;
+        private string _text;
 
         /// <summary>
         /// Gets a string representation of the status instance.
@@ -170,13 +170,13 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public override string ToString()
         {
-            string value = this.statusType.Text;
+            string value = _statusType.Text;
 
-            if (this.text != null)
+            if (_text != null)
             {
                 value +=
                    Resources.ListSeparator +
-                   this.text;
+                   _text;
             }
 
             return value;

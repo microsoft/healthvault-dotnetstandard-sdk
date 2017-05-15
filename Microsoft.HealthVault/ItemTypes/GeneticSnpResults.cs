@@ -50,7 +50,7 @@ namespace Microsoft.HealthVault.ItemTypes
         public GeneticSnpResults()
             : base(TypeId)
         {
-            this.Sections |= ThingSections.BlobPayload;
+            Sections |= ThingSections.BlobPayload;
         }
 
         /// <summary>
@@ -87,11 +87,11 @@ namespace Microsoft.HealthVault.ItemTypes
             GenomeNumberingScheme numberingScheme)
             : base(TypeId)
         {
-            this.When = when;
-            this.GenomeBuild = genomeBuild;
-            this.Chromosome = chromosome;
-            this.NumberingScheme = numberingScheme;
-            this.Sections |= ThingSections.BlobPayload;
+            When = when;
+            GenomeBuild = genomeBuild;
+            Chromosome = chromosome;
+            NumberingScheme = numberingScheme;
+            Sections |= ThingSections.BlobPayload;
         }
 
         /// <summary>
@@ -122,48 +122,48 @@ namespace Microsoft.HealthVault.ItemTypes
             Validator.ThrowInvalidIfNull(itemNav, Resources.GeneticSnpResultsUnexpectedNode);
 
             // <when> mandatory
-            this.when = new ApproximateDateTime();
-            this.when.ParseXml(itemNav.SelectSingleNode("when"));
+            _when = new ApproximateDateTime();
+            _when.ParseXml(itemNav.SelectSingleNode("when"));
 
             // <genome-build> mandatory
-            this.genomeBuild = itemNav.SelectSingleNode("genome-build").Value;
+            _genomeBuild = itemNav.SelectSingleNode("genome-build").Value;
 
             // <chromosome> mandatory
-            this.chromosome = itemNav.SelectSingleNode("chromosome").Value;
+            _chromosome = itemNav.SelectSingleNode("chromosome").Value;
 
             // <numbering-scheme> mandatory
             int numberingScheme = itemNav.SelectSingleNode("numbering-scheme").ValueAsInt;
             if ((numberingScheme == 0) || (numberingScheme == 1))
             {
-                this.numberingScheme = (GenomeNumberingScheme)numberingScheme;
+                _numberingScheme = (GenomeNumberingScheme)numberingScheme;
             }
             else
             {
-                this.numberingScheme = GenomeNumberingScheme.Unknown;
+                _numberingScheme = GenomeNumberingScheme.Unknown;
             }
 
             // ordered-by
-            this.orderedBy =
+            _orderedBy =
                 XPathHelper.GetOptNavValue<Organization>(itemNav, "ordered-by");
 
             // test-provider
-            this.testProvider =
+            _testProvider =
                 XPathHelper.GetOptNavValue<Organization>(itemNav, "test-provider");
 
             // laboratory-name
-            this.laboratoryName =
+            _laboratoryName =
                 XPathHelper.GetOptNavValue<Organization>(itemNav, "laboratory-name");
 
             // annotation-version
-            this.annotationVersion =
+            _annotationVersion =
                 XPathHelper.GetOptNavValue(itemNav, "annotation-version");
 
             // dbSNP-build
-            this.dbSnpBuild =
+            _dbSnpBuild =
                 XPathHelper.GetOptNavValue(itemNav, "dbSNP-build");
 
             // platform
-            this.platform =
+            _platform =
                 XPathHelper.GetOptNavValue(itemNav, "platform");
         }
 
@@ -187,23 +187,23 @@ namespace Microsoft.HealthVault.ItemTypes
         public override void WriteXml(XmlWriter writer)
         {
             Validator.ThrowIfWriterNull(writer);
-            Validator.ThrowSerializationIfNull(this.when, Resources.WhenNullValue);
+            Validator.ThrowSerializationIfNull(_when, Resources.WhenNullValue);
 
-            Validator.ThrowSerializationIfNull(this.genomeBuild, Resources.GenomeBuildNotSet);
+            Validator.ThrowSerializationIfNull(_genomeBuild, Resources.GenomeBuildNotSet);
 
-            Validator.ThrowSerializationIfNull(this.chromosome, Resources.ChromosomeNotSet);
+            Validator.ThrowSerializationIfNull(_chromosome, Resources.ChromosomeNotSet);
 
-            if (this.snpData != null)
+            if (_snpData != null)
             {
-                this.snpData.StoreSnpItems();
+                _snpData.StoreSnpItems();
 
-                if (!string.IsNullOrEmpty(this.snpData.Data))
+                if (!string.IsNullOrEmpty(_snpData.Data))
                 {
                     Blob blob =
-                        this.GetBlobStore(default(HealthRecordAccessor)).NewBlob(
+                        GetBlobStore(default(HealthRecordAccessor)).NewBlob(
                             string.Empty,
-                            this.snpData.ContentType);
-                    blob.WriteInline(this.snpData.Data);
+                            _snpData.ContentType);
+                    blob.WriteInline(_snpData.Data);
                 }
             }
 
@@ -211,52 +211,52 @@ namespace Microsoft.HealthVault.ItemTypes
             writer.WriteStartElement("genetic-snp-results");
 
             // <when> mandatory
-            this.when.WriteXml("when", writer);
+            _when.WriteXml("when", writer);
 
             // <genome-build> mandatory
-            writer.WriteElementString("genome-build", this.genomeBuild);
+            writer.WriteElementString("genome-build", _genomeBuild);
 
             // <chromosome>
-            writer.WriteElementString("chromosome", this.chromosome);
+            writer.WriteElementString("chromosome", _chromosome);
 
             // <numbering-scheme>
-            writer.WriteElementString("numbering-scheme", ((int)this.numberingScheme).ToString());
+            writer.WriteElementString("numbering-scheme", ((int)_numberingScheme).ToString());
 
             // <ordered-by>
             XmlWriterHelper.WriteOpt(
                 writer,
                 "ordered-by",
-                this.orderedBy);
+                _orderedBy);
 
             // <test-provider>
             XmlWriterHelper.WriteOpt(
                 writer,
                 "test-provider",
-                this.testProvider);
+                _testProvider);
 
             // <laboratory-name>
             XmlWriterHelper.WriteOpt(
                 writer,
                 "laboratory-name",
-                this.laboratoryName);
+                _laboratoryName);
 
             // <annotation-version>
             XmlWriterHelper.WriteOptString(
                 writer,
                 "annotation-version",
-                this.annotationVersion);
+                _annotationVersion);
 
             // <dbSNP-build>
             XmlWriterHelper.WriteOptString(
                 writer,
                 "dbSNP-build",
-                this.dbSnpBuild);
+                _dbSnpBuild);
 
             // <platform>
             XmlWriterHelper.WriteOptString(
                 writer,
                 "platform",
-                this.platform);
+                _platform);
 
             // </genetic-snp-results>
             writer.WriteEndElement();
@@ -277,16 +277,16 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public ApproximateDateTime When
         {
-            get { return this.when; }
+            get { return _when; }
 
             set
             {
-                Validator.ThrowIfArgumentNull(value, nameof(this.When), Resources.WhenNullValue);
-                this.when = value;
+                Validator.ThrowIfArgumentNull(value, nameof(When), Resources.WhenNullValue);
+                _when = value;
             }
         }
 
-        private ApproximateDateTime when;
+        private ApproximateDateTime _when;
 
         /// <summary>
         /// Gets or sets the genome build that defines the SNPs.
@@ -303,17 +303,17 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public string GenomeBuild
         {
-            get { return this.genomeBuild; }
+            get { return _genomeBuild; }
 
             set
             {
                 Validator.ThrowIfStringNullOrEmpty(value, "GenomeBuild");
                 Validator.ThrowIfStringIsWhitespace(value, "GenomeBuild");
-                this.genomeBuild = value;
+                _genomeBuild = value;
             }
         }
 
-        private string genomeBuild;
+        private string _genomeBuild;
 
         /// <summary>
         /// Gets or sets the chromosome on which the SNPs are located.
@@ -330,17 +330,17 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public string Chromosome
         {
-            get { return this.chromosome; }
+            get { return _chromosome; }
 
             set
             {
                 Validator.ThrowIfStringNullOrEmpty(value, "Chromosome");
                 Validator.ThrowIfStringIsWhitespace(value, "Chromosome");
-                this.chromosome = value;
+                _chromosome = value;
             }
         }
 
-        private string chromosome;
+        private string _chromosome;
 
         /// <summary>
         /// The numbering scheme used for positions.
@@ -358,20 +358,20 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public GenomeNumberingScheme NumberingScheme
         {
-            get { return this.numberingScheme; }
+            get { return _numberingScheme; }
 
             set
             {
                 if (value != GenomeNumberingScheme.ZeroBased && value != GenomeNumberingScheme.OneBased)
                 {
-                    throw new ArgumentOutOfRangeException(nameof(this.NumberingScheme), Resources.InvalidNumberingScheme);
+                    throw new ArgumentOutOfRangeException(nameof(NumberingScheme), Resources.InvalidNumberingScheme);
                 }
 
-                this.numberingScheme = value;
+                _numberingScheme = value;
             }
         }
 
-        private GenomeNumberingScheme numberingScheme;
+        private GenomeNumberingScheme _numberingScheme;
 
         /// <summary>
         /// Gets or sets the person or organization that ordered the SNP test.
@@ -379,11 +379,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public Organization OrderedBy
         {
-            get { return this.orderedBy; }
-            set { this.orderedBy = value; }
+            get { return _orderedBy; }
+            set { _orderedBy = value; }
         }
 
-        private Organization orderedBy;
+        private Organization _orderedBy;
 
         /// <summary>
         /// The organization that provides the SNP test service.
@@ -395,11 +395,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public Organization TestProvider
         {
-            get { return this.testProvider; }
-            set { this.testProvider = value; }
+            get { return _testProvider; }
+            set { _testProvider = value; }
         }
 
-        private Organization testProvider;
+        private Organization _testProvider;
 
         /// <summary>
         /// The name of the laboratory that performed the test.
@@ -407,11 +407,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public Organization LaboratoryName
         {
-            get { return this.laboratoryName; }
-            set { this.laboratoryName = value; }
+            get { return _laboratoryName; }
+            set { _laboratoryName = value; }
         }
 
-        private Organization laboratoryName;
+        private Organization _laboratoryName;
 
         /// <summary>
         /// Gets or sets the annotation version.
@@ -432,16 +432,16 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public string AnnotationVersion
         {
-            get { return this.annotationVersion; }
+            get { return _annotationVersion; }
 
             set
             {
                 Validator.ThrowIfStringIsWhitespace(value, "AnnotationVersion");
-                this.annotationVersion = value;
+                _annotationVersion = value;
             }
         }
 
-        private string annotationVersion;
+        private string _annotationVersion;
 
         /// <summary>
         /// Gets or sets the dbSNP build version.
@@ -462,16 +462,16 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public string DbSnpBuild
         {
-            get { return this.dbSnpBuild; }
+            get { return _dbSnpBuild; }
 
             set
             {
                 Validator.ThrowIfStringIsWhitespace(value, "dbSnpBuild");
-                this.dbSnpBuild = value;
+                _dbSnpBuild = value;
             }
         }
 
-        private string dbSnpBuild;
+        private string _dbSnpBuild;
 
         /// <summary>
         /// Gets or sets the platform.
@@ -492,16 +492,16 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public string Platform
         {
-            get { return this.platform; }
+            get { return _platform; }
 
             set
             {
                 Validator.ThrowIfStringIsWhitespace(value, "Platform");
-                this.platform = value;
+                _platform = value;
             }
         }
 
-        private string platform;
+        private string _platform;
 
         /// <summary>
         /// Gets the description of a SNP result instance.
@@ -516,8 +516,8 @@ namespace Microsoft.HealthVault.ItemTypes
             return
                 string.Format(
                     Resources.GeneticSnpResultsToStringFormat,
-                    this.chromosome,
-                    this.genomeBuild);
+                    _chromosome,
+                    _genomeBuild);
         }
 
         /// <summary>
@@ -540,15 +540,15 @@ namespace Microsoft.HealthVault.ItemTypes
             // to a SnpData instance.
             get
             {
-                BlobStore store = this.GetBlobStore(default(HealthRecordAccessor));
+                BlobStore store = GetBlobStore(default(HealthRecordAccessor));
                 Blob blob = store[string.Empty];
 
                 // no data, create an instance for the user to use.
                 if (blob == null)
                 {
-                    if (this.snpData == null)
+                    if (_snpData == null)
                     {
-                        this.snpData = new SnpData(null, string.Empty, "text/csv");
+                        _snpData = new SnpData(null, string.Empty, "text/csv");
                     }
                 }
 
@@ -559,7 +559,7 @@ namespace Microsoft.HealthVault.ItemTypes
                     // Validate that it's text/csv before we change its type.
                     if (blob.ContentType == "text/csv")
                     {
-                        this.snpData =
+                        _snpData =
                             new SnpData(
                                 blob.ReadAsString(),
                                 null,
@@ -571,10 +571,10 @@ namespace Microsoft.HealthVault.ItemTypes
                     }
                 }
 
-                return this.snpData;
+                return _snpData;
             }
         }
 
-        private SnpData snpData;
+        private SnpData _snpData;
     }
 }

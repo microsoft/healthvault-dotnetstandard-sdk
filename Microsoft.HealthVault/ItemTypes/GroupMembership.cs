@@ -68,15 +68,15 @@ namespace Microsoft.HealthVault.ItemTypes
             Validator.ThrowInvalidIfNull(itemNav, Resources.GroupMembershipUnexpectedNode);
 
             XPathNodeIterator membershipIterator = itemNav.Select("membership");
-            this.groupMemberships.Clear();
+            _groupMemberships.Clear();
             foreach (XPathNavigator membershipNav in membershipIterator)
             {
                 GroupMembershipType groupMembership = new GroupMembershipType();
                 groupMembership.ParseXml(membershipNav);
-                this.groupMemberships.Add(groupMembership);
+                _groupMemberships.Add(groupMembership);
             }
 
-            this.expires = XPathHelper.GetOptNavValue<HealthServiceDateTime>(itemNav, "expires");
+            _expires = XPathHelper.GetOptNavValue<HealthServiceDateTime>(itemNav, "expires");
         }
 
         /// <summary>
@@ -99,13 +99,13 @@ namespace Microsoft.HealthVault.ItemTypes
             writer.WriteStartElement("group-membership");
 
             // <membership>
-            for (int index = 0; index < this.groupMemberships.Count; ++index)
+            for (int index = 0; index < _groupMemberships.Count; ++index)
             {
-                this.groupMemberships[index].WriteXml("membership", writer);
+                _groupMemberships[index].WriteXml("membership", writer);
             }
 
             // <expires>
-            XmlWriterHelper.WriteOpt(writer, "expires", this.expires);
+            XmlWriterHelper.WriteOpt(writer, "expires", _expires);
 
             // </group-membership>
             writer.WriteEndElement();
@@ -115,9 +115,9 @@ namespace Microsoft.HealthVault.ItemTypes
         /// Gets a collection of group memberships of the record owner.
         /// </summary>
         ///
-        public Collection<GroupMembershipType> GroupMemberships => this.groupMemberships;
+        public Collection<GroupMembershipType> GroupMemberships => _groupMemberships;
 
-        private readonly Collection<GroupMembershipType> groupMemberships =
+        private readonly Collection<GroupMembershipType> _groupMemberships =
             new Collection<GroupMembershipType>();
 
         /// <summary>
@@ -132,15 +132,15 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public HealthServiceDateTime Expires
         {
-            get { return this.expires; }
+            get { return _expires; }
 
             set
             {
-                this.expires = value;
+                _expires = value;
             }
         }
 
-        private HealthServiceDateTime expires;
+        private HealthServiceDateTime _expires;
 
         /// <summary>
         /// Gets a string representation of the group membership.
@@ -154,14 +154,14 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             StringBuilder result = new StringBuilder(200);
 
-            for (int index = 0; index < this.GroupMemberships.Count; ++index)
+            for (int index = 0; index < GroupMemberships.Count; ++index)
             {
                 if (index > 0)
                 {
                     result.Append(Resources.ListSeparator);
                 }
 
-                result.Append(this.GroupMemberships[index]);
+                result.Append(GroupMemberships[index]);
             }
 
             return result.ToString();

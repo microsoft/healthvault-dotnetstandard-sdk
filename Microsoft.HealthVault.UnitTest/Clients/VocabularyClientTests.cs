@@ -1,36 +1,35 @@
-﻿using Microsoft.HealthVault.Clients;
+﻿using System;
+using System.IO;
+using System.Linq;
+using System.Threading.Tasks;
+using System.Xml.XPath;
+using Microsoft.HealthVault.Clients;
 using Microsoft.HealthVault.Connection;
 using Microsoft.HealthVault.Transport;
+using Microsoft.HealthVault.UnitTest.Samples;
 using Microsoft.HealthVault.Vocabulary;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NSubstitute;
-using System;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Xml.XPath;
-using Microsoft.HealthVault.UnitTest.Samples;
 
 namespace Microsoft.HealthVault.UnitTest.Clients
 {
     [TestClass]
     public class VocabularyClientTests
     {
-        private IConnectionInternal connection;
-        private VocabularyClient client;
+        private IConnectionInternal _connection;
+        private VocabularyClient _client;
 
         [TestInitialize]
         public void InitializeTest()
         {
-            this.connection = Substitute.For<IConnectionInternal>();
-            this.client = new VocabularyClient(connection);
+            _connection = Substitute.For<IConnectionInternal>();
+            _client = new VocabularyClient(_connection);
 
             var response = new HealthServiceResponseData
             {
                 InfoNavigator = new XPathDocument(new StringReader(SampleUtils.GetSampleContent("VocabularySample.xml"))).CreateNavigator(),
             };
-            connection.ExecuteAsync(Arg.Any<HealthVaultMethods>(), Arg.Any<int>(), Arg.Any<string>())
+            _connection.ExecuteAsync(Arg.Any<HealthVaultMethods>(), Arg.Any<int>(), Arg.Any<string>())
                 .Returns(response);
         }
 
@@ -41,8 +40,8 @@ namespace Microsoft.HealthVault.UnitTest.Clients
         public void CreateClientTest()
         {
             var guid = Guid.NewGuid();
-            this.client.CorrelationId = guid;
-            Assert.IsTrue(this.client.CorrelationId == guid);
+            _client.CorrelationId = guid;
+            Assert.IsTrue(_client.CorrelationId == guid);
         }
 
         /// <summary>
@@ -52,8 +51,8 @@ namespace Microsoft.HealthVault.UnitTest.Clients
         [TestMethod]
         public async Task GetVocabularyKeysTest()
         {
-            await client.GetVocabularyKeysAsync();
-            await connection.Received().ExecuteAsync(HealthVaultMethods.GetVocabulary, Arg.Any<int>());
+            await _client.GetVocabularyKeysAsync();
+            await _connection.Received().ExecuteAsync(HealthVaultMethods.GetVocabulary, Arg.Any<int>());
         }
 
         /// <summary>
@@ -66,10 +65,10 @@ namespace Microsoft.HealthVault.UnitTest.Clients
             var vocabName = "vocabName";
             var vocabFamily = "vocabFamily";
             var vocabVersion = "vocabVersion";
-            var vocabularies = await this.client.GetVocabularyAsync(new VocabularyKey(vocabName, vocabFamily, vocabVersion));
+            var vocabularies = await _client.GetVocabularyAsync(new VocabularyKey(vocabName, vocabFamily, vocabVersion));
 
             // ensure that the connection was called with the proper values
-            await this.connection.Received().ExecuteAsync(HealthVaultMethods.GetVocabulary, Arg.Any<int>(), Arg.Is<string>(x => x.Contains(vocabName) && x.Contains(vocabFamily) && x.Contains(vocabVersion)));
+            await _connection.Received().ExecuteAsync(HealthVaultMethods.GetVocabulary, Arg.Any<int>(), Arg.Is<string>(x => x.Contains(vocabName) && x.Contains(vocabFamily) && x.Contains(vocabVersion)));
 
             // Ensure that the vocabularies returned were parsed correctly
             Assert.AreEqual(vocabularies.Family, "wc");
@@ -92,13 +91,12 @@ namespace Microsoft.HealthVault.UnitTest.Clients
 
             var key1 = new VocabularyKey(vocabName1, vocabFamily1, vocabVersion1);
             var key2 = new VocabularyKey(vocabName2, vocabFamily2, vocabVersion2);
-            var vocabularies = await this.client.GetVocabulariesAsync(new [] { key1, key2});
-            await this.connection.Received().ExecuteAsync(HealthVaultMethods.GetVocabulary, Arg.Any<int>(), Arg.Is<string>(x => x.Contains(vocabName1) && x.Contains(vocabName2) && x.Contains(vocabFamily1) && x.Contains(vocabVersion2)));
+            var vocabularies = await _client.GetVocabulariesAsync(new[] { key1, key2 });
+            await _connection.Received().ExecuteAsync(HealthVaultMethods.GetVocabulary, Arg.Any<int>(), Arg.Is<string>(x => x.Contains(vocabName1) && x.Contains(vocabName2) && x.Contains(vocabFamily1) && x.Contains(vocabVersion2)));
 
             // Ensure that the vocabularies returned were parsed correctly
             Assert.AreEqual(vocabularies.Count, 1);
             Assert.AreEqual(vocabularies.FirstOrDefault()?.Family, "wc");
-
         }
 
         /// <summary>
@@ -113,11 +111,11 @@ namespace Microsoft.HealthVault.UnitTest.Clients
                 InfoNavigator = new XPathDocument(new StringReader(SampleUtils.GetSampleContent("VocabularySearchSample.xml"))).CreateNavigator()
             };
 
-            connection.ExecuteAsync(Arg.Any<HealthVaultMethods>(), Arg.Any<int>(), Arg.Any<string>())
+            _connection.ExecuteAsync(Arg.Any<HealthVaultMethods>(), Arg.Any<int>(), Arg.Any<string>())
                 .Returns(response);
             var searchTerm = "hypertension";
-            await client.SearchVocabularyAsync(searchTerm, VocabularySearchType.Contains, null);
-            await connection.Received().ExecuteAsync(HealthVaultMethods.SearchVocabulary, Arg.Any<int>(), Arg.Is<string>(x => x.Contains(searchTerm)));
+            await _client.SearchVocabularyAsync(searchTerm, VocabularySearchType.Contains, null);
+            await _connection.Received().ExecuteAsync(HealthVaultMethods.SearchVocabulary, Arg.Any<int>(), Arg.Is<string>(x => x.Contains(searchTerm)));
         }
 
         /// <summary>
@@ -130,7 +128,7 @@ namespace Microsoft.HealthVault.UnitTest.Clients
             try
             {
                 // Testing a search for a value over 256 characters
-                await client.SearchVocabularyAsync("IIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIII", 
+                await _client.SearchVocabularyAsync("IIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIII",
                                                    VocabularySearchType.Contains, null);
                 Assert.Fail("Expecting an exception when searching for incompatible values.");
             }
@@ -142,7 +140,7 @@ namespace Microsoft.HealthVault.UnitTest.Clients
             try
             {
                 //Testing for a search with invalid results count
-                await client.SearchVocabularyAsync("hypertension", VocabularySearchType.Contains, 0);
+                await _client.SearchVocabularyAsync("hypertension", VocabularySearchType.Contains, 0);
                 Assert.Fail("Expecting an exception when searching for too many vocabulary.");
             }
             catch (ArgumentException)

@@ -13,14 +13,14 @@ namespace Microsoft.HealthVault.UnitTest.Clients
     [TestClass]
     public class PlatformClientTests
     {
-        private IConnectionInternal connection;
-        private PlatformClient platformClient;
+        private IConnectionInternal _connection;
+        private PlatformClient _platformClient;
 
         [TestInitialize]
         public void InitializeTest()
         {
-            this.connection = Substitute.For<IConnectionInternal>();
-            this.platformClient = new PlatformClient(this.connection);
+            _connection = Substitute.For<IConnectionInternal>();
+            _platformClient = new PlatformClient(_connection);
         }
 
         [TestMethod]
@@ -30,12 +30,12 @@ namespace Microsoft.HealthVault.UnitTest.Clients
 
             var response = SampleUtils.GetResponseData("InstanceSample.xml");
 
-            this.connection.ExecuteAsync(HealthVaultMethods.SelectInstance, Arg.Any<int>(), Arg.Any<string>())
+            _connection.ExecuteAsync(HealthVaultMethods.SelectInstance, Arg.Any<int>(), Arg.Any<string>())
                 .Returns(response);
 
-            var result = await this.platformClient.SelectInstanceAsync(location).ConfigureAwait(false);
+            var result = await _platformClient.SelectInstanceAsync(location).ConfigureAwait(false);
 
-            await this.connection.Received()
+            await _connection.Received()
                 .ExecuteAsync(HealthVaultMethods.SelectInstance, Arg.Any<int>(), Arg.Any<string>());
 
             Assert.AreEqual(result.Description, "US instance");
@@ -49,11 +49,11 @@ namespace Microsoft.HealthVault.UnitTest.Clients
 
             var response = SampleUtils.GetResponseData("InstanceSample.xml");
 
-            this.connection.ExecuteAsync(HealthVaultMethods.SelectInstance, Arg.Any<int>(), Arg.Any<string>())
+            _connection.ExecuteAsync(HealthVaultMethods.SelectInstance, Arg.Any<int>(), Arg.Any<string>())
                 .Returns(response);
             try
             {
-                var result = await this.platformClient.SelectInstanceAsync(location).ConfigureAwait(false);
+                var result = await _platformClient.SelectInstanceAsync(location).ConfigureAwait(false);
             }
             catch
             {
@@ -68,11 +68,11 @@ namespace Microsoft.HealthVault.UnitTest.Clients
         {
             var response = SampleUtils.GetResponseData("ServiceDefinitionSample.xml");
 
-            this.connection.ExecuteAsync(HealthVaultMethods.GetServiceDefinition, Arg.Any<int>(), Arg.Any<string>())
+            _connection.ExecuteAsync(HealthVaultMethods.GetServiceDefinition, Arg.Any<int>(), Arg.Any<string>())
                 .Returns(response);
 
-            var result = await this.platformClient.GetServiceDefinitionAsync().ConfigureAwait(false);
-            await this.connection.Received()
+            var result = await _platformClient.GetServiceDefinitionAsync().ConfigureAwait(false);
+            await _connection.Received()
                 .ExecuteAsync(HealthVaultMethods.GetServiceDefinition, Arg.Any<int>(), Arg.Any<string>());
 
             Assert.AreEqual(result.LastUpdated.ToString(), "3/17/2017 3:24:19 AM");
@@ -83,10 +83,10 @@ namespace Microsoft.HealthVault.UnitTest.Clients
         {
             var response = SampleUtils.GetResponseData("ServiceDefinitionSample.xml");
 
-            this.connection.ExecuteAsync(HealthVaultMethods.GetServiceDefinition, Arg.Any<int>(), Arg.Any<string>())
+            _connection.ExecuteAsync(HealthVaultMethods.GetServiceDefinition, Arg.Any<int>(), Arg.Any<string>())
                 .Returns(response);
-            var result = await this.platformClient.GetServiceDefinitionAsync(ServiceInfoSections.All).ConfigureAwait(false);
-            await this.connection.Received()
+            var result = await _platformClient.GetServiceDefinitionAsync(ServiceInfoSections.All).ConfigureAwait(false);
+            await _connection.Received()
                 .ExecuteAsync(HealthVaultMethods.GetServiceDefinition, Arg.Any<int>(), Arg.Any<string>());
 
             Assert.AreEqual(result.LastUpdated.ToString(), "3/17/2017 3:24:19 AM");
@@ -98,11 +98,11 @@ namespace Microsoft.HealthVault.UnitTest.Clients
             DateTime lastUpdatedTime = new DateTime(2017, 03, 17, 03, 24, 19);
             var response = SampleUtils.GetResponseData("ServiceDefinitionSample.xml");
 
-            this.connection.ExecuteAsync(HealthVaultMethods.GetServiceDefinition, Arg.Any<int>(), Arg.Any<string>())
+            _connection.ExecuteAsync(HealthVaultMethods.GetServiceDefinition, Arg.Any<int>(), Arg.Any<string>())
                 .Returns(response);
 
-            var result = await this.platformClient.GetServiceDefinitionAsync(lastUpdatedTime).ConfigureAwait(false);
-            await this.connection.Received()
+            var result = await _platformClient.GetServiceDefinitionAsync(lastUpdatedTime).ConfigureAwait(false);
+            await _connection.Received()
                 .ExecuteAsync(HealthVaultMethods.GetServiceDefinition, Arg.Any<int>(), Arg.Any<string>());
 
             Assert.AreEqual(result.LastUpdated, lastUpdatedTime);
@@ -114,13 +114,13 @@ namespace Microsoft.HealthVault.UnitTest.Clients
             DateTime lastUpdatedTime = new DateTime(2017, 03, 17, 03, 24, 19);
             var response = SampleUtils.GetResponseData("ServiceDefinitionSample.xml");
 
-            this.connection.ExecuteAsync(HealthVaultMethods.GetServiceDefinition, Arg.Any<int>(), Arg.Any<string>())
+            _connection.ExecuteAsync(HealthVaultMethods.GetServiceDefinition, Arg.Any<int>(), Arg.Any<string>())
                 .Returns(response);
 
             var result =
-                await this.platformClient.GetServiceDefinitionAsync(ServiceInfoSections.All, lastUpdatedTime)
+                await _platformClient.GetServiceDefinitionAsync(ServiceInfoSections.All, lastUpdatedTime)
                     .ConfigureAwait(false);
-            await this.connection.Received()
+            await _connection.Received()
                 .ExecuteAsync(HealthVaultMethods.GetServiceDefinition, Arg.Any<int>(), Arg.Any<string>());
 
             Assert.AreEqual(result.LastUpdated, lastUpdatedTime);

@@ -1,7 +1,7 @@
-﻿// Copyright (c) Microsoft Corporation.  All rights reserved. 
+﻿// Copyright (c) Microsoft Corporation.  All rights reserved.
 // MIT License
 // Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the ""Software""), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 //
 // THE SOFTWARE IS PROVIDED *AS IS*, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
@@ -17,21 +17,21 @@ namespace Microsoft.HealthVault.Web.Utilities
 {
     internal class ShellUrlBuilder
     {
-        private HttpContextBase context;
-        private string target;
-        private IDictionary<string, object> parameters;
-        private WebHealthVaultConfiguration webHealthVaultConfiguration;
+        private HttpContextBase _context;
+        private string _target;
+        private IDictionary<string, object> _parameters;
+        private WebHealthVaultConfiguration _webHealthVaultConfiguration;
 
         internal ShellUrlBuilder(
             HttpContextBase context,
             string target,
             IDictionary<string, object> parameters)
         {
-            this.context = context ?? throw new ArgumentNullException(nameof(context));
-            this.target = target ?? throw new ArgumentNullException(nameof(target));
-            this.parameters = parameters;
+            _context = context ?? throw new ArgumentNullException(nameof(context));
+            _target = target ?? throw new ArgumentNullException(nameof(target));
+            _parameters = parameters;
 
-            this.webHealthVaultConfiguration = Ioc.Get<WebHealthVaultConfiguration>();
+            _webHealthVaultConfiguration = Ioc.Get<WebHealthVaultConfiguration>();
         }
 
         internal string Generate()
@@ -41,10 +41,10 @@ namespace Microsoft.HealthVault.Web.Utilities
             StringBuilder targetUrl = GetShellUrl();
             StringBuilder query = CreateQuery();
 
-            if (!string.IsNullOrEmpty(this.target))
+            if (!string.IsNullOrEmpty(_target))
             {
                 targetUrl.Append("redirect.aspx?target=");
-                targetUrl.Append(target);
+                targetUrl.Append(_target);
                 if (query.Length > 0)
                 {
                     targetUrl.Append("&targetqs=");
@@ -62,7 +62,7 @@ namespace Microsoft.HealthVault.Web.Utilities
 
         private StringBuilder GetShellUrl()
         {
-            string shellUrl = this.webHealthVaultConfiguration.DefaultHealthVaultShellUrl.OriginalString;
+            string shellUrl = _webHealthVaultConfiguration.DefaultHealthVaultShellUrl.OriginalString;
 
             StringBuilder targetUrl = new StringBuilder(shellUrl);
             if (!shellUrl.EndsWith("/", StringComparison.OrdinalIgnoreCase))
@@ -84,13 +84,13 @@ namespace Microsoft.HealthVault.Web.Utilities
         private StringBuilder CreateQuery()
         {
             var builder = new StringBuilder();
-            if (parameters == null)
+            if (_parameters == null)
             {
                 return builder;
             }
 
             bool first = true;
-            foreach (KeyValuePair<string, object> parameter in parameters)
+            foreach (KeyValuePair<string, object> parameter in _parameters)
             {
                 if (!first)
                 {
@@ -109,42 +109,42 @@ namespace Microsoft.HealthVault.Web.Utilities
 
         private void EnsureAppId()
         {
-            if (!this.parameters.ContainsKey("appid"))
+            if (!_parameters.ContainsKey("appid"))
             {
-                this.parameters.Add("appid", this.webHealthVaultConfiguration.MasterApplicationId);
+                _parameters.Add("appid", _webHealthVaultConfiguration.MasterApplicationId);
             }
         }
 
         private void EnsureAppQs()
         {
-            if (!this.parameters.ContainsKey("actionqs"))
+            if (!_parameters.ContainsKey("actionqs"))
             {
-                this.parameters.Add("actionqs", this.context.Request?.Url?.PathAndQuery);
+                _parameters.Add("actionqs", _context.Request?.Url?.PathAndQuery);
             }
         }
 
         private void EnsureAib()
         {
-            if (!this.parameters.ContainsKey("aib")
-                && this.webHealthVaultConfiguration.MultiInstanceAware)
+            if (!_parameters.ContainsKey("aib")
+                && _webHealthVaultConfiguration.MultiInstanceAware)
             {
-                this.parameters.Add("aib", "true");
+                _parameters.Add("aib", "true");
             }
         }
 
         private void EnsureRedirect()
         {
-            Uri redirectOverride = this.webHealthVaultConfiguration.ActionUrlRedirectOverride;
-            if (this.parameters.ContainsKey("redirect") || redirectOverride == null)
+            Uri redirectOverride = _webHealthVaultConfiguration.ActionUrlRedirectOverride;
+            if (_parameters.ContainsKey("redirect") || redirectOverride == null)
             {
                 return;
             }
 
             // absolute or scheme-relative urls are already ok
-            if (redirectOverride.IsAbsoluteUri || 
+            if (redirectOverride.IsAbsoluteUri ||
                 redirectOverride.OriginalString.StartsWith("//", StringComparison.OrdinalIgnoreCase))
             {
-                this.parameters.Add("redirect", redirectOverride.OriginalString);
+                _parameters.Add("redirect", redirectOverride.OriginalString);
             }
             else
             {
@@ -152,18 +152,18 @@ namespace Microsoft.HealthVault.Web.Utilities
                 string redirect = redirectOverride.OriginalString;
                 if (!redirect.StartsWith("/", StringComparison.OrdinalIgnoreCase))
                 {
-                    if (this.context.Request.ApplicationPath.EndsWith("/", StringComparison.OrdinalIgnoreCase))
+                    if (_context.Request.ApplicationPath.EndsWith("/", StringComparison.OrdinalIgnoreCase))
                     {
-                        redirect = this.context.Request.ApplicationPath + redirect;
+                        redirect = _context.Request.ApplicationPath + redirect;
                     }
                     else
                     {
-                        redirect = this.context.Request.ApplicationPath + "/" + redirect;
+                        redirect = _context.Request.ApplicationPath + "/" + redirect;
                     }
                 }
 
-                Uri absoluteRedirect = new Uri(this.context.Request.Url, redirect);
-                this.parameters["redirect"] = absoluteRedirect.OriginalString;
+                Uri absoluteRedirect = new Uri(_context.Request.Url, redirect);
+                _parameters["redirect"] = absoluteRedirect.OriginalString;
             }
         }
     }

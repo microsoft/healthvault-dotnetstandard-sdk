@@ -1,7 +1,7 @@
-﻿// Copyright (c) Microsoft Corporation.  All rights reserved. 
+﻿// Copyright (c) Microsoft Corporation.  All rights reserved.
 // MIT License
 // Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the ""Software""), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 //
 // THE SOFTWARE IS PROVIDED *AS IS*, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
@@ -33,8 +33,8 @@ namespace Microsoft.HealthVault.Web.UnitTest.Connections
     [TestClass]
     public class WebHealthVaultConnectionUnitTests
     {
-        private WebHealthVaultConnection webHealthVaultConnection;
-        private string userAuthToken;
+        private WebHealthVaultConnection _webHealthVaultConnection;
+        private string _userAuthToken;
 
         [TestInitialize]
         public void TestInitialize()
@@ -51,11 +51,11 @@ namespace Microsoft.HealthVault.Web.UnitTest.Connections
 
             HealthServiceInstance healthServiceInstance = Substitute.For<HealthServiceInstance>();
             SessionCredential sessionCredential = Substitute.For<SessionCredential>();
-            userAuthToken = "someToken";
+            _userAuthToken = "someToken";
 
-            webHealthVaultConnection = new WebHealthVaultConnection(serviceLocator)
+            _webHealthVaultConnection = new WebHealthVaultConnection(serviceLocator)
             {
-                UserAuthToken = userAuthToken,
+                UserAuthToken = _userAuthToken,
                 ServiceInstance = healthServiceInstance,
                 SessionCredential = sessionCredential
             };
@@ -68,10 +68,10 @@ namespace Microsoft.HealthVault.Web.UnitTest.Connections
         public void WhenRestAuthSessionHeaderIsInvoked()
         {
             // Act
-            string restAuthSessionHeader = webHealthVaultConnection.GetRestAuthSessionHeader();
+            string restAuthSessionHeader = _webHealthVaultConnection.GetRestAuthSessionHeader();
 
             // Assert
-            Assert.AreEqual($"user-token={userAuthToken}", restAuthSessionHeader);
+            Assert.AreEqual($"user-token={_userAuthToken}", restAuthSessionHeader);
         }
 
         /// <summary>
@@ -81,10 +81,10 @@ namespace Microsoft.HealthVault.Web.UnitTest.Connections
         public void WhenAuthSessionHeaderIsInvoked()
         {
             // Act
-            AuthSession authSession = webHealthVaultConnection.GetAuthSessionHeader();
+            AuthSession authSession = _webHealthVaultConnection.GetAuthSessionHeader();
 
             // Assert
-            Assert.AreEqual(webHealthVaultConnection.UserAuthToken, authSession.UserAuthToken);
+            Assert.AreEqual(_webHealthVaultConnection.UserAuthToken, authSession.UserAuthToken);
         }
 
         /// <summary>
@@ -95,19 +95,19 @@ namespace Microsoft.HealthVault.Web.UnitTest.Connections
         {
             var webConnectionInfo = CreateWebConnectionInfo();
 
-            PersonInfo personInfo = await webHealthVaultConnection.GetPersonInfoAsync();
+            PersonInfo personInfo = await _webHealthVaultConnection.GetPersonInfoAsync();
 
             Assert.AreEqual(webConnectionInfo.PersonInfo.Name, personInfo.Name);
         }
 
         /// <summary>
-        /// Verify that when a cookie is restored with minimized application setting, then 
+        /// Verify that when a cookie is restored with minimized application setting, then
         /// a call to platform is made to populate the application settings from server
         /// </summary>
         [TestMethod]
         public async Task WhenPersonInfoRestoredFromIdentityWithMinimizedApplicationSettings()
         {
-            this.CreateWebConnectionInfo(minimizedApplicationSettings: true);
+            CreateWebConnectionInfo(minimizedApplicationSettings: true);
 
             PersonInfo mockedPersonInfoWithApplicationSettings = new PersonInfo()
             {
@@ -120,20 +120,20 @@ namespace Microsoft.HealthVault.Web.UnitTest.Connections
 
             Ioc.Container.Configure(c => c.ExportInstance(f => personClient).As<IPersonClient>());
 
-            PersonInfo personInfo = await webHealthVaultConnection.GetPersonInfoAsync();
+            PersonInfo personInfo = await _webHealthVaultConnection.GetPersonInfoAsync();
 
             Assert.AreEqual(mockedPersonInfoWithApplicationSettings.Name, personInfo.Name);
             Assert.IsNotNull(personInfo.ApplicationSettingsDocument);
         }
 
         /// <summary>
-        /// Verify that when a cookie is restored with minimized authorized records, then 
+        /// Verify that when a cookie is restored with minimized authorized records, then
         /// a call to platform is made to populate the AuthorizedRecords from server
         /// </summary>
         [TestMethod]
         public async Task WhenPersonInfoRestoredFromIdentityWithMinimizedAuthorizedRecords()
         {
-            this.CreateWebConnectionInfo(minimizedPersonInfoRecords: true);
+            CreateWebConnectionInfo(minimizedPersonInfoRecords: true);
 
             PersonInfo mockedPersonInfoWithExpandedAuthorizedRecords = new PersonInfo()
             {
@@ -150,7 +150,7 @@ namespace Microsoft.HealthVault.Web.UnitTest.Connections
 
             Ioc.Container.Configure(c => c.ExportInstance(f => personClient).As<IPersonClient>());
 
-            PersonInfo personInfo = await webHealthVaultConnection.GetPersonInfoAsync();
+            PersonInfo personInfo = await _webHealthVaultConnection.GetPersonInfoAsync();
 
             Assert.AreEqual(mockedPersonInfoWithExpandedAuthorizedRecords.Name, personInfo.Name);
             Assert.AreEqual(

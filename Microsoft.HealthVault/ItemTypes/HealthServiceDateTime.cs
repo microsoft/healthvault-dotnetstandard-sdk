@@ -36,7 +36,7 @@ namespace Microsoft.HealthVault.ItemTypes
         public HealthServiceDateTime()
         {
             DateTime now = DateTime.Now;
-            this.date =
+            _date =
                 new HealthServiceDate(
                     now.Year,
                     now.Month,
@@ -58,8 +58,8 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public HealthServiceDateTime(HealthServiceDate date)
         {
-            this.Date = date;
-            this.Time = null;
+            Date = date;
+            Time = null;
         }
 
         /// <summary>
@@ -81,8 +81,8 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public HealthServiceDateTime(HealthServiceDate date, ApproximateTime time)
         {
-            this.Date = date;
-            this.Time = time;
+            Date = date;
+            Time = time;
         }
 
         /// <summary>
@@ -111,9 +111,9 @@ namespace Microsoft.HealthVault.ItemTypes
             ApproximateTime time,
             CodableValue timeZone)
         {
-            this.Date = date;
-            this.Time = time;
-            this.TimeZone = timeZone;
+            Date = date;
+            Time = time;
+            TimeZone = timeZone;
         }
 
         /// <summary>
@@ -131,20 +131,20 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public HealthServiceDateTime(DateTime dateTime)
         {
-            this.date =
+            _date =
                 new HealthServiceDate(
                     dateTime.Year,
                     dateTime.Month,
                     dateTime.Day);
 
-            this.time =
+            _time =
                 new ApproximateTime(
                     dateTime.Hour,
                     dateTime.Minute,
                     dateTime.Second);
             if (dateTime.Millisecond != 0)
             {
-                this.time.Millisecond = dateTime.Millisecond;
+                _time.Millisecond = dateTime.Millisecond;
             }
         }
 
@@ -160,18 +160,18 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             Validator.ThrowIfNavigatorNull(navigator);
 
-            this.date = new HealthServiceDate();
-            this.date.ParseXml(navigator.SelectSingleNode("date"));
+            _date = new HealthServiceDate();
+            _date.ParseXml(navigator.SelectSingleNode("date"));
 
             XPathNavigator timeNav = navigator.SelectSingleNode("time");
             if (timeNav != null)
             {
-                this.time = new ApproximateTime();
-                this.time.ParseXml(timeNav);
+                _time = new ApproximateTime();
+                _time.ParseXml(timeNav);
             }
             else
             {
-                this.time = null;
+                _time = null;
             }
 
             XPathNavigator tzNav =
@@ -179,8 +179,8 @@ namespace Microsoft.HealthVault.ItemTypes
 
             if (tzNav != null)
             {
-                this.timeZone = new CodableValue();
-                this.timeZone.ParseXml(tzNav);
+                _timeZone = new CodableValue();
+                _timeZone.ParseXml(tzNav);
             }
         }
 
@@ -211,16 +211,16 @@ namespace Microsoft.HealthVault.ItemTypes
 
             writer.WriteStartElement(nodeName);
 
-            this.date.WriteXml("date", writer);
+            _date.WriteXml("date", writer);
 
-            if (this.time != null)
+            if (_time != null)
             {
-                this.time.WriteXml("time", writer);
+                _time.WriteXml("time", writer);
             }
 
-            if (this.timeZone != null)
+            if (_timeZone != null)
             {
-                this.timeZone.WriteXml("tz", writer);
+                _timeZone.WriteXml("tz", writer);
             }
 
             writer.WriteEndElement();
@@ -296,16 +296,16 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public HealthServiceDate Date
         {
-            get { return this.date; }
+            get { return _date; }
 
             set
             {
-                Validator.ThrowIfArgumentNull(value, nameof(this.Date), Resources.HealthServiceDateTimeDateNull);
-                this.date = value;
+                Validator.ThrowIfArgumentNull(value, nameof(Date), Resources.HealthServiceDateTimeDateNull);
+                _date = value;
             }
         }
 
-        private HealthServiceDate date;
+        private HealthServiceDate _date;
 
         /// <summary>
         /// Gets or sets the time.
@@ -323,11 +323,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public ApproximateTime Time
         {
-            get { return this.time; }
-            set { this.time = value; }
+            get { return _time; }
+            set { _time = value; }
         }
 
-        private ApproximateTime time = new ApproximateTime();
+        private ApproximateTime _time = new ApproximateTime();
 
         /// <summary>
         /// Gets or sets the time zone.
@@ -344,21 +344,21 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public CodableValue TimeZone
         {
-            get { return this.timeZone; }
-            set { this.timeZone = value; }
+            get { return _timeZone; }
+            set { _timeZone = value; }
         }
 
-        private CodableValue timeZone;
+        private CodableValue _timeZone;
 
         internal string ToString(IFormatProvider formatProvider)
         {
             StringBuilder result = new StringBuilder(40);
 
-            result.Append(this.Date.ToString(formatProvider));
+            result.Append(Date.ToString(formatProvider));
 
-            if (this.Time != null)
+            if (Time != null)
             {
-                string time = this.Time.ToString(formatProvider);
+                string time = Time.ToString(formatProvider);
 
                 if (!string.IsNullOrEmpty(time))
                 {
@@ -367,10 +367,10 @@ namespace Microsoft.HealthVault.ItemTypes
                 }
             }
 
-            if (this.TimeZone != null)
+            if (TimeZone != null)
             {
                 result.Append(" ");
-                result.Append(this.TimeZone);
+                result.Append(TimeZone);
             }
 
             return result.ToString();
@@ -414,7 +414,7 @@ namespace Microsoft.HealthVault.ItemTypes
                 try
                 {
                     DateTime dt = (DateTime)obj;
-                    return this.CompareTo(dt);
+                    return CompareTo(dt);
                 }
                 catch (InvalidCastException)
                 {
@@ -422,7 +422,7 @@ namespace Microsoft.HealthVault.ItemTypes
                 }
             }
 
-            return this.CompareTo(hsDate);
+            return CompareTo(hsDate);
         }
 
         /// <summary>
@@ -450,18 +450,18 @@ namespace Microsoft.HealthVault.ItemTypes
                 return 1;
             }
 
-            var result = this.Date.CompareTo(other.Date);
+            var result = Date.CompareTo(other.Date);
 
             if (result != 0 ||
-                this.Time == null ||
-                (this.Time.Hour == 0 &&
-                    this.Time.Minute == 0 &&
-                    this.Time.Second == null))
+                Time == null ||
+                (Time.Hour == 0 &&
+                    Time.Minute == 0 &&
+                    Time.Second == null))
             {
                 return result;
             }
 
-            return this.Time.CompareTo(other.Time);
+            return Time.CompareTo(other.Time);
         }
 
         /// <summary>
@@ -481,32 +481,32 @@ namespace Microsoft.HealthVault.ItemTypes
         /// </returns>
         public int CompareTo(DateTime other)
         {
-            if (this.Date.Year > other.Year)
+            if (Date.Year > other.Year)
             {
                 return 1;
             }
 
-            if (this.Date.Year < other.Year)
+            if (Date.Year < other.Year)
             {
                 return -1;
             }
 
-            if (this.Date.Month > other.Month)
+            if (Date.Month > other.Month)
             {
                 return 1;
             }
 
-            if (this.Date.Month < other.Month)
+            if (Date.Month < other.Month)
             {
                 return -1;
             }
 
-            if (this.Date.Day > other.Day)
+            if (Date.Day > other.Day)
             {
                 return 1;
             }
 
-            if (this.Date.Day < other.Day)
+            if (Date.Day < other.Day)
             {
                 return -1;
             }
@@ -540,7 +540,7 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public override bool Equals(object obj)
         {
-            return this.CompareTo(obj) == 0;
+            return CompareTo(obj) == 0;
         }
 
         /// <summary>

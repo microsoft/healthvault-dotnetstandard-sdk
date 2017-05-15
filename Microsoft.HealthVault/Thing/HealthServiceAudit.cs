@@ -1,7 +1,7 @@
-// Copyright (c) Microsoft Corporation.  All rights reserved. 
+// Copyright (c) Microsoft Corporation.  All rights reserved.
 // MIT License
 // Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the ""Software""), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 //
 // THE SOFTWARE IS PROVIDED *AS IS*, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
@@ -27,22 +27,22 @@ namespace Microsoft.HealthVault.Thing
     {
         internal void ParseXml(XPathNavigator auditNav)
         {
-            this.Timestamp =
+            Timestamp =
                 auditNav.SelectSingleNode("timestamp").ValueAsDateTime;
 
             XPathNavigator nav = auditNav.SelectSingleNode("app-id");
-            this.applicationId = new Guid(nav.Value);
-            this.ApplicationName = nav.GetAttribute("name", string.Empty);
+            _applicationId = new Guid(nav.Value);
+            ApplicationName = nav.GetAttribute("name", string.Empty);
 
             nav = auditNav.SelectSingleNode("person-id");
-            this.personId = new Guid(nav.Value);
-            this.PersonName = nav.GetAttribute("name", string.Empty);
+            _personId = new Guid(nav.Value);
+            PersonName = nav.GetAttribute("name", string.Empty);
 
             nav = auditNav.SelectSingleNode("impersonator-id");
             if (nav != null)
             {
-                this.ImpersonatorId = new Guid(nav.Value);
-                this.ImpersonatorName = nav.GetAttribute("name", string.Empty);
+                ImpersonatorId = new Guid(nav.Value);
+                ImpersonatorName = nav.GetAttribute("name", string.Empty);
             }
 
             nav = auditNav.SelectSingleNode("access-avenue");
@@ -50,13 +50,13 @@ namespace Microsoft.HealthVault.Thing
             {
                 try
                 {
-                    this.AccessAvenue =
+                    AccessAvenue =
                         (HealthServiceAuditAccessAvenue)Enum.Parse(
                             typeof(HealthServiceAuditAccessAvenue), nav.Value);
                 }
                 catch (ArgumentException)
                 {
-                    this.AccessAvenue = HealthServiceAuditAccessAvenue.Unknown;
+                    AccessAvenue = HealthServiceAuditAccessAvenue.Unknown;
                 }
             }
 
@@ -64,61 +64,61 @@ namespace Microsoft.HealthVault.Thing
 
             try
             {
-                this.AuditAction =
+                AuditAction =
                     (HealthServiceAuditAction)Enum.Parse(
                         typeof(HealthServiceAuditAction), nav.Value);
             }
             catch (ArgumentException)
             {
-                this.AuditAction = HealthServiceAuditAction.Unknown;
+                AuditAction = HealthServiceAuditAction.Unknown;
             }
 
             nav = auditNav.SelectSingleNode("master-app-id");
             if (nav != null)
             {
-                this.masterAppId = new Guid(nav.Value);
+                _masterAppId = new Guid(nav.Value);
             }
         }
 
         internal void WriteXml(XmlWriter writer)
         {
-            writer.WriteElementString("timestamp", SDKHelper.XmlFromDateTime(this.Timestamp));
+            writer.WriteElementString("timestamp", SDKHelper.XmlFromDateTime(Timestamp));
 
             writer.WriteStartElement("app-id");
-            writer.WriteAttributeString("name", this.ApplicationName);
-            writer.WriteValue(this.applicationId.ToString());
+            writer.WriteAttributeString("name", ApplicationName);
+            writer.WriteValue(_applicationId.ToString());
             writer.WriteEndElement();
 
             writer.WriteStartElement("person-id");
-            writer.WriteAttributeString("name", this.PersonName);
-            writer.WriteValue(this.personId.ToString());
+            writer.WriteAttributeString("name", PersonName);
+            writer.WriteValue(_personId.ToString());
             writer.WriteEndElement();
 
-            if (this.ImpersonatorId != null)
+            if (ImpersonatorId != null)
             {
                 writer.WriteStartElement("impersonator-id");
-                if (!string.IsNullOrEmpty(this.ImpersonatorName))
+                if (!string.IsNullOrEmpty(ImpersonatorName))
                 {
-                    writer.WriteAttributeString("name", this.ImpersonatorName);
+                    writer.WriteAttributeString("name", ImpersonatorName);
                 }
 
-                writer.WriteValue(this.ImpersonatorId.ToString());
+                writer.WriteValue(ImpersonatorId.ToString());
                 writer.WriteEndElement();
             }
 
-            if (this.AccessAvenue != HealthServiceAuditAccessAvenue.Unknown)
+            if (AccessAvenue != HealthServiceAuditAccessAvenue.Unknown)
             {
-                writer.WriteElementString("access-avenue", this.AccessAvenue.ToString());
+                writer.WriteElementString("access-avenue", AccessAvenue.ToString());
             }
 
-            if (this.AuditAction != HealthServiceAuditAction.Unknown)
+            if (AuditAction != HealthServiceAuditAction.Unknown)
             {
-                writer.WriteElementString("audit-action", this.AuditAction.ToString());
+                writer.WriteElementString("audit-action", AuditAction.ToString());
             }
 
-            if (this.masterAppId != Guid.Empty)
+            if (_masterAppId != Guid.Empty)
             {
-                writer.WriteElementString("master-app-id", this.masterAppId.ToString());
+                writer.WriteElementString("master-app-id", _masterAppId.ToString());
             }
         }
 
@@ -145,9 +145,9 @@ namespace Microsoft.HealthVault.Thing
         /// A Guid representing the unique identifier of the application.
         /// </value>
         ///
-        public Guid ApplicationId => this.applicationId;
+        public Guid ApplicationId => _applicationId;
 
-        private Guid applicationId;
+        private Guid _applicationId;
 
         /// <summary>
         /// Gets the name of the application.
@@ -167,9 +167,9 @@ namespace Microsoft.HealthVault.Thing
         /// A Guid representing the unique identifier of the person.
         /// </value>
         ///
-        public Guid PersonId => this.personId;
+        public Guid PersonId => _personId;
 
-        private Guid personId;
+        private Guid _personId;
 
         /// <summary>
         /// Gets the name of the person.
@@ -241,9 +241,9 @@ namespace Microsoft.HealthVault.Thing
         /// configuration of the application.
         /// </remarks>
         ///
-        public Guid MasterApplicationId => this.masterAppId;
+        public Guid MasterApplicationId => _masterAppId;
 
-        private Guid masterAppId;
+        private Guid _masterAppId;
 
         /// <summary>
         /// Gets a string representation of the object.
@@ -257,7 +257,7 @@ namespace Microsoft.HealthVault.Thing
         ///
         public override string ToString()
         {
-            return $"{this.Timestamp}, {this.applicationId}, {this.personId}, {this.AuditAction}";
+            return $"{Timestamp}, {_applicationId}, {_personId}, {AuditAction}";
         }
     }
 }

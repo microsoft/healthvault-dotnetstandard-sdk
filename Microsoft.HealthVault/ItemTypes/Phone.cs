@@ -40,7 +40,7 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public Phone(string number)
         {
-            this.Number = number;
+            Number = number;
         }
 
         /// <summary>
@@ -67,9 +67,9 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public Phone(string number, string description, bool isPrimary)
         {
-            this.Number = number;
-            this.Description = description;
-            this.IsPrimary = isPrimary;
+            Number = number;
+            Description = description;
+            IsPrimary = isPrimary;
         }
 
         /// <summary>
@@ -93,7 +93,7 @@ namespace Microsoft.HealthVault.ItemTypes
 
             if (descNav != null)
             {
-                this.description = descNav.Value;
+                _description = descNav.Value;
             }
 
             XPathNavigator isPrimaryNav =
@@ -101,10 +101,10 @@ namespace Microsoft.HealthVault.ItemTypes
 
             if (isPrimaryNav != null)
             {
-                this.isPrimary = isPrimaryNav.ValueAsBoolean;
+                _isPrimary = isPrimaryNav.ValueAsBoolean;
             }
 
-            this.number = navigator.SelectSingleNode("number").Value;
+            _number = navigator.SelectSingleNode("number").Value;
         }
 
         /// <summary>
@@ -137,23 +137,23 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             Validator.ThrowIfStringNullOrEmpty(nodeName, "nodeName");
             Validator.ThrowIfWriterNull(writer);
-            Validator.ThrowSerializationIfNull(this.number, Resources.PhoneNumberNotSet);
+            Validator.ThrowSerializationIfNull(_number, Resources.PhoneNumberNotSet);
 
             writer.WriteStartElement(nodeName);
 
-            if (!string.IsNullOrEmpty(this.description))
+            if (!string.IsNullOrEmpty(_description))
             {
-                writer.WriteElementString("description", this.description);
+                writer.WriteElementString("description", _description);
             }
 
-            if (this.isPrimary != null)
+            if (_isPrimary != null)
             {
                 writer.WriteElementString(
                     "is-primary",
-                    SDKHelper.XmlFromBool((bool)this.isPrimary));
+                    SDKHelper.XmlFromBool((bool)_isPrimary));
             }
 
-            writer.WriteElementString("number", this.number);
+            writer.WriteElementString("number", _number);
 
             writer.WriteEndElement();
         }
@@ -172,16 +172,16 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public string Description
         {
-            get { return this.description; }
+            get { return _description; }
 
             set
             {
                 Validator.ThrowIfStringIsWhitespace(value, "Description");
-                this.description = value;
+                _description = value;
             }
         }
 
-        private string description;
+        private string _description;
 
         /// <summary>
         /// Gets or sets a value indicating whether the telephone number is the
@@ -199,11 +199,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public bool? IsPrimary
         {
-            get { return this.isPrimary; }
-            set { this.isPrimary = value; }
+            get { return _isPrimary; }
+            set { _isPrimary = value; }
         }
 
-        private bool? isPrimary;
+        private bool? _isPrimary;
 
         /// <summary>
         /// Gets or sets the telephone number.
@@ -220,16 +220,16 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public string Number
         {
-            get { return this.number; }
+            get { return _number; }
 
             set
             {
                 Validator.ThrowIfStringNullOrEmpty(value, "Number");
                 Validator.ThrowIfStringIsWhitespace(value, "Number");
-                this.number = value;
+                _number = value;
             }
         }
 
-        private string number;
+        private string _number;
     }
 }

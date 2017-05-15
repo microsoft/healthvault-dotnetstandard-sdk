@@ -33,9 +33,9 @@ namespace Microsoft.HealthVault.ItemTypes
             Validator.ThrowIfArgumentNull(name, nameof(name), Resources.ArgumentNull);
             Validator.ThrowIfArgumentNull(contentType, nameof(contentType), Resources.ArgumentNull);
 
-            this.Name = name;
-            this.ContentType = contentType;
-            this.HashInfo = hashInfo;
+            Name = name;
+            ContentType = contentType;
+            HashInfo = hashInfo;
         }
 
         /// <summary>

@@ -11,7 +11,7 @@ namespace Microsoft.HealthVault.Exceptions
         /// Initializes a new instance of the <see cref="MoreThanOneThingException"/> class.
         /// </summary>
         /// <param name="message">The exception message.</param>
-        public MoreThanOneThingException(string message) 
+        public MoreThanOneThingException(string message)
             : base(message)
         {
         }

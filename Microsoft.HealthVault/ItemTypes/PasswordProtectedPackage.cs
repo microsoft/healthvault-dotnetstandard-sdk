@@ -85,9 +85,9 @@ namespace Microsoft.HealthVault.ItemTypes
             int keyLength)
             : base(TypeId)
         {
-            this.PasswordProtectAlgorithm = algorithm;
-            this.Salt = salt;
-            this.KeyLength = keyLength;
+            PasswordProtectAlgorithm = algorithm;
+            Salt = salt;
+            KeyLength = keyLength;
         }
 
         /// <summary>
@@ -123,34 +123,34 @@ namespace Microsoft.HealthVault.ItemTypes
 
             Validator.ThrowInvalidIfNull(packageNav, Resources.PackageUnexpectedNode);
 
-            this.algorithmName =
+            _algorithmName =
                 packageNav.SelectSingleNode("algorithm-name").Value;
 
-            switch (this.algorithmName)
+            switch (_algorithmName)
             {
                 case "none":
-                    this.PasswordProtectAlgorithm = PasswordProtectAlgorithm.None;
+                    PasswordProtectAlgorithm = PasswordProtectAlgorithm.None;
                     break;
 
                 case "hmac-sha1-3des":
-                    this.PasswordProtectAlgorithm = PasswordProtectAlgorithm.HmacSha13Des;
+                    PasswordProtectAlgorithm = PasswordProtectAlgorithm.HmacSha13Des;
                     break;
 
                 case "hmac-sha256-aes256":
-                    this.PasswordProtectAlgorithm = PasswordProtectAlgorithm.HmacSha256Aes256;
+                    PasswordProtectAlgorithm = PasswordProtectAlgorithm.HmacSha256Aes256;
                     break;
 
                 default:
-                    this.PasswordProtectAlgorithm = PasswordProtectAlgorithm.Unknown;
+                    PasswordProtectAlgorithm = PasswordProtectAlgorithm.Unknown;
                     break;
             }
 
-            this.salt = packageNav.SelectSingleNode("parameters/salt").Value;
-            this.hashIterations =
+            _salt = packageNav.SelectSingleNode("parameters/salt").Value;
+            _hashIterations =
                 packageNav.SelectSingleNode(
                     "parameters/iteration-count").ValueAsInt;
 
-            this.keyLength =
+            _keyLength =
                 packageNav.SelectSingleNode(
                     "parameters/key-length").ValueAsInt;
         }
@@ -171,17 +171,17 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             Validator.ThrowIfWriterNull(writer);
 
-            if (this.PasswordProtectAlgorithm == PasswordProtectAlgorithm.Unknown && this.algorithmName == null)
+            if (PasswordProtectAlgorithm == PasswordProtectAlgorithm.Unknown && _algorithmName == null)
             {
                 throw new ThingSerializationException(Resources.PackageAlgorithmNotSet);
             }
 
-            if (string.IsNullOrEmpty(this.salt))
+            if (string.IsNullOrEmpty(_salt))
             {
                 throw new ThingSerializationException(Resources.PackageSaltNotSet);
             }
 
-            if (this.keyLength < 1)
+            if (_keyLength < 1)
             {
                 throw new ThingSerializationException(Resources.PackageKeyLengthNotSet);
             }
@@ -192,7 +192,7 @@ namespace Microsoft.HealthVault.ItemTypes
             // <encrypt-algorithm>
             writer.WriteStartElement("encrypt-algorithm");
 
-            switch (this.PasswordProtectAlgorithm)
+            switch (PasswordProtectAlgorithm)
             {
                 case PasswordProtectAlgorithm.None:
                     writer.WriteElementString("algorithm-name", "none");
@@ -207,20 +207,20 @@ namespace Microsoft.HealthVault.ItemTypes
                     break;
 
                 case PasswordProtectAlgorithm.Unknown:
-                    writer.WriteElementString("algorithm-name", this.algorithmName);
+                    writer.WriteElementString("algorithm-name", _algorithmName);
                     break;
             }
 
             // <parameters>
             writer.WriteStartElement("parameters");
 
-            writer.WriteElementString("salt", this.salt);
+            writer.WriteElementString("salt", _salt);
             writer.WriteElementString(
                 "iteration-count",
-                this.hashIterations.ToString(CultureInfo.InvariantCulture));
+                _hashIterations.ToString(CultureInfo.InvariantCulture));
             writer.WriteElementString(
                 "key-length",
-                this.keyLength.ToString(CultureInfo.InvariantCulture));
+                _keyLength.ToString(CultureInfo.InvariantCulture));
 
             // </parameters>
             writer.WriteEndElement();
@@ -243,7 +243,7 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public PasswordProtectAlgorithm PasswordProtectAlgorithm { get; set; } = PasswordProtectAlgorithm.None;
 
-        private string algorithmName;
+        private string _algorithmName;
 
         /// <summary>
         /// Gets or sets the salt used when encrypting the package.
@@ -266,17 +266,17 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public string Salt
         {
-            get { return this.salt; }
+            get { return _salt; }
 
             set
             {
                 Validator.ThrowIfStringNullOrEmpty(value, "Salt");
                 Validator.ThrowIfStringIsWhitespace(value, "Salt");
-                this.salt = value;
+                _salt = value;
             }
         }
 
-        private string salt;
+        private string _salt;
 
         /// <summary>
         /// Gets or sets the number of hash iterations taken when protecting
@@ -296,22 +296,22 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             get
             {
-                return this.hashIterations;
+                return _hashIterations;
             }
 
             set
             {
                 if (value <= 0)
                 {
-                    throw new ArgumentOutOfRangeException(nameof(this.HashIterations), Resources.PackageHashIterationOutOfRange);
+                    throw new ArgumentOutOfRangeException(nameof(HashIterations), Resources.PackageHashIterationOutOfRange);
                 }
 
-                this.hashIterations = value;
+                _hashIterations = value;
             }
         }
 
         // Default to 20k (same as PFX in Windows)
-        private int hashIterations = 20000;
+        private int _hashIterations = 20000;
 
         /// <summary>
         /// Gets or sets the key length in bits.
@@ -332,20 +332,20 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public int KeyLength
         {
-            get { return this.keyLength; }
+            get { return _keyLength; }
 
             set
             {
                 if (value < 1)
                 {
-                    throw new ArgumentOutOfRangeException(nameof(this.KeyLength), Resources.PackageKeyLengthOutOfRange);
+                    throw new ArgumentOutOfRangeException(nameof(KeyLength), Resources.PackageKeyLengthOutOfRange);
                 }
 
-                this.keyLength = value;
+                _keyLength = value;
             }
         }
 
-        private int keyLength;
+        private int _keyLength;
 
         /// <summary>
         /// Gets a string representation of the password protected package definition.
@@ -358,7 +358,7 @@ namespace Microsoft.HealthVault.ItemTypes
         public override string ToString()
         {
             string result;
-            switch (this.PasswordProtectAlgorithm)
+            switch (PasswordProtectAlgorithm)
             {
                 case PasswordProtectAlgorithm.HmacSha13Des:
                     result = "hmac-sha1-3des";

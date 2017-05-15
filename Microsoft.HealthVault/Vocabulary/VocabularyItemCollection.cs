@@ -16,14 +16,14 @@ namespace Microsoft.HealthVault.Vocabulary
     {
         internal VocabularyItemCollection()
         {
-            this.orderedItemsList = new List<VocabularyItem>(10);
+            _orderedItemsList = new List<VocabularyItem>(10);
         }
 
         /// <summary>
         /// Retrieves the vocabulary items in the intended order for this instance.
         /// </summary>
         ///
-        public ReadOnlyCollection<VocabularyItem> OrderedValues => new ReadOnlyCollection<VocabularyItem>(this.orderedItemsList);
+        public ReadOnlyCollection<VocabularyItem> OrderedValues => new ReadOnlyCollection<VocabularyItem>(_orderedItemsList);
 
         /// <summary>
         /// Retrieves the vocabulary item at the specified index based on the intended order
@@ -34,14 +34,14 @@ namespace Microsoft.HealthVault.Vocabulary
         ///
         /// <returns>The vocabulary item at the requested index</returns>
         ///
-        public VocabularyItem this[int index] => this.orderedItemsList[index];
+        public VocabularyItem this[int index] => _orderedItemsList[index];
 
         internal override void AddVocabularyItem(string key, VocabularyItem item)
         {
             base.AddVocabularyItem(key, item);
-            this.orderedItemsList.Add(item);
+            _orderedItemsList.Add(item);
         }
 
-        private readonly List<VocabularyItem> orderedItemsList;
+        private readonly List<VocabularyItem> _orderedItemsList;
     }
 }

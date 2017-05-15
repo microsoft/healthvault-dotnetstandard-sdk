@@ -5,6 +5,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml;
@@ -13,9 +14,8 @@ using Microsoft.HealthVault.Application;
 using Microsoft.HealthVault.Connection;
 using Microsoft.HealthVault.Exceptions;
 using Microsoft.HealthVault.Helpers;
-using Microsoft.HealthVault.Transport;
-using System.Globalization;
 using Microsoft.HealthVault.Thing;
+using Microsoft.HealthVault.Transport;
 
 namespace Microsoft.HealthVault.PlatformInformation
 {
@@ -343,9 +343,9 @@ namespace Microsoft.HealthVault.PlatformInformation
         ///
         public virtual void ClearItemTypeCache()
         {
-            lock (this.sectionCache)
+            lock (sectionCache)
             {
-                this.sectionCache.Clear();
+                sectionCache.Clear();
             }
         }
 
@@ -426,7 +426,7 @@ namespace Microsoft.HealthVault.PlatformInformation
 
             if (lastClientRefreshDate != null)
             {
-                return await this.GetHealthRecordItemTypeDefinitionByDateAsync(
+                return await GetHealthRecordItemTypeDefinitionByDateAsync(
                     typeIds,
                     sections,
                     imageTypes,
@@ -434,7 +434,7 @@ namespace Microsoft.HealthVault.PlatformInformation
                     connection).ConfigureAwait(false);
             }
 
-            return await this.GetHealthRecordItemTypeDefinitionNoDateAsync(
+            return await GetHealthRecordItemTypeDefinitionNoDateAsync(
                 typeIds,
                 sections,
                 imageTypes,
@@ -463,21 +463,21 @@ namespace Microsoft.HealthVault.PlatformInformation
                 {
                     foreach (Guid id in typeIds)
                     {
-                        lock (this.sectionCache)
+                        lock (sectionCache)
                         {
-                            if (!this.sectionCache.ContainsKey(cultureName))
+                            if (!sectionCache.ContainsKey(cultureName))
                             {
-                                this.sectionCache.Add(
+                                sectionCache.Add(
                                     cultureName,
                                     new Dictionary<ThingTypeSections, Dictionary<Guid, ThingTypeDefinition>>());
                             }
 
-                            if (!this.sectionCache[cultureName].ContainsKey(sections))
+                            if (!sectionCache[cultureName].ContainsKey(sections))
                             {
-                                this.sectionCache[cultureName].Add(sections, new Dictionary<Guid, ThingTypeDefinition>());
+                                sectionCache[cultureName].Add(sections, new Dictionary<Guid, ThingTypeDefinition>());
                             }
 
-                            if (this.sectionCache[cultureName][sections].ContainsKey(id))
+                            if (sectionCache[cultureName][sections].ContainsKey(id))
                             {
                                 if (cachedThingTypes == null)
                                 {
@@ -485,7 +485,7 @@ namespace Microsoft.HealthVault.PlatformInformation
                                         new Dictionary<Guid, ThingTypeDefinition>();
                                 }
 
-                                cachedThingTypes[id] = this.sectionCache[cultureName][sections][id];
+                                cachedThingTypes[id] = sectionCache[cultureName][sections][id];
                             }
                             else
                             {
@@ -502,22 +502,22 @@ namespace Microsoft.HealthVault.PlatformInformation
                 }
                 else
                 {
-                    lock (this.sectionCache)
+                    lock (sectionCache)
                     {
-                        if (!this.sectionCache.ContainsKey(cultureName))
+                        if (!sectionCache.ContainsKey(cultureName))
                         {
-                            this.sectionCache.Add(
+                            sectionCache.Add(
                                 cultureName,
                                 new Dictionary<ThingTypeSections, Dictionary<Guid, ThingTypeDefinition>>());
                         }
 
-                        if (!this.sectionCache[cultureName].ContainsKey(sections))
+                        if (!sectionCache[cultureName].ContainsKey(sections))
                         {
-                            this.sectionCache[cultureName].Add(sections, new Dictionary<Guid, ThingTypeDefinition>());
+                            sectionCache[cultureName].Add(sections, new Dictionary<Guid, ThingTypeDefinition>());
                         }
                         else
                         {
-                            cachedThingTypes = this.sectionCache[cultureName][sections];
+                            cachedThingTypes = sectionCache[cultureName][sections];
                         }
                     }
 
@@ -551,17 +551,17 @@ namespace Microsoft.HealthVault.PlatformInformation
                     requestParameters.ToString()).ConfigureAwait(false);
 
                 Dictionary<Guid, ThingTypeDefinition> result =
-                    this.CreateThingTypesFromResponse(
+                    CreateThingTypesFromResponse(
                         cultureName,
                         responseData,
                         sections,
                         cachedThingTypes);
 
-                lock (this.sectionCache)
+                lock (sectionCache)
                 {
                     foreach (Guid id in result.Keys)
                     {
-                        this.sectionCache[cultureName][sections][id] = result[id];
+                        sectionCache[cultureName][sections][id] = result[id];
                     }
                 }
 
@@ -621,15 +621,15 @@ namespace Microsoft.HealthVault.PlatformInformation
                     requestParameters.ToString()).ConfigureAwait(false);
 
                 Dictionary<Guid, ThingTypeDefinition> result =
-                    this.CreateThingTypesFromResponse(
+                    CreateThingTypesFromResponse(
                         CultureInfo.CurrentCulture.Name,
                         responseData,
                         sections,
                         null);
 
-                lock (this.sectionCache)
+                lock (sectionCache)
                 {
-                    this.sectionCache[CultureInfo.CurrentCulture.Name][sections] = result;
+                    sectionCache[CultureInfo.CurrentCulture.Name][sections] = result;
                 }
 
                 return result;
@@ -710,16 +710,16 @@ namespace Microsoft.HealthVault.PlatformInformation
             XPathNodeIterator thingTypesIterator =
                 response.InfoNavigator.Select("thing-type");
 
-            lock (this.sectionCache)
+            lock (sectionCache)
             {
-                if (!this.sectionCache.ContainsKey(cultureName))
+                if (!sectionCache.ContainsKey(cultureName))
                 {
-                    this.sectionCache.Add(cultureName, new Dictionary<ThingTypeSections, Dictionary<Guid, ThingTypeDefinition>>());
+                    sectionCache.Add(cultureName, new Dictionary<ThingTypeSections, Dictionary<Guid, ThingTypeDefinition>>());
                 }
 
-                if (!this.sectionCache[cultureName].ContainsKey(sections))
+                if (!sectionCache[cultureName].ContainsKey(sections))
                 {
-                    this.sectionCache[cultureName].Add(sections, new Dictionary<Guid, ThingTypeDefinition>());
+                    sectionCache[cultureName].Add(sections, new Dictionary<Guid, ThingTypeDefinition>());
                 }
 
                 foreach (XPathNavigator navigator in thingTypesIterator)
@@ -727,7 +727,7 @@ namespace Microsoft.HealthVault.PlatformInformation
                     ThingTypeDefinition thingType =
                         ThingTypeDefinition.CreateFromXml(navigator);
 
-                    this.sectionCache[cultureName][sections][thingType.TypeId] = thingType;
+                    sectionCache[cultureName][sections][thingType.TypeId] = thingType;
                     thingTypes[thingType.TypeId] = thingType;
                 }
             }

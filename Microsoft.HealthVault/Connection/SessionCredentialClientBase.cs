@@ -1,12 +1,12 @@
-﻿using Microsoft.HealthVault.Configuration;
-using Microsoft.HealthVault.Helpers;
-using Microsoft.HealthVault.Transport;
-using System;
+﻿using System;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.XPath;
+using Microsoft.HealthVault.Configuration;
+using Microsoft.HealthVault.Helpers;
+using Microsoft.HealthVault.Transport;
 
 namespace Microsoft.HealthVault.Connection
 {
@@ -16,16 +16,16 @@ namespace Microsoft.HealthVault.Connection
 
         public async Task<SessionCredential> GetSessionCredentialAsync(CancellationToken token)
         {
-            if (this.Connection == null)
+            if (Connection == null)
             {
-                throw new NotSupportedException($"{nameof(this.Connection)} is required");
+                throw new NotSupportedException($"{nameof(Connection)} is required");
             }
 
-            HealthServiceResponseData responseData = await this.Connection
-                .ExecuteAsync(HealthVaultMethods.CreateAuthenticatedSessionToken, 2, this.ConstructCreateTokenInfoXml())
+            HealthServiceResponseData responseData = await Connection
+                .ExecuteAsync(HealthVaultMethods.CreateAuthenticatedSessionToken, 2, ConstructCreateTokenInfoXml())
                 .ConfigureAwait(false);
 
-            return this.GetSessionCredential(responseData);
+            return GetSessionCredential(responseData);
         }
 
         public virtual string ConstructCreateTokenInfoXml()
@@ -38,10 +38,10 @@ namespace Microsoft.HealthVault.Connection
                 // Add the PersonInfo elements
                 writer.WriteStartElement("auth-info");
 
-                this.ConstructCreateTokenInfoXmlAppIdPart(writer);
+                ConstructCreateTokenInfoXmlAppIdPart(writer);
 
                 writer.WriteStartElement("credential");
-                this.WriteInfoXml(writer);
+                WriteInfoXml(writer);
                 writer.WriteEndElement();
 
                 writer.WriteEndElement();
@@ -58,7 +58,7 @@ namespace Microsoft.HealthVault.Connection
                 throw new ArgumentNullException($"{nameof(responseData)}");
             }
 
-            SessionCredential sessionCredential = this.GetAuthenticationToken(responseData.InfoNavigator);
+            SessionCredential sessionCredential = GetAuthenticationToken(responseData.InfoNavigator);
 
             return sessionCredential;
         }
@@ -77,7 +77,7 @@ namespace Microsoft.HealthVault.Connection
         {
             SessionCredential sessionCredential = new SessionCredential();
 
-            XPathExpression authTokenPath = this.GetAuthTokenXPath(nav);
+            XPathExpression authTokenPath = GetAuthTokenXPath(nav);
             XPathNodeIterator navTokenIterator = nav.Select(authTokenPath);
 
             GetTokenByParseResponse(navTokenIterator, sessionCredential);
@@ -90,7 +90,7 @@ namespace Microsoft.HealthVault.Connection
 
         private XPathExpression GetAuthTokenXPath(XPathNavigator infoNav)
         {
-            return this.GetTokenXPathExpression(infoNav, "/wc:info/token");
+            return GetTokenXPathExpression(infoNav, "/wc:info/token");
         }
 
         private XPathExpression GetTokenXPathExpression(
@@ -142,7 +142,7 @@ namespace Microsoft.HealthVault.Connection
                 writer.WriteAttributeString("is-multi-record-app", "true");
             }
 
-            writer.WriteValue(this.Connection.ApplicationId.ToString());
+            writer.WriteValue(Connection.ApplicationId.ToString());
             writer.WriteEndElement();
         }
 

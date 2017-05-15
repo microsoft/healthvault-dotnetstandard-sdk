@@ -55,7 +55,7 @@ namespace Microsoft.HealthVault.ItemTypes
         public PeakFlow(ApproximateDateTime when)
             : base(TypeId)
         {
-            this.When = when;
+            When = when;
         }
 
         /// <summary>
@@ -86,32 +86,32 @@ namespace Microsoft.HealthVault.ItemTypes
 
             Validator.ThrowInvalidIfNull(itemNav, Resources.PeakFlowUnexpectedNode);
 
-            this.when = new ApproximateDateTime();
-            this.when.ParseXml(itemNav.SelectSingleNode("when"));
+            _when = new ApproximateDateTime();
+            _when.ParseXml(itemNav.SelectSingleNode("when"));
 
-            this.peakExpiratoryFlow =
+            _peakExpiratoryFlow =
                 XPathHelper.GetOptNavValue<FlowMeasurement>(
                     itemNav,
                     "pef");
 
-            this.fev1 =
+            _fev1 =
                 XPathHelper.GetOptNavValue<VolumeMeasurement>(
                     itemNav,
                     "fev1");
 
-            this.fev6 =
+            _fev6 =
                 XPathHelper.GetOptNavValue<VolumeMeasurement>(
                     itemNav,
                     "fev6");
 
-            this.measurementFlags.Clear();
+            _measurementFlags.Clear();
             XPathNodeIterator measurementFlagsIterator = itemNav.Select("measurement-flags");
             foreach (XPathNavigator flagNav in measurementFlagsIterator)
             {
                 CodableValue flag = new CodableValue();
                 flag.ParseXml(flagNav);
 
-                this.measurementFlags.Add(flag);
+                _measurementFlags.Add(flag);
             }
         }
 
@@ -134,30 +134,30 @@ namespace Microsoft.HealthVault.ItemTypes
         public override void WriteXml(XmlWriter writer)
         {
             Validator.ThrowIfWriterNull(writer);
-            Validator.ThrowSerializationIfNull(this.when, Resources.PeakFlowWhenNotSet);
+            Validator.ThrowSerializationIfNull(_when, Resources.PeakFlowWhenNotSet);
 
             // <peak-flow>
             writer.WriteStartElement("peak-flow");
 
             // <when>
-            this.when.WriteXml("when", writer);
+            _when.WriteXml("when", writer);
 
             XmlWriterHelper.WriteOpt(
                 writer,
                 "pef",
-                this.peakExpiratoryFlow);
+                _peakExpiratoryFlow);
 
             XmlWriterHelper.WriteOpt(
                 writer,
                 "fev1",
-                this.fev1);
+                _fev1);
 
             XmlWriterHelper.WriteOpt(
                 writer,
                 "fev6",
-                this.fev6);
+                _fev6);
 
-            foreach (CodableValue flag in this.measurementFlags)
+            foreach (CodableValue flag in _measurementFlags)
             {
                 flag.WriteXml("measurement-flags", writer);
             }
@@ -185,16 +185,16 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public ApproximateDateTime When
         {
-            get { return this.when; }
+            get { return _when; }
 
             set
             {
-                Validator.ThrowIfArgumentNull(value, nameof(this.When), Resources.WhenNullValue);
-                this.when = value;
+                Validator.ThrowIfArgumentNull(value, nameof(When), Resources.WhenNullValue);
+                _when = value;
             }
         }
 
-        private ApproximateDateTime when = new ApproximateDateTime();
+        private ApproximateDateTime _when = new ApproximateDateTime();
 
         /// <summary>
         /// Gets or sets the peak expiratory flow measured in liters per
@@ -212,11 +212,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public FlowMeasurement Pef
         {
-            get { return this.peakExpiratoryFlow; }
-            set { this.peakExpiratoryFlow = value; }
+            get { return _peakExpiratoryFlow; }
+            set { _peakExpiratoryFlow = value; }
         }
 
-        private FlowMeasurement peakExpiratoryFlow;
+        private FlowMeasurement _peakExpiratoryFlow;
 
         /// <summary>
         /// Gets or sets the forced expiratory volume in one second, measured in
@@ -234,11 +234,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public VolumeMeasurement Fev1
         {
-            get { return this.fev1; }
-            set { this.fev1 = value; }
+            get { return _fev1; }
+            set { _fev1 = value; }
         }
 
-        private VolumeMeasurement fev1;
+        private VolumeMeasurement _fev1;
 
         /// <summary>
         /// Gets or sets the forced expiratory volume in six seconds, measured in
@@ -256,11 +256,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public VolumeMeasurement Fev6
         {
-            get { return this.fev6; }
-            set { this.fev6 = value; }
+            get { return _fev6; }
+            set { _fev6 = value; }
         }
 
-        private VolumeMeasurement fev6;
+        private VolumeMeasurement _fev6;
 
         /// <summary>
         /// Gets a collection of additional information about the measurement.
@@ -274,9 +274,9 @@ namespace Microsoft.HealthVault.ItemTypes
         /// Examples: incomplete measurement.
         /// </remarks>
         ///
-        public Collection<CodableValue> MeasurementFlags => this.measurementFlags;
+        public Collection<CodableValue> MeasurementFlags => _measurementFlags;
 
-        private readonly Collection<CodableValue> measurementFlags = new Collection<CodableValue>();
+        private readonly Collection<CodableValue> _measurementFlags = new Collection<CodableValue>();
 
         /// <summary>
         /// Gets a string representation of the peak flow reading.
@@ -290,59 +290,59 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             string result = string.Empty;
 
-            if (this.Pef != null && this.Fev1 != null && this.Fev6 != null)
+            if (Pef != null && Fev1 != null && Fev6 != null)
             {
                 result =
                     string.Format(
                         Resources.PeakFlowToStringFormatPefFev1Fev6,
-                        this.Pef.ToString(),
-                        this.Fev1.ToString(),
-                        this.Fev6.ToString());
+                        Pef.ToString(),
+                        Fev1.ToString(),
+                        Fev6.ToString());
             }
-            else if (this.Pef != null && this.Fev1 != null)
+            else if (Pef != null && Fev1 != null)
             {
                 result =
                     string.Format(
                         Resources.PeakFlowToStringFormatPefFev1,
-                        this.Pef.ToString(),
-                        this.Fev1.ToString());
+                        Pef.ToString(),
+                        Fev1.ToString());
             }
-            else if (this.Pef != null && this.Fev6 != null)
+            else if (Pef != null && Fev6 != null)
             {
                 result =
                     string.Format(
                         Resources.PeakFlowToStringFormatPefFev6,
-                        this.Pef.ToString(),
-                        this.Fev6.ToString());
+                        Pef.ToString(),
+                        Fev6.ToString());
             }
-            else if (this.Fev1 != null && this.Fev6 != null)
+            else if (Fev1 != null && Fev6 != null)
             {
                 result =
                     string.Format(
                         Resources.PeakFlowToStringFormatFev1Fev6,
-                        this.Fev1.ToString(),
-                        this.Fev6.ToString());
+                        Fev1.ToString(),
+                        Fev6.ToString());
             }
-            else if (this.Pef != null)
+            else if (Pef != null)
             {
                 result =
                     string.Format(
                         Resources.PeakFlowToStringFormatPef,
-                        this.Pef.ToString());
+                        Pef.ToString());
             }
-            else if (this.Fev1 != null)
+            else if (Fev1 != null)
             {
                 result =
                     string.Format(
                         Resources.PeakFlowToStringFormatFev1,
-                        this.Fev1.ToString());
+                        Fev1.ToString());
             }
-            else if (this.Fev6 != null)
+            else if (Fev6 != null)
             {
                 result =
                     string.Format(
                         Resources.PeakFlowToStringFormatFev6,
-                        this.Fev6.ToString());
+                        Fev6.ToString());
             }
 
             return result;

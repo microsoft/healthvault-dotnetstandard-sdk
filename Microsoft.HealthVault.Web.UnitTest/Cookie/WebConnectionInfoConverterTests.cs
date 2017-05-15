@@ -1,7 +1,7 @@
-﻿// Copyright (c) Microsoft Corporation.  All rights reserved. 
+﻿// Copyright (c) Microsoft Corporation.  All rights reserved.
 // MIT License
 // Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the ""Software""), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 //
 // THE SOFTWARE IS PROVIDED *AS IS*, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
@@ -32,18 +32,18 @@ namespace Microsoft.HealthVault.Web.UnitTest.Cookie
         /// Verifies when serialized WebConnectionInfo is less than
         /// acceptable cookie size, WebConnectionInfoConverter serializes all
         /// the properties - though we only are testing serviceInstanceId, it
-        /// should suffice the assumption that the converter is not doing any 
+        /// should suffice the assumption that the converter is not doing any
         /// additional changes.
         /// </summary>
         [TestMethod]
         public void WhenWebConnectionInfoIsLessThanCookieSize()
         {
             // Arrange
-            WebConnectionInfo webConnectionInfo = this.CreateWebConnectionInfo();
+            WebConnectionInfo webConnectionInfo = CreateWebConnectionInfo();
             JsonWriter mockedJsonWriter = Substitute.For<JsonWriter>();
 
             // Act
-            this.Serialize(mockedJsonWriter, webConnectionInfo);
+            Serialize(mockedJsonWriter, webConnectionInfo);
 
             // Assert
             mockedJsonWriter.Received().WriteValue(Arg.Is<string>(x => x.Contains("ServiceInstanceId")));
@@ -58,12 +58,12 @@ namespace Microsoft.HealthVault.Web.UnitTest.Cookie
         public void WhenApplicationSettingsMakeWebConnectionInfoGreaterThanCookieSize()
         {
             // Arrange
-            var applicationSettingDocument = this.CreateApplicationSettingDocumentBiggerThanCookieSize();
-            WebConnectionInfo webConnectionInfo = this.CreateWebConnectionInfo(null, applicationSettingDocument);
+            var applicationSettingDocument = CreateApplicationSettingDocumentBiggerThanCookieSize();
+            WebConnectionInfo webConnectionInfo = CreateWebConnectionInfo(null, applicationSettingDocument);
             JsonWriter mockedJsonWriter = Substitute.For<JsonWriter>();
 
             // Act
-            this.Serialize(mockedJsonWriter, webConnectionInfo);
+            Serialize(mockedJsonWriter, webConnectionInfo);
 
             // Assert
             // Verify that person info application settings has been minimized
@@ -80,12 +80,12 @@ namespace Microsoft.HealthVault.Web.UnitTest.Cookie
         public void WhenAuthorizedRecordsMakeWebConnectionInfoGreaterThanCookieSize()
         {
             // Arrange
-            var healthRecordInfos = this.CreateHealthRecordInfosToMakeCookieSizeLarge();
-            WebConnectionInfo webConnectionInfo = this.CreateWebConnectionInfo(healthRecordInfos);
+            var healthRecordInfos = CreateHealthRecordInfosToMakeCookieSizeLarge();
+            WebConnectionInfo webConnectionInfo = CreateWebConnectionInfo(healthRecordInfos);
             JsonWriter mockedJsonWriter = Substitute.For<JsonWriter>();
 
             // Act
-            this.Serialize(mockedJsonWriter, webConnectionInfo);
+            Serialize(mockedJsonWriter, webConnectionInfo);
 
             // Assert
             // Verify that person info authorized records have been minimized
@@ -94,20 +94,20 @@ namespace Microsoft.HealthVault.Web.UnitTest.Cookie
         }
 
         /// <summary>
-        /// Verifies when application settings and authorized records exist in the person info and make 
-        /// the serialized string greater than cookie size, then the converter 
-        /// minimizes the application settings and authorized records and sets the MinimizedPersonInfoApplicationSettings 
+        /// Verifies when application settings and authorized records exist in the person info and make
+        /// the serialized string greater than cookie size, then the converter
+        /// minimizes the application settings and authorized records and sets the MinimizedPersonInfoApplicationSettings
         /// and MinimizedPersonInfoRecords property to true.
         /// </summary>
         [TestMethod]
         public void WhenBothAuthorizedRecordsAndApplicationSettingsMakeCookieSizeBig()
         {
-            var applicationSettingDocument = this.CreateApplicationSettingDocumentBiggerThanCookieSize();
-            var healthRecordInfos = this.CreateHealthRecordInfosToMakeCookieSizeLarge();
-            WebConnectionInfo webConnectionInfo = this.CreateWebConnectionInfo(healthRecordInfos, applicationSettingDocument);
+            var applicationSettingDocument = CreateApplicationSettingDocumentBiggerThanCookieSize();
+            var healthRecordInfos = CreateHealthRecordInfosToMakeCookieSizeLarge();
+            WebConnectionInfo webConnectionInfo = CreateWebConnectionInfo(healthRecordInfos, applicationSettingDocument);
             JsonWriter mockedJsonWriter = Substitute.For<JsonWriter>();
 
-            this.Serialize(mockedJsonWriter, webConnectionInfo);
+            Serialize(mockedJsonWriter, webConnectionInfo);
 
             // Verify that person info authorized records have been minimized
             mockedJsonWriter.Received().WriteValue(
@@ -162,7 +162,7 @@ namespace Microsoft.HealthVault.Web.UnitTest.Cookie
         {
             Dictionary<Guid, HealthRecordInfo> healthRecordInfos = new Dictionary<Guid, HealthRecordInfo>(1000);
 
-            // Create authorized records to be greater than 1000. This will make the cooie size of webconnectioninfo to 
+            // Create authorized records to be greater than 1000. This will make the cooie size of webconnectioninfo to
             // be greater than 4093.
             for (int i = 0; i < 1000; i++)
             {

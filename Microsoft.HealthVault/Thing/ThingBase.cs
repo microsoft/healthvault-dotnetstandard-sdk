@@ -13,7 +13,6 @@ using System.Xml.XPath;
 using Microsoft.HealthVault.Exceptions;
 using Microsoft.HealthVault.Helpers;
 using Microsoft.HealthVault.ItemTypes;
-using Microsoft.HealthVault.PlatformInformation;
 
 namespace Microsoft.HealthVault.Thing
 {
@@ -44,8 +43,8 @@ namespace Microsoft.HealthVault.Thing
         ///
         protected internal ThingBase(Guid typeId)
         {
-            this.TypeId = typeId;
-            this.tags = new TagsCollection(this);
+            TypeId = typeId;
+            _tags = new TagsCollection(this);
         }
 
         /// <summary>
@@ -70,7 +69,7 @@ namespace Microsoft.HealthVault.Thing
         public ThingBase(Guid typeId, IXPathNavigable typeSpecificData)
             : this(typeId)
         {
-            this.TypeSpecificData = typeSpecificData;
+            TypeSpecificData = typeSpecificData;
         }
 
         /// <summary>
@@ -111,7 +110,7 @@ namespace Microsoft.HealthVault.Thing
         ///
         public virtual void WriteXml(XmlWriter writer)
         {
-            writer.WriteNode(this.TypeSpecificData.CreateNavigator().ReadSubtree(), true);
+            writer.WriteNode(TypeSpecificData.CreateNavigator().ReadSubtree(), true);
         }
 
         /// <summary>
@@ -121,7 +120,7 @@ namespace Microsoft.HealthVault.Thing
         ///
         internal void ClearDirtyFlags()
         {
-            this.areFlagsDirty = false;
+            _areFlagsDirty = false;
         }
 
         /// <summary>
@@ -184,20 +183,20 @@ namespace Microsoft.HealthVault.Thing
         ///
         public DateTime EffectiveDate
         {
-            get { return this.effectiveDate; }
+            get { return _effectiveDate; }
 
             set
             {
-                if (this.effectiveDate != value)
+                if (_effectiveDate != value)
                 {
-                    this.effectiveDate = value;
-                    this.effectiveDateDirty = true;
+                    _effectiveDate = value;
+                    _effectiveDateDirty = true;
                 }
             }
         }
 
-        private DateTime effectiveDate = SDKHelper.DateUnspecified;
-        private bool effectiveDateDirty;
+        private DateTime _effectiveDate = SDKHelper.DateUnspecified;
+        private bool _effectiveDateDirty;
 
         /// <summary>
         /// Gets the state of the <see cref="ThingBase"/>.
@@ -225,21 +224,21 @@ namespace Microsoft.HealthVault.Thing
         {
             get
             {
-                return this.flags;
+                return _flags;
             }
 
             set
             {
-                if (this.flags != value)
+                if (_flags != value)
                 {
-                    this.areFlagsDirty = true;
-                    this.flags = value;
+                    _areFlagsDirty = true;
+                    _flags = value;
                 }
             }
         }
 
-        private ThingFlags flags;
-        private bool areFlagsDirty;
+        private ThingFlags _flags;
+        private bool _areFlagsDirty;
 
         /// <summary>
         /// Gets or sets the value indicating if the <see cref="ThingBase"/> is private.
@@ -254,17 +253,17 @@ namespace Microsoft.HealthVault.Thing
         ///
         public bool IsPersonal
         {
-            get { return this.IsFlagSet(ThingFlags.Personal); }
+            get { return IsFlagSet(ThingFlags.Personal); }
 
             set
             {
                 if (value)
                 {
-                    this.SetFlag(ThingFlags.Personal);
+                    SetFlag(ThingFlags.Personal);
                 }
                 else
                 {
-                    this.ClearFlag(ThingFlags.Personal);
+                    ClearFlag(ThingFlags.Personal);
                 }
             }
         }
@@ -278,7 +277,7 @@ namespace Microsoft.HealthVault.Thing
         /// will fail.
         /// </remarks>
         ///
-        public bool IsDownVersioned => this.IsFlagSet(ThingFlags.DownVersioned);
+        public bool IsDownVersioned => IsFlagSet(ThingFlags.DownVersioned);
 
         /// <summary>
         /// Gets the value indicating if the <see cref="ThingBase"/> is up-versioned.
@@ -290,7 +289,7 @@ namespace Microsoft.HealthVault.Thing
         /// type version which may cause data loss in some cases.
         /// </remarks>
         ///
-        public bool IsUpVersioned => this.IsFlagSet(ThingFlags.UpVersioned);
+        public bool IsUpVersioned => IsFlagSet(ThingFlags.UpVersioned);
 
         /// <summary>
         /// Gets or sets the date when ThingBase is not relevant.
@@ -305,21 +304,21 @@ namespace Microsoft.HealthVault.Thing
         {
             get
             {
-                return this.updatedEndDate;
+                return _updatedEndDate;
             }
 
             set
             {
-                if (this.updatedEndDate != value)
+                if (_updatedEndDate != value)
                 {
-                    this.updatedEndDate = value;
-                    this.updatedEndDateDirty = true;
+                    _updatedEndDate = value;
+                    _updatedEndDateDirty = true;
                 }
             }
         }
 
-        private DateTime updatedEndDate = DateTime.MaxValue;
-        private bool updatedEndDateDirty;
+        private DateTime _updatedEndDate = DateTime.MaxValue;
+        private bool _updatedEndDateDirty;
 
         #endregion Core information
 
@@ -418,19 +417,19 @@ namespace Microsoft.HealthVault.Thing
         {
             get
             {
-                return this.IsImmutable || this.IsFlagSet(ThingFlags.ReadOnly);
+                return IsImmutable || IsFlagSet(ThingFlags.ReadOnly);
             }
 
             set
             {
-                if (!value && (this.IsFlagSet(ThingFlags.ReadOnly) || this.IsImmutable))
+                if (!value && (IsFlagSet(ThingFlags.ReadOnly) || IsImmutable))
                 {
                     throw new InvalidOperationException(Resources.CannotChangeImmutableFlag);
                 }
 
                 if (value)
                 {
-                    this.SetFlag(ThingFlags.ReadOnly);
+                    SetFlag(ThingFlags.ReadOnly);
                 }
             }
         }
@@ -477,10 +476,10 @@ namespace Microsoft.HealthVault.Thing
         /// set though it will not contain data unless a transform was
         /// specified when getting the item.
         /// </remarks>
-        /// 
-        public IDictionary<string, XDocument> TransformedXmlData => this.transformedData;
+        ///
+        public IDictionary<string, XDocument> TransformedXmlData => _transformedData;
 
-        private readonly Dictionary<string, XDocument> transformedData =
+        private readonly Dictionary<string, XDocument> _transformedData =
             new Dictionary<string, XDocument>(StringComparer.OrdinalIgnoreCase);
 
         /// <summary>
@@ -532,19 +531,19 @@ namespace Microsoft.HealthVault.Thing
         ///
         internal BlobStore GetBlobStore(HealthRecordAccessor record)
         {
-            if (this.blobStore == null)
+            if (_blobStore == null)
             {
-                this.blobStore = new BlobStore(this, record);
+                _blobStore = new BlobStore(this, record);
             }
             else
             {
-                this.blobStore.Record = record;
+                _blobStore.Record = record;
             }
 
-            return this.blobStore;
+            return _blobStore;
         }
 
-        private BlobStore blobStore;
+        private BlobStore _blobStore;
 
         #endregion Blobs
 
@@ -558,47 +557,47 @@ namespace Microsoft.HealthVault.Thing
         /// A string representing the tag list.
         /// </value>
         ///
-        public Collection<string> Tags => this.tags;
+        public Collection<string> Tags => _tags;
 
-        private TagsCollection tags;
+        private TagsCollection _tags;
 
         private class TagsCollection : Collection<string>
         {
             internal TagsCollection(ThingBase item)
             {
-                this.item = item;
+                _item = item;
             }
 
             internal TagsCollection(ThingBase item, IList<string> list)
                 : base(list)
             {
-                this.item = item;
+                _item = item;
             }
 
-            private readonly ThingBase item;
+            private readonly ThingBase _item;
 
             protected override void ClearItems()
             {
                 base.ClearItems();
-                this.item.Sections |= ThingSections.Tags;
+                _item.Sections |= ThingSections.Tags;
             }
 
             protected override void InsertItem(int index, string itemToInsert)
             {
                 base.InsertItem(index, itemToInsert);
-                this.item.Sections |= ThingSections.Tags;
+                _item.Sections |= ThingSections.Tags;
             }
 
             protected override void RemoveItem(int index)
             {
                 base.RemoveItem(index);
-                this.item.Sections |= ThingSections.Tags;
+                _item.Sections |= ThingSections.Tags;
             }
 
             protected override void SetItem(int index, string itemToInsert)
             {
                 base.SetItem(index, itemToInsert);
-                this.item.Sections |= ThingSections.Tags;
+                _item.Sections |= ThingSections.Tags;
             }
         }
 
@@ -642,9 +641,9 @@ namespace Microsoft.HealthVault.Thing
 
             using (XmlWriter writer = XmlWriter.Create(thingXml, settings))
             {
-                this.AddXmlPutThingsRequestParameters(writer);
-                this.AddBlobPayloadPutThingsRequestParameters(writer);
-                this.AddTagsPutThingsRequestParameters(writer);
+                AddXmlPutThingsRequestParameters(writer);
+                AddBlobPayloadPutThingsRequestParameters(writer);
+                AddTagsPutThingsRequestParameters(writer);
             }
 
             byte[] bytes = Encoding.UTF8.GetBytes(thingXml.ToString());
@@ -670,15 +669,15 @@ namespace Microsoft.HealthVault.Thing
         ///
         public string GetItemXml(string elementName = "thing")
         {
-            ThingSections sections = this.Sections;
+            ThingSections sections = Sections;
 
             // Add the tags section if there are tags present
-            if (this.tags != null && this.tags.Count > 0)
+            if (_tags != null && _tags.Count > 0)
             {
                 sections |= ThingSections.Tags;
             }
 
-            return this.GetItemXml(sections, elementName);
+            return GetItemXml(sections, elementName);
         }
 
         /// <summary>
@@ -712,7 +711,7 @@ namespace Microsoft.HealthVault.Thing
 
             using (XmlWriter writer = XmlWriter.Create(thingXml, settings))
             {
-                this.WriteItemXml(writer, sections, true, elementName);
+                WriteItemXml(writer, sections, true, elementName);
             }
 
             return thingXml.ToString();
@@ -720,30 +719,30 @@ namespace Microsoft.HealthVault.Thing
 
         public bool WriteItemXml(XmlWriter infoXmlWriter)
         {
-            return this.WriteItemXml(infoXmlWriter, true);
+            return WriteItemXml(infoXmlWriter, true);
         }
 
         internal bool WriteItemXml(XmlWriter infoXmlWriter, string elementName)
         {
-            return this.WriteItemXml(infoXmlWriter, true, elementName);
+            return WriteItemXml(infoXmlWriter, true, elementName);
         }
 
         internal bool WriteItemXml(XmlWriter infoXmlWriter, bool writeAllCore = true)
         {
-            return this.WriteItemXml(infoXmlWriter, writeAllCore, "thing");
+            return WriteItemXml(infoXmlWriter, writeAllCore, "thing");
         }
 
         internal bool WriteItemXml(XmlWriter infoXmlWriter, bool writeAllCore, string elementName)
         {
-            ThingSections sections = this.Sections & ~ThingSections.Audits;
+            ThingSections sections = Sections & ~ThingSections.Audits;
 
             // Add the tags section if there are tags present
-            if (this.tags != null && this.tags.Count > 0)
+            if (_tags != null && _tags.Count > 0)
             {
                 sections |= ThingSections.Tags;
             }
 
-            return this.WriteItemXml(
+            return WriteItemXml(
                 infoXmlWriter,
                 sections,
                 writeAllCore,
@@ -764,34 +763,34 @@ namespace Microsoft.HealthVault.Thing
             // Add the <core> element and children
 
             updateRequired =
-                this.AddCorePutThingsRequestParameters(infoXmlWriter, writeAllCore, sections);
+                AddCorePutThingsRequestParameters(infoXmlWriter, writeAllCore, sections);
 
             if ((sections & ThingSections.Audits) != 0)
             {
-                this.AddAuditThingsRequestParameters(infoXmlWriter);
+                AddAuditThingsRequestParameters(infoXmlWriter);
             }
 
             if ((sections & ThingSections.Xml) != 0)
             {
-                this.AddXmlPutThingsRequestParameters(infoXmlWriter);
+                AddXmlPutThingsRequestParameters(infoXmlWriter);
                 updateRequired = true;
             }
 
             if ((sections & ThingSections.BlobPayload) != 0)
             {
-                this.AddBlobPayloadPutThingsRequestParameters(infoXmlWriter);
+                AddBlobPayloadPutThingsRequestParameters(infoXmlWriter);
                 updateRequired = true;
             }
 
             if ((sections & ThingSections.Tags) != 0)
             {
-                this.AddTagsPutThingsRequestParameters(infoXmlWriter);
+                AddTagsPutThingsRequestParameters(infoXmlWriter);
                 updateRequired = true;
             }
 
             if ((sections & ThingSections.Core) == ThingSections.Core)
             {
-                updateRequired |= this.AddUpdatedEndDate(infoXmlWriter, writeAllCore);
+                updateRequired |= AddUpdatedEndDate(infoXmlWriter, writeAllCore);
             }
 
             // Close the <__elementName__> tag
@@ -821,15 +820,15 @@ namespace Microsoft.HealthVault.Thing
         ///
         public string Serialize()
         {
-            if (this.fetchedXml == null)
+            if (_fetchedXml == null)
             {
-                return this.GetItemXml();
+                return GetItemXml();
             }
 
             // replace the data-xml node from the original xml with the data-xml node that contains the current
             // state of the object...
-            XDocument fetchedDocument = SDKHelper.SafeLoadXml(this.fetchedXml);
-            XDocument newDocument = SDKHelper.SafeLoadXml(this.GetItemXml());
+            XDocument fetchedDocument = SDKHelper.SafeLoadXml(_fetchedXml);
+            XDocument newDocument = SDKHelper.SafeLoadXml(GetItemXml());
 
             string dataName = "thing/data-xml";
             fetchedDocument.Element(dataName).ReplaceWith(newDocument.Element(dataName));
@@ -837,7 +836,7 @@ namespace Microsoft.HealthVault.Thing
         }
 
         // The original XML that was fetched by the thing.
-        private string fetchedXml;
+        private string _fetchedXml;
 
         /// <summary>
         /// Create a <see cref="ThingBase"/> instance from the item XML.
@@ -873,8 +872,8 @@ namespace Microsoft.HealthVault.Thing
             // <data-xml>
             writer.WriteStartElement("data-xml");
 
-            this.WriteXml(writer);
-            this.CommonData.WriteXml(writer);
+            WriteXml(writer);
+            CommonData.WriteXml(writer);
 
             // </data-xml>
             writer.WriteEndElement();
@@ -891,9 +890,9 @@ namespace Microsoft.HealthVault.Thing
         private void AddBlobPayloadPutThingsRequestParameters(
             XmlWriter writer)
         {
-            if (this.blobStore != null && (this.blobStore.Count > 0 || this.blobStore.RemovedBlobs.Count > 0))
+            if (_blobStore != null && (_blobStore.Count > 0 || _blobStore.RemovedBlobs.Count > 0))
             {
-                this.blobStore.WriteXml("blob-payload", writer);
+                _blobStore.WriteXml("blob-payload", writer);
             }
         }
 
@@ -908,14 +907,14 @@ namespace Microsoft.HealthVault.Thing
         private void AddTagsPutThingsRequestParameters(
             XmlWriter writer)
         {
-            if (this.tags != null && this.tags.Count != 0)
+            if (_tags != null && _tags.Count != 0)
             {
                 StringBuilder tagsString = new StringBuilder(512);
-                tagsString.Append(this.tags[0]);
-                for (int i = 1; i < this.tags.Count; i++)
+                tagsString.Append(_tags[0]);
+                for (int i = 1; i < _tags.Count; i++)
                 {
                     tagsString.Append(",");
-                    tagsString.Append(this.tags[i]);
+                    tagsString.Append(_tags[i]);
                 }
 
                 writer.WriteElementString("tags", tagsString.ToString());
@@ -950,48 +949,48 @@ namespace Microsoft.HealthVault.Thing
         {
             bool updateRequired = false;
 
-            if (this.Key != null)
+            if (Key != null)
             {
                 // Since it's not a new thing we need to specify the ID
                 writer.WriteStartElement("thing-id");
-                writer.WriteAttributeString("version-stamp", this.Key.VersionStamp.ToString());
-                writer.WriteValue(this.Key.Id.ToString());
+                writer.WriteAttributeString("version-stamp", Key.VersionStamp.ToString());
+                writer.WriteValue(Key.Id.ToString());
                 writer.WriteEndElement();
             }
 
             // Write the type-id element
             writer.WriteStartElement("type-id");
 
-            if (!string.IsNullOrEmpty(this.TypeName))
+            if (!string.IsNullOrEmpty(TypeName))
             {
-                writer.WriteAttributeString("name", this.TypeName);
+                writer.WriteAttributeString("name", TypeName);
             }
 
-            writer.WriteValue(this.TypeId.ToString());
+            writer.WriteValue(TypeId.ToString());
             writer.WriteEndElement();
 
             if ((sections & ThingSections.Core) != 0 && writeAllCore)
             {
                 updateRequired = true;
-                writer.WriteElementString("thing-state", this.State.ToString());
+                writer.WriteElementString("thing-state", State.ToString());
 
-                writer.WriteElementString("flags", ((uint)this.Flags).ToString());
+                writer.WriteElementString("flags", ((uint)Flags).ToString());
             }
             else
             {
-                if (this.areFlagsDirty)
+                if (_areFlagsDirty)
                 {
-                    writer.WriteElementString("flags", ((uint)this.Flags).ToString());
+                    writer.WriteElementString("flags", ((uint)Flags).ToString());
                     updateRequired = true;
                 }
             }
 
             if ((sections & ThingSections.Core) != 0 &&
-                this.EffectiveDate != SDKHelper.DateUnspecified && (this.effectiveDateDirty || writeAllCore))
+                EffectiveDate != SDKHelper.DateUnspecified && (_effectiveDateDirty || writeAllCore))
             {
                 // <eff-date>
                 writer.WriteStartElement("eff-date");
-                writer.WriteValue(SDKHelper.XmlFromDateTime(this.EffectiveDate));
+                writer.WriteValue(SDKHelper.XmlFromDateTime(EffectiveDate));
                 writer.WriteEndElement();
                 updateRequired = true;
             }
@@ -1010,17 +1009,17 @@ namespace Microsoft.HealthVault.Thing
         ///
         private void AddAuditThingsRequestParameters(XmlWriter writer)
         {
-            if (this.Created != null)
+            if (Created != null)
             {
                 writer.WriteStartElement("created");
-                this.Created.WriteXml(writer);
+                Created.WriteXml(writer);
                 writer.WriteEndElement();
             }
 
-            if (this.LastUpdated != null)
+            if (LastUpdated != null)
             {
                 writer.WriteStartElement("updated");
-                this.LastUpdated.WriteXml(writer);
+                LastUpdated.WriteXml(writer);
                 writer.WriteEndElement();
             }
         }
@@ -1039,10 +1038,10 @@ namespace Microsoft.HealthVault.Thing
         {
             bool updateRequired = false;
 
-            if (this.updatedEndDateDirty || (writeAllCore && this.UpdatedEndDate != DateTime.MaxValue))
+            if (_updatedEndDateDirty || (writeAllCore && UpdatedEndDate != DateTime.MaxValue))
             {
                 writer.WriteStartElement("updated-end-date");
-                writer.WriteValue(SDKHelper.XmlFromDateTime(this.UpdatedEndDate));
+                writer.WriteValue(SDKHelper.XmlFromDateTime(UpdatedEndDate));
                 writer.WriteEndElement();
                 updateRequired = true;
             }
@@ -1078,9 +1077,9 @@ namespace Microsoft.HealthVault.Thing
         ///
         internal void ParseXml(XPathNavigator thingNavigator, string thingXml)
         {
-            this.fetchedXml = thingXml;
+            _fetchedXml = thingXml;
 
-            this.Sections = ThingSections.None;
+            Sections = ThingSections.None;
 
             XPathNavigator thingIdNav = thingNavigator.SelectSingleNode("thing-id");
             if (thingIdNav != null)
@@ -1089,7 +1088,7 @@ namespace Microsoft.HealthVault.Thing
 
                 string versionStamp = thingIdNav.GetAttribute("version-stamp", string.Empty);
 
-                this.Key = !string.IsNullOrEmpty(versionStamp) ? new ThingKey(thingId, new Guid(versionStamp)) : new ThingKey(thingId);
+                Key = !string.IsNullOrEmpty(versionStamp) ? new ThingKey(thingId, new Guid(versionStamp)) : new ThingKey(thingId);
             }
 
             XPathNavigator thingTypeNavigator = thingNavigator.SelectSingleNode("type-id");
@@ -1099,23 +1098,23 @@ namespace Microsoft.HealthVault.Thing
                 string typeId = thingTypeNavigator.Value;
                 if (!string.IsNullOrEmpty(typeId))
                 {
-                    this.TypeId = new Guid(typeId);
+                    TypeId = new Guid(typeId);
                 }
 
-                this.TypeName = thingTypeNavigator.GetAttribute("name", string.Empty);
+                TypeName = thingTypeNavigator.GetAttribute("name", string.Empty);
             }
 
-            this.AddCoreSectionValues(thingNavigator);
-            this.AddAuditsSectionValues(thingNavigator);
-            this.AddEffectivePermissionsSectionValues(thingNavigator);
-            this.AddBlobPayloadSectionValues(thingNavigator);
+            AddCoreSectionValues(thingNavigator);
+            AddAuditsSectionValues(thingNavigator);
+            AddEffectivePermissionsSectionValues(thingNavigator);
+            AddBlobPayloadSectionValues(thingNavigator);
 
             // Do the data-xml section last so that the type specific
             // extensions have access to all the data, and so that failures
             // in the derived type can be handled more cleanly.
-            this.AddXmlSectionValues(thingNavigator);
+            AddXmlSectionValues(thingNavigator);
 
-            this.AddTagsSectionValues(thingNavigator);
+            AddTagsSectionValues(thingNavigator);
         }
 
         /// <summary>
@@ -1136,41 +1135,41 @@ namespace Microsoft.HealthVault.Thing
 
             if (effectiveDateNav != null)
             {
-                this.Sections |= ThingSections.Core;
-                this.effectiveDate = effectiveDateNav.ValueAsDateTime;
+                Sections |= ThingSections.Core;
+                _effectiveDate = effectiveDateNav.ValueAsDateTime;
             }
 
             XPathNavigator stateNav =
                 thingNavigator.SelectSingleNode("thing-state");
             if (stateNav != null)
             {
-                this.Sections |= ThingSections.Core;
+                Sections |= ThingSections.Core;
 
                 try
                 {
-                    this.State =
+                    State =
                         (ThingState)Enum.Parse(
                             typeof(ThingState), stateNav.Value);
                 }
                 catch (ArgumentException)
                 {
-                    this.State = ThingState.Unknown;
+                    State = ThingState.Unknown;
                 }
             }
 
             XPathNavigator flagsNav = thingNavigator.SelectSingleNode("flags");
             if (flagsNav != null)
             {
-                this.Sections |= ThingSections.Core;
+                Sections |= ThingSections.Core;
 
-                this.flags = (ThingFlags)Convert.ToInt64(flagsNav.Value);
+                _flags = (ThingFlags)Convert.ToInt64(flagsNav.Value);
             }
 
             XPathNavigator updatedEndDateNav = thingNavigator.SelectSingleNode("updated-end-date");
             if (updatedEndDateNav != null)
             {
-                this.Sections |= ThingSections.Core;
-                this.updatedEndDate = updatedEndDateNav.ValueAsDateTime;
+                Sections |= ThingSections.Core;
+                _updatedEndDate = updatedEndDateNav.ValueAsDateTime;
             }
         }
 
@@ -1192,11 +1191,11 @@ namespace Microsoft.HealthVault.Thing
                 thingNavigator.SelectSingleNode("updated");
             if (updatedNav != null)
             {
-                this.LastUpdated = new HealthServiceAudit();
-                this.LastUpdated.ParseXml(updatedNav);
+                LastUpdated = new HealthServiceAudit();
+                LastUpdated.ParseXml(updatedNav);
 
                 // Now update the sections appropriately
-                this.Sections |= ThingSections.Audits;
+                Sections |= ThingSections.Audits;
             }
 
             // Check the "created" group
@@ -1204,11 +1203,11 @@ namespace Microsoft.HealthVault.Thing
                 thingNavigator.SelectSingleNode("created");
             if (createdNav != null)
             {
-                this.Created = new HealthServiceAudit();
-                this.Created.ParseXml(createdNav);
+                Created = new HealthServiceAudit();
+                Created.ParseXml(createdNav);
 
                 // Now update the sections appropriately
-                this.Sections |= ThingSections.Audits;
+                Sections |= ThingSections.Audits;
             }
         }
 
@@ -1239,7 +1238,7 @@ namespace Microsoft.HealthVault.Thing
             foreach (XPathNavigator dataXml in dataXmlIterator)
             {
                 // Now update the sections appropriately
-                this.Sections |= ThingSections.Xml;
+                Sections |= ThingSections.Xml;
 
                 string transformName =
                     dataXml.GetAttribute("transform", string.Empty);
@@ -1251,7 +1250,7 @@ namespace Microsoft.HealthVault.Thing
                     if (commonNav != null)
                     {
                         // Parse out the common section
-                        this.CommonData.ParseXml(commonNav);
+                        CommonData.ParseXml(commonNav);
                     }
 
                     // The first child is always the type specific data
@@ -1266,11 +1265,11 @@ namespace Microsoft.HealthVault.Thing
 
                     using (XmlReader reader = SDKHelper.GetXmlReaderForXml(dataXml.OuterXml, settings))
                     {
-                        this.TypeSpecificData = new XPathDocument(reader, XmlSpace.Preserve);
+                        TypeSpecificData = new XPathDocument(reader, XmlSpace.Preserve);
 
                         try
                         {
-                            this.ParseXml(this.TypeSpecificData);
+                            ParseXml(TypeSpecificData);
                         }
                         catch (Exception e)
                         {
@@ -1289,7 +1288,7 @@ namespace Microsoft.HealthVault.Thing
                         if (row != null)
                         {
                             var relatedThingsValue = row.GetAttribute("wc-relatedthings", string.Empty);
-                            this.CommonData.ParseRelatedAttribute(relatedThingsValue);
+                            CommonData.ParseRelatedAttribute(relatedThingsValue);
                         }
                     }
 
@@ -1298,9 +1297,9 @@ namespace Microsoft.HealthVault.Thing
                     // parser.
                     XDocument newDoc = SDKHelper.SafeLoadXml(dataXml.OuterXml);
 
-                    if (!this.TransformedXmlData.ContainsKey(transformName))
+                    if (!TransformedXmlData.ContainsKey(transformName))
                     {
-                        this.TransformedXmlData.Add(transformName, newDoc);
+                        TransformedXmlData.Add(transformName, newDoc);
                     }
                 }
             }
@@ -1325,16 +1324,16 @@ namespace Microsoft.HealthVault.Thing
 
             if (blobPayloadNav != null)
             {
-                this.blobStore = new BlobStore(this, default(HealthRecordAccessor));
-                this.blobStore.ParseXml(blobPayloadNav);
-                this.Sections |= ThingSections.BlobPayload;
+                _blobStore = new BlobStore(this, default(HealthRecordAccessor));
+                _blobStore.ParseXml(blobPayloadNav);
+                Sections |= ThingSections.BlobPayload;
             }
 
             XPathNavigator otherDataNav = thingNavigator.SelectSingleNode("data-other");
             if (otherDataNav != null)
             {
-                this.blobStore = new BlobStore(this, default(HealthRecordAccessor));
-                this.Sections |= ThingSections.BlobPayload;
+                _blobStore = new BlobStore(this, default(HealthRecordAccessor));
+                Sections |= ThingSections.BlobPayload;
                 string contentEncoding =
                     otherDataNav.GetAttribute("content-encoding", string.Empty);
                 byte[] blobPayload =
@@ -1343,11 +1342,11 @@ namespace Microsoft.HealthVault.Thing
                         contentEncoding);
                 string contentType =
                     otherDataNav.GetAttribute("content-type", string.Empty);
-                this.blobStore.WriteInline(string.Empty, contentType, blobPayload);
+                _blobStore.WriteInline(string.Empty, contentType, blobPayload);
             }
         }
 
-        private static XPathExpression signaturePath =
+        private static XPathExpression s_signaturePath =
            XPathExpression.Compile("/thing/ds:Signature");
 
         private static XPathExpression GetSignatureXPathExpression(
@@ -1361,9 +1360,9 @@ namespace Microsoft.HealthVault.Thing
                 "http://www.w3.org/2000/09/xmldsig#");
 
             XPathExpression signaturePathClone;
-            lock (signaturePath)
+            lock (s_signaturePath)
             {
-                signaturePathClone = signaturePath.Clone();
+                signaturePathClone = s_signaturePath.Clone();
             }
 
             signaturePathClone.SetContext(infoXmlNamespaceManager);
@@ -1390,8 +1389,8 @@ namespace Microsoft.HealthVault.Thing
 
                 if (tagStrings.Count > 0)
                 {
-                    this.tags = new TagsCollection(this, tagStrings);
-                    this.Sections |= ThingSections.Tags;
+                    _tags = new TagsCollection(this, tagStrings);
+                    Sections |= ThingSections.Tags;
                 }
             }
         }
@@ -1415,12 +1414,12 @@ namespace Microsoft.HealthVault.Thing
             if (permsNav != null)
             {
                 // Now update the sections appropriately
-                this.Sections |= ThingSections.EffectivePermissions;
+                Sections |= ThingSections.EffectivePermissions;
 
                 string isImmutableString = permsNav.GetAttribute("immutable", string.Empty);
                 if (!string.IsNullOrEmpty(isImmutableString))
                 {
-                    this.IsImmutable = XmlConvert.ToBoolean(isImmutableString);
+                    IsImmutable = XmlConvert.ToBoolean(isImmutableString);
                 }
 
                 XPathNodeIterator permIterator = permsNav.Select("permission");
@@ -1436,13 +1435,13 @@ namespace Microsoft.HealthVault.Thing
                                 typeof(ThingPermissions),
                                 permissionString);
 
-                        if (this.EffectivePermissions == null)
+                        if (EffectivePermissions == null)
                         {
-                            this.EffectivePermissions = permission;
+                            EffectivePermissions = permission;
                         }
                         else
                         {
-                            this.EffectivePermissions |= permission;
+                            EffectivePermissions |= permission;
                         }
                     }
                     catch (ArgumentException)
@@ -1457,26 +1456,26 @@ namespace Microsoft.HealthVault.Thing
         private void SetFlag(ThingFlags flag)
         {
             // Check if *all* bits in flag are set
-            if ((this.flags & flag) != flag)
+            if ((_flags & flag) != flag)
             {
-                this.flags |= flag;
-                this.areFlagsDirty = true;
+                _flags |= flag;
+                _areFlagsDirty = true;
             }
         }
 
         private void ClearFlag(ThingFlags flag)
         {
             // Check if *any* bits in flag are set
-            if ((this.flags & flag) != 0)
+            if ((_flags & flag) != 0)
             {
-                this.flags &= ~flag;
-                this.areFlagsDirty = true;
+                _flags &= ~flag;
+                _areFlagsDirty = true;
             }
         }
 
         private bool IsFlagSet(ThingFlags flagToCheck)
         {
-            return (this.flags & flagToCheck) == flagToCheck;
+            return (_flags & flagToCheck) == flagToCheck;
         }
 
         #endregion private helpers

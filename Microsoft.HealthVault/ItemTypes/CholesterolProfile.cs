@@ -49,7 +49,7 @@ namespace Microsoft.HealthVault.ItemTypes
         public CholesterolProfile(HealthServiceDate when)
             : base(TypeId)
         {
-            this.When = when;
+            When = when;
         }
 
         /// <summary>
@@ -84,16 +84,16 @@ namespace Microsoft.HealthVault.ItemTypes
 
             Validator.ThrowInvalidIfNull(itemNav, Resources.CholesterolProfileUnexpectedNode);
 
-            this.when = new HealthServiceDate();
-            this.when.ParseXml(itemNav.SelectSingleNode("when"));
+            _when = new HealthServiceDate();
+            _when.ParseXml(itemNav.SelectSingleNode("when"));
 
-            this.ldl = XPathHelper.GetOptNavValueAsInt(itemNav, "ldl");
+            _ldl = XPathHelper.GetOptNavValueAsInt(itemNav, "ldl");
 
-            this.hdl = XPathHelper.GetOptNavValueAsInt(itemNav, "hdl");
+            _hdl = XPathHelper.GetOptNavValueAsInt(itemNav, "hdl");
 
-            this.totalCholesterol = XPathHelper.GetOptNavValueAsInt(itemNav, "total-cholesterol");
+            _totalCholesterol = XPathHelper.GetOptNavValueAsInt(itemNav, "total-cholesterol");
 
-            this.triglyceride = XPathHelper.GetOptNavValueAsInt(itemNav, "triglyceride");
+            _triglyceride = XPathHelper.GetOptNavValueAsInt(itemNav, "triglyceride");
         }
 
         /// <summary>
@@ -116,27 +116,27 @@ namespace Microsoft.HealthVault.ItemTypes
             writer.WriteStartElement("cholesterol-profile");
 
             // <when>
-            this.when.WriteXml("when", writer);
+            _when.WriteXml("when", writer);
 
             XmlWriterHelper.WriteOptInt(
                 writer,
                 "ldl",
-                this.ldl);
+                _ldl);
 
             XmlWriterHelper.WriteOptInt(
                 writer,
                 "hdl",
-                this.hdl);
+                _hdl);
 
             XmlWriterHelper.WriteOptInt(
                 writer,
                 "total-cholesterol",
-                this.totalCholesterol);
+                _totalCholesterol);
 
             XmlWriterHelper.WriteOptInt(
                 writer,
                 "triglyceride",
-                this.triglyceride);
+                _triglyceride);
 
             // </cholesterol-profile>
             writer.WriteEndElement();
@@ -157,16 +157,16 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public HealthServiceDate When
         {
-            get { return this.when; }
+            get { return _when; }
 
             set
             {
-                Validator.ThrowIfArgumentNull(value, nameof(this.When), Resources.WhenNullValue);
-                this.when = value;
+                Validator.ThrowIfArgumentNull(value, nameof(When), Resources.WhenNullValue);
+                _when = value;
             }
         }
 
-        private HealthServiceDate when = new HealthServiceDate();
+        private HealthServiceDate _when = new HealthServiceDate();
 
         /// <summary>
         /// Gets or sets the person's low density lipoprotein in mg/dL.
@@ -178,11 +178,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public int? LDL
         {
-            get { return this.ldl; }
-            set { this.ldl = value; }
+            get { return _ldl; }
+            set { _ldl = value; }
         }
 
-        private int? ldl;
+        private int? _ldl;
 
         /// <summary>
         /// Gets or sets the person's high density lipoprotein in mg/dL.
@@ -194,11 +194,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public int? HDL
         {
-            get { return this.hdl; }
-            set { this.hdl = value; }
+            get { return _hdl; }
+            set { _hdl = value; }
         }
 
-        private int? hdl;
+        private int? _hdl;
 
         /// <summary>
         /// Gets or sets the person's total cholesterol in mg/dL.
@@ -210,11 +210,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public int? TotalCholesterol
         {
-            get { return this.totalCholesterol; }
-            set { this.totalCholesterol = value; }
+            get { return _totalCholesterol; }
+            set { _totalCholesterol = value; }
         }
 
-        private int? totalCholesterol;
+        private int? _totalCholesterol;
 
         /// <summary>
         /// Gets or sets the person's triglyceride in mg/dL.
@@ -226,11 +226,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public int? Triglyceride
         {
-            get { return this.triglyceride; }
-            set { this.triglyceride = value; }
+            get { return _triglyceride; }
+            set { _triglyceride = value; }
         }
 
-        private int? triglyceride;
+        private int? _triglyceride;
 
         /// <summary>
         /// Gets a string representation of the cholesterol profile.
@@ -243,41 +243,41 @@ namespace Microsoft.HealthVault.ItemTypes
         public override string ToString()
         {
             string result = string.Empty;
-            if (this.TotalCholesterol != null)
+            if (TotalCholesterol != null)
             {
                 result =
                     string.Format(
                         Resources.CholesterolProfileToStringFormatTotal,
-                        this.TotalCholesterol.Value);
+                        TotalCholesterol.Value);
             }
-            else if (this.LDL != null && this.HDL != null)
+            else if (LDL != null && HDL != null)
             {
                 result =
                     string.Format(
                         Resources.CholesterolProfileToStringFormatLDLAndHDL,
-                        this.LDL.Value,
-                        this.HDL.Value);
+                        LDL.Value,
+                        HDL.Value);
             }
-            else if (this.LDL != null)
+            else if (LDL != null)
             {
                 result =
                     string.Format(
                         Resources.CholesterolProfileToStringFormatLDL,
-                        this.LDL.Value);
+                        LDL.Value);
             }
-            else if (this.HDL != null)
+            else if (HDL != null)
             {
                 result =
                     string.Format(
                         Resources.CholesterolProfileToStringFormatHDL,
-                        this.HDL.Value);
+                        HDL.Value);
             }
-            else if (this.Triglyceride != null)
+            else if (Triglyceride != null)
             {
                 result =
                     string.Format(
                         Resources.CholesterolProfileToStringFormatTriglyceride,
-                        this.Triglyceride.Value);
+                        Triglyceride.Value);
             }
 
             return result;

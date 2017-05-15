@@ -7,7 +7,6 @@ using System;
 using System.Globalization;
 using System.Xml;
 using System.Xml.XPath;
-using Microsoft.HealthVault.Helpers;
 
 namespace Microsoft.HealthVault.ItemTypes
 {
@@ -105,7 +104,7 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         protected override void ParseValueXml(XPathNavigator navigator)
         {
-            this.Value = navigator.SelectSingleNode("mmolPerL").ValueAsDouble;
+            Value = navigator.SelectSingleNode("mmolPerL").ValueAsDouble;
         }
 
         /// <summary>
@@ -118,8 +117,7 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         protected override void WriteValueXml(XmlWriter writer)
         {
-            writer.WriteElementString(
-                "mmolPerL", XmlConvert.ToString(this.Value));
+            writer.WriteElementString("mmolPerL", XmlConvert.ToString(Value));
         }
 
         /// <summary>

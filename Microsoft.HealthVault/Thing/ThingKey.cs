@@ -4,7 +4,6 @@
 // All other rights reserved.
 
 using System;
-using Microsoft.HealthVault.Helpers;
 
 namespace Microsoft.HealthVault.Thing
 {
@@ -47,8 +46,8 @@ namespace Microsoft.HealthVault.Thing
                 throw new ArgumentException(Resources.ThingVersionInvalid, nameof(versionStamp));
             }
 
-            this.thingId = id;
-            this.versionStamp = versionStamp;
+            _thingId = id;
+            _versionStamp = versionStamp;
         }
 
         /// <summary>
@@ -73,7 +72,7 @@ namespace Microsoft.HealthVault.Thing
                 throw new ArgumentException(Resources.ThingIdInvalid, nameof(id));
             }
 
-            this.thingId = id;
+            _thingId = id;
         }
 
         /// <summary>
@@ -85,9 +84,9 @@ namespace Microsoft.HealthVault.Thing
         /// issued when the item is created.
         /// </value>
         ///
-        public Guid Id => this.thingId;
+        public Guid Id => _thingId;
 
-        private Guid thingId;
+        private Guid _thingId;
 
         /// <summary>
         /// Gets the unique version stamp of the <see cref="ThingBase"/>.
@@ -104,9 +103,9 @@ namespace Microsoft.HealthVault.Thing
         /// is always equal to the <see cref="Id"/> of that item.
         /// </remarks>
         ///
-        public Guid VersionStamp => this.versionStamp;
+        public Guid VersionStamp => _versionStamp;
 
-        private Guid versionStamp;
+        private Guid _versionStamp;
 
         /// <summary>
         /// Gets a string representation of the key.
@@ -118,12 +117,12 @@ namespace Microsoft.HealthVault.Thing
         ///
         public override string ToString()
         {
-            if (this.versionStamp != Guid.Empty)
+            if (_versionStamp != Guid.Empty)
             {
-                return this.thingId + "," + this.versionStamp;
+                return _thingId + "," + _versionStamp;
             }
 
-            return this.thingId.ToString();
+            return _thingId.ToString();
         }
 
         /// <summary>
@@ -131,7 +130,7 @@ namespace Microsoft.HealthVault.Thing
         /// </summary>
         ///
         /// <param name="obj">
-        /// The <see cref="ThingKey"/> to compare against this.
+        /// The <see cref="ThingKey"/> to compare against
         /// </param>
         ///
         /// <returns>
@@ -146,8 +145,8 @@ namespace Microsoft.HealthVault.Thing
 
             if (rVal != null)
             {
-                result = (this.versionStamp == rVal.VersionStamp)
-                       && (this.thingId == rVal.Id);
+                result = (_versionStamp == rVal.VersionStamp)
+                       && (_thingId == rVal.Id);
             }
 
             return result;
@@ -163,7 +162,7 @@ namespace Microsoft.HealthVault.Thing
         ///
         public override int GetHashCode()
         {
-            return this.versionStamp.GetHashCode();
+            return _versionStamp.GetHashCode();
         }
     }
 }

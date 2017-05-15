@@ -38,7 +38,7 @@ namespace Microsoft.HealthVault.ItemTypes
         public ExerciseSamples()
             : base(TypeId)
         {
-            this.Sections |= ThingSections.BlobPayload;
+            Sections |= ThingSections.BlobPayload;
         }
 
         /// <summary>
@@ -57,11 +57,11 @@ namespace Microsoft.HealthVault.ItemTypes
         public ExerciseSamples(ApproximateDateTime when, CodableValue name, CodableValue unit, double samplingInterval)
             : base(TypeId)
         {
-            this.When = when;
-            this.Name = name;
-            this.Unit = unit;
-            this.SamplingInterval = samplingInterval;
-            this.Sections |= ThingSections.BlobPayload;
+            When = when;
+            Name = name;
+            Unit = unit;
+            SamplingInterval = samplingInterval;
+            Sections |= ThingSections.BlobPayload;
         }
 
         /// <summary>
@@ -91,17 +91,17 @@ namespace Microsoft.HealthVault.ItemTypes
             Validator.ThrowInvalidIfNull(itemNav, Resources.ExerciseSamplesUnexpectedNode);
 
             // when
-            this.when = new ApproximateDateTime();
-            this.when.ParseXml(itemNav.SelectSingleNode("when"));
+            _when = new ApproximateDateTime();
+            _when.ParseXml(itemNav.SelectSingleNode("when"));
 
             // name
-            this.name = XPathHelper.GetOptNavValue<CodableValue>(itemNav, "name");
+            _name = XPathHelper.GetOptNavValue<CodableValue>(itemNav, "name");
 
             // unit
-            this.unit = XPathHelper.GetOptNavValue<CodableValue>(itemNav, "unit");
+            _unit = XPathHelper.GetOptNavValue<CodableValue>(itemNav, "unit");
 
             // sampling interval
-            this.samplingInterval = itemNav.SelectSingleNode("sampling-interval").ValueAsDouble;
+            _samplingInterval = itemNav.SelectSingleNode("sampling-interval").ValueAsDouble;
         }
 
         /// <summary>
@@ -124,55 +124,55 @@ namespace Microsoft.HealthVault.ItemTypes
         public override void WriteXml(XmlWriter writer)
         {
             Validator.ThrowIfWriterNull(writer);
-            Validator.ThrowSerializationIfNull(this.when, Resources.WhenNullValue);
-            Validator.ThrowSerializationIfNull(this.name, Resources.ExerciseSampleNameNotSet);
-            Validator.ThrowSerializationIfNull(this.unit, Resources.ExerciseSampleUnitNotSet);
+            Validator.ThrowSerializationIfNull(_when, Resources.WhenNullValue);
+            Validator.ThrowSerializationIfNull(_name, Resources.ExerciseSampleNameNotSet);
+            Validator.ThrowSerializationIfNull(_unit, Resources.ExerciseSampleUnitNotSet);
 
-            if (double.IsNaN(this.samplingInterval))
+            if (double.IsNaN(_samplingInterval))
             {
                 throw new ThingSerializationException(Resources.ExerciseSampleSamplingIntervalNotSet);
             }
 
-            if (this.sampleData != null && this.sampleData.SingleValuedSamples.Count > 0)
+            if (_sampleData != null && _sampleData.SingleValuedSamples.Count > 0)
             {
                 // This ensures that the data gets written to a string in _sampleData.Data
                 using (MemoryStream stream = new MemoryStream(1024))
                 {
                     using (XmlWriter unusedWriter = XmlWriter.Create(stream))
                     {
-                        this.sampleData.WriteXml(unusedWriter);
+                        _sampleData.WriteXml(unusedWriter);
                     }
                 }
 
                 Blob blob =
-                    this.GetBlobStore(default(HealthRecordAccessor)).NewBlob(
+                    GetBlobStore(default(HealthRecordAccessor)).NewBlob(
                         string.Empty,
-                        this.sampleData.ContentType);
-                blob.WriteInline(this.sampleData.Data);
+                        _sampleData.ContentType);
+                blob.WriteInline(_sampleData.Data);
             }
 
             // <exercise-samples>
             writer.WriteStartElement("exercise-samples");
 
             // <when>
-            this.when.WriteXml("when", writer);
+            _when.WriteXml("when", writer);
 
             // <name>
             XmlWriterHelper.WriteOpt(
                 writer,
                 "name",
-                this.name);
+                _name);
 
             // <unit>
             XmlWriterHelper.WriteOpt(
                 writer,
                 "unit",
-                this.unit);
+                _unit);
 
             // <sampling-interval>
             writer.WriteElementString(
                 "sampling-interval",
-                XmlConvert.ToString(this.samplingInterval));
+                XmlConvert.ToString(_samplingInterval));
 
             // </exercise-samples>
             writer.WriteEndElement();
@@ -193,16 +193,16 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public ApproximateDateTime When
         {
-            get { return this.when; }
+            get { return _when; }
 
             set
             {
-                Validator.ThrowIfArgumentNull(value, nameof(this.When), Resources.WhenNullValue);
-                this.when = value;
+                Validator.ThrowIfArgumentNull(value, nameof(When), Resources.WhenNullValue);
+                _when = value;
             }
         }
 
-        private ApproximateDateTime when;
+        private ApproximateDateTime _when;
 
         /// <summary>
         /// Gets or sets the kind of information that is stored in this sample set.
@@ -235,16 +235,16 @@ namespace Microsoft.HealthVault.ItemTypes
         /// </exception>
         public CodableValue Name
         {
-            get { return this.name; }
+            get { return _name; }
 
             set
             {
-                Validator.ThrowIfArgumentNull(value, nameof(this.Name), Resources.ExerciseSampleNameMandatory);
-                this.name = value;
+                Validator.ThrowIfArgumentNull(value, nameof(Name), Resources.ExerciseSampleNameMandatory);
+                _name = value;
             }
         }
 
-        private CodableValue name;
+        private CodableValue _name;
 
         /// <summary>
         /// Gets or sets the unit of measure for the samples.
@@ -262,16 +262,16 @@ namespace Microsoft.HealthVault.ItemTypes
         /// </exception>
         public CodableValue Unit
         {
-            get { return this.unit; }
+            get { return _unit; }
 
             set
             {
-                Validator.ThrowIfArgumentNull(value, nameof(this.Unit), Resources.ExerciseSampleUnitMandatory);
-                this.unit = value;
+                Validator.ThrowIfArgumentNull(value, nameof(Unit), Resources.ExerciseSampleUnitMandatory);
+                _unit = value;
             }
         }
 
-        private CodableValue unit;
+        private CodableValue _unit;
 
         /// <summary>
         /// Gets or sets the initial sampling interval between samples, in seconds.
@@ -291,20 +291,20 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public double SamplingInterval
         {
-            get { return this.samplingInterval; }
+            get { return _samplingInterval; }
 
             set
             {
                 if (value <= 0)
                 {
-                    throw new ArgumentOutOfRangeException(nameof(this.SamplingInterval), Resources.SamplingIntervalMustBePositive);
+                    throw new ArgumentOutOfRangeException(nameof(SamplingInterval), Resources.SamplingIntervalMustBePositive);
                 }
 
-                this.samplingInterval = value;
+                _samplingInterval = value;
             }
         }
 
-        private double samplingInterval = double.NaN;
+        private double _samplingInterval = double.NaN;
 
         /// <summary>
         /// Gets the description of a exercise samples instance.
@@ -316,7 +316,7 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public override string ToString()
         {
-            return this.name.Text;
+            return _name.Text;
         }
 
         /// <summary>
@@ -331,9 +331,9 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <exception cref="InvalidOperationException">
         /// If the sampling interval has not be set before the property is referenced.
         /// </exception>
-        public ExerciseSamplesData ExerciseSamplesData => this.sampleData ?? (this.sampleData = this.CreateExerciseSampleData());
+        public ExerciseSamplesData ExerciseSamplesData => _sampleData ?? (_sampleData = CreateExerciseSampleData());
 
-        private ExerciseSamplesData sampleData;
+        private ExerciseSamplesData _sampleData;
 
         /// <summary>
         /// Sample name for Heartrate_BPM.
@@ -402,19 +402,19 @@ namespace Microsoft.HealthVault.ItemTypes
 
         private ExerciseSamplesData CreateExerciseSampleData()
         {
-            if (double.IsNaN(this.SamplingInterval))
+            if (double.IsNaN(SamplingInterval))
             {
                 throw new InvalidOperationException(Resources.SamplingIntervalMustBeSet);
             }
 
             ExerciseSamplesData sampleData;
 
-            BlobStore store = this.GetBlobStore(default(HealthRecordAccessor));
+            BlobStore store = GetBlobStore(default(HealthRecordAccessor));
             Blob blob = store[string.Empty];
 
             if (blob == null)
             {
-                sampleData = new ExerciseSamplesData(null, string.Empty, "text/csv") { SamplingInterval = this.SamplingInterval };
+                sampleData = new ExerciseSamplesData(null, string.Empty, "text/csv") { SamplingInterval = SamplingInterval };
             }
             else
             {
@@ -422,7 +422,7 @@ namespace Microsoft.HealthVault.ItemTypes
                     blob.ReadAsString(),
                     blob.ContentEncoding,
                     blob.ContentType)
-                { SamplingInterval = this.SamplingInterval };
+                { SamplingInterval = SamplingInterval };
             }
 
             return sampleData;

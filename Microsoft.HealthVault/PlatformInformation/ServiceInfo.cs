@@ -1,7 +1,7 @@
-// Copyright (c) Microsoft Corporation.  All rights reserved. 
+// Copyright (c) Microsoft Corporation.  All rights reserved.
 // MIT License
 // Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the ""Software""), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 //
 // THE SOFTWARE IS PROVIDED *AS IS*, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
@@ -115,7 +115,7 @@ namespace Microsoft.HealthVault.PlatformInformation
 
             using (XmlWriter writer = XmlWriter.Create(result, settings))
             {
-                this.WriteXml("service-info", writer);
+                WriteXml("service-info", writer);
                 writer.Flush();
             }
 
@@ -126,29 +126,29 @@ namespace Microsoft.HealthVault.PlatformInformation
         {
             writer.WriteStartElement(elementName);
             {
-                this.WritePlatformInfo(writer);
-                this.WriteShellInfo(writer);
-                this.WriteMethods(writer);
-                this.WriteIncludes(writer);
-                this.WriteServiceInstances(writer);
-                this.WriteUpdatedDate(writer);
+                WritePlatformInfo(writer);
+                WriteShellInfo(writer);
+                WriteMethods(writer);
+                WriteIncludes(writer);
+                WriteServiceInstances(writer);
+                WriteUpdatedDate(writer);
                 writer.WriteEndElement();
             }
         }
 
         private void WritePlatformInfo(XmlWriter writer)
         {
-            if (this.HealthServiceUrl == null || string.IsNullOrEmpty(this.Version))
+            if (HealthServiceUrl == null || string.IsNullOrEmpty(Version))
             {
                 return;
             }
 
             writer.WriteStartElement("platform");
             {
-                writer.WriteElementString("url", this.HealthServiceUrl.OriginalString);
-                writer.WriteElementString("version", this.Version);
+                writer.WriteElementString("url", HealthServiceUrl.OriginalString);
+                writer.WriteElementString("version", Version);
 
-                WriteConfigs(writer, this.ConfigurationValues);
+                WriteConfigs(writer, ConfigurationValues);
 
                 writer.WriteEndElement();
             }
@@ -156,12 +156,12 @@ namespace Microsoft.HealthVault.PlatformInformation
 
         private void WriteIncludes(XmlWriter writer)
         {
-            if (this.IncludedSchemaUrls == null)
+            if (IncludedSchemaUrls == null)
             {
                 return;
             }
 
-            foreach (Uri include in this.IncludedSchemaUrls)
+            foreach (Uri include in IncludedSchemaUrls)
             {
                 writer.WriteElementString("common-schema", include.OriginalString);
             }
@@ -169,12 +169,12 @@ namespace Microsoft.HealthVault.PlatformInformation
 
         private void WriteMethods(XmlWriter writer)
         {
-            if (this.Methods == null)
+            if (Methods == null)
             {
                 return;
             }
 
-            foreach (HealthServiceMethodInfo method in this.Methods)
+            foreach (HealthServiceMethodInfo method in Methods)
             {
                 writer.WriteStartElement("xml-method");
                 {
@@ -207,17 +207,17 @@ namespace Microsoft.HealthVault.PlatformInformation
 
         private void WriteShellInfo(XmlWriter writer)
         {
-            if (this.HealthServiceShellInfo == null)
+            if (HealthServiceShellInfo == null)
             {
                 return;
             }
 
             writer.WriteStartElement("shell");
             {
-                writer.WriteElementString("url", this.HealthServiceShellInfo.BaseUrl.OriginalString);
-                writer.WriteElementString("redirect-url", this.HealthServiceShellInfo.RedirectUrl.OriginalString);
+                writer.WriteElementString("url", HealthServiceShellInfo.BaseUrl.OriginalString);
+                writer.WriteElementString("redirect-url", HealthServiceShellInfo.RedirectUrl.OriginalString);
 
-                foreach (HealthServiceShellRedirectToken token in this.HealthServiceShellInfo.RedirectTokens)
+                foreach (HealthServiceShellRedirectToken token in HealthServiceShellInfo.RedirectTokens)
                 {
                     writer.WriteStartElement("redirect-token");
                     {
@@ -254,16 +254,16 @@ namespace Microsoft.HealthVault.PlatformInformation
 
         private void WriteServiceInstances(XmlWriter writer)
         {
-            if (this.ServiceInstances == null || this.CurrentInstance == null)
+            if (ServiceInstances == null || CurrentInstance == null)
             {
                 return;
             }
 
             writer.WriteStartElement("instances");
             {
-                writer.WriteAttributeString("current-instance-id", this.CurrentInstance.Id);
+                writer.WriteAttributeString("current-instance-id", CurrentInstance.Id);
 
-                foreach (HealthServiceInstance instance in this.ServiceInstances.Values)
+                foreach (HealthServiceInstance instance in ServiceInstances.Values)
                 {
                     instance.WriteXml(writer);
                 }
@@ -276,7 +276,7 @@ namespace Microsoft.HealthVault.PlatformInformation
         {
             writer.WriteElementString(
                 "updated-date",
-                SDKHelper.XmlFromDateTime(this.LastUpdated.ToUniversalTime()));
+                SDKHelper.XmlFromDateTime(LastUpdated.ToUniversalTime()));
         }
 
         private static Dictionary<string, string> GetConfigurationValues(
@@ -360,28 +360,28 @@ namespace Microsoft.HealthVault.PlatformInformation
             string currentInstanceId,
             DateTime lastUpdated)
         {
-            this.HealthServiceUrl = healthServiceUrl;
-            this.Version = healthVaultVersion;
-            this.HealthServiceShellInfo = shellInfo;
+            HealthServiceUrl = healthServiceUrl;
+            Version = healthVaultVersion;
+            HealthServiceShellInfo = shellInfo;
 
-            this.Methods =
+            Methods =
                 new ReadOnlyCollection<HealthServiceMethodInfo>(methods);
-            this.IncludedSchemaUrls =
+            IncludedSchemaUrls =
                 new ReadOnlyCollection<Uri>(includes);
 
             if (configurationValues != null)
             {
-                this.ConfigurationValues = configurationValues;
+                ConfigurationValues = configurationValues;
             }
 
             if (instances != null)
             {
-                this.ServiceInstances = instances;
+                ServiceInstances = instances;
 
-                this.CurrentInstance = this.ServiceInstances[currentInstanceId];
+                CurrentInstance = ServiceInstances[currentInstanceId];
             }
 
-            this.LastUpdated = lastUpdated;
+            LastUpdated = lastUpdated;
         }
 
         /// <summary>

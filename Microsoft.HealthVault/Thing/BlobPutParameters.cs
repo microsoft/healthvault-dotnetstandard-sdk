@@ -45,12 +45,12 @@ namespace Microsoft.HealthVault.Thing
             BlobHashAlgorithm blobHashAlgorithm,
             int blockSize)
         {
-            this.Url = blobReferenceUrl;
-            this.ChunkSize = chunkSize;
-            this.PostEncryptionChunkSize = chunkSize;
-            this.MaxBlobSize = maxBlobSize;
-            this.BlobHashAlgorithm = blobHashAlgorithm;
-            this.HashBlockSize = blockSize;
+            Url = blobReferenceUrl;
+            ChunkSize = chunkSize;
+            PostEncryptionChunkSize = chunkSize;
+            MaxBlobSize = maxBlobSize;
+            BlobHashAlgorithm = blobHashAlgorithm;
+            HashBlockSize = blockSize;
         }
 
         /// <summary>
@@ -90,12 +90,12 @@ namespace Microsoft.HealthVault.Thing
             BlobHashAlgorithm blobHashAlgorithm,
             int blockSize)
         {
-            this.Url = blobReferenceUrl;
-            this.ChunkSize = chunkSize;
-            this.PostEncryptionChunkSize = postEncryptionChunkSize;
-            this.MaxBlobSize = maxBlobSize;
-            this.BlobHashAlgorithm = blobHashAlgorithm;
-            this.HashBlockSize = blockSize;
+            Url = blobReferenceUrl;
+            ChunkSize = chunkSize;
+            PostEncryptionChunkSize = postEncryptionChunkSize;
+            MaxBlobSize = maxBlobSize;
+            BlobHashAlgorithm = blobHashAlgorithm;
+            HashBlockSize = blockSize;
         }
 
         /// <summary>

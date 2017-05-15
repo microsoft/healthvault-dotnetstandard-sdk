@@ -51,9 +51,9 @@ namespace Microsoft.HealthVault.ItemTypes
             BloodGlucoseMeasurement lowerBoundaryAbsoluteGlucose,
             BloodGlucoseMeasurement upperBoundaryAbsoluteGlucose)
         {
-            this.name = name;
-            this.lowAbsolute = lowerBoundaryAbsoluteGlucose;
-            this.upperAbsolute = upperBoundaryAbsoluteGlucose;
+            _name = name;
+            _lowAbsolute = lowerBoundaryAbsoluteGlucose;
+            _upperAbsolute = upperBoundaryAbsoluteGlucose;
         }
 
         /// <summary>
@@ -86,9 +86,9 @@ namespace Microsoft.HealthVault.ItemTypes
             double lowerBoundaryRelativeGlucose,
             double upperBoundaryRelativeGlucose)
         {
-            this.name = name;
-            this.RelativeLowerBoundary = lowerBoundaryRelativeGlucose;
-            this.RelativeUpperBoundary = upperBoundaryRelativeGlucose;
+            _name = name;
+            RelativeLowerBoundary = lowerBoundaryRelativeGlucose;
+            RelativeUpperBoundary = upperBoundaryRelativeGlucose;
         }
 
         /// <summary>
@@ -110,7 +110,7 @@ namespace Microsoft.HealthVault.ItemTypes
             string name = navigator.GetAttribute("name", string.Empty);
             if (name.Length != 0)
             {
-                this.name = name;
+                _name = name;
             }
 
             XPathNavigator lowNav =
@@ -121,8 +121,8 @@ namespace Microsoft.HealthVault.ItemTypes
                     lowNav.SelectSingleNode("absolute-glucose");
                 if (absoluteNav != null)
                 {
-                    this.lowAbsolute = new BloodGlucoseMeasurement();
-                    this.lowAbsolute.ParseXml(absoluteNav);
+                    _lowAbsolute = new BloodGlucoseMeasurement();
+                    _lowAbsolute.ParseXml(absoluteNav);
                 }
                 else
                 {
@@ -130,7 +130,7 @@ namespace Microsoft.HealthVault.ItemTypes
                         lowNav.SelectSingleNode("percent-max-glucose");
                     if (relativeNav != null)
                     {
-                        this.lowRelative = relativeNav.ValueAsDouble;
+                        _lowRelative = relativeNav.ValueAsDouble;
                     }
                 }
             }
@@ -143,8 +143,8 @@ namespace Microsoft.HealthVault.ItemTypes
                     upperNav.SelectSingleNode("absolute-glucose");
                 if (absoluteNav != null)
                 {
-                    this.upperAbsolute = new BloodGlucoseMeasurement();
-                    this.upperAbsolute.ParseXml(absoluteNav);
+                    _upperAbsolute = new BloodGlucoseMeasurement();
+                    _upperAbsolute.ParseXml(absoluteNav);
                 }
                 else
                 {
@@ -152,7 +152,7 @@ namespace Microsoft.HealthVault.ItemTypes
                         upperNav.SelectSingleNode("percent-max-glucose");
                     if (relativeNav != null)
                     {
-                        this.upperRelative = relativeNav.ValueAsDouble;
+                        _upperRelative = relativeNav.ValueAsDouble;
                     }
                 }
             }
@@ -190,47 +190,47 @@ namespace Microsoft.HealthVault.ItemTypes
             Validator.ThrowIfStringNullOrEmpty(nodeName, "nodeName");
             Validator.ThrowIfWriterNull(writer);
 
-            if (this.lowAbsolute == null && this.lowRelative == null)
+            if (_lowAbsolute == null && _lowRelative == null)
             {
                 throw new ThingSerializationException(Resources.GlucoseZoneNoLowerBoundary);
             }
 
-            if (this.upperAbsolute == null && this.upperRelative == null)
+            if (_upperAbsolute == null && _upperRelative == null)
             {
                 throw new ThingSerializationException(Resources.GlucoseZoneNoUpperBoundary);
             }
 
             writer.WriteStartElement(nodeName);
 
-            if (!string.IsNullOrEmpty(this.name))
+            if (!string.IsNullOrEmpty(_name))
             {
-                writer.WriteAttributeString("name", this.name);
+                writer.WriteAttributeString("name", _name);
             }
 
             writer.WriteStartElement("lower-bound");
-            if (this.lowAbsolute != null)
+            if (_lowAbsolute != null)
             {
-                this.lowAbsolute.WriteXml("absolute-glucose", writer);
+                _lowAbsolute.WriteXml("absolute-glucose", writer);
             }
             else
             {
                 writer.WriteElementString(
                     "percent-max-glucose",
-                    this.lowRelative.Value.ToString(CultureInfo.InvariantCulture));
+                    _lowRelative.Value.ToString(CultureInfo.InvariantCulture));
             }
 
             writer.WriteEndElement();
 
             writer.WriteStartElement("upper-bound");
-            if (this.upperAbsolute != null)
+            if (_upperAbsolute != null)
             {
-                this.upperAbsolute.WriteXml("absolute-glucose", writer);
+                _upperAbsolute.WriteXml("absolute-glucose", writer);
             }
             else
             {
                 writer.WriteElementString(
                     "percent-max-glucose",
-                    this.upperRelative.Value.ToString(CultureInfo.InvariantCulture));
+                    _upperRelative.Value.ToString(CultureInfo.InvariantCulture));
             }
 
             writer.WriteEndElement();
@@ -252,11 +252,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public string Name
         {
-            get { return this.name; }
-            set { this.name = value; }
+            get { return _name; }
+            set { _name = value; }
         }
 
-        private string name;
+        private string _name;
 
         /// <summary>
         /// Gets or sets the lower boundary of the blood glucose zone as a
@@ -279,20 +279,20 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public double? RelativeLowerBoundary
         {
-            get { return this.lowRelative; }
+            get { return _lowRelative; }
 
             set
             {
                 if (value != null && (value < 0.0 || value > 1.0))
                 {
-                    throw new ArgumentOutOfRangeException(nameof(this.RelativeLowerBoundary), Resources.GlucoseZoneRelativeBoundaryRange);
+                    throw new ArgumentOutOfRangeException(nameof(RelativeLowerBoundary), Resources.GlucoseZoneRelativeBoundaryRange);
                 }
 
-                this.lowRelative = value;
+                _lowRelative = value;
             }
         }
 
-        private double? lowRelative;
+        private double? _lowRelative;
 
         /// <summary>
         /// Gets or sets the lower boundary of the blood glucose zone as a
@@ -312,11 +312,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public BloodGlucoseMeasurement AbsoluteLowerBoundary
         {
-            get { return this.lowAbsolute; }
-            set { this.lowAbsolute = value; }
+            get { return _lowAbsolute; }
+            set { _lowAbsolute = value; }
         }
 
-        private BloodGlucoseMeasurement lowAbsolute;
+        private BloodGlucoseMeasurement _lowAbsolute;
 
         /// <summary>
         /// Gets or sets the upper boundary of the blood glucose zone as a
@@ -339,20 +339,20 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public double? RelativeUpperBoundary
         {
-            get { return this.upperRelative; }
+            get { return _upperRelative; }
 
             set
             {
                 if (value != null && (value < 0.0 || value > 1.0))
                 {
-                    throw new ArgumentOutOfRangeException(nameof(this.RelativeUpperBoundary), Resources.GlucoseZoneRelativeBoundaryRange);
+                    throw new ArgumentOutOfRangeException(nameof(RelativeUpperBoundary), Resources.GlucoseZoneRelativeBoundaryRange);
                 }
 
-                this.upperRelative = value;
+                _upperRelative = value;
             }
         }
 
-        private double? upperRelative;
+        private double? _upperRelative;
 
         /// <summary>
         /// Gets or sets the upper boundary of the blood glucose zone as a
@@ -367,10 +367,10 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public BloodGlucoseMeasurement AbsoluteUpperBoundary
         {
-            get { return this.upperAbsolute; }
-            set { this.upperAbsolute = value; }
+            get { return _upperAbsolute; }
+            set { _upperAbsolute = value; }
         }
 
-        private BloodGlucoseMeasurement upperAbsolute;
+        private BloodGlucoseMeasurement _upperAbsolute;
     }
 }

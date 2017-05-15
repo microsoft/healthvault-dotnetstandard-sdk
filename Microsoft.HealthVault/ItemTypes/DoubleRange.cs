@@ -127,8 +127,8 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             return string.Format(
                 Resources.Range,
-                this.MinRange,
-                this.MaxRange);
+                MinRange,
+                MaxRange);
         }
     }
 }

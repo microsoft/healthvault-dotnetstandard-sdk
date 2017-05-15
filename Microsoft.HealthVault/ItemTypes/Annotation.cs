@@ -49,7 +49,7 @@ namespace Microsoft.HealthVault.ItemTypes
         public Annotation(HealthServiceDateTime when)
             : base(TypeId)
         {
-            this.When = when;
+            When = when;
         }
 
         /// <summary>
@@ -83,22 +83,22 @@ namespace Microsoft.HealthVault.ItemTypes
 
             Validator.ThrowInvalidIfNull(itemNav, Resources.AnnotationUnexpectedNode);
 
-            this.when = new HealthServiceDateTime();
-            this.when.ParseXml(itemNav.SelectSingleNode("when"));
+            _when = new HealthServiceDateTime();
+            _when.ParseXml(itemNav.SelectSingleNode("when"));
 
-            this.content =
+            _content =
                 XPathHelper.GetOptNavValue(itemNav, "content");
 
-            this.author =
+            _author =
                 XPathHelper.GetOptNavValue<PersonItem>(itemNav, "author");
 
-            this.classification =
+            _classification =
                 XPathHelper.GetOptNavValue(itemNav, "classification");
 
-            this.index =
+            _index =
                 XPathHelper.GetOptNavValue(itemNav, "index");
 
-            this.version =
+            _version =
                 XPathHelper.GetOptNavValue(itemNav, "version");
         }
 
@@ -121,43 +121,43 @@ namespace Microsoft.HealthVault.ItemTypes
         public override void WriteXml(XmlWriter writer)
         {
             Validator.ThrowIfArgumentNull(writer, nameof(writer), Resources.WriteXmlNullWriter);
-            Validator.ThrowSerializationIfNull(this.when, Resources.AnnotationWhenNotSet);
+            Validator.ThrowSerializationIfNull(_when, Resources.AnnotationWhenNotSet);
 
             // <annotation>
             writer.WriteStartElement("annotation");
 
             // <when>
-            this.when.WriteXml("when", writer);
+            _when.WriteXml("when", writer);
 
             // <content>
             XmlWriterHelper.WriteOptString(
                 writer,
                 "content",
-                this.content);
+                _content);
 
             // <author>
             XmlWriterHelper.WriteOpt(
                 writer,
                 "author",
-                this.Author);
+                Author);
 
             // <classification>
             XmlWriterHelper.WriteOptString(
                 writer,
                 "classification",
-                this.classification);
+                _classification);
 
             // <index>
             XmlWriterHelper.WriteOptString(
                 writer,
                 "index",
-                this.index);
+                _index);
 
             // <version>
             XmlWriterHelper.WriteOptString(
                 writer,
                 "version",
-                this.version);
+                _version);
 
             // </annotation>
             writer.WriteEndElement();
@@ -178,16 +178,16 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public HealthServiceDateTime When
         {
-            get { return this.when; }
+            get { return _when; }
 
             set
             {
-                Validator.ThrowIfArgumentNull(value, nameof(this.When), Resources.WhenNullValue);
-                this.when = value;
+                Validator.ThrowIfArgumentNull(value, nameof(When), Resources.WhenNullValue);
+                _when = value;
             }
         }
 
-        private HealthServiceDateTime when = new HealthServiceDateTime();
+        private HealthServiceDateTime _when = new HealthServiceDateTime();
 
         /// <summary>
         /// Gets or sets the content for the annotation.
@@ -208,16 +208,16 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public string Content
         {
-            get { return this.content; }
+            get { return _content; }
 
             set
             {
                 Validator.ThrowIfStringIsWhitespace(value, "Content");
-                this.content = value;
+                _content = value;
             }
         }
 
-        private string content;
+        private string _content;
 
         /// <summary>
         /// Gets or sets the author contact information.
@@ -234,11 +234,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public PersonItem Author
         {
-            get { return this.author; }
-            set { this.author = value; }
+            get { return _author; }
+            set { _author = value; }
         }
 
-        private PersonItem author;
+        private PersonItem _author;
 
         /// <summary>
         /// Gets or sets the classification for the annotation.
@@ -258,16 +258,16 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public string Classification
         {
-            get { return this.classification; }
+            get { return _classification; }
 
             set
             {
                 Validator.ThrowIfStringIsWhitespace(value, "Classification");
-                this.classification = value;
+                _classification = value;
             }
         }
 
-        private string classification;
+        private string _classification;
 
         /// <summary>
         /// Gets or sets the index for the annotation.
@@ -288,16 +288,16 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public string Index
         {
-            get { return this.index; }
+            get { return _index; }
 
             set
             {
                 Validator.ThrowIfStringIsWhitespace(value, "Index");
-                this.index = value;
+                _index = value;
             }
         }
 
-        private string index;
+        private string _index;
 
         /// <summary>
         /// Gets or sets the version for the annotation.
@@ -318,16 +318,16 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public string Version
         {
-            get { return this.version; }
+            get { return _version; }
 
             set
             {
                 Validator.ThrowIfStringIsWhitespace(value, "Version");
-                this.version = value;
+                _version = value;
             }
         }
 
-        private string version;
+        private string _version;
 
         /// <summary>
         /// Gets a string representation of the annotation item.
@@ -341,29 +341,29 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             string result;
 
-            if (this.Content != null)
+            if (Content != null)
             {
-                result = this.Content;
+                result = Content;
 
-                if (this.Content.Length > 50)
+                if (Content.Length > 50)
                 {
-                    result = this.Content.Substring(0, 50) +
+                    result = Content.Substring(0, 50) +
                              Resources.Ellipsis;
                 }
             }
-            else if (this.Author != null)
+            else if (Author != null)
             {
                 result =
                     string.Format(
                         Resources.AnnotationAuthorFormat,
-                        this.Author.ToString());
+                        Author.ToString());
             }
             else
             {
                 result =
                     string.Format(
                         Resources.AnnotationDateFormat,
-                        this.When.ToString());
+                        When.ToString());
             }
 
             return result;

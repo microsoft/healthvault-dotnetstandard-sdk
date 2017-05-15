@@ -11,8 +11,8 @@ namespace Microsoft.HealthVault.Transport
     // From https://github.com/WebApiContrib/WebAPIContrib/blob/master/src/WebApiContrib/Content/CompressedContent.cs , which is not compatible with .NET Standard
     internal class CompressedContent : HttpContent
     {
-        private readonly HttpContent originalContent;
-        private readonly string encodingType;
+        private readonly HttpContent _originalContent;
+        private readonly string _encodingType;
 
         public CompressedContent(HttpContent content, string encodingType)
         {
@@ -26,20 +26,20 @@ namespace Microsoft.HealthVault.Transport
                 throw new ArgumentNullException(nameof(encodingType));
             }
 
-            this.originalContent = content;
-            this.encodingType = encodingType.ToLowerInvariant();
+            _originalContent = content;
+            _encodingType = encodingType.ToLowerInvariant();
 
-            if (this.encodingType != "gzip" && this.encodingType != "deflate")
+            if (_encodingType != "gzip" && _encodingType != "deflate")
             {
-                throw new InvalidOperationException(string.Format("Encoding '{0}' is not supported. Only supports gzip or deflate encoding.", this.encodingType));
+                throw new InvalidOperationException(string.Format("Encoding '{0}' is not supported. Only supports gzip or deflate encoding.", _encodingType));
             }
 
-            foreach (KeyValuePair<string, IEnumerable<string>> header in this.originalContent.Headers)
+            foreach (KeyValuePair<string, IEnumerable<string>> header in _originalContent.Headers)
             {
-                this.Headers.TryAddWithoutValidation(header.Key, header.Value);
+                Headers.TryAddWithoutValidation(header.Key, header.Value);
             }
 
-            this.Headers.ContentEncoding.Add(encodingType);
+            Headers.ContentEncoding.Add(encodingType);
         }
 
         protected override bool TryComputeLength(out long length)
@@ -53,16 +53,16 @@ namespace Microsoft.HealthVault.Transport
         {
             Stream compressedStream = null;
 
-            if (this.encodingType == "gzip")
+            if (_encodingType == "gzip")
             {
                 compressedStream = new GZipStream(stream, CompressionMode.Compress, leaveOpen: true);
             }
-            else if (this.encodingType == "deflate")
+            else if (_encodingType == "deflate")
             {
                 compressedStream = new DeflateStream(stream, CompressionMode.Compress, leaveOpen: true);
             }
 
-            return this.originalContent.CopyToAsync(compressedStream).ContinueWith(tsk =>
+            return _originalContent.CopyToAsync(compressedStream).ContinueWith(tsk =>
             {
                 compressedStream?.Dispose();
             });

@@ -72,15 +72,15 @@ namespace Microsoft.HealthVault.ItemTypes
 
             Validator.ThrowInvalidIfNull(itemNav, Resources.FamilyHistoryUnexpectedNode);
 
-            this.conditions.Clear();
+            _conditions.Clear();
             foreach (XPathNavigator conditionNav in itemNav.Select("condition"))
             {
                 ConditionEntry condition = new ConditionEntry();
                 condition.ParseXml(conditionNav);
-                this.conditions.Add(condition);
+                _conditions.Add(condition);
             }
 
-            this.relative =
+            _relative =
                 XPathHelper.GetOptNavValue<FamilyHistoryRelativeV3>(itemNav, "relative");
         }
 
@@ -104,7 +104,7 @@ namespace Microsoft.HealthVault.ItemTypes
             writer.WriteStartElement("family-history");
 
             // <condition>
-            foreach (ConditionEntry condition in this.conditions)
+            foreach (ConditionEntry condition in _conditions)
             {
                 condition.WriteXml("condition", writer);
             }
@@ -113,7 +113,7 @@ namespace Microsoft.HealthVault.ItemTypes
             XmlWriterHelper.WriteOpt(
                 writer,
                 "relative",
-                this.relative);
+                _relative);
 
             // </familty-history>
             writer.WriteEndElement();
@@ -127,9 +127,9 @@ namespace Microsoft.HealthVault.ItemTypes
         /// If there is no information about the condition of the relative the collection should be empty.
         /// </remarks>
         ///
-        public Collection<ConditionEntry> Conditions => this.conditions;
+        public Collection<ConditionEntry> Conditions => _conditions;
 
-        private readonly Collection<ConditionEntry> conditions = new Collection<ConditionEntry>();
+        private readonly Collection<ConditionEntry> _conditions = new Collection<ConditionEntry>();
 
         /// <summary>
         /// Gets or sets information about the relative with this condition.
@@ -141,11 +141,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public FamilyHistoryRelativeV3 Relative
         {
-            get { return this.relative; }
-            set { this.relative = value; }
+            get { return _relative; }
+            set { _relative = value; }
         }
 
-        private FamilyHistoryRelativeV3 relative;
+        private FamilyHistoryRelativeV3 _relative;
 
         /// <summary>
         /// Gets a string representation of the family history item.
@@ -159,7 +159,7 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             StringBuilder sb = new StringBuilder(200);
 
-            foreach (ConditionEntry condition in this.Conditions)
+            foreach (ConditionEntry condition in Conditions)
             {
                 if (sb.Length > 0)
                 {
@@ -170,12 +170,12 @@ namespace Microsoft.HealthVault.ItemTypes
             }
 
             string result = sb.ToString();
-            if (this.relative != null && this.relative.Relationship != null)
+            if (_relative != null && _relative.Relationship != null)
             {
                 result = string.Format(
                         Resources.FamilyHistoryToStringFormat,
                         result,
-                        this.relative.Relationship.Text);
+                        _relative.Relationship.Text);
             }
 
             return result;

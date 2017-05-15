@@ -8,7 +8,6 @@ using Microsoft.HealthVault.Transport;
 
 namespace Microsoft.HealthVault
 {
-
     internal static class Ioc
     {
         static Ioc()

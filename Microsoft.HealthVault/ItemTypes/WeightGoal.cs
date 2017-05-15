@@ -69,8 +69,8 @@ namespace Microsoft.HealthVault.ItemTypes
 
             if (initialNav != null)
             {
-                this.initialWeight = new WeightValue();
-                this.initialWeight.ParseXml(initialNav);
+                _initialWeight = new WeightValue();
+                _initialWeight.ParseXml(initialNav);
             }
 
             XPathNavigator minNav =
@@ -78,8 +78,8 @@ namespace Microsoft.HealthVault.ItemTypes
 
             if (minNav != null)
             {
-                this.minWeight = new WeightValue();
-                this.minWeight.ParseXml(minNav);
+                _minWeight = new WeightValue();
+                _minWeight.ParseXml(minNav);
             }
 
             XPathNavigator maxNav =
@@ -87,8 +87,8 @@ namespace Microsoft.HealthVault.ItemTypes
 
             if (maxNav != null)
             {
-                this.maxWeight = new WeightValue();
-                this.maxWeight.ParseXml(maxNav);
+                _maxWeight = new WeightValue();
+                _maxWeight.ParseXml(maxNav);
             }
 
             XPathNavigator goalNav =
@@ -96,8 +96,8 @@ namespace Microsoft.HealthVault.ItemTypes
 
             if (goalNav != null)
             {
-                this.goal = new Goal();
-                this.goal.ParseXml(goalNav);
+                _goal = new Goal();
+                _goal.ParseXml(goalNav);
             }
         }
 
@@ -120,24 +120,24 @@ namespace Microsoft.HealthVault.ItemTypes
             // <weight-goal>
             writer.WriteStartElement("weight-goal");
 
-            if (this.initialWeight != null)
+            if (_initialWeight != null)
             {
-                this.initialWeight.WriteXml("initial", writer);
+                _initialWeight.WriteXml("initial", writer);
             }
 
-            if (this.minWeight != null)
+            if (_minWeight != null)
             {
-                this.minWeight.WriteXml("minimum", writer);
+                _minWeight.WriteXml("minimum", writer);
             }
 
-            if (this.maxWeight != null)
+            if (_maxWeight != null)
             {
-                this.maxWeight.WriteXml("maximum", writer);
+                _maxWeight.WriteXml("maximum", writer);
             }
 
-            if (this.goal != null)
+            if (_goal != null)
             {
-                this.goal.WriteXml("goal-info", writer);
+                _goal.WriteXml("goal-info", writer);
             }
 
             // </weight-goal>
@@ -158,11 +158,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public WeightValue InitialWeight
         {
-            get { return this.initialWeight; }
-            set { this.initialWeight = value; }
+            get { return _initialWeight; }
+            set { _initialWeight = value; }
         }
 
-        private WeightValue initialWeight;
+        private WeightValue _initialWeight;
 
         /// <summary>
         /// Gets or sets the person's minimum weight.
@@ -178,11 +178,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public WeightValue MinimumWeight
         {
-            get { return this.minWeight; }
-            set { this.minWeight = value; }
+            get { return _minWeight; }
+            set { _minWeight = value; }
         }
 
-        private WeightValue minWeight;
+        private WeightValue _minWeight;
 
         /// <summary>
         /// Gets or sets the person's maximum weight.
@@ -198,11 +198,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public WeightValue MaximumWeight
         {
-            get { return this.maxWeight; }
-            set { this.maxWeight = value; }
+            get { return _maxWeight; }
+            set { _maxWeight = value; }
         }
 
-        private WeightValue maxWeight;
+        private WeightValue _maxWeight;
 
         /// <summary>
         /// Gets or sets the goal information.
@@ -218,11 +218,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public Goal Goal
         {
-            get { return this.goal; }
-            set { this.goal = value; }
+            get { return _goal; }
+            set { _goal = value; }
         }
 
-        private Goal goal;
+        private Goal _goal;
 
         /// <summary>
         /// Gets a string representation of the weight goal.
@@ -236,65 +236,65 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             string result = string.Empty;
 
-            if (this.Goal == null || this.Goal.TargetDate == null)
+            if (Goal == null || Goal.TargetDate == null)
             {
-                if (this.MinimumWeight != null)
+                if (MinimumWeight != null)
                 {
-                    if (this.MaximumWeight != null)
+                    if (MaximumWeight != null)
                     {
                         result =
                             string.Format(
                                 Resources.MeasurementRange,
-                                this.MinimumWeight.ToString(),
-                                this.MaximumWeight.ToString());
+                                MinimumWeight.ToString(),
+                                MaximumWeight.ToString());
                     }
                     else
                     {
                         result =
                             string.Format(
                                 Resources.WeightGoalToStringFormatMin,
-                                this.MinimumWeight.ToString());
+                                MinimumWeight.ToString());
                     }
                 }
                 else
                 {
-                    if (this.MaximumWeight != null)
+                    if (MaximumWeight != null)
                     {
-                        result = this.MaximumWeight.ToString();
+                        result = MaximumWeight.ToString();
                     }
                 }
             }
             else
             {
-                if (this.MinimumWeight != null)
+                if (MinimumWeight != null)
                 {
-                    if (this.MaximumWeight != null)
+                    if (MaximumWeight != null)
                     {
                         result =
                             string.Format(
                                 Resources.MeasurementRangeWithDate,
-                                this.MinimumWeight.ToString(),
-                                this.MaximumWeight.ToString(),
-                                this.Goal.TargetDate.ToString());
+                                MinimumWeight.ToString(),
+                                MaximumWeight.ToString(),
+                                Goal.TargetDate.ToString());
                     }
                     else
                     {
                         result =
                             string.Format(
                                 Resources.WeightGoalToStringFormatMinWithDate,
-                                this.MinimumWeight.ToString(),
-                                this.Goal.TargetDate.ToString());
+                                MinimumWeight.ToString(),
+                                Goal.TargetDate.ToString());
                     }
                 }
                 else
                 {
-                    if (this.MaximumWeight != null)
+                    if (MaximumWeight != null)
                     {
                         result =
                             string.Format(
                                 Resources.WeightGoalToStringFormatMaxWithDate,
-                                this.MaximumWeight.ToString(),
-                                this.Goal.TargetDate.ToString());
+                                MaximumWeight.ToString(),
+                                Goal.TargetDate.ToString());
                     }
                     else
                     {
@@ -302,7 +302,7 @@ namespace Microsoft.HealthVault.ItemTypes
                             string.Format(
                                 Resources.WeightGoalToStringFormatMaxWithDate,
                                 string.Empty,
-                                this.Goal.TargetDate.ToString());
+                                Goal.TargetDate.ToString());
                     }
                 }
             }

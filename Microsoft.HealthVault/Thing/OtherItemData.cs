@@ -55,9 +55,9 @@ namespace Microsoft.HealthVault.Thing
             string contentEncoding,
             string contentType)
         {
-            this.Data = data;
-            this.ContentEncoding = contentEncoding;
-            this.ContentType = contentType;
+            Data = data;
+            ContentEncoding = contentEncoding;
+            ContentType = contentType;
         }
 
         /// <summary>
@@ -69,12 +69,12 @@ namespace Microsoft.HealthVault.Thing
         /// </param>
         public void ParseXml(XPathNavigator otherDataNavigator)
         {
-            this.Data = otherDataNavigator.Value;
+            Data = otherDataNavigator.Value;
 
-            this.ContentType =
+            ContentType =
                 otherDataNavigator.GetAttribute("content-type", string.Empty);
 
-            this.ContentEncoding =
+            ContentEncoding =
                 otherDataNavigator.GetAttribute("content-encoding", string.Empty);
         }
 
@@ -94,21 +94,21 @@ namespace Microsoft.HealthVault.Thing
             // <data-other>
             writer.WriteStartElement("data-other");
 
-            if (!string.IsNullOrEmpty(this.ContentType))
+            if (!string.IsNullOrEmpty(ContentType))
             {
                 writer.WriteAttributeString(
                     "content-type",
-                    this.ContentType);
+                    ContentType);
             }
 
-            if (!string.IsNullOrEmpty(this.ContentEncoding))
+            if (!string.IsNullOrEmpty(ContentEncoding))
             {
                 writer.WriteAttributeString(
                     "content-encoding",
-                    this.ContentEncoding);
+                    ContentEncoding);
             }
 
-            writer.WriteString(this.Data);
+            writer.WriteString(Data);
 
             // </data-other>
             writer.WriteEndElement();

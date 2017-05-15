@@ -61,8 +61,8 @@ namespace Microsoft.HealthVault.ItemTypes
         public AllergicEpisode(HealthServiceDateTime when, CodableValue name)
             : base(TypeId)
         {
-            this.When = when;
-            this.Name = name;
+            When = when;
+            Name = name;
         }
 
         /// <summary>
@@ -87,31 +87,31 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         protected override void ParseXml(IXPathNavigable typeSpecificXml)
         {
-            this.name.Clear();
+            _name.Clear();
             XPathNavigator allergyNav =
                 typeSpecificXml.CreateNavigator().SelectSingleNode("allergic-episode");
 
             Validator.ThrowInvalidIfNull(allergyNav, Resources.AllergicEpisodeUnexpectedNode);
 
-            this.when = new HealthServiceDateTime();
-            this.when.ParseXml(allergyNav.SelectSingleNode("when"));
-            this.name.ParseXml(allergyNav.SelectSingleNode("name"));
+            _when = new HealthServiceDateTime();
+            _when.ParseXml(allergyNav.SelectSingleNode("when"));
+            _name.ParseXml(allergyNav.SelectSingleNode("name"));
 
             XPathNavigator reactionNav =
                 allergyNav.SelectSingleNode("reaction");
 
             if (reactionNav != null)
             {
-                this.reaction = new CodableValue();
-                this.reaction.ParseXml(reactionNav);
+                _reaction = new CodableValue();
+                _reaction.ParseXml(reactionNav);
             }
 
             XPathNavigator treatmentNav =
                 allergyNav.SelectSingleNode("treatment");
             if (treatmentNav != null)
             {
-                this.treatment = new CodableValue();
-                this.treatment.ParseXml(treatmentNav);
+                _treatment = new CodableValue();
+                _treatment.ParseXml(treatmentNav);
             }
         }
 
@@ -134,17 +134,17 @@ namespace Microsoft.HealthVault.ItemTypes
         public override void WriteXml(XmlWriter writer)
         {
             Validator.ThrowIfArgumentNull(writer, nameof(writer), Resources.WriteXmlNullWriter);
-            Validator.ThrowSerializationIfNull(this.name.Text, Resources.AllergyNameMandatory);
+            Validator.ThrowSerializationIfNull(_name.Text, Resources.AllergyNameMandatory);
 
             // <allergic-episode>
             writer.WriteStartElement("allergic-episode");
 
-            this.when.WriteXml("when", writer);
-            this.name.WriteXml("name", writer);
+            _when.WriteXml("when", writer);
+            _name.WriteXml("name", writer);
 
-            this.Reaction?.WriteXml("reaction", writer);
+            Reaction?.WriteXml("reaction", writer);
 
-            this.Treatment?.WriteXml("treatment", writer);
+            Treatment?.WriteXml("treatment", writer);
 
             // </allergic-episode>
             writer.WriteEndElement();
@@ -165,16 +165,16 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public CodableValue Name
         {
-            get { return this.name; }
+            get { return _name; }
 
             set
             {
-                Validator.ThrowIfArgumentNull(value, nameof(this.Name), Resources.AllergyNameMandatory);
-                this.name = value;
+                Validator.ThrowIfArgumentNull(value, nameof(Name), Resources.AllergyNameMandatory);
+                _name = value;
             }
         }
 
-        private CodableValue name = new CodableValue();
+        private CodableValue _name = new CodableValue();
 
         /// <summary>
         /// Gets or sets the date/time when the allergic episode occurred.
@@ -191,16 +191,16 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public HealthServiceDateTime When
         {
-            get { return this.when; }
+            get { return _when; }
 
             set
             {
-                Validator.ThrowIfArgumentNull(value, nameof(this.When), Resources.WhenNullValue);
-                this.when = value;
+                Validator.ThrowIfArgumentNull(value, nameof(When), Resources.WhenNullValue);
+                _when = value;
             }
         }
 
-        private HealthServiceDateTime when = new HealthServiceDateTime();
+        private HealthServiceDateTime _when = new HealthServiceDateTime();
 
         /// <summary>
         /// Gets or sets the reaction the person has.
@@ -212,11 +212,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public CodableValue Reaction
         {
-            get { return this.reaction; }
-            set { this.reaction = value; }
+            get { return _reaction; }
+            set { _reaction = value; }
         }
 
-        private CodableValue reaction;
+        private CodableValue _reaction;
 
         /// <summary>
         /// Gets or sets a possible treatment method for this allergy.
@@ -229,11 +229,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public CodableValue Treatment
         {
-            get { return this.treatment; }
-            set { this.treatment = value; }
+            get { return _treatment; }
+            set { _treatment = value; }
         }
 
-        private CodableValue treatment;
+        private CodableValue _treatment;
 
         /// <summary>
         /// Gets a string representation of the allergic episode item.
@@ -245,7 +245,7 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public override string ToString()
         {
-            return this.Name.Text;
+            return Name.Text;
         }
     }
 }

@@ -113,13 +113,13 @@ namespace Microsoft.HealthVault.Thing
             bool isOptional,
             AuthorizationRuleDisplayFlags displayFlags)
         {
-            this.Name = name;
-            this.IsOptional = isOptional;
-            this.DisplayFlags = displayFlags;
+            Name = name;
+            IsOptional = isOptional;
+            DisplayFlags = displayFlags;
 
             if (!string.IsNullOrEmpty(reason))
             {
-                this.CultureSpecificReasons.DefaultValue = reason;
+                CultureSpecificReasons.DefaultValue = reason;
             }
 
             if (permissions == ThingPermissions.None)
@@ -127,30 +127,30 @@ namespace Microsoft.HealthVault.Thing
                 throw new ArgumentException(Resources.AuthorizationRuleBadPermissions, nameof(permissions));
             }
 
-            this.Permissions = permissions;
+            Permissions = permissions;
 
             if (targetSets != null)
             {
-                this.TargetSets =
+                TargetSets =
                     new ReadOnlyCollection<AuthorizationSetDefinition>(
                         targetSets);
             }
             else
             {
-                this.TargetSets =
+                TargetSets =
                     new ReadOnlyCollection<AuthorizationSetDefinition>(
                         new AuthorizationSetDefinition[0]);
             }
 
             if (exceptionSets != null)
             {
-                this.ExceptionSets =
+                ExceptionSets =
                     new ReadOnlyCollection<AuthorizationSetDefinition>(
                         exceptionSets);
             }
             else
             {
-                this.ExceptionSets =
+                ExceptionSets =
                     new ReadOnlyCollection<AuthorizationSetDefinition>(
                         new AuthorizationSetDefinition[0]);
             }
@@ -176,7 +176,7 @@ namespace Microsoft.HealthVault.Thing
         /// Gets the reason the application wants the access represented by this rule.
         /// </summary>
         ///
-        public string Reason => this.CultureSpecificReasons.BestValue;
+        public string Reason => CultureSpecificReasons.BestValue;
 
         /// <summary>
         /// Gets a dictionary of language specifiers and reasons.
@@ -237,7 +237,7 @@ namespace Microsoft.HealthVault.Thing
         ///
         public override string ToString()
         {
-            return this.GetXml();
+            return GetXml();
         }
 
         /// <summary>
@@ -337,21 +337,21 @@ namespace Microsoft.HealthVault.Thing
             {
                 writer.WriteStartElement("rule");
 
-                if (this.IsOptional)
+                if (IsOptional)
                 {
                     writer.WriteAttributeString("is-optional", "true");
                 }
 
-                if (!string.IsNullOrEmpty(this.Name))
+                if (!string.IsNullOrEmpty(Name))
                 {
-                    writer.WriteAttributeString("name", this.Name);
+                    writer.WriteAttributeString("name", Name);
                 }
 
-                this.AppendReasons(writer);
-                this.AppendDisplayFlags(writer);
-                this.AppendPermissions(writer);
-                AppendSets(writer, "target-set", this.TargetSets);
-                AppendSets(writer, "exception-set", this.ExceptionSets);
+                AppendReasons(writer);
+                AppendDisplayFlags(writer);
+                AppendPermissions(writer);
+                AppendSets(writer, "target-set", TargetSets);
+                AppendSets(writer, "exception-set", ExceptionSets);
 
                 writer.WriteEndElement();
             }
@@ -361,17 +361,17 @@ namespace Microsoft.HealthVault.Thing
 
         private void AppendReasons(XmlWriter writer)
         {
-            this.CultureSpecificReasons.AppendLocalizedElements(
+            CultureSpecificReasons.AppendLocalizedElements(
                 writer,
                 "reason");
         }
 
         private void AppendDisplayFlags(XmlWriter writer)
         {
-            if (this.DisplayFlags != AuthorizationRuleDisplayFlags.None)
+            if (DisplayFlags != AuthorizationRuleDisplayFlags.None)
             {
                 writer.WriteStartElement("display-flags");
-                writer.WriteValue((uint)this.DisplayFlags);
+                writer.WriteValue((uint)DisplayFlags);
                 writer.WriteEndElement();
             }
         }
@@ -468,7 +468,7 @@ namespace Microsoft.HealthVault.Thing
                 if (permissionValue != ThingPermissions.All &&
                     permissionValue != ThingPermissions.None)
                 {
-                    if ((permissionValue & this.Permissions) != 0)
+                    if ((permissionValue & Permissions) != 0)
                     {
                         writer.WriteElementString(
                             "permission",

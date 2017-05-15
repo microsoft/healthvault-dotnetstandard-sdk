@@ -47,8 +47,8 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public CodedValue(string value, string vocabularyName)
         {
-            this.Value = value;
-            this.VocabularyName = vocabularyName;
+            Value = value;
+            VocabularyName = vocabularyName;
         }
 
         /// <summary>
@@ -83,10 +83,10 @@ namespace Microsoft.HealthVault.ItemTypes
             string family,
             string version)
         {
-            this.Value = value;
-            this.VocabularyName = vocabularyName;
-            this.Family = family;
-            this.Version = version;
+            Value = value;
+            VocabularyName = vocabularyName;
+            Family = family;
+            Version = version;
         }
 
         /// <summary>
@@ -108,10 +108,10 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             Validator.ThrowIfArgumentNull(key, nameof(key), Resources.VocabularyKeyMandatory);
 
-            this.Value = value;
-            this.VocabularyName = key.Name;
-            this.Family = key.Family;
-            this.Version = key.Version;
+            Value = value;
+            VocabularyName = key.Name;
+            Family = key.Family;
+            Version = key.Version;
         }
 
         /// <summary>
@@ -130,22 +130,22 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             Validator.ThrowIfNavigatorNull(navigator);
 
-            this.value = navigator.SelectSingleNode("value").Value;
+            _value = navigator.SelectSingleNode("value").Value;
 
             XPathNavigator famNav = navigator.SelectSingleNode("family");
             if (famNav != null)
             {
-                this.family = famNav.Value;
+                _family = famNav.Value;
             }
 
-            this.vocabName = navigator.SelectSingleNode("type").Value;
+            _vocabName = navigator.SelectSingleNode("type").Value;
 
             XPathNavigator versionNav =
                 navigator.SelectSingleNode("version");
 
             if (versionNav != null)
             {
-                this.version = versionNav.Value;
+                _version = versionNav.Value;
             }
         }
 
@@ -178,30 +178,30 @@ namespace Microsoft.HealthVault.ItemTypes
             Validator.ThrowIfStringNullOrEmpty(nodeName, "nodeName");
             Validator.ThrowIfWriterNull(writer);
 
-            if (this.value == null)
+            if (_value == null)
             {
                 throw new ThingSerializationException(Resources.ValueNotSet);
             }
 
-            if (this.vocabName == null)
+            if (_vocabName == null)
             {
                 throw new ThingSerializationException(Resources.NameNotSet);
             }
 
             writer.WriteStartElement(nodeName);
 
-            writer.WriteElementString("value", this.value);
+            writer.WriteElementString("value", _value);
 
-            if (!string.IsNullOrEmpty(this.family))
+            if (!string.IsNullOrEmpty(_family))
             {
-                writer.WriteElementString("family", this.family);
+                writer.WriteElementString("family", _family);
             }
 
-            writer.WriteElementString("type", this.vocabName);
+            writer.WriteElementString("type", _vocabName);
 
-            if (!string.IsNullOrEmpty(this.version))
+            if (!string.IsNullOrEmpty(_version))
             {
-                writer.WriteElementString("version", this.version);
+                writer.WriteElementString("version", _version);
             }
 
             writer.WriteEndElement();
@@ -227,17 +227,17 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public string Value
         {
-            get { return this.value; }
+            get { return _value; }
 
             set
             {
                 Validator.ThrowIfStringNullOrEmpty(value, "Value");
                 Validator.ThrowIfStringIsWhitespace(value, "Value");
-                this.value = value;
+                _value = value;
             }
         }
 
-        private string value;
+        private string _value;
 
         /// <summary>
         /// Gets or sets the code family.
@@ -259,20 +259,20 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public string Family
         {
-            get { return this.family; }
+            get { return _family; }
 
             set
             {
                 if (!string.IsNullOrEmpty(value) && string.IsNullOrEmpty(value.Trim()))
                 {
-                    throw new ArgumentException(Resources.WhitespaceOnlyValue, nameof(this.Family));
+                    throw new ArgumentException(Resources.WhitespaceOnlyValue, nameof(Family));
                 }
 
-                this.family = value;
+                _family = value;
             }
         }
 
-        private string family;
+        private string _family;
 
         /// <summary>
         /// Gets or sets the vocabulary name.
@@ -289,17 +289,17 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public string VocabularyName
         {
-            get { return this.vocabName; }
+            get { return _vocabName; }
 
             set
             {
                 Validator.ThrowIfStringNullOrEmpty(value, "VocabularyName");
                 Validator.ThrowIfStringIsWhitespace(value, "VocabularyName");
-                this.vocabName = value;
+                _vocabName = value;
             }
         }
 
-        private string vocabName;
+        private string _vocabName;
 
         /// <summary>
         /// Gets or sets the code version.
@@ -319,20 +319,20 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public string Version
         {
-            get { return this.version; }
+            get { return _version; }
 
             set
             {
                 if (!string.IsNullOrEmpty(value) && string.IsNullOrEmpty(value.Trim()))
                 {
-                    throw new ArgumentException(Resources.WhitespaceOnlyValue, nameof(this.Version));
+                    throw new ArgumentException(Resources.WhitespaceOnlyValue, nameof(Version));
                 }
 
-                this.version = value;
+                _version = value;
             }
         }
 
-        private string version;
+        private string _version;
 
         /// <summary>
         /// Gets a string representation of the vocabulary item reference.
@@ -346,12 +346,12 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             StringBuilder result = new StringBuilder(30);
 
-            if (this.Family != null)
+            if (Family != null)
             {
-                result.Append(this.Family);
+                result.Append(Family);
             }
 
-            if (this.VocabularyName != null)
+            if (VocabularyName != null)
             {
                 if (result.Length > 0)
                 {
@@ -359,10 +359,10 @@ namespace Microsoft.HealthVault.ItemTypes
                         Resources.ListSeparator);
                 }
 
-                result.Append(this.VocabularyName);
+                result.Append(VocabularyName);
             }
 
-            if (this.Version != null)
+            if (Version != null)
             {
                 if (result.Length > 0)
                 {
@@ -370,10 +370,10 @@ namespace Microsoft.HealthVault.ItemTypes
                         Resources.ListSeparator);
                 }
 
-                result.Append(this.Version);
+                result.Append(Version);
             }
 
-            if (this.Value != null)
+            if (Value != null)
             {
                 if (result.Length > 0)
                 {
@@ -381,7 +381,7 @@ namespace Microsoft.HealthVault.ItemTypes
                         Resources.ListSeparator);
                 }
 
-                result.Append(this.Value);
+                result.Append(Value);
             }
 
             return result.ToString();

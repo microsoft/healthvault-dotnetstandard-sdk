@@ -19,7 +19,6 @@ namespace Microsoft.HealthVault.Exceptions
         /// <summary>
         /// Creates an instance of the <see cref="HealthAuthorizedConnectionRequiredException"/>.
         /// </summary>
-        /// 
         ///
         /// <remarks>
         /// This constructor is internal to the SDK. Application developers
@@ -27,7 +26,7 @@ namespace Microsoft.HealthVault.Exceptions
         /// throwing new exceptions of this type.
         /// </remarks>
         ///
-        internal HealthAuthorizedConnectionRequiredException() 
+        internal HealthAuthorizedConnectionRequiredException()
             : base(Resources.AuthenticatedConnectionRequired)
         {
         }

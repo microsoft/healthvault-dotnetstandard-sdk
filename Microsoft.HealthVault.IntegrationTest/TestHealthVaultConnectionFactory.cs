@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Microsoft.HealthVault.Client;
 
 namespace Microsoft.HealthVault.IntegrationTest
@@ -10,7 +6,7 @@ namespace Microsoft.HealthVault.IntegrationTest
     public class HealthVaultConnectionFactory
     {
         private static readonly object InstanceLock = new object();
-        private static IHealthVaultConnectionFactory current;
+        private static IHealthVaultConnectionFactory s_current;
 
         /// <summary>
         /// Gets the current factory instance.
@@ -21,13 +17,13 @@ namespace Microsoft.HealthVault.IntegrationTest
             {
                 lock (InstanceLock)
                 {
-                    if (current == null)
+                    if (s_current == null)
                     {
                         ClientIoc.EnsureTypesRegistered();
-                        current = new HealthVaultConnectionFactoryInternal();
+                        s_current = new HealthVaultConnectionFactoryInternal();
                     }
 
-                    return current;
+                    return s_current;
                 }
             }
         }

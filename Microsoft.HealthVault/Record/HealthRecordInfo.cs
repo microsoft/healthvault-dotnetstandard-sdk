@@ -45,17 +45,17 @@ namespace Microsoft.HealthVault.Record
         ///
         internal HealthRecordInfo(HealthRecordInfo recordInfo)
         {
-            this.Id = recordInfo.Id;
-            this.custodian = recordInfo.IsCustodian;
-            this.dateAuthorizationExpires = recordInfo.DateAuthorizationExpires;
-            this.name = recordInfo.Name;
-            this.relationshipType = recordInfo.RelationshipType;
-            this.relationshipName = recordInfo.RelationshipName;
-            this.displayName = recordInfo.DisplayName;
+            Id = recordInfo.Id;
+            _custodian = recordInfo.IsCustodian;
+            _dateAuthorizationExpires = recordInfo.DateAuthorizationExpires;
+            _name = recordInfo.Name;
+            _relationshipType = recordInfo.RelationshipType;
+            _relationshipName = recordInfo.RelationshipName;
+            _displayName = recordInfo.DisplayName;
 
             if (recordInfo.Location != null)
             {
-                this.Location = new Location(recordInfo.Location.Country, recordInfo.Location.StateProvince);
+                Location = new Location(recordInfo.Location.Country, recordInfo.Location.StateProvince);
             }
         }
 
@@ -155,16 +155,16 @@ namespace Microsoft.HealthVault.Record
         internal void ParseXml(XPathNavigator navigator)
         {
             string id = navigator.GetAttribute("id", string.Empty);
-            this.Id = new Guid(id);
+            Id = new Guid(id);
 
             string country = navigator.GetAttribute("location-country", string.Empty);
             string state = navigator.GetAttribute("location-state-province", string.Empty);
             if (!string.IsNullOrEmpty(country))
             {
-                this.Location = new Location(country, string.IsNullOrEmpty(state) ? null : state);
+                Location = new Location(country, string.IsNullOrEmpty(state) ? null : state);
             }
 
-            this.custodian = XPathHelper.ParseAttributeAsBoolean(navigator, "record-custodian", false);
+            _custodian = XPathHelper.ParseAttributeAsBoolean(navigator, "record-custodian", false);
 
             long? relationshipNumber;
 
@@ -172,41 +172,41 @@ namespace Microsoft.HealthVault.Record
             if (relationshipNumber.HasValue &&
                (relationshipNumber <= (int)RelationshipType.Daughter))
             {
-                this.relationshipType = (RelationshipType)relationshipNumber;
+                _relationshipType = (RelationshipType)relationshipNumber;
             }
 
-            this.relationshipName = navigator.GetAttribute("rel-name", string.Empty);
+            _relationshipName = navigator.GetAttribute("rel-name", string.Empty);
 
-            this.dateAuthorizationExpires = XPathHelper.ParseAttributeAsDateTime(navigator, "auth-expires", DateTime.MinValue);
+            _dateAuthorizationExpires = XPathHelper.ParseAttributeAsDateTime(navigator, "auth-expires", DateTime.MinValue);
 
-            this.authExpired = XPathHelper.ParseAttributeAsBoolean(navigator, "auth-expired", false);
+            _authExpired = XPathHelper.ParseAttributeAsBoolean(navigator, "auth-expired", false);
 
-            this.name = navigator.Value;
+            _name = navigator.Value;
 
-            this.displayName = navigator.GetAttribute("display-name", string.Empty);
+            _displayName = navigator.GetAttribute("display-name", string.Empty);
 
-            this.State = XPathHelper.ParseAttributeAsEnum(navigator, "state", HealthRecordState.Unknown);
-            if (this.State > HealthRecordState.Deleted)
+            State = XPathHelper.ParseAttributeAsEnum(navigator, "state", HealthRecordState.Unknown);
+            if (State > HealthRecordState.Deleted)
             {
-                this.State = HealthRecordState.Unknown;
+                State = HealthRecordState.Unknown;
             }
 
-            this.DateCreated = XPathHelper.ParseAttributeAsDateTime(navigator, "date-created", DateTime.MinValue);
-            this.DateUpdated = XPathHelper.ParseAttributeAsDateTime(navigator, "date-updated", DateTime.MinValue);
+            DateCreated = XPathHelper.ParseAttributeAsDateTime(navigator, "date-created", DateTime.MinValue);
+            DateUpdated = XPathHelper.ParseAttributeAsDateTime(navigator, "date-updated", DateTime.MinValue);
 
-            this.QuotaInBytes = XPathHelper.ParseAttributeAsLong(navigator, "max-size-bytes", null);
-            this.QuotaUsedInBytes = XPathHelper.ParseAttributeAsLong(navigator, "size-bytes", null);
+            QuotaInBytes = XPathHelper.ParseAttributeAsLong(navigator, "max-size-bytes", null);
+            QuotaUsedInBytes = XPathHelper.ParseAttributeAsLong(navigator, "size-bytes", null);
 
-            this.HealthRecordAuthorizationStatus = XPathHelper.ParseAttributeAsEnum(
+            HealthRecordAuthorizationStatus = XPathHelper.ParseAttributeAsEnum(
                     navigator,
                     "app-record-auth-action",
                     HealthRecordAuthorizationStatus.Unknown);
 
-            this.ApplicationSpecificRecordId = navigator.GetAttribute("app-specific-record-id", string.Empty);
+            ApplicationSpecificRecordId = navigator.GetAttribute("app-specific-record-id", string.Empty);
 
-            this.LatestOperationSequenceNumber = XPathHelper.ParseAttributeAsLong(navigator, "latest-operation-sequence-number", 0).Value;
+            LatestOperationSequenceNumber = XPathHelper.ParseAttributeAsLong(navigator, "latest-operation-sequence-number", 0).Value;
 
-            this.RecordAppAuthCreatedDate = XPathHelper.ParseAttributeAsDateTime(navigator, "record-app-auth-created-date", DateTime.MinValue);
+            RecordAppAuthCreatedDate = XPathHelper.ParseAttributeAsDateTime(navigator, "record-app-auth-created-date", DateTime.MinValue);
         }
 
         /// <summary>
@@ -225,7 +225,7 @@ namespace Microsoft.HealthVault.Record
 
             using (XmlWriter writer = XmlWriter.Create(recordInfoXml, settings))
             {
-                this.WriteXml("record", writer);
+                WriteXml("record", writer);
                 writer.Flush();
             }
 
@@ -236,82 +236,82 @@ namespace Microsoft.HealthVault.Record
         {
             writer.WriteStartElement(nodeName);
 
-            writer.WriteAttributeString("id", this.Id.ToString());
+            writer.WriteAttributeString("id", Id.ToString());
 
-            if (this.Location != null)
+            if (Location != null)
             {
-                writer.WriteAttributeString("location-country", this.Location.Country);
-                if (!string.IsNullOrEmpty(this.Location.StateProvince))
+                writer.WriteAttributeString("location-country", Location.Country);
+                if (!string.IsNullOrEmpty(Location.StateProvince))
                 {
-                    writer.WriteAttributeString("location-state-province", this.Location.StateProvince);
+                    writer.WriteAttributeString("location-state-province", Location.StateProvince);
                 }
             }
 
             writer.WriteAttributeString(
                 "record-custodian",
-                XmlConvert.ToString(this.custodian));
+                XmlConvert.ToString(_custodian));
 
             writer.WriteAttributeString(
                 "rel-type",
-                XmlConvert.ToString((int)this.relationshipType));
+                XmlConvert.ToString((int)_relationshipType));
 
-            if (!string.IsNullOrEmpty(this.relationshipName))
+            if (!string.IsNullOrEmpty(_relationshipName))
             {
                 writer.WriteAttributeString(
                     "rel-name",
-                    this.relationshipName);
+                    _relationshipName);
             }
 
             writer.WriteAttributeString(
                 "auth-expires",
-                SDKHelper.XmlFromDateTime(this.dateAuthorizationExpires));
+                SDKHelper.XmlFromDateTime(_dateAuthorizationExpires));
 
             writer.WriteAttributeString(
                 "auth-expired",
-                SDKHelper.XmlFromBool(this.authExpired));
+                SDKHelper.XmlFromBool(_authExpired));
 
-            if (!string.IsNullOrEmpty(this.displayName))
+            if (!string.IsNullOrEmpty(_displayName))
             {
                 writer.WriteAttributeString(
                     "display-name",
-                    this.displayName);
+                    _displayName);
             }
 
             writer.WriteAttributeString(
                 "state",
-                this.State.ToString());
+                State.ToString());
 
             writer.WriteAttributeString(
                 "date-created",
-                SDKHelper.XmlFromDateTime(this.DateCreated));
+                SDKHelper.XmlFromDateTime(DateCreated));
 
-            if (this.QuotaInBytes.HasValue)
+            if (QuotaInBytes.HasValue)
             {
                 writer.WriteAttributeString(
                     "max-size-bytes",
-                    XmlConvert.ToString(this.QuotaInBytes.Value));
+                    XmlConvert.ToString(QuotaInBytes.Value));
             }
 
-            if (this.QuotaUsedInBytes.HasValue)
+            if (QuotaUsedInBytes.HasValue)
             {
                 writer.WriteAttributeString(
                     "size-bytes",
-                    XmlConvert.ToString(this.QuotaUsedInBytes.Value));
+                    XmlConvert.ToString(QuotaUsedInBytes.Value));
             }
 
             writer.WriteAttributeString(
                 "app-record-auth-action",
-                this.HealthRecordAuthorizationStatus.ToString());
+                HealthRecordAuthorizationStatus.ToString());
 
             writer.WriteAttributeString(
                 "app-specific-record-id",
-                this.ApplicationSpecificRecordId);
+                ApplicationSpecificRecordId);
 
             writer.WriteAttributeString(
                 "date-updated",
-                SDKHelper.XmlFromDateTime(this.DateUpdated));
+                SDKHelper.XmlFromDateTime(DateUpdated));
 
-            writer.WriteValue(this.name);
+            writer.WriteValue(_name);
 
             writer.WriteEndElement();
         }
@@ -339,16 +339,16 @@ namespace Microsoft.HealthVault.Record
         {
             get
             {
-                return this.custodian;
+                return _custodian;
             }
 
             set
             {
-                this.custodian = value;
+                _custodian = value;
             }
         }
 
-        private bool custodian;
+        private bool _custodian;
 
         /// <summary>
         /// Gets the date/time that the authorization for the record expires.
@@ -375,16 +375,16 @@ namespace Microsoft.HealthVault.Record
         {
             get
             {
-                return this.dateAuthorizationExpires;
+                return _dateAuthorizationExpires;
             }
 
             set
             {
-                this.dateAuthorizationExpires = value;
+                _dateAuthorizationExpires = value;
             }
         }
 
-        private DateTime dateAuthorizationExpires;
+        private DateTime _dateAuthorizationExpires;
 
         /// <summary>
         /// <b>true</b> if the authorization of the authenticated person has
@@ -395,16 +395,16 @@ namespace Microsoft.HealthVault.Record
         {
             get
             {
-                return this.authExpired;
+                return _authExpired;
             }
 
             set
             {
-                this.authExpired = value;
+                _authExpired = value;
             }
         }
 
-        private bool authExpired;
+        private bool _authExpired;
 
         /// <summary>
         /// Gets the name of the record.
@@ -429,16 +429,16 @@ namespace Microsoft.HealthVault.Record
         {
             get
             {
-                return this.name;
+                return _name;
             }
 
             set
             {
-                this.name = value;
+                _name = value;
             }
         }
 
-        private string name;
+        private string _name;
 
         /// <summary>
         /// Gets the relationship the person authorized to view this record
@@ -463,16 +463,16 @@ namespace Microsoft.HealthVault.Record
         {
             get
             {
-                return this.relationshipType;
+                return _relationshipType;
             }
 
             set
             {
-                this.relationshipType = value;
+                _relationshipType = value;
             }
         }
 
-        private RelationshipType relationshipType = RelationshipType.Unknown;
+        private RelationshipType _relationshipType = RelationshipType.Unknown;
 
         /// <summary>
         /// Gets the localized string representing the relationship between
@@ -499,16 +499,16 @@ namespace Microsoft.HealthVault.Record
         {
             get
             {
-                return this.relationshipName;
+                return _relationshipName;
             }
 
             set
             {
-                this.relationshipName = value;
+                _relationshipName = value;
             }
         }
 
-        private string relationshipName;
+        private string _relationshipName;
 
         /// <summary>
         /// Gets the display name of the record.
@@ -535,16 +535,16 @@ namespace Microsoft.HealthVault.Record
         {
             get
             {
-                return this.displayName;
+                return _displayName;
             }
 
             set
             {
-                this.displayName = value;
+                _displayName = value;
             }
         }
 
-        private string displayName;
+        private string _displayName;
 
         /// <summary>
         /// Gets the state of a <see cref="HealthRecordInfo"/>.
@@ -639,7 +639,7 @@ namespace Microsoft.HealthVault.Record
         ///
         public override string ToString()
         {
-            return this.Name;
+            return Name;
         }
     }
 }

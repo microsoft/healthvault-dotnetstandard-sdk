@@ -24,4 +24,3 @@ namespace SandboxXamarinForms.Droid
         }
     }
 }
-

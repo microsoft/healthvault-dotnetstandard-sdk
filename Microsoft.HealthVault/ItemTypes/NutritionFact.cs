@@ -42,7 +42,7 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public NutritionFact(CodableValue name)
         {
-            this.Name = name;
+            Name = name;
         }
 
         /// <summary>
@@ -66,9 +66,9 @@ namespace Microsoft.HealthVault.ItemTypes
                     Resources.ParseXmlNavNull);
             }
 
-            this.name = new CodableValue();
-            this.name.ParseXml(navigator.SelectSingleNode("name"));
-            this.fact = XPathHelper.GetOptNavValue<GeneralMeasurement>(navigator, "fact");
+            _name = new CodableValue();
+            _name.ParseXml(navigator.SelectSingleNode("name"));
+            _fact = XPathHelper.GetOptNavValue<GeneralMeasurement>(navigator, "fact");
         }
 
         /// <summary>
@@ -113,7 +113,7 @@ namespace Microsoft.HealthVault.ItemTypes
                     Resources.WriteXmlNullWriter);
             }
 
-            if (this.name == null)
+            if (_name == null)
             {
                 throw new ThingSerializationException(
                     Resources.NutrientNameNullValue);
@@ -121,8 +121,8 @@ namespace Microsoft.HealthVault.ItemTypes
 
             writer.WriteStartElement(nodeName);
 
-            this.name.WriteXml("name", writer);
-            XmlWriterHelper.WriteOpt(writer, "fact", this.fact);
+            _name.WriteXml("name", writer);
+            XmlWriterHelper.WriteOpt(writer, "fact", _fact);
             writer.WriteEndElement();
         }
 
@@ -144,7 +144,7 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             get
             {
-                return this.name;
+                return _name;
             }
 
             set
@@ -156,11 +156,11 @@ namespace Microsoft.HealthVault.ItemTypes
                         Resources.NutrientNameNullValue);
                 }
 
-                this.name = value;
+                _name = value;
             }
         }
 
-        private CodableValue name;
+        private CodableValue _name;
 
         /// <summary>
         /// Gets or sets the amount of nutrient consumed.
@@ -175,16 +175,16 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             get
             {
-                return this.fact;
+                return _fact;
             }
 
             set
             {
-                this.fact = value;
+                _fact = value;
             }
         }
 
-        private GeneralMeasurement fact;
+        private GeneralMeasurement _fact;
 
         /// <summary>
         /// Gets a string representation of the NutritionFact.
@@ -196,16 +196,16 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public override string ToString()
         {
-            if (this.Fact != null)
+            if (Fact != null)
             {
                 return string.Format(
                             CultureInfo.CurrentUICulture,
                             Resources.NutritionValueFormat,
-                            this.Name.Text,
-                            this.Fact.ToString());
+                            Name.Text,
+                            Fact.ToString());
             }
 
-            return this.Name.Text;
+            return Name.Text;
         }
     }
 }

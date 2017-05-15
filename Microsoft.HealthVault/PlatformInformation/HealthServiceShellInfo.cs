@@ -82,9 +82,9 @@ namespace Microsoft.HealthVault.PlatformInformation
             Uri redirectUrl,
             IList<HealthServiceShellRedirectToken> redirectTokens)
         {
-            this.BaseUrl = baseUrl;
-            this.RedirectUrl = redirectUrl;
-            this.redirectTokens = redirectTokens;
+            BaseUrl = baseUrl;
+            RedirectUrl = redirectUrl;
+            _redirectTokens = redirectTokens;
         }
 
         /// <summary>
@@ -126,8 +126,8 @@ namespace Microsoft.HealthVault.PlatformInformation
         /// A read-only collection containing the redirect information.
         /// </returns>
         ///
-        public ReadOnlyCollection<HealthServiceShellRedirectToken> RedirectTokens => new ReadOnlyCollection<HealthServiceShellRedirectToken>(this.redirectTokens);
+        public ReadOnlyCollection<HealthServiceShellRedirectToken> RedirectTokens => new ReadOnlyCollection<HealthServiceShellRedirectToken>(_redirectTokens);
 
-        private IList<HealthServiceShellRedirectToken> redirectTokens;
+        private IList<HealthServiceShellRedirectToken> _redirectTokens;
     }
 }

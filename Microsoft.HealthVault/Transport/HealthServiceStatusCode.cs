@@ -3,7 +3,6 @@
 // see http://www.microsoft.com/resources/sharedsource/licensingbasics/sharedsourcelicenses.mspx.
 // All other rights reserved.
 
-using System.Diagnostics.CodeAnalysis;
 using Microsoft.HealthVault.Record;
 using Microsoft.HealthVault.Thing;
 

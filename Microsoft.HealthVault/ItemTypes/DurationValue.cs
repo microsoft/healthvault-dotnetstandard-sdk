@@ -42,7 +42,7 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public DurationValue(ApproximateDateTime startDate)
         {
-            this.StartDate = startDate;
+            StartDate = startDate;
         }
 
         /// <summary>
@@ -67,8 +67,8 @@ namespace Microsoft.HealthVault.ItemTypes
             ApproximateDateTime startDate,
             ApproximateDateTime endDate)
         {
-            this.StartDate = startDate;
-            this.EndDate = endDate;
+            StartDate = startDate;
+            EndDate = endDate;
         }
 
         /// <summary>
@@ -89,11 +89,11 @@ namespace Microsoft.HealthVault.ItemTypes
             Validator.ThrowIfNavigatorNull(navigator);
 
             // <start-date>
-            this.startDate = new ApproximateDateTime();
-            this.startDate.ParseXml(navigator.SelectSingleNode("start-date"));
+            _startDate = new ApproximateDateTime();
+            _startDate.ParseXml(navigator.SelectSingleNode("start-date"));
 
             // <end-date>
-            this.endDate =
+            _endDate =
                 XPathHelper.GetOptNavValue<ApproximateDateTime>(
                     navigator,
                     "end-date");
@@ -127,17 +127,17 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             Validator.ThrowIfStringNullOrEmpty(nodeName, "nodeName");
             Validator.ThrowIfWriterNull(writer);
-            Validator.ThrowSerializationIfNull(this.startDate, Resources.DurationValueStartDateNotSet);
+            Validator.ThrowSerializationIfNull(_startDate, Resources.DurationValueStartDateNotSet);
 
             // <duration-value>
             writer.WriteStartElement(nodeName);
 
-            this.startDate.WriteXml("start-date", writer);
+            _startDate.WriteXml("start-date", writer);
 
             XmlWriterHelper.WriteOpt(
                 writer,
                 "end-date",
-                this.endDate);
+                _endDate);
 
             // </duration-value>
             writer.WriteEndElement();
@@ -158,16 +158,16 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public ApproximateDateTime StartDate
         {
-            get { return this.startDate; }
+            get { return _startDate; }
 
             set
             {
-                Validator.ThrowIfArgumentNull(value, nameof(this.StartDate), Resources.DurationValueStartDateMandatory);
-                this.startDate = value;
+                Validator.ThrowIfArgumentNull(value, nameof(StartDate), Resources.DurationValueStartDateMandatory);
+                _startDate = value;
             }
         }
 
-        private ApproximateDateTime startDate = new ApproximateDateTime();
+        private ApproximateDateTime _startDate = new ApproximateDateTime();
 
         /// <summary>
         /// Gets or sets the approximate date of the end of the duration.
@@ -184,11 +184,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public ApproximateDateTime EndDate
         {
-            get { return this.endDate; }
-            set { this.endDate = value; }
+            get { return _endDate; }
+            set { _endDate = value; }
         }
 
-        private ApproximateDateTime endDate;
+        private ApproximateDateTime _endDate;
 
         /// <summary>
         /// Gets a string representation of the duration value.
@@ -202,17 +202,17 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             string result = string.Empty;
 
-            if (this.EndDate != null)
+            if (EndDate != null)
             {
                 result =
                     string.Format(
                         Resources.DateRange,
-                        this.StartDate.ToString(),
-                        this.EndDate.ToString());
+                        StartDate.ToString(),
+                        EndDate.ToString());
             }
             else
             {
-                result = this.StartDate.ToString();
+                result = StartDate.ToString();
             }
 
             return result;

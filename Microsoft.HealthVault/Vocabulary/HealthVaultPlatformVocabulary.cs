@@ -353,12 +353,12 @@ namespace Microsoft.HealthVault.Vocabulary
         {
             public VocabularySearchResult(VocabularyItemCollection matchingVocabulary)
             {
-                this.MatchingVocabulary = matchingVocabulary;
+                MatchingVocabulary = matchingVocabulary;
             }
 
             public VocabularySearchResult(ReadOnlyCollection<VocabularyKey> matchingKeys)
             {
-                this.MatchingKeys = matchingKeys;
+                MatchingKeys = matchingKeys;
             }
 
             public VocabularyItemCollection MatchingVocabulary { get; }

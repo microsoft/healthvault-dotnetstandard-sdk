@@ -70,7 +70,7 @@ namespace Microsoft.HealthVault.IntegrationTest
             var condition = new Condition(new CodableValue("Diseased"));
 
             await thingClient.CreateNewThingsAsync(
-                record.Id, 
+                record.Id,
                 new List<IThing>
                 {
                     bloodGlucose,

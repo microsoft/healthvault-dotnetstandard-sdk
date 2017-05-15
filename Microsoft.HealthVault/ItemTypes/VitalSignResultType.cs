@@ -42,7 +42,7 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public VitalSignsResultType(CodableValue title)
         {
-            this.Title = title;
+            Title = title;
         }
 
         /// <summary>
@@ -61,40 +61,40 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             Validator.ThrowIfNavigatorNull(navigator);
 
-            this.title = new CodableValue();
-            this.title.ParseXml(navigator.SelectSingleNode("title"));
+            _title = new CodableValue();
+            _title.ParseXml(navigator.SelectSingleNode("title"));
 
-            this.value =
+            _value =
                 XPathHelper.GetOptNavValueAsDouble(
                     navigator,
                     "value");
 
             // <unit>
-            this.unit =
+            _unit =
                 XPathHelper.GetOptNavValue<CodableValue>(
                     navigator,
                     "unit");
 
             // <reference-minimum>
-            this.referenceMinimum =
+            _referenceMinimum =
                 XPathHelper.GetOptNavValueAsDouble(
                     navigator,
                     "reference-minimum");
 
             // <reference-maximum>
-            this.referenceMaximum =
+            _referenceMaximum =
                 XPathHelper.GetOptNavValueAsDouble(
                     navigator,
                     "reference-maximum");
 
             // <text-value>
-            this.textValue =
+            _textValue =
                 XPathHelper.GetOptNavValue(
                     navigator,
                     "text-value");
 
             // <flag>
-            this.flag =
+            _flag =
                 XPathHelper.GetOptNavValue<CodableValue>(
                     navigator,
                     "flag");
@@ -130,49 +130,49 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             Validator.ThrowIfStringNullOrEmpty(nodeName, "nodeName");
             Validator.ThrowIfWriterNull(writer);
-            Validator.ThrowSerializationIfNull(this.title, Resources.VitalSignResultTitleNotSet);
-            Validator.ThrowSerializationIfNull(this.title.Text, Resources.CodableValueNullText);
+            Validator.ThrowSerializationIfNull(_title, Resources.VitalSignResultTitleNotSet);
+            Validator.ThrowSerializationIfNull(_title.Text, Resources.CodableValueNullText);
 
             writer.WriteStartElement(nodeName);
 
             // <title>
-            this.title.WriteXml("title", writer);
+            _title.WriteXml("title", writer);
 
             // <value>
             XmlWriterHelper.WriteOptDouble(
                 writer,
                 "value",
-                this.value);
+                _value);
 
             // <unit>
             XmlWriterHelper.WriteOpt(
                 writer,
                 "unit",
-                this.unit);
+                _unit);
 
             // <reference-minimum>
             XmlWriterHelper.WriteOptDouble(
                 writer,
                 "reference-minimum",
-                this.referenceMinimum);
+                _referenceMinimum);
 
             // <reference-maximum>
             XmlWriterHelper.WriteOptDouble(
                 writer,
                 "reference-maximum",
-                this.referenceMaximum);
+                _referenceMaximum);
 
             // <text-value>
             XmlWriterHelper.WriteOptString(
                 writer,
                 "text-value",
-                this.textValue);
+                _textValue);
 
             // <flag>
             XmlWriterHelper.WriteOpt(
                 writer,
                 "flag",
-                this.flag);
+                _flag);
 
             writer.WriteEndElement();
         }
@@ -197,16 +197,16 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public CodableValue Title
         {
-            get { return this.title; }
+            get { return _title; }
 
             set
             {
-                Validator.ThrowIfArgumentNull(value, nameof(this.Title), Resources.VitalSignResultTitleMandatory);
-                this.title = value;
+                Validator.ThrowIfArgumentNull(value, nameof(Title), Resources.VitalSignResultTitleMandatory);
+                _title = value;
             }
         }
 
-        private CodableValue title = new CodableValue();
+        private CodableValue _title = new CodableValue();
 
         /// <summary>
         /// Gets or sets the vital sign value.
@@ -223,11 +223,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public double? Value
         {
-            get { return this.value; }
-            set { this.value = value; }
+            get { return _value; }
+            set { _value = value; }
         }
 
-        private double? value;
+        private double? _value;
 
         /// <summary>
         /// Gets or sets the unit for the vital signs.
@@ -245,11 +245,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public CodableValue Unit
         {
-            get { return this.unit; }
-            set { this.unit = value; }
+            get { return _unit; }
+            set { _unit = value; }
         }
 
-        private CodableValue unit;
+        private CodableValue _unit;
 
         /// <summary>
         /// Gets or sets the reference minimum for the vital signs.
@@ -266,11 +266,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public double? ReferenceMinimum
         {
-            get { return this.referenceMinimum; }
-            set { this.referenceMinimum = value; }
+            get { return _referenceMinimum; }
+            set { _referenceMinimum = value; }
         }
 
-        private double? referenceMinimum;
+        private double? _referenceMinimum;
 
         /// <summary>
         /// Gets or sets the reference maximum for the vital signs.
@@ -287,11 +287,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public double? ReferenceMaximum
         {
-            get { return this.referenceMaximum; }
-            set { this.referenceMaximum = value; }
+            get { return _referenceMaximum; }
+            set { _referenceMaximum = value; }
         }
 
-        private double? referenceMaximum;
+        private double? _referenceMaximum;
 
         /// <summary>
         /// Gets or sets the text value for the vital signs.
@@ -312,16 +312,16 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public string TextValue
         {
-            get { return this.textValue; }
+            get { return _textValue; }
 
             set
             {
                 Validator.ThrowIfStringIsWhitespace(value, "TextValue");
-                this.textValue = value;
+                _textValue = value;
             }
         }
 
-        private string textValue;
+        private string _textValue;
 
         /// <summary>
         /// Gets or sets the flag for the vital signs.
@@ -339,11 +339,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public CodableValue Flag
         {
-            get { return this.flag; }
-            set { this.flag = value; }
+            get { return _flag; }
+            set { _flag = value; }
         }
 
-        private CodableValue flag;
+        private CodableValue _flag;
 
         /// <summary>
         /// Gets a string representation of the vital signs result type.
@@ -357,25 +357,25 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             StringBuilder result = new StringBuilder(100);
 
-            if (this.title != null)
+            if (_title != null)
             {
-                result.Append(this.title);
+                result.Append(_title);
             }
 
-            if (this.value != null)
+            if (_value != null)
             {
                 result.AppendFormat(
                     Resources.VitalSignResultToStringFormatValue,
-                    this.value.Value);
+                    _value.Value);
             }
 
-            if (this.unit != null)
+            if (_unit != null)
             {
                 result.Append(" ");
 
                 result.AppendFormat(
                     Resources.VitalSignResultToStringFormatUnit,
-                    this.unit.ToString());
+                    _unit.ToString());
             }
 
             return result.ToString();

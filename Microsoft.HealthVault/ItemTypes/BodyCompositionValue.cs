@@ -33,13 +33,13 @@ namespace Microsoft.HealthVault.ItemTypes
             Validator.ThrowIfNavigatorNull(navigator);
 
             // mass-value (t:weight-value)
-            this.massValue = XPathHelper.GetOptNavValue<WeightValue>(navigator, "mass-value");
+            _massValue = XPathHelper.GetOptNavValue<WeightValue>(navigator, "mass-value");
 
             // percent-value (t:percentage)
             XPathNavigator percentValueNav = navigator.SelectSingleNode("percent-value");
             if (percentValueNav != null)
             {
-                this.percentValue = percentValueNav.ValueAsDouble;
+                _percentValue = percentValueNav.ValueAsDouble;
             }
         }
 
@@ -75,13 +75,13 @@ namespace Microsoft.HealthVault.ItemTypes
             XmlWriterHelper.WriteOpt(
                 writer,
                 "mass-value",
-                this.massValue);
+                _massValue);
 
             // percent-value
             XmlWriterHelper.WriteOptDouble(
                 writer,
                 "percent-value",
-                this.percentValue);
+                _percentValue);
 
             // </body-composition-value>
             writer.WriteEndElement();
@@ -97,11 +97,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public WeightValue MassValue
         {
-            get { return this.massValue; }
-            set { this.massValue = value; }
+            get { return _massValue; }
+            set { _massValue = value; }
         }
 
-        private WeightValue massValue;
+        private WeightValue _massValue;
 
         /// <summary>
         /// Gets or sets a body composition measurement stored as a percentage.
@@ -113,20 +113,20 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public double? PercentValue
         {
-            get { return this.percentValue; }
+            get { return _percentValue; }
 
             set
             {
                 if (value > 1.0 || value < 0.0)
                 {
-                    throw new ArgumentOutOfRangeException(nameof(this.PercentValue), Resources.BodyCompositionValuePercentValueOutOfRange);
+                    throw new ArgumentOutOfRangeException(nameof(PercentValue), Resources.BodyCompositionValuePercentValueOutOfRange);
                 }
 
-                this.percentValue = value;
+                _percentValue = value;
             }
         }
 
-        private double? percentValue;
+        private double? _percentValue;
 
         /// <summary>
         /// Gets a string representation of BodyCompositionValue.
@@ -138,24 +138,24 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public override string ToString()
         {
-            if (this.massValue != null && this.percentValue != null)
+            if (_massValue != null && _percentValue != null)
             {
                 return string.Format(
                         Resources.BodyCompositionValueToStringFormatMassAndPercent,
-                        this.massValue.ToString(),
-                        this.percentValue * 100);
+                        _massValue.ToString(),
+                        _percentValue * 100);
             }
 
-            if (this.massValue != null)
+            if (_massValue != null)
             {
-                return this.massValue.ToString();
+                return _massValue.ToString();
             }
 
-            if (this.percentValue != null)
+            if (_percentValue != null)
             {
                 return string.Format(
                     Resources.Percent,
-                    this.percentValue * 100);
+                    _percentValue * 100);
             }
 
             return string.Empty;

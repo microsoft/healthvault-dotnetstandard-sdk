@@ -54,8 +54,8 @@ namespace Microsoft.HealthVault.ItemTypes
         public GroupMembershipActivity(HealthServiceDateTime when, CodedValue activity)
             : base(TypeId)
         {
-            this.When = when;
-            this.Activity = activity;
+            When = when;
+            Activity = activity;
         }
 
         /// <summary>
@@ -89,13 +89,13 @@ namespace Microsoft.HealthVault.ItemTypes
 
             Validator.ThrowInvalidIfNull(itemNav, Resources.GroupMembershipActivityUnexpectedNode);
 
-            this.when = new HealthServiceDateTime();
-            this.when.ParseXml(itemNav.SelectSingleNode("when"));
+            _when = new HealthServiceDateTime();
+            _when.ParseXml(itemNav.SelectSingleNode("when"));
 
-            this.activity = new CodedValue();
-            this.activity.ParseXml(itemNav.SelectSingleNode("activity"));
+            _activity = new CodedValue();
+            _activity.ParseXml(itemNav.SelectSingleNode("activity"));
 
-            this.activityInfo = XPathHelper.GetOptNavValue(itemNav, "activity-info");
+            _activityInfo = XPathHelper.GetOptNavValue(itemNav, "activity-info");
         }
 
         /// <summary>
@@ -113,18 +113,18 @@ namespace Microsoft.HealthVault.ItemTypes
         public override void WriteXml(XmlWriter writer)
         {
             Validator.ThrowIfWriterNull(writer);
-            Validator.ThrowSerializationIfNull(this.when, Resources.GroupMembershipActivityWhenNotSet);
-            Validator.ThrowSerializationIfNull(this.activity, Resources.GroupMembershipActivityActivityNotSet);
+            Validator.ThrowSerializationIfNull(_when, Resources.GroupMembershipActivityWhenNotSet);
+            Validator.ThrowSerializationIfNull(_activity, Resources.GroupMembershipActivityActivityNotSet);
 
             // <group-membership-activity>
             writer.WriteStartElement("group-membership-activity");
 
             // <when>
-            this.when.WriteXml("when", writer);
+            _when.WriteXml("when", writer);
 
-            this.activity.WriteXml("activity", writer);
+            _activity.WriteXml("activity", writer);
 
-            XmlWriterHelper.WriteOptString(writer, "activity-info", this.activityInfo);
+            XmlWriterHelper.WriteOptString(writer, "activity-info", _activityInfo);
 
             // </group-membership-activity>
             writer.WriteEndElement();
@@ -142,15 +142,15 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             string result = string.Empty;
 
-            if (this.Activity != null)
+            if (Activity != null)
             {
-                result = this.Activity.Value;
+                result = Activity.Value;
             }
 
-            if (this.ActivityInfo != null)
+            if (ActivityInfo != null)
             {
                 result += Resources.ListSeparator;
-                result += this.ActivityInfo;
+                result += ActivityInfo;
             }
 
             return result;
@@ -172,16 +172,16 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public HealthServiceDateTime When
         {
-            get { return this.when; }
+            get { return _when; }
 
             set
             {
-                Validator.ThrowIfArgumentNull(value, nameof(this.When), Resources.WhenNullValue);
-                this.when = value;
+                Validator.ThrowIfArgumentNull(value, nameof(When), Resources.WhenNullValue);
+                _when = value;
             }
         }
 
-        private HealthServiceDateTime when = new HealthServiceDateTime();
+        private HealthServiceDateTime _when = new HealthServiceDateTime();
 
         /// <summary>
         /// Gets or sets the activity that occurred.
@@ -202,16 +202,16 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public CodedValue Activity
         {
-            get { return this.activity; }
+            get { return _activity; }
 
             set
             {
-                Validator.ThrowIfArgumentNull(value, nameof(this.Activity), Resources.GroupMembershipActivityActivityMandatory);
-                this.activity = value;
+                Validator.ThrowIfArgumentNull(value, nameof(Activity), Resources.GroupMembershipActivityActivityMandatory);
+                _activity = value;
             }
         }
 
-        private CodedValue activity;
+        private CodedValue _activity;
 
         /// <summary>
         /// Gets or sets additional information about the activity.
@@ -227,15 +227,15 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public string ActivityInfo
         {
-            get { return this.activityInfo; }
+            get { return _activityInfo; }
 
             set
             {
                 Validator.ThrowIfStringIsWhitespace(value, "ActivityInfo");
-                this.activityInfo = value;
+                _activityInfo = value;
             }
         }
 
-        private string activityInfo;
+        private string _activityInfo;
     }
 }

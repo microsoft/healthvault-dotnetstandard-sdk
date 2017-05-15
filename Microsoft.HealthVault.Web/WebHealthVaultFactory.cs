@@ -1,7 +1,7 @@
-﻿// Copyright (c) Microsoft Corporation.  All rights reserved. 
+﻿// Copyright (c) Microsoft Corporation.  All rights reserved.
 // MIT License
 // Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the ""Software""), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 //
 // THE SOFTWARE IS PROVIDED *AS IS*, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
@@ -23,7 +23,7 @@ namespace Microsoft.HealthVault.Web
     public class WebHealthVaultFactory
     {
         /// <summary>
-        /// Creates an authenticated web connection when the reuest 
+        /// Creates an authenticated web connection when the reuest
         /// has been authenticated using [RequireSignIn] attribute.
         /// In case the request has not been authenticated, an anonymous
         /// connection is created.
@@ -60,7 +60,7 @@ namespace Microsoft.HealthVault.Web
             SessionCredential sessionCredentialToken = webConnectionInfo.SessionCredential;
             string token = webConnectionInfo.UserAuthToken;
 
-            IWebHealthVaultConnection webConnection = Ioc.Container.Locate<IWebHealthVaultConnection>(extraData: new { serviceLocator = serviceLocator});
+            IWebHealthVaultConnection webConnection = Ioc.Container.Locate<IWebHealthVaultConnection>(extraData: new { serviceLocator = serviceLocator });
 
             WebHealthVaultConnection connection = webConnection as WebHealthVaultConnection;
             connection.UserAuthToken = token;
@@ -78,8 +78,8 @@ namespace Microsoft.HealthVault.Web
         /// <param name="sessionCredential">The session credential.</param>
         /// <returns></returns>
         public static async Task<IOfflineHealthVaultConnection> CreateOfflineConnectionAsync(
-            string offlinePersonId, 
-            string instanceId = null, 
+            string offlinePersonId,
+            string instanceId = null,
             SessionCredential sessionCredential = null)
         {
             Guid parsedOfflinePersonId;
@@ -99,7 +99,7 @@ namespace Microsoft.HealthVault.Web
             }
 
             IOfflineHealthVaultConnection offlineHealthVaultConnection = Ioc.Container.Locate<IOfflineHealthVaultConnection>(
-                extraData: new { serviceLocator = serviceLocator});
+                extraData: new { serviceLocator = serviceLocator });
 
             OfflineHealthVaultConnection connection = offlineHealthVaultConnection as OfflineHealthVaultConnection;
             connection.SessionCredential = sessionCredential;

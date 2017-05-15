@@ -50,7 +50,7 @@ namespace Microsoft.HealthVault.ItemTypes
         public Link(Uri url)
             : base(TypeId)
         {
-            this.Url = url;
+            Url = url;
         }
 
         /// <summary>
@@ -88,14 +88,14 @@ namespace Microsoft.HealthVault.ItemTypes
 
             Validator.ThrowInvalidIfNull(linkNav, Resources.LinkUnexpectedNode);
 
-            this.url = new Uri(linkNav.SelectSingleNode("url").Value);
+            _url = new Uri(linkNav.SelectSingleNode("url").Value);
 
             XPathNavigator titleNav =
                 linkNav.SelectSingleNode("title");
 
             if (titleNav != null)
             {
-                this.title = titleNav.Value;
+                _title = titleNav.Value;
             }
         }
 
@@ -118,17 +118,17 @@ namespace Microsoft.HealthVault.ItemTypes
         public override void WriteXml(XmlWriter writer)
         {
             Validator.ThrowIfWriterNull(writer);
-            Validator.ThrowSerializationIfNull(this.url, Resources.LinkUrlNotSet);
+            Validator.ThrowSerializationIfNull(_url, Resources.LinkUrlNotSet);
 
             // <link>
             writer.WriteStartElement("link");
 
-            writer.WriteElementString("url", this.url.OriginalString);
+            writer.WriteElementString("url", _url.OriginalString);
 
-            if (!string.IsNullOrEmpty(this.title))
+            if (!string.IsNullOrEmpty(_title))
             {
                 writer.WriteElementString(
-                    "title", this.title);
+                    "title", _title);
             }
 
             // </link>
@@ -149,16 +149,16 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public Uri Url
         {
-            get { return this.url; }
+            get { return _url; }
 
             set
             {
-                Validator.ThrowIfArgumentNull(value, nameof(this.Url), Resources.LinkUrlMandatory);
-                this.url = value;
+                Validator.ThrowIfArgumentNull(value, nameof(Url), Resources.LinkUrlMandatory);
+                _url = value;
             }
         }
 
-        private Uri url;
+        private Uri _url;
 
         /// <summary>
         /// Gets or sets the link title.
@@ -180,16 +180,16 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public string Title
         {
-            get { return this.title; }
+            get { return _title; }
 
             set
             {
                 Validator.ThrowIfStringIsWhitespace(value, "Title");
-                this.title = value;
+                _title = value;
             }
         }
 
-        private string title;
+        private string _title;
 
         /// <summary>
         /// Gets the display text for the link.
@@ -208,10 +208,10 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             get
             {
-                string result = this.url.ToString();
-                if (!string.IsNullOrEmpty(this.title))
+                string result = _url.ToString();
+                if (!string.IsNullOrEmpty(_title))
                 {
-                    result = this.title;
+                    result = _title;
                 }
 
                 return result;
@@ -228,7 +228,7 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public override string ToString()
         {
-            return this.Url.ToString();
+            return Url.ToString();
         }
     }
 }

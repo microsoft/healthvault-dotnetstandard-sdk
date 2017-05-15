@@ -9,7 +9,7 @@
 namespace Microsoft.HealthVault.Connection
 {
     /// <summary>
-    /// Provides crypto services for constructing authorized 
+    /// Provides crypto services for constructing authorized
     /// xml to send to healthvault
     /// </summary>
     internal interface ICryptographer

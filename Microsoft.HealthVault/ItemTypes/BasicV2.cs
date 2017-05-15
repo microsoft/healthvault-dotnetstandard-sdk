@@ -75,7 +75,7 @@ namespace Microsoft.HealthVault.ItemTypes
                         "m",
                         StringComparison.Ordinal))
                 {
-                    this.gender = ItemTypes.Gender.Male;
+                    _gender = ItemTypes.Gender.Male;
                 }
                 else if (
                     string.Equals(
@@ -83,27 +83,27 @@ namespace Microsoft.HealthVault.ItemTypes
                         "f",
                         StringComparison.Ordinal))
                 {
-                    this.gender = ItemTypes.Gender.Female;
+                    _gender = ItemTypes.Gender.Female;
                 }
                 else
                 {
-                    this.gender = ItemTypes.Gender.Unknown;
+                    _gender = ItemTypes.Gender.Unknown;
                 }
             }
 
-            this.birthYear = XPathHelper.GetOptNavValueAsInt(basicNav, "birthyear");
-            this.country = XPathHelper.GetOptNavValue<CodableValue>(basicNav, "country");
-            this.postalCode = XPathHelper.GetOptNavValue(basicNav, "postcode");
-            this.city = XPathHelper.GetOptNavValue(basicNav, "city");
+            _birthYear = XPathHelper.GetOptNavValueAsInt(basicNav, "birthyear");
+            _country = XPathHelper.GetOptNavValue<CodableValue>(basicNav, "country");
+            _postalCode = XPathHelper.GetOptNavValue(basicNav, "postcode");
+            _city = XPathHelper.GetOptNavValue(basicNav, "city");
 
-            this.stateOrProvince =
+            _stateOrProvince =
                 XPathHelper.GetOptNavValue<CodableValue>(basicNav, "state");
 
             XPathNavigator dayOfWeekNav =
                 basicNav.SelectSingleNode("firstdow");
             if (dayOfWeekNav != null)
             {
-                this.firstDayOfWeek = (DayOfWeek)(dayOfWeekNav.ValueAsInt - 1);
+                _firstDayOfWeek = (DayOfWeek)(dayOfWeekNav.ValueAsInt - 1);
             }
 
             XPathNodeIterator languageIterator =
@@ -116,7 +116,7 @@ namespace Microsoft.HealthVault.ItemTypes
                     Language newLanguage = new Language();
                     newLanguage.ParseXml(languageNav);
 
-                    this.languages.Add(newLanguage);
+                    _languages.Add(newLanguage);
                 }
             }
         }
@@ -140,35 +140,35 @@ namespace Microsoft.HealthVault.ItemTypes
             // <basic>
             writer.WriteStartElement("basic");
 
-            if (this.gender != null)
+            if (_gender != null)
             {
-                if (this.gender == ItemTypes.Gender.Male)
+                if (_gender == ItemTypes.Gender.Male)
                 {
                     writer.WriteElementString("gender", "m");
                 }
-                else if (this.gender == ItemTypes.Gender.Female)
+                else if (_gender == ItemTypes.Gender.Female)
                 {
                     writer.WriteElementString("gender", "f");
                 }
             }
 
-            XmlWriterHelper.WriteOptInt(writer, "birthyear", this.birthYear);
-            XmlWriterHelper.WriteOpt(writer, "country", this.country);
-            XmlWriterHelper.WriteOptString(writer, "postcode", this.postalCode);
-            XmlWriterHelper.WriteOptString(writer, "city", this.city);
-            XmlWriterHelper.WriteOpt(writer, "state", this.stateOrProvince);
+            XmlWriterHelper.WriteOptInt(writer, "birthyear", _birthYear);
+            XmlWriterHelper.WriteOpt(writer, "country", _country);
+            XmlWriterHelper.WriteOptString(writer, "postcode", _postalCode);
+            XmlWriterHelper.WriteOptString(writer, "city", _city);
+            XmlWriterHelper.WriteOpt(writer, "state", _stateOrProvince);
 
-            if (this.firstDayOfWeek != null)
+            if (_firstDayOfWeek != null)
             {
                 // The DayOfWeek enum starts at 0 whereas the XSD starts at
                 // 1.
 
                 writer.WriteElementString(
                     "firstdow",
-                    ((int)this.firstDayOfWeek + 1).ToString(CultureInfo.InvariantCulture));
+                    ((int)_firstDayOfWeek + 1).ToString(CultureInfo.InvariantCulture));
             }
 
-            foreach (Language language in this.languages)
+            foreach (Language language in _languages)
             {
                 language.WriteXml("language", writer);
             }
@@ -191,11 +191,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public Gender? Gender
         {
-            get { return this.gender; }
-            set { this.gender = value; }
+            get { return _gender; }
+            set { _gender = value; }
         }
 
-        private Gender? gender;
+        private Gender? _gender;
 
         /// <summary>
         /// Gets or sets the birth year of the person.
@@ -216,20 +216,20 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public int? BirthYear
         {
-            get { return this.birthYear; }
+            get { return _birthYear; }
 
             set
             {
                 if (value != null && ((int)value < 1000 || (int)value > 3000))
                 {
-                    throw new ArgumentOutOfRangeException(nameof(this.BirthYear), Resources.BasicBirthYearOutOfRange);
+                    throw new ArgumentOutOfRangeException(nameof(BirthYear), Resources.BasicBirthYearOutOfRange);
                 }
 
-                this.birthYear = value;
+                _birthYear = value;
             }
         }
 
-        private int? birthYear;
+        private int? _birthYear;
 
         /// <summary>
         /// Gets or sets the country of residence.
@@ -245,11 +245,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public CodableValue Country
         {
-            get { return this.country; }
-            set { this.country = value; }
+            get { return _country; }
+            set { _country = value; }
         }
 
-        private CodableValue country;
+        private CodableValue _country;
 
         /// <summary>
         /// Gets or sets the postal code of the country of residence.
@@ -265,16 +265,16 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public string PostalCode
         {
-            get { return this.postalCode; }
+            get { return _postalCode; }
 
             set
             {
                 Validator.ThrowIfStringIsWhitespace(value, "PostalCode");
-                this.postalCode = value;
+                _postalCode = value;
             }
         }
 
-        private string postalCode;
+        private string _postalCode;
 
         /// <summary>
         /// Gets or sets the city of residence.
@@ -290,16 +290,16 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public string City
         {
-            get { return this.city; }
+            get { return _city; }
 
             set
             {
                 Validator.ThrowIfStringIsWhitespace(value, "City");
-                this.city = value;
+                _city = value;
             }
         }
 
-        private string city;
+        private string _city;
 
         /// <summary>
         /// Gets or sets the state or province of residence.
@@ -316,11 +316,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public CodableValue StateOrProvince
         {
-            get { return this.stateOrProvince; }
-            set { this.stateOrProvince = value; }
+            get { return _stateOrProvince; }
+            set { _stateOrProvince = value; }
         }
 
-        private CodableValue stateOrProvince;
+        private CodableValue _stateOrProvince;
 
         /// <summary>
         /// Gets or sets the preferred first day of the week.
@@ -337,11 +337,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public DayOfWeek? FirstDayOfWeek
         {
-            get { return this.firstDayOfWeek; }
-            set { this.firstDayOfWeek = value; }
+            get { return _firstDayOfWeek; }
+            set { _firstDayOfWeek = value; }
         }
 
-        private DayOfWeek? firstDayOfWeek;
+        private DayOfWeek? _firstDayOfWeek;
 
         /// <summary>
         /// Gets the language(s) the person speaks.
@@ -351,9 +351,9 @@ namespace Microsoft.HealthVault.ItemTypes
         /// A list of the languages.
         /// </value>
         ///
-        public IList<Language> Languages => this.languages;
+        public IList<Language> Languages => _languages;
 
-        private readonly List<Language> languages = new List<Language>();
+        private readonly List<Language> _languages = new List<Language>();
 
         /// <summary>
         /// Gets a string representation of the basic item.
@@ -365,50 +365,50 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public override string ToString()
         {
-            if (this.Gender != null || this.BirthYear != null)
+            if (Gender != null || BirthYear != null)
             {
-                if (this.Gender != null && this.BirthYear != null)
+                if (Gender != null && BirthYear != null)
                 {
                     return string.Format(
                         CultureInfo.CurrentCulture,
                         Resources.BasicToStringFormatGenderAndBirthYear,
-                        ResourceUtilities.ResourceManager.GetString(this.Gender.ToString()),
-                        this.BirthYear);
+                        ResourceUtilities.ResourceManager.GetString(Gender.ToString()),
+                        BirthYear);
                 }
 
-                if (this.BirthYear != null)
+                if (BirthYear != null)
                 {
                     return string.Format(
                         CultureInfo.CurrentCulture,
                         Resources.BasicToStringFormatBirthYear,
-                        this.BirthYear);
+                        BirthYear);
                 }
 
-                return ResourceUtilities.ResourceManager.GetString(this.Gender.ToString());
+                return ResourceUtilities.ResourceManager.GetString(Gender.ToString());
             }
 
-            if (this.PostalCode != null || this.Country != null)
+            if (PostalCode != null || Country != null)
             {
-                if (this.PostalCode != null && this.Country != null)
+                if (PostalCode != null && Country != null)
                 {
                     return string.Format(
                         CultureInfo.CurrentCulture,
                         Resources.BasicToStringFormatPostalCodeAndCountry,
-                        this.PostalCode,
-                        this.Country);
+                        PostalCode,
+                        Country);
                 }
 
-                if (this.Country != null)
+                if (Country != null)
                 {
-                    return this.Country.Text;
+                    return Country.Text;
                 }
 
-                return this.PostalCode;
+                return PostalCode;
             }
 
-            if (this.CommonData.Note != null)
+            if (CommonData.Note != null)
             {
-                return this.CommonData.Note;
+                return CommonData.Note;
             }
 
             return Resources.BasicToStringSeeDetails;

@@ -63,8 +63,8 @@ namespace Microsoft.HealthVault.ItemTypes
             string content)
             : base(TypeId)
         {
-            this.When = when;
-            this.Content = content;
+            When = when;
+            Content = content;
         }
 
         /// <summary>
@@ -104,10 +104,10 @@ namespace Microsoft.HealthVault.ItemTypes
 
             Validator.ThrowInvalidIfNull(itemNav, Resources.CommentUnexpectedNode);
 
-            this.when = new ApproximateDateTime();
-            this.when.ParseXml(itemNav.SelectSingleNode("when"));
-            this.content = itemNav.SelectSingleNode("content").Value;
-            this.category = XPathHelper.GetOptNavValue<CodableValue>(itemNav, "category");
+            _when = new ApproximateDateTime();
+            _when.ParseXml(itemNav.SelectSingleNode("when"));
+            _content = itemNav.SelectSingleNode("content").Value;
+            _category = XPathHelper.GetOptNavValue<CodableValue>(itemNav, "category");
         }
 
         /// <summary>
@@ -133,18 +133,18 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             Validator.ThrowIfWriterNull(writer);
 
-            Validator.ThrowSerializationIfNull(this.when, Resources.WhenNullValue);
+            Validator.ThrowSerializationIfNull(_when, Resources.WhenNullValue);
 
-            if (string.IsNullOrEmpty(this.content) || string.IsNullOrEmpty(this.content.Trim()))
+            if (string.IsNullOrEmpty(_content) || string.IsNullOrEmpty(_content.Trim()))
             {
                 throw new ThingSerializationException(Resources.CommentContentMandatory);
             }
 
             writer.WriteStartElement("comment");
 
-            this.when.WriteXml("when", writer);
-            writer.WriteElementString("content", this.content);
-            XmlWriterHelper.WriteOpt(writer, "category", this.category);
+            _when.WriteXml("when", writer);
+            writer.WriteElementString("content", _content);
+            XmlWriterHelper.WriteOpt(writer, "category", _category);
 
             writer.WriteEndElement();
         }
@@ -161,17 +161,17 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             get
             {
-                return this.when;
+                return _when;
             }
 
             set
             {
                 Validator.ThrowIfArgumentNull(value, nameof(value), Resources.WhenNullValue);
-                this.when = value;
+                _when = value;
             }
         }
 
-        private ApproximateDateTime when;
+        private ApproximateDateTime _when;
 
         /// <summary>
         /// Gets or sets the text content of this comment.
@@ -185,18 +185,18 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             get
             {
-                return this.content;
+                return _content;
             }
 
             set
             {
                 Validator.ThrowIfStringNullOrEmpty(value, "Content");
                 Validator.ThrowIfStringIsWhitespace(value, "Content");
-                this.content = value;
+                _content = value;
             }
         }
 
-        private string content;
+        private string _content;
 
         /// <summary>
         /// Gets or sets the category of the comment.
@@ -209,12 +209,12 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public CodableValue Category
         {
-            get { return this.category; }
+            get { return _category; }
 
-            set { this.category = value; }
+            set { _category = value; }
         }
 
-        private CodableValue category;
+        private CodableValue _category;
 
         /// <summary>
         /// Gets a string representation of the comment.
@@ -228,13 +228,13 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             StringBuilder result = new StringBuilder(200);
 
-            result.Append(this.content);
+            result.Append(_content);
 
-            if (this.category != null)
+            if (_category != null)
             {
                 result.Append(" ");
                 result.Append(Resources.OpenParen);
-                result.Append(this.category.Text);
+                result.Append(_category.Text);
                 result.Append(Resources.CloseParen);
             }
 

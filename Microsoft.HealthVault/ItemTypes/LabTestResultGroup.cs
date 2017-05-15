@@ -43,7 +43,7 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public LabTestResultGroup(CodableValue groupName)
         {
-            this.GroupName = groupName;
+            GroupName = groupName;
         }
 
         /// <summary>
@@ -63,37 +63,37 @@ namespace Microsoft.HealthVault.ItemTypes
             Validator.ThrowIfNavigatorNull(navigator);
 
             // group-name
-            this.groupName = new CodableValue();
-            this.groupName.ParseXml(navigator.SelectSingleNode("group-name"));
+            _groupName = new CodableValue();
+            _groupName.ParseXml(navigator.SelectSingleNode("group-name"));
 
             // laboratory-name
-            this.laboratoryName =
+            _laboratoryName =
                 XPathHelper.GetOptNavValue<Organization>(navigator, "laboratory-name");
 
             // status
-            this.status =
+            _status =
                 XPathHelper.GetOptNavValue<CodableValue>(navigator, "status");
 
             // sub-groups
             XPathNodeIterator subGroupsIterator = navigator.Select("sub-groups");
 
-            this.subGroups = new Collection<LabTestResultGroup>();
+            _subGroups = new Collection<LabTestResultGroup>();
             foreach (XPathNavigator subGroupNav in subGroupsIterator)
             {
                 LabTestResultGroup subGroup = new LabTestResultGroup();
                 subGroup.ParseXml(subGroupNav);
-                this.subGroups.Add(subGroup);
+                _subGroups.Add(subGroup);
             }
 
             // results
             XPathNodeIterator resultsIterator = navigator.Select("results");
 
-            this.results = new Collection<LabTestResultDetails>();
+            _results = new Collection<LabTestResultDetails>();
             foreach (XPathNavigator resultNav in resultsIterator)
             {
                 LabTestResultDetails result = new LabTestResultDetails();
                 result.ParseXml(resultNav);
-                this.results.Add(result);
+                _results.Add(result);
             }
         }
 
@@ -125,39 +125,39 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             Validator.ThrowIfStringNullOrEmpty(nodeName, "nodeName");
             Validator.ThrowIfWriterNull(writer);
-            Validator.ThrowSerializationIfNull(this.groupName, Resources.LabTestResultsGroupTypeGroupNameNotSet);
+            Validator.ThrowSerializationIfNull(_groupName, Resources.LabTestResultsGroupTypeGroupNameNotSet);
 
             // <lab-test-results-group-type>
             writer.WriteStartElement(nodeName);
 
             // group-name
-            this.groupName.WriteXml("group-name", writer);
+            _groupName.WriteXml("group-name", writer);
 
             // laboratory-name
             XmlWriterHelper.WriteOpt(
                 writer,
                 "laboratory-name",
-                this.laboratoryName);
+                _laboratoryName);
 
             // status
             XmlWriterHelper.WriteOpt(
                 writer,
                 "status",
-                this.status);
+                _status);
 
             // sub-groups
-            if (this.subGroups != null)
+            if (_subGroups != null)
             {
-                for (int index = 0; index < this.subGroups.Count; ++index)
+                for (int index = 0; index < _subGroups.Count; ++index)
                 {
-                    this.subGroups[index].WriteXml("sub-groups", writer);
+                    _subGroups[index].WriteXml("sub-groups", writer);
                 }
             }
 
             // results
-            for (int index = 0; index < this.results.Count; ++index)
+            for (int index = 0; index < _results.Count; ++index)
             {
-                this.results[index].WriteXml("results", writer);
+                _results[index].WriteXml("results", writer);
             }
 
             // </lab-test-results-group-type>
@@ -174,16 +174,16 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public CodableValue GroupName
         {
-            get { return this.groupName; }
+            get { return _groupName; }
 
             set
             {
-                Validator.ThrowIfArgumentNull(value, nameof(this.GroupName), Resources.LabTestResultsGroupTypeGroupNameMandatory);
-                this.groupName = value;
+                Validator.ThrowIfArgumentNull(value, nameof(GroupName), Resources.LabTestResultsGroupTypeGroupNameMandatory);
+                _groupName = value;
             }
         }
 
-        private CodableValue groupName;
+        private CodableValue _groupName;
 
         /// <summary>
         /// Gets or sets the information about the laboratory which performed
@@ -196,11 +196,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public Organization LaboratoryName
         {
-            get { return this.laboratoryName; }
-            set { this.laboratoryName = value; }
+            get { return _laboratoryName; }
+            set { _laboratoryName = value; }
         }
 
-        private Organization laboratoryName;
+        private Organization _laboratoryName;
 
         /// <summary>
         /// Gets or sets the overall status of this group and the sub group tests.
@@ -213,28 +213,28 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public CodableValue Status
         {
-            get { return this.status; }
-            set { this.status = value; }
+            get { return _status; }
+            set { _status = value; }
         }
 
-        private CodableValue status;
+        private CodableValue _status;
 
         /// <summary>
         /// Gets lab test result sub groups.
         /// </summary>
         ///
-        public Collection<LabTestResultGroup> SubGroups => this.subGroups;
+        public Collection<LabTestResultGroup> SubGroups => _subGroups;
 
-        private Collection<LabTestResultGroup> subGroups =
+        private Collection<LabTestResultGroup> _subGroups =
             new Collection<LabTestResultGroup>();
 
         /// <summary>
         /// Gets a set of results for this group.
         /// </summary>
         ///
-        public Collection<LabTestResultDetails> Results => this.results;
+        public Collection<LabTestResultDetails> Results => _results;
 
-        private Collection<LabTestResultDetails> results = new Collection<LabTestResultDetails>();
+        private Collection<LabTestResultDetails> _results = new Collection<LabTestResultDetails>();
 
         /// <summary>
         /// Gets a string representation of the lab test results group type item.
@@ -247,38 +247,38 @@ namespace Microsoft.HealthVault.ItemTypes
         public override string ToString()
         {
             StringBuilder result = new StringBuilder(200);
-            result.Append(this.groupName);
-            if (this.laboratoryName != null)
+            result.Append(_groupName);
+            if (_laboratoryName != null)
             {
                 result.AppendFormat(
                     Resources.ListFormat,
-                    this.laboratoryName.ToString());
+                    _laboratoryName.ToString());
             }
 
-            if (this.status != null)
+            if (_status != null)
             {
                 result.AppendFormat(
                     Resources.ListFormat,
-                    this.status.ToString());
+                    _status.ToString());
             }
 
-            if (this.subGroups != null)
+            if (_subGroups != null)
             {
-                for (int index = 0; index < this.subGroups.Count; ++index)
+                for (int index = 0; index < _subGroups.Count; ++index)
                 {
                     result.AppendFormat(
                     Resources.ListFormat,
-                    this.subGroups[index].ToString());
+                    _subGroups[index].ToString());
                 }
             }
 
-            if (this.results != null)
+            if (_results != null)
             {
-                for (int index = 0; index < this.results.Count; ++index)
+                for (int index = 0; index < _results.Count; ++index)
                 {
                     result.AppendFormat(
                     Resources.ListFormat,
-                    this.results[index].ToString());
+                    _results[index].ToString());
                 }
             }
 

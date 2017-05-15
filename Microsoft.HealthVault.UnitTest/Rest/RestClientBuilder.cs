@@ -13,18 +13,18 @@ namespace Microsoft.HealthVault.UnitTest.Rest
 {
     internal class RestClientBuilder
     {
-        private readonly HealthVaultConfiguration healthVaultConfiguration;
-        private readonly IConnectionInternal connection;
-        private readonly IHealthWebRequestClient webClient;
+        private readonly HealthVaultConfiguration _healthVaultConfiguration;
+        private readonly IConnectionInternal _connection;
+        private readonly IHealthWebRequestClient _webClient;
 
         private RestClientBuilder()
         {
-            this.healthVaultConfiguration = new HealthVaultConfiguration
+            _healthVaultConfiguration = new HealthVaultConfiguration
             {
                 RestHealthVaultUrl = new Uri("http://localhost")
             };
-            this.connection = Substitute.For<IConnectionInternal>();
-            this.webClient = Substitute.For<IHealthWebRequestClient>();
+            _connection = Substitute.For<IConnectionInternal>();
+            _webClient = Substitute.For<IHealthWebRequestClient>();
         }
 
         public static RestClientBuilder Create()
@@ -34,7 +34,7 @@ namespace Microsoft.HealthVault.UnitTest.Rest
 
         public RestClientBuilder WithResponseMessage(string body, HttpStatusCode statusCode = HttpStatusCode.OK)
         {
-            this.webClient.SendAsync(Arg.Any<HttpRequestMessage>(), Arg.Any<CancellationToken>(), Arg.Any<bool>())
+            _webClient.SendAsync(Arg.Any<HttpRequestMessage>(), Arg.Any<CancellationToken>(), Arg.Any<bool>())
                 .Returns(Task.FromResult(new HttpResponseMessage(statusCode) { Content = new StringContent(body) }));
 
             return this;
@@ -42,12 +42,12 @@ namespace Microsoft.HealthVault.UnitTest.Rest
 
         public RestClientBuilder WithErrorMessage(string message)
         {
-            return this.WithResponseMessage($"{{ \"error\": {{ \"message\": \"{message}\" }} }}", HttpStatusCode.BadRequest);
+            return WithResponseMessage($"{{ \"error\": {{ \"message\": \"{message}\" }} }}", HttpStatusCode.BadRequest);
         }
 
         public HealthVaultRestClient Build()
         {
-            return new HealthVaultRestClient(this.healthVaultConfiguration, this.connection, this.webClient);
+            return new HealthVaultRestClient(_healthVaultConfiguration, _connection, _webClient);
         }
     }
 }

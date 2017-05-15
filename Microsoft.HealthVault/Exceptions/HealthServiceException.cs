@@ -6,7 +6,6 @@
 using System;
 using System.Globalization;
 using Microsoft.HealthVault.Extensions;
-using Microsoft.HealthVault.Helpers;
 using Microsoft.HealthVault.Transport;
 
 namespace Microsoft.HealthVault.Exceptions
@@ -71,8 +70,8 @@ namespace Microsoft.HealthVault.Exceptions
             HealthServiceResponseError error)
             : base(GetMessage(errorCodeId, error))
         {
-            this.Error = error;
-            this.ErrorCodeId = errorCodeId;
+            Error = error;
+            ErrorCodeId = errorCodeId;
         }
 
         private static string GetMessage(
@@ -126,7 +125,7 @@ namespace Microsoft.HealthVault.Exceptions
         /// </summary>
         ///
         public HealthServiceStatusCode ErrorCode => HealthServiceStatusCodeManager.GetStatusCode(
-            this.ErrorCodeId);
+            ErrorCodeId);
 
         /// <summary>
         /// Gets the identifier of the status code in the HealthVault response.
@@ -169,16 +168,16 @@ namespace Microsoft.HealthVault.Exceptions
         {
             get
             {
-                return this.response;
+                return _response;
             }
 
             internal set
             {
-                this.response = value;
+                _response = value;
             }
         }
 
-        private HealthServiceResponseData response;
+        private HealthServiceResponseData _response;
 
         #endregion public properties
 
@@ -195,7 +194,7 @@ namespace Microsoft.HealthVault.Exceptions
         public override string ToString()
         {
             string result =
-                string.Join(" ", base.ToString(), this.GetType().ToString(), ":StatusCode =", this.ErrorCode.ToString(), ":StatusCodeId =", this.ErrorCodeId.ToString(CultureInfo.InvariantCulture));
+                string.Join(" ", base.ToString(), GetType().ToString(), ":StatusCode =", ErrorCode.ToString(), ":StatusCodeId =", ErrorCodeId.ToString(CultureInfo.InvariantCulture));
             return result;
         }
     }

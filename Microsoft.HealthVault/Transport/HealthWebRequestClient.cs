@@ -1,7 +1,7 @@
-﻿// Copyright (c) Microsoft Corporation.  All rights reserved. 
+﻿// Copyright (c) Microsoft Corporation.  All rights reserved.
 // MIT License
 // Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the ""Software""), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 //
 // THE SOFTWARE IS PROVIDED *AS IS*, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
@@ -20,13 +20,13 @@ namespace Microsoft.HealthVault.Transport
 {
     internal class HealthWebRequestClient : IHealthWebRequestClient
     {
-        private readonly HealthVaultConfiguration configuration;
-        private readonly IHttpClientFactory httpClientFactory;
+        private readonly HealthVaultConfiguration _configuration;
+        private readonly IHttpClientFactory _httpClientFactory;
 
         public HealthWebRequestClient(HealthVaultConfiguration config, IHttpClientFactory httpClientFactory)
         {
-            this.configuration = config;
-            this.httpClientFactory = httpClientFactory;
+            _configuration = config;
+            _httpClientFactory = httpClientFactory;
         }
 
         /// <summary>
@@ -35,24 +35,24 @@ namespace Microsoft.HealthVault.Transport
         ///
         public string RequestCompressionMethod
         {
-            get { return this.requestCompressionMethod; }
+            get { return _requestCompressionMethod; }
 
             set
             {
-                this.requestCompressionMethod = value;
+                _requestCompressionMethod = value;
 
-                if (string.IsNullOrEmpty(this.requestCompressionMethod))
+                if (string.IsNullOrEmpty(_requestCompressionMethod))
                 {
-                    this.requestCompressionMethod = null;
+                    _requestCompressionMethod = null;
                 }
                 else
                 {
                     if (!string.Equals(
-                            this.requestCompressionMethod,
+                            _requestCompressionMethod,
                             "gzip",
                             StringComparison.OrdinalIgnoreCase) &&
                         !string.Equals(
-                            this.requestCompressionMethod,
+                            _requestCompressionMethod,
                             "deflate",
                             StringComparison.OrdinalIgnoreCase))
                     {
@@ -62,7 +62,7 @@ namespace Microsoft.HealthVault.Transport
             }
         }
 
-        private string requestCompressionMethod = "gzip";
+        private string _requestCompressionMethod = "gzip";
 
         public async Task<HttpResponseMessage> SendAsync(Uri url, byte[] utf8EncodedXml, int utf8EncodedXmlLength, IDictionary<string, string> headers, CancellationToken token)
         {
@@ -83,27 +83,27 @@ namespace Microsoft.HealthVault.Transport
             }
 
             HttpContent content = new ByteArrayContent(utf8EncodedXml, 0, utf8EncodedXmlLength);
-            if (!string.IsNullOrEmpty(this.RequestCompressionMethod))
+            if (!string.IsNullOrEmpty(RequestCompressionMethod))
             {
-                content = new CompressedContent(content, this.RequestCompressionMethod);
+                content = new CompressedContent(content, RequestCompressionMethod);
             }
 
             message.Content = content;
 
-            return await this.SendAsync(message, token);
+            return await SendAsync(message, token);
         }
 
         public async Task<HttpResponseMessage> SendAsync(HttpRequestMessage message, CancellationToken token, bool throwExceptionOnFailure = true)
         {
-            HttpClient client = this.httpClientFactory.GetOrCreateClient();
-            int retryCount = this.configuration.RetryOnInternal500Count;
+            HttpClient client = _httpClientFactory.GetOrCreateClient();
+            int retryCount = _configuration.RetryOnInternal500Count;
             do
             {
                 HttpResponseMessage response = await client.SendAsync(message, token).ConfigureAwait(false);
                 if (response.StatusCode == HttpStatusCode.InternalServerError && retryCount > 0)
                 {
                     // If we have a 500 and have retries left, retry.
-                    await Task.Delay(this.configuration.RetryOnInternal500SleepDuration, token).ConfigureAwait(false);
+                    await Task.Delay(_configuration.RetryOnInternal500SleepDuration, token).ConfigureAwait(false);
                 }
                 else
                 {

@@ -3,11 +3,11 @@
     /// <summary>
     /// The authenticated session token
     /// </summary>
-    /// 
+    ///
     /// <remarks>
     /// The token has a limited time-to-live.
     /// When the token expires, requests will fail with access denied.
-    /// Connections will automatically refresh the token when expired 
+    /// Connections will automatically refresh the token when expired
     /// </remarks>
     public class SessionCredential
     {

@@ -1,7 +1,7 @@
-﻿// Copyright (c) Microsoft Corporation.  All rights reserved. 
+﻿// Copyright (c) Microsoft Corporation.  All rights reserved.
 // MIT License
 // Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the ""Software""), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 //
 // THE SOFTWARE IS PROVIDED *AS IS*, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
@@ -11,7 +11,6 @@ using System.Globalization;
 using System.Threading.Tasks;
 using System.Web;
 using Microsoft.HealthVault.Clients;
-using Microsoft.HealthVault.Connection;
 using Microsoft.HealthVault.PlatformInformation;
 using Microsoft.HealthVault.Web.Configuration;
 using Microsoft.HealthVault.Web.Connection;
@@ -29,43 +28,43 @@ namespace Microsoft.HealthVault.Web.Providers
         private const string HvTokenWebConnectionInfo = "w";
         private const string CookieVersion = "1:";
 
-        private readonly IServiceLocator serviceLocator;
+        private readonly IServiceLocator _serviceLocator;
 
-        private readonly WebHealthVaultConfiguration webHealthVaultConfiguration;
-        private readonly ICookieDataManager cookieDataManager;
+        private readonly WebHealthVaultConfiguration _webHealthVaultConfiguration;
+        private readonly ICookieDataManager _cookieDataManager;
 
-        private readonly bool useSession;
-        private readonly string cookieName;
+        private readonly bool _useSession;
+        private readonly string _cookieName;
 
-        private readonly JsonSerializerSettings serializerSettings;
+        private readonly JsonSerializerSettings _serializerSettings;
 
         public WebConnectionInfoProvider(IServiceLocator serviceLocator)
         {
-            this.serviceLocator = serviceLocator;
+            _serviceLocator = serviceLocator;
 
-            this.webHealthVaultConfiguration = this.serviceLocator.GetInstance<WebHealthVaultConfiguration>();
-            this.cookieDataManager = this.serviceLocator.GetInstance<ICookieDataManager>();
+            _webHealthVaultConfiguration = serviceLocator.GetInstance<WebHealthVaultConfiguration>();
+            _cookieDataManager = serviceLocator.GetInstance<ICookieDataManager>();
 
-            useSession = webHealthVaultConfiguration.UseAspSession;
-            cookieName = webHealthVaultConfiguration.CookieName;
+            _useSession = _webHealthVaultConfiguration.UseAspSession;
+            _cookieName = _webHealthVaultConfiguration.CookieName;
 
-            serializerSettings = new JsonSerializerSettings();
-            serializerSettings.Converters.Add(new WebConnectionInfoConverter());
+            _serializerSettings = new JsonSerializerSettings();
+            _serializerSettings.Converters.Add(new WebConnectionInfoConverter());
         }
 
         public async Task<WebConnectionInfo> CreateWebConnectionInfoAsync(string token, string instanceId)
         {
-            IServiceInstanceProvider serviceInstanceProvider = this.serviceLocator.GetInstance<IServiceInstanceProvider>();
+            IServiceInstanceProvider serviceInstanceProvider = _serviceLocator.GetInstance<IServiceInstanceProvider>();
             HealthServiceInstance serviceInstance = await serviceInstanceProvider.GetHealthServiceInstanceAsync(instanceId);
 
             IWebHealthVaultConnection connection = Ioc.Container.Locate<IWebHealthVaultConnection>(
                 extraData:
                 new
                 {
-                    serviceLocator = serviceLocator
+                    serviceLocator = _serviceLocator
                 });
 
-            WebHealthVaultConnection  webHealthVaultConnection = connection as WebHealthVaultConnection;
+            WebHealthVaultConnection webHealthVaultConnection = connection as WebHealthVaultConnection;
             webHealthVaultConnection.ServiceInstance = serviceInstance;
             webHealthVaultConnection.UserAuthToken = token;
 
@@ -103,8 +102,8 @@ namespace Microsoft.HealthVault.Web.Providers
 
             string serializedWebConnectionInfo = cookieVersionSerializedWebConnectionInfo.Substring(versionIndex + 1);
 
-            string cookieData = this.UnmarshalCookieVersion1(serializedWebConnectionInfo);
-            WebConnectionInfo webConnectionInfo = JsonConvert.DeserializeObject<WebConnectionInfo>(cookieData, serializerSettings);
+            string cookieData = UnmarshalCookieVersion1(serializedWebConnectionInfo);
+            WebConnectionInfo webConnectionInfo = JsonConvert.DeserializeObject<WebConnectionInfo>(cookieData, _serializerSettings);
 
             return webConnectionInfo;
         }
@@ -121,21 +120,21 @@ namespace Microsoft.HealthVault.Web.Providers
                 throw new ArgumentException(nameof(webConnectionInfo));
             }
 
-            string serializedWebConnectionInfo = JsonConvert.SerializeObject(webConnectionInfo, serializerSettings);
-            string marshalledCookie = CookieVersion + this.MarshalCookieVersion1(serializedWebConnectionInfo);
+            string serializedWebConnectionInfo = JsonConvert.SerializeObject(webConnectionInfo, _serializerSettings);
+            string marshalledCookie = CookieVersion + MarshalCookieVersion1(serializedWebConnectionInfo);
 
-            this.SetCookie(httpConext, marshalledCookie);
+            SetCookie(httpConext, marshalledCookie);
         }
 
         public void Clear(HttpContextBase httpContext)
         {
-            if (useSession)
+            if (_useSession)
             {
-                httpContext.Session.Remove(cookieName);
+                httpContext.Session.Remove(_cookieName);
                 return;
             }
 
-            HttpCookie cookie = httpContext.Request.Cookies[cookieName];
+            HttpCookie cookie = httpContext.Request.Cookies[_cookieName];
 
             if (cookie == null)
             {
@@ -143,32 +142,32 @@ namespace Microsoft.HealthVault.Web.Providers
             }
 
             cookie.Expires = DateTime.Now.AddDays(-1d);
-            httpContext.Response.Cookies.Remove(cookieName);
+            httpContext.Response.Cookies.Remove(_cookieName);
             httpContext.Response.Cookies.Add(cookie);
         }
 
         private HttpCookie CreateCookie(HttpContextBase httpContext, string webConnectionInfo)
         {
-            HttpCookie cookie = new HttpCookie(this.webHealthVaultConfiguration.CookieName)
+            HttpCookie cookie = new HttpCookie(_webHealthVaultConfiguration.CookieName)
             {
                 HttpOnly = true,
-                Secure = this.webHealthVaultConfiguration.UseSslForSecurity,
+                Secure = _webHealthVaultConfiguration.UseSslForSecurity,
                 [HvTokenWebConnectionInfo] = webConnectionInfo
             };
 
-            if (!String.IsNullOrEmpty(this.webHealthVaultConfiguration.CookieDomain))
+            if (!String.IsNullOrEmpty(_webHealthVaultConfiguration.CookieDomain))
             {
-                cookie.Domain = this.webHealthVaultConfiguration.CookieDomain;
+                cookie.Domain = _webHealthVaultConfiguration.CookieDomain;
             }
 
-            if (!String.IsNullOrEmpty(this.webHealthVaultConfiguration.CookiePath))
+            if (!String.IsNullOrEmpty(_webHealthVaultConfiguration.CookiePath))
             {
-                cookie.Path = this.webHealthVaultConfiguration.CookiePath;
+                cookie.Path = _webHealthVaultConfiguration.CookiePath;
             }
 
             // We only set the expiration if it is not a
             // session cookie.
-            if (!useSession)
+            if (!_useSession)
             {
                 if (string.IsNullOrEmpty(webConnectionInfo))
                 {
@@ -176,13 +175,13 @@ namespace Microsoft.HealthVault.Web.Providers
                     return cookie;
                 }
 
-                HttpCookie existingCookie = this.GetCookie(httpContext);
+                HttpCookie existingCookie = GetCookie(httpContext);
 
                 DateTime cookieExpires;
                 if (existingCookie == null)
                 {
                     cookieExpires = DateTime.Now.AddMinutes(
-                        this.webHealthVaultConfiguration.CookieTimeoutDuration.TotalMinutes);
+                        _webHealthVaultConfiguration.CookieTimeoutDuration.TotalMinutes);
                 }
                 else
                 {
@@ -191,7 +190,7 @@ namespace Microsoft.HealthVault.Web.Providers
 
                     if (!DateTime.TryParse(expirationString, out expiration))
                     {
-                        cookieExpires = DateTime.Now.AddMinutes(this.webHealthVaultConfiguration.CookieTimeoutDuration
+                        cookieExpires = DateTime.Now.AddMinutes(_webHealthVaultConfiguration.CookieTimeoutDuration
                             .TotalMinutes);
                     }
                     else
@@ -210,31 +209,31 @@ namespace Microsoft.HealthVault.Web.Providers
 
         private HttpCookie GetCookie(HttpContextBase httpContext)
         {
-            if (this.useSession)
+            if (_useSession)
             {
                 HttpCookie cookie = new HttpCookie("wrapper");
-                cookie.Values["p"] = (string)httpContext.Session[cookieName];
+                cookie.Values["p"] = (string)httpContext.Session[_cookieName];
                 return cookie;
             }
 
-            return httpContext.Request.Cookies[cookieName];
+            return httpContext.Request.Cookies[_cookieName];
         }
 
         private void SetCookie(HttpContextBase httpContext, string cookieData)
         {
-            HttpCookie newCookie = this.CreateCookie(httpContext, cookieData);
+            HttpCookie newCookie = CreateCookie(httpContext, cookieData);
 
             if (newCookie != null)
             {
-                if (this.useSession)
+                if (_useSession)
                 {
-                    httpContext.Session[cookieName] = newCookie.Values["p"];
+                    httpContext.Session[_cookieName] = newCookie.Values["p"];
                 }
                 else
                 {
                     var httpCookieCollection = httpContext.Response.Cookies;
 
-                    httpCookieCollection.Remove(cookieName);
+                    httpCookieCollection.Remove(_cookieName);
                     httpCookieCollection.Add(newCookie);
                 }
             }
@@ -245,13 +244,13 @@ namespace Microsoft.HealthVault.Web.Providers
             string[] lengthAndData = serializedWebConnectionInfo.Split(new[] { '-' }, 2);
             string compressedData = lengthAndData[1];
 
-            return this.cookieDataManager.Decompress(compressedData);
+            return _cookieDataManager.Decompress(compressedData);
         }
 
         private string MarshalCookieVersion1(string webConnectionInfoJson)
         {
             int bufferLength;
-            string compressedData = this.cookieDataManager.Compress(webConnectionInfoJson, out bufferLength);
+            string compressedData = _cookieDataManager.Compress(webConnectionInfoJson, out bufferLength);
             return bufferLength.ToString(CultureInfo.InvariantCulture) + "-" + compressedData;
         }
     }

@@ -82,7 +82,7 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         protected override void ParseValueXml(XPathNavigator navigator)
         {
-            this.Value = navigator.SelectSingleNode(this.ValueElementName).Value;
+            Value = navigator.SelectSingleNode(ValueElementName).Value;
         }
 
         /// <summary>
@@ -96,8 +96,8 @@ namespace Microsoft.HealthVault.ItemTypes
         protected override void WriteValueXml(XmlWriter writer)
         {
             writer.WriteElementString(
-                this.ValueElementName,
-                this.Value);
+                ValueElementName,
+                Value);
         }
 
         /// <summary>
@@ -129,10 +129,10 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         protected virtual string ValueElementName
         {
-            get { return this.valueElementName; }
-            set { this.valueElementName = value; }
+            get { return _valueElementName; }
+            set { _valueElementName = value; }
         }
 
-        private string valueElementName = "value";
+        private string _valueElementName = "value";
     }
 }

@@ -42,7 +42,7 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public GoalRange(CodableValue name)
         {
-            this.Name = name;
+            Name = name;
         }
 
         /// <summary>
@@ -66,11 +66,11 @@ namespace Microsoft.HealthVault.ItemTypes
                     Resources.ParseXmlNavNull);
             }
 
-            this.name = new CodableValue();
-            this.name.ParseXml(navigator.SelectSingleNode("name"));
-            this.description = XPathHelper.GetOptNavValue(navigator, "description");
-            this.minimum = XPathHelper.GetOptNavValue<GeneralMeasurement>(navigator, "minimum");
-            this.maximum = XPathHelper.GetOptNavValue<GeneralMeasurement>(navigator, "maximum");
+            _name = new CodableValue();
+            _name.ParseXml(navigator.SelectSingleNode("name"));
+            _description = XPathHelper.GetOptNavValue(navigator, "description");
+            _minimum = XPathHelper.GetOptNavValue<GeneralMeasurement>(navigator, "minimum");
+            _maximum = XPathHelper.GetOptNavValue<GeneralMeasurement>(navigator, "maximum");
         }
 
         /// <summary>
@@ -115,7 +115,7 @@ namespace Microsoft.HealthVault.ItemTypes
                     Resources.WriteXmlNullWriter);
             }
 
-            if (this.name == null)
+            if (_name == null)
             {
                 throw new ThingSerializationException(
                     Resources.GoalRangeNameNullValue);
@@ -123,10 +123,10 @@ namespace Microsoft.HealthVault.ItemTypes
 
             writer.WriteStartElement(nodeName);
 
-            this.name.WriteXml("name", writer);
-            XmlWriterHelper.WriteOptString(writer, "description", this.description);
-            XmlWriterHelper.WriteOpt(writer, "minimum", this.minimum);
-            XmlWriterHelper.WriteOpt(writer, "maximum", this.maximum);
+            _name.WriteXml("name", writer);
+            XmlWriterHelper.WriteOptString(writer, "description", _description);
+            XmlWriterHelper.WriteOpt(writer, "minimum", _minimum);
+            XmlWriterHelper.WriteOpt(writer, "maximum", _maximum);
             writer.WriteEndElement();
         }
 
@@ -147,7 +147,7 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             get
             {
-                return this.name;
+                return _name;
             }
 
             set
@@ -159,11 +159,11 @@ namespace Microsoft.HealthVault.ItemTypes
                         Resources.GoalRangeNameNullValue);
                 }
 
-                this.name = value;
+                _name = value;
             }
         }
 
-        private CodableValue name;
+        private CodableValue _name;
 
         /// <summary>
         /// Gets or sets a description for the goal range allows more detailed information about the range.
@@ -182,7 +182,7 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             get
             {
-                return this.description;
+                return _description;
             }
 
             set
@@ -192,11 +192,11 @@ namespace Microsoft.HealthVault.ItemTypes
                     throw new ArgumentException(Resources.WhitespaceOnlyValue, nameof(value));
                 }
 
-                this.description = value;
+                _description = value;
             }
         }
 
-        private string description;
+        private string _description;
 
         /// <summary>
         /// Gets or sets minimum value of the range.
@@ -210,16 +210,16 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             get
             {
-                return this.minimum;
+                return _minimum;
             }
 
             set
             {
-                this.minimum = value;
+                _minimum = value;
             }
         }
 
-        private GeneralMeasurement minimum;
+        private GeneralMeasurement _minimum;
 
         /// <summary>
         /// Gets or sets maximum value of the range.
@@ -233,16 +233,16 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             get
             {
-                return this.maximum;
+                return _maximum;
             }
 
             set
             {
-                this.maximum = value;
+                _maximum = value;
             }
         }
 
-        private GeneralMeasurement maximum;
+        private GeneralMeasurement _maximum;
 
         /// <summary>
         /// Gets a string representation of the GoalRange.
@@ -254,35 +254,35 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public override string ToString()
         {
-            if (this.Minimum != null && this.Maximum != null)
+            if (Minimum != null && Maximum != null)
             {
                 return
                     string.Format(
                         CultureInfo.CurrentCulture,
                         Resources.GoalRangeWithMinAndMaxFormat,
-                        this.Minimum.ToString(),
-                        this.Maximum.ToString());
+                        Minimum.ToString(),
+                        Maximum.ToString());
             }
 
-            if (this.Minimum != null)
+            if (Minimum != null)
             {
                 return
                     string.Format(
                         CultureInfo.CurrentCulture,
                         Resources.GoalRangeWithMinFormat,
-                        this.Minimum.ToString());
+                        Minimum.ToString());
             }
 
-            if (this.Maximum != null)
+            if (Maximum != null)
             {
                 return
                     string.Format(
                         CultureInfo.CurrentCulture,
                         Resources.GoalRangeWithMaxFormat,
-                        this.Maximum.ToString());
+                        Maximum.ToString());
             }
 
-            return this.Name.Text;
+            return Name.Text;
         }
     }
 }

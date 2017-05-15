@@ -8,82 +8,82 @@ namespace Microsoft.HealthVault.Thing
 {
     public sealed class ItemFilterCollection : IItemFilterCollection
     {
-        private List<ThingQuery> items = new List<ThingQuery>();
+        private List<ThingQuery> _items = new List<ThingQuery>();
 
         #region IItemFilterCollection Members
 
-        public int Count => this.items.Count;
+        public int Count => _items.Count;
 
         public bool IsReadOnly => false;
 
         public ThingQuery this[int index]
         {
-            get { return this.items[index]; }
+            get { return _items[index]; }
 
             set
             {
                 ValidateItem(value);
-                this.items[index] = value;
+                _items[index] = value;
             }
         }
 
         public void Add(ThingQuery item)
         {
             ValidateItem(item);
-            this.items.Add(item);
+            _items.Add(item);
         }
 
         public void Clear()
         {
-            this.items.Clear();
+            _items.Clear();
         }
 
         public bool Contains(ThingQuery item)
         {
-            return this.items.Contains(item);
+            return _items.Contains(item);
         }
 
         public void CopyTo(ThingQuery[] array, int arrayIndex)
         {
-            this.items.CopyTo(array, arrayIndex);
+            _items.CopyTo(array, arrayIndex);
         }
 
         public int IndexOf(ThingQuery item)
         {
-            return this.items.IndexOf(item);
+            return _items.IndexOf(item);
         }
 
         public void Insert(int index, ThingQuery item)
         {
             ValidateItem(item);
-            this.items.Insert(index, item);
+            _items.Insert(index, item);
         }
 
         public void RemoveAt(int index)
         {
-            this.items.RemoveAt(index);
+            _items.RemoveAt(index);
         }
 
         public bool Remove(ThingQuery item)
         {
-            return this.items.Remove(item);
+            return _items.Remove(item);
         }
 
         public IEnumerator<ThingQuery> GetEnumerator()
         {
-            return this.items.GetEnumerator();
+            return _items.GetEnumerator();
         }
 
         IEnumerator IEnumerable.GetEnumerator()
         {
-            return this.GetEnumerator();
+            return GetEnumerator();
         }
 
         #endregion
 
         public void AddRange(IEnumerable<ThingQuery> itemFilters)
         {
-            this.items.AddRange(itemFilters);
+            _items.AddRange(itemFilters);
         }
 
         private static void ValidateItem(ThingQuery item)

@@ -19,7 +19,7 @@ namespace Microsoft.HealthVault.Vocabulary
     /// <summary>
     /// Represents an item in the HealthVault <see cref="Vocabulary"/>.
     /// </summary>
-    /// 
+    ///
     public class VocabularyItem : ItemBase, IXmlSerializable
     {
         /// <summary>
@@ -36,7 +36,7 @@ namespace Microsoft.HealthVault.Vocabulary
         /// <param name="value">The code value for the item</param>
         public VocabularyItem(string value)
         {
-            this.Value = value;
+            Value = value;
         }
 
         /// <summary>
@@ -47,8 +47,8 @@ namespace Microsoft.HealthVault.Vocabulary
         /// <param name="displayText">The display text for the item</param>
         public VocabularyItem(string value, string displayText)
         {
-            this.Value = value;
-            this.DisplayText = displayText;
+            Value = value;
+            DisplayText = displayText;
         }
 
         /// <summary>
@@ -60,9 +60,9 @@ namespace Microsoft.HealthVault.Vocabulary
         /// <param name="abbreviationText">The abbreviation text for the item</param>
         public VocabularyItem(string value, string displayText, string abbreviationText)
         {
-            this.Value = value;
-            this.DisplayText = displayText;
-            this.AbbreviationText = abbreviationText;
+            Value = value;
+            DisplayText = displayText;
+            AbbreviationText = abbreviationText;
         }
 
         /// <summary>
@@ -81,15 +81,15 @@ namespace Microsoft.HealthVault.Vocabulary
         {
             Validator.ThrowIfNavigatorNull(navigator);
 
-            this.Value = navigator.SelectSingleNode("code-value").Value;
+            Value = navigator.SelectSingleNode("code-value").Value;
 
-            this.DisplayText = XPathHelper.GetOptNavValue(navigator, "display-text");
+            DisplayText = XPathHelper.GetOptNavValue(navigator, "display-text");
 
             // preserve previous behavior where items without abbreviations have an empty string...
             string abbreviationText = XPathHelper.GetOptNavValue(navigator, "abbreviation-text");
             if (abbreviationText != null)
             {
-                this.AbbreviationText = abbreviationText;
+                AbbreviationText = abbreviationText;
             }
 
             XPathNavigator infoNav
@@ -100,7 +100,7 @@ namespace Microsoft.HealthVault.Vocabulary
                 {
                     using (XmlReader reader = SDKHelper.GetXmlReaderForXml(infoNav.InnerXml, SDKHelper.XmlReaderSettings))
                     {
-                        this.infoXml = new XPathDocument(reader);
+                        _infoXml = new XPathDocument(reader);
                     }
                 }
                 catch (XmlException)
@@ -138,23 +138,23 @@ namespace Microsoft.HealthVault.Vocabulary
         internal void WriteXmlInternal(string nodeName, XmlWriter writer)
         {
             Validator.ThrowIfWriterNull(writer);
-            Validator.ThrowIfStringNullOrEmpty(this.Value, "Value");
+            Validator.ThrowIfStringNullOrEmpty(Value, "Value");
 
             if (nodeName != null)
             {
                 writer.WriteStartElement(nodeName);
             }
 
-            writer.WriteElementString("code-value", this.Value);
+            writer.WriteElementString("code-value", Value);
 
-            XmlWriterHelper.WriteOptString(writer, "display-text", this.DisplayText);
-            XmlWriterHelper.WriteOptString(writer, "abbreviation-text", this.AbbreviationText);
+            XmlWriterHelper.WriteOptString(writer, "display-text", DisplayText);
+            XmlWriterHelper.WriteOptString(writer, "abbreviation-text", AbbreviationText);
 
-            if (this.infoXml != null)
+            if (_infoXml != null)
             {
                 writer.WriteStartElement("info-xml");
                 {
-                    writer.WriteRaw(this.infoXml.CreateNavigator().InnerXml);
+                    writer.WriteRaw(_infoXml.CreateNavigator().InnerXml);
                 }
 
                 writer.WriteEndElement();
@@ -196,30 +196,30 @@ namespace Microsoft.HealthVault.Vocabulary
             Validator.ThrowIfStringNullOrEmpty(nodeName, "nodeName");
             Validator.ThrowIfWriterNull(writer);
 
-            if (string.IsNullOrEmpty(this.value))
+            if (string.IsNullOrEmpty(_value))
             {
                 throw new ThingSerializationException(Resources.ValueNotSet);
             }
 
-            if (string.IsNullOrEmpty(this.vocabName))
+            if (string.IsNullOrEmpty(_vocabName))
             {
                 throw new ThingSerializationException(Resources.NameNotSet);
             }
 
             writer.WriteStartElement(nodeName);
 
-            writer.WriteElementString("value", this.value);
+            writer.WriteElementString("value", _value);
 
-            if (!string.IsNullOrEmpty(this.family))
+            if (!string.IsNullOrEmpty(_family))
             {
-                writer.WriteElementString("family", this.family);
+                writer.WriteElementString("family", _family);
             }
 
-            writer.WriteElementString("type", this.vocabName);
+            writer.WriteElementString("type", _vocabName);
 
-            if (!string.IsNullOrEmpty(this.version))
+            if (!string.IsNullOrEmpty(_version))
             {
-                writer.WriteElementString("version", this.version);
+                writer.WriteElementString("version", _version);
             }
 
             writer.WriteEndElement();
@@ -254,9 +254,9 @@ namespace Microsoft.HealthVault.Vocabulary
         /// An IXPathNavigable object representing the extra information.
         /// </value>
         ///
-        public IXPathNavigable InfoXml => this.infoXml;
+        public IXPathNavigable InfoXml => _infoXml;
 
-        private XPathDocument infoXml;
+        private XPathDocument _infoXml;
 
         /// <summary>
         /// Set the InfoXml for this instance.
@@ -274,7 +274,7 @@ namespace Microsoft.HealthVault.Vocabulary
             {
                 using (StringReader stringReader = new StringReader(infoXml))
                 {
-                    this.infoXml = new XPathDocument(XmlReader.Create(stringReader, SDKHelper.XmlReaderSettings));
+                    _infoXml = new XPathDocument(XmlReader.Create(stringReader, SDKHelper.XmlReaderSettings));
                 }
             }
             catch (XmlException)
@@ -297,7 +297,7 @@ namespace Microsoft.HealthVault.Vocabulary
         ///
         public override string ToString()
         {
-            return this.DisplayText;
+            return DisplayText;
         }
 
         /// <summary>
@@ -306,30 +306,30 @@ namespace Microsoft.HealthVault.Vocabulary
         ///
         public Vocabulary Vocabulary
         {
-            get { return this.vocabulary; }
+            get { return _vocabulary; }
 
             set
             {
-                this.vocabulary = value;
-                this.CopyNameFamilyVersionFromVocabulary();
+                _vocabulary = value;
+                CopyNameFamilyVersionFromVocabulary();
             }
         }
 
-        private Vocabulary vocabulary;
+        private Vocabulary _vocabulary;
 
         private void CopyNameFamilyVersionFromVocabulary()
         {
-            if (this.Vocabulary != null)
+            if (Vocabulary != null)
             {
-                this.Family = this.Vocabulary.Family;
-                this.VocabularyName = this.Vocabulary.Name;
-                this.Version = this.Vocabulary.Version;
+                Family = Vocabulary.Family;
+                VocabularyName = Vocabulary.Name;
+                Version = Vocabulary.Version;
             }
             else
             {
-                this.Family = null;
-                this.VocabularyName = null;
-                this.Version = null;
+                Family = null;
+                VocabularyName = null;
+                Version = null;
             }
         }
 
@@ -353,7 +353,7 @@ namespace Microsoft.HealthVault.Vocabulary
             XPathDocument document = new XPathDocument(reader);
             XPathNavigator navigator = document.CreateNavigator();
 
-            this.ParseXml(navigator.SelectSingleNode("item"));
+            ParseXml(navigator.SelectSingleNode("item"));
         }
 
         /// <summary>
@@ -362,7 +362,7 @@ namespace Microsoft.HealthVault.Vocabulary
         /// <param name="writer">The writer</param>
         public void WriteXml(XmlWriter writer)
         {
-            this.WriteXmlInternal(null, writer);
+            WriteXmlInternal(null, writer);
         }
 
         #endregion
@@ -387,17 +387,17 @@ namespace Microsoft.HealthVault.Vocabulary
         ///
         public string Value
         {
-            get { return this.value; }
+            get { return _value; }
 
             set
             {
                 Validator.ThrowIfStringNullOrEmpty(value, "Value");
                 Validator.ThrowIfStringIsWhitespace(value, "Value");
-                this.value = value;
+                _value = value;
             }
         }
 
-        private string value;
+        private string _value;
 
         /// <summary>
         /// Gets or sets the code family.
@@ -419,20 +419,20 @@ namespace Microsoft.HealthVault.Vocabulary
         ///
         public string Family
         {
-            get { return this.family; }
+            get { return _family; }
 
             set
             {
                 if (!string.IsNullOrEmpty(value) && string.IsNullOrEmpty(value.Trim()))
                 {
-                    throw new ArgumentException(Resources.WhitespaceOnlyValue, nameof(this.Family));
+                    throw new ArgumentException(Resources.WhitespaceOnlyValue, nameof(Family));
                 }
 
-                this.family = value;
+                _family = value;
             }
         }
 
-        private string family;
+        private string _family;
 
         /// <summary>
         /// Gets or sets the vocabulary name.
@@ -449,17 +449,17 @@ namespace Microsoft.HealthVault.Vocabulary
         ///
         public string VocabularyName
         {
-            get { return this.vocabName; }
+            get { return _vocabName; }
 
             set
             {
                 Validator.ThrowIfStringNullOrEmpty(value, "VocabularyName");
                 Validator.ThrowIfStringIsWhitespace(value, "VocabularyName");
-                this.vocabName = value;
+                _vocabName = value;
             }
         }
 
-        private string vocabName;
+        private string _vocabName;
 
         /// <summary>
         /// Gets or sets the code version.
@@ -479,19 +479,19 @@ namespace Microsoft.HealthVault.Vocabulary
         ///
         public string Version
         {
-            get { return this.version; }
+            get { return _version; }
 
             set
             {
                 if (!string.IsNullOrEmpty(value) && string.IsNullOrEmpty(value.Trim()))
                 {
-                    throw new ArgumentException(Resources.WhitespaceOnlyValue, nameof(this.Version));
+                    throw new ArgumentException(Resources.WhitespaceOnlyValue, nameof(Version));
                 }
 
-                this.version = value;
+                _version = value;
             }
         }
 
-        private string version;
+        private string _version;
     }
 }

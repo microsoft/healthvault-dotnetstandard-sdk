@@ -1,7 +1,7 @@
-// Copyright (c) Microsoft Corporation.  All rights reserved. 
+// Copyright (c) Microsoft Corporation.  All rights reserved.
 // MIT License
 // Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the ""Software""), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 //
 // THE SOFTWARE IS PROVIDED *AS IS*, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
@@ -16,7 +16,6 @@ using Microsoft.HealthVault.Application;
 using Microsoft.HealthVault.Exceptions;
 using Microsoft.HealthVault.Helpers;
 using Microsoft.HealthVault.Record;
-using Microsoft.HealthVault.Transport;
 
 namespace Microsoft.HealthVault.Person
 {
@@ -65,9 +64,9 @@ namespace Microsoft.HealthVault.Person
         ///
         internal PersonInfo(PersonInfo personInfo)
         {
-            this.personId = personInfo.personId;
-            this.Name = personInfo.Name;
-            this.selectedRecordId = personInfo.selectedRecordId;
+            _personId = personInfo._personId;
+            Name = personInfo.Name;
+            _selectedRecordId = personInfo._selectedRecordId;
         }
 
         /// <summary>
@@ -91,16 +90,16 @@ namespace Microsoft.HealthVault.Person
         ///
         internal virtual void ParseXml(XPathNavigator navigator)
         {
-            this.personId = new Guid(navigator.SelectSingleNode("person-id").Value);
+            _personId = new Guid(navigator.SelectSingleNode("person-id").Value);
 
-            this.Name = navigator.SelectSingleNode("name").Value;
+            Name = navigator.SelectSingleNode("name").Value;
 
             XPathNavigator navAppSettings = navigator.SelectSingleNode("app-settings");
 
             if (navAppSettings != null)
             {
                 XDocument doc = SDKHelper.SafeLoadXml(navAppSettings.OuterXml);
-                this.ApplicationSettingsDocument = doc;
+                ApplicationSettingsDocument = doc;
             }
 
             XPathNavigator navSelectedRecordId =
@@ -108,23 +107,23 @@ namespace Microsoft.HealthVault.Person
 
             if (navSelectedRecordId != null)
             {
-                this.selectedRecordId = new Guid(navSelectedRecordId.Value);
+                _selectedRecordId = new Guid(navSelectedRecordId.Value);
             }
 
             XPathNavigator navPreferredCulture =
                 navigator.SelectSingleNode("preferred-culture[language != '']");
             if (navPreferredCulture != null)
             {
-                this.PreferredCulture = null;
+                PreferredCulture = null;
                 XPathNavigator navLanguageCode = navPreferredCulture.SelectSingleNode("language");
                 {
-                    this.PreferredCulture = navLanguageCode.Value;
+                    PreferredCulture = navLanguageCode.Value;
 
                     // Country code only matters if the language code is present.
                     XPathNavigator navCountryCode = navPreferredCulture.SelectSingleNode("country");
                     if (navCountryCode != null)
                     {
-                        this.PreferredCulture += "-" + navCountryCode.Value;
+                        PreferredCulture += "-" + navCountryCode.Value;
                     }
                 }
             }
@@ -133,16 +132,16 @@ namespace Microsoft.HealthVault.Person
                 navigator.SelectSingleNode("preferred-uiculture[language != '']");
             if (navPreferredUICulture != null)
             {
-                this.PreferredUICulture = null;
+                PreferredUICulture = null;
                 XPathNavigator navLanguageCode = navPreferredUICulture.SelectSingleNode("language");
                 {
-                    this.PreferredUICulture = navLanguageCode.Value;
+                    PreferredUICulture = navLanguageCode.Value;
 
                     // Country code only matters if the language code is present.
                     XPathNavigator navCountryCode = navPreferredUICulture.SelectSingleNode("country");
                     if (navCountryCode != null)
                     {
-                        this.PreferredUICulture += "-" + navCountryCode.Value;
+                        PreferredUICulture += "-" + navCountryCode.Value;
                     }
                 }
             }
@@ -150,8 +149,8 @@ namespace Microsoft.HealthVault.Person
             XPathNavigator locationNav = navigator.SelectSingleNode("location");
             if (locationNav != null)
             {
-                this.Location = new Location();
-                this.Location.ParseXml(locationNav);
+                Location = new Location();
+                Location.ParseXml(locationNav);
             }
 
             XPathNodeIterator recordsNav = navigator.Select("record");
@@ -161,36 +160,36 @@ namespace Microsoft.HealthVault.Person
                 HealthRecordInfo record = HealthRecordInfo.CreateFromXml(recordNav);
                 if (record != null)
                 {
-                    this.AuthorizedRecords.Add(record.Id, record);
+                    AuthorizedRecords.Add(record.Id, record);
                 }
             }
 
             XPathNavigator navMoreRecords = navigator.SelectSingleNode("more-records");
             if (navMoreRecords != null)
             {
-                this.HasMoreRecords = true;
+                HasMoreRecords = true;
             }
 
             XPathNavigator navMoreAppSettings = navigator.SelectSingleNode("more-app-settings");
             if (navMoreAppSettings != null)
             {
-                this.HasMoreApplicationSettings = true;
+                HasMoreApplicationSettings = true;
             }
         }
 
         /// <summary>
         /// Gets the XML representation of the <see cref="PersonInfo"/>.
         /// </summary>
-        /// 
+        ///
         /// <returns>
         /// A XML string containing the person information.
         /// </returns>
-        /// 
+        ///
         /// <remarks>
-        /// This method can be used to get a serialized version of the 
+        /// This method can be used to get a serialized version of the
         /// <see cref="PersonInfo"/>.
         /// </remarks>
-        /// 
+        ///
         public string GetXml()
         {
             StringBuilder personInfoXml = new StringBuilder(128);
@@ -199,7 +198,7 @@ namespace Microsoft.HealthVault.Person
 
             using (XmlWriter writer = XmlWriter.Create(personInfoXml, settings))
             {
-                this.WriteXml("person-info", writer);
+                WriteXml("person-info", writer);
                 writer.Flush();
             }
 
@@ -215,47 +214,47 @@ namespace Microsoft.HealthVault.Person
                 writer.WriteStartElement(nodeName);
             }
 
-            writer.WriteElementString("person-id", this.personId.ToString());
-            writer.WriteElementString("name", this.Name);
+            writer.WriteElementString("person-id", _personId.ToString());
+            writer.WriteElementString("name", Name);
 
-            if (this.ApplicationSettingsDocument != null)
+            if (ApplicationSettingsDocument != null)
             {
-                writer.WriteRaw(this.ApplicationSettingsDocument.CreateNavigator().OuterXml);
+                writer.WriteRaw(ApplicationSettingsDocument.CreateNavigator().OuterXml);
             }
 
-            if (this.HasMoreApplicationSettings)
+            if (HasMoreApplicationSettings)
             {
                 writer.WriteElementString("more-app-settings", string.Empty);
             }
 
-            if (this.selectedRecordId != Guid.Empty)
+            if (_selectedRecordId != Guid.Empty)
             {
                 writer.WriteElementString(
                     "selected-record-id",
-                    this.selectedRecordId.ToString());
+                    _selectedRecordId.ToString());
             }
 
-            foreach (HealthRecordInfo record in this.AuthorizedRecords.Values)
+            foreach (HealthRecordInfo record in AuthorizedRecords.Values)
             {
                 record.WriteXml("record", writer);
             }
 
-            if (this.HasMoreRecords)
+            if (HasMoreRecords)
             {
                 writer.WriteElementString("more-records", string.Empty);
             }
 
-            if (!string.IsNullOrEmpty(this.PreferredCulture))
+            if (!string.IsNullOrEmpty(PreferredCulture))
             {
-                WriteCulture("preferred-culture", writer, this.PreferredCulture);
+                WriteCulture("preferred-culture", writer, PreferredCulture);
             }
 
-            if (!string.IsNullOrEmpty(this.PreferredUICulture))
+            if (!string.IsNullOrEmpty(PreferredUICulture))
             {
-                WriteCulture("preferred-uiculture", writer, this.PreferredUICulture);
+                WriteCulture("preferred-uiculture", writer, PreferredUICulture);
             }
 
-            this.Location?.WriteXml(writer, "location");
+            Location?.WriteXml(writer, "location");
 
             if (writeContainingNode)
             {
@@ -292,13 +291,13 @@ namespace Microsoft.HealthVault.Person
         {
             get
             {
-                return this.personId;
+                return _personId;
             }
 
-            set { this.personId = value; }
+            set { _personId = value; }
         }
 
-        private Guid personId;
+        private Guid _personId;
 
         /// <summary>
         /// Gets or sets the person's name.
@@ -348,34 +347,34 @@ namespace Microsoft.HealthVault.Person
         {
             get
             {
-                if (this.selectedRecord == null)
+                if (_selectedRecord == null)
                 {
-                    if (this.selectedRecordId != Guid.Empty &&
-                        this.AuthorizedRecords.ContainsKey(this.selectedRecordId))
+                    if (_selectedRecordId != Guid.Empty &&
+                        AuthorizedRecords.ContainsKey(_selectedRecordId))
                     {
-                        this.selectedRecord = this.AuthorizedRecords[this.selectedRecordId];
+                        _selectedRecord = AuthorizedRecords[_selectedRecordId];
                     }
                 }
 
-                return this.selectedRecord;
+                return _selectedRecord;
             }
 
             set
             {
-                this.selectedRecord = value;
+                _selectedRecord = value;
 
                 if (value != null &&
                     value.Id != Guid.Empty)
                 {
-                    this.selectedRecordId = value.Id;
+                    _selectedRecordId = value.Id;
                 }
 
-                this.SelectedRecordChanged?.Invoke(this, new EventArgs());
+                SelectedRecordChanged?.Invoke(this, new EventArgs());
             }
         }
 
-        private HealthRecordInfo selectedRecord;
-        private Guid selectedRecordId;
+        private HealthRecordInfo _selectedRecord;
+        private Guid _selectedRecordId;
 
         /// <summary>
         /// Occurs when the <see cref="SelectedRecord"/> setter is called.
@@ -421,7 +420,7 @@ namespace Microsoft.HealthVault.Person
         /// </summary>
         ///
         public Location Location { get; set; }
-        
+
         public bool HasMoreRecords { get; set; }
 
         public bool HasMoreApplicationSettings { get; set; }
@@ -458,7 +457,7 @@ namespace Microsoft.HealthVault.Person
         {
             HealthRecordInfo selfRecord = null;
 
-            foreach (HealthRecordInfo authRecord in this.AuthorizedRecords.Values)
+            foreach (HealthRecordInfo authRecord in AuthorizedRecords.Values)
             {
                 if (authRecord.RelationshipType == RelationshipType.Self
                     && authRecord.DateAuthorizationExpires > DateTime.UtcNow)

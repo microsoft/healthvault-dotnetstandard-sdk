@@ -50,7 +50,7 @@ namespace Microsoft.HealthVault.ItemTypes
         public Allergy(CodableValue name)
             : base(TypeId)
         {
-            this.Name = name;
+            Name = name;
         }
 
         /// <summary>
@@ -79,53 +79,53 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         protected override void ParseXml(IXPathNavigable typeSpecificXml)
         {
-            this.name.Clear();
+            _name.Clear();
             XPathNavigator itemNav =
                 typeSpecificXml.CreateNavigator().SelectSingleNode("allergy");
 
             Validator.ThrowInvalidIfNull(itemNav, Resources.AllergyUnexpectedNode);
 
             // <name>
-            this.name.ParseXml(itemNav.SelectSingleNode("name"));
+            _name.ParseXml(itemNav.SelectSingleNode("name"));
 
             // <reaction>
-            this.reaction =
+            _reaction =
                 XPathHelper.GetOptNavValue<CodableValue>(
                     itemNav,
                     "reaction");
 
             // <first-observed>
-            this.firstObserved =
+            _firstObserved =
                 XPathHelper.GetOptNavValue<ApproximateDateTime>(
                     itemNav,
                     "first-observed");
 
             // <allergen-type>
-            this.allergen =
+            _allergen =
                 XPathHelper.GetOptNavValue<CodableValue>(
                     itemNav,
                     "allergen-type");
 
             // <allergen-code>
-            this.allergenCode =
+            _allergenCode =
                 XPathHelper.GetOptNavValue<CodableValue>(
                     itemNav,
                     "allergen-code");
 
             // <treatment-provider>
-            this.treatmentProvider =
+            _treatmentProvider =
                 XPathHelper.GetOptNavValue<PersonItem>(
                     itemNav,
                     "treatment-provider");
 
             // <treatment>
-            this.treatment =
+            _treatment =
                 XPathHelper.GetOptNavValue<CodableValue>(
                     itemNav,
                     "treatment");
 
             // <is-negated>
-            this.isNegated =
+            _isNegated =
                 XPathHelper.GetOptNavValueAsBool(itemNav, "is-negated");
         }
 
@@ -148,55 +148,55 @@ namespace Microsoft.HealthVault.ItemTypes
         public override void WriteXml(XmlWriter writer)
         {
             Validator.ThrowIfArgumentNull(writer, nameof(writer), Resources.WriteXmlNullWriter);
-            Validator.ThrowSerializationIfNull(this.name.Text, Resources.AllergyNameMandatory);
+            Validator.ThrowSerializationIfNull(_name.Text, Resources.AllergyNameMandatory);
 
             // <allergy>
             writer.WriteStartElement("allergy");
 
             // <name>
-            this.name.WriteXml("name", writer);
+            _name.WriteXml("name", writer);
 
             // <reaction>
             XmlWriterHelper.WriteOpt(
                 writer,
                 "reaction",
-                this.Reaction);
+                Reaction);
 
             // <first-observed>
             XmlWriterHelper.WriteOpt(
                 writer,
                 "first-observed",
-                this.FirstObserved);
+                FirstObserved);
 
             // <allergen-type>
             XmlWriterHelper.WriteOpt(
                 writer,
                 "allergen-type",
-                this.AllergenType);
+                AllergenType);
 
             // <allergen-code>
             XmlWriterHelper.WriteOpt(
                 writer,
                 "allergen-code",
-                this.AllergenCode);
+                AllergenCode);
 
             // <treatment-provider>
             XmlWriterHelper.WriteOpt(
                 writer,
                 "treatment-provider",
-                this.TreatmentProvider);
+                TreatmentProvider);
 
             // <treatment>
             XmlWriterHelper.WriteOpt(
                 writer,
                 "treatment",
-                this.Treatment);
+                Treatment);
 
             // <is-negated>
             XmlWriterHelper.WriteOptBool(
                 writer,
                 "is-negated",
-                this.isNegated);
+                _isNegated);
 
             // </allergy>
             writer.WriteEndElement();
@@ -216,16 +216,16 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public CodableValue Name
         {
-            get { return this.name; }
+            get { return _name; }
 
             set
             {
-                Validator.ThrowIfArgumentNull(value, nameof(this.Name), Resources.AllergyNameMandatory);
-                this.name = value;
+                Validator.ThrowIfArgumentNull(value, nameof(Name), Resources.AllergyNameMandatory);
+                _name = value;
             }
         }
 
-        private CodableValue name = new CodableValue();
+        private CodableValue _name = new CodableValue();
 
         /// <summary>
         /// Gets or sets the reaction the person has.
@@ -237,11 +237,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public CodableValue Reaction
         {
-            get { return this.reaction; }
-            set { this.reaction = value; }
+            get { return _reaction; }
+            set { _reaction = value; }
         }
 
-        private CodableValue reaction;
+        private CodableValue _reaction;
 
         /// <summary>
         /// Gets or sets the approximate date of the first occurrence of the
@@ -259,11 +259,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public ApproximateDateTime FirstObserved
         {
-            get { return this.firstObserved; }
-            set { this.firstObserved = value; }
+            get { return _firstObserved; }
+            set { _firstObserved = value; }
         }
 
-        private ApproximateDateTime firstObserved;
+        private ApproximateDateTime _firstObserved;
 
         /// <summary>
         /// Gets or sets the type of allergen that causes an allergic
@@ -286,11 +286,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public CodableValue AllergenType
         {
-            get { return this.allergen; }
-            set { this.allergen = value; }
+            get { return _allergen; }
+            set { _allergen = value; }
         }
 
-        private CodableValue allergen;
+        private CodableValue _allergen;
 
         /// <summary>
         /// Gets or sets the code for the allergen that causes an allergic
@@ -313,11 +313,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public CodableValue AllergenCode
         {
-            get { return this.allergenCode; }
-            set { this.allergenCode = value; }
+            get { return _allergenCode; }
+            set { _allergenCode = value; }
         }
 
-        private CodableValue allergenCode;
+        private CodableValue _allergenCode;
 
         /// <summary>
         /// Gets or sets information about the treatment provider for this allergy.
@@ -329,11 +329,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public PersonItem TreatmentProvider
         {
-            get { return this.treatmentProvider; }
-            set { this.treatmentProvider = value; }
+            get { return _treatmentProvider; }
+            set { _treatmentProvider = value; }
         }
 
-        private PersonItem treatmentProvider;
+        private PersonItem _treatmentProvider;
 
         /// <summary>
         /// Gets or sets a possible treatment method for this allergy.
@@ -345,11 +345,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public CodableValue Treatment
         {
-            get { return this.treatment; }
-            set { this.treatment = value; }
+            get { return _treatment; }
+            set { _treatment = value; }
         }
 
-        private CodableValue treatment;
+        private CodableValue _treatment;
 
         /// <summary>
         /// Gets or sets a value indicating whether the allergic reaction is
@@ -363,11 +363,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public bool? IsNegated
         {
-            get { return this.isNegated; }
-            set { this.isNegated = value; }
+            get { return _isNegated; }
+            set { _isNegated = value; }
         }
 
-        private bool? isNegated;
+        private bool? _isNegated;
 
         /// <summary>
         /// Gets a string representation of the allergy item.
@@ -379,7 +379,7 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public override string ToString()
         {
-            return this.Name.Text;
+            return Name.Text;
         }
     }
 }

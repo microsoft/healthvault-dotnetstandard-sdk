@@ -43,7 +43,7 @@ namespace Microsoft.HealthVault.ItemTypes
             switch (algorithm)
             {
                 case BlobHashAlgorithm.SHA256Block:
-                    this.baseHashAlgorithm = SHA256.Create();
+                    _baseHashAlgorithm = SHA256.Create();
                     break;
                 default:
                     throw new ArgumentException(
@@ -56,14 +56,14 @@ namespace Microsoft.HealthVault.ItemTypes
                 throw new ArgumentOutOfRangeException(nameof(blockSize), Resources.BlockSizeMustBePositive);
             }
 
-            if (this.baseHashAlgorithm.HashSize % 8 != 0)
+            if (_baseHashAlgorithm.HashSize % 8 != 0)
             {
-                throw new CryptographicUnexpectedOperationException(Resources.AlgorithmHashSizePartialByteLength.FormatResource(this.baseHashAlgorithm.HashSize));
+                throw new CryptographicUnexpectedOperationException(Resources.AlgorithmHashSizePartialByteLength.FormatResource(_baseHashAlgorithm.HashSize));
             }
 
-            this.BlockSize = blockSize;
-            this.BlobHashAlgorithm = algorithm;
-            this.HashSizeBytes = this.baseHashAlgorithm.HashSize / 8;
+            BlockSize = blockSize;
+            BlobHashAlgorithm = algorithm;
+            HashSizeBytes = _baseHashAlgorithm.HashSize / 8;
         }
 
         /// <summary>
@@ -106,20 +106,20 @@ namespace Microsoft.HealthVault.ItemTypes
                 throw new ArgumentException(Resources.CalculateBlockHashesDataLengthTooSmall, nameof(data));
             }
 
-            int numBlocks = (int)Math.Ceiling((double)count / this.BlockSize);
+            int numBlocks = (int)Math.Ceiling((double)count / BlockSize);
             List<byte[]> blockHashes = new List<byte[]>(numBlocks);
 
             int currentOffset = offset;
             while (currentOffset < offset + count)
             {
-                int numBytesToHash = Math.Min(this.BlockSize, (offset + count) - currentOffset);
+                int numBytesToHash = Math.Min(BlockSize, (offset + count) - currentOffset);
 
                 byte[] blockHash =
-                    this.baseHashAlgorithm.ComputeHash(data, currentOffset, numBytesToHash);
+                    _baseHashAlgorithm.ComputeHash(data, currentOffset, numBytesToHash);
 
                 blockHashes.Add(blockHash);
 
-                currentOffset = currentOffset + this.BlockSize;
+                currentOffset = currentOffset + BlockSize;
             }
 
             return blockHashes;
@@ -147,16 +147,16 @@ namespace Microsoft.HealthVault.ItemTypes
                 throw new ArgumentOutOfRangeException(nameof(blockHashes), Resources.CalculateBlobHashBlockHashCountMustBePositive);
             }
 
-            byte[] blockHashBuffer = new byte[blockHashes.Count * this.HashSizeBytes];
+            byte[] blockHashBuffer = new byte[blockHashes.Count * HashSizeBytes];
 
             int writeOffset = 0;
             foreach (byte[] blockHash in blockHashes)
             {
                 blockHash.CopyTo(blockHashBuffer, writeOffset);
-                writeOffset += this.HashSizeBytes;
+                writeOffset += HashSizeBytes;
             }
 
-            return this.baseHashAlgorithm.ComputeHash(blockHashBuffer);
+            return _baseHashAlgorithm.ComputeHash(blockHashBuffer);
         }
 
         /// <summary>
@@ -164,7 +164,7 @@ namespace Microsoft.HealthVault.ItemTypes
         /// </summary>
         internal byte[] CalculateBlobHash(byte[] data, int offset, int count)
         {
-            return this.CalculateBlobHash(this.CalculateBlockHashes(data, offset, count));
+            return CalculateBlobHash(CalculateBlockHashes(data, offset, count));
         }
 
         internal static BlobHasher InlineBlobHasher { get; } = new BlobHasher(
@@ -175,7 +175,7 @@ namespace Microsoft.HealthVault.ItemTypes
 
         internal BlobHashAlgorithm BlobHashAlgorithm { get; }
 
-        private HashAlgorithm baseHashAlgorithm;
+        private HashAlgorithm _baseHashAlgorithm;
 
         internal int BlockSize { get; }
 

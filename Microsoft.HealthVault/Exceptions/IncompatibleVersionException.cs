@@ -4,9 +4,7 @@
 // All other rights reserved.
 
 using System;
-using System.Globalization;
 using Microsoft.HealthVault.Extensions;
-using Microsoft.HealthVault.Helpers;
 
 namespace Microsoft.HealthVault.Exceptions
 {
@@ -69,8 +67,8 @@ namespace Microsoft.HealthVault.Exceptions
             Exception innerException = null)
             : base(message, innerException)
         {
-            this.CompatibleVersions = compatibleVersions;
-            this.IncompatibleVersion = incompatibleVersion;
+            CompatibleVersions = compatibleVersions;
+            IncompatibleVersion = incompatibleVersion;
         }
 
         /// <summary>
@@ -136,7 +134,7 @@ namespace Microsoft.HealthVault.Exceptions
         public override string ToString()
         {
             string result =
-                string.Join(" ", base.ToString(), this.GetType().ToString(), ":CompatibleVersions =", this.CompatibleVersions ?? string.Empty, ":IncompatibleVersion =", this.IncompatibleVersion ?? string.Empty);
+                string.Join(" ", base.ToString(), GetType().ToString(), ":CompatibleVersions =", CompatibleVersions ?? string.Empty, ":IncompatibleVersion =", IncompatibleVersion ?? string.Empty);
             return result;
         }
     }
