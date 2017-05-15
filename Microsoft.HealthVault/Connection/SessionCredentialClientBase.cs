@@ -59,8 +59,8 @@ namespace Microsoft.HealthVault.Connection
             }
 
             SessionCredential sessionCredential = this.GetAuthenticationToken(responseData.InfoNavigator);
-            // Based on access token default lifetime: https://docs.microsoft.com/en-us/azure/active-directory/active-directory-configurable-token-lifetimes
-            sessionCredential.ExpirationUtc = DateTimeOffset.UtcNow.AddHours(1);
+            // TODO: Update with returned expiry when #55406 is completed. 4h is the default HealthVault token expiry time
+            sessionCredential.ExpirationUtc = DateTimeOffset.UtcNow.AddHours(4);
 
             return sessionCredential;
         }
