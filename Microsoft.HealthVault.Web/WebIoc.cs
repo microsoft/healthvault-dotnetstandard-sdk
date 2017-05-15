@@ -40,28 +40,27 @@ namespace Microsoft.HealthVault.Web
             RegisterConfiguration(container);
 
             container.RegisterSingleton<ICookieDataManager, CookieDataManager>();
-            container.RegisterSingleton<IWebConnectionInfoProvider, WebConnectionInfoProvider>();
-
             container.RegisterSingleton<IHttpClientFactory, WebHttpClientFactory>();
 
+            container.RegisterSingleton<IWebConnectionInfoProvider, WebConnectionInfoProvider>();
             container.RegisterSingleton<ICertificateInfoProvider, CertificateInfoProvider>();
             container.RegisterSingleton<IServiceInstanceProvider, ServiceInstanceProvider>();
 
             container.RegisterSingleton<IWebConnectionInfoProvider, WebConnectionInfoProvider>();
+            container.RegisterTransient<IHealthVaultIdentityProvider, HealthVaultIdentityProvider>();
 
             container.RegisterTransient<IWebSessionCredentialClient, WebSessionCredentialClient>();
 
             container.RegisterTransient<IWebHealthVaultConnection, WebHealthVaultConnection>();
-
             container.RegisterTransient<IOfflineHealthVaultConnection, OfflineHealthVaultConnection>();
         }
 
         private static void RegisterConfiguration(DependencyInjectionContainer container)
         {
-           WebHealthVaultConfiguration configuration = WebConfigurationReader.GetConfiguration();
-        
-           container.Configure(c => c.ExportInstance(configuration).As<WebHealthVaultConfiguration>());
-           container.Configure(c => c.ExportInstance(configuration).As<HealthVaultConfiguration>());
+            WebHealthVaultConfiguration configuration = WebConfigurationReader.GetConfiguration();
+
+            container.Configure(c => c.ExportInstance(configuration).As<WebHealthVaultConfiguration>());
+            container.Configure(c => c.ExportInstance(configuration).As<HealthVaultConfiguration>());
         }
     }
 }
