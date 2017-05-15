@@ -31,12 +31,11 @@ namespace Microsoft.HealthVault.Web.Connection
         {
             this.webHealthVaultConfiguration = this.ServiceLocator.GetInstance<WebHealthVaultConfiguration>();
 
-            this.ServiceInstance = new HealthServiceInstance(
-                "1",
-                "Default",
-                "Default HealthVault instance",
-                UrlUtilities.GetFullPlatformUrl(this.webHealthVaultConfiguration.DefaultHealthVaultUrl),
-                this.webHealthVaultConfiguration.DefaultHealthVaultShellUrl);
+            this.ServiceInstance = new HealthServiceInstance
+            {
+                HealthServiceUrl = UrlUtilities.GetFullPlatformUrl(this.webHealthVaultConfiguration.DefaultHealthVaultUrl),
+                ShellUrl = this.webHealthVaultConfiguration.DefaultHealthVaultShellUrl
+            };
         }
 
         public override Guid? ApplicationId => this.webHealthVaultConfiguration.MasterApplicationId;
