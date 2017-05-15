@@ -8,10 +8,7 @@
 
 using System;
 using System.Threading.Tasks;
-using Microsoft.HealthVault.Configuration;
-using Microsoft.HealthVault.Connection;
 using Microsoft.HealthVault.Person;
-using Microsoft.HealthVault.PlatformInformation;
 using Microsoft.HealthVault.Rest;
 using Microsoft.HealthVault.Transport;
 
@@ -26,27 +23,13 @@ namespace Microsoft.HealthVault.Web.Connection
         /// Initializes a new instance of the <see cref="OfflineHealthVaultConnection"/> class.
         /// </summary>
         /// <param name="serviceLocator">The service locator.</param>
-        /// <param name="serviceInstance">The service instance.</param>
-        /// <param name="sessionCredential">The session credential.</param>
-        /// <param name="offlinePersionId">The offline person identifier.</param>
         public OfflineHealthVaultConnection(
-            IServiceLocator serviceLocator,
-            HealthServiceInstance serviceInstance = null,
-            SessionCredential sessionCredential = null,
-            string offlinePersionId = null)
-            : base(serviceLocator, serviceInstance, sessionCredential)
+            IServiceLocator serviceLocator)
+            : base(serviceLocator)
         {
-            Guid offlinePersonId;
-
-            if (Guid.TryParse(offlinePersionId, out offlinePersonId))
-            {
-                this.OfflinePersonId = offlinePersonId;
-            }
-
-            Ioc.Container.Configure(c => c.ExportInstance(this).As<IConnectionInternal>());
         }
 
-        public Guid OfflinePersonId { get; }
+        public Guid OfflinePersonId { get; internal set; }
 
         public override Task<PersonInfo> GetPersonInfoAsync()
         {

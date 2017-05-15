@@ -14,7 +14,6 @@ namespace Microsoft.HealthVault.Exceptions
     /// or the application has changed its minimum authorization requirements.
     /// </summary>
     ///
-    [Serializable]
     public sealed class HealthRecordReauthorizationRequiredException : HealthServiceException
     {
         /// <summary>

@@ -13,7 +13,6 @@ namespace Microsoft.HealthVault.Exceptions
     /// <see cref = "HealthServiceStatusCode.DuplicateCredentialFound"/>.
     /// </summary>
     ///
-    [Serializable]
     public sealed class HealthServiceApplicationDuplicateCredentialException
         : HealthServiceException
     {

@@ -6,16 +6,20 @@ using System.Net.Http;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using Grace.DependencyInjection;
 using Microsoft.HealthVault;
 using Microsoft.HealthVault.Client;
+using Microsoft.HealthVault.Clients;
 using Microsoft.HealthVault.Configuration;
 using Microsoft.HealthVault.Connection;
+using Microsoft.HealthVault.Extensions;
 using Microsoft.HealthVault.Person;
 using Microsoft.HealthVault.PlatformInformation;
 using Microsoft.HealthVault.Transport;
 using Microsoft.HealthVault.UnitTest.Samples;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NSubstitute;
+using Arg = NSubstitute.Arg;
 
 namespace Microsoft.HealthVault.UnitTest
 {
@@ -46,6 +50,8 @@ namespace Microsoft.HealthVault.UnitTest
         [TestInitialize]
         public void TestInitialize()
         {
+            Ioc.Container = new DependencyInjectionContainer();
+
             this.subServiceLocator = Substitute.For<IServiceLocator>();
             this.subHealthWebRequestClient = Substitute.For<IHealthWebRequestClient>();
             this.subLocalObjectStore = Substitute.For<ILocalObjectStore>();
@@ -63,6 +69,8 @@ namespace Microsoft.HealthVault.UnitTest
             this.subServiceLocator.GetInstance<SdkTelemetryInformation>().Returns(new SdkTelemetryInformation { FileVersion = "1.0.0.0" });
             this.subServiceLocator.GetInstance<ICryptographer>().Returns(new Cryptographer());
             this.subServiceLocator.GetInstance<IHealthServiceResponseParser>().Returns(new HealthServiceResponseParser());
+
+            Ioc.Container.RegisterTransient<IPersonClient, PersonClient>();
         }
 
         [TestMethod]

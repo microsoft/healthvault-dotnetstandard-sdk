@@ -13,7 +13,6 @@ namespace Microsoft.HealthVault.Exceptions
     /// a health record being authorized for that application.
     /// </summary>
     ///
-    [Serializable]
     public sealed class HealthRecordAuthorizationRequiredException : HealthServiceException
     {
         /// <summary>

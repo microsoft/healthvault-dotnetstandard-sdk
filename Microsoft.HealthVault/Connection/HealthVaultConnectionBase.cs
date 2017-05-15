@@ -86,7 +86,7 @@ namespace Microsoft.HealthVault.Connection
         /// <summary>
         /// A client that can be used to access information and records associated with the currently athenticated user.
         /// </summary>
-        public IPersonClient CreatePersonClient() => new PersonClient(this);
+        public IPersonClient CreatePersonClient() => Ioc.Container.Locate<IPersonClient>(extraData: new { connection = this });
 
         /// <summary>
         /// A client that can be used to access vocabularies.

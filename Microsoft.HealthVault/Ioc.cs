@@ -1,4 +1,5 @@
 ﻿using Grace.DependencyInjection;
+using Microsoft.HealthVault.Clients;
 using Microsoft.HealthVault.Clients.Deserializers;
 using Microsoft.HealthVault.Connection;
 using Microsoft.HealthVault.Extensions;
@@ -14,9 +15,6 @@ namespace Microsoft.HealthVault
         {
             Container = new DependencyInjectionContainer();
 
-            Container.RegisterTransient<IConnectionInternal, HealthVaultConnectionBase>();
-            Container.RegisterTransient<ISessionCredentialClient, SessionCredentialClientBase>();
-
             Container.RegisterSingleton<IServiceLocator, ServiceLocator>();
             Container.RegisterSingleton<IMessageHandlerFactory, MessageHandlerFactory>();
             Container.RegisterSingleton<IHttpClientFactory, HttpClientFactory>();
@@ -28,6 +26,8 @@ namespace Microsoft.HealthVault
 
             Container.RegisterSingleton<IHealthWebRequestClient, HealthWebRequestClient>();
             Container.RegisterSingleton<ICryptographer, Cryptographer>();
+
+            Container.RegisterTransient<IPersonClient, PersonClient>();
         }
 
         public static DependencyInjectionContainer Container { get; internal set; }

@@ -40,12 +40,14 @@ namespace Microsoft.HealthVault.Web
             RegisterConfiguration(container);
 
             container.RegisterSingleton<ICookieDataManager, CookieDataManager>();
-            container.RegisterSingleton<ICookieManager, CookieManager>();
+            container.RegisterSingleton<IWebConnectionInfoProvider, WebConnectionInfoProvider>();
 
             container.RegisterSingleton<IHttpClientFactory, WebHttpClientFactory>();
 
             container.RegisterSingleton<ICertificateInfoProvider, CertificateInfoProvider>();
             container.RegisterSingleton<IServiceInstanceProvider, ServiceInstanceProvider>();
+
+            container.RegisterSingleton<IWebConnectionInfoProvider, WebConnectionInfoProvider>();
 
             container.RegisterTransient<IWebSessionCredentialClient, WebSessionCredentialClient>();
 

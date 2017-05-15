@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Foundation;
+using Microsoft.HealthVault.Client.Core;
 using Microsoft.HealthVault.Exceptions;
 using UIKit;
 using WebKit;
@@ -30,8 +31,7 @@ namespace Microsoft.HealthVault.Client
                     BeginInvokeOnMainThread(() =>
                     {
                         signInViewController = new SignInViewController(this, startUrl.AbsoluteUri);
-                        IUIApplicationDelegate appDelegate = UIApplication.SharedApplication.Delegate;
-                        UIViewController rootViewController = appDelegate.GetWindow().RootViewController;
+                        UIViewController rootViewController = UIApplication.SharedApplication.KeyWindow.RootViewController;
 
                         rootViewController.PresentViewController(new UINavigationController(signInViewController), true, null);
                     });

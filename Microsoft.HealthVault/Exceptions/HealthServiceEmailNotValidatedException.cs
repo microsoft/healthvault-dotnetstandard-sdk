@@ -13,7 +13,6 @@ namespace Microsoft.HealthVault.Exceptions
     /// <see cref = "HealthServiceStatusCode.EmailNotValidated"/>.
     /// </summary>
     ///
-    [Serializable]
     public sealed class HealthServiceEmailNotValidatedException : HealthServiceException
     {
         /// <summary>

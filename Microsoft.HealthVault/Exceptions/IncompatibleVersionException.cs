@@ -14,7 +14,6 @@ namespace Microsoft.HealthVault.Exceptions
     /// Indicates version incompatibility.
     /// </summary>
     ///
-    [Serializable]
     public class IncompatibleVersionException : HealthVaultException
     {
         /// <summary>
