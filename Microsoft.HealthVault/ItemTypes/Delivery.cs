@@ -46,12 +46,12 @@ namespace Microsoft.HealthVault.ItemTypes
                 _complications.Add(complication);
             }
 
-            this._anesthesia.Clear();
+            _anesthesia.Clear();
             foreach (XPathNavigator anesthesiaNav in navigator.Select("anesthesia"))
             {
                 CodableValue anesthesia = new CodableValue();
                 anesthesia.ParseXml(anesthesiaNav);
-                this._anesthesia.Add(anesthesia);
+                _anesthesia.Add(anesthesia);
             }
 
             _deliveryMethod = XPathHelper.GetOptNavValue<CodableValue>(navigator, "delivery-method");

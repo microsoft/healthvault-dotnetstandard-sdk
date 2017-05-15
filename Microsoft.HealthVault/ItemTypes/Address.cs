@@ -56,9 +56,9 @@ namespace Microsoft.HealthVault.ItemTypes
             Validator.ThrowIfStringNullOrEmpty(country, "country");
             Validator.ThrowIfStringNullOrEmpty(postalCode, "postalCode");
 
-            city = city;
-            country = country;
-            postalCode = postalCode;
+            _city = city;
+            _country = country;
+            _postalCode = postalCode;
         }
 
         /// <summary>
@@ -94,16 +94,16 @@ namespace Microsoft.HealthVault.ItemTypes
             Validator.ThrowIfStringNullOrEmpty(country, "country");
             Validator.ThrowIfStringNullOrEmpty(postalCode, "postalCode");
 
-            this._city = city;
-            this._country = country;
-            this._postalCode = postalCode;
+            _city = city;
+            _country = country;
+            _postalCode = postalCode;
 
             foreach (string streetString in street)
             {
-                this._street.Add(streetString);
+                _street.Add(streetString);
             }
 
-            if (this._street.Count == 0)
+            if (_street.Count == 0)
             {
                 throw new ArgumentException(Resources.AddressStreetMandatory, nameof(street));
             }

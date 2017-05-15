@@ -70,7 +70,7 @@ namespace Microsoft.HealthVault.ItemTypes
         public Concern(string description)
             : base(TypeId)
         {
-            this._description = new CodableValue(description);
+            _description = new CodableValue(description);
         }
 
         /// <summary>
