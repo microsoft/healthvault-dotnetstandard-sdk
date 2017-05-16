@@ -1898,6 +1898,15 @@ namespace Microsoft.HealthVault {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Collection cannot be empty..
+        /// </summary>
+        internal static string CollectionEmpty {
+            get {
+                return ResourceManager.GetString("CollectionEmpty", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The value of the Content property cannot be null or empty..
         /// </summary>
         internal static string CommentContentMandatory {
@@ -4567,15 +4576,6 @@ namespace Microsoft.HealthVault {
         internal static string NameToStringFormat {
             get {
                 return ResourceManager.GetString("NameToStringFormat", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to The things must be specified when creating a new item..
-        /// </summary>
-        internal static string NewItemNullItem {
-            get {
-                return ResourceManager.GetString("NewItemNullItem", resourceCulture);
             }
         }
         

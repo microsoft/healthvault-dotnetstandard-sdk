@@ -8,6 +8,7 @@
         <Button Clicked="Connect_OnClicked" Text="Connect" />
         <Button Clicked="SetBP_OnClicked" Text="Add BP" />
         <Button Clicked="GetBP_OnClicked" Text="Get BP" />
+        <Button Clicked="MultiQuery_OnClicked" Text="Get Things Multi-Query" />
         <Label x:Name="OutputLabel" />
     </StackLayout>
 </ContentPage>

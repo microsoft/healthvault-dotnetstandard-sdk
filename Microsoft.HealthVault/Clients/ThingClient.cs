@@ -55,7 +55,7 @@ namespace Microsoft.HealthVault.Clients
             query.View.Sections = ThingSections.Default;
             query.CurrentVersionOnly = true;
 
-            HealthServiceResponseData result = await GetRequestWithParameters(recordId, searcher, query);
+            HealthServiceResponseData result = await GetRequestWithParameters(recordId, searcher, new []{ query });
 
             IReadOnlyCollection<ThingCollection> resultSet = _thingDeserializer.Deserialize(result, searcher);
 
@@ -83,15 +83,26 @@ namespace Microsoft.HealthVault.Clients
             return default(T);
         }
 
-        public async Task<IReadOnlyCollection<ThingCollection>> GetThingsAsync(Guid recordId, ThingQuery query)
+        public async Task<ThingCollection> GetThingsAsync(Guid recordId, ThingQuery query)
         {
-            Validator.ThrowIfArgumentNull(recordId, nameof(recordId), Resources.NewItemsNullItem);
-            Validator.ThrowIfArgumentNull(query, nameof(query), Resources.NewItemsNullItem);
+            Validator.ThrowIfGuidEmpty(recordId, nameof(recordId));
+            Validator.ThrowIfArgumentNull(query, nameof(query));
+
+            IReadOnlyCollection<ThingCollection> resultSet = await this.GetThingsAsync(recordId, new[] { query }).ConfigureAwait(false);
+            return resultSet.FirstOrDefault();
+        }
+
+        public async Task<IReadOnlyCollection<ThingCollection>> GetThingsAsync(Guid recordId, IEnumerable<ThingQuery> queries)
+        {
+            Validator.ThrowIfGuidEmpty(recordId, nameof(recordId));
+
+            List<ThingQuery> queriesList = queries.ToList();
+            Validator.ThrowIfCollectionNullOrEmpty(queriesList, nameof(queries));
 
             HealthRecordAccessor accessor = new HealthRecordAccessor(_connection, recordId);
             HealthRecordSearcher searcher = new HealthRecordSearcher(accessor);
 
-            HealthServiceResponseData response = await GetRequestWithParameters(recordId, searcher, query);
+            HealthServiceResponseData response = await GetRequestWithParameters(recordId, searcher, queriesList).ConfigureAwait(false);
             IReadOnlyCollection<ThingCollection> resultSet = _thingDeserializer.Deserialize(response, searcher);
 
             return resultSet;
@@ -108,17 +119,14 @@ namespace Microsoft.HealthVault.Clients
             query.TypeIds.Clear();
             query.TypeIds.Add(thing.TypeId);
 
-            IReadOnlyCollection<ThingCollection> resultSet = await GetThingsAsync(recordId, query);
+            ThingCollection results = await GetThingsAsync(recordId, query);
 
             IList<T> things = new Collection<T>();
-            foreach (ThingCollection results in resultSet)
+            foreach (IThing resultThing in results)
             {
-                foreach (IThing resultThing in results)
+                if (resultThing is T)
                 {
-                    if (resultThing is T)
-                    {
-                        things.Add((T)resultThing);
-                    }
+                    things.Add((T)resultThing);
                 }
             }
 
@@ -289,10 +297,14 @@ namespace Microsoft.HealthVault.Clients
             return parameters.ToString();
         }
 
-        private async Task<HealthServiceResponseData> GetRequestWithParameters(Guid recordId, HealthRecordSearcher searcher, ThingQuery query)
+        private async Task<HealthServiceResponseData> GetRequestWithParameters(Guid recordId, HealthRecordSearcher searcher, IEnumerable<ThingQuery> queries)
         {
-            searcher.Filters.Add(query);
-            return await _connection.ExecuteAsync(HealthVaultMethods.GetThings, 3, GetParametersXml(searcher), recordId, correlationId: CorrelationId);
+            foreach (ThingQuery query in queries)
+            {
+                searcher.Filters.Add(query);
+            }
+
+            return await _connection.ExecuteAsync(HealthVaultMethods.GetThings, 3, GetParametersXml(searcher), recordId, correlationId: CorrelationId).ConfigureAwait(false);
         }
 
         /// <summary>
