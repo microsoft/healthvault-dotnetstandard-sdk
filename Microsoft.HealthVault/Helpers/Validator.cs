@@ -74,7 +74,7 @@ namespace Microsoft.HealthVault.Helpers
 
         public static void ThrowIfGuidEmpty(Guid argument, string argumentName)
         {
-            if (argument == null)
+            if (argument == Guid.Empty)
             {
                 throw new ArgumentException(Resources.GuidParameterEmpty, argumentName);
             }
