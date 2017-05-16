@@ -32,8 +32,16 @@ namespace Microsoft.HealthVault.Clients
         /// </summary>
         /// <param name="recordId">The health record's ID.</param>
         /// <param name="query">An instance of <see cref="ThingQuery"/>.  Use this query to identify parameters for the search.</param>
-        /// <returns>ICollection of ThingBase</returns>
-        Task<IReadOnlyCollection<ThingCollection>> GetThingsAsync(Guid recordId, ThingQuery query);
+        /// <returns>A collection of things returned from the query.</returns>
+        Task<ThingCollection> GetThingsAsync(Guid recordId, ThingQuery query);
+
+        /// <summary>
+        /// Gets a collection of Things that match a given query.
+        /// </summary>
+        /// <param name="recordId">The health record's ID.</param>
+        /// <param name="queries">A collection of <see cref="ThingQuery"/> objects.  Use these queries to identify parameters for the search.</param>
+        /// <returns>A group of results for the queries. Each <see cref="ThingCollection"/> corresponds to a <see cref="ThingQuery"/> passed in.</returns>
+        Task<IReadOnlyCollection<ThingCollection>> GetThingsAsync(Guid recordId, IEnumerable<ThingQuery> queries);
 
         /// <summary>
         /// Gets a collection of Things of the specific type.

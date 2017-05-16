@@ -170,6 +170,9 @@
     <EmbeddedResource Include="Samples\GetServiceDefinitionResult.xml" />
     <EmbeddedResource Include="Samples\GetAuthorizedPeopleResult.xml" />
   </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Samples\ThingsMultiQueryResult.xml" />
+  </ItemGroup>
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">
       <ItemGroup>
