@@ -6,6 +6,7 @@ using Microsoft.HealthVault.Clients;
 using Microsoft.HealthVault.Configuration;
 using Microsoft.HealthVault.ItemTypes;
 using Microsoft.HealthVault.Person;
+using Microsoft.HealthVault.Thing;
 using Xamarin.Forms;
 
 namespace SandboxXamarinForms
@@ -68,6 +69,22 @@ namespace SandboxXamarinForms
             {
                 OutputLabel.Text = firstBloodPressure.Systolic + "/" + firstBloodPressure.Diastolic;
             }
+        }
+
+        private async void MultiQuery_OnClicked(object sender, EventArgs e)
+        {
+            PersonInfo personInfo = await _connection.GetPersonInfoAsync();
+            var resultSet = await _thingClient.GetThingsAsync(
+                personInfo.SelectedRecord.Id, 
+                new List<ThingQuery>
+                {
+                    new ThingQuery(BloodPressure.TypeId),
+                    new ThingQuery(Weight.TypeId)
+                });
+
+            var resultList = resultSet.ToList();
+
+            OutputLabel.Text = $"There are {resultList[0].Count} blood pressure(s) and {resultList[1].Count} weight(s).";
         }
     }
 }

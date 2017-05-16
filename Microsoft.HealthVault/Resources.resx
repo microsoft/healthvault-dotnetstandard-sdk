@@ -291,9 +291,6 @@
   <data name="HealthRecordNotUpdated" xml:space="preserve">
     <value>The data for this property is not available until Refresh is called.</value>
   </data>
-  <data name="NewItemNullItem" xml:space="preserve">
-    <value>The things must be specified when creating a new item.</value>
-  </data>
   <data name="NewItemsNullItem" xml:space="preserve">
     <value>A valid enumeration of non-null things must be provided.</value>
   </data>
@@ -2294,5 +2291,8 @@
   </data>
   <data name="CannotCallAuthorizeAdditionalRecords" xml:space="preserve">
     <value>Cannot call authorize additional records. First authorization is not yet complete.</value>
+  </data>
+  <data name="CollectionEmpty" xml:space="preserve">
+    <value>Collection cannot be empty.</value>
   </data>
 </root>
