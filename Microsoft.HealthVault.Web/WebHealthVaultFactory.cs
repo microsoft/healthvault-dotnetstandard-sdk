@@ -7,9 +7,7 @@
 // THE SOFTWARE IS PROVIDED *AS IS*, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 using System;
-using System.Security.Principal;
 using System.Threading.Tasks;
-using System.Web;
 using Microsoft.HealthVault.Connection;
 using Microsoft.HealthVault.PlatformInformation;
 using Microsoft.HealthVault.Web.Connection;
@@ -23,7 +21,7 @@ namespace Microsoft.HealthVault.Web
     public class WebHealthVaultFactory
     {
         /// <summary>
-        /// Creates an authenticated web connection when the reuest
+        /// Creates an authenticated web connection when the reuest 
         /// has been authenticated using [RequireSignIn] attribute.
         /// In case the request has not been authenticated, an anonymous
         /// connection is created.
@@ -34,8 +32,38 @@ namespace Microsoft.HealthVault.Web
         /// </exception>
         public static async Task<IWebHealthVaultConnection> CreateWebConnectionAsync()
         {
-            IPrincipal principal = HttpContext.Current.User;
-            HealthVaultIdentity identity = principal?.Identity as HealthVaultIdentity;
+            WebHealthVaultFactory factory = new WebHealthVaultFactory();
+            IWebHealthVaultConnection webHealthVaultConnection = await factory.CreateWebConnectionInternalAsync();
+
+            return webHealthVaultConnection;
+        }
+
+        /// <summary>
+        /// Creates the offline connection.
+        /// </summary>
+        /// <param name="offlinePersonId">The offline person identifier.</param>
+        /// <param name="instanceId">The instance identifier.</param>
+        /// <param name="sessionCredential">The session credential.</param>
+        /// <returns></returns>
+        public static async Task<IOfflineHealthVaultConnection> CreateOfflineConnectionAsync(
+            string offlinePersonId,
+            string instanceId = null,
+            SessionCredential sessionCredential = null)
+        {
+            WebHealthVaultFactory factory = new WebHealthVaultFactory();
+            IOfflineHealthVaultConnection webHealthVaultConnection = await factory.CreateOfflineConnectionInternalAsync(
+                offlinePersonId,
+                instanceId,
+                sessionCredential);
+
+            return webHealthVaultConnection;
+        }
+
+        // Enables unit test
+        internal async Task<IWebHealthVaultConnection> CreateWebConnectionInternalAsync()
+        {
+            IHealthVaultIdentityProvider healthVaultIdentityProvider = Ioc.Container.Locate<IHealthVaultIdentityProvider>();
+            HealthVaultIdentity identity = healthVaultIdentityProvider.TryGetIdentity();
 
             IServiceLocator serviceLocator = new ServiceLocator();
 
@@ -53,7 +81,7 @@ namespace Microsoft.HealthVault.Web
             }
 
             // Get ServiceInstance
-            IServiceInstanceProvider serviceInstanceProvider = serviceLocator.GetInstance<IServiceInstanceProvider>();
+            IServiceInstanceProvider serviceInstanceProvider = Ioc.Container.Locate<IServiceInstanceProvider>();
             HealthServiceInstance serviceInstance = await serviceInstanceProvider.GetHealthServiceInstanceAsync(webConnectionInfo.ServiceInstanceId);
 
             // Get AuthInformation
@@ -70,14 +98,8 @@ namespace Microsoft.HealthVault.Web
             return webConnection;
         }
 
-        /// <summary>
-        /// Creates the offline connection.
-        /// </summary>
-        /// <param name="offlinePersonId">The offline person identifier.</param>
-        /// <param name="instanceId">The instance identifier.</param>
-        /// <param name="sessionCredential">The session credential.</param>
-        /// <returns></returns>
-        public static async Task<IOfflineHealthVaultConnection> CreateOfflineConnectionAsync(
+        // Enables unit test
+        internal async Task<IOfflineHealthVaultConnection> CreateOfflineConnectionInternalAsync(
             string offlinePersonId,
             string instanceId = null,
             SessionCredential sessionCredential = null)

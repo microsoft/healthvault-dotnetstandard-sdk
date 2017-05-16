@@ -26,10 +26,9 @@ namespace Microsoft.HealthVault.RestApi
             _recordId = recordId;
         }
 
-        public override Task ProcessHttpRequestAsync(HttpRequestMessage request, CancellationToken cancellationToken)
+        public override async Task ProcessHttpRequestAsync(HttpRequestMessage request, CancellationToken cancellationToken)
         {
-            _client.AuthorizeRestRequest(request, _recordId);
-            return Task.FromResult(true);
+            await _client.AuthorizeRestRequestAsync(request, _recordId);
         }
     }
 }

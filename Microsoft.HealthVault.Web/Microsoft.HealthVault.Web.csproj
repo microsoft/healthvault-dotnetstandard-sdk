@@ -107,6 +107,8 @@
     <Compile Include="Exceptions\UserNotFoundException.cs" />
     <Compile Include="Extensions\WebConnectionInfoExtensions.cs" />
     <Compile Include="HealthVaultIdentity.cs" />
+    <Compile Include="Providers\HealthVaultIdentityProvider.cs" />
+    <Compile Include="Providers\IHealthVaultIdentityProvider.cs" />
     <Compile Include="Providers\IWebConnectionInfoProvider.cs" />
     <Compile Include="Providers\WebConnectionInfoProvider.cs" />
     <Compile Include="Helpers\ActionRedirectHelper.cs" />

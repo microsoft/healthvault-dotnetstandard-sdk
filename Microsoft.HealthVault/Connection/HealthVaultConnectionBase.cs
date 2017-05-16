@@ -19,8 +19,8 @@ using System.Xml;
 using Microsoft.HealthVault.Clients;
 using Microsoft.HealthVault.Clients.Deserializers;
 using Microsoft.HealthVault.Configuration;
-using Microsoft.HealthVault.Diagnostics;
 using Microsoft.HealthVault.Exceptions;
+using Microsoft.HealthVault.Diagnostics;
 using Microsoft.HealthVault.Person;
 using Microsoft.HealthVault.PlatformInformation;
 using Microsoft.HealthVault.Rest;
@@ -145,30 +145,29 @@ namespace Microsoft.HealthVault.Connection
             {
                 if (!isMethodAnonymous)
                 {
-                    using (await _sessionCredentialLock.LockAsync().ConfigureAwait(false))
-                    {
-                        if (SessionCredential != null)
-                        {
-                            // To prevent multiple token refresh calls being made from simultaneous requests, we check if the token has been refreshed in the last
-                            // {SessionCredentialCallThresholdMinutes} minutes and if so we do not make the call again.
-                            if (DateTimeOffset.Now.Subtract(_lastRefreshedSessionCredential) > TimeSpan.FromMinutes(SessionCredentialCallThresholdMinutes))
-                            {
-                                await RefreshSessionCredentialAsync(CancellationToken.None).ConfigureAwait(false);
+                    await RefreshSessionAsync(CancellationToken.None);
 
-                                _lastRefreshedSessionCredential = DateTimeOffset.Now;
-                            }
-
-                            // Re-generate the message so it pulls in the new SessionCredential
-                            requestXml = requestXmlCreator();
-                            return await SendRequestAsync(requestXml, correlationId).ConfigureAwait(false);
-                        }
-
-                        throw;
-                    }
+                    // Re-generate the message so it pulls in the new SessionCredential
+                    requestXml = requestXmlCreator();
+                    return await SendRequestAsync(requestXml, correlationId).ConfigureAwait(false);
                 }
             }
 
             return responseData;
+        }
+
+        public async Task RefreshSessionAsync(CancellationToken token)
+        {
+            using (await _sessionCredentialLock.LockAsync().ConfigureAwait(false))
+            {
+                // To prevent multiple token refresh calls being made from simultaneous requests, we check if the token has been refreshed in the last
+                // {SessionCredentialCallThresholdMinutes} minutes and if so we do not make the call again.
+                if (DateTimeOffset.Now.Subtract(_lastRefreshedSessionCredential) > TimeSpan.FromMinutes(SessionCredentialCallThresholdMinutes))
+                {
+                    await RefreshSessionCredentialAsync(token).ConfigureAwait(false);
+                    _lastRefreshedSessionCredential = DateTimeOffset.Now;
+                }
+            }
         }
 
         protected virtual async Task RefreshSessionCredentialAsync(CancellationToken token)

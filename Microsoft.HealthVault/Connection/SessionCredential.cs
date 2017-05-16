@@ -1,4 +1,6 @@
-﻿namespace Microsoft.HealthVault.Connection
+﻿using System;
+
+namespace Microsoft.HealthVault.Connection
 {
     /// <summary>
     /// The authenticated session token
@@ -20,5 +22,10 @@
         /// Gets or sets the shared secret.
         /// </summary>
         public string SharedSecret { get; set; }
+
+        /// <summary>
+        /// Gets or sets the created time of the token.
+        /// </summary>
+        public DateTimeOffset ExpirationUtc { get; set; }
     }
 }

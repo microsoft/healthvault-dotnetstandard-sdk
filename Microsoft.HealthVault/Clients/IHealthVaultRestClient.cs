@@ -23,7 +23,7 @@ namespace Microsoft.HealthVault.Clients
         /// </summary>
         /// <param name="message">The message that will be sent to HealthVault.</param>
         /// <param name="recordId">The record identifier.</param>
-        void AuthorizeRestRequest(HttpRequestMessage message, Guid recordId);
+        Task AuthorizeRestRequestAsync(HttpRequestMessage message, Guid recordId);
 
         /// <summary>
         /// Executes the request asynchronously.

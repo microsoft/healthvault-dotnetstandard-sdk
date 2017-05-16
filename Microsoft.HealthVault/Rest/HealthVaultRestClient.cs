@@ -18,6 +18,7 @@ using Microsoft.HealthVault.Clients;
 using Microsoft.HealthVault.Configuration;
 using Microsoft.HealthVault.Connection;
 using Microsoft.HealthVault.Exceptions;
+using Microsoft.HealthVault.Extensions;
 using Microsoft.HealthVault.Transport;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -43,10 +44,15 @@ namespace Microsoft.HealthVault.Rest
 
         public Guid? CorrelationId { get; set; }
 
-        public void AuthorizeRestRequest(HttpRequestMessage message, Guid recordId)
+        public async Task AuthorizeRestRequestAsync(HttpRequestMessage message, Guid recordId)
         {
             if (!string.IsNullOrEmpty(_connection.SessionCredential?.Token))
             {
+                if (_connection.SessionCredential.IsExpired())
+                {
+                    await _connection.RefreshSessionAsync(CancellationToken.None);
+                }
+
                 var parts = new List<string>
                 {
                     $"app-token={_connection.SessionCredential.Token}"
@@ -69,7 +75,7 @@ namespace Microsoft.HealthVault.Rest
 
         public async Task<T> ExecuteAsync<T>(IHealthVaultRestMessage<T> request)
         {
-            using (var httpRequestMessage = CreateHttpRequestMessage(request))
+            using (var httpRequestMessage = await CreateHttpRequestMessageAsync(request))
             using (var httpResponseMessage = await _client.SendAsync(httpRequestMessage, CancellationToken.None, false))
             using (var stream = await ProcessHttpResponseMessage(httpResponseMessage))
             using (var streamReader = new StreamReader(stream))
@@ -79,7 +85,7 @@ namespace Microsoft.HealthVault.Rest
             }
         }
 
-        private HttpRequestMessage CreateHttpRequestMessage<T>(IHealthVaultRestMessage<T> request)
+        private async Task<HttpRequestMessage> CreateHttpRequestMessageAsync<T>(IHealthVaultRestMessage<T> request)
         {
             Uri requestPath;
             if (request.Path.IsAbsoluteUri == false)
@@ -100,7 +106,7 @@ namespace Microsoft.HealthVault.Rest
             httpRequestMessage.Headers.AcceptEncoding.Add(StringWithQualityHeaderValue.Parse("deflate"));
             httpRequestMessage.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue(RestConstants.JsonContentType));
             httpRequestMessage.Headers.Add(RestConstants.VersionHeader, request.ApiVersion.ToString());
-            AuthorizeRestRequest(httpRequestMessage, request.RecordId);
+            await AuthorizeRestRequestAsync(httpRequestMessage, request.RecordId);
 
             // TODO: Fix useragent string
             httpRequestMessage.Headers.UserAgent.ParseAdd(string.Format(RestConstants.MSHSDKVersion, "Unknown", "Unknown"));

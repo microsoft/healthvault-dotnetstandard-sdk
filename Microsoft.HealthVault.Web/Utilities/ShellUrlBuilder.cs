@@ -17,21 +17,29 @@ namespace Microsoft.HealthVault.Web.Utilities
 {
     internal class ShellUrlBuilder
     {
-        private HttpContextBase _context;
+        private Uri _shellUri;
+        private string _applicationPath;
         private string _target;
         private IDictionary<string, object> _parameters;
         private WebHealthVaultConfiguration _webHealthVaultConfiguration;
 
-        internal ShellUrlBuilder(
-            HttpContextBase context,
+        public ShellUrlBuilder(
+            Uri shellUri,
             string target,
+            string applicationPath,
             IDictionary<string, object> parameters)
         {
-            _context = context ?? throw new ArgumentNullException(nameof(context));
-            _target = target ?? throw new ArgumentNullException(nameof(target));
+            _shellUri = shellUri ?? throw new ArgumentNullException(nameof(shellUri));
+            _target = target;
+            _applicationPath = applicationPath;
             _parameters = parameters;
 
             _webHealthVaultConfiguration = Ioc.Get<WebHealthVaultConfiguration>();
+        }
+
+        public override string ToString()
+        {
+            return Generate();
         }
 
         internal string Generate()
@@ -55,12 +63,75 @@ namespace Microsoft.HealthVault.Web.Utilities
             return targetUrl.ToString();
         }
 
-        public override string ToString()
+        internal void EnsureBaseParameters()
         {
-            return Generate();
+            EnsureAppId();
+            EnsureAppQs();
+            EnsureRedirect();
+            EnsureAib();
         }
 
-        private StringBuilder GetShellUrl()
+        internal void EnsureAppId()
+        {
+            if (!_parameters.ContainsKey("appid"))
+            {
+                _parameters.Add("appid", _webHealthVaultConfiguration.MasterApplicationId);
+            }
+        }
+
+        internal void EnsureAppQs()
+        {
+            if (!_parameters.ContainsKey("actionqs"))
+            {
+                _parameters.Add("actionqs", _shellUri.PathAndQuery);
+            }
+        }
+
+        internal void EnsureRedirect()
+        {
+            Uri redirectOverride = _webHealthVaultConfiguration.ActionUrlRedirectOverride;
+            if (_parameters.ContainsKey("redirect") || redirectOverride == null)
+            {
+                return;
+            }
+
+            // absolute or scheme-relative urls are already ok
+            if (redirectOverride.IsAbsoluteUri ||
+                redirectOverride.OriginalString.StartsWith("//", StringComparison.OrdinalIgnoreCase))
+            {
+                _parameters.Add("redirect", redirectOverride.OriginalString);
+            }
+            else
+            {
+                // we have to make it absolute so we can redirect to it
+                string redirect = redirectOverride.OriginalString;
+                if (!redirect.StartsWith("/", StringComparison.OrdinalIgnoreCase))
+                {
+                    if (_applicationPath.EndsWith("/", StringComparison.OrdinalIgnoreCase))
+                    {
+                        redirect = _applicationPath + redirect;
+                    }
+                    else
+                    {
+                        redirect = _applicationPath + "/" + redirect;
+                    }
+                }
+
+                Uri absoluteRedirect = new Uri(_shellUri, redirect);
+                _parameters["redirect"] = absoluteRedirect.OriginalString;
+            }
+        }
+
+        internal void EnsureAib()
+        {
+            if (!_parameters.ContainsKey("aib")
+                && _webHealthVaultConfiguration.MultiInstanceAware)
+            {
+                _parameters.Add("aib", "true");
+            }
+        }
+
+        internal StringBuilder GetShellUrl()
         {
             string shellUrl = _webHealthVaultConfiguration.DefaultHealthVaultShellUrl.OriginalString;
 
@@ -73,15 +144,7 @@ namespace Microsoft.HealthVault.Web.Utilities
             return targetUrl;
         }
 
-        private void EnsureBaseParameters()
-        {
-            EnsureAppId();
-            EnsureAppQs();
-            EnsureRedirect();
-            EnsureAib();
-        }
-
-        private StringBuilder CreateQuery()
+        internal StringBuilder CreateQuery()
         {
             var builder = new StringBuilder();
             if (_parameters == null)
@@ -105,66 +168,6 @@ namespace Microsoft.HealthVault.Web.Utilities
             }
 
             return builder;
-        }
-
-        private void EnsureAppId()
-        {
-            if (!_parameters.ContainsKey("appid"))
-            {
-                _parameters.Add("appid", _webHealthVaultConfiguration.MasterApplicationId);
-            }
-        }
-
-        private void EnsureAppQs()
-        {
-            if (!_parameters.ContainsKey("actionqs"))
-            {
-                _parameters.Add("actionqs", _context.Request?.Url?.PathAndQuery);
-            }
-        }
-
-        private void EnsureAib()
-        {
-            if (!_parameters.ContainsKey("aib")
-                && _webHealthVaultConfiguration.MultiInstanceAware)
-            {
-                _parameters.Add("aib", "true");
-            }
-        }
-
-        private void EnsureRedirect()
-        {
-            Uri redirectOverride = _webHealthVaultConfiguration.ActionUrlRedirectOverride;
-            if (_parameters.ContainsKey("redirect") || redirectOverride == null)
-            {
-                return;
-            }
-
-            // absolute or scheme-relative urls are already ok
-            if (redirectOverride.IsAbsoluteUri ||
-                redirectOverride.OriginalString.StartsWith("//", StringComparison.OrdinalIgnoreCase))
-            {
-                _parameters.Add("redirect", redirectOverride.OriginalString);
-            }
-            else
-            {
-                // we have to make it absolute so we can redirect to it
-                string redirect = redirectOverride.OriginalString;
-                if (!redirect.StartsWith("/", StringComparison.OrdinalIgnoreCase))
-                {
-                    if (_context.Request.ApplicationPath.EndsWith("/", StringComparison.OrdinalIgnoreCase))
-                    {
-                        redirect = _context.Request.ApplicationPath + redirect;
-                    }
-                    else
-                    {
-                        redirect = _context.Request.ApplicationPath + "/" + redirect;
-                    }
-                }
-
-                Uri absoluteRedirect = new Uri(_context.Request.Url, redirect);
-                _parameters["redirect"] = absoluteRedirect.OriginalString;
-            }
         }
     }
 }

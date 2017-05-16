@@ -2,10 +2,10 @@
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Xml;
-using System.Xml.XPath;
 using Microsoft.HealthVault.Configuration;
+using System.Xml;
 using Microsoft.HealthVault.Helpers;
+using System.Xml.XPath;
 using Microsoft.HealthVault.Transport;
 
 namespace Microsoft.HealthVault.Connection
@@ -59,6 +59,8 @@ namespace Microsoft.HealthVault.Connection
             }
 
             SessionCredential sessionCredential = GetAuthenticationToken(responseData.InfoNavigator);
+            // TODO: Update with returned expiry when #55406 is completed. 4h is the default HealthVault token expiry time
+            sessionCredential.ExpirationUtc = DateTimeOffset.UtcNow.AddHours(4);
 
             return sessionCredential;
         }
