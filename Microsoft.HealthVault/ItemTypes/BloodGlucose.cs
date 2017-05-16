@@ -62,9 +62,9 @@ namespace Microsoft.HealthVault.ItemTypes
             CodableValue glucoseMeasurementType)
             : base(TypeId)
         {
-            this.When = when;
-            this.Value = value;
-            this.GlucoseMeasurementType = glucoseMeasurementType;
+            When = when;
+            Value = value;
+            GlucoseMeasurementType = glucoseMeasurementType;
         }
 
         /// <summary>
@@ -95,22 +95,22 @@ namespace Microsoft.HealthVault.ItemTypes
 
             Validator.ThrowInvalidIfNull(bgNav, Resources.BGUnexpectedNode);
 
-            this.when = new HealthServiceDateTime();
-            this.when.ParseXml(bgNav.SelectSingleNode("when"));
+            _when = new HealthServiceDateTime();
+            _when.ParseXml(bgNav.SelectSingleNode("when"));
 
-            this.value = new BloodGlucoseMeasurement();
-            this.value.ParseXml(bgNav.SelectSingleNode("value"));
+            _value = new BloodGlucoseMeasurement();
+            _value.ParseXml(bgNav.SelectSingleNode("value"));
 
-            this.glucoseMeasurementType = new CodableValue();
-            this.glucoseMeasurementType.ParseXml(
+            _glucoseMeasurementType = new CodableValue();
+            _glucoseMeasurementType.ParseXml(
                 bgNav.SelectSingleNode("glucose-measurement-type"));
 
-            this.outsideOperatingTemp =
+            _outsideOperatingTemp =
                 XPathHelper.GetOptNavValueAsBool(
                     bgNav,
                     "outside-operating-temp");
 
-            this.isControlTest =
+            _isControlTest =
                 XPathHelper.GetOptNavValueAsBool(
                     bgNav,
                     "is-control-test");
@@ -120,19 +120,19 @@ namespace Microsoft.HealthVault.ItemTypes
 
             if (normalcyNav != null)
             {
-                this.normalcyValue = normalcyNav.ValueAsInt;
-                if (this.normalcyValue < (int)Normalcy.WellBelowNormal ||
-                    this.normalcyValue > (int)Normalcy.WellAboveNormal)
+                _normalcyValue = normalcyNav.ValueAsInt;
+                if (_normalcyValue < (int)Normalcy.WellBelowNormal ||
+                    _normalcyValue > (int)Normalcy.WellAboveNormal)
                 {
-                    this.normalcy = Normalcy.Unknown;
+                    _normalcy = Normalcy.Unknown;
                 }
                 else
                 {
-                    this.normalcy = (Normalcy)this.normalcyValue;
+                    _normalcy = (Normalcy)_normalcyValue;
                 }
             }
 
-            this.measurementContext =
+            _measurementContext =
                 XPathHelper.GetOptNavValue<CodableValue>(
                     bgNav,
                     "measurement-context");
@@ -157,41 +157,41 @@ namespace Microsoft.HealthVault.ItemTypes
         public override void WriteXml(XmlWriter writer)
         {
             Validator.ThrowIfWriterNull(writer);
-            Validator.ThrowSerializationIfNull(this.value, Resources.BGValueNotSet);
-            Validator.ThrowSerializationIfNull(this.glucoseMeasurementType, Resources.BGMeasurementTypeNotSet);
+            Validator.ThrowSerializationIfNull(_value, Resources.BGValueNotSet);
+            Validator.ThrowSerializationIfNull(_glucoseMeasurementType, Resources.BGMeasurementTypeNotSet);
 
             // <blood-glucose>
             writer.WriteStartElement("blood-glucose");
 
             // <when>
-            this.when.WriteXml("when", writer);
+            _when.WriteXml("when", writer);
 
-            this.value.WriteXml("value", writer);
-            this.glucoseMeasurementType.WriteXml(
+            _value.WriteXml("value", writer);
+            _glucoseMeasurementType.WriteXml(
                 "glucose-measurement-type",
                 writer);
 
             XmlWriterHelper.WriteOptBool(
                 writer,
                 "outside-operating-temp",
-                this.outsideOperatingTemp);
+                _outsideOperatingTemp);
 
             XmlWriterHelper.WriteOptBool(
                 writer,
                 "is-control-test",
-                this.isControlTest);
+                _isControlTest);
 
-            if (this.normalcy != null && this.normalcy != Normalcy.Unknown)
+            if (_normalcy != null && _normalcy != Normalcy.Unknown)
             {
                 writer.WriteElementString(
                     "normalcy",
-                    ((int)this.normalcy).ToString(CultureInfo.InvariantCulture));
+                    ((int)_normalcy).ToString(CultureInfo.InvariantCulture));
             }
 
             XmlWriterHelper.WriteOpt(
                 writer,
                 "measurement-context",
-                this.measurementContext);
+                _measurementContext);
 
             // </blood-glucose>
             writer.WriteEndElement();
@@ -212,16 +212,16 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public HealthServiceDateTime When
         {
-            get { return this.when; }
+            get { return _when; }
 
             set
             {
-                Validator.ThrowIfArgumentNull(value, nameof(this.When), Resources.WhenNullValue);
-                this.when = value;
+                Validator.ThrowIfArgumentNull(value, nameof(When), Resources.WhenNullValue);
+                _when = value;
             }
         }
 
-        private HealthServiceDateTime when = new HealthServiceDateTime();
+        private HealthServiceDateTime _when = new HealthServiceDateTime();
 
         /// <summary>
         /// Gets or set the blood glucose value.
@@ -239,17 +239,17 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             get
             {
-                return this.value;
+                return _value;
             }
 
             set
             {
-                Validator.ThrowIfArgumentNull(value, nameof(this.Value), Resources.BGValueMandatory);
-                this.value = value;
+                Validator.ThrowIfArgumentNull(value, nameof(Value), Resources.BGValueMandatory);
+                _value = value;
             }
         }
 
-        private BloodGlucoseMeasurement value;
+        private BloodGlucoseMeasurement _value;
 
         /// <summary>
         /// Gets or set the glucose measurement type.
@@ -269,17 +269,17 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             get
             {
-                return this.glucoseMeasurementType;
+                return _glucoseMeasurementType;
             }
 
             set
             {
-                Validator.ThrowIfArgumentNull(value, nameof(this.GlucoseMeasurementType), Resources.BGMeasurementTypeMandatory);
-                this.glucoseMeasurementType = value;
+                Validator.ThrowIfArgumentNull(value, nameof(GlucoseMeasurementType), Resources.BGMeasurementTypeMandatory);
+                _glucoseMeasurementType = value;
             }
         }
 
-        private CodableValue glucoseMeasurementType;
+        private CodableValue _glucoseMeasurementType;
 
         /// <summary>
         /// Gets or sets whether the reading was taken outside the operating
@@ -293,11 +293,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public bool? OutsideOperatingTemperature
         {
-            get { return this.outsideOperatingTemp; }
-            set { this.outsideOperatingTemp = value; }
+            get { return _outsideOperatingTemp; }
+            set { _outsideOperatingTemp = value; }
         }
 
-        private bool? outsideOperatingTemp;
+        private bool? _outsideOperatingTemp;
 
         /// <summary>
         /// Gets or sets a value indicating whether the reading was taken as a
@@ -316,11 +316,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public bool? IsControlTest
         {
-            get { return this.isControlTest; }
-            set { this.isControlTest = value; }
+            get { return _isControlTest; }
+            set { _isControlTest = value; }
         }
 
-        private bool? isControlTest;
+        private bool? _isControlTest;
 
         /// <summary>
         /// Gets or sets a value indicating whether the reading was within the
@@ -339,12 +339,12 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public Normalcy? ReadingNormalcy
         {
-            get { return this.normalcy; }
-            set { this.normalcy = value; }
+            get { return _normalcy; }
+            set { _normalcy = value; }
         }
 
-        private Normalcy? normalcy;
-        private int normalcyValue;
+        private Normalcy? _normalcy;
+        private int _normalcyValue;
 
         /// <summary>
         /// Gets or sets the contextual information about the reading.
@@ -361,11 +361,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public CodableValue MeasurementContext
         {
-            get { return this.measurementContext; }
-            set { this.measurementContext = value; }
+            get { return _measurementContext; }
+            set { _measurementContext = value; }
         }
 
-        private CodableValue measurementContext;
+        private CodableValue _measurementContext;
 
         /// <summary>
         /// Gets a string representation of the blood glucose item.
@@ -377,7 +377,7 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public override string ToString()
         {
-            return this.Value.ToString();
+            return Value.ToString();
         }
     }
 }

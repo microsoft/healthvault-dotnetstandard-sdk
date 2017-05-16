@@ -60,9 +60,9 @@ namespace Microsoft.HealthVault.ItemTypes
             DurationValue serviceDates,
             ClaimAmounts claimAmounts)
         {
-            this.ServiceType = serviceType;
-            this.ServiceDates = serviceDates;
-            this.ClaimAmounts = claimAmounts;
+            ServiceType = serviceType;
+            ServiceDates = serviceDates;
+            ClaimAmounts = claimAmounts;
         }
 
         /// <summary>
@@ -81,18 +81,18 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             Validator.ThrowIfNavigatorNull(navigator);
 
-            this.serviceType = XPathHelper.GetOptNavValue<CodableValue>(navigator, "service-type");
-            this.diagnosis = XPathHelper.GetOptNavValue<CodableValue>(navigator, "diagnosis");
-            this.billingCode = XPathHelper.GetOptNavValue<CodableValue>(navigator, "billing-code");
-            this.serviceDates = XPathHelper.GetOptNavValue<DurationValue>(navigator, "service-dates");
+            _serviceType = XPathHelper.GetOptNavValue<CodableValue>(navigator, "service-type");
+            _diagnosis = XPathHelper.GetOptNavValue<CodableValue>(navigator, "diagnosis");
+            _billingCode = XPathHelper.GetOptNavValue<CodableValue>(navigator, "billing-code");
+            _serviceDates = XPathHelper.GetOptNavValue<DurationValue>(navigator, "service-dates");
 
-            this.claimAmounts = new ClaimAmounts();
-            this.claimAmounts.ParseXml(navigator.SelectSingleNode("claim-amounts"));
+            _claimAmounts = new ClaimAmounts();
+            _claimAmounts.ParseXml(navigator.SelectSingleNode("claim-amounts"));
 
-            this.notes.Clear();
+            _notes.Clear();
             foreach (XPathNavigator notesNav in navigator.Select("notes"))
             {
-                this.notes.Add(notesNav.Value);
+                _notes.Add(notesNav.Value);
             }
         }
 
@@ -128,21 +128,21 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             Validator.ThrowIfStringNullOrEmpty(nodeName, "nodeName");
             Validator.ThrowIfWriterNull(writer);
-            Validator.ThrowSerializationIfNull(this.serviceType, Resources.ServiceTypeNullValue);
-            Validator.ThrowSerializationIfNull(this.serviceDates, Resources.ServiceDatesNullValue);
-            Validator.ThrowSerializationIfNull(this.claimAmounts, Resources.ClaimAmountsNullValue);
+            Validator.ThrowSerializationIfNull(_serviceType, Resources.ServiceTypeNullValue);
+            Validator.ThrowSerializationIfNull(_serviceDates, Resources.ServiceDatesNullValue);
+            Validator.ThrowSerializationIfNull(_claimAmounts, Resources.ClaimAmountsNullValue);
 
             writer.WriteStartElement(nodeName);
 
-            this.serviceType.WriteXml("service-type", writer);
+            _serviceType.WriteXml("service-type", writer);
 
-            XmlWriterHelper.WriteOpt(writer, "diagnosis", this.diagnosis);
-            XmlWriterHelper.WriteOpt(writer, "billing-code", this.billingCode);
+            XmlWriterHelper.WriteOpt(writer, "diagnosis", _diagnosis);
+            XmlWriterHelper.WriteOpt(writer, "billing-code", _billingCode);
 
-            this.serviceDates.WriteXml("service-dates", writer);
-            this.claimAmounts.WriteXml("claim-amounts", writer);
+            _serviceDates.WriteXml("service-dates", writer);
+            _claimAmounts.WriteXml("claim-amounts", writer);
 
-            foreach (string note in this.notes)
+            foreach (string note in _notes)
             {
                 writer.WriteElementString("notes", note);
             }
@@ -160,16 +160,16 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public CodableValue ServiceType
         {
-            get { return this.serviceType; }
+            get { return _serviceType; }
 
             set
             {
-                Validator.ThrowIfArgumentNull(value, nameof(this.ServiceType), Resources.ServiceTypeNullValue);
-                this.serviceType = value;
+                Validator.ThrowIfArgumentNull(value, nameof(ServiceType), Resources.ServiceTypeNullValue);
+                _serviceType = value;
             }
         }
 
-        private CodableValue serviceType;
+        private CodableValue _serviceType;
 
         /// <summary>
         /// Gets or sets the diagnosis.
@@ -181,11 +181,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public CodableValue Diagnosis
         {
-            get { return this.diagnosis; }
-            set { this.diagnosis = value; }
+            get { return _diagnosis; }
+            set { _diagnosis = value; }
         }
 
-        private CodableValue diagnosis;
+        private CodableValue _diagnosis;
 
         /// <summary>
         /// Gets or sets the billing code.
@@ -197,11 +197,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public CodableValue BillingCode
         {
-            get { return this.billingCode; }
-            set { this.billingCode = value; }
+            get { return _billingCode; }
+            set { _billingCode = value; }
         }
 
-        private CodableValue billingCode;
+        private CodableValue _billingCode;
 
         /// <summary>
         /// Gets or sets the dates for this service.
@@ -213,16 +213,16 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public DurationValue ServiceDates
         {
-            get { return this.serviceDates; }
+            get { return _serviceDates; }
 
             set
             {
-                Validator.ThrowIfArgumentNull(value, nameof(this.ServiceDates), Resources.ServiceDatesNullValue);
-                this.serviceDates = value;
+                Validator.ThrowIfArgumentNull(value, nameof(ServiceDates), Resources.ServiceDatesNullValue);
+                _serviceDates = value;
             }
         }
 
-        private DurationValue serviceDates;
+        private DurationValue _serviceDates;
 
         /// <summary>
         /// Gets or sets the financial information for this service.
@@ -234,16 +234,16 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public ClaimAmounts ClaimAmounts
         {
-            get { return this.claimAmounts; }
+            get { return _claimAmounts; }
 
             set
             {
-                Validator.ThrowIfArgumentNull(value, nameof(this.ClaimAmounts), Resources.ClaimAmountsNullValue);
-                this.claimAmounts = value;
+                Validator.ThrowIfArgumentNull(value, nameof(ClaimAmounts), Resources.ClaimAmountsNullValue);
+                _claimAmounts = value;
             }
         }
 
-        private ClaimAmounts claimAmounts;
+        private ClaimAmounts _claimAmounts;
 
         /// <summary>
         /// Gets a collection of additional information about this service.
@@ -253,9 +253,9 @@ namespace Microsoft.HealthVault.ItemTypes
         /// If there is no information about the notes the collection should be empty.
         /// </remarks>
         ///
-        public Collection<string> Notes => this.notes;
+        public Collection<string> Notes => _notes;
 
-        private readonly Collection<string> notes = new Collection<string>();
+        private readonly Collection<string> _notes = new Collection<string>();
 
         /// <summary>
         /// Gets a string representation of the Service.
@@ -267,7 +267,7 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public override string ToString()
         {
-            return this.ServiceType.Text;
+            return ServiceType.Text;
         }
     }
 }

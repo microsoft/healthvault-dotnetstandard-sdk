@@ -6,7 +6,7 @@ namespace Microsoft.HealthVault.Client
     /// <summary>
     /// Factory for creating client connections to HealthVault.
     /// </summary>
-    public interface IHealthVaultConnectionFactory 
+    public interface IHealthVaultConnectionFactory
     {
         /// <summary>
         /// Gets an <see cref="IHealthVaultSodaConnection"/> used to connect to HealthVault.

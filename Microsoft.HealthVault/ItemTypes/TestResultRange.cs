@@ -51,8 +51,8 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public TestResultRange(CodableValue type, CodableValue text)
         {
-            this.RangeType = type;
-            this.Text = text;
+            RangeType = type;
+            Text = text;
         }
 
         /// <summary>
@@ -72,15 +72,15 @@ namespace Microsoft.HealthVault.ItemTypes
             Validator.ThrowIfNavigatorNull(navigator);
 
             // type
-            this.rangeType = new CodableValue();
-            this.rangeType.ParseXml(navigator.SelectSingleNode("type"));
+            _rangeType = new CodableValue();
+            _rangeType.ParseXml(navigator.SelectSingleNode("type"));
 
             // text
-            this.text = new CodableValue();
-            this.text.ParseXml(navigator.SelectSingleNode("text"));
+            _text = new CodableValue();
+            _text.ParseXml(navigator.SelectSingleNode("text"));
 
             // value
-            this.value = XPathHelper.GetOptNavValue<TestResultRangeValue>(navigator, "value");
+            _value = XPathHelper.GetOptNavValue<TestResultRangeValue>(navigator, "value");
         }
 
         /// <summary>
@@ -111,20 +111,20 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             Validator.ThrowIfStringNullOrEmpty(nodeName, "nodeName");
             Validator.ThrowIfWriterNull(writer);
-            Validator.ThrowSerializationIfNull(this.rangeType, Resources.TestResultRangeRangeTypeNotSet);
-            Validator.ThrowSerializationIfNull(this.text, Resources.TestResultRangeTextNotSet);
+            Validator.ThrowSerializationIfNull(_rangeType, Resources.TestResultRangeRangeTypeNotSet);
+            Validator.ThrowSerializationIfNull(_text, Resources.TestResultRangeTextNotSet);
 
             // <test-result-range>
             writer.WriteStartElement(nodeName);
 
             // type
-            this.rangeType.WriteXml("type", writer);
+            _rangeType.WriteXml("type", writer);
 
             // text
-            this.text.WriteXml("text", writer);
+            _text.WriteXml("text", writer);
 
             // value
-            XmlWriterHelper.WriteOpt(writer, "value", this.value);
+            XmlWriterHelper.WriteOpt(writer, "value", _value);
 
             // </test-result-range>
             writer.WriteEndElement();
@@ -142,11 +142,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public TestResultRangeValue Value
         {
-            get { return this.value; }
-            set { this.value = value; }
+            get { return _value; }
+            set { _value = value; }
         }
 
-        private TestResultRangeValue value;
+        private TestResultRangeValue _value;
 
         /// <summary>
         /// Gets or sets the type of the range.
@@ -158,16 +158,16 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public CodableValue RangeType
         {
-            get { return this.rangeType; }
+            get { return _rangeType; }
 
             set
             {
-                Validator.ThrowIfArgumentNull(value, nameof(this.RangeType), Resources.TestResultRangeRangeTypeNotSet);
-                this.rangeType = value;
+                Validator.ThrowIfArgumentNull(value, nameof(RangeType), Resources.TestResultRangeRangeTypeNotSet);
+                _rangeType = value;
             }
         }
 
-        private CodableValue rangeType;
+        private CodableValue _rangeType;
 
         /// <summary>
         /// Gets or sets the range expressed as text.
@@ -195,16 +195,16 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public CodableValue Text
         {
-            get { return this.text; }
+            get { return _text; }
 
             set
             {
-                Validator.ThrowIfArgumentNull(value, nameof(this.Text), Resources.TestResultRangeTextNotSet);
-                this.text = value;
+                Validator.ThrowIfArgumentNull(value, nameof(Text), Resources.TestResultRangeTextNotSet);
+                _text = value;
             }
         }
 
-        private CodableValue text;
+        private CodableValue _text;
 
         /// <summary>
         /// Gets a string representation of the test result range item.
@@ -219,8 +219,8 @@ namespace Microsoft.HealthVault.ItemTypes
             return
                 string.Format(
                     Resources.TestResultRangeToStringFormat,
-                    this.rangeType.ToString(),
-                    this.text.ToString());
+                    _rangeType.ToString(),
+                    _text.ToString());
         }
     }
 }

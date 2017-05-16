@@ -72,7 +72,7 @@ namespace Microsoft.HealthVault.Transport.Serializers
                                     // </offline-person-info>
                                     writer.WriteEndElement();
                                 }
-                                else if(requestHeader.HasUserAuthToken)
+                                else if (requestHeader.HasUserAuthToken)
                                 {
                                     writer.WriteElementString("user-auth-token",
                                         requestHeader.AuthSession.UserAuthToken);

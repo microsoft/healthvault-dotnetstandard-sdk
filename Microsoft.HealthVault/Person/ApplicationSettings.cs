@@ -31,7 +31,7 @@ namespace Microsoft.HealthVault.Person
             {
                 using (StringReader stringReader = new StringReader(appSettingsNav.OuterXml))
                 {
-                    this.XmlSettings = new XPathDocument(XmlReader.Create(stringReader, SDKHelper.XmlReaderSettings));
+                    XmlSettings = new XPathDocument(XmlReader.Create(stringReader, SDKHelper.XmlReaderSettings));
                 }
             }
 
@@ -39,7 +39,7 @@ namespace Microsoft.HealthVault.Person
                 settingsRootNav.SelectSingleNode("selected-record-id");
             if (selectedRecordIdNav != null)
             {
-                this.SelectedRecordId = new Guid(selectedRecordIdNav.Value);
+                SelectedRecordId = new Guid(selectedRecordIdNav.Value);
             }
         }
 

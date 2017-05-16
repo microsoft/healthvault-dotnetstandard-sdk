@@ -26,7 +26,7 @@ namespace Microsoft.HealthVault.PlatformInformation
 
         internal void ParseXml(XPathNavigator nav)
         {
-            this.Name = nav.SelectSingleNode("name").Value;
+            Name = nav.SelectSingleNode("name").Value;
 
             XPathNodeIterator versionIterator =
                 nav.Select("version");
@@ -41,7 +41,7 @@ namespace Microsoft.HealthVault.PlatformInformation
                 versions.Add(methodVersion);
             }
 
-            this.Versions =
+            Versions =
                 new ReadOnlyCollection<HealthServiceMethodVersionInfo>(
                     versions);
         }
@@ -63,8 +63,8 @@ namespace Microsoft.HealthVault.PlatformInformation
             string name,
             ReadOnlyCollection<HealthServiceMethodVersionInfo> versions)
         {
-            this.Name = name;
-            this.Versions = versions;
+            Name = name;
+            Versions = versions;
         }
 
         /// <summary>

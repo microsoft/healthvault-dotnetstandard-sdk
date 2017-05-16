@@ -6,7 +6,6 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.XPath;
 using Microsoft.HealthVault.Clients;
@@ -140,7 +139,7 @@ namespace Microsoft.HealthVault.ItemTypes
             while (bytesRead > 0);
 
             Blob blob =
-                this.GetBlobStore(default(HealthRecordAccessor)).NewBlob(string.Empty, mimeType);
+                GetBlobStore(default(HealthRecordAccessor)).NewBlob(string.Empty, mimeType);
             blob.WriteInline(imageBytes);
         }
 
@@ -164,7 +163,7 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public Stream ReadImage()
         {
-            BlobStore store = this.GetBlobStore(default(HealthRecordAccessor));
+            BlobStore store = GetBlobStore(default(HealthRecordAccessor));
             Blob blob = store[string.Empty];
 
             if (blob == null)

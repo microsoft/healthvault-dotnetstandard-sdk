@@ -13,9 +13,9 @@ namespace Microsoft.HealthVault.Client
     /// </summary>
     internal class EncryptionKeyService : IEncryptionKeyService
     {
-        private const string keyStoreFileName = "HealthVault.Android.keystore";
-        private string keyStoreDirectory;
-        private AsyncLock keystoreLock = new AsyncLock();
+        private const string _keyStoreFileName = "HealthVault.Android.keystore";
+        private string _keyStoreDirectory;
+        private AsyncLock _keystoreLock = new AsyncLock();
 
         public EncryptionKeyService()
         {
@@ -29,19 +29,19 @@ namespace Microsoft.HealthVault.Client
                 storageDir = AndroidApp.Application.Context.FilesDir.AbsolutePath;
             }
 
-            this.keyStoreDirectory = Path.Combine(storageDir, HealthVaultConstants.Storage.DirectoryName);
+            _keyStoreDirectory = Path.Combine(storageDir, HealthVaultConstants.Storage.DirectoryName);
         }
 
         #region IEncryptionKeyService
 
         public async Task<byte[]> GetOrMakeEncryptionKeyAsync(string keyName)
         {
-            using (await this.keystoreLock.LockAsync().ConfigureAwait(false))
+            using (await _keystoreLock.LockAsync().ConfigureAwait(false))
             {
-                byte[] key = await this.GetEncryptionKeyLockedAsync(keyName).ConfigureAwait(false);
+                byte[] key = await GetEncryptionKeyLockedAsync(keyName).ConfigureAwait(false);
                 if (key == null)
                 {
-                    key = await this.CreateAndStoreEncryptionKeyLockedAsync(keyName).ConfigureAwait(false);
+                    key = await CreateAndStoreEncryptionKeyLockedAsync(keyName).ConfigureAwait(false);
                 }
 
                 return key;
@@ -50,17 +50,17 @@ namespace Microsoft.HealthVault.Client
 
         public async Task<byte[]> GetEncryptionKeyAsync(string keyName)
         {
-            using (await this.keystoreLock.LockAsync().ConfigureAwait(false))
+            using (await _keystoreLock.LockAsync().ConfigureAwait(false))
             {
-                return await this.GetEncryptionKeyLockedAsync(keyName).ConfigureAwait(false);
+                return await GetEncryptionKeyLockedAsync(keyName).ConfigureAwait(false);
             }
         }
 
         public async Task<byte[]> CreateAndStoreEncryptionKeyAsync(string keyName)
         {
-            using (await this.keystoreLock.LockAsync().ConfigureAwait(false))
+            using (await _keystoreLock.LockAsync().ConfigureAwait(false))
             {
-                return await this.CreateAndStoreEncryptionKeyLockedAsync(keyName).ConfigureAwait(false);
+                return await CreateAndStoreEncryptionKeyLockedAsync(keyName).ConfigureAwait(false);
             }
         }
 
@@ -74,8 +74,8 @@ namespace Microsoft.HealthVault.Client
 
             try
             {
-                char[] deviceId = this.GetDeviceId().ToCharArray();
-                KeyStore keyStore = await this.GetOrCreateKeyStoreAsync(deviceId).ConfigureAwait(false);
+                char[] deviceId = GetDeviceId().ToCharArray();
+                KeyStore keyStore = await GetOrCreateKeyStoreAsync(deviceId).ConfigureAwait(false);
 
                 KeyStore.IProtectionParameter protectionParameter = new KeyStore.PasswordProtection(deviceId);
                 KeyStore.SecretKeyEntry secretKeyEntry = (KeyStore.SecretKeyEntry)keyStore.GetEntry(keyName, protectionParameter);
@@ -103,7 +103,7 @@ namespace Microsoft.HealthVault.Client
             KeyStore keyStore = KeyStore.GetInstance("BKS");
             try
             {
-                using (Stream inputStream = await this.OpenKeyStoreFileForInputAsync().ConfigureAwait(false))
+                using (Stream inputStream = await OpenKeyStoreFileForInputAsync().ConfigureAwait(false))
                 {
                     keyStore.Load(inputStream, password);
                 }
@@ -123,7 +123,7 @@ namespace Microsoft.HealthVault.Client
             KeyGenerator keyGenerator = KeyGenerator.GetInstance("AES");
             keyGenerator.Init(256, new SecureRandom());
             ISecretKey key = keyGenerator.GenerateKey();
-            await this.StoreKeyAsync(keyName, key).ConfigureAwait(false);
+            await StoreKeyAsync(keyName, key).ConfigureAwait(false);
             keyBytes = key.GetEncoded();
 
             return keyBytes;
@@ -131,8 +131,8 @@ namespace Microsoft.HealthVault.Client
 
         private async Task StoreKeyAsync(string keyName, ISecretKey key)
         {
-            char[] deviceId = this.GetDeviceId().ToCharArray();
-            KeyStore keyStore = await this.GetOrCreateKeyStoreAsync(deviceId).ConfigureAwait(false);
+            char[] deviceId = GetDeviceId().ToCharArray();
+            KeyStore keyStore = await GetOrCreateKeyStoreAsync(deviceId).ConfigureAwait(false);
 
             KeyStore.IProtectionParameter protectionParameter = new KeyStore.PasswordProtection(deviceId);
 
@@ -144,7 +144,7 @@ namespace Microsoft.HealthVault.Client
 
             // Write the KeyStore to the app's directory with appropriate permissions
             // Note: we're using the same key to protect the KeyStore as we are to protect the entry inside it.
-            using (Stream fileStream = await this.OpenKeyStoreFileForOutputAsync().ConfigureAwait(false))
+            using (Stream fileStream = await OpenKeyStoreFileForOutputAsync().ConfigureAwait(false))
             {
                 keyStore.Store(fileStream, deviceId);
             }
@@ -152,17 +152,17 @@ namespace Microsoft.HealthVault.Client
 
         private Task<Stream> OpenKeyStoreFileForOutputAsync()
         {
-            if (!Directory.Exists(this.keyStoreDirectory))
+            if (!Directory.Exists(_keyStoreDirectory))
             {
-                Directory.CreateDirectory(this.keyStoreDirectory);
+                Directory.CreateDirectory(_keyStoreDirectory);
             }
 
-            return Task.FromResult((Stream)File.Create(Path.Combine(this.keyStoreDirectory, keyStoreFileName)));
+            return Task.FromResult((Stream)File.Create(Path.Combine(_keyStoreDirectory, _keyStoreFileName)));
         }
 
         private Task<Stream> OpenKeyStoreFileForInputAsync()
         {
-            return Task.FromResult((Stream)File.OpenRead(Path.Combine(this.keyStoreDirectory, keyStoreFileName)));
+            return Task.FromResult((Stream)File.OpenRead(Path.Combine(_keyStoreDirectory, _keyStoreFileName)));
         }
 
         private string GetDeviceId()

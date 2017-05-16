@@ -72,13 +72,13 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             Validator.ThrowIfArgumentNull(series, nameof(series), Resources.MedicalImageStudySeriesMandatory);
 
-            this.When = when;
+            When = when;
             foreach (MedicalImageStudySeriesV2 medicalImageStudySeries in series)
             {
-                this.Series.Add(medicalImageStudySeries);
+                Series.Add(medicalImageStudySeries);
             }
 
-            if (this.Series.Count == 0)
+            if (Series.Count == 0)
             {
                 throw new ArgumentException(Resources.MedicalImageStudySeriesMandatory, nameof(series));
             }
@@ -121,37 +121,37 @@ namespace Microsoft.HealthVault.ItemTypes
 
             Validator.ThrowInvalidIfNull(itemNav, Resources.MedicalImageStudyUnexpectedNode);
 
-            if (this.when == null)
+            if (_when == null)
             {
-                this.when = new HealthServiceDateTime();
+                _when = new HealthServiceDateTime();
             }
 
-            this.when.ParseXml(itemNav.SelectSingleNode("when"));
-            this.patientName = XPathHelper.GetOptNavValue(itemNav, "patient-name");
-            this.description = XPathHelper.GetOptNavValue(itemNav, "description");
+            _when.ParseXml(itemNav.SelectSingleNode("when"));
+            _patientName = XPathHelper.GetOptNavValue(itemNav, "patient-name");
+            _description = XPathHelper.GetOptNavValue(itemNav, "description");
 
-            this.series.Clear();
+            _series.Clear();
             foreach (XPathNavigator imageStudySeriesNav in itemNav.Select("series"))
             {
                 MedicalImageStudySeriesV2 imageStudySeries = new MedicalImageStudySeriesV2();
                 imageStudySeries.ParseXml(imageStudySeriesNav);
-                this.series.Add(imageStudySeries);
+                _series.Add(imageStudySeries);
             }
 
-            this.reason = XPathHelper.GetOptNavValue<CodableValue>(itemNav, "reason");
-            this.previewBlobName = XPathHelper.GetOptNavValue(itemNav, "preview-blob-name");
+            _reason = XPathHelper.GetOptNavValue<CodableValue>(itemNav, "reason");
+            _previewBlobName = XPathHelper.GetOptNavValue(itemNav, "preview-blob-name");
 
-            this.keyImages.Clear();
+            _keyImages.Clear();
             foreach (XPathNavigator imageNav in itemNav.Select("key-images"))
             {
                 MedicalImageStudySeriesImage image = new MedicalImageStudySeriesImage();
                 image.ParseXml(imageNav);
-                this.keyImages.Add(image);
+                _keyImages.Add(image);
             }
 
-            this.studyInstanceUID = XPathHelper.GetOptNavValue(itemNav, "study-instance-uid");
-            this.referringPhysician = XPathHelper.GetOptNavValue<PersonItem>(itemNav, "referring-physician");
-            this.accessionNumber = XPathHelper.GetOptNavValue(itemNav, "accession-number");
+            _studyInstanceUID = XPathHelper.GetOptNavValue(itemNav, "study-instance-uid");
+            _referringPhysician = XPathHelper.GetOptNavValue<PersonItem>(itemNav, "referring-physician");
+            _accessionNumber = XPathHelper.GetOptNavValue(itemNav, "accession-number");
         }
 
         /// <summary>
@@ -176,35 +176,35 @@ namespace Microsoft.HealthVault.ItemTypes
         public override void WriteXml(XmlWriter writer)
         {
             Validator.ThrowIfWriterNull(writer);
-            Validator.ThrowSerializationIfNull(this.when, Resources.WhenNullValue);
+            Validator.ThrowSerializationIfNull(_when, Resources.WhenNullValue);
 
-            if (this.series == null || this.series.Count == 0)
+            if (_series == null || _series.Count == 0)
             {
                 throw new ThingSerializationException(Resources.MedicalImageStudySeriesMandatory);
             }
 
             writer.WriteStartElement("medical-image-study");
 
-            this.when.WriteXml("when", writer);
-            XmlWriterHelper.WriteOptString(writer, "patient-name", this.patientName);
-            XmlWriterHelper.WriteOptString(writer, "description", this.description);
+            _when.WriteXml("when", writer);
+            XmlWriterHelper.WriteOptString(writer, "patient-name", _patientName);
+            XmlWriterHelper.WriteOptString(writer, "description", _description);
 
-            foreach (MedicalImageStudySeriesV2 medicalImageStudySeries in this.series)
+            foreach (MedicalImageStudySeriesV2 medicalImageStudySeries in _series)
             {
                 medicalImageStudySeries.WriteXml("series", writer);
             }
 
-            XmlWriterHelper.WriteOpt(writer, "reason", this.reason);
-            XmlWriterHelper.WriteOptString(writer, "preview-blob-name", this.previewBlobName);
+            XmlWriterHelper.WriteOpt(writer, "reason", _reason);
+            XmlWriterHelper.WriteOptString(writer, "preview-blob-name", _previewBlobName);
 
-            foreach (MedicalImageStudySeriesImage image in this.keyImages)
+            foreach (MedicalImageStudySeriesImage image in _keyImages)
             {
                 image.WriteXml("key-images", writer);
             }
 
-            XmlWriterHelper.WriteOptString(writer, "study-instance-uid", this.studyInstanceUID);
-            XmlWriterHelper.WriteOpt(writer, "referring-physician", this.referringPhysician);
-            XmlWriterHelper.WriteOptString(writer, "accession-number", this.accessionNumber);
+            XmlWriterHelper.WriteOptString(writer, "study-instance-uid", _studyInstanceUID);
+            XmlWriterHelper.WriteOpt(writer, "referring-physician", _referringPhysician);
+            XmlWriterHelper.WriteOptString(writer, "accession-number", _accessionNumber);
 
             writer.WriteEndElement();
         }
@@ -225,17 +225,17 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             get
             {
-                return this.when;
+                return _when;
             }
 
             set
             {
-                Validator.ThrowIfArgumentNull(value, nameof(this.When), Resources.WhenNullValue);
-                this.when = value;
+                Validator.ThrowIfArgumentNull(value, nameof(When), Resources.WhenNullValue);
+                _when = value;
             }
         }
 
-        private HealthServiceDateTime when;
+        private HealthServiceDateTime _when;
 
         /// <summary>
         /// Gets or sets the name of the patient as contained in the medical image.
@@ -253,17 +253,17 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             get
             {
-                return this.patientName;
+                return _patientName;
             }
 
             set
             {
                 Validator.ThrowIfStringIsWhitespace(value, "PatientName");
-                this.patientName = value;
+                _patientName = value;
             }
         }
 
-        private string patientName;
+        private string _patientName;
 
         /// <summary>
         /// Gets or sets a description of the study.
@@ -281,25 +281,25 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             get
             {
-                return this.description;
+                return _description;
             }
 
             set
             {
                 Validator.ThrowIfStringIsWhitespace(value, "Description");
-                this.description = value;
+                _description = value;
             }
         }
 
-        private string description;
+        private string _description;
 
         /// <summary>
         /// Gets the collection of image series.
         /// </summary>
         ///
-        public Collection<MedicalImageStudySeriesV2> Series => this.series;
+        public Collection<MedicalImageStudySeriesV2> Series => _series;
 
-        private readonly Collection<MedicalImageStudySeriesV2> series = new Collection<MedicalImageStudySeriesV2>();
+        private readonly Collection<MedicalImageStudySeriesV2> _series = new Collection<MedicalImageStudySeriesV2>();
 
         /// <summary>
         /// Gets or sets the reason for the study.
@@ -314,11 +314,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public CodableValue Reason
         {
-            get { return this.reason; }
-            set { this.reason = value; }
+            get { return _reason; }
+            set { _reason = value; }
         }
 
-        private CodableValue reason;
+        private CodableValue _reason;
 
         /// <summary>
         /// Gets or sets the name of the BLOB holding a smaller version of the image
@@ -339,17 +339,17 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             get
             {
-                return this.previewBlobName;
+                return _previewBlobName;
             }
 
             set
             {
                 Validator.ThrowIfStringIsWhitespace(value, "PreviewBlobName");
-                this.previewBlobName = value;
+                _previewBlobName = value;
             }
         }
 
-        private string previewBlobName;
+        private string _previewBlobName;
 
         /// <summary>
         /// Gets the important images in the study.
@@ -359,9 +359,9 @@ namespace Microsoft.HealthVault.ItemTypes
         /// If there is no information about the key images the collection should be empty.
         /// </remarks>
         ///
-        public Collection<MedicalImageStudySeriesImage> KeyImages => this.keyImages;
+        public Collection<MedicalImageStudySeriesImage> KeyImages => _keyImages;
 
-        private readonly Collection<MedicalImageStudySeriesImage> keyImages = new Collection<MedicalImageStudySeriesImage>();
+        private readonly Collection<MedicalImageStudySeriesImage> _keyImages = new Collection<MedicalImageStudySeriesImage>();
 
         /// <summary>
         /// Gets or sets the study instance UID.
@@ -380,17 +380,17 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             get
             {
-                return this.studyInstanceUID;
+                return _studyInstanceUID;
             }
 
             set
             {
                 Validator.ThrowIfStringIsWhitespace(value, "StudyInstanceUID");
-                this.studyInstanceUID = value;
+                _studyInstanceUID = value;
             }
         }
 
-        private string studyInstanceUID;
+        private string _studyInstanceUID;
 
         /// <summary>
         /// Gets or sets the physician who ordered the study.
@@ -405,11 +405,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public PersonItem ReferringPhysician
         {
-            get { return this.referringPhysician; }
-            set { this.referringPhysician = value; }
+            get { return _referringPhysician; }
+            set { _referringPhysician = value; }
         }
 
-        private PersonItem referringPhysician;
+        private PersonItem _referringPhysician;
 
         /// <summary>
         /// Gets or sets the accession number.
@@ -428,17 +428,17 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             get
             {
-                return this.accessionNumber;
+                return _accessionNumber;
             }
 
             set
             {
                 Validator.ThrowIfStringIsWhitespace(value, "AccessionNumber");
-                this.accessionNumber = value;
+                _accessionNumber = value;
             }
         }
 
-        private string accessionNumber;
+        private string _accessionNumber;
 
         /// <summary>
         /// Gets a string representation of the medical image study.
@@ -452,19 +452,19 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             StringBuilder result = new StringBuilder(200);
 
-            if (!string.IsNullOrEmpty(this.Description) && !string.IsNullOrEmpty(this.Description.Trim()))
+            if (!string.IsNullOrEmpty(Description) && !string.IsNullOrEmpty(Description.Trim()))
             {
-                result.Append(this.Description);
+                result.Append(Description);
             }
 
-            if (this.Reason != null)
+            if (Reason != null)
             {
                 if (result.Length > 0)
                 {
                     result.Append(Resources.ListSeparator);
                 }
 
-                result.Append(this.Reason);
+                result.Append(Reason);
             }
 
             return result.ToString();

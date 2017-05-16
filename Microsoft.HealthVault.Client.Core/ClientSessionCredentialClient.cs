@@ -1,9 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using System.Xml;
 using Microsoft.HealthVault.Connection;
 using Microsoft.HealthVault.Helpers;
@@ -19,8 +16,8 @@ namespace Microsoft.HealthVault.Client
 
         public override void WriteInfoXml(XmlWriter writer)
         {
-            byte[] hmacContentBytes = this.GetHmacContentBytes();
-            CryptoData hmacResult = Cryptographer.Hmac(this.AppSharedSecret, hmacContentBytes);
+            byte[] hmacContentBytes = GetHmacContentBytes();
+            CryptoData hmacResult = Cryptographer.Hmac(AppSharedSecret, hmacContentBytes);
 
             writer.WriteStartElement("appserver2");
             writer.WriteStartElement("hmacSig");
@@ -40,7 +37,7 @@ namespace Microsoft.HealthVault.Client
                 using (XmlWriter writer = XmlWriter.Create(contentMemoryStream, settings))
                 {
                     writer.WriteStartElement("content");
-                    writer.WriteElementString("app-id", this.Connection.ApplicationId.ToString());
+                    writer.WriteElementString("app-id", Connection.ApplicationId.ToString());
                     writer.WriteElementString("hmac", HealthVaultConstants.Cryptography.HmacAlgorithm);
                     writer.WriteElementString("signing-time", DateTimeOffset.UtcNow.ToString("o"));
                     writer.WriteEndElement(); // content

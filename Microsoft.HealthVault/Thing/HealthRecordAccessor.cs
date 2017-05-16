@@ -3,11 +3,6 @@
 // see http://www.microsoft.com/resources/sharedsource/licensingbasics/sharedsourcelicenses.mspx.
 // All other rights reserved.
 
-using Microsoft.HealthVault.Application;
-using Microsoft.HealthVault.Connection;
-using Microsoft.HealthVault.Exceptions;
-using Microsoft.HealthVault.Helpers;
-using Microsoft.HealthVault.Record;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -15,6 +10,11 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.XPath;
+using Microsoft.HealthVault.Application;
+using Microsoft.HealthVault.Connection;
+using Microsoft.HealthVault.Exceptions;
+using Microsoft.HealthVault.Helpers;
+using Microsoft.HealthVault.Record;
 
 namespace Microsoft.HealthVault.Thing
 {
@@ -81,13 +81,13 @@ namespace Microsoft.HealthVault.Thing
         internal virtual void ParseXml(XPathNavigator navigator)
         {
             string id = navigator.GetAttribute("id", string.Empty);
-            this.Id = new Guid(id);
+            Id = new Guid(id);
 
             string country = navigator.GetAttribute("location-country", string.Empty);
             string state = navigator.GetAttribute("location-state-province", string.Empty);
             if (!string.IsNullOrEmpty(country))
             {
-                this.Location = new Location(country, string.IsNullOrEmpty(state) ? null : state);
+                Location = new Location(country, string.IsNullOrEmpty(state) ? null : state);
             }
         }
 
@@ -108,7 +108,7 @@ namespace Microsoft.HealthVault.Thing
 
             using (XmlWriter writer = XmlWriter.Create(recordInfoXml, settings))
             {
-                this.WriteXml("record", writer);
+                WriteXml("record", writer);
                 writer.Flush();
             }
 
@@ -118,19 +118,19 @@ namespace Microsoft.HealthVault.Thing
         internal virtual void WriteXml(string nodeName, XmlWriter writer)
         {
             writer.WriteStartElement(nodeName);
-            this.WriteXml(writer);
+            WriteXml(writer);
         }
 
         internal void WriteXml(XmlWriter writer)
         {
-            writer.WriteAttributeString("id", this.Id.ToString());
+            writer.WriteAttributeString("id", Id.ToString());
 
-            if (this.Location != null)
+            if (Location != null)
             {
-                writer.WriteAttributeString("location-country", this.Location.Country);
-                if (!string.IsNullOrEmpty(this.Location.StateProvince))
+                writer.WriteAttributeString("location-country", Location.Country);
+                if (!string.IsNullOrEmpty(Location.StateProvince))
                 {
-                    writer.WriteAttributeString("location-state-province", this.Location.StateProvince);
+                    writer.WriteAttributeString("location-state-province", Location.StateProvince);
                 }
             }
         }
@@ -171,8 +171,8 @@ namespace Microsoft.HealthVault.Thing
                 throw new ArgumentException(Resources.CtorIDArgumentEmpty, nameof(id));
             }
 
-            this.Connection = connection;
-            this.Id = id;
+            Connection = connection;
+            Id = id;
         }
 
         /// <summary>
@@ -195,7 +195,7 @@ namespace Microsoft.HealthVault.Thing
         internal HealthRecordAccessor(
             IHealthVaultConnection connection)
         {
-            this.Connection = connection;
+            Connection = connection;
         }
 
         internal HealthRecordAccessor()
@@ -305,7 +305,7 @@ namespace Microsoft.HealthVault.Thing
         /// </remarks>
         public async Task RemoveApplicationAuthorizationAsync()
         {
-            await this.Connection.ExecuteAsync(HealthVaultMethods.RemoveApplicationRecordAuthorization, 1).ConfigureAwait(false);
+            await Connection.ExecuteAsync(HealthVaultMethods.RemoveApplicationRecordAuthorization, 1).ConfigureAwait(false);
         }
 
         #endregion Authorization methods
@@ -349,7 +349,7 @@ namespace Microsoft.HealthVault.Thing
                 thingTypeIds.Add(definition.TypeId);
             }
 
-            return await this.QueryPermissions(thingTypeIds).ConfigureAwait(false);
+            return await QueryPermissions(thingTypeIds).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -386,7 +386,7 @@ namespace Microsoft.HealthVault.Thing
         public async Task<IDictionary<Guid, ThingTypePermission>> QueryPermissionsByTypes(
             IList<Guid> healthRecordItemTypeIds)
         {
-            return await HealthVaultPlatform.QueryPermissionsByTypesAsync(this.Connection, this, healthRecordItemTypeIds).ConfigureAwait(false);
+            return await HealthVaultPlatform.QueryPermissionsByTypesAsync(Connection, this, healthRecordItemTypeIds).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -426,7 +426,7 @@ namespace Microsoft.HealthVault.Thing
         public async Task<Collection<ThingTypePermission>> QueryPermissions(
             IList<Guid> healthRecordItemTypeIds)
         {
-            return await HealthVaultPlatform.QueryPermissionsAsync(this.Connection, this, healthRecordItemTypeIds).ConfigureAwait(false);
+            return await HealthVaultPlatform.QueryPermissionsAsync(Connection, this, healthRecordItemTypeIds).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -466,7 +466,7 @@ namespace Microsoft.HealthVault.Thing
         public async Task<HealthRecordPermissions> QueryRecordPermissions(
             IList<Guid> healthRecordItemTypeIds)
         {
-            return await HealthVaultPlatform.QueryRecordPermissionsAsync(this.Connection, this, healthRecordItemTypeIds).ConfigureAwait(false);
+            return await HealthVaultPlatform.QueryRecordPermissionsAsync(Connection, this, healthRecordItemTypeIds).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -500,7 +500,7 @@ namespace Microsoft.HealthVault.Thing
         /// </exception>
         public async Task<Collection<ThingBase>> GetValidGroupMembership(IList<Guid> applicationIds)
         {
-            return await HealthVaultPlatform.GetValidGroupMembershipAsync(this.Connection, this, applicationIds).ConfigureAwait(false);
+            return await HealthVaultPlatform.GetValidGroupMembershipAsync(Connection, this, applicationIds).ConfigureAwait(false);
         }
 
         #endregion

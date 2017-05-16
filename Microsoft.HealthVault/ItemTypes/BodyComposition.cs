@@ -65,9 +65,9 @@ namespace Microsoft.HealthVault.ItemTypes
             BodyCompositionValue compositionValue)
             : base(TypeId)
         {
-            this.When = when;
-            this.MeasurementName = measurementName;
-            this.Value = compositionValue;
+            When = when;
+            MeasurementName = measurementName;
+            Value = compositionValue;
         }
 
         /// <summary>
@@ -98,23 +98,23 @@ namespace Microsoft.HealthVault.ItemTypes
             Validator.ThrowInvalidIfNull(itemNav, Resources.BodyCompositionUnexpectedNode);
 
             // when (approxi-date-time, mandatory)
-            this.when = new ApproximateDateTime();
-            this.when.ParseXml(itemNav.SelectSingleNode("when"));
+            _when = new ApproximateDateTime();
+            _when.ParseXml(itemNav.SelectSingleNode("when"));
 
             // measurement-name (codable-value, mandatory)
-            this.measurementName = new CodableValue();
-            this.measurementName.ParseXml(itemNav.SelectSingleNode("measurement-name"));
+            _measurementName = new CodableValue();
+            _measurementName.ParseXml(itemNav.SelectSingleNode("measurement-name"));
 
             // value (BodyCompositionValue, mandatory)
-            this.value = new BodyCompositionValue();
-            this.value.ParseXml(itemNav.SelectSingleNode("value"));
+            _value = new BodyCompositionValue();
+            _value.ParseXml(itemNav.SelectSingleNode("value"));
 
             // measurement-method (codable value )
-            this.measurementMethod =
+            _measurementMethod =
                 XPathHelper.GetOptNavValue<CodableValue>(itemNav, "measurement-method");
 
             // site
-            this.site =
+            _site =
                 XPathHelper.GetOptNavValue<CodableValue>(itemNav, "site");
         }
 
@@ -137,33 +137,33 @@ namespace Microsoft.HealthVault.ItemTypes
         public override void WriteXml(XmlWriter writer)
         {
             Validator.ThrowIfWriterNull(writer);
-            Validator.ThrowSerializationIfNull(this.when, Resources.WhenNullValue);
-            Validator.ThrowSerializationIfNull(this.measurementName, Resources.BodyCompositionMeasurementNameNotSet);
-            Validator.ThrowSerializationIfNull(this.value, Resources.BodyCompositionValueNotSet);
+            Validator.ThrowSerializationIfNull(_when, Resources.WhenNullValue);
+            Validator.ThrowSerializationIfNull(_measurementName, Resources.BodyCompositionMeasurementNameNotSet);
+            Validator.ThrowSerializationIfNull(_value, Resources.BodyCompositionValueNotSet);
 
             // <body-composition>
             writer.WriteStartElement("body-composition");
 
             // <when>
-            this.when.WriteXml("when", writer);
+            _when.WriteXml("when", writer);
 
             // <measurement-name>
-            this.measurementName.WriteXml("measurement-name", writer);
+            _measurementName.WriteXml("measurement-name", writer);
 
             // <value>
-            this.value.WriteXml("value", writer);
+            _value.WriteXml("value", writer);
 
             // <measurement-method>
             XmlWriterHelper.WriteOpt(
                 writer,
                 "measurement-method",
-                this.measurementMethod);
+                _measurementMethod);
 
             // <site>
             XmlWriterHelper.WriteOpt(
                 writer,
                 "site",
-                this.site);
+                _site);
 
             // </body-composition>
             writer.WriteEndElement();
@@ -184,16 +184,16 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public ApproximateDateTime When
         {
-            get { return this.when; }
+            get { return _when; }
 
             set
             {
-                Validator.ThrowIfArgumentNull(value, nameof(this.When), Resources.WhenNullValue);
-                this.when = value;
+                Validator.ThrowIfArgumentNull(value, nameof(When), Resources.WhenNullValue);
+                _when = value;
             }
         }
 
-        private ApproximateDateTime when;
+        private ApproximateDateTime _when;
 
         /// <summary>
         /// Gets or sets the name of this measurement.
@@ -215,16 +215,16 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public CodableValue MeasurementName
         {
-            get { return this.measurementName; }
+            get { return _measurementName; }
 
             set
             {
-                Validator.ThrowIfArgumentNull(value, nameof(this.MeasurementName), Resources.BodyCompositionMeasurementNameNullValue);
-                this.measurementName = value;
+                Validator.ThrowIfArgumentNull(value, nameof(MeasurementName), Resources.BodyCompositionMeasurementNameNullValue);
+                _measurementName = value;
             }
         }
 
-        private CodableValue measurementName;
+        private CodableValue _measurementName;
 
         /// <summary>
         /// Gets or sets the value of this measurement.
@@ -241,16 +241,16 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public BodyCompositionValue Value
         {
-            get { return this.value; }
+            get { return _value; }
 
             set
             {
-                Validator.ThrowIfArgumentNull(value, nameof(this.Value), Resources.BodyCompositionMeasurementNameNullValue);
-                this.value = value;
+                Validator.ThrowIfArgumentNull(value, nameof(Value), Resources.BodyCompositionMeasurementNameNullValue);
+                _value = value;
             }
         }
 
-        private BodyCompositionValue value;
+        private BodyCompositionValue _value;
 
         /// <summary>
         /// Gets or sets the technique used to obtain the measurement.
@@ -269,11 +269,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public CodableValue MeasurementMethod
         {
-            get { return this.measurementMethod; }
-            set { this.measurementMethod = value; }
+            get { return _measurementMethod; }
+            set { _measurementMethod = value; }
         }
 
-        private CodableValue measurementMethod;
+        private CodableValue _measurementMethod;
 
         /// <summary>
         /// Gets or sets the body part that is the subject of the measurement.
@@ -290,11 +290,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public CodableValue Site
         {
-            get { return this.site; }
-            set { this.site = value; }
+            get { return _site; }
+            set { _site = value; }
         }
 
-        private CodableValue site;
+        private CodableValue _site;
 
         /// <summary>
         /// Gets the representation of a body composition instance.
@@ -308,20 +308,20 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             List<string> elements = new List<string>();
 
-            if (this.measurementName != null)
+            if (_measurementName != null)
             {
-                elements.Add(this.measurementName.ToString());
+                elements.Add(_measurementName.ToString());
             }
 
-            string valueString = this.value?.ToString();
+            string valueString = _value?.ToString();
             if (!string.IsNullOrEmpty(valueString))
             {
                 elements.Add(valueString);
             }
 
-            if (this.measurementMethod != null)
+            if (_measurementMethod != null)
             {
-                elements.Add(this.measurementMethod.ToString());
+                elements.Add(_measurementMethod.ToString());
             }
 
             string separator =

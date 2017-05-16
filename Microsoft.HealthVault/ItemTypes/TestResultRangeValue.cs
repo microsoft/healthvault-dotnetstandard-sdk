@@ -41,8 +41,8 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             Validator.ThrowIfNavigatorNull(navigator);
 
-            this.minimum = XPathHelper.GetOptNavValueAsDouble(navigator, "minimum-range");
-            this.maximum = XPathHelper.GetOptNavValueAsDouble(navigator, "maximum-range");
+            _minimum = XPathHelper.GetOptNavValueAsDouble(navigator, "minimum-range");
+            _maximum = XPathHelper.GetOptNavValueAsDouble(navigator, "maximum-range");
         }
 
         /// <summary>
@@ -76,13 +76,13 @@ namespace Microsoft.HealthVault.ItemTypes
             XmlWriterHelper.WriteOptDouble(
                 writer,
                 "minimum-range",
-                this.minimum);
+                _minimum);
 
             // maximum
             XmlWriterHelper.WriteOptDouble(
                 writer,
                 "maximum-range",
-                this.maximum);
+                _maximum);
 
             writer.WriteEndElement();
         }
@@ -96,11 +96,11 @@ namespace Microsoft.HealthVault.ItemTypes
         /// </value>
         public double? Minimum
         {
-            get { return this.minimum; }
-            set { this.minimum = value; }
+            get { return _minimum; }
+            set { _minimum = value; }
         }
 
-        private double? minimum;
+        private double? _minimum;
 
         /// <summary>
         /// Gets or sets the maximum value of the range.
@@ -111,11 +111,11 @@ namespace Microsoft.HealthVault.ItemTypes
         /// </value>
         public double? Maximum
         {
-            get { return this.maximum; }
-            set { this.maximum = value; }
+            get { return _maximum; }
+            set { _maximum = value; }
         }
 
-        private double? maximum;
+        private double? _maximum;
 
         /// <summary>
         /// Gets a string representation of the test result range value.
@@ -127,8 +127,8 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public override string ToString()
         {
-            string minimumString = this.minimum != null ? this.minimum.ToString() : string.Empty;
-            string maximumString = this.maximum != null ? this.maximum.ToString() : string.Empty;
+            string minimumString = _minimum != null ? _minimum.ToString() : string.Empty;
+            string maximumString = _maximum != null ? _maximum.ToString() : string.Empty;
 
             return string.Format(
                 Resources.TestResultRangeValueToStringFormat,

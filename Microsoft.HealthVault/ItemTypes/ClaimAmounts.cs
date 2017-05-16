@@ -80,16 +80,16 @@ namespace Microsoft.HealthVault.ItemTypes
             decimal benefitsPaid,
             decimal patientResponsibility)
         {
-            this.ChargedAmount = chargedAmount;
-            this.NegotiatedAmount = negotiatedAmount;
-            this.CoPayment = coPayment;
-            this.Deductible = deductible;
-            this.AmountNotCovered = amountNotCovered;
-            this.EligibleForBenefits = eligibleForBenefits;
-            this.Coinsurance = coinsurance;
-            this.MiscellaneousAdjustments = miscellaneousAdjustments;
-            this.BenefitsPaid = benefitsPaid;
-            this.PatientResponsibility = patientResponsibility;
+            ChargedAmount = chargedAmount;
+            NegotiatedAmount = negotiatedAmount;
+            CoPayment = coPayment;
+            Deductible = deductible;
+            AmountNotCovered = amountNotCovered;
+            EligibleForBenefits = eligibleForBenefits;
+            Coinsurance = coinsurance;
+            MiscellaneousAdjustments = miscellaneousAdjustments;
+            BenefitsPaid = benefitsPaid;
+            PatientResponsibility = patientResponsibility;
         }
 
         /// <summary>
@@ -108,19 +108,19 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             Validator.ThrowIfNavigatorNull(navigator);
 
-            this.chargedAmount = XPathHelper.GetDecimal(navigator, "charged-amount");
-            this.negotiatedAmount = XPathHelper.GetDecimal(navigator, "negotiated-amount");
-            this.coPayment = XPathHelper.GetDecimal(navigator, "copay");
-            this.deductible = XPathHelper.GetDecimal(navigator, "deductible");
-            this.amountNotCovered = XPathHelper.GetDecimal(navigator, "amount-not-covered");
-            this.eligibleForBenefits = XPathHelper.GetDecimal(navigator, "eligible-for-benefits");
+            _chargedAmount = XPathHelper.GetDecimal(navigator, "charged-amount");
+            _negotiatedAmount = XPathHelper.GetDecimal(navigator, "negotiated-amount");
+            _coPayment = XPathHelper.GetDecimal(navigator, "copay");
+            _deductible = XPathHelper.GetDecimal(navigator, "deductible");
+            _amountNotCovered = XPathHelper.GetDecimal(navigator, "amount-not-covered");
+            _eligibleForBenefits = XPathHelper.GetDecimal(navigator, "eligible-for-benefits");
 
-            this.percentageCovered = XPathHelper.GetOptNavValueAsDouble(navigator, "percentage-covered");
+            _percentageCovered = XPathHelper.GetOptNavValueAsDouble(navigator, "percentage-covered");
 
-            this.coinsurance = XPathHelper.GetDecimal(navigator, "coinsurance");
-            this.miscellaneousAdjustments = XPathHelper.GetDecimal(navigator, "miscellaneous-adjustments");
-            this.benefitsPaid = XPathHelper.GetDecimal(navigator, "benefits-paid");
-            this.patientResponsibility = XPathHelper.GetDecimal(navigator, "patient-responsibility");
+            _coinsurance = XPathHelper.GetDecimal(navigator, "coinsurance");
+            _miscellaneousAdjustments = XPathHelper.GetDecimal(navigator, "miscellaneous-adjustments");
+            _benefitsPaid = XPathHelper.GetDecimal(navigator, "benefits-paid");
+            _patientResponsibility = XPathHelper.GetDecimal(navigator, "patient-responsibility");
         }
 
         /// <summary>
@@ -152,19 +152,19 @@ namespace Microsoft.HealthVault.ItemTypes
 
             writer.WriteStartElement(nodeName);
 
-            XmlWriterHelper.WriteDecimal(writer, "charged-amount", this.chargedAmount);
-            XmlWriterHelper.WriteDecimal(writer, "negotiated-amount", this.negotiatedAmount);
-            XmlWriterHelper.WriteDecimal(writer, "copay", this.coPayment);
-            XmlWriterHelper.WriteDecimal(writer, "deductible", this.deductible);
-            XmlWriterHelper.WriteDecimal(writer, "amount-not-covered", this.amountNotCovered);
-            XmlWriterHelper.WriteDecimal(writer, "eligible-for-benefits", this.eligibleForBenefits);
+            XmlWriterHelper.WriteDecimal(writer, "charged-amount", _chargedAmount);
+            XmlWriterHelper.WriteDecimal(writer, "negotiated-amount", _negotiatedAmount);
+            XmlWriterHelper.WriteDecimal(writer, "copay", _coPayment);
+            XmlWriterHelper.WriteDecimal(writer, "deductible", _deductible);
+            XmlWriterHelper.WriteDecimal(writer, "amount-not-covered", _amountNotCovered);
+            XmlWriterHelper.WriteDecimal(writer, "eligible-for-benefits", _eligibleForBenefits);
 
-            XmlWriterHelper.WriteOptDouble(writer, "percentage-covered", this.percentageCovered);
+            XmlWriterHelper.WriteOptDouble(writer, "percentage-covered", _percentageCovered);
 
-            XmlWriterHelper.WriteDecimal(writer, "coinsurance", this.coinsurance);
-            XmlWriterHelper.WriteDecimal(writer, "miscellaneous-adjustments", this.miscellaneousAdjustments);
-            XmlWriterHelper.WriteDecimal(writer, "benefits-paid", this.benefitsPaid);
-            XmlWriterHelper.WriteDecimal(writer, "patient-responsibility", this.patientResponsibility);
+            XmlWriterHelper.WriteDecimal(writer, "coinsurance", _coinsurance);
+            XmlWriterHelper.WriteDecimal(writer, "miscellaneous-adjustments", _miscellaneousAdjustments);
+            XmlWriterHelper.WriteDecimal(writer, "benefits-paid", _benefitsPaid);
+            XmlWriterHelper.WriteDecimal(writer, "patient-responsibility", _patientResponsibility);
 
             writer.WriteEndElement();
         }
@@ -175,11 +175,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public decimal ChargedAmount
         {
-            get { return this.chargedAmount; }
-            set { this.chargedAmount = value; }
+            get { return _chargedAmount; }
+            set { _chargedAmount = value; }
         }
 
-        private decimal chargedAmount;
+        private decimal _chargedAmount;
 
         /// <summary>
         /// Gets or sets the amount negotiated between the provider and the payer.
@@ -187,11 +187,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public decimal NegotiatedAmount
         {
-            get { return this.negotiatedAmount; }
-            set { this.negotiatedAmount = value; }
+            get { return _negotiatedAmount; }
+            set { _negotiatedAmount = value; }
         }
 
-        private decimal negotiatedAmount;
+        private decimal _negotiatedAmount;
 
         /// <summary>
         /// Gets or sets the copayment amount.
@@ -199,11 +199,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public decimal CoPayment
         {
-            get { return this.coPayment; }
-            set { this.coPayment = value; }
+            get { return _coPayment; }
+            set { _coPayment = value; }
         }
 
-        private decimal coPayment;
+        private decimal _coPayment;
 
         /// <summary>
         /// Gets or sets the deductible amount.
@@ -211,11 +211,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public decimal Deductible
         {
-            get { return this.deductible; }
-            set { this.deductible = value; }
+            get { return _deductible; }
+            set { _deductible = value; }
         }
 
-        private decimal deductible;
+        private decimal _deductible;
 
         /// <summary>
         /// Gets or sets the amount for services not covered by the plan.
@@ -223,11 +223,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public decimal AmountNotCovered
         {
-            get { return this.amountNotCovered; }
-            set { this.amountNotCovered = value; }
+            get { return _amountNotCovered; }
+            set { _amountNotCovered = value; }
         }
 
-        private decimal amountNotCovered;
+        private decimal _amountNotCovered;
 
         /// <summary>
         /// Gets or sets the amount that is eligible for benefits.
@@ -235,11 +235,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public decimal EligibleForBenefits
         {
-            get { return this.eligibleForBenefits; }
-            set { this.eligibleForBenefits = value; }
+            get { return _eligibleForBenefits; }
+            set { _eligibleForBenefits = value; }
         }
 
-        private decimal eligibleForBenefits;
+        private decimal _eligibleForBenefits;
 
         /// <summary>
         /// Gets or sets the percentage of the eligible amount that is covered by the payer.
@@ -251,11 +251,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public double? PercentageCovered
         {
-            get { return this.percentageCovered; }
-            set { this.percentageCovered = value; }
+            get { return _percentageCovered; }
+            set { _percentageCovered = value; }
         }
 
-        private double? percentageCovered;
+        private double? _percentageCovered;
 
         /// <summary>
         /// Gets or sets the amount paid by the person.
@@ -263,11 +263,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public decimal Coinsurance
         {
-            get { return this.coinsurance; }
-            set { this.coinsurance = value; }
+            get { return _coinsurance; }
+            set { _coinsurance = value; }
         }
 
-        private decimal coinsurance;
+        private decimal _coinsurance;
 
         /// <summary>
         /// Gets or sets the adjustments that may affect the amount paid on the claim.
@@ -275,11 +275,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public decimal MiscellaneousAdjustments
         {
-            get { return this.miscellaneousAdjustments; }
-            set { this.miscellaneousAdjustments = value; }
+            get { return _miscellaneousAdjustments; }
+            set { _miscellaneousAdjustments = value; }
         }
 
-        private decimal miscellaneousAdjustments;
+        private decimal _miscellaneousAdjustments;
 
         /// <summary>
         /// Gets or sets the amount paid by the payer.
@@ -287,11 +287,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public decimal BenefitsPaid
         {
-            get { return this.benefitsPaid; }
-            set { this.benefitsPaid = value; }
+            get { return _benefitsPaid; }
+            set { _benefitsPaid = value; }
         }
 
-        private decimal benefitsPaid;
+        private decimal _benefitsPaid;
 
         /// <summary>
         /// Gets or sets the total amount paid by the patient.
@@ -299,11 +299,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public decimal PatientResponsibility
         {
-            get { return this.patientResponsibility; }
-            set { this.patientResponsibility = value; }
+            get { return _patientResponsibility; }
+            set { _patientResponsibility = value; }
         }
 
-        private decimal patientResponsibility;
+        private decimal _patientResponsibility;
 
         /// <summary>
         /// Gets a string representation of the ClaimAmounts.
@@ -319,17 +319,17 @@ namespace Microsoft.HealthVault.ItemTypes
                 string.Format(
                     CultureInfo.CurrentCulture,
                     Resources.ClaimAmountsToStringFormat,
-                this.chargedAmount,
-                this.negotiatedAmount,
-                this.coPayment,
-                this.deductible,
-                this.amountNotCovered,
-                this.eligibleForBenefits,
-                this.percentageCovered != null ? this.percentageCovered.ToString() : string.Empty,
-                this.coinsurance,
-                this.miscellaneousAdjustments,
-                this.benefitsPaid,
-                this.patientResponsibility);
+                _chargedAmount,
+                _negotiatedAmount,
+                _coPayment,
+                _deductible,
+                _amountNotCovered,
+                _eligibleForBenefits,
+                _percentageCovered != null ? _percentageCovered.ToString() : string.Empty,
+                _coinsurance,
+                _miscellaneousAdjustments,
+                _benefitsPaid,
+                _patientResponsibility);
 
             return value;
         }

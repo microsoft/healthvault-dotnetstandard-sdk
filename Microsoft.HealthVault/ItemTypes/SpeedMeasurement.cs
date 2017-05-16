@@ -7,7 +7,6 @@ using System;
 using System.Globalization;
 using System.Xml;
 using System.Xml.XPath;
-using Microsoft.HealthVault.Helpers;
 
 namespace Microsoft.HealthVault.ItemTypes
 {
@@ -102,7 +101,7 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         protected override void ParseValueXml(XPathNavigator navigator)
         {
-            this.Value = navigator.SelectSingleNode("meters-per-second").ValueAsDouble;
+            Value = navigator.SelectSingleNode("meters-per-second").ValueAsDouble;
         }
 
         /// <summary>
@@ -117,7 +116,7 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             writer.WriteElementString(
                 "meters-per-second",
-                XmlConvert.ToString(this.Value));
+                XmlConvert.ToString(Value));
         }
 
         /// <summary>

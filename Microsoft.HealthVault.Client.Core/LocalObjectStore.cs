@@ -1,18 +1,16 @@
 ﻿using System;
 using System.Threading.Tasks;
-using Microsoft.HealthVault.Exceptions;
-using Microsoft.HealthVault.Helpers;
 using Newtonsoft.Json;
 
 namespace Microsoft.HealthVault.Client
 {
     internal class LocalObjectStore : ILocalObjectStore
     {
-        private readonly ISecretStore secretStore;
+        private readonly ISecretStore _secretStore;
 
         public LocalObjectStore(ISecretStore secretStore)
         {
-            this.secretStore = secretStore;
+            _secretStore = secretStore;
         }
 
         public async Task<T> ReadAsync<T>(string key)
@@ -22,7 +20,7 @@ namespace Microsoft.HealthVault.Client
                 throw new ArgumentException(Resources.ObjectStoreParametersEmpty);
             }
 
-            var json = await this.secretStore.ReadAsync(key).ConfigureAwait(false);
+            var json = await _secretStore.ReadAsync(key).ConfigureAwait(false);
             if (json == null)
             {
                 return default(T);
@@ -39,12 +37,12 @@ namespace Microsoft.HealthVault.Client
             }
 
             var serializedObj = JsonConvert.SerializeObject(value);
-            await this.secretStore.WriteAsync(key, serializedObj).ConfigureAwait(false);
+            await _secretStore.WriteAsync(key, serializedObj).ConfigureAwait(false);
         }
 
         public async Task DeleteAsync(string key)
         {
-            await this.secretStore.DeleteAsync(key).ConfigureAwait(false);
+            await _secretStore.DeleteAsync(key).ConfigureAwait(false);
         }
     }
 }

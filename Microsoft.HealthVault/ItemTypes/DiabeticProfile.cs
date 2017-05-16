@@ -51,7 +51,7 @@ namespace Microsoft.HealthVault.ItemTypes
         public DiabeticProfile(HealthServiceDateTime when)
             : base(TypeId)
         {
-            this.When = when;
+            When = when;
         }
 
         /// <summary>
@@ -86,15 +86,15 @@ namespace Microsoft.HealthVault.ItemTypes
 
             Validator.ThrowInvalidIfNull(itemNav, Resources.DiabeticProfileUnexpectedNode);
 
-            this.when = new HealthServiceDateTime();
-            this.when.ParseXml(itemNav.SelectSingleNode("when"));
+            _when = new HealthServiceDateTime();
+            _when.ParseXml(itemNav.SelectSingleNode("when"));
 
             XPathNavigator maxHbA1CNav =
                 itemNav.SelectSingleNode("max-HbA1C");
 
             if (maxHbA1CNav != null)
             {
-                this.maxHbA1C = maxHbA1CNav.ValueAsDouble;
+                _maxHbA1C = maxHbA1CNav.ValueAsDouble;
             }
 
             XPathNodeIterator zoneGroupIterator =
@@ -104,7 +104,7 @@ namespace Microsoft.HealthVault.ItemTypes
             {
                 TargetGlucoseZoneGroup zoneGroup = new TargetGlucoseZoneGroup();
                 zoneGroup.ParseXml(groupNav);
-                this.zoneGroups.Add(zoneGroup);
+                _zoneGroups.Add(zoneGroup);
             }
         }
 
@@ -128,17 +128,17 @@ namespace Microsoft.HealthVault.ItemTypes
             writer.WriteStartElement("diabetic-profile");
 
             // <when>
-            this.when.WriteXml("when", writer);
+            _when.WriteXml("when", writer);
 
             // <max-HbA1C>
-            if (this.maxHbA1C != null)
+            if (_maxHbA1C != null)
             {
                 writer.WriteElementString(
                     "max-HbA1C",
-                    this.maxHbA1C.Value.ToString(CultureInfo.InvariantCulture));
+                    _maxHbA1C.Value.ToString(CultureInfo.InvariantCulture));
             }
 
-            foreach (TargetGlucoseZoneGroup group in this.zoneGroups)
+            foreach (TargetGlucoseZoneGroup group in _zoneGroups)
             {
                 group.WriteXml("target-glucose-zone-group", writer);
             }
@@ -162,16 +162,16 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public HealthServiceDateTime When
         {
-            get { return this.when; }
+            get { return _when; }
 
             set
             {
-                Validator.ThrowIfArgumentNull(value, nameof(this.When), Resources.WhenNullValue);
-                this.when = value;
+                Validator.ThrowIfArgumentNull(value, nameof(When), Resources.WhenNullValue);
+                _when = value;
             }
         }
 
-        private HealthServiceDateTime when = new HealthServiceDateTime();
+        private HealthServiceDateTime _when = new HealthServiceDateTime();
 
         /// <summary>
         /// Gets or sets the person's maximum HbA1C.
@@ -192,20 +192,20 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public double? MaximumHbA1C
         {
-            get { return this.maxHbA1C; }
+            get { return _maxHbA1C; }
 
             set
             {
                 if (value != null && (value < 0.0 || value > 1.0))
                 {
-                    throw new ArgumentOutOfRangeException(nameof(this.MaximumHbA1C), Resources.DiabeticProfileMaxHbA1CRange);
+                    throw new ArgumentOutOfRangeException(nameof(MaximumHbA1C), Resources.DiabeticProfileMaxHbA1CRange);
                 }
 
-                this.maxHbA1C = value;
+                _maxHbA1C = value;
             }
         }
 
-        private double? maxHbA1C;
+        private double? _maxHbA1C;
 
         /// <summary>
         /// Gets the target glucose zone groups.
@@ -222,9 +222,9 @@ namespace Microsoft.HealthVault.ItemTypes
         /// returned collection.
         /// </remarks>
         ///
-        public Collection<TargetGlucoseZoneGroup> TargetGlucoseZoneGroups => this.zoneGroups;
+        public Collection<TargetGlucoseZoneGroup> TargetGlucoseZoneGroups => _zoneGroups;
 
-        private readonly Collection<TargetGlucoseZoneGroup> zoneGroups =
+        private readonly Collection<TargetGlucoseZoneGroup> _zoneGroups =
             new Collection<TargetGlucoseZoneGroup>();
 
         /// <summary>
@@ -238,12 +238,12 @@ namespace Microsoft.HealthVault.ItemTypes
         public override string ToString()
         {
             string result = string.Empty;
-            if (this.MaximumHbA1C != null)
+            if (MaximumHbA1C != null)
             {
                 result =
                     string.Format(
                         Resources.DiabeticProfileToStringFormatPercent,
-                        (this.MaximumHbA1C.Value * 100.0).ToString(CultureInfo.CurrentCulture));
+                        (MaximumHbA1C.Value * 100.0).ToString(CultureInfo.CurrentCulture));
             }
 
             return result;

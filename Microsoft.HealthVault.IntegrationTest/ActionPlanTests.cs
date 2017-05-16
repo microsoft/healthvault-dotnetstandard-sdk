@@ -1,9 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using Microsoft.HealthVault.Client;
-using Microsoft.HealthVault.Clients;
 using Microsoft.HealthVault.Person;
 using Microsoft.HealthVault.Record;
 using Microsoft.HealthVault.RestApi;
@@ -106,7 +104,6 @@ namespace Microsoft.HealthVault.IntegrationTest
                     },
                     TargetEvents = new Collection<ActionPlanTaskTargetEvent>
                     {
-
                         new ActionPlanTaskTargetEvent
                         {
                             ElementXPath = "thing/data-xml/weight",

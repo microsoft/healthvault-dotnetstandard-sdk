@@ -85,9 +85,9 @@ namespace Microsoft.HealthVault
                 else
                 {
                     // Remove any existing value.
-                    if (this.ContainsKey(language))
+                    if (ContainsKey(language))
                     {
-                        this.Remove(language);
+                        Remove(language);
                     }
                 }
             }
@@ -106,12 +106,12 @@ namespace Microsoft.HealthVault
         {
             get
             {
-                if (this.Count == 1)
+                if (Count == 1)
                 {
-                    return this.Values.First();
+                    return Values.First();
                 }
 
-                if (this.ContainsKey(DefaultLanguage))
+                if (ContainsKey(DefaultLanguage))
                 {
                     return this[DefaultLanguage];
                 }
@@ -132,7 +132,7 @@ namespace Microsoft.HealthVault
         {
             get
             {
-                if (this.ContainsKey(DefaultLanguage))
+                if (ContainsKey(DefaultLanguage))
                 {
                     return this[DefaultLanguage];
                 }
@@ -144,9 +144,9 @@ namespace Microsoft.HealthVault
             {
                 if (value == null)
                 {
-                    if (this.ContainsKey(DefaultLanguage))
+                    if (ContainsKey(DefaultLanguage))
                     {
-                        this.Remove(DefaultLanguage);
+                        Remove(DefaultLanguage);
                     }
                 }
                 else
@@ -192,7 +192,7 @@ namespace Microsoft.HealthVault
             string elementName)
         {
             ConvertToType stringConvert = ConvertToString;
-            this.PopulateFromXml(
+            PopulateFromXml(
                 containerNav,
                 elementName,
                 stringConvert);
@@ -205,7 +205,7 @@ namespace Microsoft.HealthVault
             ConvertFromType stringConvert =
                 ConvertFromString;
 
-            this.AppendLocalizedElements(
+            AppendLocalizedElements(
                 writer,
                 elementName,
                 stringConvert);
@@ -242,7 +242,7 @@ namespace Microsoft.HealthVault
         {
             ConvertToType stringConvert =
                 ConvertToUri;
-            this.PopulateFromXml(
+            PopulateFromXml(
                 containerNav,
                 elementName,
                 stringConvert);
@@ -255,7 +255,7 @@ namespace Microsoft.HealthVault
             ConvertFromType stringConvert =
                 ConvertFromUri;
 
-            this.AppendLocalizedElements(
+            AppendLocalizedElements(
                 writer,
                 elementName,
                 stringConvert);
@@ -292,7 +292,7 @@ namespace Microsoft.HealthVault
         {
             ConvertToType byteArrayConvert =
                 ConvertToByteArray;
-            this.PopulateFromXml(
+            PopulateFromXml(
                 containerNav,
                 elementName,
                 byteArrayConvert);
@@ -305,7 +305,7 @@ namespace Microsoft.HealthVault
             ConvertFromType byteArrayConvert =
                 ConvertFromByteArray;
 
-            this.AppendLocalizedElements(
+            AppendLocalizedElements(
                 writer,
                 elementName,
                 byteArrayConvert);

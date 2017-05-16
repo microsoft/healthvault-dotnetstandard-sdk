@@ -10,7 +10,6 @@ using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.IO.Compression;
 using System.Xml;
-using Microsoft.HealthVault.Helpers;
 using Microsoft.HealthVault.Thing;
 
 namespace Microsoft.HealthVault.ItemTypes
@@ -68,7 +67,7 @@ namespace Microsoft.HealthVault.ItemTypes
         [SuppressMessage("Microsoft.Usage", "CA2202:Do not dispose objects multiple times", Justification = "MemoryStream and GZipStream can be disposed multiple times. Usings block makes code more readable")]
         private void ProcessCompressedAndEncodedData()
         {
-            if (this.ContentEncoding == null)
+            if (ContentEncoding == null)
             {
                 return;
             }
@@ -78,7 +77,7 @@ namespace Microsoft.HealthVault.ItemTypes
 
             try
             {
-                buffer = Convert.FromBase64String(this.Data);
+                buffer = Convert.FromBase64String(Data);
             }
             catch (FormatException)
             {
@@ -111,9 +110,9 @@ namespace Microsoft.HealthVault.ItemTypes
                     using (StreamReader reader = new StreamReader(decompress))
                     {
                         string result = reader.ReadToEnd();
-                        this.Data = result;
-                        this.ContentEncoding = null;
-                        this.ContentType = "text/csv";
+                        Data = result;
+                        ContentEncoding = null;
+                        ContentType = "text/csv";
                     }
                 }
             }
@@ -124,12 +123,12 @@ namespace Microsoft.HealthVault.ItemTypes
         // instance was created to an instance of this type.
         internal ExerciseSamplesData(OtherItemData otherItemData)
         {
-            this.Data = otherItemData.Data;
-            this.ContentEncoding = otherItemData.ContentEncoding;
-            this.ContentType = otherItemData.ContentType;
+            Data = otherItemData.Data;
+            ContentEncoding = otherItemData.ContentEncoding;
+            ContentType = otherItemData.ContentType;
         }
 
-        private double samplingInterval;
+        private double _samplingInterval;
 
         /// <summary>
         /// Gets or sets the initial sampling interval for the set of samples.
@@ -142,20 +141,20 @@ namespace Microsoft.HealthVault.ItemTypes
         /// </exception>
         public double SamplingInterval
         {
-            get { return this.samplingInterval; }
+            get { return _samplingInterval; }
 
             set
             {
                 if (value <= 0)
                 {
-                    throw new ArgumentOutOfRangeException(nameof(this.SamplingInterval), Resources.SamplingIntervalMustBePositive);
+                    throw new ArgumentOutOfRangeException(nameof(SamplingInterval), Resources.SamplingIntervalMustBePositive);
                 }
 
-                this.samplingInterval = value;
+                _samplingInterval = value;
             }
         }
 
-        private Collection<ExerciseSampleOneValue> singleValuedSamples;
+        private Collection<ExerciseSampleOneValue> _singleValuedSamples;
 
         /// <summary>
         /// Gets the sample data as a collection of single values.
@@ -168,20 +167,20 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             get
             {
-                if (this.singleValuedSamples == null)
+                if (_singleValuedSamples == null)
                 {
                     // If there is no OtherData here, we're creating a new set of samples...
-                    if (this.Data == null)
+                    if (Data == null)
                     {
-                        this.singleValuedSamples = new Collection<ExerciseSampleOneValue>();
+                        _singleValuedSamples = new Collection<ExerciseSampleOneValue>();
                     }
                     else
                     {
-                        this.CreateSingleValuedSamples();
+                        CreateSingleValuedSamples();
                     }
                 }
 
-                return this.singleValuedSamples;
+                return _singleValuedSamples;
             }
         }
 
@@ -190,13 +189,13 @@ namespace Microsoft.HealthVault.ItemTypes
         // reset it.
         private void CreateSingleValuedSamples()
         {
-            this.ProcessCompressedAndEncodedData();
+            ProcessCompressedAndEncodedData();
 
-            this.singleValuedSamples = new Collection<ExerciseSampleOneValue>();
+            _singleValuedSamples = new Collection<ExerciseSampleOneValue>();
 
-            Collection<OtherItemDataCsvItem> rawSamples = this.GetAsDouble();
+            Collection<OtherItemDataCsvItem> rawSamples = GetAsDouble();
 
-            double currentSampleInterval = this.samplingInterval;
+            double currentSampleInterval = _samplingInterval;
             double offsetInSeconds = -currentSampleInterval;
 
             for (int sampleIndex = 0; sampleIndex < rawSamples.Count; sampleIndex++)
@@ -210,7 +209,7 @@ namespace Microsoft.HealthVault.ItemTypes
                     offsetInSeconds += currentSampleInterval;
 
                     ExerciseSampleOneValue sample = new ExerciseSampleOneValue(offsetInSeconds, itemDouble.Value);
-                    this.singleValuedSamples.Add(sample);
+                    _singleValuedSamples.Add(sample);
                 }
 
                 OtherItemDataCsvEscape itemEscape = item as OtherItemDataCsvEscape;
@@ -224,7 +223,7 @@ namespace Microsoft.HealthVault.ItemTypes
             }
         }
 
-        private Collection<ExerciseSampleTwoValue> twoValuedSamples;
+        private Collection<ExerciseSampleTwoValue> _twoValuedSamples;
 
         /// <summary>
         /// Gets the sample data as a collection of two-valued samples.
@@ -237,19 +236,19 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             get
             {
-                if (this.twoValuedSamples == null)
+                if (_twoValuedSamples == null)
                 {
-                    if (this.Data == null)
+                    if (Data == null)
                     {
-                        this.twoValuedSamples = new Collection<ExerciseSampleTwoValue>();
+                        _twoValuedSamples = new Collection<ExerciseSampleTwoValue>();
                     }
                     else
                     {
-                        this.CreateTwoValuedSamples();
+                        CreateTwoValuedSamples();
                     }
                 }
 
-                return this.twoValuedSamples;
+                return _twoValuedSamples;
             }
         }
 
@@ -258,13 +257,13 @@ namespace Microsoft.HealthVault.ItemTypes
         // reset it. We also go from a single-valued list to the two-valued list.
         private void CreateTwoValuedSamples()
         {
-            this.ProcessCompressedAndEncodedData();
+            ProcessCompressedAndEncodedData();
 
-            this.twoValuedSamples = new Collection<ExerciseSampleTwoValue>();
+            _twoValuedSamples = new Collection<ExerciseSampleTwoValue>();
 
-            Collection<OtherItemDataCsvItem> rawSamples = this.GetAsDouble();
+            Collection<OtherItemDataCsvItem> rawSamples = GetAsDouble();
 
-            double currentSampleInterval = this.samplingInterval;
+            double currentSampleInterval = _samplingInterval;
             double offsetInSeconds = -currentSampleInterval;
 
             for (int sampleIndex = 0; sampleIndex < rawSamples.Count; sampleIndex++)
@@ -280,7 +279,7 @@ namespace Microsoft.HealthVault.ItemTypes
 
                     ExerciseSampleTwoValue sample =
                         new ExerciseSampleTwoValue(offsetInSeconds, itemDouble.Value, itemSecond.Value);
-                    this.twoValuedSamples.Add(sample);
+                    _twoValuedSamples.Add(sample);
 
                     sampleIndex++;  // skip an extra item
                 }
@@ -310,26 +309,26 @@ namespace Microsoft.HealthVault.ItemTypes
         /// </exception>
         public override void WriteXml(XmlWriter writer)
         {
-            if (this.singleValuedSamples != null && this.twoValuedSamples != null)
+            if (_singleValuedSamples != null && _twoValuedSamples != null)
             {
                 throw new InvalidOperationException(Resources.OneAndTwoValuedSamples);
             }
 
-            if (this.singleValuedSamples == null && this.twoValuedSamples == null)
+            if (_singleValuedSamples == null && _twoValuedSamples == null)
             {
                 throw new InvalidOperationException(Resources.OneAndTwoValuedSamples);
             }
 
             // Convert the samples to the text format and put them in the other data section...
 
-            if (this.singleValuedSamples != null)
+            if (_singleValuedSamples != null)
             {
-                this.StoreSingle();
+                StoreSingle();
             }
 
-            if (this.twoValuedSamples != null)
+            if (_twoValuedSamples != null)
             {
-                this.StoreTwo();
+                StoreTwo();
             }
 
             // The base class takes the other data string and puts it in the proper xml format.
@@ -341,12 +340,12 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             List<OtherItemDataCsvItem> rawSamples = new List<OtherItemDataCsvItem>();
 
-            double currentSamplingInterval = this.SamplingInterval;
+            double currentSamplingInterval = SamplingInterval;
 
-            double lastOffset = -this.SamplingInterval;
-            for (int sampleNumber = 0; sampleNumber < this.singleValuedSamples.Count; sampleNumber++)
+            double lastOffset = -SamplingInterval;
+            for (int sampleNumber = 0; sampleNumber < _singleValuedSamples.Count; sampleNumber++)
             {
-                ExerciseSampleOneValue sample = this.singleValuedSamples[sampleNumber];
+                ExerciseSampleOneValue sample = _singleValuedSamples[sampleNumber];
 
                 // Is this sample coming when it's expected?
                 // if not, we need to put in an escape...
@@ -362,7 +361,7 @@ namespace Microsoft.HealthVault.ItemTypes
                 lastOffset = sample.OffsetInSeconds;
             }
 
-            this.SetOtherData(rawSamples);
+            SetOtherData(rawSamples);
         }
 
         // Take the collection of samples the user gave us, and convert them into the underlying format.
@@ -370,12 +369,12 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             List<OtherItemDataCsvItem> rawSamples = new List<OtherItemDataCsvItem>();
 
-            double currentSamplingInterval = this.SamplingInterval;
+            double currentSamplingInterval = SamplingInterval;
 
-            double lastOffset = -this.SamplingInterval;
-            for (int sampleNumber = 0; sampleNumber < this.twoValuedSamples.Count; sampleNumber++)
+            double lastOffset = -SamplingInterval;
+            for (int sampleNumber = 0; sampleNumber < _twoValuedSamples.Count; sampleNumber++)
             {
-                ExerciseSampleTwoValue sample = this.twoValuedSamples[sampleNumber];
+                ExerciseSampleTwoValue sample = _twoValuedSamples[sampleNumber];
 
                 // Is this sample coming when it's expected?
                 // if not, we need to put in an escape...
@@ -392,7 +391,7 @@ namespace Microsoft.HealthVault.ItemTypes
                 lastOffset = sample.OffsetInSeconds;
             }
 
-            this.SetOtherData(rawSamples);
+            SetOtherData(rawSamples);
         }
     }
 }

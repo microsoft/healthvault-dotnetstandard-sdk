@@ -35,7 +35,7 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public Language(CodableValue spokenLanguage)
         {
-            this.SpokenLanguage = spokenLanguage;
+            SpokenLanguage = spokenLanguage;
         }
 
         /// <summary>
@@ -54,8 +54,8 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public Language(CodableValue spokenLanguage, bool isPrimary)
         {
-            this.SpokenLanguage = spokenLanguage;
-            this.IsPrimary = isPrimary;
+            SpokenLanguage = spokenLanguage;
+            IsPrimary = isPrimary;
         }
 
         /// <summary>
@@ -72,21 +72,21 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public override void ParseXml(XPathNavigator navigator)
         {
-            this.language.Clear();
+            _language.Clear();
 
             Validator.ThrowIfNavigatorNull(navigator);
 
             XPathNavigator languageNav = navigator.SelectSingleNode("language");
             if (languageNav != null)
             {
-                this.language.ParseXml(languageNav);
+                _language.ParseXml(languageNav);
             }
 
             XPathNavigator isPrimaryNav =
                 navigator.SelectSingleNode("is-primary");
             if (isPrimaryNav != null)
             {
-                this.isPrimary = isPrimaryNav.ValueAsBoolean;
+                _isPrimary = isPrimaryNav.ValueAsBoolean;
             }
         }
 
@@ -116,15 +116,15 @@ namespace Microsoft.HealthVault.ItemTypes
             Validator.ThrowIfWriterNull(writer);
 
             // null indicates uninitialized
-            if (this.language.Text != null)
+            if (_language.Text != null)
             {
                 writer.WriteStartElement(nodeName);
 
-                this.language.WriteXml("language", writer);
+                _language.WriteXml("language", writer);
 
                 writer.WriteElementString(
                     "is-primary",
-                    SDKHelper.XmlFromBool(this.isPrimary));
+                    SDKHelper.XmlFromBool(_isPrimary));
 
                 writer.WriteEndElement();
             }
@@ -140,11 +140,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public CodableValue SpokenLanguage
         {
-            get { return this.language; }
-            set { this.language = value; }
+            get { return _language; }
+            set { _language = value; }
         }
 
-        private CodableValue language = new CodableValue();
+        private CodableValue _language = new CodableValue();
 
         /// <summary>
         /// Gets or sets a value indicating whether the language is the
@@ -158,10 +158,10 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public bool IsPrimary
         {
-            get { return this.isPrimary; }
-            set { this.isPrimary = value; }
+            get { return _isPrimary; }
+            set { _isPrimary = value; }
         }
 
-        private bool isPrimary = true;
+        private bool _isPrimary = true;
     }
 }

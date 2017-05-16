@@ -85,12 +85,12 @@ namespace Microsoft.HealthVault.ItemTypes
             WakeState wakeState)
             : base(TypeId)
         {
-            this.When = when;
-            this.Bedtime = bedtime;
-            this.WakeTime = wakeTime;
-            this.SleepMinutes = sleepMinutes;
-            this.SettlingMinutes = settlingMinutes;
-            this.WakeState = wakeState;
+            When = when;
+            Bedtime = bedtime;
+            WakeTime = wakeTime;
+            SleepMinutes = sleepMinutes;
+            SettlingMinutes = settlingMinutes;
+            WakeState = wakeState;
         }
 
         /// <summary>
@@ -120,19 +120,19 @@ namespace Microsoft.HealthVault.ItemTypes
 
             Validator.ThrowInvalidIfNull(sleepNav, Resources.SleepJournalAMUnexpectedNode);
 
-            this.when = new HealthServiceDateTime();
-            this.when.ParseXml(sleepNav.SelectSingleNode("when"));
+            _when = new HealthServiceDateTime();
+            _when.ParseXml(sleepNav.SelectSingleNode("when"));
 
-            this.bedtime = new ApproximateTime();
-            this.bedtime.ParseXml(sleepNav.SelectSingleNode("bed-time"));
+            _bedtime = new ApproximateTime();
+            _bedtime.ParseXml(sleepNav.SelectSingleNode("bed-time"));
 
-            this.wakeTime = new ApproximateTime();
-            this.wakeTime.ParseXml(sleepNav.SelectSingleNode("wake-time"));
+            _wakeTime = new ApproximateTime();
+            _wakeTime.ParseXml(sleepNav.SelectSingleNode("wake-time"));
 
-            this.sleepMinutes =
+            _sleepMinutes =
                 sleepNav.SelectSingleNode("sleep-minutes").ValueAsInt;
 
-            this.settlingMinutes =
+            _settlingMinutes =
                 sleepNav.SelectSingleNode("settling-minutes").ValueAsInt;
 
             XPathNodeIterator awakeningsIterator =
@@ -142,18 +142,18 @@ namespace Microsoft.HealthVault.ItemTypes
             {
                 Occurrence awakening = new Occurrence();
                 awakening.ParseXml(awakeningNav);
-                this.awakenings.Add(awakening);
+                _awakenings.Add(awakening);
             }
 
             XPathNavigator medNav = sleepNav.SelectSingleNode("medications");
 
             if (medNav != null)
             {
-                this.medications = new CodableValue();
-                this.medications.ParseXml(medNav);
+                _medications = new CodableValue();
+                _medications.ParseXml(medNav);
             }
 
-            this.wakeState =
+            _wakeState =
                 (WakeState)sleepNav.SelectSingleNode("wake-state").ValueAsInt;
         }
 
@@ -180,13 +180,13 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             Validator.ThrowIfWriterNull(writer);
 
-            Validator.ThrowSerializationIfNull(this.when, Resources.SleepJournalAMWhenNotSet);
-            Validator.ThrowSerializationIfNull(this.bedtime, Resources.SleepJournalAMBedTimeNotSet);
-            Validator.ThrowSerializationIfNull(this.wakeTime, Resources.SleepJournalAMWakeTimeNotSet);
-            Validator.ThrowSerializationIfNull(this.sleepMinutes, Resources.SleepJournalAMSleepMinutesNotSet);
-            Validator.ThrowSerializationIfNull(this.settlingMinutes, Resources.SleepJournalAMSettlingMinutesNotSet);
+            Validator.ThrowSerializationIfNull(_when, Resources.SleepJournalAMWhenNotSet);
+            Validator.ThrowSerializationIfNull(_bedtime, Resources.SleepJournalAMBedTimeNotSet);
+            Validator.ThrowSerializationIfNull(_wakeTime, Resources.SleepJournalAMWakeTimeNotSet);
+            Validator.ThrowSerializationIfNull(_sleepMinutes, Resources.SleepJournalAMSleepMinutesNotSet);
+            Validator.ThrowSerializationIfNull(_settlingMinutes, Resources.SleepJournalAMSettlingMinutesNotSet);
 
-            if (this.wakeState == WakeState.Unknown)
+            if (_wakeState == WakeState.Unknown)
             {
                 throw new ThingSerializationException(Resources.SleepJournalAMWakeStateNotSet);
             }
@@ -194,28 +194,28 @@ namespace Microsoft.HealthVault.ItemTypes
             // <sleep-am>
             writer.WriteStartElement("sleep-am");
 
-            this.when.WriteXml("when", writer);
-            this.bedtime.WriteXml("bed-time", writer);
-            this.wakeTime.WriteXml("wake-time", writer);
+            _when.WriteXml("when", writer);
+            _bedtime.WriteXml("bed-time", writer);
+            _wakeTime.WriteXml("wake-time", writer);
 
             writer.WriteElementString(
                 "sleep-minutes",
-                this.sleepMinutes.ToString());
+                _sleepMinutes.ToString());
 
             writer.WriteElementString(
                 "settling-minutes",
-                this.settlingMinutes.ToString());
+                _settlingMinutes.ToString());
 
-            foreach (Occurrence awakening in this.awakenings)
+            foreach (Occurrence awakening in _awakenings)
             {
                 awakening.WriteXml("awakening", writer);
             }
 
-            this.medications?.WriteXml("medications", writer);
+            _medications?.WriteXml("medications", writer);
 
             writer.WriteElementString(
                 "wake-state",
-                ((int)this.wakeState).ToString(CultureInfo.InvariantCulture));
+                ((int)_wakeState).ToString(CultureInfo.InvariantCulture));
 
             // </sleep-am>
             writer.WriteEndElement();
@@ -236,16 +236,16 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public HealthServiceDateTime When
         {
-            get { return this.when; }
+            get { return _when; }
 
             set
             {
-                Validator.ThrowIfArgumentNull(value, nameof(this.When), Resources.SleepJournalAMWhenMandatory);
-                this.when = value;
+                Validator.ThrowIfArgumentNull(value, nameof(When), Resources.SleepJournalAMWhenMandatory);
+                _when = value;
             }
         }
 
-        private HealthServiceDateTime when;
+        private HealthServiceDateTime _when;
 
         /// <summary>
         /// Gets or sets the when the person went to bed.
@@ -261,16 +261,16 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public ApproximateTime Bedtime
         {
-            get { return this.bedtime; }
+            get { return _bedtime; }
 
             set
             {
-                Validator.ThrowIfArgumentNull(value, nameof(this.Bedtime), Resources.SleepJournalAMBedTimeMandatory);
-                this.bedtime = value;
+                Validator.ThrowIfArgumentNull(value, nameof(Bedtime), Resources.SleepJournalAMBedTimeMandatory);
+                _bedtime = value;
             }
         }
 
-        private ApproximateTime bedtime;
+        private ApproximateTime _bedtime;
 
         /// <summary>
         /// Gets or sets the when the person woke up.
@@ -286,16 +286,16 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public ApproximateTime WakeTime
         {
-            get { return this.wakeTime; }
+            get { return _wakeTime; }
 
             set
             {
-                Validator.ThrowIfArgumentNull(value, nameof(this.WakeTime), Resources.SleepJournalAMWakeTimeMandatory);
-                this.wakeTime = value;
+                Validator.ThrowIfArgumentNull(value, nameof(WakeTime), Resources.SleepJournalAMWakeTimeMandatory);
+                _wakeTime = value;
             }
         }
 
-        private ApproximateTime wakeTime;
+        private ApproximateTime _wakeTime;
 
         /// <summary>
         /// Gets or sets the number of minutes slept.
@@ -311,20 +311,20 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public int SleepMinutes
         {
-            get { return this.sleepMinutes ?? 0; }
+            get { return _sleepMinutes ?? 0; }
 
             set
             {
                 if (value <= 0)
                 {
-                    throw new ArgumentOutOfRangeException(nameof(this.SleepMinutes), Resources.SleepJournalAMSleepMinutesNotPositive);
+                    throw new ArgumentOutOfRangeException(nameof(SleepMinutes), Resources.SleepJournalAMSleepMinutesNotPositive);
                 }
 
-                this.sleepMinutes = value;
+                _sleepMinutes = value;
             }
         }
 
-        private int? sleepMinutes;
+        private int? _sleepMinutes;
 
         /// <summary>
         /// Gets or sets the number of minutes spent settling into sleep.
@@ -340,20 +340,20 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public int SettlingMinutes
         {
-            get { return this.settlingMinutes ?? 0; }
+            get { return _settlingMinutes ?? 0; }
 
             set
             {
                 if (value < 0)
                 {
-                    throw new ArgumentOutOfRangeException(nameof(this.SettlingMinutes), Resources.SleepJournalAMSettlingMinutesMandatory);
+                    throw new ArgumentOutOfRangeException(nameof(SettlingMinutes), Resources.SleepJournalAMSettlingMinutesMandatory);
                 }
 
-                this.settlingMinutes = value;
+                _settlingMinutes = value;
             }
         }
 
-        private int? settlingMinutes;
+        private int? _settlingMinutes;
 
         /// <summary>
         /// Gets the occurrences of awakenings that occurred during
@@ -369,9 +369,9 @@ namespace Microsoft.HealthVault.ItemTypes
         /// collection.
         /// </remarks>
         ///
-        public Collection<Occurrence> Awakenings => this.awakenings;
+        public Collection<Occurrence> Awakenings => _awakenings;
 
-        private readonly Collection<Occurrence> awakenings =
+        private readonly Collection<Occurrence> _awakenings =
             new Collection<Occurrence>();
 
         /// <summary>
@@ -388,11 +388,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public CodableValue Medications
         {
-            get { return this.medications; }
-            set { this.medications = value; }
+            get { return _medications; }
+            set { _medications = value; }
         }
 
-        private CodableValue medications;
+        private CodableValue _medications;
 
         /// <summary>
         /// Gets or sets the state of the person when they awoke.
@@ -404,11 +404,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public WakeState WakeState
         {
-            get { return this.wakeState; }
-            set { this.wakeState = value; }
+            get { return _wakeState; }
+            set { _wakeState = value; }
         }
 
-        private WakeState wakeState = WakeState.Unknown;
+        private WakeState _wakeState = WakeState.Unknown;
 
         /// <summary>
         /// Gets a string representation of the sleep journal entry.
@@ -420,15 +420,15 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public override string ToString()
         {
-            string result = this.When.ToString();
+            string result = When.ToString();
 
-            if (this.SleepMinutes > 0)
+            if (SleepMinutes > 0)
             {
                 result =
                     string.Format(
                         Resources.SleepJournalAmToStringFormat,
-                    this.When.ToString(),
-                    this.SleepMinutes);
+                    When.ToString(),
+                    SleepMinutes);
             }
 
             return result;

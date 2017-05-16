@@ -2,8 +2,8 @@ namespace Microsoft.HealthVault.Client
 {
     public class HealthVaultConnectionFactory
     {
-        private static readonly object InstanceLock = new object();
-        private static IHealthVaultConnectionFactory current;
+        private static readonly object s_instanceLock = new object();
+        private static IHealthVaultConnectionFactory _current;
 
         /// <summary>
         /// Gets the current factory instance.
@@ -12,15 +12,15 @@ namespace Microsoft.HealthVault.Client
         {
             get
             {
-                lock (InstanceLock)
+                lock (s_instanceLock)
                 {
-                    if (current == null)
+                    if (_current == null)
                     {
                         ClientIoc.EnsureTypesRegistered();
-                        current = new HealthVaultConnectionFactoryInternal();
+                        _current = new HealthVaultConnectionFactoryInternal();
                     }
 
-                    return current;
+                    return _current;
                 }
             }
         }

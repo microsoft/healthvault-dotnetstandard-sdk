@@ -70,8 +70,8 @@ namespace Microsoft.HealthVault.ItemTypes
         public AsthmaInhaler(ApproximateDateTime startDate, CodableValue drug)
             : base(TypeId)
         {
-            this.StartDate = startDate;
-            this.Drug = drug;
+            StartDate = startDate;
+            Drug = drug;
         }
 
         /// <summary>
@@ -102,16 +102,16 @@ namespace Microsoft.HealthVault.ItemTypes
 
             Validator.ThrowInvalidIfNull(inhalerNav, Resources.AsthmaInhalerUnexpectedNode);
 
-            this.drug = new CodableValue();
-            this.drug.ParseXml(inhalerNav.SelectSingleNode("drug"));
+            _drug = new CodableValue();
+            _drug.ParseXml(inhalerNav.SelectSingleNode("drug"));
 
             XPathNavigator strengthNav =
                 inhalerNav.SelectSingleNode("strength");
 
             if (strengthNav != null)
             {
-                this.strength = new CodableValue();
-                this.strength.ParseXml(strengthNav);
+                _strength = new CodableValue();
+                _strength.ParseXml(strengthNav);
             }
 
             XPathNavigator purposeNav =
@@ -121,7 +121,7 @@ namespace Microsoft.HealthVault.ItemTypes
             {
                 try
                 {
-                    this.purpose =
+                    _purpose =
                         (InhalerPurpose)Enum.Parse(
                             typeof(InhalerPurpose),
                             purposeNav.Value,
@@ -129,21 +129,21 @@ namespace Microsoft.HealthVault.ItemTypes
                 }
                 catch (ArgumentException)
                 {
-                    this.purpose = InhalerPurpose.None;
-                    this.purposeString = purposeNav.Value;
+                    _purpose = InhalerPurpose.None;
+                    _purposeString = purposeNav.Value;
                 }
             }
 
-            this.startDate = new ApproximateDateTime();
-            this.startDate.ParseXml(inhalerNav.SelectSingleNode("start-date"));
+            _startDate = new ApproximateDateTime();
+            _startDate.ParseXml(inhalerNav.SelectSingleNode("start-date"));
 
             XPathNavigator stopDateNav =
                 inhalerNav.SelectSingleNode("stop-date");
 
             if (stopDateNav != null)
             {
-                this.stopDate = new ApproximateDateTime();
-                this.stopDate.ParseXml(stopDateNav);
+                _stopDate = new ApproximateDateTime();
+                _stopDate.ParseXml(stopDateNav);
             }
 
             XPathNavigator expirationDateNav =
@@ -151,8 +151,8 @@ namespace Microsoft.HealthVault.ItemTypes
 
             if (expirationDateNav != null)
             {
-                this.expirationDate = new ApproximateDateTime();
-                this.expirationDate.ParseXml(expirationDateNav);
+                _expirationDate = new ApproximateDateTime();
+                _expirationDate.ParseXml(expirationDateNav);
             }
 
             XPathNavigator deviceIdNav =
@@ -160,7 +160,7 @@ namespace Microsoft.HealthVault.ItemTypes
 
             if (deviceIdNav != null)
             {
-                this.deviceId = deviceIdNav.Value;
+                _deviceId = deviceIdNav.Value;
             }
 
             XPathNavigator initialDosesNav =
@@ -168,7 +168,7 @@ namespace Microsoft.HealthVault.ItemTypes
 
             if (initialDosesNav != null)
             {
-                this.initialDoses = initialDosesNav.ValueAsInt;
+                _initialDoses = initialDosesNav.ValueAsInt;
             }
 
             XPathNavigator minDosesNav =
@@ -176,7 +176,7 @@ namespace Microsoft.HealthVault.ItemTypes
 
             if (minDosesNav != null)
             {
-                this.minDailyDoses = minDosesNav.ValueAsInt;
+                _minDailyDoses = minDosesNav.ValueAsInt;
             }
 
             XPathNavigator maxDosesNav =
@@ -184,7 +184,7 @@ namespace Microsoft.HealthVault.ItemTypes
 
             if (maxDosesNav != null)
             {
-                this.maxDailyDoses = maxDosesNav.ValueAsInt;
+                _maxDailyDoses = maxDosesNav.ValueAsInt;
             }
 
             XPathNavigator canAlertNav =
@@ -192,7 +192,7 @@ namespace Microsoft.HealthVault.ItemTypes
 
             if (canAlertNav != null)
             {
-                this.canAlert = canAlertNav.ValueAsBoolean;
+                _canAlert = canAlertNav.ValueAsBoolean;
             }
 
             XPathNodeIterator alertIterator =
@@ -202,7 +202,7 @@ namespace Microsoft.HealthVault.ItemTypes
             {
                 Alert alert = new Alert();
                 alert.ParseXml(alertNav);
-                this.alerts.Add(alert);
+                _alerts.Add(alert);
             }
         }
 
@@ -226,85 +226,85 @@ namespace Microsoft.HealthVault.ItemTypes
         public override void WriteXml(XmlWriter writer)
         {
             Validator.ThrowIfWriterNull(writer);
-            Validator.ThrowSerializationIfNull(this.startDate, Resources.AsthmaInhalerStartDateNotSet);
-            Validator.ThrowSerializationIfNull(this.drug, Resources.AsthmaInhalerDrugNotSet);
+            Validator.ThrowSerializationIfNull(_startDate, Resources.AsthmaInhalerStartDateNotSet);
+            Validator.ThrowSerializationIfNull(_drug, Resources.AsthmaInhalerDrugNotSet);
 
             // <asthma-inhaler>
             writer.WriteStartElement("asthma-inhaler");
 
             // <drug>
-            this.drug.WriteXml("drug", writer);
+            _drug.WriteXml("drug", writer);
 
             // <strength>
-            this.strength?.WriteXml("strength", writer);
+            _strength?.WriteXml("strength", writer);
 
-            if (this.purpose != InhalerPurpose.None)
+            if (_purpose != InhalerPurpose.None)
             {
                 // <purpose>
-                writer.WriteElementString("purpose", this.purpose.ToString());
+                writer.WriteElementString("purpose", _purpose.ToString());
             }
             else
             {
-                if (!string.IsNullOrEmpty(this.purposeString))
+                if (!string.IsNullOrEmpty(_purposeString))
                 {
                     // <purpose>
-                    writer.WriteElementString("purpose", this.purposeString);
+                    writer.WriteElementString("purpose", _purposeString);
                 }
             }
 
             // <start-date>
-            this.startDate.WriteXml("start-date", writer);
+            _startDate.WriteXml("start-date", writer);
 
-            if (this.stopDate != null)
+            if (_stopDate != null)
             {
                 // <stop-date>
-                this.stopDate.WriteXml("stop-date", writer);
+                _stopDate.WriteXml("stop-date", writer);
             }
 
-            if (this.expirationDate != null)
+            if (_expirationDate != null)
             {
                 // <expiration-date>
-                this.expirationDate.WriteXml("expiration-date", writer);
+                _expirationDate.WriteXml("expiration-date", writer);
             }
 
-            if (!string.IsNullOrEmpty(this.deviceId))
+            if (!string.IsNullOrEmpty(_deviceId))
             {
                 // <device-id>
-                writer.WriteElementString("device-id", this.deviceId);
+                writer.WriteElementString("device-id", _deviceId);
             }
 
-            if (this.initialDoses != null)
+            if (_initialDoses != null)
             {
                 // <initial-doses>
                 writer.WriteElementString(
                     "initial-doses",
-                    ((int)this.initialDoses).ToString(CultureInfo.InvariantCulture));
+                    ((int)_initialDoses).ToString(CultureInfo.InvariantCulture));
             }
 
-            if (this.minDailyDoses != null)
+            if (_minDailyDoses != null)
             {
                 // <initial-doses>
                 writer.WriteElementString(
                     "min-daily-doses",
-                    ((int)this.minDailyDoses).ToString(CultureInfo.InvariantCulture));
+                    ((int)_minDailyDoses).ToString(CultureInfo.InvariantCulture));
             }
 
-            if (this.maxDailyDoses != null)
+            if (_maxDailyDoses != null)
             {
                 // <max-daily-doses>
                 writer.WriteElementString(
                     "max-daily-doses",
-                    ((int)this.maxDailyDoses).ToString(CultureInfo.InvariantCulture));
+                    ((int)_maxDailyDoses).ToString(CultureInfo.InvariantCulture));
             }
 
-            if (this.canAlert != null)
+            if (_canAlert != null)
             {
                 writer.WriteElementString(
                     "can-alert",
-                    SDKHelper.XmlFromBool((bool)this.canAlert));
+                    SDKHelper.XmlFromBool((bool)_canAlert));
             }
 
-            foreach (Alert alert in this.alerts)
+            foreach (Alert alert in _alerts)
             {
                 alert.WriteXml("alert", writer);
             }
@@ -332,16 +332,16 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public ApproximateDateTime StartDate
         {
-            get { return this.startDate; }
+            get { return _startDate; }
 
             set
             {
-                Validator.ThrowIfArgumentNull(value, nameof(this.StartDate), Resources.AsthmaInhalerStartDateMandatory);
-                this.startDate = value;
+                Validator.ThrowIfArgumentNull(value, nameof(StartDate), Resources.AsthmaInhalerStartDateMandatory);
+                _startDate = value;
             }
         }
 
-        private ApproximateDateTime startDate = new ApproximateDateTime();
+        private ApproximateDateTime _startDate = new ApproximateDateTime();
 
         /// <summary>
         /// Gets or sets the drug being used in the inhaler.
@@ -361,16 +361,16 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public CodableValue Drug
         {
-            get { return this.drug; }
+            get { return _drug; }
 
             set
             {
-                Validator.ThrowIfArgumentNull(value, nameof(this.Drug), Resources.AsthmaInhalerUseDrugMandatory);
-                this.drug = value;
+                Validator.ThrowIfArgumentNull(value, nameof(Drug), Resources.AsthmaInhalerUseDrugMandatory);
+                _drug = value;
             }
         }
 
-        private CodableValue drug;
+        private CodableValue _drug;
 
         /// <summary>
         /// Gets or sets the textual description of the drug strength
@@ -387,11 +387,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public CodableValue Strength
         {
-            get { return this.strength; }
-            set { this.strength = value; }
+            get { return _strength; }
+            set { _strength = value; }
         }
 
-        private CodableValue strength;
+        private CodableValue _strength;
 
         /// <summary>
         /// Gets or sets the count of doses for each inhaler use.
@@ -408,12 +408,12 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public InhalerPurpose Purpose
         {
-            get { return this.purpose; }
-            set { this.purpose = value; }
+            get { return _purpose; }
+            set { _purpose = value; }
         }
 
-        private InhalerPurpose purpose;
-        private string purposeString;
+        private InhalerPurpose _purpose;
+        private string _purposeString;
 
         /// <summary>
         /// Gets or sets the date and time when the inhaler was retired.
@@ -433,11 +433,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public ApproximateDateTime StopDate
         {
-            get { return this.stopDate; }
-            set { this.stopDate = value; }
+            get { return _stopDate; }
+            set { _stopDate = value; }
         }
 
-        private ApproximateDateTime stopDate = new ApproximateDateTime();
+        private ApproximateDateTime _stopDate = new ApproximateDateTime();
 
         /// <summary>
         /// Gets or sets the date and time when the canister has clinically
@@ -457,11 +457,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public ApproximateDateTime ExpirationDate
         {
-            get { return this.expirationDate; }
-            set { this.expirationDate = value; }
+            get { return _expirationDate; }
+            set { _expirationDate = value; }
         }
 
-        private ApproximateDateTime expirationDate = new ApproximateDateTime();
+        private ApproximateDateTime _expirationDate = new ApproximateDateTime();
 
         /// <summary>
         /// Gets or sets the identifier for the device.
@@ -482,16 +482,16 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public string DeviceId
         {
-            get { return this.deviceId; }
+            get { return _deviceId; }
 
             set
             {
                 Validator.ThrowIfStringIsWhitespace(value, "DeviceId");
-                this.deviceId = value;
+                _deviceId = value;
             }
         }
 
-        private string deviceId;
+        private string _deviceId;
 
         /// <summary>
         /// Gets or sets the number of doses in the unit at the time of
@@ -512,11 +512,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public int? InitialDoses
         {
-            get { return this.initialDoses; }
-            set { this.initialDoses = value; }
+            get { return _initialDoses; }
+            set { _initialDoses = value; }
         }
 
-        private int? initialDoses;
+        private int? _initialDoses;
 
         /// <summary>
         /// Gets or sets the minimum number of doses that should be taken
@@ -533,11 +533,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public int? MinimumDailyDoses
         {
-            get { return this.minDailyDoses; }
-            set { this.minDailyDoses = value; }
+            get { return _minDailyDoses; }
+            set { _minDailyDoses = value; }
         }
 
-        private int? minDailyDoses;
+        private int? _minDailyDoses;
 
         /// <summary>
         /// Gets or sets the maximum number of doses that should be taken
@@ -554,11 +554,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public int? MaximumDailyDoses
         {
-            get { return this.maxDailyDoses; }
-            set { this.maxDailyDoses = value; }
+            get { return _maxDailyDoses; }
+            set { _maxDailyDoses = value; }
         }
 
-        private int? maxDailyDoses;
+        private int? _maxDailyDoses;
 
         /// <summary>
         /// Gets or sets a value indicating whether the inhaler can show alerts.
@@ -572,11 +572,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public bool? CanAlert
         {
-            get { return this.canAlert; }
-            set { this.canAlert = value; }
+            get { return _canAlert; }
+            set { _canAlert = value; }
         }
 
-        private bool? canAlert;
+        private bool? _canAlert;
 
         /// <summary>
         /// Gets a collection of alerts for the inhaler.
@@ -591,9 +591,9 @@ namespace Microsoft.HealthVault.ItemTypes
         /// an instance of the <see cref="Alert"/> class.
         /// </remarks>
         ///
-        public Collection<Alert> Alerts => this.alerts;
+        public Collection<Alert> Alerts => _alerts;
 
-        private readonly Collection<Alert> alerts = new Collection<Alert>();
+        private readonly Collection<Alert> _alerts = new Collection<Alert>();
 
         /// <summary>
         /// Gets a string representation of the asthma inhaler item.
@@ -605,9 +605,9 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public override string ToString()
         {
-            if (this.Drug != null)
+            if (Drug != null)
             {
-                return this.Drug.Text;
+                return Drug.Text;
             }
 
             return string.Empty;

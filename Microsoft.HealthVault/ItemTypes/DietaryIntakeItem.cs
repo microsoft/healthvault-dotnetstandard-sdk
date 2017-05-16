@@ -49,7 +49,7 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public DietaryIntakeItem(CodableValue foodItem)
         {
-            this.FoodItem = foodItem;
+            FoodItem = foodItem;
         }
 
         /// <summary>
@@ -72,44 +72,44 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             Validator.ThrowIfNavigatorNull(navigator);
 
-            this.foodItem = new CodableValue();
-            this.foodItem.ParseXml(navigator.SelectSingleNode("food-item"));
-            this.servingSize = XPathHelper.GetOptNavValue<CodableValue>(navigator, "serving-size");
-            this.servingsConsumed = XPathHelper.GetOptNavValueAsDouble(navigator, "servings-consumed");
-            this.meal = XPathHelper.GetOptNavValue<CodableValue>(navigator, "meal");
-            this.when = XPathHelper.GetOptNavValue<HealthServiceDateTime>(navigator, "when");
-            this.energy = XPathHelper.GetOptNavValue<FoodEnergyValue>(navigator, "energy");
-            this.energyFromFat = XPathHelper.GetOptNavValue<FoodEnergyValue>(navigator, "energy-from-fat");
-            this.totalFat = XPathHelper.GetOptNavValue<WeightValue>(navigator, "total-fat");
-            this.saturatedFat = XPathHelper.GetOptNavValue<WeightValue>(navigator, "saturated-fat");
-            this.transFat = XPathHelper.GetOptNavValue<WeightValue>(navigator, "trans-fat");
-            this.monounsaturatedFat = XPathHelper.GetOptNavValue<WeightValue>(navigator, "monounsaturated-fat");
-            this.polyunsaturatedFat = XPathHelper.GetOptNavValue<WeightValue>(navigator, "polyunsaturated-fat");
-            this.protein = XPathHelper.GetOptNavValue<WeightValue>(navigator, "protein");
-            this.carbohydrates = XPathHelper.GetOptNavValue<WeightValue>(navigator, "carbohydrates");
-            this.dietaryFiber = XPathHelper.GetOptNavValue<WeightValue>(navigator, "dietary-fiber");
-            this.sugars = XPathHelper.GetOptNavValue<WeightValue>(navigator, "sugars");
-            this.sodium = XPathHelper.GetOptNavValue<WeightValue>(navigator, "sodium");
-            this.cholesterol = XPathHelper.GetOptNavValue<WeightValue>(navigator, "cholesterol");
-            this.calcium = XPathHelper.GetOptNavValue<WeightValue>(navigator, "calcium");
-            this.iron = XPathHelper.GetOptNavValue<WeightValue>(navigator, "iron");
-            this.magnesium = XPathHelper.GetOptNavValue<WeightValue>(navigator, "magnesium");
-            this.phosphorus = XPathHelper.GetOptNavValue<WeightValue>(navigator, "phosphorus");
-            this.potassium = XPathHelper.GetOptNavValue<WeightValue>(navigator, "potassium");
-            this.zinc = XPathHelper.GetOptNavValue<WeightValue>(navigator, "zinc");
-            this.vitaminARAE = XPathHelper.GetOptNavValue<WeightValue>(navigator, "vitamin-A-RAE");
-            this.vitaminE = XPathHelper.GetOptNavValue<WeightValue>(navigator, "vitamin-E");
-            this.vitaminD = XPathHelper.GetOptNavValue<WeightValue>(navigator, "vitamin-D");
-            this.vitaminC = XPathHelper.GetOptNavValue<WeightValue>(navigator, "vitamin-C");
-            this.thiamin = XPathHelper.GetOptNavValue<WeightValue>(navigator, "thiamin");
-            this.riboflavin = XPathHelper.GetOptNavValue<WeightValue>(navigator, "riboflavin");
-            this.niacin = XPathHelper.GetOptNavValue<WeightValue>(navigator, "niacin");
-            this.vitaminB6 = XPathHelper.GetOptNavValue<WeightValue>(navigator, "vitamin-B-6");
-            this.folateDFE = XPathHelper.GetOptNavValue<WeightValue>(navigator, "folate-DFE");
-            this.vitaminB12 = XPathHelper.GetOptNavValue<WeightValue>(navigator, "vitamin-B-12");
-            this.vitaminK = XPathHelper.GetOptNavValue<WeightValue>(navigator, "vitamin-K");
+            _foodItem = new CodableValue();
+            _foodItem.ParseXml(navigator.SelectSingleNode("food-item"));
+            _servingSize = XPathHelper.GetOptNavValue<CodableValue>(navigator, "serving-size");
+            _servingsConsumed = XPathHelper.GetOptNavValueAsDouble(navigator, "servings-consumed");
+            _meal = XPathHelper.GetOptNavValue<CodableValue>(navigator, "meal");
+            _when = XPathHelper.GetOptNavValue<HealthServiceDateTime>(navigator, "when");
+            _energy = XPathHelper.GetOptNavValue<FoodEnergyValue>(navigator, "energy");
+            _energyFromFat = XPathHelper.GetOptNavValue<FoodEnergyValue>(navigator, "energy-from-fat");
+            _totalFat = XPathHelper.GetOptNavValue<WeightValue>(navigator, "total-fat");
+            _saturatedFat = XPathHelper.GetOptNavValue<WeightValue>(navigator, "saturated-fat");
+            _transFat = XPathHelper.GetOptNavValue<WeightValue>(navigator, "trans-fat");
+            _monounsaturatedFat = XPathHelper.GetOptNavValue<WeightValue>(navigator, "monounsaturated-fat");
+            _polyunsaturatedFat = XPathHelper.GetOptNavValue<WeightValue>(navigator, "polyunsaturated-fat");
+            _protein = XPathHelper.GetOptNavValue<WeightValue>(navigator, "protein");
+            _carbohydrates = XPathHelper.GetOptNavValue<WeightValue>(navigator, "carbohydrates");
+            _dietaryFiber = XPathHelper.GetOptNavValue<WeightValue>(navigator, "dietary-fiber");
+            _sugars = XPathHelper.GetOptNavValue<WeightValue>(navigator, "sugars");
+            _sodium = XPathHelper.GetOptNavValue<WeightValue>(navigator, "sodium");
+            _cholesterol = XPathHelper.GetOptNavValue<WeightValue>(navigator, "cholesterol");
+            _calcium = XPathHelper.GetOptNavValue<WeightValue>(navigator, "calcium");
+            _iron = XPathHelper.GetOptNavValue<WeightValue>(navigator, "iron");
+            _magnesium = XPathHelper.GetOptNavValue<WeightValue>(navigator, "magnesium");
+            _phosphorus = XPathHelper.GetOptNavValue<WeightValue>(navigator, "phosphorus");
+            _potassium = XPathHelper.GetOptNavValue<WeightValue>(navigator, "potassium");
+            _zinc = XPathHelper.GetOptNavValue<WeightValue>(navigator, "zinc");
+            _vitaminARAE = XPathHelper.GetOptNavValue<WeightValue>(navigator, "vitamin-A-RAE");
+            _vitaminE = XPathHelper.GetOptNavValue<WeightValue>(navigator, "vitamin-E");
+            _vitaminD = XPathHelper.GetOptNavValue<WeightValue>(navigator, "vitamin-D");
+            _vitaminC = XPathHelper.GetOptNavValue<WeightValue>(navigator, "vitamin-C");
+            _thiamin = XPathHelper.GetOptNavValue<WeightValue>(navigator, "thiamin");
+            _riboflavin = XPathHelper.GetOptNavValue<WeightValue>(navigator, "riboflavin");
+            _niacin = XPathHelper.GetOptNavValue<WeightValue>(navigator, "niacin");
+            _vitaminB6 = XPathHelper.GetOptNavValue<WeightValue>(navigator, "vitamin-B-6");
+            _folateDFE = XPathHelper.GetOptNavValue<WeightValue>(navigator, "folate-DFE");
+            _vitaminB12 = XPathHelper.GetOptNavValue<WeightValue>(navigator, "vitamin-B-12");
+            _vitaminK = XPathHelper.GetOptNavValue<WeightValue>(navigator, "vitamin-K");
 
-            this.additionalNutritionFacts.Clear();
+            _additionalNutritionFacts.Clear();
             XPathNavigator additionalFactsNav = navigator.SelectSingleNode("additional-nutrition-facts");
 
             if (additionalFactsNav != null)
@@ -118,7 +118,7 @@ namespace Microsoft.HealthVault.ItemTypes
                 {
                     NutritionFact nutritionFact = new NutritionFact();
                     nutritionFact.ParseXml(nav);
-                    this.additionalNutritionFacts.Add(nutritionFact);
+                    _additionalNutritionFacts.Add(nutritionFact);
                 }
             }
         }
@@ -149,51 +149,51 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             Validator.ThrowIfStringNullOrEmpty(nodeName, "WriteXmlEmptyNodeName");
             Validator.ThrowIfWriterNull(writer);
-            Validator.ThrowSerializationIfNull(this.foodItem, Resources.FoodItemNullValue);
+            Validator.ThrowSerializationIfNull(_foodItem, Resources.FoodItemNullValue);
 
             writer.WriteStartElement(nodeName);
 
-            this.foodItem.WriteXml("food-item", writer);
-            XmlWriterHelper.WriteOpt(writer, "serving-size", this.servingSize);
-            XmlWriterHelper.WriteOptDouble(writer, "servings-consumed", this.servingsConsumed);
-            XmlWriterHelper.WriteOpt(writer, "meal", this.meal);
-            XmlWriterHelper.WriteOpt(writer, "when", this.when);
-            XmlWriterHelper.WriteOpt(writer, "energy", this.energy);
-            XmlWriterHelper.WriteOpt(writer, "energy-from-fat", this.energyFromFat);
-            XmlWriterHelper.WriteOpt(writer, "total-fat", this.totalFat);
-            XmlWriterHelper.WriteOpt(writer, "saturated-fat", this.saturatedFat);
-            XmlWriterHelper.WriteOpt(writer, "trans-fat", this.transFat);
-            XmlWriterHelper.WriteOpt(writer, "monounsaturated-fat", this.monounsaturatedFat);
-            XmlWriterHelper.WriteOpt(writer, "polyunsaturated-fat", this.polyunsaturatedFat);
-            XmlWriterHelper.WriteOpt(writer, "protein", this.protein);
-            XmlWriterHelper.WriteOpt(writer, "carbohydrates", this.carbohydrates);
-            XmlWriterHelper.WriteOpt(writer, "dietary-fiber", this.dietaryFiber);
-            XmlWriterHelper.WriteOpt(writer, "sugars", this.sugars);
-            XmlWriterHelper.WriteOpt(writer, "sodium", this.sodium);
-            XmlWriterHelper.WriteOpt(writer, "cholesterol", this.cholesterol);
-            XmlWriterHelper.WriteOpt(writer, "calcium", this.calcium);
-            XmlWriterHelper.WriteOpt(writer, "iron", this.iron);
-            XmlWriterHelper.WriteOpt(writer, "magnesium", this.magnesium);
-            XmlWriterHelper.WriteOpt(writer, "phosphorus", this.phosphorus);
-            XmlWriterHelper.WriteOpt(writer, "potassium", this.potassium);
-            XmlWriterHelper.WriteOpt(writer, "zinc", this.zinc);
-            XmlWriterHelper.WriteOpt(writer, "vitamin-A-RAE", this.vitaminARAE);
-            XmlWriterHelper.WriteOpt(writer, "vitamin-E", this.vitaminE);
-            XmlWriterHelper.WriteOpt(writer, "vitamin-D", this.vitaminD);
-            XmlWriterHelper.WriteOpt(writer, "vitamin-C", this.vitaminC);
-            XmlWriterHelper.WriteOpt(writer, "thiamin", this.thiamin);
-            XmlWriterHelper.WriteOpt(writer, "riboflavin", this.riboflavin);
-            XmlWriterHelper.WriteOpt(writer, "niacin", this.niacin);
-            XmlWriterHelper.WriteOpt(writer, "vitamin-B-6", this.vitaminB6);
-            XmlWriterHelper.WriteOpt(writer, "folate-DFE", this.folateDFE);
-            XmlWriterHelper.WriteOpt(writer, "vitamin-B-12", this.vitaminB12);
-            XmlWriterHelper.WriteOpt(writer, "vitamin-K", this.vitaminK);
+            _foodItem.WriteXml("food-item", writer);
+            XmlWriterHelper.WriteOpt(writer, "serving-size", _servingSize);
+            XmlWriterHelper.WriteOptDouble(writer, "servings-consumed", _servingsConsumed);
+            XmlWriterHelper.WriteOpt(writer, "meal", _meal);
+            XmlWriterHelper.WriteOpt(writer, "when", _when);
+            XmlWriterHelper.WriteOpt(writer, "energy", _energy);
+            XmlWriterHelper.WriteOpt(writer, "energy-from-fat", _energyFromFat);
+            XmlWriterHelper.WriteOpt(writer, "total-fat", _totalFat);
+            XmlWriterHelper.WriteOpt(writer, "saturated-fat", _saturatedFat);
+            XmlWriterHelper.WriteOpt(writer, "trans-fat", _transFat);
+            XmlWriterHelper.WriteOpt(writer, "monounsaturated-fat", _monounsaturatedFat);
+            XmlWriterHelper.WriteOpt(writer, "polyunsaturated-fat", _polyunsaturatedFat);
+            XmlWriterHelper.WriteOpt(writer, "protein", _protein);
+            XmlWriterHelper.WriteOpt(writer, "carbohydrates", _carbohydrates);
+            XmlWriterHelper.WriteOpt(writer, "dietary-fiber", _dietaryFiber);
+            XmlWriterHelper.WriteOpt(writer, "sugars", _sugars);
+            XmlWriterHelper.WriteOpt(writer, "sodium", _sodium);
+            XmlWriterHelper.WriteOpt(writer, "cholesterol", _cholesterol);
+            XmlWriterHelper.WriteOpt(writer, "calcium", _calcium);
+            XmlWriterHelper.WriteOpt(writer, "iron", _iron);
+            XmlWriterHelper.WriteOpt(writer, "magnesium", _magnesium);
+            XmlWriterHelper.WriteOpt(writer, "phosphorus", _phosphorus);
+            XmlWriterHelper.WriteOpt(writer, "potassium", _potassium);
+            XmlWriterHelper.WriteOpt(writer, "zinc", _zinc);
+            XmlWriterHelper.WriteOpt(writer, "vitamin-A-RAE", _vitaminARAE);
+            XmlWriterHelper.WriteOpt(writer, "vitamin-E", _vitaminE);
+            XmlWriterHelper.WriteOpt(writer, "vitamin-D", _vitaminD);
+            XmlWriterHelper.WriteOpt(writer, "vitamin-C", _vitaminC);
+            XmlWriterHelper.WriteOpt(writer, "thiamin", _thiamin);
+            XmlWriterHelper.WriteOpt(writer, "riboflavin", _riboflavin);
+            XmlWriterHelper.WriteOpt(writer, "niacin", _niacin);
+            XmlWriterHelper.WriteOpt(writer, "vitamin-B-6", _vitaminB6);
+            XmlWriterHelper.WriteOpt(writer, "folate-DFE", _folateDFE);
+            XmlWriterHelper.WriteOpt(writer, "vitamin-B-12", _vitaminB12);
+            XmlWriterHelper.WriteOpt(writer, "vitamin-K", _vitaminK);
 
-            if (this.additionalNutritionFacts.Count != 0)
+            if (_additionalNutritionFacts.Count != 0)
             {
                 writer.WriteStartElement("additional-nutrition-facts");
 
-                foreach (NutritionFact nutritionFact in this.additionalNutritionFacts)
+                foreach (NutritionFact nutritionFact in _additionalNutritionFacts)
                 {
                     nutritionFact.WriteXml("nutrition-fact", writer);
                 }
@@ -221,7 +221,7 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             get
             {
-                return this.foodItem;
+                return _foodItem;
             }
 
             set
@@ -233,11 +233,11 @@ namespace Microsoft.HealthVault.ItemTypes
                         Resources.FoodItemNullValue);
                 }
 
-                this.foodItem = value;
+                _foodItem = value;
             }
         }
 
-        private CodableValue foodItem;
+        private CodableValue _foodItem;
 
         /// <summary>
         /// Gets or sets the serving size.
@@ -253,16 +253,16 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             get
             {
-                return this.servingSize;
+                return _servingSize;
             }
 
             set
             {
-                this.servingSize = value;
+                _servingSize = value;
             }
         }
 
-        private CodableValue servingSize;
+        private CodableValue _servingSize;
 
         /// <summary>
         /// Gets or sets the number of servings consumed.
@@ -272,16 +272,16 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             get
             {
-                return this.servingsConsumed;
+                return _servingsConsumed;
             }
 
             set
             {
-                this.servingsConsumed = value;
+                _servingsConsumed = value;
             }
         }
 
-        private double? servingsConsumed;
+        private double? _servingsConsumed;
 
         /// <summary>
         /// Gets or sets a textual description of a meal.
@@ -296,16 +296,16 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             get
             {
-                return this.meal;
+                return _meal;
             }
 
             set
             {
-                this.meal = value;
+                _meal = value;
             }
         }
 
-        private CodableValue meal;
+        private CodableValue _meal;
 
         /// <summary>
         /// Gets or sets the date time of consumption.
@@ -319,16 +319,16 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             get
             {
-                return this.when;
+                return _when;
             }
 
             set
             {
-                this.when = value;
+                _when = value;
             }
         }
 
-        private HealthServiceDateTime when;
+        private HealthServiceDateTime _when;
 
         /// <summary>
         /// Gets or sets the amount of food energy consumed.
@@ -342,16 +342,16 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             get
             {
-                return this.energy;
+                return _energy;
             }
 
             set
             {
-                this.energy = value;
+                _energy = value;
             }
         }
 
-        private FoodEnergyValue energy;
+        private FoodEnergyValue _energy;
 
         /// <summary>
         /// Gets or sets the amount of food energy consumed that came from fat.
@@ -365,16 +365,16 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             get
             {
-                return this.energyFromFat;
+                return _energyFromFat;
             }
 
             set
             {
-                this.energyFromFat = value;
+                _energyFromFat = value;
             }
         }
 
-        private FoodEnergyValue energyFromFat;
+        private FoodEnergyValue _energyFromFat;
 
         /// <summary>
         /// Gets or sets the total amount of fat consumed.
@@ -389,16 +389,16 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             get
             {
-                return this.totalFat;
+                return _totalFat;
             }
 
             set
             {
-                this.totalFat = value;
+                _totalFat = value;
             }
         }
 
-        private WeightValue totalFat;
+        private WeightValue _totalFat;
 
         /// <summary>
         /// Gets or sets the amount of saturated fat consumed.
@@ -413,16 +413,16 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             get
             {
-                return this.saturatedFat;
+                return _saturatedFat;
             }
 
             set
             {
-                this.saturatedFat = value;
+                _saturatedFat = value;
             }
         }
 
-        private WeightValue saturatedFat;
+        private WeightValue _saturatedFat;
 
         /// <summary>
         /// Gets or sets the amount of trans fat consumed.
@@ -437,16 +437,16 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             get
             {
-                return this.transFat;
+                return _transFat;
             }
 
             set
             {
-                this.transFat = value;
+                _transFat = value;
             }
         }
 
-        private WeightValue transFat;
+        private WeightValue _transFat;
 
         /// <summary>
         /// Gets or sets the amount of mono unsaturated fat consumed.
@@ -461,16 +461,16 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             get
             {
-                return this.monounsaturatedFat;
+                return _monounsaturatedFat;
             }
 
             set
             {
-                this.monounsaturatedFat = value;
+                _monounsaturatedFat = value;
             }
         }
 
-        private WeightValue monounsaturatedFat;
+        private WeightValue _monounsaturatedFat;
 
         /// <summary>
         /// Gets or sets the amount of poly unsaturated fat consumed.
@@ -485,16 +485,16 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             get
             {
-                return this.polyunsaturatedFat;
+                return _polyunsaturatedFat;
             }
 
             set
             {
-                this.polyunsaturatedFat = value;
+                _polyunsaturatedFat = value;
             }
         }
 
-        private WeightValue polyunsaturatedFat;
+        private WeightValue _polyunsaturatedFat;
 
         /// <summary>
         /// Gets or sets the amount of protein consumed.
@@ -509,16 +509,16 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             get
             {
-                return this.protein;
+                return _protein;
             }
 
             set
             {
-                this.protein = value;
+                _protein = value;
             }
         }
 
-        private WeightValue protein;
+        private WeightValue _protein;
 
         /// <summary>
         /// Gets or sets the amount of carbohydrates consumed.
@@ -533,16 +533,16 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             get
             {
-                return this.carbohydrates;
+                return _carbohydrates;
             }
 
             set
             {
-                this.carbohydrates = value;
+                _carbohydrates = value;
             }
         }
 
-        private WeightValue carbohydrates;
+        private WeightValue _carbohydrates;
 
         /// <summary>
         /// Gets or sets the amount of dietary fiber consumed.
@@ -557,16 +557,16 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             get
             {
-                return this.dietaryFiber;
+                return _dietaryFiber;
             }
 
             set
             {
-                this.dietaryFiber = value;
+                _dietaryFiber = value;
             }
         }
 
-        private WeightValue dietaryFiber;
+        private WeightValue _dietaryFiber;
 
         /// <summary>
         /// Gets or sets the total amount of sugars consumed.
@@ -581,16 +581,16 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             get
             {
-                return this.sugars;
+                return _sugars;
             }
 
             set
             {
-                this.sugars = value;
+                _sugars = value;
             }
         }
 
-        private WeightValue sugars;
+        private WeightValue _sugars;
 
         /// <summary>
         /// Gets or sets the amount of sodium consumed.
@@ -605,16 +605,16 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             get
             {
-                return this.sodium;
+                return _sodium;
             }
 
             set
             {
-                this.sodium = value;
+                _sodium = value;
             }
         }
 
-        private WeightValue sodium;
+        private WeightValue _sodium;
 
         /// <summary>
         /// Gets or sets the amount of cholesterol consumed.
@@ -629,16 +629,16 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             get
             {
-                return this.cholesterol;
+                return _cholesterol;
             }
 
             set
             {
-                this.cholesterol = value;
+                _cholesterol = value;
             }
         }
 
-        private WeightValue cholesterol;
+        private WeightValue _cholesterol;
 
         /// <summary>
         /// Gets or sets the amount of calcium consumed.
@@ -653,16 +653,16 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             get
             {
-                return this.calcium;
+                return _calcium;
             }
 
             set
             {
-                this.calcium = value;
+                _calcium = value;
             }
         }
 
-        private WeightValue calcium;
+        private WeightValue _calcium;
 
         /// <summary>
         /// Gets or sets the amount of iron consumed.
@@ -677,16 +677,16 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             get
             {
-                return this.iron;
+                return _iron;
             }
 
             set
             {
-                this.iron = value;
+                _iron = value;
             }
         }
 
-        private WeightValue iron;
+        private WeightValue _iron;
 
         /// <summary>
         /// Gets or sets the amount of magnesium consumed.
@@ -701,16 +701,16 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             get
             {
-                return this.magnesium;
+                return _magnesium;
             }
 
             set
             {
-                this.magnesium = value;
+                _magnesium = value;
             }
         }
 
-        private WeightValue magnesium;
+        private WeightValue _magnesium;
 
         /// <summary>
         /// Gets or sets the amount of phosphorus consumed.
@@ -725,16 +725,16 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             get
             {
-                return this.phosphorus;
+                return _phosphorus;
             }
 
             set
             {
-                this.phosphorus = value;
+                _phosphorus = value;
             }
         }
 
-        private WeightValue phosphorus;
+        private WeightValue _phosphorus;
 
         /// <summary>
         /// Gets or sets the amount of potassium consumed.
@@ -749,16 +749,16 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             get
             {
-                return this.potassium;
+                return _potassium;
             }
 
             set
             {
-                this.potassium = value;
+                _potassium = value;
             }
         }
 
-        private WeightValue potassium;
+        private WeightValue _potassium;
 
         /// <summary>
         /// Gets or sets the amount of zinc consumed.
@@ -773,16 +773,16 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             get
             {
-                return this.zinc;
+                return _zinc;
             }
 
             set
             {
-                this.zinc = value;
+                _zinc = value;
             }
         }
 
-        private WeightValue zinc;
+        private WeightValue _zinc;
 
         /// <summary>
         /// Gets or sets this value is the retinol activity equivalent (RAE) weight of vitamin A consumed.
@@ -797,16 +797,16 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             get
             {
-                return this.vitaminARAE;
+                return _vitaminARAE;
             }
 
             set
             {
-                this.vitaminARAE = value;
+                _vitaminARAE = value;
             }
         }
 
-        private WeightValue vitaminARAE;
+        private WeightValue _vitaminARAE;
 
         /// <summary>
         /// Gets or sets the amount of vitamin E consumed.
@@ -821,16 +821,16 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             get
             {
-                return this.vitaminE;
+                return _vitaminE;
             }
 
             set
             {
-                this.vitaminE = value;
+                _vitaminE = value;
             }
         }
 
-        private WeightValue vitaminE;
+        private WeightValue _vitaminE;
 
         /// <summary>
         /// Gets or sets the amount of vitamin D consumed.
@@ -845,16 +845,16 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             get
             {
-                return this.vitaminD;
+                return _vitaminD;
             }
 
             set
             {
-                this.vitaminD = value;
+                _vitaminD = value;
             }
         }
 
-        private WeightValue vitaminD;
+        private WeightValue _vitaminD;
 
         /// <summary>
         /// Gets or sets the amount of vitamin C consumed.
@@ -869,16 +869,16 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             get
             {
-                return this.vitaminC;
+                return _vitaminC;
             }
 
             set
             {
-                this.vitaminC = value;
+                _vitaminC = value;
             }
         }
 
-        private WeightValue vitaminC;
+        private WeightValue _vitaminC;
 
         /// <summary>
         /// Gets or sets the amount of thiamin consumed.
@@ -893,16 +893,16 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             get
             {
-                return this.thiamin;
+                return _thiamin;
             }
 
             set
             {
-                this.thiamin = value;
+                _thiamin = value;
             }
         }
 
-        private WeightValue thiamin;
+        private WeightValue _thiamin;
 
         /// <summary>
         /// Gets or sets the amount of riboflavin consumed.
@@ -917,16 +917,16 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             get
             {
-                return this.riboflavin;
+                return _riboflavin;
             }
 
             set
             {
-                this.riboflavin = value;
+                _riboflavin = value;
             }
         }
 
-        private WeightValue riboflavin;
+        private WeightValue _riboflavin;
 
         /// <summary>
         /// Gets or sets the amount of niacin consumed.
@@ -941,16 +941,16 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             get
             {
-                return this.niacin;
+                return _niacin;
             }
 
             set
             {
-                this.niacin = value;
+                _niacin = value;
             }
         }
 
-        private WeightValue niacin;
+        private WeightValue _niacin;
 
         /// <summary>
         /// Gets or sets the amount of vitamin B-6 consumed.
@@ -965,16 +965,16 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             get
             {
-                return this.vitaminB6;
+                return _vitaminB6;
             }
 
             set
             {
-                this.vitaminB6 = value;
+                _vitaminB6 = value;
             }
         }
 
-        private WeightValue vitaminB6;
+        private WeightValue _vitaminB6;
 
         /// <summary>
         /// Gets or sets this value is the dietary folate equivalent (DFE) of Folate consumed.
@@ -989,16 +989,16 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             get
             {
-                return this.folateDFE;
+                return _folateDFE;
             }
 
             set
             {
-                this.folateDFE = value;
+                _folateDFE = value;
             }
         }
 
-        private WeightValue folateDFE;
+        private WeightValue _folateDFE;
 
         /// <summary>
         /// Gets or sets the amount of vitamin B-12 consumed.
@@ -1013,16 +1013,16 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             get
             {
-                return this.vitaminB12;
+                return _vitaminB12;
             }
 
             set
             {
-                this.vitaminB12 = value;
+                _vitaminB12 = value;
             }
         }
 
-        private WeightValue vitaminB12;
+        private WeightValue _vitaminB12;
 
         /// <summary>
         /// Gets or sets the amount of vitamin K consumed.
@@ -1037,16 +1037,16 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             get
             {
-                return this.vitaminK;
+                return _vitaminK;
             }
 
             set
             {
-                this.vitaminK = value;
+                _vitaminK = value;
             }
         }
 
-        private WeightValue vitaminK;
+        private WeightValue _vitaminK;
 
         /// <summary>
         /// Gets the additional nutritional fact data.
@@ -1057,9 +1057,9 @@ namespace Microsoft.HealthVault.ItemTypes
         /// If there is no information about additionalNutritionFacts the value should be set to <b>null</b>.
         /// </remarks>
         ///
-        public Collection<NutritionFact> AdditionalNutritionFacts => this.additionalNutritionFacts;
+        public Collection<NutritionFact> AdditionalNutritionFacts => _additionalNutritionFacts;
 
-        private readonly Collection<NutritionFact> additionalNutritionFacts = new Collection<NutritionFact>();
+        private readonly Collection<NutritionFact> _additionalNutritionFacts = new Collection<NutritionFact>();
 
         /// <summary>
         /// Gets a string representation of the DietaryIntake.
@@ -1071,26 +1071,26 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public override string ToString()
         {
-            if (this.ServingSize != null)
+            if (ServingSize != null)
             {
-                if (this.ServingsConsumed.HasValue)
+                if (ServingsConsumed.HasValue)
                 {
                     return string.Format(
                         CultureInfo.CurrentUICulture,
                         Resources.DietaryIntakeServingSizeServingConsumedFormat,
-                        this.FoodItem.Text,
-                        this.ServingsConsumed.Value,
-                        this.ServingSize.Text);
+                        FoodItem.Text,
+                        ServingsConsumed.Value,
+                        ServingSize.Text);
                 }
 
                 return string.Format(
                     CultureInfo.CurrentUICulture,
                     Resources.DietaryIntakeServingSizeFormat,
-                    this.FoodItem.Text,
-                    this.ServingSize.Text);
+                    FoodItem.Text,
+                    ServingSize.Text);
             }
 
-            return this.FoodItem.Text;
+            return FoodItem.Text;
         }
     }
 }

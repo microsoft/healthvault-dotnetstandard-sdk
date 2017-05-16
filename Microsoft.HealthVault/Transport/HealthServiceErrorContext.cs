@@ -39,7 +39,7 @@ namespace Microsoft.HealthVault.Transport
 
         internal void SetServerIpAddresses(IList<IPAddress> ipAddresses)
         {
-            this.ServerIPAddresses =
+            ServerIPAddresses =
                 new ReadOnlyCollection<IPAddress>(ipAddresses);
         }
 
@@ -71,14 +71,14 @@ namespace Microsoft.HealthVault.Transport
         ///
         public override string ToString()
         {
-            string result = this.ServerName;
+            string result = ServerName;
 
-            foreach (IPAddress serverIP in this.ServerIPAddresses)
+            foreach (IPAddress serverIP in ServerIPAddresses)
             {
                 result = string.Join(" ", result, serverIP.ToString());
             }
 
-            result = string.Join(" ", result, this.InnerException);
+            result = string.Join(" ", result, InnerException);
 
             return result;
         }

@@ -1,22 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Microsoft.HealthVault.Client;
 using Microsoft.HealthVault.Clients;
 using Microsoft.HealthVault.Configuration;
 using Microsoft.HealthVault.ItemTypes;
 using Microsoft.HealthVault.Person;
 using Xamarin.Forms;
-using Xamarin.Forms.PlatformConfiguration;
 
 namespace SandboxXamarinForms
 {
     public partial class MainPage : ContentPage
     {
-        private IHealthVaultSodaConnection connection;
-        private IThingClient thingClient;
+        private IHealthVaultSodaConnection _connection;
+        private IThingClient _thingClient;
 
         public MainPage()
         {
@@ -25,19 +22,19 @@ namespace SandboxXamarinForms
 
         private async void Connect_OnClicked(object sender, EventArgs e)
         {
-            this.OutputLabel.Text = "Connecting...";
+            OutputLabel.Text = "Connecting...";
 
             var configuration = new HealthVaultConfiguration
             {
                 MasterApplicationId = Guid.Parse("d6318dff-5352-4a10-a140-6c82c6536a3b")
             };
-            this.connection = HealthVaultConnectionFactory.Current.GetOrCreateSodaConnection(configuration);
+            _connection = HealthVaultConnectionFactory.Current.GetOrCreateSodaConnection(configuration);
 
-            await this.connection.AuthenticateAsync();
+            await _connection.AuthenticateAsync();
 
-            this.thingClient = this.connection.CreateThingClient();
+            _thingClient = _connection.CreateThingClient();
 
-            this.OutputLabel.Text = "Connected.";
+            OutputLabel.Text = "Connected.";
         }
 
         private async void SetBP_OnClicked(object sender, EventArgs e)
@@ -51,25 +48,25 @@ namespace SandboxXamarinForms
             };
 
             // use our thing client to creat the new blood pressure
-            PersonInfo personInfo = await this.connection.GetPersonInfoAsync();
-            await this.thingClient.CreateNewThingsAsync(personInfo.SelectedRecord.Id, new List<BloodPressure> { bp });
+            PersonInfo personInfo = await _connection.GetPersonInfoAsync();
+            await _thingClient.CreateNewThingsAsync(personInfo.SelectedRecord.Id, new List<BloodPressure> { bp });
 
-            this.OutputLabel.Text = "Added blood pressure";
+            OutputLabel.Text = "Added blood pressure";
         }
 
         private async void GetBP_OnClicked(object sender, EventArgs e)
         {
             // use our thing client to get all things of type blood pressure
-            PersonInfo personInfo = await this.connection.GetPersonInfoAsync();
-            IReadOnlyCollection<BloodPressure> bloodPressures = await this.thingClient.GetThingsAsync<BloodPressure>(personInfo.SelectedRecord.Id);
+            PersonInfo personInfo = await _connection.GetPersonInfoAsync();
+            IReadOnlyCollection<BloodPressure> bloodPressures = await _thingClient.GetThingsAsync<BloodPressure>(personInfo.SelectedRecord.Id);
             BloodPressure firstBloodPressure = bloodPressures.FirstOrDefault();
             if (firstBloodPressure == null)
             {
-                this.OutputLabel.Text = "No blood pressures.";
+                OutputLabel.Text = "No blood pressures.";
             }
             else
             {
-                this.OutputLabel.Text = firstBloodPressure.Systolic + "/" + firstBloodPressure.Diastolic;
+                OutputLabel.Text = firstBloodPressure.Systolic + "/" + firstBloodPressure.Diastolic;
             }
         }
     }

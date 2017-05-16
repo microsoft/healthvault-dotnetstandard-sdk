@@ -8,19 +8,19 @@ namespace Microsoft.HealthVault.Client
     {
         private static readonly object RegistrationLock = new object();
 
-        private static bool typesRegistered;
+        private static bool s_typesRegistered;
 
         internal static void EnsureTypesRegistered(Action<DependencyInjectionContainer> registerClientTypesAction)
         {
             lock (RegistrationLock)
             {
-                if (!typesRegistered)
+                if (!s_typesRegistered)
                 {
                     // Register SODA types
                     RegisterTypes(Ioc.Container);
 
                     registerClientTypesAction(Ioc.Container);
-                    typesRegistered = true;
+                    s_typesRegistered = true;
                 }
             }
         }

@@ -42,7 +42,7 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public PersonItem(Name name)
         {
-            this.Name = name;
+            Name = name;
         }
 
         /// <summary>
@@ -65,8 +65,8 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public PersonItem(Name name, CodableValue personType)
         {
-            this.Name = name;
-            this.PersonType = personType;
+            Name = name;
+            PersonType = personType;
         }
 
         /// <summary>
@@ -87,8 +87,8 @@ namespace Microsoft.HealthVault.ItemTypes
             Validator.ThrowIfNavigatorNull(navigator);
 
             // <name>
-            this.name = new Name();
-            this.name.ParseXml(navigator.SelectSingleNode("name"));
+            _name = new Name();
+            _name.ParseXml(navigator.SelectSingleNode("name"));
 
             // <organization>
             XPathNavigator orgNav =
@@ -96,7 +96,7 @@ namespace Microsoft.HealthVault.ItemTypes
 
             if (orgNav != null)
             {
-                this.organization = orgNav.Value;
+                _organization = orgNav.Value;
             }
 
             // <professional-training>
@@ -105,7 +105,7 @@ namespace Microsoft.HealthVault.ItemTypes
 
             if (professionalTrainingNav != null)
             {
-                this.professionalTraining = professionalTrainingNav.Value;
+                _professionalTraining = professionalTrainingNav.Value;
             }
 
             // <id>
@@ -114,7 +114,7 @@ namespace Microsoft.HealthVault.ItemTypes
 
             if (idNav != null)
             {
-                this.id = idNav.Value;
+                _id = idNav.Value;
             }
 
             // <contact>
@@ -123,8 +123,8 @@ namespace Microsoft.HealthVault.ItemTypes
 
             if (contactNav != null)
             {
-                this.contactInfo = new ContactInfo();
-                this.contactInfo.ParseXml(contactNav);
+                _contactInfo = new ContactInfo();
+                _contactInfo.ParseXml(contactNav);
             }
 
             // <type>
@@ -133,8 +133,8 @@ namespace Microsoft.HealthVault.ItemTypes
 
             if (typeNav != null)
             {
-                this.personType = new CodableValue();
-                this.personType.ParseXml(navigator.SelectSingleNode("type"));
+                _personType = new CodableValue();
+                _personType.ParseXml(navigator.SelectSingleNode("type"));
             }
         }
 
@@ -166,38 +166,38 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             Validator.ThrowIfStringNullOrEmpty(nodeName, "nodeName");
             Validator.ThrowIfWriterNull(writer);
-            Validator.ThrowSerializationIfNull(this.name, Resources.PersonNameNotSet);
+            Validator.ThrowSerializationIfNull(_name, Resources.PersonNameNotSet);
 
             // <person>
             writer.WriteStartElement(nodeName);
 
-            this.name.WriteXml("name", writer);
+            _name.WriteXml("name", writer);
 
-            if (!string.IsNullOrEmpty(this.organization))
+            if (!string.IsNullOrEmpty(_organization))
             {
-                writer.WriteElementString("organization", this.organization);
+                writer.WriteElementString("organization", _organization);
             }
 
             // <professional-training>
-            if (!string.IsNullOrEmpty(this.professionalTraining))
+            if (!string.IsNullOrEmpty(_professionalTraining))
             {
-                writer.WriteElementString("professional-training", this.professionalTraining);
+                writer.WriteElementString("professional-training", _professionalTraining);
             }
 
-            if (!string.IsNullOrEmpty(this.id))
+            if (!string.IsNullOrEmpty(_id))
             {
-                writer.WriteElementString("id", this.id);
+                writer.WriteElementString("id", _id);
             }
 
-            if (this.contactInfo != null)
+            if (_contactInfo != null)
             {
-                this.contactInfo.WriteXml("contact", writer);
+                _contactInfo.WriteXml("contact", writer);
             }
 
-            if (this.personType != null &&
-                !string.IsNullOrEmpty(this.personType.Text))
+            if (_personType != null &&
+                !string.IsNullOrEmpty(_personType.Text))
             {
-                this.personType.WriteXml("type", writer);
+                _personType.WriteXml("type", writer);
             }
 
             // </person>
@@ -218,16 +218,16 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public Name Name
         {
-            get { return this.name; }
+            get { return _name; }
 
             set
             {
-                Validator.ThrowIfArgumentNull(value, nameof(this.Name), Resources.PersonNameMandatory);
-                this.name = value;
+                Validator.ThrowIfArgumentNull(value, nameof(Name), Resources.PersonNameMandatory);
+                _name = value;
             }
         }
 
-        private Name name;
+        private Name _name;
 
         /// <summary>
         /// Gets or sets the organization the person belongs to.
@@ -247,16 +247,16 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public string Organization
         {
-            get { return this.organization; }
+            get { return _organization; }
 
             set
             {
                 Validator.ThrowIfStringIsWhitespace(value, "Organization");
-                this.organization = value;
+                _organization = value;
             }
         }
 
-        private string organization;
+        private string _organization;
 
         /// <summary>
         /// Gets or sets the professional training for the provider.
@@ -272,16 +272,16 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public string ProfessionalTraining
         {
-            get { return this.professionalTraining; }
+            get { return _professionalTraining; }
 
             set
             {
                 Validator.ThrowIfStringIsWhitespace(value, "ProfessionalTraining");
-                this.professionalTraining = value;
+                _professionalTraining = value;
             }
         }
 
-        private string professionalTraining;
+        private string _professionalTraining;
 
         /// <summary>
         /// Gets or sets the ID number for the person in the organization.
@@ -301,16 +301,16 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public string PersonId
         {
-            get { return this.id; }
+            get { return _id; }
 
             set
             {
                 Validator.ThrowIfStringIsWhitespace(value, "PersonId");
-                this.id = value;
+                _id = value;
             }
         }
 
-        private string id;
+        private string _id;
 
         /// <summary>
         /// Gets or sets the contact information.
@@ -327,11 +327,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public ContactInfo ContactInformation
         {
-            get { return this.contactInfo; }
-            set { this.contactInfo = value; }
+            get { return _contactInfo; }
+            set { _contactInfo = value; }
         }
 
-        private ContactInfo contactInfo;
+        private ContactInfo _contactInfo;
 
         /// <summary>
         /// Gets or sets the type of person, such as provider, emergency
@@ -344,11 +344,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public CodableValue PersonType
         {
-            get { return this.personType; }
-            set { this.personType = value; }
+            get { return _personType; }
+            set { _personType = value; }
         }
 
-        private CodableValue personType = new CodableValue();
+        private CodableValue _personType = new CodableValue();
 
         /// <summary>
         /// Gets a string representation of the person item.
@@ -362,45 +362,45 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             StringBuilder result = new StringBuilder(200);
 
-            if (this.Name != null)
+            if (Name != null)
             {
-                result.Append(this.Name);
+                result.Append(Name);
             }
 
-            if (this.Organization != null)
+            if (Organization != null)
             {
                 result.AppendFormat(
                     Resources.ListFormat,
-                    this.Organization);
+                    Organization);
             }
 
-            if (this.ProfessionalTraining != null)
+            if (ProfessionalTraining != null)
             {
                 result.AppendFormat(
                     Resources.ListFormat,
-                    this.ProfessionalTraining);
+                    ProfessionalTraining);
             }
 
-            if (this.PersonId != null)
+            if (PersonId != null)
             {
                 result.AppendFormat(
                     Resources.ListFormat,
-                    this.PersonId);
+                    PersonId);
             }
 
-            if (this.ContactInformation != null)
+            if (ContactInformation != null)
             {
                 result.AppendFormat(
                     Resources.ListFormat,
-                    this.ContactInformation.ToString());
+                    ContactInformation.ToString());
             }
 
-            if (this.PersonType != null &&
-                !string.IsNullOrEmpty(this.PersonType.Text))
+            if (PersonType != null &&
+                !string.IsNullOrEmpty(PersonType.Text))
             {
                 result.AppendFormat(
                     Resources.ListFormat,
-                    this.PersonType.Text);
+                    PersonType.Text);
             }
 
             return result.ToString();

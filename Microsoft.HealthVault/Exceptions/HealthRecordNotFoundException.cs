@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Microsoft.HealthVault.Exceptions
 {
@@ -15,7 +11,7 @@ namespace Microsoft.HealthVault.Exceptions
         /// Initializes a new instance of the <see cref="HealthRecordNotFoundException"/> class.
         /// </summary>
         /// <param name="message">The exception message.</param>
-        public HealthRecordNotFoundException(string message) 
+        public HealthRecordNotFoundException(string message)
             : base(message)
         {
         }

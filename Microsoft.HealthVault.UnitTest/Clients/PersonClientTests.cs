@@ -1,26 +1,26 @@
-﻿using Microsoft.HealthVault.Clients;
-using Microsoft.HealthVault.Connection;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using NSubstitute;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.HealthVault.Clients;
+using Microsoft.HealthVault.Connection;
 using Microsoft.HealthVault.UnitTest.Samples;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NSubstitute;
 
 namespace Microsoft.HealthVault.UnitTest.Clients
 {
     [TestClass]
     public class PersonClientTests
     {
-        private IConnectionInternal connection;
-        private PersonClient personClient;
+        private IConnectionInternal _connection;
+        private PersonClient _personClient;
 
         [TestInitialize]
         public void InitializeTest()
         {
-            connection = Substitute.For<IConnectionInternal>();
-            personClient = new PersonClient(connection);
+            _connection = Substitute.For<IConnectionInternal>();
+            _personClient = new PersonClient(_connection);
         }
 
         [TestMethod]
@@ -28,13 +28,13 @@ namespace Microsoft.HealthVault.UnitTest.Clients
         {
             string requestParameters = "<parameters />";
             var personId = new Guid("2d44d876-3bde-482b-a2af-ba133bc41fa9");
-            
+
             var response = SampleUtils.GetResponseData("AuthorizedPeopleSample.xml");
 
-            connection.ExecuteAsync(HealthVaultMethods.GetAuthorizedPeople, Arg.Any<int>(), Arg.Any<string>()).Returns(response);
-            var result = (await personClient.GetAuthorizedPeopleAsync()).FirstOrDefault();
+            _connection.ExecuteAsync(HealthVaultMethods.GetAuthorizedPeople, Arg.Any<int>(), Arg.Any<string>()).Returns(response);
+            var result = (await _personClient.GetAuthorizedPeopleAsync()).FirstOrDefault();
 
-            await this.connection.Received().ExecuteAsync(HealthVaultMethods.GetAuthorizedPeople, Arg.Any<int>(), Arg.Is<string>(x=> x.Contains(requestParameters)));
+            await _connection.Received().ExecuteAsync(HealthVaultMethods.GetAuthorizedPeople, Arg.Any<int>(), Arg.Is<string>(x => x.Contains(requestParameters)));
 
             Assert.IsNotNull(result);
             Assert.AreEqual(result.PersonId, personId);
@@ -45,11 +45,11 @@ namespace Microsoft.HealthVault.UnitTest.Clients
         {
             var response = SampleUtils.GetResponseData("AppSettingsSample.xml");
 
-            connection.ExecuteAsync(HealthVaultMethods.GetApplicationSettings, Arg.Any<int>()).Returns(response);
+            _connection.ExecuteAsync(HealthVaultMethods.GetApplicationSettings, Arg.Any<int>()).Returns(response);
 
-            var result = await personClient.GetApplicationSettingsAsync();
+            var result = await _personClient.GetApplicationSettingsAsync();
 
-            await connection.Received().ExecuteAsync(HealthVaultMethods.GetApplicationSettings, Arg.Any<int>(), null);
+            await _connection.Received().ExecuteAsync(HealthVaultMethods.GetApplicationSettings, Arg.Any<int>(), null);
             Assert.IsNotNull(result.SelectedRecordId);
         }
 
@@ -60,9 +60,9 @@ namespace Microsoft.HealthVault.UnitTest.Clients
 
             var nav = response.InfoNavigator;
 
-            await personClient.SetApplicationSettingsAsync(nav).ConfigureAwait(false);
+            await _personClient.SetApplicationSettingsAsync(nav).ConfigureAwait(false);
 
-            await connection.Received()
+            await _connection.Received()
                 .ExecuteAsync(HealthVaultMethods.SetApplicationSettings, Arg.Any<int>(), Arg.Is<string>(x => x.Contains("7a231675-4e78-451f-b94d-1e05b2a24586")));
         }
 
@@ -71,10 +71,10 @@ namespace Microsoft.HealthVault.UnitTest.Clients
         {
             string requestParameters = "<app-settings />";
 
-            await personClient.SetApplicationSettingsAsync(requestParameters).ConfigureAwait(false);
+            await _personClient.SetApplicationSettingsAsync(requestParameters).ConfigureAwait(false);
 
-            await connection.Received()
-                .ExecuteAsync(HealthVaultMethods.SetApplicationSettings, Arg.Any<int>(), Arg.Is<string>(x=> x.Contains(requestParameters)));
+            await _connection.Received()
+                .ExecuteAsync(HealthVaultMethods.SetApplicationSettings, Arg.Any<int>(), Arg.Is<string>(x => x.Contains(requestParameters)));
         }
 
         [TestMethod]
@@ -86,11 +86,11 @@ namespace Microsoft.HealthVault.UnitTest.Clients
 
             var response = SampleUtils.GetResponseData("AuthorizedRecordsSample.xml");
 
-            connection.ExecuteAsync(HealthVaultMethods.GetAuthorizedRecords, Arg.Any<int>(), Arg.Any<string>())
+            _connection.ExecuteAsync(HealthVaultMethods.GetAuthorizedRecords, Arg.Any<int>(), Arg.Any<string>())
                 .Returns(response);
-            var result = await personClient.GetAuthorizedRecordsAsync(recordIds).ConfigureAwait(false);
+            var result = await _personClient.GetAuthorizedRecordsAsync(recordIds).ConfigureAwait(false);
 
-            await connection.Received()
+            await _connection.Received()
                 .ExecuteAsync(HealthVaultMethods.GetAuthorizedRecords, Arg.Any<int>(), Arg.Any<string>());
 
             Assert.AreEqual(result.FirstOrDefault().ApplicationSpecificRecordId, appSpecificId);

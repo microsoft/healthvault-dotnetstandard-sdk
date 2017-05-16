@@ -16,7 +16,7 @@ namespace Microsoft.HealthVault.Thing
         /// <param name="value">The string value of this entry.</param>
         internal OtherItemDataCsvString(string value)
         {
-            this.Value = value;
+            Value = value;
         }
 
         /// <summary>

@@ -69,27 +69,27 @@ namespace Microsoft.HealthVault.ItemTypes
             Validator.ThrowInvalidIfNull(itemNav, Resources.EncounterUnexpectedNode);
 
             // when
-            this.when =
+            _when =
                 XPathHelper.GetOptNavValue<HealthServiceDateTime>(itemNav, "when");
 
             // type
-            this.type =
+            _type =
                 XPathHelper.GetOptNavValue<CodableValue>(itemNav, "type");
 
             // reason
-            this.reason =
+            _reason =
                 XPathHelper.GetOptNavValue(itemNav, "reason");
 
             // duration
-            this.duration =
+            _duration =
                 XPathHelper.GetOptNavValue<DurationValue>(itemNav, "duration");
 
             // consent-granted
-            this.consentGranted =
+            _consentGranted =
                 XPathHelper.GetOptNavValueAsBool(itemNav, "consent-granted");
 
             // facility
-            this.facility =
+            _facility =
                 XPathHelper.GetOptNavValue<Organization>(itemNav, "facility");
         }
 
@@ -116,37 +116,37 @@ namespace Microsoft.HealthVault.ItemTypes
             XmlWriterHelper.WriteOpt(
                 writer,
                 "when",
-                this.when);
+                _when);
 
             // <type>
             XmlWriterHelper.WriteOpt(
                 writer,
                 "type",
-                this.type);
+                _type);
 
             // <reason>
             XmlWriterHelper.WriteOptString(
                 writer,
                 "reason",
-                this.reason);
+                _reason);
 
             // <duration>
             XmlWriterHelper.WriteOpt(
                 writer,
                 "duration",
-                this.duration);
+                _duration);
 
             // <consent-granted>
             XmlWriterHelper.WriteOptBool(
                 writer,
                 "consent-granted",
-                this.consentGranted);
+                _consentGranted);
 
             // <facility>
             XmlWriterHelper.WriteOpt(
                 writer,
                 "facility",
-                this.facility);
+                _facility);
 
             // </encounter>
             writer.WriteEndElement();
@@ -163,11 +163,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public HealthServiceDateTime When
         {
-            get { return this.when; }
-            set { this.when = value; }
+            get { return _when; }
+            set { _when = value; }
         }
 
-        private HealthServiceDateTime when;
+        private HealthServiceDateTime _when;
 
         /// <summary>
         /// Gets or sets the reason of the medical encounter. The description
@@ -188,16 +188,16 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public string Reason
         {
-            get { return this.reason; }
+            get { return _reason; }
 
             set
             {
                 Validator.ThrowIfStringIsWhitespace(value, "Reason");
-                this.reason = value;
+                _reason = value;
             }
         }
 
-        private string reason;
+        private string _reason;
 
         /// <summary>
         /// Gets or sets the type of medical encounter.
@@ -209,11 +209,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public CodableValue Type
         {
-            get { return this.type; }
-            set { this.type = value; }
+            get { return _type; }
+            set { _type = value; }
         }
 
-        private CodableValue type;
+        private CodableValue _type;
 
         /// <summary>
         /// Gets or sets the encounter duration.
@@ -226,11 +226,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public DurationValue Duration
         {
-            get { return this.duration; }
-            set { this.duration = value; }
+            get { return _duration; }
+            set { _duration = value; }
         }
 
-        private DurationValue duration;
+        private DurationValue _duration;
 
         /// <summary>
         /// Gets and sets a value indicating whether consent
@@ -244,11 +244,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public bool? ConsentGranted
         {
-            get { return this.consentGranted; }
-            set { this.consentGranted = value; }
+            get { return _consentGranted; }
+            set { _consentGranted = value; }
         }
 
-        private bool? consentGranted;
+        private bool? _consentGranted;
 
         /// <summary>
         /// The facility where the encounter occurred.
@@ -256,15 +256,15 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public Organization Facility
         {
-            get { return this.facility; }
+            get { return _facility; }
 
             set
             {
-                this.facility = value;
+                _facility = value;
             }
         }
 
-        private Organization facility;
+        private Organization _facility;
 
         /// <summary>
         /// Gets a string representation of the encounter item.
@@ -278,20 +278,20 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             StringBuilder result = new StringBuilder(200);
 
-            if (this.Type != null)
+            if (Type != null)
             {
-                result.Append(this.Type);
+                result.Append(Type);
             }
 
-            if (!string.IsNullOrEmpty(this.Reason))
+            if (!string.IsNullOrEmpty(Reason))
             {
-                if (this.Type != null)
+                if (Type != null)
                 {
                     result.Append(
                         Resources.ListSeparator);
                 }
 
-                result.Append(this.Reason);
+                result.Append(Reason);
             }
 
             return result.ToString();

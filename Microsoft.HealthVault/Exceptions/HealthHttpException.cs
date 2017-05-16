@@ -19,18 +19,18 @@ namespace Microsoft.HealthVault.Exceptions
         /// Creates an instance of the <see cref="HealthHttpException"/>
         /// class with the specified message and status code.
         /// </summary>
-        /// 
+        ///
         /// <param name="message">
         /// The exception message.
         /// </param>
-        /// 
+        ///
         /// <param name="statusCode">
         /// The HTTP error code corresponding with the error
         /// </param>
         public HealthHttpException(string message, HttpStatusCode statusCode)
             : base(message)
         {
-            this.StatusCode = statusCode;
+            StatusCode = statusCode;
         }
 
         /// <summary>

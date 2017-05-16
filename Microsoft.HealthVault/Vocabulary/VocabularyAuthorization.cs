@@ -35,7 +35,7 @@ namespace Microsoft.HealthVault.Vocabulary
         public VocabularyAuthorization(string vocabularyFamily)
         {
             Validator.ThrowIfStringNullOrEmpty(vocabularyFamily, "vocabularyFamily");
-            this.VocabularyFamily = vocabularyFamily;
+            VocabularyFamily = vocabularyFamily;
         }
 
         /// <summary>
@@ -62,8 +62,8 @@ namespace Microsoft.HealthVault.Vocabulary
             Validator.ThrowIfStringNullOrEmpty(vocabularyFamily, "vocabularyFamily");
             Validator.ThrowIfStringNullOrEmpty(vocabularyName, "vocabularyName");
 
-            this.VocabularyFamily = vocabularyFamily;
-            this.VocabularyName = vocabularyName;
+            VocabularyFamily = vocabularyFamily;
+            VocabularyName = vocabularyName;
         }
 
         /// <summary>
@@ -91,11 +91,11 @@ namespace Microsoft.HealthVault.Vocabulary
         public override string ToString()
         {
             StringBuilder result = new StringBuilder();
-            result.Append(this.VocabularyFamily);
-            if (!string.IsNullOrEmpty(this.VocabularyName))
+            result.Append(VocabularyFamily);
+            if (!string.IsNullOrEmpty(VocabularyName))
             {
                 result.Append(":");
-                result.Append(this.VocabularyName);
+                result.Append(VocabularyName);
             }
 
             return result.ToString();
@@ -118,10 +118,10 @@ namespace Microsoft.HealthVault.Vocabulary
             Validator.ThrowIfWriterNull(writer);
 
             writer.WriteStartElement("vocabulary-authorization");
-            writer.WriteElementString("family", this.VocabularyFamily);
-            if (!string.IsNullOrEmpty(this.VocabularyName))
+            writer.WriteElementString("family", VocabularyFamily);
+            if (!string.IsNullOrEmpty(VocabularyName))
             {
-                writer.WriteElementString("name", this.VocabularyName);
+                writer.WriteElementString("name", VocabularyName);
             }
 
             writer.WriteEndElement();
@@ -197,8 +197,8 @@ namespace Microsoft.HealthVault.Vocabulary
                 return true;
             }
 
-            return string.Equals(this.VocabularyFamily, other.VocabularyFamily, StringComparison.OrdinalIgnoreCase)
-                && string.Equals(this.VocabularyName, other.VocabularyName, StringComparison.OrdinalIgnoreCase);
+            return string.Equals(VocabularyFamily, other.VocabularyFamily, StringComparison.OrdinalIgnoreCase)
+                && string.Equals(VocabularyName, other.VocabularyName, StringComparison.OrdinalIgnoreCase);
         }
 
         /// <summary>
@@ -210,7 +210,7 @@ namespace Microsoft.HealthVault.Vocabulary
         public override bool Equals(object obj)
         {
             VocabularyAuthorization vocabularyAuthorization = obj as VocabularyAuthorization;
-            return this.Equals(vocabularyAuthorization);
+            return Equals(vocabularyAuthorization);
         }
 
         /// <summary>
@@ -219,11 +219,11 @@ namespace Microsoft.HealthVault.Vocabulary
         ///
         public override int GetHashCode()
         {
-            int hashCode = this.VocabularyFamily.ToUpperInvariant().GetHashCode();
+            int hashCode = VocabularyFamily.ToUpperInvariant().GetHashCode();
 
-            if (!string.IsNullOrEmpty(this.VocabularyName))
+            if (!string.IsNullOrEmpty(VocabularyName))
             {
-                hashCode ^= this.VocabularyName.ToUpperInvariant().GetHashCode();
+                hashCode ^= VocabularyName.ToUpperInvariant().GetHashCode();
             }
 
             return hashCode;

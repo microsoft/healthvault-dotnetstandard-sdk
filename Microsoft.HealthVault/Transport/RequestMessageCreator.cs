@@ -1,7 +1,7 @@
-﻿// Copyright (c) Microsoft Corporation.  All rights reserved. 
+﻿// Copyright (c) Microsoft Corporation.  All rights reserved.
 // MIT License
 // Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the ""Software""), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 //
 // THE SOFTWARE IS PROVIDED *AS IS*, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
@@ -22,21 +22,21 @@ namespace Microsoft.HealthVault.Transport
     /// </summary>
     internal class RequestMessageCreator : IRequestMessageCreator
     {
-        private readonly IConnectionInternal connectionInternal;
+        private readonly IConnectionInternal _connectionInternal;
 
-        private readonly HealthVaultConfiguration healthVaultConfiguration;
-        private readonly SdkTelemetryInformation telemetryInformation;
-        private readonly ICryptographer cryptographer;
+        private readonly HealthVaultConfiguration _healthVaultConfiguration;
+        private readonly SdkTelemetryInformation _telemetryInformation;
+        private readonly ICryptographer _cryptographer;
 
         public RequestMessageCreator(
             IConnectionInternal connectionInternal,
             IServiceLocator serviceLocator)
         {
-            this.connectionInternal = connectionInternal;
+            _connectionInternal = connectionInternal;
 
-            this.healthVaultConfiguration = serviceLocator.GetInstance<HealthVaultConfiguration>();
-            this.telemetryInformation = serviceLocator.GetInstance<SdkTelemetryInformation>();
-            this.cryptographer = serviceLocator.GetInstance<ICryptographer>();
+            _healthVaultConfiguration = serviceLocator.GetInstance<HealthVaultConfiguration>();
+            _telemetryInformation = serviceLocator.GetInstance<SdkTelemetryInformation>();
+            _cryptographer = serviceLocator.GetInstance<ICryptographer>();
         }
 
         /// <summary>
@@ -53,9 +53,9 @@ namespace Microsoft.HealthVault.Transport
             Request request = new Request { Info = new RequestInfo { InfoXml = parameters } };
 
             // Serialize info part of the request message
-            string infoXml = this.Serialize(new RequestInfoSerializer(),  request.Info.InfoXml);
+            string infoXml = Serialize(new RequestInfoSerializer(), request.Info.InfoXml);
 
-            this.SetRequestHeader(
+            SetRequestHeader(
                 method,
                 methodVersion,
                 isMethodAnonymous,
@@ -65,18 +65,18 @@ namespace Microsoft.HealthVault.Transport
                 request);
 
             //Serialize header part of the request message
-            string headerXml = this.Serialize(new RequestHeaderSerializer(), request.Header);
+            string headerXml = Serialize(new RequestHeaderSerializer(), request.Header);
 
             string authXml = null;
 
             // in case the method is anonymous, there is no need to set auth
             if (!isMethodAnonymous)
             {
-                this.SetAuth(headerXml, request);
-                authXml = this.Serialize(new RequestAuthSerializer(), request.Auth);
+                SetAuth(headerXml, request);
+                authXml = Serialize(new RequestAuthSerializer(), request.Auth);
             }
 
-            string requestXml = this.SerializeRequest(authXml, headerXml, infoXml);
+            string requestXml = SerializeRequest(authXml, headerXml, infoXml);
             return requestXml;
         }
 
@@ -105,22 +105,22 @@ namespace Microsoft.HealthVault.Transport
             {
                 request.Header.AppId = appId.HasValue
                     ? appId.Value.ToString()
-                    : this.healthVaultConfiguration.MasterApplicationId.ToString();
+                    : _healthVaultConfiguration.MasterApplicationId.ToString();
             }
             else
             {
-                request.Header.AuthSession = this.connectionInternal.GetAuthSessionHeader();
+                request.Header.AuthSession = _connectionInternal.GetAuthSessionHeader();
             }
 
             request.Header.MessageTime = SDKHelper.XmlFromNow();
-            request.Header.MessageTtl = (int)this.healthVaultConfiguration.RequestTimeToLiveDuration.TotalSeconds;
+            request.Header.MessageTtl = (int)_healthVaultConfiguration.RequestTimeToLiveDuration.TotalSeconds;
 
             request.Header.Version =
-                $"{this.telemetryInformation.Category}/{this.telemetryInformation.FileVersion} {this.telemetryInformation.OsInformation}";
+                $"{_telemetryInformation.Category}/{_telemetryInformation.FileVersion} {_telemetryInformation.OsInformation}";
 
             request.Header.InfoHash = new InfoHash
             {
-                HashData = this.cryptographer.Hash(Encoding.UTF8.GetBytes(infoXml))
+                HashData = _cryptographer.Hash(Encoding.UTF8.GetBytes(infoXml))
             };
         }
 
@@ -128,8 +128,8 @@ namespace Microsoft.HealthVault.Transport
         {
             request.Auth = new RequestAuth
             {
-                HmacData = this.cryptographer.Hmac(
-                    this.connectionInternal.SessionCredential.SharedSecret,
+                HmacData = _cryptographer.Hmac(
+                    _connectionInternal.SessionCredential.SharedSecret,
                     Encoding.UTF8.GetBytes(headerXml))
             };
         }

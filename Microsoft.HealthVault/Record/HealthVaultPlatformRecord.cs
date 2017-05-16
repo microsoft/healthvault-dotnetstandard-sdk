@@ -3,11 +3,6 @@
 // see http://www.microsoft.com/resources/sharedsource/licensingbasics/sharedsourcelicenses.mspx.
 // All other rights reserved.
 
-using Microsoft.HealthVault.Connection;
-using Microsoft.HealthVault.Exceptions;
-using Microsoft.HealthVault.Helpers;
-using Microsoft.HealthVault.Thing;
-using Microsoft.HealthVault.Transport;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -15,6 +10,11 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.XPath;
+using Microsoft.HealthVault.Connection;
+using Microsoft.HealthVault.Exceptions;
+using Microsoft.HealthVault.Helpers;
+using Microsoft.HealthVault.Thing;
+using Microsoft.HealthVault.Transport;
 
 namespace Microsoft.HealthVault.Record
 {
@@ -89,7 +89,7 @@ namespace Microsoft.HealthVault.Record
             HealthRecordAccessor accessor,
             IList<Guid> healthRecordItemTypeIds)
         {
-            HealthRecordPermissions recordPermissions = await this.QueryRecordPermissionsAsync(connection, accessor, healthRecordItemTypeIds).ConfigureAwait(false);
+            HealthRecordPermissions recordPermissions = await QueryRecordPermissionsAsync(connection, accessor, healthRecordItemTypeIds).ConfigureAwait(false);
             Collection<ThingTypePermission> typePermissions = recordPermissions.ItemTypePermissions;
 
             Dictionary<Guid, ThingTypePermission> permissions = new Dictionary<Guid, ThingTypePermission>();
@@ -153,7 +153,7 @@ namespace Microsoft.HealthVault.Record
             HealthRecordAccessor accessor,
             IList<Guid> healthRecordItemTypeIds)
         {
-            HealthRecordPermissions permissions = await this.QueryRecordPermissionsAsync(connection, accessor, healthRecordItemTypeIds).ConfigureAwait(false);
+            HealthRecordPermissions permissions = await QueryRecordPermissionsAsync(connection, accessor, healthRecordItemTypeIds).ConfigureAwait(false);
             return permissions.ItemTypePermissions;
         }
 
@@ -256,7 +256,7 @@ namespace Microsoft.HealthVault.Record
             return parameters.ToString();
         }
 
-        private static readonly XPathExpression QueryPermissionsInfoPath = XPathExpression.Compile("/wc:info");
+        private static readonly XPathExpression s_queryPermissionsInfoPath = XPathExpression.Compile("/wc:info");
 
         internal static XPathExpression GetQueryPermissionsInfoXPathExpression(XPathNavigator infoNav)
         {
@@ -268,9 +268,9 @@ namespace Microsoft.HealthVault.Record
                 "urn:com.microsoft.wc.methods.response.QueryPermissions");
 
             XPathExpression infoPathClone;
-            lock (QueryPermissionsInfoPath)
+            lock (s_queryPermissionsInfoPath)
             {
-                infoPathClone = QueryPermissionsInfoPath.Clone();
+                infoPathClone = s_queryPermissionsInfoPath.Clone();
             }
 
             infoPathClone.SetContext(infoXmlNamespaceManager);

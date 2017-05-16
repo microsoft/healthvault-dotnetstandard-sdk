@@ -40,7 +40,7 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public Email(string address)
         {
-            this.Address = address;
+            Address = address;
         }
 
         /// <summary>
@@ -68,8 +68,8 @@ namespace Microsoft.HealthVault.ItemTypes
         public Email(string address, string description, bool isPrimary)
             : this(address)
         {
-            this.Description = description;
-            this.IsPrimary = isPrimary;
+            Description = description;
+            IsPrimary = isPrimary;
         }
 
         /// <summary>
@@ -93,7 +93,7 @@ namespace Microsoft.HealthVault.ItemTypes
 
             if (descNav != null)
             {
-                this.description = descNav.Value;
+                _description = descNav.Value;
             }
 
             XPathNavigator isPrimaryNav =
@@ -101,10 +101,10 @@ namespace Microsoft.HealthVault.ItemTypes
 
             if (isPrimaryNav != null)
             {
-                this.isPrimary = isPrimaryNav.ValueAsBoolean;
+                _isPrimary = isPrimaryNav.ValueAsBoolean;
             }
 
-            this.address = navigator.SelectSingleNode("address").Value;
+            _address = navigator.SelectSingleNode("address").Value;
         }
 
         /// <summary>
@@ -137,23 +137,23 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             Validator.ThrowIfStringNullOrEmpty(nodeName, "nodeName");
             Validator.ThrowIfWriterNull(writer);
-            Validator.ThrowSerializationIfNull(this.address, Resources.EmailAddressNotSet);
+            Validator.ThrowSerializationIfNull(_address, Resources.EmailAddressNotSet);
 
             writer.WriteStartElement(nodeName);
 
-            if (!string.IsNullOrEmpty(this.description))
+            if (!string.IsNullOrEmpty(_description))
             {
-                writer.WriteElementString("description", this.description);
+                writer.WriteElementString("description", _description);
             }
 
-            if (this.isPrimary != null)
+            if (_isPrimary != null)
             {
                 writer.WriteElementString(
                     "is-primary",
-                    SDKHelper.XmlFromBool((bool)this.isPrimary));
+                    SDKHelper.XmlFromBool((bool)_isPrimary));
             }
 
-            writer.WriteElementString("address", this.address);
+            writer.WriteElementString("address", _address);
 
             writer.WriteEndElement();
         }
@@ -176,16 +176,16 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public string Description
         {
-            get { return this.description; }
+            get { return _description; }
 
             set
             {
                 Validator.ThrowIfStringIsWhitespace(value, "Description");
-                this.description = value;
+                _description = value;
             }
         }
 
-        private string description;
+        private string _description;
 
         /// <summary>
         /// Gets or sets a value indicating whether the email address is the
@@ -202,11 +202,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public bool? IsPrimary
         {
-            get { return this.isPrimary; }
-            set { this.isPrimary = value; }
+            get { return _isPrimary; }
+            set { _isPrimary = value; }
         }
 
-        private bool? isPrimary;
+        private bool? _isPrimary;
 
         /// <summary>
         /// Gets or sets the email address.
@@ -223,16 +223,16 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public string Address
         {
-            get { return this.address; }
+            get { return _address; }
 
             set
             {
                 Validator.ThrowIfStringNullOrEmpty(value, "Addresses");
                 Validator.ThrowIfStringIsWhitespace(value, "Addresses");
-                this.address = value;
+                _address = value;
             }
         }
 
-        private string address;
+        private string _address;
     }
 }

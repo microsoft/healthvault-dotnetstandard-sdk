@@ -50,7 +50,7 @@ namespace Microsoft.HealthVault.ItemTypes
         public Person(Name name)
             : base(TypeId)
         {
-            this.Item.Name = name;
+            Item.Name = name;
         }
 
         /// <summary>
@@ -75,8 +75,8 @@ namespace Microsoft.HealthVault.ItemTypes
         public Person(Name name, CodableValue personType)
             : base(TypeId)
         {
-            this.Name = name;
-            this.PersonType = personType;
+            Name = name;
+            PersonType = personType;
         }
 
         /// <summary>
@@ -111,7 +111,7 @@ namespace Microsoft.HealthVault.ItemTypes
             Validator.ThrowInvalidIfNull(personNav, Resources.PersonUnexpectedNode);
 
             // <person>
-            this.item.ParseXml(personNav);
+            _item.ParseXml(personNav);
         }
 
         /// <summary>
@@ -125,7 +125,7 @@ namespace Microsoft.HealthVault.ItemTypes
         public override void WriteXml(XmlWriter writer)
         {
             // <person>
-            this.item.WriteXml("person", writer);
+            _item.WriteXml("person", writer);
         }
 
         /// <summary>
@@ -142,8 +142,8 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public Name Name
         {
-            get { return this.Item.Name; }
-            set { this.Item.Name = value; }
+            get { return Item.Name; }
+            set { Item.Name = value; }
         }
 
         /// <summary>
@@ -164,12 +164,12 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public string Organization
         {
-            get { return this.Item.Organization; }
+            get { return Item.Organization; }
 
             set
             {
                 Validator.ThrowIfStringIsWhitespace(value, "Organization");
-                this.Item.Organization = value;
+                Item.Organization = value;
             }
         }
 
@@ -187,12 +187,12 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public string ProfessionalTraining
         {
-            get { return this.Item.ProfessionalTraining; }
+            get { return Item.ProfessionalTraining; }
 
             set
             {
                 Validator.ThrowIfStringIsWhitespace(value, "ProfessionalTraining");
-                this.Item.ProfessionalTraining = value;
+                Item.ProfessionalTraining = value;
             }
         }
 
@@ -214,12 +214,12 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public string PersonId
         {
-            get { return this.Item.PersonId; }
+            get { return Item.PersonId; }
 
             set
             {
                 Validator.ThrowIfStringIsWhitespace(value, "PersonId");
-                this.Item.PersonId = value;
+                Item.PersonId = value;
             }
         }
 
@@ -238,8 +238,8 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public ContactInfo ContactInformation
         {
-            get { return this.Item.ContactInformation; }
-            set { this.Item.ContactInformation = value; }
+            get { return Item.ContactInformation; }
+            set { Item.ContactInformation = value; }
         }
 
         /// <summary>
@@ -253,8 +253,8 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public CodableValue PersonType
         {
-            get { return this.Item.PersonType; }
-            set { this.Item.PersonType = value; }
+            get { return Item.PersonType; }
+            set { Item.PersonType = value; }
         }
 
         /// <summary>
@@ -267,11 +267,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         private PersonItem Item
         {
-            get { return this.item; }
-            set { this.item = value; }
+            get { return _item; }
+            set { _item = value; }
         }
 
-        private PersonItem item = new PersonItem();
+        private PersonItem _item = new PersonItem();
 
         /// <summary>
         /// Gets a string representation of the person item.
@@ -283,15 +283,15 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public override string ToString()
         {
-            string result = this.Name.ToString();
+            string result = Name.ToString();
 
-            if (this.PersonType != null)
+            if (PersonType != null)
             {
                 result =
                     string.Format(
                         Resources.PersonToStringFormat,
-                        this.Name.ToString(),
-                        this.PersonType.Text);
+                        Name.ToString(),
+                        PersonType.Text);
             }
 
             return result;

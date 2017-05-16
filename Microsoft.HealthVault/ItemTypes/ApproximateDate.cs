@@ -51,7 +51,7 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public ApproximateDate(int year)
         {
-            this.Year = year;
+            Year = year;
         }
 
         /// <summary>
@@ -76,7 +76,7 @@ namespace Microsoft.HealthVault.ItemTypes
         public ApproximateDate(int year, int month)
             : this(year)
         {
-            this.Month = month;
+            Month = month;
         }
 
         /// <summary>
@@ -106,7 +106,7 @@ namespace Microsoft.HealthVault.ItemTypes
         public ApproximateDate(int year, int month, int day)
             : this(year, month)
         {
-            this.Day = day;
+            Day = day;
         }
 
         /// <summary>
@@ -125,18 +125,18 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             Validator.ThrowIfNavigatorNull(navigator);
 
-            this.year = navigator.SelectSingleNode("y").ValueAsInt;
+            _year = navigator.SelectSingleNode("y").ValueAsInt;
 
             XPathNavigator monthNav = navigator.SelectSingleNode("m");
             if (monthNav != null)
             {
-                this.month = monthNav.ValueAsInt;
+                _month = monthNav.ValueAsInt;
             }
 
             XPathNavigator dayNav = navigator.SelectSingleNode("d");
             if (dayNav != null)
             {
-                this.day = dayNav.ValueAsInt;
+                _day = dayNav.ValueAsInt;
             }
         }
 
@@ -168,20 +168,20 @@ namespace Microsoft.HealthVault.ItemTypes
             writer.WriteStartElement(nodeName);
 
             writer.WriteElementString(
-                "y", this.year.ToString(CultureInfo.InvariantCulture));
+                "y", _year.ToString(CultureInfo.InvariantCulture));
 
-            if (this.month != null)
+            if (_month != null)
             {
                 writer.WriteElementString(
                     "m",
-                    ((int)this.month).ToString(CultureInfo.InvariantCulture));
+                    ((int)_month).ToString(CultureInfo.InvariantCulture));
             }
 
-            if (this.day != null)
+            if (_day != null)
             {
                 writer.WriteElementString(
                     "d",
-                    ((int)this.day).ToString(CultureInfo.InvariantCulture));
+                    ((int)_day).ToString(CultureInfo.InvariantCulture));
             }
 
             writer.WriteEndElement();
@@ -205,20 +205,20 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public int Year
         {
-            get { return this.year; }
+            get { return _year; }
 
             set
             {
                 if (value < 1000 || value > 9999)
                 {
-                    throw new ArgumentOutOfRangeException(nameof(this.Year), Resources.DateYearOutOfRange);
+                    throw new ArgumentOutOfRangeException(nameof(Year), Resources.DateYearOutOfRange);
                 }
 
-                this.year = value;
+                _year = value;
             }
         }
 
-        private int year = DateTime.Now.Year;
+        private int _year = DateTime.Now.Year;
 
         /// <summary>
         /// Gets or sets the month of the date approximation.
@@ -239,20 +239,20 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public int? Month
         {
-            get { return this.month; }
+            get { return _month; }
 
             set
             {
                 if (value < 1 || value > 12)
                 {
-                    throw new ArgumentOutOfRangeException(nameof(this.Month), Resources.DateMonthOutOfRange);
+                    throw new ArgumentOutOfRangeException(nameof(Month), Resources.DateMonthOutOfRange);
                 }
 
-                this.month = value;
+                _month = value;
             }
         }
 
-        private int? month;
+        private int? _month;
 
         /// <summary>
         /// Gets or sets the day of the date approximation.
@@ -273,20 +273,20 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public int? Day
         {
-            get { return this.day; }
+            get { return _day; }
 
             set
             {
                 if (value < 1 || value > 31)
                 {
-                    throw new ArgumentOutOfRangeException(nameof(this.Day), Resources.DateDayOutOfRange);
+                    throw new ArgumentOutOfRangeException(nameof(Day), Resources.DateDayOutOfRange);
                 }
 
-                this.day = value;
+                _day = value;
             }
         }
 
-        private int? day;
+        private int? _day;
 
         #region IComparable
 
@@ -325,7 +325,7 @@ namespace Microsoft.HealthVault.ItemTypes
                 try
                 {
                     DateTime dt = (DateTime)obj;
-                    return this.CompareTo(dt);
+                    return CompareTo(dt);
                 }
                 catch (InvalidCastException)
                 {
@@ -333,7 +333,7 @@ namespace Microsoft.HealthVault.ItemTypes
                 }
             }
 
-            return this.CompareTo(hsDate);
+            return CompareTo(hsDate);
         }
 
         /// <summary>
@@ -360,24 +360,24 @@ namespace Microsoft.HealthVault.ItemTypes
                 return 1;
             }
 
-            if (this.Year > other.Year)
+            if (Year > other.Year)
             {
                 return 1;
             }
 
-            if (this.Year < other.Year)
+            if (Year < other.Year)
             {
                 return -1;
             }
 
-            int result = ApproximateTime.CompareOptional(this.Month, other.Month);
+            int result = ApproximateTime.CompareOptional(Month, other.Month);
 
             if (result != 0)
             {
                 return result;
             }
 
-            return ApproximateTime.CompareOptional(this.Day, other.Day);
+            return ApproximateTime.CompareOptional(Day, other.Day);
         }
 
         /// <summary>
@@ -399,24 +399,24 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public int CompareTo(DateTime other)
         {
-            if (this.Year > other.Year)
+            if (Year > other.Year)
             {
                 return 1;
             }
 
-            if (this.Year < other.Year)
+            if (Year < other.Year)
             {
                 return -1;
             }
 
-            int result = ApproximateTime.CompareOptional(this.Month, other.Month);
+            int result = ApproximateTime.CompareOptional(Month, other.Month);
 
             if (result != 0)
             {
                 return result;
             }
 
-            return ApproximateTime.CompareOptional(this.Day, other.Day);
+            return ApproximateTime.CompareOptional(Day, other.Day);
         }
 
         #endregion IComparable
@@ -445,7 +445,7 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public override bool Equals(object obj)
         {
-            return this.CompareTo(obj) == 0;
+            return CompareTo(obj) == 0;
         }
 
         /// <summary>
@@ -601,19 +601,19 @@ namespace Microsoft.HealthVault.ItemTypes
 
         internal string ToString(IFormatProvider formatProvider)
         {
-            if (this.Month == null)
+            if (Month == null)
             {
-                return string.Format("{0:D4}", this.Year);
+                return string.Format("{0:D4}", Year);
             }
 
-            if (this.Day != null)
+            if (Day != null)
             {
-                DateTime date = new DateTime(this.Year, this.Month.Value, this.Day.Value);
+                DateTime date = new DateTime(Year, Month.Value, Day.Value);
                 return date.ToString("d", formatProvider);
             }
             else
             {
-                DateTime date = new DateTime(this.Year, this.Month.Value, 1);
+                DateTime date = new DateTime(Year, Month.Value, 1);
                 return date.ToString("Y", formatProvider);
             }
         }

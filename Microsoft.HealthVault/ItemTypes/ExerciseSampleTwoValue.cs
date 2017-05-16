@@ -20,12 +20,12 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <param name="value2">The second data value of this sample.</param>
         public ExerciseSampleTwoValue(double offsetInSeconds, double value1, double value2)
         {
-            this.OffsetInSeconds = offsetInSeconds;
-            this.Value1 = value1;
-            this.Value2 = value2;
+            OffsetInSeconds = offsetInSeconds;
+            Value1 = value1;
+            Value2 = value2;
         }
 
-        private double offsetInSeconds;
+        private double _offsetInSeconds;
 
         /// <summary>
         /// Gets or sets the offset in seconds of this data sample from the beginning of the sample set.
@@ -40,39 +40,39 @@ namespace Microsoft.HealthVault.ItemTypes
         /// </exception>
         public double OffsetInSeconds
         {
-            get { return this.offsetInSeconds; }
+            get { return _offsetInSeconds; }
 
             set
             {
                 if (value < 0)
                 {
-                    throw new ArgumentOutOfRangeException(nameof(this.OffsetInSeconds), Resources.OffsetMustBePositive);
+                    throw new ArgumentOutOfRangeException(nameof(OffsetInSeconds), Resources.OffsetMustBePositive);
                 }
 
-                this.offsetInSeconds = value;
+                _offsetInSeconds = value;
             }
         }
 
-        private double value1;
+        private double _value1;
 
         /// <summary>
         /// Gets or sets the first data value stored in the sample.
         /// </summary>
         public double Value1
         {
-            get { return this.value1; }
-            set { this.value1 = value; }
+            get { return _value1; }
+            set { _value1 = value; }
         }
 
-        private double value2;
+        private double _value2;
 
         /// <summary>
         /// Gets or sets the second data value stored in the sample.
         /// </summary>
         public double Value2
         {
-            get { return this.value2; }
-            set { this.value2 = value; }
+            get { return _value2; }
+            set { _value2 = value; }
         }
 
         /// <summary>
@@ -83,9 +83,9 @@ namespace Microsoft.HealthVault.ItemTypes
             return
                 string.Format(
                     Resources.ExerciseSampleTwoValueToStringFormat,
-                    this.OffsetInSeconds.ToString(),
-                    this.Value1.ToString(),
-                    this.Value2.ToString());
+                    OffsetInSeconds.ToString(),
+                    Value1.ToString(),
+                    Value2.ToString());
         }
     }
 }

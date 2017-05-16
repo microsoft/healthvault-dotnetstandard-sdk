@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Microsoft.HealthVault.Exceptions;
 
 namespace Microsoft.HealthVault.Client.Exceptions
@@ -19,7 +15,7 @@ namespace Microsoft.HealthVault.Client.Exceptions
         public BrowserAuthException(int? errorCode)
             : base(Resources.BrowserAuthException)
         {
-            this.HttpErrorCode = errorCode;
+            HttpErrorCode = errorCode;
         }
 
         /// <summary>

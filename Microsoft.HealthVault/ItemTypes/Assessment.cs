@@ -49,8 +49,8 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public Assessment(CodableValue name, CodableValue value)
         {
-            this.Name = name;
-            this.Value = value;
+            Name = name;
+            Value = value;
         }
 
         /// <summary>
@@ -70,15 +70,15 @@ namespace Microsoft.HealthVault.ItemTypes
             Validator.ThrowIfNavigatorNull(navigator);
 
             // <name>
-            this.name = new CodableValue();
-            this.name.ParseXml(navigator.SelectSingleNode("name"));
+            _name = new CodableValue();
+            _name.ParseXml(navigator.SelectSingleNode("name"));
 
             // <value>
-            this.value = new CodableValue();
-            this.value.ParseXml(navigator.SelectSingleNode("value"));
+            _value = new CodableValue();
+            _value.ParseXml(navigator.SelectSingleNode("value"));
 
             // <group>
-            this.group = XPathHelper.GetOptNavValue<CodableValue>(navigator, "group");
+            _group = XPathHelper.GetOptNavValue<CodableValue>(navigator, "group");
         }
 
         /// <summary>
@@ -109,19 +109,19 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             Validator.ThrowIfStringNullOrEmpty(nodeName, "nodeName");
             Validator.ThrowIfWriterNull(writer);
-            Validator.ThrowSerializationIfNull(this.name, Resources.AssessmentNameNotSet);
-            Validator.ThrowSerializationIfNull(this.value, Resources.AssessmentValueNotSet);
+            Validator.ThrowSerializationIfNull(_name, Resources.AssessmentNameNotSet);
+            Validator.ThrowSerializationIfNull(_value, Resources.AssessmentValueNotSet);
 
             writer.WriteStartElement(nodeName);
 
             // <name>
-            this.name.WriteXml("name", writer);
+            _name.WriteXml("name", writer);
 
             // <value>
-            this.value.WriteXml("value", writer);
+            _value.WriteXml("value", writer);
 
             // <group>
-            XmlWriterHelper.WriteOpt(writer, "group", this.group);
+            XmlWriterHelper.WriteOpt(writer, "group", _group);
 
             writer.WriteEndElement();
         }
@@ -142,16 +142,16 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public CodableValue Name
         {
-            get { return this.name; }
+            get { return _name; }
 
             set
             {
-                Validator.ThrowIfArgumentNull(value, nameof(this.Name), Resources.AssessmentNameMandatory);
-                this.name = value;
+                Validator.ThrowIfArgumentNull(value, nameof(Name), Resources.AssessmentNameMandatory);
+                _name = value;
             }
         }
 
-        private CodableValue name;
+        private CodableValue _name;
 
         /// <summary>
         /// Gets or sets the calculated value of the assessed area.
@@ -171,16 +171,16 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public CodableValue Value
         {
-            get { return this.value; }
+            get { return _value; }
 
             set
             {
-                Validator.ThrowIfArgumentNull(value, nameof(this.Value), Resources.AssessmentValueMandatory);
-                this.value = value;
+                Validator.ThrowIfArgumentNull(value, nameof(Value), Resources.AssessmentValueMandatory);
+                _value = value;
             }
         }
 
-        private CodableValue value;
+        private CodableValue _value;
 
         /// <summary>
         /// Gets or sets the additional information that can be used to help organize the
@@ -197,11 +197,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public CodableValue Group
         {
-            get { return this.group; }
-            set { this.group = value; }
+            get { return _group; }
+            set { _group = value; }
         }
 
-        private CodableValue group;
+        private CodableValue _group;
 
         /// <summary>
         /// Gets a string of the name or description of the assessment.
@@ -211,21 +211,21 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             string result = string.Empty;
 
-            if (this.name != null && this.value != null)
+            if (_name != null && _value != null)
             {
                 result =
                     string.Format(
                         Resources.AssessmentToStringFormat,
-                        this.name.ToString(),
-                        this.value.ToString());
+                        _name.ToString(),
+                        _value.ToString());
             }
-            else if (this.name != null)
+            else if (_name != null)
             {
-                result = this.name.ToString();
+                result = _name.ToString();
             }
-            else if (this.value != null)
+            else if (_value != null)
             {
-                result = this.value.ToString();
+                result = _value.ToString();
             }
 
             return result;

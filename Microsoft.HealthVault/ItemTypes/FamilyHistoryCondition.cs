@@ -51,7 +51,7 @@ namespace Microsoft.HealthVault.ItemTypes
         public FamilyHistoryCondition(ConditionEntry relativeCondition)
             : base(TypeId)
         {
-            this.RelativeCondition = relativeCondition;
+            RelativeCondition = relativeCondition;
         }
 
         /// <summary>
@@ -81,8 +81,8 @@ namespace Microsoft.HealthVault.ItemTypes
 
             Validator.ThrowInvalidIfNull(itemNav, Resources.FamilyHistoryConditionUnexpectedNode);
 
-            this.relativeCondition = new ConditionEntry();
-            this.relativeCondition.ParseXml(itemNav.SelectSingleNode("condition"));
+            _relativeCondition = new ConditionEntry();
+            _relativeCondition.ParseXml(itemNav.SelectSingleNode("condition"));
         }
 
         /// <summary>
@@ -104,13 +104,13 @@ namespace Microsoft.HealthVault.ItemTypes
         public override void WriteXml(XmlWriter writer)
         {
             Validator.ThrowIfWriterNull(writer);
-            Validator.ThrowSerializationIfNull(this.relativeCondition, Resources.FamilyHistoryConditionConditionNotSet);
+            Validator.ThrowSerializationIfNull(_relativeCondition, Resources.FamilyHistoryConditionConditionNotSet);
 
             // <family-history-condition>
             writer.WriteStartElement("family-history-condition");
 
             // <condition>
-            this.relativeCondition.WriteXml("condition", writer);
+            _relativeCondition.WriteXml("condition", writer);
 
             // </familty-history-conditon>
             writer.WriteEndElement();
@@ -126,16 +126,16 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public ConditionEntry RelativeCondition
         {
-            get { return this.relativeCondition; }
+            get { return _relativeCondition; }
 
             set
             {
-                Validator.ThrowIfArgumentNull(value, nameof(this.RelativeCondition), Resources.FamilyHistoryConditionConditionMandatory);
-                this.relativeCondition = value;
+                Validator.ThrowIfArgumentNull(value, nameof(RelativeCondition), Resources.FamilyHistoryConditionConditionMandatory);
+                _relativeCondition = value;
             }
         }
 
-        private ConditionEntry relativeCondition;
+        private ConditionEntry _relativeCondition;
 
         /// <summary>
         /// Gets a string representation of the family history condition item.
@@ -147,7 +147,7 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public override string ToString()
         {
-            return this.relativeCondition.Name.ToString();
+            return _relativeCondition.Name.ToString();
         }
     }
 }

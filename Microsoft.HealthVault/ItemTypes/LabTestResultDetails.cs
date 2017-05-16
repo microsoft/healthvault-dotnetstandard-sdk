@@ -35,35 +35,35 @@ namespace Microsoft.HealthVault.ItemTypes
             Validator.ThrowIfNavigatorNull(navigator);
 
             // when
-            this.when =
+            _when =
                 XPathHelper.GetOptNavValue<ApproximateDateTime>(navigator, "when");
 
             // name
-            this.name =
+            _name =
                 XPathHelper.GetOptNavValue(navigator, "name");
 
             // substance
-            this.substance =
+            _substance =
                 XPathHelper.GetOptNavValue<CodableValue>(navigator, "substance");
 
             // collection-method
-            this.collectionMethod =
+            _collectionMethod =
                 XPathHelper.GetOptNavValue<CodableValue>(navigator, "collection-method");
 
             // clinical-code
-            this.clinicalCode =
+            _clinicalCode =
                 XPathHelper.GetOptNavValue<CodableValue>(navigator, "clinical-code");
 
             // value
-            this.value =
+            _value =
                 XPathHelper.GetOptNavValue<LabTestResultValue>(navigator, "value");
 
             // status
-            this.status =
+            _status =
                 XPathHelper.GetOptNavValue<CodableValue>(navigator, "status");
 
             // note
-            this.note =
+            _note =
                 XPathHelper.GetOptNavValue(navigator, "note");
         }
 
@@ -99,49 +99,49 @@ namespace Microsoft.HealthVault.ItemTypes
             XmlWriterHelper.WriteOpt(
                 writer,
                 "when",
-                this.when);
+                _when);
 
             // name
             XmlWriterHelper.WriteOptString(
                 writer,
                 "name",
-                this.name);
+                _name);
 
             // substance
             XmlWriterHelper.WriteOpt(
                 writer,
                 "substance",
-                this.substance);
+                _substance);
 
             // collection-method
             XmlWriterHelper.WriteOpt(
                 writer,
                 "collection-method",
-                this.collectionMethod);
+                _collectionMethod);
 
             // clinical-code
             XmlWriterHelper.WriteOpt(
                 writer,
                 "clinical-code",
-                this.clinicalCode);
+                _clinicalCode);
 
             // value
             XmlWriterHelper.WriteOpt(
                 writer,
                 "value",
-                this.value);
+                _value);
 
             // status
             XmlWriterHelper.WriteOpt(
                 writer,
                 "status",
-                this.status);
+                _status);
 
             // note
             XmlWriterHelper.WriteOptString(
                 writer,
                 "note",
-                this.note);
+                _note);
 
             // </lab-test-result-type>
             writer.WriteEndElement();
@@ -157,11 +157,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public ApproximateDateTime When
         {
-            get { return this.when; }
-            set { this.when = value; }
+            get { return _when; }
+            set { _when = value; }
         }
 
-        private ApproximateDateTime when;
+        private ApproximateDateTime _when;
 
         /// <summary>
         /// Gets or sets name of the laboratory test.
@@ -177,16 +177,16 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public string Name
         {
-            get { return this.name; }
+            get { return _name; }
 
             set
             {
                 Validator.ThrowIfStringIsWhitespace(value, "Name");
-                this.name = value;
+                _name = value;
             }
         }
 
-        private string name;
+        private string _name;
 
         /// <summary>
         /// Gets or sets substance that is tested.
@@ -198,11 +198,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public CodableValue Substance
         {
-            get { return this.substance; }
-            set { this.substance = value; }
+            get { return _substance; }
+            set { _substance = value; }
         }
 
-        private CodableValue substance;
+        private CodableValue _substance;
 
         /// <summary>
         /// Gets or sets the collection method for the laboratory test.
@@ -214,11 +214,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public CodableValue CollectionMethod
         {
-            get { return this.collectionMethod; }
-            set { this.collectionMethod = value; }
+            get { return _collectionMethod; }
+            set { _collectionMethod = value; }
         }
 
-        private CodableValue collectionMethod;
+        private CodableValue _collectionMethod;
 
         /// <summary>
         /// Gets or sets the clinical code for the lab tests.
@@ -230,11 +230,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public CodableValue ClinicalCode
         {
-            get { return this.clinicalCode; }
-            set { this.clinicalCode = value; }
+            get { return _clinicalCode; }
+            set { _clinicalCode = value; }
         }
 
-        private CodableValue clinicalCode;
+        private CodableValue _clinicalCode;
 
         /// <summary>
         /// Gets or sets the clinical value within a laboratory result.
@@ -248,11 +248,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public LabTestResultValue Value
         {
-            get { return this.value; }
-            set { this.value = value; }
+            get { return _value; }
+            set { _value = value; }
         }
 
-        private LabTestResultValue value;
+        private LabTestResultValue _value;
 
         /// <summary>
         /// Gets or sets the status of the laboratory results.
@@ -265,11 +265,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public CodableValue Status
         {
-            get { return this.status; }
-            set { this.status = value; }
+            get { return _status; }
+            set { _status = value; }
         }
 
-        private CodableValue status;
+        private CodableValue _status;
 
         /// <summary>
         /// Gets or sets a note that augments the laboratory result.
@@ -286,7 +286,7 @@ namespace Microsoft.HealthVault.ItemTypes
         /// Formatting:
         /// Notes may come from systems that require a line-based approach to textual display. To support
         /// this, applications should render the spaces and newlines in the note, and use a fixed-width font.
-        /// The form transform for the lab test results type shows one way to do this.
+        /// The form transform for the lab test results type shows one way to do
         /// </remarks>
         ///
         /// <exception cref="ArgumentException">
@@ -295,16 +295,16 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public string Note
         {
-            get { return this.note; }
+            get { return _note; }
 
             set
             {
                 Validator.ThrowIfStringIsWhitespace(value, "Note");
-                this.note = value;
+                _note = value;
             }
         }
 
-        private string note;
+        private string _note;
 
         /// <summary>
         /// Gets a string representation of the lab test result type item.
@@ -319,86 +319,86 @@ namespace Microsoft.HealthVault.ItemTypes
             StringBuilder result = new StringBuilder(200);
 
             bool first = true;
-            if (this.when != null)
+            if (_when != null)
             {
-                result.Append(this.when);
+                result.Append(_when);
                 first = false;
             }
 
-            if (!string.IsNullOrEmpty(this.name))
+            if (!string.IsNullOrEmpty(_name))
             {
                 if (!first)
                 {
                     result.Append(" ");
                 }
 
-                result.Append(this.name);
+                result.Append(_name);
                 first = false;
             }
 
-            if (this.substance != null)
+            if (_substance != null)
             {
                 if (!first)
                 {
                     result.Append(" ");
                 }
 
-                result.Append(this.substance);
+                result.Append(_substance);
                 first = false;
             }
 
-            if (this.collectionMethod != null)
+            if (_collectionMethod != null)
             {
                 if (!first)
                 {
                     result.Append(" ");
                 }
 
-                result.Append(this.collectionMethod);
+                result.Append(_collectionMethod);
                 first = false;
             }
 
-            if (this.clinicalCode != null)
+            if (_clinicalCode != null)
             {
                 if (!first)
                 {
                     result.Append(" ");
                 }
 
-                result.Append(this.clinicalCode);
+                result.Append(_clinicalCode);
                 first = false;
             }
 
-            if (this.value != null)
+            if (_value != null)
             {
                 if (!first)
                 {
                     result.Append(" ");
                 }
 
-                result.Append(this.value);
+                result.Append(_value);
                 first = false;
             }
 
-            if (this.status != null)
+            if (_status != null)
             {
                 if (!first)
                 {
                     result.Append(" ");
                 }
 
-                result.Append(this.status);
+                result.Append(_status);
                 first = false;
             }
 
-            if (!string.IsNullOrEmpty(this.note))
+            if (!string.IsNullOrEmpty(_note))
             {
                 if (!first)
                 {
                     result.Append(" ");
                 }
 
-                result.Append(this.note);
+                result.Append(_note);
                 first = false;
             }
 

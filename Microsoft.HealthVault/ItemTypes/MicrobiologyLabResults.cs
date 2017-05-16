@@ -52,7 +52,7 @@ namespace Microsoft.HealthVault.ItemTypes
         public MicrobiologyLabResults(HealthServiceDateTime when)
             : base(TypeId)
         {
-            this.When = when;
+            When = when;
         }
 
         /// <summary>
@@ -86,34 +86,34 @@ namespace Microsoft.HealthVault.ItemTypes
 
             Validator.ThrowInvalidIfNull(itemNav, Resources.MicrobiologyLabResultsUnexpectedNode);
 
-            this.when = new HealthServiceDateTime();
-            this.when.ParseXml(itemNav.SelectSingleNode("when"));
+            _when = new HealthServiceDateTime();
+            _when.ParseXml(itemNav.SelectSingleNode("when"));
 
-            this.labTests.Clear();
+            _labTests.Clear();
             XPathNodeIterator labTestIterator = itemNav.Select("lab-tests");
             foreach (XPathNavigator labTestNav in labTestIterator)
             {
                 LabTestType labTest = new LabTestType();
                 labTest.ParseXml(labTestNav);
-                this.labTests.Add(labTest);
+                _labTests.Add(labTest);
             }
 
-            this.sensitivityAgent =
+            _sensitivityAgent =
                 XPathHelper.GetOptNavValue<CodableValue>(itemNav, "sensitivity-agent");
 
-            this.sensitivityValue =
+            _sensitivityValue =
                 XPathHelper.GetOptNavValue<CodableValue>(itemNav, "sensitivity-value");
 
-            this.sensitivityInterpretation =
+            _sensitivityInterpretation =
                 XPathHelper.GetOptNavValue(itemNav, "sensitivity-interpretation");
 
-            this.specimenType =
+            _specimenType =
                 XPathHelper.GetOptNavValue<CodableValue>(itemNav, "specimen-type");
 
-            this.organismName =
+            _organismName =
                 XPathHelper.GetOptNavValue<CodableValue>(itemNav, "organism-name");
 
-            this.organismComment =
+            _organismComment =
                 XPathHelper.GetOptNavValue(itemNav, "organism-comment");
         }
 
@@ -136,48 +136,48 @@ namespace Microsoft.HealthVault.ItemTypes
         public override void WriteXml(XmlWriter writer)
         {
             Validator.ThrowIfWriterNull(writer);
-            Validator.ThrowSerializationIfNull(this.when, Resources.LabResultsWhenNotSet);
+            Validator.ThrowSerializationIfNull(_when, Resources.LabResultsWhenNotSet);
 
             // <microbiology-lab-results>
             writer.WriteStartElement("microbiology-lab-results");
 
             // <when>
-            this.when.WriteXml("when", writer);
+            _when.WriteXml("when", writer);
 
-            for (int index = 0; index < this.labTests.Count; ++index)
+            for (int index = 0; index < _labTests.Count; ++index)
             {
-                this.labTests[index].WriteXml("lab-tests", writer);
+                _labTests[index].WriteXml("lab-tests", writer);
             }
 
             XmlWriterHelper.WriteOpt(
                 writer,
                 "sensitivity-agent",
-                this.sensitivityAgent);
+                _sensitivityAgent);
 
             XmlWriterHelper.WriteOpt(
                 writer,
                 "sensitivity-value",
-                this.sensitivityValue);
+                _sensitivityValue);
 
             XmlWriterHelper.WriteOptString(
                 writer,
                 "sensitivity-interpretation",
-                this.sensitivityInterpretation);
+                _sensitivityInterpretation);
 
             XmlWriterHelper.WriteOpt(
                 writer,
                 "specimen-type",
-                this.specimenType);
+                _specimenType);
 
             XmlWriterHelper.WriteOpt(
                 writer,
                 "organism-name",
-                this.organismName);
+                _organismName);
 
             XmlWriterHelper.WriteOptString(
                 writer,
                 "organism-comment",
-                this.organismComment);
+                _organismComment);
 
             // </microbiology-lab-result>
             writer.WriteEndElement();
@@ -198,24 +198,24 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public HealthServiceDateTime When
         {
-            get { return this.when; }
+            get { return _when; }
 
             set
             {
-                Validator.ThrowIfArgumentNull(value, nameof(this.When), Resources.WhenNullValue);
-                this.when = value;
+                Validator.ThrowIfArgumentNull(value, nameof(When), Resources.WhenNullValue);
+                _when = value;
             }
         }
 
-        private HealthServiceDateTime when = new HealthServiceDateTime();
+        private HealthServiceDateTime _when = new HealthServiceDateTime();
 
         /// <summary>
         /// Gets a collection of laboratory tests.
         /// </summary>
         ///
-        public Collection<LabTestType> LabTests => this.labTests;
+        public Collection<LabTestType> LabTests => _labTests;
 
-        private readonly Collection<LabTestType> labTests = new Collection<LabTestType>();
+        private readonly Collection<LabTestType> _labTests = new Collection<LabTestType>();
 
         /// <summary>
         /// Gets or sets the sensitivity agent.
@@ -228,11 +228,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public CodableValue SensitivityAgent
         {
-            get { return this.sensitivityAgent; }
-            set { this.sensitivityAgent = value; }
+            get { return _sensitivityAgent; }
+            set { _sensitivityAgent = value; }
         }
 
-        private CodableValue sensitivityAgent;
+        private CodableValue _sensitivityAgent;
 
         /// <summary>
         /// Gets or sets the sensitivity value.
@@ -245,11 +245,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public CodableValue SensitivityValue
         {
-            get { return this.sensitivityValue; }
-            set { this.sensitivityValue = value; }
+            get { return _sensitivityValue; }
+            set { _sensitivityValue = value; }
         }
 
-        private CodableValue sensitivityValue;
+        private CodableValue _sensitivityValue;
 
         /// <summary>
         /// Gets or sets the sensitivity interpretation.
@@ -266,16 +266,16 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public string SensitivityInterpretation
         {
-            get { return this.sensitivityInterpretation; }
+            get { return _sensitivityInterpretation; }
 
             set
             {
                 Validator.ThrowIfStringIsWhitespace(value, "SensitivityInterpretation");
-                this.sensitivityInterpretation = value;
+                _sensitivityInterpretation = value;
             }
         }
 
-        private string sensitivityInterpretation;
+        private string _sensitivityInterpretation;
 
         /// <summary>
         /// Gets or sets the specimen type.
@@ -288,11 +288,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public CodableValue SpecimenType
         {
-            get { return this.specimenType; }
-            set { this.specimenType = value; }
+            get { return _specimenType; }
+            set { _specimenType = value; }
         }
 
-        private CodableValue specimenType;
+        private CodableValue _specimenType;
 
         /// <summary>
         /// Gets or sets the organism name.
@@ -305,11 +305,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public CodableValue OrganismName
         {
-            get { return this.organismName; }
-            set { this.organismName = value; }
+            get { return _organismName; }
+            set { _organismName = value; }
         }
 
-        private CodableValue organismName;
+        private CodableValue _organismName;
 
         /// <summary>
         /// Gets or sets the organism comment.
@@ -326,16 +326,16 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public string OrganismComment
         {
-            get { return this.organismComment; }
+            get { return _organismComment; }
 
             set
             {
                 Validator.ThrowIfStringIsWhitespace(value, "OrganismComment");
-                this.organismComment = value;
+                _organismComment = value;
             }
         }
 
-        private string organismComment;
+        private string _organismComment;
 
         /// <summary>
         /// Gets a string representation of the microbiology lab results.
@@ -349,15 +349,15 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             StringBuilder result = new StringBuilder(100);
 
-            result.Append(this.When);
+            result.Append(When);
 
-            for (int index = 0; index < this.LabTests.Count; ++index)
+            for (int index = 0; index < LabTests.Count; ++index)
             {
-                if (!string.IsNullOrEmpty(this.LabTests[index].Name))
+                if (!string.IsNullOrEmpty(LabTests[index].Name))
                 {
                     result.AppendFormat(
                         Resources.ListFormat,
-                        this.LabTests[index].Name);
+                        LabTests[index].Name);
                 }
             }
 

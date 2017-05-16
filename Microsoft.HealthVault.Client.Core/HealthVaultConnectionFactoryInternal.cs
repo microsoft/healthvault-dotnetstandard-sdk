@@ -10,9 +10,9 @@ namespace Microsoft.HealthVault.Client
     /// </summary>
     internal class HealthVaultConnectionFactoryInternal : IHealthVaultConnectionFactory
     {
-        private readonly object connectionLock = new object();
+        private readonly object _connectionLock = new object();
 
-        private HealthVaultSodaConnection cachedConnection;
+        private HealthVaultSodaConnection _cachedConnection;
 
         /// <summary>
         /// Gets an <see cref="IHealthVaultSodaConnection"/> used to connect to HealthVault.
@@ -24,12 +24,12 @@ namespace Microsoft.HealthVault.Client
         /// </exception>
         public IHealthVaultSodaConnection GetOrCreateSodaConnection(HealthVaultConfiguration configuration)
         {
-            lock (this.connectionLock)
+            lock (_connectionLock)
             {
-                if (this.cachedConnection != null)
+                if (_cachedConnection != null)
                 {
-                    ValidateConfiguration(this.cachedConnection.Configuration, configuration);
-                    return this.cachedConnection;
+                    ValidateConfiguration(_cachedConnection.Configuration, configuration);
+                    return _cachedConnection;
                 }
 
                 var missingProperties = new List<string>();
@@ -50,7 +50,7 @@ namespace Microsoft.HealthVault.Client
 
                 HealthVaultSodaConnection newConnection = Ioc.Get<HealthVaultSodaConnection>();
 
-                this.cachedConnection = newConnection;
+                _cachedConnection = newConnection;
                 return newConnection;
             }
         }

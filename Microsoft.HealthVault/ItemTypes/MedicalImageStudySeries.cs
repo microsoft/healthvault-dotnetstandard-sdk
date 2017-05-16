@@ -11,7 +11,6 @@ using System.Xml;
 using System.Xml.XPath;
 using Microsoft.HealthVault.Exceptions;
 using Microsoft.HealthVault.Helpers;
-using Microsoft.HealthVault.Thing;
 
 namespace Microsoft.HealthVault.ItemTypes
 {
@@ -55,10 +54,10 @@ namespace Microsoft.HealthVault.ItemTypes
                 throw new ArgumentException(Resources.ImagesMandatory, nameof(images));
             }
 
-            this.AcquisitionDateTime = acquisitionDateTime;
+            AcquisitionDateTime = acquisitionDateTime;
             foreach (MedicalImageStudySeriesImage image in images)
             {
-                this.images.Add(image);
+                images.Add(image);
             }
         }
 
@@ -78,31 +77,31 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             Validator.ThrowIfNavigatorNull(navigator);
 
-            if (this.acquisitionDateTime == null)
+            if (_acquisitionDateTime == null)
             {
-                this.acquisitionDateTime = new HealthServiceDateTime();
+                _acquisitionDateTime = new HealthServiceDateTime();
             }
 
-            this.acquisitionDateTime.ParseXml(navigator.SelectSingleNode("acquisition-datetime"));
+            _acquisitionDateTime.ParseXml(navigator.SelectSingleNode("acquisition-datetime"));
 
-            this.description = XPathHelper.GetOptNavValue(navigator, "description");
+            _description = XPathHelper.GetOptNavValue(navigator, "description");
 
-            this.images.Clear();
+            _images.Clear();
 
             XPathNodeIterator imageIterator = navigator.Select("images");
             foreach (XPathNavigator imageNav in imageIterator)
             {
                 MedicalImageStudySeriesImage image = new MedicalImageStudySeriesImage();
                 image.ParseXml(imageNav);
-                this.images.Add(image);
+                _images.Add(image);
             }
 
-            this.institutionName = XPathHelper.GetOptNavValue<Organization>(navigator, "institution-name");
-            this.referringPhysician = XPathHelper.GetOptNavValue<PersonItem>(navigator, "referring-physician");
-            this.modality = XPathHelper.GetOptNavValue<CodableValue>(navigator, "modality");
-            this.bodyPart = XPathHelper.GetOptNavValue<CodableValue>(navigator, "body-part");
-            this.previewBlobName = XPathHelper.GetOptNavValue(navigator, "preview-blob-name");
-            this.seriesInstanceUID = XPathHelper.GetOptNavValue(navigator, "series-instance-uid");
+            _institutionName = XPathHelper.GetOptNavValue<Organization>(navigator, "institution-name");
+            _referringPhysician = XPathHelper.GetOptNavValue<PersonItem>(navigator, "referring-physician");
+            _modality = XPathHelper.GetOptNavValue<CodableValue>(navigator, "modality");
+            _bodyPart = XPathHelper.GetOptNavValue<CodableValue>(navigator, "body-part");
+            _previewBlobName = XPathHelper.GetOptNavValue(navigator, "preview-blob-name");
+            _seriesInstanceUID = XPathHelper.GetOptNavValue(navigator, "series-instance-uid");
         }
 
         /// <summary>
@@ -136,9 +135,9 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             Validator.ThrowIfStringNullOrEmpty(nodeName, "nodeName");
             Validator.ThrowIfWriterNull(writer);
-            Validator.ThrowSerializationIfNull(this.acquisitionDateTime, Resources.AcquisitionDateTimeMandatory);
+            Validator.ThrowSerializationIfNull(_acquisitionDateTime, Resources.AcquisitionDateTimeMandatory);
 
-            if (this.images == null || this.images.Count == 0)
+            if (_images == null || _images.Count == 0)
             {
                 throw new ThingSerializationException(Resources.ImagesMandatory);
             }
@@ -146,34 +145,34 @@ namespace Microsoft.HealthVault.ItemTypes
             writer.WriteStartElement(nodeName);
 
             // acquisition-datetime
-            this.acquisitionDateTime.WriteXml("acquisition-datetime", writer);
+            _acquisitionDateTime.WriteXml("acquisition-datetime", writer);
 
             // description
-            XmlWriterHelper.WriteOptString(writer, "description", this.description);
+            XmlWriterHelper.WriteOptString(writer, "description", _description);
 
             // images
-            foreach (MedicalImageStudySeriesImage image in this.images)
+            foreach (MedicalImageStudySeriesImage image in _images)
             {
                 XmlWriterHelper.WriteOpt(writer, "images", image);
             }
 
             // institution-name
-            XmlWriterHelper.WriteOpt(writer, "institution-name", this.institutionName);
+            XmlWriterHelper.WriteOpt(writer, "institution-name", _institutionName);
 
             // referring-physician
-            XmlWriterHelper.WriteOpt(writer, "referring-physician", this.referringPhysician);
+            XmlWriterHelper.WriteOpt(writer, "referring-physician", _referringPhysician);
 
             // modality
-            XmlWriterHelper.WriteOpt(writer, "modality", this.modality);
+            XmlWriterHelper.WriteOpt(writer, "modality", _modality);
 
             // body-part
-            XmlWriterHelper.WriteOpt(writer, "body-part", this.bodyPart);
+            XmlWriterHelper.WriteOpt(writer, "body-part", _bodyPart);
 
             // preview-blob-name
-            XmlWriterHelper.WriteOptString(writer, "preview-blob-name", this.previewBlobName);
+            XmlWriterHelper.WriteOptString(writer, "preview-blob-name", _previewBlobName);
 
             // series-instance-uid
-            XmlWriterHelper.WriteOptString(writer, "series-instance-uid", this.seriesInstanceUID);
+            XmlWriterHelper.WriteOptString(writer, "series-instance-uid", _seriesInstanceUID);
 
             writer.WriteEndElement();
         }
@@ -192,16 +191,16 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public HealthServiceDateTime AcquisitionDateTime
         {
-            get { return this.acquisitionDateTime; }
+            get { return _acquisitionDateTime; }
 
             set
             {
-                Validator.ThrowIfArgumentNull(value, nameof(this.AcquisitionDateTime), Resources.AcquisitionDateTimeMandatory);
-                this.acquisitionDateTime = value;
+                Validator.ThrowIfArgumentNull(value, nameof(AcquisitionDateTime), Resources.AcquisitionDateTimeMandatory);
+                _acquisitionDateTime = value;
             }
         }
 
-        private HealthServiceDateTime acquisitionDateTime;
+        private HealthServiceDateTime _acquisitionDateTime;
 
         /// <summary>
         /// Gets or sets a description of the series.
@@ -217,24 +216,24 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public string Description
         {
-            get { return this.description; }
+            get { return _description; }
 
             set
             {
                 Validator.ThrowIfStringIsWhitespace(value, "Description");
-                this.description = value;
+                _description = value;
             }
         }
 
-        private string description;
+        private string _description;
 
         /// <summary>
         /// Gets and sets medical images.
         /// </summary>
         ///
-        public Collection<MedicalImageStudySeriesImage> Images => this.images;
+        public Collection<MedicalImageStudySeriesImage> Images => _images;
 
-        private readonly Collection<MedicalImageStudySeriesImage> images = new Collection<MedicalImageStudySeriesImage>();
+        private readonly Collection<MedicalImageStudySeriesImage> _images = new Collection<MedicalImageStudySeriesImage>();
 
         /// <summary>
         /// Gets or sets the name of the institution where the images were acquired.
@@ -249,11 +248,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public Organization InstitutionName
         {
-            get { return this.institutionName; }
-            set { this.institutionName = value; }
+            get { return _institutionName; }
+            set { _institutionName = value; }
         }
 
-        private Organization institutionName;
+        private Organization _institutionName;
 
         /// <summary>
         /// Gets or sets the physician who ordered the study.
@@ -268,11 +267,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public PersonItem ReferringPhysician
         {
-            get { return this.referringPhysician; }
-            set { this.referringPhysician = value; }
+            get { return _referringPhysician; }
+            set { _referringPhysician = value; }
         }
 
-        private PersonItem referringPhysician;
+        private PersonItem _referringPhysician;
 
         /// <summary>
         /// Gets or sets the method (or modality) in which the images were acquired.
@@ -288,11 +287,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public CodableValue Modality
         {
-            get { return this.modality; }
-            set { this.modality = value; }
+            get { return _modality; }
+            set { _modality = value; }
         }
 
-        private CodableValue modality;
+        private CodableValue _modality;
 
         /// <summary>
         /// Gets or sets the body part that was imaged.
@@ -306,11 +305,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public CodableValue BodyPart
         {
-            get { return this.bodyPart; }
-            set { this.bodyPart = value; }
+            get { return _bodyPart; }
+            set { _bodyPart = value; }
         }
 
-        private CodableValue bodyPart;
+        private CodableValue _bodyPart;
 
         /// <summary>
         /// Gets or sets the name of the BLOB holding a smaller version of the image
@@ -329,16 +328,16 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public string PreviewBlobName
         {
-            get { return this.previewBlobName; }
+            get { return _previewBlobName; }
 
             set
             {
                 Validator.ThrowIfStringIsWhitespace(value, "PreviewBlobName");
-                this.previewBlobName = value;
+                _previewBlobName = value;
             }
         }
 
-        private string previewBlobName;
+        private string _previewBlobName;
 
         /// <summary>
         /// Gets or sets the series instance UID.
@@ -356,16 +355,16 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public string SeriesInstanceUID
         {
-            get { return this.seriesInstanceUID; }
+            get { return _seriesInstanceUID; }
 
             set
             {
                 Validator.ThrowIfStringIsWhitespace(value, "SeriesInstanceUID");
-                this.seriesInstanceUID = value;
+                _seriesInstanceUID = value;
             }
         }
 
-        private string seriesInstanceUID;
+        private string _seriesInstanceUID;
 
         /// <summary>
         /// Gets a string representation of the medical image study series.
@@ -379,9 +378,9 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             StringBuilder result = new StringBuilder(200);
 
-            if (!string.IsNullOrEmpty(this.Description) && !string.IsNullOrEmpty(this.Description.Trim()))
+            if (!string.IsNullOrEmpty(Description) && !string.IsNullOrEmpty(Description.Trim()))
             {
-                result.Append(this.Description);
+                result.Append(Description);
 
                 if (result.Length > 0)
                 {
@@ -390,39 +389,39 @@ namespace Microsoft.HealthVault.ItemTypes
 
                 result.Append(Resources.OpenParen);
 
-                if (this.BodyPart != null)
+                if (BodyPart != null)
                 {
-                    result.Append(this.BodyPart.Text);
+                    result.Append(BodyPart.Text);
                 }
 
-                if (this.AcquisitionDateTime != null)
+                if (AcquisitionDateTime != null)
                 {
                     if (result.Length > 0)
                     {
                         result.Append(Resources.ListSeparator);
                     }
 
-                    result.Append(this.AcquisitionDateTime);
+                    result.Append(AcquisitionDateTime);
                 }
 
-                if (this.InstitutionName != null)
+                if (InstitutionName != null)
                 {
                     if (result.Length > 0)
                     {
                         result.Append(Resources.ListSeparator);
                     }
 
-                    result.Append(this.InstitutionName.Name);
+                    result.Append(InstitutionName.Name);
                 }
 
-                if (this.ReferringPhysician != null)
+                if (ReferringPhysician != null)
                 {
                     if (result.Length > 0)
                     {
                         result.Append(Resources.ListSeparator);
                     }
 
-                    result.Append(this.ReferringPhysician.Name);
+                    result.Append(ReferringPhysician.Name);
                 }
 
                 result.Append(Resources.CloseParen);

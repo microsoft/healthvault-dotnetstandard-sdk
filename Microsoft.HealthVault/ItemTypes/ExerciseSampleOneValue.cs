@@ -19,11 +19,11 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <param name="value">The data value of this sample.</param>
         public ExerciseSampleOneValue(double offsetInSeconds, double value)
         {
-            this.OffsetInSeconds = offsetInSeconds;
-            this.Value = value;
+            OffsetInSeconds = offsetInSeconds;
+            Value = value;
         }
 
-        private double offsetInSeconds;
+        private double _offsetInSeconds;
 
         /// <summary>
         /// Gets or sets the offset in seconds of this data sample from the beginning of the sample set.
@@ -38,28 +38,28 @@ namespace Microsoft.HealthVault.ItemTypes
         /// </exception>
         public double OffsetInSeconds
         {
-            get { return this.offsetInSeconds; }
+            get { return _offsetInSeconds; }
 
             set
             {
                 if (value < 0)
                 {
-                    throw new ArgumentOutOfRangeException(nameof(this.OffsetInSeconds), Resources.OffsetMustBePositive);
+                    throw new ArgumentOutOfRangeException(nameof(OffsetInSeconds), Resources.OffsetMustBePositive);
                 }
 
-                this.offsetInSeconds = value;
+                _offsetInSeconds = value;
             }
         }
 
-        private double value;
+        private double _value;
 
         /// <summary>
         /// Gets or sets the data value stored in the sample.
         /// </summary>
         public double Value
         {
-            get { return this.value; }
-            set { this.value = value; }
+            get { return _value; }
+            set { _value = value; }
         }
 
         /// <summary>
@@ -70,8 +70,8 @@ namespace Microsoft.HealthVault.ItemTypes
             return
                 string.Format(
                     Resources.ExerciseSampleOneValueToStringFormat,
-                    this.OffsetInSeconds.ToString(),
-                    this.Value.ToString());
+                    OffsetInSeconds.ToString(),
+                    Value.ToString());
         }
     }
 }

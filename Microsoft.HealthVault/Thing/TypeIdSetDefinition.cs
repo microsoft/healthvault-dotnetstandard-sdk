@@ -56,7 +56,7 @@ namespace Microsoft.HealthVault.Thing
                 throw new ArgumentException(Resources.TypeIdSetGuidEmpty, nameof(typeId));
             }
 
-            this.TypeId = typeId;
+            TypeId = typeId;
         }
 
         /// <summary>
@@ -94,7 +94,7 @@ namespace Microsoft.HealthVault.Thing
         public override string GetXml()
         {
             return
-                "<type-id>" + this.TypeId + "</type-id>";
+                "<type-id>" + TypeId + "</type-id>";
         }
     }
 }

@@ -36,11 +36,11 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             Validator.ThrowIfNavigatorNull(navigator);
 
-            this.mean = XPathHelper.GetOptNavValue<T>(navigator, "mean");
-            this.median = XPathHelper.GetOptNavValue<T>(navigator, "median");
-            this.maximum = XPathHelper.GetOptNavValue<T>(navigator, "maximum");
-            this.percentile95th = XPathHelper.GetOptNavValue<T>(navigator, "percentile-95th");
-            this.percentile90th = XPathHelper.GetOptNavValue<T>(navigator, "percentile-90th");
+            _mean = XPathHelper.GetOptNavValue<T>(navigator, "mean");
+            _median = XPathHelper.GetOptNavValue<T>(navigator, "median");
+            _maximum = XPathHelper.GetOptNavValue<T>(navigator, "maximum");
+            _percentile95th = XPathHelper.GetOptNavValue<T>(navigator, "percentile-95th");
+            _percentile90th = XPathHelper.GetOptNavValue<T>(navigator, "percentile-90th");
         }
 
         /// <summary>
@@ -72,11 +72,11 @@ namespace Microsoft.HealthVault.ItemTypes
 
             writer.WriteStartElement(nodeName);
 
-            XmlWriterHelper.WriteOpt(writer, "mean", this.mean);
-            XmlWriterHelper.WriteOpt(writer, "median", this.median);
-            XmlWriterHelper.WriteOpt(writer, "maximum", this.maximum);
-            XmlWriterHelper.WriteOpt(writer, "percentile-95th", this.percentile95th);
-            XmlWriterHelper.WriteOpt(writer, "percentile-90th", this.percentile90th);
+            XmlWriterHelper.WriteOpt(writer, "mean", _mean);
+            XmlWriterHelper.WriteOpt(writer, "median", _median);
+            XmlWriterHelper.WriteOpt(writer, "maximum", _maximum);
+            XmlWriterHelper.WriteOpt(writer, "percentile-95th", _percentile95th);
+            XmlWriterHelper.WriteOpt(writer, "percentile-90th", _percentile90th);
 
             writer.WriteEndElement();
         }
@@ -91,11 +91,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public T Mean
         {
-            get { return this.mean; }
-            set { this.mean = value; }
+            get { return _mean; }
+            set { _mean = value; }
         }
 
-        private T mean;
+        private T _mean;
 
         /// <summary>
         /// Gets or sets the median value that occurred during the session.
@@ -107,11 +107,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public T Median
         {
-            get { return this.median; }
-            set { this.median = value; }
+            get { return _median; }
+            set { _median = value; }
         }
 
-        private T median;
+        private T _median;
 
         /// <summary>
         /// Gets or sets the greatest value that occured during the session.
@@ -123,11 +123,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public T Maximum
         {
-            get { return this.maximum; }
-            set { this.maximum = value; }
+            get { return _maximum; }
+            set { _maximum = value; }
         }
 
-        private T maximum;
+        private T _maximum;
 
         /// <summary>
         /// Gets or sets the value that was at or below this value 95% of the time.
@@ -140,11 +140,11 @@ namespace Microsoft.HealthVault.ItemTypes
         [SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly", Justification = "A valid element name in PAP session.")]
         public T Percentile95th
         {
-            get { return this.percentile95th; }
-            set { this.percentile95th = value; }
+            get { return _percentile95th; }
+            set { _percentile95th = value; }
         }
 
-        private T percentile95th;
+        private T _percentile95th;
 
         /// <summary>
         /// Gets or sets the value that was at or below this value 90% of the time.
@@ -157,11 +157,11 @@ namespace Microsoft.HealthVault.ItemTypes
         [SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly", Justification = "A valid element name in PAP session.")]
         public T Percentile90th
         {
-            get { return this.percentile90th; }
-            set { this.percentile90th = value; }
+            get { return _percentile90th; }
+            set { _percentile90th = value; }
         }
 
-        private T percentile90th;
+        private T _percentile90th;
 
         /// <summary>
         /// Gets a string representation of the PAP session measurements.
@@ -175,11 +175,11 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             StringBuilder result = new StringBuilder(200);
 
-            AddStringRepresentationOfMeasurement(result, this.Mean, Resources.MeanToStringFormat);
-            AddStringRepresentationOfMeasurement(result, this.Median, Resources.MedianToStringFormat);
-            AddStringRepresentationOfMeasurement(result, this.Maximum, Resources.MaximumToStringFormat);
-            AddStringRepresentationOfMeasurement(result, this.Percentile95th, Resources.Percentile95thToStringFormat);
-            AddStringRepresentationOfMeasurement(result, this.Percentile90th, Resources.Percentile90thToStringFormat);
+            AddStringRepresentationOfMeasurement(result, Mean, Resources.MeanToStringFormat);
+            AddStringRepresentationOfMeasurement(result, Median, Resources.MedianToStringFormat);
+            AddStringRepresentationOfMeasurement(result, Maximum, Resources.MaximumToStringFormat);
+            AddStringRepresentationOfMeasurement(result, Percentile95th, Resources.Percentile95thToStringFormat);
+            AddStringRepresentationOfMeasurement(result, Percentile90th, Resources.Percentile90thToStringFormat);
 
             return result.ToString();
         }

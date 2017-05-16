@@ -1,19 +1,18 @@
-﻿// Copyright (c) Microsoft Corporation.  All rights reserved. 
+﻿// Copyright (c) Microsoft Corporation.  All rights reserved.
 // MIT License
 // Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the ""Software""), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 //
 // THE SOFTWARE IS PROVIDED *AS IS*, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-using Microsoft.HealthVault.Application;
-using Microsoft.HealthVault.Exceptions;
-using Microsoft.HealthVault.PlatformInformation;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Microsoft.HealthVault.Application;
+using Microsoft.HealthVault.Exceptions;
 using Microsoft.HealthVault.Person;
-using Microsoft.HealthVault.Record;
+using Microsoft.HealthVault.PlatformInformation;
 using Microsoft.HealthVault.Thing;
 
 namespace Microsoft.HealthVault.Clients
@@ -55,7 +54,7 @@ namespace Microsoft.HealthVault.Clients
         /// <exception cref="ArgumentException">
         /// If <paramref name="preferredLocation"/> is <b>null</b>.
         /// </exception>
-        /// 
+        ///
         Task<HealthServiceInstance> SelectInstanceAsync(Location preferredLocation);
 
         /// <summary>
@@ -96,7 +95,7 @@ namespace Microsoft.HealthVault.Clients
         /// Gets information about the HealthVault service only if it has been updated since
         /// the specified update time.
         /// </summary>
-        /// 
+        ///
         /// <param name="lastUpdatedTime">
         /// The time of the last update to an existing cached copy of <see cref="ServiceInfo"/>.
         /// </param>
@@ -175,7 +174,7 @@ namespace Microsoft.HealthVault.Clients
         ///
         /// <exception cref="UriFormatException">
         /// One or more URL strings returned by HealthVault is invalid.
-        /// </exception> 
+        /// </exception>
         ///
         Task<ServiceInfo> GetServiceDefinitionAsync(ServiceInfoSections responseSections);
 
@@ -276,7 +275,7 @@ namespace Microsoft.HealthVault.Clients
         /// <paramref name="typeIds"/> is <b>non null</b> and member in <paramref name="typeIds"/> is
         /// <see cref="System.Guid.Empty"/>.
         /// </exception>
-        /// 
+        ///
         Task<IDictionary<Guid, ThingTypeDefinition>> GetHealthRecordItemTypeDefinitionAsync(
             IList<Guid> typeIds,
             ThingTypeSections sections,

@@ -33,26 +33,26 @@ namespace SandboxAndroid
             // Set our view from the "main" layout resource
             SetContentView(Resource.Layout.Main);
 
-            this.statusView = FindViewById<TextView>(Resource.Id.StatusText);
-            this.controlsLayout = FindViewById<LinearLayout>(Resource.Id.ControlLayout);
-            this.listView = FindViewById<ListView>(Resource.Id.ListView);
+            statusView = FindViewById<TextView>(Resource.Id.StatusText);
+            controlsLayout = FindViewById<LinearLayout>(Resource.Id.ControlLayout);
+            listView = FindViewById<ListView>(Resource.Id.ListView);
 
             // Get our buttons from the layout resource,
-            this.connectionButton = FindViewById<Button>(Resource.Id.ConnectButton);
-            this.disconnectButton = FindViewById<Button>(Resource.Id.DisconnectButton);
-            this.getButton = FindViewById<Button>(Resource.Id.GetButton);
-            this.createButton = FindViewById<Button>(Resource.Id.CreateButton);
+            connectionButton = FindViewById<Button>(Resource.Id.ConnectButton);
+            disconnectButton = FindViewById<Button>(Resource.Id.DisconnectButton);
+            getButton = FindViewById<Button>(Resource.Id.GetButton);
+            createButton = FindViewById<Button>(Resource.Id.CreateButton);
 
             // attach the actions
-            this.connectionButton.Click += this.ConnectToHealthVaultAsync;
-            this.disconnectButton.Click += this.DisconnectButtonOnClick;
-            this.getButton.Click += this.GetBloodPressures;
-            this.createButton.Click += this.CreateBloodPressure;
+            connectionButton.Click += ConnectToHealthVaultAsync;
+            disconnectButton.Click += DisconnectButtonOnClick;
+            getButton.Click += GetBloodPressures;
+            createButton.Click += CreateBloodPressure;
         }
 
         private async void ConnectToHealthVaultAsync(object sender, EventArgs eventArgs)
         {
-            this.statusView.Text = "Connecting...";
+            statusView.Text = "Connecting...";
 
             // create a configuration for our HealthVault application
             var configuration = GetPpeConfiguration();
@@ -60,25 +60,25 @@ namespace SandboxAndroid
             try
             {
                 // get a connection to HealthVault
-                this.connection = HealthVaultConnectionFactory.Current.GetOrCreateSodaConnection(configuration);
-                await this.connection.AuthenticateAsync();
+                connection = HealthVaultConnectionFactory.Current.GetOrCreateSodaConnection(configuration);
+                await connection.AuthenticateAsync();
             }
             catch (Exception e)
             {
-                this.statusView.Text = $"Error connecting... {e.ToString()}";
+                statusView.Text = $"Error connecting... {e.ToString()}";
             }
 
             // get a thing client
 
-            this.thingClient = connection.CreateThingClient();
+            thingClient = connection.CreateThingClient();
 
-            PersonInfo personInfo = await this.connection.GetPersonInfoAsync();
+            PersonInfo personInfo = await connection.GetPersonInfoAsync();
 
             // update visual state
-            this.connectionButton.Visibility = ViewStates.Gone;
-            this.controlsLayout.Visibility = ViewStates.Visible;
-            this.disconnectButton.Visibility = ViewStates.Visible;
-            this.statusView.Text = $"Hello {personInfo.Name}";
+            connectionButton.Visibility = ViewStates.Gone;
+            controlsLayout.Visibility = ViewStates.Visible;
+            disconnectButton.Visibility = ViewStates.Visible;
+            statusView.Text = $"Hello {personInfo.Name}";
         }
 
         private static HealthVaultConfiguration GetPpeConfiguration()
@@ -94,12 +94,12 @@ namespace SandboxAndroid
 
         private async void DisconnectButtonOnClick(object sender, EventArgs eventArgs)
         {
-            await this.connection.DeauthorizeApplicationAsync();
-            this.statusView.Text = "Disconnected.";
+            await connection.DeauthorizeApplicationAsync();
+            statusView.Text = "Disconnected.";
 
-            this.connectionButton.Visibility = ViewStates.Visible;
-            this.disconnectButton.Visibility = ViewStates.Gone;
-            this.controlsLayout.Visibility = ViewStates.Gone;
+            connectionButton.Visibility = ViewStates.Visible;
+            disconnectButton.Visibility = ViewStates.Gone;
+            controlsLayout.Visibility = ViewStates.Gone;
         }
 
         private async void CreateBloodPressure(object sender, EventArgs eventArgs)
@@ -113,16 +113,16 @@ namespace SandboxAndroid
             };
 
             // use our thing client to creat the new blood pressure
-            PersonInfo personInfo = await this.connection.GetPersonInfoAsync();
+            PersonInfo personInfo = await connection.GetPersonInfoAsync();
             await thingClient.CreateNewThingsAsync(personInfo.SelectedRecord.Id, new List<BloodPressure>() { bp });
         }
 
         private async void GetBloodPressures(object sender, EventArgs eventArgs)
         {
             // use our thing client to get all things of type blood pressure
-            PersonInfo personInfo = await this.connection.GetPersonInfoAsync();
-            IReadOnlyCollection<BloodPressure> bloodPressures = await this.thingClient.GetThingsAsync<BloodPressure>(personInfo.SelectedRecord.Id);
-            this.listView.Adapter = new ArrayAdapter(this, Android.Resource.Layout.SimpleListItem1, new List<BloodPressure>(bloodPressures));
+            PersonInfo personInfo = await connection.GetPersonInfoAsync();
+            IReadOnlyCollection<BloodPressure> bloodPressures = await thingClient.GetThingsAsync<BloodPressure>(personInfo.SelectedRecord.Id);
+            listView.Adapter = new ArrayAdapter(this, Android.Resource.Layout.SimpleListItem1, new List<BloodPressure>(bloodPressures));
         }
     }
 }

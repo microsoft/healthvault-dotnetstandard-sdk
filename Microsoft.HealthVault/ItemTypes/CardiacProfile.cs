@@ -50,7 +50,7 @@ namespace Microsoft.HealthVault.ItemTypes
         public CardiacProfile(HealthServiceDateTime when)
             : base(TypeId)
         {
-            this.When = when;
+            When = when;
         }
 
         /// <summary>
@@ -85,31 +85,31 @@ namespace Microsoft.HealthVault.ItemTypes
 
             Validator.ThrowInvalidIfNull(itemNav, Resources.CardiacProfileUnexpectedNode);
 
-            this.when = new HealthServiceDateTime();
-            this.when.ParseXml(itemNav.SelectSingleNode("when"));
+            _when = new HealthServiceDateTime();
+            _when.ParseXml(itemNav.SelectSingleNode("when"));
 
-            this.onHypertensionDiet =
+            _onHypertensionDiet =
                 XPathHelper.GetOptNavValueAsBool(itemNav, "on-hypertension-diet");
 
-            this.onHypertensionMedication =
+            _onHypertensionMedication =
                 XPathHelper.GetOptNavValueAsBool(itemNav, "on-hypertension-medication");
 
-            this.renalFailureDiagnosed =
+            _renalFailureDiagnosed =
                 XPathHelper.GetOptNavValueAsBool(itemNav, "renal-failure-diagnosed");
 
-            this.diabetesDiagnosed =
+            _diabetesDiagnosed =
                 XPathHelper.GetOptNavValueAsBool(itemNav, "diabetes-diagnosed");
 
-            this.hasFamilyHeartDiseaseHistory =
+            _hasFamilyHeartDiseaseHistory =
                 XPathHelper.GetOptNavValueAsBool(itemNav, "has-family-heart-disease-history");
 
-            this.hasFamilyStrokeHistory =
+            _hasFamilyStrokeHistory =
                 XPathHelper.GetOptNavValueAsBool(itemNav, "has-family-stroke-history");
 
-            this.hasPersonalHeartDiseaseHistory =
+            _hasPersonalHeartDiseaseHistory =
                 XPathHelper.GetOptNavValueAsBool(itemNav, "has-personal-heart-disease-history");
 
-            this.hasPersonalStrokeHistory =
+            _hasPersonalStrokeHistory =
                 XPathHelper.GetOptNavValueAsBool(itemNav, "has-person-stroke-history");
         }
 
@@ -133,47 +133,47 @@ namespace Microsoft.HealthVault.ItemTypes
             writer.WriteStartElement("cardiac-profile");
 
             // <when>
-            this.when.WriteXml("when", writer);
+            _when.WriteXml("when", writer);
 
             XmlWriterHelper.WriteOptBool(
                 writer,
                 "on-hypertension-diet",
-                this.onHypertensionDiet);
+                _onHypertensionDiet);
 
             XmlWriterHelper.WriteOptBool(
                 writer,
                 "on-hypertension-medication",
-                this.onHypertensionMedication);
+                _onHypertensionMedication);
 
             XmlWriterHelper.WriteOptBool(
                 writer,
                 "renal-failure-diagnosed",
-                this.renalFailureDiagnosed);
+                _renalFailureDiagnosed);
 
             XmlWriterHelper.WriteOptBool(
                 writer,
                 "diabetes-diagnosed",
-                this.diabetesDiagnosed);
+                _diabetesDiagnosed);
 
             XmlWriterHelper.WriteOptBool(
                 writer,
                 "has-family-heart-disease-history",
-                this.hasFamilyHeartDiseaseHistory);
+                _hasFamilyHeartDiseaseHistory);
 
             XmlWriterHelper.WriteOptBool(
                 writer,
                 "has-family-stroke-history",
-                this.hasFamilyStrokeHistory);
+                _hasFamilyStrokeHistory);
 
             XmlWriterHelper.WriteOptBool(
                 writer,
                 "has-personal-heart-disease-history",
-                this.hasPersonalHeartDiseaseHistory);
+                _hasPersonalHeartDiseaseHistory);
 
             XmlWriterHelper.WriteOptBool(
                 writer,
                 "has-person-stroke-history",
-                this.hasPersonalStrokeHistory);
+                _hasPersonalStrokeHistory);
 
             // </cardiac-profile>
             writer.WriteEndElement();
@@ -194,16 +194,16 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public HealthServiceDateTime When
         {
-            get { return this.when; }
+            get { return _when; }
 
             set
             {
-                Validator.ThrowIfArgumentNull(value, nameof(this.When), Resources.WhenNullValue);
-                this.when = value;
+                Validator.ThrowIfArgumentNull(value, nameof(When), Resources.WhenNullValue);
+                _when = value;
             }
         }
 
-        private HealthServiceDateTime when = new HealthServiceDateTime();
+        private HealthServiceDateTime _when = new HealthServiceDateTime();
 
         /// <summary>
         /// Gets or sets whether the person is on a hypertension specific
@@ -217,11 +217,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public bool? IsOnHypertensionDiet
         {
-            get { return this.onHypertensionDiet; }
-            set { this.onHypertensionDiet = value; }
+            get { return _onHypertensionDiet; }
+            set { _onHypertensionDiet = value; }
         }
 
-        private bool? onHypertensionDiet;
+        private bool? _onHypertensionDiet;
 
         /// <summary>
         /// Gets or sets whether the person is on a hypertension specific
@@ -235,11 +235,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public bool? IsOnHypertensionMedication
         {
-            get { return this.onHypertensionMedication; }
-            set { this.onHypertensionMedication = value; }
+            get { return _onHypertensionMedication; }
+            set { _onHypertensionMedication = value; }
         }
 
-        private bool? onHypertensionMedication;
+        private bool? _onHypertensionMedication;
 
         /// <summary>
         /// Gets or sets whether renal failure has been diagnosed for the person.
@@ -252,11 +252,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public bool? HasRenalFailureBeenDiagnosed
         {
-            get { return this.renalFailureDiagnosed; }
-            set { this.renalFailureDiagnosed = value; }
+            get { return _renalFailureDiagnosed; }
+            set { _renalFailureDiagnosed = value; }
         }
 
-        private bool? renalFailureDiagnosed;
+        private bool? _renalFailureDiagnosed;
 
         /// <summary>
         /// Gets or sets whether diabetes has been diagnosed for the person.
@@ -269,11 +269,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public bool? HasDiabetesBeenDiagnosed
         {
-            get { return this.diabetesDiagnosed; }
-            set { this.diabetesDiagnosed = value; }
+            get { return _diabetesDiagnosed; }
+            set { _diabetesDiagnosed = value; }
         }
 
-        private bool? diabetesDiagnosed;
+        private bool? _diabetesDiagnosed;
 
         /// <summary>
         /// Gets or sets whether heart disease has been diagnosed for anyone
@@ -287,11 +287,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public bool? HasFamilyHeartDiseaseHistory
         {
-            get { return this.hasFamilyHeartDiseaseHistory; }
-            set { this.hasFamilyHeartDiseaseHistory = value; }
+            get { return _hasFamilyHeartDiseaseHistory; }
+            set { _hasFamilyHeartDiseaseHistory = value; }
         }
 
-        private bool? hasFamilyHeartDiseaseHistory;
+        private bool? _hasFamilyHeartDiseaseHistory;
 
         /// <summary>
         /// Gets or sets whether stroke has been diagnosed for anyone
@@ -305,11 +305,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public bool? HasFamilyStrokeHistory
         {
-            get { return this.hasFamilyStrokeHistory; }
-            set { this.hasFamilyStrokeHistory = value; }
+            get { return _hasFamilyStrokeHistory; }
+            set { _hasFamilyStrokeHistory = value; }
         }
 
-        private bool? hasFamilyStrokeHistory;
+        private bool? _hasFamilyStrokeHistory;
 
         /// <summary>
         /// Gets or sets whether the person has been diagnosed with heart disease.
@@ -322,11 +322,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public bool? HasPersonalHeartDiseaseHistory
         {
-            get { return this.hasPersonalHeartDiseaseHistory; }
-            set { this.hasPersonalHeartDiseaseHistory = value; }
+            get { return _hasPersonalHeartDiseaseHistory; }
+            set { _hasPersonalHeartDiseaseHistory = value; }
         }
 
-        private bool? hasPersonalHeartDiseaseHistory;
+        private bool? _hasPersonalHeartDiseaseHistory;
 
         /// <summary>
         /// Gets or sets whether the person has been diagnosed with a stroke.
@@ -339,11 +339,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public bool? HasPersonalStrokeHistory
         {
-            get { return this.hasPersonalStrokeHistory; }
-            set { this.hasPersonalStrokeHistory = value; }
+            get { return _hasPersonalStrokeHistory; }
+            set { _hasPersonalStrokeHistory = value; }
         }
 
-        private bool? hasPersonalStrokeHistory;
+        private bool? _hasPersonalStrokeHistory;
 
         /// <summary>
         /// Gets a string representation of the cardiac profile item.
@@ -360,14 +360,14 @@ namespace Microsoft.HealthVault.ItemTypes
             string trueString = Resources.True;
             string falseString = Resources.False;
 
-            if (this.IsOnHypertensionDiet != null)
+            if (IsOnHypertensionDiet != null)
             {
                 result.AppendFormat(
                     Resources.CardiacProfileToStringFormatOnHypertensionDiet,
-                        this.IsOnHypertensionDiet.Value ? trueString : falseString);
+                        IsOnHypertensionDiet.Value ? trueString : falseString);
             }
 
-            if (this.IsOnHypertensionMedication != null)
+            if (IsOnHypertensionMedication != null)
             {
                 if (result.Length > 0)
                 {
@@ -377,10 +377,10 @@ namespace Microsoft.HealthVault.ItemTypes
 
                 result.AppendFormat(
                     Resources.CardiacProfileToStringFormatOnHypertensionMeds,
-                        this.IsOnHypertensionMedication.Value ? trueString : falseString);
+                        IsOnHypertensionMedication.Value ? trueString : falseString);
             }
 
-            if (this.HasRenalFailureBeenDiagnosed != null)
+            if (HasRenalFailureBeenDiagnosed != null)
             {
                 if (result.Length > 0)
                 {
@@ -390,10 +390,10 @@ namespace Microsoft.HealthVault.ItemTypes
 
                 result.AppendFormat(
                     Resources.CardiacProfileToStringFormatRenalFailureDiagnosed,
-                        this.HasRenalFailureBeenDiagnosed.Value ? trueString : falseString);
+                        HasRenalFailureBeenDiagnosed.Value ? trueString : falseString);
             }
 
-            if (this.HasDiabetesBeenDiagnosed != null)
+            if (HasDiabetesBeenDiagnosed != null)
             {
                 if (result.Length > 0)
                 {
@@ -403,10 +403,10 @@ namespace Microsoft.HealthVault.ItemTypes
 
                 result.AppendFormat(
                     Resources.CardiacProfileToStringFormatDiabetesDiagnosed,
-                        this.HasDiabetesBeenDiagnosed.Value ? trueString : falseString);
+                        HasDiabetesBeenDiagnosed.Value ? trueString : falseString);
             }
 
-            if (this.HasFamilyHeartDiseaseHistory != null)
+            if (HasFamilyHeartDiseaseHistory != null)
             {
                 if (result.Length > 0)
                 {
@@ -416,10 +416,10 @@ namespace Microsoft.HealthVault.ItemTypes
 
                 result.AppendFormat(
                     Resources.CardiacProfileToStringFormatHasFamlyHeartDiseaseHistory,
-                        this.HasFamilyHeartDiseaseHistory.Value ? trueString : falseString);
+                        HasFamilyHeartDiseaseHistory.Value ? trueString : falseString);
             }
 
-            if (this.HasFamilyStrokeHistory != null)
+            if (HasFamilyStrokeHistory != null)
             {
                 if (result.Length > 0)
                 {
@@ -429,10 +429,10 @@ namespace Microsoft.HealthVault.ItemTypes
 
                 result.AppendFormat(
                     Resources.CardiacProfileToStringFormatHasFamlyStrokeHistory,
-                        this.HasFamilyStrokeHistory.Value ? trueString : falseString);
+                        HasFamilyStrokeHistory.Value ? trueString : falseString);
             }
 
-            if (this.HasPersonalHeartDiseaseHistory != null)
+            if (HasPersonalHeartDiseaseHistory != null)
             {
                 if (result.Length > 0)
                 {
@@ -442,10 +442,10 @@ namespace Microsoft.HealthVault.ItemTypes
 
                 result.AppendFormat(
                     Resources.CardiacProfileToStringFormatHasPersonalHeartDiseaseHistory,
-                        this.HasPersonalHeartDiseaseHistory.Value ? trueString : falseString);
+                        HasPersonalHeartDiseaseHistory.Value ? trueString : falseString);
             }
 
-            if (this.HasPersonalStrokeHistory != null)
+            if (HasPersonalStrokeHistory != null)
             {
                 if (result.Length > 0)
                 {
@@ -455,7 +455,7 @@ namespace Microsoft.HealthVault.ItemTypes
 
                 result.AppendFormat(
                     Resources.CardiacProfileToStringFormatHasPersonalStrokeHistory,
-                        this.HasPersonalStrokeHistory.Value ? trueString : falseString);
+                        HasPersonalStrokeHistory.Value ? trueString : falseString);
             }
 
             return result.ToString();

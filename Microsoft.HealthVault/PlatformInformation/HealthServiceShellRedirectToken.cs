@@ -20,9 +20,9 @@ namespace Microsoft.HealthVault.PlatformInformation
             string description,
             IList<string> queryStringParameters)
         {
-            this.Token = token;
-            this.Description = description;
-            this.queryStringParameters = queryStringParameters;
+            Token = token;
+            Description = description;
+            _queryStringParameters = queryStringParameters;
         }
 
         /// <summary>
@@ -56,8 +56,8 @@ namespace Microsoft.HealthVault.PlatformInformation
         /// A read-only collection containing the parameters.
         /// </returns>
         ///
-        public ReadOnlyCollection<string> QueryStringParameters => new ReadOnlyCollection<string>(this.queryStringParameters);
+        public ReadOnlyCollection<string> QueryStringParameters => new ReadOnlyCollection<string>(_queryStringParameters);
 
-        private IList<string> queryStringParameters;
+        private IList<string> _queryStringParameters;
     }
 }

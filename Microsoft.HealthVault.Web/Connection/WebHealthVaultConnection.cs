@@ -1,7 +1,7 @@
-﻿// Copyright (c) Microsoft Corporation.  All rights reserved. 
+﻿// Copyright (c) Microsoft Corporation.  All rights reserved.
 // MIT License
 // Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the ""Software""), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 //
 // THE SOFTWARE IS PROVIDED *AS IS*, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
@@ -22,10 +22,10 @@ namespace Microsoft.HealthVault.Web.Connection
 {
     internal class WebHealthVaultConnection : WebHealthVaultConnectionBase, IWebHealthVaultConnection
     {
-        private readonly AsyncLock personInfoLock = new AsyncLock();
-        private PersonInfo personInfo;
+        private readonly AsyncLock _personInfoLock = new AsyncLock();
+        private PersonInfo _personInfo;
 
-        public WebHealthVaultConnection(IServiceLocator serviceLocator) 
+        public WebHealthVaultConnection(IServiceLocator serviceLocator)
             : base(serviceLocator)
         {
         }
@@ -40,14 +40,14 @@ namespace Microsoft.HealthVault.Web.Connection
         /// <exception cref="UserNotFoundException">When the request is not authenticated, the method will throw exception</exception>
         public override async Task<PersonInfo> GetPersonInfoAsync()
         {
-            if (this.personInfo != null)
+            if (_personInfo != null)
             {
-                return this.personInfo;
+                return _personInfo;
             }
 
-            using (await this.personInfoLock.LockAsync())
+            using (await _personInfoLock.LockAsync())
             {
-                if (this.personInfo == null)
+                if (_personInfo == null)
                 {
                     IPrincipal principal = HttpContext.Current.User;
                     HealthVaultIdentity user = principal?.Identity as HealthVaultIdentity;
@@ -67,41 +67,41 @@ namespace Microsoft.HealthVault.Web.Connection
                     // as a cookie, we will restore the application settings and authorized documents from the server.
                     if (webConnectionInfo.MinimizedPersonInfoApplicationSettings || webConnectionInfo.MinimizedPersonInfoRecords)
                     {
-                        IPersonClient personClient = this.CreatePersonClient();
+                        IPersonClient personClient = CreatePersonClient();
                         var personInfoFromServer = await personClient.GetPersonInfoAsync();
 
                         applicationSettingsDocument = personInfoFromServer.ApplicationSettingsDocument;
                         authorizedRecords = personInfoFromServer.AuthorizedRecords;
                     }
 
-                    this.personInfo = personInfoFromCookie;
+                    _personInfo = personInfoFromCookie;
 
                     if (applicationSettingsDocument != null)
                     {
-                        this.personInfo.ApplicationSettingsDocument = applicationSettingsDocument;
+                        _personInfo.ApplicationSettingsDocument = applicationSettingsDocument;
                     }
 
                     if (authorizedRecords != null)
                     {
-                        this.personInfo.AuthorizedRecords = authorizedRecords;
+                        _personInfo.AuthorizedRecords = authorizedRecords;
                     }
                 }
 
-                return this.personInfo; 
+                return _personInfo;
             }
         }
 
         public override string GetRestAuthSessionHeader()
         {
-            return $"user-token={this.UserAuthToken}";
+            return $"user-token={UserAuthToken}";
         }
 
         public override AuthSession GetAuthSessionHeader()
         {
             AuthSession authSession = new AuthSession
             {
-                AuthToken = this.SessionCredential.Token,
-                UserAuthToken = this.UserAuthToken
+                AuthToken = SessionCredential.Token,
+                UserAuthToken = UserAuthToken
             };
 
             return authSession;

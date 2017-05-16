@@ -50,7 +50,7 @@ namespace Microsoft.HealthVault.ItemTypes
         public ApplicationDataReference(string name)
             : base(TypeId)
         {
-            this.Name = name;
+            Name = name;
         }
 
         /// <summary>
@@ -81,13 +81,13 @@ namespace Microsoft.HealthVault.ItemTypes
 
             Validator.ThrowInvalidIfNull(itemNav, Resources.ApplicationDataReferenceUnexpectedNode);
 
-            this.name = XPathHelper.GetOptNavValue(itemNav, "name");
+            _name = XPathHelper.GetOptNavValue(itemNav, "name");
 
-            this.renderFileName = XPathHelper.GetOptNavValue(itemNav, "render-filename");
+            _renderFileName = XPathHelper.GetOptNavValue(itemNav, "render-filename");
 
-            this.publicUrl = XPathHelper.GetOptNavValueAsUri(itemNav, "public-url");
-            this.configurationUrl = XPathHelper.GetOptNavValueAsUri(itemNav, "configuration-url");
-            this.applicationDataUrl = XPathHelper.GetOptNavValueAsUri(itemNav, "application-data-url");
+            _publicUrl = XPathHelper.GetOptNavValueAsUri(itemNav, "public-url");
+            _configurationUrl = XPathHelper.GetOptNavValueAsUri(itemNav, "configuration-url");
+            _applicationDataUrl = XPathHelper.GetOptNavValueAsUri(itemNav, "application-data-url");
         }
 
         /// <summary>
@@ -109,19 +109,19 @@ namespace Microsoft.HealthVault.ItemTypes
         public override void WriteXml(XmlWriter writer)
         {
             Validator.ThrowIfWriterNull(writer);
-            Validator.ThrowSerializationIfNull(this.name, Resources.ApplicationDataReferenceNameNotSet);
+            Validator.ThrowSerializationIfNull(_name, Resources.ApplicationDataReferenceNameNotSet);
 
             writer.WriteStartElement("application-data-reference");
 
-            writer.WriteElementString("name", this.name);
+            writer.WriteElementString("name", _name);
 
-            XmlWriterHelper.WriteOptString(writer, "render-filename", this.renderFileName);
+            XmlWriterHelper.WriteOptString(writer, "render-filename", _renderFileName);
 
-            XmlWriterHelper.WriteOptUrl(writer, "public-url", this.publicUrl);
+            XmlWriterHelper.WriteOptUrl(writer, "public-url", _publicUrl);
 
-            XmlWriterHelper.WriteOptUrl(writer, "configuration-url", this.configurationUrl);
+            XmlWriterHelper.WriteOptUrl(writer, "configuration-url", _configurationUrl);
 
-            XmlWriterHelper.WriteOptUrl(writer, "application-data-url", this.applicationDataUrl);
+            XmlWriterHelper.WriteOptUrl(writer, "application-data-url", _applicationDataUrl);
 
             writer.WriteEndElement();
         }
@@ -140,16 +140,16 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public string Name
         {
-            get { return this.name; }
+            get { return _name; }
 
             set
             {
                 Validator.ThrowIfStringNullOrEmpty(value, "Name");
-                this.name = value;
+                _name = value;
             }
         }
 
-        private string name;
+        private string _name;
 
         /// <summary>
         /// Gets or sets the fully qualified name of the Silverlight application.
@@ -170,20 +170,20 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public string RenderFileName
         {
-            get { return this.renderFileName; }
+            get { return _renderFileName; }
 
             set
             {
                 if (value != null && value.Length == 0)
                 {
-                    throw new ArgumentNullException(Resources.RenderFileNameEmptyValue, nameof(this.RenderFileName));
+                    throw new ArgumentNullException(Resources.RenderFileNameEmptyValue, nameof(RenderFileName));
                 }
 
-                this.renderFileName = value;
+                _renderFileName = value;
             }
         }
 
-        private string renderFileName;
+        private string _renderFileName;
 
         /// <summary>
         /// Gets or sets the URL that renders the application.
@@ -199,11 +199,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public Uri PublicUrl
         {
-            get { return this.publicUrl; }
-            set { this.publicUrl = value; }
+            get { return _publicUrl; }
+            set { _publicUrl = value; }
         }
 
-        private Uri publicUrl;
+        private Uri _publicUrl;
 
         /// <summary>
         /// Gets or sets the URL to the application's configuration page.
@@ -219,11 +219,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public Uri ConfigurationUrl
         {
-            get { return this.configurationUrl; }
-            set { this.configurationUrl = value; }
+            get { return _configurationUrl; }
+            set { _configurationUrl = value; }
         }
 
-        private Uri configurationUrl;
+        private Uri _configurationUrl;
 
         /// <summary>
         /// Gets or sets the URL used to obtain data from the application.
@@ -240,11 +240,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public Uri ApplicationDataUrl
         {
-            get { return this.applicationDataUrl; }
-            set { this.applicationDataUrl = value; }
+            get { return _applicationDataUrl; }
+            set { _applicationDataUrl = value; }
         }
 
-        private Uri applicationDataUrl;
+        private Uri _applicationDataUrl;
 
         /// <summary>
         /// Gets a string representation of the application data reference.
@@ -256,12 +256,12 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public override string ToString()
         {
-            if (this.name == null)
+            if (_name == null)
             {
                 return string.Empty;
             }
 
-            return this.name;
+            return _name;
         }
     }
 }

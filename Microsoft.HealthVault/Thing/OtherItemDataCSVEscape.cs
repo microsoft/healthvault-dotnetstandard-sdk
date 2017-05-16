@@ -23,11 +23,11 @@ namespace Microsoft.HealthVault.Thing
         /// <param name="value">The value.</param>
         internal OtherItemDataCsvEscape(string name, string value)
         {
-            this.Name = name;
-            this.Value = value;
+            Name = name;
+            Value = value;
         }
 
-        private string name;
+        private string _name;
 
         /// <summary>
         /// Gets or sets the name of the escape.
@@ -40,22 +40,22 @@ namespace Microsoft.HealthVault.Thing
         /// </exception>
         internal string Name
         {
-            get { return this.name; }
+            get { return _name; }
 
             set
             {
-                Validator.ThrowIfArgumentNull(value, nameof(this.Name), Resources.CSVNameNull);
+                Validator.ThrowIfArgumentNull(value, nameof(Name), Resources.CSVNameNull);
 
                 if (value.Contains("="))
                 {
-                    throw new ArgumentException(Resources.CSVNameInvalid, nameof(this.Name));
+                    throw new ArgumentException(Resources.CSVNameInvalid, nameof(Name));
                 }
 
-                this.name = value;
+                _name = value;
             }
         }
 
-        private string value;
+        private string _value;
 
         /// <summary>
         /// Gets or sets the value of the escape.
@@ -68,24 +68,24 @@ namespace Microsoft.HealthVault.Thing
         /// </exception>
         internal string Value
         {
-            get { return this.value; }
+            get { return _value; }
 
             set
             {
-                Validator.ThrowIfArgumentNull(value, nameof(this.Value), Resources.CSVValueNull);
+                Validator.ThrowIfArgumentNull(value, nameof(Value), Resources.CSVValueNull);
 
                 if (value.Contains("="))
                 {
-                    throw new ArgumentException(Resources.CSVValueInvalid, nameof(this.Value));
+                    throw new ArgumentException(Resources.CSVValueInvalid, nameof(Value));
                 }
 
-                this.value = value;
+                _value = value;
             }
         }
 
         /// <summary>
         /// Gets the escape in "Name=value" format.
         /// </summary>
-        internal string NameEqualsValue => this.name + "=" + this.value;
+        internal string NameEqualsValue => _name + "=" + _value;
     }
 }

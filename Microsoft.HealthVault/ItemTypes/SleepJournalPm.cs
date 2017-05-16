@@ -64,8 +64,8 @@ namespace Microsoft.HealthVault.ItemTypes
             Sleepiness sleepiness)
             : base(TypeId)
         {
-            this.When = when;
-            this.Sleepiness = sleepiness;
+            When = when;
+            Sleepiness = sleepiness;
         }
 
         /// <summary>
@@ -99,15 +99,15 @@ namespace Microsoft.HealthVault.ItemTypes
 
             Validator.ThrowInvalidIfNull(sleepNav, Resources.SleepJournalPMUnexpectedNode);
 
-            this.when = new HealthServiceDateTime();
-            this.when.ParseXml(sleepNav.SelectSingleNode("when"));
+            _when = new HealthServiceDateTime();
+            _when.ParseXml(sleepNav.SelectSingleNode("when"));
 
             XPathNodeIterator caffeineNodes = sleepNav.Select("caffeine");
             foreach (XPathNavigator caffeineNav in caffeineNodes)
             {
                 ApproximateTime caffeineTaken = new ApproximateTime();
                 caffeineTaken.ParseXml(caffeineNav);
-                this.caffeine.Add(caffeineTaken);
+                _caffeine.Add(caffeineTaken);
             }
 
             XPathNodeIterator alcoholNodes = sleepNav.Select("alcohol");
@@ -115,7 +115,7 @@ namespace Microsoft.HealthVault.ItemTypes
             {
                 ApproximateTime alcoholTaken = new ApproximateTime();
                 alcoholTaken.ParseXml(alcoholNav);
-                this.alcohol.Add(alcoholTaken);
+                _alcohol.Add(alcoholTaken);
             }
 
             XPathNodeIterator napNodes = sleepNav.Select("nap");
@@ -123,7 +123,7 @@ namespace Microsoft.HealthVault.ItemTypes
             {
                 Occurrence napTaken = new Occurrence();
                 napTaken.ParseXml(napNav);
-                this.naps.Add(napTaken);
+                _naps.Add(napTaken);
             }
 
             XPathNodeIterator exerciseNodes = sleepNav.Select("exercise");
@@ -131,10 +131,10 @@ namespace Microsoft.HealthVault.ItemTypes
             {
                 Occurrence exerciseTaken = new Occurrence();
                 exerciseTaken.ParseXml(exerciseNav);
-                this.exercise.Add(exerciseTaken);
+                _exercise.Add(exerciseTaken);
             }
 
-            this.sleepiness =
+            _sleepiness =
                 (Sleepiness)sleepNav.SelectSingleNode("sleepiness").ValueAsInt;
         }
 
@@ -159,9 +159,9 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             Validator.ThrowIfWriterNull(writer);
 
-            Validator.ThrowSerializationIfNull(this.when, Resources.SleepJournalPMWhenNotSet);
+            Validator.ThrowSerializationIfNull(_when, Resources.SleepJournalPMWhenNotSet);
 
-            if (this.sleepiness == Sleepiness.Unknown)
+            if (_sleepiness == Sleepiness.Unknown)
             {
                 throw new ThingSerializationException(Resources.SleepJournalPMSleepinessNotSet);
             }
@@ -169,16 +169,16 @@ namespace Microsoft.HealthVault.ItemTypes
             // <sleep-pm>
             writer.WriteStartElement("sleep-pm");
 
-            this.when.WriteXml("when", writer);
+            _when.WriteXml("when", writer);
 
-            WriteApproximateTimeCollection(this.caffeine, "caffeine", writer);
-            WriteApproximateTimeCollection(this.alcohol, "alcohol", writer);
-            WriteOccurrenceCollection(this.naps, "nap", writer);
-            WriteOccurrenceCollection(this.exercise, "exercise", writer);
+            WriteApproximateTimeCollection(_caffeine, "caffeine", writer);
+            WriteApproximateTimeCollection(_alcohol, "alcohol", writer);
+            WriteOccurrenceCollection(_naps, "nap", writer);
+            WriteOccurrenceCollection(_exercise, "exercise", writer);
 
             writer.WriteElementString(
                 "sleepiness",
-                ((int)this.sleepiness).ToString(CultureInfo.InvariantCulture));
+                ((int)_sleepiness).ToString(CultureInfo.InvariantCulture));
 
             // </sleep-pm>
             writer.WriteEndElement();
@@ -221,16 +221,16 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public HealthServiceDateTime When
         {
-            get { return this.when; }
+            get { return _when; }
 
             set
             {
-                Validator.ThrowIfArgumentNull(value, nameof(this.When), Resources.SleepJournalPMWhenMandatory);
-                this.when = value;
+                Validator.ThrowIfArgumentNull(value, nameof(When), Resources.SleepJournalPMWhenMandatory);
+                _when = value;
             }
         }
 
-        private HealthServiceDateTime when;
+        private HealthServiceDateTime _when;
 
         /// <summary>
         /// Gets the time(s) in which caffeine was consumed
@@ -246,9 +246,9 @@ namespace Microsoft.HealthVault.ItemTypes
         /// instances to the returned collection.
         /// </remarks>
         ///
-        public Collection<ApproximateTime> Caffeine => this.caffeine;
+        public Collection<ApproximateTime> Caffeine => _caffeine;
 
-        private readonly Collection<ApproximateTime> caffeine =
+        private readonly Collection<ApproximateTime> _caffeine =
             new Collection<ApproximateTime>();
 
         /// <summary>
@@ -265,9 +265,9 @@ namespace Microsoft.HealthVault.ItemTypes
         /// instances to the returned collection.
         /// </remarks>
         ///
-        public Collection<ApproximateTime> Alcohol => this.alcohol;
+        public Collection<ApproximateTime> Alcohol => _alcohol;
 
-        private readonly Collection<ApproximateTime> alcohol =
+        private readonly Collection<ApproximateTime> _alcohol =
             new Collection<ApproximateTime>();
 
         /// <summary>
@@ -283,9 +283,9 @@ namespace Microsoft.HealthVault.ItemTypes
         /// to the returned collection.
         /// </remarks>
         ///
-        public Collection<Occurrence> Naps => this.naps;
+        public Collection<Occurrence> Naps => _naps;
 
-        private readonly Collection<Occurrence> naps =
+        private readonly Collection<Occurrence> _naps =
             new Collection<Occurrence>();
 
         /// <summary>
@@ -302,9 +302,9 @@ namespace Microsoft.HealthVault.ItemTypes
         /// to the returned collection.
         /// </remarks>
         ///
-        public Collection<Occurrence> Exercise => this.exercise;
+        public Collection<Occurrence> Exercise => _exercise;
 
-        private readonly Collection<Occurrence> exercise =
+        private readonly Collection<Occurrence> _exercise =
             new Collection<Occurrence>();
 
         /// <summary>
@@ -323,20 +323,20 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public Sleepiness Sleepiness
         {
-            get { return this.sleepiness; }
+            get { return _sleepiness; }
 
             set
             {
                 if (value == Sleepiness.Unknown)
                 {
-                    throw new ArgumentException(Resources.SleepJournalPMSleepinessNotSet, nameof(this.Sleepiness));
+                    throw new ArgumentException(Resources.SleepJournalPMSleepinessNotSet, nameof(Sleepiness));
                 }
 
-                this.sleepiness = value;
+                _sleepiness = value;
             }
         }
 
-        private Sleepiness sleepiness = Sleepiness.Unknown;
+        private Sleepiness _sleepiness = Sleepiness.Unknown;
 
         /// <summary>
         /// Gets the string representation of the sleep journal entry.
@@ -348,7 +348,7 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public override string ToString()
         {
-            return this.When.ToString();
+            return When.ToString();
         }
     }
 }

@@ -38,7 +38,7 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public TargetGlucoseZoneGroup(string name)
         {
-            this.Name = name;
+            Name = name;
         }
 
         /// <summary>
@@ -58,7 +58,7 @@ namespace Microsoft.HealthVault.ItemTypes
             string name,
             IEnumerable<TargetGlucoseZone> targetZones)
         {
-            this.Name = name;
+            Name = name;
 
             if (targetZones != null)
             {
@@ -66,7 +66,7 @@ namespace Microsoft.HealthVault.ItemTypes
                 {
                     if (zone != null)
                     {
-                        this.zones.Add(zone);
+                        _zones.Add(zone);
                     }
                 }
             }
@@ -91,7 +91,7 @@ namespace Microsoft.HealthVault.ItemTypes
             string name = navigator.GetAttribute("name", string.Empty);
             if (name.Length != 0)
             {
-                this.name = name;
+                _name = name;
             }
 
             XPathNodeIterator zoneIterator =
@@ -100,7 +100,7 @@ namespace Microsoft.HealthVault.ItemTypes
             {
                 TargetGlucoseZone zone = new TargetGlucoseZone();
                 zone.ParseXml(zoneNav);
-                this.zones.Add(zone);
+                _zones.Add(zone);
             }
         }
 
@@ -133,12 +133,12 @@ namespace Microsoft.HealthVault.ItemTypes
 
             writer.WriteStartElement(nodeName);
 
-            if (!string.IsNullOrEmpty(this.name))
+            if (!string.IsNullOrEmpty(_name))
             {
-                writer.WriteAttributeString("name", this.name);
+                writer.WriteAttributeString("name", _name);
             }
 
-            foreach (TargetGlucoseZone zone in this.zones)
+            foreach (TargetGlucoseZone zone in _zones)
             {
                 zone.WriteXml("target-glucose-zone", writer);
             }
@@ -164,16 +164,16 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public string Name
         {
-            get { return this.name; }
+            get { return _name; }
 
             set
             {
                 Validator.ThrowIfStringIsWhitespace(value, "Name");
-                this.name = value;
+                _name = value;
             }
         }
 
-        private string name;
+        private string _name;
 
         /// <summary>
         /// Gets the target glucose zones for the zone group.
@@ -187,9 +187,9 @@ namespace Microsoft.HealthVault.ItemTypes
         /// To add a zone to the group, call Add on the returned collection.
         /// </remarks>
         ///
-        public Collection<TargetGlucoseZone> TargetZones => this.zones;
+        public Collection<TargetGlucoseZone> TargetZones => _zones;
 
-        private readonly Collection<TargetGlucoseZone> zones =
+        private readonly Collection<TargetGlucoseZone> _zones =
             new Collection<TargetGlucoseZone>();
     }
 }

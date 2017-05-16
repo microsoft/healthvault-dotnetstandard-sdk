@@ -1,7 +1,7 @@
-﻿// Copyright (c) Microsoft Corporation.  All rights reserved. 
+﻿// Copyright (c) Microsoft Corporation.  All rights reserved.
 // MIT License
 // Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the ""Software""), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 //
 // THE SOFTWARE IS PROVIDED *AS IS*, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
@@ -21,10 +21,10 @@ namespace Microsoft.HealthVault.Clients
     public interface IVocabularyClient : IClient
     {
         /// <summary>
-        /// Retrieves a collection of key information for identifying and 
+        /// Retrieves a collection of key information for identifying and
         /// describing the vocabularies in the system.
         /// </summary>
-        /// 
+        ///
         /// <returns>
         /// A collection of keys identifying the vocabularies in the system.
         /// </returns>
@@ -50,16 +50,16 @@ namespace Microsoft.HealthVault.Clients
         /// <exception cref="HealthServiceException">
         /// There is an error in the server request.
         /// <br></br>
-        /// -Or- 
+        /// -Or-
         /// <br></br>
         /// The requested vocabulary is not found on the server.
         /// <br></br>
-        /// -Or- 
+        /// -Or-
         /// <br></br>
-        /// The requested vocabulary does not contain representations 
+        /// The requested vocabulary does not contain representations
         /// for its items for the specified culture
         /// <br></br>
-        /// -Or- 
+        /// -Or-
         /// <br></br>
         /// There is an error loading the vocabulary.
         /// </exception>
@@ -87,16 +87,16 @@ namespace Microsoft.HealthVault.Clients
         /// <exception cref="HealthServiceException">
         /// There is an error in the server request.
         /// <br></br>
-        /// -Or- 
+        /// -Or-
         /// <br></br>
         /// One of the requested vocabularies is not found on the server.
         /// <br></br>
-        /// -Or- 
+        /// -Or-
         /// <br></br>
-        /// One of the requested vocabularies does not contain representations 
+        /// One of the requested vocabularies does not contain representations
         /// for its items for the specified culture
         /// <br></br>
-        /// -Or- 
+        /// -Or-
         /// <br></br>
         /// There is an error loading the vocabularies.
         /// </exception>
@@ -105,12 +105,12 @@ namespace Microsoft.HealthVault.Clients
         /// <summary>
         /// Searches a specific vocabulary and retrieves the matching vocabulary items.
         /// </summary>
-        /// 
+        ///
         /// <remarks>
         /// This method does text search matching of display text and abbreviation text
-        /// for the culture defined by the <see cref="HealthServiceConnection.Culture"/>. 
-        /// The <paramref name="searchValue"/> is a string of characters in the specified 
-        /// culture. 
+        /// for the culture defined by the <see cref="HealthServiceConnection.Culture"/>.
+        /// The <paramref name="searchValue"/> is a string of characters in the specified
+        /// culture.
         /// </remarks>
         /// <param name="searchValue">
         ///     The search string to use.
@@ -119,39 +119,39 @@ namespace Microsoft.HealthVault.Clients
         ///     The type of search to perform.
         /// </param>
         /// <param name="maxResults">
-        ///     The maximum number of results to return. If null, all matching results 
-        ///     are returned, up to a maximum number defined by the service config 
+        ///     The maximum number of results to return. If null, all matching results
+        ///     are returned, up to a maximum number defined by the service config
         ///     value with key maxResultsPerVocabularyRetrieval.
         /// </param>
         /// <returns>
-        /// A <see cref="VocabularyItemCollection"/> populated with entries matching 
+        /// A <see cref="VocabularyItemCollection"/> populated with entries matching
         /// the search criteria.
         /// </returns>
-        /// 
+        ///
         /// <exception cref="ArgumentException">
-        /// If <paramref name="searchValue"/> is <b>null</b> or empty or greater 
+        /// If <paramref name="searchValue"/> is <b>null</b> or empty or greater
         /// than <b>255</b> characters.
         /// <br></br>
         /// -Or-
         /// <br></br>
-        /// if <paramref name="searchType"/> is not a known 
-        /// <see cref="VocabularySearchType"/> value.        
+        /// if <paramref name="searchType"/> is not a known
+        /// <see cref="VocabularySearchType"/> value.
         /// <br></br>
         /// -Or-
         /// <br></br>
-        /// when <paramref name="maxResults"/> is defined but has a value less than 1.        
+        /// when <paramref name="maxResults"/> is defined but has a value less than 1.
         /// </exception>
-        /// 
+        ///
         /// <exception cref="HealthServiceException">
-        /// There is an error in the server request.         
+        /// There is an error in the server request.
         /// <br></br>
-        /// -Or-        
+        /// -Or-
         /// <br></br>
         /// The requested vocabulary is not found on the server.
         /// <br></br>
-        /// -Or- 
-        /// The requested search culture is not supported. 
-        /// </exception>        
+        /// -Or-
+        /// The requested search culture is not supported.
+        /// </exception>
         Task<ReadOnlyCollection<VocabularyKey>> SearchVocabularyAsync(string searchValue, VocabularySearchType searchType, int? maxResults);
     }
 }

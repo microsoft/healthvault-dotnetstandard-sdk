@@ -38,7 +38,7 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public LabTestType(HealthServiceDateTime when)
         {
-            this.When = when;
+            When = when;
         }
 
         /// <summary>
@@ -57,31 +57,31 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             Validator.ThrowIfNavigatorNull(navigator);
 
-            this.when = new HealthServiceDateTime();
-            this.when.ParseXml(navigator.SelectSingleNode("when"));
+            _when = new HealthServiceDateTime();
+            _when.ParseXml(navigator.SelectSingleNode("when"));
 
-            this.name = XPathHelper.GetOptNavValue(navigator, "name");
-            this.substance = XPathHelper.GetOptNavValue<CodableValue>(navigator, "substance");
+            _name = XPathHelper.GetOptNavValue(navigator, "name");
+            _substance = XPathHelper.GetOptNavValue<CodableValue>(navigator, "substance");
 
-            this.collectionMethod =
+            _collectionMethod =
                 XPathHelper.GetOptNavValue<CodableValue>(
                     navigator,
                     "collection-method");
 
-            this.abbreviation = XPathHelper.GetOptNavValue(navigator, "abbreviation");
-            this.description = XPathHelper.GetOptNavValue(navigator, "description");
+            _abbreviation = XPathHelper.GetOptNavValue(navigator, "abbreviation");
+            _description = XPathHelper.GetOptNavValue(navigator, "description");
 
-            this.code.Clear();
+            _code.Clear();
             XPathNodeIterator codeIterator = navigator.Select("code");
             foreach (XPathNavigator codeNav in codeIterator)
             {
                 CodableValue codeValue = new CodableValue();
                 codeValue.ParseXml(codeNav);
-                this.code.Add(codeValue);
+                _code.Add(codeValue);
             }
 
-            this.result = XPathHelper.GetOptNavValue<LabResultType>(navigator, "result");
-            this.status = XPathHelper.GetOptNavValue<CodableValue>(navigator, "status");
+            _result = XPathHelper.GetOptNavValue<LabResultType>(navigator, "result");
+            _status = XPathHelper.GetOptNavValue<CodableValue>(navigator, "status");
         }
 
         /// <summary>
@@ -111,22 +111,22 @@ namespace Microsoft.HealthVault.ItemTypes
 
             writer.WriteStartElement(nodeName);
 
-            this.when = new HealthServiceDateTime();
-            this.when.WriteXml("when", writer);
+            _when = new HealthServiceDateTime();
+            _when.WriteXml("when", writer);
 
-            XmlWriterHelper.WriteOptString(writer, "name", this.name);
-            XmlWriterHelper.WriteOpt(writer, "substance", this.substance);
-            XmlWriterHelper.WriteOpt(writer, "collection-method", this.collectionMethod);
-            XmlWriterHelper.WriteOptString(writer, "abbreviation", this.abbreviation);
-            XmlWriterHelper.WriteOptString(writer, "description", this.description);
+            XmlWriterHelper.WriteOptString(writer, "name", _name);
+            XmlWriterHelper.WriteOpt(writer, "substance", _substance);
+            XmlWriterHelper.WriteOpt(writer, "collection-method", _collectionMethod);
+            XmlWriterHelper.WriteOptString(writer, "abbreviation", _abbreviation);
+            XmlWriterHelper.WriteOptString(writer, "description", _description);
 
-            foreach (CodableValue codeValue in this.code)
+            foreach (CodableValue codeValue in _code)
             {
                 codeValue.WriteXml("code", writer);
             }
 
-            XmlWriterHelper.WriteOpt(writer, "result", this.result);
-            XmlWriterHelper.WriteOpt(writer, "status", this.status);
+            XmlWriterHelper.WriteOpt(writer, "result", _result);
+            XmlWriterHelper.WriteOpt(writer, "status", _status);
 
             writer.WriteEndElement();
         }
@@ -146,16 +146,16 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public HealthServiceDateTime When
         {
-            get { return this.when; }
+            get { return _when; }
 
             set
             {
-                Validator.ThrowIfArgumentNull(value, nameof(this.When), Resources.WhenNullValue);
-                this.when = value;
+                Validator.ThrowIfArgumentNull(value, nameof(When), Resources.WhenNullValue);
+                _when = value;
             }
         }
 
-        private HealthServiceDateTime when = new HealthServiceDateTime();
+        private HealthServiceDateTime _when = new HealthServiceDateTime();
 
         /// <summary>
         /// Gets or sets the name of the test.
@@ -167,16 +167,16 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public string Name
         {
-            get { return this.name; }
+            get { return _name; }
 
             set
             {
                 Validator.ThrowIfStringIsWhitespace(value, "Name");
-                this.name = value;
+                _name = value;
             }
         }
 
-        private string name;
+        private string _name;
 
         /// <summary>
         /// Gets or sets the substance that was tested.
@@ -184,11 +184,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public CodableValue Substance
         {
-            get { return this.substance; }
-            set { this.substance = value; }
+            get { return _substance; }
+            set { _substance = value; }
         }
 
-        private CodableValue substance;
+        private CodableValue _substance;
 
         /// <summary>
         /// Gets or sets the method used to collect the substance.
@@ -196,11 +196,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public CodableValue CollectionMethod
         {
-            get { return this.collectionMethod; }
-            set { this.collectionMethod = value; }
+            get { return _collectionMethod; }
+            set { _collectionMethod = value; }
         }
 
-        private CodableValue collectionMethod;
+        private CodableValue _collectionMethod;
 
         /// <summary>
         /// Gets or sets the abbreviation for the test.
@@ -212,16 +212,16 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public string TestAbbreviation
         {
-            get { return this.abbreviation; }
+            get { return _abbreviation; }
 
             set
             {
                 Validator.ThrowIfStringIsWhitespace(value, "TestAbbreviation");
-                this.abbreviation = value;
+                _abbreviation = value;
             }
         }
 
-        private string abbreviation;
+        private string _abbreviation;
 
         /// <summary>
         /// Gets or sets the description for the test.
@@ -233,24 +233,24 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public string Description
         {
-            get { return this.description; }
+            get { return _description; }
 
             set
             {
                 Validator.ThrowIfStringIsWhitespace(value, "Description");
-                this.description = value;
+                _description = value;
             }
         }
 
-        private string description;
+        private string _description;
 
         /// <summary>
         /// Gets a collection of the clinical code(s) used for the test.
         /// </summary>
         ///
-        public Collection<CodableValue> Code => this.code;
+        public Collection<CodableValue> Code => _code;
 
-        private readonly Collection<CodableValue> code = new Collection<CodableValue>();
+        private readonly Collection<CodableValue> _code = new Collection<CodableValue>();
 
         /// <summary>
         /// Gets or sets the result of the lab test.
@@ -258,11 +258,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public LabResultType Result
         {
-            get { return this.result; }
-            set { this.result = value; }
+            get { return _result; }
+            set { _result = value; }
         }
 
-        private LabResultType result;
+        private LabResultType _result;
 
         /// <summary>
         /// Gets or sets the status of the lab results.
@@ -275,11 +275,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public CodableValue Status
         {
-            get { return this.status; }
-            set { this.status = value; }
+            get { return _status; }
+            set { _status = value; }
         }
 
-        private CodableValue status;
+        private CodableValue _status;
 
         /// <summary>
         /// Gets a string representation of the lab test type.
@@ -293,55 +293,55 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             StringBuilder result = new StringBuilder(200);
 
-            result.Append(this.When);
+            result.Append(When);
 
-            if (!string.IsNullOrEmpty(this.Name))
+            if (!string.IsNullOrEmpty(Name))
             {
                 result.AppendFormat(
                     Resources.ListFormat,
-                    this.Name);
+                    Name);
             }
 
-            if (this.Substance != null)
+            if (Substance != null)
             {
                 result.AppendFormat(
                     Resources.ListFormat,
-                    this.Substance.ToString());
+                    Substance.ToString());
             }
 
-            if (this.CollectionMethod != null)
+            if (CollectionMethod != null)
             {
                 result.AppendFormat(
                     Resources.ListFormat,
-                    this.CollectionMethod.ToString());
+                    CollectionMethod.ToString());
             }
 
-            if (this.TestAbbreviation != null)
+            if (TestAbbreviation != null)
             {
                 result.AppendFormat(
                     Resources.ListFormat,
-                    this.TestAbbreviation);
+                    TestAbbreviation);
             }
 
-            if (!string.IsNullOrEmpty(this.Description))
+            if (!string.IsNullOrEmpty(Description))
             {
                 result.AppendFormat(
                     Resources.ListFormat,
-                    this.Description);
+                    Description);
             }
 
-            if (this.Result != null)
+            if (Result != null)
             {
                 result.AppendFormat(
                     Resources.ListFormat,
-                    this.Result.ToString());
+                    Result.ToString());
             }
 
-            if (this.Status != null)
+            if (Status != null)
             {
                 result.AppendFormat(
                     Resources.ListFormat,
-                    this.Status.ToString());
+                    Status.ToString());
             }
 
             return result.ToString();

@@ -39,7 +39,7 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public Name(string fullName)
         {
-            this.Full = fullName;
+            Full = fullName;
         }
 
         /// <summary>
@@ -70,9 +70,9 @@ namespace Microsoft.HealthVault.ItemTypes
         public Name(string fullName, string first, string middle, string last)
             : this(fullName)
         {
-            this.First = first;
-            this.Middle = middle;
-            this.Last = last;
+            First = first;
+            Middle = middle;
+            Last = last;
         }
 
         /// <summary>
@@ -112,7 +112,7 @@ namespace Microsoft.HealthVault.ItemTypes
             CodableValue suffix)
             : this(fullName, first, middle, last)
         {
-            this.Suffix = suffix;
+            Suffix = suffix;
         }
 
         /// <summary>
@@ -131,15 +131,15 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             Validator.ThrowIfNavigatorNull(navigator);
 
-            this.full = navigator.SelectSingleNode("full").Value;
+            _full = navigator.SelectSingleNode("full").Value;
 
             XPathNavigator titleNav =
                 navigator.SelectSingleNode("title");
 
             if (titleNav != null)
             {
-                this.title = new CodableValue();
-                this.title.ParseXml(titleNav);
+                _title = new CodableValue();
+                _title.ParseXml(titleNav);
             }
 
             XPathNavigator firstNav =
@@ -147,7 +147,7 @@ namespace Microsoft.HealthVault.ItemTypes
 
             if (firstNav != null)
             {
-                this.first = firstNav.Value;
+                _first = firstNav.Value;
             }
 
             XPathNavigator middleNav =
@@ -155,7 +155,7 @@ namespace Microsoft.HealthVault.ItemTypes
 
             if (middleNav != null)
             {
-                this.middle = middleNav.Value;
+                _middle = middleNav.Value;
             }
 
             XPathNavigator lastNav =
@@ -163,7 +163,7 @@ namespace Microsoft.HealthVault.ItemTypes
 
             if (lastNav != null)
             {
-                this.last = lastNav.Value;
+                _last = lastNav.Value;
             }
 
             XPathNavigator suffixNav =
@@ -171,8 +171,8 @@ namespace Microsoft.HealthVault.ItemTypes
 
             if (suffixNav != null)
             {
-                this.suffix = new CodableValue();
-                this.suffix.ParseXml(suffixNav);
+                _suffix = new CodableValue();
+                _suffix.ParseXml(suffixNav);
             }
         }
 
@@ -206,35 +206,35 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             Validator.ThrowIfStringNullOrEmpty(nodeName, "nodeName");
             Validator.ThrowIfWriterNull(writer);
-            Validator.ThrowSerializationIfNull(this.full, Resources.FullNotSet);
+            Validator.ThrowSerializationIfNull(_full, Resources.FullNotSet);
 
             writer.WriteStartElement(nodeName);
 
-            writer.WriteElementString("full", this.full);
+            writer.WriteElementString("full", _full);
 
-            if (this.title != null)
+            if (_title != null)
             {
-                this.title.WriteXml("title", writer);
+                _title.WriteXml("title", writer);
             }
 
-            if (!string.IsNullOrEmpty(this.first))
+            if (!string.IsNullOrEmpty(_first))
             {
-                writer.WriteElementString("first", this.first);
+                writer.WriteElementString("first", _first);
             }
 
-            if (!string.IsNullOrEmpty(this.middle))
+            if (!string.IsNullOrEmpty(_middle))
             {
-                writer.WriteElementString("middle", this.middle);
+                writer.WriteElementString("middle", _middle);
             }
 
-            if (!string.IsNullOrEmpty(this.last))
+            if (!string.IsNullOrEmpty(_last))
             {
-                writer.WriteElementString("last", this.last);
+                writer.WriteElementString("last", _last);
             }
 
-            if (this.suffix != null)
+            if (_suffix != null)
             {
-                this.suffix.WriteXml("suffix", writer);
+                _suffix.WriteXml("suffix", writer);
             }
 
             writer.WriteEndElement();
@@ -254,16 +254,16 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public string Full
         {
-            get { return this.full; }
+            get { return _full; }
 
             set
             {
-                Validator.ThrowIfArgumentNull(value, nameof(this.Full), Resources.FullMandatory);
-                this.full = value;
+                Validator.ThrowIfArgumentNull(value, nameof(Full), Resources.FullMandatory);
+                _full = value;
             }
         }
 
-        private string full;
+        private string _full;
 
         /// <summary>
         /// Gets or sets the person's title.
@@ -279,11 +279,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public CodableValue Title
         {
-            get { return this.title; }
-            set { this.title = value; }
+            get { return _title; }
+            set { _title = value; }
         }
 
-        private CodableValue title;
+        private CodableValue _title;
 
         /// <summary>
         /// Gets or sets the person's first name.
@@ -299,11 +299,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public string First
         {
-            get { return this.first; }
-            set { this.first = value; }
+            get { return _first; }
+            set { _first = value; }
         }
 
-        private string first;
+        private string _first;
 
         /// <summary>
         /// Gets or sets the person's middle name.
@@ -319,11 +319,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public string Middle
         {
-            get { return this.middle; }
-            set { this.middle = value; }
+            get { return _middle; }
+            set { _middle = value; }
         }
 
-        private string middle;
+        private string _middle;
 
         /// <summary>
         /// Gets or sets the person's last name.
@@ -339,11 +339,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public string Last
         {
-            get { return this.last; }
-            set { this.last = value; }
+            get { return _last; }
+            set { _last = value; }
         }
 
-        private string last;
+        private string _last;
 
         /// <summary>
         /// Gets or sets the person's suffix.
@@ -359,11 +359,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public CodableValue Suffix
         {
-            get { return this.suffix; }
-            set { this.suffix = value; }
+            get { return _suffix; }
+            set { _suffix = value; }
         }
 
-        private CodableValue suffix;
+        private CodableValue _suffix;
 
         /// <summary>
         /// Gets a string representation of the name.
@@ -375,18 +375,18 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public override string ToString()
         {
-            string result = this.Full;
+            string result = Full;
 
-            if (this.Full == null)
+            if (Full == null)
             {
                 result =
                     string.Format(
                         Resources.NameToStringFormat,
-                        this.Title != null ? this.Title.Text : string.Empty,
-                        this.First != null ? this.First : string.Empty,
-                        this.Middle != null ? this.Middle : string.Empty,
-                        this.Last != null ? this.Last : string.Empty,
-                        this.Suffix != null ? this.Suffix.Text : string.Empty);
+                        Title != null ? Title.Text : string.Empty,
+                        First != null ? First : string.Empty,
+                        Middle != null ? Middle : string.Empty,
+                        Last != null ? Last : string.Empty,
+                        Suffix != null ? Suffix.Text : string.Empty);
             }
 
             return result;

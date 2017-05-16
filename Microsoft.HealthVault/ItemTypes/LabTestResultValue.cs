@@ -48,7 +48,7 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public LabTestResultValue(GeneralMeasurement measurement)
         {
-            this.Measurement = measurement;
+            Measurement = measurement;
         }
 
         /// <summary>
@@ -68,29 +68,29 @@ namespace Microsoft.HealthVault.ItemTypes
             Validator.ThrowIfNavigatorNull(navigator);
 
             // measurement
-            this.measurement = new GeneralMeasurement();
-            this.measurement.ParseXml(navigator.SelectSingleNode("measurement"));
+            _measurement = new GeneralMeasurement();
+            _measurement.ParseXml(navigator.SelectSingleNode("measurement"));
 
             // ranges
             XPathNodeIterator rangesIterator = navigator.Select("ranges");
 
-            this.ranges = new Collection<TestResultRange>();
+            _ranges = new Collection<TestResultRange>();
             foreach (XPathNavigator rangeNav in rangesIterator)
             {
                 TestResultRange range = new TestResultRange();
                 range.ParseXml(rangeNav);
-                this.ranges.Add(range);
+                _ranges.Add(range);
             }
 
             // flag
             XPathNodeIterator flagsIterator = navigator.Select("flag");
 
-            this.flag = new Collection<CodableValue>();
+            _flag = new Collection<CodableValue>();
             foreach (XPathNavigator flagNav in flagsIterator)
             {
                 CodableValue singleflag = new CodableValue();
                 singleflag.ParseXml(flagNav);
-                this.flag.Add(singleflag);
+                _flag.Add(singleflag);
             }
         }
 
@@ -121,30 +121,30 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             Validator.ThrowIfStringNullOrEmpty(nodeName, "nodeName");
             Validator.ThrowIfWriterNull(writer);
-            Validator.ThrowSerializationIfNull(this.measurement, Resources.LabTestResultValueTypeMeasurementNotSet);
+            Validator.ThrowSerializationIfNull(_measurement, Resources.LabTestResultValueTypeMeasurementNotSet);
 
             // <lab-test-result-value-type>
             writer.WriteStartElement(nodeName);
 
             // measurement
-            this.measurement.WriteXml("measurement", writer);
+            _measurement.WriteXml("measurement", writer);
 
             // ranges
-            for (int index = 0; index < this.ranges.Count; ++index)
+            for (int index = 0; index < _ranges.Count; ++index)
             {
                 XmlWriterHelper.WriteOpt(
                     writer,
                     "ranges",
-                    this.ranges[index]);
+                    _ranges[index]);
             }
 
             // flag
-            for (int index = 0; index < this.flag.Count; ++index)
+            for (int index = 0; index < _flag.Count; ++index)
             {
                 XmlWriterHelper.WriteOpt(
                     writer,
                     "flag",
-                    this.flag[index]);
+                    _flag[index]);
             }
 
             // </lab-test-result-value-type>
@@ -161,24 +161,24 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public GeneralMeasurement Measurement
         {
-            get { return this.measurement; }
+            get { return _measurement; }
 
             set
             {
-                Validator.ThrowIfArgumentNull(value, nameof(this.Measurement), Resources.LabTestResultValueTypeMeasurementNotSet);
-                this.measurement = value;
+                Validator.ThrowIfArgumentNull(value, nameof(Measurement), Resources.LabTestResultValueTypeMeasurementNotSet);
+                _measurement = value;
             }
         }
 
-        private GeneralMeasurement measurement;
+        private GeneralMeasurement _measurement;
 
         /// <summary>
         /// Gets the ranges that are associated with this test.
         /// </summary>
         ///
-        public Collection<TestResultRange> Ranges => this.ranges;
+        public Collection<TestResultRange> Ranges => _ranges;
 
-        private Collection<TestResultRange> ranges = new Collection<TestResultRange>();
+        private Collection<TestResultRange> _ranges = new Collection<TestResultRange>();
 
         /// <summary>
         /// Gets a collection containing the flags for laboratory results.
@@ -188,9 +188,9 @@ namespace Microsoft.HealthVault.ItemTypes
         /// Example values are normal, high, low.
         /// </value>
         ///
-        public Collection<CodableValue> Flag => this.flag;
+        public Collection<CodableValue> Flag => _flag;
 
-        private Collection<CodableValue> flag = new Collection<CodableValue>();
+        private Collection<CodableValue> _flag = new Collection<CodableValue>();
 
         /// <summary>
         /// Gets a string representation of the lab test result value type item.
@@ -203,20 +203,20 @@ namespace Microsoft.HealthVault.ItemTypes
         public override string ToString()
         {
             StringBuilder result = new StringBuilder(200);
-            result.Append(this.measurement);
-            if (this.ranges != null)
+            result.Append(_measurement);
+            if (_ranges != null)
             {
-                for (int index = 0; index < this.ranges.Count; ++index)
+                for (int index = 0; index < _ranges.Count; ++index)
                 {
                     result.AppendFormat(
                         Resources.ListFormat,
-                        this.ranges[index].ToString());
+                        _ranges[index].ToString());
                 }
             }
 
-            if (this.flag != null)
+            if (_flag != null)
             {
-                for (int index = 0; index < this.flag.Count; ++index)
+                for (int index = 0; index < _flag.Count; ++index)
                 {
                     if (result.Length > 0)
                     {
@@ -224,7 +224,7 @@ namespace Microsoft.HealthVault.ItemTypes
                             Resources.ListSeparator);
                     }
 
-                    result.Append(this.flag[index]);
+                    result.Append(_flag[index]);
                 }
             }
 

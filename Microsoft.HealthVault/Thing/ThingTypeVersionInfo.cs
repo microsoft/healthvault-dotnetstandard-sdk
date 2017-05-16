@@ -22,10 +22,10 @@ namespace Microsoft.HealthVault.Thing
             int versionSequence,
             ThingTypeOrderByProperties orderByProperties)
         {
-            this.VersionTypeId = versionTypeId;
-            this.Name = versionName;
-            this.VersionSequence = versionSequence;
-            this.OrderByProperties = orderByProperties;
+            VersionTypeId = versionTypeId;
+            Name = versionName;
+            VersionSequence = versionSequence;
+            OrderByProperties = orderByProperties;
         }
 
         /// <summary>

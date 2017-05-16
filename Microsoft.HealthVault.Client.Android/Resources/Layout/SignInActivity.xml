@@ -4,8 +4,8 @@
     xmlns:local="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_gravity="center" 
-    android:background="#fff" >
+    android:layout_gravity="center"
+    android:background="#fff">
   <WebView
       android:id="@+id/SignInWebView"
       android:layout_width="match_parent"

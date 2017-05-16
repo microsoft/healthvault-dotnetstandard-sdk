@@ -52,7 +52,7 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public DisplayValue(double value)
         {
-            this.Value = value;
+            Value = value;
         }
 
         /// <summary>
@@ -76,7 +76,7 @@ namespace Microsoft.HealthVault.ItemTypes
         public DisplayValue(double value, string units)
             : this(value)
         {
-            this.Units = units;
+            Units = units;
         }
 
         /// <summary>
@@ -104,7 +104,7 @@ namespace Microsoft.HealthVault.ItemTypes
         public DisplayValue(double value, string units, string unitsCode)
             : this(value, units)
         {
-            this.UnitsCode = unitsCode;
+            UnitsCode = unitsCode;
         }
 
         /// <summary>
@@ -123,20 +123,20 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             Validator.ThrowIfNavigatorNull(navigator);
 
-            this.units = navigator.GetAttribute("units", string.Empty);
-            this.unitsCode = navigator.GetAttribute("units-code", string.Empty);
-            if (string.IsNullOrEmpty(this.unitsCode))
+            _units = navigator.GetAttribute("units", string.Empty);
+            _unitsCode = navigator.GetAttribute("units-code", string.Empty);
+            if (string.IsNullOrEmpty(_unitsCode))
             {
-                this.unitsCode = null;
+                _unitsCode = null;
             }
 
-            this.text = navigator.GetAttribute("text", string.Empty);
-            if (string.IsNullOrEmpty(this.text))
+            _text = navigator.GetAttribute("text", string.Empty);
+            if (string.IsNullOrEmpty(_text))
             {
-                this.text = null;
+                _text = null;
             }
 
-            this.value = navigator.ValueAsDouble;
+            _value = navigator.ValueAsDouble;
         }
 
         /// <summary>
@@ -167,23 +167,23 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             Validator.ThrowIfStringNullOrEmpty(nodeName, "nodeName");
             Validator.ThrowIfWriterNull(writer);
-            Validator.ThrowSerializationIfNull(this.units, Resources.DisplayValueUnitsMandatory);
+            Validator.ThrowSerializationIfNull(_units, Resources.DisplayValueUnitsMandatory);
 
             writer.WriteStartElement(nodeName);
 
-            writer.WriteAttributeString("units", this.units);
+            writer.WriteAttributeString("units", _units);
 
-            if (!string.IsNullOrEmpty(this.unitsCode))
+            if (!string.IsNullOrEmpty(_unitsCode))
             {
-                writer.WriteAttributeString("units-code", this.unitsCode);
+                writer.WriteAttributeString("units-code", _unitsCode);
             }
 
-            if (!string.IsNullOrEmpty(this.text))
+            if (!string.IsNullOrEmpty(_text))
             {
-                writer.WriteAttributeString("text", this.text);
+                writer.WriteAttributeString("text", _text);
             }
 
-            writer.WriteValue(XmlConvert.ToString(this.value));
+            writer.WriteValue(XmlConvert.ToString(_value));
 
             writer.WriteEndElement();
         }
@@ -200,16 +200,16 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             string result;
 
-            if (this.text != null)
+            if (_text != null)
             {
-                return this.text;
+                return _text;
             }
 
-            result = this.Value.ToString(CultureInfo.CurrentCulture);
+            result = Value.ToString(CultureInfo.CurrentCulture);
 
-            if (!string.IsNullOrEmpty(this.Units))
+            if (!string.IsNullOrEmpty(Units))
             {
-                result = Resources.DisplayValueToStringFormatWithUnits.FormatResource(result, this.Units);
+                result = Resources.DisplayValueToStringFormatWithUnits.FormatResource(result, Units);
             }
 
             return result;
@@ -232,11 +232,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public string UnitsCode
         {
-            get { return this.unitsCode; }
-            set { this.unitsCode = value; }
+            get { return _unitsCode; }
+            set { _unitsCode = value; }
         }
 
-        private string unitsCode;
+        private string _unitsCode;
 
         /// <summary>
         /// Gets or sets the units of measure as defined by the user.
@@ -258,16 +258,16 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public string Units
         {
-            get { return this.units; }
+            get { return _units; }
 
             set
             {
-                Validator.ThrowIfArgumentNull(value, nameof(this.Units), Resources.DisplayValueUnitsMandatory);
-                this.units = value;
+                Validator.ThrowIfArgumentNull(value, nameof(Units), Resources.DisplayValueUnitsMandatory);
+                _units = value;
             }
         }
 
-        private string units;
+        private string _units;
 
         /// <summary>
         /// Gets or sets the display value.
@@ -279,11 +279,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public double Value
         {
-            get { return this.value; }
-            set { this.value = value; }
+            get { return _value; }
+            set { _value = value; }
         }
 
-        private double value;
+        private double _value;
 
         /// <summary>
         /// Gets or sets the display text.
@@ -309,7 +309,7 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public string Text
         {
-            get { return this.text; }
+            get { return _text; }
 
             set
             {
@@ -319,10 +319,10 @@ namespace Microsoft.HealthVault.ItemTypes
                     Validator.ThrowIfStringIsWhitespace(value, "Text");
                 }
 
-                this.text = value;
+                _text = value;
             }
         }
 
-        private string text;
+        private string _text;
     }
 }

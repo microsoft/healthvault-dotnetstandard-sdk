@@ -37,7 +37,7 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public Goal(ApproximateDateTime targetDate)
         {
-            this.TargetDate = targetDate;
+            TargetDate = targetDate;
         }
 
         /// <summary>
@@ -61,8 +61,8 @@ namespace Microsoft.HealthVault.ItemTypes
 
             if (targetNav != null)
             {
-                this.targetDate = new ApproximateDateTime();
-                this.targetDate.ParseXml(targetNav);
+                _targetDate = new ApproximateDateTime();
+                _targetDate.ParseXml(targetNav);
             }
 
             XPathNavigator completionNav =
@@ -70,8 +70,8 @@ namespace Microsoft.HealthVault.ItemTypes
 
             if (completionNav != null)
             {
-                this.completionDate = new ApproximateDateTime();
-                this.completionDate.ParseXml(completionNav);
+                _completionDate = new ApproximateDateTime();
+                _completionDate.ParseXml(completionNav);
             }
 
             XPathNavigator statusNav =
@@ -81,13 +81,13 @@ namespace Microsoft.HealthVault.ItemTypes
             {
                 try
                 {
-                    this.status =
+                    _status =
                         (GoalStatus)Enum.Parse(typeof(GoalStatus), statusNav.Value, true);
                 }
                 catch (ArgumentException)
                 {
-                    this.status = GoalStatus.Unknown;
-                    this.statusString = statusNav.Value;
+                    _status = GoalStatus.Unknown;
+                    _statusString = statusNav.Value;
                 }
             }
         }
@@ -121,31 +121,31 @@ namespace Microsoft.HealthVault.ItemTypes
 
             writer.WriteStartElement(nodeName);
 
-            if (this.targetDate != null)
+            if (_targetDate != null)
             {
-                this.targetDate.WriteXml("target-date", writer);
+                _targetDate.WriteXml("target-date", writer);
             }
 
-            if (this.completionDate != null)
+            if (_completionDate != null)
             {
-                this.completionDate.WriteXml("completion-date", writer);
+                _completionDate.WriteXml("completion-date", writer);
             }
 
-            if (this.status != null)
+            if (_status != null)
             {
-                if (this.status != GoalStatus.Unknown)
+                if (_status != GoalStatus.Unknown)
                 {
                     writer.WriteElementString(
                         "status",
-                        this.status.ToString());
+                        _status.ToString());
                 }
                 else
                 {
-                    if (!string.IsNullOrEmpty(this.statusString))
+                    if (!string.IsNullOrEmpty(_statusString))
                     {
                         writer.WriteElementString(
                             "status",
-                            this.statusString);
+                            _statusString);
                     }
                 }
             }
@@ -167,11 +167,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public ApproximateDateTime TargetDate
         {
-            get { return this.targetDate; }
-            set { this.targetDate = value; }
+            get { return _targetDate; }
+            set { _targetDate = value; }
         }
 
-        private ApproximateDateTime targetDate;
+        private ApproximateDateTime _targetDate;
 
         /// <summary>
         /// Gets or sets the date the goal was achieved.
@@ -187,11 +187,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public ApproximateDateTime CompletionDate
         {
-            get { return this.completionDate; }
-            set { this.completionDate = value; }
+            get { return _completionDate; }
+            set { _completionDate = value; }
         }
 
-        private ApproximateDateTime completionDate;
+        private ApproximateDateTime _completionDate;
 
         /// <summary>
         /// Gets or sets the status of the goal.
@@ -207,11 +207,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public GoalStatus? Status
         {
-            get { return this.status; }
-            set { this.status = value; }
+            get { return _status; }
+            set { _status = value; }
         }
 
-        private GoalStatus? status;
-        private string statusString;
+        private GoalStatus? _status;
+        private string _statusString;
     }
 }

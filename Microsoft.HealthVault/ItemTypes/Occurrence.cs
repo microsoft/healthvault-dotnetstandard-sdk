@@ -50,8 +50,8 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public Occurrence(ApproximateTime when, int minutes)
         {
-            this.When = when;
-            this.Minutes = minutes;
+            When = when;
+            Minutes = minutes;
         }
 
         /// <summary>
@@ -70,10 +70,10 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             Validator.ThrowIfNavigatorNull(navigator);
 
-            this.when = new ApproximateTime();
-            this.when.ParseXml(navigator.SelectSingleNode("when"));
+            _when = new ApproximateTime();
+            _when.ParseXml(navigator.SelectSingleNode("when"));
 
-            this.minutes = navigator.SelectSingleNode("minutes").ValueAsInt;
+            _minutes = navigator.SelectSingleNode("minutes").ValueAsInt;
         }
 
         /// <summary>
@@ -106,13 +106,13 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             Validator.ThrowIfStringNullOrEmpty(nodeName, "nodeName");
             Validator.ThrowIfWriterNull(writer);
-            Validator.ThrowSerializationIfNull(this.when, Resources.OccurrenceWhenNotSet);
-            Validator.ThrowSerializationIfNull(this.minutes, Resources.OccurrenceMinutesNotSet);
+            Validator.ThrowSerializationIfNull(_when, Resources.OccurrenceWhenNotSet);
+            Validator.ThrowSerializationIfNull(_minutes, Resources.OccurrenceMinutesNotSet);
 
             writer.WriteStartElement(nodeName);
 
-            this.when.WriteXml("when", writer);
-            writer.WriteElementString("minutes", this.minutes.ToString());
+            _when.WriteXml("when", writer);
+            writer.WriteElementString("minutes", _minutes.ToString());
 
             writer.WriteEndElement();
         }
@@ -132,16 +132,16 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public ApproximateTime When
         {
-            get { return this.when; }
+            get { return _when; }
 
             set
             {
-                Validator.ThrowIfArgumentNull(value, nameof(this.When), Resources.OccurrenceWhenMandatory);
-                this.when = value;
+                Validator.ThrowIfArgumentNull(value, nameof(When), Resources.OccurrenceWhenMandatory);
+                _when = value;
             }
         }
 
-        private ApproximateTime when;
+        private ApproximateTime _when;
 
         /// <summary>
         /// Gets or sets the duration of the occurrence in minutes.
@@ -157,19 +157,19 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public int Minutes
         {
-            get { return (int)this.minutes; }
+            get { return (int)_minutes; }
 
             set
             {
                 if (value <= 0)
                 {
-                    throw new ArgumentOutOfRangeException(nameof(this.Minutes), Resources.OccurrenceMinutesMustBePositive);
+                    throw new ArgumentOutOfRangeException(nameof(Minutes), Resources.OccurrenceMinutesMustBePositive);
                 }
 
-                this.minutes = value;
+                _minutes = value;
             }
         }
 
-        private int? minutes;
+        private int? _minutes;
     }
 }

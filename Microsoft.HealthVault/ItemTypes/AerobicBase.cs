@@ -42,10 +42,10 @@ namespace Microsoft.HealthVault.ItemTypes
             XPathNavigator modeNav =
                 navigator.SelectSingleNode("mode");
 
-            this.mode.Clear();
+            _mode.Clear();
             if (modeNav != null)
             {
-                this.mode.ParseXml(modeNav);
+                _mode.ParseXml(modeNav);
             }
 
             XPathNavigator distanceNav =
@@ -53,160 +53,160 @@ namespace Microsoft.HealthVault.ItemTypes
 
             if (distanceNav != null)
             {
-                this.distance = new Length();
-                this.distance.ParseXml(distanceNav);
+                _distance = new Length();
+                _distance.ParseXml(distanceNav);
             }
 
-            this.minutes =
+            _minutes =
                 XPathHelper.GetOptNavValueAsDouble(navigator, "minutes");
 
             int? currentIntensity =
                 XPathHelper.GetOptNavValueAsInt(navigator, "intensity");
             if (currentIntensity != null)
             {
-                this.intensity = (RelativeRating)(int)currentIntensity;
+                _intensity = (RelativeRating)(int)currentIntensity;
             }
 
-            this.peakHr =
+            _peakHr =
                 XPathHelper.GetOptNavValueAsInt(navigator, "peak-heartrate");
 
-            this.averageHr =
+            _averageHr =
                 XPathHelper.GetOptNavValueAsInt(navigator, "avg-heartrate");
 
-            this.minHr =
+            _minHr =
                 XPathHelper.GetOptNavValueAsInt(navigator, "min-heartrate");
 
-            this.energy =
+            _energy =
                 XPathHelper.GetOptNavValueAsDouble(navigator, "energy");
 
-            this.energyFromFat =
+            _energyFromFat =
                 XPathHelper.GetOptNavValueAsDouble(navigator, "energy-from-fat");
 
-            this.peakSpeed =
+            _peakSpeed =
                 XPathHelper.GetOptNavValue<SpeedMeasurement>(
                     navigator,
                     "peak-speed");
 
-            this.averageSpeed =
+            _averageSpeed =
                 XPathHelper.GetOptNavValue<SpeedMeasurement>(
                     navigator,
                     "avg-speed");
 
-            this.minSpeed =
+            _minSpeed =
                 XPathHelper.GetOptNavValue<SpeedMeasurement>(
                     navigator,
                     "min-speed");
 
-            this.peakPace =
+            _peakPace =
                 XPathHelper.GetOptNavValue<PaceMeasurement>(
                     navigator,
                     "peak-pace");
 
-            this.averagePace =
+            _averagePace =
                 XPathHelper.GetOptNavValue<PaceMeasurement>(
                     navigator,
                     "avg-pace");
 
-            this.minPace =
+            _minPace =
                 XPathHelper.GetOptNavValue<PaceMeasurement>(
                     navigator,
                     "min-pace");
 
-            this.peakPower =
+            _peakPower =
                 XPathHelper.GetOptNavValue<PowerMeasurement>(
                     navigator,
                     "peak-power");
 
-            this.averagePower =
+            _averagePower =
                 XPathHelper.GetOptNavValue<PowerMeasurement>(
                     navigator,
                     "avg-power");
 
-            this.minPower =
+            _minPower =
                 XPathHelper.GetOptNavValue<PowerMeasurement>(
                     navigator,
                     "min-power");
 
-            this.peakTorque =
+            _peakTorque =
                 XPathHelper.GetOptNavValue<TorqueMeasurement>(
                     navigator,
                     "peak-torque");
 
-            this.averageTorque =
+            _averageTorque =
                 XPathHelper.GetOptNavValue<TorqueMeasurement>(
                     navigator,
                     "avg-torque");
 
-            this.minTorque =
+            _minTorque =
                 XPathHelper.GetOptNavValue<TorqueMeasurement>(
                     navigator,
                     "min-torque");
 
-            this.leftRightBalance =
+            _leftRightBalance =
                 XPathHelper.GetOptNavValueAsDouble(
                     navigator,
                     "left-right-balance");
 
-            this.peakCadence =
+            _peakCadence =
                 XPathHelper.GetOptNavValueAsDouble(navigator, "peak-cadence");
 
-            this.averageCadence =
+            _averageCadence =
                 XPathHelper.GetOptNavValueAsDouble(navigator, "avg-cadence");
 
-            this.minCadence =
+            _minCadence =
                 XPathHelper.GetOptNavValueAsDouble(navigator, "min-cadence");
 
-            this.peakTemperature =
+            _peakTemperature =
                 XPathHelper.GetOptNavValue<TemperatureMeasurement>(
                     navigator,
                     "peak-temperature");
 
-            this.averageTemperature =
+            _averageTemperature =
                 XPathHelper.GetOptNavValue<TemperatureMeasurement>(
                     navigator,
                     "avg-temperature");
 
-            this.minTemperature =
+            _minTemperature =
                 XPathHelper.GetOptNavValue<TemperatureMeasurement>(
                     navigator,
                     "min-temperature");
 
-            this.peakAltitude =
+            _peakAltitude =
                 XPathHelper.GetOptNavValue<AltitudeMeasurement>(
                     navigator,
                     "peak-altitude");
 
-            this.averageAltitude =
+            _averageAltitude =
                 XPathHelper.GetOptNavValue<AltitudeMeasurement>(
                     navigator,
                     "avg-altitude");
 
-            this.minAltitude =
+            _minAltitude =
                 XPathHelper.GetOptNavValue<AltitudeMeasurement>(
                     navigator,
                     "min-altitude");
 
-            this.elevationGain =
+            _elevationGain =
                 XPathHelper.GetOptNavValue<Length>(
                     navigator,
                     "elevation-gain");
 
-            this.elevationLoss =
+            _elevationLoss =
                 XPathHelper.GetOptNavValue<Length>(
                     navigator,
                     "elevation-loss");
 
-            this.numberOfSteps =
+            _numberOfSteps =
                 XPathHelper.GetOptNavValueAsInt(
                     navigator,
                     "number-of-steps");
 
-            this.numberOfAerobicSteps =
+            _numberOfAerobicSteps =
                 XPathHelper.GetOptNavValueAsInt(
                     navigator,
                     "number-of-aerobic-steps");
 
-            this.aerobicStepMinutes =
+            _aerobicStepMinutes =
                 XPathHelper.GetOptNavValueAsDouble(
                     navigator,
                     "aerobic-step-minutes");
@@ -240,126 +240,126 @@ namespace Microsoft.HealthVault.ItemTypes
 
             writer.WriteStartElement(nodeName);
 
-            if (this.mode.Text != null)
+            if (_mode.Text != null)
             {
                 // <mode>
-                this.mode.WriteXml("mode", writer);
+                _mode.WriteXml("mode", writer);
             }
 
             // <distance>
-            this.distance?.WriteXml("distance", writer);
+            _distance?.WriteXml("distance", writer);
 
-            if (this.minutes != null)
+            if (_minutes != null)
             {
                 // <minutes>
                 writer.WriteElementString(
                     "minutes",
-                    XmlConvert.ToString(this.minutes.Value));
+                    XmlConvert.ToString(_minutes.Value));
             }
 
-            if (this.intensity != RelativeRating.None)
+            if (_intensity != RelativeRating.None)
             {
                 // <intensity>
                 writer.WriteElementString(
                     "intensity",
-                    ((int)this.intensity).ToString(CultureInfo.InvariantCulture));
+                    ((int)_intensity).ToString(CultureInfo.InvariantCulture));
             }
 
-            if (this.peakHr != null)
+            if (_peakHr != null)
             {
                 // <peak-heartrate>
                 writer.WriteElementString(
                     "peak-heartrate",
-                    this.peakHr.Value.ToString(CultureInfo.InvariantCulture));
+                    _peakHr.Value.ToString(CultureInfo.InvariantCulture));
             }
 
-            if (this.averageHr != null)
+            if (_averageHr != null)
             {
                 // <avg-heartrate>
                 writer.WriteElementString(
                     "avg-heartrate",
-                    this.averageHr.Value.ToString(CultureInfo.InvariantCulture));
+                    _averageHr.Value.ToString(CultureInfo.InvariantCulture));
             }
 
-            if (this.minHr != null)
+            if (_minHr != null)
             {
                 // <min-heartrate>
                 writer.WriteElementString(
                     "min-heartrate",
-                    this.minHr.Value.ToString(CultureInfo.InvariantCulture));
+                    _minHr.Value.ToString(CultureInfo.InvariantCulture));
             }
 
             XmlWriterHelper.WriteOptDouble(
                 writer,
                 "energy",
-                this.energy);
+                _energy);
 
             XmlWriterHelper.WriteOptDouble(
                 writer,
                 "energy-from-fat",
-                this.energyFromFat);
+                _energyFromFat);
 
-            this.peakSpeed?.WriteXml("peak-speed", writer);
+            _peakSpeed?.WriteXml("peak-speed", writer);
 
-            this.averageSpeed?.WriteXml("avg-speed", writer);
+            _averageSpeed?.WriteXml("avg-speed", writer);
 
-            this.minSpeed?.WriteXml("min-speed", writer);
+            _minSpeed?.WriteXml("min-speed", writer);
 
-            this.peakPace?.WriteXml("peak-pace", writer);
+            _peakPace?.WriteXml("peak-pace", writer);
 
-            this.averagePace?.WriteXml("avg-pace", writer);
+            _averagePace?.WriteXml("avg-pace", writer);
 
-            this.minPace?.WriteXml("min-pace", writer);
+            _minPace?.WriteXml("min-pace", writer);
 
-            this.peakPower?.WriteXml("peak-power", writer);
+            _peakPower?.WriteXml("peak-power", writer);
 
-            this.averagePower?.WriteXml("avg-power", writer);
+            _averagePower?.WriteXml("avg-power", writer);
 
-            this.minPower?.WriteXml("min-power", writer);
+            _minPower?.WriteXml("min-power", writer);
 
-            this.peakTorque?.WriteXml("peak-torque", writer);
+            _peakTorque?.WriteXml("peak-torque", writer);
 
-            this.averageTorque?.WriteXml("avg-torque", writer);
+            _averageTorque?.WriteXml("avg-torque", writer);
 
-            this.minTorque?.WriteXml("min-torque", writer);
+            _minTorque?.WriteXml("min-torque", writer);
 
             XmlWriterHelper.WriteOptDouble(
                 writer,
                 "left-right-balance",
-                this.leftRightBalance);
+                _leftRightBalance);
 
             XmlWriterHelper.WriteOptDouble(
                 writer,
                 "peak-cadence",
-                this.peakCadence);
+                _peakCadence);
 
             XmlWriterHelper.WriteOptDouble(
                 writer,
                 "avg-cadence",
-                this.averageCadence);
+                _averageCadence);
 
             XmlWriterHelper.WriteOptDouble(
                 writer,
                 "min-cadence",
-                this.minCadence);
+                _minCadence);
 
-            this.peakTemperature?.WriteXml("peak-temperature", writer);
+            _peakTemperature?.WriteXml("peak-temperature", writer);
 
-            this.averageTemperature?.WriteXml("avg-temperature", writer);
+            _averageTemperature?.WriteXml("avg-temperature", writer);
 
-            this.minTemperature?.WriteXml("min-temperature", writer);
+            _minTemperature?.WriteXml("min-temperature", writer);
 
-            this.peakAltitude?.WriteXml("peak-altitude", writer);
+            _peakAltitude?.WriteXml("peak-altitude", writer);
 
-            this.averageAltitude?.WriteXml("avg-altitude", writer);
+            _averageAltitude?.WriteXml("avg-altitude", writer);
 
-            this.minAltitude?.WriteXml("min-altitude", writer);
+            _minAltitude?.WriteXml("min-altitude", writer);
 
-            XmlWriterHelper.WriteOpt(writer, "elevation-gain", this.elevationGain);
-            XmlWriterHelper.WriteOpt(writer, "elevation-loss", this.elevationLoss);
-            XmlWriterHelper.WriteOptInt(writer, "number-of-steps", this.numberOfSteps);
-            XmlWriterHelper.WriteOptInt(writer, "number-of-aerobic-steps", this.numberOfAerobicSteps);
-            XmlWriterHelper.WriteOptDouble(writer, "aerobic-step-minutes", this.aerobicStepMinutes);
+            XmlWriterHelper.WriteOpt(writer, "elevation-gain", _elevationGain);
+            XmlWriterHelper.WriteOpt(writer, "elevation-loss", _elevationLoss);
+            XmlWriterHelper.WriteOptInt(writer, "number-of-steps", _numberOfSteps);
+            XmlWriterHelper.WriteOptInt(writer, "number-of-aerobic-steps", _numberOfAerobicSteps);
+            XmlWriterHelper.WriteOptDouble(writer, "aerobic-step-minutes", _aerobicStepMinutes);
 
             writer.WriteEndElement();
         }
@@ -375,11 +375,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public CodableValue Mode
         {
-            get { return this.mode; }
-            set { this.mode = value; }
+            get { return _mode; }
+            set { _mode = value; }
         }
 
-        private CodableValue mode = new CodableValue();
+        private CodableValue _mode = new CodableValue();
 
         /// <summary>
         /// Gets or sets the length traversed by this aerobic session.
@@ -395,11 +395,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public Length Distance
         {
-            get { return this.distance; }
-            set { this.distance = value; }
+            get { return _distance; }
+            set { _distance = value; }
         }
 
-        private Length distance;
+        private Length _distance;
 
         private static void ThrowIfValueIsNegative(double? value, string message)
         {
@@ -431,16 +431,16 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public double? Duration
         {
-            get { return this.minutes; }
+            get { return _minutes; }
 
             set
             {
                 ThrowIfValueIsNegative(value, Resources.AerobicSessionDurationNotPositive);
-                this.minutes = value;
+                _minutes = value;
             }
         }
 
-        private double? minutes;
+        private double? _minutes;
 
         /// <summary>
         /// Gets the duration of the aerobic session as a
@@ -452,13 +452,13 @@ namespace Microsoft.HealthVault.ItemTypes
             get
             {
                 TimeSpan result;
-                if (this.minutes != null)
+                if (_minutes != null)
                 {
                     result =
                         new TimeSpan(
                             0,
-                            (int)this.minutes.Value,
-                            (int)(60.0 * (this.minutes - (int)this.minutes)));
+                            (int)_minutes.Value,
+                            (int)(60.0 * (_minutes - (int)_minutes)));
                 }
                 else
                 {
@@ -480,11 +480,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public RelativeRating Intensity
         {
-            get { return this.intensity; }
-            set { this.intensity = value; }
+            get { return _intensity; }
+            set { _intensity = value; }
         }
 
-        private RelativeRating intensity;
+        private RelativeRating _intensity;
 
         /// <summary>
         /// Gets or sets the peak heart rate for the session.
@@ -501,16 +501,16 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public int? PeakHeartRate
         {
-            get { return this.peakHr; }
+            get { return _peakHr; }
 
             set
             {
                 ThrowIfValueIsNegative(value, Resources.AerobicSessionPeakHrNotPositive);
-                this.peakHr = value;
+                _peakHr = value;
             }
         }
 
-        private int? peakHr;
+        private int? _peakHr;
 
         /// <summary>
         /// Gets or sets the average heart rate for the session.
@@ -527,16 +527,16 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public int? AverageHeartRate
         {
-            get { return this.averageHr; }
+            get { return _averageHr; }
 
             set
             {
                 ThrowIfValueIsNegative(value, Resources.AerobicSessionAvgHrNotPositive);
-                this.averageHr = value;
+                _averageHr = value;
             }
         }
 
-        private int? averageHr;
+        private int? _averageHr;
 
         /// <summary>
         /// Gets or sets the minimum heart rate for the session.
@@ -554,16 +554,16 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public int? MinHeartRate
         {
-            get { return this.minHr; }
+            get { return _minHr; }
 
             set
             {
                 ThrowIfValueIsNegative(value, Resources.AerobicSessionMinHrNotPositive);
-                this.minHr = value;
+                _minHr = value;
             }
         }
 
-        private int? minHr;
+        private int? _minHr;
 
         /// <summary>
         /// Gets or sets the food energy consumed during the session.
@@ -580,16 +580,16 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public double? Energy
         {
-            get { return this.energy; }
+            get { return _energy; }
 
             set
             {
                 ThrowIfValueIsNegative(value, Resources.AerobicSessionEnergyNotPositive);
-                this.energy = value;
+                _energy = value;
             }
         }
 
-        private double? energy;
+        private double? _energy;
 
         /// <summary>
         /// Gets or sets the energy from fat consumed during the session.
@@ -606,16 +606,16 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public double? EnergyFromFat
         {
-            get { return this.energyFromFat; }
+            get { return _energyFromFat; }
 
             set
             {
                 ThrowIfValueIsNegative(value, Resources.AerobicSessionEnergyFromFatNotPositive);
-                this.energyFromFat = value;
+                _energyFromFat = value;
             }
         }
 
-        private double? energyFromFat;
+        private double? _energyFromFat;
 
         /// <summary>
         /// Gets or sets the peak speed, in meters per second, during the
@@ -628,11 +628,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public SpeedMeasurement PeakSpeed
         {
-            get { return this.peakSpeed; }
-            set { this.peakSpeed = value; }
+            get { return _peakSpeed; }
+            set { _peakSpeed = value; }
         }
 
-        private SpeedMeasurement peakSpeed;
+        private SpeedMeasurement _peakSpeed;
 
         /// <summary>
         /// Gets or sets the average speed, in meters per second, during the
@@ -645,11 +645,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public SpeedMeasurement AverageSpeed
         {
-            get { return this.averageSpeed; }
-            set { this.averageSpeed = value; }
+            get { return _averageSpeed; }
+            set { _averageSpeed = value; }
         }
 
-        private SpeedMeasurement averageSpeed;
+        private SpeedMeasurement _averageSpeed;
 
         /// <summary>
         /// Gets or sets the minimum speed, in meters per second, during the
@@ -662,11 +662,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public SpeedMeasurement MinSpeed
         {
-            get { return this.minSpeed; }
-            set { this.minSpeed = value; }
+            get { return _minSpeed; }
+            set { _minSpeed = value; }
         }
 
-        private SpeedMeasurement minSpeed;
+        private SpeedMeasurement _minSpeed;
 
         /// <summary>
         /// Gets or sets the peak pace, in seconds per 100 meters, during the session.
@@ -678,11 +678,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public PaceMeasurement PeakPace
         {
-            get { return this.peakPace; }
-            set { this.peakPace = value; }
+            get { return _peakPace; }
+            set { _peakPace = value; }
         }
 
-        private PaceMeasurement peakPace;
+        private PaceMeasurement _peakPace;
 
         /// <summary>
         /// Gets or sets the average pace, in seconds per 100 meters, during the session.
@@ -694,15 +694,15 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public PaceMeasurement AveragePace
         {
-            get { return this.averagePace; }
+            get { return _averagePace; }
 
             set
             {
-                this.averagePace = value;
+                _averagePace = value;
             }
         }
 
-        private PaceMeasurement averagePace;
+        private PaceMeasurement _averagePace;
 
         /// <summary>
         /// Gets or sets the minimum pace, in seconds per 100 meters, during the session.
@@ -714,15 +714,15 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public PaceMeasurement MinPace
         {
-            get { return this.minPace; }
+            get { return _minPace; }
 
             set
             {
-                this.minPace = value;
+                _minPace = value;
             }
         }
 
-        private PaceMeasurement minPace;
+        private PaceMeasurement _minPace;
 
         /// <summary>
         /// Gets or sets the peak power, in watts, during the session.
@@ -734,15 +734,15 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public PowerMeasurement PeakPower
         {
-            get { return this.peakPower; }
+            get { return _peakPower; }
 
             set
             {
-                this.peakPower = value;
+                _peakPower = value;
             }
         }
 
-        private PowerMeasurement peakPower;
+        private PowerMeasurement _peakPower;
 
         /// <summary>
         /// Gets or sets the average power, in watts, during the session.
@@ -754,15 +754,15 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public PowerMeasurement AveragePower
         {
-            get { return this.averagePower; }
+            get { return _averagePower; }
 
             set
             {
-                this.averagePower = value;
+                _averagePower = value;
             }
         }
 
-        private PowerMeasurement averagePower;
+        private PowerMeasurement _averagePower;
 
         /// <summary>
         /// Gets or sets the minimum power, in watts, during the session.
@@ -774,15 +774,15 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public PowerMeasurement MinPower
         {
-            get { return this.minPower; }
+            get { return _minPower; }
 
             set
             {
-                this.minPower = value;
+                _minPower = value;
             }
         }
 
-        private PowerMeasurement minPower;
+        private PowerMeasurement _minPower;
 
         /// <summary>
         /// Gets or sets the peak torque, in newton meters, during the session.
@@ -794,15 +794,15 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public TorqueMeasurement PeakTorque
         {
-            get { return this.peakTorque; }
+            get { return _peakTorque; }
 
             set
             {
-                this.peakTorque = value;
+                _peakTorque = value;
             }
         }
 
-        private TorqueMeasurement peakTorque;
+        private TorqueMeasurement _peakTorque;
 
         /// <summary>
         /// Gets or sets the average torque, in newton meters, during the session.
@@ -814,15 +814,15 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public TorqueMeasurement AverageTorque
         {
-            get { return this.averageTorque; }
+            get { return _averageTorque; }
 
             set
             {
-                this.averageTorque = value;
+                _averageTorque = value;
             }
         }
 
-        private TorqueMeasurement averageTorque;
+        private TorqueMeasurement _averageTorque;
 
         /// <summary>
         /// Gets or sets the minimum torque, in newton meters, during the session.
@@ -834,15 +834,15 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public TorqueMeasurement MinTorque
         {
-            get { return this.minTorque; }
+            get { return _minTorque; }
 
             set
             {
-                this.minTorque = value;
+                _minTorque = value;
             }
         }
 
-        private TorqueMeasurement minTorque;
+        private TorqueMeasurement _minTorque;
 
         /// <summary>
         /// Gets or sets the balance between left and right strokes.
@@ -861,20 +861,20 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public double? LeftRightBalance
         {
-            get { return this.leftRightBalance; }
+            get { return _leftRightBalance; }
 
             set
             {
                 if (value != null && ((double)value < 0.0 || (double)value > 1.0))
                 {
-                    throw new ArgumentOutOfRangeException(nameof(this.LeftRightBalance), Resources.AerobicSessionLeftRightBalanceNotPercentage);
+                    throw new ArgumentOutOfRangeException(nameof(LeftRightBalance), Resources.AerobicSessionLeftRightBalanceNotPercentage);
                 }
-                
-                this.leftRightBalance = value;
+
+                _leftRightBalance = value;
             }
         }
 
-        private double? leftRightBalance;
+        private double? _leftRightBalance;
 
         /// <summary>
         /// Gets or sets the peak cadence, in revolutions per minute (rpm),
@@ -891,16 +891,16 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public double? PeakCadence
         {
-            get { return this.peakCadence; }
+            get { return _peakCadence; }
 
             set
             {
                 ThrowIfValueIsNegative(value, Resources.AerobicSessionPeakCadenceNotPositive);
-                this.peakCadence = value;
+                _peakCadence = value;
             }
         }
 
-        private double? peakCadence;
+        private double? _peakCadence;
 
         /// <summary>
         /// Gets or sets the average cadence, in revolutions per minute (rpm),
@@ -917,16 +917,16 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public double? AverageCadence
         {
-            get { return this.averageCadence; }
+            get { return _averageCadence; }
 
             set
             {
                 ThrowIfValueIsNegative(value, Resources.AerobicSessionAvgCadenceNotPositive);
-                this.averageCadence = value;
+                _averageCadence = value;
             }
         }
 
-        private double? averageCadence;
+        private double? _averageCadence;
 
         /// <summary>
         /// Gets or sets the minimum cadence, in revolutions per minute (rpm),
@@ -943,16 +943,16 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public double? MinCadence
         {
-            get { return this.minCadence; }
+            get { return _minCadence; }
 
             set
             {
                 ThrowIfValueIsNegative(value, Resources.AerobicSessionMinCadenceNotPositive);
-                this.minCadence = value;
+                _minCadence = value;
             }
         }
 
-        private double? minCadence;
+        private double? _minCadence;
 
         /// <summary>
         /// Gets or sets the peak temperature, in degrees Celsius (C), during
@@ -965,15 +965,15 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public TemperatureMeasurement PeakTemperature
         {
-            get { return this.peakTemperature; }
+            get { return _peakTemperature; }
 
             set
             {
-                this.peakTemperature = value;
+                _peakTemperature = value;
             }
         }
 
-        private TemperatureMeasurement peakTemperature;
+        private TemperatureMeasurement _peakTemperature;
 
         /// <summary>
         /// Gets or sets the average temperature, in degrees Celsius (C),
@@ -986,15 +986,15 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public TemperatureMeasurement AverageTemperature
         {
-            get { return this.averageTemperature; }
+            get { return _averageTemperature; }
 
             set
             {
-                this.averageTemperature = value;
+                _averageTemperature = value;
             }
         }
 
-        private TemperatureMeasurement averageTemperature;
+        private TemperatureMeasurement _averageTemperature;
 
         /// <summary>
         /// Gets or sets the minimum temperature, in degrees Celsius (C),
@@ -1007,11 +1007,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public TemperatureMeasurement MinTemperature
         {
-            get { return this.minTemperature; }
-            set { this.minTemperature = value; }
+            get { return _minTemperature; }
+            set { _minTemperature = value; }
         }
 
-        private TemperatureMeasurement minTemperature;
+        private TemperatureMeasurement _minTemperature;
 
         /// <summary>
         /// Gets or sets the peak altitude, in meters above sea level, during
@@ -1025,11 +1025,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public AltitudeMeasurement PeakAltitude
         {
-            get { return this.peakAltitude; }
-            set { this.peakAltitude = value; }
+            get { return _peakAltitude; }
+            set { _peakAltitude = value; }
         }
 
-        private AltitudeMeasurement peakAltitude;
+        private AltitudeMeasurement _peakAltitude;
 
         /// <summary>
         /// Gets or sets the average altitude, in meters above sea level,
@@ -1043,11 +1043,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public AltitudeMeasurement AverageAltitude
         {
-            get { return this.averageAltitude; }
-            set { this.averageAltitude = value; }
+            get { return _averageAltitude; }
+            set { _averageAltitude = value; }
         }
 
-        private AltitudeMeasurement averageAltitude;
+        private AltitudeMeasurement _averageAltitude;
 
         /// <summary>
         /// Gets or sets the minimum altitude, in meters above sea level,
@@ -1061,11 +1061,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public AltitudeMeasurement MinAltitude
         {
-            get { return this.minAltitude; }
-            set { this.minAltitude = value; }
+            get { return _minAltitude; }
+            set { _minAltitude = value; }
         }
 
-        private AltitudeMeasurement minAltitude;
+        private AltitudeMeasurement _minAltitude;
 
         /// <summary>
         /// Gets or sets the elevation gained, in meters, during the session.
@@ -1077,11 +1077,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public Length ElevationGain
         {
-            get { return this.elevationGain; }
-            set { this.elevationGain = value; }
+            get { return _elevationGain; }
+            set { _elevationGain = value; }
         }
 
-        private Length elevationGain;
+        private Length _elevationGain;
 
         /// <summary>
         /// Gets or sets the elevation loss, in meters, during the session.
@@ -1093,11 +1093,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public Length ElevationLoss
         {
-            get { return this.elevationLoss; }
-            set { this.elevationLoss = value; }
+            get { return _elevationLoss; }
+            set { _elevationLoss = value; }
         }
 
-        private Length elevationLoss;
+        private Length _elevationLoss;
 
         /// <summary>
         /// Gets or sets the number of steps taken during the session.
@@ -1109,11 +1109,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public int? NumberOfSteps
         {
-            get { return this.numberOfSteps; }
-            set { this.numberOfSteps = value; }
+            get { return _numberOfSteps; }
+            set { _numberOfSteps = value; }
         }
 
-        private int? numberOfSteps;
+        private int? _numberOfSteps;
 
         /// <summary>
         /// Gets or sets the number of aerobic steps taken during the session.
@@ -1125,11 +1125,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public int? NumberOfAerobicSteps
         {
-            get { return this.numberOfAerobicSteps; }
-            set { this.numberOfAerobicSteps = value; }
+            get { return _numberOfAerobicSteps; }
+            set { _numberOfAerobicSteps = value; }
         }
 
-        private int? numberOfAerobicSteps;
+        private int? _numberOfAerobicSteps;
 
         /// <summary>
         /// Gets or sets the number of aerobic minutes during the session.
@@ -1142,11 +1142,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public double? AerobicStepMinutes
         {
-            get { return this.aerobicStepMinutes; }
-            set { this.aerobicStepMinutes = value; }
+            get { return _aerobicStepMinutes; }
+            set { _aerobicStepMinutes = value; }
         }
 
-        private double? aerobicStepMinutes;
+        private double? _aerobicStepMinutes;
 
         /// <summary>
         /// Gets a summary of the aerobic data.
@@ -1160,19 +1160,19 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             string result = string.Empty;
 
-            if (this.Distance != null && this.Duration != null)
+            if (Distance != null && Duration != null)
             {
                 result = Resources.AerobicDataToStringFormatDistanceAndDuration.FormatResource(
-                    this.Distance.ToString(),
-                    this.Duration.Value.ToString(CultureInfo.CurrentCulture));
+                    Distance.ToString(),
+                    Duration.Value.ToString(CultureInfo.CurrentCulture));
             }
-            else if (this.Duration != null)
+            else if (Duration != null)
             {
-                result = Resources.AerobicDataToStringFormatDuration.FormatResource(this.Duration.Value.ToString(CultureInfo.InvariantCulture));
+                result = Resources.AerobicDataToStringFormatDuration.FormatResource(Duration.Value.ToString(CultureInfo.InvariantCulture));
             }
-            else if (this.Distance != null)
+            else if (Distance != null)
             {
-                result = Resources.AerobicDataToStringFormatDistance.FormatResource(this.Distance.ToString());
+                result = Resources.AerobicDataToStringFormatDistance.FormatResource(Distance.ToString());
             }
 
             return result;

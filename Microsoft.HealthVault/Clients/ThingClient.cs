@@ -1,7 +1,7 @@
-// Copyright (c) Microsoft Corporation.  All rights reserved. 
+// Copyright (c) Microsoft Corporation.  All rights reserved.
 // MIT License
 // Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the ""Software""), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 //
 // THE SOFTWARE IS PROVIDED *AS IS*, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
@@ -28,15 +28,15 @@ namespace Microsoft.HealthVault.Clients
     /// </summary>
     internal class ThingClient : IThingClient
     {
-        private readonly IHealthVaultConnection connection;
-        private readonly IThingDeserializer thingDeserializer;
+        private readonly IHealthVaultConnection _connection;
+        private readonly IThingDeserializer _thingDeserializer;
 
         public ThingClient(
             IHealthVaultConnection connection,
             IThingDeserializer thingDeserializer)
         {
-            this.connection = connection;
-            this.thingDeserializer = thingDeserializer;
+            _connection = connection;
+            _thingDeserializer = thingDeserializer;
         }
 
         public Guid? CorrelationId { get; set; }
@@ -47,7 +47,7 @@ namespace Microsoft.HealthVault.Clients
             Validator.ThrowIfArgumentNull(recordId, nameof(recordId), Resources.NewItemsNullItem);
 
             // Create a new searcher to get the item.
-            HealthRecordAccessor accessor = new HealthRecordAccessor(this.connection, recordId);
+            HealthRecordAccessor accessor = new HealthRecordAccessor(_connection, recordId);
             HealthRecordSearcher searcher = new HealthRecordSearcher(accessor);
 
             ThingQuery query = new ThingQuery();
@@ -55,9 +55,9 @@ namespace Microsoft.HealthVault.Clients
             query.View.Sections = ThingSections.Default;
             query.CurrentVersionOnly = true;
 
-            HealthServiceResponseData result = await this.GetRequestWithParameters(recordId, searcher, query);
+            HealthServiceResponseData result = await GetRequestWithParameters(recordId, searcher, query);
 
-            IReadOnlyCollection<ThingCollection> resultSet = this.thingDeserializer.Deserialize(result, searcher);
+            IReadOnlyCollection<ThingCollection> resultSet = _thingDeserializer.Deserialize(result, searcher);
 
             // Check in case HealthVault returned invalid data.
             if (resultSet.Count == 0)
@@ -88,11 +88,11 @@ namespace Microsoft.HealthVault.Clients
             Validator.ThrowIfArgumentNull(recordId, nameof(recordId), Resources.NewItemsNullItem);
             Validator.ThrowIfArgumentNull(query, nameof(query), Resources.NewItemsNullItem);
 
-            HealthRecordAccessor accessor = new HealthRecordAccessor(this.connection, recordId);
+            HealthRecordAccessor accessor = new HealthRecordAccessor(_connection, recordId);
             HealthRecordSearcher searcher = new HealthRecordSearcher(accessor);
 
-            HealthServiceResponseData response = await this.GetRequestWithParameters(recordId, searcher, query);
-            IReadOnlyCollection<ThingCollection> resultSet = this.thingDeserializer.Deserialize(response, searcher);
+            HealthServiceResponseData response = await GetRequestWithParameters(recordId, searcher, query);
+            IReadOnlyCollection<ThingCollection> resultSet = _thingDeserializer.Deserialize(response, searcher);
 
             return resultSet;
         }
@@ -108,7 +108,7 @@ namespace Microsoft.HealthVault.Clients
             query.TypeIds.Clear();
             query.TypeIds.Add(thing.TypeId);
 
-            IReadOnlyCollection<ThingCollection> resultSet = await this.GetThingsAsync(recordId, query);
+            IReadOnlyCollection<ThingCollection> resultSet = await GetThingsAsync(recordId, query);
 
             IList<T> things = new Collection<T>();
             foreach (ThingCollection results in resultSet)
@@ -147,12 +147,12 @@ namespace Microsoft.HealthVault.Clients
                 infoXmlWriter.Flush();
             }
 
-            HealthServiceResponseData responseData = await this.connection.ExecuteAsync(
+            HealthServiceResponseData responseData = await _connection.ExecuteAsync(
                 HealthVaultMethods.PutThings,
-                2, 
-                infoXml.ToString(), 
+                2,
+                infoXml.ToString(),
                 recordId,
-                this.CorrelationId);
+                CorrelationId);
 
             // Now update the Id for the new item
             XPathNodeIterator thingIds =
@@ -209,12 +209,12 @@ namespace Microsoft.HealthVault.Clients
 
             if (somethingRequiresUpdate)
             {
-                HealthServiceResponseData response = await this.connection.ExecuteAsync(
+                HealthServiceResponseData response = await _connection.ExecuteAsync(
                     HealthVaultMethods.PutThings,
                     2,
                     infoXml.ToString(),
                     recordId,
-                    correlationId: this.CorrelationId);
+                    correlationId: CorrelationId);
 
                 XPathNodeIterator thingIds =
                     response.InfoNavigator.Select(
@@ -253,7 +253,7 @@ namespace Microsoft.HealthVault.Clients
                 parameters.Append("</thing-id>");
             }
 
-            await this.connection.ExecuteAsync(HealthVaultMethods.RemoveThings, 1, parameters.ToString(), recordId, correlationId: this.CorrelationId);
+            await _connection.ExecuteAsync(HealthVaultMethods.RemoveThings, 1, parameters.ToString(), recordId, correlationId: CorrelationId);
         }
 
         internal static string GetParametersXml(HealthRecordSearcher searcher)
@@ -292,7 +292,7 @@ namespace Microsoft.HealthVault.Clients
         private async Task<HealthServiceResponseData> GetRequestWithParameters(Guid recordId, HealthRecordSearcher searcher, ThingQuery query)
         {
             searcher.Filters.Add(query);
-            return await this.connection.ExecuteAsync(HealthVaultMethods.GetThings, 3, GetParametersXml(searcher), recordId, correlationId: this.CorrelationId);
+            return await _connection.ExecuteAsync(HealthVaultMethods.GetThings, 3, GetParametersXml(searcher), recordId, correlationId: CorrelationId);
         }
 
         /// <summary>

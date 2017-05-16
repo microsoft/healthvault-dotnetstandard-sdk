@@ -10,14 +10,14 @@ namespace Microsoft.HealthVault.UnitTest.Connection
     [TestClass]
     public class HttpClientFactoryTests
     {
-        private IMessageHandlerFactory subMessageHandlerFactory;
-        private IDateTimeService subDateTimeService;
+        private IMessageHandlerFactory _subMessageHandlerFactory;
+        private IDateTimeService _subDateTimeService;
 
         [TestInitialize]
         public void TestInitialize()
         {
-            this.subMessageHandlerFactory = Substitute.For<IMessageHandlerFactory>();
-            this.subDateTimeService = Substitute.For<IDateTimeService>();
+            _subMessageHandlerFactory = Substitute.For<IMessageHandlerFactory>();
+            _subDateTimeService = Substitute.For<IDateTimeService>();
         }
 
         [TestMethod]
@@ -26,11 +26,11 @@ namespace Microsoft.HealthVault.UnitTest.Connection
             DateTimeOffset firstNow = new DateTimeOffset(2017, 3, 27, 13, 40, 23, TimeSpan.Zero);
             DateTimeOffset secondNow = new DateTimeOffset(2017, 3, 27, 13, 42, 23, TimeSpan.Zero);
 
-            this.subDateTimeService.UtcNow
+            _subDateTimeService.UtcNow
                 .Returns(firstNow, secondNow);
-            this.subMessageHandlerFactory.Create().Returns(c => new HttpClientHandler());
+            _subMessageHandlerFactory.Create().Returns(c => new HttpClientHandler());
 
-            HttpClientFactory factory = this.CreateFactory();
+            HttpClientFactory factory = CreateFactory();
 
             HttpClient firstClient = factory.GetOrCreateClient();
             HttpClient secondClient = factory.GetOrCreateClient();
@@ -44,11 +44,11 @@ namespace Microsoft.HealthVault.UnitTest.Connection
             DateTimeOffset firstNow = new DateTimeOffset(2017, 3, 27, 13, 40, 23, TimeSpan.Zero);
             DateTimeOffset secondNow = new DateTimeOffset(2017, 3, 27, 13, 46, 23, TimeSpan.Zero);
 
-            this.subDateTimeService.UtcNow
+            _subDateTimeService.UtcNow
                 .Returns(firstNow, secondNow);
-            this.subMessageHandlerFactory.Create().Returns(c => new HttpClientHandler());
+            _subMessageHandlerFactory.Create().Returns(c => new HttpClientHandler());
 
-            HttpClientFactory factory = this.CreateFactory();
+            HttpClientFactory factory = CreateFactory();
 
             HttpClient firstClient = factory.GetOrCreateClient();
             HttpClient secondClient = factory.GetOrCreateClient();
@@ -59,8 +59,8 @@ namespace Microsoft.HealthVault.UnitTest.Connection
         private HttpClientFactory CreateFactory()
         {
             return new HttpClientFactory(
-                this.subMessageHandlerFactory,
-                this.subDateTimeService);
+                _subMessageHandlerFactory,
+                _subDateTimeService);
         }
     }
 }

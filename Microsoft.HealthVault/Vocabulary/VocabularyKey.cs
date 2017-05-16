@@ -41,7 +41,7 @@ namespace Microsoft.HealthVault.Vocabulary
         public VocabularyKey(string name)
         {
             Validator.ThrowIfStringNullOrEmpty(name, "name");
-            this.name = name;
+            _name = name;
         }
 
         /// <summary>
@@ -70,7 +70,7 @@ namespace Microsoft.HealthVault.Vocabulary
         {
             if (!string.IsNullOrEmpty(family))
             {
-                this.Family = family;
+                Family = family;
             }
         }
 
@@ -99,7 +99,7 @@ namespace Microsoft.HealthVault.Vocabulary
         {
             if (!string.IsNullOrEmpty(version))
             {
-                this.Version = version;
+                Version = version;
             }
         }
 
@@ -136,7 +136,7 @@ namespace Microsoft.HealthVault.Vocabulary
         {
             if (!string.IsNullOrEmpty(codeValue))
             {
-                this.CodeValue = codeValue;
+                CodeValue = codeValue;
             }
         }
 
@@ -154,16 +154,16 @@ namespace Microsoft.HealthVault.Vocabulary
         ///
         public string Name
         {
-            get { return this.name; }
+            get { return _name; }
 
             set
             {
                 Validator.ThrowIfStringNullOrEmpty("value", "Name");
-                this.name = value;
+                _name = value;
             }
         }
 
-        private string name;
+        private string _name;
 
         /// <summary>
         /// Gets or sets the name of the family the <see cref="Vocabulary"/> belongs to.
@@ -250,23 +250,23 @@ namespace Microsoft.HealthVault.Vocabulary
         public override string ToString()
         {
             StringBuilder sb = new StringBuilder(56);
-            sb.Append(this.name);
-            if (!string.IsNullOrEmpty(this.Family))
+            sb.Append(_name);
+            if (!string.IsNullOrEmpty(Family))
             {
                 sb.Append("_");
-                sb.Append(this.Family);
+                sb.Append(Family);
             }
 
-            if (!string.IsNullOrEmpty(this.Version))
+            if (!string.IsNullOrEmpty(Version))
             {
                 sb.Append("_");
-                sb.Append(this.Version);
+                sb.Append(Version);
             }
 
-            if (!string.IsNullOrEmpty(this.CodeValue))
+            if (!string.IsNullOrEmpty(CodeValue))
             {
                 sb.Append("_");
-                sb.Append(this.CodeValue);
+                sb.Append(CodeValue);
             }
 
             return sb.ToString();
@@ -283,20 +283,20 @@ namespace Microsoft.HealthVault.Vocabulary
         public void WriteXml(XmlWriter writer)
         {
             writer.WriteStartElement("vocabulary-key");
-            writer.WriteElementString("name", this.name);
-            if (!string.IsNullOrEmpty(this.Family))
+            writer.WriteElementString("name", _name);
+            if (!string.IsNullOrEmpty(Family))
             {
-                writer.WriteElementString("family", this.Family);
+                writer.WriteElementString("family", Family);
             }
 
-            if (!string.IsNullOrEmpty(this.Version))
+            if (!string.IsNullOrEmpty(Version))
             {
-                writer.WriteElementString("version", this.Version);
+                writer.WriteElementString("version", Version);
             }
 
-            if (!string.IsNullOrEmpty(this.CodeValue))
+            if (!string.IsNullOrEmpty(CodeValue))
             {
-                writer.WriteElementString("code-value", this.CodeValue);
+                writer.WriteElementString("code-value", CodeValue);
             }
 
             writer.WriteEndElement();
@@ -304,17 +304,17 @@ namespace Microsoft.HealthVault.Vocabulary
 
         internal void ParseXml(XPathNavigator vocabularyKeyNav)
         {
-            this.name = vocabularyKeyNav.SelectSingleNode("name").Value;
-            this.Family = vocabularyKeyNav.SelectSingleNode("family").Value;
-            this.Version = vocabularyKeyNav.SelectSingleNode("version").Value;
+            _name = vocabularyKeyNav.SelectSingleNode("name").Value;
+            Family = vocabularyKeyNav.SelectSingleNode("family").Value;
+            Version = vocabularyKeyNav.SelectSingleNode("version").Value;
 
             XPathNavigator codeValueNav
                 = vocabularyKeyNav.SelectSingleNode("code-value");
-            this.CodeValue = (codeValueNav != null) ? codeValueNav.Value : null;
+            CodeValue = (codeValueNav != null) ? codeValueNav.Value : null;
 
             XPathNavigator descNav
                 = vocabularyKeyNav.SelectSingleNode("description");
-            this.Description = (descNav != null) ? descNav.Value : string.Empty;
+            Description = (descNav != null) ? descNav.Value : string.Empty;
         }
     }
 }

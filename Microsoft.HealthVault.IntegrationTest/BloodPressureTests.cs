@@ -4,7 +4,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.HealthVault.Client;
 using Microsoft.HealthVault.Clients;
-using Microsoft.HealthVault.Configuration;
 using Microsoft.HealthVault.ItemTypes;
 using Microsoft.HealthVault.Person;
 using Microsoft.VisualStudio.TestTools.UnitTesting;

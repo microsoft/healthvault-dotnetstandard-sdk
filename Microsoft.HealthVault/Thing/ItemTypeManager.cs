@@ -83,15 +83,15 @@ namespace Microsoft.HealthVault.Thing
         {
             internal DefaultTypeHandler(Guid typeId, Type implementingType)
             {
-                this.TypeId = typeId;
-                this.Type = implementingType;
+                TypeId = typeId;
+                Type = implementingType;
             }
 
             public Guid TypeId { get; }
 
             public Type Type { get; }
 
-            internal string TypeName => this.Type.Name;
+            internal string TypeName => Type.Name;
         }
 
         /// <summary>
@@ -217,28 +217,28 @@ namespace Microsoft.HealthVault.Thing
             }
 
             TypeHandlers[typeId] = new ThingTypeHandler(typeId, itemTypeClass);
-            typeHandlersByClassName[itemTypeClass.Name] = TypeHandlers[typeId];
+            s_typeHandlersByClassName[itemTypeClass.Name] = TypeHandlers[typeId];
         }
 
         private static Dictionary<Guid, ThingTypeHandler> TypeHandlers
         {
             get
             {
-                if (typeHandlers == null)
+                if (s_typeHandlers == null)
                 {
-                    typeHandlers = RegisterDefaultTypeHandlers(out typeHandlersByClassName);
+                    s_typeHandlers = RegisterDefaultTypeHandlers(out s_typeHandlersByClassName);
                     RegisterExternalTypeHandlers();
                 }
 
-                return typeHandlers;
+                return s_typeHandlers;
             }
         }
 
-        private static Dictionary<Guid, ThingTypeHandler> typeHandlers;
+        private static Dictionary<Guid, ThingTypeHandler> s_typeHandlers;
 
-        internal static Dictionary<string, ThingTypeHandler> TypeHandlersByClassName => typeHandlersByClassName;
+        internal static Dictionary<string, ThingTypeHandler> TypeHandlersByClassName => s_typeHandlersByClassName;
 
-        private static Dictionary<string, ThingTypeHandler> typeHandlersByClassName;
+        private static Dictionary<string, ThingTypeHandler> s_typeHandlersByClassName;
 
         /// <summary>
         /// Get a collection of all the ThingBase-derived types that are registered.
@@ -380,17 +380,17 @@ namespace Microsoft.HealthVault.Thing
             Validator.ThrowIfStringNullOrEmpty(extensionSource, "extensionSource");
             Validator.ThrowIfArgumentNull(itemExtensionClass, nameof(itemExtensionClass), Resources.ItemExtensionClassNull);
 
-            if (extensionHandlers.ContainsKey(extensionSource) &&
+            if (s_extensionHandlers.ContainsKey(extensionSource) &&
                 !overwriteExisting)
             {
                 throw new TypeHandlerAlreadyRegisteredException(Resources.ExtensionHandlerAlreadyRegistered);
             }
 
-            extensionHandlers[extensionSource] =
+            s_extensionHandlers[extensionSource] =
                 new ThingTypeHandler(itemExtensionClass);
         }
 
-        private static Dictionary<string, ThingTypeHandler> extensionHandlers =
+        private static Dictionary<string, ThingTypeHandler> s_extensionHandlers =
             new Dictionary<string, ThingTypeHandler>();
 
         #endregion RegisterExtensionHandler
@@ -557,9 +557,9 @@ namespace Microsoft.HealthVault.Thing
 
             Dictionary<string, ThingTypeHandler> handlerDictionary;
 
-            if (appSpecificHandlers.ContainsKey(applicationId))
+            if (s_appSpecificHandlers.ContainsKey(applicationId))
             {
-                handlerDictionary = appSpecificHandlers[applicationId];
+                handlerDictionary = s_appSpecificHandlers[applicationId];
 
                 if (handlerDictionary.ContainsKey(subtypeTag) &&
                     !overwriteExisting)
@@ -570,7 +570,7 @@ namespace Microsoft.HealthVault.Thing
             else
             {
                 handlerDictionary = new Dictionary<string, ThingTypeHandler>();
-                appSpecificHandlers.Add(applicationId, handlerDictionary);
+                s_appSpecificHandlers.Add(applicationId, handlerDictionary);
             }
 
             ThingTypeHandler handler =
@@ -579,7 +579,7 @@ namespace Microsoft.HealthVault.Thing
             handlerDictionary[subtypeTag] = handler;
         }
 
-        private static Dictionary<string, Dictionary<string, ThingTypeHandler>> appSpecificHandlers =
+        private static Dictionary<string, Dictionary<string, ThingTypeHandler>> s_appSpecificHandlers =
             new Dictionary<string, Dictionary<string, ThingTypeHandler>>();
 
         #endregion RegisterApplicationSpecificTypeHandler
@@ -611,7 +611,7 @@ namespace Microsoft.HealthVault.Thing
             }
         }
 
-        private static Guid applicationSpecificId = new Guid("a5033c9d-08cf-4204-9bd3-cb412ce39fc0");
+        private static Guid s_applicationSpecificId = new Guid("a5033c9d-08cf-4204-9bd3-cb412ce39fc0");
 
         /// <summary>
         /// Deserializes the response XML into a <see cref="ThingBase"/> or derived type
@@ -660,7 +660,7 @@ namespace Microsoft.HealthVault.Thing
             Guid typeId = GetTypeId(thingNav);
 
             ThingTypeHandler handler = null;
-            if (typeId == applicationSpecificId)
+            if (typeId == s_applicationSpecificId)
             {
                 // Handle application specific health item records by checking for handlers
                 // for the application ID and subtype tag. If the handler doesn't exist
@@ -670,12 +670,12 @@ namespace Microsoft.HealthVault.Thing
 
                 if (appDataKey != null)
                 {
-                    if (appSpecificHandlers.ContainsKey(appDataKey.AppId))
+                    if (s_appSpecificHandlers.ContainsKey(appDataKey.AppId))
                     {
-                        if (appSpecificHandlers[appDataKey.AppId].ContainsKey(appDataKey.SubtypeTag))
+                        if (s_appSpecificHandlers[appDataKey.AppId].ContainsKey(appDataKey.SubtypeTag))
                         {
                             handler =
-                                appSpecificHandlers[appDataKey.AppId][appDataKey.SubtypeTag];
+                                s_appSpecificHandlers[appDataKey.AppId][appDataKey.SubtypeTag];
                         }
                     }
                 }
@@ -739,9 +739,9 @@ namespace Microsoft.HealthVault.Thing
             ThingExtension result;
 
             string source = extensionNav.GetAttribute("source", string.Empty);
-            if (extensionHandlers.ContainsKey(source))
+            if (s_extensionHandlers.ContainsKey(source))
             {
-                ThingTypeHandler handler = extensionHandlers[source];
+                ThingTypeHandler handler = s_extensionHandlers[source];
                 result =
                     (ThingExtension)Activator.CreateInstance(
                         handler.ItemTypeClass);
@@ -1176,7 +1176,7 @@ namespace Microsoft.HealthVault.Thing
         public static async Task<ThingTypeDefinition> GetBaseHealthRecordItemTypeDefinitionAsync(
             IConnectionInternal connection)
         {
-            return await GetHealthRecordItemTypeDefinitionAsync(BaseTypeId, connection).ConfigureAwait(false);
+            return await GetHealthRecordItemTypeDefinitionAsync(s_baseTypeId, connection).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -1188,7 +1188,7 @@ namespace Microsoft.HealthVault.Thing
             HealthVaultPlatform.ClearItemTypeCache();
         }
 
-        private static readonly Guid BaseTypeId =
+        private static readonly Guid s_baseTypeId =
             new Guid("3e730686-781f-4616-aa0d-817bba8eb141");
 
         #endregion ThingBase Type Definitions

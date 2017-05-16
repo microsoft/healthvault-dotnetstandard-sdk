@@ -1,6 +1,4 @@
-﻿using Microsoft.HealthVault.Authentication;
-
-namespace Microsoft.HealthVault
+﻿namespace Microsoft.HealthVault
 {
     internal interface IServiceLocator
     {

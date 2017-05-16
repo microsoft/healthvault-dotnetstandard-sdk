@@ -8,16 +8,16 @@
 
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml;
+using System.Xml.XPath;
+using Microsoft.HealthVault.Application;
 using Microsoft.HealthVault.Connection;
 using Microsoft.HealthVault.Person;
-using Microsoft.HealthVault.Transport;
-using System.Xml.XPath;
-using System.Xml;
-using System.Collections.ObjectModel;
 using Microsoft.HealthVault.Record;
-using Microsoft.HealthVault.Application;
+using Microsoft.HealthVault.Transport;
 
 namespace Microsoft.HealthVault.Clients
 {
@@ -26,26 +26,26 @@ namespace Microsoft.HealthVault.Clients
     /// </summary>
     internal class PersonClient : IPersonClient
     {
-        private static readonly XPathExpression InfoPersonAppSettingsPath = XPathExpression.Compile("/wc:info");
-        private static readonly XPathExpression InfoPersonPath = XPathExpression.Compile("/wc:info/person-info");
-        private static readonly XPathExpression InfoRecordPath = XPathExpression.Compile("/wc:info/record");
+        private static readonly XPathExpression s_infoPersonAppSettingsPath = XPathExpression.Compile("/wc:info");
+        private static readonly XPathExpression s_infoPersonPath = XPathExpression.Compile("/wc:info/person-info");
+        private static readonly XPathExpression s_infoRecordPath = XPathExpression.Compile("/wc:info/record");
 
-        private readonly IHealthVaultConnection connection;
+        private readonly IHealthVaultConnection _connection;
 
         public PersonClient(IHealthVaultConnection connection)
         {
-            this.connection = connection;
+            _connection = connection;
         }
 
         public Guid? CorrelationId { get; set; }
 
         public virtual async Task<ApplicationSettings> GetApplicationSettingsAsync()
         {
-            HealthServiceResponseData responseData = await this.connection
+            HealthServiceResponseData responseData = await _connection
                 .ExecuteAsync(HealthVaultMethods.GetApplicationSettings, 1, null)
                 .ConfigureAwait(false);
 
-            XPathExpression xPathExpression = this.GetPersonAppSettingsXPathExpression(responseData.InfoNavigator);
+            XPathExpression xPathExpression = GetPersonAppSettingsXPathExpression(responseData.InfoNavigator);
 
             XPathNavigator appSettingsNav = responseData.InfoNavigator.SelectSingleNode(xPathExpression);
 
@@ -63,32 +63,32 @@ namespace Microsoft.HealthVault.Clients
         {
             string requestParameters = HealthVaultPlatformPerson.GetSetApplicationSettingsParameters(applicationSettings);
 
-            await this.SetApplicationSettingsAsync(requestParameters).ConfigureAwait(false);
+            await SetApplicationSettingsAsync(requestParameters).ConfigureAwait(false);
         }
 
         public virtual async Task SetApplicationSettingsAsync(string requestParameters)
         {
-            await this.connection.ExecuteAsync(HealthVaultMethods.SetApplicationSettings, 1, requestParameters).ConfigureAwait(false);
+            await _connection.ExecuteAsync(HealthVaultMethods.SetApplicationSettings, 1, requestParameters).ConfigureAwait(false);
         }
 
         public virtual async Task<IReadOnlyCollection<PersonInfo>> GetAuthorizedPeopleAsync()
         {
-            // TODO: We are going through the HealthVaultPlatformApplication for now to get things working. We should fix this.
+            // TODO: We are going through the HealthVaultPlatformApplication for now to get things working. We should fix
 
-            // HealthServiceResponseData responseData = await this.Connection.ExecuteAsync(HealthVaultMethods.GetAuthorizedPeople, 1).ConfigureAwait(false);
-            // XPathExpression personPath = this.GetPersonXPathExpression(responseData.InfoNavigator);
+            // HealthServiceResponseData responseData = await Connection.ExecuteAsync(HealthVaultMethods.GetAuthorizedPeople, 1).ConfigureAwait(false);
+            // XPathExpression personPath = GetPersonXPathExpression(responseData.InfoNavigator);
             // XPathNavigator infoNav = responseData.InfoNavigator.SelectSingleNode(personPath);
             // return PersonInfo.CreateFromXml(infoNav);
 
-            IList<PersonInfo> people = await HealthVaultPlatformApplication.Current.EnsureGetAuthorizedPeopleAsync(this.connection, new GetAuthorizedPeopleSettings());
+            IList<PersonInfo> people = await HealthVaultPlatformApplication.Current.EnsureGetAuthorizedPeopleAsync(_connection, new GetAuthorizedPeopleSettings());
             return (IReadOnlyCollection<PersonInfo>)people;
         }
 
         public virtual async Task<PersonInfo> GetPersonInfoAsync()
         {
-            HealthServiceResponseData responseData = await this.connection.ExecuteAsync(HealthVaultMethods.GetPersonInfo, 1).ConfigureAwait(false);
+            HealthServiceResponseData responseData = await _connection.ExecuteAsync(HealthVaultMethods.GetPersonInfo, 1).ConfigureAwait(false);
 
-            XPathExpression personPath = this.GetPersonXPathExpression(responseData.InfoNavigator);
+            XPathExpression personPath = GetPersonXPathExpression(responseData.InfoNavigator);
             XPathNavigator infoNav = responseData.InfoNavigator.SelectSingleNode(personPath);
 
             return PersonInfo.CreateFromXml(infoNav);
@@ -103,7 +103,7 @@ namespace Microsoft.HealthVault.Clients
                     "<id>" + id + "</id>");
             }
 
-            HealthServiceResponseData responseData = await this.connection.ExecuteAsync(
+            HealthServiceResponseData responseData = await _connection.ExecuteAsync(
                     HealthVaultMethods.GetAuthorizedRecords,
                     1,
                     parameters.ToString())
@@ -111,11 +111,11 @@ namespace Microsoft.HealthVault.Clients
 
             Collection<HealthRecordInfo> results = new Collection<HealthRecordInfo>();
 
-            XPathNodeIterator records = responseData.InfoNavigator.Select(this.GetRecordXPathExpression(responseData.InfoNavigator));
+            XPathNodeIterator records = responseData.InfoNavigator.Select(GetRecordXPathExpression(responseData.InfoNavigator));
 
             foreach (XPathNavigator recordNav in records)
             {
-                results.Add(HealthRecordInfo.CreateFromXml(this.connection, recordNav));
+                results.Add(HealthRecordInfo.CreateFromXml(_connection, recordNav));
             }
 
             return results;
@@ -128,9 +128,9 @@ namespace Microsoft.HealthVault.Clients
             infoXmlNamespaceManager.AddNamespace("wc", "urn:com.microsoft.wc.methods.response.GetApplicationSettings");
 
             XPathExpression infoPersonAppSettingsPathClone;
-            lock (InfoPersonAppSettingsPath)
+            lock (s_infoPersonAppSettingsPath)
             {
-                infoPersonAppSettingsPathClone = InfoPersonAppSettingsPath.Clone();
+                infoPersonAppSettingsPathClone = s_infoPersonAppSettingsPath.Clone();
             }
 
             infoPersonAppSettingsPathClone.SetContext(infoXmlNamespaceManager);
@@ -145,9 +145,9 @@ namespace Microsoft.HealthVault.Clients
             infoXmlNamespaceManager.AddNamespace("wc", "urn:com.microsoft.wc.methods.response.GetPersonInfo");
 
             XPathExpression infoPersonPathClone;
-            lock (InfoPersonPath)
+            lock (s_infoPersonPath)
             {
-                infoPersonPathClone = InfoPersonPath.Clone();
+                infoPersonPathClone = s_infoPersonPath.Clone();
             }
 
             infoPersonPathClone.SetContext(infoXmlNamespaceManager);
@@ -161,9 +161,9 @@ namespace Microsoft.HealthVault.Clients
             infoXmlNamespaceManager.AddNamespace("wc", "urn:com.microsoft.wc.methods.response.GetAuthorizedRecords");
 
             XPathExpression infoRecordPathClone;
-            lock (InfoRecordPath)
+            lock (s_infoRecordPath)
             {
-                infoRecordPathClone = InfoRecordPath.Clone();
+                infoRecordPathClone = s_infoRecordPath.Clone();
             }
 
             infoRecordPathClone.SetContext(infoXmlNamespaceManager);

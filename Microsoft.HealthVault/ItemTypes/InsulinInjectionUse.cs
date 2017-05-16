@@ -69,9 +69,9 @@ namespace Microsoft.HealthVault.ItemTypes
             InsulinInjectionMeasurement amount)
             : base(TypeId)
         {
-            this.When = when;
-            this.InsulinType = insulinType;
-            this.Amount = amount;
+            When = when;
+            InsulinType = insulinType;
+            Amount = amount;
         }
 
         /// <summary>
@@ -107,21 +107,21 @@ namespace Microsoft.HealthVault.ItemTypes
 
             Validator.ThrowInvalidIfNull(itemNav, Resources.InsulinInjectionUseUnexpectedNode);
 
-            this.when = new HealthServiceDateTime();
-            this.when.ParseXml(itemNav.SelectSingleNode("when"));
+            _when = new HealthServiceDateTime();
+            _when.ParseXml(itemNav.SelectSingleNode("when"));
 
-            this.insulinType = new CodableValue();
-            this.insulinType.ParseXml(itemNav.SelectSingleNode("type"));
+            _insulinType = new CodableValue();
+            _insulinType.ParseXml(itemNav.SelectSingleNode("type"));
 
-            this.amount = new InsulinInjectionMeasurement();
-            this.amount.ParseXml(itemNav.SelectSingleNode("amount"));
+            _amount = new InsulinInjectionMeasurement();
+            _amount.ParseXml(itemNav.SelectSingleNode("amount"));
 
             XPathNavigator deviceIdNav =
                 itemNav.SelectSingleNode("device-id");
 
             if (deviceIdNav != null)
             {
-                this.deviceId = deviceIdNav.Value;
+                _deviceId = deviceIdNav.Value;
             }
         }
 
@@ -144,26 +144,26 @@ namespace Microsoft.HealthVault.ItemTypes
         public override void WriteXml(XmlWriter writer)
         {
             Validator.ThrowIfWriterNull(writer);
-            Validator.ThrowSerializationIfNull(this.when, Resources.InsulinInjectionWhenNotSet);
-            Validator.ThrowSerializationIfNull(this.insulinType, Resources.InsulinInjectionTypeNotSet);
-            Validator.ThrowSerializationIfNull(this.amount, Resources.InsulinInjectionAmountNotSet);
+            Validator.ThrowSerializationIfNull(_when, Resources.InsulinInjectionWhenNotSet);
+            Validator.ThrowSerializationIfNull(_insulinType, Resources.InsulinInjectionTypeNotSet);
+            Validator.ThrowSerializationIfNull(_amount, Resources.InsulinInjectionAmountNotSet);
 
             // <diabetes-insulin-injection-use>
             writer.WriteStartElement("diabetes-insulin-injection-use");
 
             // <when>
-            this.when.WriteXml("when", writer);
+            _when.WriteXml("when", writer);
 
             // <type>
-            this.insulinType.WriteXml("type", writer);
+            _insulinType.WriteXml("type", writer);
 
             // <amount>
-            this.amount.WriteXml("amount", writer);
+            _amount.WriteXml("amount", writer);
 
-            if (!string.IsNullOrEmpty(this.deviceId))
+            if (!string.IsNullOrEmpty(_deviceId))
             {
                 // <device-id>
-                writer.WriteElementString("device-id", this.deviceId);
+                writer.WriteElementString("device-id", _deviceId);
             }
 
             // </diabetes-insulin-injection-use>
@@ -185,16 +185,16 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public HealthServiceDateTime When
         {
-            get { return this.when; }
+            get { return _when; }
 
             set
             {
-                Validator.ThrowIfArgumentNull(value, nameof(this.When), Resources.WhenNullValue);
-                this.when = value;
+                Validator.ThrowIfArgumentNull(value, nameof(When), Resources.WhenNullValue);
+                _when = value;
             }
         }
 
-        private HealthServiceDateTime when = new HealthServiceDateTime();
+        private HealthServiceDateTime _when = new HealthServiceDateTime();
 
         /// <summary>
         /// Gets or sets the type of insulin being used in the injector.
@@ -214,16 +214,16 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public CodableValue InsulinType
         {
-            get { return this.insulinType; }
+            get { return _insulinType; }
 
             set
             {
-                Validator.ThrowIfArgumentNull(value, nameof(this.InsulinType), Resources.InsulinInjectionTypeMandatory);
-                this.insulinType = value;
+                Validator.ThrowIfArgumentNull(value, nameof(InsulinType), Resources.InsulinInjectionTypeMandatory);
+                _insulinType = value;
             }
         }
 
-        private CodableValue insulinType;
+        private CodableValue _insulinType;
 
         /// <summary>
         /// Gets or sets the amount of insulin.
@@ -235,16 +235,16 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public InsulinInjectionMeasurement Amount
         {
-            get { return this.amount; }
+            get { return _amount; }
 
             set
             {
-                Validator.ThrowIfArgumentNull(value, nameof(this.Amount), Resources.InsulinInjectionAmountMandatory);
-                this.amount = value;
+                Validator.ThrowIfArgumentNull(value, nameof(Amount), Resources.InsulinInjectionAmountMandatory);
+                _amount = value;
             }
         }
 
-        private InsulinInjectionMeasurement amount;
+        private InsulinInjectionMeasurement _amount;
 
         /// <summary>
         /// Gets or sets the identifier for the device.
@@ -265,16 +265,16 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public string DeviceId
         {
-            get { return this.deviceId; }
+            get { return _deviceId; }
 
             set
             {
                 Validator.ThrowIfStringIsWhitespace(value, "DeviceId");
-                this.deviceId = value;
+                _deviceId = value;
             }
         }
 
-        private string deviceId;
+        private string _deviceId;
 
         /// <summary>
         /// Gets a string representation of the insulin injection use item.
@@ -289,8 +289,8 @@ namespace Microsoft.HealthVault.ItemTypes
             return
                 string.Format(
                     Resources.InsulinInjectionToStringFormat,
-                    this.InsulinType.Text,
-                    this.Amount.ToString());
+                    InsulinType.Text,
+                    Amount.ToString());
         }
     }
 }

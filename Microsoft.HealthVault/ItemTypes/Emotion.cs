@@ -50,7 +50,7 @@ namespace Microsoft.HealthVault.ItemTypes
         public Emotion(HealthServiceDateTime when)
             : base(TypeId)
         {
-            this.When = when;
+            When = when;
         }
 
         /// <summary>
@@ -84,15 +84,15 @@ namespace Microsoft.HealthVault.ItemTypes
 
             Validator.ThrowInvalidIfNull(emotionNav, Resources.EmotionUnexpectedNode);
 
-            this.when = new HealthServiceDateTime();
-            this.when.ParseXml(emotionNav.SelectSingleNode("when"));
+            _when = new HealthServiceDateTime();
+            _when.ParseXml(emotionNav.SelectSingleNode("when"));
 
             XPathNavigator moodNav =
                 emotionNav.SelectSingleNode("mood");
 
             if (moodNav != null)
             {
-                this.mood = (Mood)moodNav.ValueAsInt;
+                _mood = (Mood)moodNav.ValueAsInt;
             }
 
             XPathNavigator stressNav =
@@ -100,7 +100,7 @@ namespace Microsoft.HealthVault.ItemTypes
 
             if (stressNav != null)
             {
-                this.stress = (RelativeRating)stressNav.ValueAsInt;
+                _stress = (RelativeRating)stressNav.ValueAsInt;
             }
 
             XPathNavigator wellbeingNav =
@@ -108,7 +108,7 @@ namespace Microsoft.HealthVault.ItemTypes
 
             if (wellbeingNav != null)
             {
-                this.wellbeing = (Wellbeing)wellbeingNav.ValueAsInt;
+                _wellbeing = (Wellbeing)wellbeingNav.ValueAsInt;
             }
         }
 
@@ -132,27 +132,27 @@ namespace Microsoft.HealthVault.ItemTypes
             writer.WriteStartElement("emotion");
 
             // <when>
-            this.when.WriteXml("when", writer);
+            _when.WriteXml("when", writer);
 
-            if (this.mood != Mood.None)
+            if (_mood != Mood.None)
             {
                 writer.WriteElementString(
                     "mood",
-                    ((int)this.mood).ToString(CultureInfo.InvariantCulture));
+                    ((int)_mood).ToString(CultureInfo.InvariantCulture));
             }
 
-            if (this.stress != RelativeRating.None)
+            if (_stress != RelativeRating.None)
             {
                 writer.WriteElementString(
                     "stress",
-                    ((int)this.stress).ToString(CultureInfo.InvariantCulture));
+                    ((int)_stress).ToString(CultureInfo.InvariantCulture));
             }
 
-            if (this.wellbeing != Wellbeing.None)
+            if (_wellbeing != Wellbeing.None)
             {
                 writer.WriteElementString(
                     "wellbeing",
-                    ((int)this.wellbeing).ToString(CultureInfo.InvariantCulture));
+                    ((int)_wellbeing).ToString(CultureInfo.InvariantCulture));
             }
 
             // </emotion>
@@ -174,16 +174,16 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public HealthServiceDateTime When
         {
-            get { return this.when; }
+            get { return _when; }
 
             set
             {
-                Validator.ThrowIfArgumentNull(value, nameof(this.When), Resources.WhenNullValue);
-                this.when = value;
+                Validator.ThrowIfArgumentNull(value, nameof(When), Resources.WhenNullValue);
+                _when = value;
             }
         }
 
-        private HealthServiceDateTime when = new HealthServiceDateTime();
+        private HealthServiceDateTime _when = new HealthServiceDateTime();
 
         /// <summary>
         /// Gets or sets the mood of the person.
@@ -200,11 +200,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public Mood Mood
         {
-            get { return this.mood; }
-            set { this.mood = value; }
+            get { return _mood; }
+            set { _mood = value; }
         }
 
-        private Mood mood;
+        private Mood _mood;
 
         /// <summary>
         /// Gets or sets the stress level of the person.
@@ -221,11 +221,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public RelativeRating Stress
         {
-            get { return this.stress; }
-            set { this.stress = value; }
+            get { return _stress; }
+            set { _stress = value; }
         }
 
-        private RelativeRating stress;
+        private RelativeRating _stress;
 
         /// <summary>
         /// Gets or sets the wellbeing of the person.
@@ -242,11 +242,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public Wellbeing Wellbeing
         {
-            get { return this.wellbeing; }
-            set { this.wellbeing = value; }
+            get { return _wellbeing; }
+            set { _wellbeing = value; }
         }
 
-        private Wellbeing wellbeing;
+        private Wellbeing _wellbeing;
 
         /// <summary>
         /// Gets a string representation of the emotion item.
@@ -260,25 +260,25 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             StringBuilder result = new StringBuilder(100);
 
-            if (this.Mood != Mood.None)
+            if (Mood != Mood.None)
             {
                 result.AppendFormat(
                     Resources.EmotionToStringFormatMood,
-                    (int)this.Mood);
+                    (int)Mood);
             }
 
-            if (this.Stress != RelativeRating.None)
+            if (Stress != RelativeRating.None)
             {
                 result.AppendFormat(
                     Resources.EmotionToStringFormatStress,
-                    (int)this.Stress);
+                    (int)Stress);
             }
 
-            if (this.Wellbeing != Wellbeing.None)
+            if (Wellbeing != Wellbeing.None)
             {
                 result.AppendFormat(
                     Resources.EmotionToStringFormatWellbeing,
-                    (int)this.Wellbeing);
+                    (int)Wellbeing);
             }
 
             return result.ToString();

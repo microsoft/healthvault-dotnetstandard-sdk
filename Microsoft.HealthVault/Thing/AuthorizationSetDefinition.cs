@@ -27,7 +27,7 @@ namespace Microsoft.HealthVault.Thing
     {
         internal AuthorizationSetDefinition(SetType setType)
         {
-            this.SetType = setType;
+            SetType = setType;
         }
 
         internal SetType SetType { get; }
@@ -62,7 +62,7 @@ namespace Microsoft.HealthVault.Thing
         ///
         public override string ToString()
         {
-            return this.GetXml();
+            return GetXml();
         }
     }
 }
