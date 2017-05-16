@@ -37,7 +37,7 @@ namespace Microsoft.HealthVault.AspNetCore.Connection
 
             if (Guid.TryParse(offlinePersionId, out offlinePersonId))
             {
-                this.OfflinePersonId = offlinePersonId;
+                OfflinePersonId = offlinePersonId;
             }
 
             Ioc.Container.Configure(c => c.ExportInstance(this).As<IConnectionInternal>());

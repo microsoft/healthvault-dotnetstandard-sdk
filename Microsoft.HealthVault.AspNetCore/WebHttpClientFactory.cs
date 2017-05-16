@@ -14,23 +14,18 @@ namespace Microsoft.HealthVault.AspNetCore
 {
     internal class WebHttpClientFactory : IHttpClientFactory
     {
-        private readonly IMessageHandlerFactory messageHandlerFactory;
-
-        private readonly HttpClient httpClient;
+        private readonly HttpClient _httpClient;
 
         public WebHttpClientFactory(IMessageHandlerFactory messageHandlerFactory)
         {
-            this.messageHandlerFactory = messageHandlerFactory;
-
-            HttpClientHandler handler = this.messageHandlerFactory.Create();
+            var handler = messageHandlerFactory.Create();
             handler.AutomaticDecompression = DecompressionMethods.GZip | DecompressionMethods.Deflate;
-
-            this.httpClient = new HttpClient(handler);
+            _httpClient = new HttpClient(handler);
         }
 
         public HttpClient GetOrCreateClient()
         {
-            return this.httpClient;
+            return _httpClient;
         }
     }
 }

@@ -18,40 +18,40 @@ using Microsoft.HealthVault.PlatformInformation;
 namespace Microsoft.HealthVault.AspNetCore.Connection
 {
     /// <summary>
-    /// Provides common functionality for both Web and Offline Connection types
+    ///     Provides common functionality for both Web and Offline Connection types
     /// </summary>
     /// <seealso cref="HealthVaultConnectionBase" />
     internal abstract class WebHealthVaultConnectionBase : HealthVaultConnectionBase
     {
-        protected readonly HealthVaultConfiguration webHealthVaultConfiguration;
+        protected readonly HealthVaultConfiguration WebHealthVaultConfiguration;
 
         protected WebHealthVaultConnectionBase(
             HealthServiceInstance healthServiceInstance = null,
             SessionCredential sessionCredential = null)
             : base(Ioc.Get<IServiceLocator>())
         {
-            this.webHealthVaultConfiguration = this.ServiceLocator.GetInstance<HealthVaultConfiguration>();
+            WebHealthVaultConfiguration = ServiceLocator.GetInstance<HealthVaultConfiguration>();
 
-            this.ServiceInstance = healthServiceInstance ?? new HealthServiceInstance(
-                "1",
-                "Default",
-                "Default HealthVault instance",
-                UrlUtilities.GetFullPlatformUrl(this.webHealthVaultConfiguration.DefaultHealthVaultUrl),
-                this.webHealthVaultConfiguration.DefaultHealthVaultShellUrl);
+            ServiceInstance = healthServiceInstance ?? new HealthServiceInstance(
+                                  "1",
+                                  "Default",
+                                  "Default HealthVault instance",
+                                  UrlUtilities.GetFullPlatformUrl(WebHealthVaultConfiguration.DefaultHealthVaultUrl),
+                                  WebHealthVaultConfiguration.DefaultHealthVaultShellUrl);
 
-            this.SessionCredential = sessionCredential;
+            SessionCredential = sessionCredential;
         }
 
-        public override Guid? ApplicationId => this.webHealthVaultConfiguration.MasterApplicationId;
+        public override Guid? ApplicationId => WebHealthVaultConfiguration.MasterApplicationId;
 
         public override async Task AuthenticateAsync()
         {
-            await this.RefreshSessionCredentialAsync(CancellationToken.None).ConfigureAwait(false);
+            await RefreshSessionCredentialAsync(CancellationToken.None).ConfigureAwait(false);
         }
 
         protected override ISessionCredentialClient CreateSessionCredentialClient()
         {
-            return this.ServiceLocator.GetInstance<IWebSessionCredentialClient>();
+            return ServiceLocator.GetInstance<IWebSessionCredentialClient>();
         }
     }
 }

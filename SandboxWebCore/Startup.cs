@@ -67,7 +67,7 @@ namespace SandboxWebCore
                 {
                     context.Response.ContentType = "text/html";
                     string identityName = context.User.Identity.Name;
-                    await context.Authentication.SignOutAsync(HealthVaultAuthenticationMiddleware.AuthenticationScheme);
+                    await context.Authentication.SignOutAsync(HealthVaultAuthenticationDefaults.AuthenticationScheme);
                     await context.Response.WriteAsync("<html><body>");
                     await context.Response.WriteAsync("You have been logged out. Goodbye " + identityName + "<br>");
                     await context.Response.WriteAsync("<a href=\"/\">Home</a>");

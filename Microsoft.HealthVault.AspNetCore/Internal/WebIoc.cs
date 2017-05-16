@@ -17,18 +17,18 @@ namespace Microsoft.HealthVault.AspNetCore.Internal
 {
     internal static class WebIoc
     {
-        private static readonly object RegistrationLock = new object();
+        private static readonly object s_registrationLock = new object();
 
-        private static bool typesRegistered;
+        private static bool s_typesRegistered;
 
         public static void EnsureTypesRegistered(HealthVaultAuthenticationOptions configuration)
         {
-            lock (RegistrationLock)
+            lock (s_registrationLock)
             {
-                if (!typesRegistered)
+                if (!s_typesRegistered)
                 {
                     RegisterTypes(Ioc.Container, configuration);
-                    typesRegistered = true;
+                    s_typesRegistered = true;
                 }
             }
         }

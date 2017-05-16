@@ -18,13 +18,13 @@ namespace Microsoft.HealthVault.AspNetCore.Connection
 {
     internal class WebHealthVaultConnection : WebHealthVaultConnectionBase, IWebHealthVaultConnection
     {
-        private readonly ClaimsIdentity identity;
+        private readonly ClaimsIdentity _identity;
 
         public WebHealthVaultConnection(ClaimsIdentity identity, HealthServiceInstance healthServiceInstance = null, SessionCredential sessionCredential = null, string userAuthToken = null)
             : base(healthServiceInstance, sessionCredential)
         {
-            this.identity = identity;
-            this.UserAuthToken = userAuthToken;
+            _identity = identity;
+            UserAuthToken = userAuthToken;
 
             Ioc.Container.Configure(c => c.ExportInstance(this).As<IConnectionInternal>());
         }
@@ -33,20 +33,20 @@ namespace Microsoft.HealthVault.AspNetCore.Connection
 
         public override Task<PersonInfo> GetPersonInfoAsync()
         {
-            return Task.FromResult(this.identity.GetConnectionInfo().PersonInfo);
+            return Task.FromResult(_identity.GetConnectionInfo().PersonInfo);
         }
 
         public override string GetRestAuthSessionHeader()
         {
-            return $"user-token={this.UserAuthToken}";
+            return $"user-token={UserAuthToken}";
         }
 
         public override AuthSession GetAuthSessionHeader()
         {
-            AuthSession authSession = new AuthSession
+            var authSession = new AuthSession
             {
-                AuthToken = this.SessionCredential.Token,
-                UserAuthToken = this.UserAuthToken
+                AuthToken = SessionCredential.Token,
+                UserAuthToken = UserAuthToken
             };
 
             return authSession;

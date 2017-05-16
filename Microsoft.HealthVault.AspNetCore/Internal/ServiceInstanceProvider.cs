@@ -8,7 +8,6 @@
 
 using System.Threading.Tasks;
 using Microsoft.HealthVault.AspNetCore.Connection;
-using Microsoft.HealthVault.Clients;
 using Microsoft.HealthVault.Exceptions;
 using Microsoft.HealthVault.PlatformInformation;
 using Microsoft.HealthVault.Transport;
@@ -17,40 +16,36 @@ namespace Microsoft.HealthVault.AspNetCore.Internal
 {
     internal class ServiceInstanceProvider : IServiceInstanceProvider
     {
-        private readonly AsyncLock seriviceInstanceLock;
-
-        private HealthServiceInstance cachedServiceInstance;
+        private readonly AsyncLock _seriviceInstanceLock;
+        private HealthServiceInstance _cachedServiceInstance;
 
         public ServiceInstanceProvider()
         {
-            this.seriviceInstanceLock = new AsyncLock();
+            _seriviceInstanceLock = new AsyncLock();
         }
- 
+
         public async Task<HealthServiceInstance> GetHealthServiceInstanceAsync(string serviceInstanceId)
         {
-            using (await this.seriviceInstanceLock.LockAsync().ConfigureAwait(false))
+            using (await _seriviceInstanceLock.LockAsync().ConfigureAwait(false))
             {
-                if (this.cachedServiceInstance == null)
+                if (_cachedServiceInstance == null)
                 {
-                    ServiceInfo serviceInfo = await this.GetFromServiceAsync().ConfigureAwait(false);
+                    var serviceInfo = await GetFromServiceAsync().ConfigureAwait(false);
 
-                    if (!serviceInfo.ServiceInstances.TryGetValue(serviceInstanceId, out this.cachedServiceInstance))
-                    {
+                    if (!serviceInfo.ServiceInstances.TryGetValue(serviceInstanceId, out _cachedServiceInstance))
                         throw new HealthServiceException(HealthServiceStatusCode.Failed);
-                    }
                 }
 
-                return this.cachedServiceInstance;
+                return _cachedServiceInstance;
             }
         }
 
         private async Task<ServiceInfo> GetFromServiceAsync()
         {
-            
             IWebHealthVaultConnection webHealthVaultConnection = new WebHealthVaultConnection(null);
-            IPlatformClient platformClient = webHealthVaultConnection.CreatePlatformClient();
+            var platformClient = webHealthVaultConnection.CreatePlatformClient();
 
-            ServiceInfo serviceInfo = await platformClient.GetServiceDefinitionAsync(ServiceInfoSections.Topology).ConfigureAwait(false);
+            var serviceInfo = await platformClient.GetServiceDefinitionAsync(ServiceInfoSections.Topology).ConfigureAwait(false);
             return serviceInfo;
         }
     }

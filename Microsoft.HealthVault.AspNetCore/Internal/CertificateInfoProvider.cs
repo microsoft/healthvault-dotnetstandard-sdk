@@ -16,45 +16,42 @@ using Microsoft.HealthVault.Diagnostics;
 namespace Microsoft.HealthVault.AspNetCore.Internal
 {
     /// <summary>
-    /// <see cref="ICertificateInfoProvider"/>
+    /// <see cref="ICertificateInfoProvider" />
     /// </summary>
     internal class CertificateInfoProvider : ICertificateInfoProvider
     {
-        private HealthVaultAuthenticationOptions configuration;
-        private Guid applicationId;
+        private readonly Guid _applicationId;
+        private readonly string _certSubject;
+        private readonly HealthVaultAuthenticationOptions _configuration;
 
-        private StoreLocation storeLocation;
-        private string certSubject;
-
-        private X509Certificate2 x509Certificate2;
+        private readonly StoreLocation _storeLocation;
 
         public CertificateInfoProvider(HealthVaultAuthenticationOptions configuration)
         {
-            this.configuration = configuration;
-            this.applicationId = this.configuration.Configuration.MasterApplicationId;
+            _configuration = configuration;
+            _applicationId = _configuration.Configuration.MasterApplicationId;
 
+            _storeLocation = StoreLocation.LocalMachine;
+            _certSubject = "CN=" + GetApplicationCertificateSubject();
 
-            this.storeLocation = StoreLocation.LocalMachine;
-            this.certSubject = "CN=" + this.GetApplicationCertificateSubject();
+            X509Certificate2 x509Certificate2 = GetApplicationCertificate();
 
-            this.x509Certificate2 = this.GetApplicationCertificate();
+            Thumbprint = x509Certificate2.Thumbprint;
 
-            this.Thumbprint = this.x509Certificate2.Thumbprint;
-
-            this.PrivateKey = this.x509Certificate2.GetRSAPrivateKey();
+            PrivateKey = x509Certificate2.GetRSAPrivateKey();
         }
 
         public string Thumbprint { get; internal set; }
 
         public RSA PrivateKey { get; internal set; }
-        
+
         private X509Certificate2 GetApplicationCertificate()
         {
-            string applicationCertificateFilename = this.configuration.ApplicationCertificateFileName;
+            string applicationCertificateFilename = _configuration.ApplicationCertificateFileName;
 
-            var cert = applicationCertificateFilename == null 
-                ? this.GetApplicationCertificateFromStore() 
-                : this.GetApplicationCertificateFromFile(applicationCertificateFilename);
+            X509Certificate2 cert = applicationCertificateFilename == null
+                ? GetApplicationCertificateFromStore()
+                : GetApplicationCertificateFromFile(applicationCertificateFilename);
 
             return cert;
         }
@@ -76,7 +73,7 @@ namespace Microsoft.HealthVault.AspNetCore.Internal
                 throw new ArgumentException("CertificateFileNotFound");
             }
 
-            string password = this.configuration.ApplicationCertificatePassword;
+            string password = _configuration.ApplicationCertificatePassword;
 
             X509Certificate2 cert;
 
@@ -111,8 +108,8 @@ namespace Microsoft.HealthVault.AspNetCore.Internal
                 "Found cert with thumbprint: {0}",
                 cert.Thumbprint);
 
-            var thumbprint = cert.Thumbprint;
-            var rsaProvider = cert.GetRSAPrivateKey();
+            string thumbprint = cert.Thumbprint;
+            RSA rsaProvider = cert.GetRSAPrivateKey();
             HealthVaultPlatformTrace.LogCertLoading("Private key found");
 
             if (rsaProvider == null || string.IsNullOrEmpty(thumbprint))
@@ -127,27 +124,24 @@ namespace Microsoft.HealthVault.AspNetCore.Internal
         {
             HealthVaultPlatformTrace.LogCertLoading(
                 "Opening cert store (read-only): {0}",
-                this.storeLocation.ToString());
+                _storeLocation.ToString());
 
             RSA rsaProvider = null;
             string thumbprint = null;
 
             X509Certificate2 result = null;
-            X509Store store = new X509Store(StoreName.My, this.storeLocation);
+            var store = new X509Store(StoreName.My, _storeLocation);
             store.Open(OpenFlags.ReadOnly);
 
             try
             {
                 HealthVaultPlatformTrace.LogCertLoading(
                     "Looking for matching cert with subject: {0}",
-                    this.certSubject);
+                    _certSubject);
 
                 foreach (X509Certificate2 cert in store.Certificates)
                 {
-                    if (string.Equals(
-                        cert.Subject,
-                        this.certSubject,
-                        StringComparison.OrdinalIgnoreCase))
+                    if (string.Equals(cert.Subject, _certSubject, StringComparison.OrdinalIgnoreCase))
                     {
                         HealthVaultPlatformTrace.LogCertLoading(
                             "Found matching cert subject with thumbprint: {0}",
@@ -185,11 +179,11 @@ namespace Microsoft.HealthVault.AspNetCore.Internal
 
         private string GetApplicationCertificateSubject()
         {
-            string result = this.configuration.CertSubject;
+            string result = _configuration.CertSubject;
 
             if (result == null)
             {
-                result = "WildcatApp-" + this.applicationId;
+                result = "WildcatApp-" + _applicationId;
 
                 HealthVaultPlatformTrace.LogCertLoading(
                     "Using default cert subject: {0}",

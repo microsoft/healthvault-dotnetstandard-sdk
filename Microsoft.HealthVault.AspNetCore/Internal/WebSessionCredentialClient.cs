@@ -18,16 +18,16 @@ namespace Microsoft.HealthVault.AspNetCore.Internal
 {
     internal class WebSessionCredentialClient : SessionCredentialClientBase, IWebSessionCredentialClient
     {
-        private readonly HealthVaultConfiguration webHealthVaultConfiguration;
+        private readonly HealthVaultConfiguration _webHealthVaultConfiguration;
 
         public WebSessionCredentialClient(
             HealthVaultConfiguration configuration,
             IConnectionInternal connection,
             ICertificateInfoProvider certificateInfoProvider)
         {
-            this.Connection = connection;
-            this.CertificateInfoProvider = certificateInfoProvider;
-            this.webHealthVaultConfiguration = configuration;
+            Connection = connection;
+            CertificateInfoProvider = certificateInfoProvider;
+            _webHealthVaultConfiguration = configuration;
         }
 
         public ICertificateInfoProvider CertificateInfoProvider { get; set; }
@@ -36,14 +36,14 @@ namespace Microsoft.HealthVault.AspNetCore.Internal
         {
             writer.WriteStartElement("appserver2");
 
-            string requestXml = this.GetContentSection();
+            string requestXml = GetContentSection();
 
             // SIG
             writer.WriteStartElement("sig");
             writer.WriteAttributeString("digestMethod", HealthVaultConstants.Cryptography.DigestAlgorithm);
             writer.WriteAttributeString("sigMethod", HealthVaultConstants.Cryptography.SignatureAlgorithmName);
-            writer.WriteAttributeString("thumbprint", this.CertificateInfoProvider.Thumbprint);
-            writer.WriteString(this.SignRequestXml(requestXml));
+            writer.WriteAttributeString("thumbprint", CertificateInfoProvider.Thumbprint);
+            writer.WriteString(SignRequestXml(requestXml));
             writer.WriteEndElement(); // sig
 
             // CONTENT
@@ -54,34 +54,31 @@ namespace Microsoft.HealthVault.AspNetCore.Internal
 
         public string SignRequestXml(string requestXml)
         {
-            UTF8Encoding encoding = new UTF8Encoding();
+            var encoding = new UTF8Encoding();
 
-            Byte[] paramBlob = encoding.GetBytes(requestXml);
-            Byte[] sigBlob = this.CertificateInfoProvider.PrivateKey.SignData(paramBlob, new HashAlgorithmName(HealthVaultConstants.Cryptography.DigestAlgorithm), RSASignaturePadding.Pkcs1);
+            var paramBlob = encoding.GetBytes(requestXml);
+            var sigBlob = CertificateInfoProvider.PrivateKey.SignData(paramBlob, new HashAlgorithmName(HealthVaultConstants.Cryptography.DigestAlgorithm), RSASignaturePadding.Pkcs1);
 
             return Convert.ToBase64String(sigBlob);
         }
 
-
         /// <summary>
-        /// Generate the to-be signed content for the credential.
+        ///     Generate the to-be signed content for the credential.
         /// </summary>
-        /// 
         /// <returns>
-        /// Raw XML representing the ContentSection of the info secttion.
+        ///     Raw XML representing the ContentSection of the info secttion.
         /// </returns>
-        /// 
         internal string GetContentSection()
         {
-            StringBuilder requestXml = new StringBuilder(2048);
-            XmlWriterSettings settings = SDKHelper.XmlUnicodeWriterSettings;
+            var requestXml = new StringBuilder(2048);
+            var settings = SDKHelper.XmlUnicodeWriterSettings;
 
-            using (XmlWriter writer = XmlWriter.Create(requestXml, settings))
-            { 
+            using (var writer = XmlWriter.Create(requestXml, settings))
+            {
                 writer.WriteStartElement("content");
 
                 writer.WriteStartElement("app-id");
-                writer.WriteString(this.webHealthVaultConfiguration.MasterApplicationId.ToString());
+                writer.WriteString(_webHealthVaultConfiguration.MasterApplicationId.ToString());
                 writer.WriteEndElement();
 
                 writer.WriteElementString("hmac", HealthVaultConstants.Cryptography.HmacAlgorithm);

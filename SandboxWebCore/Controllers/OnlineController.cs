@@ -12,7 +12,7 @@ using Microsoft.HealthVault.AspNetCore.Connection;
 
 namespace SandboxWeb.Controllers
 {
-    [Authorize(ActiveAuthenticationSchemes = HealthVaultAuthenticationMiddleware.AuthenticationScheme)]
+    [Authorize(ActiveAuthenticationSchemes = HealthVaultAuthenticationDefaults.AuthenticationScheme)]
     public class OnlineController : Controller
     {
         // GET: HealthVault

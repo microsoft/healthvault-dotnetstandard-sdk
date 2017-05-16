@@ -14,7 +14,7 @@ namespace Microsoft.HealthVault.AspNetCore
     {
         public HealthVaultAuthorizeAttribute()
         {
-            ActiveAuthenticationSchemes = HealthVaultAuthenticationMiddleware.AuthenticationScheme;
+            ActiveAuthenticationSchemes = HealthVaultAuthenticationDefaults.AuthenticationScheme;
         }
     }
 }

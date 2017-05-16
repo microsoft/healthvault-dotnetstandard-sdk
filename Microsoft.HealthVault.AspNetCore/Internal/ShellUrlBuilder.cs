@@ -18,34 +18,34 @@ namespace Microsoft.HealthVault.AspNetCore.Internal
 {
     internal class ShellUrlBuilder
     {
-        private HttpContext context;
-        private string target;
-        private IDictionary<string, object> parameters;
-        private HealthVaultConfiguration webHealthVaultConfiguration;
+        private readonly HttpContext _context;
+        private readonly IDictionary<string, object> _parameters;
+        private readonly HealthVaultConfiguration _webHealthVaultConfiguration;
+        private readonly string target;
 
         internal ShellUrlBuilder(
             HttpContext context,
             string target,
             IDictionary<string, object> parameters)
         {
-            this.context = context ?? throw new ArgumentNullException(nameof(context));
+            _context = context ?? throw new ArgumentNullException(nameof(context));
             this.target = target ?? throw new ArgumentNullException(nameof(target));
-            this.parameters = parameters;
+            _parameters = parameters;
 
-            this.webHealthVaultConfiguration = Ioc.Get<HealthVaultConfiguration>();
+            _webHealthVaultConfiguration = Ioc.Get<HealthVaultConfiguration>();
         }
 
         internal string Generate()
         {
-            this.EnsureBaseParameters();
+            EnsureBaseParameters();
 
-            StringBuilder targetUrl = this.GetShellUrl();
-            StringBuilder query = this.CreateQuery();
+            var targetUrl = GetShellUrl();
+            var query = CreateQuery();
 
-            if (!string.IsNullOrEmpty(this.target))
+            if (!string.IsNullOrEmpty(target))
             {
                 targetUrl.Append("redirect.aspx?target=");
-                targetUrl.Append(this.target);
+                targetUrl.Append(target);
                 if (query.Length > 0)
                 {
                     targetUrl.Append("&targetqs=");
@@ -58,45 +58,39 @@ namespace Microsoft.HealthVault.AspNetCore.Internal
 
         public override string ToString()
         {
-            return this.Generate();
+            return Generate();
         }
 
         private StringBuilder GetShellUrl()
         {
-            string shellUrl = this.webHealthVaultConfiguration.DefaultHealthVaultShellUrl.OriginalString;
+            string shellUrl = _webHealthVaultConfiguration.DefaultHealthVaultShellUrl.OriginalString;
 
-            StringBuilder targetUrl = new StringBuilder(shellUrl);
+            var targetUrl = new StringBuilder(shellUrl);
             if (!shellUrl.EndsWith("/", StringComparison.OrdinalIgnoreCase))
-            {
                 targetUrl.Append("/");
-            }
 
             return targetUrl;
         }
 
         private void EnsureBaseParameters()
         {
-            this.EnsureAppId();
-            this.EnsureAppQs();
-            this.EnsureRedirect();
-            this.EnsureAib();
+            EnsureAppId();
+            EnsureAppQs();
+            EnsureRedirect();
+            EnsureAib();
         }
 
         private StringBuilder CreateQuery()
         {
             var builder = new StringBuilder();
-            if (this.parameters == null)
-            {
+            if (_parameters == null)
                 return builder;
-            }
 
-            bool first = true;
-            foreach (KeyValuePair<string, object> parameter in this.parameters)
+            var first = true;
+            foreach (var parameter in _parameters)
             {
                 if (!first)
-                {
                     builder.Append("&");
-                }
 
                 first = false;
                 builder.Append(parameter.Key);
@@ -110,35 +104,27 @@ namespace Microsoft.HealthVault.AspNetCore.Internal
 
         private void EnsureAppId()
         {
-            if (!this.parameters.ContainsKey("appid"))
-            {
-                this.parameters.Add("appid", this.webHealthVaultConfiguration.MasterApplicationId);
-            }
+            if (!_parameters.ContainsKey("appid"))
+                _parameters.Add("appid", _webHealthVaultConfiguration.MasterApplicationId);
         }
 
         private void EnsureAppQs()
         {
-            if (!this.parameters.ContainsKey("actionqs"))
-            {
-                this.parameters.Add("actionqs", this.context.Request?.Path);
-            }
+            if (!_parameters.ContainsKey("actionqs"))
+                _parameters.Add("actionqs", _context.Request?.Path);
         }
 
         private void EnsureAib()
         {
-            if (!this.parameters.ContainsKey("aib")
-                && this.webHealthVaultConfiguration.MultiInstanceAware)
-            {
-                this.parameters.Add("aib", "true");
-            }
+            if (!_parameters.ContainsKey("aib")
+                && _webHealthVaultConfiguration.MultiInstanceAware)
+                _parameters.Add("aib", "true");
         }
 
         private void EnsureRedirect()
         {
-            if (this.parameters.ContainsKey("redirect"))
-            {
+            if (_parameters.ContainsKey("redirect"))
                 return;
-            }
             throw new NotSupportedException();
         }
     }

@@ -15,7 +15,6 @@ using Microsoft.HealthVault.AspNetCore.Connection;
 using Microsoft.HealthVault.AspNetCore.Internal;
 using Microsoft.HealthVault.Connection;
 using Microsoft.HealthVault.PlatformInformation;
-using Newtonsoft.Json;
 
 namespace Microsoft.HealthVault.AspNetCore
 {
@@ -25,31 +24,31 @@ namespace Microsoft.HealthVault.AspNetCore
     public static class WebHealthVaultFactory
     {
         /// <summary>
-        /// Creates an authenticated web connection when the reuest 
+        /// Creates an authenticated web connection when the reuest
         /// has been authenticated using [RequireSignIn] attribute.
         /// In case the request has not been authenticated, an anonymous
         /// connection is created.
         /// </summary>
         /// <returns>IWebHealthVaultConnection</returns>
         /// <exception cref="NotSupportedException">
-        ///     WebConnectionInfo is expected for authenticated connections
+        /// WebConnectionInfo is expected for authenticated connections
         /// </exception>
         public static async Task<IWebHealthVaultConnection> CreateWebConnectionAsync(this HttpContext context)
         {
             IPrincipal principal = context.User;
             var identity = principal?.Identity as ClaimsIdentity;
 
-            IServiceLocator serviceLocator = Ioc.Get<IServiceLocator>();
-            var webConnectionInfo = identity.GetConnectionInfo();
+            var serviceLocator = Ioc.Get<IServiceLocator>();
+            WebConnectionInfo webConnectionInfo = identity.GetConnectionInfo();
 
             // Get ServiceInstance
-            IServiceInstanceProvider serviceInstanceProvider = serviceLocator.GetInstance<IServiceInstanceProvider>();
+            var serviceInstanceProvider = serviceLocator.GetInstance<IServiceInstanceProvider>();
             HealthServiceInstance serviceInstance = await serviceInstanceProvider.GetHealthServiceInstanceAsync(webConnectionInfo.ServiceInstanceId);
 
             // Get AuthInformation
             SessionCredential sessionCredentialToken = webConnectionInfo.SessionCredential;
             string token = webConnectionInfo.UserAuthToken;
-            
+
             IWebHealthVaultConnection webConnection = new WebHealthVaultConnection(identity, serviceInstance, sessionCredentialToken, token);
 
             return webConnection;
@@ -63,17 +62,17 @@ namespace Microsoft.HealthVault.AspNetCore
         /// <param name="sessionCredential">The session credential.</param>
         /// <returns></returns>
         public static async Task<IOfflineHealthVaultConnection> CreateOfflineConnectionAsync(
-            string offlinePersonId, 
-            string instanceId = null, 
+            string offlinePersonId,
+            string instanceId = null,
             SessionCredential sessionCredential = null)
         {
-            IServiceLocator serviceLocator = Ioc.Get<IServiceLocator>();
+            var serviceLocator = Ioc.Get<IServiceLocator>();
 
             // Get ServiceInstance
-            IServiceInstanceProvider serviceInstanceProvider = serviceLocator.GetInstance<IServiceInstanceProvider>();
+            var serviceInstanceProvider = serviceLocator.GetInstance<IServiceInstanceProvider>();
             HealthServiceInstance serviceInstance = await serviceInstanceProvider.GetHealthServiceInstanceAsync(instanceId);
 
-            IOfflineHealthVaultConnection offlineHealthVaultConnection = new OfflineHealthVaultConnection( 
+            IOfflineHealthVaultConnection offlineHealthVaultConnection = new OfflineHealthVaultConnection(
                 serviceInstance,
                 sessionCredential,
                 offlinePersonId);

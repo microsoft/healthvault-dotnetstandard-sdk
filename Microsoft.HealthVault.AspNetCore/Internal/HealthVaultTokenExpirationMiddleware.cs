@@ -8,34 +8,34 @@ namespace Microsoft.HealthVault.AspNetCore.Internal
 {
     internal sealed class HealthVaultTokenExpirationMiddleware
     {
-        private readonly RequestDelegate next;
-        private readonly ILogger logger;
+        private readonly ILogger _logger;
+        private readonly RequestDelegate _next;
 
         public HealthVaultTokenExpirationMiddleware(
             RequestDelegate next,
             ILoggerFactory loggerFactory)
         {
-            this.next = next;
-            this.logger = loggerFactory.CreateLogger<HealthVaultTokenExpirationMiddleware>();
+            _next = next;
+            _logger = loggerFactory.CreateLogger<HealthVaultTokenExpirationMiddleware>();
         }
 
         public async Task Invoke(HttpContext context)
         {
             try
             {
-                await this.next(context);
+                await _next(context);
             }
             catch (HealthServiceCredentialTokenExpiredException)
             {
                 try
                 {
-                    await context.Authentication.SignOutAsync(HealthVaultAuthenticationMiddleware.AuthenticationScheme);
-                    await context.Authentication.ChallengeAsync(HealthVaultAuthenticationMiddleware.AuthenticationScheme);
+                    await context.Authentication.SignOutAsync(HealthVaultAuthenticationDefaults.AuthenticationScheme);
+                    await context.Authentication.ChallengeAsync(HealthVaultAuthenticationDefaults.AuthenticationScheme);
                     return;
                 }
                 catch (Exception ex2)
                 {
-                    LoggerExtensions.LogError(this.logger, 0, ex2,
+                    _logger.LogError(0, ex2,
                         "An exception was thrown attempting " +
                         "to execute the error handler.");
                 }
