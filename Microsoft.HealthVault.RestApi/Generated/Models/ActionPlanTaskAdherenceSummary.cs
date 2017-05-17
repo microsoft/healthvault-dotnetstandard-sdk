@@ -2,11 +2,16 @@
 // Changes may cause incorrect behavior and will be lost if the code is
 // regenerated.
 
-using System.Collections.Generic;
-using Newtonsoft.Json;
-
 namespace Microsoft.HealthVault.RestApi.Generated.Models
 {
+    using Microsoft.HealthVault;
+    using Microsoft.HealthVault.RestApi;
+    using Microsoft.HealthVault.RestApi.Generated;
+    using Newtonsoft.Json;
+    using System.Collections;
+    using System.Collections.Generic;
+    using System.Linq;
+
     /// <summary>
     /// An adherence summary for a task in an action plan
     /// </summary>
@@ -18,7 +23,7 @@ namespace Microsoft.HealthVault.RestApi.Generated.Models
         /// </summary>
         public ActionPlanTaskAdherenceSummary()
         {
-          this.CustomInit();
+          CustomInit();
         }
 
         /// <summary>
@@ -38,13 +43,13 @@ namespace Microsoft.HealthVault.RestApi.Generated.Models
         /// summaries</param>
         public ActionPlanTaskAdherenceSummary(string id = default(string), string name = default(string), string windowType = default(string), System.DateTime? startDate = default(System.DateTime?), System.DateTime? endDate = default(System.DateTime?), IList<WeeklyAdherenceSummary> weeklyAdherence = default(IList<WeeklyAdherenceSummary>))
         {
-            this.Id = id;
-            this.Name = name;
-            this.WindowType = windowType;
-            this.StartDate = startDate;
-            this.EndDate = endDate;
-            this.WeeklyAdherence = weeklyAdherence;
-            this.CustomInit();
+            Id = id;
+            Name = name;
+            WindowType = windowType;
+            StartDate = startDate;
+            EndDate = endDate;
+            WeeklyAdherence = weeklyAdherence;
+            CustomInit();
         }
 
         /// <summary>

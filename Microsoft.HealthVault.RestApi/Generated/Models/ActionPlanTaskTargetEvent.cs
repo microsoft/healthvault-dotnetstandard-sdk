@@ -2,11 +2,16 @@
 // Changes may cause incorrect behavior and will be lost if the code is
 // regenerated.
 
-using System.Collections.Generic;
-using Newtonsoft.Json;
-
 namespace Microsoft.HealthVault.RestApi.Generated.Models
 {
+    using Microsoft.HealthVault;
+    using Microsoft.HealthVault.RestApi;
+    using Microsoft.HealthVault.RestApi.Generated;
+    using Newtonsoft.Json;
+    using System.Collections;
+    using System.Collections.Generic;
+    using System.Linq;
+
     /// <summary>
     /// The tracking properties of a HealthVault event
     /// </summary>
@@ -17,7 +22,7 @@ namespace Microsoft.HealthVault.RestApi.Generated.Models
         /// </summary>
         public ActionPlanTaskTargetEvent()
         {
-          this.CustomInit();
+          CustomInit();
         }
 
         /// <summary>
@@ -32,10 +37,10 @@ namespace Microsoft.HealthVault.RestApi.Generated.Models
         /// above is negated. e.g. Item shouldn't be a run or a walk.</param>
         public ActionPlanTaskTargetEvent(string elementXPath = default(string), IList<string> elementValues = default(IList<string>), bool? isNegated = default(bool?))
         {
-            this.ElementXPath = elementXPath;
-            this.ElementValues = elementValues;
-            this.IsNegated = isNegated;
-            this.CustomInit();
+            ElementXPath = elementXPath;
+            ElementValues = elementValues;
+            IsNegated = isNegated;
+            CustomInit();
         }
 
         /// <summary>

@@ -2,10 +2,14 @@
 // Changes may cause incorrect behavior and will be lost if the code is
 // regenerated.
 
-using Newtonsoft.Json;
-
 namespace Microsoft.HealthVault.RestApi.Generated.Models
 {
+    using Microsoft.HealthVault;
+    using Microsoft.HealthVault.RestApi;
+    using Microsoft.HealthVault.RestApi.Generated;
+    using Newtonsoft.Json;
+    using System.Linq;
+
     /// <summary>
     /// Defines the Action Plan Range Numeric
     /// </summary>
@@ -16,7 +20,7 @@ namespace Microsoft.HealthVault.RestApi.Generated.Models
         /// </summary>
         public ActionPlanRangeMetric()
         {
-          this.CustomInit();
+          CustomInit();
         }
 
         /// <summary>
@@ -34,12 +38,12 @@ namespace Microsoft.HealthVault.RestApi.Generated.Models
         /// that the metric applies to</param>
         public ActionPlanRangeMetric(string propertyName = default(string), string valueType = default(string), double? maxTarget = default(double?), double? minTarget = default(double?), string propertyXPath = default(string))
         {
-            this.PropertyName = propertyName;
-            this.ValueType = valueType;
-            this.MaxTarget = maxTarget;
-            this.MinTarget = minTarget;
-            this.PropertyXPath = propertyXPath;
-            this.CustomInit();
+            PropertyName = propertyName;
+            ValueType = valueType;
+            MaxTarget = maxTarget;
+            MinTarget = minTarget;
+            PropertyXPath = propertyXPath;
+            CustomInit();
         }
 
         /// <summary>

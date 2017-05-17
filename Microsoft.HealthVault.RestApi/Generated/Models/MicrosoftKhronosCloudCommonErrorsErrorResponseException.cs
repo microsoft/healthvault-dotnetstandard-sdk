@@ -2,10 +2,13 @@
 // Changes may cause incorrect behavior and will be lost if the code is
 // regenerated.
 
-using Microsoft.Rest;
-
 namespace Microsoft.HealthVault.RestApi.Generated.Models
 {
+    using Microsoft.HealthVault;
+    using Microsoft.HealthVault.RestApi;
+    using Microsoft.HealthVault.RestApi.Generated;
+    using Microsoft.Rest;
+
     /// <summary>
     /// Exception thrown for an invalid response with
     /// MicrosoftKhronosCloudCommonErrorsErrorResponse information.

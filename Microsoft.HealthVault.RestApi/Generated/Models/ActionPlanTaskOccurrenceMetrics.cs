@@ -2,11 +2,16 @@
 // Changes may cause incorrect behavior and will be lost if the code is
 // regenerated.
 
-using System.Collections.Generic;
-using Newtonsoft.Json;
-
 namespace Microsoft.HealthVault.RestApi.Generated.Models
 {
+    using Microsoft.HealthVault;
+    using Microsoft.HealthVault.RestApi;
+    using Microsoft.HealthVault.RestApi.Generated;
+    using Newtonsoft.Json;
+    using System.Collections;
+    using System.Collections.Generic;
+    using System.Linq;
+
     /// <summary>
     /// The task occurrence metrics
     /// </summary>
@@ -18,7 +23,7 @@ namespace Microsoft.HealthVault.RestApi.Generated.Models
         /// </summary>
         public ActionPlanTaskOccurrenceMetrics()
         {
-          this.CustomInit();
+          CustomInit();
         }
 
         /// <summary>
@@ -30,9 +35,9 @@ namespace Microsoft.HealthVault.RestApi.Generated.Models
         /// <param name="targets">Gets or sets the targets to evaluate</param>
         public ActionPlanTaskOccurrenceMetrics(bool? evaluateTargets = default(bool?), IList<ActionPlanRangeMetric> targets = default(IList<ActionPlanRangeMetric>))
         {
-            this.EvaluateTargets = evaluateTargets;
-            this.Targets = targets;
-            this.CustomInit();
+            EvaluateTargets = evaluateTargets;
+            Targets = targets;
+            CustomInit();
         }
 
         /// <summary>

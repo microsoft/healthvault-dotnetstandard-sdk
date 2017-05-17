@@ -2,10 +2,14 @@
 // Changes may cause incorrect behavior and will be lost if the code is
 // regenerated.
 
-using Newtonsoft.Json;
-
 namespace Microsoft.HealthVault.RestApi.Generated.Models
 {
+    using Microsoft.HealthVault;
+    using Microsoft.HealthVault.RestApi;
+    using Microsoft.HealthVault.RestApi.Generated;
+    using Newtonsoft.Json;
+    using System.Linq;
+
     /// <summary>
     /// A tracking object for an Action Plan Task
     /// </summary>
@@ -16,7 +20,7 @@ namespace Microsoft.HealthVault.RestApi.Generated.Models
         /// </summary>
         public ActionPlanTaskTracking()
         {
-          this.CustomInit();
+          CustomInit();
         }
 
         /// <summary>
@@ -51,20 +55,20 @@ namespace Microsoft.HealthVault.RestApi.Generated.Models
         /// tracking</param>
         public ActionPlanTaskTracking(string id = default(string), string trackingType = default(string), int? timeZoneOffset = default(int?), System.DateTime? trackingDateTime = default(System.DateTime?), System.DateTime? creationDateTime = default(System.DateTime?), string trackingStatus = default(string), System.DateTime? occurrenceStart = default(System.DateTime?), System.DateTime? occurrenceEnd = default(System.DateTime?), System.DateTime? completionStart = default(System.DateTime?), System.DateTime? completionEnd = default(System.DateTime?), string taskId = default(string), string feedback = default(string), ActionPlanTaskTrackingEvidence evidence = default(ActionPlanTaskTrackingEvidence))
         {
-            this.Id = id;
-            this.TrackingType = trackingType;
-            this.TimeZoneOffset = timeZoneOffset;
-            this.TrackingDateTime = trackingDateTime;
-            this.CreationDateTime = creationDateTime;
-            this.TrackingStatus = trackingStatus;
-            this.OccurrenceStart = occurrenceStart;
-            this.OccurrenceEnd = occurrenceEnd;
-            this.CompletionStart = completionStart;
-            this.CompletionEnd = completionEnd;
-            this.TaskId = taskId;
-            this.Feedback = feedback;
-            this.Evidence = evidence;
-            this.CustomInit();
+            Id = id;
+            TrackingType = trackingType;
+            TimeZoneOffset = timeZoneOffset;
+            TrackingDateTime = trackingDateTime;
+            CreationDateTime = creationDateTime;
+            TrackingStatus = trackingStatus;
+            OccurrenceStart = occurrenceStart;
+            OccurrenceEnd = occurrenceEnd;
+            CompletionStart = completionStart;
+            CompletionEnd = completionEnd;
+            TaskId = taskId;
+            Feedback = feedback;
+            Evidence = evidence;
+            CustomInit();
         }
 
         /// <summary>

@@ -2,11 +2,16 @@
 // Changes may cause incorrect behavior and will be lost if the code is
 // regenerated.
 
-using System.Collections.Generic;
-using Newtonsoft.Json;
-
 namespace Microsoft.HealthVault.RestApi.Generated.Models
 {
+    using Microsoft.HealthVault;
+    using Microsoft.HealthVault.RestApi;
+    using Microsoft.HealthVault.RestApi.Generated;
+    using Newtonsoft.Json;
+    using System.Collections;
+    using System.Collections.Generic;
+    using System.Linq;
+
     /// <summary>
     /// The content passed from a client during the onboarding process
     /// </summary>
@@ -17,7 +22,7 @@ namespace Microsoft.HealthVault.RestApi.Generated.Models
         /// </summary>
         public OnboardingRequest()
         {
-          this.CustomInit();
+          CustomInit();
         }
 
         /// <summary>
@@ -51,23 +56,23 @@ namespace Microsoft.HealthVault.RestApi.Generated.Models
         /// collection</param>
         public OnboardingRequest(string friendlyName = default(string), string applicationPatientId = default(string), string secretQuestion = default(string), string secretAnswer = default(string), string firstName = default(string), string lastName = default(string), string email = default(string), string zipCode = default(string), string state = default(string), string country = default(string), System.DateTime? birthday = default(System.DateTime?), string gender = default(string), int? weight = default(int?), int? height = default(int?), IList<string> actionPlanTemplateIds = default(IList<string>), IList<string> conditions = default(IList<string>))
         {
-            this.FriendlyName = friendlyName;
-            this.ApplicationPatientId = applicationPatientId;
-            this.SecretQuestion = secretQuestion;
-            this.SecretAnswer = secretAnswer;
-            this.FirstName = firstName;
-            this.LastName = lastName;
-            this.Email = email;
-            this.ZipCode = zipCode;
-            this.State = state;
-            this.Country = country;
-            this.Birthday = birthday;
-            this.Gender = gender;
-            this.Weight = weight;
-            this.Height = height;
-            this.ActionPlanTemplateIds = actionPlanTemplateIds;
-            this.Conditions = conditions;
-            this.CustomInit();
+            FriendlyName = friendlyName;
+            ApplicationPatientId = applicationPatientId;
+            SecretQuestion = secretQuestion;
+            SecretAnswer = secretAnswer;
+            FirstName = firstName;
+            LastName = lastName;
+            Email = email;
+            ZipCode = zipCode;
+            State = state;
+            Country = country;
+            Birthday = birthday;
+            Gender = gender;
+            Weight = weight;
+            Height = height;
+            ActionPlanTemplateIds = actionPlanTemplateIds;
+            Conditions = conditions;
+            CustomInit();
         }
 
         /// <summary>

@@ -2,10 +2,14 @@
 // Changes may cause incorrect behavior and will be lost if the code is
 // regenerated.
 
-using Newtonsoft.Json;
-
 namespace Microsoft.HealthVault.RestApi.Generated.Models
 {
+    using Microsoft.HealthVault;
+    using Microsoft.HealthVault.RestApi;
+    using Microsoft.HealthVault.RestApi.Generated;
+    using Newtonsoft.Json;
+    using System.Linq;
+
     public partial class MicrosoftWin32SafeHandlesSafeWaitHandle
     {
         /// <summary>
@@ -14,7 +18,7 @@ namespace Microsoft.HealthVault.RestApi.Generated.Models
         /// </summary>
         public MicrosoftWin32SafeHandlesSafeWaitHandle()
         {
-          this.CustomInit();
+          CustomInit();
         }
 
         /// <summary>
@@ -23,9 +27,9 @@ namespace Microsoft.HealthVault.RestApi.Generated.Models
         /// </summary>
         public MicrosoftWin32SafeHandlesSafeWaitHandle(bool? isInvalid = default(bool?), bool? isClosed = default(bool?))
         {
-            this.IsInvalid = isInvalid;
-            this.IsClosed = isClosed;
-            this.CustomInit();
+            IsInvalid = isInvalid;
+            IsClosed = isClosed;
+            CustomInit();
         }
 
         /// <summary>

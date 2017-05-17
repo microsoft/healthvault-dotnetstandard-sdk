@@ -2,11 +2,16 @@
 // Changes may cause incorrect behavior and will be lost if the code is
 // regenerated.
 
-using System.Collections.Generic;
-using Newtonsoft.Json;
-
 namespace Microsoft.HealthVault.RestApi.Generated.Models
 {
+    using Microsoft.HealthVault;
+    using Microsoft.HealthVault.RestApi;
+    using Microsoft.HealthVault.RestApi.Generated;
+    using Newtonsoft.Json;
+    using System.Collections;
+    using System.Collections.Generic;
+    using System.Linq;
+
     /// <summary>
     /// The action plans task collection response
     /// </summary>
@@ -18,7 +23,7 @@ namespace Microsoft.HealthVault.RestApi.Generated.Models
         /// </summary>
         public ActionPlanTasksResponseActionPlanTaskInstance()
         {
-          this.CustomInit();
+          CustomInit();
         }
 
         /// <summary>
@@ -29,9 +34,9 @@ namespace Microsoft.HealthVault.RestApi.Generated.Models
         /// <param name="nextLink">The URI for the next page of data</param>
         public ActionPlanTasksResponseActionPlanTaskInstance(IList<ActionPlanTaskInstance> tasks = default(IList<ActionPlanTaskInstance>), string nextLink = default(string))
         {
-            this.Tasks = tasks;
-            this.NextLink = nextLink;
-            this.CustomInit();
+            Tasks = tasks;
+            NextLink = nextLink;
+            CustomInit();
         }
 
         /// <summary>

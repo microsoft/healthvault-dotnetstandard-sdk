@@ -2,10 +2,14 @@
 // Changes may cause incorrect behavior and will be lost if the code is
 // regenerated.
 
-using Newtonsoft.Json;
-
 namespace Microsoft.HealthVault.RestApi.Generated.Models
 {
+    using Microsoft.HealthVault;
+    using Microsoft.HealthVault.RestApi;
+    using Microsoft.HealthVault.RestApi.Generated;
+    using Newtonsoft.Json;
+    using System.Linq;
+
     /// <summary>
     /// The range of achievement for a goal.
     /// </summary>
@@ -16,7 +20,7 @@ namespace Microsoft.HealthVault.RestApi.Generated.Models
         /// </summary>
         public GoalRange()
         {
-          this.CustomInit();
+          CustomInit();
         }
 
         /// <summary>
@@ -35,12 +39,12 @@ namespace Microsoft.HealthVault.RestApi.Generated.Models
         /// include: 'Unknown', 'Kilograms', 'Count', 'Calories'</param>
         public GoalRange(string name = default(string), string description = default(string), double? minimum = default(double?), double? maximum = default(double?), string units = default(string))
         {
-            this.Name = name;
-            this.Description = description;
-            this.Minimum = minimum;
-            this.Maximum = maximum;
-            this.Units = units;
-            this.CustomInit();
+            Name = name;
+            Description = description;
+            Minimum = minimum;
+            Maximum = maximum;
+            Units = units;
+            CustomInit();
         }
 
         /// <summary>
