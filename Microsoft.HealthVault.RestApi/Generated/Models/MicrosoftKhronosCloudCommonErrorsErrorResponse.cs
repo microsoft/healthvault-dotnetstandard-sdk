@@ -2,10 +2,14 @@
 // Changes may cause incorrect behavior and will be lost if the code is
 // regenerated.
 
-using Newtonsoft.Json;
-
 namespace Microsoft.HealthVault.RestApi.Generated.Models
 {
+    using Microsoft.HealthVault;
+    using Microsoft.HealthVault.RestApi;
+    using Microsoft.HealthVault.RestApi.Generated;
+    using Newtonsoft.Json;
+    using System.Linq;
+
     public partial class MicrosoftKhronosCloudCommonErrorsErrorResponse
     {
         /// <summary>
@@ -14,7 +18,7 @@ namespace Microsoft.HealthVault.RestApi.Generated.Models
         /// </summary>
         public MicrosoftKhronosCloudCommonErrorsErrorResponse()
         {
-          this.CustomInit();
+          CustomInit();
         }
 
         /// <summary>
@@ -23,8 +27,8 @@ namespace Microsoft.HealthVault.RestApi.Generated.Models
         /// </summary>
         public MicrosoftKhronosCloudCommonErrorsErrorResponse(MicrosoftKhronosCloudCommonErrorsErrorInformation error = default(MicrosoftKhronosCloudCommonErrorsErrorInformation))
         {
-            this.Error = error;
-            this.CustomInit();
+            Error = error;
+            CustomInit();
         }
 
         /// <summary>

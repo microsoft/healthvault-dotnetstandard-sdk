@@ -2,11 +2,16 @@
 // Changes may cause incorrect behavior and will be lost if the code is
 // regenerated.
 
-using System.Collections.Generic;
-using Newtonsoft.Json;
-
 namespace Microsoft.HealthVault.RestApi.Generated.Models
 {
+    using Microsoft.HealthVault;
+    using Microsoft.HealthVault.RestApi;
+    using Microsoft.HealthVault.RestApi.Generated;
+    using Newtonsoft.Json;
+    using System.Collections;
+    using System.Collections.Generic;
+    using System.Linq;
+
     /// <summary>
     /// An action plan being created for a user
     /// </summary>
@@ -17,7 +22,7 @@ namespace Microsoft.HealthVault.RestApi.Generated.Models
         /// </summary>
         public ActionPlan()
         {
-          this.CustomInit();
+          CustomInit();
         }
 
         /// <summary>
@@ -39,14 +44,14 @@ namespace Microsoft.HealthVault.RestApi.Generated.Models
         /// plan</param>
         public ActionPlan(string name = default(string), string description = default(string), string imageUrl = default(string), string thumbnailImageUrl = default(string), string category = default(string), IList<Objective> objectives = default(IList<Objective>), IList<ActionPlanTask> associatedTasks = default(IList<ActionPlanTask>))
         {
-            this.Name = name;
-            this.Description = description;
-            this.ImageUrl = imageUrl;
-            this.ThumbnailImageUrl = thumbnailImageUrl;
-            this.Category = category;
-            this.Objectives = objectives;
-            this.AssociatedTasks = associatedTasks;
-            this.CustomInit();
+            Name = name;
+            Description = description;
+            ImageUrl = imageUrl;
+            ThumbnailImageUrl = thumbnailImageUrl;
+            Category = category;
+            Objectives = objectives;
+            AssociatedTasks = associatedTasks;
+            CustomInit();
         }
 
         /// <summary>

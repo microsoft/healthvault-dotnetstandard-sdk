@@ -2,12 +2,14 @@
 // Changes may cause incorrect behavior and will be lost if the code is
 // regenerated.
 
-using System.Threading;
-using System.Threading.Tasks;
-using Microsoft.HealthVault.RestApi.Generated.Models;
-
 namespace Microsoft.HealthVault.RestApi.Generated
 {
+    using Microsoft.HealthVault;
+    using Microsoft.HealthVault.RestApi;
+    using Models;
+    using System.Threading;
+    using System.Threading.Tasks;
+
     /// <summary>
     /// Extension methods for MicrosoftHealthVaultRestApi.
     /// </summary>
@@ -467,9 +469,9 @@ namespace Microsoft.HealthVault.RestApi.Generated
             /// </param>
             /// <param name='actionPlanTaskId'>
             /// </param>
-            public static ActionPlanTaskInstance GetActionPlanTasksById(this IMicrosoftHealthVaultRestApi operations, string actionPlanTaskId)
+            public static ActionPlanTaskInstance GetActionPlanTaskById(this IMicrosoftHealthVaultRestApi operations, string actionPlanTaskId)
             {
-                return operations.GetActionPlanTasksByIdAsync(actionPlanTaskId).GetAwaiter().GetResult();
+                return operations.GetActionPlanTaskByIdAsync(actionPlanTaskId).GetAwaiter().GetResult();
             }
 
             /// <summary>
@@ -483,9 +485,9 @@ namespace Microsoft.HealthVault.RestApi.Generated
             /// <param name='cancellationToken'>
             /// The cancellation token.
             /// </param>
-            public static async Task<ActionPlanTaskInstance> GetActionPlanTasksByIdAsync(this IMicrosoftHealthVaultRestApi operations, string actionPlanTaskId, CancellationToken cancellationToken = default(CancellationToken))
+            public static async Task<ActionPlanTaskInstance> GetActionPlanTaskByIdAsync(this IMicrosoftHealthVaultRestApi operations, string actionPlanTaskId, CancellationToken cancellationToken = default(CancellationToken))
             {
-                using (var _result = await operations.GetActionPlanTasksByIdWithHttpMessagesAsync(actionPlanTaskId, null, cancellationToken).ConfigureAwait(false))
+                using (var _result = await operations.GetActionPlanTaskByIdWithHttpMessagesAsync(actionPlanTaskId, null, cancellationToken).ConfigureAwait(false))
                 {
                     return _result.Body;
                 }

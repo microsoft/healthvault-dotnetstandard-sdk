@@ -2,11 +2,16 @@
 // Changes may cause incorrect behavior and will be lost if the code is
 // regenerated.
 
-using System.Collections.Generic;
-using Newtonsoft.Json;
-
 namespace Microsoft.HealthVault.RestApi.Generated.Models
 {
+    using Microsoft.HealthVault;
+    using Microsoft.HealthVault.RestApi;
+    using Microsoft.HealthVault.RestApi.Generated;
+    using Newtonsoft.Json;
+    using System.Collections;
+    using System.Collections.Generic;
+    using System.Linq;
+
     public partial class MicrosoftKhronosCloudCommonErrorsErrorInformation
     {
         /// <summary>
@@ -15,7 +20,7 @@ namespace Microsoft.HealthVault.RestApi.Generated.Models
         /// </summary>
         public MicrosoftKhronosCloudCommonErrorsErrorInformation()
         {
-          this.CustomInit();
+          CustomInit();
         }
 
         /// <summary>
@@ -24,13 +29,13 @@ namespace Microsoft.HealthVault.RestApi.Generated.Models
         /// </summary>
         public MicrosoftKhronosCloudCommonErrorsErrorInformation(string code = default(string), string message = default(string), string target = default(string), IList<MicrosoftKhronosCloudCommonErrorsErrorInformation> details = default(IList<MicrosoftKhronosCloudCommonErrorsErrorInformation>), MicrosoftKhronosCloudCommonErrorsErrorInformation innererror = default(MicrosoftKhronosCloudCommonErrorsErrorInformation), object exception = default(object))
         {
-            this.Code = code;
-            this.Message = message;
-            this.Target = target;
-            this.Details = details;
-            this.Innererror = innererror;
-            this.Exception = exception;
-            this.CustomInit();
+            Code = code;
+            Message = message;
+            Target = target;
+            Details = details;
+            Innererror = innererror;
+            Exception = exception;
+            CustomInit();
         }
 
         /// <summary>

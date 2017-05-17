@@ -2,10 +2,14 @@
 // Changes may cause incorrect behavior and will be lost if the code is
 // regenerated.
 
-using Newtonsoft.Json;
-
 namespace Microsoft.HealthVault.RestApi.Generated.Models
 {
+    using Microsoft.HealthVault;
+    using Microsoft.HealthVault.RestApi;
+    using Microsoft.HealthVault.RestApi.Generated;
+    using Newtonsoft.Json;
+    using System.Linq;
+
     /// <summary>
     /// class for Tracking Validation
     /// </summary>
@@ -16,7 +20,7 @@ namespace Microsoft.HealthVault.RestApi.Generated.Models
         /// </summary>
         public TrackingValidation()
         {
-          this.CustomInit();
+          CustomInit();
         }
 
         /// <summary>
@@ -28,9 +32,9 @@ namespace Microsoft.HealthVault.RestApi.Generated.Models
         /// document.</param>
         public TrackingValidation(ActionPlanTask actionPlanTask = default(ActionPlanTask), string xmlThingDocument = default(string))
         {
-            this.ActionPlanTask = actionPlanTask;
-            this.XmlThingDocument = xmlThingDocument;
-            this.CustomInit();
+            ActionPlanTask = actionPlanTask;
+            XmlThingDocument = xmlThingDocument;
+            CustomInit();
         }
 
         /// <summary>

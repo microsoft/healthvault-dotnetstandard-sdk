@@ -2,10 +2,14 @@
 // Changes may cause incorrect behavior and will be lost if the code is
 // regenerated.
 
-using Newtonsoft.Json;
-
 namespace Microsoft.HealthVault.RestApi.Generated.Models
 {
+    using Microsoft.HealthVault;
+    using Microsoft.HealthVault.RestApi;
+    using Microsoft.HealthVault.RestApi.Generated;
+    using Newtonsoft.Json;
+    using System.Linq;
+
     /// <summary>
     /// The recurrence metrics for a goal.
     /// </summary>
@@ -16,7 +20,7 @@ namespace Microsoft.HealthVault.RestApi.Generated.Models
         /// </summary>
         public GoalRecurrenceMetrics()
         {
-          this.CustomInit();
+          CustomInit();
         }
 
         /// <summary>
@@ -32,9 +36,9 @@ namespace Microsoft.HealthVault.RestApi.Generated.Models
         /// a goal target of 5000.</param>
         public GoalRecurrenceMetrics(string windowType = default(string), int? occurrenceCount = default(int?))
         {
-            this.WindowType = windowType;
-            this.OccurrenceCount = occurrenceCount;
-            this.CustomInit();
+            WindowType = windowType;
+            OccurrenceCount = occurrenceCount;
+            CustomInit();
         }
 
         /// <summary>

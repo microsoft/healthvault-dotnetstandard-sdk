@@ -2,10 +2,14 @@
 // Changes may cause incorrect behavior and will be lost if the code is
 // regenerated.
 
-using Newtonsoft.Json;
-
 namespace Microsoft.HealthVault.RestApi.Generated.Models
 {
+    using Microsoft.HealthVault;
+    using Microsoft.HealthVault.RestApi;
+    using Microsoft.HealthVault.RestApi.Generated;
+    using Newtonsoft.Json;
+    using System.Linq;
+
     public partial class SystemThreadingWaitHandle
     {
         /// <summary>
@@ -13,7 +17,7 @@ namespace Microsoft.HealthVault.RestApi.Generated.Models
         /// </summary>
         public SystemThreadingWaitHandle()
         {
-          this.CustomInit();
+          CustomInit();
         }
 
         /// <summary>
@@ -21,9 +25,9 @@ namespace Microsoft.HealthVault.RestApi.Generated.Models
         /// </summary>
         public SystemThreadingWaitHandle(object handle = default(object), MicrosoftWin32SafeHandlesSafeWaitHandle safeWaitHandle = default(MicrosoftWin32SafeHandlesSafeWaitHandle))
         {
-            this.Handle = handle;
-            this.SafeWaitHandle = safeWaitHandle;
-            this.CustomInit();
+            Handle = handle;
+            SafeWaitHandle = safeWaitHandle;
+            CustomInit();
         }
 
         /// <summary>

@@ -2,10 +2,14 @@
 // Changes may cause incorrect behavior and will be lost if the code is
 // regenerated.
 
-using Newtonsoft.Json;
-
 namespace Microsoft.HealthVault.RestApi.Generated.Models
 {
+    using Microsoft.HealthVault;
+    using Microsoft.HealthVault.RestApi;
+    using Microsoft.HealthVault.RestApi.Generated;
+    using Newtonsoft.Json;
+    using System.Linq;
+
     /// <summary>
     /// An objective is a high-level concept of what a user wants to accomplish
     /// as part of their enrollment in various action plans
@@ -20,7 +24,7 @@ namespace Microsoft.HealthVault.RestApi.Generated.Models
         /// </summary>
         public Objective()
         {
-          this.CustomInit();
+          CustomInit();
         }
 
         /// <summary>
@@ -40,13 +44,13 @@ namespace Microsoft.HealthVault.RestApi.Generated.Models
         /// 'MinutesToFallAsleepPerNight', 'Other'</param>
         public Objective(string id = default(string), string name = default(string), string description = default(string), string state = default(string), string outcomeName = default(string), string outcomeType = default(string))
         {
-            this.Id = id;
-            this.Name = name;
-            this.Description = description;
-            this.State = state;
-            this.OutcomeName = outcomeName;
-            this.OutcomeType = outcomeType;
-            this.CustomInit();
+            Id = id;
+            Name = name;
+            Description = description;
+            State = state;
+            OutcomeName = outcomeName;
+            OutcomeType = outcomeType;
+            CustomInit();
         }
 
         /// <summary>

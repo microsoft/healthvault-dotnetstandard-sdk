@@ -2,11 +2,16 @@
 // Changes may cause incorrect behavior and will be lost if the code is
 // regenerated.
 
-using System.Collections.Generic;
-using Newtonsoft.Json;
-
 namespace Microsoft.HealthVault.RestApi.Generated.Models
 {
+    using Microsoft.HealthVault;
+    using Microsoft.HealthVault.RestApi;
+    using Microsoft.HealthVault.RestApi.Generated;
+    using Newtonsoft.Json;
+    using System.Collections;
+    using System.Collections.Generic;
+    using System.Linq;
+
     /// <summary>
     /// The goals wrapper.
     /// </summary>
@@ -17,7 +22,7 @@ namespace Microsoft.HealthVault.RestApi.Generated.Models
         /// </summary>
         public GoalsWrapper()
         {
-          this.CustomInit();
+          CustomInit();
         }
 
         /// <summary>
@@ -26,8 +31,8 @@ namespace Microsoft.HealthVault.RestApi.Generated.Models
         /// <param name="goals">The collection of goals</param>
         public GoalsWrapper(IList<Goal> goals = default(IList<Goal>))
         {
-            this.Goals = goals;
-            this.CustomInit();
+            Goals = goals;
+            CustomInit();
         }
 
         /// <summary>

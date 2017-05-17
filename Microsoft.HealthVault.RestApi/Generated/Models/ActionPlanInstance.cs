@@ -2,11 +2,16 @@
 // Changes may cause incorrect behavior and will be lost if the code is
 // regenerated.
 
-using System.Collections.Generic;
-using Newtonsoft.Json;
-
 namespace Microsoft.HealthVault.RestApi.Generated.Models
 {
+    using Microsoft.HealthVault;
+    using Microsoft.HealthVault.RestApi;
+    using Microsoft.HealthVault.RestApi.Generated;
+    using Newtonsoft.Json;
+    using System.Collections;
+    using System.Collections.Generic;
+    using System.Linq;
+
     /// <summary>
     /// An instance of an action plan associated to a user
     /// </summary>
@@ -17,7 +22,7 @@ namespace Microsoft.HealthVault.RestApi.Generated.Models
         /// </summary>
         public ActionPlanInstance()
         {
-          this.CustomInit();
+          CustomInit();
         }
 
         /// <summary>
@@ -47,18 +52,18 @@ namespace Microsoft.HealthVault.RestApi.Generated.Models
         /// plan</param>
         public ActionPlanInstance(string id = default(string), string status = default(string), string organizationId = default(string), string organizationName = default(string), IList<ActionPlanTaskInstance> associatedTasks = default(IList<ActionPlanTaskInstance>), string name = default(string), string description = default(string), string imageUrl = default(string), string thumbnailImageUrl = default(string), string category = default(string), IList<Objective> objectives = default(IList<Objective>))
         {
-            this.Id = id;
-            this.Status = status;
-            this.OrganizationId = organizationId;
-            this.OrganizationName = organizationName;
-            this.AssociatedTasks = associatedTasks;
-            this.Name = name;
-            this.Description = description;
-            this.ImageUrl = imageUrl;
-            this.ThumbnailImageUrl = thumbnailImageUrl;
-            this.Category = category;
-            this.Objectives = objectives;
-            this.CustomInit();
+            Id = id;
+            Status = status;
+            OrganizationId = organizationId;
+            OrganizationName = organizationName;
+            AssociatedTasks = associatedTasks;
+            Name = name;
+            Description = description;
+            ImageUrl = imageUrl;
+            ThumbnailImageUrl = thumbnailImageUrl;
+            Category = category;
+            Objectives = objectives;
+            CustomInit();
         }
 
         /// <summary>

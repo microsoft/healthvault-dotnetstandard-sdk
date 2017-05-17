@@ -2,11 +2,16 @@
 // Changes may cause incorrect behavior and will be lost if the code is
 // regenerated.
 
-using System.Collections.Generic;
-using Newtonsoft.Json;
-
 namespace Microsoft.HealthVault.RestApi.Generated.Models
 {
+    using Microsoft.HealthVault;
+    using Microsoft.HealthVault.RestApi;
+    using Microsoft.HealthVault.RestApi.Generated;
+    using Newtonsoft.Json;
+    using System.Collections;
+    using System.Collections.Generic;
+    using System.Linq;
+
     /// <summary>
     /// An action a user should complete.
     /// Adherence to a plan is measured by completion statistics against tasks
@@ -18,7 +23,7 @@ namespace Microsoft.HealthVault.RestApi.Generated.Models
         /// </summary>
         public ActionPlanTask()
         {
-          this.CustomInit();
+          CustomInit();
         }
 
         /// <summary>
@@ -51,20 +56,20 @@ namespace Microsoft.HealthVault.RestApi.Generated.Models
         /// schedule based tasks</param>
         public ActionPlanTask(string name = default(string), string shortDescription = default(string), string longDescription = default(string), string imageUrl = default(string), string thumbnailImageUrl = default(string), string taskType = default(string), ActionPlanTrackingPolicy trackingPolicy = default(ActionPlanTrackingPolicy), string signupName = default(string), string associatedPlanId = default(string), IList<string> associatedObjectiveIds = default(IList<string>), string completionType = default(string), ActionPlanFrequencyTaskCompletionMetrics frequencyTaskCompletionMetrics = default(ActionPlanFrequencyTaskCompletionMetrics), ActionPlanScheduledTaskCompletionMetrics scheduledTaskCompletionMetrics = default(ActionPlanScheduledTaskCompletionMetrics))
         {
-            this.Name = name;
-            this.ShortDescription = shortDescription;
-            this.LongDescription = longDescription;
-            this.ImageUrl = imageUrl;
-            this.ThumbnailImageUrl = thumbnailImageUrl;
-            this.TaskType = taskType;
-            this.TrackingPolicy = trackingPolicy;
-            this.SignupName = signupName;
-            this.AssociatedPlanId = associatedPlanId;
-            this.AssociatedObjectiveIds = associatedObjectiveIds;
-            this.CompletionType = completionType;
-            this.FrequencyTaskCompletionMetrics = frequencyTaskCompletionMetrics;
-            this.ScheduledTaskCompletionMetrics = scheduledTaskCompletionMetrics;
-            this.CustomInit();
+            Name = name;
+            ShortDescription = shortDescription;
+            LongDescription = longDescription;
+            ImageUrl = imageUrl;
+            ThumbnailImageUrl = thumbnailImageUrl;
+            TaskType = taskType;
+            TrackingPolicy = trackingPolicy;
+            SignupName = signupName;
+            AssociatedPlanId = associatedPlanId;
+            AssociatedObjectiveIds = associatedObjectiveIds;
+            CompletionType = completionType;
+            FrequencyTaskCompletionMetrics = frequencyTaskCompletionMetrics;
+            ScheduledTaskCompletionMetrics = scheduledTaskCompletionMetrics;
+            CustomInit();
         }
 
         /// <summary>

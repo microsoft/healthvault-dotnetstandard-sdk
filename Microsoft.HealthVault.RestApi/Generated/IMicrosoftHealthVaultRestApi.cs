@@ -2,15 +2,18 @@
 // Changes may cause incorrect behavior and will be lost if the code is
 // regenerated.
 
-using System.Collections.Generic;
-using System.Threading;
-using System.Threading.Tasks;
-using Microsoft.HealthVault.RestApi.Generated.Models;
-using Microsoft.Rest;
-using Newtonsoft.Json;
-
 namespace Microsoft.HealthVault.RestApi.Generated
 {
+    using Microsoft.HealthVault;
+    using Microsoft.HealthVault.RestApi;
+    using Microsoft.Rest;
+    using Models;
+    using Newtonsoft.Json;
+    using System.Collections;
+    using System.Collections.Generic;
+    using System.Threading;
+    using System.Threading.Tasks;
+
     /// <summary>
     /// </summary>
     public partial interface IMicrosoftHealthVaultRestApi : System.IDisposable
@@ -235,7 +238,7 @@ namespace Microsoft.HealthVault.RestApi.Generated
         /// <param name='cancellationToken'>
         /// The cancellation token.
         /// </param>
-        Task<HttpOperationResponse<ActionPlanTaskInstance>> GetActionPlanTasksByIdWithHttpMessagesAsync(string actionPlanTaskId, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
+        Task<HttpOperationResponse<ActionPlanTaskInstance>> GetActionPlanTaskByIdWithHttpMessagesAsync(string actionPlanTaskId, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
 
         /// <summary>
         /// Delete a task by id

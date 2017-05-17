@@ -2,18 +2,21 @@
 // Changes may cause incorrect behavior and will be lost if the code is
 // regenerated.
 
-using System.Collections.Generic;
-using System.Net;
-using System.Net.Http;
-using System.Threading;
-using System.Threading.Tasks;
-using Microsoft.HealthVault.RestApi.Generated.Models;
-using Microsoft.Rest;
-using Microsoft.Rest.Serialization;
-using Newtonsoft.Json;
-
 namespace Microsoft.HealthVault.RestApi.Generated
 {
+    using Microsoft.HealthVault;
+    using Microsoft.HealthVault.RestApi;
+    using Microsoft.Rest;
+    using Microsoft.Rest.Serialization;
+    using Models;
+    using Newtonsoft.Json;
+    using System.Collections;
+    using System.Collections.Generic;
+    using System.Net;
+    using System.Net.Http;
+    using System.Threading;
+    using System.Threading.Tasks;
+
     public partial class MicrosoftHealthVaultRestApi : ServiceClient<MicrosoftHealthVaultRestApi>, IMicrosoftHealthVaultRestApi
     {
         /// <summary>
@@ -44,7 +47,7 @@ namespace Microsoft.HealthVault.RestApi.Generated
         /// </param>
         protected MicrosoftHealthVaultRestApi(params DelegatingHandler[] handlers) : base(handlers)
         {
-            this.Initialize();
+            Initialize();
         }
 
         /// <summary>
@@ -58,7 +61,7 @@ namespace Microsoft.HealthVault.RestApi.Generated
         /// </param>
         protected MicrosoftHealthVaultRestApi(HttpClientHandler rootHandler, params DelegatingHandler[] handlers) : base(rootHandler, handlers)
         {
-            this.Initialize();
+            Initialize();
         }
 
         /// <summary>
@@ -79,7 +82,7 @@ namespace Microsoft.HealthVault.RestApi.Generated
             {
                 throw new System.ArgumentNullException("baseUri");
             }
-            this.BaseUri = baseUri;
+            BaseUri = baseUri;
         }
 
         /// <summary>
@@ -103,7 +106,7 @@ namespace Microsoft.HealthVault.RestApi.Generated
             {
                 throw new System.ArgumentNullException("baseUri");
             }
-            this.BaseUri = baseUri;
+            BaseUri = baseUri;
         }
 
         /// <summary>
@@ -124,10 +127,10 @@ namespace Microsoft.HealthVault.RestApi.Generated
             {
                 throw new System.ArgumentNullException("credentials");
             }
-            this.Credentials = credentials;
-            if (this.Credentials != null)
+            Credentials = credentials;
+            if (Credentials != null)
             {
-                this.Credentials.InitializeServiceClient(this);
+                Credentials.InitializeServiceClient(this);
             }
         }
 
@@ -152,10 +155,10 @@ namespace Microsoft.HealthVault.RestApi.Generated
             {
                 throw new System.ArgumentNullException("credentials");
             }
-            this.Credentials = credentials;
-            if (this.Credentials != null)
+            Credentials = credentials;
+            if (Credentials != null)
             {
-                this.Credentials.InitializeServiceClient(this);
+                Credentials.InitializeServiceClient(this);
             }
         }
 
@@ -184,11 +187,11 @@ namespace Microsoft.HealthVault.RestApi.Generated
             {
                 throw new System.ArgumentNullException("credentials");
             }
-            this.BaseUri = baseUri;
-            this.Credentials = credentials;
-            if (this.Credentials != null)
+            BaseUri = baseUri;
+            Credentials = credentials;
+            if (Credentials != null)
             {
-                this.Credentials.InitializeServiceClient(this);
+                Credentials.InitializeServiceClient(this);
             }
         }
 
@@ -220,11 +223,11 @@ namespace Microsoft.HealthVault.RestApi.Generated
             {
                 throw new System.ArgumentNullException("credentials");
             }
-            this.BaseUri = baseUri;
-            this.Credentials = credentials;
-            if (this.Credentials != null)
+            BaseUri = baseUri;
+            Credentials = credentials;
+            if (Credentials != null)
             {
-                this.Credentials.InitializeServiceClient(this);
+                Credentials.InitializeServiceClient(this);
             }
         }
 
@@ -237,8 +240,8 @@ namespace Microsoft.HealthVault.RestApi.Generated
         /// </summary>
         private void Initialize()
         {
-            this.BaseUri = new System.Uri("https://data.ppe.microsofthealth.net/");
-            this.SerializationSettings = new JsonSerializerSettings
+            BaseUri = new System.Uri("https://data.ppe.microsofthealth.net/");
+            SerializationSettings = new JsonSerializerSettings
             {
                 Formatting = Newtonsoft.Json.Formatting.Indented,
                 DateFormatHandling = Newtonsoft.Json.DateFormatHandling.IsoDateFormat,
@@ -251,7 +254,7 @@ namespace Microsoft.HealthVault.RestApi.Generated
                         new Iso8601TimeSpanConverter()
                     }
             };
-            this.DeserializationSettings = new JsonSerializerSettings
+            DeserializationSettings = new JsonSerializerSettings
             {
                 DateFormatHandling = Newtonsoft.Json.DateFormatHandling.IsoDateFormat,
                 DateTimeZoneHandling = Newtonsoft.Json.DateTimeZoneHandling.Utc,
@@ -263,7 +266,7 @@ namespace Microsoft.HealthVault.RestApi.Generated
                         new Iso8601TimeSpanConverter()
                     }
             };
-            this.CustomInitialize();
+            CustomInitialize();
         }
         /// <summary>
         /// Get a collection of action plans
@@ -300,12 +303,12 @@ namespace Microsoft.HealthVault.RestApi.Generated
                 ServiceClientTracing.Enter(_invocationId, this, "GetActionPlans", tracingParameters);
             }
             // Construct URL
-            var _baseUrl = this.BaseUri.AbsoluteUri;
+            var _baseUrl = BaseUri.AbsoluteUri;
             var _url = new System.Uri(new System.Uri(_baseUrl + (_baseUrl.EndsWith("/") ? "" : "/")), "ActionPlans").ToString();
             List<string> _queryParameters = new List<string>();
             if (maxPageSize != null)
             {
-                _queryParameters.Add(string.Format("maxPageSize={0}", System.Uri.EscapeDataString(SafeJsonConvert.SerializeObject(maxPageSize, this.SerializationSettings).Trim('"'))));
+                _queryParameters.Add(string.Format("maxPageSize={0}", System.Uri.EscapeDataString(SafeJsonConvert.SerializeObject(maxPageSize, SerializationSettings).Trim('"'))));
             }
             if (_queryParameters.Count > 0)
             {
@@ -334,10 +337,10 @@ namespace Microsoft.HealthVault.RestApi.Generated
             // Serialize Request
             string _requestContent = null;
             // Set Credentials
-            if (this.Credentials != null)
+            if (Credentials != null)
             {
                 cancellationToken.ThrowIfCancellationRequested();
-                await this.Credentials.ProcessHttpRequestAsync(_httpRequest, cancellationToken).ConfigureAwait(false);
+                await Credentials.ProcessHttpRequestAsync(_httpRequest, cancellationToken).ConfigureAwait(false);
             }
             // Send Request
             if (_shouldTrace)
@@ -345,7 +348,7 @@ namespace Microsoft.HealthVault.RestApi.Generated
                 ServiceClientTracing.SendRequest(_invocationId, _httpRequest);
             }
             cancellationToken.ThrowIfCancellationRequested();
-            _httpResponse = await this.HttpClient.SendAsync(_httpRequest, cancellationToken).ConfigureAwait(false);
+            _httpResponse = await HttpClient.SendAsync(_httpRequest, cancellationToken).ConfigureAwait(false);
             if (_shouldTrace)
             {
                 ServiceClientTracing.ReceiveResponse(_invocationId, _httpResponse);
@@ -359,7 +362,7 @@ namespace Microsoft.HealthVault.RestApi.Generated
                 try
                 {
                     _responseContent = await _httpResponse.Content.ReadAsStringAsync().ConfigureAwait(false);
-                    MicrosoftKhronosCloudCommonErrorsErrorResponse _errorBody =  SafeJsonConvert.DeserializeObject<MicrosoftKhronosCloudCommonErrorsErrorResponse>(_responseContent, this.DeserializationSettings);
+                    MicrosoftKhronosCloudCommonErrorsErrorResponse _errorBody =  SafeJsonConvert.DeserializeObject<MicrosoftKhronosCloudCommonErrorsErrorResponse>(_responseContent, DeserializationSettings);
                     if (_errorBody != null)
                     {
                         ex.Body = _errorBody;
@@ -392,7 +395,7 @@ namespace Microsoft.HealthVault.RestApi.Generated
                 _responseContent = await _httpResponse.Content.ReadAsStringAsync().ConfigureAwait(false);
                 try
                 {
-                    _result.Body = SafeJsonConvert.DeserializeObject<ActionPlansResponseActionPlanInstance>(_responseContent, this.DeserializationSettings);
+                    _result.Body = SafeJsonConvert.DeserializeObject<ActionPlansResponseActionPlanInstance>(_responseContent, DeserializationSettings);
                 }
                 catch (JsonException ex)
                 {
@@ -457,7 +460,7 @@ namespace Microsoft.HealthVault.RestApi.Generated
                 ServiceClientTracing.Enter(_invocationId, this, "PutActionPlan", tracingParameters);
             }
             // Construct URL
-            var _baseUrl = this.BaseUri.AbsoluteUri;
+            var _baseUrl = BaseUri.AbsoluteUri;
             var _url = new System.Uri(new System.Uri(_baseUrl + (_baseUrl.EndsWith("/") ? "" : "/")), "ActionPlans").ToString();
             // Create HTTP transport objects
             var _httpRequest = new HttpRequestMessage();
@@ -483,15 +486,15 @@ namespace Microsoft.HealthVault.RestApi.Generated
             string _requestContent = null;
             if(actionPlan != null)
             {
-                _requestContent = SafeJsonConvert.SerializeObject(actionPlan, this.SerializationSettings);
+                _requestContent = SafeJsonConvert.SerializeObject(actionPlan, SerializationSettings);
                 _httpRequest.Content = new StringContent(_requestContent, System.Text.Encoding.UTF8);
                 _httpRequest.Content.Headers.ContentType =System.Net.Http.Headers.MediaTypeHeaderValue.Parse("application/json; charset=utf-8");
             }
             // Set Credentials
-            if (this.Credentials != null)
+            if (Credentials != null)
             {
                 cancellationToken.ThrowIfCancellationRequested();
-                await this.Credentials.ProcessHttpRequestAsync(_httpRequest, cancellationToken).ConfigureAwait(false);
+                await Credentials.ProcessHttpRequestAsync(_httpRequest, cancellationToken).ConfigureAwait(false);
             }
             // Send Request
             if (_shouldTrace)
@@ -499,7 +502,7 @@ namespace Microsoft.HealthVault.RestApi.Generated
                 ServiceClientTracing.SendRequest(_invocationId, _httpRequest);
             }
             cancellationToken.ThrowIfCancellationRequested();
-            _httpResponse = await this.HttpClient.SendAsync(_httpRequest, cancellationToken).ConfigureAwait(false);
+            _httpResponse = await HttpClient.SendAsync(_httpRequest, cancellationToken).ConfigureAwait(false);
             if (_shouldTrace)
             {
                 ServiceClientTracing.ReceiveResponse(_invocationId, _httpResponse);
@@ -513,7 +516,7 @@ namespace Microsoft.HealthVault.RestApi.Generated
                 try
                 {
                     _responseContent = await _httpResponse.Content.ReadAsStringAsync().ConfigureAwait(false);
-                    MicrosoftKhronosCloudCommonErrorsErrorResponse _errorBody =  SafeJsonConvert.DeserializeObject<MicrosoftKhronosCloudCommonErrorsErrorResponse>(_responseContent, this.DeserializationSettings);
+                    MicrosoftKhronosCloudCommonErrorsErrorResponse _errorBody =  SafeJsonConvert.DeserializeObject<MicrosoftKhronosCloudCommonErrorsErrorResponse>(_responseContent, DeserializationSettings);
                     if (_errorBody != null)
                     {
                         ex.Body = _errorBody;
@@ -546,7 +549,7 @@ namespace Microsoft.HealthVault.RestApi.Generated
                 _responseContent = await _httpResponse.Content.ReadAsStringAsync().ConfigureAwait(false);
                 try
                 {
-                    _result.Body = SafeJsonConvert.DeserializeObject<ActionPlansResponseActionPlanInstance>(_responseContent, this.DeserializationSettings);
+                    _result.Body = SafeJsonConvert.DeserializeObject<ActionPlansResponseActionPlanInstance>(_responseContent, DeserializationSettings);
                 }
                 catch (JsonException ex)
                 {
@@ -610,7 +613,7 @@ namespace Microsoft.HealthVault.RestApi.Generated
                 ServiceClientTracing.Enter(_invocationId, this, "CreateActionPlan", tracingParameters);
             }
             // Construct URL
-            var _baseUrl = this.BaseUri.AbsoluteUri;
+            var _baseUrl = BaseUri.AbsoluteUri;
             var _url = new System.Uri(new System.Uri(_baseUrl + (_baseUrl.EndsWith("/") ? "" : "/")), "ActionPlans").ToString();
             // Create HTTP transport objects
             var _httpRequest = new HttpRequestMessage();
@@ -636,15 +639,15 @@ namespace Microsoft.HealthVault.RestApi.Generated
             string _requestContent = null;
             if(actionPlan != null)
             {
-                _requestContent = SafeJsonConvert.SerializeObject(actionPlan, this.SerializationSettings);
+                _requestContent = SafeJsonConvert.SerializeObject(actionPlan, SerializationSettings);
                 _httpRequest.Content = new StringContent(_requestContent, System.Text.Encoding.UTF8);
                 _httpRequest.Content.Headers.ContentType =System.Net.Http.Headers.MediaTypeHeaderValue.Parse("application/json; charset=utf-8");
             }
             // Set Credentials
-            if (this.Credentials != null)
+            if (Credentials != null)
             {
                 cancellationToken.ThrowIfCancellationRequested();
-                await this.Credentials.ProcessHttpRequestAsync(_httpRequest, cancellationToken).ConfigureAwait(false);
+                await Credentials.ProcessHttpRequestAsync(_httpRequest, cancellationToken).ConfigureAwait(false);
             }
             // Send Request
             if (_shouldTrace)
@@ -652,7 +655,7 @@ namespace Microsoft.HealthVault.RestApi.Generated
                 ServiceClientTracing.SendRequest(_invocationId, _httpRequest);
             }
             cancellationToken.ThrowIfCancellationRequested();
-            _httpResponse = await this.HttpClient.SendAsync(_httpRequest, cancellationToken).ConfigureAwait(false);
+            _httpResponse = await HttpClient.SendAsync(_httpRequest, cancellationToken).ConfigureAwait(false);
             if (_shouldTrace)
             {
                 ServiceClientTracing.ReceiveResponse(_invocationId, _httpResponse);
@@ -666,7 +669,7 @@ namespace Microsoft.HealthVault.RestApi.Generated
                 try
                 {
                     _responseContent = await _httpResponse.Content.ReadAsStringAsync().ConfigureAwait(false);
-                    MicrosoftKhronosCloudCommonErrorsErrorResponse _errorBody =  SafeJsonConvert.DeserializeObject<MicrosoftKhronosCloudCommonErrorsErrorResponse>(_responseContent, this.DeserializationSettings);
+                    MicrosoftKhronosCloudCommonErrorsErrorResponse _errorBody =  SafeJsonConvert.DeserializeObject<MicrosoftKhronosCloudCommonErrorsErrorResponse>(_responseContent, DeserializationSettings);
                     if (_errorBody != null)
                     {
                         ex.Body = _errorBody;
@@ -699,7 +702,7 @@ namespace Microsoft.HealthVault.RestApi.Generated
                 _responseContent = await _httpResponse.Content.ReadAsStringAsync().ConfigureAwait(false);
                 try
                 {
-                    _result.Body = SafeJsonConvert.DeserializeObject<object>(_responseContent, this.DeserializationSettings);
+                    _result.Body = SafeJsonConvert.DeserializeObject<object>(_responseContent, DeserializationSettings);
                 }
                 catch (JsonException ex)
                 {
@@ -717,7 +720,7 @@ namespace Microsoft.HealthVault.RestApi.Generated
                 _responseContent = await _httpResponse.Content.ReadAsStringAsync().ConfigureAwait(false);
                 try
                 {
-                    _result.Body = SafeJsonConvert.DeserializeObject<ActionPlansResponseActionPlanInstance>(_responseContent, this.DeserializationSettings);
+                    _result.Body = SafeJsonConvert.DeserializeObject<ActionPlansResponseActionPlanInstance>(_responseContent, DeserializationSettings);
                 }
                 catch (JsonException ex)
                 {
@@ -783,7 +786,7 @@ namespace Microsoft.HealthVault.RestApi.Generated
                 ServiceClientTracing.Enter(_invocationId, this, "PatchActionPlan", tracingParameters);
             }
             // Construct URL
-            var _baseUrl = this.BaseUri.AbsoluteUri;
+            var _baseUrl = BaseUri.AbsoluteUri;
             var _url = new System.Uri(new System.Uri(_baseUrl + (_baseUrl.EndsWith("/") ? "" : "/")), "ActionPlans").ToString();
             // Create HTTP transport objects
             var _httpRequest = new HttpRequestMessage();
@@ -809,15 +812,15 @@ namespace Microsoft.HealthVault.RestApi.Generated
             string _requestContent = null;
             if(actionPlan != null)
             {
-                _requestContent = SafeJsonConvert.SerializeObject(actionPlan, this.SerializationSettings);
+                _requestContent = SafeJsonConvert.SerializeObject(actionPlan, SerializationSettings);
                 _httpRequest.Content = new StringContent(_requestContent, System.Text.Encoding.UTF8);
                 _httpRequest.Content.Headers.ContentType =System.Net.Http.Headers.MediaTypeHeaderValue.Parse("application/json; charset=utf-8");
             }
             // Set Credentials
-            if (this.Credentials != null)
+            if (Credentials != null)
             {
                 cancellationToken.ThrowIfCancellationRequested();
-                await this.Credentials.ProcessHttpRequestAsync(_httpRequest, cancellationToken).ConfigureAwait(false);
+                await Credentials.ProcessHttpRequestAsync(_httpRequest, cancellationToken).ConfigureAwait(false);
             }
             // Send Request
             if (_shouldTrace)
@@ -825,7 +828,7 @@ namespace Microsoft.HealthVault.RestApi.Generated
                 ServiceClientTracing.SendRequest(_invocationId, _httpRequest);
             }
             cancellationToken.ThrowIfCancellationRequested();
-            _httpResponse = await this.HttpClient.SendAsync(_httpRequest, cancellationToken).ConfigureAwait(false);
+            _httpResponse = await HttpClient.SendAsync(_httpRequest, cancellationToken).ConfigureAwait(false);
             if (_shouldTrace)
             {
                 ServiceClientTracing.ReceiveResponse(_invocationId, _httpResponse);
@@ -839,7 +842,7 @@ namespace Microsoft.HealthVault.RestApi.Generated
                 try
                 {
                     _responseContent = await _httpResponse.Content.ReadAsStringAsync().ConfigureAwait(false);
-                    MicrosoftKhronosCloudCommonErrorsErrorResponse _errorBody =  SafeJsonConvert.DeserializeObject<MicrosoftKhronosCloudCommonErrorsErrorResponse>(_responseContent, this.DeserializationSettings);
+                    MicrosoftKhronosCloudCommonErrorsErrorResponse _errorBody =  SafeJsonConvert.DeserializeObject<MicrosoftKhronosCloudCommonErrorsErrorResponse>(_responseContent, DeserializationSettings);
                     if (_errorBody != null)
                     {
                         ex.Body = _errorBody;
@@ -872,7 +875,7 @@ namespace Microsoft.HealthVault.RestApi.Generated
                 _responseContent = await _httpResponse.Content.ReadAsStringAsync().ConfigureAwait(false);
                 try
                 {
-                    _result.Body = SafeJsonConvert.DeserializeObject<ActionPlansResponseActionPlanInstance>(_responseContent, this.DeserializationSettings);
+                    _result.Body = SafeJsonConvert.DeserializeObject<ActionPlansResponseActionPlanInstance>(_responseContent, DeserializationSettings);
                 }
                 catch (JsonException ex)
                 {
@@ -936,7 +939,7 @@ namespace Microsoft.HealthVault.RestApi.Generated
                 ServiceClientTracing.Enter(_invocationId, this, "GetActionPlanById", tracingParameters);
             }
             // Construct URL
-            var _baseUrl = this.BaseUri.AbsoluteUri;
+            var _baseUrl = BaseUri.AbsoluteUri;
             var _url = new System.Uri(new System.Uri(_baseUrl + (_baseUrl.EndsWith("/") ? "" : "/")), "ActionPlans/{actionPlanId}").ToString();
             _url = _url.Replace("{actionPlanId}", System.Uri.EscapeDataString(actionPlanId));
             // Create HTTP transport objects
@@ -962,10 +965,10 @@ namespace Microsoft.HealthVault.RestApi.Generated
             // Serialize Request
             string _requestContent = null;
             // Set Credentials
-            if (this.Credentials != null)
+            if (Credentials != null)
             {
                 cancellationToken.ThrowIfCancellationRequested();
-                await this.Credentials.ProcessHttpRequestAsync(_httpRequest, cancellationToken).ConfigureAwait(false);
+                await Credentials.ProcessHttpRequestAsync(_httpRequest, cancellationToken).ConfigureAwait(false);
             }
             // Send Request
             if (_shouldTrace)
@@ -973,7 +976,7 @@ namespace Microsoft.HealthVault.RestApi.Generated
                 ServiceClientTracing.SendRequest(_invocationId, _httpRequest);
             }
             cancellationToken.ThrowIfCancellationRequested();
-            _httpResponse = await this.HttpClient.SendAsync(_httpRequest, cancellationToken).ConfigureAwait(false);
+            _httpResponse = await HttpClient.SendAsync(_httpRequest, cancellationToken).ConfigureAwait(false);
             if (_shouldTrace)
             {
                 ServiceClientTracing.ReceiveResponse(_invocationId, _httpResponse);
@@ -987,7 +990,7 @@ namespace Microsoft.HealthVault.RestApi.Generated
                 try
                 {
                     _responseContent = await _httpResponse.Content.ReadAsStringAsync().ConfigureAwait(false);
-                    MicrosoftKhronosCloudCommonErrorsErrorResponse _errorBody =  SafeJsonConvert.DeserializeObject<MicrosoftKhronosCloudCommonErrorsErrorResponse>(_responseContent, this.DeserializationSettings);
+                    MicrosoftKhronosCloudCommonErrorsErrorResponse _errorBody =  SafeJsonConvert.DeserializeObject<MicrosoftKhronosCloudCommonErrorsErrorResponse>(_responseContent, DeserializationSettings);
                     if (_errorBody != null)
                     {
                         ex.Body = _errorBody;
@@ -1020,7 +1023,7 @@ namespace Microsoft.HealthVault.RestApi.Generated
                 _responseContent = await _httpResponse.Content.ReadAsStringAsync().ConfigureAwait(false);
                 try
                 {
-                    _result.Body = SafeJsonConvert.DeserializeObject<ActionPlanInstance>(_responseContent, this.DeserializationSettings);
+                    _result.Body = SafeJsonConvert.DeserializeObject<ActionPlanInstance>(_responseContent, DeserializationSettings);
                 }
                 catch (JsonException ex)
                 {
@@ -1084,7 +1087,7 @@ namespace Microsoft.HealthVault.RestApi.Generated
                 ServiceClientTracing.Enter(_invocationId, this, "DeleteActionPlan", tracingParameters);
             }
             // Construct URL
-            var _baseUrl = this.BaseUri.AbsoluteUri;
+            var _baseUrl = BaseUri.AbsoluteUri;
             var _url = new System.Uri(new System.Uri(_baseUrl + (_baseUrl.EndsWith("/") ? "" : "/")), "ActionPlans/{actionPlanId}").ToString();
             _url = _url.Replace("{actionPlanId}", System.Uri.EscapeDataString(actionPlanId));
             // Create HTTP transport objects
@@ -1110,10 +1113,10 @@ namespace Microsoft.HealthVault.RestApi.Generated
             // Serialize Request
             string _requestContent = null;
             // Set Credentials
-            if (this.Credentials != null)
+            if (Credentials != null)
             {
                 cancellationToken.ThrowIfCancellationRequested();
-                await this.Credentials.ProcessHttpRequestAsync(_httpRequest, cancellationToken).ConfigureAwait(false);
+                await Credentials.ProcessHttpRequestAsync(_httpRequest, cancellationToken).ConfigureAwait(false);
             }
             // Send Request
             if (_shouldTrace)
@@ -1121,7 +1124,7 @@ namespace Microsoft.HealthVault.RestApi.Generated
                 ServiceClientTracing.SendRequest(_invocationId, _httpRequest);
             }
             cancellationToken.ThrowIfCancellationRequested();
-            _httpResponse = await this.HttpClient.SendAsync(_httpRequest, cancellationToken).ConfigureAwait(false);
+            _httpResponse = await HttpClient.SendAsync(_httpRequest, cancellationToken).ConfigureAwait(false);
             if (_shouldTrace)
             {
                 ServiceClientTracing.ReceiveResponse(_invocationId, _httpResponse);
@@ -1135,7 +1138,7 @@ namespace Microsoft.HealthVault.RestApi.Generated
                 try
                 {
                     _responseContent = await _httpResponse.Content.ReadAsStringAsync().ConfigureAwait(false);
-                    MicrosoftKhronosCloudCommonErrorsErrorResponse _errorBody =  SafeJsonConvert.DeserializeObject<MicrosoftKhronosCloudCommonErrorsErrorResponse>(_responseContent, this.DeserializationSettings);
+                    MicrosoftKhronosCloudCommonErrorsErrorResponse _errorBody =  SafeJsonConvert.DeserializeObject<MicrosoftKhronosCloudCommonErrorsErrorResponse>(_responseContent, DeserializationSettings);
                     if (_errorBody != null)
                     {
                         ex.Body = _errorBody;
@@ -1168,7 +1171,7 @@ namespace Microsoft.HealthVault.RestApi.Generated
                 _responseContent = await _httpResponse.Content.ReadAsStringAsync().ConfigureAwait(false);
                 try
                 {
-                    _result.Body = SafeJsonConvert.DeserializeObject<object>(_responseContent, this.DeserializationSettings);
+                    _result.Body = SafeJsonConvert.DeserializeObject<object>(_responseContent, DeserializationSettings);
                 }
                 catch (JsonException ex)
                 {
@@ -1240,7 +1243,7 @@ namespace Microsoft.HealthVault.RestApi.Generated
                 ServiceClientTracing.Enter(_invocationId, this, "DeleteActionPlanObjective", tracingParameters);
             }
             // Construct URL
-            var _baseUrl = this.BaseUri.AbsoluteUri;
+            var _baseUrl = BaseUri.AbsoluteUri;
             var _url = new System.Uri(new System.Uri(_baseUrl + (_baseUrl.EndsWith("/") ? "" : "/")), "ActionPlans/{actionPlanId}/Objectives/{objectiveId}").ToString();
             _url = _url.Replace("{actionPlanId}", System.Uri.EscapeDataString(actionPlanId));
             _url = _url.Replace("{objectiveId}", System.Uri.EscapeDataString(objectiveId));
@@ -1267,10 +1270,10 @@ namespace Microsoft.HealthVault.RestApi.Generated
             // Serialize Request
             string _requestContent = null;
             // Set Credentials
-            if (this.Credentials != null)
+            if (Credentials != null)
             {
                 cancellationToken.ThrowIfCancellationRequested();
-                await this.Credentials.ProcessHttpRequestAsync(_httpRequest, cancellationToken).ConfigureAwait(false);
+                await Credentials.ProcessHttpRequestAsync(_httpRequest, cancellationToken).ConfigureAwait(false);
             }
             // Send Request
             if (_shouldTrace)
@@ -1278,7 +1281,7 @@ namespace Microsoft.HealthVault.RestApi.Generated
                 ServiceClientTracing.SendRequest(_invocationId, _httpRequest);
             }
             cancellationToken.ThrowIfCancellationRequested();
-            _httpResponse = await this.HttpClient.SendAsync(_httpRequest, cancellationToken).ConfigureAwait(false);
+            _httpResponse = await HttpClient.SendAsync(_httpRequest, cancellationToken).ConfigureAwait(false);
             if (_shouldTrace)
             {
                 ServiceClientTracing.ReceiveResponse(_invocationId, _httpResponse);
@@ -1292,7 +1295,7 @@ namespace Microsoft.HealthVault.RestApi.Generated
                 try
                 {
                     _responseContent = await _httpResponse.Content.ReadAsStringAsync().ConfigureAwait(false);
-                    MicrosoftKhronosCloudCommonErrorsErrorResponse _errorBody =  SafeJsonConvert.DeserializeObject<MicrosoftKhronosCloudCommonErrorsErrorResponse>(_responseContent, this.DeserializationSettings);
+                    MicrosoftKhronosCloudCommonErrorsErrorResponse _errorBody =  SafeJsonConvert.DeserializeObject<MicrosoftKhronosCloudCommonErrorsErrorResponse>(_responseContent, DeserializationSettings);
                     if (_errorBody != null)
                     {
                         ex.Body = _errorBody;
@@ -1325,7 +1328,7 @@ namespace Microsoft.HealthVault.RestApi.Generated
                 _responseContent = await _httpResponse.Content.ReadAsStringAsync().ConfigureAwait(false);
                 try
                 {
-                    _result.Body = SafeJsonConvert.DeserializeObject<object>(_responseContent, this.DeserializationSettings);
+                    _result.Body = SafeJsonConvert.DeserializeObject<object>(_responseContent, DeserializationSettings);
                 }
                 catch (JsonException ex)
                 {
@@ -1405,12 +1408,12 @@ namespace Microsoft.HealthVault.RestApi.Generated
                 ServiceClientTracing.Enter(_invocationId, this, "GetActionPlanAdherence", tracingParameters);
             }
             // Construct URL
-            var _baseUrl = this.BaseUri.AbsoluteUri;
+            var _baseUrl = BaseUri.AbsoluteUri;
             var _url = new System.Uri(new System.Uri(_baseUrl + (_baseUrl.EndsWith("/") ? "" : "/")), "ActionPlans/{actionPlanId}/Adherence").ToString();
             _url = _url.Replace("{actionPlanId}", System.Uri.EscapeDataString(actionPlanId));
             List<string> _queryParameters = new List<string>();
-            _queryParameters.Add(string.Format("startTime={0}", System.Uri.EscapeDataString(SafeJsonConvert.SerializeObject(startTime, this.SerializationSettings).Trim('"'))));
-            _queryParameters.Add(string.Format("endTime={0}", System.Uri.EscapeDataString(SafeJsonConvert.SerializeObject(endTime, this.SerializationSettings).Trim('"'))));
+            _queryParameters.Add(string.Format("startTime={0}", System.Uri.EscapeDataString(SafeJsonConvert.SerializeObject(startTime, SerializationSettings).Trim('"'))));
+            _queryParameters.Add(string.Format("endTime={0}", System.Uri.EscapeDataString(SafeJsonConvert.SerializeObject(endTime, SerializationSettings).Trim('"'))));
             if (objectiveId != null)
             {
                 _queryParameters.Add(string.Format("objectiveId={0}", System.Uri.EscapeDataString(objectiveId)));
@@ -1446,10 +1449,10 @@ namespace Microsoft.HealthVault.RestApi.Generated
             // Serialize Request
             string _requestContent = null;
             // Set Credentials
-            if (this.Credentials != null)
+            if (Credentials != null)
             {
                 cancellationToken.ThrowIfCancellationRequested();
-                await this.Credentials.ProcessHttpRequestAsync(_httpRequest, cancellationToken).ConfigureAwait(false);
+                await Credentials.ProcessHttpRequestAsync(_httpRequest, cancellationToken).ConfigureAwait(false);
             }
             // Send Request
             if (_shouldTrace)
@@ -1457,7 +1460,7 @@ namespace Microsoft.HealthVault.RestApi.Generated
                 ServiceClientTracing.SendRequest(_invocationId, _httpRequest);
             }
             cancellationToken.ThrowIfCancellationRequested();
-            _httpResponse = await this.HttpClient.SendAsync(_httpRequest, cancellationToken).ConfigureAwait(false);
+            _httpResponse = await HttpClient.SendAsync(_httpRequest, cancellationToken).ConfigureAwait(false);
             if (_shouldTrace)
             {
                 ServiceClientTracing.ReceiveResponse(_invocationId, _httpResponse);
@@ -1471,7 +1474,7 @@ namespace Microsoft.HealthVault.RestApi.Generated
                 try
                 {
                     _responseContent = await _httpResponse.Content.ReadAsStringAsync().ConfigureAwait(false);
-                    MicrosoftKhronosCloudCommonErrorsErrorResponse _errorBody =  SafeJsonConvert.DeserializeObject<MicrosoftKhronosCloudCommonErrorsErrorResponse>(_responseContent, this.DeserializationSettings);
+                    MicrosoftKhronosCloudCommonErrorsErrorResponse _errorBody =  SafeJsonConvert.DeserializeObject<MicrosoftKhronosCloudCommonErrorsErrorResponse>(_responseContent, DeserializationSettings);
                     if (_errorBody != null)
                     {
                         ex.Body = _errorBody;
@@ -1504,7 +1507,7 @@ namespace Microsoft.HealthVault.RestApi.Generated
                 _responseContent = await _httpResponse.Content.ReadAsStringAsync().ConfigureAwait(false);
                 try
                 {
-                    _result.Body = SafeJsonConvert.DeserializeObject<ActionPlanAdherenceSummary>(_responseContent, this.DeserializationSettings);
+                    _result.Body = SafeJsonConvert.DeserializeObject<ActionPlanAdherenceSummary>(_responseContent, DeserializationSettings);
                 }
                 catch (JsonException ex)
                 {
@@ -1563,7 +1566,7 @@ namespace Microsoft.HealthVault.RestApi.Generated
                 ServiceClientTracing.Enter(_invocationId, this, "GetActionPlanTasks", tracingParameters);
             }
             // Construct URL
-            var _baseUrl = this.BaseUri.AbsoluteUri;
+            var _baseUrl = BaseUri.AbsoluteUri;
             var _url = new System.Uri(new System.Uri(_baseUrl + (_baseUrl.EndsWith("/") ? "" : "/")), "ActionPlanTasks").ToString();
             List<string> _queryParameters = new List<string>();
             if (actionPlanTaskStatus != null)
@@ -1572,7 +1575,7 @@ namespace Microsoft.HealthVault.RestApi.Generated
             }
             if (maxPageSize != null)
             {
-                _queryParameters.Add(string.Format("maxPageSize={0}", System.Uri.EscapeDataString(SafeJsonConvert.SerializeObject(maxPageSize, this.SerializationSettings).Trim('"'))));
+                _queryParameters.Add(string.Format("maxPageSize={0}", System.Uri.EscapeDataString(SafeJsonConvert.SerializeObject(maxPageSize, SerializationSettings).Trim('"'))));
             }
             if (_queryParameters.Count > 0)
             {
@@ -1601,10 +1604,10 @@ namespace Microsoft.HealthVault.RestApi.Generated
             // Serialize Request
             string _requestContent = null;
             // Set Credentials
-            if (this.Credentials != null)
+            if (Credentials != null)
             {
                 cancellationToken.ThrowIfCancellationRequested();
-                await this.Credentials.ProcessHttpRequestAsync(_httpRequest, cancellationToken).ConfigureAwait(false);
+                await Credentials.ProcessHttpRequestAsync(_httpRequest, cancellationToken).ConfigureAwait(false);
             }
             // Send Request
             if (_shouldTrace)
@@ -1612,7 +1615,7 @@ namespace Microsoft.HealthVault.RestApi.Generated
                 ServiceClientTracing.SendRequest(_invocationId, _httpRequest);
             }
             cancellationToken.ThrowIfCancellationRequested();
-            _httpResponse = await this.HttpClient.SendAsync(_httpRequest, cancellationToken).ConfigureAwait(false);
+            _httpResponse = await HttpClient.SendAsync(_httpRequest, cancellationToken).ConfigureAwait(false);
             if (_shouldTrace)
             {
                 ServiceClientTracing.ReceiveResponse(_invocationId, _httpResponse);
@@ -1626,7 +1629,7 @@ namespace Microsoft.HealthVault.RestApi.Generated
                 try
                 {
                     _responseContent = await _httpResponse.Content.ReadAsStringAsync().ConfigureAwait(false);
-                    MicrosoftKhronosCloudCommonErrorsErrorResponse _errorBody =  SafeJsonConvert.DeserializeObject<MicrosoftKhronosCloudCommonErrorsErrorResponse>(_responseContent, this.DeserializationSettings);
+                    MicrosoftKhronosCloudCommonErrorsErrorResponse _errorBody =  SafeJsonConvert.DeserializeObject<MicrosoftKhronosCloudCommonErrorsErrorResponse>(_responseContent, DeserializationSettings);
                     if (_errorBody != null)
                     {
                         ex.Body = _errorBody;
@@ -1659,7 +1662,7 @@ namespace Microsoft.HealthVault.RestApi.Generated
                 _responseContent = await _httpResponse.Content.ReadAsStringAsync().ConfigureAwait(false);
                 try
                 {
-                    _result.Body = SafeJsonConvert.DeserializeObject<ActionPlanTasksResponseActionPlanTaskInstance>(_responseContent, this.DeserializationSettings);
+                    _result.Body = SafeJsonConvert.DeserializeObject<ActionPlanTasksResponseActionPlanTaskInstance>(_responseContent, DeserializationSettings);
                 }
                 catch (JsonException ex)
                 {
@@ -1722,7 +1725,7 @@ namespace Microsoft.HealthVault.RestApi.Generated
                 ServiceClientTracing.Enter(_invocationId, this, "PutActionPlanTasks", tracingParameters);
             }
             // Construct URL
-            var _baseUrl = this.BaseUri.AbsoluteUri;
+            var _baseUrl = BaseUri.AbsoluteUri;
             var _url = new System.Uri(new System.Uri(_baseUrl + (_baseUrl.EndsWith("/") ? "" : "/")), "ActionPlanTasks").ToString();
             // Create HTTP transport objects
             var _httpRequest = new HttpRequestMessage();
@@ -1748,15 +1751,15 @@ namespace Microsoft.HealthVault.RestApi.Generated
             string _requestContent = null;
             if(actionPlanTask != null)
             {
-                _requestContent = SafeJsonConvert.SerializeObject(actionPlanTask, this.SerializationSettings);
+                _requestContent = SafeJsonConvert.SerializeObject(actionPlanTask, SerializationSettings);
                 _httpRequest.Content = new StringContent(_requestContent, System.Text.Encoding.UTF8);
                 _httpRequest.Content.Headers.ContentType =System.Net.Http.Headers.MediaTypeHeaderValue.Parse("application/json; charset=utf-8");
             }
             // Set Credentials
-            if (this.Credentials != null)
+            if (Credentials != null)
             {
                 cancellationToken.ThrowIfCancellationRequested();
-                await this.Credentials.ProcessHttpRequestAsync(_httpRequest, cancellationToken).ConfigureAwait(false);
+                await Credentials.ProcessHttpRequestAsync(_httpRequest, cancellationToken).ConfigureAwait(false);
             }
             // Send Request
             if (_shouldTrace)
@@ -1764,7 +1767,7 @@ namespace Microsoft.HealthVault.RestApi.Generated
                 ServiceClientTracing.SendRequest(_invocationId, _httpRequest);
             }
             cancellationToken.ThrowIfCancellationRequested();
-            _httpResponse = await this.HttpClient.SendAsync(_httpRequest, cancellationToken).ConfigureAwait(false);
+            _httpResponse = await HttpClient.SendAsync(_httpRequest, cancellationToken).ConfigureAwait(false);
             if (_shouldTrace)
             {
                 ServiceClientTracing.ReceiveResponse(_invocationId, _httpResponse);
@@ -1778,7 +1781,7 @@ namespace Microsoft.HealthVault.RestApi.Generated
                 try
                 {
                     _responseContent = await _httpResponse.Content.ReadAsStringAsync().ConfigureAwait(false);
-                    MicrosoftKhronosCloudCommonErrorsErrorResponse _errorBody =  SafeJsonConvert.DeserializeObject<MicrosoftKhronosCloudCommonErrorsErrorResponse>(_responseContent, this.DeserializationSettings);
+                    MicrosoftKhronosCloudCommonErrorsErrorResponse _errorBody =  SafeJsonConvert.DeserializeObject<MicrosoftKhronosCloudCommonErrorsErrorResponse>(_responseContent, DeserializationSettings);
                     if (_errorBody != null)
                     {
                         ex.Body = _errorBody;
@@ -1811,7 +1814,7 @@ namespace Microsoft.HealthVault.RestApi.Generated
                 _responseContent = await _httpResponse.Content.ReadAsStringAsync().ConfigureAwait(false);
                 try
                 {
-                    _result.Body = SafeJsonConvert.DeserializeObject<ActionPlanTasksResponseActionPlanTaskInstance>(_responseContent, this.DeserializationSettings);
+                    _result.Body = SafeJsonConvert.DeserializeObject<ActionPlanTasksResponseActionPlanTaskInstance>(_responseContent, DeserializationSettings);
                 }
                 catch (JsonException ex)
                 {
@@ -1874,7 +1877,7 @@ namespace Microsoft.HealthVault.RestApi.Generated
                 ServiceClientTracing.Enter(_invocationId, this, "PostActionPlanTasks", tracingParameters);
             }
             // Construct URL
-            var _baseUrl = this.BaseUri.AbsoluteUri;
+            var _baseUrl = BaseUri.AbsoluteUri;
             var _url = new System.Uri(new System.Uri(_baseUrl + (_baseUrl.EndsWith("/") ? "" : "/")), "ActionPlanTasks").ToString();
             // Create HTTP transport objects
             var _httpRequest = new HttpRequestMessage();
@@ -1900,15 +1903,15 @@ namespace Microsoft.HealthVault.RestApi.Generated
             string _requestContent = null;
             if(actionPlanTask != null)
             {
-                _requestContent = SafeJsonConvert.SerializeObject(actionPlanTask, this.SerializationSettings);
+                _requestContent = SafeJsonConvert.SerializeObject(actionPlanTask, SerializationSettings);
                 _httpRequest.Content = new StringContent(_requestContent, System.Text.Encoding.UTF8);
                 _httpRequest.Content.Headers.ContentType =System.Net.Http.Headers.MediaTypeHeaderValue.Parse("application/json; charset=utf-8");
             }
             // Set Credentials
-            if (this.Credentials != null)
+            if (Credentials != null)
             {
                 cancellationToken.ThrowIfCancellationRequested();
-                await this.Credentials.ProcessHttpRequestAsync(_httpRequest, cancellationToken).ConfigureAwait(false);
+                await Credentials.ProcessHttpRequestAsync(_httpRequest, cancellationToken).ConfigureAwait(false);
             }
             // Send Request
             if (_shouldTrace)
@@ -1916,7 +1919,7 @@ namespace Microsoft.HealthVault.RestApi.Generated
                 ServiceClientTracing.SendRequest(_invocationId, _httpRequest);
             }
             cancellationToken.ThrowIfCancellationRequested();
-            _httpResponse = await this.HttpClient.SendAsync(_httpRequest, cancellationToken).ConfigureAwait(false);
+            _httpResponse = await HttpClient.SendAsync(_httpRequest, cancellationToken).ConfigureAwait(false);
             if (_shouldTrace)
             {
                 ServiceClientTracing.ReceiveResponse(_invocationId, _httpResponse);
@@ -1930,7 +1933,7 @@ namespace Microsoft.HealthVault.RestApi.Generated
                 try
                 {
                     _responseContent = await _httpResponse.Content.ReadAsStringAsync().ConfigureAwait(false);
-                    MicrosoftKhronosCloudCommonErrorsErrorResponse _errorBody =  SafeJsonConvert.DeserializeObject<MicrosoftKhronosCloudCommonErrorsErrorResponse>(_responseContent, this.DeserializationSettings);
+                    MicrosoftKhronosCloudCommonErrorsErrorResponse _errorBody =  SafeJsonConvert.DeserializeObject<MicrosoftKhronosCloudCommonErrorsErrorResponse>(_responseContent, DeserializationSettings);
                     if (_errorBody != null)
                     {
                         ex.Body = _errorBody;
@@ -1963,7 +1966,7 @@ namespace Microsoft.HealthVault.RestApi.Generated
                 _responseContent = await _httpResponse.Content.ReadAsStringAsync().ConfigureAwait(false);
                 try
                 {
-                    _result.Body = SafeJsonConvert.DeserializeObject<object>(_responseContent, this.DeserializationSettings);
+                    _result.Body = SafeJsonConvert.DeserializeObject<object>(_responseContent, DeserializationSettings);
                 }
                 catch (JsonException ex)
                 {
@@ -1981,7 +1984,7 @@ namespace Microsoft.HealthVault.RestApi.Generated
                 _responseContent = await _httpResponse.Content.ReadAsStringAsync().ConfigureAwait(false);
                 try
                 {
-                    _result.Body = SafeJsonConvert.DeserializeObject<ActionPlanTasksResponseActionPlanTaskInstance>(_responseContent, this.DeserializationSettings);
+                    _result.Body = SafeJsonConvert.DeserializeObject<ActionPlanTasksResponseActionPlanTaskInstance>(_responseContent, DeserializationSettings);
                 }
                 catch (JsonException ex)
                 {
@@ -2044,7 +2047,7 @@ namespace Microsoft.HealthVault.RestApi.Generated
                 ServiceClientTracing.Enter(_invocationId, this, "PatchActionPlanTasks", tracingParameters);
             }
             // Construct URL
-            var _baseUrl = this.BaseUri.AbsoluteUri;
+            var _baseUrl = BaseUri.AbsoluteUri;
             var _url = new System.Uri(new System.Uri(_baseUrl + (_baseUrl.EndsWith("/") ? "" : "/")), "ActionPlanTasks").ToString();
             // Create HTTP transport objects
             var _httpRequest = new HttpRequestMessage();
@@ -2070,15 +2073,15 @@ namespace Microsoft.HealthVault.RestApi.Generated
             string _requestContent = null;
             if(actionPlanTask != null)
             {
-                _requestContent = SafeJsonConvert.SerializeObject(actionPlanTask, this.SerializationSettings);
+                _requestContent = SafeJsonConvert.SerializeObject(actionPlanTask, SerializationSettings);
                 _httpRequest.Content = new StringContent(_requestContent, System.Text.Encoding.UTF8);
                 _httpRequest.Content.Headers.ContentType =System.Net.Http.Headers.MediaTypeHeaderValue.Parse("application/json; charset=utf-8");
             }
             // Set Credentials
-            if (this.Credentials != null)
+            if (Credentials != null)
             {
                 cancellationToken.ThrowIfCancellationRequested();
-                await this.Credentials.ProcessHttpRequestAsync(_httpRequest, cancellationToken).ConfigureAwait(false);
+                await Credentials.ProcessHttpRequestAsync(_httpRequest, cancellationToken).ConfigureAwait(false);
             }
             // Send Request
             if (_shouldTrace)
@@ -2086,7 +2089,7 @@ namespace Microsoft.HealthVault.RestApi.Generated
                 ServiceClientTracing.SendRequest(_invocationId, _httpRequest);
             }
             cancellationToken.ThrowIfCancellationRequested();
-            _httpResponse = await this.HttpClient.SendAsync(_httpRequest, cancellationToken).ConfigureAwait(false);
+            _httpResponse = await HttpClient.SendAsync(_httpRequest, cancellationToken).ConfigureAwait(false);
             if (_shouldTrace)
             {
                 ServiceClientTracing.ReceiveResponse(_invocationId, _httpResponse);
@@ -2100,7 +2103,7 @@ namespace Microsoft.HealthVault.RestApi.Generated
                 try
                 {
                     _responseContent = await _httpResponse.Content.ReadAsStringAsync().ConfigureAwait(false);
-                    MicrosoftKhronosCloudCommonErrorsErrorResponse _errorBody =  SafeJsonConvert.DeserializeObject<MicrosoftKhronosCloudCommonErrorsErrorResponse>(_responseContent, this.DeserializationSettings);
+                    MicrosoftKhronosCloudCommonErrorsErrorResponse _errorBody =  SafeJsonConvert.DeserializeObject<MicrosoftKhronosCloudCommonErrorsErrorResponse>(_responseContent, DeserializationSettings);
                     if (_errorBody != null)
                     {
                         ex.Body = _errorBody;
@@ -2133,7 +2136,7 @@ namespace Microsoft.HealthVault.RestApi.Generated
                 _responseContent = await _httpResponse.Content.ReadAsStringAsync().ConfigureAwait(false);
                 try
                 {
-                    _result.Body = SafeJsonConvert.DeserializeObject<ActionPlanTasksResponseActionPlanTaskInstance>(_responseContent, this.DeserializationSettings);
+                    _result.Body = SafeJsonConvert.DeserializeObject<ActionPlanTasksResponseActionPlanTaskInstance>(_responseContent, DeserializationSettings);
                 }
                 catch (JsonException ex)
                 {
@@ -2178,7 +2181,7 @@ namespace Microsoft.HealthVault.RestApi.Generated
         /// <return>
         /// A response object containing the response body and response headers.
         /// </return>
-        public async Task<HttpOperationResponse<ActionPlanTaskInstance>> GetActionPlanTasksByIdWithHttpMessagesAsync(string actionPlanTaskId, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<HttpOperationResponse<ActionPlanTaskInstance>> GetActionPlanTaskByIdWithHttpMessagesAsync(string actionPlanTaskId, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
         {
             if (actionPlanTaskId == null)
             {
@@ -2193,10 +2196,10 @@ namespace Microsoft.HealthVault.RestApi.Generated
                 Dictionary<string, object> tracingParameters = new Dictionary<string, object>();
                 tracingParameters.Add("actionPlanTaskId", actionPlanTaskId);
                 tracingParameters.Add("cancellationToken", cancellationToken);
-                ServiceClientTracing.Enter(_invocationId, this, "GetActionPlanTasksById", tracingParameters);
+                ServiceClientTracing.Enter(_invocationId, this, "GetActionPlanTaskById", tracingParameters);
             }
             // Construct URL
-            var _baseUrl = this.BaseUri.AbsoluteUri;
+            var _baseUrl = BaseUri.AbsoluteUri;
             var _url = new System.Uri(new System.Uri(_baseUrl + (_baseUrl.EndsWith("/") ? "" : "/")), "ActionPlanTasks/{actionPlanTaskId}").ToString();
             _url = _url.Replace("{actionPlanTaskId}", System.Uri.EscapeDataString(actionPlanTaskId));
             // Create HTTP transport objects
@@ -2222,10 +2225,10 @@ namespace Microsoft.HealthVault.RestApi.Generated
             // Serialize Request
             string _requestContent = null;
             // Set Credentials
-            if (this.Credentials != null)
+            if (Credentials != null)
             {
                 cancellationToken.ThrowIfCancellationRequested();
-                await this.Credentials.ProcessHttpRequestAsync(_httpRequest, cancellationToken).ConfigureAwait(false);
+                await Credentials.ProcessHttpRequestAsync(_httpRequest, cancellationToken).ConfigureAwait(false);
             }
             // Send Request
             if (_shouldTrace)
@@ -2233,7 +2236,7 @@ namespace Microsoft.HealthVault.RestApi.Generated
                 ServiceClientTracing.SendRequest(_invocationId, _httpRequest);
             }
             cancellationToken.ThrowIfCancellationRequested();
-            _httpResponse = await this.HttpClient.SendAsync(_httpRequest, cancellationToken).ConfigureAwait(false);
+            _httpResponse = await HttpClient.SendAsync(_httpRequest, cancellationToken).ConfigureAwait(false);
             if (_shouldTrace)
             {
                 ServiceClientTracing.ReceiveResponse(_invocationId, _httpResponse);
@@ -2247,7 +2250,7 @@ namespace Microsoft.HealthVault.RestApi.Generated
                 try
                 {
                     _responseContent = await _httpResponse.Content.ReadAsStringAsync().ConfigureAwait(false);
-                    MicrosoftKhronosCloudCommonErrorsErrorResponse _errorBody =  SafeJsonConvert.DeserializeObject<MicrosoftKhronosCloudCommonErrorsErrorResponse>(_responseContent, this.DeserializationSettings);
+                    MicrosoftKhronosCloudCommonErrorsErrorResponse _errorBody =  SafeJsonConvert.DeserializeObject<MicrosoftKhronosCloudCommonErrorsErrorResponse>(_responseContent, DeserializationSettings);
                     if (_errorBody != null)
                     {
                         ex.Body = _errorBody;
@@ -2343,7 +2346,7 @@ namespace Microsoft.HealthVault.RestApi.Generated
                 ServiceClientTracing.Enter(_invocationId, this, "DeleteActionPlanTasksById", tracingParameters);
             }
             // Construct URL
-            var _baseUrl = this.BaseUri.AbsoluteUri;
+            var _baseUrl = BaseUri.AbsoluteUri;
             var _url = new System.Uri(new System.Uri(_baseUrl + (_baseUrl.EndsWith("/") ? "" : "/")), "ActionPlanTasks/{actionPlanTaskId}").ToString();
             _url = _url.Replace("{actionPlanTaskId}", System.Uri.EscapeDataString(actionPlanTaskId));
             // Create HTTP transport objects
@@ -2369,10 +2372,10 @@ namespace Microsoft.HealthVault.RestApi.Generated
             // Serialize Request
             string _requestContent = null;
             // Set Credentials
-            if (this.Credentials != null)
+            if (Credentials != null)
             {
                 cancellationToken.ThrowIfCancellationRequested();
-                await this.Credentials.ProcessHttpRequestAsync(_httpRequest, cancellationToken).ConfigureAwait(false);
+                await Credentials.ProcessHttpRequestAsync(_httpRequest, cancellationToken).ConfigureAwait(false);
             }
             // Send Request
             if (_shouldTrace)
@@ -2380,7 +2383,7 @@ namespace Microsoft.HealthVault.RestApi.Generated
                 ServiceClientTracing.SendRequest(_invocationId, _httpRequest);
             }
             cancellationToken.ThrowIfCancellationRequested();
-            _httpResponse = await this.HttpClient.SendAsync(_httpRequest, cancellationToken).ConfigureAwait(false);
+            _httpResponse = await HttpClient.SendAsync(_httpRequest, cancellationToken).ConfigureAwait(false);
             if (_shouldTrace)
             {
                 ServiceClientTracing.ReceiveResponse(_invocationId, _httpResponse);
@@ -2394,7 +2397,7 @@ namespace Microsoft.HealthVault.RestApi.Generated
                 try
                 {
                     _responseContent = await _httpResponse.Content.ReadAsStringAsync().ConfigureAwait(false);
-                    MicrosoftKhronosCloudCommonErrorsErrorResponse _errorBody =  SafeJsonConvert.DeserializeObject<MicrosoftKhronosCloudCommonErrorsErrorResponse>(_responseContent, this.DeserializationSettings);
+                    MicrosoftKhronosCloudCommonErrorsErrorResponse _errorBody =  SafeJsonConvert.DeserializeObject<MicrosoftKhronosCloudCommonErrorsErrorResponse>(_responseContent, DeserializationSettings);
                     if (_errorBody != null)
                     {
                         ex.Body = _errorBody;
@@ -2427,7 +2430,7 @@ namespace Microsoft.HealthVault.RestApi.Generated
                 _responseContent = await _httpResponse.Content.ReadAsStringAsync().ConfigureAwait(false);
                 try
                 {
-                    _result.Body = SafeJsonConvert.DeserializeObject<object>(_responseContent, this.DeserializationSettings);
+                    _result.Body = SafeJsonConvert.DeserializeObject<object>(_responseContent, DeserializationSettings);
                 }
                 catch (JsonException ex)
                 {
@@ -2487,7 +2490,7 @@ namespace Microsoft.HealthVault.RestApi.Generated
                 ServiceClientTracing.Enter(_invocationId, this, "ValidateActionPlanTasksTracking", tracingParameters);
             }
             // Construct URL
-            var _baseUrl = this.BaseUri.AbsoluteUri;
+            var _baseUrl = BaseUri.AbsoluteUri;
             var _url = new System.Uri(new System.Uri(_baseUrl + (_baseUrl.EndsWith("/") ? "" : "/")), "ActionPlanTasks/ValidateTracking").ToString();
             // Create HTTP transport objects
             var _httpRequest = new HttpRequestMessage();
@@ -2513,15 +2516,15 @@ namespace Microsoft.HealthVault.RestApi.Generated
             string _requestContent = null;
             if(trackingValidation != null)
             {
-                _requestContent = SafeJsonConvert.SerializeObject(trackingValidation, this.SerializationSettings);
+                _requestContent = SafeJsonConvert.SerializeObject(trackingValidation, SerializationSettings);
                 _httpRequest.Content = new StringContent(_requestContent, System.Text.Encoding.UTF8);
                 _httpRequest.Content.Headers.ContentType =System.Net.Http.Headers.MediaTypeHeaderValue.Parse("application/json; charset=utf-8");
             }
             // Set Credentials
-            if (this.Credentials != null)
+            if (Credentials != null)
             {
                 cancellationToken.ThrowIfCancellationRequested();
-                await this.Credentials.ProcessHttpRequestAsync(_httpRequest, cancellationToken).ConfigureAwait(false);
+                await Credentials.ProcessHttpRequestAsync(_httpRequest, cancellationToken).ConfigureAwait(false);
             }
             // Send Request
             if (_shouldTrace)
@@ -2529,7 +2532,7 @@ namespace Microsoft.HealthVault.RestApi.Generated
                 ServiceClientTracing.SendRequest(_invocationId, _httpRequest);
             }
             cancellationToken.ThrowIfCancellationRequested();
-            _httpResponse = await this.HttpClient.SendAsync(_httpRequest, cancellationToken).ConfigureAwait(false);
+            _httpResponse = await HttpClient.SendAsync(_httpRequest, cancellationToken).ConfigureAwait(false);
             if (_shouldTrace)
             {
                 ServiceClientTracing.ReceiveResponse(_invocationId, _httpResponse);
@@ -2543,7 +2546,7 @@ namespace Microsoft.HealthVault.RestApi.Generated
                 try
                 {
                     _responseContent = await _httpResponse.Content.ReadAsStringAsync().ConfigureAwait(false);
-                    MicrosoftKhronosCloudCommonErrorsErrorResponse _errorBody =  SafeJsonConvert.DeserializeObject<MicrosoftKhronosCloudCommonErrorsErrorResponse>(_responseContent, this.DeserializationSettings);
+                    MicrosoftKhronosCloudCommonErrorsErrorResponse _errorBody =  SafeJsonConvert.DeserializeObject<MicrosoftKhronosCloudCommonErrorsErrorResponse>(_responseContent, DeserializationSettings);
                     if (_errorBody != null)
                     {
                         ex.Body = _errorBody;
@@ -2576,7 +2579,7 @@ namespace Microsoft.HealthVault.RestApi.Generated
                 _responseContent = await _httpResponse.Content.ReadAsStringAsync().ConfigureAwait(false);
                 try
                 {
-                    _result.Body = SafeJsonConvert.DeserializeObject<ActionPlanTaskTrackingResponseActionPlanTaskTracking>(_responseContent, this.DeserializationSettings);
+                    _result.Body = SafeJsonConvert.DeserializeObject<ActionPlanTaskTrackingResponseActionPlanTaskTracking>(_responseContent, DeserializationSettings);
                 }
                 catch (JsonException ex)
                 {
@@ -2642,7 +2645,7 @@ namespace Microsoft.HealthVault.RestApi.Generated
                 ServiceClientTracing.Enter(_invocationId, this, "GetGoals", tracingParameters);
             }
             // Construct URL
-            var _baseUrl = this.BaseUri.AbsoluteUri;
+            var _baseUrl = BaseUri.AbsoluteUri;
             var _url = new System.Uri(new System.Uri(_baseUrl + (_baseUrl.EndsWith("/") ? "" : "/")), "Goals").ToString();
             List<string> _queryParameters = new List<string>();
             if (types != null)
@@ -2655,11 +2658,11 @@ namespace Microsoft.HealthVault.RestApi.Generated
             }
             if (startDate != null)
             {
-                _queryParameters.Add(string.Format("startDate={0}", System.Uri.EscapeDataString(SafeJsonConvert.SerializeObject(startDate, this.SerializationSettings).Trim('"'))));
+                _queryParameters.Add(string.Format("startDate={0}", System.Uri.EscapeDataString(SafeJsonConvert.SerializeObject(startDate, SerializationSettings).Trim('"'))));
             }
             if (endDate != null)
             {
-                _queryParameters.Add(string.Format("endDate={0}", System.Uri.EscapeDataString(SafeJsonConvert.SerializeObject(endDate, this.SerializationSettings).Trim('"'))));
+                _queryParameters.Add(string.Format("endDate={0}", System.Uri.EscapeDataString(SafeJsonConvert.SerializeObject(endDate, SerializationSettings).Trim('"'))));
             }
             if (_queryParameters.Count > 0)
             {
@@ -2688,10 +2691,10 @@ namespace Microsoft.HealthVault.RestApi.Generated
             // Serialize Request
             string _requestContent = null;
             // Set Credentials
-            if (this.Credentials != null)
+            if (Credentials != null)
             {
                 cancellationToken.ThrowIfCancellationRequested();
-                await this.Credentials.ProcessHttpRequestAsync(_httpRequest, cancellationToken).ConfigureAwait(false);
+                await Credentials.ProcessHttpRequestAsync(_httpRequest, cancellationToken).ConfigureAwait(false);
             }
             // Send Request
             if (_shouldTrace)
@@ -2699,7 +2702,7 @@ namespace Microsoft.HealthVault.RestApi.Generated
                 ServiceClientTracing.SendRequest(_invocationId, _httpRequest);
             }
             cancellationToken.ThrowIfCancellationRequested();
-            _httpResponse = await this.HttpClient.SendAsync(_httpRequest, cancellationToken).ConfigureAwait(false);
+            _httpResponse = await HttpClient.SendAsync(_httpRequest, cancellationToken).ConfigureAwait(false);
             if (_shouldTrace)
             {
                 ServiceClientTracing.ReceiveResponse(_invocationId, _httpResponse);
@@ -2713,7 +2716,7 @@ namespace Microsoft.HealthVault.RestApi.Generated
                 try
                 {
                     _responseContent = await _httpResponse.Content.ReadAsStringAsync().ConfigureAwait(false);
-                    MicrosoftKhronosCloudCommonErrorsErrorResponse _errorBody =  SafeJsonConvert.DeserializeObject<MicrosoftKhronosCloudCommonErrorsErrorResponse>(_responseContent, this.DeserializationSettings);
+                    MicrosoftKhronosCloudCommonErrorsErrorResponse _errorBody =  SafeJsonConvert.DeserializeObject<MicrosoftKhronosCloudCommonErrorsErrorResponse>(_responseContent, DeserializationSettings);
                     if (_errorBody != null)
                     {
                         ex.Body = _errorBody;
@@ -2746,7 +2749,7 @@ namespace Microsoft.HealthVault.RestApi.Generated
                 _responseContent = await _httpResponse.Content.ReadAsStringAsync().ConfigureAwait(false);
                 try
                 {
-                    _result.Body = SafeJsonConvert.DeserializeObject<GoalsResponse>(_responseContent, this.DeserializationSettings);
+                    _result.Body = SafeJsonConvert.DeserializeObject<GoalsResponse>(_responseContent, DeserializationSettings);
                 }
                 catch (JsonException ex)
                 {
@@ -2811,7 +2814,7 @@ namespace Microsoft.HealthVault.RestApi.Generated
                 ServiceClientTracing.Enter(_invocationId, this, "PutGoal", tracingParameters);
             }
             // Construct URL
-            var _baseUrl = this.BaseUri.AbsoluteUri;
+            var _baseUrl = BaseUri.AbsoluteUri;
             var _url = new System.Uri(new System.Uri(_baseUrl + (_baseUrl.EndsWith("/") ? "" : "/")), "Goals").ToString();
             // Create HTTP transport objects
             var _httpRequest = new HttpRequestMessage();
@@ -2837,15 +2840,15 @@ namespace Microsoft.HealthVault.RestApi.Generated
             string _requestContent = null;
             if(goal != null)
             {
-                _requestContent = SafeJsonConvert.SerializeObject(goal, this.SerializationSettings);
+                _requestContent = SafeJsonConvert.SerializeObject(goal, SerializationSettings);
                 _httpRequest.Content = new StringContent(_requestContent, System.Text.Encoding.UTF8);
                 _httpRequest.Content.Headers.ContentType =System.Net.Http.Headers.MediaTypeHeaderValue.Parse("application/json; charset=utf-8");
             }
             // Set Credentials
-            if (this.Credentials != null)
+            if (Credentials != null)
             {
                 cancellationToken.ThrowIfCancellationRequested();
-                await this.Credentials.ProcessHttpRequestAsync(_httpRequest, cancellationToken).ConfigureAwait(false);
+                await Credentials.ProcessHttpRequestAsync(_httpRequest, cancellationToken).ConfigureAwait(false);
             }
             // Send Request
             if (_shouldTrace)
@@ -2853,7 +2856,7 @@ namespace Microsoft.HealthVault.RestApi.Generated
                 ServiceClientTracing.SendRequest(_invocationId, _httpRequest);
             }
             cancellationToken.ThrowIfCancellationRequested();
-            _httpResponse = await this.HttpClient.SendAsync(_httpRequest, cancellationToken).ConfigureAwait(false);
+            _httpResponse = await HttpClient.SendAsync(_httpRequest, cancellationToken).ConfigureAwait(false);
             if (_shouldTrace)
             {
                 ServiceClientTracing.ReceiveResponse(_invocationId, _httpResponse);
@@ -2867,7 +2870,7 @@ namespace Microsoft.HealthVault.RestApi.Generated
                 try
                 {
                     _responseContent = await _httpResponse.Content.ReadAsStringAsync().ConfigureAwait(false);
-                    MicrosoftKhronosCloudCommonErrorsErrorResponse _errorBody =  SafeJsonConvert.DeserializeObject<MicrosoftKhronosCloudCommonErrorsErrorResponse>(_responseContent, this.DeserializationSettings);
+                    MicrosoftKhronosCloudCommonErrorsErrorResponse _errorBody =  SafeJsonConvert.DeserializeObject<MicrosoftKhronosCloudCommonErrorsErrorResponse>(_responseContent, DeserializationSettings);
                     if (_errorBody != null)
                     {
                         ex.Body = _errorBody;
@@ -2900,7 +2903,7 @@ namespace Microsoft.HealthVault.RestApi.Generated
                 _responseContent = await _httpResponse.Content.ReadAsStringAsync().ConfigureAwait(false);
                 try
                 {
-                    _result.Body = SafeJsonConvert.DeserializeObject<Goal>(_responseContent, this.DeserializationSettings);
+                    _result.Body = SafeJsonConvert.DeserializeObject<Goal>(_responseContent, DeserializationSettings);
                 }
                 catch (JsonException ex)
                 {
@@ -2964,7 +2967,7 @@ namespace Microsoft.HealthVault.RestApi.Generated
                 ServiceClientTracing.Enter(_invocationId, this, "CreateGoals", tracingParameters);
             }
             // Construct URL
-            var _baseUrl = this.BaseUri.AbsoluteUri;
+            var _baseUrl = BaseUri.AbsoluteUri;
             var _url = new System.Uri(new System.Uri(_baseUrl + (_baseUrl.EndsWith("/") ? "" : "/")), "Goals").ToString();
             // Create HTTP transport objects
             var _httpRequest = new HttpRequestMessage();
@@ -2990,15 +2993,15 @@ namespace Microsoft.HealthVault.RestApi.Generated
             string _requestContent = null;
             if(goalsWrapper != null)
             {
-                _requestContent = SafeJsonConvert.SerializeObject(goalsWrapper, this.SerializationSettings);
+                _requestContent = SafeJsonConvert.SerializeObject(goalsWrapper, SerializationSettings);
                 _httpRequest.Content = new StringContent(_requestContent, System.Text.Encoding.UTF8);
                 _httpRequest.Content.Headers.ContentType =System.Net.Http.Headers.MediaTypeHeaderValue.Parse("application/json; charset=utf-8");
             }
             // Set Credentials
-            if (this.Credentials != null)
+            if (Credentials != null)
             {
                 cancellationToken.ThrowIfCancellationRequested();
-                await this.Credentials.ProcessHttpRequestAsync(_httpRequest, cancellationToken).ConfigureAwait(false);
+                await Credentials.ProcessHttpRequestAsync(_httpRequest, cancellationToken).ConfigureAwait(false);
             }
             // Send Request
             if (_shouldTrace)
@@ -3006,7 +3009,7 @@ namespace Microsoft.HealthVault.RestApi.Generated
                 ServiceClientTracing.SendRequest(_invocationId, _httpRequest);
             }
             cancellationToken.ThrowIfCancellationRequested();
-            _httpResponse = await this.HttpClient.SendAsync(_httpRequest, cancellationToken).ConfigureAwait(false);
+            _httpResponse = await HttpClient.SendAsync(_httpRequest, cancellationToken).ConfigureAwait(false);
             if (_shouldTrace)
             {
                 ServiceClientTracing.ReceiveResponse(_invocationId, _httpResponse);
@@ -3020,7 +3023,7 @@ namespace Microsoft.HealthVault.RestApi.Generated
                 try
                 {
                     _responseContent = await _httpResponse.Content.ReadAsStringAsync().ConfigureAwait(false);
-                    MicrosoftKhronosCloudCommonErrorsErrorResponse _errorBody =  SafeJsonConvert.DeserializeObject<MicrosoftKhronosCloudCommonErrorsErrorResponse>(_responseContent, this.DeserializationSettings);
+                    MicrosoftKhronosCloudCommonErrorsErrorResponse _errorBody =  SafeJsonConvert.DeserializeObject<MicrosoftKhronosCloudCommonErrorsErrorResponse>(_responseContent, DeserializationSettings);
                     if (_errorBody != null)
                     {
                         ex.Body = _errorBody;
@@ -3053,7 +3056,7 @@ namespace Microsoft.HealthVault.RestApi.Generated
                 _responseContent = await _httpResponse.Content.ReadAsStringAsync().ConfigureAwait(false);
                 try
                 {
-                    _result.Body = SafeJsonConvert.DeserializeObject<object>(_responseContent, this.DeserializationSettings);
+                    _result.Body = SafeJsonConvert.DeserializeObject<object>(_responseContent, DeserializationSettings);
                 }
                 catch (JsonException ex)
                 {
@@ -3071,7 +3074,7 @@ namespace Microsoft.HealthVault.RestApi.Generated
                 _responseContent = await _httpResponse.Content.ReadAsStringAsync().ConfigureAwait(false);
                 try
                 {
-                    _result.Body = SafeJsonConvert.DeserializeObject<GoalsResponse>(_responseContent, this.DeserializationSettings);
+                    _result.Body = SafeJsonConvert.DeserializeObject<GoalsResponse>(_responseContent, DeserializationSettings);
                 }
                 catch (JsonException ex)
                 {
@@ -3137,7 +3140,7 @@ namespace Microsoft.HealthVault.RestApi.Generated
                 ServiceClientTracing.Enter(_invocationId, this, "PatchGoals", tracingParameters);
             }
             // Construct URL
-            var _baseUrl = this.BaseUri.AbsoluteUri;
+            var _baseUrl = BaseUri.AbsoluteUri;
             var _url = new System.Uri(new System.Uri(_baseUrl + (_baseUrl.EndsWith("/") ? "" : "/")), "Goals").ToString();
             // Create HTTP transport objects
             var _httpRequest = new HttpRequestMessage();
@@ -3163,15 +3166,15 @@ namespace Microsoft.HealthVault.RestApi.Generated
             string _requestContent = null;
             if(goalsWrapper != null)
             {
-                _requestContent = SafeJsonConvert.SerializeObject(goalsWrapper, this.SerializationSettings);
+                _requestContent = SafeJsonConvert.SerializeObject(goalsWrapper, SerializationSettings);
                 _httpRequest.Content = new StringContent(_requestContent, System.Text.Encoding.UTF8);
                 _httpRequest.Content.Headers.ContentType =System.Net.Http.Headers.MediaTypeHeaderValue.Parse("application/json; charset=utf-8");
             }
             // Set Credentials
-            if (this.Credentials != null)
+            if (Credentials != null)
             {
                 cancellationToken.ThrowIfCancellationRequested();
-                await this.Credentials.ProcessHttpRequestAsync(_httpRequest, cancellationToken).ConfigureAwait(false);
+                await Credentials.ProcessHttpRequestAsync(_httpRequest, cancellationToken).ConfigureAwait(false);
             }
             // Send Request
             if (_shouldTrace)
@@ -3179,7 +3182,7 @@ namespace Microsoft.HealthVault.RestApi.Generated
                 ServiceClientTracing.SendRequest(_invocationId, _httpRequest);
             }
             cancellationToken.ThrowIfCancellationRequested();
-            _httpResponse = await this.HttpClient.SendAsync(_httpRequest, cancellationToken).ConfigureAwait(false);
+            _httpResponse = await HttpClient.SendAsync(_httpRequest, cancellationToken).ConfigureAwait(false);
             if (_shouldTrace)
             {
                 ServiceClientTracing.ReceiveResponse(_invocationId, _httpResponse);
@@ -3193,7 +3196,7 @@ namespace Microsoft.HealthVault.RestApi.Generated
                 try
                 {
                     _responseContent = await _httpResponse.Content.ReadAsStringAsync().ConfigureAwait(false);
-                    MicrosoftKhronosCloudCommonErrorsErrorResponse _errorBody =  SafeJsonConvert.DeserializeObject<MicrosoftKhronosCloudCommonErrorsErrorResponse>(_responseContent, this.DeserializationSettings);
+                    MicrosoftKhronosCloudCommonErrorsErrorResponse _errorBody =  SafeJsonConvert.DeserializeObject<MicrosoftKhronosCloudCommonErrorsErrorResponse>(_responseContent, DeserializationSettings);
                     if (_errorBody != null)
                     {
                         ex.Body = _errorBody;
@@ -3226,7 +3229,7 @@ namespace Microsoft.HealthVault.RestApi.Generated
                 _responseContent = await _httpResponse.Content.ReadAsStringAsync().ConfigureAwait(false);
                 try
                 {
-                    _result.Body = SafeJsonConvert.DeserializeObject<GoalsResponse>(_responseContent, this.DeserializationSettings);
+                    _result.Body = SafeJsonConvert.DeserializeObject<GoalsResponse>(_responseContent, DeserializationSettings);
                 }
                 catch (JsonException ex)
                 {
@@ -3290,7 +3293,7 @@ namespace Microsoft.HealthVault.RestApi.Generated
                 ServiceClientTracing.Enter(_invocationId, this, "GetGoalById", tracingParameters);
             }
             // Construct URL
-            var _baseUrl = this.BaseUri.AbsoluteUri;
+            var _baseUrl = BaseUri.AbsoluteUri;
             var _url = new System.Uri(new System.Uri(_baseUrl + (_baseUrl.EndsWith("/") ? "" : "/")), "Goals/{goalId}").ToString();
             _url = _url.Replace("{goalId}", System.Uri.EscapeDataString(goalId));
             // Create HTTP transport objects
@@ -3316,10 +3319,10 @@ namespace Microsoft.HealthVault.RestApi.Generated
             // Serialize Request
             string _requestContent = null;
             // Set Credentials
-            if (this.Credentials != null)
+            if (Credentials != null)
             {
                 cancellationToken.ThrowIfCancellationRequested();
-                await this.Credentials.ProcessHttpRequestAsync(_httpRequest, cancellationToken).ConfigureAwait(false);
+                await Credentials.ProcessHttpRequestAsync(_httpRequest, cancellationToken).ConfigureAwait(false);
             }
             // Send Request
             if (_shouldTrace)
@@ -3327,7 +3330,7 @@ namespace Microsoft.HealthVault.RestApi.Generated
                 ServiceClientTracing.SendRequest(_invocationId, _httpRequest);
             }
             cancellationToken.ThrowIfCancellationRequested();
-            _httpResponse = await this.HttpClient.SendAsync(_httpRequest, cancellationToken).ConfigureAwait(false);
+            _httpResponse = await HttpClient.SendAsync(_httpRequest, cancellationToken).ConfigureAwait(false);
             if (_shouldTrace)
             {
                 ServiceClientTracing.ReceiveResponse(_invocationId, _httpResponse);
@@ -3341,7 +3344,7 @@ namespace Microsoft.HealthVault.RestApi.Generated
                 try
                 {
                     _responseContent = await _httpResponse.Content.ReadAsStringAsync().ConfigureAwait(false);
-                    MicrosoftKhronosCloudCommonErrorsErrorResponse _errorBody =  SafeJsonConvert.DeserializeObject<MicrosoftKhronosCloudCommonErrorsErrorResponse>(_responseContent, this.DeserializationSettings);
+                    MicrosoftKhronosCloudCommonErrorsErrorResponse _errorBody =  SafeJsonConvert.DeserializeObject<MicrosoftKhronosCloudCommonErrorsErrorResponse>(_responseContent, DeserializationSettings);
                     if (_errorBody != null)
                     {
                         ex.Body = _errorBody;
@@ -3374,7 +3377,7 @@ namespace Microsoft.HealthVault.RestApi.Generated
                 _responseContent = await _httpResponse.Content.ReadAsStringAsync().ConfigureAwait(false);
                 try
                 {
-                    _result.Body = SafeJsonConvert.DeserializeObject<Goal>(_responseContent, this.DeserializationSettings);
+                    _result.Body = SafeJsonConvert.DeserializeObject<Goal>(_responseContent, DeserializationSettings);
                 }
                 catch (JsonException ex)
                 {
@@ -3438,7 +3441,7 @@ namespace Microsoft.HealthVault.RestApi.Generated
                 ServiceClientTracing.Enter(_invocationId, this, "DeleteGoal", tracingParameters);
             }
             // Construct URL
-            var _baseUrl = this.BaseUri.AbsoluteUri;
+            var _baseUrl = BaseUri.AbsoluteUri;
             var _url = new System.Uri(new System.Uri(_baseUrl + (_baseUrl.EndsWith("/") ? "" : "/")), "Goals/{goalId}").ToString();
             _url = _url.Replace("{goalId}", System.Uri.EscapeDataString(goalId));
             // Create HTTP transport objects
@@ -3464,10 +3467,10 @@ namespace Microsoft.HealthVault.RestApi.Generated
             // Serialize Request
             string _requestContent = null;
             // Set Credentials
-            if (this.Credentials != null)
+            if (Credentials != null)
             {
                 cancellationToken.ThrowIfCancellationRequested();
-                await this.Credentials.ProcessHttpRequestAsync(_httpRequest, cancellationToken).ConfigureAwait(false);
+                await Credentials.ProcessHttpRequestAsync(_httpRequest, cancellationToken).ConfigureAwait(false);
             }
             // Send Request
             if (_shouldTrace)
@@ -3475,7 +3478,7 @@ namespace Microsoft.HealthVault.RestApi.Generated
                 ServiceClientTracing.SendRequest(_invocationId, _httpRequest);
             }
             cancellationToken.ThrowIfCancellationRequested();
-            _httpResponse = await this.HttpClient.SendAsync(_httpRequest, cancellationToken).ConfigureAwait(false);
+            _httpResponse = await HttpClient.SendAsync(_httpRequest, cancellationToken).ConfigureAwait(false);
             if (_shouldTrace)
             {
                 ServiceClientTracing.ReceiveResponse(_invocationId, _httpResponse);
@@ -3489,7 +3492,7 @@ namespace Microsoft.HealthVault.RestApi.Generated
                 try
                 {
                     _responseContent = await _httpResponse.Content.ReadAsStringAsync().ConfigureAwait(false);
-                    MicrosoftKhronosCloudCommonErrorsErrorResponse _errorBody =  SafeJsonConvert.DeserializeObject<MicrosoftKhronosCloudCommonErrorsErrorResponse>(_responseContent, this.DeserializationSettings);
+                    MicrosoftKhronosCloudCommonErrorsErrorResponse _errorBody =  SafeJsonConvert.DeserializeObject<MicrosoftKhronosCloudCommonErrorsErrorResponse>(_responseContent, DeserializationSettings);
                     if (_errorBody != null)
                     {
                         ex.Body = _errorBody;
@@ -3522,7 +3525,7 @@ namespace Microsoft.HealthVault.RestApi.Generated
                 _responseContent = await _httpResponse.Content.ReadAsStringAsync().ConfigureAwait(false);
                 try
                 {
-                    _result.Body = SafeJsonConvert.DeserializeObject<object>(_responseContent, this.DeserializationSettings);
+                    _result.Body = SafeJsonConvert.DeserializeObject<object>(_responseContent, DeserializationSettings);
                 }
                 catch (JsonException ex)
                 {
@@ -3580,7 +3583,7 @@ namespace Microsoft.HealthVault.RestApi.Generated
                 ServiceClientTracing.Enter(_invocationId, this, "GetActiveGoals", tracingParameters);
             }
             // Construct URL
-            var _baseUrl = this.BaseUri.AbsoluteUri;
+            var _baseUrl = BaseUri.AbsoluteUri;
             var _url = new System.Uri(new System.Uri(_baseUrl + (_baseUrl.EndsWith("/") ? "" : "/")), "Goals/active").ToString();
             List<string> _queryParameters = new List<string>();
             if (types != null)
@@ -3618,10 +3621,10 @@ namespace Microsoft.HealthVault.RestApi.Generated
             // Serialize Request
             string _requestContent = null;
             // Set Credentials
-            if (this.Credentials != null)
+            if (Credentials != null)
             {
                 cancellationToken.ThrowIfCancellationRequested();
-                await this.Credentials.ProcessHttpRequestAsync(_httpRequest, cancellationToken).ConfigureAwait(false);
+                await Credentials.ProcessHttpRequestAsync(_httpRequest, cancellationToken).ConfigureAwait(false);
             }
             // Send Request
             if (_shouldTrace)
@@ -3629,7 +3632,7 @@ namespace Microsoft.HealthVault.RestApi.Generated
                 ServiceClientTracing.SendRequest(_invocationId, _httpRequest);
             }
             cancellationToken.ThrowIfCancellationRequested();
-            _httpResponse = await this.HttpClient.SendAsync(_httpRequest, cancellationToken).ConfigureAwait(false);
+            _httpResponse = await HttpClient.SendAsync(_httpRequest, cancellationToken).ConfigureAwait(false);
             if (_shouldTrace)
             {
                 ServiceClientTracing.ReceiveResponse(_invocationId, _httpResponse);
@@ -3643,7 +3646,7 @@ namespace Microsoft.HealthVault.RestApi.Generated
                 try
                 {
                     _responseContent = await _httpResponse.Content.ReadAsStringAsync().ConfigureAwait(false);
-                    MicrosoftKhronosCloudCommonErrorsErrorResponse _errorBody =  SafeJsonConvert.DeserializeObject<MicrosoftKhronosCloudCommonErrorsErrorResponse>(_responseContent, this.DeserializationSettings);
+                    MicrosoftKhronosCloudCommonErrorsErrorResponse _errorBody =  SafeJsonConvert.DeserializeObject<MicrosoftKhronosCloudCommonErrorsErrorResponse>(_responseContent, DeserializationSettings);
                     if (_errorBody != null)
                     {
                         ex.Body = _errorBody;
@@ -3676,7 +3679,7 @@ namespace Microsoft.HealthVault.RestApi.Generated
                 _responseContent = await _httpResponse.Content.ReadAsStringAsync().ConfigureAwait(false);
                 try
                 {
-                    _result.Body = SafeJsonConvert.DeserializeObject<GoalsResponse>(_responseContent, this.DeserializationSettings);
+                    _result.Body = SafeJsonConvert.DeserializeObject<GoalsResponse>(_responseContent, DeserializationSettings);
                 }
                 catch (JsonException ex)
                 {
@@ -3740,7 +3743,7 @@ namespace Microsoft.HealthVault.RestApi.Generated
                 ServiceClientTracing.Enter(_invocationId, this, "GenerateInviteCode", tracingParameters);
             }
             // Construct URL
-            var _baseUrl = this.BaseUri.AbsoluteUri;
+            var _baseUrl = BaseUri.AbsoluteUri;
             var _url = new System.Uri(new System.Uri(_baseUrl + (_baseUrl.EndsWith("/") ? "" : "/")), "Onboarding/GenerateInviteCode").ToString();
             // Create HTTP transport objects
             var _httpRequest = new HttpRequestMessage();
@@ -3766,15 +3769,15 @@ namespace Microsoft.HealthVault.RestApi.Generated
             string _requestContent = null;
             if(onboardingRequest != null)
             {
-                _requestContent = SafeJsonConvert.SerializeObject(onboardingRequest, this.SerializationSettings);
+                _requestContent = SafeJsonConvert.SerializeObject(onboardingRequest, SerializationSettings);
                 _httpRequest.Content = new StringContent(_requestContent, System.Text.Encoding.UTF8);
                 _httpRequest.Content.Headers.ContentType =System.Net.Http.Headers.MediaTypeHeaderValue.Parse("application/json; charset=utf-8");
             }
             // Set Credentials
-            if (this.Credentials != null)
+            if (Credentials != null)
             {
                 cancellationToken.ThrowIfCancellationRequested();
-                await this.Credentials.ProcessHttpRequestAsync(_httpRequest, cancellationToken).ConfigureAwait(false);
+                await Credentials.ProcessHttpRequestAsync(_httpRequest, cancellationToken).ConfigureAwait(false);
             }
             // Send Request
             if (_shouldTrace)
@@ -3782,7 +3785,7 @@ namespace Microsoft.HealthVault.RestApi.Generated
                 ServiceClientTracing.SendRequest(_invocationId, _httpRequest);
             }
             cancellationToken.ThrowIfCancellationRequested();
-            _httpResponse = await this.HttpClient.SendAsync(_httpRequest, cancellationToken).ConfigureAwait(false);
+            _httpResponse = await HttpClient.SendAsync(_httpRequest, cancellationToken).ConfigureAwait(false);
             if (_shouldTrace)
             {
                 ServiceClientTracing.ReceiveResponse(_invocationId, _httpResponse);
@@ -3796,7 +3799,7 @@ namespace Microsoft.HealthVault.RestApi.Generated
                 try
                 {
                     _responseContent = await _httpResponse.Content.ReadAsStringAsync().ConfigureAwait(false);
-                    MicrosoftKhronosCloudCommonErrorsErrorResponse _errorBody =  SafeJsonConvert.DeserializeObject<MicrosoftKhronosCloudCommonErrorsErrorResponse>(_responseContent, this.DeserializationSettings);
+                    MicrosoftKhronosCloudCommonErrorsErrorResponse _errorBody =  SafeJsonConvert.DeserializeObject<MicrosoftKhronosCloudCommonErrorsErrorResponse>(_responseContent, DeserializationSettings);
                     if (_errorBody != null)
                     {
                         ex.Body = _errorBody;
@@ -3829,7 +3832,7 @@ namespace Microsoft.HealthVault.RestApi.Generated
                 _responseContent = await _httpResponse.Content.ReadAsStringAsync().ConfigureAwait(false);
                 try
                 {
-                    _result.Body = SafeJsonConvert.DeserializeObject<OnboardingResponse>(_responseContent, this.DeserializationSettings);
+                    _result.Body = SafeJsonConvert.DeserializeObject<OnboardingResponse>(_responseContent, DeserializationSettings);
                 }
                 catch (JsonException ex)
                 {

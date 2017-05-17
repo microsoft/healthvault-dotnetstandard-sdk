@@ -2,11 +2,16 @@
 // Changes may cause incorrect behavior and will be lost if the code is
 // regenerated.
 
-using System.Collections.Generic;
-using Newtonsoft.Json;
-
 namespace Microsoft.HealthVault.RestApi.Generated.Models
 {
+    using Microsoft.HealthVault;
+    using Microsoft.HealthVault.RestApi;
+    using Microsoft.HealthVault.RestApi.Generated;
+    using Newtonsoft.Json;
+    using System.Collections;
+    using System.Collections.Generic;
+    using System.Linq;
+
     /// <summary>
     /// An action plan objective for the purpose of the adherence report
     /// </summary>
@@ -17,7 +22,7 @@ namespace Microsoft.HealthVault.RestApi.Generated.Models
         /// </summary>
         public ObjectiveAdherenceSummary()
         {
-          this.CustomInit();
+          CustomInit();
         }
 
         /// <summary>
@@ -32,11 +37,11 @@ namespace Microsoft.HealthVault.RestApi.Generated.Models
         /// plan</param>
         public ObjectiveAdherenceSummary(string id = default(string), string name = default(string), string outcomeName = default(string), IList<ActionPlanTaskAdherenceSummary> associatedTasks = default(IList<ActionPlanTaskAdherenceSummary>))
         {
-            this.Id = id;
-            this.Name = name;
-            this.OutcomeName = outcomeName;
-            this.AssociatedTasks = associatedTasks;
-            this.CustomInit();
+            Id = id;
+            Name = name;
+            OutcomeName = outcomeName;
+            AssociatedTasks = associatedTasks;
+            CustomInit();
         }
 
         /// <summary>

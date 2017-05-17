@@ -2,10 +2,14 @@
 // Changes may cause incorrect behavior and will be lost if the code is
 // regenerated.
 
-using Newtonsoft.Json;
-
 namespace Microsoft.HealthVault.RestApi.Generated.Models
 {
+    using Microsoft.HealthVault;
+    using Microsoft.HealthVault.RestApi;
+    using Microsoft.HealthVault.RestApi.Generated;
+    using Newtonsoft.Json;
+    using System.Linq;
+
     public partial class SystemThreadingCancellationToken
     {
         /// <summary>
@@ -14,7 +18,7 @@ namespace Microsoft.HealthVault.RestApi.Generated.Models
         /// </summary>
         public SystemThreadingCancellationToken()
         {
-          this.CustomInit();
+          CustomInit();
         }
 
         /// <summary>
@@ -23,10 +27,10 @@ namespace Microsoft.HealthVault.RestApi.Generated.Models
         /// </summary>
         public SystemThreadingCancellationToken(bool? isCancellationRequested = default(bool?), bool? canBeCanceled = default(bool?), SystemThreadingWaitHandle waitHandle = default(SystemThreadingWaitHandle))
         {
-            this.IsCancellationRequested = isCancellationRequested;
-            this.CanBeCanceled = canBeCanceled;
-            this.WaitHandle = waitHandle;
-            this.CustomInit();
+            IsCancellationRequested = isCancellationRequested;
+            CanBeCanceled = canBeCanceled;
+            WaitHandle = waitHandle;
+            CustomInit();
         }
 
         /// <summary>

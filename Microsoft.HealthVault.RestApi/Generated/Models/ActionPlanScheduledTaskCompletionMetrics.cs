@@ -2,11 +2,16 @@
 // Changes may cause incorrect behavior and will be lost if the code is
 // regenerated.
 
-using System.Collections.Generic;
-using Newtonsoft.Json;
-
 namespace Microsoft.HealthVault.RestApi.Generated.Models
 {
+    using Microsoft.HealthVault;
+    using Microsoft.HealthVault.RestApi;
+    using Microsoft.HealthVault.RestApi.Generated;
+    using Newtonsoft.Json;
+    using System.Collections;
+    using System.Collections.Generic;
+    using System.Linq;
+
     /// <summary>
     /// The Completion Metrics for scheduled tasks
     /// </summary>
@@ -18,7 +23,7 @@ namespace Microsoft.HealthVault.RestApi.Generated.Models
         /// </summary>
         public ActionPlanScheduledTaskCompletionMetrics()
         {
-          this.CustomInit();
+          CustomInit();
         }
 
         /// <summary>
@@ -38,10 +43,10 @@ namespace Microsoft.HealthVault.RestApi.Generated.Models
         /// 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday' }</param>
         public ActionPlanScheduledTaskCompletionMetrics(Time scheduledTime = default(Time), string reminderState = default(string), IList<string> scheduledDays = default(IList<string>))
         {
-            this.ScheduledTime = scheduledTime;
-            this.ReminderState = reminderState;
-            this.ScheduledDays = scheduledDays;
-            this.CustomInit();
+            ScheduledTime = scheduledTime;
+            ReminderState = reminderState;
+            ScheduledDays = scheduledDays;
+            CustomInit();
         }
 
         /// <summary>
