@@ -1072,8 +1072,7 @@ namespace Microsoft.HealthVault.Thing
                 }
             }
 
-            IReadOnlyCollection<ThingCollection> thingCollection = await GetPartialThingsAsync(partialThings).ConfigureAwait(false);
-            ThingCollection things = thingCollection.FirstOrDefault();
+            ThingCollection things = await GetPartialThingsAsync(partialThings).ConfigureAwait(false);
 
             bool atEndOfPartialThings = false;
             int newThingIndex = index;
@@ -1113,7 +1112,7 @@ namespace Microsoft.HealthVault.Thing
             }
         }
 
-        private async Task<IReadOnlyCollection<ThingCollection>> GetPartialThingsAsync(
+        private async Task<ThingCollection> GetPartialThingsAsync(
             IList<ThingKey> partialThings)
         {
             IThingClient thingClient = Connection.CreateThingClient();
@@ -1137,7 +1136,7 @@ namespace Microsoft.HealthVault.Thing
                 }
             }
 
-            IReadOnlyCollection<ThingCollection> results = await thingClient.GetThingsAsync(Record.Id, query).ConfigureAwait(false);
+            ThingCollection results = await thingClient.GetThingsAsync(Record.Id, query).ConfigureAwait(false);
 
             return results;
         }

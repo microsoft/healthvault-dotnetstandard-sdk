@@ -7,6 +7,7 @@
 // THE SOFTWARE IS PROVIDED *AS IS*, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 using System;
+using System.Collections.Generic;
 using System.Xml;
 using System.Xml.XPath;
 using Microsoft.HealthVault.Exceptions;
@@ -55,11 +56,40 @@ namespace Microsoft.HealthVault.Helpers
             }
         }
 
+        public static void ThrowIfArgumentNull(object argument, string argumentName)
+        {
+            if (argument == null)
+            {
+                throw new ArgumentNullException(argumentName);
+            }
+        }
+
         public static void ThrowIfArgumentNull(object argument, string argumentName, string message)
         {
             if (argument == null)
             {
                 throw new ArgumentNullException(argumentName, message);
+            }
+        }
+
+        public static void ThrowIfGuidEmpty(Guid argument, string argumentName)
+        {
+            if (argument == Guid.Empty)
+            {
+                throw new ArgumentException(Resources.GuidParameterEmpty, argumentName);
+            }
+        }
+
+        public static void ThrowIfCollectionNullOrEmpty<T>(ICollection<T> argument, string argumentName)
+        {
+            if (argument == null)
+            {
+                throw new ArgumentNullException(argumentName);
+            }
+
+            if (argument.Count == 0)
+            {
+                throw new ArgumentException(Resources.CollectionEmpty, argumentName);
             }
         }
 

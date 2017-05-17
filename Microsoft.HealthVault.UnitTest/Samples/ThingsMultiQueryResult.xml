@@ -1,0 +1,110 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<response>
+  <status>
+    <code>0</code>
+  </status>
+  <wc:info xmlns:wc="urn:com.microsoft.wc.methods.response.GetThings3">
+    <group>
+      <thing>
+        <thing-id version-stamp="9b379300-bb6f-4d46-8ff0-328a04513f30">295eda72-9b30-4811-82ab-33d34b979705</thing-id>
+        <type-id name="Blood pressure">ca3c57f4-f4c1-4e15-be67-0a3caf5414ed</type-id>
+        <thing-state>Active</thing-state>
+        <flags>0</flags>
+        <eff-date>2017-05-10T00:00:00</eff-date>
+        <data-xml>
+          <blood-pressure>
+            <when>
+              <date>
+                <y>2017</y>
+                <m>5</m>
+                <d>10</d>
+              </date>
+            </when>
+            <systolic>110</systolic>
+            <diastolic>29</diastolic>
+          </blood-pressure>
+          <common />
+        </data-xml>
+      </thing>
+      <thing>
+        <thing-id version-stamp="2a0e1f1a-3a61-4446-8d28-4ffbe6c9350f">a1a6ab8a-7169-459b-98e1-9d6d880098b5</thing-id>
+        <type-id name="Blood pressure">ca3c57f4-f4c1-4e15-be67-0a3caf5414ed</type-id>
+        <thing-state>Active</thing-state>
+        <flags>0</flags>
+        <eff-date>2017-05-09T11:00:44.759</eff-date>
+        <data-xml>
+          <blood-pressure>
+            <when>
+              <date>
+                <y>2017</y>
+                <m>5</m>
+                <d>9</d>
+              </date>
+              <time>
+                <h>11</h>
+                <m>0</m>
+                <s>44</s>
+                <f>759</f>
+              </time>
+            </when>
+            <systolic>117</systolic>
+            <diastolic>70</diastolic>
+          </blood-pressure>
+          <common />
+        </data-xml>
+      </thing>
+      <thing>
+        <thing-id version-stamp="8ca1fe29-ee44-4187-9255-2cef77f965ee">09883e46-7bfd-4af4-9026-0b5b9fbd77a5</thing-id>
+        <type-id name="Blood pressure">ca3c57f4-f4c1-4e15-be67-0a3caf5414ed</type-id>
+        <thing-state>Active</thing-state>
+        <flags>0</flags>
+        <eff-date>2017-03-23T12:39:48.107</eff-date>
+        <data-xml>
+          <blood-pressure>
+            <when>
+              <date>
+                <y>2017</y>
+                <m>3</m>
+                <d>23</d>
+              </date>
+              <time>
+                <h>12</h>
+                <m>39</m>
+                <s>48</s>
+                <f>107</f>
+              </time>
+            </when>
+            <systolic>117</systolic>
+            <diastolic>70</diastolic>
+          </blood-pressure>
+          <common />
+        </data-xml>
+      </thing>
+    </group>
+    <group>
+      <thing>
+        <thing-id version-stamp="e4923f24-9413-4bc9-adb3-e269f65013d3">711627e2-7dab-4ce5-a5b2-5b601e235bb7</thing-id>
+        <type-id name="Weight">3d34d87e-7fc1-4153-800f-f56592cb0d17</type-id>
+        <thing-state>Active</thing-state>
+        <flags>0</flags>
+        <eff-date>2014-10-26T00:00:00</eff-date>
+        <data-xml>
+          <weight>
+            <when>
+              <date>
+                <y>2014</y>
+                <m>10</m>
+                <d>26</d>
+              </date>
+            </when>
+            <value>
+              <kg>74.84274105165585</kg>
+              <display units="lbs" units-code="lb">165</display>
+            </value>
+          </weight>
+          <common />
+        </data-xml>
+      </thing>
+    </group>
+  </wc:info>
+</response>
