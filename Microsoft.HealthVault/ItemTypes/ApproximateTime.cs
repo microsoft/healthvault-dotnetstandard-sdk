@@ -452,6 +452,55 @@ namespace Microsoft.HealthVault.ItemTypes
         }
 
         /// <summary>
+        /// Compares the specified object to this <see cref="DateTime"/> object.
+        /// </summary>
+        ///
+        /// <param name="other">
+        /// The time to be compared.
+        /// </param>
+        ///
+        /// <returns>
+        /// A 32-bit signed integer that indicates the relative order of the
+        /// objects being compared. If the result is less than zero, the
+        /// instance is less than <paramref name="other"/>. If the result is zero,
+        /// the instance is equal to <paramref name="other"/>. If the result is
+        /// greater than zero, the instance is greater than
+        /// <paramref name="other"/>.
+        /// </returns>
+        public int CompareTo(DateTime other)
+        {
+            if (Hour > other.Hour)
+            {
+                return 1;
+            }
+
+            if (Hour < other.Hour)
+            {
+                return -1;
+            }
+
+            if (Minute > other.Minute)
+            {
+                return 1;
+            }
+
+            if (Minute < other.Minute)
+            {
+                return -1;
+            }
+
+            int result = ApproximateTime.CompareOptional(Second, other.Second);
+
+            if (result != 0)
+            {
+                return result;
+            }
+
+            return ApproximateTime.CompareOptional(Millisecond, other.Millisecond);
+        }
+
+
+        /// <summary>
         /// Compares the specified object to this ApproximateDate object.
         /// </summary>
         ///

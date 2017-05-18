@@ -6,6 +6,7 @@
 //
 // THE SOFTWARE IS PROVIDED *AS IS*, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+using System;
 using Microsoft.HealthVault.ItemTypes;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NSubstitute;
@@ -16,7 +17,7 @@ namespace Microsoft.HealthVault.UnitTest.ItemTypes
     public class HealthServiceDateTimeTests
     {
         [TestMethod]
-        public void TestEqualsWrongType()
+        public void WhenWrongTypePassedToEquals_ThenFalseReturned()
         {
             HealthServiceDateTime dateTime = new HealthServiceDateTime();
 
@@ -24,7 +25,7 @@ namespace Microsoft.HealthVault.UnitTest.ItemTypes
         }
 
         [TestMethod]
-        public void TestEqualsNull()
+        public void WhenNullPassedToEquals_ThenFalseReturned()
         {
             HealthServiceDateTime dateTime = new HealthServiceDateTime();
 
@@ -32,7 +33,7 @@ namespace Microsoft.HealthVault.UnitTest.ItemTypes
         }
 
         [TestMethod]
-        public void TestEqualsSameDate()
+        public void WhenSameDatePassedToEquals_ThenTrueReturned()
         {
             HealthServiceDate date = new HealthServiceDate(2017, 1, 12);
 
@@ -40,6 +41,33 @@ namespace Microsoft.HealthVault.UnitTest.ItemTypes
             HealthServiceDateTime dateTime2 = new HealthServiceDateTime(date);
 
             Assert.IsTrue(dateTime1.Equals(dateTime2), "The equals should return true.");
+        }
+
+        [TestMethod]
+        public void WhenDifferentDatePassedToEquals_ThenFalseReturned()
+        {
+            HealthServiceDateTime dateTime1 = new HealthServiceDateTime(new DateTime(2017, 5, 18, 5, 28, 20, DateTimeKind.Utc));
+            HealthServiceDateTime dateTime2 = new HealthServiceDateTime(new DateTime(2017, 5, 18, 5, 27, 20, DateTimeKind.Utc));
+
+            Assert.IsFalse(dateTime1.Equals(dateTime2), "Equals should return false.");
+        }
+
+        [TestMethod]
+        public void WhenSameDateTimePassedToEquals_ThenTrueReturned()
+        {
+            HealthServiceDateTime healthServiceDateTime = new HealthServiceDateTime(new DateTime(2017, 5, 18, 5, 28, 20, DateTimeKind.Utc));
+            DateTime dateTime = new DateTime(2017, 5, 18, 5, 28, 20, DateTimeKind.Utc);
+
+            Assert.IsTrue(healthServiceDateTime.Equals(dateTime), "Equals should return true");
+        }
+
+        [TestMethod]
+        public void WhenDifferentDateTimePassedToEquals_ThenFalseReturned()
+        {
+            HealthServiceDateTime healthServiceDateTime = new HealthServiceDateTime(new DateTime(2017, 5, 18, 5, 28, 20, DateTimeKind.Utc));
+            DateTime dateTime = new DateTime(2017, 5, 18, 5, 27, 20, DateTimeKind.Utc);
+
+            Assert.IsFalse(healthServiceDateTime.Equals(dateTime), "Equals should return false");
         }
     }
 }
