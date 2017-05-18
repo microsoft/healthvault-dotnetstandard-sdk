@@ -540,6 +540,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public override bool Equals(object obj)
         {
+            if (obj?.GetType() != this.GetType())
+            {
+                return false;
+            }
+
             return CompareTo(obj) == 0;
         }
 
