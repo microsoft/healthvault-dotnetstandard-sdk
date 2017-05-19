@@ -542,6 +542,12 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public override bool Equals(object obj)
         {
+            Type objectType = obj?.GetType();
+            if (objectType != this.GetType() && objectType != typeof(DateTime))
+            {
+                return false;
+            }
+
             return CompareTo(obj) == 0;
         }
 

@@ -141,11 +141,8 @@ namespace Microsoft.HealthVault.ItemTypes
                 new ApproximateTime(
                     dateTime.Hour,
                     dateTime.Minute,
-                    dateTime.Second);
-            if (dateTime.Millisecond != 0)
-            {
-                _time.Millisecond = dateTime.Millisecond;
-            }
+                    dateTime.Second,
+                    dateTime.Millisecond);
         }
 
         /// <summary>
@@ -511,7 +508,7 @@ namespace Microsoft.HealthVault.ItemTypes
                 return -1;
             }
 
-            return 0;
+            return Time.CompareTo(other);
         }
 
         #endregion IComparable
@@ -540,6 +537,12 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public override bool Equals(object obj)
         {
+            Type objectType = obj?.GetType();
+            if (objectType != this.GetType() && objectType != typeof(DateTime))
+            {
+                return false;
+            }
+
             return CompareTo(obj) == 0;
         }
 

@@ -123,6 +123,8 @@
     <Compile Include="Connection\HttpClientFactoryTests.cs" />
     <Compile Include="HealthVaultConnectionFactoryInternalTests.cs" />
     <Compile Include="HealthVaultSodaConnectionTests.cs" />
+    <Compile Include="ItemTypes\ApproximateDateTimeTests.cs" />
+    <Compile Include="ItemTypes\HealthServiceDateTimeTests.cs" />
     <Compile Include="LocalObjectStoreTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Rest\GivenARestRequest.cs" />
