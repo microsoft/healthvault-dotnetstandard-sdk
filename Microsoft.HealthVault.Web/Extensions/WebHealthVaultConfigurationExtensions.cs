@@ -7,7 +7,7 @@ namespace Microsoft.HealthVault.Web.Extensions
 {
     internal static class WebHealthVaultConfigurationExtensions
     {
-        private static readonly string AuthTarget = "AUTH";
+        private static readonly string s_authTarget = "AUTH";
 
         /// <summary>
         /// Gets the URL to/from which BLOBs get streamed, for
@@ -45,7 +45,7 @@ namespace Microsoft.HealthVault.Web.Extensions
         {
             var redirect = new ShellRedirectParameters(config.DefaultHealthVaultShellUrl.OriginalString)
             {
-                TargetLocation = AuthTarget,
+                TargetLocation = s_authTarget,
                 ApplicationId = config.MasterApplicationId,
             };
 

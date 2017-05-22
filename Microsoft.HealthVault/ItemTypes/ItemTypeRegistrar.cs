@@ -21,13 +21,13 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public static void RegisterAssemblyHealthRecordItemTypes()
         {
-            foreach (ItemTypeManager.DefaultTypeHandler typeHandler in DefaultTypeHandlers)
+            foreach (ItemTypeManager.DefaultTypeHandler typeHandler in s_defaultTypeHandlers)
             {
                 ItemTypeManager.RegisterTypeHandler(typeHandler.TypeId, typeHandler.Type, true);
             }
         }
 
-        private static readonly ItemTypeManager.DefaultTypeHandler[] DefaultTypeHandlers =
+        private static readonly ItemTypeManager.DefaultTypeHandler[] s_defaultTypeHandlers =
             {
                 new ItemTypeManager.DefaultTypeHandler(ApplicationDataReference.TypeId, typeof(ApplicationDataReference)),
                 new ItemTypeManager.DefaultTypeHandler(BasicV2.TypeId, typeof(BasicV2)),

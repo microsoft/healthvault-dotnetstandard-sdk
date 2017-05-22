@@ -75,7 +75,7 @@ namespace SandboxXamarinForms
         {
             PersonInfo personInfo = await _connection.GetPersonInfoAsync();
             var resultSet = await _thingClient.GetThingsAsync(
-                personInfo.SelectedRecord.Id, 
+                personInfo.SelectedRecord.Id,
                 new List<ThingQuery>
                 {
                     new ThingQuery(BloodPressure.TypeId),

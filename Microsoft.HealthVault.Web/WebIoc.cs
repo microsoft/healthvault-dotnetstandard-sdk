@@ -19,13 +19,13 @@ namespace Microsoft.HealthVault.Web
 {
     internal static class WebIoc
     {
-        private static readonly object RegistrationLock = new object();
+        private static readonly object s_registrationLock = new object();
 
         private static bool s_typesRegistered;
 
         public static void EnsureTypesRegistered()
         {
-            lock (RegistrationLock)
+            lock (s_registrationLock)
             {
                 if (!s_typesRegistered)
                 {

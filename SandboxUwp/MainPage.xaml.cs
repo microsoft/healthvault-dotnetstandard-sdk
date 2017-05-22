@@ -22,7 +22,7 @@ namespace SandboxUwp
     /// </summary>
     public sealed partial class MainPage : Page
     {
-        private IHealthVaultSodaConnection connection;
+        private IHealthVaultSodaConnection _connection;
 
         public MainPage()
         {
@@ -37,17 +37,17 @@ namespace SandboxUwp
             {
                 MasterApplicationId = Guid.Parse("d6318dff-5352-4a10-a140-6c82c6536a3b")
             };
-            connection = HealthVaultConnectionFactory.Current.GetOrCreateSodaConnection(configuration);
-            await connection.AuthenticateAsync();
+            _connection = HealthVaultConnectionFactory.Current.GetOrCreateSodaConnection(configuration);
+            await _connection.AuthenticateAsync();
 
             OutputBlock.Text = "Connected.";
         }
 
         private async void Get_BP_OnClick(object sender, RoutedEventArgs e)
         {
-            PersonInfo personInfo = await connection.GetPersonInfoAsync();
+            PersonInfo personInfo = await _connection.GetPersonInfoAsync();
             HealthRecordInfo recordInfo = personInfo.SelectedRecord;
-            IThingClient thingClient = connection.CreateThingClient();
+            IThingClient thingClient = _connection.CreateThingClient();
 
             var bloodPressures = await thingClient.GetThingsAsync<BloodPressure>(recordInfo.Id);
             BloodPressure firstBloodPressure = bloodPressures.FirstOrDefault();
@@ -63,9 +63,9 @@ namespace SandboxUwp
 
         private async void SetBP_OnClick(object sender, RoutedEventArgs e)
         {
-            PersonInfo personInfo = await connection.GetPersonInfoAsync();
+            PersonInfo personInfo = await _connection.GetPersonInfoAsync();
             HealthRecordInfo recordInfo = personInfo.SelectedRecord;
-            IThingClient thingClient = connection.CreateThingClient();
+            IThingClient thingClient = _connection.CreateThingClient();
 
             await thingClient.CreateNewThingsAsync(recordInfo.Id, new List<BloodPressure> { new BloodPressure(new HealthServiceDateTime(DateTime.Now), 117, 70) });
 
@@ -74,10 +74,10 @@ namespace SandboxUwp
 
         private async void GetUserImage_OnClick(object sender, RoutedEventArgs e)
         {
-            PersonInfo personInfo = await connection.GetPersonInfoAsync();
+            PersonInfo personInfo = await _connection.GetPersonInfoAsync();
             HealthRecordInfo recordInfo = personInfo.SelectedRecord;
 
-            IThingClient thingClient = connection.CreateThingClient();
+            IThingClient thingClient = _connection.CreateThingClient();
             ThingQuery query = new ThingQuery();
             query.View.Sections = ThingSections.Default | ThingSections.BlobPayload;
             var theThings = await thingClient.GetThingsAsync<PersonalImage>(recordInfo.Id, query);
@@ -92,7 +92,7 @@ namespace SandboxUwp
 
         private async void GetVocab_OnClick(object sender, RoutedEventArgs e)
         {
-            var vocabClient = connection.CreateVocabularyClient();
+            var vocabClient = _connection.CreateVocabularyClient();
             IList<VocabularyKey> keys = (await vocabClient.GetVocabularyKeysAsync()).ToList();
 
             VocabularyKey key = keys[4];
@@ -114,7 +114,7 @@ namespace SandboxUwp
 
         private async void DeleteConnectionInfo_OnClick(object sender, RoutedEventArgs e)
         {
-            await connection.DeauthorizeApplicationAsync();
+            await _connection.DeauthorizeApplicationAsync();
             OutputBlock.Text = "Deleted connection information.";
         }
     }

@@ -34,7 +34,7 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             Validator.ThrowIfNavigatorNull(navigator);
 
-            location = XPathHelper.GetOptNavValue<Organization>(navigator, "location");
+            _location = XPathHelper.GetOptNavValue<Organization>(navigator, "location");
             _timeOfDelivery = XPathHelper.GetOptNavValue<ApproximateDateTime>(navigator, "time-of-delivery");
             _laborDuration = XPathHelper.GetOptNavValueAsDouble(navigator, "labor-duration");
 
@@ -89,7 +89,7 @@ namespace Microsoft.HealthVault.ItemTypes
 
             writer.WriteStartElement(nodeName);
 
-            XmlWriterHelper.WriteOpt(writer, "location", location);
+            XmlWriterHelper.WriteOpt(writer, "location", _location);
             XmlWriterHelper.WriteOpt(writer, "time-of-delivery", _timeOfDelivery);
             XmlWriterHelper.WriteOptDouble(writer, "labor-duration", _laborDuration);
 
@@ -122,11 +122,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public Organization Location
         {
-            get { return location; }
-            set { location = value; }
+            get { return _location; }
+            set { _location = value; }
         }
 
-        private Organization location;
+        private Organization _location;
 
         /// <summary>
         /// Gets or sets the date/time of the delivery.

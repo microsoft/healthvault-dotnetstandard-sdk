@@ -88,7 +88,7 @@ namespace Microsoft.HealthVault.UnitTest.Clients
         public async Task GetThingsMultiQuery()
         {
             InitializeResponse(SampleUtils.GetSampleContent("ThingsMultiQueryResult.xml"));
-            var result = await _client.GetThingsAsync(_recordId, new [] { this.GetBloodPressureThingQuery(), this.GetWeightThingQuery() });
+            var result = await _client.GetThingsAsync(_recordId, new[] { this.GetBloodPressureThingQuery(), this.GetWeightThingQuery() });
 
             // ensure that the connection was called with the proper values
             await _connection.Received().ExecuteAsync(

@@ -11,8 +11,8 @@ namespace SandboxIos
 {
     public partial class RootViewController : UIViewController
     {
-        private IHealthVaultSodaConnection connection;
-        private IThingClient thingClient;
+        private IHealthVaultSodaConnection _connection;
+        private IThingClient _thingClient;
 
         private const string notConnectedMessage = "Tap \"Connect\" to log in";
 
@@ -39,14 +39,14 @@ namespace SandboxIos
 
         partial void BloodPressureButtonPressed()
         {
-            NavigationController.PushViewController(new ThingListViewController<BloodPressure>(connection), true);
+            NavigationController.PushViewController(new ThingListViewController<BloodPressure>(_connection), true);
         }
 
         partial void ConnectButtonPressed()
         {
             connectButton.Enabled = false;
 
-            if (connection == null)
+            if (_connection == null)
             {
                 ConnectToHealthVaultAsync();
             }
@@ -66,11 +66,11 @@ namespace SandboxIos
             {
                 var configuration = GetPpeConfiguration();
 
-                connection = HealthVaultConnectionFactory.Current.GetOrCreateSodaConnection(configuration);
-                await connection.AuthenticateAsync();
+                _connection = HealthVaultConnectionFactory.Current.GetOrCreateSodaConnection(configuration);
+                await _connection.AuthenticateAsync();
 
-                thingClient = connection.CreateThingClient();
-                PersonInfo personInfo = await connection.GetPersonInfoAsync();
+                _thingClient = _connection.CreateThingClient();
+                PersonInfo personInfo = await _connection.GetPersonInfoAsync();
 
                 connectButton.SetTitle("Disconnect", UIControlState.Normal);
                 SetStatusLabelText("");
@@ -104,10 +104,10 @@ namespace SandboxIos
 
             try
             {
-                await connection.DeauthorizeApplicationAsync();
+                await _connection.DeauthorizeApplicationAsync();
 
-                thingClient = null;
-                connection = null;
+                _thingClient = null;
+                _connection = null;
 
                 connectButton.SetTitle("Connect", UIControlState.Normal);
                 UpdateTitle("Not Connected");

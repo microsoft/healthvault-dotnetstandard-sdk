@@ -43,7 +43,7 @@ namespace Microsoft.HealthVault.UnitTest
         private IClientSessionCredentialClient _subClientSessionCredentialClient;
         private HealthVaultConfiguration _healthVaultConfiguration;
 
-        private static readonly Guid MasterApplicationId = new Guid("30945bac-d221-4f89-8197-6983a390066d");
+        private static readonly Guid s_masterApplicationId = new Guid("30945bac-d221-4f89-8197-6983a390066d");
 
         [TestInitialize]
         public void TestInitialize()
@@ -57,7 +57,7 @@ namespace Microsoft.HealthVault.UnitTest
             _subClientSessionCredentialClient = Substitute.For<IClientSessionCredentialClient>();
             _healthVaultConfiguration = new HealthVaultConfiguration
             {
-                MasterApplicationId = MasterApplicationId,
+                MasterApplicationId = s_masterApplicationId,
                 DefaultHealthVaultUrl = new Uri("https://platform2.healthvault.com/platform/"),
                 DefaultHealthVaultShellUrl = new Uri("https://account.healthvault.com")
             };
@@ -76,7 +76,7 @@ namespace Microsoft.HealthVault.UnitTest
         {
             SetupEmptyLocalStore();
 
-            _healthVaultConfiguration.MasterApplicationId = MasterApplicationId;
+            _healthVaultConfiguration.MasterApplicationId = s_masterApplicationId;
 
             var responseMessage1 = GenerateResponseMessage("NewApplicationCreationInfoResult.xml");
             var responseMessage2 = GenerateResponseMessage("GetServiceDefinitionResult.xml");
@@ -122,7 +122,7 @@ namespace Microsoft.HealthVault.UnitTest
             _subShellAuthService
                 .ProvisionApplicationAsync(
                     new Uri("https://account.healthvault.com"),
-                    MasterApplicationId,
+                    s_masterApplicationId,
                     ApplicationCreationToken,
                     ApplicationInstanceId)
                 .Returns("1");
@@ -181,7 +181,7 @@ namespace Microsoft.HealthVault.UnitTest
             await healthVaultSodaConnection.AuthorizeAdditionalRecordsAsync();
 
             await _subShellAuthService.Received()
-                .AuthorizeAdditionalRecordsAsync(new Uri("https://account.healthvault-ppe.com/"), MasterApplicationId);
+                .AuthorizeAdditionalRecordsAsync(new Uri("https://account.healthvault-ppe.com/"), s_masterApplicationId);
 
             await _subLocalObjectStore.Received()
                 .WriteAsync(HealthVaultSodaConnection.PersonInfoKey, Arg.Any<object>());

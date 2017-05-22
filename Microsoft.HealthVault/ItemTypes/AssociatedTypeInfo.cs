@@ -113,12 +113,12 @@ namespace Microsoft.HealthVault.ItemTypes
 
             writer.WriteStartElement(nodeName);
 
-            if (thingTypeVersionId.Equals(Guid.Empty))
+            if (_thingTypeVersionId.Equals(Guid.Empty))
             {
                 throw new InvalidOperationException(Resources.AssociatedThingTypeVersionIdNullorEmpty);
             }
 
-            XmlWriterHelper.WriteOptGuid(writer, "thing-type-version-id", thingTypeVersionId);
+            XmlWriterHelper.WriteOptGuid(writer, "thing-type-version-id", _thingTypeVersionId);
             XmlWriterHelper.WriteOptString(writer, "thing-type-value-xpath", _thingTypeValueXPath);
             XmlWriterHelper.WriteOptString(writer, "thing-type-display-xpath", _thingTypeDisplayXPath);
             writer.WriteEndElement();
@@ -136,7 +136,7 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             get
             {
-                return thingTypeVersionId;
+                return _thingTypeVersionId;
             }
 
             set
@@ -146,11 +146,11 @@ namespace Microsoft.HealthVault.ItemTypes
                     throw new ArgumentException(Resources.AssociatedThingTypeVersionIdNullorEmpty, nameof(ThingTypeVersionId));
                 }
 
-                thingTypeVersionId = value;
+                _thingTypeVersionId = value;
             }
         }
 
-        private Guid thingTypeVersionId;
+        private Guid _thingTypeVersionId;
 
         /// <summary>
         /// Gets or sets xPath expression for the value field associated with this goal or task in the thing type.

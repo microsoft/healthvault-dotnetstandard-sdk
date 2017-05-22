@@ -69,7 +69,7 @@ namespace Microsoft.HealthVault.Web.UnitTest
             Assert.AreEqual(offlinePersonId, offlineHealthVaultConnection.OfflinePersonId.ToString());
 
             // Assert that default service instance is created and is set to default shell url from web configuration
-            Assert.AreEqual(configuration.DefaultHealthVaultShellUrl, ((OfflineHealthVaultConnection) offlineHealthVaultConnection).ServiceInstance.ShellUrl);
+            Assert.AreEqual(configuration.DefaultHealthVaultShellUrl, ((OfflineHealthVaultConnection)offlineHealthVaultConnection).ServiceInstance.ShellUrl);
         }
 
         [TestMethod]
@@ -93,7 +93,7 @@ namespace Microsoft.HealthVault.Web.UnitTest
 
             IServiceInstanceProvider serviceInstanceProvider = Substitute.For<IServiceInstanceProvider>();
             serviceInstanceProvider.GetHealthServiceInstanceAsync(Arg.Any<string>())
-                .Returns(new HealthServiceInstance {Name = "Test"});
+                .Returns(new HealthServiceInstance { Name = "Test" });
             Ioc.Container.Configure(c => c.ExportInstance(serviceInstanceProvider).As<IServiceInstanceProvider>());
 
             string instanceId = Guid.NewGuid().ToString();

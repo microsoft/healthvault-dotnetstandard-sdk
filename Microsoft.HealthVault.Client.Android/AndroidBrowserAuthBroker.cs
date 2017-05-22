@@ -11,12 +11,12 @@ namespace Microsoft.HealthVault.Client
     {
         private TaskCompletionSource<Uri> _loginCompletionSource;
         private Exception _loginException;
-        static readonly AsyncLock _asyncLock = new AsyncLock();
+        private static readonly AsyncLock s_asyncLock = new AsyncLock();
 
         public async Task<Uri> AuthenticateAsync(Uri startUrl, Uri endUrl)
         {
             // Wait here for any future threads until the current one is finished
-            using (await _asyncLock.LockAsync().ConfigureAwait(false))
+            using (await s_asyncLock.LockAsync().ConfigureAwait(false))
             {
                 Intent intent = new Intent(Android.App.Application.Context, typeof(SignInActivity));
                 intent.AddFlags(ActivityFlags.NewTask);

@@ -1,8 +1,9 @@
-﻿namespace Microsoft.HealthVault.Client
+﻿
+namespace Microsoft.HealthVault.Client
 {
     public class HealthVaultConnectionFactory
     {
-        private static readonly object InstanceLock = new object();
+        private static readonly object s_instanceLock = new object();
         private static IHealthVaultConnectionFactory s_current;
 
         /// <summary>
@@ -12,7 +13,7 @@
         {
             get
             {
-                lock (InstanceLock)
+                lock (s_instanceLock)
                 {
                     if (s_current == null)
                     {

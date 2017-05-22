@@ -30,7 +30,7 @@ namespace Microsoft.HealthVault.Web.UnitTest.Utilities
             // Arrange
             Guid masterAppId = Guid.NewGuid();
 
-            WebHealthVaultConfiguration webHealthVaultConfiguration = new WebHealthVaultConfiguration {MasterApplicationId = masterAppId};
+            WebHealthVaultConfiguration webHealthVaultConfiguration = new WebHealthVaultConfiguration { MasterApplicationId = masterAppId };
             Ioc.Container.Configure(c => c.ExportInstance(webHealthVaultConfiguration).As<WebHealthVaultConfiguration>());
 
             Uri uri = new Uri("http://www.bing.com", UriKind.Absolute);
@@ -62,7 +62,7 @@ namespace Microsoft.HealthVault.Web.UnitTest.Utilities
             Uri uri = new Uri("http://www.bing.com", UriKind.Absolute);
 
             // Create a dictionary - we are not setting app id as part of the parameters
-            Dictionary<string, object> parameters = new Dictionary<string, object>(StringComparer.OrdinalIgnoreCase) {{"Appid", "test-id"}};
+            Dictionary<string, object> parameters = new Dictionary<string, object>(StringComparer.OrdinalIgnoreCase) { { "Appid", "test-id" } };
             ShellUrlBuilder urlBuilder = new ShellUrlBuilder(
                 shellUri: uri,
                 target: "Action",

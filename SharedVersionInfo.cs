@@ -15,8 +15,8 @@ using System.Runtime.InteropServices;
 #endif
 
 [assembly: AssemblyCompany("Microsoft Corporation")]
-[assembly: AssemblyCopyright("Copyright © Microsoft Corporation. All rights reserved.")]
-[assembly: AssemblyProduct("Microsoft HealthVault ®")]
+[assembly: AssemblyCopyright("Copyright \u00A9 Microsoft Corporation. All rights reserved.")]
+[assembly: AssemblyProduct("Microsoft HealthVault \u00AE")]
 [assembly: CLSCompliant(false)]
 [assembly: ComVisible(false)]
 

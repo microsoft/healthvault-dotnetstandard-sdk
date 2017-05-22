@@ -81,8 +81,8 @@ namespace Microsoft.HealthVault.Client.Platform.Android
         /// </summary>
         private class SignInWebViewClient : WebViewClient
         {
-            private readonly SignInActivity activity;
-            private readonly string endUrl;
+            private readonly SignInActivity _activity;
+            private readonly string _endUrl;
 
             public SignInWebViewClient(SignInActivity activity, string endUrl)
             {
@@ -94,9 +94,9 @@ namespace Microsoft.HealthVault.Client.Platform.Android
             {
                 base.OnPageFinished(view, url);
 
-                if (url.Contains(endUrl))
+                if (url.Contains(_endUrl))
                 {
-                    activity.onLoadCompleted(new Uri(url));
+                    _activity.onLoadCompleted(new Uri(url));
                 }
             }
         }

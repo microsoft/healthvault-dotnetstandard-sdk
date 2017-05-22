@@ -42,7 +42,7 @@ namespace Microsoft.HealthVault.Thing
                 new Dictionary<string, ThingTypeHandler>(
                     StringComparer.OrdinalIgnoreCase);
 
-            foreach (DefaultTypeHandler typeHandler in DefaultTypeHandlers)
+            foreach (DefaultTypeHandler typeHandler in s_defaultTypeHandlers)
             {
                 ThingTypeHandler handler =
                     new ThingTypeHandler(typeHandler.TypeId, typeHandler.Type);
@@ -74,7 +74,7 @@ namespace Microsoft.HealthVault.Thing
             }
         }
 
-        private static readonly DefaultTypeHandler[] DefaultTypeHandlers =
+        private static readonly DefaultTypeHandler[] s_defaultTypeHandlers =
         {
             new DefaultTypeHandler(PasswordProtectedPackage.TypeId, typeof(PasswordProtectedPackage))
         };

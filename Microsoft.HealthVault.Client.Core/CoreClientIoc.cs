@@ -6,13 +6,13 @@ namespace Microsoft.HealthVault.Client
 {
     internal static class CoreClientIoc
     {
-        private static readonly object RegistrationLock = new object();
+        private static readonly object s_registrationLock = new object();
 
         private static bool s_typesRegistered;
 
         internal static void EnsureTypesRegistered(Action<DependencyInjectionContainer> registerClientTypesAction)
         {
-            lock (RegistrationLock)
+            lock (s_registrationLock)
             {
                 if (!s_typesRegistered)
                 {

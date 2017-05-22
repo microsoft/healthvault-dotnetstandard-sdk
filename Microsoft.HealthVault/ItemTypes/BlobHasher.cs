@@ -18,7 +18,7 @@ namespace Microsoft.HealthVault.ItemTypes
     /// </summary>
     internal class BlobHasher
     {
-        private static HealthVaultConfiguration configuration = Ioc.Get<HealthVaultConfiguration>();
+        private static HealthVaultConfiguration s_configuration = Ioc.Get<HealthVaultConfiguration>();
 
         /// <summary>
         /// Constructs the BlobHasher for calculating BLOB hashes.
@@ -169,7 +169,7 @@ namespace Microsoft.HealthVault.ItemTypes
 
         internal static BlobHasher InlineBlobHasher { get; } = new BlobHasher(
             BlobHashAlgorithm.SHA256Block,
-            configuration.InlineBlobHashBlockSize);
+            s_configuration.InlineBlobHashBlockSize);
 
         internal const int DefaultInlineBlobHashBlockSizeBytes = 1 << 21; // 2Mb.
 

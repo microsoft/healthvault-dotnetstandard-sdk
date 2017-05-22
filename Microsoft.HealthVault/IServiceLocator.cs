@@ -1,4 +1,5 @@
-﻿namespace Microsoft.HealthVault
+﻿
+namespace Microsoft.HealthVault
 {
     internal interface IServiceLocator
     {

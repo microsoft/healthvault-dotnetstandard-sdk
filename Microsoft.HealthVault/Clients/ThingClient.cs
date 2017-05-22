@@ -55,7 +55,7 @@ namespace Microsoft.HealthVault.Clients
             query.View.Sections = ThingSections.Default;
             query.CurrentVersionOnly = true;
 
-            HealthServiceResponseData result = await GetRequestWithParameters(recordId, searcher, new []{ query });
+            HealthServiceResponseData result = await GetRequestWithParameters(recordId, searcher, new[] { query });
 
             IReadOnlyCollection<ThingCollection> resultSet = _thingDeserializer.Deserialize(result, searcher);
 
