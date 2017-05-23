@@ -90,7 +90,7 @@ namespace Microsoft.HealthVault.Transport
 
             message.Content = content;
 
-            return await SendAsync(message, token);
+            return await SendAsync(message, token).ConfigureAwait(false);
         }
 
         public async Task<HttpResponseMessage> SendAsync(HttpRequestMessage message, CancellationToken token, bool throwExceptionOnFailure = true)

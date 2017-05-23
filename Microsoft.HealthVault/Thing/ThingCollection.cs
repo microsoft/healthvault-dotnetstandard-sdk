@@ -1049,9 +1049,7 @@ namespace Microsoft.HealthVault.Thing
             List<ThingKey> partialThings = new List<ThingKey>();
             for (
                 int partialThingIndex = index;
-                (partialThings.Count < MaxResultsPerRequest ||
-                 MaxResultsPerRequest == int.MinValue) &&
-                partialThingIndex < _abstractResults.Count;
+                (partialThings.Count < MaxResultsPerRequest || MaxResultsPerRequest == int.MinValue) && partialThingIndex < _abstractResults.Count;
                 ++partialThingIndex)
             {
                 var key = _abstractResults[partialThingIndex] as ThingKey;

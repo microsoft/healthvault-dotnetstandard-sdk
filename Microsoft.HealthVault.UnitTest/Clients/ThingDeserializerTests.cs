@@ -20,7 +20,7 @@ using NSubstitute;
 namespace Microsoft.HealthVault.UnitTest.Clients
 {
     [TestClass]
-    public class ThingDesrializerTests
+    public class ThingDeserializerTests
     {
         private ThingDeserializer _thingDeserializer;
         private HealthRecordAccessor _healthRecordAccessor;
