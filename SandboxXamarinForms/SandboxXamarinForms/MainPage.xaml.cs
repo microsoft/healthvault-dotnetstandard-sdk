@@ -6,6 +6,7 @@ using Microsoft.HealthVault.Clients;
 using Microsoft.HealthVault.Configuration;
 using Microsoft.HealthVault.ItemTypes;
 using Microsoft.HealthVault.Person;
+using Microsoft.HealthVault.Record;
 using Microsoft.HealthVault.Thing;
 using Xamarin.Forms;
 
@@ -34,6 +35,7 @@ namespace SandboxXamarinForms
             await _connection.AuthenticateAsync();
 
             _thingClient = _connection.CreateThingClient();
+            this.ConnectedButtons.IsVisible = true;
 
             OutputLabel.Text = "Connected.";
         }
@@ -55,6 +57,32 @@ namespace SandboxXamarinForms
             OutputLabel.Text = "Added blood pressure";
         }
 
+        private async void Add100BPs_OnClicked(object sender, EventArgs e)
+        {
+            OutputLabel.Text = "Adding 100 blood pressures...";
+
+            PersonInfo personInfo = await _connection.GetPersonInfoAsync();
+            HealthRecordInfo recordInfo = personInfo.SelectedRecord;
+            IThingClient thingClient = _connection.CreateThingClient();
+
+            var random = new Random();
+
+            var pressures = new List<BloodPressure>();
+            for (int i = 0; i < 100; i++)
+            {
+                pressures.Add(new BloodPressure(
+                    new HealthServiceDateTime(DateTime.Now),
+                    random.Next(110, 130),
+                    random.Next(70, 90)));
+            }
+
+            await thingClient.CreateNewThingsAsync(
+                recordInfo.Id,
+                pressures);
+
+            OutputLabel.Text = "Done adding blood pressures.";
+        }
+
         private async void GetBP_OnClicked(object sender, EventArgs e)
         {
             // use our thing client to get all things of type blood pressure
@@ -67,7 +95,7 @@ namespace SandboxXamarinForms
             }
             else
             {
-                OutputLabel.Text = firstBloodPressure.Systolic + "/" + firstBloodPressure.Diastolic;
+                OutputLabel.Text = firstBloodPressure.Systolic + "/" + firstBloodPressure.Diastolic + ", " + bloodPressures.Count + " total";
             }
         }
 

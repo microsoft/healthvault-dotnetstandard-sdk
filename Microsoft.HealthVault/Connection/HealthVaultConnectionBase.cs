@@ -139,7 +139,7 @@ namespace Microsoft.HealthVault.Connection
             HealthServiceResponseData responseData = null;
             try
             {
-                responseData = await SendRequestAsync(requestXml, correlationId);
+                responseData = await SendRequestAsync(requestXml, correlationId).ConfigureAwait(false);
             }
             catch (HealthServiceAuthenticatedSessionTokenExpiredException)
             {
