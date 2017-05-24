@@ -85,7 +85,7 @@ namespace SandboxUwp
             }
             else
             {
-                OutputBlock.Text = firstHeight.Value.Meters.ToString();
+                OutputBlock.Text = firstHeight.Value.Meters.ToString() + "m";
             }
         }
         
@@ -94,7 +94,14 @@ namespace SandboxUwp
             PersonInfo personInfo = await connection.GetPersonInfoAsync();
             HealthRecordInfo recordInfo = personInfo.SelectedRecord;
             IThingClient thingClient = connection.CreateThingClient();
-            await thingClient.CreateNewThingsAsync(recordInfo.Id, new List<Height> { new Height(new HealthServiceDateTime(DateTime.Now), new Length(1.8)) });
+
+            Random rand = new Random();
+            double minHeight = 1.53;
+            double maxHeight = 1.83;
+            double range = maxHeight - minHeight;
+            double randHeight = Math.Round((minHeight + rand.NextDouble()*range), 2);
+
+            await thingClient.CreateNewThingsAsync(recordInfo.Id, new List<Height> { new Height(new HealthServiceDateTime(DateTime.Now), new Length(randHeight)) });
             OutputBlock.Text = "Created height.";
         }
 
