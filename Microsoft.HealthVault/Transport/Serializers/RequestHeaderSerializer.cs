@@ -79,6 +79,7 @@ namespace Microsoft.HealthVault.Transport.Serializers
                                 }
                             }
                         }
+
                         // In case auth session is not present, appid will be sent
                         else
                         {
