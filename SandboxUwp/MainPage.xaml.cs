@@ -72,6 +72,39 @@ namespace SandboxUwp
             OutputBlock.Text = "Created blood pressure.";
         }
 
+        private async void Get_Height_OnClick(object sender, RoutedEventArgs e)
+        {
+            PersonInfo personInfo = await connection.GetPersonInfoAsync();
+            HealthRecordInfo recordInfo = personInfo.SelectedRecord;
+            IThingClient thingClient = connection.CreateThingClient();
+            var heights = await thingClient.GetThingsAsync<Height>(recordInfo.Id);
+            Height firstHeight = heights.FirstOrDefault();
+            if (firstHeight == null)
+            {
+                OutputBlock.Text = "No height.";
+            }
+            else
+            {
+                OutputBlock.Text = firstHeight.Value.Meters.ToString() + "m";
+            }
+        }
+        
+        private async void Set_Height_OnClick(object sender, RoutedEventArgs e)
+        {
+            PersonInfo personInfo = await connection.GetPersonInfoAsync();
+            HealthRecordInfo recordInfo = personInfo.SelectedRecord;
+            IThingClient thingClient = connection.CreateThingClient();
+
+            Random rand = new Random();
+            double minHeight = 1.53;
+            double maxHeight = 1.83;
+            double range = maxHeight - minHeight;
+            double randHeight = Math.Round((minHeight + rand.NextDouble()*range), 2);
+
+            await thingClient.CreateNewThingsAsync(recordInfo.Id, new List<Height> { new Height(new HealthServiceDateTime(DateTime.Now), new Length(randHeight)) });
+            OutputBlock.Text = "Created height.";
+        }
+
         private async void GetUserImage_OnClick(object sender, RoutedEventArgs e)
         {
             PersonInfo personInfo = await connection.GetPersonInfoAsync();
