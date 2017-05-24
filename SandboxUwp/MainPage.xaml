@@ -11,6 +11,8 @@
         <Button Name="ConnectButton" Click="Connect_OnClick">Connect</Button>
         <Button Name="GetBP" Click="Get_BP_OnClick">Get BP</Button>
         <Button Name="SetBP" Click="SetBP_OnClick">Set BP</Button>
+        <Button Name="GetHeight" Click="Get_Height_OnClick">Get Height</Button>
+        <Button Name="SetHeight" Click="Set_Height_OnClick">Set Height</Button>
         <Button Name="GetUserImage" Click="GetUserImage_OnClick">Get User Image</Button>
         <Button Name="GetVocab" Click="GetVocab_OnClick">Get Vocab</Button>
         <Button Name="DeleteConnectionInfo" Click="DeleteConnectionInfo_OnClick">Delete connection info</Button>
