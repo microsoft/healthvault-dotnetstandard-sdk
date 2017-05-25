@@ -82,9 +82,9 @@ namespace SandboxUwp
 
         private async void Get_Height_OnClick(object sender, RoutedEventArgs e)
         {
-            PersonInfo personInfo = await connection.GetPersonInfoAsync();
+            PersonInfo personInfo = await _connection.GetPersonInfoAsync();
             HealthRecordInfo recordInfo = personInfo.SelectedRecord;
-            IThingClient thingClient = connection.CreateThingClient();
+            IThingClient thingClient = _connection.CreateThingClient();
             var heights = await thingClient.GetThingsAsync<Height>(recordInfo.Id);
             Height firstHeight = heights.FirstOrDefault();
             if (firstHeight == null)
@@ -99,9 +99,9 @@ namespace SandboxUwp
 
         private async void Set_Height_OnClick(object sender, RoutedEventArgs e)
         {
-            PersonInfo personInfo = await connection.GetPersonInfoAsync();
+            PersonInfo personInfo = await _connection.GetPersonInfoAsync();
             HealthRecordInfo recordInfo = personInfo.SelectedRecord;
-            IThingClient thingClient = connection.CreateThingClient();
+            IThingClient thingClient = _connection.CreateThingClient();
 
             Random rand = new Random();
             double minHeight = 1.53;

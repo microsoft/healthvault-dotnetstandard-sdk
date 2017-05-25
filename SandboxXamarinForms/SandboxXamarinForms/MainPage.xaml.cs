@@ -43,7 +43,7 @@ namespace SandboxXamarinForms
             await _connection.AuthenticateAsync();
 
             _thingClient = _connection.CreateThingClient();
-            this.ConnectedButtons.IsVisible = true;
+            ConnectedButtons.IsVisible = true;
 
             OutputLabel.Text = "Connected.";
         }
