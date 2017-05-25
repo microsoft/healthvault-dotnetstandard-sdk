@@ -9,7 +9,6 @@
 using System;
 using Microsoft.HealthVault.ItemTypes;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using NSubstitute;
 
 namespace Microsoft.HealthVault.UnitTest.ItemTypes
 {

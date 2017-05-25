@@ -1,3 +1,11 @@
+// Copyright (c) Microsoft Corporation.  All rights reserved.
+// MIT License
+// Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the ""Software""), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+//
+// The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED *AS IS*, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -43,7 +51,7 @@ namespace Microsoft.HealthVault.UnitTest
         private IClientSessionCredentialClient _subClientSessionCredentialClient;
         private HealthVaultConfiguration _healthVaultConfiguration;
 
-        private static readonly Guid MasterApplicationId = new Guid("30945bac-d221-4f89-8197-6983a390066d");
+        private static readonly Guid s_masterApplicationId = new Guid("30945bac-d221-4f89-8197-6983a390066d");
 
         [TestInitialize]
         public void TestInitialize()
@@ -57,7 +65,7 @@ namespace Microsoft.HealthVault.UnitTest
             _subClientSessionCredentialClient = Substitute.For<IClientSessionCredentialClient>();
             _healthVaultConfiguration = new HealthVaultConfiguration
             {
-                MasterApplicationId = MasterApplicationId,
+                MasterApplicationId = s_masterApplicationId,
                 DefaultHealthVaultUrl = new Uri("https://platform2.healthvault.com/platform/"),
                 DefaultHealthVaultShellUrl = new Uri("https://account.healthvault.com")
             };
@@ -76,7 +84,7 @@ namespace Microsoft.HealthVault.UnitTest
         {
             SetupEmptyLocalStore();
 
-            _healthVaultConfiguration.MasterApplicationId = MasterApplicationId;
+            _healthVaultConfiguration.MasterApplicationId = s_masterApplicationId;
 
             var responseMessage1 = GenerateResponseMessage("NewApplicationCreationInfoResult.xml");
             var responseMessage2 = GenerateResponseMessage("GetServiceDefinitionResult.xml");
@@ -122,7 +130,7 @@ namespace Microsoft.HealthVault.UnitTest
             _subShellAuthService
                 .ProvisionApplicationAsync(
                     new Uri("https://account.healthvault.com"),
-                    MasterApplicationId,
+                    s_masterApplicationId,
                     ApplicationCreationToken,
                     ApplicationInstanceId)
                 .Returns("1");
@@ -181,7 +189,7 @@ namespace Microsoft.HealthVault.UnitTest
             await healthVaultSodaConnection.AuthorizeAdditionalRecordsAsync();
 
             await _subShellAuthService.Received()
-                .AuthorizeAdditionalRecordsAsync(new Uri("https://account.healthvault-ppe.com/"), MasterApplicationId);
+                .AuthorizeAdditionalRecordsAsync(new Uri("https://account.healthvault-ppe.com/"), s_masterApplicationId);
 
             await _subLocalObjectStore.Received()
                 .WriteAsync(HealthVaultSodaConnection.PersonInfoKey, Arg.Any<object>());
