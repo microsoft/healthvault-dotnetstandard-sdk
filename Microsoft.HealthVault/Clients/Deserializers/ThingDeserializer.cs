@@ -23,7 +23,7 @@ namespace Microsoft.HealthVault.Clients.Deserializers
 
         public ThingDeserializer(IHealthVaultConnection connection)
         {
-            connection = connection;
+            _connection = connection;
         }
 
         public IReadOnlyCollection<ThingCollection> Deserialize(

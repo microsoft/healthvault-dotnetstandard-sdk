@@ -21,7 +21,7 @@ namespace Microsoft.HealthVault.Web
     public class WebHealthVaultFactory
     {
         /// <summary>
-        /// Creates an authenticated web connection when the reuest 
+        /// Creates an authenticated web connection when the reuest
         /// has been authenticated using [RequireSignIn] attribute.
         /// In case the request has not been authenticated, an anonymous
         /// connection is created.

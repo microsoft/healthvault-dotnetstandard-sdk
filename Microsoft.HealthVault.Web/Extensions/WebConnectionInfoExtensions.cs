@@ -45,7 +45,7 @@ namespace Microsoft.HealthVault.Web.Extensions
             {
                 HealthRecordInfo selfRecordInfo = personInfo.GetSelfRecord();
 
-                personInfo.AuthorizedRecords = new Dictionary<Guid, HealthRecordInfo> {{selfRecordInfo.Id, selfRecordInfo}};
+                personInfo.AuthorizedRecords = new Dictionary<Guid, HealthRecordInfo> { { selfRecordInfo.Id, selfRecordInfo } };
 
                 webConnectionInfo.MinimizedPersonInfoRecords = true;
             }

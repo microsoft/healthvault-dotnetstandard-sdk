@@ -1,4 +1,12 @@
-﻿using System;
+﻿// Copyright (c) Microsoft Corporation.  All rights reserved.
+// MIT License
+// Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the ""Software""), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+//
+// The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED *AS IS*, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.HealthVault.Client;
@@ -6,6 +14,7 @@ using Microsoft.HealthVault.Clients;
 using Microsoft.HealthVault.Configuration;
 using Microsoft.HealthVault.ItemTypes;
 using Microsoft.HealthVault.Person;
+using Microsoft.HealthVault.Record;
 using Microsoft.HealthVault.Thing;
 using Xamarin.Forms;
 
@@ -34,6 +43,7 @@ namespace SandboxXamarinForms
             await _connection.AuthenticateAsync();
 
             _thingClient = _connection.CreateThingClient();
+            ConnectedButtons.IsVisible = true;
 
             OutputLabel.Text = "Connected.";
         }
@@ -55,6 +65,32 @@ namespace SandboxXamarinForms
             OutputLabel.Text = "Added blood pressure";
         }
 
+        private async void Add100BPs_OnClicked(object sender, EventArgs e)
+        {
+            OutputLabel.Text = "Adding 100 blood pressures...";
+
+            PersonInfo personInfo = await _connection.GetPersonInfoAsync();
+            HealthRecordInfo recordInfo = personInfo.SelectedRecord;
+            IThingClient thingClient = _connection.CreateThingClient();
+
+            var random = new Random();
+
+            var pressures = new List<BloodPressure>();
+            for (int i = 0; i < 100; i++)
+            {
+                pressures.Add(new BloodPressure(
+                    new HealthServiceDateTime(DateTime.Now),
+                    random.Next(110, 130),
+                    random.Next(70, 90)));
+            }
+
+            await thingClient.CreateNewThingsAsync(
+                recordInfo.Id,
+                pressures);
+
+            OutputLabel.Text = "Done adding blood pressures.";
+        }
+
         private async void GetBP_OnClicked(object sender, EventArgs e)
         {
             // use our thing client to get all things of type blood pressure
@@ -67,7 +103,7 @@ namespace SandboxXamarinForms
             }
             else
             {
-                OutputLabel.Text = firstBloodPressure.Systolic + "/" + firstBloodPressure.Diastolic;
+                OutputLabel.Text = firstBloodPressure.Systolic + "/" + firstBloodPressure.Diastolic + ", " + bloodPressures.Count + " total";
             }
         }
 
@@ -75,7 +111,7 @@ namespace SandboxXamarinForms
         {
             PersonInfo personInfo = await _connection.GetPersonInfoAsync();
             var resultSet = await _thingClient.GetThingsAsync(
-                personInfo.SelectedRecord.Id, 
+                personInfo.SelectedRecord.Id,
                 new List<ThingQuery>
                 {
                     new ThingQuery(BloodPressure.TypeId),

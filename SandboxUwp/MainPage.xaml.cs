@@ -1,4 +1,12 @@
-﻿using System;
+﻿// Copyright (c) Microsoft Corporation.  All rights reserved.
+// MIT License
+// Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the ""Software""), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+//
+// The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED *AS IS*, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -22,7 +30,7 @@ namespace SandboxUwp
     /// </summary>
     public sealed partial class MainPage : Page
     {
-        private IHealthVaultSodaConnection connection;
+        private IHealthVaultSodaConnection _connection;
 
         public MainPage()
         {
@@ -37,17 +45,17 @@ namespace SandboxUwp
             {
                 MasterApplicationId = Guid.Parse("d6318dff-5352-4a10-a140-6c82c6536a3b")
             };
-            connection = HealthVaultConnectionFactory.Current.GetOrCreateSodaConnection(configuration);
-            await connection.AuthenticateAsync();
+            _connection = HealthVaultConnectionFactory.Current.GetOrCreateSodaConnection(configuration);
+            await _connection.AuthenticateAsync();
 
             OutputBlock.Text = "Connected.";
         }
 
         private async void Get_BP_OnClick(object sender, RoutedEventArgs e)
         {
-            PersonInfo personInfo = await connection.GetPersonInfoAsync();
+            PersonInfo personInfo = await _connection.GetPersonInfoAsync();
             HealthRecordInfo recordInfo = personInfo.SelectedRecord;
-            IThingClient thingClient = connection.CreateThingClient();
+            IThingClient thingClient = _connection.CreateThingClient();
 
             var bloodPressures = await thingClient.GetThingsAsync<BloodPressure>(recordInfo.Id);
             BloodPressure firstBloodPressure = bloodPressures.FirstOrDefault();
@@ -63,21 +71,54 @@ namespace SandboxUwp
 
         private async void SetBP_OnClick(object sender, RoutedEventArgs e)
         {
-            PersonInfo personInfo = await connection.GetPersonInfoAsync();
+            PersonInfo personInfo = await _connection.GetPersonInfoAsync();
             HealthRecordInfo recordInfo = personInfo.SelectedRecord;
-            IThingClient thingClient = connection.CreateThingClient();
+            IThingClient thingClient = _connection.CreateThingClient();
 
             await thingClient.CreateNewThingsAsync(recordInfo.Id, new List<BloodPressure> { new BloodPressure(new HealthServiceDateTime(DateTime.Now), 117, 70) });
 
             OutputBlock.Text = "Created blood pressure.";
         }
 
+        private async void Get_Height_OnClick(object sender, RoutedEventArgs e)
+        {
+            PersonInfo personInfo = await _connection.GetPersonInfoAsync();
+            HealthRecordInfo recordInfo = personInfo.SelectedRecord;
+            IThingClient thingClient = _connection.CreateThingClient();
+            var heights = await thingClient.GetThingsAsync<Height>(recordInfo.Id);
+            Height firstHeight = heights.FirstOrDefault();
+            if (firstHeight == null)
+            {
+                OutputBlock.Text = "No height.";
+            }
+            else
+            {
+                OutputBlock.Text = firstHeight.Value.Meters.ToString() + "m";
+            }
+        }
+
+        private async void Set_Height_OnClick(object sender, RoutedEventArgs e)
+        {
+            PersonInfo personInfo = await _connection.GetPersonInfoAsync();
+            HealthRecordInfo recordInfo = personInfo.SelectedRecord;
+            IThingClient thingClient = _connection.CreateThingClient();
+
+            Random rand = new Random();
+            double minHeight = 1.53;
+            double maxHeight = 1.83;
+            double range = maxHeight - minHeight;
+            double randHeight = Math.Round((minHeight + rand.NextDouble() * range), 2);
+
+            await thingClient.CreateNewThingsAsync(recordInfo.Id, new List<Height> { new Height(new HealthServiceDateTime(DateTime.Now), new Length(randHeight)) });
+            OutputBlock.Text = "Created height.";
+        }
+
         private async void GetUserImage_OnClick(object sender, RoutedEventArgs e)
         {
-            PersonInfo personInfo = await connection.GetPersonInfoAsync();
+            PersonInfo personInfo = await _connection.GetPersonInfoAsync();
             HealthRecordInfo recordInfo = personInfo.SelectedRecord;
 
-            IThingClient thingClient = connection.CreateThingClient();
+            IThingClient thingClient = _connection.CreateThingClient();
             ThingQuery query = new ThingQuery();
             query.View.Sections = ThingSections.Default | ThingSections.BlobPayload;
             var theThings = await thingClient.GetThingsAsync<PersonalImage>(recordInfo.Id, query);
@@ -92,7 +133,7 @@ namespace SandboxUwp
 
         private async void GetVocab_OnClick(object sender, RoutedEventArgs e)
         {
-            var vocabClient = connection.CreateVocabularyClient();
+            var vocabClient = _connection.CreateVocabularyClient();
             IList<VocabularyKey> keys = (await vocabClient.GetVocabularyKeysAsync()).ToList();
 
             VocabularyKey key = keys[4];
@@ -114,7 +155,7 @@ namespace SandboxUwp
 
         private async void DeleteConnectionInfo_OnClick(object sender, RoutedEventArgs e)
         {
-            await connection.DeauthorizeApplicationAsync();
+            await _connection.DeauthorizeApplicationAsync();
             OutputBlock.Text = "Deleted connection information.";
         }
     }

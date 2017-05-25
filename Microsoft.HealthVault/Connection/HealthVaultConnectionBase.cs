@@ -19,8 +19,8 @@ using System.Xml;
 using Microsoft.HealthVault.Clients;
 using Microsoft.HealthVault.Clients.Deserializers;
 using Microsoft.HealthVault.Configuration;
-using Microsoft.HealthVault.Exceptions;
 using Microsoft.HealthVault.Diagnostics;
+using Microsoft.HealthVault.Exceptions;
 using Microsoft.HealthVault.Person;
 using Microsoft.HealthVault.PlatformInformation;
 using Microsoft.HealthVault.Rest;
@@ -139,7 +139,7 @@ namespace Microsoft.HealthVault.Connection
             HealthServiceResponseData responseData = null;
             try
             {
-                responseData = await SendRequestAsync(requestXml, correlationId);
+                responseData = await SendRequestAsync(requestXml, correlationId).ConfigureAwait(false);
             }
             catch (HealthServiceAuthenticatedSessionTokenExpiredException)
             {

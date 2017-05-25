@@ -1,4 +1,12 @@
-﻿using System;
+﻿// Copyright (c) Microsoft Corporation.  All rights reserved.
+// MIT License
+// Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the ""Software""), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+//
+// The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED *AS IS*, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+using System;
 using System.Collections.Generic;
 using Android.App;
 using Android.OS;
@@ -15,16 +23,16 @@ namespace SandboxAndroid
     [Activity(Label = "SandboxAndroid", MainLauncher = true, Icon = "@drawable/icon")]
     public class MainActivity : Activity
     {
-        private IHealthVaultSodaConnection connection;
-        private IThingClient thingClient;
+        private IHealthVaultSodaConnection _connection;
+        private IThingClient _thingClient;
 
-        private TextView statusView;
-        private Button connectionButton;
-        private Button disconnectButton;
-        private Button createButton;
-        private Button getButton;
-        private LinearLayout controlsLayout;
-        private ListView listView;
+        private TextView _statusView;
+        private Button _connectionButton;
+        private Button _disconnectButton;
+        private Button _createButton;
+        private Button _getButton;
+        private LinearLayout _controlsLayout;
+        private ListView _listView;
 
         protected override void OnCreate(Bundle bundle)
         {
@@ -33,26 +41,26 @@ namespace SandboxAndroid
             // Set our view from the "main" layout resource
             SetContentView(Resource.Layout.Main);
 
-            statusView = FindViewById<TextView>(Resource.Id.StatusText);
-            controlsLayout = FindViewById<LinearLayout>(Resource.Id.ControlLayout);
-            listView = FindViewById<ListView>(Resource.Id.ListView);
+            _statusView = FindViewById<TextView>(Resource.Id.StatusText);
+            _controlsLayout = FindViewById<LinearLayout>(Resource.Id.ControlLayout);
+            _listView = FindViewById<ListView>(Resource.Id.ListView);
 
             // Get our buttons from the layout resource,
-            connectionButton = FindViewById<Button>(Resource.Id.ConnectButton);
-            disconnectButton = FindViewById<Button>(Resource.Id.DisconnectButton);
-            getButton = FindViewById<Button>(Resource.Id.GetButton);
-            createButton = FindViewById<Button>(Resource.Id.CreateButton);
+            _connectionButton = FindViewById<Button>(Resource.Id.ConnectButton);
+            _disconnectButton = FindViewById<Button>(Resource.Id.DisconnectButton);
+            _getButton = FindViewById<Button>(Resource.Id.GetButton);
+            _createButton = FindViewById<Button>(Resource.Id.CreateButton);
 
             // attach the actions
-            connectionButton.Click += ConnectToHealthVaultAsync;
-            disconnectButton.Click += DisconnectButtonOnClick;
-            getButton.Click += GetBloodPressures;
-            createButton.Click += CreateBloodPressure;
+            _connectionButton.Click += ConnectToHealthVaultAsync;
+            _disconnectButton.Click += DisconnectButtonOnClick;
+            _getButton.Click += GetBloodPressures;
+            _createButton.Click += CreateBloodPressure;
         }
 
         private async void ConnectToHealthVaultAsync(object sender, EventArgs eventArgs)
         {
-            statusView.Text = "Connecting...";
+            _statusView.Text = "Connecting...";
 
             // create a configuration for our HealthVault application
             var configuration = GetPpeConfiguration();
@@ -60,25 +68,25 @@ namespace SandboxAndroid
             try
             {
                 // get a connection to HealthVault
-                connection = HealthVaultConnectionFactory.Current.GetOrCreateSodaConnection(configuration);
-                await connection.AuthenticateAsync();
+                _connection = HealthVaultConnectionFactory.Current.GetOrCreateSodaConnection(configuration);
+                await _connection.AuthenticateAsync();
             }
             catch (Exception e)
             {
-                statusView.Text = $"Error connecting... {e.ToString()}";
+                _statusView.Text = $"Error connecting... {e.ToString()}";
             }
 
             // get a thing client
 
-            thingClient = connection.CreateThingClient();
+            _thingClient = _connection.CreateThingClient();
 
-            PersonInfo personInfo = await connection.GetPersonInfoAsync();
+            PersonInfo personInfo = await _connection.GetPersonInfoAsync();
 
             // update visual state
-            connectionButton.Visibility = ViewStates.Gone;
-            controlsLayout.Visibility = ViewStates.Visible;
-            disconnectButton.Visibility = ViewStates.Visible;
-            statusView.Text = $"Hello {personInfo.Name}";
+            _connectionButton.Visibility = ViewStates.Gone;
+            _controlsLayout.Visibility = ViewStates.Visible;
+            _disconnectButton.Visibility = ViewStates.Visible;
+            _statusView.Text = $"Hello {personInfo.Name}";
         }
 
         private static HealthVaultConfiguration GetPpeConfiguration()
@@ -94,12 +102,12 @@ namespace SandboxAndroid
 
         private async void DisconnectButtonOnClick(object sender, EventArgs eventArgs)
         {
-            await connection.DeauthorizeApplicationAsync();
-            statusView.Text = "Disconnected.";
+            await _connection.DeauthorizeApplicationAsync();
+            _statusView.Text = "Disconnected.";
 
-            connectionButton.Visibility = ViewStates.Visible;
-            disconnectButton.Visibility = ViewStates.Gone;
-            controlsLayout.Visibility = ViewStates.Gone;
+            _connectionButton.Visibility = ViewStates.Visible;
+            _disconnectButton.Visibility = ViewStates.Gone;
+            _controlsLayout.Visibility = ViewStates.Gone;
         }
 
         private async void CreateBloodPressure(object sender, EventArgs eventArgs)
@@ -113,16 +121,16 @@ namespace SandboxAndroid
             };
 
             // use our thing client to creat the new blood pressure
-            PersonInfo personInfo = await connection.GetPersonInfoAsync();
-            await thingClient.CreateNewThingsAsync(personInfo.SelectedRecord.Id, new List<BloodPressure>() { bp });
+            PersonInfo personInfo = await _connection.GetPersonInfoAsync();
+            await _thingClient.CreateNewThingsAsync(personInfo.SelectedRecord.Id, new List<BloodPressure>() { bp });
         }
 
         private async void GetBloodPressures(object sender, EventArgs eventArgs)
         {
             // use our thing client to get all things of type blood pressure
-            PersonInfo personInfo = await connection.GetPersonInfoAsync();
-            IReadOnlyCollection<BloodPressure> bloodPressures = await thingClient.GetThingsAsync<BloodPressure>(personInfo.SelectedRecord.Id);
-            listView.Adapter = new ArrayAdapter(this, Android.Resource.Layout.SimpleListItem1, new List<BloodPressure>(bloodPressures));
+            PersonInfo personInfo = await _connection.GetPersonInfoAsync();
+            IReadOnlyCollection<BloodPressure> bloodPressures = await _thingClient.GetThingsAsync<BloodPressure>(personInfo.SelectedRecord.Id);
+            _listView.Adapter = new ArrayAdapter(this, Android.Resource.Layout.SimpleListItem1, new List<BloodPressure>(bloodPressures));
         }
     }
 }

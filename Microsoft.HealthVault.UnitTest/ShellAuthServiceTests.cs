@@ -1,3 +1,11 @@
+// Copyright (c) Microsoft Corporation.  All rights reserved.
+// MIT License
+// Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the ""Software""), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+//
+// The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED *AS IS*, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
 using System;
 using System.Threading.Tasks;
 using Microsoft.HealthVault.Client;
@@ -18,9 +26,9 @@ namespace Microsoft.HealthVault.UnitTest
         private IBrowserAuthBroker _subBrowserAuthBroker;
         private HealthVaultConfiguration _healthVaultConfiguration;
 
-        private static readonly Uri ShellUrl = new Uri("https://contoso.com/shell");
+        private static readonly Uri s_shellUrl = new Uri("https://contoso.com/shell");
 
-        private static readonly Guid MasterApplicationId = new Guid("30945bac-d221-4f89-8197-6983a390066d");
+        private static readonly Guid s_masterApplicationId = new Guid("30945bac-d221-4f89-8197-6983a390066d");
 
         [TestInitialize]
         public void TestInitialize()
@@ -54,7 +62,7 @@ namespace Microsoft.HealthVault.UnitTest
                 .Returns(successUri);
 
             ShellAuthService service = CreateService();
-            await service.AuthorizeAdditionalRecordsAsync(ShellUrl, MasterApplicationId);
+            await service.AuthorizeAdditionalRecordsAsync(s_shellUrl, s_masterApplicationId);
 
             await _subBrowserAuthBroker
                 .Received()
@@ -70,7 +78,7 @@ namespace Microsoft.HealthVault.UnitTest
                 .Returns(successUri);
 
             ShellAuthService service = CreateService();
-            string instanceId = await service.ProvisionApplicationAsync(ShellUrl, MasterApplicationId, ApplicationCreationToken, ApplicationInstanceId);
+            string instanceId = await service.ProvisionApplicationAsync(s_shellUrl, s_masterApplicationId, ApplicationCreationToken, ApplicationInstanceId);
 
             Assert.AreEqual("3", instanceId);
         }
@@ -118,7 +126,7 @@ namespace Microsoft.HealthVault.UnitTest
             }
 
             Assert.IsFalse(urlString.Contains(Uri.EscapeDataString("aib=")));
-            Assert.IsTrue(urlString.Contains(Uri.EscapeDataString("appid=" + MasterApplicationId)));
+            Assert.IsTrue(urlString.Contains(Uri.EscapeDataString("appid=" + s_masterApplicationId)));
 
             return true;
         }

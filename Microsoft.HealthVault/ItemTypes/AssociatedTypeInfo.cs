@@ -1,7 +1,10 @@
-// Copyright(c) Microsoft Corporation.
-// This content is subject to the Microsoft Reference Source License,
-// see http://www.microsoft.com/resources/sharedsource/licensingbasics/sharedsourcelicenses.mspx.
-// All other rights reserved.
+// Copyright (c) Microsoft Corporation.  All rights reserved.
+// MIT License
+// Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the ""Software""), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+//
+// The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED *AS IS*, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 using System;
 using System.Xml;
@@ -113,12 +116,12 @@ namespace Microsoft.HealthVault.ItemTypes
 
             writer.WriteStartElement(nodeName);
 
-            if (thingTypeVersionId.Equals(Guid.Empty))
+            if (_thingTypeVersionId.Equals(Guid.Empty))
             {
                 throw new InvalidOperationException(Resources.AssociatedThingTypeVersionIdNullorEmpty);
             }
 
-            XmlWriterHelper.WriteOptGuid(writer, "thing-type-version-id", thingTypeVersionId);
+            XmlWriterHelper.WriteOptGuid(writer, "thing-type-version-id", _thingTypeVersionId);
             XmlWriterHelper.WriteOptString(writer, "thing-type-value-xpath", _thingTypeValueXPath);
             XmlWriterHelper.WriteOptString(writer, "thing-type-display-xpath", _thingTypeDisplayXPath);
             writer.WriteEndElement();
@@ -136,7 +139,7 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             get
             {
-                return thingTypeVersionId;
+                return _thingTypeVersionId;
             }
 
             set
@@ -146,11 +149,11 @@ namespace Microsoft.HealthVault.ItemTypes
                     throw new ArgumentException(Resources.AssociatedThingTypeVersionIdNullorEmpty, nameof(ThingTypeVersionId));
                 }
 
-                thingTypeVersionId = value;
+                _thingTypeVersionId = value;
             }
         }
 
-        private Guid thingTypeVersionId;
+        private Guid _thingTypeVersionId;
 
         /// <summary>
         /// Gets or sets xPath expression for the value field associated with this goal or task in the thing type.

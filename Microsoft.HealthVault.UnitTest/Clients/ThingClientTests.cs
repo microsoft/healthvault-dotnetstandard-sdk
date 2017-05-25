@@ -1,4 +1,12 @@
-﻿using System;
+﻿// Copyright (c) Microsoft Corporation.  All rights reserved.
+// MIT License
+// Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the ""Software""), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+//
+// The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED *AS IS*, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
@@ -74,7 +82,7 @@ namespace Microsoft.HealthVault.UnitTest.Clients
                 HealthVaultMethods.GetThings,
                 Arg.Any<int>(),
                 Arg.Is<string>(x => x.Contains(BloodPressure.TypeId.ToString())),
-                Arg.Is<Guid>((x) => x == _recordId));
+                Arg.Is<Guid>(x => x == _recordId));
 
             // Assert that all results are parsed, grouped, and returned correctly.
             // Note that the sample data was not from this exact call, so it includes some other types of things in the results
@@ -88,7 +96,7 @@ namespace Microsoft.HealthVault.UnitTest.Clients
         public async Task GetThingsMultiQuery()
         {
             InitializeResponse(SampleUtils.GetSampleContent("ThingsMultiQueryResult.xml"));
-            var result = await _client.GetThingsAsync(_recordId, new [] { this.GetBloodPressureThingQuery(), this.GetWeightThingQuery() });
+            var result = await _client.GetThingsAsync(_recordId, new[] { this.GetBloodPressureThingQuery(), this.GetWeightThingQuery() });
 
             // ensure that the connection was called with the proper values
             await _connection.Received().ExecuteAsync(
@@ -103,6 +111,46 @@ namespace Microsoft.HealthVault.UnitTest.Clients
             var resultList = result.ToList();
             Assert.AreEqual(3, resultList[0].Count);
             Assert.AreEqual(1, resultList[1].Count);
+        }
+
+        [TestMethod]
+        public async Task GetThingsPaged()
+        {
+            InitializeResponse(
+                SampleUtils.GetSampleContent("ThingsPagedResult1.xml"),
+                SampleUtils.GetSampleContent("ThingsPagedResult2.xml"),
+                SampleUtils.GetSampleContent("ThingsPagedResult3.xml"));
+
+            ThingQuery query = this.GetBloodPressureThingQuery();
+            var result = await _client.GetThingsAsync<BloodPressure>(_recordId, query);
+            List<BloodPressure> resultList = result.ToList();
+
+            // The first call should be a normal one to get blood pressures.
+            await _connection.Received().ExecuteAsync(
+                HealthVaultMethods.GetThings,
+                Arg.Any<int>(),
+                Arg.Is<string>(x => x.Contains(BloodPressure.TypeId.ToString())),
+                Arg.Is<Guid>(x => x == _recordId));
+
+            // The first response contains some unresolved items, which need another couple of calls to fetch.
+            // We make sure we see these calls and the thing IDs they are requesting.
+            await _connection.Received().ExecuteAsync(
+                HealthVaultMethods.GetThings,
+                Arg.Any<int>(),
+                Arg.Is<string>(x => x.Contains("c0464a97-2832-4f50-a683-6d98c396da08")),
+                Arg.Is<Guid>(x => x == _recordId));
+
+            await _connection.Received().ExecuteAsync(
+                HealthVaultMethods.GetThings,
+                Arg.Any<int>(),
+                Arg.Is<string>(x => x.Contains("f5f2c6f0-6924-4744-9338-8e3d81c31259")),
+                Arg.Is<Guid>(x => x == _recordId));
+
+            Assert.AreEqual(503, result.Count);
+
+            BloodPressure lastBloodPressure = resultList[502];
+            Assert.AreEqual(117, lastBloodPressure.Systolic);
+            Assert.AreEqual(70, lastBloodPressure.Diastolic);
         }
 
         /// <summary>
@@ -197,24 +245,46 @@ namespace Microsoft.HealthVault.UnitTest.Clients
             return query;
         }
 
-        private void InitializeResponse(string sample)
+        private void InitializeResponse(params string[] samples)
         {
             _client = new ThingClient(_connection, new ThingDeserializer(_connection));
+            _connection.CreateThingClient().Returns(_client);
 
-            var infoReader = XmlReader.Create(new StringReader(sample), SDKHelper.XmlReaderSettings);
+            var responseData = new List<HealthServiceResponseData>();
 
-            infoReader.NameTable.Add("wc");
-            infoReader.ReadToFollowing("wc:info");
-
-            var response = new HealthServiceResponseData
+            foreach (string sample in samples)
             {
-                InfoNavigator = new XPathDocument(new StringReader(sample)).CreateNavigator(),
-            };
+                var infoReader = XmlReader.Create(new StringReader(sample), SDKHelper.XmlReaderSettings);
 
-            _connection.ExecuteAsync(Arg.Any<HealthVaultMethods>(), Arg.Any<int>()).Returns(response);
-            _connection.ExecuteAsync(Arg.Any<HealthVaultMethods>(), Arg.Any<int>(), Arg.Any<string>()).Returns(response);
-            _connection.ExecuteAsync(Arg.Any<HealthVaultMethods>(), Arg.Any<int>(), Arg.Any<string>(), Arg.Any<Guid>()).Returns(response);
-            _connection.ExecuteAsync(Arg.Any<HealthVaultMethods>(), Arg.Any<int>(), Arg.Any<string>(), Arg.Any<Guid>(), Arg.Any<Guid>()).Returns(response);
+                infoReader.NameTable.Add("wc");
+                infoReader.ReadToFollowing("wc:info");
+
+                var response = new HealthServiceResponseData
+                {
+                    InfoNavigator = new XPathDocument(new StringReader(sample)).CreateNavigator(),
+                };
+
+                responseData.Add(response);
+            }
+
+            if (responseData.Count == 1)
+            {
+                _connection.ExecuteAsync(
+                    Arg.Any<HealthVaultMethods>(),
+                    Arg.Any<int>(),
+                    Arg.Any<string>(),
+                    Arg.Any<Guid?>(),
+                    Arg.Any<Guid?>()).Returns(responseData[0]);
+            }
+            else
+            {
+                _connection.ExecuteAsync(
+                    Arg.Any<HealthVaultMethods>(),
+                    Arg.Any<int>(),
+                    Arg.Any<string>(),
+                    Arg.Any<Guid?>(),
+                    Arg.Any<Guid?>()).Returns(responseData[0], responseData.Skip(1).ToArray());
+            }
         }
     }
 }
