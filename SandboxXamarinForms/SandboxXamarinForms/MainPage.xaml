@@ -6,9 +6,12 @@
 
     <StackLayout>
         <Button Clicked="Connect_OnClicked" Text="Connect" />
-        <Button Clicked="SetBP_OnClicked" Text="Add BP" />
-        <Button Clicked="GetBP_OnClicked" Text="Get BP" />
-        <Button Clicked="MultiQuery_OnClicked" Text="Get Things Multi-Query" />
+        <StackLayout x:Name="ConnectedButtons" IsVisible="False">
+            <Button Clicked="SetBP_OnClicked" Text="Add BP" />
+            <Button Clicked="Add100BPs_OnClicked" Text="Add 100 BPs" />
+            <Button Clicked="GetBP_OnClicked" Text="Get BP" />
+            <Button Clicked="MultiQuery_OnClicked" Text="Get Things Multi-Query" />
+        </StackLayout>
         <Label x:Name="OutputLabel" />
     </StackLayout>
 </ContentPage>
