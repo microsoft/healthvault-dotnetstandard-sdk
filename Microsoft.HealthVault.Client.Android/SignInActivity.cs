@@ -94,8 +94,8 @@ namespace Microsoft.HealthVault.Client.Platform.Android
 
             public SignInWebViewClient(SignInActivity activity, string endUrl)
             {
-                activity = activity;
-                endUrl = endUrl;
+                _activity = activity;
+                _endUrl = endUrl;
             }
 
             public override void OnPageFinished(WebView view, string url)

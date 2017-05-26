@@ -56,7 +56,7 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             Validator.ThrowIfArgumentNull(approximateDate, nameof(approximateDate), Resources.ApproximateDateTimeDateNull);
 
-            approximateDate = approximateDate;
+            _approximateDate = approximateDate;
             _approximateTime = null;
         }
 
@@ -82,7 +82,7 @@ namespace Microsoft.HealthVault.ItemTypes
             ApproximateTime approximateTime)
             : this(approximateDate)
         {
-            approximateTime = approximateTime;
+            _approximateTime = approximateTime;
         }
 
         /// <summary>
@@ -112,7 +112,7 @@ namespace Microsoft.HealthVault.ItemTypes
             CodableValue timeZone)
             : this(approximateDate, approximateTime)
         {
-            timeZone = timeZone;
+            _timeZone = timeZone;
         }
 
         /// <summary>
@@ -137,7 +137,7 @@ namespace Microsoft.HealthVault.ItemTypes
         public ApproximateDateTime(string description)
         {
             Validator.ThrowIfStringNullOrEmpty(description, "description");
-            description = description;
+            _description = description;
             _approximateDate = null;
         }
 
