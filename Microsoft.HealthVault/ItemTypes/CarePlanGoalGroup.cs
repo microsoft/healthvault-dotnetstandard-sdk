@@ -69,7 +69,7 @@ namespace Microsoft.HealthVault.ItemTypes
                 throw new ArgumentException(Resources.CarePlanGoalGroupGroupsEmpty, nameof(goals));
             }
 
-            goals = goals;
+            _goals = goals;
         }
 
         /// <summary>

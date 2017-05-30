@@ -95,7 +95,7 @@ namespace Microsoft.HealthVault.ItemTypes
             string name = navigator.GetAttribute("name", string.Empty);
             if (name.Length != 0)
             {
-                name = name;
+                _name = name;
             }
 
             XPathNodeIterator zoneIterator =

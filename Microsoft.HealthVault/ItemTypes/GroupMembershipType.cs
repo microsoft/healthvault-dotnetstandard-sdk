@@ -104,7 +104,7 @@ namespace Microsoft.HealthVault.ItemTypes
 
             CodableValue name = new CodableValue();
             name.ParseXml(navigator.SelectSingleNode("name"));
-            name = name;
+            _name = name;
             _value = navigator.SelectSingleNode("value").Value;
         }
 

@@ -53,7 +53,7 @@ namespace Microsoft.HealthVault.ItemTypes
             int lowerBoundaryHeartRate,
             int upperBoundaryHeartRate)
         {
-            name = name;
+            _name = name;
             _lowAbsolute = lowerBoundaryHeartRate;
             _upperAbsolute = upperBoundaryHeartRate;
         }
@@ -82,7 +82,7 @@ namespace Microsoft.HealthVault.ItemTypes
             double lowerBoundaryPercentage,
             double upperBoundaryPercentage)
         {
-            name = name;
+            _name = name;
             _lowRelative = lowerBoundaryPercentage;
             _upperRelative = upperBoundaryPercentage;
         }
@@ -106,7 +106,7 @@ namespace Microsoft.HealthVault.ItemTypes
             string name = navigator.GetAttribute("name", string.Empty);
             if (name.Length != 0)
             {
-                name = name;
+                _name = name;
             }
 
             XPathNavigator lowNav =
