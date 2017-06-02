@@ -23,10 +23,9 @@ namespace Microsoft.HealthVault.IntegrationTest
     [TestClass]
     public class ActionPlanTests
     {
-        private const string PlanName = "Manage your weight";
+        private const string ObjectiveName = "Manage your weight";
+        private const string PlanName = "Track your weight";
 
-        // TODO: Re-enable this after cloud problems are resolved and Action Plans stops giving HTTP 500, tracked by bug #54862
-        [Ignore]
         [TestMethod]
         public async Task SimpleActionPlans()
         {
@@ -38,14 +37,15 @@ namespace Microsoft.HealthVault.IntegrationTest
 
             await RemoveAllActionPlansAsync(restClient);
 
-            Guid planId = Guid.NewGuid();
-            await restClient.CreateActionPlanWithHttpMessagesAsync(CreateWeightActionPlan(planId));
+            Guid objectiveId = Guid.NewGuid();
+            await restClient.CreateActionPlanWithHttpMessagesAsync(CreateWeightActionPlan(objectiveId));
 
             HttpOperationResponse<ActionPlansResponseActionPlanInstance> plans = await restClient.GetActionPlansWithHttpMessagesAsync();
             Assert.AreEqual(1, plans.Body.Plans.Count);
 
             ActionPlanInstance planInstance = plans.Body.Plans[0];
-            Assert.AreEqual(planId.ToString(), planInstance.Id);
+            Assert.AreEqual(objectiveId.ToString(), planInstance.Objectives[0].Id);
+            Assert.AreEqual(ObjectiveName, planInstance.Objectives[0].Name);
             Assert.AreEqual(PlanName, planInstance.Name);
         }
 
@@ -58,13 +58,13 @@ namespace Microsoft.HealthVault.IntegrationTest
             }
         }
 
-        private static ActionPlan CreateWeightActionPlan(Guid planId)
+        private static ActionPlan CreateWeightActionPlan(Guid objectiveId)
         {
             var plan = new ActionPlan();
             var objective = new Objective
             {
-                Id = planId.ToString(),
-                Name = PlanName,
+                Id = objectiveId.ToString(),
+                Name = ObjectiveName,
                 Description = "Manage your weight better by measuring daily. ",
                 State = "Active",
                 OutcomeName = "Better control over your weight",
@@ -75,7 +75,7 @@ namespace Microsoft.HealthVault.IntegrationTest
             // You can also create tasks in a separate call after the action plan is created.
             var task = CreateDailyWeightMeasurementActionPlanTask(objective.Id);
 
-            plan.Name = "Track your weight";
+            plan.Name = PlanName;
             plan.Description = "Daily weight tracking can help you be more conscious of what you eat. ";
 
             plan.ImageUrl = "https://img-prod-cms-rt-microsoft-com.akamaized.net/cms/api/am/imageFileData/RW680a?ver=b227";

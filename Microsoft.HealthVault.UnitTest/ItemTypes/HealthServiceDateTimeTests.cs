@@ -9,6 +9,7 @@
 using System;
 using Microsoft.HealthVault.ItemTypes;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NodaTime;
 
 namespace Microsoft.HealthVault.UnitTest.ItemTypes
 {
@@ -45,8 +46,8 @@ namespace Microsoft.HealthVault.UnitTest.ItemTypes
         [TestMethod]
         public void WhenDifferentDatePassedToEquals_ThenFalseReturned()
         {
-            HealthServiceDateTime dateTime1 = new HealthServiceDateTime(new DateTime(2017, 5, 18, 5, 28, 20, DateTimeKind.Utc));
-            HealthServiceDateTime dateTime2 = new HealthServiceDateTime(new DateTime(2017, 5, 18, 5, 27, 20, DateTimeKind.Utc));
+            HealthServiceDateTime dateTime1 = new HealthServiceDateTime(new LocalDateTime(2017, 5, 18, 5, 28, 20));
+            HealthServiceDateTime dateTime2 = new HealthServiceDateTime(new LocalDateTime(2017, 5, 18, 5, 27, 20));
 
             Assert.IsFalse(dateTime1.Equals(dateTime2), "Equals should return false.");
         }
@@ -54,8 +55,8 @@ namespace Microsoft.HealthVault.UnitTest.ItemTypes
         [TestMethod]
         public void WhenSameDateTimePassedToEquals_ThenTrueReturned()
         {
-            HealthServiceDateTime healthServiceDateTime = new HealthServiceDateTime(new DateTime(2017, 5, 18, 5, 28, 20, DateTimeKind.Utc));
-            DateTime dateTime = new DateTime(2017, 5, 18, 5, 28, 20, DateTimeKind.Utc);
+            HealthServiceDateTime healthServiceDateTime = new HealthServiceDateTime(new LocalDateTime(2017, 5, 18, 5, 28, 20));
+            LocalDateTime dateTime = new LocalDateTime(2017, 5, 18, 5, 28, 20);
 
             Assert.IsTrue(healthServiceDateTime.Equals(dateTime), "Equals should return true");
         }
@@ -63,8 +64,8 @@ namespace Microsoft.HealthVault.UnitTest.ItemTypes
         [TestMethod]
         public void WhenDifferentDateTimePassedToEquals_ThenFalseReturned()
         {
-            HealthServiceDateTime healthServiceDateTime = new HealthServiceDateTime(new DateTime(2017, 5, 18, 5, 28, 20, DateTimeKind.Utc));
-            DateTime dateTime = new DateTime(2017, 5, 18, 5, 27, 20, DateTimeKind.Utc);
+            HealthServiceDateTime healthServiceDateTime = new HealthServiceDateTime(new LocalDateTime(2017, 5, 18, 5, 28, 20));
+            LocalDateTime dateTime = new LocalDateTime(2017, 5, 18, 5, 27, 20);
 
             Assert.IsFalse(healthServiceDateTime.Equals(dateTime), "Equals should return false");
         }

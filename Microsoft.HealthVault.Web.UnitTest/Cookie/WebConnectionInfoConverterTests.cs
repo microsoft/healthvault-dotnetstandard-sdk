@@ -179,7 +179,7 @@ namespace Microsoft.HealthVault.Web.UnitTest.Cookie
 
             // Set the first record in the authorized records to be self record
             healthRecordInfos.ElementAt(0).Value.RelationshipType = RelationshipType.Self;
-            healthRecordInfos.ElementAt(0).Value.DateAuthorizationExpires = DateTime.MaxValue;
+            healthRecordInfos.ElementAt(0).Value.DateAuthorizationExpires = null;
             return healthRecordInfos;
         }
 

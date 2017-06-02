@@ -9,12 +9,22 @@
 using System;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
+using NodaTime;
+using NodaTime.Serialization.JsonNet;
 
 namespace Microsoft.HealthVault.Client
 {
     internal class LocalObjectStore : ILocalObjectStore
     {
         private readonly ISecretStore _secretStore;
+
+        private static readonly JsonSerializerSettings SerializerSettings;
+
+        static LocalObjectStore()
+        {
+            SerializerSettings = new JsonSerializerSettings();
+            SerializerSettings.ConfigureForNodaTime(DateTimeZoneProviders.Tzdb);
+        }
 
         public LocalObjectStore(ISecretStore secretStore)
         {
@@ -34,7 +44,7 @@ namespace Microsoft.HealthVault.Client
                 return default(T);
             }
 
-            return JsonConvert.DeserializeObject<T>(json);
+            return JsonConvert.DeserializeObject<T>(json, SerializerSettings);
         }
 
         public async Task WriteAsync(string key, object value)
@@ -44,7 +54,7 @@ namespace Microsoft.HealthVault.Client
                 throw new ArgumentException(Resources.ObjectStoreParametersEmpty);
             }
 
-            var serializedObj = JsonConvert.SerializeObject(value);
+            var serializedObj = JsonConvert.SerializeObject(value, SerializerSettings);
             await _secretStore.WriteAsync(key, serializedObj).ConfigureAwait(false);
         }
 

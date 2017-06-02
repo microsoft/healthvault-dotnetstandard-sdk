@@ -6029,7 +6029,7 @@ namespace Microsoft.HealthVault {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to An ApproximateTime object can only be compared with another ApproximateTime object..
+        ///   Looks up a localized string similar to An ApproximateTime object can only be compared with an ApproximateTime object or a LocalTime object..
         /// </summary>
         internal static string TimeCompareToInvalidType {
             get {

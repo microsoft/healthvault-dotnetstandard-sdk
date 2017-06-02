@@ -14,6 +14,8 @@ using System.Text;
 using System.Xml;
 using System.Xml.Linq;
 using System.Xml.XPath;
+using NodaTime;
+using NodaTime.Text;
 
 namespace Microsoft.HealthVault.Helpers
 {
@@ -23,6 +25,11 @@ namespace Microsoft.HealthVault.Helpers
     ///
     internal static class SDKHelper
     {
+        // This is stamping with a "Z" which seems to indicate that this is a UTC time, but
+        // this is just an issue with the protocol; the server expects this. It's actually still treated
+        // as a local time.
+        internal static readonly LocalDateTimePattern XmlLocalDateTimePattern = LocalDateTimePattern.CreateWithInvariantCulture("uuuu'-'MM'-'dd'T'HH':'mm':'ss'.'ffff'Z'");
+
         internal static XmlReaderSettings XmlReaderSettings
         {
             get
@@ -94,12 +101,6 @@ namespace Microsoft.HealthVault.Helpers
         }
 
         /// <summary>
-        /// invalid date marker
-        /// </summary>
-        ///
-        internal static readonly DateTime DateUnspecified = DateTime.MinValue;
-
-        /// <summary>
         /// XML-formatted date time value
         /// </summary>
         ///
@@ -107,57 +108,62 @@ namespace Microsoft.HealthVault.Helpers
         ///
         internal static string XmlFromNow()
         {
-            return XmlFromUtcDateTime(DateTime.UtcNow);
+            return XmlFromInstant(SystemClock.Instance.GetCurrentInstant());
         }
 
         /// <summary>
-        /// XML-formatted date time value
+        /// Formats a local date/time for XML.
         /// </summary>
-        ///
         /// <param name="dateTime">The date to format to XML</param>
-        ///
-        /// <returns>Xml formatted time from the date</returns>
-        ///
-        internal static string XmlFromLocalDateTime(DateTime dateTime)
-        {
-            return XmlFromUtcDateTime(dateTime.ToUniversalTime());
-        }
-
-        /// <summary>
-        /// XML Formatted date time value
-        /// </summary>
-        ///
-        /// <param name="dateTime">The date to format to XML</param>
-        ///
         /// <returns>The date formatted to XML</returns>
-        ///
-        /// <exception cref="ArgumentException">
-        /// If the date time value provided is not in UTC format.
-        /// </exception>
-        ///
-        internal static string XmlFromUtcDateTime(DateTime dateTime)
+        internal static string XmlFromLocalDateTime(LocalDateTime dateTime)
         {
-            if (dateTime.Kind != DateTimeKind.Utc)
+            return XmlLocalDateTimePattern.Format(dateTime);
+        }
+
+        /// <summary>
+        /// Formats an instant for XML.
+        /// </summary>
+        /// <param name="instant">The instant to format to XML.</param>
+        /// <returns>The instant formatted to XML.</returns>
+        internal static string XmlFromInstant(Instant instant)
+        {
+            return InstantPattern.ExtendedIso.Format(instant);
+        }
+
+        /// <summary>
+        /// Parses an XML local date/time.
+        /// </summary>
+        /// <param name="value">The value to parse (with 'Z' specifier)</param>
+        /// <returns>The parsed local date/time.</returns>
+        internal static LocalDateTime LocalDateTimeFromXml(string value)
+        {
+            return XmlLocalDateTimePattern.Parse(value).Value;
+        }
+
+        /// <summary>
+        /// Parses an XML instant with a 'Z' specifier.
+        /// </summary>
+        /// <param name="value">The value to parse.</param>
+        /// <returns>The parsed instant.</returns>
+        internal static Instant InstantFromXml(string value)
+        {
+            return InstantPattern.ExtendedIso.Parse(value).Value;
+        }
+
+        /// <summary>
+        /// Parses an XML instant with a no 'Z' specifier.
+        /// </summary>
+        /// <param name="value">The value to parse.</param>
+        /// <returns>The parsed instant.</returns>
+        internal static Instant InstantFromUnmarkedXml(string value)
+        {
+            if (value.EndsWith("Z", StringComparison.Ordinal))
             {
-                throw new ArgumentException(Resources.NonUTCDateTime, nameof(dateTime));
+                return InstantFromXml(value);
             }
 
-            return XmlFromDateTime(dateTime);
-        }
-
-        /// <summary>
-        /// XML-formatted date time value
-        /// </summary>
-        ///
-        /// <param name="dateTime">The date to format to XML</param>
-        ///
-        /// <returns>The date formatted to XML</returns>
-        ///
-        internal static string XmlFromDateTime(DateTime dateTime)
-        {
-            return dateTime.ToString(
-                "yyyy-MM-ddTHH:mm:ss.FFFZ",
-                    CultureInfo.InvariantCulture);
+            return InstantFromXml(value + "Z");
         }
 
         /// <summary>

@@ -11,6 +11,7 @@ using System.Globalization;
 using System.Xml;
 using System.Xml.XPath;
 using Microsoft.HealthVault.Helpers;
+using NodaTime;
 
 namespace Microsoft.HealthVault.ItemTypes
 {
@@ -26,7 +27,8 @@ namespace Microsoft.HealthVault.ItemTypes
     public class ApproximateTime
         : ItemBase,
             IComparable,
-            IComparable<ApproximateTime>
+            IComparable<ApproximateTime>,
+            IComparable<LocalTime>
     {
         /// <summary>
         /// Creates a new instance of the <see cref="ApproximateTime"/> class
@@ -128,16 +130,15 @@ namespace Microsoft.HealthVault.ItemTypes
         }
 
         /// <summary>
-        /// Gets the current time including the hour, minute, and second.
+        /// Creates a new instance of the <see cref="ApproximateTime"/> class from the given local time.
         /// </summary>
-        ///
-        public static ApproximateTime Now
+        /// <param name="time">The time to copy from.</param>
+        public ApproximateTime(LocalTime time)
         {
-            get
-            {
-                DateTime now = DateTime.Now;
-                return new ApproximateTime(now.Hour, now.Minute, now.Second);
-            }
+            Hour = time.Hour;
+            Minute = time.Minute;
+            Second = time.Second;
+            Millisecond = time.Millisecond;
         }
 
         /// <summary>
@@ -448,7 +449,15 @@ namespace Microsoft.HealthVault.ItemTypes
             ApproximateTime hsTime = obj as ApproximateTime;
             if (hsTime == null)
             {
-                throw new ArgumentException(Resources.TimeCompareToInvalidType, nameof(obj));
+                try
+                {
+                    LocalTime localTime = (LocalTime)obj;
+                    return CompareTo(localTime);
+                }
+                catch (InvalidCastException)
+                {
+                    throw new ArgumentException(Resources.TimeCompareToInvalidType, nameof(obj));
+                }
             }
 
             return CompareTo(hsTime);
@@ -470,7 +479,7 @@ namespace Microsoft.HealthVault.ItemTypes
         /// greater than zero, the instance is greater than
         /// <paramref name="other"/>.
         /// </returns>
-        public int CompareTo(DateTime other)
+        public int CompareTo(LocalTime other)
         {
             if (Hour > other.Hour)
             {

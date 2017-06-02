@@ -15,6 +15,7 @@ using Microsoft.HealthVault.Person;
 using Microsoft.HealthVault.PlatformInformation;
 using Microsoft.HealthVault.Thing;
 using Microsoft.HealthVault.Transport;
+using NodaTime;
 
 namespace Microsoft.HealthVault.Clients
 {
@@ -47,12 +48,12 @@ namespace Microsoft.HealthVault.Clients
             return HealthVaultPlatformInformation.Current.GetServiceDefinitionAsync(_connection, responseSections);
         }
 
-        public Task<ServiceInfo> GetServiceDefinitionAsync(DateTime lastUpdatedTime)
+        public Task<ServiceInfo> GetServiceDefinitionAsync(Instant lastUpdatedTime)
         {
             return HealthVaultPlatformInformation.Current.GetServiceDefinitionAsync(_connection, lastUpdatedTime);
         }
 
-        public Task<ServiceInfo> GetServiceDefinitionAsync(ServiceInfoSections responseSections, DateTime lastUpdatedTime)
+        public Task<ServiceInfo> GetServiceDefinitionAsync(ServiceInfoSections responseSections, Instant lastUpdatedTime)
         {
             return HealthVaultPlatformInformation.Current.GetServiceDefinitionAsync(_connection, responseSections, lastUpdatedTime);
         }
@@ -61,7 +62,7 @@ namespace Microsoft.HealthVault.Clients
             IList<Guid> typeIds,
             ThingTypeSections sections,
             IList<string> imageTypes,
-            DateTime? lastClientRefreshDate)
+            Instant? lastClientRefreshDate)
         {
             return HealthVaultPlatformInformation.Current.GetHealthRecordItemTypeDefinitionAsync(typeIds, sections, imageTypes, lastClientRefreshDate, _connection);
         }

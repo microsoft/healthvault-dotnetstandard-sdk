@@ -11,6 +11,7 @@ using System.Globalization;
 using System.Xml;
 using System.Xml.XPath;
 using Microsoft.HealthVault.Helpers;
+using NodaTime;
 
 namespace Microsoft.HealthVault.ItemTypes
 {
@@ -19,8 +20,7 @@ namespace Microsoft.HealthVault.ItemTypes
     /// </summary>
     ///
     /// <remarks>
-    /// A HealthVault date differs from a <see cref="System.DateTime"/> in
-    /// that it pertains to dates only, not times. The year, month, and day
+    /// A HealthVault date pertains to dates only, not times. The year, month, and day
     /// must be specified.
     /// </remarks>
     ///
@@ -28,7 +28,7 @@ namespace Microsoft.HealthVault.ItemTypes
         : ItemBase,
             IComparable,
             IComparable<HealthServiceDate>,
-            IComparable<DateTime>
+            IComparable<LocalDate>
     {
         /// <summary>
         /// Creates a new instance of the <see cref="HealthServiceDate"/> class
@@ -266,7 +266,7 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         /// <exception cref="ArgumentException">
         /// The <paramref name="obj"/> parameter is not a <see cref="HealthServiceDate"/>
-        /// or <see cref="System.DateTime"/> object.
+        /// or <see cref="LocalDate"/> object.
         /// </exception>
         ///
         public int CompareTo(object obj)
@@ -281,8 +281,8 @@ namespace Microsoft.HealthVault.ItemTypes
             {
                 try
                 {
-                    DateTime dt = (DateTime)obj;
-                    return CompareTo(dt);
+                    LocalDate date = (LocalDate)obj;
+                    return CompareTo(date);
                 }
                 catch (InvalidCastException)
                 {
@@ -312,42 +312,13 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public int CompareTo(HealthServiceDate other)
         {
-            if (other == null)
-            {
-                return 1;
-            }
-
-            if (Year > other.Year)
-            {
-                return 1;
-            }
-
-            if (Year < other.Year)
-            {
-                return -1;
-            }
-
-            if (Month > other.Month)
-            {
-                return 1;
-            }
-
-            if (Month < other.Month)
-            {
-                return -1;
-            }
-
-            if (Day > other.Day)
-            {
-                return 1;
-            }
-
-            if (Day < other.Day)
-            {
-                return -1;
-            }
-
-            return 0;
+            if (ReferenceEquals(this, other)) return 0;
+            if (ReferenceEquals(null, other)) return 1;
+            var yearComparison = _year.CompareTo(other._year);
+            if (yearComparison != 0) return yearComparison;
+            var monthComparison = _month.CompareTo(other._month);
+            if (monthComparison != 0) return monthComparison;
+            return _day.CompareTo(other._day);
         }
 
         /// <summary>
@@ -367,7 +338,7 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <paramref name="other"/>.
         /// </returns>
         ///
-        public int CompareTo(DateTime other)
+        public int CompareTo(LocalDate other)
         {
             if (Year > other.Year)
             {
@@ -572,9 +543,8 @@ namespace Microsoft.HealthVault.ItemTypes
 
         internal string ToString(IFormatProvider formatProvider)
         {
-            DateTime dt = new DateTime(Year, Month, Day);
-
-            return dt.ToString("d", formatProvider);
+            LocalDate localDate = new LocalDate(Year, Month, Day);
+            return localDate.ToString("d", formatProvider);
         }
 
         /// <summary>

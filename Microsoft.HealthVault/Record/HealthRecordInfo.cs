@@ -16,6 +16,7 @@ using Microsoft.HealthVault.Exceptions;
 using Microsoft.HealthVault.Helpers;
 using Microsoft.HealthVault.Person;
 using Microsoft.HealthVault.Thing;
+using NodaTime;
 
 namespace Microsoft.HealthVault.Record
 {
@@ -180,7 +181,7 @@ namespace Microsoft.HealthVault.Record
 
             _relationshipName = navigator.GetAttribute("rel-name", string.Empty);
 
-            _dateAuthorizationExpires = XPathHelper.ParseAttributeAsDateTime(navigator, "auth-expires", DateTime.MinValue);
+            _dateAuthorizationExpires = XPathHelper.ParseAttributeAsNullableInstant(navigator, "auth-expires");
 
             _authExpired = XPathHelper.ParseAttributeAsBoolean(navigator, "auth-expired", false);
 
@@ -194,8 +195,8 @@ namespace Microsoft.HealthVault.Record
                 State = HealthRecordState.Unknown;
             }
 
-            DateCreated = XPathHelper.ParseAttributeAsDateTime(navigator, "date-created", DateTime.MinValue);
-            DateUpdated = XPathHelper.ParseAttributeAsDateTime(navigator, "date-updated", DateTime.MinValue);
+            DateCreated = XPathHelper.ParseAttributeAsInstant(navigator, "date-created");
+            DateUpdated = XPathHelper.ParseAttributeAsInstant(navigator, "date-updated");
 
             QuotaInBytes = XPathHelper.ParseAttributeAsLong(navigator, "max-size-bytes", null);
             QuotaUsedInBytes = XPathHelper.ParseAttributeAsLong(navigator, "size-bytes", null);
@@ -209,7 +210,7 @@ namespace Microsoft.HealthVault.Record
 
             LatestOperationSequenceNumber = XPathHelper.ParseAttributeAsLong(navigator, "latest-operation-sequence-number", 0).Value;
 
-            RecordAppAuthCreatedDate = XPathHelper.ParseAttributeAsDateTime(navigator, "record-app-auth-created-date", DateTime.MinValue);
+            RecordAppAuthCreatedDate = XPathHelper.ParseAttributeAsInstant(navigator, "record-app-auth-created-date");
         }
 
         /// <summary>
@@ -267,7 +268,7 @@ namespace Microsoft.HealthVault.Record
 
             writer.WriteAttributeString(
                 "auth-expires",
-                SDKHelper.XmlFromDateTime(_dateAuthorizationExpires));
+                DateAuthorizationExpires == null ? "9999-12-31T23:59:59.999Z" : SDKHelper.XmlFromInstant(DateAuthorizationExpires.Value));
 
             writer.WriteAttributeString(
                 "auth-expired",
@@ -286,7 +287,7 @@ namespace Microsoft.HealthVault.Record
 
             writer.WriteAttributeString(
                 "date-created",
-                SDKHelper.XmlFromDateTime(DateCreated));
+                SDKHelper.XmlFromInstant(DateCreated));
 
             if (QuotaInBytes.HasValue)
             {
@@ -312,7 +313,7 @@ namespace Microsoft.HealthVault.Record
 
             writer.WriteAttributeString(
                 "date-updated",
-                SDKHelper.XmlFromDateTime(DateUpdated));
+                SDKHelper.XmlFromInstant(DateUpdated));
 
             writer.WriteValue(_name);
 
@@ -356,12 +357,6 @@ namespace Microsoft.HealthVault.Record
         /// <summary>
         /// Gets the date/time that the authorization for the record expires.
         /// </summary>
-        ///
-        /// <value>
-        /// A DateTime in UTC indicating when the record is no longer
-        /// accessible to the user.
-        /// </value>
-        ///
         /// <remarks>
         /// When a person shares their record with another HealthVault account,
         /// they can specify the date when that sharing is revoked (if ever).
@@ -369,12 +364,10 @@ namespace Microsoft.HealthVault.Record
         /// the record after the indicated date, they receive a
         /// <see cref="HealthServiceAccessDeniedException"/>.
         /// </remarks>
-        ///
         /// <exception cref="InvalidOperationException">
         /// The record was constructed using the record ID.
         /// </exception>
-        ///
-        public DateTime DateAuthorizationExpires
+        public Instant? DateAuthorizationExpires
         {
             get
             {
@@ -387,7 +380,7 @@ namespace Microsoft.HealthVault.Record
             }
         }
 
-        private DateTime _dateAuthorizationExpires;
+        private Instant? _dateAuthorizationExpires;
 
         /// <summary>
         /// <b>true</b> if the authorization of the authenticated person has
@@ -559,13 +552,13 @@ namespace Microsoft.HealthVault.Record
         /// Gets the date the record was created, in UTC.
         /// </summary>
         ///
-        public DateTime DateCreated { get; set; }
+        public Instant DateCreated { get; set; }
 
         /// <summary>
         /// Gets the date the record was updated, in UTC.
         /// </summary>
         ///
-        public DateTime DateUpdated { get; set; }
+        public Instant DateUpdated { get; set; }
 
         /// <summary>
         /// Gets the maximum total size in bytes that the <see cref="ThingBase" />s in
@@ -626,9 +619,9 @@ namespace Microsoft.HealthVault.Record
         public string ApplicationSpecificRecordId { get; set; }
 
         /// <summary>
-        /// Gets the date when the user authorized the application to the record, in UTC.
+        /// Gets the date when the user authorized the application to the record.
         /// </summary>
-        public DateTime RecordAppAuthCreatedDate { get; set; }
+        public Instant RecordAppAuthCreatedDate { get; set; }
 
         #endregion Public properties
 

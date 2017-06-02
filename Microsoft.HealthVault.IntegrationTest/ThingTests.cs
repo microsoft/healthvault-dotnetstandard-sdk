@@ -18,6 +18,7 @@ using Microsoft.HealthVault.Record;
 using Microsoft.HealthVault.Thing;
 using Microsoft.HealthVault.Vocabulary;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NodaTime;
 
 namespace Microsoft.HealthVault.IntegrationTest
 {
@@ -34,34 +35,36 @@ namespace Microsoft.HealthVault.IntegrationTest
 
             await DeletePreviousThings(thingClient, record);
 
+            LocalDateTime nowLocal = SystemClock.Instance.GetCurrentInstant().InZone(DateTimeZoneProviders.Tzdb.GetSystemDefault()).LocalDateTime;
+
             var bloodGlucose = new BloodGlucose(
-                new HealthServiceDateTime(DateTime.Now),
+                new HealthServiceDateTime(nowLocal),
                 new BloodGlucoseMeasurement(
                     4.2,
                     new DisplayValue(4.2, "mmol/L", "mmol-per-l")),
                 new CodableValue("Whole blood", "wb", new VocabularyKey("glucose-measurement-type", "wc", "1")));
 
             var weight = new Weight(
-                new HealthServiceDateTime(DateTime.Now),
+                new HealthServiceDateTime(nowLocal),
                 new WeightValue(81, new DisplayValue(81, "KG", "kg")));
 
             var bloodPressure1 = new BloodPressure
             {
-                EffectiveDate = DateTime.Now,
+                EffectiveDate = nowLocal,
                 Systolic = 110,
                 Diastolic = 90,
             };
 
             var bloodPressure2 = new BloodPressure
             {
-                EffectiveDate = DateTime.Now.AddHours(-1),
+                EffectiveDate = nowLocal.PlusHours(-1),
                 Systolic = 111,
                 Diastolic = 91,
             };
 
             var cholesterolProfile = new CholesterolProfileV2
             {
-                When = new HealthServiceDateTime(DateTime.Now),
+                When = new HealthServiceDateTime(nowLocal),
                 LDL = new ConcentrationMeasurement(110),
                 HDL = new ConcentrationMeasurement(65),
                 Triglyceride = new ConcentrationMeasurement(140)
@@ -120,15 +123,17 @@ namespace Microsoft.HealthVault.IntegrationTest
 
             await DeletePreviousThings(thingClient, record);
 
+            LocalDateTime nowLocal = SystemClock.Instance.GetCurrentInstant().InZone(DateTimeZoneProviders.Tzdb.GetSystemDefault()).LocalDateTime;
+
             var bloodGlucose = new BloodGlucose(
-                new HealthServiceDateTime(DateTime.Now),
+                new HealthServiceDateTime(nowLocal),
                 new BloodGlucoseMeasurement(
                     4.2,
                     new DisplayValue(4.2, "mmol/L", "mmol-per-l")),
                 new CodableValue("Whole blood", "wb", new VocabularyKey("glucose-measurement-type", "wc", "1")));
 
             var weight = new Weight(
-                new HealthServiceDateTime(DateTime.Now),
+                new HealthServiceDateTime(nowLocal),
                 new WeightValue(81, new DisplayValue(81, "KG", "kg")));
 
             await thingClient.CreateNewThingsAsync(

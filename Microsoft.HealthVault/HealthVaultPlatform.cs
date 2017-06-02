@@ -20,6 +20,7 @@ using Microsoft.HealthVault.PlatformInformation;
 using Microsoft.HealthVault.Record;
 using Microsoft.HealthVault.Thing;
 using Microsoft.HealthVault.Vocabulary;
+using NodaTime;
 
 namespace Microsoft.HealthVault
 {
@@ -693,7 +694,7 @@ namespace Microsoft.HealthVault
         ///
         public static async Task<IList<Guid>> GetUpdatedRecordsForApplicationAsync(
             IHealthVaultConnection connection,
-            DateTime? updatedDate)
+            Instant? updatedDate)
         {
             return await HealthVaultPlatformApplication.Current.GetUpdatedRecordsForApplicationAsync(connection, updatedDate).ConfigureAwait(false);
         }
@@ -717,7 +718,7 @@ namespace Microsoft.HealthVault
         ///
         public static async Task<IList<HealthRecordUpdateInfo>> GetUpdatedRecordInfoForApplicationAsync(
             IHealthVaultConnection connection,
-            DateTime? updatedDate)
+            Instant? updatedDate)
         {
             return await HealthVaultPlatformApplication.Current.GetUpdatedRecordInfoForApplicationAsync(connection, updatedDate).ConfigureAwait(false);
         }
@@ -829,7 +830,7 @@ namespace Microsoft.HealthVault
         /// One or more URL strings returned by HealthVault is invalid.
         /// </exception>
         ///
-        public static async Task<ServiceInfo> GetServiceDefinitionAsync(IHealthVaultConnection connection, DateTime lastUpdatedTime)
+        public static async Task<ServiceInfo> GetServiceDefinitionAsync(IHealthVaultConnection connection, Instant lastUpdatedTime)
         {
             return await HealthVaultPlatformInformation.Current.GetServiceDefinitionAsync(connection, lastUpdatedTime).ConfigureAwait(false);
         }
@@ -950,7 +951,7 @@ namespace Microsoft.HealthVault
         public static async Task<ServiceInfo> GetServiceDefinitionAsync(
             IHealthVaultConnection connection,
             ServiceInfoSections responseSections,
-            DateTime lastUpdatedTime)
+            Instant lastUpdatedTime)
         {
             return await HealthVaultPlatformInformation.Current.GetServiceDefinitionAsync(connection, responseSections, lastUpdatedTime).ConfigureAwait(false);
         }
@@ -1337,7 +1338,7 @@ namespace Microsoft.HealthVault
             IList<Guid> typeIds,
             ThingTypeSections sections,
             IList<string> imageTypes,
-            DateTime? lastClientRefreshDate,
+            Instant? lastClientRefreshDate,
             IHealthVaultConnection connection)
         {
             return await HealthVaultPlatformInformation.Current.GetHealthRecordItemTypeDefinitionAsync(

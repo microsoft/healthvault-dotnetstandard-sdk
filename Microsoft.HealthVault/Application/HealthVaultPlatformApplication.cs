@@ -20,6 +20,7 @@ using Microsoft.HealthVault.Helpers;
 using Microsoft.HealthVault.Person;
 using Microsoft.HealthVault.Record;
 using Microsoft.HealthVault.Transport;
+using NodaTime;
 
 namespace Microsoft.HealthVault.Application
 {
@@ -77,7 +78,7 @@ namespace Microsoft.HealthVault.Application
 
             bool moreResults = true;
             Guid cursor = settings.StartingPersonId;
-            DateTime authCreatedSinceDate = settings.AuthorizationsCreatedSince;
+            Instant? authCreatedSinceDate = settings.AuthorizationsCreatedSince;
             int batchSize = settings.BatchSize;
 
             while (moreResults)
@@ -138,7 +139,7 @@ namespace Microsoft.HealthVault.Application
         internal static async Task<GetAuthorizedPeopleResult> GetAuthorizedPeopleAsync(
             IHealthVaultConnection connection,
             Guid personIdCursor,
-            DateTime authCreatedSinceDate,
+            Instant? authCreatedSinceDate,
             int numResults)
         {
             if (numResults < 0)
@@ -160,11 +161,11 @@ namespace Microsoft.HealthVault.Application
                     writer.WriteElementString("person-id-cursor", personIdCursor.ToString());
                 }
 
-                if (authCreatedSinceDate != DateTime.MinValue)
+                if (authCreatedSinceDate != null)
                 {
                     writer.WriteElementString(
                         "authorizations-created-since",
-                        SDKHelper.XmlFromDateTime(authCreatedSinceDate));
+                        SDKHelper.XmlFromInstant(authCreatedSinceDate.Value));
                 }
 
                 if (numResults != 0)
@@ -290,7 +291,7 @@ namespace Microsoft.HealthVault.Application
         ///
         public virtual async Task<IList<Guid>> GetUpdatedRecordsForApplicationAsync(
             IHealthVaultConnection connection,
-            DateTime? updatedDate)
+            Instant? updatedDate)
         {
             string parameters = GetUpdateDateParameters(updatedDate);
 
@@ -317,7 +318,7 @@ namespace Microsoft.HealthVault.Application
         ///
         public virtual async Task<IList<HealthRecordUpdateInfo>> GetUpdatedRecordInfoForApplicationAsync(
             IHealthVaultConnection connection,
-            DateTime? updatedDate)
+            Instant? updatedDate)
         {
             string parameters = GetUpdateDateParameters(updatedDate);
 
@@ -325,9 +326,9 @@ namespace Microsoft.HealthVault.Application
             return ParseGetUpdatedRecordsForApplicationResponseHealthRecordUpdateInfos(responseData);
         }
 
-        private string GetUpdateDateParameters(DateTime? updateDate)
+        private string GetUpdateDateParameters(Instant? updateDate)
         {
-            return updateDate == null ? null : $"<update-date>{SDKHelper.XmlFromDateTime(updateDate.Value)}</update-date>";
+            return updateDate == null ? null : $"<update-date>{SDKHelper.XmlFromInstant(updateDate.Value)}</update-date>";
         }
 
         private static IList<Guid> ParseGetUpdatedRecordsForApplicationResponseRecordIds(HealthServiceResponseData response)
@@ -361,10 +362,7 @@ namespace Microsoft.HealthVault.Application
         {
             Guid recordId = new Guid(navigator.SelectSingleNode("record-id").Value);
             Guid personId = new Guid(navigator.SelectSingleNode("person-id").Value);
-            DateTime lastUpdateDate = DateTime.Parse(
-                                        navigator.SelectSingleNode("update-date").Value,
-                                        DateTimeFormatInfo.InvariantInfo,
-                                        DateTimeStyles.AdjustToUniversal);
+            Instant lastUpdateDate = SDKHelper.InstantFromXml(navigator.SelectSingleNode("update-date").Value);
             long latestOperationSequenceNumber = navigator.SelectSingleNode("latest-operation-sequence-number").ValueAsLong;
             return new HealthRecordUpdateInfo(recordId, lastUpdateDate, personId, latestOperationSequenceNumber);
         }

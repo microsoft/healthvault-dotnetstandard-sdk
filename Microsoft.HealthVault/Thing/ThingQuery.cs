@@ -19,6 +19,8 @@ using Microsoft.HealthVault.Configuration;
 using Microsoft.HealthVault.Exceptions;
 using Microsoft.HealthVault.Helpers;
 using Microsoft.HealthVault.Transport;
+using NodaTime;
+using NodaTime.Text;
 
 namespace Microsoft.HealthVault.Thing
 {
@@ -406,68 +408,26 @@ namespace Microsoft.HealthVault.Thing
         /// <summary>
         /// Gets or sets the minimum date of an updated item to return.
         /// </summary>
-        ///
-        /// <value>
-        /// The DateTime in UTC of the minimum date of an updated item to
-        /// return.
-        /// </value>
-        ///
-        /// <remarks>
-        /// If this property is not set, DateTime.MaxValue is returned.
-        /// <br/><br/>
-        /// The application is responsible for converting from local time to
-        /// UTC, if applicable.
-        /// </remarks>
-        ///
-        public DateTime UpdatedDateMin
+        /// <remarks>Set to null for no minimum date.</remarks>
+        public Instant? UpdatedDateMin
         {
-            get
-            {
-                if (_updatedDateMin == null)
-                {
-                    return DateTime.MaxValue;
-                }
-
-                return (DateTime)_updatedDateMin;
-            }
-
+            get { return _updatedDateMin; }
             set { _updatedDateMin = value; }
         }
 
-        private DateTime? _updatedDateMin;
+        private Instant? _updatedDateMin;
 
         /// <summary>
         /// Gets or sets the maximum date of a returned updated item to return.
         /// </summary>
-        ///
-        /// <value>
-        /// The DateTime in UTC of the maximum date of an updated item
-        /// to return.
-        /// </value>
-        ///
-        /// <remarks>
-        /// If this property is not set, DateTime.MinValue is returned.
-        /// <br/><br/>
-        /// The application is responsible for converting from local time to
-        /// UTC, if applicable.
-        /// </remarks>
-        ///
-        public DateTime UpdatedDateMax
+        /// <remarks>Set to null for no minimum date.</remarks>
+        public Instant? UpdatedDateMax
         {
-            get
-            {
-                if (_updatedDateMax == null)
-                {
-                    return DateTime.MinValue;
-                }
-
-                return (DateTime)_updatedDateMax;
-            }
-
+            get { return _updatedDateMax; }
             set { _updatedDateMax = value; }
         }
 
-        private DateTime? _updatedDateMax;
+        private Instant? _updatedDateMax;
 
         /// <summary>
         /// Gets or sets the search filter to filter on the person who
@@ -524,66 +484,26 @@ namespace Microsoft.HealthVault.Thing
         /// <summary>
         /// Gets or sets the minimum date the item was created.
         /// </summary>
-        ///
-        /// <value>
-        /// The DateTime in UTC of the minimum date a item was created.
-        /// </value>
-        ///
-        /// <remarks>
-        /// If this property has not been set, DateTime.MaxValue is returned.
-        /// <br/><br/>
-        /// The application is responsible for converting from local time to
-        /// UTC, if applicable.
-        /// </remarks>
-        ///
-        public DateTime CreatedDateMin
+        /// <remarks>Set to null for no minimum date.</remarks>
+        public Instant? CreatedDateMin
         {
-            get
-            {
-                if (_createdDateMin == null)
-                {
-                    return DateTime.MaxValue;
-                }
-
-                return (DateTime)_createdDateMin;
-            }
-
+            get { return _createdDateMin; }
             set { _createdDateMin = value; }
         }
 
-        private DateTime? _createdDateMin;
+        private Instant? _createdDateMin;
 
         /// <summary>
         /// Gets or sets the maximum date the item was created.
         /// </summary>
-        ///
-        /// <value>
-        /// The DateTime in UTC of the maximum date a item was created.
-        /// </value>
-        ///
-        /// <remarks>
-        /// If this property has not been set, DateTime.MinValue is returned.
-        /// <br/><br/>
-        /// The application is responsible for converting from local time to
-        /// UTC  if applicable.
-        /// </remarks>
-        ///
-        public DateTime CreatedDateMax
+        /// <remarks>Set to null for no maximum date.</remarks>
+        public Instant? CreatedDateMax
         {
-            get
-            {
-                if (_createdDateMax == null)
-                {
-                    return DateTime.MinValue;
-                }
-
-                return (DateTime)_createdDateMax;
-            }
-
+            get { return _createdDateMax; }
             set { _createdDateMax = value; }
         }
 
-        private DateTime? _createdDateMax;
+        private Instant? _createdDateMax;
 
         /// <summary>
         /// Gets or sets the search filter to filter on the person who
@@ -640,66 +560,26 @@ namespace Microsoft.HealthVault.Thing
         /// <summary>
         /// Gets or sets the minimum date the item pertains to.
         /// </summary>
-        ///
-        /// <value>
-        /// The DateTime in UTC of the minimum effective date of a item.
-        /// </value>
-        ///
-        /// <remarks>
-        /// If this property has not been set, DateTime.MaxValue is returned.
-        /// <br/><br/>
-        /// The application is responsible for converting from local time to
-        /// UTC, if applicable.
-        /// </remarks>
-        ///
-        public DateTime EffectiveDateMin
+        /// <remarks>Set to null for no minimum date.</remarks>
+        public LocalDateTime? EffectiveDateMin
         {
-            get
-            {
-                if (_effectiveDateMin == null)
-                {
-                    return DateTime.MaxValue;
-                }
-
-                return (DateTime)_effectiveDateMin;
-            }
-
+            get { return _effectiveDateMin; }
             set { _effectiveDateMin = value; }
         }
 
-        private DateTime? _effectiveDateMin;
+        private LocalDateTime? _effectiveDateMin;
 
         /// <summary>
         /// Gets or sets the maximum date the item was pertains to.
         /// </summary>
-        ///
-        /// <value>
-        /// The DateTime in UTC of the maximum effective date of a item.
-        /// </value>
-        ///
-        /// <remarks>
-        /// If this property has not been set, DateTime.MinValue is returned.
-        /// <br/><br/>
-        /// The application is responsible for converting from local time to
-        /// UTC, if applicable.
-        /// </remarks>
-        ///
-        public DateTime EffectiveDateMax
+        /// <remarks>Set to null for no maximum date.</remarks>
+        public LocalDateTime? EffectiveDateMax
         {
-            get
-            {
-                if (_effectiveDateMax == null)
-                {
-                    return DateTime.MinValue;
-                }
-
-                return (DateTime)_effectiveDateMax;
-            }
-
+            get { return _effectiveDateMax; }
             set { _effectiveDateMax = value; }
         }
 
-        private DateTime? _effectiveDateMax;
+        private LocalDateTime? _effectiveDateMax;
 
         /// <summary>
         /// Gets or sets the search filter to filter on the existence
@@ -723,66 +603,27 @@ namespace Microsoft.HealthVault.Thing
         /// <summary>
         /// Gets or sets the minimum updated end date of the item.
         /// </summary>
-        ///
-        /// <value>
-        /// The DateTime of the minimum updated end date of a item.
-        /// </value>
-        ///
-        /// <remarks>
-        /// If this property has not been set, DateTime.MaxValue is returned.
-        /// <br/><br/>
-        /// The application is responsible for converting from local time to
-        /// UTC, if applicable.
-        /// </remarks>
-        ///
-        public DateTime UpdatedEndDateMin
+        /// <remarks>Set to null for no minimum date.</remarks>
+        public LocalDateTime? UpdatedEndDateMin
         {
-            get
-            {
-                if (_updatedEndDateMin == null)
-                {
-                    return DateTime.MaxValue;
-                }
-
-                return (DateTime)_updatedEndDateMin;
-            }
-
+            get { return _updatedEndDateMin; }
             set { _updatedEndDateMin = value; }
         }
 
-        private DateTime? _updatedEndDateMin;
+        private LocalDateTime? _updatedEndDateMin;
 
         /// <summary>
         /// Gets or sets the maximum updated end date of the item.
         /// </summary>
-        ///
-        /// <value>
-        /// The DateTime of the maximum updated end date of a item.
-        /// </value>
-        ///
-        /// <remarks>
-        /// If this property has not been set, DateTime.MinValue is returned.
-        /// <br/><br/>
-        /// The application is responsible for converting from local time to
-        /// UTC, if applicable.
-        /// </remarks>
-        ///
-        public DateTime UpdatedEndDateMax
+        /// <remarks>Set to null for no maximum date.</remarks>
+        public LocalDateTime? UpdatedEndDateMax
         {
-            get
-            {
-                if (_updatedEndDateMax == null)
-                {
-                    return DateTime.MinValue;
-                }
-
-                return (DateTime)_updatedEndDateMax;
-            }
-
+            get { return _updatedEndDateMax; }
             set { _updatedEndDateMax = value; }
         }
 
-        private DateTime? _updatedEndDateMax;
+        private LocalDateTime? _updatedEndDateMax;
+
         private HealthVaultConfiguration _configuration;
 
         /// <summary>
@@ -887,14 +728,14 @@ namespace Microsoft.HealthVault.Thing
                     filterNav.SelectSingleNode("eff-date-min");
                 if (effDateMinNav != null)
                 {
-                    filter.EffectiveDateMin = effDateMinNav.ValueAsDateTime;
+                    filter.EffectiveDateMin = SDKHelper.LocalDateTimeFromXml(effDateMinNav.Value);
                 }
 
                 XPathNavigator effDateMaxNav =
                     filterNav.SelectSingleNode("eff-date-max");
                 if (effDateMaxNav != null)
                 {
-                    filter.EffectiveDateMax = effDateMaxNav.ValueAsDateTime;
+                    filter.EffectiveDateMax = SDKHelper.LocalDateTimeFromXml(effDateMaxNav.Value);
                 }
 
                 XPathNavigator createdAppIdNav =
@@ -929,42 +770,42 @@ namespace Microsoft.HealthVault.Thing
                     filterNav.SelectSingleNode("created-date-min");
                 if (createdDateMinNav != null)
                 {
-                    filter.CreatedDateMin = createdDateMinNav.ValueAsDateTime;
+                    filter.CreatedDateMin = InstantPattern.ExtendedIso.Parse(createdDateMinNav.Value).Value;
                 }
 
                 XPathNavigator createdDateMaxNav =
                     filterNav.SelectSingleNode("created-date-min");
                 if (createdDateMaxNav != null)
                 {
-                    filter.CreatedDateMax = createdDateMaxNav.ValueAsDateTime;
+                    filter.CreatedDateMax = InstantPattern.ExtendedIso.Parse(createdDateMaxNav.Value).Value;
                 }
 
                 XPathNavigator updatedDateMinNav =
                     filterNav.SelectSingleNode("updated-date-min");
                 if (updatedDateMinNav != null)
                 {
-                    filter.UpdatedDateMin = updatedDateMinNav.ValueAsDateTime;
+                    filter.UpdatedDateMin = InstantPattern.ExtendedIso.Parse(updatedDateMinNav.Value).Value;
                 }
 
                 XPathNavigator updatedDateMaxNav =
                     filterNav.SelectSingleNode("updated-date-min");
                 if (updatedDateMaxNav != null)
                 {
-                    filter.UpdatedDateMax = updatedDateMaxNav.ValueAsDateTime;
+                    filter.UpdatedDateMax = InstantPattern.ExtendedIso.Parse(updatedDateMaxNav.Value).Value;
                 }
 
                 XPathNavigator updatedEndDateMinNav =
                     filterNav.SelectSingleNode("updated-end-date-min");
                 if (updatedEndDateMinNav != null)
                 {
-                    filter.UpdatedEndDateMin = updatedEndDateMinNav.ValueAsDateTime;
+                    filter.UpdatedEndDateMin = SDKHelper.LocalDateTimeFromXml(updatedEndDateMinNav.Value);
                 }
 
                 XPathNavigator updatedEndDateMaxNav =
                     filterNav.SelectSingleNode("updated-end-date-max");
                 if (updatedEndDateMaxNav != null)
                 {
-                    filter.UpdatedEndDateMax = updatedEndDateMaxNav.ValueAsDateTime;
+                    filter.UpdatedEndDateMax = SDKHelper.LocalDateTimeFromXml(updatedEndDateMaxNav.Value);
                 }
 
                 XPathNavigator xpathNav =
@@ -1186,19 +1027,19 @@ namespace Microsoft.HealthVault.Thing
                         ThingState.Deleted.ToString());
                 }
 
-                if (_effectiveDateMin != null)
+                if (EffectiveDateMin != null)
                 {
                     // <eff-date-min>
                     writer.WriteStartElement("eff-date-min");
-                    writer.WriteValue(SDKHelper.XmlFromDateTime(EffectiveDateMin));
+                    writer.WriteValue(SDKHelper.XmlFromLocalDateTime(EffectiveDateMin.Value));
                     writer.WriteEndElement();
                 }
 
-                if (_effectiveDateMax != null)
+                if (EffectiveDateMax != null)
                 {
                     // <eff-date-max>
                     writer.WriteStartElement("eff-date-max");
-                    writer.WriteValue(SDKHelper.XmlFromDateTime(EffectiveDateMax));
+                    writer.WriteValue(SDKHelper.XmlFromLocalDateTime(EffectiveDateMax.Value));
                     writer.WriteEndElement();
                 }
 

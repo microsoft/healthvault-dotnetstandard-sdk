@@ -14,6 +14,7 @@ using System.Text;
 using System.Xml;
 using System.Xml.XPath;
 using Microsoft.HealthVault.Helpers;
+using NodaTime;
 
 namespace Microsoft.HealthVault.PlatformInformation
 {
@@ -80,9 +81,7 @@ namespace Microsoft.HealthVault.PlatformInformation
             Dictionary<string, HealthServiceInstance> instances =
                 GetServiceInstances(nav, out currentInstanceId);
 
-            // updated-date is in UTC, but we have to say so explicitly or it's treated as local.
-            DateTime lastUpdated = nav.SelectSingleNode("updated-date").ValueAsDateTime;
-            lastUpdated = new DateTime(lastUpdated.Ticks, DateTimeKind.Utc);
+            Instant lastUpdated = SDKHelper.InstantFromUnmarkedXml(nav.SelectSingleNode("updated-date").Value);
 
             ServiceInfo serviceInfo =
                 new ServiceInfo(
@@ -276,7 +275,7 @@ namespace Microsoft.HealthVault.PlatformInformation
         {
             writer.WriteElementString(
                 "updated-date",
-                SDKHelper.XmlFromDateTime(LastUpdated.ToUniversalTime()));
+                SDKHelper.XmlFromInstant(LastUpdated));
         }
 
         private static Dictionary<string, string> GetConfigurationValues(
@@ -358,7 +357,7 @@ namespace Microsoft.HealthVault.PlatformInformation
             Dictionary<string, string> configurationValues,
             Dictionary<string, HealthServiceInstance> instances,
             string currentInstanceId,
-            DateTime lastUpdated)
+            Instant lastUpdated)
         {
             HealthServiceUrl = healthServiceUrl;
             Version = healthVaultVersion;
@@ -514,6 +513,6 @@ namespace Microsoft.HealthVault.PlatformInformation
         /// all of which refresh at slightly different times, this timestamp will vary
         /// among several values across requests.
         /// </remarks>
-        public DateTime LastUpdated { get; private set; }
+        public Instant LastUpdated { get; private set; }
     }
 }

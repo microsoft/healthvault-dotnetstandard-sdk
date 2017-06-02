@@ -10,6 +10,8 @@ using System;
 using System.Xml;
 using System.Xml.XPath;
 using Microsoft.HealthVault.Helpers;
+using NodaTime;
+using NodaTime.Text;
 
 namespace Microsoft.HealthVault.Thing
 {
@@ -27,8 +29,7 @@ namespace Microsoft.HealthVault.Thing
     {
         internal void ParseXml(XPathNavigator auditNav)
         {
-            Timestamp =
-                auditNav.SelectSingleNode("timestamp").ValueAsDateTime;
+            Timestamp = InstantPattern.ExtendedIso.Parse(auditNav.SelectSingleNode("timestamp").Value).Value;
 
             XPathNavigator nav = auditNav.SelectSingleNode("app-id");
             _applicationId = new Guid(nav.Value);
@@ -82,7 +83,7 @@ namespace Microsoft.HealthVault.Thing
 
         internal void WriteXml(XmlWriter writer)
         {
-            writer.WriteElementString("timestamp", SDKHelper.XmlFromDateTime(Timestamp));
+            writer.WriteElementString("timestamp", InstantPattern.ExtendedIso.Format(Timestamp));
 
             writer.WriteStartElement("app-id");
             writer.WriteAttributeString("name", ApplicationName);
@@ -135,7 +136,7 @@ namespace Microsoft.HealthVault.Thing
         /// if needed.
         /// </remarks>
         ///
-        public DateTime Timestamp { get; private set; } = DateTime.Now;
+        public Instant Timestamp { get; private set; }
 
         /// <summary>
         /// Gets the unique identifier of the application.
