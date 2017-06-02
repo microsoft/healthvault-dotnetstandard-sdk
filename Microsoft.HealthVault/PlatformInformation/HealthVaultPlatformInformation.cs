@@ -19,6 +19,7 @@ using Microsoft.HealthVault.Exceptions;
 using Microsoft.HealthVault.Helpers;
 using Microsoft.HealthVault.Thing;
 using Microsoft.HealthVault.Transport;
+using NodaTime;
 
 namespace Microsoft.HealthVault.PlatformInformation
 {
@@ -126,7 +127,7 @@ namespace Microsoft.HealthVault.PlatformInformation
         /// One or more URL strings returned by HealthVault is invalid.
         /// </exception>
         ///
-        public virtual async Task<ServiceInfo> GetServiceDefinitionAsync(IHealthVaultConnection connection, DateTime lastUpdatedTime)
+        public virtual async Task<ServiceInfo> GetServiceDefinitionAsync(IHealthVaultConnection connection, Instant lastUpdatedTime)
         {
             Validator.ThrowIfArgumentNull(connection, nameof(connection), Resources.ConnectionNull);
 
@@ -135,7 +136,7 @@ namespace Microsoft.HealthVault.PlatformInformation
             {
                 writer.WriteElementString(
                     "updated-date",
-                    SDKHelper.XmlFromUtcDateTime(lastUpdatedTime.ToUniversalTime()));
+                    SDKHelper.XmlFromInstant(lastUpdatedTime));
 
                 writer.Flush();
             }
@@ -262,7 +263,7 @@ namespace Microsoft.HealthVault.PlatformInformation
         public virtual async Task<ServiceInfo> GetServiceDefinitionAsync(
             IHealthVaultConnection connection,
             ServiceInfoSections responseSections,
-            DateTime lastUpdatedTime)
+            Instant lastUpdatedTime)
         {
             Validator.ThrowIfArgumentNull(connection, nameof(connection), Resources.ConnectionNull);
             string requestParams = CreateServiceDefinitionRequestParameters(responseSections, lastUpdatedTime);
@@ -271,7 +272,7 @@ namespace Microsoft.HealthVault.PlatformInformation
 
         private static string CreateServiceDefinitionRequestParameters(
             ServiceInfoSections responseSections,
-            DateTime? lastUpdatedTime)
+            Instant? lastUpdatedTime)
         {
             StringBuilder requestBuilder = new StringBuilder();
             using (XmlWriter writer = XmlWriter.Create(requestBuilder, SDKHelper.XmlUnicodeWriterSettings))
@@ -280,7 +281,7 @@ namespace Microsoft.HealthVault.PlatformInformation
                 {
                     writer.WriteElementString(
                         "updated-date",
-                        SDKHelper.XmlFromUtcDateTime(lastUpdatedTime.Value.ToUniversalTime()));
+                        SDKHelper.XmlFromInstant(lastUpdatedTime.Value));
                 }
 
                 writer.WriteStartElement("response-sections");
@@ -416,7 +417,7 @@ namespace Microsoft.HealthVault.PlatformInformation
             IList<Guid> typeIds,
             ThingTypeSections sections,
             IList<string> imageTypes,
-            DateTime? lastClientRefreshDate,
+            Instant? lastClientRefreshDate,
             IHealthVaultConnection connection)
         {
             Validator.ThrowIfArgumentNull(connection, nameof(connection), Resources.TypeManagerConnectionNull);
@@ -576,7 +577,7 @@ namespace Microsoft.HealthVault.PlatformInformation
             IList<Guid> typeIds,
             ThingTypeSections sections,
             IList<string> imageTypes,
-            DateTime lastClientRefreshDate,
+            Instant lastClientRefreshDate,
             IHealthVaultConnection connection)
         {
             StringBuilder requestParameters = new StringBuilder();
@@ -614,7 +615,7 @@ namespace Microsoft.HealthVault.PlatformInformation
 
                 writer.WriteElementString(
                     "last-client-refresh",
-                    SDKHelper.XmlFromLocalDateTime(lastClientRefreshDate));
+                    SDKHelper.XmlFromInstant(lastClientRefreshDate));
 
                 writer.Flush();
 

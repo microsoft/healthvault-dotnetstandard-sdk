@@ -13,6 +13,7 @@ using Microsoft.HealthVault.Client;
 using Microsoft.HealthVault.Clients;
 using Microsoft.HealthVault.ItemTypes;
 using Microsoft.HealthVault.Person;
+using NodaTime;
 using UIKit;
 
 namespace SandboxIos
@@ -79,12 +80,12 @@ namespace SandboxIos
                 Diastolic = diastolic,
                 Systolic = systolic,
                 Pulse = pulse,
-                When = new HealthServiceDateTime(DateTime.Now)
+                When = new HealthServiceDateTime(SystemClock.Instance.GetCurrentInstant().InZone(DateTimeZoneProviders.Tzdb.GetSystemDefault()).LocalDateTime)
             };
 
             IThingClient thingClient = _connection.CreateThingClient();
             PersonInfo personInfo = await _connection.GetPersonInfoAsync();
-            await thingClient.CreateNewThingsAsync(personInfo.SelectedRecord.Id, new List<BloodPressure>() { bp });
+            await thingClient.CreateNewThingsAsync(personInfo.SelectedRecord.Id, new List<BloodPressure> { bp });
 
             Dismiss();
         }

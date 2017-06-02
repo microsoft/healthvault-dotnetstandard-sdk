@@ -2149,7 +2149,7 @@
     <value>A HealthServiceDate object can only be compared with HealthServiceDate and DateTime objects.</value>
   </data>
   <data name="TimeCompareToInvalidType" xml:space="preserve">
-    <value>An ApproximateTime object can only be compared with another ApproximateTime object.</value>
+    <value>An ApproximateTime object can only be compared with an ApproximateTime object or a LocalTime object.</value>
   </data>
   <data name="ApproximateDateCompareToInvalidType" xml:space="preserve">
     <value>An ApproximateDate object can only be compared with ApproximateDate and DateTime objects.</value>

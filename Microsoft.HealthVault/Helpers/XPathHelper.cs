@@ -13,32 +13,14 @@ using System.Globalization;
 using System.Xml;
 using System.Xml.XPath;
 using Microsoft.HealthVault.ItemTypes;
+using NodaTime;
+using NodaTime.Text;
 
 namespace Microsoft.HealthVault.Helpers
 {
     internal static class XPathHelper
     {
         #region mandatory
-
-        internal static DateTime GetDateTime(XPathNavigator nav, string elementName)
-        {
-            string navValue = nav.SelectSingleNode(elementName).Value;
-
-            DateTime result = DateTime.MaxValue;
-            try
-            {
-                result =
-                    DateTime.Parse(
-                        navValue,
-                        DateTimeFormatInfo.InvariantInfo,
-                        DateTimeStyles.AdjustToUniversal);
-            }
-            catch (FormatException)
-            {
-            }
-
-            return result;
-        }
 
         internal static EnumType GetEnumByName<EnumType>(
             XPathNavigator nav,
@@ -349,35 +331,38 @@ namespace Microsoft.HealthVault.Helpers
         }
 
         /// <summary>
-        /// Parse an attribute on the navigator as a DateTime.
+        /// Parse an attribute on the navigator as an Instant.
         /// </summary>
-        /// <remarks>
-        /// The nullable value argument is returned as a DateTime if present, otherwise the
-        /// <paramref name="defaultValue"/> is returned.
-        /// </remarks>
-        /// <param name="navigator">The navigator.</param>
-        /// <param name="attributeName">The name of the attribute.</param>
-        /// <param name="defaultValue">The default value.</param>
-        internal static DateTime ParseAttributeAsDateTime(
-            XPathNavigator navigator,
-            string attributeName,
-            DateTime defaultValue)
+        /// <param name="navigator"></param>
+        /// <param name="attributeName"></param>
+        /// <returns></returns>
+        internal static Instant ParseAttributeAsInstant(XPathNavigator navigator, string attributeName)
         {
-            DateTime result = defaultValue;
+            string attributeString = navigator.GetAttribute(attributeName, string.Empty);
+            return InstantPattern.ExtendedIso.Parse(attributeString).Value;
+        }
 
-            string attributeString =
-                navigator.GetAttribute(attributeName, string.Empty);
-
-            if (attributeString != string.Empty)
+        /// <summary>
+        /// Parse an attribute on the navigator as an Instant.
+        /// </summary>
+        /// <param name="navigator"></param>
+        /// <param name="attributeName"></param>
+        /// <returns></returns>
+        internal static Instant? ParseAttributeAsNullableInstant(XPathNavigator navigator, string attributeName)
+        {
+            string attributeString = navigator.GetAttribute(attributeName, string.Empty);
+            if (string.IsNullOrEmpty(attributeString))
             {
-                DateTime.TryParse(
-                    attributeString,
-                    DateTimeFormatInfo.InvariantInfo,
-                    DateTimeStyles.AdjustToUniversal,
-                    out result);
+                return null;
             }
 
-            return result;
+            ParseResult<Instant> parseResult = InstantPattern.ExtendedIso.Parse(attributeString);
+            if (!parseResult.Success)
+            {
+                return null;
+            }
+
+            return parseResult.Value;
         }
 
         /// <summary>

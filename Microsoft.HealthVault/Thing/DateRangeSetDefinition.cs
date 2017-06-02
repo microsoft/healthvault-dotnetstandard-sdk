@@ -8,6 +8,7 @@
 
 using System;
 using Microsoft.HealthVault.Helpers;
+using NodaTime;
 
 namespace Microsoft.HealthVault.Thing
 {
@@ -45,20 +46,15 @@ namespace Microsoft.HealthVault.Thing
         /// the set.
         /// </param>
         ///
-        /// <remarks>
-        /// All dates and times are considered to be in UTC time. The calling
-        /// application must do any conversion from local time.
-        /// </remarks>
-        ///
         /// <exception cref="ArgumentException">
         /// The <paramref name="dateMin"/> parameter is greater than the
         /// <paramref name="dateMax"/> parameter.
         /// </exception>
         ///
-        public DateRangeSetDefinition(DateTime dateMin, DateTime dateMax)
+        public DateRangeSetDefinition(Instant? dateMin, Instant? dateMax)
             : base(SetType.DateRangeSet)
         {
-            if (dateMin > dateMax)
+            if (dateMin != null && dateMax != null && dateMin.Value > dateMax.Value)
             {
                 throw new ArgumentException(Resources.DateRangeMinLessThanMax, nameof(dateMin));
             }
@@ -81,7 +77,7 @@ namespace Microsoft.HealthVault.Thing
         /// times to UTC.
         /// </remarks>
         ///
-        public DateTime DateMin { get; } = DateTime.MinValue;
+        public Instant? DateMin { get; }
 
         /// <summary>
         /// Gets the maximum effective date of the things in
@@ -97,7 +93,7 @@ namespace Microsoft.HealthVault.Thing
         /// times to UTC time.
         /// </remarks>
         ///
-        public DateTime DateMax { get; } = DateTime.MaxValue;
+        public Instant? DateMax { get; }
 
         /// <summary>
         /// Gets the XML representation of the set.
@@ -117,10 +113,10 @@ namespace Microsoft.HealthVault.Thing
             return
                 "<date-range>" +
                 "<date-min>" +
-                SDKHelper.XmlFromDateTime(DateMin) +
+                (DateMin == null ? "1000-01-01T00:00:00.000Z" : SDKHelper.XmlFromInstant(DateMin.Value)) +
                 "</date-min>" +
                 "<date-max>" +
-                SDKHelper.XmlFromDateTime(DateMax) +
+                (DateMax == null ? "9999-12-31T23:59:59.999Z" : SDKHelper.XmlFromInstant(DateMax.Value)) +
                 "</date-max>" +
                 "</date-range>";
         }

@@ -12,6 +12,7 @@ using System.Xml;
 using System.Xml.XPath;
 using Microsoft.HealthVault.Exceptions;
 using Microsoft.HealthVault.Helpers;
+using NodaTime;
 
 namespace Microsoft.HealthVault.ItemTypes
 {
@@ -28,7 +29,7 @@ namespace Microsoft.HealthVault.ItemTypes
         : ItemBase,
             IComparable,
             IComparable<ApproximateDateTime>,
-            IComparable<DateTime>
+            IComparable<LocalDateTime>
     {
         /// <summary>
         /// Creates a new instance of the <see cref="ApproximateDateTime"/>
@@ -136,7 +137,7 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public ApproximateDateTime(string description)
         {
-            Validator.ThrowIfStringNullOrEmpty(description, "description");
+            Validator.ThrowIfStringNullOrEmpty(description, nameof(description));
             _description = description;
             _approximateDate = null;
         }
@@ -145,16 +146,11 @@ namespace Microsoft.HealthVault.ItemTypes
         /// Creates a new instance of the <see cref="ApproximateDateTime"/>
         /// class from a DateTime instance.
         /// </summary>
-        ///
-        /// <param name="dateTime">
-        /// The DateTime instance
-        /// </param>
-        ///
+        /// <param name="dateTime">The local date/time to copy from.</param>
         /// <remarks>
         /// The time zone is not set by this constructor.
         /// </remarks>
-        ///
-        public ApproximateDateTime(DateTime dateTime)
+        public ApproximateDateTime(LocalDateTime dateTime)
         {
             _approximateDate = new ApproximateDate(dateTime.Year, dateTime.Month, dateTime.Day);
             _approximateTime = new ApproximateTime(dateTime.Hour, dateTime.Minute, dateTime.Second, dateTime.Millisecond);
@@ -399,7 +395,7 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         /// <exception cref="ArgumentException">
         /// The <paramref name="obj"/> parameter is not an <see cref="ApproximateDateTime"/>
-        /// or <see cref="System.DateTime"/> object.
+        /// or <see cref="LocalDateTime"/> object.
         /// </exception>
         ///
         public int CompareTo(object obj)
@@ -414,7 +410,7 @@ namespace Microsoft.HealthVault.ItemTypes
             {
                 try
                 {
-                    DateTime dt = (DateTime)obj;
+                    LocalDateTime dt = (LocalDateTime)obj;
                     return CompareTo(dt);
                 }
                 catch (InvalidCastException)
@@ -498,14 +494,14 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <paramref name="other"/>.
         /// </returns>
         ///
-        public int CompareTo(DateTime other)
+        public int CompareTo(LocalDateTime other)
         {
             if (ApproximateDate == null)
             {
                 return -1;
             }
 
-            int result = ApproximateDate.CompareTo(other);
+            int result = ApproximateDate.CompareTo(other.Date);
             if (result != 0)
             {
                 return result;
@@ -516,7 +512,7 @@ namespace Microsoft.HealthVault.ItemTypes
                 return -1;
             }
 
-            return ApproximateTime.CompareTo(other);
+            return ApproximateTime.CompareTo(other.TimeOfDay);
         }
 
         #endregion IComparable
@@ -546,7 +542,7 @@ namespace Microsoft.HealthVault.ItemTypes
         public override bool Equals(object obj)
         {
             Type objectType = obj?.GetType();
-            if (objectType != this.GetType() && objectType != typeof(DateTime))
+            if (objectType != this.GetType() && objectType != typeof(LocalDateTime))
             {
                 return false;
             }
@@ -625,7 +621,7 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <exception cref="ArgumentException">
         /// The <paramref name="secondInstance"/> parameter
         /// is not an <see cref="ApproximateDateTime"/> or
-        /// <see cref="System.DateTime"/> object.
+        /// <see cref="LocalDateTime"/> object.
         /// </exception>
         ///
         public static bool operator !=(ApproximateDateTime date, object secondInstance)
@@ -642,27 +638,18 @@ namespace Microsoft.HealthVault.ItemTypes
         /// Gets a value indicating whether the specified date is greater than
         /// the specified object.
         /// </summary>
-        ///
-        /// <param name="date">
-        /// The date object to be compared.
-        /// </param>
-        ///
-        /// <param name="secondInstance">
-        /// The second object to be compared.
-        /// </param>
-        ///
+        /// <param name="date">The date object to be compared.</param>
+        /// <param name="secondInstance">The second object to be compared.</param>
         /// <returns>
         /// <b>true</b> if the year, month, and day of the <paramref name="date"/>
         /// is greater than the year, month, and day of <paramref name="secondInstance"/>;
         /// otherwise, <b>false</b>.
         /// </returns>
-        ///
         /// <exception cref="ArgumentException">
         /// The <paramref name="secondInstance"/> parameter
         /// is not an <see cref="ApproximateDateTime"/> or
-        /// <see cref="System.DateTime"/> object.
+        /// <see cref="LocalDateTime"/> object.
         /// </exception>
-        ///
         public static bool operator >(ApproximateDateTime date, object secondInstance)
         {
             if (date == null)
@@ -674,30 +661,47 @@ namespace Microsoft.HealthVault.ItemTypes
         }
 
         /// <summary>
+        /// Gets a value indicating whether the specified date is greater than
+        /// or equal to the specified object.
+        /// </summary>
+        /// <param name="date">The date object to be compared.</param>
+        /// <param name="secondInstance">The second object to be compared.</param>
+        /// <returns>
+        /// <b>true</b> if the year, month, and day of the <paramref name="date"/>
+        /// is greater than or equal to  the year, month, and day of <paramref name="secondInstance"/>;
+        /// otherwise, <b>false</b>.
+        /// </returns>
+        /// <exception cref="ArgumentException">
+        /// The <paramref name="secondInstance"/> parameter
+        /// is not an <see cref="ApproximateDateTime"/> or
+        /// <see cref="LocalDateTime"/> object.
+        /// </exception>
+        public static bool operator >=(ApproximateDateTime date, object secondInstance)
+        {
+            if (date == null)
+            {
+                return secondInstance != null;
+            }
+
+            return date.CompareTo(secondInstance) >= 0;
+        }
+
+        /// <summary>
         /// Gets a value indicating whether the specified date is less than the specified
         /// object.
         /// </summary>
-        ///
-        /// <param name="date">
-        /// The date object to be compared.
-        /// </param>
-        ///
-        /// <param name="secondInstance">
-        /// The second object to be compared.
-        /// </param>
-        ///
+        /// <param name="date">The date object to be compared.</param>
+        /// <param name="secondInstance">The second object to be compared.</param>
         /// <returns>
         /// <b>true</b> if the year, month, and day of the <paramref name="date"/>
         /// is less than the year, month, and day of <paramref name="secondInstance"/>;
         /// otherwise, <b>false</b>.
         /// </returns>
-        ///
         /// <exception cref="ArgumentException">
         /// The <paramref name="secondInstance"/> parameter
         /// is not an <see cref="ApproximateDateTime"/> or
-        /// <see cref="System.DateTime"/> object.
+        /// <see cref="LocalDateTime"/> object.
         /// </exception>
-        ///
         public static bool operator <(ApproximateDateTime date, object secondInstance)
         {
             if (date == null)
@@ -706,6 +710,32 @@ namespace Microsoft.HealthVault.ItemTypes
             }
 
             return date.CompareTo(secondInstance) < 0;
+        }
+
+        /// <summary>
+        /// Gets a value indicating whether the specified date is less than or equal to the specified
+        /// object.
+        /// </summary>
+        /// <param name="date">The date object to be compared.</param>
+        /// <param name="secondInstance">The second object to be compared.</param>
+        /// <returns>
+        /// <b>true</b> if the year, month, and day of the <paramref name="date"/>
+        /// is less than or equal to the year, month, and day of <paramref name="secondInstance"/>;
+        /// otherwise, <b>false</b>.
+        /// </returns>
+        /// <exception cref="ArgumentException">
+        /// The <paramref name="secondInstance"/> parameter
+        /// is not an <see cref="ApproximateDateTime"/> or
+        /// <see cref="LocalDateTime"/> object.
+        /// </exception>
+        public static bool operator <=(ApproximateDateTime date, object secondInstance)
+        {
+            if (date == null)
+            {
+                return secondInstance != null;
+            }
+
+            return date.CompareTo(secondInstance) <= 0;
         }
 
         #endregion Operators

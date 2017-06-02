@@ -11,6 +11,7 @@ using System.Globalization;
 using System.Xml;
 using System.Xml.XPath;
 using Microsoft.HealthVault.Helpers;
+using NodaTime;
 
 namespace Microsoft.HealthVault.ItemTypes
 {
@@ -27,13 +28,12 @@ namespace Microsoft.HealthVault.ItemTypes
         : ItemBase,
             IComparable,
             IComparable<ApproximateDate>,
-            IComparable<DateTime>
+            IComparable<LocalDate>
     {
         /// <summary>
         /// Creates a new instance of the <see cref="ApproximateDate"/> class
         /// using default values.
         /// </summary>
-        ///
         public ApproximateDate()
         {
         }
@@ -110,6 +110,18 @@ namespace Microsoft.HealthVault.ItemTypes
             : this(year, month)
         {
             Day = day;
+        }
+
+        /// <summary>
+        /// Creates a new instance of the <see cref="ApproximateDate"/> class
+        /// from the given date.
+        /// </summary>
+        /// <param name="date">The date to copy from.</param>
+        public ApproximateDate(LocalDate date)
+        {
+            Year = date.Year;
+            Month = date.Month;
+            Day = date.Day;
         }
 
         /// <summary>
@@ -221,7 +233,7 @@ namespace Microsoft.HealthVault.ItemTypes
             }
         }
 
-        private int _year = DateTime.Now.Year;
+        private int _year = 2000;
 
         /// <summary>
         /// Gets or sets the month of the date approximation.
@@ -327,7 +339,7 @@ namespace Microsoft.HealthVault.ItemTypes
             {
                 try
                 {
-                    DateTime dt = (DateTime)obj;
+                    LocalDate dt = (LocalDate)obj;
                     return CompareTo(dt);
                 }
                 catch (InvalidCastException)
@@ -400,7 +412,7 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <paramref name="other"/>.
         /// </returns>
         ///
-        public int CompareTo(DateTime other)
+        public int CompareTo(LocalDate other)
         {
             if (Year > other.Year)
             {

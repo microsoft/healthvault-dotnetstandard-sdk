@@ -20,6 +20,7 @@ using Microsoft.HealthVault.Diagnostics;
 using Microsoft.HealthVault.Exceptions;
 using Microsoft.HealthVault.Helpers;
 using Microsoft.HealthVault.ItemTypes;
+using NodaTime;
 
 namespace Microsoft.HealthVault.Thing
 {
@@ -839,7 +840,7 @@ namespace Microsoft.HealthVault.Thing
         ///
         public static async Task<IDictionary<Guid, ThingTypeDefinition>> GetHealthRecordItemTypeDefinitionAsync(
             IList<Guid> typeIds,
-            DateTime? lastClientRefreshDate,
+            Instant? lastClientRefreshDate,
             IConnectionInternal connection)
         {
             return await GetHealthRecordItemTypeDefinitionAsync(
@@ -919,7 +920,7 @@ namespace Microsoft.HealthVault.Thing
         /// </param>
         ///
         /// <param name="lastClientRefreshDate">
-        /// A <see cref="DateTime"/> instance that specifies the time of the last refresh
+        /// An <see cref="Instant"/> that specifies the time of the last refresh
         /// made by the client.
         /// </param>
         ///
@@ -951,7 +952,7 @@ namespace Microsoft.HealthVault.Thing
         public static async Task<IDictionary<Guid, ThingTypeDefinition>> GetHealthRecordItemTypeDefinitionAsync(
             IList<Guid> typeIds,
             ThingTypeSections sections,
-            DateTime? lastClientRefreshDate,
+            Instant? lastClientRefreshDate,
             IConnectionInternal connection)
         {
             return await GetHealthRecordItemTypeDefinitionAsync(
@@ -1025,7 +1026,7 @@ namespace Microsoft.HealthVault.Thing
         /// </param>
         ///
         /// <param name="lastClientRefreshDate">
-        /// A <see cref="DateTime"/> instance that specifies the time of the last refresh
+        /// An <see cref="Instant"/> that specifies the time of the last refresh
         /// made by the client.
         /// </param>
         ///
@@ -1058,7 +1059,7 @@ namespace Microsoft.HealthVault.Thing
             IList<Guid> typeIds,
             ThingTypeSections sections,
             IList<string> imageTypes,
-            DateTime? lastClientRefreshDate,
+            Instant? lastClientRefreshDate,
             IConnectionInternal connection)
         {
             return await HealthVaultPlatform.GetHealthRecordItemTypeDefinitionAsync(

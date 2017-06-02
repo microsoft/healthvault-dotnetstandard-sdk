@@ -13,6 +13,7 @@ using Microsoft.HealthVault.Connection;
 using Microsoft.HealthVault.Helpers;
 using Microsoft.HealthVault.Web.Configuration;
 using Microsoft.HealthVault.Web.Providers;
+using NodaTime;
 
 namespace Microsoft.HealthVault.Web
 {
@@ -93,7 +94,7 @@ namespace Microsoft.HealthVault.Web
                 writer.WriteElementString("hmac", HealthVaultConstants.Cryptography.HmacAlgorithm);
 
                 writer.WriteStartElement("signing-time");
-                writer.WriteValue(DateTime.Now.ToUniversalTime());
+                writer.WriteValue(SDKHelper.XmlFromInstant(SystemClock.Instance.GetCurrentInstant()));
                 writer.WriteEndElement();
 
                 writer.WriteEndElement(); // content

@@ -14,6 +14,7 @@ using Microsoft.HealthVault.Exceptions;
 using Microsoft.HealthVault.Person;
 using Microsoft.HealthVault.PlatformInformation;
 using Microsoft.HealthVault.Thing;
+using NodaTime;
 
 namespace Microsoft.HealthVault.Clients
 {
@@ -132,7 +133,7 @@ namespace Microsoft.HealthVault.Clients
         /// One or more URL strings returned by HealthVault is invalid.
         /// </exception>
         ///
-        Task<ServiceInfo> GetServiceDefinitionAsync(DateTime lastUpdatedTime);
+        Task<ServiceInfo> GetServiceDefinitionAsync(Instant lastUpdatedTime);
 
         /// <summary>
         /// Gets information about the HealthVault service corresponding to the specified
@@ -230,7 +231,7 @@ namespace Microsoft.HealthVault.Clients
         /// One or more URL strings returned by HealthVault is invalid.
         /// </exception>
         ///
-        Task<ServiceInfo> GetServiceDefinitionAsync(ServiceInfoSections responseSections, DateTime lastUpdatedTime);
+        Task<ServiceInfo> GetServiceDefinitionAsync(ServiceInfoSections responseSections, Instant lastUpdatedTime);
 
         /// <summary>
         /// Gets the definitions for one or more thing type definitions
@@ -260,7 +261,7 @@ namespace Microsoft.HealthVault.Clients
         /// </param>
         ///
         /// <param name="lastClientRefreshDate">
-        /// A <see cref="DateTime"/> instance that specifies the time of the last refresh
+        /// An <see cref="Instant"/> that specifies the time of the last refresh
         /// made by the client.
         /// </param>
         ///
@@ -280,7 +281,7 @@ namespace Microsoft.HealthVault.Clients
             IList<Guid> typeIds,
             ThingTypeSections sections,
             IList<string> imageTypes,
-            DateTime? lastClientRefreshDate);
+            Instant? lastClientRefreshDate);
 
         /// <summary>
         /// Creates a new application instance. This is the first step in the SODA authentication flow.

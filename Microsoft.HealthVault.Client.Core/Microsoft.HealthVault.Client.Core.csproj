@@ -11,6 +11,8 @@
   <ItemGroup>
     <PackageReference Include="Grace" Version="6.0.1" />
     <PackageReference Include="Newtonsoft.Json" Version="10.0.2" />
+    <PackageReference Include="NodaTime" Version="2.0.2" />
+    <PackageReference Include="NodaTime.Serialization.JsonNet" Version="2.0.0" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Microsoft.HealthVault\Microsoft.HealthVault.csproj" />

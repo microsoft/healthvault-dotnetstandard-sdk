@@ -14,6 +14,7 @@ using Microsoft.HealthVault.Connection;
 using Microsoft.HealthVault.PlatformInformation;
 using Microsoft.HealthVault.UnitTest.Samples;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NodaTime;
 using NSubstitute;
 
 namespace Microsoft.HealthVault.UnitTest.Clients
@@ -46,7 +47,7 @@ namespace Microsoft.HealthVault.UnitTest.Clients
             await _connection.Received()
                 .ExecuteAsync(HealthVaultMethods.SelectInstance, Arg.Any<int>(), Arg.Any<string>());
 
-            Assert.AreEqual(result.Description, "US instance");
+            Assert.AreEqual("US instance", result.Description);
         }
 
         [TestMethod]
@@ -83,7 +84,7 @@ namespace Microsoft.HealthVault.UnitTest.Clients
             await _connection.Received()
                 .ExecuteAsync(HealthVaultMethods.GetServiceDefinition, Arg.Any<int>(), Arg.Any<string>());
 
-            Assert.AreEqual(result.LastUpdated.ToString(), "3/17/2017 3:24:19 AM");
+            Assert.AreEqual("2017-03-17T03:24:19Z", result.LastUpdated.ToString());
         }
 
         [TestMethod]
@@ -97,13 +98,13 @@ namespace Microsoft.HealthVault.UnitTest.Clients
             await _connection.Received()
                 .ExecuteAsync(HealthVaultMethods.GetServiceDefinition, Arg.Any<int>(), Arg.Any<string>());
 
-            Assert.AreEqual(result.LastUpdated.ToString(), "3/17/2017 3:24:19 AM");
+            Assert.AreEqual("2017-03-17T03:24:19Z", result.LastUpdated.ToString());
         }
 
         [TestMethod]
         public async Task GetServiceDefinitionWithDateTimeTest()
         {
-            DateTime lastUpdatedTime = new DateTime(2017, 03, 17, 03, 24, 19);
+            Instant lastUpdatedTime = Instant.FromDateTimeOffset(new DateTimeOffset(2017, 03, 17, 03, 24, 19, TimeSpan.Zero));
             var response = SampleUtils.GetResponseData("ServiceDefinitionSample.xml");
 
             _connection.ExecuteAsync(HealthVaultMethods.GetServiceDefinition, Arg.Any<int>(), Arg.Any<string>())
@@ -113,13 +114,13 @@ namespace Microsoft.HealthVault.UnitTest.Clients
             await _connection.Received()
                 .ExecuteAsync(HealthVaultMethods.GetServiceDefinition, Arg.Any<int>(), Arg.Any<string>());
 
-            Assert.AreEqual(result.LastUpdated, lastUpdatedTime);
+            Assert.AreEqual(lastUpdatedTime, result.LastUpdated);
         }
 
         [TestMethod]
         public async Task GetServiceDefinitionWithSectionsDateTimeTest()
         {
-            DateTime lastUpdatedTime = new DateTime(2017, 03, 17, 03, 24, 19);
+            Instant lastUpdatedTime = Instant.FromDateTimeOffset(new DateTimeOffset(2017, 03, 17, 03, 24, 19, TimeSpan.Zero));
             var response = SampleUtils.GetResponseData("ServiceDefinitionSample.xml");
 
             _connection.ExecuteAsync(HealthVaultMethods.GetServiceDefinition, Arg.Any<int>(), Arg.Any<string>())
@@ -131,7 +132,7 @@ namespace Microsoft.HealthVault.UnitTest.Clients
             await _connection.Received()
                 .ExecuteAsync(HealthVaultMethods.GetServiceDefinition, Arg.Any<int>(), Arg.Any<string>());
 
-            Assert.AreEqual(result.LastUpdated, lastUpdatedTime);
+            Assert.AreEqual(lastUpdatedTime, result.LastUpdated);
         }
     }
 }

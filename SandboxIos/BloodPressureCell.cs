@@ -37,7 +37,7 @@ namespace SandboxIos
             diastolicLabel.Text = bloodPressure.Diastolic.ToString();
             pulseLabel.Text = bloodPressure.Pulse.ToString();
             systolicLabel.Text = bloodPressure.Systolic.ToString();
-            dateLabel.Text = bloodPressure.When.ToDateTime().ToString("g");
+            dateLabel.Text = bloodPressure.When.ToLocalDateTime().ToString();
         }
 
         public CGSize GetSize(IThing thing)

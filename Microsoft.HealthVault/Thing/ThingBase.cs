@@ -16,6 +16,7 @@ using System.Xml.XPath;
 using Microsoft.HealthVault.Exceptions;
 using Microsoft.HealthVault.Helpers;
 using Microsoft.HealthVault.ItemTypes;
+using NodaTime;
 
 namespace Microsoft.HealthVault.Thing
 {
@@ -184,7 +185,7 @@ namespace Microsoft.HealthVault.Thing
         /// set.
         /// </remarks>
         ///
-        public DateTime EffectiveDate
+        public LocalDateTime? EffectiveDate
         {
             get { return _effectiveDate; }
 
@@ -198,7 +199,7 @@ namespace Microsoft.HealthVault.Thing
             }
         }
 
-        private DateTime _effectiveDate = SDKHelper.DateUnspecified;
+        private LocalDateTime? _effectiveDate;
         private bool _effectiveDateDirty;
 
         /// <summary>
@@ -303,7 +304,7 @@ namespace Microsoft.HealthVault.Thing
         /// <see cref="ThingSections.Core"/> bit
         /// set.
         /// </remarks>
-        public DateTime UpdatedEndDate
+        public LocalDateTime? UpdatedEndDate
         {
             get
             {
@@ -320,7 +321,7 @@ namespace Microsoft.HealthVault.Thing
             }
         }
 
-        private DateTime _updatedEndDate = DateTime.MaxValue;
+        private LocalDateTime? _updatedEndDate;
         private bool _updatedEndDateDirty;
 
         #endregion Core information
@@ -988,12 +989,11 @@ namespace Microsoft.HealthVault.Thing
                 }
             }
 
-            if ((sections & ThingSections.Core) != 0 &&
-                EffectiveDate != SDKHelper.DateUnspecified && (_effectiveDateDirty || writeAllCore))
+            if ((sections & ThingSections.Core) != 0 && EffectiveDate != null && (_effectiveDateDirty || writeAllCore))
             {
                 // <eff-date>
                 writer.WriteStartElement("eff-date");
-                writer.WriteValue(SDKHelper.XmlFromDateTime(EffectiveDate));
+                writer.WriteValue(SDKHelper.XmlFromLocalDateTime(EffectiveDate.Value));
                 writer.WriteEndElement();
                 updateRequired = true;
             }
@@ -1041,10 +1041,10 @@ namespace Microsoft.HealthVault.Thing
         {
             bool updateRequired = false;
 
-            if (_updatedEndDateDirty || (writeAllCore && UpdatedEndDate != DateTime.MaxValue))
+            if (UpdatedEndDate != null && (_updatedEndDateDirty || writeAllCore))
             {
                 writer.WriteStartElement("updated-end-date");
-                writer.WriteValue(SDKHelper.XmlFromDateTime(UpdatedEndDate));
+                writer.WriteValue(SDKHelper.XmlFromLocalDateTime(UpdatedEndDate.Value));
                 writer.WriteEndElement();
                 updateRequired = true;
             }
@@ -1139,7 +1139,8 @@ namespace Microsoft.HealthVault.Thing
             if (effectiveDateNav != null)
             {
                 Sections |= ThingSections.Core;
-                _effectiveDate = effectiveDateNav.ValueAsDateTime;
+
+                _effectiveDate = ReadXmlLocalDateTime(effectiveDateNav);
             }
 
             XPathNavigator stateNav =
@@ -1172,7 +1173,7 @@ namespace Microsoft.HealthVault.Thing
             if (updatedEndDateNav != null)
             {
                 Sections |= ThingSections.Core;
-                _updatedEndDate = updatedEndDateNav.ValueAsDateTime;
+                _updatedEndDate = ReadXmlLocalDateTime(updatedEndDateNav);
             }
         }
 
@@ -1479,6 +1480,20 @@ namespace Microsoft.HealthVault.Thing
         private bool IsFlagSet(ThingFlags flagToCheck)
         {
             return (_flags & flagToCheck) == flagToCheck;
+        }
+
+        private static LocalDateTime ReadXmlLocalDateTime(XPathNavigator navigator)
+        {
+            // These dates are stamped with "Z" but should be treated as local date/times
+            DateTime valueDateTime = navigator.ValueAsDateTime;
+            return new LocalDateTime(
+                valueDateTime.Year,
+                valueDateTime.Month,
+                valueDateTime.Day,
+                valueDateTime.Hour,
+                valueDateTime.Minute,
+                valueDateTime.Second,
+                valueDateTime.Millisecond);
         }
 
         #endregion private helpers

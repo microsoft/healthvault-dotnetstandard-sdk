@@ -42,7 +42,7 @@ namespace SandboxIos
 
             : base("ThingListViewController", null)
         {
-            connection = connection;
+            _connection = connection;
         }
 
         public override void DidReceiveMemoryWarning()

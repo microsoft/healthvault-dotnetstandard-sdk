@@ -16,6 +16,7 @@ using Microsoft.HealthVault.ItemTypes;
 using Microsoft.HealthVault.Person;
 using Microsoft.HealthVault.Record;
 using Microsoft.HealthVault.Thing;
+using NodaTime;
 using Xamarin.Forms;
 
 namespace SandboxXamarinForms
@@ -79,7 +80,7 @@ namespace SandboxXamarinForms
             for (int i = 0; i < 100; i++)
             {
                 pressures.Add(new BloodPressure(
-                    new HealthServiceDateTime(DateTime.Now),
+                    new HealthServiceDateTime(SystemClock.Instance.GetCurrentInstant().InZone(DateTimeZoneProviders.Tzdb.GetSystemDefault()).LocalDateTime),
                     random.Next(110, 130),
                     random.Next(70, 90)));
             }
@@ -121,6 +122,12 @@ namespace SandboxXamarinForms
             var resultList = resultSet.ToList();
 
             OutputLabel.Text = $"There are {resultList[0].Count} blood pressure(s) and {resultList[1].Count} weight(s).";
+        }
+
+        private async void GetItemTypeDef_OnClicked(object sender, EventArgs e)
+        {
+            IPlatformClient platformClient = _connection.CreatePlatformClient();
+            await platformClient.GetHealthRecordItemTypeDefinitionAsync(new List<Guid> { BloodPressure.TypeId }, ThingTypeSections.All, new List<string>(), SystemClock.Instance.GetCurrentInstant());
         }
     }
 }

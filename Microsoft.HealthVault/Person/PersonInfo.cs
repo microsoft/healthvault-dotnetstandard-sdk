@@ -16,6 +16,7 @@ using Microsoft.HealthVault.Application;
 using Microsoft.HealthVault.Exceptions;
 using Microsoft.HealthVault.Helpers;
 using Microsoft.HealthVault.Record;
+using NodaTime;
 
 namespace Microsoft.HealthVault.Person
 {
@@ -459,8 +460,9 @@ namespace Microsoft.HealthVault.Person
 
             foreach (HealthRecordInfo authRecord in AuthorizedRecords.Values)
             {
-                if (authRecord.RelationshipType == RelationshipType.Self
-                    && authRecord.DateAuthorizationExpires > DateTime.UtcNow)
+                if (
+                    authRecord.RelationshipType == RelationshipType.Self && 
+                    (authRecord.DateAuthorizationExpires == null || authRecord.DateAuthorizationExpires.Value > SystemClock.Instance.GetCurrentInstant()))
                 {
                     selfRecord = authRecord;
                     break;

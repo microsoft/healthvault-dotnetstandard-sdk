@@ -16,6 +16,7 @@ using Microsoft.HealthVault.ItemTypes;
 using Microsoft.HealthVault.Person;
 using Microsoft.HealthVault.Record;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NodaTime;
 
 namespace Microsoft.HealthVault.IntegrationTest
 {
@@ -32,13 +33,15 @@ namespace Microsoft.HealthVault.IntegrationTest
 
             await TestUtilities.RemoveAllThingsAsync<Weight>(thingClient, record.Id);
 
+            LocalDateTime nowLocal = SystemClock.Instance.GetCurrentInstant().InZone(DateTimeZoneProviders.Tzdb.GetSystemDefault()).LocalDateTime;
+
             List<Weight> weightList = new List<Weight>();
             weightList.Add(new Weight(
-                new HealthServiceDateTime(DateTime.Now.AddHours(-1)),
+                new HealthServiceDateTime(nowLocal.PlusHours(-1)),
                 new WeightValue(81, new DisplayValue(81, "KG", "kg"))));
 
             weightList.Add(new Weight(
-                new HealthServiceDateTime(DateTime.Now),
+                new HealthServiceDateTime(nowLocal),
                 new WeightValue(85, new DisplayValue(187, "LBS", "lb"))));
 
             await thingClient.CreateNewThingsAsync<Weight>(record.Id, weightList);

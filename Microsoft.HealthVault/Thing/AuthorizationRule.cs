@@ -14,6 +14,7 @@ using System.Text;
 using System.Xml;
 using System.Xml.XPath;
 using Microsoft.HealthVault.Helpers;
+using NodaTime;
 
 namespace Microsoft.HealthVault.Thing
 {
@@ -680,20 +681,19 @@ namespace Microsoft.HealthVault.Thing
             XPathNodeIterator dateSets = setNav.Select("date-range");
             foreach (XPathNavigator dateSet in dateSets)
             {
-                DateTime dateMin = DateTime.MinValue;
-                XPathNavigator dateMinNav =
-                    dateSet.SelectSingleNode("date-min");
+                Instant? dateMin = null;
+                XPathNavigator dateMinNav = dateSet.SelectSingleNode("date-min");
                 if (dateMinNav != null)
                 {
-                    dateMin = dateMinNav.ValueAsDateTime;
+                    dateMin = SDKHelper.InstantFromXml(dateMinNav.Value);
                 }
 
-                DateTime dateMax = DateTime.MaxValue;
+                Instant? dateMax = null;
                 XPathNavigator dateMaxNav =
                     dateSet.SelectSingleNode("date-max");
                 if (dateMaxNav != null)
                 {
-                    dateMax = dateMaxNav.ValueAsDateTime;
+                    dateMax = SDKHelper.InstantFromXml(dateMaxNav.Value);
                 }
 
                 sets.Add(new DateRangeSetDefinition(dateMin, dateMax));

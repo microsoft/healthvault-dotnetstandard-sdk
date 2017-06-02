@@ -8,6 +8,7 @@
 
 using System;
 using Microsoft.HealthVault.Thing;
+using NodaTime;
 
 namespace Microsoft.HealthVault.Record
 {
@@ -25,7 +26,7 @@ namespace Microsoft.HealthVault.Record
 
         internal HealthRecordUpdateInfo(
             Guid recordId,
-            DateTime lastUpdateDate,
+            Instant lastUpdateDate,
             Guid personId,
             long latestOperationSequenceNumber)
         {
@@ -44,7 +45,7 @@ namespace Microsoft.HealthVault.Record
         /// Gets or sets the timestamp when an addition, deletion or update occurred to the
         /// <see cref="ThingBase"/>s in the <see cref="HealthRecordAccessor"/>
         /// </summary>
-        public DateTime LastUpdateDate { get; protected set; }
+        public Instant LastUpdateDate { get; protected set; }
 
         /// <summary>
         /// Gets or sets the person ID of the updated record.

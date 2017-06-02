@@ -11,6 +11,7 @@ using System.Text;
 using System.Xml;
 using System.Xml.XPath;
 using Microsoft.HealthVault.Helpers;
+using NodaTime;
 
 namespace Microsoft.HealthVault.ItemTypes
 {
@@ -29,7 +30,7 @@ namespace Microsoft.HealthVault.ItemTypes
         : ItemBase,
             IComparable,
             IComparable<HealthServiceDateTime>,
-            IComparable<DateTime>
+            IComparable<LocalDateTime>
     {
         /// <summary>
         /// Creates a new instance of the <see cref="HealthServiceDateTime"/> class
@@ -121,18 +122,12 @@ namespace Microsoft.HealthVault.ItemTypes
 
         /// <summary>
         /// Creates a new instance of the <see cref="HealthServiceDateTime"/>
-        /// class from the specified DateTime instance.
+        /// class from the specified <see cref="LocalDateTime" /> instance.
         /// </summary>
-        ///
         /// <param name="dateTime">
         /// The date and time used to construct the HealthVault date and time.
         /// </param>
-        ///
-        /// <remarks>
-        /// The time zone is ignored.
-        /// </remarks>
-        ///
-        public HealthServiceDateTime(DateTime dateTime)
+        public HealthServiceDateTime(LocalDateTime dateTime)
         {
             _date =
                 new HealthServiceDate(
@@ -227,25 +222,22 @@ namespace Microsoft.HealthVault.ItemTypes
         }
 
         /// <summary>
-        /// Casts the <see cref="HealthServiceDateTime"/> instance to a System.DateTime object.
+        /// Casts the <see cref="HealthServiceDateTime"/> instance to a <see cref="LocalDateTime"/> object.
         /// </summary>
-        ///
         /// <param name="wcDateTime">
         /// The <see cref="HealthServiceDateTime"/> instance to cast.
         /// </param>
-        ///
         /// <returns>
-        /// A DateTime instance with the appropriate fields populated by the
+        /// A LocalDateTime instance with the appropriate fields populated by the
         /// <see cref="HealthServiceDateTime"/> values.
         /// </returns>
-        ///
-        public static explicit operator DateTime(HealthServiceDateTime wcDateTime)
+        public static explicit operator LocalDateTime(HealthServiceDateTime wcDateTime)
         {
             int year = wcDateTime.Date.Year;
             int month = wcDateTime.Date.Month;
             int day = wcDateTime.Date.Day;
 
-            DateTime result;
+            LocalDateTime result;
             if (wcDateTime.Time != null)
             {
                 int hour = wcDateTime.Time.Hour;
@@ -258,28 +250,26 @@ namespace Microsoft.HealthVault.ItemTypes
                     wcDateTime.Time.Millisecond == null ?
                         0 : (int)wcDateTime.Time.Millisecond;
 
-                result = new DateTime(year, month, day, hour, minute, second, millisecond);
+                result = new LocalDateTime(year, month, day, hour, minute, second, millisecond);
             }
             else
             {
-                result = new DateTime(year, month, day);
+                result = new LocalDateTime(year, month, day, 0, 0);
             }
 
             return result;
         }
 
         /// <summary>
-        /// Converts the <see cref="HealthServiceDateTime"/> instance to a System.DateTime object.
+        /// Converts the <see cref="HealthServiceDateTime"/> instance to a <see cref="LocalDateTime"/> object.
         /// </summary>
-        ///
         /// <returns>
-        /// A DateTime instance with the appropriate fields populated by the
+        /// A <see cref="LocalDateTime"/> instance with the appropriate fields populated by the
         /// <see cref="HealthServiceDateTime"/> values.
         /// </returns>
-        ///
-        public DateTime ToDateTime()
+        public LocalDateTime ToLocalDateTime()
         {
-            return (DateTime)this;
+            return (LocalDateTime)this;
         }
 
         /// <summary>
@@ -398,7 +388,7 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         /// <exception cref="ArgumentException">
         /// The <paramref name="obj"/> parameter is not a <see cref="HealthServiceDateTime"/>
-        /// or <see cref="System.DateTime"/> object.
+        /// or <see cref="LocalDateTime"/> object.
         /// </exception>
         ///
         public int CompareTo(object obj)
@@ -413,7 +403,7 @@ namespace Microsoft.HealthVault.ItemTypes
             {
                 try
                 {
-                    DateTime dt = (DateTime)obj;
+                    LocalDateTime dt = (LocalDateTime)obj;
                     return CompareTo(dt);
                 }
                 catch (InvalidCastException)
@@ -479,7 +469,7 @@ namespace Microsoft.HealthVault.ItemTypes
         /// greater than zero, the instance is greater than
         /// <paramref name="other"/>.
         /// </returns>
-        public int CompareTo(DateTime other)
+        public int CompareTo(LocalDateTime other)
         {
             if (Date.Year > other.Year)
             {
@@ -511,7 +501,7 @@ namespace Microsoft.HealthVault.ItemTypes
                 return -1;
             }
 
-            return Time.CompareTo(other);
+            return Time.CompareTo(other.TimeOfDay);
         }
 
         #endregion IComparable
@@ -541,7 +531,7 @@ namespace Microsoft.HealthVault.ItemTypes
         public override bool Equals(object obj)
         {
             Type objectType = obj?.GetType();
-            if (objectType != this.GetType() && objectType != typeof(DateTime))
+            if (objectType != this.GetType() && objectType != typeof(LocalDateTime))
             {
                 return false;
             }

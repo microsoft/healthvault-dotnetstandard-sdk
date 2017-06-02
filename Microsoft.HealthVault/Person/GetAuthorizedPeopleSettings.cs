@@ -8,6 +8,7 @@
 
 using System;
 using Microsoft.HealthVault.Exceptions;
+using NodaTime;
 
 namespace Microsoft.HealthVault.Person
 {
@@ -59,18 +60,12 @@ namespace Microsoft.HealthVault.Person
         private int _batchSize;
 
         /// <summary>
-        /// Get or sets the DateTime in UTC that will be used to filter authorized people
+        /// Get or sets the <see cref="Instant"/> that will be used to filter authorized people
         /// from the returned list according to the date that the person was authorized for the application.
         /// Calls to <see cref="Microsoft.HealthVault.Clients.IPlatformClient.GetAuthorizedPeople(GetAuthorizedPeopleSettings)" />
         /// will only return people whose authorization was created after the given date and time.
         /// </summary>
-        ///
-        /// <remarks>
-        /// The default value is DateTime.MinValue.
-        /// <br/><br/>
-        /// The application is responsible for converting from local time to UTC.
-        /// </remarks>
-        public DateTime AuthorizationsCreatedSince { get; set; } = DateTime.MinValue;
+        public Instant? AuthorizationsCreatedSince { get; set; }
 
         /// <summary>
         /// Gets or sets the person id that determines the starting point for the

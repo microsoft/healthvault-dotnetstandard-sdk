@@ -20,6 +20,7 @@ using Microsoft.HealthVault.Thing;
 using Microsoft.HealthVault.Vocabulary;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using NodaTime;
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x409
 
@@ -31,10 +32,15 @@ namespace SandboxUwp
     public sealed partial class MainPage : Page
     {
         private IHealthVaultSodaConnection _connection;
+        private IClock _clock;
+        private IDateTimeZoneProvider _dateTimeZoneProvider;
 
         public MainPage()
         {
             InitializeComponent();
+
+            _clock = SystemClock.Instance;
+            _dateTimeZoneProvider = DateTimeZoneProviders.Tzdb;
         }
 
         private async void Connect_OnClick(object sender, RoutedEventArgs e)
@@ -75,7 +81,14 @@ namespace SandboxUwp
             HealthRecordInfo recordInfo = personInfo.SelectedRecord;
             IThingClient thingClient = _connection.CreateThingClient();
 
-            await thingClient.CreateNewThingsAsync(recordInfo.Id, new List<BloodPressure> { new BloodPressure(new HealthServiceDateTime(DateTime.Now), 117, 70) });
+            LocalDateTime nowLocal = _clock.GetCurrentInstant().InZone(_dateTimeZoneProvider.GetSystemDefault()).LocalDateTime;
+
+            await thingClient.CreateNewThingsAsync(
+                recordInfo.Id, 
+                new List<BloodPressure>
+                {
+                    new BloodPressure(new HealthServiceDateTime(nowLocal), 117, 70)
+                });
 
             OutputBlock.Text = "Created blood pressure.";
         }
@@ -109,7 +122,14 @@ namespace SandboxUwp
             double range = maxHeight - minHeight;
             double randHeight = Math.Round((minHeight + rand.NextDouble() * range), 2);
 
-            await thingClient.CreateNewThingsAsync(recordInfo.Id, new List<Height> { new Height(new HealthServiceDateTime(DateTime.Now), new Length(randHeight)) });
+            LocalDateTime nowLocal = _clock.GetCurrentInstant().InZone(_dateTimeZoneProvider.GetSystemDefault()).LocalDateTime;
+
+            await thingClient.CreateNewThingsAsync(
+                recordInfo.Id, 
+                new List<Height>
+                {
+                    new Height(new HealthServiceDateTime(nowLocal), new Length(randHeight))
+                });
             OutputBlock.Text = "Created height.";
         }
 

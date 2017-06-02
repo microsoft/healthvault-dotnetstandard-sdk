@@ -17,6 +17,7 @@ using Microsoft.HealthVault.Person;
 using Microsoft.HealthVault.Web;
 using Microsoft.HealthVault.Web.Attributes;
 using Microsoft.HealthVault.Web.Connection;
+using NodaTime;
 
 namespace SandboxWeb.Controllers
 {
@@ -46,7 +47,9 @@ namespace SandboxWeb.Controllers
 
             IThingClient thingClient = webHealthVaultConnection.CreateThingClient();
 
-            await thingClient.CreateNewThingsAsync(personInfo.GetSelfRecord().Id, new List<Weight> { new Weight(new HealthServiceDateTime(DateTime.Now), new WeightValue(10)) });
+            LocalDateTime nowLocal = SystemClock.Instance.GetCurrentInstant().InZone(DateTimeZoneProviders.Tzdb.GetSystemDefault()).LocalDateTime;
+
+            await thingClient.CreateNewThingsAsync(personInfo.GetSelfRecord().Id, new List<Weight> { new Weight(new HealthServiceDateTime(nowLocal), new WeightValue(10)) });
 
             return RedirectToAction("Index", new RouteValueDictionary());
         }
