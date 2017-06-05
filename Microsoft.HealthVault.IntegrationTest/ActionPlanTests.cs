@@ -38,12 +38,12 @@ namespace Microsoft.HealthVault.IntegrationTest
             await RemoveAllActionPlansAsync(restClient);
 
             Guid objectiveId = Guid.NewGuid();
-            await restClient.CreateActionPlanWithHttpMessagesAsync(CreateWeightActionPlan(objectiveId));
+            await restClient.ActionPlans.CreateAsync(CreateWeightActionPlan(objectiveId));
 
-            HttpOperationResponse<ActionPlansResponseActionPlanInstance> plans = await restClient.GetActionPlansWithHttpMessagesAsync();
-            Assert.AreEqual(1, plans.Body.Plans.Count);
+            ActionPlansResponseActionPlanInstance plans = await restClient.ActionPlans.GetAsync();
+            Assert.AreEqual(1, plans.Plans.Count);
 
-            ActionPlanInstance planInstance = plans.Body.Plans[0];
+            ActionPlanInstance planInstance = plans.Plans[0];
             Assert.AreEqual(objectiveId.ToString(), planInstance.Objectives[0].Id);
             Assert.AreEqual(ObjectiveName, planInstance.Objectives[0].Name);
             Assert.AreEqual(PlanName, planInstance.Name);
@@ -51,10 +51,10 @@ namespace Microsoft.HealthVault.IntegrationTest
 
         private static async Task RemoveAllActionPlansAsync(IMicrosoftHealthVaultRestApi api)
         {
-            HttpOperationResponse<ActionPlansResponseActionPlanInstance> plans = await api.GetActionPlansWithHttpMessagesAsync();
-            foreach (var plan in plans.Body.Plans)
+            var plans = await api.ActionPlans.GetAsync();
+            foreach (var plan in plans.Plans)
             {
-                await api.DeleteActionPlanWithHttpMessagesAsync(plan.Id);
+                await api.ActionPlans.DeleteAsync(plan.Id);
             }
         }
 

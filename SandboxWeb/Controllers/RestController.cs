@@ -25,7 +25,7 @@ namespace SandboxWeb.Controllers
             var personInfo = await webHealthVaultConnection.GetPersonInfoAsync();
 
             var restClient = webHealthVaultConnection.CreateMicrosoftHealthVaultRestApi(personInfo.GetSelfRecord().Id);
-            var plans = await restClient.GetActionPlansAsync();
+            var plans = await restClient.ActionPlans.GetAsync();
 
             return View(plans);
         }
