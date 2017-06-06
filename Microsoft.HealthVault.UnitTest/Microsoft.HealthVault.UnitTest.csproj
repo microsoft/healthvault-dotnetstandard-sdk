@@ -187,6 +187,9 @@
     <EmbeddedResource Include="Samples\ThingsPagedResult2.xml" />
     <EmbeddedResource Include="Samples\ThingsPagedResult3.xml" />
   </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Samples\ThingSampleWeight.xml" />
+  </ItemGroup>
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">
       <ItemGroup>

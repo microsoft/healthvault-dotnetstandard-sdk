@@ -1084,7 +1084,7 @@ namespace Microsoft.HealthVault.Thing
 
             Sections = ThingSections.None;
 
-            XPathNavigator thingIdNav = thingNavigator.SelectSingleNode("thing/thing-id");
+            XPathNavigator thingIdNav = thingNavigator.SelectSingleNode("thing-id");
             if (thingIdNav != null)
             {
                 Guid thingId = new Guid(thingIdNav.Value);
@@ -1094,7 +1094,7 @@ namespace Microsoft.HealthVault.Thing
                 Key = !string.IsNullOrEmpty(versionStamp) ? new ThingKey(thingId, new Guid(versionStamp)) : new ThingKey(thingId);
             }
 
-            XPathNavigator thingTypeNavigator = thingNavigator.SelectSingleNode("thing/type-id");
+            XPathNavigator thingTypeNavigator = thingNavigator.SelectSingleNode("type-id");
 
             if (thingTypeNavigator != null)
             {
@@ -1134,7 +1134,7 @@ namespace Microsoft.HealthVault.Thing
         private void AddCoreSectionValues(XPathNavigator thingNavigator)
         {
             XPathNavigator effectiveDateNav =
-                thingNavigator.SelectSingleNode("thing/eff-date");
+                thingNavigator.SelectSingleNode("eff-date");
 
             if (effectiveDateNav != null)
             {
@@ -1237,7 +1237,7 @@ namespace Microsoft.HealthVault.Thing
             // Check for the "data-xml" data-group
 
             XPathNodeIterator dataXmlIterator =
-                thingNavigator.Select("thing/data-xml");
+                thingNavigator.Select("data-xml");
 
             foreach (XPathNavigator dataXml in dataXmlIterator)
             {
