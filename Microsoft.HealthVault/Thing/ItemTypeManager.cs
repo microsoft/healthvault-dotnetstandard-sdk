@@ -1201,7 +1201,7 @@ namespace Microsoft.HealthVault.Thing
 
         private static Guid GetTypeId(XPathNavigator thingNav)
         {
-            string typeIdString = thingNav.SelectSingleNode("type-id").Value;
+            string typeIdString = thingNav.SelectSingleNode("thing/type-id").Value;
             return new Guid(typeIdString);
         }
 
