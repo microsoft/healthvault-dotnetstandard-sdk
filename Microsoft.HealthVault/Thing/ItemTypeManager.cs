@@ -651,7 +651,7 @@ namespace Microsoft.HealthVault.Thing
             string thingString = thingReader.ReadOuterXml();
             XmlReader reader = XmlReader.Create(new StringReader(thingString), SDKHelper.XmlReaderSettings);
 
-            XPathNavigator thingNav = new XPathDocument(reader).CreateNavigator();
+            XPathNavigator thingNav = new XPathDocument(reader).CreateNavigator().SelectSingleNode("thing");
 
             ThingBase thingBase = DeserializeItem(thingNav);
 

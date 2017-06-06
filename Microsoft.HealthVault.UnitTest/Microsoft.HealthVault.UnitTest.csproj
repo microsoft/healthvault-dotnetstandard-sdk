@@ -131,6 +131,7 @@
     <Compile Include="HealthVaultSodaConnectionTests.cs" />
     <Compile Include="ItemTypes\ApproximateDateTimeTests.cs" />
     <Compile Include="ItemTypes\HealthServiceDateTimeTests.cs" />
+    <Compile Include="ItemTypes\WeightTests.cs" />
     <Compile Include="LocalObjectStoreTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Rest\GivenARestRequest.cs" />
@@ -185,6 +186,9 @@
     <EmbeddedResource Include="Samples\ThingsPagedResult1.xml" />
     <EmbeddedResource Include="Samples\ThingsPagedResult2.xml" />
     <EmbeddedResource Include="Samples\ThingsPagedResult3.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Samples\ThingSampleWeight.xml" />
   </ItemGroup>
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">
