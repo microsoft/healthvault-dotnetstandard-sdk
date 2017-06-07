@@ -15,18 +15,18 @@ namespace Microsoft.HealthVault.RestApi.Generated.Models
     /// <summary>
     /// An action plan being created for a user
     /// </summary>
-    public partial class ActionPlan
+    public partial class ActionPlanV2
     {
         /// <summary>
-        /// Initializes a new instance of the ActionPlan class.
+        /// Initializes a new instance of the ActionPlanV2 class.
         /// </summary>
-        public ActionPlan()
+        public ActionPlanV2()
         {
           CustomInit();
         }
 
         /// <summary>
-        /// Initializes a new instance of the ActionPlan class.
+        /// Initializes a new instance of the ActionPlanV2 class.
         /// </summary>
         /// <param name="name">The name of the plan, localized</param>
         /// <param name="description">The description of the plan,
@@ -43,7 +43,7 @@ namespace Microsoft.HealthVault.RestApi.Generated.Models
         /// plan</param>
         /// <param name="associatedTasks">The Tasks associated with this
         /// plan</param>
-        public ActionPlan(string name = default(string), string description = default(string), string imageUrl = default(string), string thumbnailImageUrl = default(string), string category = default(string), IList<Objective> objectives = default(IList<Objective>), IList<ActionPlanTask> associatedTasks = default(IList<ActionPlanTask>))
+        public ActionPlanV2(string name = default(string), string description = default(string), string imageUrl = default(string), string thumbnailImageUrl = default(string), string category = default(string), IList<Objective> objectives = default(IList<Objective>), IList<ActionPlanTaskV2> associatedTasks = default(IList<ActionPlanTaskV2>))
         {
             Name = name;
             Description = description;
@@ -103,7 +103,7 @@ namespace Microsoft.HealthVault.RestApi.Generated.Models
         /// Gets or sets the Tasks associated with this plan
         /// </summary>
         [JsonProperty(PropertyName = "associatedTasks")]
-        public IList<ActionPlanTask> AssociatedTasks { get; set; }
+        public IList<ActionPlanTaskV2> AssociatedTasks { get; set; }
 
     }
 }

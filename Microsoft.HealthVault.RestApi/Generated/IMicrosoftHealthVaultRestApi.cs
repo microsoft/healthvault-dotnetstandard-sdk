@@ -57,9 +57,19 @@ namespace Microsoft.HealthVault.RestApi.Generated
         IGoals Goals { get; }
 
         /// <summary>
+        /// Gets the IGoalRecommendations.
+        /// </summary>
+        IGoalRecommendations GoalRecommendations { get; }
+
+        /// <summary>
         /// Gets the IOnboarding.
         /// </summary>
         IOnboarding Onboarding { get; }
+
+        /// <summary>
+        /// Gets the ISleeps.
+        /// </summary>
+        ISleeps Sleeps { get; }
 
     }
 }

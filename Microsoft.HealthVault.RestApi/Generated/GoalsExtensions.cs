@@ -59,7 +59,7 @@ namespace Microsoft.HealthVault.RestApi.Generated
             /// <param name='cancellationToken'>
             /// The cancellation token.
             /// </param>
-            public static async Task<GoalsResponse> GetAsync(this IGoals operations, string types = default(string), string windowTypes = default(string), System.DateTime? startDate = default(System.DateTime?), System.DateTime? endDate = default(System.DateTime?), CancellationToken cancellationToken = default(CancellationToken))
+            public static async Task<GoalsResponse> GetAsync(this IGoals operations, string types = default(string), string windowTypes = default(string), System.DateTime? startDate = default(System.DateTime?), System.DateTime? endDate = default(System.DateTime?), System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken))
             {
                 using (var _result = await operations.GetWithHttpMessagesAsync(types, windowTypes, startDate, endDate, null, cancellationToken).ConfigureAwait(false))
                 {
@@ -95,7 +95,7 @@ namespace Microsoft.HealthVault.RestApi.Generated
             /// <param name='cancellationToken'>
             /// The cancellation token.
             /// </param>
-            public static async Task<Goal> ReplaceAsync(this IGoals operations, Goal goal, CancellationToken cancellationToken = default(CancellationToken))
+            public static async Task<Goal> ReplaceAsync(this IGoals operations, Goal goal, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken))
             {
                 using (var _result = await operations.ReplaceWithHttpMessagesAsync(goal, null, cancellationToken).ConfigureAwait(false))
                 {
@@ -129,7 +129,7 @@ namespace Microsoft.HealthVault.RestApi.Generated
             /// <param name='cancellationToken'>
             /// The cancellation token.
             /// </param>
-            public static async Task<object> CreateAsync(this IGoals operations, GoalsWrapper goalsWrapper, CancellationToken cancellationToken = default(CancellationToken))
+            public static async Task<object> CreateAsync(this IGoals operations, GoalsWrapper goalsWrapper, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken))
             {
                 using (var _result = await operations.CreateWithHttpMessagesAsync(goalsWrapper, null, cancellationToken).ConfigureAwait(false))
                 {
@@ -167,7 +167,7 @@ namespace Microsoft.HealthVault.RestApi.Generated
             /// <param name='cancellationToken'>
             /// The cancellation token.
             /// </param>
-            public static async Task<GoalsResponse> UpdateAsync(this IGoals operations, GoalsWrapper goalsWrapper, CancellationToken cancellationToken = default(CancellationToken))
+            public static async Task<GoalsResponse> UpdateAsync(this IGoals operations, GoalsWrapper goalsWrapper, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken))
             {
                 using (var _result = await operations.UpdateWithHttpMessagesAsync(goalsWrapper, null, cancellationToken).ConfigureAwait(false))
                 {
@@ -201,7 +201,7 @@ namespace Microsoft.HealthVault.RestApi.Generated
             /// <param name='cancellationToken'>
             /// The cancellation token.
             /// </param>
-            public static async Task<Goal> GetByIdAsync(this IGoals operations, string goalId, CancellationToken cancellationToken = default(CancellationToken))
+            public static async Task<Goal> GetByIdAsync(this IGoals operations, string goalId, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken))
             {
                 using (var _result = await operations.GetByIdWithHttpMessagesAsync(goalId, null, cancellationToken).ConfigureAwait(false))
                 {
@@ -235,7 +235,7 @@ namespace Microsoft.HealthVault.RestApi.Generated
             /// <param name='cancellationToken'>
             /// The cancellation token.
             /// </param>
-            public static async Task<object> DeleteAsync(this IGoals operations, string goalId, CancellationToken cancellationToken = default(CancellationToken))
+            public static async Task<object> DeleteAsync(this IGoals operations, string goalId, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken))
             {
                 using (var _result = await operations.DeleteWithHttpMessagesAsync(goalId, null, cancellationToken).ConfigureAwait(false))
                 {
@@ -275,7 +275,7 @@ namespace Microsoft.HealthVault.RestApi.Generated
             /// <param name='cancellationToken'>
             /// The cancellation token.
             /// </param>
-            public static async Task<GoalsResponse> GetActiveAsync(this IGoals operations, string types = default(string), string windowTypes = default(string), CancellationToken cancellationToken = default(CancellationToken))
+            public static async Task<GoalsResponse> GetActiveAsync(this IGoals operations, string types = default(string), string windowTypes = default(string), System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken))
             {
                 using (var _result = await operations.GetActiveWithHttpMessagesAsync(types, windowTypes, null, cancellationToken).ConfigureAwait(false))
                 {

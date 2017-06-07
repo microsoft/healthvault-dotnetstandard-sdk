@@ -18,12 +18,12 @@ namespace Microsoft.HealthVault.RestApi.Generated
     using System.Threading.Tasks;
 
     /// <summary>
-    /// ActionPlanTasks operations.
+    /// GoalRecommendations operations.
     /// </summary>
-    public partial class ActionPlanTasks : IServiceOperations<MicrosoftHealthVaultRestApi>, IActionPlanTasks
+    public partial class GoalRecommendations : IServiceOperations<MicrosoftHealthVaultRestApi>, IGoalRecommendations
     {
         /// <summary>
-        /// Initializes a new instance of the ActionPlanTasks class.
+        /// Initializes a new instance of the GoalRecommendations class.
         /// </summary>
         /// <param name='client'>
         /// Reference to the service client.
@@ -31,7 +31,7 @@ namespace Microsoft.HealthVault.RestApi.Generated
         /// <exception cref="System.ArgumentNullException">
         /// Thrown when a required parameter is null
         /// </exception>
-        public ActionPlanTasks(MicrosoftHealthVaultRestApi client)
+        public GoalRecommendations(MicrosoftHealthVaultRestApi client)
         {
             if (client == null)
             {
@@ -46,14 +46,13 @@ namespace Microsoft.HealthVault.RestApi.Generated
         public MicrosoftHealthVaultRestApi Client { get; private set; }
 
         /// <summary>
-        /// Get a collection of task definitions
+        /// Get a collection of all goal recommendations
         /// </summary>
-        /// <param name='actionPlanTaskStatus'>
-        /// Possible values include: 'Unknown', 'Archived', 'InProgress',
-        /// 'Recommended', 'Completed', 'Template'
+        /// <param name='goalTypes'>
+        /// The goal types(e.g Steps, CaloriesBurned) filter.
         /// </param>
-        /// <param name='maxPageSize'>
-        /// The maximum number of entries to return per page. Defaults to 1000.
+        /// <param name='goalWindowTypes'>
+        /// The goal window types(e.g Daily, Weekly) filter.
         /// </param>
         /// <param name='customHeaders'>
         /// Headers that will be added to request.
@@ -70,7 +69,7 @@ namespace Microsoft.HealthVault.RestApi.Generated
         /// <return>
         /// A response object containing the response body and response headers.
         /// </return>
-        public async Task<HttpOperationResponse<ActionPlanTasksResponseActionPlanTaskInstanceV2>> GetWithHttpMessagesAsync(string actionPlanTaskStatus = default(string), int? maxPageSize = default(int?), Dictionary<string, List<string>> customHeaders = null, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken))
+        public async Task<HttpOperationResponse<GoalRecommendationsResponse>> GetWithHttpMessagesAsync(string goalTypes = default(string), string goalWindowTypes = default(string), Dictionary<string, List<string>> customHeaders = null, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken))
         {
             // Tracing
             bool _shouldTrace = ServiceClientTracing.IsEnabled;
@@ -79,22 +78,22 @@ namespace Microsoft.HealthVault.RestApi.Generated
             {
                 _invocationId = ServiceClientTracing.NextInvocationId.ToString();
                 Dictionary<string, object> tracingParameters = new Dictionary<string, object>();
-                tracingParameters.Add("actionPlanTaskStatus", actionPlanTaskStatus);
-                tracingParameters.Add("maxPageSize", maxPageSize);
+                tracingParameters.Add("goalTypes", goalTypes);
+                tracingParameters.Add("goalWindowTypes", goalWindowTypes);
                 tracingParameters.Add("cancellationToken", cancellationToken);
                 ServiceClientTracing.Enter(_invocationId, this, "Get", tracingParameters);
             }
             // Construct URL
             var _baseUrl = Client.BaseUri.AbsoluteUri;
-            var _url = new System.Uri(new System.Uri(_baseUrl + (_baseUrl.EndsWith("/") ? "" : "/")), "ActionPlanTasks").ToString();
+            var _url = new System.Uri(new System.Uri(_baseUrl + (_baseUrl.EndsWith("/") ? "" : "/")), "GoalRecommendations").ToString();
             List<string> _queryParameters = new List<string>();
-            if (actionPlanTaskStatus != null)
+            if (goalTypes != null)
             {
-                _queryParameters.Add(string.Format("actionPlanTaskStatus={0}", System.Uri.EscapeDataString(actionPlanTaskStatus)));
+                _queryParameters.Add(string.Format("goalTypes={0}", System.Uri.EscapeDataString(goalTypes)));
             }
-            if (maxPageSize != null)
+            if (goalWindowTypes != null)
             {
-                _queryParameters.Add(string.Format("maxPageSize={0}", System.Uri.EscapeDataString(Microsoft.Rest.Serialization.SafeJsonConvert.SerializeObject(maxPageSize, Client.SerializationSettings).Trim('"'))));
+                _queryParameters.Add(string.Format("goalWindowTypes={0}", System.Uri.EscapeDataString(goalWindowTypes)));
             }
             if (_queryParameters.Count > 0)
             {
@@ -172,7 +171,7 @@ namespace Microsoft.HealthVault.RestApi.Generated
                 throw ex;
             }
             // Create Result
-            var _result = new HttpOperationResponse<ActionPlanTasksResponseActionPlanTaskInstanceV2>();
+            var _result = new HttpOperationResponse<GoalRecommendationsResponse>();
             _result.Request = _httpRequest;
             _result.Response = _httpResponse;
             // Deserialize Response
@@ -181,7 +180,7 @@ namespace Microsoft.HealthVault.RestApi.Generated
                 _responseContent = await _httpResponse.Content.ReadAsStringAsync().ConfigureAwait(false);
                 try
                 {
-                    _result.Body = Microsoft.Rest.Serialization.SafeJsonConvert.DeserializeObject<ActionPlanTasksResponseActionPlanTaskInstanceV2>(_responseContent, Client.DeserializationSettings);
+                    _result.Body = Microsoft.Rest.Serialization.SafeJsonConvert.DeserializeObject<GoalRecommendationsResponse>(_responseContent, Client.DeserializationSettings);
                 }
                 catch (JsonException ex)
                 {
@@ -201,9 +200,10 @@ namespace Microsoft.HealthVault.RestApi.Generated
         }
 
         /// <summary>
-        /// Put an update for an action plan task
+        /// Post a goal recommendation instance
         /// </summary>
-        /// <param name='actionPlanTask'>
+        /// <param name='goalRecommendation'>
+        /// The instance of the goal recommendation to create.
         /// </param>
         /// <param name='customHeaders'>
         /// Headers that will be added to request.
@@ -226,11 +226,11 @@ namespace Microsoft.HealthVault.RestApi.Generated
         /// <return>
         /// A response object containing the response body and response headers.
         /// </return>
-        public async Task<HttpOperationResponse<ActionPlanTasksResponseActionPlanTaskInstanceV2>> ReplaceWithHttpMessagesAsync(ActionPlanTaskInstanceV2 actionPlanTask, Dictionary<string, List<string>> customHeaders = null, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken))
+        public async Task<HttpOperationResponse<object>> CreateWithHttpMessagesAsync(GoalRecommendation goalRecommendation, Dictionary<string, List<string>> customHeaders = null, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken))
         {
-            if (actionPlanTask == null)
+            if (goalRecommendation == null)
             {
-                throw new ValidationException(ValidationRules.CannotBeNull, "actionPlanTask");
+                throw new ValidationException(ValidationRules.CannotBeNull, "goalRecommendation");
             }
             // Tracing
             bool _shouldTrace = ServiceClientTracing.IsEnabled;
@@ -239,165 +239,13 @@ namespace Microsoft.HealthVault.RestApi.Generated
             {
                 _invocationId = ServiceClientTracing.NextInvocationId.ToString();
                 Dictionary<string, object> tracingParameters = new Dictionary<string, object>();
-                tracingParameters.Add("actionPlanTask", actionPlanTask);
-                tracingParameters.Add("cancellationToken", cancellationToken);
-                ServiceClientTracing.Enter(_invocationId, this, "Replace", tracingParameters);
-            }
-            // Construct URL
-            var _baseUrl = Client.BaseUri.AbsoluteUri;
-            var _url = new System.Uri(new System.Uri(_baseUrl + (_baseUrl.EndsWith("/") ? "" : "/")), "ActionPlanTasks").ToString();
-            // Create HTTP transport objects
-            var _httpRequest = new HttpRequestMessage();
-            HttpResponseMessage _httpResponse = null;
-            _httpRequest.Method = new HttpMethod("PUT");
-            _httpRequest.RequestUri = new System.Uri(_url);
-            // Set Headers
-
-
-            if (customHeaders != null)
-            {
-                foreach(var _header in customHeaders)
-                {
-                    if (_httpRequest.Headers.Contains(_header.Key))
-                    {
-                        _httpRequest.Headers.Remove(_header.Key);
-                    }
-                    _httpRequest.Headers.TryAddWithoutValidation(_header.Key, _header.Value);
-                }
-            }
-
-            // Serialize Request
-            string _requestContent = null;
-            if(actionPlanTask != null)
-            {
-                _requestContent = Microsoft.Rest.Serialization.SafeJsonConvert.SerializeObject(actionPlanTask, Client.SerializationSettings);
-                _httpRequest.Content = new StringContent(_requestContent, System.Text.Encoding.UTF8);
-                _httpRequest.Content.Headers.ContentType =System.Net.Http.Headers.MediaTypeHeaderValue.Parse("application/json; charset=utf-8");
-            }
-            // Set Credentials
-            if (Client.Credentials != null)
-            {
-                cancellationToken.ThrowIfCancellationRequested();
-                await Client.Credentials.ProcessHttpRequestAsync(_httpRequest, cancellationToken).ConfigureAwait(false);
-            }
-            // Send Request
-            if (_shouldTrace)
-            {
-                ServiceClientTracing.SendRequest(_invocationId, _httpRequest);
-            }
-            cancellationToken.ThrowIfCancellationRequested();
-            _httpResponse = await Client.HttpClient.SendAsync(_httpRequest, cancellationToken).ConfigureAwait(false);
-            if (_shouldTrace)
-            {
-                ServiceClientTracing.ReceiveResponse(_invocationId, _httpResponse);
-            }
-            HttpStatusCode _statusCode = _httpResponse.StatusCode;
-            cancellationToken.ThrowIfCancellationRequested();
-            string _responseContent = null;
-            if ((int)_statusCode != 200)
-            {
-                var ex = new ErrorResponseException(string.Format("Operation returned an invalid status code '{0}'", _statusCode));
-                try
-                {
-                    _responseContent = await _httpResponse.Content.ReadAsStringAsync().ConfigureAwait(false);
-                    ErrorResponse _errorBody =  Microsoft.Rest.Serialization.SafeJsonConvert.DeserializeObject<ErrorResponse>(_responseContent, Client.DeserializationSettings);
-                    if (_errorBody != null)
-                    {
-                        ex.Body = _errorBody;
-                    }
-                }
-                catch (JsonException)
-                {
-                    // Ignore the exception
-                }
-                ex.Request = new HttpRequestMessageWrapper(_httpRequest, _requestContent);
-                ex.Response = new HttpResponseMessageWrapper(_httpResponse, _responseContent);
-                if (_shouldTrace)
-                {
-                    ServiceClientTracing.Error(_invocationId, ex);
-                }
-                _httpRequest.Dispose();
-                if (_httpResponse != null)
-                {
-                    _httpResponse.Dispose();
-                }
-                throw ex;
-            }
-            // Create Result
-            var _result = new HttpOperationResponse<ActionPlanTasksResponseActionPlanTaskInstanceV2>();
-            _result.Request = _httpRequest;
-            _result.Response = _httpResponse;
-            // Deserialize Response
-            if ((int)_statusCode == 200)
-            {
-                _responseContent = await _httpResponse.Content.ReadAsStringAsync().ConfigureAwait(false);
-                try
-                {
-                    _result.Body = Microsoft.Rest.Serialization.SafeJsonConvert.DeserializeObject<ActionPlanTasksResponseActionPlanTaskInstanceV2>(_responseContent, Client.DeserializationSettings);
-                }
-                catch (JsonException ex)
-                {
-                    _httpRequest.Dispose();
-                    if (_httpResponse != null)
-                    {
-                        _httpResponse.Dispose();
-                    }
-                    throw new SerializationException("Unable to deserialize the response.", _responseContent, ex);
-                }
-            }
-            if (_shouldTrace)
-            {
-                ServiceClientTracing.Exit(_invocationId, _result);
-            }
-            return _result;
-        }
-
-        /// <summary>
-        /// Post a new action plan task
-        /// </summary>
-        /// <param name='actionPlanTask'>
-        /// </param>
-        /// <param name='customHeaders'>
-        /// Headers that will be added to request.
-        /// </param>
-        /// <param name='cancellationToken'>
-        /// The cancellation token.
-        /// </param>
-        /// <exception cref="ErrorResponseException">
-        /// Thrown when the operation returned an invalid status code
-        /// </exception>
-        /// <exception cref="SerializationException">
-        /// Thrown when unable to deserialize the response
-        /// </exception>
-        /// <exception cref="ValidationException">
-        /// Thrown when a required parameter is null
-        /// </exception>
-        /// <exception cref="System.ArgumentNullException">
-        /// Thrown when a required parameter is null
-        /// </exception>
-        /// <return>
-        /// A response object containing the response body and response headers.
-        /// </return>
-        public async Task<HttpOperationResponse<object>> CreateWithHttpMessagesAsync(ActionPlanTaskV2 actionPlanTask, Dictionary<string, List<string>> customHeaders = null, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken))
-        {
-            if (actionPlanTask == null)
-            {
-                throw new ValidationException(ValidationRules.CannotBeNull, "actionPlanTask");
-            }
-            // Tracing
-            bool _shouldTrace = ServiceClientTracing.IsEnabled;
-            string _invocationId = null;
-            if (_shouldTrace)
-            {
-                _invocationId = ServiceClientTracing.NextInvocationId.ToString();
-                Dictionary<string, object> tracingParameters = new Dictionary<string, object>();
-                tracingParameters.Add("actionPlanTask", actionPlanTask);
+                tracingParameters.Add("goalRecommendation", goalRecommendation);
                 tracingParameters.Add("cancellationToken", cancellationToken);
                 ServiceClientTracing.Enter(_invocationId, this, "Create", tracingParameters);
             }
             // Construct URL
             var _baseUrl = Client.BaseUri.AbsoluteUri;
-            var _url = new System.Uri(new System.Uri(_baseUrl + (_baseUrl.EndsWith("/") ? "" : "/")), "ActionPlanTasks").ToString();
+            var _url = new System.Uri(new System.Uri(_baseUrl + (_baseUrl.EndsWith("/") ? "" : "/")), "GoalRecommendations").ToString();
             // Create HTTP transport objects
             var _httpRequest = new HttpRequestMessage();
             HttpResponseMessage _httpResponse = null;
@@ -420,9 +268,9 @@ namespace Microsoft.HealthVault.RestApi.Generated
 
             // Serialize Request
             string _requestContent = null;
-            if(actionPlanTask != null)
+            if(goalRecommendation != null)
             {
-                _requestContent = Microsoft.Rest.Serialization.SafeJsonConvert.SerializeObject(actionPlanTask, Client.SerializationSettings);
+                _requestContent = Microsoft.Rest.Serialization.SafeJsonConvert.SerializeObject(goalRecommendation, Client.SerializationSettings);
                 _httpRequest.Content = new StringContent(_requestContent, System.Text.Encoding.UTF8);
                 _httpRequest.Content.Headers.ContentType =System.Net.Http.Headers.MediaTypeHeaderValue.Parse("application/json; charset=utf-8");
             }
@@ -503,7 +351,7 @@ namespace Microsoft.HealthVault.RestApi.Generated
                 _responseContent = await _httpResponse.Content.ReadAsStringAsync().ConfigureAwait(false);
                 try
                 {
-                    _result.Body = Microsoft.Rest.Serialization.SafeJsonConvert.DeserializeObject<ActionPlanTasksResponseActionPlanTaskInstanceV2>(_responseContent, Client.DeserializationSettings);
+                    _result.Body = Microsoft.Rest.Serialization.SafeJsonConvert.DeserializeObject<GoalRecommendation>(_responseContent, Client.DeserializationSettings);
                 }
                 catch (JsonException ex)
                 {
@@ -523,9 +371,10 @@ namespace Microsoft.HealthVault.RestApi.Generated
         }
 
         /// <summary>
-        /// Patch an update for an action plan task
+        /// Get an instance of a specific goal recommendation
         /// </summary>
-        /// <param name='actionPlanTask'>
+        /// <param name='goalRecommendationId'>
+        /// The goal recommendation identifier.
         /// </param>
         /// <param name='customHeaders'>
         /// Headers that will be added to request.
@@ -548,11 +397,11 @@ namespace Microsoft.HealthVault.RestApi.Generated
         /// <return>
         /// A response object containing the response body and response headers.
         /// </return>
-        public async Task<HttpOperationResponse<ActionPlanTasksResponseActionPlanTaskInstanceV2>> UpdateWithHttpMessagesAsync(ActionPlanTaskInstanceV2 actionPlanTask, Dictionary<string, List<string>> customHeaders = null, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken))
+        public async Task<HttpOperationResponse<GoalRecommendationInstance>> GetByIdWithHttpMessagesAsync(string goalRecommendationId, Dictionary<string, List<string>> customHeaders = null, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken))
         {
-            if (actionPlanTask == null)
+            if (goalRecommendationId == null)
             {
-                throw new ValidationException(ValidationRules.CannotBeNull, "actionPlanTask");
+                throw new ValidationException(ValidationRules.CannotBeNull, "goalRecommendationId");
             }
             // Tracing
             bool _shouldTrace = ServiceClientTracing.IsEnabled;
@@ -561,166 +410,14 @@ namespace Microsoft.HealthVault.RestApi.Generated
             {
                 _invocationId = ServiceClientTracing.NextInvocationId.ToString();
                 Dictionary<string, object> tracingParameters = new Dictionary<string, object>();
-                tracingParameters.Add("actionPlanTask", actionPlanTask);
-                tracingParameters.Add("cancellationToken", cancellationToken);
-                ServiceClientTracing.Enter(_invocationId, this, "Update", tracingParameters);
-            }
-            // Construct URL
-            var _baseUrl = Client.BaseUri.AbsoluteUri;
-            var _url = new System.Uri(new System.Uri(_baseUrl + (_baseUrl.EndsWith("/") ? "" : "/")), "ActionPlanTasks").ToString();
-            // Create HTTP transport objects
-            var _httpRequest = new HttpRequestMessage();
-            HttpResponseMessage _httpResponse = null;
-            _httpRequest.Method = new HttpMethod("PATCH");
-            _httpRequest.RequestUri = new System.Uri(_url);
-            // Set Headers
-
-
-            if (customHeaders != null)
-            {
-                foreach(var _header in customHeaders)
-                {
-                    if (_httpRequest.Headers.Contains(_header.Key))
-                    {
-                        _httpRequest.Headers.Remove(_header.Key);
-                    }
-                    _httpRequest.Headers.TryAddWithoutValidation(_header.Key, _header.Value);
-                }
-            }
-
-            // Serialize Request
-            string _requestContent = null;
-            if(actionPlanTask != null)
-            {
-                _requestContent = Microsoft.Rest.Serialization.SafeJsonConvert.SerializeObject(actionPlanTask, Client.SerializationSettings);
-                _httpRequest.Content = new StringContent(_requestContent, System.Text.Encoding.UTF8);
-                _httpRequest.Content.Headers.ContentType =System.Net.Http.Headers.MediaTypeHeaderValue.Parse("application/json; charset=utf-8");
-            }
-            // Set Credentials
-            if (Client.Credentials != null)
-            {
-                cancellationToken.ThrowIfCancellationRequested();
-                await Client.Credentials.ProcessHttpRequestAsync(_httpRequest, cancellationToken).ConfigureAwait(false);
-            }
-            // Send Request
-            if (_shouldTrace)
-            {
-                ServiceClientTracing.SendRequest(_invocationId, _httpRequest);
-            }
-            cancellationToken.ThrowIfCancellationRequested();
-            _httpResponse = await Client.HttpClient.SendAsync(_httpRequest, cancellationToken).ConfigureAwait(false);
-            if (_shouldTrace)
-            {
-                ServiceClientTracing.ReceiveResponse(_invocationId, _httpResponse);
-            }
-            HttpStatusCode _statusCode = _httpResponse.StatusCode;
-            cancellationToken.ThrowIfCancellationRequested();
-            string _responseContent = null;
-            if ((int)_statusCode != 200)
-            {
-                var ex = new ErrorResponseException(string.Format("Operation returned an invalid status code '{0}'", _statusCode));
-                try
-                {
-                    _responseContent = await _httpResponse.Content.ReadAsStringAsync().ConfigureAwait(false);
-                    ErrorResponse _errorBody =  Microsoft.Rest.Serialization.SafeJsonConvert.DeserializeObject<ErrorResponse>(_responseContent, Client.DeserializationSettings);
-                    if (_errorBody != null)
-                    {
-                        ex.Body = _errorBody;
-                    }
-                }
-                catch (JsonException)
-                {
-                    // Ignore the exception
-                }
-                ex.Request = new HttpRequestMessageWrapper(_httpRequest, _requestContent);
-                ex.Response = new HttpResponseMessageWrapper(_httpResponse, _responseContent);
-                if (_shouldTrace)
-                {
-                    ServiceClientTracing.Error(_invocationId, ex);
-                }
-                _httpRequest.Dispose();
-                if (_httpResponse != null)
-                {
-                    _httpResponse.Dispose();
-                }
-                throw ex;
-            }
-            // Create Result
-            var _result = new HttpOperationResponse<ActionPlanTasksResponseActionPlanTaskInstanceV2>();
-            _result.Request = _httpRequest;
-            _result.Response = _httpResponse;
-            // Deserialize Response
-            if ((int)_statusCode == 200)
-            {
-                _responseContent = await _httpResponse.Content.ReadAsStringAsync().ConfigureAwait(false);
-                try
-                {
-                    _result.Body = Microsoft.Rest.Serialization.SafeJsonConvert.DeserializeObject<ActionPlanTasksResponseActionPlanTaskInstanceV2>(_responseContent, Client.DeserializationSettings);
-                }
-                catch (JsonException ex)
-                {
-                    _httpRequest.Dispose();
-                    if (_httpResponse != null)
-                    {
-                        _httpResponse.Dispose();
-                    }
-                    throw new SerializationException("Unable to deserialize the response.", _responseContent, ex);
-                }
-            }
-            if (_shouldTrace)
-            {
-                ServiceClientTracing.Exit(_invocationId, _result);
-            }
-            return _result;
-        }
-
-        /// <summary>
-        /// Get a task by id
-        /// </summary>
-        /// <param name='actionPlanTaskId'>
-        /// </param>
-        /// <param name='customHeaders'>
-        /// Headers that will be added to request.
-        /// </param>
-        /// <param name='cancellationToken'>
-        /// The cancellation token.
-        /// </param>
-        /// <exception cref="ErrorResponseException">
-        /// Thrown when the operation returned an invalid status code
-        /// </exception>
-        /// <exception cref="SerializationException">
-        /// Thrown when unable to deserialize the response
-        /// </exception>
-        /// <exception cref="ValidationException">
-        /// Thrown when a required parameter is null
-        /// </exception>
-        /// <exception cref="System.ArgumentNullException">
-        /// Thrown when a required parameter is null
-        /// </exception>
-        /// <return>
-        /// A response object containing the response body and response headers.
-        /// </return>
-        public async Task<HttpOperationResponse<ActionPlanTaskInstanceV2>> GetByIdWithHttpMessagesAsync(string actionPlanTaskId, Dictionary<string, List<string>> customHeaders = null, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken))
-        {
-            if (actionPlanTaskId == null)
-            {
-                throw new ValidationException(ValidationRules.CannotBeNull, "actionPlanTaskId");
-            }
-            // Tracing
-            bool _shouldTrace = ServiceClientTracing.IsEnabled;
-            string _invocationId = null;
-            if (_shouldTrace)
-            {
-                _invocationId = ServiceClientTracing.NextInvocationId.ToString();
-                Dictionary<string, object> tracingParameters = new Dictionary<string, object>();
-                tracingParameters.Add("actionPlanTaskId", actionPlanTaskId);
+                tracingParameters.Add("goalRecommendationId", goalRecommendationId);
                 tracingParameters.Add("cancellationToken", cancellationToken);
                 ServiceClientTracing.Enter(_invocationId, this, "GetById", tracingParameters);
             }
             // Construct URL
             var _baseUrl = Client.BaseUri.AbsoluteUri;
-            var _url = new System.Uri(new System.Uri(_baseUrl + (_baseUrl.EndsWith("/") ? "" : "/")), "ActionPlanTasks/{actionPlanTaskId}").ToString();
-            _url = _url.Replace("{actionPlanTaskId}", System.Uri.EscapeDataString(actionPlanTaskId));
+            var _url = new System.Uri(new System.Uri(_baseUrl + (_baseUrl.EndsWith("/") ? "" : "/")), "GoalRecommendations/{goalRecommendationId}").ToString();
+            _url = _url.Replace("{goalRecommendationId}", System.Uri.EscapeDataString(goalRecommendationId));
             // Create HTTP transport objects
             var _httpRequest = new HttpRequestMessage();
             HttpResponseMessage _httpResponse = null;
@@ -793,7 +490,7 @@ namespace Microsoft.HealthVault.RestApi.Generated
                 throw ex;
             }
             // Create Result
-            var _result = new HttpOperationResponse<ActionPlanTaskInstanceV2>();
+            var _result = new HttpOperationResponse<GoalRecommendationInstance>();
             _result.Request = _httpRequest;
             _result.Response = _httpResponse;
             // Deserialize Response
@@ -802,7 +499,7 @@ namespace Microsoft.HealthVault.RestApi.Generated
                 _responseContent = await _httpResponse.Content.ReadAsStringAsync().ConfigureAwait(false);
                 try
                 {
-                    _result.Body = Microsoft.Rest.Serialization.SafeJsonConvert.DeserializeObject<ActionPlanTaskInstanceV2>(_responseContent, Client.DeserializationSettings);
+                    _result.Body = Microsoft.Rest.Serialization.SafeJsonConvert.DeserializeObject<GoalRecommendationInstance>(_responseContent, Client.DeserializationSettings);
                 }
                 catch (JsonException ex)
                 {
@@ -822,9 +519,10 @@ namespace Microsoft.HealthVault.RestApi.Generated
         }
 
         /// <summary>
-        /// Delete a task by id
+        /// Delete a goal recommendation instance
         /// </summary>
-        /// <param name='actionPlanTaskId'>
+        /// <param name='goalRecommendationId'>
+        /// The identifier of the goal recommendation to delete.
         /// </param>
         /// <param name='customHeaders'>
         /// Headers that will be added to request.
@@ -847,11 +545,11 @@ namespace Microsoft.HealthVault.RestApi.Generated
         /// <return>
         /// A response object containing the response body and response headers.
         /// </return>
-        public async Task<HttpOperationResponse<object>> DeleteWithHttpMessagesAsync(string actionPlanTaskId, Dictionary<string, List<string>> customHeaders = null, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken))
+        public async Task<HttpOperationResponse<object>> DeleteWithHttpMessagesAsync(string goalRecommendationId, Dictionary<string, List<string>> customHeaders = null, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken))
         {
-            if (actionPlanTaskId == null)
+            if (goalRecommendationId == null)
             {
-                throw new ValidationException(ValidationRules.CannotBeNull, "actionPlanTaskId");
+                throw new ValidationException(ValidationRules.CannotBeNull, "goalRecommendationId");
             }
             // Tracing
             bool _shouldTrace = ServiceClientTracing.IsEnabled;
@@ -860,14 +558,14 @@ namespace Microsoft.HealthVault.RestApi.Generated
             {
                 _invocationId = ServiceClientTracing.NextInvocationId.ToString();
                 Dictionary<string, object> tracingParameters = new Dictionary<string, object>();
-                tracingParameters.Add("actionPlanTaskId", actionPlanTaskId);
+                tracingParameters.Add("goalRecommendationId", goalRecommendationId);
                 tracingParameters.Add("cancellationToken", cancellationToken);
                 ServiceClientTracing.Enter(_invocationId, this, "Delete", tracingParameters);
             }
             // Construct URL
             var _baseUrl = Client.BaseUri.AbsoluteUri;
-            var _url = new System.Uri(new System.Uri(_baseUrl + (_baseUrl.EndsWith("/") ? "" : "/")), "ActionPlanTasks/{actionPlanTaskId}").ToString();
-            _url = _url.Replace("{actionPlanTaskId}", System.Uri.EscapeDataString(actionPlanTaskId));
+            var _url = new System.Uri(new System.Uri(_baseUrl + (_baseUrl.EndsWith("/") ? "" : "/")), "GoalRecommendations/{goalRecommendationId}").ToString();
+            _url = _url.Replace("{goalRecommendationId}", System.Uri.EscapeDataString(goalRecommendationId));
             // Create HTTP transport objects
             var _httpRequest = new HttpRequestMessage();
             HttpResponseMessage _httpResponse = null;
@@ -968,7 +666,11 @@ namespace Microsoft.HealthVault.RestApi.Generated
             return _result;
         }
 
-        /// <param name='trackingValidation'>
+        /// <summary>
+        /// Updates the goal recommendation to acknowledged state
+        /// </summary>
+        /// <param name='goalRecommendationId'>
+        /// The identifier of the goal recommendation to acknowledge.
         /// </param>
         /// <param name='customHeaders'>
         /// Headers that will be added to request.
@@ -991,11 +693,11 @@ namespace Microsoft.HealthVault.RestApi.Generated
         /// <return>
         /// A response object containing the response body and response headers.
         /// </return>
-        public async Task<HttpOperationResponse<ActionPlanTaskTrackingResponseActionPlanTaskTracking>> ValidateTrackingWithHttpMessagesAsync(TrackingValidation trackingValidation, Dictionary<string, List<string>> customHeaders = null, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken))
+        public async Task<HttpOperationResponse<object>> AcknowledgeWithHttpMessagesAsync(string goalRecommendationId, Dictionary<string, List<string>> customHeaders = null, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken))
         {
-            if (trackingValidation == null)
+            if (goalRecommendationId == null)
             {
-                throw new ValidationException(ValidationRules.CannotBeNull, "trackingValidation");
+                throw new ValidationException(ValidationRules.CannotBeNull, "goalRecommendationId");
             }
             // Tracing
             bool _shouldTrace = ServiceClientTracing.IsEnabled;
@@ -1004,17 +706,18 @@ namespace Microsoft.HealthVault.RestApi.Generated
             {
                 _invocationId = ServiceClientTracing.NextInvocationId.ToString();
                 Dictionary<string, object> tracingParameters = new Dictionary<string, object>();
-                tracingParameters.Add("trackingValidation", trackingValidation);
+                tracingParameters.Add("goalRecommendationId", goalRecommendationId);
                 tracingParameters.Add("cancellationToken", cancellationToken);
-                ServiceClientTracing.Enter(_invocationId, this, "ValidateTracking", tracingParameters);
+                ServiceClientTracing.Enter(_invocationId, this, "Acknowledge", tracingParameters);
             }
             // Construct URL
             var _baseUrl = Client.BaseUri.AbsoluteUri;
-            var _url = new System.Uri(new System.Uri(_baseUrl + (_baseUrl.EndsWith("/") ? "" : "/")), "ActionPlanTasks/ValidateTracking").ToString();
+            var _url = new System.Uri(new System.Uri(_baseUrl + (_baseUrl.EndsWith("/") ? "" : "/")), "GoalRecommendations/{goalRecommendationId}/Acknowledge").ToString();
+            _url = _url.Replace("{goalRecommendationId}", System.Uri.EscapeDataString(goalRecommendationId));
             // Create HTTP transport objects
             var _httpRequest = new HttpRequestMessage();
             HttpResponseMessage _httpResponse = null;
-            _httpRequest.Method = new HttpMethod("POST");
+            _httpRequest.Method = new HttpMethod("PUT");
             _httpRequest.RequestUri = new System.Uri(_url);
             // Set Headers
 
@@ -1033,12 +736,6 @@ namespace Microsoft.HealthVault.RestApi.Generated
 
             // Serialize Request
             string _requestContent = null;
-            if(trackingValidation != null)
-            {
-                _requestContent = Microsoft.Rest.Serialization.SafeJsonConvert.SerializeObject(trackingValidation, Client.SerializationSettings);
-                _httpRequest.Content = new StringContent(_requestContent, System.Text.Encoding.UTF8);
-                _httpRequest.Content.Headers.ContentType =System.Net.Http.Headers.MediaTypeHeaderValue.Parse("application/json; charset=utf-8");
-            }
             // Set Credentials
             if (Client.Credentials != null)
             {
@@ -1059,7 +756,7 @@ namespace Microsoft.HealthVault.RestApi.Generated
             HttpStatusCode _statusCode = _httpResponse.StatusCode;
             cancellationToken.ThrowIfCancellationRequested();
             string _responseContent = null;
-            if ((int)_statusCode != 200)
+            if ((int)_statusCode != 200 && (int)_statusCode != 204)
             {
                 var ex = new ErrorResponseException(string.Format("Operation returned an invalid status code '{0}'", _statusCode));
                 try
@@ -1089,7 +786,7 @@ namespace Microsoft.HealthVault.RestApi.Generated
                 throw ex;
             }
             // Create Result
-            var _result = new HttpOperationResponse<ActionPlanTaskTrackingResponseActionPlanTaskTracking>();
+            var _result = new HttpOperationResponse<object>();
             _result.Request = _httpRequest;
             _result.Response = _httpResponse;
             // Deserialize Response
@@ -1098,7 +795,7 @@ namespace Microsoft.HealthVault.RestApi.Generated
                 _responseContent = await _httpResponse.Content.ReadAsStringAsync().ConfigureAwait(false);
                 try
                 {
-                    _result.Body = Microsoft.Rest.Serialization.SafeJsonConvert.DeserializeObject<ActionPlanTaskTrackingResponseActionPlanTaskTracking>(_responseContent, Client.DeserializationSettings);
+                    _result.Body = Microsoft.Rest.Serialization.SafeJsonConvert.DeserializeObject<object>(_responseContent, Client.DeserializationSettings);
                 }
                 catch (JsonException ex)
                 {

@@ -40,10 +40,10 @@ namespace Microsoft.HealthVault.IntegrationTest
             Guid objectiveId = Guid.NewGuid();
             await restClient.ActionPlans.CreateAsync(CreateWeightActionPlan(objectiveId));
 
-            ActionPlansResponseActionPlanInstance plans = await restClient.ActionPlans.GetAsync();
+            var plans = await restClient.ActionPlans.GetAsync();
             Assert.AreEqual(1, plans.Plans.Count);
 
-            ActionPlanInstance planInstance = plans.Plans[0];
+            var planInstance = plans.Plans[0];
             Assert.AreEqual(objectiveId.ToString(), planInstance.Objectives[0].Id);
             Assert.AreEqual(ObjectiveName, planInstance.Objectives[0].Name);
             Assert.AreEqual(PlanName, planInstance.Name);
@@ -58,9 +58,9 @@ namespace Microsoft.HealthVault.IntegrationTest
             }
         }
 
-        private static ActionPlan CreateWeightActionPlan(Guid objectiveId)
+        private static ActionPlanV2 CreateWeightActionPlan(Guid objectiveId)
         {
-            var plan = new ActionPlan();
+            var plan = new ActionPlanV2();
             var objective = new Objective
             {
                 Id = objectiveId.ToString(),
@@ -82,7 +82,7 @@ namespace Microsoft.HealthVault.IntegrationTest
             plan.ThumbnailImageUrl = "https://img-prod-cms-rt-microsoft-com.akamaized.net/cms/api/am/imageFileData/RW6fN6?ver=6479";
             plan.Category = "Health";
             plan.Objectives = new Collection<Objective> { objective };
-            plan.AssociatedTasks = new Collection<ActionPlanTask> { task };
+            plan.AssociatedTasks = new Collection<ActionPlanTaskV2> { task };
 
             return plan;
         }
@@ -90,9 +90,9 @@ namespace Microsoft.HealthVault.IntegrationTest
         /// <summary>
         /// Creates a sample frequency based task associated with the specified objective.
         /// </summary>
-        private static ActionPlanTask CreateDailyWeightMeasurementActionPlanTask(string objectiveId, Guid planId = default(Guid))
+        private static ActionPlanTaskV2 CreateDailyWeightMeasurementActionPlanTask(string objectiveId, Guid planId = default(Guid))
         {
-            var task = new ActionPlanTask
+            var task = new ActionPlanTaskV2
             {
                 Name = "Measure your weight",
                 ShortDescription = "Measure your weight daily",
@@ -119,10 +119,8 @@ namespace Microsoft.HealthVault.IntegrationTest
                     }
                 },
                 CompletionType = "Frequency",
-                FrequencyTaskCompletionMetrics = new ActionPlanFrequencyTaskCompletionMetrics()
+                FrequencyTaskCompletionMetrics = new ActionPlanFrequencyTaskCompletionMetricsV2()
                 {
-                    ReminderState = "Off",
-                    ScheduledDays = new Collection<string> { "Everyday" },
                     OccurrenceCount = 1,
                     WindowType = "Daily"
                 }
