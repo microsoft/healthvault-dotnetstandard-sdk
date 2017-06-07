@@ -10,22 +10,20 @@ namespace Microsoft.HealthVault.RestApi.Generated.Models
     using Newtonsoft.Json;
     using System.Linq;
 
-    public partial class SystemThreadingCancellationToken
+    public partial class CancellationToken
     {
         /// <summary>
-        /// Initializes a new instance of the SystemThreadingCancellationToken
-        /// class.
+        /// Initializes a new instance of the CancellationToken class.
         /// </summary>
-        public SystemThreadingCancellationToken()
+        public CancellationToken()
         {
           CustomInit();
         }
 
         /// <summary>
-        /// Initializes a new instance of the SystemThreadingCancellationToken
-        /// class.
+        /// Initializes a new instance of the CancellationToken class.
         /// </summary>
-        public SystemThreadingCancellationToken(bool? isCancellationRequested = default(bool?), bool? canBeCanceled = default(bool?), SystemThreadingWaitHandle waitHandle = default(SystemThreadingWaitHandle))
+        public CancellationToken(bool? isCancellationRequested = default(bool?), bool? canBeCanceled = default(bool?), WaitHandle waitHandle = default(WaitHandle))
         {
             IsCancellationRequested = isCancellationRequested;
             CanBeCanceled = canBeCanceled;
@@ -51,7 +49,7 @@ namespace Microsoft.HealthVault.RestApi.Generated.Models
         /// <summary>
         /// </summary>
         [JsonProperty(PropertyName = "waitHandle")]
-        public SystemThreadingWaitHandle WaitHandle { get; private set; }
+        public WaitHandle WaitHandle { get; private set; }
 
     }
 }

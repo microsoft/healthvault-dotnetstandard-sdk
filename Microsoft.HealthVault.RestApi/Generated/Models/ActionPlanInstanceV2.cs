@@ -13,21 +13,31 @@ namespace Microsoft.HealthVault.RestApi.Generated.Models
     using System.Linq;
 
     /// <summary>
-    /// An action plan being created for a user
+    /// An instance of an action plan associated to a user
     /// </summary>
-    public partial class ActionPlan
+    public partial class ActionPlanInstanceV2
     {
         /// <summary>
-        /// Initializes a new instance of the ActionPlan class.
+        /// Initializes a new instance of the ActionPlanInstanceV2 class.
         /// </summary>
-        public ActionPlan()
+        public ActionPlanInstanceV2()
         {
           CustomInit();
         }
 
         /// <summary>
-        /// Initializes a new instance of the ActionPlan class.
+        /// Initializes a new instance of the ActionPlanInstanceV2 class.
         /// </summary>
+        /// <param name="id">The ID of the plan instance</param>
+        /// <param name="status">The status of the plan. Possible values
+        /// include: 'Unknown', 'Archived', 'Recommended', 'InProgress',
+        /// 'Completed', 'Template'</param>
+        /// <param name="organizationId">The ID of the organization that
+        /// manages this plan. Read-only</param>
+        /// <param name="organizationName">The name of the organization that
+        /// manages this plan. Read-only</param>
+        /// <param name="associatedTasks">The Task instances associated with
+        /// this plan</param>
         /// <param name="name">The name of the plan, localized</param>
         /// <param name="description">The description of the plan,
         /// localized</param>
@@ -41,17 +51,19 @@ namespace Microsoft.HealthVault.RestApi.Generated.Models
         /// include: 'Unknown', 'Health', 'Sleep', 'Activity', 'Stress'</param>
         /// <param name="objectives">The Collection of objectives for the
         /// plan</param>
-        /// <param name="associatedTasks">The Tasks associated with this
-        /// plan</param>
-        public ActionPlan(string name = default(string), string description = default(string), string imageUrl = default(string), string thumbnailImageUrl = default(string), string category = default(string), IList<Objective> objectives = default(IList<Objective>), IList<ActionPlanTask> associatedTasks = default(IList<ActionPlanTask>))
+        public ActionPlanInstanceV2(string id = default(string), string status = default(string), string organizationId = default(string), string organizationName = default(string), IList<ActionPlanTaskInstanceV2> associatedTasks = default(IList<ActionPlanTaskInstanceV2>), string name = default(string), string description = default(string), string imageUrl = default(string), string thumbnailImageUrl = default(string), string category = default(string), IList<Objective> objectives = default(IList<Objective>))
         {
+            Id = id;
+            Status = status;
+            OrganizationId = organizationId;
+            OrganizationName = organizationName;
+            AssociatedTasks = associatedTasks;
             Name = name;
             Description = description;
             ImageUrl = imageUrl;
             ThumbnailImageUrl = thumbnailImageUrl;
             Category = category;
             Objectives = objectives;
-            AssociatedTasks = associatedTasks;
             CustomInit();
         }
 
@@ -59,6 +71,40 @@ namespace Microsoft.HealthVault.RestApi.Generated.Models
         /// An initialization method that performs custom operations like setting defaults
         /// </summary>
         partial void CustomInit();
+
+        /// <summary>
+        /// Gets or sets the ID of the plan instance
+        /// </summary>
+        [JsonProperty(PropertyName = "id")]
+        public string Id { get; set; }
+
+        /// <summary>
+        /// Gets or sets the status of the plan. Possible values include:
+        /// 'Unknown', 'Archived', 'Recommended', 'InProgress', 'Completed',
+        /// 'Template'
+        /// </summary>
+        [JsonProperty(PropertyName = "status")]
+        public string Status { get; set; }
+
+        /// <summary>
+        /// Gets or sets the ID of the organization that manages this plan.
+        /// Read-only
+        /// </summary>
+        [JsonProperty(PropertyName = "organizationId")]
+        public string OrganizationId { get; set; }
+
+        /// <summary>
+        /// Gets or sets the name of the organization that manages this plan.
+        /// Read-only
+        /// </summary>
+        [JsonProperty(PropertyName = "organizationName")]
+        public string OrganizationName { get; set; }
+
+        /// <summary>
+        /// Gets or sets the Task instances associated with this plan
+        /// </summary>
+        [JsonProperty(PropertyName = "associatedTasks")]
+        public IList<ActionPlanTaskInstanceV2> AssociatedTasks { get; set; }
 
         /// <summary>
         /// Gets or sets the name of the plan, localized
@@ -98,12 +144,6 @@ namespace Microsoft.HealthVault.RestApi.Generated.Models
         /// </summary>
         [JsonProperty(PropertyName = "objectives")]
         public IList<Objective> Objectives { get; set; }
-
-        /// <summary>
-        /// Gets or sets the Tasks associated with this plan
-        /// </summary>
-        [JsonProperty(PropertyName = "associatedTasks")]
-        public IList<ActionPlanTask> AssociatedTasks { get; set; }
 
     }
 }

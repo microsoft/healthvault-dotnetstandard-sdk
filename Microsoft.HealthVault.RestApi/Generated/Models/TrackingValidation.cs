@@ -30,7 +30,7 @@ namespace Microsoft.HealthVault.RestApi.Generated.Models
         /// task.</param>
         /// <param name="xmlThingDocument">Gets or sets the XML thing
         /// document.</param>
-        public TrackingValidation(ActionPlanTask actionPlanTask = default(ActionPlanTask), string xmlThingDocument = default(string))
+        public TrackingValidation(ActionPlanTaskV2 actionPlanTask = default(ActionPlanTaskV2), string xmlThingDocument = default(string))
         {
             ActionPlanTask = actionPlanTask;
             XmlThingDocument = xmlThingDocument;
@@ -46,7 +46,7 @@ namespace Microsoft.HealthVault.RestApi.Generated.Models
         /// Gets or sets the action plan task.
         /// </summary>
         [JsonProperty(PropertyName = "actionPlanTask")]
-        public ActionPlanTask ActionPlanTask { get; set; }
+        public ActionPlanTaskV2 ActionPlanTask { get; set; }
 
         /// <summary>
         /// Gets or sets the XML thing document.

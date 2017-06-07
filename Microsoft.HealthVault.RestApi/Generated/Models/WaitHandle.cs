@@ -10,24 +10,23 @@ namespace Microsoft.HealthVault.RestApi.Generated.Models
     using Newtonsoft.Json;
     using System.Linq;
 
-    public partial class MicrosoftKhronosCloudCommonErrorsErrorResponse
+    public partial class WaitHandle
     {
         /// <summary>
-        /// Initializes a new instance of the
-        /// MicrosoftKhronosCloudCommonErrorsErrorResponse class.
+        /// Initializes a new instance of the WaitHandle class.
         /// </summary>
-        public MicrosoftKhronosCloudCommonErrorsErrorResponse()
+        public WaitHandle()
         {
           CustomInit();
         }
 
         /// <summary>
-        /// Initializes a new instance of the
-        /// MicrosoftKhronosCloudCommonErrorsErrorResponse class.
+        /// Initializes a new instance of the WaitHandle class.
         /// </summary>
-        public MicrosoftKhronosCloudCommonErrorsErrorResponse(MicrosoftKhronosCloudCommonErrorsErrorInformation error = default(MicrosoftKhronosCloudCommonErrorsErrorInformation))
+        public WaitHandle(object handle = default(object), SafeWaitHandle safeWaitHandle = default(SafeWaitHandle))
         {
-            Error = error;
+            Handle = handle;
+            SafeWaitHandle = safeWaitHandle;
             CustomInit();
         }
 
@@ -38,8 +37,13 @@ namespace Microsoft.HealthVault.RestApi.Generated.Models
 
         /// <summary>
         /// </summary>
-        [JsonProperty(PropertyName = "error")]
-        public MicrosoftKhronosCloudCommonErrorsErrorInformation Error { get; set; }
+        [JsonProperty(PropertyName = "handle")]
+        public object Handle { get; set; }
+
+        /// <summary>
+        /// </summary>
+        [JsonProperty(PropertyName = "safeWaitHandle")]
+        public SafeWaitHandle SafeWaitHandle { get; set; }
 
     }
 }

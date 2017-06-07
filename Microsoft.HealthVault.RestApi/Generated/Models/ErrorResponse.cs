@@ -10,23 +10,22 @@ namespace Microsoft.HealthVault.RestApi.Generated.Models
     using Newtonsoft.Json;
     using System.Linq;
 
-    public partial class SystemThreadingWaitHandle
+    public partial class ErrorResponse
     {
         /// <summary>
-        /// Initializes a new instance of the SystemThreadingWaitHandle class.
+        /// Initializes a new instance of the ErrorResponse class.
         /// </summary>
-        public SystemThreadingWaitHandle()
+        public ErrorResponse()
         {
           CustomInit();
         }
 
         /// <summary>
-        /// Initializes a new instance of the SystemThreadingWaitHandle class.
+        /// Initializes a new instance of the ErrorResponse class.
         /// </summary>
-        public SystemThreadingWaitHandle(object handle = default(object), MicrosoftWin32SafeHandlesSafeWaitHandle safeWaitHandle = default(MicrosoftWin32SafeHandlesSafeWaitHandle))
+        public ErrorResponse(ErrorInformation error = default(ErrorInformation))
         {
-            Handle = handle;
-            SafeWaitHandle = safeWaitHandle;
+            Error = error;
             CustomInit();
         }
 
@@ -37,13 +36,8 @@ namespace Microsoft.HealthVault.RestApi.Generated.Models
 
         /// <summary>
         /// </summary>
-        [JsonProperty(PropertyName = "handle")]
-        public object Handle { get; set; }
-
-        /// <summary>
-        /// </summary>
-        [JsonProperty(PropertyName = "safeWaitHandle")]
-        public MicrosoftWin32SafeHandlesSafeWaitHandle SafeWaitHandle { get; set; }
+        [JsonProperty(PropertyName = "error")]
+        public ErrorInformation Error { get; set; }
 
     }
 }
