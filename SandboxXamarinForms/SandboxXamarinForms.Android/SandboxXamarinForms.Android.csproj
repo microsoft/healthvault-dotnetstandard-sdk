@@ -51,9 +51,6 @@
     <Reference Include="FormsViewGroup, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\..\..\packages\Xamarin.Forms.2.3.4.224\lib\MonoAndroid10\FormsViewGroup.dll</HintPath>
     </Reference>
-    <Reference Include="Grace, Version=6.0.1.0, Culture=neutral, PublicKeyToken=b7d24c6367970497, processorArchitecture=MSIL">
-      <HintPath>..\..\..\packages\Grace.6.0.1\lib\netstandard1.0\Grace.dll</HintPath>
-    </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="ModernHttpClient, Version=2.4.2.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\..\..\packages\modernhttpclient.2.4.2\lib\MonoAndroid\ModernHttpClient.dll</HintPath>
