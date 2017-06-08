@@ -11,24 +11,25 @@ using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.HealthVault.Clients;
+using Microsoft.HealthVault.Rest;
 using Microsoft.Rest;
 
 namespace Microsoft.HealthVault.RestApi
 {
     internal class HealthVaultRestCredentials : ServiceClientCredentials
     {
-        private readonly IHealthVaultRestClient _client;
+        private readonly IHealthVaultRestAuthorizer _authorizer;
         private readonly Guid _recordId;
 
-        public HealthVaultRestCredentials(IHealthVaultRestClient client, Guid recordId)
+        public HealthVaultRestCredentials(IHealthVaultRestAuthorizer authorizer, Guid recordId)
         {
-            _client = client;
+            _authorizer = authorizer;
             _recordId = recordId;
         }
 
         public override async Task ProcessHttpRequestAsync(HttpRequestMessage request, CancellationToken cancellationToken)
         {
-            await _client.AuthorizeRestRequestAsync(request, _recordId);
+            await _authorizer.AuthorizeRestRequestAsync(request, _recordId);
         }
     }
 }

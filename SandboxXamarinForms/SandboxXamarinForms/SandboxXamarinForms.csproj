@@ -67,6 +67,10 @@
       <Project>{5c7ec9d4-88b9-4ea2-bea1-3bf3f17858b4}</Project>
       <Name>Microsoft.HealthVault.Client.Core</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\Microsoft.HealthVault.RestApi\Microsoft.HealthVault.RestApi.csproj">
+      <Project>{5ab34d9c-c82c-4209-a7df-e9391796d0dc}</Project>
+      <Name>Microsoft.HealthVault.RestApi</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\Microsoft.HealthVault\Microsoft.HealthVault.csproj">
       <Project>{dbe2ba67-dbc3-479e-a374-1ce5ee33c453}</Project>
       <Name>Microsoft.HealthVault</Name>

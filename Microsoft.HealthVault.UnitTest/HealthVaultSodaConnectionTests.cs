@@ -9,6 +9,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Net.Http;
 using System.Text;
 using System.Threading;
@@ -21,6 +22,7 @@ using Microsoft.HealthVault.Connection;
 using Microsoft.HealthVault.Extensions;
 using Microsoft.HealthVault.Person;
 using Microsoft.HealthVault.PlatformInformation;
+using Microsoft.HealthVault.Rest;
 using Microsoft.HealthVault.Transport;
 using Microsoft.HealthVault.UnitTest.Samples;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -44,10 +46,14 @@ namespace Microsoft.HealthVault.UnitTest
 
         private const string SessionSharedSecret = "Jop6pGrETq2wvczma4LkEGjknPPF76MN+XE7t9xyiyC3ZzlWVk++6i4o4Ia+D8V3YHu/elyppKRJJaOR5MWUuA==";
 
+        private static readonly Guid RecordId = Guid.Parse("51c6cdcc-a5b3-438c-95b9-9602ab92e1e4");
+        private static readonly Guid PersonId = Guid.Parse("ef17ac35-adc6-4a5a-afc0-84dc8937caac");
+
         private IServiceLocator _subServiceLocator;
         private IHealthWebRequestClient _subHealthWebRequestClient;
         private ILocalObjectStore _subLocalObjectStore;
         private IShellAuthService _subShellAuthService;
+        private IMessageHandlerFactory _subMessageHandlerFactory;
         private IClientSessionCredentialClient _subClientSessionCredentialClient;
         private HealthVaultConfiguration _healthVaultConfiguration;
 
@@ -62,6 +68,7 @@ namespace Microsoft.HealthVault.UnitTest
             _subHealthWebRequestClient = Substitute.For<IHealthWebRequestClient>();
             _subLocalObjectStore = Substitute.For<ILocalObjectStore>();
             _subShellAuthService = Substitute.For<IShellAuthService>();
+            _subMessageHandlerFactory = Substitute.For<IMessageHandlerFactory>();
             _subClientSessionCredentialClient = Substitute.For<IClientSessionCredentialClient>();
             _healthVaultConfiguration = new HealthVaultConfiguration
             {
@@ -205,6 +212,40 @@ namespace Microsoft.HealthVault.UnitTest
             await healthVaultSodaConnection.AuthorizeAdditionalRecordsAsync();
         }
 
+        [TestMethod]
+        public void WhenMessageHandlerCreateCalled_ThenFactoryIsInvoked()
+        {
+            var handler = new HttpClientHandler();
+            _subMessageHandlerFactory.Create().Returns(handler);
+
+            HealthVaultSodaConnection healthVaultSodaConnection = CreateHealthVaultSodaConnection();
+            IMessageHandlerFactory factory = healthVaultSodaConnection;
+            var handlerResult = factory.Create();
+
+            Assert.AreEqual(handler, handlerResult);
+        }
+
+        [TestMethod]
+        public async Task WhenAuthorizeRestRequestInvoked_ThenHeadersArePopulated()
+        {
+            SetupLocalStore();
+
+            HealthVaultSodaConnection healthVaultSodaConnection = CreateHealthVaultSodaConnection();
+
+            HttpRequestMessage message = new HttpRequestMessage();
+
+            await healthVaultSodaConnection.AuthorizeRestRequestAsync(message, RecordId);
+
+            Assert.AreEqual("MSH-V1", message.Headers.Authorization.Scheme);
+
+            string authParameters = message.Headers.Authorization.Parameter;
+            List<string> authParametersList = authParameters.Split(',').ToList();
+
+            Assert.IsTrue(authParametersList.Contains("app-token=" + SessionToken));
+            Assert.IsTrue(authParametersList.Contains("offline-person-id=" + PersonId));
+            Assert.IsTrue(authParametersList.Contains("record-id=" + RecordId));
+        }
+
         private static HttpResponseMessage GenerateResponseMessage(string samplePath)
         {
             var responseMessage = Substitute.For<HttpResponseMessage>();
@@ -236,10 +277,14 @@ namespace Microsoft.HealthVault.UnitTest
             var sessionCredential = new SessionCredential
             {
                 Token = SessionToken,
-                SharedSecret = SessionSharedSecret
+                SharedSecret = SessionSharedSecret,
+                ExpirationUtc = DateTimeOffset.UtcNow.AddHours(4)
             };
 
-            var personInfo = new PersonInfo();
+            var personInfo = new PersonInfo
+            {
+                PersonId = PersonId
+            };
 
             _subLocalObjectStore
                 .ReadAsync<HealthServiceInstance>(HealthVaultSodaConnection.ServiceInstanceKey)
@@ -282,7 +327,8 @@ namespace Microsoft.HealthVault.UnitTest
             return new HealthVaultSodaConnection(
                 _subServiceLocator,
                 _subLocalObjectStore,
-                _subShellAuthService);
+                _subShellAuthService,
+                _subMessageHandlerFactory);
         }
     }
 }

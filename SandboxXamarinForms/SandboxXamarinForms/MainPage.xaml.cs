@@ -15,6 +15,8 @@ using Microsoft.HealthVault.Configuration;
 using Microsoft.HealthVault.ItemTypes;
 using Microsoft.HealthVault.Person;
 using Microsoft.HealthVault.Record;
+using Microsoft.HealthVault.RestApi;
+using Microsoft.HealthVault.RestApi.Generated;
 using Microsoft.HealthVault.Thing;
 using NodaTime;
 using Xamarin.Forms;
@@ -128,6 +130,24 @@ namespace SandboxXamarinForms
         {
             IPlatformClient platformClient = _connection.CreatePlatformClient();
             await platformClient.GetHealthRecordItemTypeDefinitionAsync(new List<Guid> { BloodPressure.TypeId }, ThingTypeSections.All, new List<string>(), SystemClock.Instance.GetCurrentInstant());
+        }
+
+        private async void GetActionPlans_OnClicked(object sender, EventArgs e)
+        {
+            PersonInfo personInfo = await _connection.GetPersonInfoAsync();
+            IMicrosoftHealthVaultRestApi restClient = _connection.CreateMicrosoftHealthVaultRestApi(personInfo.SelectedRecord.Id);
+
+            var actionPlansResponse = await restClient.GetActionPlansAsync();
+
+            OutputLabel.Text = $"There are {actionPlansResponse.Plans.Count} action plans";
+        }
+
+        private async void Disconnect_OnClicked(object sender, EventArgs e)
+        {
+            await _connection.DeauthorizeApplicationAsync();
+            OutputLabel.Text = "Deleted connection information.";
+
+            ConnectedButtons.IsVisible = false;
         }
     }
 }

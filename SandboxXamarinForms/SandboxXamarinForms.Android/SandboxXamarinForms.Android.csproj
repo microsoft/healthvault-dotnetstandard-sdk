@@ -52,6 +52,9 @@
       <HintPath>..\..\..\packages\Xamarin.Forms.2.3.4.224\lib\MonoAndroid10\FormsViewGroup.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
+    <Reference Include="Microsoft.Rest.ClientRuntime, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\Microsoft.Rest.ClientRuntime.2.3.8\lib\netstandard1.4\Microsoft.Rest.ClientRuntime.dll</HintPath>
+    </Reference>
     <Reference Include="ModernHttpClient, Version=2.4.2.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\..\..\packages\modernhttpclient.2.4.2\lib\MonoAndroid\ModernHttpClient.dll</HintPath>
     </Reference>

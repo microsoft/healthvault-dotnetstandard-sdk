@@ -9,6 +9,8 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
+using System.Net.Http;
 using System.Security.Principal;
 using System.Threading.Tasks;
 using System.Web;
@@ -33,6 +35,10 @@ namespace Microsoft.HealthVault.Web.UnitTest.Connections
     [TestClass]
     public class WebHealthVaultConnectionUnitTests
     {
+        private const string SessionSharedSecret = "abc";
+        private const string SessionToken = "def";
+        private static readonly Guid RecordId = Guid.Parse("51c6cdcc-a5b3-438c-95b9-9602ab92e1e4");
+
         private WebHealthVaultConnection _webHealthVaultConnection;
         private string _userAuthToken;
 
@@ -50,7 +56,12 @@ namespace Microsoft.HealthVault.Web.UnitTest.Connections
             });
 
             HealthServiceInstance healthServiceInstance = Substitute.For<HealthServiceInstance>();
-            SessionCredential sessionCredential = Substitute.For<SessionCredential>();
+            SessionCredential sessionCredential = new SessionCredential
+            {
+                ExpirationUtc = DateTimeOffset.UtcNow.AddHours(4),
+                SharedSecret = SessionSharedSecret,
+                Token = SessionToken
+            };
             _userAuthToken = "someToken";
 
             _webHealthVaultConnection = new WebHealthVaultConnection(serviceLocator)
@@ -61,17 +72,21 @@ namespace Microsoft.HealthVault.Web.UnitTest.Connections
             };
         }
 
-        /// <summary>
-        /// Verifies the format of rest auth session header
-        /// </summary>
         [TestMethod]
-        public void WhenRestAuthSessionHeaderIsInvoked()
+        public async Task WhenAuthorizeRestRequestInvoked_ThenHeadersArePopulated()
         {
-            // Act
-            string restAuthSessionHeader = _webHealthVaultConnection.GetRestAuthSessionHeader();
+            HttpRequestMessage message = new HttpRequestMessage();
 
-            // Assert
-            Assert.AreEqual($"user-token={_userAuthToken}", restAuthSessionHeader);
+            await _webHealthVaultConnection.AuthorizeRestRequestAsync(message, RecordId);
+
+            Assert.AreEqual("MSH-V1", message.Headers.Authorization.Scheme);
+
+            string authParameters = message.Headers.Authorization.Parameter;
+            List<string> authParametersList = authParameters.Split(',').ToList();
+
+            Assert.IsTrue(authParametersList.Contains("app-token=" + SessionToken));
+            Assert.IsTrue(authParametersList.Contains("user-token=someToken"));
+            Assert.IsTrue(authParametersList.Contains("record-id=" + RecordId));
         }
 
         /// <summary>

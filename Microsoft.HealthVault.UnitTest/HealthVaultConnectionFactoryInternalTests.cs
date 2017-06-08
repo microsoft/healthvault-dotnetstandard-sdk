@@ -28,7 +28,7 @@ namespace Microsoft.HealthVault.UnitTest
             RegisterStubIoc<IHealthWebRequestClient>();
             RegisterStubIoc<IHealthServiceResponseParser>();
             RegisterStubIoc<ICryptographer>();
-            Ioc.Container.Configure(c => c.ExportFactory(() => new HealthVaultSodaConnection(new ServiceLocator(), null, null)).As<HealthVaultSodaConnection>());
+            Ioc.Container.Configure(c => c.ExportFactory(() => new HealthVaultSodaConnection(new ServiceLocator(), null, null, null)).As<HealthVaultSodaConnection>());
         }
 
         [TestMethod]

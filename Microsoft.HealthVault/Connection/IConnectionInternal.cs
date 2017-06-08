@@ -20,8 +20,6 @@ namespace Microsoft.HealthVault.Connection
         /// </summary>
         HealthServiceInstance ServiceInstance { get; }
 
-        string GetRestAuthSessionHeader();
-
         /// <summary>
         /// Provide AuthSession header for XML over Http protocol
         /// </summary>
