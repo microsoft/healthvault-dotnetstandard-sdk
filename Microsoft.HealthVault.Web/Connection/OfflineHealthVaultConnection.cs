@@ -36,7 +36,7 @@ namespace Microsoft.HealthVault.Web.Connection
             throw new NotSupportedException("OfflineHealthVaultConnection is a specialized anonymous connection with no PersonInfo");
         }
 
-        public override string GetRestAuthSessionHeader()
+        protected override string GetPlatformSpecificRestAuthHeaderPortion()
         {
             return $"{RestConstants.OfflinePersonId}={OfflinePersonId}";
         }

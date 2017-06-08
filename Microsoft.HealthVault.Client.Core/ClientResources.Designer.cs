@@ -116,6 +116,15 @@ namespace Microsoft.HealthVault.Client.Core {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Login failed with code {0}.
+        /// </summary>
+        internal static string LoginErrorWithCode {
+            get {
+                return ResourceManager.GetString("LoginErrorWithCode", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to HealthVault Sign In.
         /// </summary>
         internal static string SignInActivityTitle {

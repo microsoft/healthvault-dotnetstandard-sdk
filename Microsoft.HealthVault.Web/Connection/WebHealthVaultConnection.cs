@@ -91,7 +91,7 @@ namespace Microsoft.HealthVault.Web.Connection
             }
         }
 
-        public override string GetRestAuthSessionHeader()
+        protected override string GetPlatformSpecificRestAuthHeaderPortion()
         {
             return $"user-token={UserAuthToken}";
         }

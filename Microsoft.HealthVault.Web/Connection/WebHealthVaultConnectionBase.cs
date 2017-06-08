@@ -10,6 +10,7 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.HealthVault.Connection;
+using Microsoft.HealthVault.Extensions;
 using Microsoft.HealthVault.Helpers;
 using Microsoft.HealthVault.PlatformInformation;
 using Microsoft.HealthVault.Web.Configuration;
@@ -24,6 +25,8 @@ namespace Microsoft.HealthVault.Web.Connection
     internal abstract class WebHealthVaultConnectionBase : HealthVaultConnectionBase
     {
         protected readonly WebHealthVaultConfiguration webHealthVaultConfiguration;
+
+        private readonly AsyncLock _authenticateLock = new AsyncLock();
 
         protected WebHealthVaultConnectionBase(
             IServiceLocator serviceLocator)
@@ -42,7 +45,13 @@ namespace Microsoft.HealthVault.Web.Connection
 
         public override async Task AuthenticateAsync()
         {
-            await RefreshSessionCredentialAsync(CancellationToken.None).ConfigureAwait(false);
+            using (await _authenticateLock.LockAsync().ConfigureAwait(false))
+            {
+                if (SessionCredential == null || SessionCredential.IsExpired())
+                {
+                    await RefreshSessionCredentialAsync(CancellationToken.None).ConfigureAwait(false);
+                }
+            }
         }
 
         protected override ISessionCredentialClient CreateSessionCredentialClient()

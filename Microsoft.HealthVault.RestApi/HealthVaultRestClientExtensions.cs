@@ -10,6 +10,7 @@ using System;
 using Microsoft.HealthVault.Configuration;
 using Microsoft.HealthVault.Connection;
 using Microsoft.HealthVault.RestApi.Generated;
+using Microsoft.Rest;
 
 namespace Microsoft.HealthVault.RestApi
 {
@@ -25,7 +26,17 @@ namespace Microsoft.HealthVault.RestApi
         /// <param name="recordId">The record identifier.</param>
         public static IMicrosoftHealthVaultRestApi CreateMicrosoftHealthVaultRestApi(this IHealthVaultConnection connection, Guid recordId)
         {
-            return new MicrosoftHealthVaultRestApi(Ioc.Get<HealthVaultConfiguration>().RestHealthVaultUrl, new HealthVaultRestCredentials(connection.CreateRestClient(), recordId));
+            Uri restUrl = Ioc.Get<HealthVaultConfiguration>().RestHealthVaultUrl;
+            ServiceClientCredentials credentials = new HealthVaultRestCredentials(connection, recordId);
+            var messageHandlerFactory = connection as IMessageHandlerFactory;
+            if (messageHandlerFactory != null)
+            {
+                return new MicrosoftHealthVaultRestApi(restUrl, credentials, messageHandlerFactory.Create());
+            }
+            else
+            {
+                return new MicrosoftHealthVaultRestApi(restUrl, credentials);
+            }
         }
     }
 }
