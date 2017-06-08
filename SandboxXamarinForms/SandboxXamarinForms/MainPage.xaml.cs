@@ -137,7 +137,7 @@ namespace SandboxXamarinForms
             PersonInfo personInfo = await _connection.GetPersonInfoAsync();
             IMicrosoftHealthVaultRestApi restClient = _connection.CreateMicrosoftHealthVaultRestApi(personInfo.SelectedRecord.Id);
 
-            var actionPlansResponse = await restClient.GetActionPlansAsync();
+            var actionPlansResponse = await restClient.ActionPlans.GetAsync();
 
             OutputLabel.Text = $"There are {actionPlansResponse.Plans.Count} action plans";
         }
