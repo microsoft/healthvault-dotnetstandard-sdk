@@ -12,6 +12,7 @@ using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Security.Principal;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Web;
 using System.Xml.Linq;
@@ -24,8 +25,10 @@ using Microsoft.HealthVault.Record;
 using Microsoft.HealthVault.Transport;
 using Microsoft.HealthVault.Web.Configuration;
 using Microsoft.HealthVault.Web.Connection;
+using Microsoft.HealthVault.Web.Providers;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NSubstitute;
+using Arg = NSubstitute.Arg;
 
 namespace Microsoft.HealthVault.Web.UnitTest.Connections
 {

@@ -10,6 +10,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
+using System.Threading;
 using System.Threading.Tasks;
 using Grace.DependencyInjection;
 using Microsoft.HealthVault.Connection;
@@ -18,8 +19,10 @@ using Microsoft.HealthVault.Rest;
 using Microsoft.HealthVault.Transport;
 using Microsoft.HealthVault.Web.Configuration;
 using Microsoft.HealthVault.Web.Connection;
+using Microsoft.HealthVault.Web.Providers;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NSubstitute;
+using Arg = NSubstitute.Arg;
 
 namespace Microsoft.HealthVault.Web.UnitTest.Connections
 {
