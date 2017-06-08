@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<Project ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <!-- Hard links were causing file access issues when performing concurrent builds on the build machine -->
+    <AppxUseHardLinksIfPossible>false</AppxUseHardLinksIfPossible>
+  </PropertyGroup>
+  
+  <!-- Overriding the PrepareILCInputFolder target from .NetNative to avoid issues with Hardlinked files.
+       The only change is in the <Copy> step where we set UseHardlinksIfPossible to false instead of true. -->
+  <Target Name="PrepareILCInputFolder" AfterTargets="CheckForUnsupportedScenarios" DependsOnTargets="ComputeIlcParameters;ComputeNativePackageInputsAndOutputs" Condition="'$(ProjectNProfileEnabled)' == 'true' and ('$(_ProjectNToolchainEnabled)' == 'true' or '$(EnableGateKeeperAnalysis)' == 'true')">
+    <ItemGroup>
+      <_IlcInputPayload Include="@(BuildNativePackagesInputs)" KeepDuplicates="false" />
+      <_IlcInputPayload Include="@(AppxPackagePayload)" KeepDuplicates="false" />
+      <_IlcInputPayload Include="@(FinalAppxManifest)" KeepDuplicates="false">
+        <TargetPath>AppxManifest.xml</TargetPath>
+      </_IlcInputPayload>
+    </ItemGroup>
+    <ItemGroup>
+      <_IlcInputFolderContents Include="@(_IlcInputPayload->'$(_IlcInputPath)%(TargetPath)')" />
+    </ItemGroup>
+    <ItemGroup>
+      <_ResidualFilesInIlcInputPath Include="$(_IlcInputPath)**\*" />
+      <_ResidualFilesInIlcInputPath Remove="@(_IlcInputFolderContents)" />
+    </ItemGroup>
+    <Delete Files="@(_ResidualFilesInIlcInputPath)" />
+    <ItemGroup>
+      <AppLocalMetadataFile Include="@(_IlcInputPayload)" Condition="'%(TargetPath)' == 'WinMetadata\Windows.winmd'" />
+    </ItemGroup>
+    <PropertyGroup>
+      <AppLocalMetadataPath>%(AppLocalMetadataFile.RootDir)%(AppLocalMetadataFile.Directory)</AppLocalMetadataPath>
+    </PropertyGroup>
+    <Copy SourceFiles="@(_IlcInputPayload)" DestinationFiles="@(_IlcInputFolderContents)" SkipUnchangedFiles="$(SkipCopyUnchangedFiles)" UseHardlinksIfPossible="false">
+      <Output TaskParameter="DestinationFiles" ItemName="FileWrites" />
+    </Copy>
+    <PropertyGroup Condition="Exists('$(_IlcInputPath)WinMetadata\Windows.winmd')">
+      <_TargetPlatformMetadataPath>$(_IlcInputPath)WinMetadata</_TargetPlatformMetadataPath>
+    </PropertyGroup>
+    <PropertyGroup Condition="'$(_TargetPlatformMetadataPath)' == '' and Exists('@(UnionWinmdPath)')">
+      <_TargetPlatformMetadataPath>$([System.IO.Path]::GetDirectoryName('%(UnionWinmdPath.FullPath)'))</_TargetPlatformMetadataPath>
+    </PropertyGroup>
+    <PropertyGroup Condition="'$(_TargetPlatformMetadataPath)' == '' and Exists('$(TargetPlatformWinMDLocation)')">
+      <_TargetPlatformMetadataPath>$(TargetPlatformWinMDLocation)</_TargetPlatformMetadataPath>
+    </PropertyGroup>
+    <Error Condition="'$(_TargetPlatformMetadataPath)' == ''" Text="Could not find an existing platform WinMD location" />
+  </Target>
+</Project>
