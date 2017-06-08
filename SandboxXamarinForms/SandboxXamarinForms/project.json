@@ -2,6 +2,7 @@
   "supports": {},
   "dependencies": {
     "Microsoft.NETCore.Portable.Compatibility": "1.0.1",
+    "Microsoft.Rest.ClientRuntime": "2.3.8",
     "NETStandard.Library": "1.6.1",
     "Newtonsoft.Json": "10.0.2",
     "Xamarin.Forms": "2.3.4.224"

@@ -32,6 +32,7 @@ namespace Microsoft.HealthVault.Configuration
         {
             DefaultHealthVaultUrl = HealthVaultConfigurationDefaults.HealthVaultRootUrl;
             DefaultHealthVaultShellUrl = HealthVaultConfigurationDefaults.ShellUrl;
+            RestHealthVaultUrl = HealthVaultConfigurationDefaults.RestUrl;
             RequestTimeoutDuration = HealthVaultConfigurationDefaults.RequestTimeoutDuration;
             RequestTimeToLiveDuration = HealthVaultConfigurationDefaults.RequestTimeToLiveDuration;
             RetryOnInternal500Count = HealthVaultConfigurationDefaults.RetryOnInternal500Count;

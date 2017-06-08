@@ -11,6 +11,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Reflection;
 using System.Text;
 using System.Threading;
@@ -21,6 +22,7 @@ using Microsoft.HealthVault.Clients.Deserializers;
 using Microsoft.HealthVault.Configuration;
 using Microsoft.HealthVault.Diagnostics;
 using Microsoft.HealthVault.Exceptions;
+using Microsoft.HealthVault.Extensions;
 using Microsoft.HealthVault.Person;
 using Microsoft.HealthVault.PlatformInformation;
 using Microsoft.HealthVault.Rest;
@@ -71,7 +73,7 @@ namespace Microsoft.HealthVault.Connection
 
         public abstract Task AuthenticateAsync();
 
-        public abstract string GetRestAuthSessionHeader();
+        protected abstract string GetPlatformSpecificRestAuthHeaderPortion();
 
         public abstract AuthSession GetAuthSessionHeader();
 
@@ -99,11 +101,6 @@ namespace Microsoft.HealthVault.Connection
         /// An instance implementing IThingClient
         /// </returns>
         public IThingClient CreateThingClient() => new ThingClient(this, new ThingDeserializer(this));
-
-        /// <summary>
-        /// Creates a rest client that commmunicates with HealthVault
-        /// </summary>
-        public IHealthVaultRestClient CreateRestClient() => new HealthVaultRestClient(Configuration, this, _webRequestClient);
 
         #endregion
 
@@ -168,6 +165,35 @@ namespace Microsoft.HealthVault.Connection
                     _lastRefreshedSessionCredential = DateTimeOffset.Now;
                 }
             }
+        }
+
+        public async Task AuthorizeRestRequestAsync(HttpRequestMessage message, Guid recordId)
+        {
+            // Ensure we're authenticated
+            await AuthenticateAsync().ConfigureAwait(false);
+
+            if (SessionCredential.IsExpired())
+            {
+                await RefreshSessionAsync(CancellationToken.None).ConfigureAwait(false);
+            }
+
+            var parts = new List<string>
+            {
+                $"app-token={SessionCredential.Token}"
+            };
+
+            string connectionHeader = GetPlatformSpecificRestAuthHeaderPortion();
+            if (!string.IsNullOrEmpty(connectionHeader))
+            {
+                parts.Add(connectionHeader);
+            }
+
+            if (recordId != Guid.Empty)
+            {
+                parts.Add($"record-id={recordId}");
+            }
+
+            message.Headers.Authorization = new AuthenticationHeaderValue("MSH-V1", string.Join(",", parts));
         }
 
         protected virtual async Task RefreshSessionCredentialAsync(CancellationToken token)

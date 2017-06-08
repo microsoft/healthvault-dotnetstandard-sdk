@@ -7,6 +7,10 @@
 // THE SOFTWARE IS PROVIDED *AS IS*, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Net.Http;
+using System.Threading;
 using System.Threading.Tasks;
 using Grace.DependencyInjection;
 using Microsoft.HealthVault.Connection;
@@ -15,8 +19,10 @@ using Microsoft.HealthVault.Rest;
 using Microsoft.HealthVault.Transport;
 using Microsoft.HealthVault.Web.Configuration;
 using Microsoft.HealthVault.Web.Connection;
+using Microsoft.HealthVault.Web.Providers;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NSubstitute;
+using Arg = NSubstitute.Arg;
 
 namespace Microsoft.HealthVault.Web.UnitTest.Connections
 {
@@ -26,8 +32,12 @@ namespace Microsoft.HealthVault.Web.UnitTest.Connections
     [TestClass]
     public class OfflineHealthVaultConnectionTests
     {
+        private const string SessionSharedSecret = "abc";
+        private const string SessionToken = "def";
+        private static readonly Guid RecordId = Guid.Parse("51c6cdcc-a5b3-438c-95b9-9602ab92e1e4");
+        private static readonly Guid OfflinePersonId = Guid.Parse("ef17ac35-adc6-4a5a-afc0-84dc8937caac");
+
         private OfflineHealthVaultConnection _offlineHealthVaultConnection;
-        private Guid _offlinePersonId;
 
         [TestInitialize]
         public void TestInitialize()
@@ -43,13 +53,17 @@ namespace Microsoft.HealthVault.Web.UnitTest.Connections
             });
 
             HealthServiceInstance healthServiceInstance = new HealthServiceInstance();
-            SessionCredential sessionCredential = new SessionCredential();
-            _offlinePersonId = Guid.NewGuid();
+            SessionCredential sessionCredential = new SessionCredential
+            {
+                ExpirationUtc = DateTimeOffset.UtcNow.AddHours(4),
+                SharedSecret = SessionSharedSecret,
+                Token = SessionToken
+            };
 
             _offlineHealthVaultConnection =
                 new OfflineHealthVaultConnection(serviceLocator)
                 {
-                    OfflinePersonId = _offlinePersonId,
+                    OfflinePersonId = OfflinePersonId,
                     ServiceInstance = healthServiceInstance,
                     SessionCredential = sessionCredential
                 };
@@ -67,17 +81,21 @@ namespace Microsoft.HealthVault.Web.UnitTest.Connections
             await _offlineHealthVaultConnection.GetPersonInfoAsync();
         }
 
-        /// <summary>
-        /// Verifies the format of rest auth session header
-        /// </summary>
         [TestMethod]
-        public void WhenRestAuthSessionHeaderIsRequested()
+        public async Task WhenAuthorizeRestRequestInvoked_ThenHeadersArePopulated()
         {
-            // Act
-            string restAuthSessionHeader = _offlineHealthVaultConnection.GetRestAuthSessionHeader();
+            HttpRequestMessage message = new HttpRequestMessage();
 
-            // Assert
-            Assert.AreEqual($"{RestConstants.OfflinePersonId}={_offlinePersonId}", restAuthSessionHeader);
+            await _offlineHealthVaultConnection.AuthorizeRestRequestAsync(message, RecordId);
+
+            Assert.AreEqual("MSH-V1", message.Headers.Authorization.Scheme);
+
+            string authParameters = message.Headers.Authorization.Parameter;
+            List<string> authParametersList = authParameters.Split(',').ToList();
+
+            Assert.IsTrue(authParametersList.Contains("app-token=" + SessionToken));
+            Assert.IsTrue(authParametersList.Contains("offline-person-id=" + OfflinePersonId));
+            Assert.IsTrue(authParametersList.Contains("record-id=" + RecordId));
         }
 
         /// <summary>
@@ -90,7 +108,7 @@ namespace Microsoft.HealthVault.Web.UnitTest.Connections
             AuthSession authSession = _offlineHealthVaultConnection.GetAuthSessionHeader();
 
             // Assert
-            Assert.AreEqual(authSession.Person.OfflinePersonId, _offlinePersonId);
+            Assert.AreEqual(authSession.Person.OfflinePersonId, OfflinePersonId);
         }
     }
 }

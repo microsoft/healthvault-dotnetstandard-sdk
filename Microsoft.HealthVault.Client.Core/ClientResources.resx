@@ -142,6 +142,11 @@
   <data name="LoginError" xml:space="preserve">
     <value>Login Failed</value>
   </data>
+  <data name="LoginErrorWithCode" xml:space="preserve">
+    <value>Login failed with code {0}</value>
+    <comment>{NumberedPlaceholder="{0}"}, Error message thrown when an error occurs during login.
+%0 - The failure code, e.g. 404</comment>
+  </data>
   <data name="SignInActivityTitle" xml:space="preserve">
     <value>HealthVault Sign In</value>
   </data>

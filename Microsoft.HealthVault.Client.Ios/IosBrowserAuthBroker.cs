@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 using Foundation;
 using Microsoft.HealthVault.Client.Core;
 using Microsoft.HealthVault.Exceptions;
+using Microsoft.HealthVault.Extensions;
 using Security;
 using UIKit;
 using WebKit;
@@ -91,7 +92,7 @@ namespace Microsoft.HealthVault.Client
                 return;
             }
 
-            SetTaskResult(null, new HealthServiceException(ClientResources.LoginError));
+            SetTaskResult(null, new HealthServiceException(ClientResources.LoginError.FormatResource(error.Code)));
         }
 
         [Export("webView:decidePolicyForNavigationResponse:decisionHandler:")]
@@ -103,7 +104,7 @@ namespace Microsoft.HealthVault.Client
                 if (response.StatusCode >= 400)
                 {
                     // The navigation request resulted in an error.
-                    SetTaskResult(null, new HealthServiceException(ClientResources.LoginError));
+                    SetTaskResult(null, new HealthServiceException(ClientResources.LoginErrorWithCode.FormatResource(response.StatusCode)));
 
                     return;
                 }

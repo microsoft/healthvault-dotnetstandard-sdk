@@ -31,6 +31,11 @@ namespace Microsoft.HealthVault.Configuration
         public static readonly Uri HealthVaultRootUrl = new Uri("https://platform.healthvault.com/platform/");
 
         /// <summary>
+        /// Default Rest URL for HealthVault application
+        /// </summary>
+        public static readonly Uri RestUrl = new Uri("https://data.microsofthealth.net");
+
+        /// <summary>
         /// Default sleep duration in seconds.
         /// </summary>
         public static readonly TimeSpan RetryOnInternal500SleepDuration = TimeSpan.FromMinutes(1);

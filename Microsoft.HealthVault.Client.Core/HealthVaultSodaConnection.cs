@@ -8,6 +8,7 @@
 
 using System;
 using System.Linq;
+using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.HealthVault.Clients;
@@ -22,7 +23,7 @@ using Microsoft.HealthVault.Transport;
 
 namespace Microsoft.HealthVault.Client
 {
-    internal class HealthVaultSodaConnection : HealthVaultConnectionBase, IHealthVaultSodaConnection
+    internal class HealthVaultSodaConnection : HealthVaultConnectionBase, IHealthVaultSodaConnection, IMessageHandlerFactory
     {
         internal const string ServiceInstanceKey = "ServiceInstance";
         internal const string ApplicationCreationInfoKey = "ApplicationCreationInfo";
@@ -31,6 +32,7 @@ namespace Microsoft.HealthVault.Client
 
         private readonly ILocalObjectStore _localObjectStore;
         private readonly IShellAuthService _shellAuthService;
+        private readonly IMessageHandlerFactory _messageHandlerFactory;
 
         private readonly AsyncLock _authenticateLock = new AsyncLock();
 
@@ -39,11 +41,13 @@ namespace Microsoft.HealthVault.Client
         public HealthVaultSodaConnection(
             IServiceLocator serviceLocator,
             ILocalObjectStore localObjectStore,
-            IShellAuthService shellAuthService)
+            IShellAuthService shellAuthService,
+            IMessageHandlerFactory messageHandlerFactory)
             : base(serviceLocator)
         {
             _localObjectStore = localObjectStore;
             _shellAuthService = shellAuthService;
+            _messageHandlerFactory = messageHandlerFactory;
         }
 
         public ApplicationCreationInfo ApplicationCreationInfo { get; internal set; }
@@ -73,7 +77,7 @@ namespace Microsoft.HealthVault.Client
             }
         }
 
-        public override string GetRestAuthSessionHeader()
+        protected override string GetPlatformSpecificRestAuthHeaderPortion()
         {
             return $"{RestConstants.OfflinePersonId}={_personInfo.PersonId}";
         }
@@ -256,6 +260,11 @@ namespace Microsoft.HealthVault.Client
             }
 
             return _personInfo;
+        }
+
+        HttpClientHandler IMessageHandlerFactory.Create()
+        {
+            return _messageHandlerFactory.Create();
         }
     }
 }

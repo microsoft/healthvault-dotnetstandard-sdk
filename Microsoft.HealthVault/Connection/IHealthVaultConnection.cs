@@ -10,6 +10,7 @@ using System;
 using System.Threading.Tasks;
 using Microsoft.HealthVault.Clients;
 using Microsoft.HealthVault.Person;
+using Microsoft.HealthVault.Rest;
 using Microsoft.HealthVault.Transport;
 
 namespace Microsoft.HealthVault.Connection
@@ -18,7 +19,7 @@ namespace Microsoft.HealthVault.Connection
     /// Represents a connection for an application to the HealthVault service
     /// for operations
     /// </summary>
-    public interface IHealthVaultConnection
+    public interface IHealthVaultConnection : IHealthVaultRestAuthorizer
     {
         /// <summary>
         /// Gets the application identifier.
@@ -92,10 +93,5 @@ namespace Microsoft.HealthVault.Connection
         /// An instance implementing IPlatformClient
         /// </returns>
         IPlatformClient CreatePlatformClient();
-
-        /// <summary>
-        /// Creates a new rest client for communicating with HealthVault
-        /// </summary>
-        IHealthVaultRestClient CreateRestClient();
     }
 }
