@@ -28,15 +28,7 @@ namespace Microsoft.HealthVault.RestApi
         {
             Uri restUrl = Ioc.Get<HealthVaultConfiguration>().RestHealthVaultUrl;
             ServiceClientCredentials credentials = new HealthVaultRestCredentials(connection, recordId);
-            var messageHandlerFactory = connection as IMessageHandlerFactory;
-            if (messageHandlerFactory != null)
-            {
-                return new MicrosoftHealthVaultRestApi(restUrl, credentials, messageHandlerFactory.Create());
-            }
-            else
-            {
-                return new MicrosoftHealthVaultRestApi(restUrl, credentials);
-            }
+            return new MicrosoftHealthVaultRestApi(restUrl, credentials, (connection as IMessageHandlerFactory)?.Create());
         }
     }
 }
