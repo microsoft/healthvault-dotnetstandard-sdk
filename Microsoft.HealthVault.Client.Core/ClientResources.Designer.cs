@@ -71,6 +71,15 @@ namespace Microsoft.HealthVault.Client.Core {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to An error occurred while running authentication through the browser..
+        /// </summary>
+        internal static string BrowserAuthException {
+            get {
+                return ResourceManager.GetString("BrowserAuthException", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to delete.
         /// </summary>
         internal static string FileAccessActionDelete {
@@ -125,11 +134,20 @@ namespace Microsoft.HealthVault.Client.Core {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Could not open browser authentication UI. If you are running on Windows Forms you first need assign your form to HealthVaultConnectionFactory.WinFormsInvoke ..
+        /// </summary>
+        internal static string NoDispatcherFound {
+            get {
+                return ResourceManager.GetString("NoDispatcherFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to HealthVault Sign In.
         /// </summary>
-        internal static string SignInActivityTitle {
+        internal static string SignInPageTitle {
             get {
-                return ResourceManager.GetString("SignInActivityTitle", resourceCulture);
+                return ResourceManager.GetString("SignInPageTitle", resourceCulture);
             }
         }
     }

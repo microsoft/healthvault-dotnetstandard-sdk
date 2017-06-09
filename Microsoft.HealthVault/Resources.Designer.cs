@@ -1295,15 +1295,6 @@ namespace Microsoft.HealthVault {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to An error occurred while running authentication through the browser..
-        /// </summary>
-        internal static string BrowserAuthException {
-            get {
-                return ResourceManager.GetString("BrowserAuthException", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to The block hash count must be greater than 0..
         /// </summary>
         internal static string CalculateBlobHashBlockHashCountMustBePositive {

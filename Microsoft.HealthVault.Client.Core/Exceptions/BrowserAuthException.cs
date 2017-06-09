@@ -7,6 +7,7 @@
 // THE SOFTWARE IS PROVIDED *AS IS*, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 using System;
+using Microsoft.HealthVault.Client.Core;
 using Microsoft.HealthVault.Exceptions;
 
 namespace Microsoft.HealthVault.Client.Exceptions
@@ -21,7 +22,30 @@ namespace Microsoft.HealthVault.Client.Exceptions
         /// </summary>
         /// <param name="errorCode">The error code.</param>
         public BrowserAuthException(int? errorCode)
-            : base(Resources.BrowserAuthException)
+            : base(ClientResources.BrowserAuthException)
+        {
+            HttpErrorCode = errorCode;
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="BrowserAuthException"/> class.
+        /// </summary>
+        /// <param name="message">The exception message.</param>
+        /// <param name="errorCode">The error code.</param>
+        public BrowserAuthException(string message, int? errorCode)
+            : base(message)
+        {
+            HttpErrorCode = errorCode;
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="BrowserAuthException"/> class.
+        /// </summary>
+        /// <param name="message">The exception message.</param>
+        /// <param name="innerException">The inner exception that caused this exception.</param>
+        /// <param name="errorCode">The error code.</param>
+        public BrowserAuthException(string message, Exception innerException, int? errorCode)
+            : base(message, innerException)
         {
             HttpErrorCode = errorCode;
         }
