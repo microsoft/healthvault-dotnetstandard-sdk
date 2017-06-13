@@ -11,7 +11,7 @@ using Microsoft.HealthVault.Client.Core;
 
 namespace Microsoft.HealthVault.Client
 {
-    public class HealthVaultConnectionFactory
+    public static class HealthVaultConnectionFactory
     {
         /// <summary>
         /// Gets the current factory instance.

@@ -29,7 +29,7 @@ namespace Microsoft.HealthVault.Client.Platform.Android
         protected override void OnCreate(Bundle savedInstanceState)
         {
             base.OnCreate(savedInstanceState);
-            Title = ClientResources.SignInActivityTitle;
+            Title = ClientResources.SignInPageTitle;
 
             SetContentView(Resource.Layout.SignInActivity);
 
