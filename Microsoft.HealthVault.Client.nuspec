@@ -15,6 +15,14 @@
     <copyright>© Microsoft Corporation. All rights reserved.</copyright>
     <tags>HealthVault</tags>
     <dependencies>
+      <group targetFramework="net461">
+        <dependency id="Microsoft.HealthVault" version="[$version$]" exclude="Build,Analyzers" />
+        <dependency id="NETStandard.Library" version="1.6.1" exclude="Build,Analyzers" />
+        <dependency id="Grace" version="6.0.1" exclude="Build,Analyzers" />
+        <dependency id="Newtonsoft.Json" version="10.0.2" exclude="Build,Analyzers" />
+        <dependency id="NodaTime" version="2.0.2" exclude="Build,Analyzers" />
+        <dependency id="NodaTime.Serialization.JsonNet" version="2.0.0" exclude="Build,Analyzers" />
+      </group>
       <group targetFramework="netstandard1.4">
       	<dependency id="Microsoft.HealthVault" version="[$version$]" exclude="Build,Analyzers" />
         <dependency id="NETStandard.Library" version="1.6.1" exclude="Build,Analyzers" />
@@ -71,7 +79,15 @@
     <file src="Microsoft.HealthVault.Client.Uwp\bin\$configuration$\Microsoft.HealthVault.Client.dll" target="lib\uap10.0" />
     <file src="Microsoft.HealthVault.Client.Uwp\bin\$configuration$\Microsoft.HealthVault.Client.pdb" target="lib\uap10.0" />
     <file src="Microsoft.HealthVault.Client.Uwp\bin\$configuration$\Microsoft.HealthVault.Client.xml" target="lib\uap10.0" />
-
+    
+    <!-- .NET Framework (WPF/WinForms) -->
+    <file src="Microsoft.HealthVault.Client.Core\bin\$configuration$\netstandard1.4\Microsoft.HealthVault.Client.Core.dll" target="lib\net461" />
+    <file src="Microsoft.HealthVault.Client.Core\bin\$configuration$\netstandard1.4\Microsoft.HealthVault.Client.Core.pdb" target="lib\net461" />
+    <file src="Microsoft.HealthVault.Client.Core\bin\$configuration$\netstandard1.4\Microsoft.HealthVault.Client.Core.xml" target="lib\net461" />
+    <file src="Microsoft.HealthVault.Client.NetFramework\bin\$configuration$\Microsoft.HealthVault.Client.dll" target="lib\net461" />
+    <file src="Microsoft.HealthVault.Client.NetFramework\bin\$configuration$\Microsoft.HealthVault.Client.pdb" target="lib\net461" />
+    <file src="Microsoft.HealthVault.Client.NetFramework\bin\$configuration$\Microsoft.HealthVault.Client.xml" target="lib\net461" />
+    
     <!-- Android -->
     <file src="Microsoft.HealthVault.Client.Core\bin\$configuration$\netstandard1.4\Microsoft.HealthVault.Client.Core.dll" target="lib\monoandroid" />
     <file src="Microsoft.HealthVault.Client.Core\bin\$configuration$\netstandard1.4\Microsoft.HealthVault.Client.Core.pdb" target="lib\monoandroid" />
