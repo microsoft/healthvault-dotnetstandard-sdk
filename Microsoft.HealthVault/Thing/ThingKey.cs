@@ -87,7 +87,8 @@ namespace Microsoft.HealthVault.Thing
         /// issued when the item is created.
         /// </value>
         ///
-        public Guid Id {
+        public Guid Id
+        {
             get { return _thingId; }
             set { _thingId = value; }
         }

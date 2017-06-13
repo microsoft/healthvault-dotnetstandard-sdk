@@ -17,7 +17,7 @@ namespace Microsoft.HealthVault.UnitTest.ItemTypes
     public class WeightTests
     {
         [TestMethod]
-        public void WhenSerializesXml_ThenCorrectSerializationReturned()
+        public void WhenDeserializesXml_ThenCorrectSerializationReturned()
         {
             var xml = SampleUtils.GetSampleContent("ThingSampleWeight.xml");
             var weight = Weight.Deserialize(xml) as Weight;
@@ -33,7 +33,7 @@ namespace Microsoft.HealthVault.UnitTest.ItemTypes
         }
 
         [TestMethod]
-        public void WhenDeserializesXml_ThenCorrectStringReturned()
+        public void WhenSerializesXml_ThenCorrectStringReturned()
         {           
             Weight weight = new Weight(new HealthServiceDateTime(new NodaTime.LocalDateTime(2017, 6, 1, 12, 0, 0)), new WeightValue(60.0));
             var serialized = weight.Serialize();
