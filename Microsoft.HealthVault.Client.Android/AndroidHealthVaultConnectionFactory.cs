@@ -8,7 +8,7 @@
 
 namespace Microsoft.HealthVault.Client
 {
-    public class HealthVaultConnectionFactory
+    public static class HealthVaultConnectionFactory
     {
         private static readonly object s_instanceLock = new object();
         private static IHealthVaultConnectionFactory s_current;
