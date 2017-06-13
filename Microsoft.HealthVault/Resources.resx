@@ -543,9 +543,6 @@
   <data name="ShellTargetRequired" xml:space="preserve">
     <value>A Shell redirect target location name must be specified.</value>
   </data>
-  <data name="BrowserAuthException" xml:space="preserve">
-    <value>An error occurred while running authentication through the browser.</value>
-  </data>
   <data name="IncompatibleVersionExceptionMessageFormatString" xml:space="preserve">
     <value>The versions are not compatible. Supported versions: {0} . Encountered version: {1}</value>
   </data>

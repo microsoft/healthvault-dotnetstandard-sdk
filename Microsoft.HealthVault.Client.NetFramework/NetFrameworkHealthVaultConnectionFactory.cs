@@ -6,12 +6,26 @@
 //
 // THE SOFTWARE IS PROVIDED *AS IS*, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-namespace Microsoft.HealthVault.Client
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Microsoft.HealthVault.Client.NetFramework
 {
     public static class HealthVaultConnectionFactory
     {
         private static readonly object s_instanceLock = new object();
         private static IHealthVaultConnectionFactory s_current;
+
+        /// <summary>
+        /// Gets or sets the invoke context used for WinForms projects. 
+        /// </summary>
+        /// <remarks>In Windows Forms apps, you need to assign your Form object to this property.
+        /// For WPF apps, it is ignored.</remarks>
+        public static ISynchronizeInvoke WinFormsInvoke { get; set; }
 
         /// <summary>
         /// Gets the current IHealthVaultConnectionFactory instance.
