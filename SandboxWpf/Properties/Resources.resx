@@ -46,7 +46,7 @@
     
     mimetype: application/x-microsoft.net.object.binary.base64
     value   : The object must be serialized with 
-            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : System.Serialization.Formatters.Binary.BinaryFormatter
             : and then encoded with base64 encoding.
     
     mimetype: application/x-microsoft.net.object.soap.base64
@@ -60,7 +60,6 @@
             : and then encoded with base64 encoding.
     -->
   <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
-    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
     <xsd:element name="root" msdata:IsDataSet="true">
       <xsd:complexType>
         <xsd:choice maxOccurs="unbounded">
@@ -69,10 +68,9 @@
               <xsd:sequence>
                 <xsd:element name="value" type="xsd:string" minOccurs="0" />
               </xsd:sequence>
-              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
               <xsd:attribute name="type" type="xsd:string" />
               <xsd:attribute name="mimetype" type="xsd:string" />
-              <xsd:attribute ref="xml:space" />
             </xsd:complexType>
           </xsd:element>
           <xsd:element name="assembly">
@@ -87,10 +85,9 @@
                 <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
                 <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
               </xsd:sequence>
-              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="name" type="xsd:string" msdata:Ordinal="1" />
               <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
               <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
-              <xsd:attribute ref="xml:space" />
             </xsd:complexType>
           </xsd:element>
           <xsd:element name="resheader">
@@ -112,48 +109,9 @@
     <value>2.0</value>
   </resheader>
   <resheader name="reader">
-    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <resheader name="writer">
-    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="BaitWithoutSwitchError" xml:space="preserve">
-    <value>If you see this error then you need to reference the Microsoft.HealthVault.Client NuGet package from your client projects as well as your portable ones.</value>
-    <comment>A message telling developers how to properly reference the SDK.</comment>
-  </data>
-  <data name="BrowserAuthException" xml:space="preserve">
-    <value>An error occurred while running authentication through the browser.</value>
-  </data>
-  <data name="FileAccessActionDelete" xml:space="preserve">
-    <value>delete</value>
-    <comment>As in "delete a file"</comment>
-  </data>
-  <data name="FileAccessActionRead" xml:space="preserve">
-    <value>read</value>
-    <comment>As in "read a file"</comment>
-  </data>
-  <data name="FileAccessActionWrite" xml:space="preserve">
-    <value>write</value>
-    <comment>As in "write to a file"</comment>
-  </data>
-  <data name="FileAccessErrorMessage" xml:space="preserve">
-    <value>An error occurred while attempting to {0} file: {1}</value>
-    <comment>{NumberedPlaceholder="{0}","{1}"}, Error message thrown when an error occurred during file IO.
-%0 - The attempted action.  e.g., read, write, or delete
-%1 - The name of the file</comment>
-  </data>
-  <data name="LoginError" xml:space="preserve">
-    <value>Login Failed</value>
-  </data>
-  <data name="LoginErrorWithCode" xml:space="preserve">
-    <value>Login failed with code {0}</value>
-    <comment>{NumberedPlaceholder="{0}"}, Error message thrown when an error occurs during login.
-%0 - The failure code, e.g. 404</comment>
-  </data>
-  <data name="NoDispatcherFound" xml:space="preserve">
-    <value>Could not open browser authentication UI. If you are running on Windows Forms you first need assign your form to HealthVaultConnectionFactory.WinFormsInvoke .</value>
-  </data>
-  <data name="SignInPageTitle" xml:space="preserve">
-    <value>HealthVault Sign In</value>
-  </data>
 </root>
