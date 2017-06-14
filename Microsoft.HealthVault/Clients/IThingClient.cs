@@ -57,13 +57,6 @@ namespace Microsoft.HealthVault.Clients
         /// </summary>
         /// <param name="recordId">The health record's ID.</param>
         /// <param name="things">The collection of things to create.</param>
-        /// <remarks>
-        /// If a thing with a thing id is provided the object will be updated instead of failing with an exception.
-        /// </remarks>
-        /// <exception cref="Microsoft.HealthVault.Exceptions.HealthServiceException">
-        /// An exception will be thrown if a thing id or version stamp is provided for the new object and
-        /// the object doesn't exist.
-        /// </exception>
         Task CreateNewThingsAsync<T>(Guid recordId, ICollection<T> things)
             where T : IThing;
 
