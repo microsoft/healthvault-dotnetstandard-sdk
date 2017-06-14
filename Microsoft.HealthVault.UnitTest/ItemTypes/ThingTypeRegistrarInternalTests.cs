@@ -40,5 +40,16 @@ namespace Microsoft.HealthVault.UnitTest.ItemTypes
 
             Assert.IsTrue(thingTypeRegistrarInternal.RegisteredExtensionHandlers.Count == 1);
         }
+
+        [TestMethod]
+        public void WhenSerializesXml_ThenCorrectStringReturned()
+        {           
+            Weight weight = new Weight(new HealthServiceDateTime(new NodaTime.LocalDateTime(2017, 6, 1, 12, 0, 0)), new WeightValue(60.0));
+            var serialized = weight.Serialize();
+            Assert.IsFalse(string.IsNullOrWhiteSpace(serialized));
+            Assert.IsTrue(serialized.Contains("<type-id>3d34d87e-7fc1-4153-800f-f56592cb0d17</type-id>"));
+            Assert.IsTrue(serialized.Contains("<when><date><y>2017</y><m>6</m><d>1</d></date><time><h>12</h><m>0</m><s>0</s><f>0</f></time></when>"));
+            Assert.IsTrue(serialized.Contains("<kg>60</kg>"));
+        }
     }
 }

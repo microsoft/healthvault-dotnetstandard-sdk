@@ -140,7 +140,7 @@ namespace Microsoft.HealthVault.Thing
         /// <see cref="ThingBase.Sections"/> is set.
         /// </remarks>
         ///
-        public ThingKey Key { get; internal set; }
+        public ThingKey Key { get; set; }
 
         /// <summary>
         /// Gets the type identifier for the thing type.
@@ -832,7 +832,9 @@ namespace Microsoft.HealthVault.Thing
             XDocument newDocument = SDKHelper.SafeLoadXml(GetItemXml());
 
             string dataName = "thing/data-xml";
-            fetchedDocument.Element(dataName).ReplaceWith(newDocument.Element(dataName));
+            
+            var element = fetchedDocument.XPathSelectElement(dataName);
+            element.ReplaceWith(newDocument.XPathSelectElement(dataName));
             return fetchedDocument.ToString();
         }
 
