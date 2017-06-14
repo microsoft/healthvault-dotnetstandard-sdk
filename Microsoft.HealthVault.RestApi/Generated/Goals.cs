@@ -66,7 +66,7 @@ namespace Microsoft.HealthVault.RestApi.Generated
         /// <param name='cancellationToken'>
         /// The cancellation token.
         /// </param>
-        /// <exception cref="MicrosoftKhronosCloudCommonErrorsErrorResponseException">
+        /// <exception cref="ErrorResponseException">
         /// Thrown when the operation returned an invalid status code
         /// </exception>
         /// <exception cref="SerializationException">
@@ -75,7 +75,7 @@ namespace Microsoft.HealthVault.RestApi.Generated
         /// <return>
         /// A response object containing the response body and response headers.
         /// </return>
-        public async Task<HttpOperationResponse<GoalsResponse>> GetWithHttpMessagesAsync(string types = default(string), string windowTypes = default(string), System.DateTime? startDate = default(System.DateTime?), System.DateTime? endDate = default(System.DateTime?), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<HttpOperationResponse<GoalsResponse>> GetWithHttpMessagesAsync(string types = default(string), string windowTypes = default(string), System.DateTime? startDate = default(System.DateTime?), System.DateTime? endDate = default(System.DateTime?), Dictionary<string, List<string>> customHeaders = null, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken))
         {
             // Tracing
             bool _shouldTrace = ServiceClientTracing.IsEnabled;
@@ -159,11 +159,11 @@ namespace Microsoft.HealthVault.RestApi.Generated
             string _responseContent = null;
             if ((int)_statusCode != 200)
             {
-                var ex = new MicrosoftKhronosCloudCommonErrorsErrorResponseException(string.Format("Operation returned an invalid status code '{0}'", _statusCode));
+                var ex = new ErrorResponseException(string.Format("Operation returned an invalid status code '{0}'", _statusCode));
                 try
                 {
                     _responseContent = await _httpResponse.Content.ReadAsStringAsync().ConfigureAwait(false);
-                    MicrosoftKhronosCloudCommonErrorsErrorResponse _errorBody =  Microsoft.Rest.Serialization.SafeJsonConvert.DeserializeObject<MicrosoftKhronosCloudCommonErrorsErrorResponse>(_responseContent, Client.DeserializationSettings);
+                    ErrorResponse _errorBody =  Microsoft.Rest.Serialization.SafeJsonConvert.DeserializeObject<ErrorResponse>(_responseContent, Client.DeserializationSettings);
                     if (_errorBody != null)
                     {
                         ex.Body = _errorBody;
@@ -228,7 +228,7 @@ namespace Microsoft.HealthVault.RestApi.Generated
         /// <param name='cancellationToken'>
         /// The cancellation token.
         /// </param>
-        /// <exception cref="MicrosoftKhronosCloudCommonErrorsErrorResponseException">
+        /// <exception cref="ErrorResponseException">
         /// Thrown when the operation returned an invalid status code
         /// </exception>
         /// <exception cref="SerializationException">
@@ -243,7 +243,7 @@ namespace Microsoft.HealthVault.RestApi.Generated
         /// <return>
         /// A response object containing the response body and response headers.
         /// </return>
-        public async Task<HttpOperationResponse<Goal>> ReplaceWithHttpMessagesAsync(Goal goal, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<HttpOperationResponse<Goal>> ReplaceWithHttpMessagesAsync(Goal goal, Dictionary<string, List<string>> customHeaders = null, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken))
         {
             if (goal == null)
             {
@@ -313,11 +313,11 @@ namespace Microsoft.HealthVault.RestApi.Generated
             string _responseContent = null;
             if ((int)_statusCode != 200)
             {
-                var ex = new MicrosoftKhronosCloudCommonErrorsErrorResponseException(string.Format("Operation returned an invalid status code '{0}'", _statusCode));
+                var ex = new ErrorResponseException(string.Format("Operation returned an invalid status code '{0}'", _statusCode));
                 try
                 {
                     _responseContent = await _httpResponse.Content.ReadAsStringAsync().ConfigureAwait(false);
-                    MicrosoftKhronosCloudCommonErrorsErrorResponse _errorBody =  Microsoft.Rest.Serialization.SafeJsonConvert.DeserializeObject<MicrosoftKhronosCloudCommonErrorsErrorResponse>(_responseContent, Client.DeserializationSettings);
+                    ErrorResponse _errorBody =  Microsoft.Rest.Serialization.SafeJsonConvert.DeserializeObject<ErrorResponse>(_responseContent, Client.DeserializationSettings);
                     if (_errorBody != null)
                     {
                         ex.Body = _errorBody;
@@ -381,7 +381,7 @@ namespace Microsoft.HealthVault.RestApi.Generated
         /// <param name='cancellationToken'>
         /// The cancellation token.
         /// </param>
-        /// <exception cref="MicrosoftKhronosCloudCommonErrorsErrorResponseException">
+        /// <exception cref="ErrorResponseException">
         /// Thrown when the operation returned an invalid status code
         /// </exception>
         /// <exception cref="SerializationException">
@@ -396,7 +396,7 @@ namespace Microsoft.HealthVault.RestApi.Generated
         /// <return>
         /// A response object containing the response body and response headers.
         /// </return>
-        public async Task<HttpOperationResponse<object>> CreateWithHttpMessagesAsync(GoalsWrapper goalsWrapper, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<HttpOperationResponse<object>> CreateWithHttpMessagesAsync(GoalsWrapper goalsWrapper, Dictionary<string, List<string>> customHeaders = null, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken))
         {
             if (goalsWrapper == null)
             {
@@ -466,11 +466,11 @@ namespace Microsoft.HealthVault.RestApi.Generated
             string _responseContent = null;
             if ((int)_statusCode != 200 && (int)_statusCode != 201)
             {
-                var ex = new MicrosoftKhronosCloudCommonErrorsErrorResponseException(string.Format("Operation returned an invalid status code '{0}'", _statusCode));
+                var ex = new ErrorResponseException(string.Format("Operation returned an invalid status code '{0}'", _statusCode));
                 try
                 {
                     _responseContent = await _httpResponse.Content.ReadAsStringAsync().ConfigureAwait(false);
-                    MicrosoftKhronosCloudCommonErrorsErrorResponse _errorBody =  Microsoft.Rest.Serialization.SafeJsonConvert.DeserializeObject<MicrosoftKhronosCloudCommonErrorsErrorResponse>(_responseContent, Client.DeserializationSettings);
+                    ErrorResponse _errorBody =  Microsoft.Rest.Serialization.SafeJsonConvert.DeserializeObject<ErrorResponse>(_responseContent, Client.DeserializationSettings);
                     if (_errorBody != null)
                     {
                         ex.Body = _errorBody;
@@ -554,7 +554,7 @@ namespace Microsoft.HealthVault.RestApi.Generated
         /// <param name='cancellationToken'>
         /// The cancellation token.
         /// </param>
-        /// <exception cref="MicrosoftKhronosCloudCommonErrorsErrorResponseException">
+        /// <exception cref="ErrorResponseException">
         /// Thrown when the operation returned an invalid status code
         /// </exception>
         /// <exception cref="SerializationException">
@@ -569,7 +569,7 @@ namespace Microsoft.HealthVault.RestApi.Generated
         /// <return>
         /// A response object containing the response body and response headers.
         /// </return>
-        public async Task<HttpOperationResponse<GoalsResponse>> UpdateWithHttpMessagesAsync(GoalsWrapper goalsWrapper, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<HttpOperationResponse<GoalsResponse>> UpdateWithHttpMessagesAsync(GoalsWrapper goalsWrapper, Dictionary<string, List<string>> customHeaders = null, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken))
         {
             if (goalsWrapper == null)
             {
@@ -639,11 +639,11 @@ namespace Microsoft.HealthVault.RestApi.Generated
             string _responseContent = null;
             if ((int)_statusCode != 200)
             {
-                var ex = new MicrosoftKhronosCloudCommonErrorsErrorResponseException(string.Format("Operation returned an invalid status code '{0}'", _statusCode));
+                var ex = new ErrorResponseException(string.Format("Operation returned an invalid status code '{0}'", _statusCode));
                 try
                 {
                     _responseContent = await _httpResponse.Content.ReadAsStringAsync().ConfigureAwait(false);
-                    MicrosoftKhronosCloudCommonErrorsErrorResponse _errorBody =  Microsoft.Rest.Serialization.SafeJsonConvert.DeserializeObject<MicrosoftKhronosCloudCommonErrorsErrorResponse>(_responseContent, Client.DeserializationSettings);
+                    ErrorResponse _errorBody =  Microsoft.Rest.Serialization.SafeJsonConvert.DeserializeObject<ErrorResponse>(_responseContent, Client.DeserializationSettings);
                     if (_errorBody != null)
                     {
                         ex.Body = _errorBody;
@@ -707,7 +707,7 @@ namespace Microsoft.HealthVault.RestApi.Generated
         /// <param name='cancellationToken'>
         /// The cancellation token.
         /// </param>
-        /// <exception cref="MicrosoftKhronosCloudCommonErrorsErrorResponseException">
+        /// <exception cref="ErrorResponseException">
         /// Thrown when the operation returned an invalid status code
         /// </exception>
         /// <exception cref="SerializationException">
@@ -722,7 +722,7 @@ namespace Microsoft.HealthVault.RestApi.Generated
         /// <return>
         /// A response object containing the response body and response headers.
         /// </return>
-        public async Task<HttpOperationResponse<Goal>> GetByIdWithHttpMessagesAsync(string goalId, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<HttpOperationResponse<Goal>> GetByIdWithHttpMessagesAsync(string goalId, Dictionary<string, List<string>> customHeaders = null, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken))
         {
             if (goalId == null)
             {
@@ -787,11 +787,11 @@ namespace Microsoft.HealthVault.RestApi.Generated
             string _responseContent = null;
             if ((int)_statusCode != 200)
             {
-                var ex = new MicrosoftKhronosCloudCommonErrorsErrorResponseException(string.Format("Operation returned an invalid status code '{0}'", _statusCode));
+                var ex = new ErrorResponseException(string.Format("Operation returned an invalid status code '{0}'", _statusCode));
                 try
                 {
                     _responseContent = await _httpResponse.Content.ReadAsStringAsync().ConfigureAwait(false);
-                    MicrosoftKhronosCloudCommonErrorsErrorResponse _errorBody =  Microsoft.Rest.Serialization.SafeJsonConvert.DeserializeObject<MicrosoftKhronosCloudCommonErrorsErrorResponse>(_responseContent, Client.DeserializationSettings);
+                    ErrorResponse _errorBody =  Microsoft.Rest.Serialization.SafeJsonConvert.DeserializeObject<ErrorResponse>(_responseContent, Client.DeserializationSettings);
                     if (_errorBody != null)
                     {
                         ex.Body = _errorBody;
@@ -855,7 +855,7 @@ namespace Microsoft.HealthVault.RestApi.Generated
         /// <param name='cancellationToken'>
         /// The cancellation token.
         /// </param>
-        /// <exception cref="MicrosoftKhronosCloudCommonErrorsErrorResponseException">
+        /// <exception cref="ErrorResponseException">
         /// Thrown when the operation returned an invalid status code
         /// </exception>
         /// <exception cref="SerializationException">
@@ -870,7 +870,7 @@ namespace Microsoft.HealthVault.RestApi.Generated
         /// <return>
         /// A response object containing the response body and response headers.
         /// </return>
-        public async Task<HttpOperationResponse<object>> DeleteWithHttpMessagesAsync(string goalId, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<HttpOperationResponse<object>> DeleteWithHttpMessagesAsync(string goalId, Dictionary<string, List<string>> customHeaders = null, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken))
         {
             if (goalId == null)
             {
@@ -935,11 +935,11 @@ namespace Microsoft.HealthVault.RestApi.Generated
             string _responseContent = null;
             if ((int)_statusCode != 200 && (int)_statusCode != 204)
             {
-                var ex = new MicrosoftKhronosCloudCommonErrorsErrorResponseException(string.Format("Operation returned an invalid status code '{0}'", _statusCode));
+                var ex = new ErrorResponseException(string.Format("Operation returned an invalid status code '{0}'", _statusCode));
                 try
                 {
                     _responseContent = await _httpResponse.Content.ReadAsStringAsync().ConfigureAwait(false);
-                    MicrosoftKhronosCloudCommonErrorsErrorResponse _errorBody =  Microsoft.Rest.Serialization.SafeJsonConvert.DeserializeObject<MicrosoftKhronosCloudCommonErrorsErrorResponse>(_responseContent, Client.DeserializationSettings);
+                    ErrorResponse _errorBody =  Microsoft.Rest.Serialization.SafeJsonConvert.DeserializeObject<ErrorResponse>(_responseContent, Client.DeserializationSettings);
                     if (_errorBody != null)
                     {
                         ex.Body = _errorBody;
@@ -984,24 +984,6 @@ namespace Microsoft.HealthVault.RestApi.Generated
                     throw new SerializationException("Unable to deserialize the response.", _responseContent, ex);
                 }
             }
-            // Deserialize Response
-            if ((int)_statusCode == 204)
-            {
-                _responseContent = await _httpResponse.Content.ReadAsStringAsync().ConfigureAwait(false);
-                try
-                {
-                    _result.Body = Microsoft.Rest.Serialization.SafeJsonConvert.DeserializeObject<object>(_responseContent, Client.DeserializationSettings);
-                }
-                catch (JsonException ex)
-                {
-                    _httpRequest.Dispose();
-                    if (_httpResponse != null)
-                    {
-                        _httpResponse.Dispose();
-                    }
-                    throw new SerializationException("Unable to deserialize the response.", _responseContent, ex);
-                }
-            }
             if (_shouldTrace)
             {
                 ServiceClientTracing.Exit(_invocationId, _result);
@@ -1024,7 +1006,7 @@ namespace Microsoft.HealthVault.RestApi.Generated
         /// <param name='cancellationToken'>
         /// The cancellation token.
         /// </param>
-        /// <exception cref="MicrosoftKhronosCloudCommonErrorsErrorResponseException">
+        /// <exception cref="ErrorResponseException">
         /// Thrown when the operation returned an invalid status code
         /// </exception>
         /// <exception cref="SerializationException">
@@ -1033,7 +1015,7 @@ namespace Microsoft.HealthVault.RestApi.Generated
         /// <return>
         /// A response object containing the response body and response headers.
         /// </return>
-        public async Task<HttpOperationResponse<GoalsResponse>> GetActiveWithHttpMessagesAsync(string types = default(string), string windowTypes = default(string), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<HttpOperationResponse<GoalsResponse>> GetActiveWithHttpMessagesAsync(string types = default(string), string windowTypes = default(string), Dictionary<string, List<string>> customHeaders = null, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken))
         {
             // Tracing
             bool _shouldTrace = ServiceClientTracing.IsEnabled;
@@ -1107,11 +1089,11 @@ namespace Microsoft.HealthVault.RestApi.Generated
             string _responseContent = null;
             if ((int)_statusCode != 200)
             {
-                var ex = new MicrosoftKhronosCloudCommonErrorsErrorResponseException(string.Format("Operation returned an invalid status code '{0}'", _statusCode));
+                var ex = new ErrorResponseException(string.Format("Operation returned an invalid status code '{0}'", _statusCode));
                 try
                 {
                     _responseContent = await _httpResponse.Content.ReadAsStringAsync().ConfigureAwait(false);
-                    MicrosoftKhronosCloudCommonErrorsErrorResponse _errorBody =  Microsoft.Rest.Serialization.SafeJsonConvert.DeserializeObject<MicrosoftKhronosCloudCommonErrorsErrorResponse>(_responseContent, Client.DeserializationSettings);
+                    ErrorResponse _errorBody =  Microsoft.Rest.Serialization.SafeJsonConvert.DeserializeObject<ErrorResponse>(_responseContent, Client.DeserializationSettings);
                     if (_errorBody != null)
                     {
                         ex.Body = _errorBody;

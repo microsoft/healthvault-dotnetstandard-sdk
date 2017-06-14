@@ -34,13 +34,13 @@ namespace Microsoft.HealthVault.RestApi.Generated
         /// <param name='cancellationToken'>
         /// The cancellation token.
         /// </param>
-        /// <exception cref="MicrosoftKhronosCloudCommonErrorsErrorResponseException">
+        /// <exception cref="ErrorResponseException">
         /// Thrown when the operation returned an invalid status code
         /// </exception>
         /// <exception cref="Microsoft.Rest.SerializationException">
         /// Thrown when unable to deserialize the response
         /// </exception>
-        Task<HttpOperationResponse<ActionPlanTasksResponseActionPlanTaskInstance>> GetWithHttpMessagesAsync(string actionPlanTaskStatus = default(string), int? maxPageSize = default(int?), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
+        Task<HttpOperationResponse<ActionPlanTasksResponseActionPlanTaskInstanceV2>> GetWithHttpMessagesAsync(string actionPlanTaskStatus = default(string), int? maxPageSize = default(int?), Dictionary<string, List<string>> customHeaders = null, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
         /// <summary>
         /// Put an update for an action plan task
         /// </summary>
@@ -52,7 +52,7 @@ namespace Microsoft.HealthVault.RestApi.Generated
         /// <param name='cancellationToken'>
         /// The cancellation token.
         /// </param>
-        /// <exception cref="MicrosoftKhronosCloudCommonErrorsErrorResponseException">
+        /// <exception cref="ErrorResponseException">
         /// Thrown when the operation returned an invalid status code
         /// </exception>
         /// <exception cref="Microsoft.Rest.SerializationException">
@@ -61,7 +61,7 @@ namespace Microsoft.HealthVault.RestApi.Generated
         /// <exception cref="Microsoft.Rest.ValidationException">
         /// Thrown when a required parameter is null
         /// </exception>
-        Task<HttpOperationResponse<ActionPlanTasksResponseActionPlanTaskInstance>> ReplaceWithHttpMessagesAsync(ActionPlanTaskInstance actionPlanTask, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
+        Task<HttpOperationResponse<ActionPlanTasksResponseActionPlanTaskInstanceV2>> ReplaceWithHttpMessagesAsync(ActionPlanTaskInstanceV2 actionPlanTask, Dictionary<string, List<string>> customHeaders = null, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
         /// <summary>
         /// Post a new action plan task
         /// </summary>
@@ -73,7 +73,7 @@ namespace Microsoft.HealthVault.RestApi.Generated
         /// <param name='cancellationToken'>
         /// The cancellation token.
         /// </param>
-        /// <exception cref="MicrosoftKhronosCloudCommonErrorsErrorResponseException">
+        /// <exception cref="ErrorResponseException">
         /// Thrown when the operation returned an invalid status code
         /// </exception>
         /// <exception cref="Microsoft.Rest.SerializationException">
@@ -82,7 +82,7 @@ namespace Microsoft.HealthVault.RestApi.Generated
         /// <exception cref="Microsoft.Rest.ValidationException">
         /// Thrown when a required parameter is null
         /// </exception>
-        Task<HttpOperationResponse<object>> CreateWithHttpMessagesAsync(ActionPlanTask actionPlanTask, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
+        Task<HttpOperationResponse<object>> CreateWithHttpMessagesAsync(ActionPlanTaskV2 actionPlanTask, Dictionary<string, List<string>> customHeaders = null, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
         /// <summary>
         /// Patch an update for an action plan task
         /// </summary>
@@ -94,7 +94,7 @@ namespace Microsoft.HealthVault.RestApi.Generated
         /// <param name='cancellationToken'>
         /// The cancellation token.
         /// </param>
-        /// <exception cref="MicrosoftKhronosCloudCommonErrorsErrorResponseException">
+        /// <exception cref="ErrorResponseException">
         /// Thrown when the operation returned an invalid status code
         /// </exception>
         /// <exception cref="Microsoft.Rest.SerializationException">
@@ -103,7 +103,7 @@ namespace Microsoft.HealthVault.RestApi.Generated
         /// <exception cref="Microsoft.Rest.ValidationException">
         /// Thrown when a required parameter is null
         /// </exception>
-        Task<HttpOperationResponse<ActionPlanTasksResponseActionPlanTaskInstance>> UpdateWithHttpMessagesAsync(ActionPlanTaskInstance actionPlanTask, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
+        Task<HttpOperationResponse<ActionPlanTasksResponseActionPlanTaskInstanceV2>> UpdateWithHttpMessagesAsync(ActionPlanTaskInstanceV2 actionPlanTask, Dictionary<string, List<string>> customHeaders = null, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
         /// <summary>
         /// Get a task by id
         /// </summary>
@@ -115,7 +115,7 @@ namespace Microsoft.HealthVault.RestApi.Generated
         /// <param name='cancellationToken'>
         /// The cancellation token.
         /// </param>
-        /// <exception cref="MicrosoftKhronosCloudCommonErrorsErrorResponseException">
+        /// <exception cref="ErrorResponseException">
         /// Thrown when the operation returned an invalid status code
         /// </exception>
         /// <exception cref="Microsoft.Rest.SerializationException">
@@ -124,7 +124,7 @@ namespace Microsoft.HealthVault.RestApi.Generated
         /// <exception cref="Microsoft.Rest.ValidationException">
         /// Thrown when a required parameter is null
         /// </exception>
-        Task<HttpOperationResponse<ActionPlanTaskInstance>> GetByIdWithHttpMessagesAsync(string actionPlanTaskId, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
+        Task<HttpOperationResponse<ActionPlanTaskInstanceV2>> GetByIdWithHttpMessagesAsync(string actionPlanTaskId, Dictionary<string, List<string>> customHeaders = null, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
         /// <summary>
         /// Delete a task by id
         /// </summary>
@@ -136,7 +136,7 @@ namespace Microsoft.HealthVault.RestApi.Generated
         /// <param name='cancellationToken'>
         /// The cancellation token.
         /// </param>
-        /// <exception cref="MicrosoftKhronosCloudCommonErrorsErrorResponseException">
+        /// <exception cref="ErrorResponseException">
         /// Thrown when the operation returned an invalid status code
         /// </exception>
         /// <exception cref="Microsoft.Rest.SerializationException">
@@ -145,7 +145,7 @@ namespace Microsoft.HealthVault.RestApi.Generated
         /// <exception cref="Microsoft.Rest.ValidationException">
         /// Thrown when a required parameter is null
         /// </exception>
-        Task<HttpOperationResponse<object>> DeleteWithHttpMessagesAsync(string actionPlanTaskId, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
+        Task<HttpOperationResponse<object>> DeleteWithHttpMessagesAsync(string actionPlanTaskId, Dictionary<string, List<string>> customHeaders = null, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
         /// <param name='trackingValidation'>
         /// </param>
         /// <param name='customHeaders'>
@@ -154,7 +154,7 @@ namespace Microsoft.HealthVault.RestApi.Generated
         /// <param name='cancellationToken'>
         /// The cancellation token.
         /// </param>
-        /// <exception cref="MicrosoftKhronosCloudCommonErrorsErrorResponseException">
+        /// <exception cref="ErrorResponseException">
         /// Thrown when the operation returned an invalid status code
         /// </exception>
         /// <exception cref="Microsoft.Rest.SerializationException">
@@ -163,6 +163,6 @@ namespace Microsoft.HealthVault.RestApi.Generated
         /// <exception cref="Microsoft.Rest.ValidationException">
         /// Thrown when a required parameter is null
         /// </exception>
-        Task<HttpOperationResponse<ActionPlanTaskTrackingResponseActionPlanTaskTracking>> ValidateTrackingWithHttpMessagesAsync(TrackingValidation trackingValidation, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
+        Task<HttpOperationResponse<ActionPlanTaskTrackingResponseActionPlanTaskTracking>> ValidateTrackingWithHttpMessagesAsync(TrackingValidation trackingValidation, Dictionary<string, List<string>> customHeaders = null, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
     }
 }

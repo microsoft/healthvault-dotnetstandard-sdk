@@ -13,34 +13,22 @@ namespace Microsoft.HealthVault.RestApi.Generated.Models
     using System.Linq;
 
     /// <summary>
-    /// An instance of an action a user should complete.
+    /// An action a user should complete.
     /// Adherence to a plan is measured by completion statistics against tasks
     /// </summary>
-    public partial class ActionPlanTaskInstance
+    public partial class ActionPlanTaskV2
     {
         /// <summary>
-        /// Initializes a new instance of the ActionPlanTaskInstance class.
+        /// Initializes a new instance of the ActionPlanTaskV2 class.
         /// </summary>
-        public ActionPlanTaskInstance()
+        public ActionPlanTaskV2()
         {
           CustomInit();
         }
 
         /// <summary>
-        /// Initializes a new instance of the ActionPlanTaskInstance class.
+        /// Initializes a new instance of the ActionPlanTaskV2 class.
         /// </summary>
-        /// <param name="id">The Id of the task instance</param>
-        /// <param name="status">The status of the task. Possible values
-        /// include: 'Unknown', 'Archived', 'InProgress', 'Recommended',
-        /// 'Completed', 'Template'</param>
-        /// <param name="startDate">The date that the task was started.
-        /// Read-only</param>
-        /// <param name="endDate">The date that the task was ended.
-        /// Read-only</param>
-        /// <param name="organizationId">The ID of the organization that owns
-        /// this task. Read-only</param>
-        /// <param name="organizationName">The name of the organization that
-        /// owns this task. Read-only</param>
         /// <param name="name">The friendly name of the task</param>
         /// <param name="shortDescription">The short description of the
         /// task</param>
@@ -64,16 +52,10 @@ namespace Microsoft.HealthVault.RestApi.Generated.Models
         /// 'Scheduled'</param>
         /// <param name="frequencyTaskCompletionMetrics">Completion metrics for
         /// frequency based tasks</param>
-        /// <param name="scheduledTaskCompletionMetrics">Completion metrics for
-        /// schedule based tasks</param>
-        public ActionPlanTaskInstance(string id = default(string), string status = default(string), System.DateTime? startDate = default(System.DateTime?), System.DateTime? endDate = default(System.DateTime?), string organizationId = default(string), string organizationName = default(string), string name = default(string), string shortDescription = default(string), string longDescription = default(string), string imageUrl = default(string), string thumbnailImageUrl = default(string), string taskType = default(string), ActionPlanTrackingPolicy trackingPolicy = default(ActionPlanTrackingPolicy), string signupName = default(string), string associatedPlanId = default(string), IList<string> associatedObjectiveIds = default(IList<string>), string completionType = default(string), ActionPlanFrequencyTaskCompletionMetrics frequencyTaskCompletionMetrics = default(ActionPlanFrequencyTaskCompletionMetrics), ActionPlanScheduledTaskCompletionMetrics scheduledTaskCompletionMetrics = default(ActionPlanScheduledTaskCompletionMetrics))
+        /// <param name="schedules">Schedules for when a task should be
+        /// completed.</param>
+        public ActionPlanTaskV2(string name = default(string), string shortDescription = default(string), string longDescription = default(string), string imageUrl = default(string), string thumbnailImageUrl = default(string), string taskType = default(string), ActionPlanTrackingPolicy trackingPolicy = default(ActionPlanTrackingPolicy), string signupName = default(string), string associatedPlanId = default(string), IList<string> associatedObjectiveIds = default(IList<string>), string completionType = default(string), ActionPlanFrequencyTaskCompletionMetricsV2 frequencyTaskCompletionMetrics = default(ActionPlanFrequencyTaskCompletionMetricsV2), IList<ScheduleV2> schedules = default(IList<ScheduleV2>))
         {
-            Id = id;
-            Status = status;
-            StartDate = startDate;
-            EndDate = endDate;
-            OrganizationId = organizationId;
-            OrganizationName = organizationName;
             Name = name;
             ShortDescription = shortDescription;
             LongDescription = longDescription;
@@ -86,7 +68,7 @@ namespace Microsoft.HealthVault.RestApi.Generated.Models
             AssociatedObjectiveIds = associatedObjectiveIds;
             CompletionType = completionType;
             FrequencyTaskCompletionMetrics = frequencyTaskCompletionMetrics;
-            ScheduledTaskCompletionMetrics = scheduledTaskCompletionMetrics;
+            Schedules = schedules;
             CustomInit();
         }
 
@@ -94,46 +76,6 @@ namespace Microsoft.HealthVault.RestApi.Generated.Models
         /// An initialization method that performs custom operations like setting defaults
         /// </summary>
         partial void CustomInit();
-
-        /// <summary>
-        /// Gets or sets the Id of the task instance
-        /// </summary>
-        [JsonProperty(PropertyName = "id")]
-        public string Id { get; set; }
-
-        /// <summary>
-        /// Gets or sets the status of the task. Possible values include:
-        /// 'Unknown', 'Archived', 'InProgress', 'Recommended', 'Completed',
-        /// 'Template'
-        /// </summary>
-        [JsonProperty(PropertyName = "status")]
-        public string Status { get; set; }
-
-        /// <summary>
-        /// Gets or sets the date that the task was started. Read-only
-        /// </summary>
-        [JsonProperty(PropertyName = "startDate")]
-        public System.DateTime? StartDate { get; set; }
-
-        /// <summary>
-        /// Gets or sets the date that the task was ended. Read-only
-        /// </summary>
-        [JsonProperty(PropertyName = "endDate")]
-        public System.DateTime? EndDate { get; set; }
-
-        /// <summary>
-        /// Gets or sets the ID of the organization that owns this task.
-        /// Read-only
-        /// </summary>
-        [JsonProperty(PropertyName = "organizationId")]
-        public string OrganizationId { get; set; }
-
-        /// <summary>
-        /// Gets or sets the name of the organization that owns this task.
-        /// Read-only
-        /// </summary>
-        [JsonProperty(PropertyName = "organizationName")]
-        public string OrganizationName { get; set; }
 
         /// <summary>
         /// Gets or sets the friendly name of the task
@@ -211,13 +153,13 @@ namespace Microsoft.HealthVault.RestApi.Generated.Models
         /// Gets or sets completion metrics for frequency based tasks
         /// </summary>
         [JsonProperty(PropertyName = "frequencyTaskCompletionMetrics")]
-        public ActionPlanFrequencyTaskCompletionMetrics FrequencyTaskCompletionMetrics { get; set; }
+        public ActionPlanFrequencyTaskCompletionMetricsV2 FrequencyTaskCompletionMetrics { get; set; }
 
         /// <summary>
-        /// Gets or sets completion metrics for schedule based tasks
+        /// Gets or sets schedules for when a task should be completed.
         /// </summary>
-        [JsonProperty(PropertyName = "scheduledTaskCompletionMetrics")]
-        public ActionPlanScheduledTaskCompletionMetrics ScheduledTaskCompletionMetrics { get; set; }
+        [JsonProperty(PropertyName = "schedules")]
+        public IList<ScheduleV2> Schedules { get; set; }
 
     }
 }
