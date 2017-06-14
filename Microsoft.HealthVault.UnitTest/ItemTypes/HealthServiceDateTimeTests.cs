@@ -44,6 +44,17 @@ namespace Microsoft.HealthVault.UnitTest.ItemTypes
         }
 
         [TestMethod]
+        public void WhenSameDatePassedToEqualsWithLocalDateTime_ThenTrueReturned()
+        {
+            HealthServiceDate date = new HealthServiceDate(2017, 1, 12);
+
+            HealthServiceDateTime healthServiceDateTime = new HealthServiceDateTime(date);
+            LocalDateTime localDateTime = new LocalDateTime(2017, 1, 12, 2, 40, 17);
+
+            Assert.IsTrue(healthServiceDateTime.Equals(localDateTime), "The equals should return true.");
+        }
+
+        [TestMethod]
         public void WhenDifferentDatePassedToEquals_ThenFalseReturned()
         {
             HealthServiceDateTime dateTime1 = new HealthServiceDateTime(new LocalDateTime(2017, 5, 18, 5, 28, 20));
