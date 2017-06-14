@@ -1,4 +1,13 @@
-﻿using System;
+﻿// Copyright (c) Microsoft Corporation.  All rights reserved.
+// MIT License
+// Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the ""Software""), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+//
+// The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED *AS IS*, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using Microsoft.HealthVault.Client;
@@ -31,28 +40,28 @@ namespace Microsoft.HealthVault.IntegrationTest
             await RemoveAllActionPlansAsync(restClient);
 
             Guid planId = Guid.NewGuid();
-            await restClient.CreateActionPlanWithHttpMessagesAsync(CreateWeightActionPlan(planId));
+            await restClient.ActionPlans.CreateAsync(CreateWeightActionPlan(planId));
 
-            HttpOperationResponse<ActionPlansResponseActionPlanInstance> plans = await restClient.GetActionPlansWithHttpMessagesAsync();
-            Assert.AreEqual(1, plans.Body.Plans.Count);
+            var plans = await restClient.ActionPlans.GetAsync();
+            Assert.AreEqual(1, plans.Plans.Count);
 
-            ActionPlanInstance planInstance = plans.Body.Plans[0];
+            var planInstance = plans.Plans[0];
             Assert.AreEqual(planId.ToString(), planInstance.Id);
             Assert.AreEqual(PlanName, planInstance.Name);
         }
 
         private static async Task RemoveAllActionPlansAsync(IMicrosoftHealthVaultRestApi api)
         {
-            HttpOperationResponse<ActionPlansResponseActionPlanInstance> plans = await api.GetActionPlansWithHttpMessagesAsync();
-            foreach (var plan in plans.Body.Plans)
+            var plans = await api.ActionPlans.GetAsync();
+            foreach (var plan in plans.Plans)
             {
-                await api.DeleteActionPlanWithHttpMessagesAsync(plan.Id);
+                await api.ActionPlans.DeleteAsync(plan.Id);
             }
         }
 
-        private static ActionPlan CreateWeightActionPlan(Guid planId)
+        private static ActionPlanV2 CreateWeightActionPlan(Guid planId)
         {
-            var plan = new ActionPlan();
+            var plan = new ActionPlanV2();
             var objective = new Objective
             {
                 Id = planId.ToString(),
@@ -74,7 +83,7 @@ namespace Microsoft.HealthVault.IntegrationTest
             plan.ThumbnailImageUrl = "https://img-prod-cms-rt-microsoft-com.akamaized.net/cms/api/am/imageFileData/RW6fN6?ver=6479";
             plan.Category = "Health";
             plan.Objectives = new Collection<Objective> { objective };
-            plan.AssociatedTasks = new Collection<ActionPlanTask> { task };
+            plan.AssociatedTasks = new Collection<ActionPlanTaskV2> { task };
 
             return plan;
         }
@@ -82,9 +91,9 @@ namespace Microsoft.HealthVault.IntegrationTest
         /// <summary>
         /// Creates a sample frequency based task associated with the specified objective.
         /// </summary>
-        private static ActionPlanTask CreateDailyWeightMeasurementActionPlanTask(string objectiveId, Guid planId = default(Guid))
+        private static ActionPlanTaskV2 CreateDailyWeightMeasurementActionPlanTask(string objectiveId, Guid planId = default(Guid))
         {
-            var task = new ActionPlanTask
+            var task = new ActionPlanTaskV2
             {
                 Name = "Measure your weight",
                 ShortDescription = "Measure your weight daily",
@@ -111,10 +120,16 @@ namespace Microsoft.HealthVault.IntegrationTest
                     }
                 },
                 CompletionType = "Frequency",
-                FrequencyTaskCompletionMetrics = new ActionPlanFrequencyTaskCompletionMetrics()
+                Schedules = new List<ScheduleV2>
                 {
-                    ReminderState = "Off",
-                    ScheduledDays = new Collection<string> { "Everyday" },
+                    new ScheduleV2
+                    {
+                        ReminderState = "Off",
+                        ScheduledDays = new Collection<string> { "Everyday" }
+                    }  
+                },
+                FrequencyTaskCompletionMetrics = new ActionPlanFrequencyTaskCompletionMetricsV2()
+                {
                     OccurrenceCount = 1,
                     WindowType = "Daily"
                 }

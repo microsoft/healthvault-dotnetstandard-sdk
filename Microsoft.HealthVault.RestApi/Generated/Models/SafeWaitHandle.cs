@@ -10,22 +10,20 @@ namespace Microsoft.HealthVault.RestApi.Generated.Models
     using Newtonsoft.Json;
     using System.Linq;
 
-    public partial class MicrosoftWin32SafeHandlesSafeWaitHandle
+    public partial class SafeWaitHandle
     {
         /// <summary>
-        /// Initializes a new instance of the
-        /// MicrosoftWin32SafeHandlesSafeWaitHandle class.
+        /// Initializes a new instance of the SafeWaitHandle class.
         /// </summary>
-        public MicrosoftWin32SafeHandlesSafeWaitHandle()
+        public SafeWaitHandle()
         {
           CustomInit();
         }
 
         /// <summary>
-        /// Initializes a new instance of the
-        /// MicrosoftWin32SafeHandlesSafeWaitHandle class.
+        /// Initializes a new instance of the SafeWaitHandle class.
         /// </summary>
-        public MicrosoftWin32SafeHandlesSafeWaitHandle(bool? isInvalid = default(bool?), bool? isClosed = default(bool?))
+        public SafeWaitHandle(bool? isInvalid = default(bool?), bool? isClosed = default(bool?))
         {
             IsInvalid = isInvalid;
             IsClosed = isClosed;

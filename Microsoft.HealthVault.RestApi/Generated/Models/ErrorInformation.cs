@@ -12,22 +12,20 @@ namespace Microsoft.HealthVault.RestApi.Generated.Models
     using System.Collections.Generic;
     using System.Linq;
 
-    public partial class MicrosoftKhronosCloudCommonErrorsErrorInformation
+    public partial class ErrorInformation
     {
         /// <summary>
-        /// Initializes a new instance of the
-        /// MicrosoftKhronosCloudCommonErrorsErrorInformation class.
+        /// Initializes a new instance of the ErrorInformation class.
         /// </summary>
-        public MicrosoftKhronosCloudCommonErrorsErrorInformation()
+        public ErrorInformation()
         {
           CustomInit();
         }
 
         /// <summary>
-        /// Initializes a new instance of the
-        /// MicrosoftKhronosCloudCommonErrorsErrorInformation class.
+        /// Initializes a new instance of the ErrorInformation class.
         /// </summary>
-        public MicrosoftKhronosCloudCommonErrorsErrorInformation(string code = default(string), string message = default(string), string target = default(string), IList<MicrosoftKhronosCloudCommonErrorsErrorInformation> details = default(IList<MicrosoftKhronosCloudCommonErrorsErrorInformation>), MicrosoftKhronosCloudCommonErrorsErrorInformation innererror = default(MicrosoftKhronosCloudCommonErrorsErrorInformation), object exception = default(object))
+        public ErrorInformation(string code = default(string), string message = default(string), string target = default(string), IList<ErrorInformation> details = default(IList<ErrorInformation>), ErrorInformation innererror = default(ErrorInformation), object exception = default(object))
         {
             Code = code;
             Message = message;
@@ -61,12 +59,12 @@ namespace Microsoft.HealthVault.RestApi.Generated.Models
         /// <summary>
         /// </summary>
         [JsonProperty(PropertyName = "details")]
-        public IList<MicrosoftKhronosCloudCommonErrorsErrorInformation> Details { get; set; }
+        public IList<ErrorInformation> Details { get; set; }
 
         /// <summary>
         /// </summary>
         [JsonProperty(PropertyName = "innererror")]
-        public MicrosoftKhronosCloudCommonErrorsErrorInformation Innererror { get; set; }
+        public ErrorInformation Innererror { get; set; }
 
         /// <summary>
         /// </summary>
