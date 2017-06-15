@@ -2,15 +2,14 @@
 // Changes may cause incorrect behavior and will be lost if the code is
 // regenerated.
 
-using System.Collections.Generic;
-using System.Threading;
-using System.Threading.Tasks;
-using Microsoft.HealthVault.RestApi.Generated.Models;
-using Microsoft.Rest;
-using Newtonsoft.Json;
-
 namespace Microsoft.HealthVault.RestApi.Generated
 {
+    using Microsoft.HealthVault;
+    using Microsoft.HealthVault.RestApi;
+    using Microsoft.Rest;
+    using Models;
+    using Newtonsoft.Json;
+
     /// <summary>
     /// </summary>
     public partial interface IMicrosoftHealthVaultRestApi : System.IDisposable
@@ -38,355 +37,39 @@ namespace Microsoft.HealthVault.RestApi.Generated
 
 
         /// <summary>
-        /// Get a collection of action plans
+        /// Gets the IActionPlans.
         /// </summary>
-        /// <param name='maxPageSize'>
-        /// The maximum number of entries to return per page. Defaults to 1000.
-        /// </param>
-        /// <param name='customHeaders'>
-        /// The headers that will be added to request.
-        /// </param>
-        /// <param name='cancellationToken'>
-        /// The cancellation token.
-        /// </param>
-        Task<HttpOperationResponse<ActionPlansResponseActionPlanInstance>> GetActionPlansWithHttpMessagesAsync(int? maxPageSize = default(int?), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
+        IActionPlans ActionPlans { get; }
 
         /// <summary>
-        /// Update/Replace a complete action plan instance with no merge.
+        /// Gets the IActionPlanObjectives.
         /// </summary>
-        /// <param name='actionPlan'>
-        /// The instance of the plan to update. The entire plan will be
-        /// replaced with this version.
-        /// </param>
-        /// <param name='customHeaders'>
-        /// The headers that will be added to request.
-        /// </param>
-        /// <param name='cancellationToken'>
-        /// The cancellation token.
-        /// </param>
-        Task<HttpOperationResponse<ActionPlansResponseActionPlanInstance>> PutActionPlanWithHttpMessagesAsync(ActionPlanInstance actionPlan, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
+        IActionPlanObjectives ActionPlanObjectives { get; }
 
         /// <summary>
-        /// Post an action plan instance
+        /// Gets the IActionPlanTasks.
         /// </summary>
-        /// <param name='actionPlan'>
-        /// The instance of the plan to create.
-        /// </param>
-        /// <param name='customHeaders'>
-        /// The headers that will be added to request.
-        /// </param>
-        /// <param name='cancellationToken'>
-        /// The cancellation token.
-        /// </param>
-        Task<HttpOperationResponse<object>> CreateActionPlanWithHttpMessagesAsync(ActionPlan actionPlan, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
+        IActionPlanTasks ActionPlanTasks { get; }
 
         /// <summary>
-        /// Update an action plan instance with merge
+        /// Gets the IGoals.
         /// </summary>
-        /// <param name='actionPlan'>
-        /// The instance of the plan to update. Only the fields present in the
-        /// passed in model will be updated. All other fields and colelctions
-        /// will be left, as is, unless invalid.
-        /// </param>
-        /// <param name='customHeaders'>
-        /// The headers that will be added to request.
-        /// </param>
-        /// <param name='cancellationToken'>
-        /// The cancellation token.
-        /// </param>
-        Task<HttpOperationResponse<ActionPlansResponseActionPlanInstance>> PatchActionPlanWithHttpMessagesAsync(ActionPlanInstance actionPlan, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
+        IGoals Goals { get; }
 
         /// <summary>
-        /// Get an instance of a specific action plan
+        /// Gets the IGoalRecommendations.
         /// </summary>
-        /// <param name='actionPlanId'>
-        /// The action plan to update.
-        /// </param>
-        /// <param name='customHeaders'>
-        /// The headers that will be added to request.
-        /// </param>
-        /// <param name='cancellationToken'>
-        /// The cancellation token.
-        /// </param>
-        Task<HttpOperationResponse<ActionPlanInstance>> GetActionPlanByIdWithHttpMessagesAsync(string actionPlanId, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
+        IGoalRecommendations GoalRecommendations { get; }
 
         /// <summary>
-        /// Delete an action plan instance
+        /// Gets the IOnboarding.
         /// </summary>
-        /// <param name='actionPlanId'>
-        /// The instance of the plan to delete.
-        /// </param>
-        /// <param name='customHeaders'>
-        /// The headers that will be added to request.
-        /// </param>
-        /// <param name='cancellationToken'>
-        /// The cancellation token.
-        /// </param>
-        Task<HttpOperationResponse<object>> DeleteActionPlanWithHttpMessagesAsync(string actionPlanId, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
+        IOnboarding Onboarding { get; }
 
         /// <summary>
-        /// Remove an action plan objective
+        /// Gets the ISleeps.
         /// </summary>
-        /// <param name='actionPlanId'>
-        /// The instance of the plan that the objective belongs to.
-        /// </param>
-        /// <param name='objectiveId'>
-        /// The instance of the objective to delete.
-        /// </param>
-        /// <param name='customHeaders'>
-        /// The headers that will be added to request.
-        /// </param>
-        /// <param name='cancellationToken'>
-        /// The cancellation token.
-        /// </param>
-        Task<HttpOperationResponse<object>> DeleteActionPlanObjectiveWithHttpMessagesAsync(string actionPlanId, string objectiveId, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
-
-        /// <summary>
-        /// Gets adherence information for an action plan.
-        /// </summary>
-        /// <param name='startTime'>
-        /// The start time.
-        /// </param>
-        /// <param name='endTime'>
-        /// The end time.
-        /// </param>
-        /// <param name='actionPlanId'>
-        /// The action plan identifier.
-        /// </param>
-        /// <param name='objectiveId'>
-        /// The objective to filter the report to.
-        /// </param>
-        /// <param name='taskId'>
-        /// The task to filter the report to.
-        /// </param>
-        /// <param name='customHeaders'>
-        /// The headers that will be added to request.
-        /// </param>
-        /// <param name='cancellationToken'>
-        /// The cancellation token.
-        /// </param>
-        Task<HttpOperationResponse<ActionPlanAdherenceSummary>> GetActionPlanAdherenceWithHttpMessagesAsync(System.DateTime startTime, System.DateTime endTime, string actionPlanId, string objectiveId = default(string), string taskId = default(string), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
-
-        /// <summary>
-        /// Get a collection of task definitions
-        /// </summary>
-        /// <param name='actionPlanTaskStatus'>
-        /// Possible values include: 'Unknown', 'Archived', 'InProgress',
-        /// 'Recommended', 'Completed', 'Template'
-        /// </param>
-        /// <param name='maxPageSize'>
-        /// The maximum number of entries to return per page. Defaults to 1000.
-        /// </param>
-        /// <param name='customHeaders'>
-        /// The headers that will be added to request.
-        /// </param>
-        /// <param name='cancellationToken'>
-        /// The cancellation token.
-        /// </param>
-        Task<HttpOperationResponse<ActionPlanTasksResponseActionPlanTaskInstance>> GetActionPlanTasksWithHttpMessagesAsync(string actionPlanTaskStatus = default(string), int? maxPageSize = default(int?), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
-
-        /// <summary>
-        /// Put an update for an action plan task
-        /// </summary>
-        /// <param name='actionPlanTask'>
-        /// </param>
-        /// <param name='customHeaders'>
-        /// The headers that will be added to request.
-        /// </param>
-        /// <param name='cancellationToken'>
-        /// The cancellation token.
-        /// </param>
-        Task<HttpOperationResponse<ActionPlanTasksResponseActionPlanTaskInstance>> PutActionPlanTasksWithHttpMessagesAsync(ActionPlanTaskInstance actionPlanTask, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
-
-        /// <summary>
-        /// Post a new action plan task
-        /// </summary>
-        /// <param name='actionPlanTask'>
-        /// </param>
-        /// <param name='customHeaders'>
-        /// The headers that will be added to request.
-        /// </param>
-        /// <param name='cancellationToken'>
-        /// The cancellation token.
-        /// </param>
-        Task<HttpOperationResponse<object>> PostActionPlanTasksWithHttpMessagesAsync(ActionPlanTask actionPlanTask, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
-
-        /// <summary>
-        /// Patch an update for an action plan task
-        /// </summary>
-        /// <param name='actionPlanTask'>
-        /// </param>
-        /// <param name='customHeaders'>
-        /// The headers that will be added to request.
-        /// </param>
-        /// <param name='cancellationToken'>
-        /// The cancellation token.
-        /// </param>
-        Task<HttpOperationResponse<ActionPlanTasksResponseActionPlanTaskInstance>> PatchActionPlanTasksWithHttpMessagesAsync(ActionPlanTaskInstance actionPlanTask, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
-
-        /// <summary>
-        /// Get a task by id
-        /// </summary>
-        /// <param name='actionPlanTaskId'>
-        /// </param>
-        /// <param name='customHeaders'>
-        /// The headers that will be added to request.
-        /// </param>
-        /// <param name='cancellationToken'>
-        /// The cancellation token.
-        /// </param>
-        Task<HttpOperationResponse<ActionPlanTaskInstance>> GetActionPlanTasksByIdWithHttpMessagesAsync(string actionPlanTaskId, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
-
-        /// <summary>
-        /// Delete a task by id
-        /// </summary>
-        /// <param name='actionPlanTaskId'>
-        /// </param>
-        /// <param name='customHeaders'>
-        /// The headers that will be added to request.
-        /// </param>
-        /// <param name='cancellationToken'>
-        /// The cancellation token.
-        /// </param>
-        Task<HttpOperationResponse<object>> DeleteActionPlanTasksByIdWithHttpMessagesAsync(string actionPlanTaskId, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
-
-        /// <param name='trackingValidation'>
-        /// </param>
-        /// <param name='customHeaders'>
-        /// The headers that will be added to request.
-        /// </param>
-        /// <param name='cancellationToken'>
-        /// The cancellation token.
-        /// </param>
-        Task<HttpOperationResponse<ActionPlanTaskTrackingResponseActionPlanTaskTracking>> ValidateActionPlanTasksTrackingWithHttpMessagesAsync(TrackingValidation trackingValidation, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
-
-        /// <summary>
-        /// Get a collection of all goals
-        /// </summary>
-        /// <param name='types'>
-        /// The goal types(e.g Steps, CaloriesBurned) filter.
-        /// </param>
-        /// <param name='windowTypes'>
-        /// The goal window types(e.g Daily, Weekly) filter.
-        /// </param>
-        /// <param name='startDate'>
-        /// The start date for date range filter.
-        /// </param>
-        /// <param name='endDate'>
-        /// The end date for date range filter.
-        /// </param>
-        /// <param name='customHeaders'>
-        /// The headers that will be added to request.
-        /// </param>
-        /// <param name='cancellationToken'>
-        /// The cancellation token.
-        /// </param>
-        Task<HttpOperationResponse<GoalsResponse>> GetGoalsWithHttpMessagesAsync(string types = default(string), string windowTypes = default(string), System.DateTime? startDate = default(System.DateTime?), System.DateTime? endDate = default(System.DateTime?), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
-
-        /// <summary>
-        /// Update/Replace a complete goal instance with no merge
-        /// </summary>
-        /// <param name='goal'>
-        /// The instance of the goal to update. The entire goal will be
-        /// replaced with this version.
-        /// </param>
-        /// <param name='customHeaders'>
-        /// The headers that will be added to request.
-        /// </param>
-        /// <param name='cancellationToken'>
-        /// The cancellation token.
-        /// </param>
-        Task<HttpOperationResponse<Goal>> PutGoalWithHttpMessagesAsync(Goal goal, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
-
-        /// <summary>
-        /// Post a collection of goal instances
-        /// </summary>
-        /// <param name='goalsWrapper'>
-        /// The collection of goal instances to create.
-        /// </param>
-        /// <param name='customHeaders'>
-        /// The headers that will be added to request.
-        /// </param>
-        /// <param name='cancellationToken'>
-        /// The cancellation token.
-        /// </param>
-        Task<HttpOperationResponse<object>> CreateGoalsWithHttpMessagesAsync(GoalsWrapper goalsWrapper, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
-
-        /// <summary>
-        /// Update collection of goal instances with merge
-        /// </summary>
-        /// <param name='goalsWrapper'>
-        /// The collection of goal instances to update. Only the fields present
-        /// in the passed in model will be updated. All other fields and
-        /// colelctions
-        /// will be left, as is, unless invalid.
-        /// </param>
-        /// <param name='customHeaders'>
-        /// The headers that will be added to request.
-        /// </param>
-        /// <param name='cancellationToken'>
-        /// The cancellation token.
-        /// </param>
-        Task<HttpOperationResponse<GoalsResponse>> PatchGoalsWithHttpMessagesAsync(GoalsWrapper goalsWrapper, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
-
-        /// <summary>
-        /// Get an instance of a specific goal
-        /// </summary>
-        /// <param name='goalId'>
-        /// The goal identifier.
-        /// </param>
-        /// <param name='customHeaders'>
-        /// The headers that will be added to request.
-        /// </param>
-        /// <param name='cancellationToken'>
-        /// The cancellation token.
-        /// </param>
-        Task<HttpOperationResponse<Goal>> GetGoalByIdWithHttpMessagesAsync(string goalId, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
-
-        /// <summary>
-        /// Delete a goal instance
-        /// </summary>
-        /// <param name='goalId'>
-        /// The identifier of the goal to delete.
-        /// </param>
-        /// <param name='customHeaders'>
-        /// The headers that will be added to request.
-        /// </param>
-        /// <param name='cancellationToken'>
-        /// The cancellation token.
-        /// </param>
-        Task<HttpOperationResponse<object>> DeleteGoalWithHttpMessagesAsync(string goalId, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
-
-        /// <summary>
-        /// Get a collection of the active goals
-        /// </summary>
-        /// <param name='types'>
-        /// The goal types(e.g Steps, CaloriesBurned) filter.
-        /// </param>
-        /// <param name='windowTypes'>
-        /// The goal window types(e.g Daily, Weekly) filter.
-        /// </param>
-        /// <param name='customHeaders'>
-        /// The headers that will be added to request.
-        /// </param>
-        /// <param name='cancellationToken'>
-        /// The cancellation token.
-        /// </param>
-        Task<HttpOperationResponse<GoalsResponse>> GetActiveGoalsWithHttpMessagesAsync(string types = default(string), string windowTypes = default(string), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
-
-        /// <summary>
-        /// Onboard a user
-        /// </summary>
-        /// <param name='onboardingRequest'>
-        /// The meta data associated with an onboarding request
-        /// </param>
-        /// <param name='customHeaders'>
-        /// The headers that will be added to request.
-        /// </param>
-        /// <param name='cancellationToken'>
-        /// The cancellation token.
-        /// </param>
-        Task<HttpOperationResponse<OnboardingResponse>> GenerateInviteCodeWithHttpMessagesAsync(OnboardingRequest onboardingRequest, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
+        ISleeps Sleeps { get; }
 
     }
 }

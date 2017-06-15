@@ -40,7 +40,7 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public ConditionEntry(CodableValue name)
         {
-            this.Name = name;
+            Name = name;
         }
 
         /// <summary>
@@ -60,29 +60,29 @@ namespace Microsoft.HealthVault.ItemTypes
             Validator.ThrowIfNavigatorNull(navigator);
 
             // name
-            this.name = new CodableValue();
-            this.name.ParseXml(navigator.SelectSingleNode("name"));
+            _name = new CodableValue();
+            _name.ParseXml(navigator.SelectSingleNode("name"));
 
             // onset-date
-            this.onsetDate =
+            _onsetDate =
                 XPathHelper.GetOptNavValue<ApproximateDate>(navigator, "onset-date");
 
             // resolution-date
-            this.resolutionDate =
+            _resolutionDate =
                 XPathHelper.GetOptNavValue<ApproximateDate>(navigator, "resolution-date");
 
             // resolution
             if (navigator.SelectSingleNode("resolution") != null)
             {
-                this.resolution = navigator.SelectSingleNode("resolution").Value;
+                _resolution = navigator.SelectSingleNode("resolution").Value;
             }
 
             // occurrence
-            this.occurrence =
+            _occurrence =
                 XPathHelper.GetOptNavValue<CodableValue>(navigator, "occurrence");
 
             // severity
-            this.severity =
+            _severity =
                 XPathHelper.GetOptNavValue<CodableValue>(navigator, "severity");
         }
 
@@ -114,43 +114,43 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             Validator.ThrowIfStringNullOrEmpty(nodeName, "nodeName");
             Validator.ThrowIfWriterNull(writer);
-            Validator.ThrowSerializationIfNull(this.name, Resources.ConditionEntryNameNotSet);
+            Validator.ThrowSerializationIfNull(_name, Resources.ConditionEntryNameNotSet);
 
             // <condition>
             writer.WriteStartElement(nodeName);
 
             // name
-            this.name.WriteXml("name", writer);
+            _name.WriteXml("name", writer);
 
             // onset-date
             XmlWriterHelper.WriteOpt(
                 writer,
                 "onset-date",
-                this.onsetDate);
+                _onsetDate);
 
             // resolution-date
             XmlWriterHelper.WriteOpt(
                 writer,
                 "resolution-date",
-                this.resolutionDate);
+                _resolutionDate);
 
             // resolution
             XmlWriterHelper.WriteOptString(
                 writer,
                 "resolution",
-                this.resolution);
+                _resolution);
 
             // occurrence
             XmlWriterHelper.WriteOpt(
                 writer,
                 "occurrence",
-                this.occurrence);
+                _occurrence);
 
             // severity
             XmlWriterHelper.WriteOpt(
                 writer,
                 "severity",
-                this.severity);
+                _severity);
 
             // </conditon>
             writer.WriteEndElement();
@@ -166,16 +166,16 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public CodableValue Name
         {
-            get { return this.name; }
+            get { return _name; }
 
             set
             {
-                Validator.ThrowIfArgumentNull(value, nameof(this.Name), Resources.ConditionEntryNameMandatory);
-                this.name = value;
+                Validator.ThrowIfArgumentNull(value, nameof(Name), Resources.ConditionEntryNameMandatory);
+                _name = value;
             }
         }
 
-        private CodableValue name;
+        private CodableValue _name;
 
         /// <summary>
         /// Gets or sets the date of onset or the first diagnosis.
@@ -187,11 +187,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public ApproximateDate OnsetDate
         {
-            get { return this.onsetDate; }
-            set { this.onsetDate = value; }
+            get { return _onsetDate; }
+            set { _onsetDate = value; }
         }
 
-        private ApproximateDate onsetDate;
+        private ApproximateDate _onsetDate;
 
         /// <summary>
         /// Gets or sets the date the condition resolved (or for multiple acute
@@ -204,11 +204,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public ApproximateDate ResolutionDate
         {
-            get { return this.resolutionDate; }
-            set { this.resolutionDate = value; }
+            get { return _resolutionDate; }
+            set { _resolutionDate = value; }
         }
 
-        private ApproximateDate resolutionDate;
+        private ApproximateDate _resolutionDate;
 
         /// <summary>
         /// Gets or sets the resolution which is a statement of how the condition
@@ -225,16 +225,16 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public string Resolution
         {
-            get { return this.resolution; }
+            get { return _resolution; }
 
             set
             {
                 Validator.ThrowIfStringIsWhitespace(value, "Resolution");
-                this.resolution = value;
+                _resolution = value;
             }
         }
 
-        private string resolution;
+        private string _resolution;
 
         /// <summary>
         /// Gets or sets the description of how often the condition occurs.
@@ -247,11 +247,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public CodableValue Occurrence
         {
-            get { return this.occurrence; }
-            set { this.occurrence = value; }
+            get { return _occurrence; }
+            set { _occurrence = value; }
         }
 
-        private CodableValue occurrence;
+        private CodableValue _occurrence;
 
         /// <summary>
         /// Gets or sets the severity of a condition.
@@ -263,11 +263,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public CodableValue Severity
         {
-            get { return this.severity; }
-            set { this.severity = value; }
+            get { return _severity; }
+            set { _severity = value; }
         }
 
-        private CodableValue severity;
+        private CodableValue _severity;
 
         /// <summary>
         /// Gets a string of the name or description of the condition item.
@@ -275,7 +275,7 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public override string ToString()
         {
-            return this.name.ToString();
+            return _name.ToString();
         }
     }
 }

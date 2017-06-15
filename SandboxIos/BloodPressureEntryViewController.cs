@@ -1,22 +1,22 @@
+using System;
+using System.Collections.Generic;
 using Foundation;
 using Microsoft.HealthVault.Client;
 using Microsoft.HealthVault.Clients;
 using Microsoft.HealthVault.ItemTypes;
 using Microsoft.HealthVault.Person;
-using System;
-using System.Collections.Generic;
 using UIKit;
 
 namespace SandboxIos
 {
     public partial class BloodPressureEntryViewController : UIViewController, IUITextFieldDelegate
     {
-        private IHealthVaultSodaConnection connection;
+        private IHealthVaultSodaConnection _connection;
 
         public BloodPressureEntryViewController(IHealthVaultSodaConnection connection)
             : base("BloodPressureEntryViewController", null)
         {
-            this.connection = connection;
+            _connection = connection;
         }
 
         public override void DidReceiveMemoryWarning()
@@ -29,20 +29,20 @@ namespace SandboxIos
             base.ViewDidLoad();
 
             // Add a cancel button to the navigation bar
-            this.NavigationItem.SetLeftBarButtonItem(
+            NavigationItem.SetLeftBarButtonItem(
                 new UIBarButtonItem(UIBarButtonSystemItem.Cancel,
                 (sender, args) =>
                 {
-                    this.Dismiss();
+                    Dismiss();
                 }),
                 false);
 
             // Add a save button to the navigation bar
-            this.NavigationItem.SetRightBarButtonItem(
+            NavigationItem.SetRightBarButtonItem(
                 new UIBarButtonItem(UIBarButtonSystemItem.Save,
                 (sender, args) =>
                 {
-                    this.SaveAndCloseAsync();
+                    SaveAndCloseAsync();
                 }),
                 false);
         }
@@ -51,20 +51,20 @@ namespace SandboxIos
         {
             base.ViewWillAppear(animated);
 
-            this.systolicTextField.BecomeFirstResponder();
+            systolicTextField.BecomeFirstResponder();
         }
 
         private async void SaveAndCloseAsync()
         {
-            this.savingView.Hidden = false;
+            savingView.Hidden = false;
 
             int diastolic = 0;
             int systolic = 0;
             int pulse = 0;
 
-            int.TryParse(this.diastolicTextField.Text, out diastolic);
-            int.TryParse(this.systolicTextField.Text, out systolic);
-            int.TryParse(this.pulseTextField.Text, out pulse);
+            int.TryParse(diastolicTextField.Text, out diastolic);
+            int.TryParse(systolicTextField.Text, out systolic);
+            int.TryParse(pulseTextField.Text, out pulse);
 
             BloodPressure bp = new BloodPressure
             {
@@ -74,21 +74,21 @@ namespace SandboxIos
                 When = new HealthServiceDateTime(DateTime.Now)
             };
 
-            IThingClient thingClient = this.connection.CreateThingClient();
-            PersonInfo personInfo = await this.connection.GetPersonInfoAsync();
+            IThingClient thingClient = _connection.CreateThingClient();
+            PersonInfo personInfo = await _connection.GetPersonInfoAsync();
             await thingClient.CreateNewThingsAsync(personInfo.SelectedRecord.Id, new List<BloodPressure>() { bp });
 
-            this.Dismiss();
+            Dismiss();
         }
 
         private void Dismiss()
         {
-            this.View.EndEditing(true);
-            this.DismissViewController(true, null);
+            View.EndEditing(true);
+            DismissViewController(true, null);
         }
 
         [Export("textField:shouldChangeCharactersInRange:replacementString:")]
-        public bool ShouldChangeCharacters(UITextField textField, NSRange range, String text)
+        public bool ShouldChangeCharacters(UITextField textField, NSRange range, string text)
         {
             // Allow Deleting Characters-
             if (text.Length == 0)
@@ -97,6 +97,7 @@ namespace SandboxIos
             }
 
             int n;
+
             // Allow only 3 characters per field, and allow only numbers
             if (range.Location + range.Length >= 3 || !int.TryParse(text, out n))
             {

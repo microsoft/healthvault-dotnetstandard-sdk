@@ -3,7 +3,7 @@
     public class HealthVaultConnectionFactory
     {
         private static readonly object InstanceLock = new object();
-        private static IHealthVaultConnectionFactory current;
+        private static IHealthVaultConnectionFactory s_current;
 
         /// <summary>
         /// Gets the current IHealthVaultConnectionFactory instance.
@@ -14,13 +14,13 @@
             {
                 lock (InstanceLock)
                 {
-                    if (current == null)
+                    if (s_current == null)
                     {
                         ClientIoc.EnsureTypesRegistered();
-                        current = new HealthVaultConnectionFactoryInternal();
+                        s_current = new HealthVaultConnectionFactoryInternal();
                     }
 
-                    return current;
+                    return s_current;
                 }
             }
         }

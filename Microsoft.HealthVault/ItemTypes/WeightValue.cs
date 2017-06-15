@@ -7,7 +7,6 @@ using System;
 using System.Globalization;
 using System.Xml;
 using System.Xml.XPath;
-using Microsoft.HealthVault.Helpers;
 
 namespace Microsoft.HealthVault.ItemTypes
 {
@@ -101,7 +100,7 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         protected override void ParseValueXml(XPathNavigator navigator)
         {
-            this.Value = navigator.SelectSingleNode("kg").ValueAsDouble;
+            Value = navigator.SelectSingleNode("kg").ValueAsDouble;
         }
 
         /// <summary>
@@ -115,7 +114,7 @@ namespace Microsoft.HealthVault.ItemTypes
         protected override void WriteValueXml(XmlWriter writer)
         {
             writer.WriteElementString(
-                "kg", XmlConvert.ToString(this.Value));
+                "kg", XmlConvert.ToString(Value));
         }
 
         /// <summary>
@@ -151,8 +150,8 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public double Kilograms
         {
-            get { return this.Value; }
-            set { this.Value = value; }
+            get { return Value; }
+            set { Value = value; }
         }
 
         /// <summary>

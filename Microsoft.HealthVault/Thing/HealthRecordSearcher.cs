@@ -8,7 +8,6 @@ using System.Collections.ObjectModel;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml;
-using System.Xml.XPath;
 using Microsoft.HealthVault.Exceptions;
 using Microsoft.HealthVault.Helpers;
 using Microsoft.HealthVault.Transport;
@@ -40,7 +39,7 @@ namespace Microsoft.HealthVault.Thing
         internal HealthRecordSearcher(HealthRecordAccessor record)
         {
             Validator.ThrowIfArgumentNull(record, nameof(record), Resources.HealthRecordSearcherCtorArgumentNull);
-            this.Record = record;
+            Record = record;
         }
 
         /// <summary>
@@ -134,7 +133,7 @@ namespace Microsoft.HealthVault.Thing
         ///
         public async Task<string> GetTransformedItems(string transform)
         {
-            return await HealthVaultPlatform.GetTransformedItemsAsync(this.Record.Connection, this.Record, this, transform).ConfigureAwait(false);
+            return await HealthVaultPlatform.GetTransformedItemsAsync(Record.Connection, Record, this, transform).ConfigureAwait(false);
         }
 
         #region helpers
@@ -153,7 +152,7 @@ namespace Microsoft.HealthVault.Thing
         ///
         internal string GetParametersXml()
         {
-            if (this.Filters.Count == 0)
+            if (Filters.Count == 0)
             {
                 HealthServiceResponseError error = new HealthServiceResponseError();
                 error.Message = Resources.HealthRecordSearcherNoFilters;
@@ -170,7 +169,7 @@ namespace Microsoft.HealthVault.Thing
 
             using (XmlWriter writer = XmlWriter.Create(parameters, settings))
             {
-                foreach (ThingQuery filter in this.Filters)
+                foreach (ThingQuery filter in Filters)
                 {
                     // Add all filters
                     filter.AddFilterXml(writer);

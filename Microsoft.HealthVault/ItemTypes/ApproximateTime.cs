@@ -55,8 +55,8 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public ApproximateTime(int hour, int minute)
         {
-            this.Hour = hour;
-            this.Minute = minute;
+            Hour = hour;
+            Minute = minute;
         }
 
         /// <summary>
@@ -86,7 +86,7 @@ namespace Microsoft.HealthVault.ItemTypes
         public ApproximateTime(int hour, int minute, int second)
             : this(hour, minute)
         {
-            this.Second = second;
+            Second = second;
         }
 
         /// <summary>
@@ -121,7 +121,7 @@ namespace Microsoft.HealthVault.ItemTypes
         public ApproximateTime(int hour, int minute, int second, int millisecond)
             : this(hour, minute, second)
         {
-            this.Millisecond = millisecond;
+            Millisecond = millisecond;
         }
 
         /// <summary>
@@ -156,25 +156,25 @@ namespace Microsoft.HealthVault.ItemTypes
             XPathNavigator hourNav = navigator.SelectSingleNode("h");
             if (hourNav != null)
             {
-                this.hour = hourNav.ValueAsInt;
+                _hour = hourNav.ValueAsInt;
             }
 
             XPathNavigator minuteNav = navigator.SelectSingleNode("m");
             if (minuteNav != null)
             {
-                this.minute = minuteNav.ValueAsInt;
+                _minute = minuteNav.ValueAsInt;
             }
 
             XPathNavigator secondNav = navigator.SelectSingleNode("s");
             if (secondNav != null)
             {
-                this.second = secondNav.ValueAsInt;
+                _second = secondNav.ValueAsInt;
             }
 
             XPathNavigator millisecondNav = navigator.SelectSingleNode("f");
             if (millisecondNav != null)
             {
-                this.millisecond = millisecondNav.ValueAsInt;
+                _millisecond = millisecondNav.ValueAsInt;
             }
         }
 
@@ -205,28 +205,28 @@ namespace Microsoft.HealthVault.ItemTypes
 
             // Having hour and minute null really means that we have
             // an unknown approximate time since both are required.
-            if (this.hour != null && this.minute != null)
+            if (_hour != null && _minute != null)
             {
                 writer.WriteStartElement(nodeName);
 
                 writer.WriteElementString(
-                    "h", this.hour.Value.ToString(CultureInfo.InvariantCulture));
+                    "h", _hour.Value.ToString(CultureInfo.InvariantCulture));
 
                 writer.WriteElementString(
-                    "m", this.minute.Value.ToString(CultureInfo.InvariantCulture));
+                    "m", _minute.Value.ToString(CultureInfo.InvariantCulture));
 
-                if (this.second != null)
+                if (_second != null)
                 {
                     writer.WriteElementString(
                         "s",
-                        ((int)this.second).ToString(CultureInfo.InvariantCulture));
+                        ((int)_second).ToString(CultureInfo.InvariantCulture));
                 }
 
-                if (this.millisecond != null)
+                if (_millisecond != null)
                 {
                     writer.WriteElementString(
                         "f",
-                        ((int)this.millisecond).ToString(
+                        ((int)_millisecond).ToString(
                             CultureInfo.InvariantCulture));
                 }
 
@@ -255,21 +255,21 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             get
             {
-                return this.hour != null ? this.hour.Value : 0;
+                return _hour != null ? _hour.Value : 0;
             }
 
             set
             {
                 if (value < 0 || value > 23)
                 {
-                    throw new ArgumentOutOfRangeException(nameof(this.Hour), Resources.TimeHoursOutOfRange);
+                    throw new ArgumentOutOfRangeException(nameof(Hour), Resources.TimeHoursOutOfRange);
                 }
 
-                this.hour = value;
+                _hour = value;
             }
         }
 
-        private int? hour;
+        private int? _hour;
 
         /// <summary>
         /// Gets or sets the minute of the time approximation.
@@ -292,21 +292,21 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             get
             {
-                return this.minute != null ? this.minute.Value : 0;
+                return _minute != null ? _minute.Value : 0;
             }
 
             set
             {
                 if (value < 0 || value > 59)
                 {
-                    throw new ArgumentOutOfRangeException(nameof(this.Minute), Resources.TimeMinutesOutOfRange);
+                    throw new ArgumentOutOfRangeException(nameof(Minute), Resources.TimeMinutesOutOfRange);
                 }
 
-                this.minute = value;
+                _minute = value;
             }
         }
 
-        private int? minute;
+        private int? _minute;
 
         /// <summary>
         /// Gets or sets the seconds of the time approximation.
@@ -328,7 +328,7 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public int? Second
         {
-            get { return this.second; }
+            get { return _second; }
 
             set
             {
@@ -336,15 +336,15 @@ namespace Microsoft.HealthVault.ItemTypes
                 {
                     if (value < 0 || value > 59)
                     {
-                        throw new ArgumentOutOfRangeException(nameof(this.Second), Resources.TimeSecondsOutOfRange);
+                        throw new ArgumentOutOfRangeException(nameof(Second), Resources.TimeSecondsOutOfRange);
                     }
                 }
 
-                this.second = value;
+                _second = value;
             }
         }
 
-        private int? second;
+        private int? _second;
 
         /// <summary>
         /// Gets or sets the milliseconds of the time approximation.
@@ -366,7 +366,7 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public int? Millisecond
         {
-            get { return this.millisecond; }
+            get { return _millisecond; }
 
             set
             {
@@ -376,15 +376,15 @@ namespace Microsoft.HealthVault.ItemTypes
                 {
                     if (value < 0 || value > 999)
                     {
-                        throw new ArgumentOutOfRangeException(nameof(this.Millisecond), Resources.TimeMillisecondsOutOfRange);
+                        throw new ArgumentOutOfRangeException(nameof(Millisecond), Resources.TimeMillisecondsOutOfRange);
                     }
                 }
 
-                this.millisecond = value;
+                _millisecond = value;
             }
         }
 
-        private int? millisecond;
+        private int? _millisecond;
 
         /// <summary>
         /// Gets a boolean indicating whether this ApproximateTime has a value in it.
@@ -401,7 +401,7 @@ namespace Microsoft.HealthVault.ItemTypes
         /// have been set to zero (ie 12:00 AM).
         /// </remarks>
         ///
-        public bool HasValue => this.hour.HasValue && this.minute.HasValue;
+        public bool HasValue => _hour.HasValue && _minute.HasValue;
 
         #region IComparable
 
@@ -448,8 +448,57 @@ namespace Microsoft.HealthVault.ItemTypes
                 throw new ArgumentException(Resources.TimeCompareToInvalidType, nameof(obj));
             }
 
-            return this.CompareTo(hsTime);
+            return CompareTo(hsTime);
         }
+
+        /// <summary>
+        /// Compares the specified object to this <see cref="DateTime"/> object.
+        /// </summary>
+        ///
+        /// <param name="other">
+        /// The time to be compared.
+        /// </param>
+        ///
+        /// <returns>
+        /// A 32-bit signed integer that indicates the relative order of the
+        /// objects being compared. If the result is less than zero, the
+        /// instance is less than <paramref name="other"/>. If the result is zero,
+        /// the instance is equal to <paramref name="other"/>. If the result is
+        /// greater than zero, the instance is greater than
+        /// <paramref name="other"/>.
+        /// </returns>
+        public int CompareTo(DateTime other)
+        {
+            if (Hour > other.Hour)
+            {
+                return 1;
+            }
+
+            if (Hour < other.Hour)
+            {
+                return -1;
+            }
+
+            if (Minute > other.Minute)
+            {
+                return 1;
+            }
+
+            if (Minute < other.Minute)
+            {
+                return -1;
+            }
+
+            int result = ApproximateTime.CompareOptional(Second, other.Second);
+
+            if (result != 0)
+            {
+                return result;
+            }
+
+            return ApproximateTime.CompareOptional(Millisecond, other.Millisecond);
+        }
+
 
         /// <summary>
         /// Compares the specified object to this ApproximateDate object.
@@ -480,33 +529,33 @@ namespace Microsoft.HealthVault.ItemTypes
                 return 1;
             }
 
-            if (this.Hour > other.Hour)
+            if (Hour > other.Hour)
             {
                 return 1;
             }
 
-            if (this.Hour < other.Hour)
+            if (Hour < other.Hour)
             {
                 return -1;
             }
 
-            if (this.Minute > other.Minute)
+            if (Minute > other.Minute)
             {
                 return 1;
             }
 
-            if (this.Minute < other.Minute)
+            if (Minute < other.Minute)
             {
                 return -1;
             }
 
-            result = CompareOptional(this.Second, other.Second);
+            result = CompareOptional(Second, other.Second);
             if (result != 0)
             {
                 return result;
             }
 
-            return CompareOptional(this.Millisecond, other.Millisecond);
+            return CompareOptional(Millisecond, other.Millisecond);
         }
 
         internal static int CompareOptional(int? first, int? second)
@@ -570,7 +619,7 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public override bool Equals(object obj)
         {
-            return this.CompareTo(obj) == 0;
+            return CompareTo(obj) == 0;
         }
 
         /// <summary>
@@ -743,7 +792,7 @@ namespace Microsoft.HealthVault.ItemTypes
         internal string ToString(IFormatProvider formatProvider)
         {
             // If the default constructor is called, _hour is null, so we return empty.
-            if (this.hour == null)
+            if (_hour == null)
             {
                 return string.Empty;
             }
@@ -754,17 +803,17 @@ namespace Microsoft.HealthVault.ItemTypes
             string format = formatInfo.LongTimePattern;
 
             DateTime dt = new DateTime(1900, 1, 1);
-            dt = dt.AddHours(this.Hour);
-            dt = dt.AddMinutes(this.Minute);
+            dt = dt.AddHours(Hour);
+            dt = dt.AddMinutes(Minute);
 
-            if (this.Second != null)
+            if (Second != null)
             {
-                dt = dt.AddSeconds(this.Second.Value);
+                dt = dt.AddSeconds(Second.Value);
             }
 
-            if (this.Millisecond != null)
+            if (Millisecond != null)
             {
-                dt = dt.AddMilliseconds(this.Millisecond.Value);
+                dt = dt.AddMilliseconds(Millisecond.Value);
 
                 NumberFormatInfo numberFormatInfo =
                     (NumberFormatInfo)formatProvider.GetFormat(typeof(NumberFormatInfo));

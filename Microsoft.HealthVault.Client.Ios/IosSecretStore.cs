@@ -1,17 +1,17 @@
-﻿using Foundation;
-using System;
-using System.Threading.Tasks;
-using Security;
-using System.Threading;
+﻿using System;
 using System.IO;
+using System.Threading.Tasks;
+using Foundation;
+using Microsoft.HealthVault.Client.Core;
+using Security;
 
 namespace Microsoft.HealthVault.Client
 {
     internal class IosSecretStore : NSObject, ISecretStore
     {
         public IosSecretStore() :
-            base ()
-        {}
+            base()
+        { }
 
         public Task DeleteAsync(string key)
         {
@@ -20,7 +20,7 @@ namespace Microsoft.HealthVault.Client
                 throw new ArgumentException(Resources.ObjectStoreParametersEmpty);
             }
 
-            SecStatusCode status = SecKeyChain.Remove(this.NewSecRecordForKey(key));
+            SecStatusCode status = SecKeyChain.Remove(NewSecRecordForKey(key));
 
             if (status != SecStatusCode.Success && status != SecStatusCode.ItemNotFound)
             {
@@ -37,11 +37,11 @@ namespace Microsoft.HealthVault.Client
                 throw new ArgumentException(Resources.ObjectStoreParametersEmpty);
             }
 
-            SecRecord record = this.ExistingSecRecordForKey(key);
+            SecRecord record = ExistingSecRecordForKey(key);
 
             if (record != null)
             {
-                return Task.FromResult(this.ExistingSecRecordForKey(key).ValueData.ToString());
+                return Task.FromResult(ExistingSecRecordForKey(key).ValueData.ToString());
             }
 
             return Task.FromResult<string>(null);
@@ -58,9 +58,9 @@ namespace Microsoft.HealthVault.Client
 
             try
             {
-                SecRecord record = this.ExistingSecRecordForKey(key);
+                SecRecord record = ExistingSecRecordForKey(key);
 
-                SecRecord newRecord = this.NewSecRecordForKey(key);
+                SecRecord newRecord = NewSecRecordForKey(key);
 
                 if (record == null)
                 {
@@ -99,14 +99,14 @@ namespace Microsoft.HealthVault.Client
                 Generic = NSData.FromString(key),
                 Account = key,
                 Accessible = SecAccessible.AfterFirstUnlockThisDeviceOnly
-            }; 
+            };
         }
 
         private SecRecord ExistingSecRecordForKey(string key)
         {
             SecStatusCode status;
 
-            SecRecord record = SecKeyChain.QueryAsRecord(this.NewSecRecordForKey(key), out status);
+            SecRecord record = SecKeyChain.QueryAsRecord(NewSecRecordForKey(key), out status);
 
             if (status == SecStatusCode.Success)
             {

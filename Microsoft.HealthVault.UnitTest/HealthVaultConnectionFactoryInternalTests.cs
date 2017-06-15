@@ -3,7 +3,6 @@ using Grace.DependencyInjection;
 using Microsoft.HealthVault.Client;
 using Microsoft.HealthVault.Configuration;
 using Microsoft.HealthVault.Connection;
-using Microsoft.HealthVault.Extensions;
 using Microsoft.HealthVault.Transport;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NSubstitute;

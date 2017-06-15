@@ -2,11 +2,16 @@
 // Changes may cause incorrect behavior and will be lost if the code is
 // regenerated.
 
-using System.Collections.Generic;
-using Newtonsoft.Json;
-
 namespace Microsoft.HealthVault.RestApi.Generated.Models
 {
+    using Microsoft.HealthVault;
+    using Microsoft.HealthVault.RestApi;
+    using Microsoft.HealthVault.RestApi.Generated;
+    using Newtonsoft.Json;
+    using System.Collections;
+    using System.Collections.Generic;
+    using System.Linq;
+
     /// <summary>
     /// The tracking policy to apply to the Action Plan Task
     /// </summary>
@@ -17,7 +22,7 @@ namespace Microsoft.HealthVault.RestApi.Generated.Models
         /// </summary>
         public ActionPlanTrackingPolicy()
         {
-          this.CustomInit();
+          CustomInit();
         }
 
         /// <summary>
@@ -31,10 +36,10 @@ namespace Microsoft.HealthVault.RestApi.Generated.Models
         /// against</param>
         public ActionPlanTrackingPolicy(bool? isAutoTrackable = default(bool?), ActionPlanTaskOccurrenceMetrics occurrenceMetrics = default(ActionPlanTaskOccurrenceMetrics), IList<ActionPlanTaskTargetEvent> targetEvents = default(IList<ActionPlanTaskTargetEvent>))
         {
-            this.IsAutoTrackable = isAutoTrackable;
-            this.OccurrenceMetrics = occurrenceMetrics;
-            this.TargetEvents = targetEvents;
-            this.CustomInit();
+            IsAutoTrackable = isAutoTrackable;
+            OccurrenceMetrics = occurrenceMetrics;
+            TargetEvents = targetEvents;
+            CustomInit();
         }
 
         /// <summary>

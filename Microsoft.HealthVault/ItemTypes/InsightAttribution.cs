@@ -31,7 +31,7 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public InsightAttribution(string name)
         {
-            this.Name = name;
+            Name = name;
         }
 
         /// <summary>
@@ -50,9 +50,9 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             Validator.ThrowIfNavigatorNull(navigator);
 
-            this.name = navigator.SelectSingleNode("name").Value;
+            _name = navigator.SelectSingleNode("name").Value;
 
-            this.attributionRequired = XPathHelper.GetOptNavValueAsBool(navigator, "attribution-required");
+            _attributionRequired = XPathHelper.GetOptNavValueAsBool(navigator, "attribution-required");
         }
 
         /// <summary>
@@ -79,15 +79,15 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             Validator.ThrowIfStringNullOrEmpty(nodeName, "nodeName");
             Validator.ThrowIfWriterNull(writer);
-            Validator.ThrowSerializationIfNull(this.name, Resources.InsightAttributionNameNullValue);
+            Validator.ThrowSerializationIfNull(_name, Resources.InsightAttributionNameNullValue);
 
             writer.WriteStartElement(nodeName);
 
             // <name>
-            writer.WriteElementString("name", this.name);
+            writer.WriteElementString("name", _name);
 
             // <attribution-required>
-            XmlWriterHelper.WriteOptBool(writer, "attribution-required", this.attributionRequired);
+            XmlWriterHelper.WriteOptBool(writer, "attribution-required", _attributionRequired);
 
             writer.WriteEndElement();
         }
@@ -102,7 +102,7 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public override string ToString()
         {
-            return this.name;
+            return _name;
         }
 
         /// <summary>
@@ -117,18 +117,18 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             get
             {
-                return this.name;
+                return _name;
             }
 
             set
             {
-                Validator.ThrowIfArgumentNull(value, nameof(this.Name), Resources.InsightAttributionNameNullValue);
+                Validator.ThrowIfArgumentNull(value, nameof(Name), Resources.InsightAttributionNameNullValue);
                 Validator.ThrowIfStringIsEmptyOrWhitespace(value, "Name");
-                this.name = value;
+                _name = value;
             }
         }
 
-        private string name;
+        private string _name;
 
         /// <summary>
         /// Gets or sets attribution required boolean value.
@@ -138,15 +138,15 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             get
             {
-                return this.attributionRequired;
+                return _attributionRequired;
             }
 
             set
             {
-                this.attributionRequired = value;
+                _attributionRequired = value;
             }
         }
 
-        private bool? attributionRequired;
+        private bool? _attributionRequired;
     }
 }

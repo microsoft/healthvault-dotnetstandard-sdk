@@ -13,7 +13,6 @@ namespace Microsoft.HealthVault.Exceptions
     /// <see cref="HealthServiceStatusCode.InvalidApplicationAuthorization"/>.
     /// </summary>
     ///
-    [Serializable]
     public sealed class HealthServiceInvalidApplicationAuthorizationException
         : HealthServiceException
     {

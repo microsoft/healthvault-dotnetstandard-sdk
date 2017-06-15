@@ -60,7 +60,7 @@ namespace Microsoft.HealthVault.ItemTypes
         public CarePlan(string name)
         : base(TypeId)
         {
-            this.Name = name;
+            Name = name;
         }
 
         /// <summary>
@@ -100,16 +100,16 @@ namespace Microsoft.HealthVault.ItemTypes
 
             Validator.ThrowInvalidIfNull(itemNav, Resources.CarePlanUnexpectedNode);
 
-            this.name = itemNav.SelectSingleNode("name").Value;
-            this.startDate = XPathHelper.GetOptNavValue<ApproximateDateTime>(itemNav, "start-date");
-            this.endDate = XPathHelper.GetOptNavValue<ApproximateDateTime>(itemNav, "end-date");
-            this.status = XPathHelper.GetOptNavValue<CodableValue>(itemNav, "status");
-            this.carePlanManager = XPathHelper.GetOptNavValue<PersonItem>(itemNav, "care-plan-manager");
+            _name = itemNav.SelectSingleNode("name").Value;
+            _startDate = XPathHelper.GetOptNavValue<ApproximateDateTime>(itemNav, "start-date");
+            _endDate = XPathHelper.GetOptNavValue<ApproximateDateTime>(itemNav, "end-date");
+            _status = XPathHelper.GetOptNavValue<CodableValue>(itemNav, "status");
+            _carePlanManager = XPathHelper.GetOptNavValue<PersonItem>(itemNav, "care-plan-manager");
 
             // collections
-            this.careTeam = XPathHelper.ParseXmlCollection<PersonItem>(itemNav, "care-team/person");
-            this.tasks = XPathHelper.ParseXmlCollection<CarePlanTask>(itemNav, "tasks/task");
-            this.goalGroups = XPathHelper.ParseXmlCollection<CarePlanGoalGroup>(itemNav, "goal-groups/goal-group");
+            _careTeam = XPathHelper.ParseXmlCollection<PersonItem>(itemNav, "care-team/person");
+            _tasks = XPathHelper.ParseXmlCollection<CarePlanTask>(itemNav, "tasks/task");
+            _goalGroups = XPathHelper.ParseXmlCollection<CarePlanGoalGroup>(itemNav, "goal-groups/goal-group");
         }
 
         /// <summary>
@@ -134,23 +134,23 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             Validator.ThrowIfArgumentNull(writer, nameof(writer), Resources.WriteXmlNullWriter);
 
-            if (string.IsNullOrEmpty(this.name) || string.IsNullOrEmpty(this.name.Trim()))
+            if (string.IsNullOrEmpty(_name) || string.IsNullOrEmpty(_name.Trim()))
             {
                 throw new ThingSerializationException(Resources.CarePlanNameNullOrEmpty);
             }
 
             writer.WriteStartElement("care-plan");
             {
-                writer.WriteElementString("name", this.name);
-                XmlWriterHelper.WriteOpt(writer, "start-date", this.startDate);
-                XmlWriterHelper.WriteOpt(writer, "end-date", this.endDate);
-                XmlWriterHelper.WriteOpt(writer, "status", this.status);
+                writer.WriteElementString("name", _name);
+                XmlWriterHelper.WriteOpt(writer, "start-date", _startDate);
+                XmlWriterHelper.WriteOpt(writer, "end-date", _endDate);
+                XmlWriterHelper.WriteOpt(writer, "status", _status);
 
-                XmlWriterHelper.WriteXmlCollection(writer, "care-team", this.careTeam, "person");
+                XmlWriterHelper.WriteXmlCollection(writer, "care-team", _careTeam, "person");
 
-                XmlWriterHelper.WriteOpt(writer, "care-plan-manager", this.carePlanManager);
-                XmlWriterHelper.WriteXmlCollection(writer, "tasks", this.tasks, "task");
-                XmlWriterHelper.WriteXmlCollection(writer, "goal-groups", this.goalGroups, "goal-group");
+                XmlWriterHelper.WriteOpt(writer, "care-plan-manager", _carePlanManager);
+                XmlWriterHelper.WriteXmlCollection(writer, "tasks", _tasks, "task");
+                XmlWriterHelper.WriteXmlCollection(writer, "goal-groups", _goalGroups, "goal-group");
             }
 
             writer.WriteEndElement();
@@ -176,7 +176,7 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             get
             {
-                return this.name;
+                return _name;
             }
 
             set
@@ -185,11 +185,11 @@ namespace Microsoft.HealthVault.ItemTypes
                 Validator.ThrowIfStringNullOrEmpty(value, "Name");
                 Validator.ThrowIfStringIsEmptyOrWhitespace(value, "Name");
 
-                this.name = value;
+                _name = value;
             }
         }
 
-        private string name;
+        private string _name;
 
         /// <summary>
         /// Gets or sets start date of the care plan.
@@ -203,16 +203,16 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             get
             {
-                return this.startDate;
+                return _startDate;
             }
 
             set
             {
-                this.startDate = value;
+                _startDate = value;
             }
         }
 
-        private ApproximateDateTime startDate;
+        private ApproximateDateTime _startDate;
 
         /// <summary>
         /// Gets or sets end date of the care plan.
@@ -226,16 +226,16 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             get
             {
-                return this.endDate;
+                return _endDate;
             }
 
             set
             {
-                this.endDate = value;
+                _endDate = value;
             }
         }
 
-        private ApproximateDateTime endDate;
+        private ApproximateDateTime _endDate;
 
         /// <summary>
         /// Gets or sets status of the care plan.
@@ -250,24 +250,24 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             get
             {
-                return this.status;
+                return _status;
             }
 
             set
             {
-                this.status = value;
+                _status = value;
             }
         }
 
-        private CodableValue status;
+        private CodableValue _status;
 
         /// <summary>
         /// Gets or sets list of person contacts associated with the care plan.
         /// </summary>
         ///
-        public Collection<PersonItem> CareTeam => this.careTeam;
+        public Collection<PersonItem> CareTeam => _careTeam;
 
-        private Collection<PersonItem> careTeam =
+        private Collection<PersonItem> _careTeam =
             new Collection<PersonItem>();
 
         /// <summary>
@@ -282,33 +282,33 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             get
             {
-                return this.carePlanManager;
+                return _carePlanManager;
             }
 
             set
             {
-                this.carePlanManager = value;
+                _carePlanManager = value;
             }
         }
 
-        private PersonItem carePlanManager;
+        private PersonItem _carePlanManager;
 
         /// <summary>
         /// Gets or sets list of tasks associated with the care plan.
         /// </summary>
         ///
-        public Collection<CarePlanTask> Tasks => this.tasks;
+        public Collection<CarePlanTask> Tasks => _tasks;
 
-        private Collection<CarePlanTask> tasks =
+        private Collection<CarePlanTask> _tasks =
             new Collection<CarePlanTask>();
 
         /// <summary>
         /// Gets or sets list of goals associated with the care plan.
         /// </summary>
         ///
-        public Collection<CarePlanGoalGroup> GoalGroups => this.goalGroups;
+        public Collection<CarePlanGoalGroup> GoalGroups => _goalGroups;
 
-        private Collection<CarePlanGoalGroup> goalGroups =
+        private Collection<CarePlanGoalGroup> _goalGroups =
             new Collection<CarePlanGoalGroup>();
 
         /// <summary>
@@ -321,16 +321,16 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public override string ToString()
         {
-            if (this.status == null)
+            if (_status == null)
             {
-                return this.name;
+                return _name;
             }
 
             return string.Format(
                 CultureInfo.CurrentUICulture,
                 Resources.CarePlanFormat,
-                this.name,
-                this.status);
+                _name,
+                _status);
         }
     }
 }

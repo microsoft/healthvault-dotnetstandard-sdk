@@ -13,7 +13,6 @@ namespace Microsoft.HealthVault.Exceptions
     /// the thing is missing.
     /// </summary>
     ///
-    [Serializable]
     public class ThingSerializationException : HealthVaultException
     {
         /// <summary>

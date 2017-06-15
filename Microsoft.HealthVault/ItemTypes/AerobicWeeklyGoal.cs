@@ -61,8 +61,8 @@ namespace Microsoft.HealthVault.ItemTypes
         public AerobicWeeklyGoal(AerobicBase session, int recurrence)
             : base(TypeId)
         {
-            this.AerobicSession = session;
-            this.Recurrence = recurrence;
+            AerobicSession = session;
+            Recurrence = recurrence;
         }
 
         /// <summary>
@@ -97,10 +97,10 @@ namespace Microsoft.HealthVault.ItemTypes
 
             Validator.ThrowInvalidIfNull(aerobicWeeklyNav, Resources.AerobicWeeklyUnexpectedNode);
 
-            this.session = new AerobicBase();
-            this.session.ParseXml(aerobicWeeklyNav.SelectSingleNode("session"));
+            _session = new AerobicBase();
+            _session.ParseXml(aerobicWeeklyNav.SelectSingleNode("session"));
 
-            this.recurrence =
+            _recurrence =
                 aerobicWeeklyNav.SelectSingleNode("recurrence").ValueAsInt;
         }
 
@@ -123,18 +123,18 @@ namespace Microsoft.HealthVault.ItemTypes
         public override void WriteXml(XmlWriter writer)
         {
             Validator.ThrowIfArgumentNull(writer, nameof(writer), Resources.WriteXmlNullWriter);
-            Validator.ThrowSerializationIfNull(this.session, Resources.AerobicWeeklySessionNotSet);
+            Validator.ThrowSerializationIfNull(_session, Resources.AerobicWeeklySessionNotSet);
 
             // <aerobic-weekly>
             writer.WriteStartElement("aerobic-weekly");
 
             // <session>
-            this.session.WriteXml("session", writer);
+            _session.WriteXml("session", writer);
 
             // <recurrence>
             writer.WriteElementString(
                 "recurrence",
-                this.recurrence.ToString(CultureInfo.InvariantCulture));
+                _recurrence.ToString(CultureInfo.InvariantCulture));
 
             // </aerobic-weekly>
             writer.WriteEndElement();
@@ -155,16 +155,16 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public AerobicBase AerobicSession
         {
-            get { return this.session; }
+            get { return _session; }
 
             set
             {
-                Validator.ThrowIfArgumentNull(value, nameof(this.AerobicSession), Resources.AerobicWeeklySessionNull);
-                this.session = value;
+                Validator.ThrowIfArgumentNull(value, nameof(AerobicSession), Resources.AerobicWeeklySessionNull);
+                _session = value;
             }
         }
 
-        private AerobicBase session = new AerobicBase();
+        private AerobicBase _session = new AerobicBase();
 
         /// <summary>
         /// Gets or sets the number of sessions per week required to meet
@@ -186,20 +186,20 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public int Recurrence
         {
-            get { return this.recurrence; }
+            get { return _recurrence; }
 
             set
             {
                 if (value <= 0)
                 {
-                    throw new ArgumentOutOfRangeException(nameof(this.Recurrence), Resources.AerobicWeeklyRecurrenceNotPositive);
+                    throw new ArgumentOutOfRangeException(nameof(Recurrence), Resources.AerobicWeeklyRecurrenceNotPositive);
                 }
 
-                this.recurrence = value;
+                _recurrence = value;
             }
         }
 
-        private int recurrence = 3;
+        private int _recurrence = 3;
 
         /// <summary>
         /// Gets a string representation of the aerobic weekly goal item.
@@ -213,8 +213,8 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             return string.Format(
                 Resources.AerobicWeeklyGoalToStringFormat,
-                this.AerobicSession.ToString(),
-                this.Recurrence);
+                AerobicSession.ToString(),
+                Recurrence);
         }
     }
 }

@@ -20,7 +20,7 @@ namespace Microsoft.HealthVault.Record
         /// </summary>
         public HealthRecordPermissions()
         {
-            this.ItemTypePermissions = new Collection<ThingTypePermission>();
+            ItemTypePermissions = new Collection<ThingTypePermission>();
         }
 
         /// <summary>

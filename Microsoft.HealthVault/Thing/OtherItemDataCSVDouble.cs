@@ -16,7 +16,7 @@ namespace Microsoft.HealthVault.Thing
         /// <param name="value">The value to store in the instance.</param>
         internal OtherItemDataCsvDouble(double value)
         {
-            this.Value = value;
+            Value = value;
         }
 
         /// <summary>

@@ -51,7 +51,7 @@ namespace Microsoft.HealthVault.ItemTypes
         public Payer(string planName)
             : base(TypeId)
         {
-            this.PlanName = planName;
+            PlanName = planName;
         }
 
         /// <summary>
@@ -81,82 +81,82 @@ namespace Microsoft.HealthVault.ItemTypes
 
             Validator.ThrowInvalidIfNull(payerNav, Resources.PayerUnexpectedNode);
 
-            this.planName = payerNav.SelectSingleNode("plan-name").Value;
+            _planName = payerNav.SelectSingleNode("plan-name").Value;
 
-            this.coverageType =
+            _coverageType =
                 XPathHelper.GetOptNavValue<CodableValue>(payerNav, "coverage-type");
 
             XPathNavigator carrierIdNav =
                 payerNav.SelectSingleNode("carrier-id");
             if (carrierIdNav != null)
             {
-                this.carrierId = carrierIdNav.Value;
+                _carrierId = carrierIdNav.Value;
             }
 
             XPathNavigator groupNumNav =
                 payerNav.SelectSingleNode("group-num");
             if (groupNumNav != null)
             {
-                this.groupNumber = groupNumNav.Value;
+                _groupNumber = groupNumNav.Value;
             }
 
             XPathNavigator planCodeNav =
                 payerNav.SelectSingleNode("plan-code");
             if (planCodeNav != null)
             {
-                this.planCode = planCodeNav.Value;
+                _planCode = planCodeNav.Value;
             }
 
             XPathNavigator subscriberIdNav =
                 payerNav.SelectSingleNode("subscriber-id");
             if (subscriberIdNav != null)
             {
-                this.subscriberId = subscriberIdNav.Value;
+                _subscriberId = subscriberIdNav.Value;
             }
 
             XPathNavigator personCodeNav =
                 payerNav.SelectSingleNode("person-code");
             if (personCodeNav != null)
             {
-                this.personCode = personCodeNav.Value;
+                _personCode = personCodeNav.Value;
             }
 
             XPathNavigator subscriberNameNav =
                 payerNav.SelectSingleNode("subscriber-name");
             if (subscriberNameNav != null)
             {
-                this.subscriberName = subscriberNameNav.Value;
+                _subscriberName = subscriberNameNav.Value;
             }
 
             XPathNavigator subscriberDobNav =
                 payerNav.SelectSingleNode("subscriber-dob");
             if (subscriberDobNav != null)
             {
-                this.subscriberDateOfBirth = new HealthServiceDateTime();
-                this.subscriberDateOfBirth.ParseXml(subscriberDobNav);
+                _subscriberDateOfBirth = new HealthServiceDateTime();
+                _subscriberDateOfBirth.ParseXml(subscriberDobNav);
             }
 
             XPathNavigator isPrimaryNav =
                 payerNav.SelectSingleNode("is-primary");
             if (isPrimaryNav != null)
             {
-                this.isPrimary = isPrimaryNav.ValueAsBoolean;
+                _isPrimary = isPrimaryNav.ValueAsBoolean;
             }
 
             XPathNavigator expirationDateNav =
                 payerNav.SelectSingleNode("expiration-date");
             if (expirationDateNav != null)
             {
-                this.expirationDate = new HealthServiceDateTime();
-                this.expirationDate.ParseXml(expirationDateNav);
+                _expirationDate = new HealthServiceDateTime();
+                _expirationDate.ParseXml(expirationDateNav);
             }
 
             XPathNavigator contactNav =
                 payerNav.SelectSingleNode("contact");
             if (contactNav != null)
             {
-                this.contact = new ContactInfo();
-                this.contact.ParseXml(contactNav);
+                _contact = new ContactInfo();
+                _contact.ParseXml(contactNav);
             }
         }
 
@@ -179,69 +179,69 @@ namespace Microsoft.HealthVault.ItemTypes
         public override void WriteXml(XmlWriter writer)
         {
             Validator.ThrowIfWriterNull(writer);
-            Validator.ThrowSerializationIfNull(this.planName, Resources.PayerPlanNameNotSet);
+            Validator.ThrowSerializationIfNull(_planName, Resources.PayerPlanNameNotSet);
 
             // <payer>
             writer.WriteStartElement("payer");
 
-            writer.WriteElementString("plan-name", this.planName);
+            writer.WriteElementString("plan-name", _planName);
 
             // <coverage-type>
             XmlWriterHelper.WriteOpt(
                 writer,
                 "coverage-type",
-                this.coverageType);
+                _coverageType);
 
-            if (!string.IsNullOrEmpty(this.carrierId))
+            if (!string.IsNullOrEmpty(_carrierId))
             {
-                writer.WriteElementString("carrier-id", this.carrierId);
+                writer.WriteElementString("carrier-id", _carrierId);
             }
 
-            if (!string.IsNullOrEmpty(this.groupNumber))
+            if (!string.IsNullOrEmpty(_groupNumber))
             {
-                writer.WriteElementString("group-num", this.groupNumber);
+                writer.WriteElementString("group-num", _groupNumber);
             }
 
-            if (!string.IsNullOrEmpty(this.planCode))
+            if (!string.IsNullOrEmpty(_planCode))
             {
-                writer.WriteElementString("plan-code", this.planCode);
+                writer.WriteElementString("plan-code", _planCode);
             }
 
-            if (!string.IsNullOrEmpty(this.subscriberId))
+            if (!string.IsNullOrEmpty(_subscriberId))
             {
-                writer.WriteElementString("subscriber-id", this.subscriberId);
+                writer.WriteElementString("subscriber-id", _subscriberId);
             }
 
-            if (!string.IsNullOrEmpty(this.personCode))
+            if (!string.IsNullOrEmpty(_personCode))
             {
-                writer.WriteElementString("person-code", this.personCode);
+                writer.WriteElementString("person-code", _personCode);
             }
 
-            if (!string.IsNullOrEmpty(this.subscriberName))
+            if (!string.IsNullOrEmpty(_subscriberName))
             {
-                writer.WriteElementString("subscriber-name", this.subscriberName);
+                writer.WriteElementString("subscriber-name", _subscriberName);
             }
 
-            if (this.subscriberDateOfBirth != null)
+            if (_subscriberDateOfBirth != null)
             {
-                this.subscriberDateOfBirth.WriteXml("subscriber-dob", writer);
+                _subscriberDateOfBirth.WriteXml("subscriber-dob", writer);
             }
 
-            if (this.isPrimary != null)
+            if (_isPrimary != null)
             {
                 writer.WriteElementString(
                     "is-primary",
-                    SDKHelper.XmlFromBool((bool)this.isPrimary));
+                    SDKHelper.XmlFromBool((bool)_isPrimary));
             }
 
-            if (this.expirationDate != null)
+            if (_expirationDate != null)
             {
-                this.expirationDate.WriteXml("expiration-date", writer);
+                _expirationDate.WriteXml("expiration-date", writer);
             }
 
-            if (this.contact != null)
+            if (_contact != null)
             {
-                this.contact.WriteXml("contact", writer);
+                _contact.WriteXml("contact", writer);
             }
 
             // </payer>
@@ -263,17 +263,17 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public string PlanName
         {
-            get { return this.planName; }
+            get { return _planName; }
 
             set
             {
                 Validator.ThrowIfStringNullOrEmpty(value, "PlanName");
                 Validator.ThrowIfStringIsWhitespace(value, "PlanName");
-                this.planName = value;
+                _planName = value;
             }
         }
 
-        private string planName;
+        private string _planName;
 
         /// <summary>
         /// Gets or sets the coverage type, such as medical, dental, and so on.
@@ -289,11 +289,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public CodableValue CoverageType
         {
-            get { return this.coverageType; }
-            set { this.coverageType = value; }
+            get { return _coverageType; }
+            set { _coverageType = value; }
         }
 
-        private CodableValue coverageType;
+        private CodableValue _coverageType;
 
         /// <summary>
         /// Gets or sets the carrier identifier.
@@ -312,16 +312,16 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public string CarrierId
         {
-            get { return this.carrierId; }
+            get { return _carrierId; }
 
             set
             {
                 Validator.ThrowIfStringIsWhitespace(value, "CarrierId");
-                this.carrierId = value;
+                _carrierId = value;
             }
         }
 
-        private string carrierId;
+        private string _carrierId;
 
         /// <summary>
         /// Gets or sets the group number.
@@ -341,16 +341,16 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public string GroupNumber
         {
-            get { return this.groupNumber; }
+            get { return _groupNumber; }
 
             set
             {
                 Validator.ThrowIfStringIsWhitespace(value, "GroupNumber");
-                this.groupNumber = value;
+                _groupNumber = value;
             }
         }
 
-        private string groupNumber;
+        private string _groupNumber;
 
         /// <summary>
         /// Gets or sets the plan code.
@@ -370,16 +370,16 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public string PlanCode
         {
-            get { return this.planCode; }
+            get { return _planCode; }
 
             set
             {
                 Validator.ThrowIfStringIsWhitespace(value, "PlanCode");
-                this.planCode = value;
+                _planCode = value;
             }
         }
 
-        private string planCode;
+        private string _planCode;
 
         /// <summary>
         /// Gets or sets the subscriber identifier.
@@ -400,16 +400,16 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public string SubscriberId
         {
-            get { return this.subscriberId; }
+            get { return _subscriberId; }
 
             set
             {
                 Validator.ThrowIfStringIsWhitespace(value, "SubscriberId");
-                this.subscriberId = value;
+                _subscriberId = value;
             }
         }
 
-        private string subscriberId;
+        private string _subscriberId;
 
         /// <summary>
         /// Gets or sets the person code.
@@ -429,16 +429,16 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public string PersonCode
         {
-            get { return this.personCode; }
+            get { return _personCode; }
 
             set
             {
                 Validator.ThrowIfStringIsWhitespace(value, "PersonCode");
-                this.personCode = value;
+                _personCode = value;
             }
         }
 
-        private string personCode;
+        private string _personCode;
 
         /// <summary>
         /// Gets or sets the subscriber name.
@@ -458,16 +458,16 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public string SubscriberName
         {
-            get { return this.subscriberName; }
+            get { return _subscriberName; }
 
             set
             {
                 Validator.ThrowIfStringIsWhitespace(value, "SubscriberName");
-                this.subscriberName = value;
+                _subscriberName = value;
             }
         }
 
-        private string subscriberName;
+        private string _subscriberName;
 
         /// <summary>
         /// Gets or sets the subscriber's date of birth.
@@ -484,11 +484,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public HealthServiceDateTime SubscriberDateOfBirth
         {
-            get { return this.subscriberDateOfBirth; }
-            set { this.subscriberDateOfBirth = value; }
+            get { return _subscriberDateOfBirth; }
+            set { _subscriberDateOfBirth = value; }
         }
 
-        private HealthServiceDateTime subscriberDateOfBirth;
+        private HealthServiceDateTime _subscriberDateOfBirth;
 
         /// <summary>
         /// Gets or sets a value indicating whether this is the primary coverage for the
@@ -505,11 +505,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public bool? IsPrimary
         {
-            get { return this.isPrimary; }
-            set { this.isPrimary = value; }
+            get { return _isPrimary; }
+            set { _isPrimary = value; }
         }
 
-        private bool? isPrimary;
+        private bool? _isPrimary;
 
         /// <summary>
         /// Gets or sets the date the coverage expires.
@@ -525,11 +525,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public HealthServiceDateTime ExpirationDate
         {
-            get { return this.expirationDate; }
-            set { this.expirationDate = value; }
+            get { return _expirationDate; }
+            set { _expirationDate = value; }
         }
 
-        private HealthServiceDateTime expirationDate;
+        private HealthServiceDateTime _expirationDate;
 
         /// <summary>
         /// Gets or sets the payer contact information.
@@ -546,11 +546,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public ContactInfo Contact
         {
-            get { return this.contact; }
-            set { this.contact = value; }
+            get { return _contact; }
+            set { _contact = value; }
         }
 
-        private ContactInfo contact;
+        private ContactInfo _contact;
 
         /// <summary>
         /// Gets a string representation of the payer item.
@@ -562,15 +562,15 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public override string ToString()
         {
-            string result = this.PlanName;
+            string result = PlanName;
 
-            if (this.CoverageType != null)
+            if (CoverageType != null)
             {
                 result =
                     string.Format(
                         Resources.PayerToStringFormat,
-                        this.PlanName,
-                        this.CoverageType.Text);
+                        PlanName,
+                        CoverageType.Text);
             }
 
             return result;

@@ -21,7 +21,7 @@ namespace Microsoft.HealthVault.Client
             AndroidBrowserAuthBroker authBroker = container.Locate<AndroidBrowserAuthBroker>();
             container.Configure(c => c.ExportInstance(authBroker).As<IAndroidBrowserAuthBroker>());
             container.Configure(c => c.ExportInstance(authBroker).As<IBrowserAuthBroker>());
-			
+
             container.RegisterSingleton<ISecretStore, AndroidSecretStore>();
             container.RegisterSingleton<IEncryptionKeyService, EncryptionKeyService>();
             container.RegisterSingleton<IMessageHandlerFactory, AndroidMessageHandlerFactory>();

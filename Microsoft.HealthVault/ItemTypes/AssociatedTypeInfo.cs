@@ -35,7 +35,7 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public AssociatedTypeInfo(Guid thingTypeVersionId)
         {
-            this.ThingTypeVersionId = thingTypeVersionId;
+            ThingTypeVersionId = thingTypeVersionId;
         }
 
         /// <summary>
@@ -68,9 +68,9 @@ namespace Microsoft.HealthVault.ItemTypes
                 throw new InvalidOperationException(Resources.AssociatedThingTypeVersionIdNullorEmpty);
             }
 
-            this.thingTypeVersionId = thingTypeVersionId.Value;
-            this.thingTypeValueXPath = XPathHelper.GetOptNavValue(navigator, "thing-type-value-xpath");
-            this.thingTypeDisplayXPath = XPathHelper.GetOptNavValue(navigator, "thing-type-display-xpath");
+            thingTypeVersionId = thingTypeVersionId.Value;
+            _thingTypeValueXPath = XPathHelper.GetOptNavValue(navigator, "thing-type-value-xpath");
+            _thingTypeDisplayXPath = XPathHelper.GetOptNavValue(navigator, "thing-type-display-xpath");
         }
 
         /// <summary>
@@ -113,14 +113,14 @@ namespace Microsoft.HealthVault.ItemTypes
 
             writer.WriteStartElement(nodeName);
 
-            if (this.thingTypeVersionId.Equals(Guid.Empty))
+            if (thingTypeVersionId.Equals(Guid.Empty))
             {
                 throw new InvalidOperationException(Resources.AssociatedThingTypeVersionIdNullorEmpty);
             }
 
-            XmlWriterHelper.WriteOptGuid(writer, "thing-type-version-id", this.thingTypeVersionId);
-            XmlWriterHelper.WriteOptString(writer, "thing-type-value-xpath", this.thingTypeValueXPath);
-            XmlWriterHelper.WriteOptString(writer, "thing-type-display-xpath", this.thingTypeDisplayXPath);
+            XmlWriterHelper.WriteOptGuid(writer, "thing-type-version-id", thingTypeVersionId);
+            XmlWriterHelper.WriteOptString(writer, "thing-type-value-xpath", _thingTypeValueXPath);
+            XmlWriterHelper.WriteOptString(writer, "thing-type-display-xpath", _thingTypeDisplayXPath);
             writer.WriteEndElement();
         }
 
@@ -136,17 +136,17 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             get
             {
-                return this.thingTypeVersionId;
+                return thingTypeVersionId;
             }
 
             set
             {
                 if (value.Equals(Guid.Empty))
                 {
-                    throw new ArgumentException(Resources.AssociatedThingTypeVersionIdNullorEmpty, nameof(this.ThingTypeVersionId));
+                    throw new ArgumentException(Resources.AssociatedThingTypeVersionIdNullorEmpty, nameof(ThingTypeVersionId));
                 }
 
-                this.thingTypeVersionId = value;
+                thingTypeVersionId = value;
             }
         }
 
@@ -169,7 +169,7 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             get
             {
-                return this.thingTypeValueXPath;
+                return _thingTypeValueXPath;
             }
 
             set
@@ -179,11 +179,11 @@ namespace Microsoft.HealthVault.ItemTypes
                     throw new ArgumentException(Resources.WhitespaceOnlyValue, nameof(value));
                 }
 
-                this.thingTypeValueXPath = value;
+                _thingTypeValueXPath = value;
             }
         }
 
-        private string thingTypeValueXPath;
+        private string _thingTypeValueXPath;
 
         /// <summary>
         /// Gets or sets xPath expression for the display field associated with this goal or task in the thing type.
@@ -202,7 +202,7 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             get
             {
-                return this.thingTypeDisplayXPath;
+                return _thingTypeDisplayXPath;
             }
 
             set
@@ -213,10 +213,10 @@ namespace Microsoft.HealthVault.ItemTypes
                         Resources.WhitespaceOnlyValue, nameof(value));
                 }
 
-                this.thingTypeDisplayXPath = value;
+                _thingTypeDisplayXPath = value;
             }
         }
 
-        private string thingTypeDisplayXPath;
+        private string _thingTypeDisplayXPath;
     }
 }

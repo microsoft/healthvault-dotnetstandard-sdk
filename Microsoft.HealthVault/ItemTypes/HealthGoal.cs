@@ -58,7 +58,7 @@ namespace Microsoft.HealthVault.ItemTypes
         public HealthGoal(CodableValue name)
         : base(TypeId)
         {
-            this.Name = name;
+            Name = name;
         }
 
         /// <summary>
@@ -107,23 +107,23 @@ namespace Microsoft.HealthVault.ItemTypes
                     Resources.HealthGoalUnexpectedNode);
             }
 
-            this.name = new CodableValue();
-            this.name.ParseXml(itemNav.SelectSingleNode("name"));
-            this.description = XPathHelper.GetOptNavValue(itemNav, "description");
-            this.startDate = XPathHelper.GetOptNavValue<ApproximateDateTime>(itemNav, "start-date");
-            this.endDate = XPathHelper.GetOptNavValue<ApproximateDateTime>(itemNav, "end-date");
-            this.associatedTypeInfo = XPathHelper.GetOptNavValue<AssociatedTypeInfo>(itemNav, "associated-type-info");
-            this.targetRange = XPathHelper.GetOptNavValue<GoalRange>(itemNav, "target-range");
+            _name = new CodableValue();
+            _name.ParseXml(itemNav.SelectSingleNode("name"));
+            _description = XPathHelper.GetOptNavValue(itemNav, "description");
+            _startDate = XPathHelper.GetOptNavValue<ApproximateDateTime>(itemNav, "start-date");
+            _endDate = XPathHelper.GetOptNavValue<ApproximateDateTime>(itemNav, "end-date");
+            _associatedTypeInfo = XPathHelper.GetOptNavValue<AssociatedTypeInfo>(itemNav, "associated-type-info");
+            _targetRange = XPathHelper.GetOptNavValue<GoalRange>(itemNav, "target-range");
 
-            this.goalAdditionalRanges.Clear();
+            _goalAdditionalRanges.Clear();
             foreach (XPathNavigator nav in itemNav.Select("goal-additional-ranges"))
             {
                 GoalRange goalRange = new GoalRange();
                 goalRange.ParseXml(nav);
-                this.goalAdditionalRanges.Add(goalRange);
+                _goalAdditionalRanges.Add(goalRange);
             }
 
-            this.recurrence = XPathHelper.GetOptNavValue<GoalRecurrence>(itemNav, "recurrence");
+            _recurrence = XPathHelper.GetOptNavValue<GoalRecurrence>(itemNav, "recurrence");
         }
 
         /// <summary>
@@ -153,7 +153,7 @@ namespace Microsoft.HealthVault.ItemTypes
                     Resources.WriteXmlNullWriter);
             }
 
-            if (this.name == null)
+            if (_name == null)
             {
                 throw new ThingSerializationException(
                     Resources.GoalNameNullValue);
@@ -161,22 +161,22 @@ namespace Microsoft.HealthVault.ItemTypes
 
             writer.WriteStartElement("health-goal");
 
-            this.name.WriteXml("name", writer);
-            XmlWriterHelper.WriteOptString(writer, "description", this.description);
-            XmlWriterHelper.WriteOpt(writer, "start-date", this.startDate);
-            XmlWriterHelper.WriteOpt(writer, "end-date", this.endDate);
-            XmlWriterHelper.WriteOpt(writer, "associated-type-info", this.associatedTypeInfo);
-            XmlWriterHelper.WriteOpt(writer, "target-range", this.targetRange);
+            _name.WriteXml("name", writer);
+            XmlWriterHelper.WriteOptString(writer, "description", _description);
+            XmlWriterHelper.WriteOpt(writer, "start-date", _startDate);
+            XmlWriterHelper.WriteOpt(writer, "end-date", _endDate);
+            XmlWriterHelper.WriteOpt(writer, "associated-type-info", _associatedTypeInfo);
+            XmlWriterHelper.WriteOpt(writer, "target-range", _targetRange);
 
-            if (this.goalAdditionalRanges != null && this.goalAdditionalRanges.Count != 0)
+            if (_goalAdditionalRanges != null && _goalAdditionalRanges.Count != 0)
             {
-                foreach (GoalRange goalRange in this.goalAdditionalRanges)
+                foreach (GoalRange goalRange in _goalAdditionalRanges)
                 {
                     goalRange.WriteXml("goal-additional-ranges", writer);
                 }
             }
 
-            XmlWriterHelper.WriteOpt(writer, "recurrence", this.recurrence);
+            XmlWriterHelper.WriteOpt(writer, "recurrence", _recurrence);
             writer.WriteEndElement();
         }
 
@@ -198,7 +198,7 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             get
             {
-                return this.name;
+                return _name;
             }
 
             set
@@ -210,11 +210,11 @@ namespace Microsoft.HealthVault.ItemTypes
                         Resources.GoalNameNullValue);
                 }
 
-                this.name = value;
+                _name = value;
             }
         }
 
-        private CodableValue name;
+        private CodableValue _name;
 
         /// <summary>
         /// Gets or sets description of the goal.
@@ -232,7 +232,7 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             get
             {
-                return this.description;
+                return _description;
             }
 
             set
@@ -243,11 +243,11 @@ namespace Microsoft.HealthVault.ItemTypes
                         Resources.WhitespaceOnlyValue, "value");
                 }
 
-                this.description = value;
+                _description = value;
             }
         }
 
-        private string description;
+        private string _description;
 
         /// <summary>
         /// Gets or sets the start date of the goal.
@@ -261,16 +261,16 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             get
             {
-                return this.startDate;
+                return _startDate;
             }
 
             set
             {
-                this.startDate = value;
+                _startDate = value;
             }
         }
 
-        private ApproximateDateTime startDate;
+        private ApproximateDateTime _startDate;
 
         /// <summary>
         /// Gets or sets the end date of the goal.
@@ -284,16 +284,16 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             get
             {
-                return this.endDate;
+                return _endDate;
             }
 
             set
             {
-                this.endDate = value;
+                _endDate = value;
             }
         }
 
-        private ApproximateDateTime endDate;
+        private ApproximateDateTime _endDate;
 
         /// <summary>
         /// Gets or sets specifies HealthVault type information related to this goal.
@@ -307,16 +307,16 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             get
             {
-                return this.associatedTypeInfo;
+                return _associatedTypeInfo;
             }
 
             set
             {
-                this.associatedTypeInfo = value;
+                _associatedTypeInfo = value;
             }
         }
 
-        private AssociatedTypeInfo associatedTypeInfo;
+        private AssociatedTypeInfo _associatedTypeInfo;
 
         /// <summary>
         /// Gets or sets the target range for the goal.
@@ -331,16 +331,16 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             get
             {
-                return this.targetRange;
+                return _targetRange;
             }
 
             set
             {
-                this.targetRange = value;
+                _targetRange = value;
             }
         }
 
-        private GoalRange targetRange;
+        private GoalRange _targetRange;
 
         /// <summary>
         /// Gets allows specifying additional ranges for the goal.
@@ -351,16 +351,16 @@ namespace Microsoft.HealthVault.ItemTypes
         /// If there is no information about goalAdditionalRanges the collection should be empty.
         /// </remarks>
         ///
-        public Collection<GoalRange> GoalAdditionalRanges => this.goalAdditionalRanges;
+        public Collection<GoalRange> GoalAdditionalRanges => _goalAdditionalRanges;
 
-        private readonly Collection<GoalRange> goalAdditionalRanges = new Collection<GoalRange>();
+        private readonly Collection<GoalRange> _goalAdditionalRanges = new Collection<GoalRange>();
 
         /// <summary>
         /// Gets or sets this field allows defining recurrence for goals.
         /// </summary>
         ///
         /// <remarks>
-        /// A goal can be defined on a weekly interval, meaning the target is intended to be achieved every week. Walking 70000 steps in a week is an example of this.
+        /// A goal can be defined on a weekly interval, meaning the target is intended to be achieved every week. Walking 70000 steps in a week is an example of
         /// If there is no information about recurrence the value should be set to <b>null</b>.
         /// </remarks>
         ///
@@ -368,16 +368,16 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             get
             {
-                return this.recurrence;
+                return _recurrence;
             }
 
             set
             {
-                this.recurrence = value;
+                _recurrence = value;
             }
         }
 
-        private GoalRecurrence recurrence;
+        private GoalRecurrence _recurrence;
 
         /// <summary>
         /// Gets a string representation of the HealthGoal.
@@ -389,35 +389,35 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public override string ToString()
         {
-            if (this.TargetRange != null && this.Recurrence != null)
+            if (TargetRange != null && Recurrence != null)
             {
                 return string.Format(
                         CultureInfo.CurrentUICulture,
                         Resources.HealthGoalWithTargetRangeAndRecurrenceFormat,
-                        this.Name.Text,
-                        this.TargetRange.ToString(),
-                        this.Recurrence.ToString());
+                        Name.Text,
+                        TargetRange.ToString(),
+                        Recurrence.ToString());
             }
 
-            if (this.TargetRange != null)
+            if (TargetRange != null)
             {
                 return string.Format(
                         CultureInfo.CurrentUICulture,
                         Resources.HealthGoalFormat,
-                        this.Name.Text,
-                        this.TargetRange.ToString());
+                        Name.Text,
+                        TargetRange.ToString());
             }
 
-            if (this.Recurrence != null)
+            if (Recurrence != null)
             {
                 return string.Format(
                         CultureInfo.CurrentUICulture,
                         Resources.HealthGoalFormat,
-                        this.Name.Text,
-                        this.Recurrence.ToString());
+                        Name.Text,
+                        Recurrence.ToString());
             }
 
-            return this.Name.Text;
+            return Name.Text;
         }
     }
 }

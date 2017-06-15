@@ -45,7 +45,7 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public Organization(string name)
         {
-            this.Name = name;
+            Name = name;
         }
 
         /// <summary>
@@ -77,13 +77,13 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             Validator.ThrowIfNavigatorNull(navigator);
 
-            this.name = navigator.SelectSingleNode("name").Value;
+            _name = navigator.SelectSingleNode("name").Value;
 
-            this.contact = XPathHelper.GetOptNavValue<ContactInfo>(
+            _contact = XPathHelper.GetOptNavValue<ContactInfo>(
                 navigator,
                 "contact");
 
-            this.type =
+            _type =
                 XPathHelper.GetOptNavValue<CodableValue>(
                 navigator,
                 "type");
@@ -93,7 +93,7 @@ namespace Microsoft.HealthVault.ItemTypes
 
             if (websiteNav != null)
             {
-                this.website = new Uri(websiteNav.Value, UriKind.RelativeOrAbsolute);
+                _website = new Uri(websiteNav.Value, UriKind.RelativeOrAbsolute);
             }
         }
 
@@ -126,18 +126,18 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             Validator.ThrowIfStringNullOrEmpty(nodeName, "nodeName");
             Validator.ThrowIfWriterNull(writer);
-            Validator.ThrowSerializationIfNull(this.name, Resources.OrganizationNameNotSet);
+            Validator.ThrowSerializationIfNull(_name, Resources.OrganizationNameNotSet);
 
             writer.WriteStartElement(nodeName);
 
-            writer.WriteElementString("name", this.Name);
+            writer.WriteElementString("name", Name);
 
-            XmlWriterHelper.WriteOpt(writer, "contact", this.contact);
-            XmlWriterHelper.WriteOpt(writer, "type", this.type);
+            XmlWriterHelper.WriteOpt(writer, "contact", _contact);
+            XmlWriterHelper.WriteOpt(writer, "type", _type);
 
-            if (this.website != null)
+            if (_website != null)
             {
-                writer.WriteElementString("website", this.website.OriginalString);
+                writer.WriteElementString("website", _website.OriginalString);
             }
 
             writer.WriteEndElement();
@@ -153,17 +153,17 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public string Name
         {
-            get { return this.name; }
+            get { return _name; }
 
             set
             {
                 Validator.ThrowIfStringNullOrEmpty(value, "Name");
                 Validator.ThrowIfStringIsWhitespace(value, "Name");
-                this.name = value;
+                _name = value;
             }
         }
 
-        private string name;
+        private string _name;
 
         /// <summary>
         /// Gets or sets the contact information of the organization.
@@ -175,11 +175,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public ContactInfo Contact
         {
-            get { return this.contact; }
-            set { this.contact = value; }
+            get { return _contact; }
+            set { _contact = value; }
         }
 
-        private ContactInfo contact;
+        private ContactInfo _contact;
 
         /// <summary>
         /// Gets or sets the type of the organization.
@@ -191,17 +191,17 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public CodableValue Type
         {
-            get { return this.type; }
+            get { return _type; }
 
             set
             {
-                this.type = value;
+                _type = value;
             }
         }
 
-        private CodableValue type;
+        private CodableValue _type;
 
-        private Uri website;
+        private Uri _website;
 
         /// <summary>
         /// Gets or sets the website URL of the organization.
@@ -217,8 +217,8 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public Uri Website
         {
-            get { return this.website; }
-            set { this.website = value; }
+            get { return _website; }
+            set { _website = value; }
         }
 
         /// <summary>
@@ -227,9 +227,9 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public override string ToString()
         {
-            if (this.Name != null)
+            if (Name != null)
             {
-                return this.Name;
+                return Name;
             }
 
             return string.Empty;

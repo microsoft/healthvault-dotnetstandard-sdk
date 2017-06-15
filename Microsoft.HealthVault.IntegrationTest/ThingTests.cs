@@ -70,7 +70,7 @@ namespace Microsoft.HealthVault.IntegrationTest
             var condition = new Condition(new CodableValue("Diseased"));
 
             await thingClient.CreateNewThingsAsync(
-                record.Id, 
+                record.Id,
                 new List<IThing>
                 {
                     bloodGlucose,
@@ -86,10 +86,7 @@ namespace Microsoft.HealthVault.IntegrationTest
                 });
 
             var query = CreateMultiThingQuery();
-            var items = await thingClient.GetThingsAsync(record.Id, query);
-
-            Assert.AreEqual(1, items.Count);
-            ThingCollection thingCollection = items.First();
+            ThingCollection thingCollection = await thingClient.GetThingsAsync(record.Id, query);
 
             Assert.AreEqual(10, thingCollection.Count);
 
@@ -105,20 +102,59 @@ namespace Microsoft.HealthVault.IntegrationTest
             Assert.AreEqual(bloodPressure1.Systolic, returnedBloodPressures[0].Systolic);
         }
 
+        [TestMethod]
+        public async Task MultipleQueries()
+        {
+            IHealthVaultSodaConnection connection = HealthVaultConnectionFactory.Current.GetOrCreateSodaConnection(Constants.Configuration);
+            IThingClient thingClient = connection.CreateThingClient();
+            PersonInfo personInfo = await connection.GetPersonInfoAsync();
+            HealthRecordInfo record = personInfo.SelectedRecord;
+
+            await DeletePreviousThings(thingClient, record);
+
+            var bloodGlucose = new BloodGlucose(
+                new HealthServiceDateTime(DateTime.Now),
+                new BloodGlucoseMeasurement(
+                    4.2,
+                    new DisplayValue(4.2, "mmol/L", "mmol-per-l")),
+                new CodableValue("Whole blood", "wb", new VocabularyKey("glucose-measurement-type", "wc", "1")));
+
+            var weight = new Weight(
+                new HealthServiceDateTime(DateTime.Now),
+                new WeightValue(81, new DisplayValue(81, "KG", "kg")));
+
+            await thingClient.CreateNewThingsAsync(
+                record.Id,
+                new List<IThing>
+                {
+                    bloodGlucose,
+                    weight,
+                });
+
+            var resultSet = await thingClient.GetThingsAsync(record.Id, new[] { new ThingQuery(BloodGlucose.TypeId), new ThingQuery(Weight.TypeId) });
+            Assert.AreEqual(2, resultSet.Count);
+            var resultList = resultSet.ToList();
+
+            ThingCollection glucoseCollection = resultList[0];
+            var returnedBloodGlucose = (BloodGlucose)glucoseCollection.First();
+            Assert.AreEqual(bloodGlucose.Value.Value, returnedBloodGlucose.Value.Value);
+
+            ThingCollection weightCollection = resultList[1];
+            var returnedWeight = (Weight)weightCollection.First();
+            Assert.AreEqual(weight.Value.Kilograms, returnedWeight.Value.Kilograms);
+        }
+
         private static async Task DeletePreviousThings(IThingClient thingClient, HealthRecordInfo record)
         {
             var query = CreateMultiThingQuery();
 
-            var items = await thingClient.GetThingsAsync(record.Id, query);
+            var thingCollection = await thingClient.GetThingsAsync(record.Id, query);
 
             var thingsToDelete = new List<IThing>();
 
-            foreach (ThingCollection thingCollection in items)
+            foreach (IThing thing in thingCollection)
             {
-                foreach (IThing thing in thingCollection)
-                {
-                    thingsToDelete.Add(thing);
-                }
+                thingsToDelete.Add(thing);
             }
 
             if (thingsToDelete.Count > 0)

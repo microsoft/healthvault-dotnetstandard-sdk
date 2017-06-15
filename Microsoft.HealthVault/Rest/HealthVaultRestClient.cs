@@ -1,9 +1,9 @@
 ﻿// Copyright (c) Microsoft Corporation.  All rights reserved.
 // MIT License
 // Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the ""Software""), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED *AS IS*, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 using System;
@@ -18,6 +18,7 @@ using Microsoft.HealthVault.Clients;
 using Microsoft.HealthVault.Configuration;
 using Microsoft.HealthVault.Connection;
 using Microsoft.HealthVault.Exceptions;
+using Microsoft.HealthVault.Extensions;
 using Microsoft.HealthVault.Transport;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -26,33 +27,38 @@ namespace Microsoft.HealthVault.Rest
 {
     internal sealed class HealthVaultRestClient : IHealthVaultRestClient
     {
-        private readonly HealthVaultConfiguration configuration;
-        private readonly IConnectionInternal connection;
-        private readonly IHealthWebRequestClient client;
-        private readonly JsonSerializer serializer = new JsonSerializer();
+        private readonly HealthVaultConfiguration _configuration;
+        private readonly IConnectionInternal _connection;
+        private readonly IHealthWebRequestClient _client;
+        private readonly JsonSerializer _serializer = new JsonSerializer();
 
         public HealthVaultRestClient(
             HealthVaultConfiguration configuration,
             IConnectionInternal connection,
             IHealthWebRequestClient client)
         {
-            this.configuration = configuration;
-            this.connection = connection;
-            this.client = client;
+            _configuration = configuration;
+            _connection = connection;
+            _client = client;
         }
 
         public Guid? CorrelationId { get; set; }
 
-        public void AuthorizeRestRequest(HttpRequestMessage message, Guid recordId)
+        public async Task AuthorizeRestRequestAsync(HttpRequestMessage message, Guid recordId)
         {
-            if (!string.IsNullOrEmpty(this.connection.SessionCredential?.Token))
+            if (!string.IsNullOrEmpty(_connection.SessionCredential?.Token))
             {
+                if (_connection.SessionCredential.IsExpired())
+                {
+                    await _connection.RefreshSessionAsync(CancellationToken.None);
+                }
+
                 var parts = new List<string>
                 {
-                    $"app-token={this.connection.SessionCredential.Token}"
+                    $"app-token={_connection.SessionCredential.Token}"
                 };
 
-                string connectionHeader = this.connection.GetRestAuthSessionHeader();
+                string connectionHeader = _connection.GetRestAuthSessionHeader();
                 if (!string.IsNullOrEmpty(connectionHeader))
                 {
                     parts.Add(connectionHeader);
@@ -69,22 +75,22 @@ namespace Microsoft.HealthVault.Rest
 
         public async Task<T> ExecuteAsync<T>(IHealthVaultRestMessage<T> request)
         {
-            using (var httpRequestMessage = this.CreateHttpRequestMessage(request))
-            using (var httpResponseMessage = await this.client.SendAsync(httpRequestMessage, CancellationToken.None, false))
-            using (var stream = await this.ProcessHttpResponseMessage(httpResponseMessage))
+            using (var httpRequestMessage = await CreateHttpRequestMessageAsync(request))
+            using (var httpResponseMessage = await _client.SendAsync(httpRequestMessage, CancellationToken.None, false))
+            using (var stream = await ProcessHttpResponseMessage(httpResponseMessage))
             using (var streamReader = new StreamReader(stream))
             using (var reader = new JsonTextReader(streamReader))
             {
-                return this.serializer.Deserialize<T>(reader);
+                return _serializer.Deserialize<T>(reader);
             }
         }
 
-        private HttpRequestMessage CreateHttpRequestMessage<T>(IHealthVaultRestMessage<T> request)
+        private async Task<HttpRequestMessage> CreateHttpRequestMessageAsync<T>(IHealthVaultRestMessage<T> request)
         {
             Uri requestPath;
             if (request.Path.IsAbsoluteUri == false)
             {
-                var requestBuilder = new UriBuilder(this.configuration.RestHealthVaultUrl)
+                var requestBuilder = new UriBuilder(_configuration.RestHealthVaultUrl)
                 {
                     Path = request.Path.ToString()
                 };
@@ -100,14 +106,14 @@ namespace Microsoft.HealthVault.Rest
             httpRequestMessage.Headers.AcceptEncoding.Add(StringWithQualityHeaderValue.Parse("deflate"));
             httpRequestMessage.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue(RestConstants.JsonContentType));
             httpRequestMessage.Headers.Add(RestConstants.VersionHeader, request.ApiVersion.ToString());
-            this.AuthorizeRestRequest(httpRequestMessage, request.RecordId);
+            await AuthorizeRestRequestAsync(httpRequestMessage, request.RecordId);
 
             // TODO: Fix useragent string
             httpRequestMessage.Headers.UserAgent.ParseAdd(string.Format(RestConstants.MSHSDKVersion, "Unknown", "Unknown"));
 
-            if (this.CorrelationId != Guid.Empty)
+            if (CorrelationId != Guid.Empty)
             {
-                httpRequestMessage.Headers.Add(RestConstants.CorrelationIdHeaderName, this.CorrelationId.ToString());
+                httpRequestMessage.Headers.Add(RestConstants.CorrelationIdHeaderName, CorrelationId.ToString());
             }
 
             if (request.CustomHeaders != null)

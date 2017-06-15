@@ -2,11 +2,16 @@
 // Changes may cause incorrect behavior and will be lost if the code is
 // regenerated.
 
-using System.Collections.Generic;
-using Newtonsoft.Json;
-
 namespace Microsoft.HealthVault.RestApi.Generated.Models
 {
+    using Microsoft.HealthVault;
+    using Microsoft.HealthVault.RestApi;
+    using Microsoft.HealthVault.RestApi.Generated;
+    using Newtonsoft.Json;
+    using System.Collections;
+    using System.Collections.Generic;
+    using System.Linq;
+
     /// <summary>
     /// The evidence associated Action Plan Task Tracking
     /// </summary>
@@ -18,7 +23,7 @@ namespace Microsoft.HealthVault.RestApi.Generated.Models
         /// </summary>
         public ActionPlanTaskTrackingEvidence()
         {
-          this.CustomInit();
+          CustomInit();
         }
 
         /// <summary>
@@ -29,9 +34,9 @@ namespace Microsoft.HealthVault.RestApi.Generated.Models
         /// <param name="hvThings">The HealthVault ThingIDs as evidence</param>
         public ActionPlanTaskTrackingEvidence(IList<string> trackings = default(IList<string>), IList<string> hvThings = default(IList<string>))
         {
-            this.Trackings = trackings;
-            this.HvThings = hvThings;
-            this.CustomInit();
+            Trackings = trackings;
+            HvThings = hvThings;
+            CustomInit();
         }
 
         /// <summary>

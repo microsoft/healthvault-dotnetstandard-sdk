@@ -117,16 +117,16 @@ namespace Microsoft.HealthVault.Thing
         /// </exception>
         protected Collection<OtherItemDataCsvItem> GetAsString()
         {
-            if (this.ContentType != "text/csv")
+            if (ContentType != "text/csv")
             {
-                throw new ArgumentException(Resources.OtherItemDataFormat, nameof(this.ContentType));
+                throw new ArgumentException(Resources.OtherItemDataFormat, nameof(ContentType));
             }
 
-            Validator.ThrowIfArgumentNull(this.Data, nameof(this.Data), Resources.OtherItemDataNull);
+            Validator.ThrowIfArgumentNull(Data, nameof(Data), Resources.OtherItemDataNull);
 
             Collection<OtherItemDataCsvItem> values = new Collection<OtherItemDataCsvItem>();
 
-            List<string> stringValues = BreakStringAtCharacter(this.Data, ',');
+            List<string> stringValues = BreakStringAtCharacter(Data, ',');
 
             for (int i = 0; i < stringValues.Count; i++)
             {
@@ -168,7 +168,7 @@ namespace Microsoft.HealthVault.Thing
         /// <returns>A collection of OtherItemDataCsvItem</returns>
         protected Collection<OtherItemDataCsvItem> GetAsDouble()
         {
-            Collection<OtherItemDataCsvItem> stringValues = this.GetAsString();
+            Collection<OtherItemDataCsvItem> stringValues = GetAsString();
             Collection<OtherItemDataCsvItem> values = new Collection<OtherItemDataCsvItem>();
 
             foreach (OtherItemDataCsvItem item in stringValues)
@@ -249,9 +249,9 @@ namespace Microsoft.HealthVault.Thing
                 currentItemIndex++;
             }
 
-            this.Data = builder.ToString();
-            this.ContentType = "text/csv";
-            this.ContentEncoding = string.Empty;
+            Data = builder.ToString();
+            ContentType = "text/csv";
+            ContentEncoding = string.Empty;
         }
     }
 }

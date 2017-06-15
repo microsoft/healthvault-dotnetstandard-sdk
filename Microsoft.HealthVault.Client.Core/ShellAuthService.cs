@@ -9,16 +9,16 @@ namespace Microsoft.HealthVault.Client
     {
         private const string InstanceQueryParamKey = "instanceid=";
 
-        private readonly IBrowserAuthBroker browserAuthBroker;
-        private readonly HealthVaultConfiguration clientHealthVaultConfiguration;
+        private readonly IBrowserAuthBroker _browserAuthBroker;
+        private readonly HealthVaultConfiguration _clientHealthVaultConfiguration;
 
         public ShellAuthService(IBrowserAuthBroker browserAuthBroker, HealthVaultConfiguration clientHealthVaultConfiguration)
         {
-            this.browserAuthBroker = browserAuthBroker;
-            this.clientHealthVaultConfiguration = clientHealthVaultConfiguration;
+            _browserAuthBroker = browserAuthBroker;
+            _clientHealthVaultConfiguration = clientHealthVaultConfiguration;
         }
 
-        private string MraString => this.clientHealthVaultConfiguration.IsMultiRecordApp ? "true" : "false";
+        private string MraString => _clientHealthVaultConfiguration.IsMultiRecordApp ? "true" : "false";
 
         public async Task<string> ProvisionApplicationAsync(Uri shellUrl, Guid masterAppId, string appCreationToken, string appInstanceId)
         {
@@ -37,13 +37,13 @@ namespace Microsoft.HealthVault.Client
                 throw new ArgumentNullException(nameof(appInstanceId));
             }
 
-            string query = $"appid={masterAppId}&appCreationToken={Uri.EscapeDataString(appCreationToken)}&instanceName={Uri.EscapeDataString(appInstanceId)}&ismra={this.MraString}&mobile=true";
-            if (this.clientHealthVaultConfiguration.MultiInstanceAware)
+            string query = $"appid={masterAppId}&appCreationToken={Uri.EscapeDataString(appCreationToken)}&instanceName={Uri.EscapeDataString(appInstanceId)}&ismra={MraString}&mobile=true";
+            if (_clientHealthVaultConfiguration.MultiInstanceAware)
             {
                 query += "&aib=true";
             }
 
-            Uri successUri = await this.AuthenticateInBrowserAsync(shellUrl, query).ConfigureAwait(false);
+            Uri successUri = await AuthenticateInBrowserAsync(shellUrl, query).ConfigureAwait(false);
             string environmentInstanceId = ParseEnvironmentInstanceIdFromUri(successUri.ToString());
             if (environmentInstanceId == null)
             {
@@ -60,9 +60,9 @@ namespace Microsoft.HealthVault.Client
                 throw new ArgumentNullException(nameof(shellUrl));
             }
 
-            string query = $"?appid={masterAppId}&ismra={this.MraString}";
+            string query = $"?appid={masterAppId}&ismra={MraString}";
 
-            await this.AuthenticateInBrowserAsync(shellUrl, query).ConfigureAwait(false);
+            await AuthenticateInBrowserAsync(shellUrl, query).ConfigureAwait(false);
         }
 
         private async Task<Uri> AuthenticateInBrowserAsync(Uri shellUrl, string query)
@@ -76,7 +76,7 @@ namespace Microsoft.HealthVault.Client
             endUriBuilder.Path = "application/complete";
             Uri stopUrl = endUriBuilder.Uri;
 
-            return await this.browserAuthBroker.AuthenticateAsync(provisionUIUrl, stopUrl).ConfigureAwait(false);
+            return await _browserAuthBroker.AuthenticateAsync(provisionUIUrl, stopUrl).ConfigureAwait(false);
         }
 
         private static UriBuilder GetShellUriBuilder(Uri shellUrl)

@@ -26,9 +26,9 @@ namespace Microsoft.HealthVault.PlatformInformation
 
         internal void ParseXml(XPathNavigator nav)
         {
-            this.AppInstanceId = Guid.Parse(nav.SelectSingleNode("app-id").Value);
-            this.SharedSecret = nav.SelectSingleNode("shared-secret").Value;
-            this.AppCreationToken = nav.SelectSingleNode("app-token").Value;
+            AppInstanceId = Guid.Parse(nav.SelectSingleNode("app-id").Value);
+            SharedSecret = nav.SelectSingleNode("shared-secret").Value;
+            AppCreationToken = nav.SelectSingleNode("app-token").Value;
         }
 
         /// <summary>

@@ -50,9 +50,9 @@ namespace Microsoft.HealthVault.ItemTypes
             int lowerBoundaryHeartRate,
             int upperBoundaryHeartRate)
         {
-            this.name = name;
-            this.lowAbsolute = lowerBoundaryHeartRate;
-            this.upperAbsolute = upperBoundaryHeartRate;
+            name = name;
+            _lowAbsolute = lowerBoundaryHeartRate;
+            _upperAbsolute = upperBoundaryHeartRate;
         }
 
         /// <summary>
@@ -79,9 +79,9 @@ namespace Microsoft.HealthVault.ItemTypes
             double lowerBoundaryPercentage,
             double upperBoundaryPercentage)
         {
-            this.name = name;
-            this.lowRelative = lowerBoundaryPercentage;
-            this.upperRelative = upperBoundaryPercentage;
+            name = name;
+            _lowRelative = lowerBoundaryPercentage;
+            _upperRelative = upperBoundaryPercentage;
         }
 
         /// <summary>
@@ -103,7 +103,7 @@ namespace Microsoft.HealthVault.ItemTypes
             string name = navigator.GetAttribute("name", string.Empty);
             if (name.Length != 0)
             {
-                this.name = name;
+                name = name;
             }
 
             XPathNavigator lowNav =
@@ -114,7 +114,7 @@ namespace Microsoft.HealthVault.ItemTypes
                     lowNav.SelectSingleNode("absolute-heartrate");
                 if (absoluteNav != null)
                 {
-                    this.lowAbsolute = absoluteNav.ValueAsInt;
+                    _lowAbsolute = absoluteNav.ValueAsInt;
                 }
                 else
                 {
@@ -122,7 +122,7 @@ namespace Microsoft.HealthVault.ItemTypes
                         lowNav.SelectSingleNode("percent-max-heartrate");
                     if (relativeNav != null)
                     {
-                        this.lowRelative = relativeNav.ValueAsDouble;
+                        _lowRelative = relativeNav.ValueAsDouble;
                     }
                 }
             }
@@ -135,7 +135,7 @@ namespace Microsoft.HealthVault.ItemTypes
                     upperNav.SelectSingleNode("absolute-heartrate");
                 if (absoluteNav != null)
                 {
-                    this.upperAbsolute = absoluteNav.ValueAsInt;
+                    _upperAbsolute = absoluteNav.ValueAsInt;
                 }
                 else
                 {
@@ -143,7 +143,7 @@ namespace Microsoft.HealthVault.ItemTypes
                         upperNav.SelectSingleNode("percent-max-heartrate");
                     if (relativeNav != null)
                     {
-                        this.upperRelative = relativeNav.ValueAsDouble;
+                        _upperRelative = relativeNav.ValueAsDouble;
                     }
                 }
             }
@@ -181,51 +181,51 @@ namespace Microsoft.HealthVault.ItemTypes
             Validator.ThrowIfStringNullOrEmpty(nodeName, nameof(nodeName));
             Validator.ThrowIfWriterNull(writer);
 
-            if (this.lowAbsolute == null && this.lowRelative == null)
+            if (_lowAbsolute == null && _lowRelative == null)
             {
                 throw new ThingSerializationException(Resources.HeartRateZoneNoLowerBoundary);
             }
 
-            if (this.upperAbsolute == null && this.upperRelative == null)
+            if (_upperAbsolute == null && _upperRelative == null)
             {
                 throw new ThingSerializationException(Resources.HeartRateZoneNoUpperBoundary);
             }
 
             writer.WriteStartElement(nodeName);
 
-            if (!string.IsNullOrEmpty(this.name))
+            if (!string.IsNullOrEmpty(_name))
             {
-                writer.WriteAttributeString("name", this.name);
+                writer.WriteAttributeString("name", _name);
             }
 
             writer.WriteStartElement("lower-bound");
-            if (this.lowAbsolute != null)
+            if (_lowAbsolute != null)
             {
                 writer.WriteElementString(
                     "absolute-heartrate",
-                    this.lowAbsolute.Value.ToString(CultureInfo.InvariantCulture));
+                    _lowAbsolute.Value.ToString(CultureInfo.InvariantCulture));
             }
             else
             {
                 writer.WriteElementString(
                     "percent-max-heartrate",
-                    this.lowRelative.Value.ToString(CultureInfo.InvariantCulture));
+                    _lowRelative.Value.ToString(CultureInfo.InvariantCulture));
             }
 
             writer.WriteEndElement();
 
             writer.WriteStartElement("upper-bound");
-            if (this.upperAbsolute != null)
+            if (_upperAbsolute != null)
             {
                 writer.WriteElementString(
                     "absolute-heartrate",
-                    this.upperAbsolute.Value.ToString(CultureInfo.InvariantCulture));
+                    _upperAbsolute.Value.ToString(CultureInfo.InvariantCulture));
             }
             else
             {
                 writer.WriteElementString(
                     "percent-max-heartrate",
-                    this.upperRelative.Value.ToString(CultureInfo.InvariantCulture));
+                    _upperRelative.Value.ToString(CultureInfo.InvariantCulture));
             }
 
             writer.WriteEndElement();
@@ -251,16 +251,16 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public string Name
         {
-            get { return this.name; }
+            get { return _name; }
 
             set
             {
                 Validator.ThrowIfStringIsWhitespace(value, "Name");
-                this.name = value;
+                _name = value;
             }
         }
 
-        private string name;
+        private string _name;
 
         /// <summary>
         /// Gets or sets the lower boundary of the heart rate zone as a
@@ -279,11 +279,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public double? RelativeLowerBoundary
         {
-            get { return this.lowRelative; }
-            set { this.lowRelative = value; }
+            get { return _lowRelative; }
+            set { _lowRelative = value; }
         }
 
-        private double? lowRelative;
+        private double? _lowRelative;
 
         /// <summary>
         /// Gets or sets the lower boundary of the heart rate zone as a
@@ -302,11 +302,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public int? AbsoluteLowerBoundary
         {
-            get { return this.lowAbsolute; }
-            set { this.lowAbsolute = value; }
+            get { return _lowAbsolute; }
+            set { _lowAbsolute = value; }
         }
 
-        private int? lowAbsolute;
+        private int? _lowAbsolute;
 
         /// <summary>
         /// Gets or sets the upper boundary of the heart rate zone as a
@@ -325,11 +325,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public double? RelativeUpperBoundary
         {
-            get { return this.upperRelative; }
-            set { this.upperRelative = value; }
+            get { return _upperRelative; }
+            set { _upperRelative = value; }
         }
 
-        private double? upperRelative;
+        private double? _upperRelative;
 
         /// <summary>
         /// Gets or sets the upper boundary of the heart rate zone as a
@@ -348,10 +348,10 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public int? AbsoluteUpperBoundary
         {
-            get { return this.upperAbsolute; }
-            set { this.upperAbsolute = value; }
+            get { return _upperAbsolute; }
+            set { _upperAbsolute = value; }
         }
 
-        private int? upperAbsolute;
+        private int? _upperAbsolute;
     }
 }

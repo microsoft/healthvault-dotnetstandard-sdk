@@ -12,16 +12,15 @@ using System.Diagnostics;
 using System.Linq;
 using System.Net.Http;
 using System.Reflection;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Xml;
-using System.Text;
-using Microsoft.HealthVault.Configuration;
-using Microsoft.HealthVault.Diagnostics;
 using Microsoft.HealthVault.Clients;
 using Microsoft.HealthVault.Clients.Deserializers;
+using Microsoft.HealthVault.Configuration;
 using Microsoft.HealthVault.Exceptions;
-using Microsoft.HealthVault.Extensions;
+using Microsoft.HealthVault.Diagnostics;
 using Microsoft.HealthVault.Person;
 using Microsoft.HealthVault.PlatformInformation;
 using Microsoft.HealthVault.Rest;
@@ -39,23 +38,23 @@ namespace Microsoft.HealthVault.Connection
         private const string ResponseIdContextKey = "WC_ResponseId";
         private const int SessionCredentialCallThresholdMinutes = 5;
 
-        private DateTimeOffset lastRefreshedSessionCredential;
-        private readonly AsyncLock sessionCredentialLock = new AsyncLock();
-        private HashSet<HealthVaultMethods> anonymousMethodSet = new HashSet<HealthVaultMethods>();
+        private DateTimeOffset _lastRefreshedSessionCredential;
+        private readonly AsyncLock _sessionCredentialLock = new AsyncLock();
+        private HashSet<HealthVaultMethods> _anonymousMethodSet = new HashSet<HealthVaultMethods>();
 
-        private readonly IHealthWebRequestClient webRequestClient;
-        private readonly IHealthServiceResponseParser healthServiceResponseParser;
-        private readonly IRequestMessageCreator requestMessageCreator;
+        private readonly IHealthWebRequestClient _webRequestClient;
+        private readonly IHealthServiceResponseParser _healthServiceResponseParser;
+        private readonly IRequestMessageCreator _requestMessageCreator;
 
         protected HealthVaultConnectionBase(IServiceLocator serviceLocator)
         {
-            this.ServiceLocator = serviceLocator;
+            ServiceLocator = serviceLocator;
 
-            this.Configuration = serviceLocator.GetInstance<HealthVaultConfiguration>();
-            this.webRequestClient = serviceLocator.GetInstance<IHealthWebRequestClient>();
-            this.healthServiceResponseParser = serviceLocator.GetInstance<IHealthServiceResponseParser>();
+            Configuration = serviceLocator.GetInstance<HealthVaultConfiguration>();
+            _webRequestClient = serviceLocator.GetInstance<IHealthWebRequestClient>();
+            _healthServiceResponseParser = serviceLocator.GetInstance<IHealthServiceResponseParser>();
 
-            this.requestMessageCreator = new RequestMessageCreator(this, serviceLocator);
+            _requestMessageCreator = new RequestMessageCreator(this, serviceLocator);
         }
 
         public HealthServiceInstance ServiceInstance { get; internal set; }
@@ -86,7 +85,7 @@ namespace Microsoft.HealthVault.Connection
         /// <summary>
         /// A client that can be used to access information and records associated with the currently athenticated user.
         /// </summary>
-        public IPersonClient CreatePersonClient() => new PersonClient(this);
+        public IPersonClient CreatePersonClient() => Ioc.Container.Locate<IPersonClient>(extraData: new { connection = this });
 
         /// <summary>
         /// A client that can be used to access vocabularies.
@@ -104,78 +103,77 @@ namespace Microsoft.HealthVault.Connection
         /// <summary>
         /// Creates a rest client that commmunicates with HealthVault
         /// </summary>
-        public IHealthVaultRestClient CreateRestClient() => new HealthVaultRestClient(this.Configuration, this, this.webRequestClient);
+        public IHealthVaultRestClient CreateRestClient() => new HealthVaultRestClient(Configuration, this, _webRequestClient);
 
         #endregion
 
         public async Task<HealthServiceResponseData> ExecuteAsync(
-            HealthVaultMethods method, 
+            HealthVaultMethods method,
             int methodVersion,
-            string parameters = null, 
+            string parameters = null,
             Guid? recordId = null,
             Guid? correlationId = null)
         {
-            bool isMethodAnonymous = this.IsMethodAnonymous(method);
+            bool isMethodAnonymous = IsMethodAnonymous(method);
 
             // Make sure that session credential is set for method calls requiring
             // authentication
-            if (!isMethodAnonymous && string.IsNullOrEmpty(this.SessionCredential?.Token))
+            if (!isMethodAnonymous && string.IsNullOrEmpty(SessionCredential?.Token))
             {
-                await this.AuthenticateAsync().ConfigureAwait(false);
+                await AuthenticateAsync().ConfigureAwait(false);
             }
 
             // Create the message using a Func in case we need to re-generate it for a retry later
-            Func <string> requestXmlCreator = () => this.requestMessageCreator.Create(
-                method, 
-                methodVersion,
-                isMethodAnonymous,
-                parameters,
-                recordId,
-                isMethodAnonymous && method == HealthVaultMethods.CreateAuthenticatedSessionToken
-                    ? this.ApplicationId 
-                    : this.Configuration.MasterApplicationId);
+            Func<string> requestXmlCreator = () => _requestMessageCreator.Create(
+               method,
+               methodVersion,
+               isMethodAnonymous,
+               parameters,
+               recordId,
+               isMethodAnonymous && method == HealthVaultMethods.CreateAuthenticatedSessionToken
+                   ? ApplicationId
+                   : Configuration.MasterApplicationId);
 
             var requestXml = requestXmlCreator();
 
             HealthServiceResponseData responseData = null;
             try
             {
-                responseData = await this.SendRequestAsync(requestXml, correlationId);
+                responseData = await SendRequestAsync(requestXml, correlationId);
             }
             catch (HealthServiceAuthenticatedSessionTokenExpiredException)
             {
                 if (!isMethodAnonymous)
                 {
-                    using (await this.sessionCredentialLock.LockAsync().ConfigureAwait(false))
-                    {
-                        if (this.SessionCredential != null)
-                        {
-                            // To prevent multiple token refresh calls being made from simultaneous requests, we check if the token has been refreshed in the last 
-                            // {SessionCredentialCallThresholdMinutes} minutes and if so we do not make the call again.
-                            if (DateTimeOffset.Now.Subtract(this.lastRefreshedSessionCredential) > TimeSpan.FromMinutes(SessionCredentialCallThresholdMinutes))
-                            {
-                                await this.RefreshSessionCredentialAsync(CancellationToken.None).ConfigureAwait(false);
+                    await RefreshSessionAsync(CancellationToken.None);
 
-                                this.lastRefreshedSessionCredential = DateTimeOffset.Now;
-                            }
-
-                            // Re-generate the message so it pulls in the new SessionCredential
-                            requestXml = requestXmlCreator();
-                            return await this.SendRequestAsync(requestXml, correlationId).ConfigureAwait(false);
-                        }
-
-                        throw;
-                    }
+                    // Re-generate the message so it pulls in the new SessionCredential
+                    requestXml = requestXmlCreator();
+                    return await SendRequestAsync(requestXml, correlationId).ConfigureAwait(false);
                 }
             }
 
             return responseData;
         }
 
+        public async Task RefreshSessionAsync(CancellationToken token)
+        {
+            using (await _sessionCredentialLock.LockAsync().ConfigureAwait(false))
+            {
+                // To prevent multiple token refresh calls being made from simultaneous requests, we check if the token has been refreshed in the last
+                // {SessionCredentialCallThresholdMinutes} minutes and if so we do not make the call again.
+                if (DateTimeOffset.Now.Subtract(_lastRefreshedSessionCredential) > TimeSpan.FromMinutes(SessionCredentialCallThresholdMinutes))
+                {
+                    await RefreshSessionCredentialAsync(token).ConfigureAwait(false);
+                    _lastRefreshedSessionCredential = DateTimeOffset.Now;
+                }
+            }
+        }
+
         protected virtual async Task RefreshSessionCredentialAsync(CancellationToken token)
         {
-            ISessionCredentialClient sessionCredentialClient = this.CreateSessionCredentialClient();
-            this.SessionCredential = await sessionCredentialClient.GetSessionCredentialAsync(token).ConfigureAwait(false);
+            ISessionCredentialClient sessionCredentialClient = CreateSessionCredentialClient();
+            SessionCredential = await sessionCredentialClient.GetSessionCredentialAsync(token).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -197,10 +195,10 @@ namespace Microsoft.HealthVault.Connection
                 HttpResponseMessage response;
                 try
                 {
-                    cancellationTokenSource = new CancellationTokenSource(this.Configuration.RequestTimeoutDuration);
+                    cancellationTokenSource = new CancellationTokenSource(Configuration.RequestTimeoutDuration);
 
-                    response = await this.webRequestClient.SendAsync(
-                        this.ServiceInstance.HealthServiceUrl,
+                    response = await _webRequestClient.SendAsync(
+                        ServiceInstance.HealthServiceUrl,
                         requestXmlBytes,
                         requestXml.Length,
                         new Dictionary<string, string> { { CorrelationIdContextKey, correlationId.GetValueOrDefault(Guid.NewGuid()).ToString() } },
@@ -225,7 +223,7 @@ namespace Microsoft.HealthVault.Connection
                     }
                 }
 
-                HealthServiceResponseData responseData = await this.healthServiceResponseParser.ParseResponseAsync(response).ConfigureAwait(false);
+                HealthServiceResponseData responseData = await _healthServiceResponseParser.ParseResponseAsync(response).ConfigureAwait(false);
 
                 return responseData;
             }
@@ -239,7 +237,7 @@ namespace Microsoft.HealthVault.Connection
 
         private bool IsMethodAnonymous(HealthVaultMethods method)
         {
-            if (this.anonymousMethodSet.Contains(method))
+            if (_anonymousMethodSet.Contains(method))
             {
                 return true;
             }
@@ -249,7 +247,7 @@ namespace Microsoft.HealthVault.Connection
 
             if (member.GetCustomAttribute<AnonymousMethodAttribute>() != null)
             {
-                this.anonymousMethodSet.Add(method);
+                _anonymousMethodSet.Add(method);
                 return true;
             }
 

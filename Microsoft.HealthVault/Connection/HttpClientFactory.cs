@@ -1,10 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net;
 using System.Net.Http;
-using System.Text;
-using System.Threading.Tasks;
 using Microsoft.HealthVault.Services;
 
 namespace Microsoft.HealthVault.Connection
@@ -16,52 +12,52 @@ namespace Microsoft.HealthVault.Connection
     /// we must instead re-generate it every so often to pick up DNS changes. See http://byterot.blogspot.co.uk/2016/07/singleton-httpclient-dns.html </remarks>
     internal class HttpClientFactory : IHttpClientFactory
     {
-        private readonly object factoryLock = new object();
+        private readonly object _factoryLock = new object();
 
-        private readonly IMessageHandlerFactory messageHandlerFactory;
-        private readonly IDateTimeService dateTimeService;
+        private readonly IMessageHandlerFactory _messageHandlerFactory;
+        private readonly IDateTimeService _dateTimeService;
 
-        private static readonly TimeSpan ClientExpirationTime = TimeSpan.FromMinutes(5);
+        private static readonly TimeSpan s_clientExpirationTime = TimeSpan.FromMinutes(5);
 
-        private HttpClient client;
+        private HttpClient _client;
 
-        private DateTimeOffset? lastCreated;
+        private DateTimeOffset? _lastCreated;
 
         public HttpClientFactory(IMessageHandlerFactory messageHandlerFactory, IDateTimeService dateTimeService)
         {
-            this.messageHandlerFactory = messageHandlerFactory;
-            this.dateTimeService = dateTimeService;
+            _messageHandlerFactory = messageHandlerFactory;
+            _dateTimeService = dateTimeService;
         }
 
         public HttpClient GetOrCreateClient()
         {
-            DateTimeOffset now = this.dateTimeService.UtcNow;
-            if (!this.NeedsRefresh(now))
+            DateTimeOffset now = _dateTimeService.UtcNow;
+            if (!NeedsRefresh(now))
             {
-                return this.client;
+                return _client;
             }
 
-            lock (this.factoryLock)
+            lock (_factoryLock)
             {
                 // Re-check inside lock
-                if (this.NeedsRefresh(now))
+                if (NeedsRefresh(now))
                 {
-                    this.client = this.Create();
-                    this.lastCreated = now;
+                    _client = Create();
+                    _lastCreated = now;
                 }
 
-                return this.client;
+                return _client;
             }
         }
 
         private bool NeedsRefresh(DateTimeOffset now)
         {
-            return this.client == null || this.lastCreated == null || now > this.lastCreated.Value + ClientExpirationTime;
+            return _client == null || _lastCreated == null || now > _lastCreated.Value + s_clientExpirationTime;
         }
 
         private HttpClient Create()
         {
-            HttpClientHandler handler = this.messageHandlerFactory.Create();
+            HttpClientHandler handler = _messageHandlerFactory.Create();
             handler.AutomaticDecompression = DecompressionMethods.GZip | DecompressionMethods.Deflate;
 
             return new HttpClient(handler);

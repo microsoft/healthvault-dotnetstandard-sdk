@@ -2,10 +2,14 @@
 // Changes may cause incorrect behavior and will be lost if the code is
 // regenerated.
 
-using Newtonsoft.Json;
-
 namespace Microsoft.HealthVault.RestApi.Generated.Models
 {
+    using Microsoft.HealthVault;
+    using Microsoft.HealthVault.RestApi;
+    using Microsoft.HealthVault.RestApi.Generated;
+    using Newtonsoft.Json;
+    using System.Linq;
+
     /// <summary>
     /// The Onboarding response
     /// </summary>
@@ -16,7 +20,7 @@ namespace Microsoft.HealthVault.RestApi.Generated.Models
         /// </summary>
         public OnboardingResponse()
         {
-          this.CustomInit();
+          CustomInit();
         }
 
         /// <summary>
@@ -28,10 +32,10 @@ namespace Microsoft.HealthVault.RestApi.Generated.Models
         /// <param name="nextLink">The URI for the next page of data</param>
         public OnboardingResponse(string invitationCode = default(string), string inviteUrl = default(string), string nextLink = default(string))
         {
-            this.InvitationCode = invitationCode;
-            this.InviteUrl = inviteUrl;
-            this.NextLink = nextLink;
-            this.CustomInit();
+            InvitationCode = invitationCode;
+            InviteUrl = inviteUrl;
+            NextLink = nextLink;
+            CustomInit();
         }
 
         /// <summary>

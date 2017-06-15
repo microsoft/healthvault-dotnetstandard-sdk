@@ -129,8 +129,8 @@ namespace Microsoft.HealthVault.ItemTypes
         public File(string name, long size)
             : base(TypeId)
         {
-            this.Name = name;
-            this.Size = size;
+            Name = name;
+            Size = size;
         }
 
         /// <summary>
@@ -164,16 +164,16 @@ namespace Microsoft.HealthVault.ItemTypes
 
             Validator.ThrowInvalidIfNull(fileNav, Resources.FileUnexpectedNode);
 
-            this.name = fileNav.SelectSingleNode("name").Value;
-            this.size = fileNav.SelectSingleNode("size").ValueAsLong;
+            _name = fileNav.SelectSingleNode("name").Value;
+            _size = fileNav.SelectSingleNode("size").ValueAsLong;
 
             XPathNavigator contentTypeNav =
                 fileNav.SelectSingleNode("content-type");
 
             if (contentTypeNav != null)
             {
-                this.contentType = new CodableValue();
-                this.contentType.ParseXml(contentTypeNav);
+                _contentType = new CodableValue();
+                _contentType.ParseXml(contentTypeNav);
             }
         }
 
@@ -193,22 +193,22 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             Validator.ThrowIfWriterNull(writer);
 
-            if (string.IsNullOrEmpty(this.name))
+            if (string.IsNullOrEmpty(_name))
             {
                 throw new ThingSerializationException(Resources.FileNameNotSet);
             }
 
-            Validator.ThrowSerializationIfNull(this.size, Resources.FileSizeNotSet);
+            Validator.ThrowSerializationIfNull(_size, Resources.FileSizeNotSet);
 
             // <file>
             writer.WriteStartElement("file");
 
-            writer.WriteElementString("name", this.name);
-            writer.WriteElementString("size", this.size.ToString());
+            writer.WriteElementString("name", _name);
+            writer.WriteElementString("size", _size.ToString());
 
-            if (this.contentType != null)
+            if (_contentType != null)
             {
-                this.contentType.WriteXml("content-type", writer);
+                _contentType.WriteXml("content-type", writer);
             }
 
             // </file>
@@ -230,16 +230,16 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public string Name
         {
-            get { return this.name; }
+            get { return _name; }
 
             set
             {
                 Validator.ThrowIfStringNullOrEmpty(value, "Name");
-                this.name = value;
+                _name = value;
             }
         }
 
-        private string name;
+        private string _name;
 
         /// <summary>
         /// Gets or sets the file size.
@@ -261,21 +261,21 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             get
             {
-                return this.size.HasValue ? (long)this.size : 0;
+                return _size.HasValue ? (long)_size : 0;
             }
 
             set
             {
                 if (value <= 0)
                 {
-                    throw new ArgumentOutOfRangeException(nameof(this.Size), Resources.FileSizeNotPositive);
+                    throw new ArgumentOutOfRangeException(nameof(Size), Resources.FileSizeNotPositive);
                 }
 
-                this.size = value;
+                _size = value;
             }
         }
 
-        private long? size;
+        private long? _size;
 
         /// <summary>
         /// Gets or sets the type of content contained in the file.
@@ -291,11 +291,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public CodableValue ContentType
         {
-            get { return this.contentType; }
-            set { this.contentType = value; }
+            get { return _contentType; }
+            set { _contentType = value; }
         }
 
-        private CodableValue contentType;
+        private CodableValue _contentType;
 
         /// <summary>
         /// Gets the content of the file item.
@@ -306,7 +306,7 @@ namespace Microsoft.HealthVault.ItemTypes
             get
             {
                 byte[] result = null;
-                BlobStore store = this.GetBlobStore(default(HealthRecordAccessor));
+                BlobStore store = GetBlobStore(default(HealthRecordAccessor));
                 if (store.Count > 0 && store[string.Empty] != null)
                 {
                     result = store[string.Empty].ReadAllBytes();
@@ -325,7 +325,7 @@ namespace Microsoft.HealthVault.ItemTypes
             get
             {
                 Stream result = null;
-                BlobStore store = this.GetBlobStore(default(HealthRecordAccessor));
+                BlobStore store = GetBlobStore(default(HealthRecordAccessor));
                 if (store.Count > 0 && store[string.Empty] != null)
                 {
                     result = store[string.Empty].GetReaderStream();
@@ -345,7 +345,7 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public override string ToString()
         {
-            return this.Name;
+            return Name;
         }
 
         /// <summary>
@@ -410,12 +410,12 @@ namespace Microsoft.HealthVault.ItemTypes
             Validator.ThrowIfArgumentNull(contentType, nameof(contentType), Resources.FileContentTypeMustBeSpecified);
 
             FileInfo fileInfo = new FileInfo(path);
-            this.Size = fileInfo.Length;
-            this.Name = fileInfo.Name;
-            this.ContentType = contentType;
+            Size = fileInfo.Length;
+            Name = fileInfo.Name;
+            ContentType = contentType;
 
-            BlobStore store = this.GetBlobStore(default(HealthRecordAccessor));
-            Blob blob = store.NewBlob(string.Empty, this.ContentType.Text);
+            BlobStore store = GetBlobStore(default(HealthRecordAccessor));
+            Blob blob = store.NewBlob(string.Empty, ContentType.Text);
 
             byte[] content = System.IO.File.ReadAllBytes(path);
             blob.WriteInline(content);

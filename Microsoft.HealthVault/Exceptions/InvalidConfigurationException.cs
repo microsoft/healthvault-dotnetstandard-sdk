@@ -12,7 +12,6 @@ namespace Microsoft.HealthVault.Exceptions
     /// values.
     /// </summary>
     ///
-    [Serializable]
     public class InvalidConfigurationException : HealthVaultException
     {
         /// <summary>

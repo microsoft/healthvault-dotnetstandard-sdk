@@ -2,11 +2,16 @@
 // Changes may cause incorrect behavior and will be lost if the code is
 // regenerated.
 
-using System.Collections.Generic;
-using Newtonsoft.Json;
-
 namespace Microsoft.HealthVault.RestApi.Generated.Models
 {
+    using Microsoft.HealthVault;
+    using Microsoft.HealthVault.RestApi;
+    using Microsoft.HealthVault.RestApi.Generated;
+    using Newtonsoft.Json;
+    using System.Collections;
+    using System.Collections.Generic;
+    using System.Linq;
+
     /// <summary>
     /// A goal defines a target for a measurement or action to be performed by
     /// a user.
@@ -19,7 +24,7 @@ namespace Microsoft.HealthVault.RestApi.Generated.Models
         /// </summary>
         public Goal()
         {
-          this.CustomInit();
+          CustomInit();
         }
 
         /// <summary>
@@ -36,7 +41,8 @@ namespace Microsoft.HealthVault.RestApi.Generated.Models
         /// If the end date is in the future, this is the target date.</param>
         /// <param name="goalType">Specifies the type of data related to this
         /// goal. Possible values include: 'Unknown', 'Steps',
-        /// 'CaloriesBurned', 'Weight'</param>
+        /// 'CaloriesBurned', 'Weight', 'BloodPressureSystolic',
+        /// 'BloodPressureDiastolic'</param>
         /// <param name="recurrenceMetrics">The goal recurrence metrics.
         /// For example, A goal can be defined on a weekly interval, meaning
         /// the target is intended to be achieved every week. Walking 50000
@@ -47,16 +53,16 @@ namespace Microsoft.HealthVault.RestApi.Generated.Models
         /// goal.</param>
         public Goal(string id = default(string), string name = default(string), string description = default(string), System.DateTime? startDate = default(System.DateTime?), System.DateTime? endDate = default(System.DateTime?), string goalType = default(string), GoalRecurrenceMetrics recurrenceMetrics = default(GoalRecurrenceMetrics), GoalRange range = default(GoalRange), IList<GoalRange> additionalRanges = default(IList<GoalRange>))
         {
-            this.Id = id;
-            this.Name = name;
-            this.Description = description;
-            this.StartDate = startDate;
-            this.EndDate = endDate;
-            this.GoalType = goalType;
-            this.RecurrenceMetrics = recurrenceMetrics;
-            this.Range = range;
-            this.AdditionalRanges = additionalRanges;
-            this.CustomInit();
+            Id = id;
+            Name = name;
+            Description = description;
+            StartDate = startDate;
+            EndDate = endDate;
+            GoalType = goalType;
+            RecurrenceMetrics = recurrenceMetrics;
+            Range = range;
+            AdditionalRanges = additionalRanges;
+            CustomInit();
         }
 
         /// <summary>
@@ -100,7 +106,7 @@ namespace Microsoft.HealthVault.RestApi.Generated.Models
         /// <summary>
         /// Gets or sets specifies the type of data related to this goal.
         /// Possible values include: 'Unknown', 'Steps', 'CaloriesBurned',
-        /// 'Weight'
+        /// 'Weight', 'BloodPressureSystolic', 'BloodPressureDiastolic'
         /// </summary>
         [JsonProperty(PropertyName = "goalType")]
         public string GoalType { get; set; }

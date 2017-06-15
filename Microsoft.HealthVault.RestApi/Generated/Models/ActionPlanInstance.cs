@@ -2,11 +2,16 @@
 // Changes may cause incorrect behavior and will be lost if the code is
 // regenerated.
 
-using System.Collections.Generic;
-using Newtonsoft.Json;
-
 namespace Microsoft.HealthVault.RestApi.Generated.Models
 {
+    using Microsoft.HealthVault;
+    using Microsoft.HealthVault.RestApi;
+    using Microsoft.HealthVault.RestApi.Generated;
+    using Newtonsoft.Json;
+    using System.Collections;
+    using System.Collections.Generic;
+    using System.Linq;
+
     /// <summary>
     /// An instance of an action plan associated to a user
     /// </summary>
@@ -17,7 +22,7 @@ namespace Microsoft.HealthVault.RestApi.Generated.Models
         /// </summary>
         public ActionPlanInstance()
         {
-          this.CustomInit();
+          CustomInit();
         }
 
         /// <summary>
@@ -28,37 +33,38 @@ namespace Microsoft.HealthVault.RestApi.Generated.Models
         /// include: 'Unknown', 'Archived', 'Recommended', 'InProgress',
         /// 'Completed', 'Template'</param>
         /// <param name="organizationId">The ID of the organization that
-        /// manages this plan</param>
+        /// manages this plan. Read-only</param>
         /// <param name="organizationName">The name of the organization that
-        /// manages this plan</param>
+        /// manages this plan. Read-only</param>
         /// <param name="associatedTasks">The Task instances associated with
         /// this plan</param>
         /// <param name="name">The name of the plan, localized</param>
         /// <param name="description">The description of the plan,
         /// localized</param>
-        /// <param name="imageUrl">A URL to an image for the plan. Suggested
-        /// resolution is 212x212 with a 25px margin in the image.</param>
-        /// <param name="thumbnailImageUrl">A URL to a thumbnail image for the
-        /// plan. Suggested resolution is 212x212 with a 25px margin in the
+        /// <param name="imageUrl">An HTTPS URL to an image for the plan.
+        /// Suggested resolution is 212x212 with a 25px margin in the
         /// image.</param>
+        /// <param name="thumbnailImageUrl">An HTTPS URL to a thumbnail image
+        /// for the plan. Suggested resolution is 212x212 with a 25px margin in
+        /// the image.</param>
         /// <param name="category">The category of the plan. Possible values
         /// include: 'Unknown', 'Health', 'Sleep', 'Activity', 'Stress'</param>
         /// <param name="objectives">The Collection of objectives for the
         /// plan</param>
         public ActionPlanInstance(string id = default(string), string status = default(string), string organizationId = default(string), string organizationName = default(string), IList<ActionPlanTaskInstance> associatedTasks = default(IList<ActionPlanTaskInstance>), string name = default(string), string description = default(string), string imageUrl = default(string), string thumbnailImageUrl = default(string), string category = default(string), IList<Objective> objectives = default(IList<Objective>))
         {
-            this.Id = id;
-            this.Status = status;
-            this.OrganizationId = organizationId;
-            this.OrganizationName = organizationName;
-            this.AssociatedTasks = associatedTasks;
-            this.Name = name;
-            this.Description = description;
-            this.ImageUrl = imageUrl;
-            this.ThumbnailImageUrl = thumbnailImageUrl;
-            this.Category = category;
-            this.Objectives = objectives;
-            this.CustomInit();
+            Id = id;
+            Status = status;
+            OrganizationId = organizationId;
+            OrganizationName = organizationName;
+            AssociatedTasks = associatedTasks;
+            Name = name;
+            Description = description;
+            ImageUrl = imageUrl;
+            ThumbnailImageUrl = thumbnailImageUrl;
+            Category = category;
+            Objectives = objectives;
+            CustomInit();
         }
 
         /// <summary>
@@ -81,13 +87,15 @@ namespace Microsoft.HealthVault.RestApi.Generated.Models
         public string Status { get; set; }
 
         /// <summary>
-        /// Gets or sets the ID of the organization that manages this plan
+        /// Gets or sets the ID of the organization that manages this plan.
+        /// Read-only
         /// </summary>
         [JsonProperty(PropertyName = "organizationId")]
         public string OrganizationId { get; set; }
 
         /// <summary>
-        /// Gets or sets the name of the organization that manages this plan
+        /// Gets or sets the name of the organization that manages this plan.
+        /// Read-only
         /// </summary>
         [JsonProperty(PropertyName = "organizationName")]
         public string OrganizationName { get; set; }
@@ -111,15 +119,15 @@ namespace Microsoft.HealthVault.RestApi.Generated.Models
         public string Description { get; set; }
 
         /// <summary>
-        /// Gets or sets a URL to an image for the plan. Suggested resolution
-        /// is 212x212 with a 25px margin in the image.
+        /// Gets or sets an HTTPS URL to an image for the plan. Suggested
+        /// resolution is 212x212 with a 25px margin in the image.
         /// </summary>
         [JsonProperty(PropertyName = "imageUrl")]
         public string ImageUrl { get; set; }
 
         /// <summary>
-        /// Gets or sets a URL to a thumbnail image for the plan. Suggested
-        /// resolution is 212x212 with a 25px margin in the image.
+        /// Gets or sets an HTTPS URL to a thumbnail image for the plan.
+        /// Suggested resolution is 212x212 with a 25px margin in the image.
         /// </summary>
         [JsonProperty(PropertyName = "thumbnailImageUrl")]
         public string ThumbnailImageUrl { get; set; }

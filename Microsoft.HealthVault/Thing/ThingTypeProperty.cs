@@ -23,10 +23,10 @@ namespace Microsoft.HealthVault.Thing
             string xpath,
             IItemTypePropertyConversion conversion = null)
         {
-            this.Name = name;
-            this.Type = type;
-            this.xpath = xpath;
-            this.Conversion = conversion;
+            Name = name;
+            Type = type;
+            _xpath = xpath;
+            Conversion = conversion;
         }
 
         /// <summary>
@@ -46,9 +46,9 @@ namespace Microsoft.HealthVault.Thing
         /// <summary>
         /// The xpath for the property.
         /// </summary>
-        public string Xpath => !string.IsNullOrEmpty(this.xpath) ? this.xpath : null;
+        public string Xpath => !string.IsNullOrEmpty(_xpath) ? _xpath : null;
 
-        private readonly string xpath;
+        private readonly string _xpath;
 
         /// <summary>
         /// A units conversion to apply to the value of a property of numeric type.

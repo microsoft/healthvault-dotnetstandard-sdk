@@ -41,10 +41,10 @@ namespace Microsoft.HealthVault.ItemTypes
         /// </param>
         public BlobHashInfo(BlobHashAlgorithm blobHashAlgorithm, int blobBlockSizeBytes, byte[] hash)
         {
-            this.BlobHashAlgorithm = blobHashAlgorithm;
-            this.blobHashAlgorithmString = blobHashAlgorithm.ToString();
-            this.BlockSizeBytes = blobBlockSizeBytes;
-            this.Hash = hash;
+            BlobHashAlgorithm = blobHashAlgorithm;
+            _blobHashAlgorithmString = blobHashAlgorithm.ToString();
+            BlockSizeBytes = blobBlockSizeBytes;
+            Hash = hash;
         }
 
         internal void Parse(XPathNavigator blobHashNav)
@@ -62,7 +62,7 @@ namespace Microsoft.HealthVault.ItemTypes
                 blobHashAlg = BlobHashAlgorithm.Unknown;
             }
 
-            this.blobHashAlgorithmString = blobHashAlgString;
+            _blobHashAlgorithmString = blobHashAlgString;
 
             int blockSize = blobHashNav.SelectSingleNode("params/block-size").ValueAsInt;
 
@@ -75,27 +75,27 @@ namespace Microsoft.HealthVault.ItemTypes
                 blobHash = Convert.FromBase64String(blobHashStr);
             }
 
-            this.BlobHashAlgorithm = blobHashAlg;
-            this.BlockSizeBytes = blockSize;
-            this.Hash = blobHash;
+            BlobHashAlgorithm = blobHashAlg;
+            BlockSizeBytes = blockSize;
+            Hash = blobHash;
         }
 
         internal void Write(XmlWriter writer)
         {
             writer.WriteStartElement("hash-info");
 
-            writer.WriteElementString("algorithm", this.blobHashAlgorithmString);
+            writer.WriteElementString("algorithm", _blobHashAlgorithmString);
             writer.WriteStartElement("params");
 
             writer.WriteElementString(
                 "block-size",
-                this.BlockSizeBytes.ToString(CultureInfo.InvariantCulture));
+                BlockSizeBytes.ToString(CultureInfo.InvariantCulture));
 
             writer.WriteEndElement();
 
-            if (this.Hash != null)
+            if (Hash != null)
             {
-                writer.WriteElementString("hash", Convert.ToBase64String(this.Hash));
+                writer.WriteElementString("hash", Convert.ToBase64String(Hash));
             }
 
             writer.WriteEndElement();
@@ -106,7 +106,7 @@ namespace Microsoft.HealthVault.ItemTypes
         /// </summary>
         public BlobHashAlgorithm BlobHashAlgorithm { get; private set; }
 
-        private string blobHashAlgorithmString;
+        private string _blobHashAlgorithmString;
 
         /// <summary>
         /// The block size in bytes used by the <see cref="BlobHashAlgorithm" /> to

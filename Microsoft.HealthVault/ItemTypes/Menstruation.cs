@@ -47,8 +47,8 @@ namespace Microsoft.HealthVault.ItemTypes
         public Menstruation(HealthServiceDateTime when)
             : base(TypeId)
         {
-            Validator.ThrowIfArgumentNull(when, nameof(this.When), Resources.WhenNullValue);
-            this.when = when;
+            Validator.ThrowIfArgumentNull(when, nameof(When), Resources.WhenNullValue);
+            _when = when;
         }
 
         /// <summary>
@@ -81,17 +81,17 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             get
             {
-                return this.when;
+                return _when;
             }
 
             set
             {
-                Validator.ThrowIfArgumentNull(value, nameof(this.When), Resources.WhenNullValue);
-                this.when = value;
+                Validator.ThrowIfArgumentNull(value, nameof(When), Resources.WhenNullValue);
+                _when = value;
             }
         }
 
-        private HealthServiceDateTime when = new HealthServiceDateTime();
+        private HealthServiceDateTime _when = new HealthServiceDateTime();
 
         /// <summary>
         /// Gets or sets the amount of discharged fluid (e.g., light, medium, heavy or spotting).
@@ -101,11 +101,11 @@ namespace Microsoft.HealthVault.ItemTypes
         /// </remarks>
         public CodableValue Amount
         {
-            get { return this.amount; }
-            set { this.amount = value; }
+            get { return _amount; }
+            set { _amount = value; }
         }
 
-        private CodableValue amount;
+        private CodableValue _amount;
 
         /// <summary>
         /// Gets or sets the bool which indicates whether this instance represents the start of
@@ -113,11 +113,11 @@ namespace Microsoft.HealthVault.ItemTypes
         /// </summary>
         public bool? IsNewCycle
         {
-            get { return this.isNewCycle; }
-            set { this.isNewCycle = value; }
+            get { return _isNewCycle; }
+            set { _isNewCycle = value; }
         }
 
-        private bool? isNewCycle;
+        private bool? _isNewCycle;
 
         /// <summary>
         /// Populates this <see cref="Menstruation"/> instance from the data in the XML.
@@ -140,14 +140,14 @@ namespace Microsoft.HealthVault.ItemTypes
             Validator.ThrowInvalidIfNull(itemNav, Resources.MenstruationUnexpectedNode);
 
             // when
-            this.when = new HealthServiceDateTime();
-            this.when.ParseXml(itemNav.SelectSingleNode("when"));
+            _when = new HealthServiceDateTime();
+            _when.ParseXml(itemNav.SelectSingleNode("when"));
 
             // isNewCycle
-            this.isNewCycle = XPathHelper.GetOptNavValueAsBool(itemNav, "is-new-cycle");
+            _isNewCycle = XPathHelper.GetOptNavValueAsBool(itemNav, "is-new-cycle");
 
             // amount
-            this.amount = XPathHelper.GetOptNavValue<CodableValue>(itemNav, "amount");
+            _amount = XPathHelper.GetOptNavValue<CodableValue>(itemNav, "amount");
         }
 
         /// <summary>
@@ -169,19 +169,19 @@ namespace Microsoft.HealthVault.ItemTypes
         public override void WriteXml(XmlWriter writer)
         {
             Validator.ThrowIfWriterNull(writer);
-            Validator.ThrowSerializationIfNull(this.when, Resources.WhenNullValue);
+            Validator.ThrowSerializationIfNull(_when, Resources.WhenNullValue);
 
             // <menstrual-flow>
             writer.WriteStartElement("menstruation");
 
             // <when>
-            this.when.WriteXml("when", writer);
+            _when.WriteXml("when", writer);
 
             // <is-new-cycle>
-            XmlWriterHelper.WriteOptBool(writer, "is-new-cycle", this.isNewCycle);
+            XmlWriterHelper.WriteOptBool(writer, "is-new-cycle", _isNewCycle);
 
             // <amount>
-            XmlWriterHelper.WriteOpt(writer, "amount", this.amount);
+            XmlWriterHelper.WriteOpt(writer, "amount", _amount);
 
             // </menstrual-flow>
             writer.WriteEndElement();
@@ -197,12 +197,12 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public override string ToString()
         {
-            if (this.amount == null)
+            if (_amount == null)
             {
                 return null;
             }
 
-            return this.amount.Text;
+            return _amount.Text;
         }
     }
 }

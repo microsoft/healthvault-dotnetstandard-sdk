@@ -2,7 +2,6 @@
   <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), NetStandard.Common.targets))\NetStandard.Common.targets" />
   <PropertyGroup>
     <TargetFramework>netstandard1.4</TargetFramework>
-    <PackageTargetFallback>$(PackageTargetFallback);portable-win+net45+wp8+win81+wpa8</PackageTargetFallback>
   </PropertyGroup>
   <PropertyGroup>
     <DebugType>full</DebugType>

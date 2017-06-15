@@ -15,12 +15,12 @@ namespace Microsoft.HealthVault.UnitTest
 
         private const string ServiceInstanceSampleFile = "StoredServiceInstance.json";
 
-        private ISecretStore subSecretStore;
+        private ISecretStore _subSecretStore;
 
         [TestInitialize]
         public void TestInitialize()
         {
-            this.subSecretStore = Substitute.For<ISecretStore>();
+            _subSecretStore = Substitute.For<ISecretStore>();
         }
 
         [TestMethod]
@@ -35,18 +35,18 @@ namespace Microsoft.HealthVault.UnitTest
                 ShellUrl = new Uri("http://contoso.com/shell"),
             };
 
-            LocalObjectStore localObjectStore = this.CreateLocalObjectStore();
+            LocalObjectStore localObjectStore = CreateLocalObjectStore();
             await localObjectStore.WriteAsync(ServiceInstanceKey, serviceInstance);
 
-            await this.subSecretStore.Received().WriteAsync(ServiceInstanceKey, SampleUtils.GetSampleContent(ServiceInstanceSampleFile));
+            await _subSecretStore.Received().WriteAsync(ServiceInstanceKey, SampleUtils.GetSampleContent(ServiceInstanceSampleFile));
         }
 
         [TestMethod]
         public async Task NormalRead()
         {
-            this.subSecretStore.ReadAsync(ServiceInstanceKey).Returns(SampleUtils.GetSampleContent(ServiceInstanceSampleFile));
+            _subSecretStore.ReadAsync(ServiceInstanceKey).Returns(SampleUtils.GetSampleContent(ServiceInstanceSampleFile));
 
-            LocalObjectStore localObjectStore = this.CreateLocalObjectStore();
+            LocalObjectStore localObjectStore = CreateLocalObjectStore();
             HealthServiceInstance serviceInstance = await localObjectStore.ReadAsync<HealthServiceInstance>(ServiceInstanceKey);
 
             Assert.AreEqual("test", serviceInstance.Id);
@@ -59,7 +59,7 @@ namespace Microsoft.HealthVault.UnitTest
         private LocalObjectStore CreateLocalObjectStore()
         {
             return new LocalObjectStore(
-                this.subSecretStore);
+                _subSecretStore);
         }
     }
 }

@@ -52,7 +52,7 @@ namespace Microsoft.HealthVault.ItemTypes
         public VitalSigns(HealthServiceDateTime when)
             : base(TypeId)
         {
-            this.When = when;
+            When = when;
         }
 
         /// <summary>
@@ -86,8 +86,8 @@ namespace Microsoft.HealthVault.ItemTypes
 
             Validator.ThrowInvalidIfNull(itemNav, Resources.VitalSignsUnexpectedNode);
 
-            this.when = new HealthServiceDateTime();
-            this.when.ParseXml(itemNav.SelectSingleNode("when"));
+            _when = new HealthServiceDateTime();
+            _when.ParseXml(itemNav.SelectSingleNode("when"));
 
             XPathNodeIterator vitalSignsResultsIterator =
                 itemNav.Select("vital-signs-results");
@@ -96,15 +96,15 @@ namespace Microsoft.HealthVault.ItemTypes
             {
                 VitalSignsResultType vitalSignResult = new VitalSignsResultType();
                 vitalSignResult.ParseXml(vitalSignsResultsNav);
-                this.vitalSignsResults.Add(vitalSignResult);
+                _vitalSignsResults.Add(vitalSignResult);
             }
 
             // <site>
-            this.site =
+            _site =
                 XPathHelper.GetOptNavValue(itemNav, "site");
 
             // <position>
-            this.position =
+            _position =
                 XPathHelper.GetOptNavValue(itemNav, "position");
         }
 
@@ -127,15 +127,15 @@ namespace Microsoft.HealthVault.ItemTypes
         public override void WriteXml(XmlWriter writer)
         {
             Validator.ThrowIfWriterNull(writer);
-            Validator.ThrowSerializationIfNull(this.when, Resources.VitalSignsWhenNotSet);
+            Validator.ThrowSerializationIfNull(_when, Resources.VitalSignsWhenNotSet);
 
             // <vital-signs>
             writer.WriteStartElement("vital-signs");
 
             // <when>
-            this.when.WriteXml("when", writer);
+            _when.WriteXml("when", writer);
 
-            foreach (VitalSignsResultType vitalSignResult in this.vitalSignsResults)
+            foreach (VitalSignsResultType vitalSignResult in _vitalSignsResults)
             {
                 vitalSignResult.WriteXml("vital-signs-results", writer);
             }
@@ -144,13 +144,13 @@ namespace Microsoft.HealthVault.ItemTypes
             XmlWriterHelper.WriteOptString(
                 writer,
                 "site",
-                this.site);
+                _site);
 
             // <position>
             XmlWriterHelper.WriteOptString(
                 writer,
                 "position",
-                this.position);
+                _position);
 
             // </vital-signs>
             writer.WriteEndElement();
@@ -171,16 +171,16 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public HealthServiceDateTime When
         {
-            get { return this.when; }
+            get { return _when; }
 
             set
             {
-                Validator.ThrowIfArgumentNull(value, nameof(this.When), Resources.WhenNullValue);
-                this.when = value;
+                Validator.ThrowIfArgumentNull(value, nameof(When), Resources.WhenNullValue);
+                _when = value;
             }
         }
 
-        private HealthServiceDateTime when = new HealthServiceDateTime();
+        private HealthServiceDateTime _when = new HealthServiceDateTime();
 
         /// <summary>
         /// Gets or sets the vital sign results.
@@ -190,9 +190,9 @@ namespace Microsoft.HealthVault.ItemTypes
         /// A collection of vital sign results.
         /// </value>
         ///
-        public Collection<VitalSignsResultType> VitalSignsResults => this.vitalSignsResults;
+        public Collection<VitalSignsResultType> VitalSignsResults => _vitalSignsResults;
 
-        private readonly Collection<VitalSignsResultType> vitalSignsResults =
+        private readonly Collection<VitalSignsResultType> _vitalSignsResults =
             new Collection<VitalSignsResultType>();
 
         /// <summary>
@@ -214,16 +214,16 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public string Site
         {
-            get { return this.site; }
+            get { return _site; }
 
             set
             {
                 Validator.ThrowIfStringIsWhitespace(value, "Site");
-                this.site = value;
+                _site = value;
             }
         }
 
-        private string site;
+        private string _site;
 
         /// <summary>
         /// Gets or sets the position for the vital signs.
@@ -244,16 +244,16 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public string Position
         {
-            get { return this.position; }
+            get { return _position; }
 
             set
             {
                 Validator.ThrowIfStringIsWhitespace(value, "Position");
-                this.position = value;
+                _position = value;
             }
         }
 
-        private string position;
+        private string _position;
 
         /// <summary>
         /// Gets a string representation of the vital signs results.
@@ -267,9 +267,9 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             StringBuilder result = new StringBuilder(100);
 
-            if (this.VitalSignsResults.Count > 0)
+            if (VitalSignsResults.Count > 0)
             {
-                for (int index = 0; index < this.VitalSignsResults.Count; ++index)
+                for (int index = 0; index < VitalSignsResults.Count; ++index)
                 {
                     if (index > 0)
                     {
@@ -277,13 +277,13 @@ namespace Microsoft.HealthVault.ItemTypes
                             Resources.ListSeparator);
                     }
 
-                    VitalSignsResultType vitalSign = this.VitalSignsResults[index];
+                    VitalSignsResultType vitalSign = VitalSignsResults[index];
                     result.Append(vitalSign);
                 }
             }
             else
             {
-                result.Append(this.When);
+                result.Append(When);
             }
 
             return result.ToString();

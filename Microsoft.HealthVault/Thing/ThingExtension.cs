@@ -54,7 +54,7 @@ namespace Microsoft.HealthVault.Thing
             : this()
         {
             Validator.ThrowIfStringNullOrEmpty(source, "source");
-            this.source = source;
+            _source = source;
         }
 
         /// <summary>
@@ -63,7 +63,7 @@ namespace Microsoft.HealthVault.Thing
         ///
         public ThingExtension()
         {
-            this.extensionData = new XDocument();
+            _extensionData = new XDocument();
         }
 
         #endregion ctors
@@ -78,15 +78,15 @@ namespace Microsoft.HealthVault.Thing
         ///
         internal void ParseXml(XPathNavigator extensionNav)
         {
-            this.source = extensionNav.GetAttribute("source", string.Empty);
-            this.Version = extensionNav.GetAttribute("ver", string.Empty);
+            _source = extensionNav.GetAttribute("source", string.Empty);
+            Version = extensionNav.GetAttribute("ver", string.Empty);
 
             string logoString =
                 extensionNav.GetAttribute("logo", string.Empty);
 
             if (!string.IsNullOrEmpty(logoString))
             {
-                this.Logo = new Uri(logoString);
+                Logo = new Uri(logoString);
             }
 
             string transformString =
@@ -94,14 +94,14 @@ namespace Microsoft.HealthVault.Thing
 
             if (!string.IsNullOrEmpty(transformString))
             {
-                this.Transform = new Uri(transformString);
+                Transform = new Uri(transformString);
             }
 
             // Save off the data in its entirety
-            this.extensionData = SDKHelper.SafeLoadXml(extensionNav.OuterXml);
+            _extensionData = SDKHelper.SafeLoadXml(extensionNav.OuterXml);
 
             // Call the derived class for parsing.
-            this.ParseXml(this.ExtensionData);
+            ParseXml(ExtensionData);
         }
 
         /// <summary>
@@ -140,31 +140,31 @@ namespace Microsoft.HealthVault.Thing
         ///
         internal void WriteExtensionXml(XmlWriter writer)
         {
-            if (string.IsNullOrEmpty(this.source))
+            if (string.IsNullOrEmpty(_source))
             {
                 throw new ThingSerializationException(Resources.ExtensionSerializationSourceMissing);
             }
 
             // <extension>
             writer.WriteStartElement("extension");
-            writer.WriteAttributeString("source", this.source);
+            writer.WriteAttributeString("source", _source);
 
-            if (!string.IsNullOrEmpty(this.Version))
+            if (!string.IsNullOrEmpty(Version))
             {
-                writer.WriteAttributeString("ver", this.Version);
+                writer.WriteAttributeString("ver", Version);
             }
 
-            if (this.Logo != null)
+            if (Logo != null)
             {
-                writer.WriteAttributeString("logo", this.Logo.ToString());
+                writer.WriteAttributeString("logo", Logo.ToString());
             }
 
-            if (this.Transform != null)
+            if (Transform != null)
             {
-                writer.WriteAttributeString("xsl", this.Transform.ToString());
+                writer.WriteAttributeString("xsl", Transform.ToString());
             }
 
-            this.WriteXml(writer);
+            WriteXml(writer);
 
             // </extension>
             writer.WriteEndElement();
@@ -194,7 +194,7 @@ namespace Microsoft.HealthVault.Thing
         protected virtual void WriteXml(XmlWriter writer)
         {
             XPathNavigator extensionDocumentNav =
-                this.extensionData.CreateNavigator();
+                _extensionData.CreateNavigator();
 
             XPathNavigator extensionNodeNav =
                 extensionDocumentNav.SelectSingleNode("extension");
@@ -221,16 +221,16 @@ namespace Microsoft.HealthVault.Thing
         ///
         public string Source
         {
-            get { return this.source; }
+            get { return _source; }
 
             set
             {
                 Validator.ThrowIfStringNullOrEmpty(value, "Source");
-                this.source = value;
+                _source = value;
             }
         }
 
-        private string source;
+        private string _source;
 
         /// <summary>
         /// Gets or sets the version of the extension.
@@ -290,8 +290,8 @@ namespace Microsoft.HealthVault.Thing
         /// <br/><br/>
         /// </remarks>
         ///
-        public IXPathNavigable ExtensionData => this.extensionData.CreateNavigator();
+        public IXPathNavigable ExtensionData => _extensionData.CreateNavigator();
 
-        private XDocument extensionData;
+        private XDocument _extensionData;
     }
 }

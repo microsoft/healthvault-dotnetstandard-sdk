@@ -39,7 +39,7 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public DoseValue(double exactDosage)
         {
-            this.ExactDose = exactDosage;
+            ExactDose = exactDosage;
         }
 
         /// <summary>
@@ -58,20 +58,20 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             Validator.ThrowIfNavigatorNull(navigator);
 
-            this.description =
+            _description =
                 XPathHelper.GetOptNavValue(navigator, "description");
 
-            this.exactDose =
+            _exactDose =
                 XPathHelper.GetOptNavValueAsDouble(
                     navigator,
                     "exact-dose");
 
-            this.minDose =
+            _minDose =
                 XPathHelper.GetOptNavValueAsDouble(
                     navigator,
                     "min-dose");
 
-            this.maxDose =
+            _maxDose =
                 XPathHelper.GetOptNavValueAsDouble(
                     navigator,
                     "max-dose");
@@ -107,22 +107,22 @@ namespace Microsoft.HealthVault.ItemTypes
             XmlWriterHelper.WriteOptString(
                 writer,
                 "description",
-                this.description);
+                _description);
 
             XmlWriterHelper.WriteOptDouble(
                 writer,
                 "exact-dose",
-                this.exactDose);
+                _exactDose);
 
             XmlWriterHelper.WriteOptDouble(
                 writer,
                 "min-dose",
-                this.minDose);
+                _minDose);
 
             XmlWriterHelper.WriteOptDouble(
                 writer,
                 "max-dose",
-                this.maxDose);
+                _maxDose);
 
             writer.WriteEndElement();
         }
@@ -141,16 +141,16 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public string Description
         {
-            get { return this.description; }
+            get { return _description; }
 
             set
             {
                 Validator.ThrowIfStringIsWhitespace(value, "Description");
-                this.description = value;
+                _description = value;
             }
         }
 
-        private string description;
+        private string _description;
 
         /// <summary>
         /// Gets or sets an exact value for the dosage.
@@ -170,20 +170,20 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public double? ExactDose
         {
-            get { return this.exactDose; }
+            get { return _exactDose; }
 
             set
             {
                 if (value != null && value.Value <= 0.0)
                 {
-                    throw new ArgumentOutOfRangeException(nameof(this.ExactDose), Resources.DoseValueMustBePositive);
+                    throw new ArgumentOutOfRangeException(nameof(ExactDose), Resources.DoseValueMustBePositive);
                 }
 
-                this.exactDose = value;
+                _exactDose = value;
             }
         }
 
-        private double? exactDose;
+        private double? _exactDose;
 
         /// <summary>
         /// Gets or sets a minimum value for the dosage.
@@ -203,20 +203,20 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public double? MinDose
         {
-            get { return this.minDose; }
+            get { return _minDose; }
 
             set
             {
                 if (value != null && value.Value <= 0.0)
                 {
-                    throw new ArgumentOutOfRangeException(nameof(this.MinDose), Resources.DoseValueMustBePositive);
+                    throw new ArgumentOutOfRangeException(nameof(MinDose), Resources.DoseValueMustBePositive);
                 }
 
-                this.minDose = value;
+                _minDose = value;
             }
         }
 
-        private double? minDose;
+        private double? _minDose;
 
         /// <summary>
         /// Gets or sets a maximum value for the dosage.
@@ -236,20 +236,20 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public double? MaxDose
         {
-            get { return this.maxDose; }
+            get { return _maxDose; }
 
             set
             {
                 if (value != null && value.Value <= 0.0)
                 {
-                    throw new ArgumentOutOfRangeException(nameof(this.MaxDose), Resources.DoseValueMustBePositive);
+                    throw new ArgumentOutOfRangeException(nameof(MaxDose), Resources.DoseValueMustBePositive);
                 }
 
-                this.maxDose = value;
+                _maxDose = value;
             }
         }
 
-        private double? maxDose;
+        private double? _maxDose;
 
         /// <summary>
         /// Gets a string representation of the dose value.
@@ -261,36 +261,36 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public override string ToString()
         {
-            if (this.Description != null)
+            if (Description != null)
             {
-                return this.Description;
+                return Description;
             }
 
-            if (this.ExactDose != null)
+            if (ExactDose != null)
             {
-                return this.ExactDose.Value.ToString();
+                return ExactDose.Value.ToString();
             }
 
-            if (this.MinDose != null && this.MaxDose != null)
+            if (MinDose != null && MaxDose != null)
             {
                 return string.Format(
                         Resources.DoseValueToStringDoseMinAndMax,
-                    this.MinDose.Value,
-                    this.MaxDose.Value);
+                    MinDose.Value,
+                    MaxDose.Value);
             }
 
-            if (this.MinDose != null)
+            if (MinDose != null)
             {
                 return string.Format(
                         Resources.DoseValueToStringDoseMin,
-                    this.MinDose.Value);
+                    MinDose.Value);
             }
 
-            if (this.MaxDose != null)
+            if (MaxDose != null)
             {
                 return string.Format(
                         Resources.DoseValueToStringDoseMax,
-                    this.MaxDose.Value);
+                    MaxDose.Value);
             }
 
             return string.Format(

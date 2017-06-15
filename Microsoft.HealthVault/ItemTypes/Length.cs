@@ -7,7 +7,6 @@ using System;
 using System.Globalization;
 using System.Xml;
 using System.Xml.XPath;
-using Microsoft.HealthVault.Helpers;
 
 namespace Microsoft.HealthVault.ItemTypes
 {
@@ -86,8 +85,8 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public double Meters
         {
-            get { return this.Value; }
-            set { this.Value = value; }
+            get { return Value; }
+            set { Value = value; }
         }
 
         /// <summary>
@@ -120,7 +119,7 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         protected override void ParseValueXml(XPathNavigator navigator)
         {
-            this.Value = navigator.SelectSingleNode("m").ValueAsDouble;
+            Value = navigator.SelectSingleNode("m").ValueAsDouble;
         }
 
         /// <summary>
@@ -134,7 +133,7 @@ namespace Microsoft.HealthVault.ItemTypes
         protected override void WriteValueXml(XmlWriter writer)
         {
             writer.WriteElementString(
-                "m", XmlConvert.ToString(this.Value));
+                "m", XmlConvert.ToString(Value));
         }
 
         /// <summary>

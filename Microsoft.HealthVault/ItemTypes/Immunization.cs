@@ -54,8 +54,8 @@ namespace Microsoft.HealthVault.ItemTypes
         public Immunization(CodableValue name, ApproximateDateTime dateAdministrated)
             : base(TypeId)
         {
-            this.Name = name;
-            this.DateAdministrated = dateAdministrated;
+            Name = name;
+            DateAdministrated = dateAdministrated;
         }
 
         /// <summary>
@@ -74,7 +74,7 @@ namespace Microsoft.HealthVault.ItemTypes
         public Immunization(CodableValue name)
             : base(TypeId)
         {
-            this.Name = name;
+            Name = name;
         }
 
         /// <summary>
@@ -110,55 +110,55 @@ namespace Microsoft.HealthVault.ItemTypes
             Validator.ThrowInvalidIfNull(itemNav, Resources.ImmunizationUnexpectedNode);
 
             // <name>
-            this.name.ParseXml(itemNav.SelectSingleNode("name"));
+            _name.ParseXml(itemNav.SelectSingleNode("name"));
 
             // <administration-date>
-            this.dateAdministrated =
+            _dateAdministrated =
                 XPathHelper.GetOptNavValue<ApproximateDateTime>(
                     itemNav,
                     "administration-date");
 
             // <administrator>
-            this.administrator =
+            _administrator =
                 XPathHelper.GetOptNavValue<PersonItem>(
                     itemNav,
                     "administrator");
 
             // <manufacturer>
-            this.manufacturer =
+            _manufacturer =
                 XPathHelper.GetOptNavValue<CodableValue>(itemNav, "manufacturer");
 
             // <lot>
-            this.lot = XPathHelper.GetOptNavValue(itemNav, "lot");
+            _lot = XPathHelper.GetOptNavValue(itemNav, "lot");
 
             // <route>
-            this.route =
+            _route =
                 XPathHelper.GetOptNavValue<CodableValue>(
                     itemNav,
                     "route");
 
             // <expiration-date> approx-date-time
-            this.expirationDate =
+            _expirationDate =
                 XPathHelper.GetOptNavValue<ApproximateDate>(
                     itemNav,
                     "expiration-date");
 
             // <sequence>
-            this.sequence =
+            _sequence =
                 XPathHelper.GetOptNavValue(itemNav, "sequence");
 
             // <anatomic-surface>
-            this.anatomicSurface =
+            _anatomicSurface =
                 XPathHelper.GetOptNavValue<CodableValue>(
                     itemNav,
                     "anatomic-surface");
 
             // <adverse-event> string
-            this.adverseEvent =
+            _adverseEvent =
                 XPathHelper.GetOptNavValue(itemNav, "adverse-event");
 
             // <consent>
-            this.consent =
+            _consent =
                 XPathHelper.GetOptNavValue(itemNav, "consent");
         }
 
@@ -181,72 +181,72 @@ namespace Microsoft.HealthVault.ItemTypes
         public override void WriteXml(XmlWriter writer)
         {
             Validator.ThrowIfWriterNull(writer);
-            Validator.ThrowSerializationIfNull(this.name.Text, Resources.ImmunizationNameNotSet);
+            Validator.ThrowSerializationIfNull(_name.Text, Resources.ImmunizationNameNotSet);
 
             // <immunization>
             writer.WriteStartElement("immunization");
 
-            this.name.WriteXml("name", writer);
+            _name.WriteXml("name", writer);
 
             // <administration-date>
             XmlWriterHelper.WriteOpt(
                 writer,
                 "administration-date",
-                this.dateAdministrated);
+                _dateAdministrated);
 
             // <administrator>
             XmlWriterHelper.WriteOpt(
                 writer,
                 "administrator",
-                this.Administrator);
+                Administrator);
 
             // <manufacturer>
             XmlWriterHelper.WriteOpt(
                 writer,
                 "manufacturer",
-                this.manufacturer);
+                _manufacturer);
 
             // <lot>
             XmlWriterHelper.WriteOptString(
                 writer,
                 "lot",
-                this.lot);
+                _lot);
 
             // <route>
             XmlWriterHelper.WriteOpt(
                 writer,
                 "route",
-                this.Route);
+                Route);
 
             // <expiration-date>
             XmlWriterHelper.WriteOpt(
                 writer,
                 "expiration-date",
-                this.expirationDate);
+                _expirationDate);
 
             // <sequence>
             XmlWriterHelper.WriteOptString(
                 writer,
                 "sequence",
-                this.sequence);
+                _sequence);
 
             // <anatomic-surface>
             XmlWriterHelper.WriteOpt(
                 writer,
                 "anatomic-surface",
-                this.AnatomicSurface);
+                AnatomicSurface);
 
             // <adverse-event>
             XmlWriterHelper.WriteOptString(
                 writer,
                 "adverse-event",
-                this.adverseEvent);
+                _adverseEvent);
 
             // <consent>
             XmlWriterHelper.WriteOptString(
                 writer,
                 "consent",
-                this.consent);
+                _consent);
 
             // </immunization>
             writer.WriteEndElement();
@@ -270,16 +270,16 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public CodableValue Name
         {
-            get { return this.name; }
+            get { return _name; }
 
             set
             {
-                Validator.ThrowIfArgumentNull(value, nameof(this.Name), Resources.ImmunizationNameMandatory);
-                this.name = value;
+                Validator.ThrowIfArgumentNull(value, nameof(Name), Resources.ImmunizationNameMandatory);
+                _name = value;
             }
         }
 
-        private CodableValue name = new CodableValue();
+        private CodableValue _name = new CodableValue();
 
         /// <summary>
         /// Gets or sets the date the immunization was administrated.
@@ -291,11 +291,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public ApproximateDateTime DateAdministrated
         {
-            get { return this.dateAdministrated; }
-            set { this.dateAdministrated = value; }
+            get { return _dateAdministrated; }
+            set { _dateAdministrated = value; }
         }
 
-        private ApproximateDateTime dateAdministrated;
+        private ApproximateDateTime _dateAdministrated;
 
         /// <summary>
         /// Gets or sets the name of the administrator of the immunization.
@@ -311,11 +311,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public PersonItem Administrator
         {
-            get { return this.administrator; }
-            set { this.administrator = value; }
+            get { return _administrator; }
+            set { _administrator = value; }
         }
 
-        private PersonItem administrator;
+        private PersonItem _administrator;
 
         /// <summary>
         /// Gets or sets the manufacturer of the vaccine.
@@ -332,11 +332,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public CodableValue Manufacturer
         {
-            get { return this.manufacturer; }
-            set { this.manufacturer = value; }
+            get { return _manufacturer; }
+            set { _manufacturer = value; }
         }
 
-        private CodableValue manufacturer;
+        private CodableValue _manufacturer;
 
         /// <summary>
         /// Gets or sets the lot of the vaccine.
@@ -356,16 +356,16 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public string Lot
         {
-            get { return this.lot; }
+            get { return _lot; }
 
             set
             {
                 Validator.ThrowIfStringIsWhitespace(value, "Lot");
-                this.lot = value;
+                _lot = value;
             }
         }
 
-        private string lot;
+        private string _lot;
 
         /// <summary>
         /// Gets or sets the medical route for the immunization.
@@ -377,11 +377,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public CodableValue Route
         {
-            get { return this.route; }
-            set { this.route = value; }
+            get { return _route; }
+            set { _route = value; }
         }
 
-        private CodableValue route;
+        private CodableValue _route;
 
         /// <summary>
         /// Gets or sets the expiration date for the vaccine.
@@ -393,11 +393,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public ApproximateDate ExpirationDate
         {
-            get { return this.expirationDate; }
-            set { this.expirationDate = value; }
+            get { return _expirationDate; }
+            set { _expirationDate = value; }
         }
 
-        private ApproximateDate expirationDate;
+        private ApproximateDate _expirationDate;
 
         /// <summary>
         /// Gets or sets the sequence for the immunization.
@@ -417,16 +417,16 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public string Sequence
         {
-            get { return this.sequence; }
+            get { return _sequence; }
 
             set
             {
                 Validator.ThrowIfStringIsWhitespace(value, "Sequence");
-                this.sequence = value;
+                _sequence = value;
             }
         }
 
-        private string sequence;
+        private string _sequence;
 
         /// <summary>
         /// Gets or sets the anatomic surface for the immunization.
@@ -438,11 +438,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public CodableValue AnatomicSurface
         {
-            get { return this.anatomicSurface; }
-            set { this.anatomicSurface = value; }
+            get { return _anatomicSurface; }
+            set { _anatomicSurface = value; }
         }
 
-        private CodableValue anatomicSurface;
+        private CodableValue _anatomicSurface;
 
         /// <summary>
         /// Gets or sets any adverse event description for the immunization.
@@ -462,16 +462,16 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public string AdverseEvent
         {
-            get { return this.adverseEvent; }
+            get { return _adverseEvent; }
 
             set
             {
                 Validator.ThrowIfStringIsWhitespace(value, "AdverseEvent");
-                this.adverseEvent = value;
+                _adverseEvent = value;
             }
         }
 
-        private string adverseEvent;
+        private string _adverseEvent;
 
         /// <summary>
         /// Gets or sets the consent description for the immunization.
@@ -491,16 +491,16 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public string Consent
         {
-            get { return this.consent; }
+            get { return _consent; }
 
             set
             {
                 Validator.ThrowIfStringIsWhitespace(value, "Consent");
-                this.consent = value;
+                _consent = value;
             }
         }
 
-        private string consent;
+        private string _consent;
 
         /// <summary>
         /// Gets a string representation of the immunization item.
@@ -512,15 +512,15 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public override string ToString()
         {
-            string result = this.Name.ToString();
+            string result = Name.ToString();
 
-            if (this.DateAdministrated != null)
+            if (DateAdministrated != null)
             {
                 result =
                     string.Format(
                         Resources.ImmunizationToStringFormat,
-                        this.Name.ToString(),
-                        this.DateAdministrated.ToString());
+                        Name.ToString(),
+                        DateAdministrated.ToString());
             }
 
             return result;

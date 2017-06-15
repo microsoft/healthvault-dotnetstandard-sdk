@@ -55,58 +55,58 @@ namespace Microsoft.HealthVault.Thing
         protected virtual void ParseXml(XPathNavigator typeNavigator)
         {
             string typeIdString = typeNavigator.SelectSingleNode("id").Value;
-            this.TypeId = new Guid(typeIdString);
-            this.Name = typeNavigator.SelectSingleNode("name").Value;
+            TypeId = new Guid(typeIdString);
+            Name = typeNavigator.SelectSingleNode("name").Value;
 
             XPathNavigator isCreatableNavigator = typeNavigator.SelectSingleNode("uncreatable");
             if (isCreatableNavigator != null)
             {
-                this.IsCreatable = !isCreatableNavigator.ValueAsBoolean;
+                IsCreatable = !isCreatableNavigator.ValueAsBoolean;
             }
 
             XPathNavigator isImmutableNavigator = typeNavigator.SelectSingleNode("immutable");
             if (isImmutableNavigator != null)
             {
-                this.IsImmutable = isImmutableNavigator.ValueAsBoolean;
+                IsImmutable = isImmutableNavigator.ValueAsBoolean;
             }
 
             XPathNavigator isSingletonNavigator = typeNavigator.SelectSingleNode("singleton");
             if (isSingletonNavigator != null)
             {
-                this.IsSingletonType = isSingletonNavigator.ValueAsBoolean;
+                IsSingletonType = isSingletonNavigator.ValueAsBoolean;
             }
 
             XPathNavigator allowReadOnlyNavigator = typeNavigator.SelectSingleNode("allow-readonly");
             if (allowReadOnlyNavigator != null)
             {
-                this.AllowReadOnly = allowReadOnlyNavigator.ValueAsBoolean;
+                AllowReadOnly = allowReadOnlyNavigator.ValueAsBoolean;
             }
 
             XPathNavigator xsdNavigator = typeNavigator.SelectSingleNode("xsd");
 
             if (xsdNavigator != null)
             {
-                this.XmlSchemaDefinition = xsdNavigator.Value;
+                XmlSchemaDefinition = xsdNavigator.Value;
             }
             else
             {
-                this.XmlSchemaDefinition = string.Empty;
+                XmlSchemaDefinition = string.Empty;
             }
 
-            this.Versions = GetThingTypeVersions(typeNavigator);
+            Versions = GetThingTypeVersions(typeNavigator);
 
             XPathNavigator effectiveDateXPath = typeNavigator.SelectSingleNode("effective-date-xpath");
 
             if (effectiveDateXPath != null)
             {
-                this.EffectiveDateXPath = effectiveDateXPath.Value;
+                EffectiveDateXPath = effectiveDateXPath.Value;
             }
 
             XPathNavigator updatedEndDateNavigator = typeNavigator.SelectSingleNode("updated-end-date-xpath");
 
             if (updatedEndDateNavigator != null)
             {
-                this.UpdatedEndDateXPath = updatedEndDateNavigator.Value;
+                UpdatedEndDateXPath = updatedEndDateNavigator.Value;
             }
         }
 

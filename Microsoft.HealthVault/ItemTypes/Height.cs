@@ -49,7 +49,7 @@ namespace Microsoft.HealthVault.ItemTypes
         public Height(double meters)
             : base(TypeId)
         {
-            this.value.Value = meters;
+            _value.Value = meters;
         }
 
         /// <summary>
@@ -76,8 +76,8 @@ namespace Microsoft.HealthVault.ItemTypes
             Validator.ThrowIfArgumentNull(when, nameof(when), Resources.WhenNullValue);
             Validator.ThrowIfArgumentNull(height, nameof(height), Resources.HeightValueMandatory);
 
-            this.when = when;
-            this.value = height;
+            _when = when;
+            _value = height;
         }
 
         /// <summary>
@@ -101,8 +101,8 @@ namespace Microsoft.HealthVault.ItemTypes
         public Height(double meters, DisplayValue displayValue)
             : base(TypeId)
         {
-            this.value.Value = meters;
-            this.value.DisplayValue = displayValue;
+            _value.Value = meters;
+            _value.DisplayValue = displayValue;
         }
 
         /// <summary>
@@ -136,11 +136,11 @@ namespace Microsoft.HealthVault.ItemTypes
 
             Validator.ThrowInvalidIfNull(heightNav, Resources.HeightUnexpectedNode);
 
-            this.when = new HealthServiceDateTime();
-            this.when.ParseXml(heightNav.SelectSingleNode("when"));
+            _when = new HealthServiceDateTime();
+            _when.ParseXml(heightNav.SelectSingleNode("when"));
 
-            this.value = new Length();
-            this.value.ParseXml(heightNav.SelectSingleNode("value"));
+            _value = new Length();
+            _value.ParseXml(heightNav.SelectSingleNode("value"));
         }
 
         /// <summary>
@@ -162,15 +162,15 @@ namespace Microsoft.HealthVault.ItemTypes
         public override void WriteXml(XmlWriter writer)
         {
             Validator.ThrowIfWriterNull(writer);
-            Validator.ThrowSerializationIfNull(this.value, Resources.HeightValueNotSet);
+            Validator.ThrowSerializationIfNull(_value, Resources.HeightValueNotSet);
 
             // <height>
             writer.WriteStartElement("height");
 
             // <when>
-            this.when.WriteXml("when", writer);
+            _when.WriteXml("when", writer);
 
-            this.value.WriteXml("value", writer);
+            _value.WriteXml("value", writer);
 
             // </height>
             writer.WriteEndElement();
@@ -192,16 +192,16 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public HealthServiceDateTime When
         {
-            get { return this.when; }
+            get { return _when; }
 
             set
             {
-                Validator.ThrowIfArgumentNull(value, nameof(this.When), Resources.WhenNullValue);
-                this.when = value;
+                Validator.ThrowIfArgumentNull(value, nameof(When), Resources.WhenNullValue);
+                _when = value;
             }
         }
 
-        private HealthServiceDateTime when = new HealthServiceDateTime();
+        private HealthServiceDateTime _when = new HealthServiceDateTime();
 
         /// <summary>
         /// Gets or sets the person's height.
@@ -217,16 +217,16 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public Length Value
         {
-            get { return this.value; }
+            get { return _value; }
 
             set
             {
-                Validator.ThrowIfArgumentNull(value, nameof(this.Value), Resources.HeightValueMandatory);
-                this.value = value;
+                Validator.ThrowIfArgumentNull(value, nameof(Value), Resources.HeightValueMandatory);
+                _value = value;
             }
         }
 
-        private Length value = new Length();
+        private Length _value = new Length();
 
         /// <summary>
         /// Gets a string representation of the height item.
@@ -238,7 +238,7 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public override string ToString()
         {
-            return this.Value.ToString();
+            return Value.ToString();
         }
     }
 }

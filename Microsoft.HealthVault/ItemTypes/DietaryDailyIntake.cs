@@ -52,7 +52,7 @@ namespace Microsoft.HealthVault.ItemTypes
         public DietaryDailyIntake(HealthServiceDate when)
             : base(TypeId)
         {
-            this.When = when;
+            When = when;
         }
 
         /// <summary>
@@ -88,15 +88,15 @@ namespace Microsoft.HealthVault.ItemTypes
 
             Validator.ThrowInvalidIfNull(intakeNav, Resources.DietaryDailyIntakeUnexpectedNode);
 
-            this.when = new HealthServiceDate();
-            this.when.ParseXml(intakeNav.SelectSingleNode("when"));
+            _when = new HealthServiceDate();
+            _when.ParseXml(intakeNav.SelectSingleNode("when"));
 
             XPathNavigator caloriesNav =
                 intakeNav.SelectSingleNode("calories");
 
             if (caloriesNav != null)
             {
-                this.calories = caloriesNav.ValueAsInt;
+                _calories = caloriesNav.ValueAsInt;
             }
 
             XPathNavigator totalFatNav =
@@ -104,8 +104,8 @@ namespace Microsoft.HealthVault.ItemTypes
 
             if (totalFatNav != null)
             {
-                this.totalFat = new WeightValue();
-                this.totalFat.ParseXml(totalFatNav);
+                _totalFat = new WeightValue();
+                _totalFat.ParseXml(totalFatNav);
             }
 
             XPathNavigator satFatNav =
@@ -113,8 +113,8 @@ namespace Microsoft.HealthVault.ItemTypes
 
             if (satFatNav != null)
             {
-                this.saturatedFat = new WeightValue();
-                this.saturatedFat.ParseXml(satFatNav);
+                _saturatedFat = new WeightValue();
+                _saturatedFat.ParseXml(satFatNav);
             }
 
             XPathNavigator transFatNav =
@@ -122,8 +122,8 @@ namespace Microsoft.HealthVault.ItemTypes
 
             if (transFatNav != null)
             {
-                this.transFat = new WeightValue();
-                this.transFat.ParseXml(transFatNav);
+                _transFat = new WeightValue();
+                _transFat.ParseXml(transFatNav);
             }
 
             XPathNavigator proteinNav =
@@ -131,8 +131,8 @@ namespace Microsoft.HealthVault.ItemTypes
 
             if (proteinNav != null)
             {
-                this.protein = new WeightValue();
-                this.protein.ParseXml(proteinNav);
+                _protein = new WeightValue();
+                _protein.ParseXml(proteinNav);
             }
 
             XPathNavigator totalCarbsNav =
@@ -140,8 +140,8 @@ namespace Microsoft.HealthVault.ItemTypes
 
             if (totalCarbsNav != null)
             {
-                this.totalCarbs = new WeightValue();
-                this.totalCarbs.ParseXml(totalCarbsNav);
+                _totalCarbs = new WeightValue();
+                _totalCarbs.ParseXml(totalCarbsNav);
             }
 
             XPathNavigator fiberNav =
@@ -149,8 +149,8 @@ namespace Microsoft.HealthVault.ItemTypes
 
             if (fiberNav != null)
             {
-                this.fiber = new WeightValue();
-                this.fiber.ParseXml(fiberNav);
+                _fiber = new WeightValue();
+                _fiber.ParseXml(fiberNav);
             }
 
             XPathNavigator sugarsNav =
@@ -158,8 +158,8 @@ namespace Microsoft.HealthVault.ItemTypes
 
             if (sugarsNav != null)
             {
-                this.sugars = new WeightValue();
-                this.sugars.ParseXml(sugarsNav);
+                _sugars = new WeightValue();
+                _sugars.ParseXml(sugarsNav);
             }
 
             XPathNavigator sodiumNav =
@@ -167,8 +167,8 @@ namespace Microsoft.HealthVault.ItemTypes
 
             if (sodiumNav != null)
             {
-                this.sodium = new WeightValue();
-                this.sodium.ParseXml(sodiumNav);
+                _sodium = new WeightValue();
+                _sodium.ParseXml(sodiumNav);
             }
 
             XPathNavigator cholesterolNav =
@@ -176,8 +176,8 @@ namespace Microsoft.HealthVault.ItemTypes
 
             if (cholesterolNav != null)
             {
-                this.cholesterol = new WeightValue();
-                this.cholesterol.ParseXml(cholesterolNav);
+                _cholesterol = new WeightValue();
+                _cholesterol.ParseXml(cholesterolNav);
             }
         }
 
@@ -201,42 +201,42 @@ namespace Microsoft.HealthVault.ItemTypes
             writer.WriteStartElement("dietary-intake-daily");
 
             // <when>
-            this.when.WriteXml("when", writer);
+            _when.WriteXml("when", writer);
 
             // <calories>
-            if (this.calories != null)
+            if (_calories != null)
             {
                 writer.WriteElementString(
                     "calories",
-                    this.calories.Value.ToString(CultureInfo.InvariantCulture));
+                    _calories.Value.ToString(CultureInfo.InvariantCulture));
             }
 
             // <total-fat>
-            this.totalFat?.WriteXml("total-fat", writer);
+            _totalFat?.WriteXml("total-fat", writer);
 
             // <saturated-fat>
-            this.saturatedFat?.WriteXml("saturated-fat", writer);
+            _saturatedFat?.WriteXml("saturated-fat", writer);
 
             // <trans-fat>
-            this.transFat?.WriteXml("trans-fat", writer);
+            _transFat?.WriteXml("trans-fat", writer);
 
             // <protein>
-            this.protein?.WriteXml("protein", writer);
+            _protein?.WriteXml("protein", writer);
 
             // <total-carbohydrates>
-            this.totalCarbs?.WriteXml("total-carbohydrates", writer);
+            _totalCarbs?.WriteXml("total-carbohydrates", writer);
 
             // <dietary-fiber>
-            this.fiber?.WriteXml("dietary-fiber", writer);
+            _fiber?.WriteXml("dietary-fiber", writer);
 
             // <sugars>
-            this.sugars?.WriteXml("sugars", writer);
+            _sugars?.WriteXml("sugars", writer);
 
             // <sodium>
-            this.sodium?.WriteXml("sodium", writer);
+            _sodium?.WriteXml("sodium", writer);
 
             // <cholesterol>
-            this.cholesterol?.WriteXml("cholesterol", writer);
+            _cholesterol?.WriteXml("cholesterol", writer);
 
             // </dietary-intake-daily>
             writer.WriteEndElement();
@@ -260,16 +260,16 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public HealthServiceDate When
         {
-            get { return this.when; }
+            get { return _when; }
 
             set
             {
-                Validator.ThrowIfArgumentNull(value, nameof(this.When), Resources.WhenNullValue);
-                this.when = value;
+                Validator.ThrowIfArgumentNull(value, nameof(When), Resources.WhenNullValue);
+                _when = value;
             }
         }
 
-        private HealthServiceDate when = new HealthServiceDate();
+        private HealthServiceDate _when = new HealthServiceDate();
 
         /// <summary>
         /// Gets or sets the caloric intake for the day.
@@ -286,11 +286,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public int? Calories
         {
-            get { return this.calories; }
-            set { this.calories = value; }
+            get { return _calories; }
+            set { _calories = value; }
         }
 
-        private int? calories;
+        private int? _calories;
 
         /// <summary>
         /// Gets or sets the total intake of fat for the day.
@@ -307,11 +307,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public WeightValue TotalFat
         {
-            get { return this.totalFat; }
-            set { this.totalFat = value; }
+            get { return _totalFat; }
+            set { _totalFat = value; }
         }
 
-        private WeightValue totalFat;
+        private WeightValue _totalFat;
 
         /// <summary>
         /// Gets or sets the intake of saturated fat for the day.
@@ -328,11 +328,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public WeightValue SaturatedFat
         {
-            get { return this.saturatedFat; }
-            set { this.saturatedFat = value; }
+            get { return _saturatedFat; }
+            set { _saturatedFat = value; }
         }
 
-        private WeightValue saturatedFat;
+        private WeightValue _saturatedFat;
 
         /// <summary>
         /// Gets or sets the intake of trans fat for the day.
@@ -349,11 +349,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public WeightValue TransFat
         {
-            get { return this.transFat; }
-            set { this.transFat = value; }
+            get { return _transFat; }
+            set { _transFat = value; }
         }
 
-        private WeightValue transFat;
+        private WeightValue _transFat;
 
         /// <summary>
         /// Gets or sets the intake of protein for the day.
@@ -370,11 +370,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public WeightValue Protein
         {
-            get { return this.protein; }
-            set { this.protein = value; }
+            get { return _protein; }
+            set { _protein = value; }
         }
 
-        private WeightValue protein;
+        private WeightValue _protein;
 
         /// <summary>
         /// Gets or sets the total intake of carbohydrates for the day.
@@ -392,11 +392,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public WeightValue TotalCarbohydrates
         {
-            get { return this.totalCarbs; }
-            set { this.totalCarbs = value; }
+            get { return _totalCarbs; }
+            set { _totalCarbs = value; }
         }
 
-        private WeightValue totalCarbs;
+        private WeightValue _totalCarbs;
 
         /// <summary>
         /// Gets or sets the intake of dietary fiber for the day.
@@ -413,11 +413,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public WeightValue DietaryFiber
         {
-            get { return this.fiber; }
-            set { this.fiber = value; }
+            get { return _fiber; }
+            set { _fiber = value; }
         }
 
-        private WeightValue fiber;
+        private WeightValue _fiber;
 
         /// <summary>
         /// Gets or sets the intake of sugars for the day.
@@ -434,11 +434,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public WeightValue Sugars
         {
-            get { return this.sugars; }
-            set { this.sugars = value; }
+            get { return _sugars; }
+            set { _sugars = value; }
         }
 
-        private WeightValue sugars;
+        private WeightValue _sugars;
 
         /// <summary>
         /// Gets or sets the intake of sodium for the day.
@@ -455,11 +455,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public WeightValue Sodium
         {
-            get { return this.sodium; }
-            set { this.sodium = value; }
+            get { return _sodium; }
+            set { _sodium = value; }
         }
 
-        private WeightValue sodium;
+        private WeightValue _sodium;
 
         /// <summary>
         /// Gets or sets the intake of cholesterol for the day.
@@ -476,11 +476,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public WeightValue Cholesterol
         {
-            get { return this.cholesterol; }
-            set { this.cholesterol = value; }
+            get { return _cholesterol; }
+            set { _cholesterol = value; }
         }
 
-        private WeightValue cholesterol;
+        private WeightValue _cholesterol;
 
         /// <summary>
         /// Gets a string representation of the dietary daily intake item.
@@ -497,49 +497,49 @@ namespace Microsoft.HealthVault.ItemTypes
 
             StringBuilder result = new StringBuilder(100);
 
-            if (this.Calories != null)
+            if (Calories != null)
             {
                 result.AppendFormat(
                     Resources.DietaryDailyIntakeToStringFormatCalories,
-                    this.Calories.Value);
+                    Calories.Value);
             }
 
-            if (this.TotalFat != null)
+            if (TotalFat != null)
             {
-                if (this.Calories != null)
+                if (Calories != null)
                 {
                     result.Append(listSeparator);
                 }
 
                 AppendWeightValue(
                     result,
-                    this.TotalFat,
+                    TotalFat,
                     Resources.DietaryDailyIntakeToStringFormatTotalFat);
             }
 
-            if (this.Protein != null)
+            if (Protein != null)
             {
-                if (this.Calories != null || this.TotalFat != null)
+                if (Calories != null || TotalFat != null)
                 {
                     result.Append(listSeparator);
                 }
 
                 AppendWeightValue(
                     result,
-                    this.Protein,
+                    Protein,
                     Resources.DietaryDailyIntakeToStringFormatProtein);
             }
 
-            if (this.TotalCarbohydrates != null)
+            if (TotalCarbohydrates != null)
             {
-                if (this.Calories != null || this.TotalFat != null || this.Protein != null)
+                if (Calories != null || TotalFat != null || Protein != null)
                 {
                     result.Append(listSeparator);
                 }
 
                 AppendWeightValue(
                     result,
-                    this.TotalCarbohydrates,
+                    TotalCarbohydrates,
                     Resources.DietaryDailyIntakeToStringFormatTotalCarbs);
             }
 

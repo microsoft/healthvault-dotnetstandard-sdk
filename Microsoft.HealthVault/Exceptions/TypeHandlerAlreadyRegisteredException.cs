@@ -12,7 +12,6 @@ namespace Microsoft.HealthVault.Exceptions
     /// the specified item type.
     /// </summary>
     ///
-    [Serializable]
     public sealed class TypeHandlerAlreadyRegisteredException : HealthVaultException
     {
         /// <summary>

@@ -52,7 +52,7 @@ namespace Microsoft.HealthVault.Thing
                 throw new ArgumentException(Resources.RelationshipItemIDNotSpecified, nameof(itemId));
             }
 
-            this.ItemKey = new ThingKey(itemId);
+            ItemKey = new ThingKey(itemId);
         }
 
         /// <summary>
@@ -73,7 +73,7 @@ namespace Microsoft.HealthVault.Thing
         {
             Validator.ThrowIfArgumentNull(itemKey, nameof(itemKey), Resources.RelationshipItemKeyNotSpecified);
 
-            this.ItemKey = itemKey;
+            ItemKey = itemKey;
         }
 
         /// <summary>
@@ -92,7 +92,7 @@ namespace Microsoft.HealthVault.Thing
         public ThingRelationship(string clientId)
         {
             Validator.ThrowIfStringNullOrEmpty(clientId, "clientId");
-            this.ClientId = clientId;
+            ClientId = clientId;
         }
 
         /// <summary>
@@ -118,7 +118,7 @@ namespace Microsoft.HealthVault.Thing
         public ThingRelationship(ThingKey itemKey, string relationshipType)
             : this(itemKey)
         {
-            this.RelationshipType = relationshipType;
+            RelationshipType = relationshipType;
         }
 
         /// <summary>
@@ -143,7 +143,7 @@ namespace Microsoft.HealthVault.Thing
         public ThingRelationship(string clientId, string relationshipType)
             : this(clientId)
         {
-            this.RelationshipType = relationshipType;
+            RelationshipType = relationshipType;
         }
 
         internal void ParseXml(XPathNavigator relationshipNav)
@@ -158,11 +158,11 @@ namespace Microsoft.HealthVault.Thing
                 {
                     Guid versionStamp = new Guid(versionStampNav.Value);
 
-                    this.ItemKey = new ThingKey(itemId, versionStamp);
+                    ItemKey = new ThingKey(itemId, versionStamp);
                 }
                 else
                 {
-                    this.ItemKey = new ThingKey(itemId);
+                    ItemKey = new ThingKey(itemId);
                 }
             }
             else
@@ -171,36 +171,36 @@ namespace Microsoft.HealthVault.Thing
 
                 if (clientIdNav != null)
                 {
-                    this.ClientId = clientIdNav.Value;
+                    ClientId = clientIdNav.Value;
                 }
             }
 
-            this.RelationshipType = XPathHelper.GetOptNavValue(relationshipNav, "relationship-type");
+            RelationshipType = XPathHelper.GetOptNavValue(relationshipNav, "relationship-type");
         }
 
         internal void WriteXml(string nodeName, XmlWriter writer)
         {
-            if (this.ItemKey == null && string.IsNullOrEmpty(this.ClientId))
+            if (ItemKey == null && string.IsNullOrEmpty(ClientId))
             {
                 throw new ThingSerializationException(Resources.RelationshipItemKeyOrClientIdNotSpecified);
             }
 
             writer.WriteStartElement(nodeName);
-            if (this.ItemKey != null)
+            if (ItemKey != null)
             {
-                writer.WriteElementString("thing-id", this.ItemKey.Id.ToString());
+                writer.WriteElementString("thing-id", ItemKey.Id.ToString());
 
-                if (this.ItemKey.VersionStamp != Guid.Empty)
+                if (ItemKey.VersionStamp != Guid.Empty)
                 {
-                    writer.WriteElementString("version-stamp", this.ItemKey.VersionStamp.ToString());
+                    writer.WriteElementString("version-stamp", ItemKey.VersionStamp.ToString());
                 }
             }
             else
             {
-                writer.WriteElementString("client-thing-id", this.ClientId);
+                writer.WriteElementString("client-thing-id", ClientId);
             }
 
-            XmlWriterHelper.WriteOptString(writer, "relationship-type", this.RelationshipType);
+            XmlWriterHelper.WriteOptString(writer, "relationship-type", RelationshipType);
 
             writer.WriteEndElement();
         }

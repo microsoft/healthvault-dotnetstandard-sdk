@@ -4,7 +4,6 @@
 // All other rights reserved.
 
 using System;
-using Microsoft.HealthVault.Helpers;
 
 namespace Microsoft.HealthVault.Exceptions
 {
@@ -14,7 +13,6 @@ namespace Microsoft.HealthVault.Exceptions
     /// or the application has changed its minimum authorization requirements.
     /// </summary>
     ///
-    [Serializable]
     public sealed class HealthRecordReauthorizationRequiredException : HealthServiceException
     {
         /// <summary>

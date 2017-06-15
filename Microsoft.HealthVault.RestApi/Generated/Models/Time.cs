@@ -2,10 +2,14 @@
 // Changes may cause incorrect behavior and will be lost if the code is
 // regenerated.
 
-using Newtonsoft.Json;
-
 namespace Microsoft.HealthVault.RestApi.Generated.Models
 {
+    using Microsoft.HealthVault;
+    using Microsoft.HealthVault.RestApi;
+    using Microsoft.HealthVault.RestApi.Generated;
+    using Newtonsoft.Json;
+    using System.Linq;
+
     /// <summary>
     /// Represents a time without a date
     /// </summary>
@@ -16,7 +20,7 @@ namespace Microsoft.HealthVault.RestApi.Generated.Models
         /// </summary>
         public Time()
         {
-          this.CustomInit();
+          CustomInit();
         }
 
         /// <summary>
@@ -26,9 +30,9 @@ namespace Microsoft.HealthVault.RestApi.Generated.Models
         /// <param name="minutes">Minutes from 0 - 59</param>
         public Time(int? hours = default(int?), int? minutes = default(int?))
         {
-            this.Hours = hours;
-            this.Minutes = minutes;
-            this.CustomInit();
+            Hours = hours;
+            Minutes = minutes;
+            CustomInit();
         }
 
         /// <summary>

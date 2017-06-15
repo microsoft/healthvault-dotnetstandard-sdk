@@ -11,13 +11,13 @@ namespace Microsoft.HealthVault.Thing
     {
         internal ThingTypeHandler(Type thingTypeClass)
         {
-            this.ItemTypeClass = thingTypeClass;
+            ItemTypeClass = thingTypeClass;
         }
 
         internal ThingTypeHandler(Guid typeId, Type thingTypeClass)
             : this(thingTypeClass)
         {
-            this.TypeId = typeId;
+            TypeId = typeId;
         }
 
         internal Type ItemTypeClass { get; }

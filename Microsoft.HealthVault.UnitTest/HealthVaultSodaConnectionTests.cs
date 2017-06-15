@@ -1,21 +1,23 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Net.Http;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.HealthVault;
+using Grace.DependencyInjection;
 using Microsoft.HealthVault.Client;
+using Microsoft.HealthVault.Clients;
 using Microsoft.HealthVault.Configuration;
 using Microsoft.HealthVault.Connection;
+using Microsoft.HealthVault.Extensions;
 using Microsoft.HealthVault.Person;
 using Microsoft.HealthVault.PlatformInformation;
 using Microsoft.HealthVault.Transport;
 using Microsoft.HealthVault.UnitTest.Samples;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NSubstitute;
+using Arg = NSubstitute.Arg;
 
 namespace Microsoft.HealthVault.UnitTest
 {
@@ -34,51 +36,56 @@ namespace Microsoft.HealthVault.UnitTest
 
         private const string SessionSharedSecret = "Jop6pGrETq2wvczma4LkEGjknPPF76MN+XE7t9xyiyC3ZzlWVk++6i4o4Ia+D8V3YHu/elyppKRJJaOR5MWUuA==";
 
-        private IServiceLocator subServiceLocator;
-        private IHealthWebRequestClient subHealthWebRequestClient;
-        private ILocalObjectStore subLocalObjectStore;
-        private IShellAuthService subShellAuthService;
-        private IClientSessionCredentialClient subClientSessionCredentialClient;
-        private HealthVaultConfiguration healthVaultConfiguration;
+        private IServiceLocator _subServiceLocator;
+        private IHealthWebRequestClient _subHealthWebRequestClient;
+        private ILocalObjectStore _subLocalObjectStore;
+        private IShellAuthService _subShellAuthService;
+        private IClientSessionCredentialClient _subClientSessionCredentialClient;
+        private HealthVaultConfiguration _healthVaultConfiguration;
 
         private static readonly Guid MasterApplicationId = new Guid("30945bac-d221-4f89-8197-6983a390066d");
 
         [TestInitialize]
         public void TestInitialize()
         {
-            this.subServiceLocator = Substitute.For<IServiceLocator>();
-            this.subHealthWebRequestClient = Substitute.For<IHealthWebRequestClient>();
-            this.subLocalObjectStore = Substitute.For<ILocalObjectStore>();
-            this.subShellAuthService = Substitute.For<IShellAuthService>();
-            this.subClientSessionCredentialClient = Substitute.For<IClientSessionCredentialClient>();
-            this.healthVaultConfiguration = new HealthVaultConfiguration
+            Ioc.Container = new DependencyInjectionContainer();
+
+            _subServiceLocator = Substitute.For<IServiceLocator>();
+            _subHealthWebRequestClient = Substitute.For<IHealthWebRequestClient>();
+            _subLocalObjectStore = Substitute.For<ILocalObjectStore>();
+            _subShellAuthService = Substitute.For<IShellAuthService>();
+            _subClientSessionCredentialClient = Substitute.For<IClientSessionCredentialClient>();
+            _healthVaultConfiguration = new HealthVaultConfiguration
             {
                 MasterApplicationId = MasterApplicationId,
                 DefaultHealthVaultUrl = new Uri("https://platform2.healthvault.com/platform/"),
                 DefaultHealthVaultShellUrl = new Uri("https://account.healthvault.com")
             };
 
-            this.subServiceLocator.GetInstance<HealthVaultConfiguration>().Returns(this.healthVaultConfiguration);
-            this.subServiceLocator.GetInstance<IHealthWebRequestClient>().Returns(this.subHealthWebRequestClient);
-            this.subServiceLocator.GetInstance<SdkTelemetryInformation>().Returns(new SdkTelemetryInformation { FileVersion = "1.0.0.0" });
-            this.subServiceLocator.GetInstance<ICryptographer>().Returns(new Cryptographer());
-            this.subServiceLocator.GetInstance<IHealthServiceResponseParser>().Returns(new HealthServiceResponseParser());
+            _subServiceLocator.GetInstance<HealthVaultConfiguration>().Returns(_healthVaultConfiguration);
+            _subServiceLocator.GetInstance<IHealthWebRequestClient>().Returns(_subHealthWebRequestClient);
+            _subServiceLocator.GetInstance<SdkTelemetryInformation>().Returns(new SdkTelemetryInformation { FileVersion = "1.0.0.0" });
+            _subServiceLocator.GetInstance<ICryptographer>().Returns(new Cryptographer());
+            _subServiceLocator.GetInstance<IHealthServiceResponseParser>().Returns(new HealthServiceResponseParser());
+
+            Ioc.Container.RegisterTransient<IPersonClient, PersonClient>();
         }
 
         [TestMethod]
         public async Task WhenAuthenticateCalledWithNoStoredInfo_ThenInfoIsFetchedAndStored()
         {
-            this.SetupEmptyLocalStore();
+            SetupEmptyLocalStore();
 
-            this.healthVaultConfiguration.MasterApplicationId = MasterApplicationId;
+            _healthVaultConfiguration.MasterApplicationId = MasterApplicationId;
 
             var responseMessage1 = GenerateResponseMessage("NewApplicationCreationInfoResult.xml");
             var responseMessage2 = GenerateResponseMessage("GetServiceDefinitionResult.xml");
+
             // #3 is CAST call - but goes through IClientSessionCredentialClient and not HealthWebRequestClient
             var responseMessage4 = GenerateResponseMessage("GetAuthorizedPeopleResult.xml");
 
             // The first few calls use the default endpoint
-            this.subHealthWebRequestClient
+            _subHealthWebRequestClient
                 .SendAsync(
                     new Uri("https://platform2.healthvault.com/platform/wildcat.ashx"),
                     Arg.Any<byte[]>(),
@@ -88,7 +95,7 @@ namespace Microsoft.HealthVault.UnitTest
                 .Returns(responseMessage1, responseMessage2);
 
             // After GetServiceDefinition called, we are calling new endpoint
-            this.subHealthWebRequestClient
+            _subHealthWebRequestClient
                 .SendAsync(
                     new Uri("https://platform.healthvault-ppe.com/platform/wildcat.ashx"),
                     Arg.Any<byte[]>(),
@@ -103,16 +110,16 @@ namespace Microsoft.HealthVault.UnitTest
                 SharedSecret = SessionSharedSecret
             };
 
-            this.subClientSessionCredentialClient
+            _subClientSessionCredentialClient
                 .GetSessionCredentialAsync(Arg.Any<CancellationToken>())
                 .Returns(sessionCredential);
 
-            this.subServiceLocator
+            _subServiceLocator
                 .GetInstance<IClientSessionCredentialClient>()
-                .Returns(this.subClientSessionCredentialClient);
+                .Returns(_subClientSessionCredentialClient);
 
             // These values match the values in NewApplicationCreationInfoResult.xml
-            this.subShellAuthService
+            _subShellAuthService
                 .ProvisionApplicationAsync(
                     new Uri("https://account.healthvault.com"),
                     MasterApplicationId,
@@ -120,25 +127,25 @@ namespace Microsoft.HealthVault.UnitTest
                     ApplicationInstanceId)
                 .Returns("1");
 
-            HealthVaultSodaConnection healthVaultSodaConnection = this.CreateHealthVaultSodaConnection();
+            HealthVaultSodaConnection healthVaultSodaConnection = CreateHealthVaultSodaConnection();
             await healthVaultSodaConnection.AuthenticateAsync();
 
-            this.subClientSessionCredentialClient.Received().AppSharedSecret = ApplicationSharedSecret;
-            this.subClientSessionCredentialClient.Received().Connection = healthVaultSodaConnection;
+            _subClientSessionCredentialClient.Received().AppSharedSecret = ApplicationSharedSecret;
+            _subClientSessionCredentialClient.Received().Connection = healthVaultSodaConnection;
 
-            await this.subLocalObjectStore.Received()
+            await _subLocalObjectStore.Received()
                 .WriteAsync(
                     HealthVaultSodaConnection.ServiceInstanceKey,
                     Arg.Is<object>(o => ((HealthServiceInstance)o).HealthServiceUrl == new Uri("https://platform.healthvault-ppe.com/platform/wildcat.ashx")));
-            await this.subLocalObjectStore.Received()
+            await _subLocalObjectStore.Received()
                 .WriteAsync(
-                    HealthVaultSodaConnection.ApplicationCreationInfoKey, 
+                    HealthVaultSodaConnection.ApplicationCreationInfoKey,
                     Arg.Is<object>(o => ((ApplicationCreationInfo)o).AppInstanceId == new Guid("b5c5593b-afb4-466d-88f2-31707fb8634b")));
-            await this.subLocalObjectStore.Received()
+            await _subLocalObjectStore.Received()
                 .WriteAsync(
-                    HealthVaultSodaConnection.SessionCredentialKey, 
+                    HealthVaultSodaConnection.SessionCredentialKey,
                     Arg.Is<object>(o => ((SessionCredential)o).SharedSecret == SessionSharedSecret));
-            await this.subLocalObjectStore.Received()
+            await _subLocalObjectStore.Received()
                 .WriteAsync(
                     HealthVaultSodaConnection.PersonInfoKey,
                     Arg.Is<object>(o => ((PersonInfo)o).Name == "David Rickard"));
@@ -147,9 +154,9 @@ namespace Microsoft.HealthVault.UnitTest
         [TestMethod]
         public async Task WhenAuthenticateCalledWithStoredInfo_ThenSessionCredentialPopulated()
         {
-            this.SetupLocalStore();
+            SetupLocalStore();
 
-            HealthVaultSodaConnection healthVaultSodaConnection = this.CreateHealthVaultSodaConnection();
+            HealthVaultSodaConnection healthVaultSodaConnection = CreateHealthVaultSodaConnection();
             await healthVaultSodaConnection.AuthenticateAsync();
 
             Assert.IsNotNull(healthVaultSodaConnection.SessionCredential);
@@ -158,10 +165,10 @@ namespace Microsoft.HealthVault.UnitTest
         [TestMethod]
         public async Task WhenAuthorizingAdditionalRecords_ThenShellAuthServiceInvoked()
         {
-            this.SetupLocalStore();
+            SetupLocalStore();
 
             var responseMessage = GenerateResponseMessage("GetAuthorizedPeopleResult.xml");
-            this.subHealthWebRequestClient
+            _subHealthWebRequestClient
                 .SendAsync(
                     new Uri("https://platform.healthvault-ppe.com/platform/wildcat.ashx"),
                     Arg.Any<byte[]>(),
@@ -170,13 +177,13 @@ namespace Microsoft.HealthVault.UnitTest
                     Arg.Any<CancellationToken>())
                 .Returns(responseMessage);
 
-            HealthVaultSodaConnection healthVaultSodaConnection = this.CreateHealthVaultSodaConnection();
+            HealthVaultSodaConnection healthVaultSodaConnection = CreateHealthVaultSodaConnection();
             await healthVaultSodaConnection.AuthorizeAdditionalRecordsAsync();
 
-            await this.subShellAuthService.Received()
+            await _subShellAuthService.Received()
                 .AuthorizeAdditionalRecordsAsync(new Uri("https://account.healthvault-ppe.com/"), MasterApplicationId);
 
-            await this.subLocalObjectStore.Received()
+            await _subLocalObjectStore.Received()
                 .WriteAsync(HealthVaultSodaConnection.PersonInfoKey, Arg.Any<object>());
         }
 
@@ -184,9 +191,9 @@ namespace Microsoft.HealthVault.UnitTest
         [TestMethod]
         public async Task WhenAuthorizingAdditionalRecordsBeforeFirstAuth_ThenInvalidOperationExceptionThrown()
         {
-            this.SetupEmptyLocalStore();
+            SetupEmptyLocalStore();
 
-            HealthVaultSodaConnection healthVaultSodaConnection = this.CreateHealthVaultSodaConnection();
+            HealthVaultSodaConnection healthVaultSodaConnection = CreateHealthVaultSodaConnection();
             await healthVaultSodaConnection.AuthorizeAdditionalRecordsAsync();
         }
 
@@ -226,38 +233,38 @@ namespace Microsoft.HealthVault.UnitTest
 
             var personInfo = new PersonInfo();
 
-            this.subLocalObjectStore
+            _subLocalObjectStore
                 .ReadAsync<HealthServiceInstance>(HealthVaultSodaConnection.ServiceInstanceKey)
                 .Returns(serviceInstance);
 
-            this.subLocalObjectStore
+            _subLocalObjectStore
                 .ReadAsync<ApplicationCreationInfo>(HealthVaultSodaConnection.ApplicationCreationInfoKey)
                 .Returns(applicationCreationInfo);
 
-            this.subLocalObjectStore
+            _subLocalObjectStore
                 .ReadAsync<SessionCredential>(HealthVaultSodaConnection.SessionCredentialKey)
                 .Returns(sessionCredential);
 
-            this.subLocalObjectStore
+            _subLocalObjectStore
                 .ReadAsync<PersonInfo>(HealthVaultSodaConnection.PersonInfoKey)
                 .Returns(personInfo);
         }
 
         private void SetupEmptyLocalStore()
         {
-            this.subLocalObjectStore
+            _subLocalObjectStore
                 .ReadAsync<HealthServiceInstance>(HealthVaultSodaConnection.ServiceInstanceKey)
                 .Returns((HealthServiceInstance)null);
 
-            this.subLocalObjectStore
+            _subLocalObjectStore
                 .ReadAsync<ApplicationCreationInfo>(HealthVaultSodaConnection.ApplicationCreationInfoKey)
                 .Returns((ApplicationCreationInfo)null);
 
-            this.subLocalObjectStore
+            _subLocalObjectStore
                 .ReadAsync<SessionCredential>(HealthVaultSodaConnection.SessionCredentialKey)
                 .Returns((SessionCredential)null);
 
-            this.subLocalObjectStore
+            _subLocalObjectStore
                 .ReadAsync<PersonInfo>(HealthVaultSodaConnection.PersonInfoKey)
                 .Returns((PersonInfo)null);
         }
@@ -265,9 +272,9 @@ namespace Microsoft.HealthVault.UnitTest
         private HealthVaultSodaConnection CreateHealthVaultSodaConnection()
         {
             return new HealthVaultSodaConnection(
-                this.subServiceLocator,
-                this.subLocalObjectStore,
-                this.subShellAuthService);
+                _subServiceLocator,
+                _subLocalObjectStore,
+                _subShellAuthService);
         }
     }
 }

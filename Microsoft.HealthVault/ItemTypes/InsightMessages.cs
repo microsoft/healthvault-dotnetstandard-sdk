@@ -31,8 +31,8 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             Validator.ThrowIfNavigatorNull(navigator);
 
-            this.regular = XPathHelper.GetOptNavValue(navigator, "regular");
-            this.@short = XPathHelper.GetOptNavValue(navigator, "short");
+            _regular = XPathHelper.GetOptNavValue(navigator, "regular");
+            _short = XPathHelper.GetOptNavValue(navigator, "short");
         }
 
         /// <summary>
@@ -63,10 +63,10 @@ namespace Microsoft.HealthVault.ItemTypes
             writer.WriteStartElement(nodeName);
 
             // <regular>
-            XmlWriterHelper.WriteOptString(writer, "regular", this.regular);
+            XmlWriterHelper.WriteOptString(writer, "regular", _regular);
 
             // <short>
-            XmlWriterHelper.WriteOptString(writer, "short", this.@short);
+            XmlWriterHelper.WriteOptString(writer, "short", _short);
 
             writer.WriteEndElement();
         }
@@ -81,7 +81,7 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public override string ToString()
         {
-            return this.regular;
+            return _regular;
         }
 
         /// <summary>
@@ -89,23 +89,23 @@ namespace Microsoft.HealthVault.ItemTypes
         /// </summary>
         public string Regular
         {
-            get { return this.regular; }
+            get { return _regular; }
 
-            set { this.regular = value; }
+            set { _regular = value; }
         }
 
-        private string regular;
+        private string _regular;
 
         /// <summary>
         /// Gets or sets the short message for this insight.
         /// </summary>
         public string Short
         {
-            get { return this.@short; }
+            get { return _short; }
 
-            set { this.@short = value; }
+            set { _short = value; }
         }
 
-        private string @short;
+        private string _short;
     }
 }

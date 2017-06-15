@@ -1,5 +1,4 @@
 using Foundation;
-using ObjCRuntime;
 using System;
 
 using UIKit;
@@ -9,18 +8,18 @@ namespace Microsoft.HealthVault.Client
 {
     public partial class SignInViewController : UIViewController
     {
-        private string startUrlString;
-        private ISignInNavigationHandler navigationHandler;
-        private const string webViewKey = "webView";
-        private WKWebView webView;
+        private string _startUrlString;
+        private ISignInNavigationHandler _navigationHandler;
+        private const string s_webViewKey = "webView";
+        private WKWebView _webView;
 
         public SignInViewController(ISignInNavigationHandler navigationHandler, string startUrlString) :
             base()
         {
             // Cancel and web view navigation is handeld by ISignInNavigationHandler
-            this.navigationHandler = navigationHandler;
+            _navigationHandler = navigationHandler;
 
-            this.startUrlString = startUrlString;
+            _startUrlString = startUrlString;
         }
 
         public override void DidReceiveMemoryWarning()
@@ -33,11 +32,11 @@ namespace Microsoft.HealthVault.Client
             base.ViewDidLoad();
 
             // Add a cancel button to the navigation bar
-            this.NavigationItem.SetLeftBarButtonItem(
+            NavigationItem.SetLeftBarButtonItem(
                 new UIBarButtonItem(UIBarButtonSystemItem.Cancel,
                 (sender, args) =>
                 {
-                    this.navigationHandler.SignInCancelled();
+                    _navigationHandler.SignInCancelled();
                 }),
                 false);
         }
@@ -46,29 +45,29 @@ namespace Microsoft.HealthVault.Client
         {
             base.ViewWillAppear(animated);
 
-            this.LoadWebView(this.startUrlString);
+            LoadWebView(_startUrlString);
         }
 
         private void LoadWebView(string url)
         {
-            if (this.webView == null)
+            if (_webView == null)
             {
                 WKUserContentController contentController = new WKUserContentController();
                 WKWebViewConfiguration configuration = new WKWebViewConfiguration();
                 configuration.UserContentController = contentController;
-                this.webView = new WKWebView(this.View.Bounds, configuration);
-                this.webView.NavigationDelegate = this.navigationHandler;
+                _webView = new WKWebView(View.Bounds, configuration);
+                _webView.NavigationDelegate = _navigationHandler;
 
                 // Add the web view to the view
-                this.View.AddSubview(this.webView);
+                View.AddSubview(_webView);
 
                 // Set up contraints
-                this.webView.TranslatesAutoresizingMaskIntoConstraints = false;
-                var subviews = NSDictionary.FromObjectAndKey(this.webView, new NSString(webViewKey));
-                this.View.AddConstraints(NSLayoutConstraint.FromVisualFormat("|[" + webViewKey + "]|", NSLayoutFormatOptions.DirectionLeadingToTrailing, new NSDictionary(), subviews));
-                this.View.AddConstraints(NSLayoutConstraint.FromVisualFormat("V:|[" + webViewKey + "]|", NSLayoutFormatOptions.DirectionLeadingToTrailing, new NSDictionary(), subviews));
+                _webView.TranslatesAutoresizingMaskIntoConstraints = false;
+                var subviews = NSDictionary.FromObjectAndKey(_webView, new NSString(s_webViewKey));
+                View.AddConstraints(NSLayoutConstraint.FromVisualFormat("|[" + s_webViewKey + "]|", NSLayoutFormatOptions.DirectionLeadingToTrailing, new NSDictionary(), subviews));
+                View.AddConstraints(NSLayoutConstraint.FromVisualFormat("V:|[" + s_webViewKey + "]|", NSLayoutFormatOptions.DirectionLeadingToTrailing, new NSDictionary(), subviews));
 
-                this.webView.LoadRequest(new NSUrlRequest(new NSUrl(url)));
+                _webView.LoadRequest(new NSUrlRequest(new NSUrl(url)));
             }
         }
     }

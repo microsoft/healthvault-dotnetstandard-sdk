@@ -54,8 +54,8 @@ namespace Microsoft.HealthVault.ItemTypes
         public Weight(HealthServiceDateTime when, WeightValue weight)
             : base(TypeId)
         {
-            this.When = when;
-            this.Value = weight;
+            When = when;
+            Value = weight;
         }
 
         /// <summary>
@@ -89,11 +89,11 @@ namespace Microsoft.HealthVault.ItemTypes
 
             Validator.ThrowInvalidIfNull(weightNav, Resources.WeightUnexpectedNode);
 
-            this.when = new HealthServiceDateTime();
-            this.when.ParseXml(weightNav.SelectSingleNode("when"));
+            _when = new HealthServiceDateTime();
+            _when.ParseXml(weightNav.SelectSingleNode("when"));
 
-            this.value = new WeightValue();
-            this.value.ParseXml(weightNav.SelectSingleNode("value"));
+            _value = new WeightValue();
+            _value.ParseXml(weightNav.SelectSingleNode("value"));
         }
 
         /// <summary>
@@ -115,15 +115,15 @@ namespace Microsoft.HealthVault.ItemTypes
         public override void WriteXml(XmlWriter writer)
         {
             Validator.ThrowIfWriterNull(writer);
-            Validator.ThrowSerializationIfNull(this.value, Resources.WeightValueNotSet);
+            Validator.ThrowSerializationIfNull(_value, Resources.WeightValueNotSet);
 
             // <weight>
             writer.WriteStartElement("weight");
 
             // <when>
-            this.when.WriteXml("when", writer);
+            _when.WriteXml("when", writer);
 
-            this.value.WriteXml("value", writer);
+            _value.WriteXml("value", writer);
 
             // </weight>
             writer.WriteEndElement();
@@ -141,9 +141,9 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             string result = string.Empty;
 
-            if (this.Value != null)
+            if (Value != null)
             {
-                result = this.Value.ToString();
+                result = Value.ToString();
             }
 
             return result;
@@ -165,16 +165,16 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public HealthServiceDateTime When
         {
-            get { return this.when; }
+            get { return _when; }
 
             set
             {
-                Validator.ThrowIfArgumentNull(value, nameof(this.When), Resources.WhenNullValue);
-                this.when = value;
+                Validator.ThrowIfArgumentNull(value, nameof(When), Resources.WhenNullValue);
+                _when = value;
             }
         }
 
-        private HealthServiceDateTime when = new HealthServiceDateTime();
+        private HealthServiceDateTime _when = new HealthServiceDateTime();
 
         /// <summary>
         /// Gets or sets the person's weight.
@@ -190,15 +190,15 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public WeightValue Value
         {
-            get { return this.value; }
+            get { return _value; }
 
             set
             {
-                Validator.ThrowIfArgumentNull(value, nameof(this.Value), Resources.WeightValueMandatory);
-                this.value = value;
+                Validator.ThrowIfArgumentNull(value, nameof(Value), Resources.WeightValueMandatory);
+                _value = value;
             }
         }
 
-        private WeightValue value = new WeightValue();
+        private WeightValue _value = new WeightValue();
     }
 }

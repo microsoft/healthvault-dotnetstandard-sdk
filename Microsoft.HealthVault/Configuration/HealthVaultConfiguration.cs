@@ -1,7 +1,7 @@
-﻿// Copyright (c) Microsoft Corporation.  All rights reserved. 
+﻿// Copyright (c) Microsoft Corporation.  All rights reserved.
 // MIT License
 // Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the ""Software""), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 //
 // THE SOFTWARE IS PROVIDED *AS IS*, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
@@ -21,22 +21,22 @@ namespace Microsoft.HealthVault.Configuration
     /// </summary>
     public class HealthVaultConfiguration
     {
-        private Uri defaultHealthVaultShellUrl;
-        private Uri defaultHealthVaultUrl;
-        private Uri restHealthVaultRootUrl;
+        private Uri _defaultHealthVaultShellUrl;
+        private Uri _defaultHealthVaultUrl;
+        private Uri _restHealthVaultRootUrl;
 
         /// <summary>
         /// Create instance of HealthVaultConfiguration with default values as defined at <see cref="HealthVaultConfigurationDefaults"></see>
         /// </summary>
         public HealthVaultConfiguration()
         {
-            this.DefaultHealthVaultUrl = HealthVaultConfigurationDefaults.HealthVaultRootUrl;
-            this.DefaultHealthVaultShellUrl = HealthVaultConfigurationDefaults.ShellUrl;
-            this.RequestTimeoutDuration = HealthVaultConfigurationDefaults.RequestTimeoutDuration;
-            this.RequestTimeToLiveDuration = HealthVaultConfigurationDefaults.RequestTimeToLiveDuration;
-            this.RetryOnInternal500Count = HealthVaultConfigurationDefaults.RetryOnInternal500Count;
-            this.RetryOnInternal500SleepDuration = HealthVaultConfigurationDefaults.RetryOnInternal500SleepDuration;
-            this.InlineBlobHashBlockSize = BlobHasher.DefaultInlineBlobHashBlockSizeBytes;
+            DefaultHealthVaultUrl = HealthVaultConfigurationDefaults.HealthVaultRootUrl;
+            DefaultHealthVaultShellUrl = HealthVaultConfigurationDefaults.ShellUrl;
+            RequestTimeoutDuration = HealthVaultConfigurationDefaults.RequestTimeoutDuration;
+            RequestTimeToLiveDuration = HealthVaultConfigurationDefaults.RequestTimeToLiveDuration;
+            RetryOnInternal500Count = HealthVaultConfigurationDefaults.RetryOnInternal500Count;
+            RetryOnInternal500SleepDuration = HealthVaultConfigurationDefaults.RetryOnInternal500SleepDuration;
+            InlineBlobHashBlockSize = BlobHasher.DefaultInlineBlobHashBlockSizeBytes;
         }
 
         /// <summary>
@@ -49,8 +49,8 @@ namespace Microsoft.HealthVault.Configuration
         /// </remarks>
         public Uri DefaultHealthVaultUrl
         {
-            get { return this.defaultHealthVaultUrl; }
-            set { this.defaultHealthVaultUrl = EnsureTrailingSlash(value); }
+            get { return _defaultHealthVaultUrl; }
+            set { _defaultHealthVaultUrl = EnsureTrailingSlash(value); }
         }
 
         /// <summary>
@@ -64,8 +64,8 @@ namespace Microsoft.HealthVault.Configuration
         /// </remarks>
         public Uri DefaultHealthVaultShellUrl
         {
-            get { return this.defaultHealthVaultShellUrl; }
-            set { this.defaultHealthVaultShellUrl = EnsureTrailingSlash(value); }
+            get { return _defaultHealthVaultShellUrl; }
+            set { _defaultHealthVaultShellUrl = EnsureTrailingSlash(value); }
         }
 
         /// <summary>
@@ -170,7 +170,7 @@ namespace Microsoft.HealthVault.Configuration
         /// exhibits the expected behavior for most applications. However, in some rare cases
         /// applications may need to revert back to the original behavior. When this property
         /// returns true the original behavior will be observed. If false, the new behavior will
-        /// be observed. 
+        /// be observed.
         /// This property corresponds to the "HV_SupportedTypeVersions" configuration value when reading from web.config.
         /// This property defaults to false
         /// </remarks>
@@ -209,8 +209,8 @@ namespace Microsoft.HealthVault.Configuration
         /// </remarks>
         public Uri RestHealthVaultUrl
         {
-            get { return this.restHealthVaultRootUrl; }
-            set { this.restHealthVaultRootUrl = EnsureTrailingSlash(value); }
+            get { return _restHealthVaultRootUrl; }
+            set { _restHealthVaultRootUrl = EnsureTrailingSlash(value); }
         }
 
         /// <summary>

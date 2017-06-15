@@ -2,10 +2,14 @@
 // Changes may cause incorrect behavior and will be lost if the code is
 // regenerated.
 
-using Newtonsoft.Json;
-
 namespace Microsoft.HealthVault.RestApi.Generated.Models
 {
+    using Microsoft.HealthVault;
+    using Microsoft.HealthVault.RestApi;
+    using Microsoft.HealthVault.RestApi.Generated;
+    using Newtonsoft.Json;
+    using System.Linq;
+
     /// <summary>
     /// The range of achievement for a goal.
     /// </summary>
@@ -16,7 +20,7 @@ namespace Microsoft.HealthVault.RestApi.Generated.Models
         /// </summary>
         public GoalRange()
         {
-          this.CustomInit();
+          CustomInit();
         }
 
         /// <summary>
@@ -32,15 +36,16 @@ namespace Microsoft.HealthVault.RestApi.Generated.Models
         /// For ranges less than a specified value with no minimum, specify a
         /// maximum but no minimum.</param>
         /// <param name="units">The units of the range. Possible values
-        /// include: 'Unknown', 'Kilograms', 'Count', 'Calories'</param>
+        /// include: 'Unknown', 'Kilograms', 'Count', 'Calories',
+        /// 'MillimetersOfMercury'</param>
         public GoalRange(string name = default(string), string description = default(string), double? minimum = default(double?), double? maximum = default(double?), string units = default(string))
         {
-            this.Name = name;
-            this.Description = description;
-            this.Minimum = minimum;
-            this.Maximum = maximum;
-            this.Units = units;
-            this.CustomInit();
+            Name = name;
+            Description = description;
+            Minimum = minimum;
+            Maximum = maximum;
+            Units = units;
+            CustomInit();
         }
 
         /// <summary>
@@ -79,7 +84,7 @@ namespace Microsoft.HealthVault.RestApi.Generated.Models
 
         /// <summary>
         /// Gets or sets the units of the range. Possible values include:
-        /// 'Unknown', 'Kilograms', 'Count', 'Calories'
+        /// 'Unknown', 'Kilograms', 'Count', 'Calories', 'MillimetersOfMercury'
         /// </summary>
         [JsonProperty(PropertyName = "units")]
         public string Units { get; set; }

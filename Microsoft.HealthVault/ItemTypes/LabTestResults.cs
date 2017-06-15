@@ -49,7 +49,7 @@ namespace Microsoft.HealthVault.ItemTypes
 
             foreach (LabTestResultGroup labGroup in labGroups)
             {
-                this.labGroup.Add(labGroup);
+                _labGroup.Add(labGroup);
             }
         }
 
@@ -81,22 +81,22 @@ namespace Microsoft.HealthVault.ItemTypes
             Validator.ThrowInvalidIfNull(itemNav, Resources.LabTestResultsUnexpectedNode);
 
             // when
-            this.when =
+            _when =
                 XPathHelper.GetOptNavValue<ApproximateDateTime>(itemNav, "when");
 
             // lab-group
             XPathNodeIterator labGroupIterator =
                 itemNav.Select("lab-group");
-            this.labGroup = new Collection<LabTestResultGroup>();
+            _labGroup = new Collection<LabTestResultGroup>();
             foreach (XPathNavigator labGroupNav in labGroupIterator)
             {
                 LabTestResultGroup labTestResultGroup = new LabTestResultGroup();
                 labTestResultGroup.ParseXml(labGroupNav);
-                this.labGroup.Add(labTestResultGroup);
+                _labGroup.Add(labTestResultGroup);
             }
 
             // ordered-by
-            this.orderedBy =
+            _orderedBy =
                 XPathHelper.GetOptNavValue<Organization>(itemNav, "ordered-by");
         }
 
@@ -120,7 +120,7 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             Validator.ThrowIfWriterNull(writer);
 
-            if (this.labGroup == null || this.labGroup.Count == 0)
+            if (_labGroup == null || _labGroup.Count == 0)
             {
                 throw new ThingSerializationException(Resources.LabTestResultsLabGroupNotSet);
             }
@@ -132,19 +132,19 @@ namespace Microsoft.HealthVault.ItemTypes
             XmlWriterHelper.WriteOpt(
                 writer,
                 "when",
-                this.when);
+                _when);
 
             // lab-group
-            for (int index = 0; index < this.labGroup.Count; ++index)
+            for (int index = 0; index < _labGroup.Count; ++index)
             {
-                this.labGroup[index].WriteXml("lab-group", writer);
+                _labGroup[index].WriteXml("lab-group", writer);
             }
 
             // ordered-by
             XmlWriterHelper.WriteOpt(
                 writer,
                 "ordered-by",
-                this.orderedBy);
+                _orderedBy);
 
             // </lab-test-results>
             writer.WriteEndElement();
@@ -161,19 +161,19 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public ApproximateDateTime When
         {
-            get { return this.when; }
-            set { this.when = value; }
+            get { return _when; }
+            set { _when = value; }
         }
 
-        private ApproximateDateTime when;
+        private ApproximateDateTime _when;
 
         /// <summary>
         /// Gets a set of lab results.
         /// </summary>
         ///
-        public Collection<LabTestResultGroup> Groups => this.labGroup;
+        public Collection<LabTestResultGroup> Groups => _labGroup;
 
-        private Collection<LabTestResultGroup> labGroup =
+        private Collection<LabTestResultGroup> _labGroup =
             new Collection<LabTestResultGroup>();
 
         /// <summary>
@@ -187,11 +187,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public Organization OrderedBy
         {
-            get { return this.orderedBy; }
-            set { this.orderedBy = value; }
+            get { return _orderedBy; }
+            set { _orderedBy = value; }
         }
 
-        private Organization orderedBy;
+        private Organization _orderedBy;
 
         /// <summary>
         /// Gets a string representation of the lab test results item.
@@ -205,21 +205,21 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             StringBuilder result = new StringBuilder(200);
 
-            for (int index = 0; index < this.labGroup.Count; ++index)
+            for (int index = 0; index < _labGroup.Count; ++index)
             {
-                if (this.labGroup[index].GroupName != null)
+                if (_labGroup[index].GroupName != null)
                 {
-                    if (!string.IsNullOrEmpty(this.labGroup[index].GroupName.Text))
+                    if (!string.IsNullOrEmpty(_labGroup[index].GroupName.Text))
                     {
                         if (index > 0)
                         {
                             result.AppendFormat(
                                 Resources.ListFormat,
-                                this.labGroup[index].GroupName.Text);
+                                _labGroup[index].GroupName.Text);
                         }
                         else
                         {
-                            result.Append(this.labGroup[index].GroupName.Text);
+                            result.Append(_labGroup[index].GroupName.Text);
                         }
                     }
                 }

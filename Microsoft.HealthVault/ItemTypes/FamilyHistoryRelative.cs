@@ -40,16 +40,16 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             Validator.ThrowIfNavigatorNull(navigator);
 
-            this.relativeName =
+            _relativeName =
                 XPathHelper.GetOptNavValue<PersonItem>(navigator, "relative-name");
 
-            this.relationship =
+            _relationship =
                 XPathHelper.GetOptNavValue<CodableValue>(navigator, "relationship");
 
-            this.dateOfBirth =
+            _dateOfBirth =
                 XPathHelper.GetOptNavValue<ApproximateDate>(navigator, "date-of-birth");
 
-            this.dateOfDeath =
+            _dateOfDeath =
                 XPathHelper.GetOptNavValue<ApproximateDate>(navigator, "date-of-death");
         }
 
@@ -89,25 +89,25 @@ namespace Microsoft.HealthVault.ItemTypes
             XmlWriterHelper.WriteOpt(
                 writer,
                 "relative-name",
-                this.relativeName);
+                _relativeName);
 
             // relationship
             XmlWriterHelper.WriteOpt(
                 writer,
                 "relationship",
-                this.relationship);
+                _relationship);
 
             // date-of-birth
             XmlWriterHelper.WriteOpt(
                 writer,
                 "date-of-birth",
-                this.dateOfBirth);
+                _dateOfBirth);
 
             // date-of-death
             XmlWriterHelper.WriteOpt(
                 writer,
                 "date-of-death",
-                this.dateOfDeath);
+                _dateOfDeath);
 
             // </family-history-relative>
             writer.WriteEndElement();
@@ -119,11 +119,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public PersonItem RelativeName
         {
-            get { return this.relativeName; }
-            set { this.relativeName = value; }
+            get { return _relativeName; }
+            set { _relativeName = value; }
         }
 
-        private PersonItem relativeName;
+        private PersonItem _relativeName;
 
         /// <summary>
         /// Gets or sets the relationship between the relative and the record owner.
@@ -135,11 +135,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public CodableValue Relationship
         {
-            get { return this.relationship; }
-            set { this.relationship = value; }
+            get { return _relationship; }
+            set { _relationship = value; }
         }
 
-        private CodableValue relationship;
+        private CodableValue _relationship;
 
         /// <summary>
         /// Gets or sets the date of birth of the relative.
@@ -151,11 +151,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public ApproximateDate DateOfBirth
         {
-            get { return this.dateOfBirth; }
-            set { this.dateOfBirth = value; }
+            get { return _dateOfBirth; }
+            set { _dateOfBirth = value; }
         }
 
-        private ApproximateDate dateOfBirth;
+        private ApproximateDate _dateOfBirth;
 
         /// <summary>
         /// Gets or sets the date of death of the relative.
@@ -167,11 +167,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public ApproximateDate DateOfDeath
         {
-            get { return this.dateOfDeath; }
-            set { this.dateOfDeath = value; }
+            get { return _dateOfDeath; }
+            set { _dateOfDeath = value; }
         }
 
-        private ApproximateDate dateOfDeath;
+        private ApproximateDate _dateOfDeath;
 
         /// <summary>
         /// Gets a string representation of the family history person item.
@@ -184,25 +184,25 @@ namespace Microsoft.HealthVault.ItemTypes
         public override string ToString()
         {
             string result = string.Empty;
-            if (this.relativeName != null && this.relationship != null)
+            if (_relativeName != null && _relationship != null)
             {
                 result =
                     string.Format(
                         Resources.FamilyHistoryRelativeToStringFormatNameAndRelationship,
-                        this.relativeName.ToString(),
-                        this.relationship.ToString());
+                        _relativeName.ToString(),
+                        _relationship.ToString());
             }
-            else if (this.relationship != null)
+            else if (_relationship != null)
             {
                 result =
                     string.Format(
                         Resources.FamilyHistoryRelativeToStringFormatNameAndRelationship,
                         string.Empty,
-                        this.relationship.ToString());
+                        _relationship.ToString());
             }
-            else if (this.relativeName != null)
+            else if (_relativeName != null)
             {
-                result = this.relativeName.ToString();
+                result = _relativeName.ToString();
             }
 
             return result;

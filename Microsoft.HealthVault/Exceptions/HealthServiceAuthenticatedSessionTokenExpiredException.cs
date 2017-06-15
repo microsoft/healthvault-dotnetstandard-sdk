@@ -13,7 +13,6 @@ namespace Microsoft.HealthVault.Exceptions
     /// <see cref = "HealthServiceStatusCode.AuthenticatedSessionTokenExpired"/>.
     /// </summary>
     ///
-    [Serializable]
     public sealed class HealthServiceAuthenticatedSessionTokenExpiredException : HealthServiceException
     {
         /// <summary>

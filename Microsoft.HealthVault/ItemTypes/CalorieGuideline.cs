@@ -64,9 +64,9 @@ namespace Microsoft.HealthVault.ItemTypes
             GeneralMeasurement calories)
             : base(TypeId)
         {
-            this.When = when;
-            this.Name = name;
-            this.Calories = calories;
+            When = when;
+            Name = name;
+            Calories = calories;
         }
 
         /// <summary>
@@ -97,16 +97,16 @@ namespace Microsoft.HealthVault.ItemTypes
             Validator.ThrowInvalidIfNull(itemNav, Resources.CalorieGuidelineUnexpectedNode);
 
             // when (approxi-date-time, mandatory)
-            this.when = new ApproximateDateTime();
-            this.when.ParseXml(itemNav.SelectSingleNode("when"));
+            _when = new ApproximateDateTime();
+            _when.ParseXml(itemNav.SelectSingleNode("when"));
 
             // measurement-name (codable-value, mandatory)
-            this.name = new CodableValue();
-            this.name.ParseXml(itemNav.SelectSingleNode("name"));
+            _name = new CodableValue();
+            _name.ParseXml(itemNav.SelectSingleNode("name"));
 
             // calories (general-measurement, mandatory)
-            this.calories = new GeneralMeasurement();
-            this.calories.ParseXml(itemNav.SelectSingleNode("calories"));
+            _calories = new GeneralMeasurement();
+            _calories.ParseXml(itemNav.SelectSingleNode("calories"));
         }
 
         /// <summary>
@@ -128,21 +128,21 @@ namespace Microsoft.HealthVault.ItemTypes
         public override void WriteXml(XmlWriter writer)
         {
             Validator.ThrowIfWriterNull(writer);
-            Validator.ThrowSerializationIfNull(this.when, Resources.WhenNotSet);
-            Validator.ThrowSerializationIfNull(this.name, Resources.CalorieGuidelineNameNotSet);
-            Validator.ThrowSerializationIfNull(this.calories, Resources.CalorieGuidelineCaloriesNotSet);
+            Validator.ThrowSerializationIfNull(_when, Resources.WhenNotSet);
+            Validator.ThrowSerializationIfNull(_name, Resources.CalorieGuidelineNameNotSet);
+            Validator.ThrowSerializationIfNull(_calories, Resources.CalorieGuidelineCaloriesNotSet);
 
             // <calorie-guideline>
             writer.WriteStartElement("calorie-guideline");
 
             // <when>
-            this.when.WriteXml("when", writer);
+            _when.WriteXml("when", writer);
 
             // <name>
-            this.name.WriteXml("name", writer);
+            _name.WriteXml("name", writer);
 
             // <calories>
-            this.calories.WriteXml("calories", writer);
+            _calories.WriteXml("calories", writer);
 
             // </calorie-guideline>
             writer.WriteEndElement();
@@ -163,16 +163,16 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public ApproximateDateTime When
         {
-            get { return this.when; }
+            get { return _when; }
 
             set
             {
-                Validator.ThrowIfArgumentNull(value, nameof(this.When), Resources.WhenNullValue);
-                this.when = value;
+                Validator.ThrowIfArgumentNull(value, nameof(When), Resources.WhenNullValue);
+                _when = value;
             }
         }
 
-        private ApproximateDateTime when;
+        private ApproximateDateTime _when;
 
         /// <summary>
         /// Gets or sets the name of the guideline.
@@ -193,16 +193,16 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public CodableValue Name
         {
-            get { return this.name; }
+            get { return _name; }
 
             set
             {
-                Validator.ThrowIfArgumentNull(value, nameof(this.Name), Resources.CalorieGuidelineNameNullValue);
-                this.name = value;
+                Validator.ThrowIfArgumentNull(value, nameof(Name), Resources.CalorieGuidelineNameNullValue);
+                _name = value;
             }
         }
 
-        private CodableValue name;
+        private CodableValue _name;
 
         /// <summary>
         /// Gets or sets the number of calories to support the guideline.
@@ -228,16 +228,16 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public GeneralMeasurement Calories
         {
-            get { return this.calories; }
+            get { return _calories; }
 
             set
             {
-                Validator.ThrowIfArgumentNull(value, nameof(this.Calories), Resources.CalorieGuidelineCaloriesNullValue);
-                this.calories = value;
+                Validator.ThrowIfArgumentNull(value, nameof(Calories), Resources.CalorieGuidelineCaloriesNullValue);
+                _calories = value;
             }
         }
 
-        private GeneralMeasurement calories;
+        private GeneralMeasurement _calories;
 
         /// <summary>
         /// Gets the representation of a CalorieGuideline instance.
@@ -252,8 +252,8 @@ namespace Microsoft.HealthVault.ItemTypes
             return
                 string.Format(
                     Resources.NameAndValue,
-                    this.name.ToString(),
-                    this.calories.ToString());
+                    _name.ToString(),
+                    _calories.ToString());
         }
     }
 }

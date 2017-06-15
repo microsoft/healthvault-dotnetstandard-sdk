@@ -67,8 +67,8 @@ namespace Microsoft.HealthVault.ItemTypes
             CodableValue eventValue)
         : base(TypeId)
         {
-            this.When = when;
-            this.Event = eventValue;
+            When = when;
+            Event = eventValue;
         }
 
         /// <summary>
@@ -108,11 +108,11 @@ namespace Microsoft.HealthVault.ItemTypes
 
             Validator.ThrowInvalidIfNull(itemNav, Resources.HealthEventUnexpectedNode);
 
-            this.when = new ApproximateDateTime();
-            this.when.ParseXml(itemNav.SelectSingleNode("when"));
-            this.@event = new CodableValue();
-            this.@event.ParseXml(itemNav.SelectSingleNode("event"));
-            this.category = XPathHelper.GetOptNavValue<CodableValue>(itemNav, "category");
+            _when = new ApproximateDateTime();
+            _when.ParseXml(itemNav.SelectSingleNode("when"));
+            _event = new CodableValue();
+            _event.ParseXml(itemNav.SelectSingleNode("event"));
+            _category = XPathHelper.GetOptNavValue<CodableValue>(itemNav, "category");
         }
 
         /// <summary>
@@ -138,14 +138,14 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             Validator.ThrowIfWriterNull(writer);
 
-            Validator.ThrowSerializationIfNull(this.when, Resources.WhenNullValue);
-            Validator.ThrowSerializationIfNull(this.@event, "EventNullValue");
+            Validator.ThrowSerializationIfNull(_when, Resources.WhenNullValue);
+            Validator.ThrowSerializationIfNull(_event, "EventNullValue");
 
             writer.WriteStartElement("health-event");
 
-            this.when.WriteXml("when", writer);
-            this.@event.WriteXml("event", writer);
-            XmlWriterHelper.WriteOpt(writer, "category", this.category);
+            _when.WriteXml("when", writer);
+            _event.WriteXml("event", writer);
+            XmlWriterHelper.WriteOpt(writer, "category", _category);
             writer.WriteEndElement();
         }
 
@@ -161,18 +161,18 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             get
             {
-                return this.when;
+                return _when;
             }
 
             set
             {
                 Validator.ThrowIfArgumentNull(value, nameof(value), Resources.WhenNullValue);
 
-                this.when = value;
+                _when = value;
             }
         }
 
-        private ApproximateDateTime when;
+        private ApproximateDateTime _when;
 
         /// <summary>
         /// Gets or sets the name of the health event.
@@ -187,18 +187,18 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             get
             {
-                return this.@event;
+                return _event;
             }
 
             set
             {
                 Validator.ThrowIfArgumentNull(value, nameof(value), Resources.EventNullValue);
 
-                this.@event = value;
+                _event = value;
             }
         }
 
-        private CodableValue @event;
+        private CodableValue _event;
 
         /// <summary>
         /// Gets or sets the category of the health event.
@@ -214,16 +214,16 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             get
             {
-                return this.category;
+                return _category;
             }
 
             set
             {
-                this.category = value;
+                _category = value;
             }
         }
 
-        private CodableValue category;
+        private CodableValue _category;
 
         /// <summary>
         /// Gets a string representation of the HealthEvent.
@@ -237,13 +237,13 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             StringBuilder result = new StringBuilder();
 
-            result.Append(this.@event.Text);
+            result.Append(_event.Text);
 
-            if (this.category != null)
+            if (_category != null)
             {
                 result.Append(" ");
                 result.Append(Resources.OpenParen);
-                result.Append(this.category.Text);
+                result.Append(_category.Text);
                 result.Append(Resources.CloseParen);
             }
 

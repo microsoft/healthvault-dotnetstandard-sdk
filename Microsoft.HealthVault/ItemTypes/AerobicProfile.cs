@@ -53,7 +53,7 @@ namespace Microsoft.HealthVault.ItemTypes
         public AerobicProfile(HealthServiceDateTime when)
             : base(TypeId)
         {
-            this.When = when;
+            When = when;
         }
 
         /// <summary>
@@ -88,15 +88,15 @@ namespace Microsoft.HealthVault.ItemTypes
 
             Validator.ThrowInvalidIfNull(aerobicProfileNav, Resources.AerobicProfileUnexpectedNode);
 
-            this.when = new HealthServiceDateTime();
-            this.when.ParseXml(aerobicProfileNav.SelectSingleNode("when"));
+            _when = new HealthServiceDateTime();
+            _when.ParseXml(aerobicProfileNav.SelectSingleNode("when"));
 
             XPathNavigator maxHrNav =
                 aerobicProfileNav.SelectSingleNode("max-heartrate");
 
             if (maxHrNav != null)
             {
-                this.maxHr = maxHrNav.ValueAsInt;
+                _maxHr = maxHrNav.ValueAsInt;
             }
 
             XPathNavigator restingHrNav =
@@ -104,7 +104,7 @@ namespace Microsoft.HealthVault.ItemTypes
 
             if (restingHrNav != null)
             {
-                this.restingHr = restingHrNav.ValueAsInt;
+                _restingHr = restingHrNav.ValueAsInt;
             }
 
             XPathNavigator atNav =
@@ -112,7 +112,7 @@ namespace Microsoft.HealthVault.ItemTypes
 
             if (atNav != null)
             {
-                this.anaerobicThreshold = atNav.ValueAsInt;
+                _anaerobicThreshold = atNav.ValueAsInt;
             }
 
             XPathNavigator vo2MaxNav =
@@ -124,14 +124,14 @@ namespace Microsoft.HealthVault.ItemTypes
                     vo2MaxNav.SelectSingleNode("absolute");
                 if (vo2AbsNav != null)
                 {
-                    this.vo2Absolute = vo2AbsNav.ValueAsDouble;
+                    _vo2Absolute = vo2AbsNav.ValueAsDouble;
                 }
 
                 XPathNavigator vo2RelNav =
                     vo2MaxNav.SelectSingleNode("relative");
                 if (vo2RelNav != null)
                 {
-                    this.vo2Relative = vo2RelNav.ValueAsDouble;
+                    _vo2Relative = vo2RelNav.ValueAsDouble;
                 }
             }
 
@@ -142,7 +142,7 @@ namespace Microsoft.HealthVault.ItemTypes
             {
                 HeartRateZoneGroup zoneGroup = new HeartRateZoneGroup();
                 zoneGroup.ParseXml(groupNav);
-                this.zoneGroups.Add(zoneGroup);
+                _zoneGroups.Add(zoneGroup);
             }
         }
 
@@ -166,57 +166,57 @@ namespace Microsoft.HealthVault.ItemTypes
             writer.WriteStartElement("aerobic-profile");
 
             // <when>
-            this.when.WriteXml("when", writer);
+            _when.WriteXml("when", writer);
 
             // <max-heartrate>
-            if (this.maxHr != null)
+            if (_maxHr != null)
             {
                 writer.WriteElementString(
                     "max-heartrate",
-                    this.maxHr.Value.ToString(CultureInfo.InvariantCulture));
+                    _maxHr.Value.ToString(CultureInfo.InvariantCulture));
             }
 
             // <resting-heartrate>
-            if (this.restingHr != null)
+            if (_restingHr != null)
             {
                 writer.WriteElementString(
                     "resting-heartrate",
-                    this.restingHr.Value.ToString(CultureInfo.InvariantCulture));
+                    _restingHr.Value.ToString(CultureInfo.InvariantCulture));
             }
 
             // <anaerobic-threshold>
-            if (this.anaerobicThreshold != null)
+            if (_anaerobicThreshold != null)
             {
                 writer.WriteElementString(
                     "anaerobic-threshold",
-                    this.anaerobicThreshold.Value.ToString(
+                    _anaerobicThreshold.Value.ToString(
                         CultureInfo.InvariantCulture));
             }
 
-            if (this.vo2Absolute != null || this.vo2Relative != null)
+            if (_vo2Absolute != null || _vo2Relative != null)
             {
                 writer.WriteStartElement("VO2-max");
 
-                if (this.vo2Absolute != null)
+                if (_vo2Absolute != null)
                 {
                     XmlWriterHelper.WriteOptDouble(
                         writer,
                         "absolute",
-                        this.vo2Absolute.Value);
+                        _vo2Absolute.Value);
                 }
 
-                if (this.vo2Relative != null)
+                if (_vo2Relative != null)
                 {
                     XmlWriterHelper.WriteOptDouble(
                         writer,
                         "relative",
-                        this.vo2Relative.Value);
+                        _vo2Relative.Value);
                 }
 
                 writer.WriteEndElement();
             }
 
-            foreach (HeartRateZoneGroup group in this.zoneGroups)
+            foreach (HeartRateZoneGroup group in _zoneGroups)
             {
                 group.WriteXml("heartrate-zone-group", writer);
             }
@@ -240,16 +240,16 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public HealthServiceDateTime When
         {
-            get { return this.when; }
+            get { return _when; }
 
             set
             {
-                Validator.ThrowIfArgumentNull(value, nameof(this.When), Resources.WhenNullValue);
-                this.when = value;
+                Validator.ThrowIfArgumentNull(value, nameof(When), Resources.WhenNullValue);
+                _when = value;
             }
         }
 
-        private HealthServiceDateTime when = new HealthServiceDateTime();
+        private HealthServiceDateTime _when = new HealthServiceDateTime();
 
         /// <summary>
         /// Gets or sets the person's maximum heart rate.
@@ -266,11 +266,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public int? MaximumHeartRate
         {
-            get { return this.maxHr; }
-            set { this.maxHr = value; }
+            get { return _maxHr; }
+            set { _maxHr = value; }
         }
 
-        private int? maxHr;
+        private int? _maxHr;
 
         /// <summary>
         /// Gets or sets the person's resting heart rate.
@@ -287,11 +287,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public int? RestingHeartRate
         {
-            get { return this.restingHr; }
-            set { this.restingHr = value; }
+            get { return _restingHr; }
+            set { _restingHr = value; }
         }
 
-        private int? restingHr;
+        private int? _restingHr;
 
         /// <summary>
         /// Gets or sets the person's anaerobic threshold in beats per minute
@@ -309,11 +309,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public int? AnaerobicThreshold
         {
-            get { return this.anaerobicThreshold; }
-            set { this.anaerobicThreshold = value; }
+            get { return _anaerobicThreshold; }
+            set { _anaerobicThreshold = value; }
         }
 
-        private int? anaerobicThreshold;
+        private int? _anaerobicThreshold;
 
         /// <summary>
         /// Gets or sets the relative VO2 max for the person in mL/kg/min.
@@ -329,11 +329,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public double? RelativeVO2Max
         {
-            get { return this.vo2Relative; }
-            set { this.vo2Relative = value; }
+            get { return _vo2Relative; }
+            set { _vo2Relative = value; }
         }
 
-        private double? vo2Relative;
+        private double? _vo2Relative;
 
         /// <summary>
         /// Gets or sets the absolute V02 max for the person in mL/min.
@@ -349,11 +349,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public double? AbsoluteVO2Max
         {
-            get { return this.vo2Absolute; }
-            set { this.vo2Absolute = value; }
+            get { return _vo2Absolute; }
+            set { _vo2Absolute = value; }
         }
 
-        private double? vo2Absolute;
+        private double? _vo2Absolute;
 
         /// <summary>
         /// Gets the target heart rate zone groups.
@@ -370,9 +370,9 @@ namespace Microsoft.HealthVault.ItemTypes
         /// returned collection.
         /// </remarks>
         ///
-        public Collection<HeartRateZoneGroup> TargetHeartRateZoneGroups => this.zoneGroups;
+        public Collection<HeartRateZoneGroup> TargetHeartRateZoneGroups => _zoneGroups;
 
-        private readonly Collection<HeartRateZoneGroup> zoneGroups =
+        private readonly Collection<HeartRateZoneGroup> _zoneGroups =
             new Collection<HeartRateZoneGroup>();
 
         /// <summary>
@@ -387,32 +387,32 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             StringBuilder result = new StringBuilder(256);
 
-            if (this.MaximumHeartRate != null)
+            if (MaximumHeartRate != null)
             {
                 result.AppendFormat(
                     Resources.AerobicProfileMaxHRFormat,
-                    this.MaximumHeartRate);
+                    MaximumHeartRate);
             }
 
-            if (this.RestingHeartRate != null)
+            if (RestingHeartRate != null)
             {
                 result.AppendFormat(
                     Resources.AerobicProfileRestingHRFormat,
-                    this.RestingHeartRate);
+                    RestingHeartRate);
             }
 
-            if (this.AnaerobicThreshold != null)
+            if (AnaerobicThreshold != null)
             {
                 result.AppendFormat(
                     Resources.AerobicProfileAnaerobicThresholdFormat,
-                    this.AnaerobicThreshold);
+                    AnaerobicThreshold);
             }
 
-            if (this.RelativeVO2Max != null)
+            if (RelativeVO2Max != null)
             {
                 result.AppendFormat(
                     Resources.AerobicProfileRelativeVO2MaxFormat,
-                    this.RelativeVO2Max);
+                    RelativeVO2Max);
             }
 
             return result.ToString();

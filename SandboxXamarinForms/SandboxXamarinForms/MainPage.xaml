@@ -1,0 +1,14 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:local="clr-namespace:SandboxXamarinForms"
+             x:Class="SandboxXamarinForms.MainPage">
+
+    <StackLayout>
+        <Button Clicked="Connect_OnClicked" Text="Connect" />
+        <Button Clicked="SetBP_OnClicked" Text="Add BP" />
+        <Button Clicked="GetBP_OnClicked" Text="Get BP" />
+        <Button Clicked="MultiQuery_OnClicked" Text="Get Things Multi-Query" />
+        <Label x:Name="OutputLabel" />
+    </StackLayout>
+</ContentPage>

@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Javax.Crypto;
 using Javax.Crypto.Spec;
+using Microsoft.HealthVault.Client.Core;
 using AndroidApp = Android.App;
 
 namespace Microsoft.HealthVault.Client
@@ -14,18 +15,18 @@ namespace Microsoft.HealthVault.Client
     /// </summary>
     internal class AndroidSecretStore : ISecretStore
     {
-        private static string encryptionKeyName = "HealthVaultStoreKey";
-        private static string encryptionFlavor = "AES";
+        private static string s_encryptionKeyName = "HealthVaultStoreKey";
+        private static string s_encryptionFlavor = "AES";
 
-        private IEncryptionKeyService keyService;
-        private Dictionary<string, AsyncLock> fileLocks = new Dictionary<string, AsyncLock>();
-        private AsyncLock globalLock = new AsyncLock();
-        private string storePath;
-        private byte[] encryptionKey;
+        private IEncryptionKeyService _keyService;
+        private Dictionary<string, AsyncLock> _fileLocks = new Dictionary<string, AsyncLock>();
+        private AsyncLock _globalLock = new AsyncLock();
+        private string _storePath;
+        private byte[] _encryptionKey;
 
         public AndroidSecretStore(IEncryptionKeyService keyService)
         {
-            this.keyService = keyService;
+            _keyService = keyService;
 
             string storageDir;
             if (Android.OS.Build.VERSION.SdkInt >= Android.OS.BuildVersionCodes.Lollipop)
@@ -37,16 +38,16 @@ namespace Microsoft.HealthVault.Client
                 storageDir = AndroidApp.Application.Context.FilesDir.AbsolutePath;
             }
 
-            this.storePath = Path.Combine(new[] { storageDir, HealthVaultConstants.Storage.DirectoryName });
+            _storePath = Path.Combine(new[] { storageDir, HealthVaultConstants.Storage.DirectoryName });
         }
 
         public async Task DeleteAsync(string key)
         {
             try
             {
-                using (await this.LockAndInitialize(key).ConfigureAwait(false))
+                using (await LockAndInitialize(key).ConfigureAwait(false))
                 {
-                    File.Delete(this.GetFilePath(key));
+                    File.Delete(GetFilePath(key));
                 }
             }
             catch (Exception e) when (!(e is IOException))
@@ -59,15 +60,15 @@ namespace Microsoft.HealthVault.Client
         {
             try
             {
-                using (await this.LockAndInitialize(key).ConfigureAwait(false))
+                using (await LockAndInitialize(key).ConfigureAwait(false))
                 {
                     // read file
-                    string file = this.GetFilePath(key);
+                    string file = GetFilePath(key);
                     byte[] fileContents = File.ReadAllBytes(file);
 
                     // decrypt the file
-                    SecretKeySpec keySpec = new SecretKeySpec(this.encryptionKey, encryptionFlavor);
-                    Cipher cipher = Cipher.GetInstance(encryptionFlavor);
+                    SecretKeySpec keySpec = new SecretKeySpec(_encryptionKey, s_encryptionFlavor);
+                    Cipher cipher = Cipher.GetInstance(s_encryptionFlavor);
                     cipher.Init(CipherMode.DecryptMode, keySpec);
                     byte[] decrypted = cipher.DoFinal(fileContents);
 
@@ -88,16 +89,16 @@ namespace Microsoft.HealthVault.Client
         {
             try
             {
-                using (await this.LockAndInitialize(key).ConfigureAwait(false))
+                using (await LockAndInitialize(key).ConfigureAwait(false))
                 {
                     // encrypt the contents
-                    SecretKeySpec keySpec = new SecretKeySpec(this.encryptionKey, encryptionFlavor);
-                    Cipher cipher = Cipher.GetInstance(encryptionFlavor);
+                    SecretKeySpec keySpec = new SecretKeySpec(_encryptionKey, s_encryptionFlavor);
+                    Cipher cipher = Cipher.GetInstance(s_encryptionFlavor);
                     cipher.Init(CipherMode.EncryptMode, keySpec);
                     byte[] encrypted = cipher.DoFinal(Encoding.UTF8.GetBytes(contents));
 
                     // write file
-                    string file = this.GetFilePath(key);
+                    string file = GetFilePath(key);
                     File.WriteAllBytes(file, encrypted);
                 }
             }
@@ -110,22 +111,22 @@ namespace Microsoft.HealthVault.Client
         private async Task<IDisposable> LockAndInitialize(string key)
         {
             AsyncLock fileLock;
-            using (await this.globalLock.LockAsync().ConfigureAwait(false))
+            using (await _globalLock.LockAsync().ConfigureAwait(false))
             {
-                if (this.encryptionKey == null)
+                if (_encryptionKey == null)
                 {
-                    this.encryptionKey = await this.keyService.GetOrMakeEncryptionKeyAsync(encryptionKeyName).ConfigureAwait(false);
+                    _encryptionKey = await _keyService.GetOrMakeEncryptionKeyAsync(s_encryptionKeyName).ConfigureAwait(false);
 
-                    if (!Directory.Exists(storePath))
+                    if (!Directory.Exists(_storePath))
                     {
-                        Directory.CreateDirectory(storePath);
+                        Directory.CreateDirectory(_storePath);
                     }
                 }
 
-                if (!this.fileLocks.TryGetValue(key, out fileLock))
+                if (!_fileLocks.TryGetValue(key, out fileLock))
                 {
                     fileLock = new AsyncLock();
-                    this.fileLocks[key] = fileLock;
+                    _fileLocks[key] = fileLock;
                 }
             }
 
@@ -134,7 +135,7 @@ namespace Microsoft.HealthVault.Client
 
         private string GetFilePath(string key)
         {
-            return Path.Combine(storePath, key);
+            return Path.Combine(_storePath, key);
         }
     }
 }

@@ -9,22 +9,22 @@ namespace Microsoft.HealthVault
     /// </summary>
     internal sealed class AsyncLock
     {
-        private readonly SemaphoreSlim semaphore = new SemaphoreSlim(1, 1);
-        private readonly Task<IDisposable> releaser;
+        private readonly SemaphoreSlim _semaphore = new SemaphoreSlim(1, 1);
+        private readonly Task<IDisposable> _releaser;
 
         public AsyncLock()
         {
-            this.releaser = Task.FromResult((IDisposable)new Releaser(this));
+            _releaser = Task.FromResult((IDisposable)new Releaser(this));
         }
 
         public Task<IDisposable> LockAsync()
         {
-            var wait = this.semaphore.WaitAsync();
+            var wait = _semaphore.WaitAsync();
             return wait.IsCompleted
-                ? this.releaser
+                ? _releaser
                 : wait.ContinueWith(
                     (_, state) => (IDisposable)state,
-                    this.releaser.Result,
+                    _releaser.Result,
                     CancellationToken.None,
                     TaskContinuationOptions.ExecuteSynchronously,
                     TaskScheduler.Default);
@@ -32,16 +32,16 @@ namespace Microsoft.HealthVault
 
         private sealed class Releaser : IDisposable
         {
-            private readonly AsyncLock toRelease;
+            private readonly AsyncLock _toRelease;
 
             internal Releaser(AsyncLock toRelease)
             {
-                this.toRelease = toRelease;
+                _toRelease = toRelease;
             }
 
             public void Dispose()
             {
-                this.toRelease.semaphore.Release();
+                _toRelease._semaphore.Release();
             }
         }
     }

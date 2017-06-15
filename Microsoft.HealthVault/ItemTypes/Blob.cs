@@ -1,7 +1,7 @@
-// Copyright (c) Microsoft Corporation.  All rights reserved. 
+// Copyright (c) Microsoft Corporation.  All rights reserved.
 // MIT License
 // Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the ""Software""), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 //
 // THE SOFTWARE IS PROVIDED *AS IS*, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
@@ -9,7 +9,6 @@
 using System;
 using System.IO;
 using System.Text;
-using System.Threading.Tasks;
 using Microsoft.HealthVault.Exceptions;
 using Microsoft.HealthVault.Helpers;
 using Microsoft.HealthVault.Thing;
@@ -105,12 +104,12 @@ namespace Microsoft.HealthVault.ItemTypes
             Validator.ThrowIfArgumentNull(name, nameof(name), Resources.StringNull);
             Validator.ThrowIfArgumentNull(contentType, nameof(contentType), Resources.StringNull);
 
-            this.Name = name;
-            this.ContentType = contentType;
-            this.ContentEncoding = currentContentEncoding;
-            this.LegacyContentEncoding = legacyContentEncoding;
-            this.HashInfo = hashInfo;
-            this.record = record;
+            Name = name;
+            ContentType = contentType;
+            ContentEncoding = currentContentEncoding;
+            LegacyContentEncoding = legacyContentEncoding;
+            HashInfo = hashInfo;
+            _record = record;
         }
 
         /// <summary>
@@ -151,11 +150,11 @@ namespace Microsoft.HealthVault.ItemTypes
             Validator.ThrowIfArgumentNull(name, nameof(name), Resources.StringNull);
             Validator.ThrowIfArgumentNull(contentType, nameof(contentType), Resources.StringNull);
 
-            this.Name = name;
-            this.ContentType = contentType;
-            this.ContentEncoding = currentContentEncoding;
-            this.LegacyContentEncoding = legacyContentEncoding;
-            this.HashInfo = hashInfo;
+            Name = name;
+            ContentType = contentType;
+            ContentEncoding = currentContentEncoding;
+            LegacyContentEncoding = legacyContentEncoding;
+            HashInfo = hashInfo;
         }
 
         /// <summary>
@@ -173,7 +172,7 @@ namespace Microsoft.HealthVault.ItemTypes
         /// </summary>
         public BlobHashInfo HashInfo { get; internal set; }
 
-        private readonly HealthRecordAccessor record;
+        private readonly HealthRecordAccessor _record;
 
         /// <summary>
         /// Gets the content encoding of the BLOB.
@@ -195,7 +194,7 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <remarks>
         /// In some cases the content length can't be determined by
         /// HealthVault until the data is retrieved. In this case, the property
-        /// will be null. 
+        /// will be null.
         /// </remarks>
         ///
         public long? ContentLength { get; internal set; }
@@ -216,15 +215,14 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public BlobStream GetWriterStream()
         {
-            if (this.InlineData != null || this.Url != null)
+            if (InlineData != null || Url != null)
             {
                 throw new NotSupportedException();
             }
 
-            this.IsDirty = true;
+            IsDirty = true;
 
-            return this.record != null ?
-                    new BlobStream(this.record, this) : null;
+            return _record != null ? new BlobStream(_record, this) : null;
         }
 
         /// <summary>
@@ -248,7 +246,7 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public void WriteInline(string data)
         {
-            this.WriteInline(data, Encoding.UTF8);
+            WriteInline(data, Encoding.UTF8);
         }
 
         /// <summary>
@@ -281,7 +279,7 @@ namespace Microsoft.HealthVault.ItemTypes
             Validator.ThrowIfArgumentNull(data, nameof(data), Resources.StringNull);
             Validator.ThrowIfArgumentNull(encoding, nameof(encoding), Resources.ArgumentNull);
 
-            this.WriteNewInlineData(encoding.GetBytes(data));
+            WriteNewInlineData(encoding.GetBytes(data));
         }
 
         /// <summary>
@@ -307,7 +305,7 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             Validator.ThrowIfArgumentNull(bytes, nameof(bytes), Resources.ArgumentNull);
 
-            this.WriteNewInlineData(bytes);
+            WriteNewInlineData(bytes);
         }
 
         private void WriteNewInlineData(byte[] bytes)
@@ -315,16 +313,16 @@ namespace Microsoft.HealthVault.ItemTypes
             BlobHasher inlineHasher = BlobHasher.InlineBlobHasher;
             byte[] blobHash = inlineHasher.CalculateBlobHash(bytes, 0, bytes.Length);
 
-            this.Url = null;
-            this.InlineData = bytes;
-            this.ContentLength = bytes.Length;
+            Url = null;
+            InlineData = bytes;
+            ContentLength = bytes.Length;
 
-            this.HashInfo = new BlobHashInfo(
+            HashInfo = new BlobHashInfo(
                 inlineHasher.BlobHashAlgorithm,
                 inlineHasher.BlockSize,
                 blobHash);
 
-            this.IsDirty = true;
+            IsDirty = true;
         }
 
         /// <summary>
@@ -355,7 +353,7 @@ namespace Microsoft.HealthVault.ItemTypes
 
             byte[] bytes = new byte[bufferSize];
 
-            using (BlobStream blobStream = this.GetWriterStream())
+            using (BlobStream blobStream = GetWriterStream())
             {
                 int bytesRead;
                 while ((bytesRead = stream.Read(bytes, 0, bufferSize)) > 0)
@@ -364,7 +362,7 @@ namespace Microsoft.HealthVault.ItemTypes
                 }
             }
 
-            this.IsDirty = true;
+            IsDirty = true;
         }
 
         #endregion Write
@@ -386,13 +384,13 @@ namespace Microsoft.HealthVault.ItemTypes
         public BlobStream GetReaderStream()
         {
             BlobStream stream;
-            if (this.Url != null)
+            if (Url != null)
             {
-                stream = new BlobStream(this, this.Url, this.ContentLength);
+                stream = new BlobStream(this, Url, ContentLength);
             }
-            else if (this.InlineData != null)
+            else if (InlineData != null)
             {
-                stream = new BlobStream(this, this.InlineData, this.ContentLength);
+                stream = new BlobStream(this, InlineData, ContentLength);
             }
             else
             {
@@ -438,7 +436,7 @@ namespace Microsoft.HealthVault.ItemTypes
 
             using (FileStream file = System.IO.File.Open(fileName, mode, FileAccess.Write))
             {
-                this.SaveToStream(file);
+                SaveToStream(file);
             }
         }
 
@@ -470,9 +468,9 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             Validator.ThrowIfArgumentNull(stream, nameof(stream), Resources.ArgumentNull);
 
-            using (BlobStream blob = this.GetReaderStream())
+            using (BlobStream blob = GetReaderStream())
             {
-                int bufferSize = (int)(this.ContentLength ?? int.MaxValue);
+                int bufferSize = (int)(ContentLength ?? int.MaxValue);
                 bufferSize = Math.Min(bufferSize, DefaultStreamBufferSize);
 
                 byte[] buffer = new byte[bufferSize];
@@ -498,7 +496,7 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public string ReadAsString()
         {
-            return this.ReadAsString(Encoding.UTF8);
+            return ReadAsString(Encoding.UTF8);
         }
 
         /// <summary>
@@ -526,7 +524,7 @@ namespace Microsoft.HealthVault.ItemTypes
             string result;
             using (MemoryStream memoryStream = new MemoryStream(1000))
             {
-                this.SaveToStream(memoryStream);
+                SaveToStream(memoryStream);
                 memoryStream.Flush();
 
                 result = encoding.GetString(memoryStream.ToArray(), 0, (int)memoryStream.Position);
@@ -554,12 +552,12 @@ namespace Microsoft.HealthVault.ItemTypes
         public byte[] ReadAllBytes()
         {
             byte[] result;
-            int bufferSize = (int)(this.ContentLength ?? int.MaxValue);
+            int bufferSize = (int)(ContentLength ?? int.MaxValue);
             bufferSize = Math.Min(bufferSize, DefaultStreamBufferSize);
 
             using (MemoryStream memoryStream = new MemoryStream(bufferSize))
             {
-                this.SaveToStream(memoryStream);
+                SaveToStream(memoryStream);
                 memoryStream.Flush();
 
                 result = memoryStream.ToArray();

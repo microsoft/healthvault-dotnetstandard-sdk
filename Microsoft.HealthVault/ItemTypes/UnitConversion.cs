@@ -33,8 +33,8 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             Validator.ThrowIfNavigatorNull(navigator);
 
-            this.multiplier = XPathHelper.GetOptNavValueAsDouble(navigator, "multiplier");
-            this.offset = XPathHelper.GetOptNavValueAsDouble(navigator, "offset");
+            _multiplier = XPathHelper.GetOptNavValueAsDouble(navigator, "multiplier");
+            _offset = XPathHelper.GetOptNavValueAsDouble(navigator, "offset");
         }
 
         /// <summary>
@@ -66,8 +66,8 @@ namespace Microsoft.HealthVault.ItemTypes
 
             writer.WriteStartElement("unit-conversion");
 
-            XmlWriterHelper.WriteOptDouble(writer, "multiplier", this.multiplier);
-            XmlWriterHelper.WriteOptDouble(writer, "offset", this.offset);
+            XmlWriterHelper.WriteOptDouble(writer, "multiplier", _multiplier);
+            XmlWriterHelper.WriteOptDouble(writer, "offset", _offset);
             writer.WriteEndElement();
         }
 
@@ -79,16 +79,16 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             get
             {
-                return this.multiplier;
+                return _multiplier;
             }
 
             set
             {
-                this.multiplier = value;
+                _multiplier = value;
             }
         }
 
-        private double? multiplier;
+        private double? _multiplier;
 
         /// <summary>
         /// Gets or sets the offset.
@@ -98,16 +98,16 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             get
             {
-                return this.offset;
+                return _offset;
             }
 
             set
             {
-                this.offset = value;
+                _offset = value;
             }
         }
 
-        private double? offset;
+        private double? _offset;
 
         /// <summary>
         /// Gets a string representation of the UnitConversion.
@@ -122,8 +122,8 @@ namespace Microsoft.HealthVault.ItemTypes
             return string.Format(
                 CultureInfo.CurrentUICulture,
                 Resources.UnitConversionFormat,
-                this.multiplier,
-                this.offset);
+                _multiplier,
+                _offset);
         }
 
         /// <summary>
@@ -133,14 +133,14 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <returns>the value using the selected conversion</returns>
         public double Convert(double value)
         {
-            if (this.multiplier.HasValue)
+            if (_multiplier.HasValue)
             {
-                value = value * this.multiplier.Value;
+                value = value * _multiplier.Value;
             }
 
-            if (this.offset.HasValue)
+            if (_offset.HasValue)
             {
-                value = value + this.offset.Value;
+                value = value + _offset.Value;
             }
 
             return value;
@@ -153,14 +153,14 @@ namespace Microsoft.HealthVault.ItemTypes
         /// <returns>the value using the reverse of this conversion</returns>
         public double ReverseConvert(double value)
         {
-            if (this.offset.HasValue)
+            if (_offset.HasValue)
             {
-                value = value - this.offset.Value;
+                value = value - _offset.Value;
             }
 
-            if (this.multiplier.HasValue)
+            if (_multiplier.HasValue)
             {
-                value = value / this.multiplier.Value;
+                value = value / _multiplier.Value;
             }
 
             return value;

@@ -1,14 +1,14 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
-using Microsoft.HealthVault.Web.Attributes;
 using System.Web.Mvc;
+using System.Web.Routing;
 using Microsoft.HealthVault.Clients;
 using Microsoft.HealthVault.ItemTypes;
 using Microsoft.HealthVault.Person;
 using Microsoft.HealthVault.Web;
+using Microsoft.HealthVault.Web.Attributes;
 using Microsoft.HealthVault.Web.Connection;
-using System;
-using System.Web.Routing;
 
 namespace SandboxWeb.Controllers
 {
@@ -18,15 +18,15 @@ namespace SandboxWeb.Controllers
         // GET: HealthVault
         public async Task<ActionResult> Index()
         {
-           IWebHealthVaultConnection webHealthVaultConnection =  await WebHealthVaultFactory.CreateWebConnectionAsync();
+            IWebHealthVaultConnection webHealthVaultConnection = await WebHealthVaultFactory.CreateWebConnectionAsync();
 
-           PersonInfo personInfo =  await webHealthVaultConnection.GetPersonInfoAsync();
+            PersonInfo personInfo = await webHealthVaultConnection.GetPersonInfoAsync();
 
-           IThingClient thingClient = webHealthVaultConnection.CreateThingClient();
+            IThingClient thingClient = webHealthVaultConnection.CreateThingClient();
 
-           IReadOnlyCollection<Weight> weights = await thingClient.GetThingsAsync<Weight>(personInfo.GetSelfRecord().Id);
-           
-           return View(weights);
+            IReadOnlyCollection<Weight> weights = await thingClient.GetThingsAsync<Weight>(personInfo.GetSelfRecord().Id);
+
+            return View(weights);
         }
 
         [HttpPost]

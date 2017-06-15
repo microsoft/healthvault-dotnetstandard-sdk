@@ -85,12 +85,12 @@ namespace Microsoft.HealthVault.Thing
 
         internal void ParseXml(XPathNavigator navigator)
         {
-            this.TypeId = new Guid(navigator.SelectSingleNode(
+            TypeId = new Guid(navigator.SelectSingleNode(
                             "thing-type-id").Value);
 
             XPathNavigator onlinePermissions
                 = navigator.SelectSingleNode("online-access-permissions");
-            this.OnlineAccessPermissions = ThingPermissions.None;
+            OnlineAccessPermissions = ThingPermissions.None;
 
             if (onlinePermissions != null)
             {
@@ -100,7 +100,7 @@ namespace Microsoft.HealthVault.Thing
                 {
                     foreach (XPathNavigator navPerms in nodes)
                     {
-                        this.OnlineAccessPermissions
+                        OnlineAccessPermissions
                             |= (ThingPermissions)Enum.Parse(
                                     typeof(ThingPermissions),
                                     navPerms.Value);
@@ -108,14 +108,14 @@ namespace Microsoft.HealthVault.Thing
                 }
                 catch (ArgumentException)
                 {
-                    this.OnlineAccessPermissions
+                    OnlineAccessPermissions
                         = ThingPermissions.None;
                 }
             }
 
             XPathNavigator offlinePermissions
                 = navigator.SelectSingleNode("offline-access-permissions");
-            this.OfflineAccessPermissions = ThingPermissions.None;
+            OfflineAccessPermissions = ThingPermissions.None;
 
             if (offlinePermissions != null)
             {
@@ -125,7 +125,7 @@ namespace Microsoft.HealthVault.Thing
                 {
                     foreach (XPathNavigator navPerms in nodes)
                     {
-                        this.OfflineAccessPermissions
+                        OfflineAccessPermissions
                             |= (ThingPermissions)Enum.Parse(
                                     typeof(ThingPermissions),
                                     navPerms.Value);
@@ -133,7 +133,7 @@ namespace Microsoft.HealthVault.Thing
                 }
                 catch (ArgumentException)
                 {
-                    this.OfflineAccessPermissions
+                    OfflineAccessPermissions
                         = ThingPermissions.None;
                 }
             }

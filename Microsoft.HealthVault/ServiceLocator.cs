@@ -1,7 +1,4 @@
-﻿using System;
-using Microsoft.HealthVault.Authentication;
-
-namespace Microsoft.HealthVault
+﻿namespace Microsoft.HealthVault
 {
     internal class ServiceLocator : IServiceLocator
     {

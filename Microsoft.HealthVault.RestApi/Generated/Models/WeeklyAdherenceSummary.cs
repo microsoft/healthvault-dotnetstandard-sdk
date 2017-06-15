@@ -2,11 +2,16 @@
 // Changes may cause incorrect behavior and will be lost if the code is
 // regenerated.
 
-using System.Collections.Generic;
-using Newtonsoft.Json;
-
 namespace Microsoft.HealthVault.RestApi.Generated.Models
 {
+    using Microsoft.HealthVault;
+    using Microsoft.HealthVault.RestApi;
+    using Microsoft.HealthVault.RestApi.Generated;
+    using Newtonsoft.Json;
+    using System.Collections;
+    using System.Collections.Generic;
+    using System.Linq;
+
     /// <summary>
     /// A summary of a tasks weekly adherence
     /// </summary>
@@ -17,7 +22,7 @@ namespace Microsoft.HealthVault.RestApi.Generated.Models
         /// </summary>
         public WeeklyAdherenceSummary()
         {
-          this.CustomInit();
+          CustomInit();
         }
 
         /// <summary>
@@ -38,14 +43,14 @@ namespace Microsoft.HealthVault.RestApi.Generated.Models
         /// (HealthVault Thing IDs) that were automatically tracked</param>
         public WeeklyAdherenceSummary(System.DateTime? weekStart = default(System.DateTime?), int? completions = default(int?), int? intendedCompletions = default(int?), int? intendedOccurrences = default(int?), int? manualTrackedOccurrences = default(int?), int? automaticTrackedOccurrences = default(int?), IList<string> automaticTrackedOccurrenceEvidence = default(IList<string>))
         {
-            this.WeekStart = weekStart;
-            this.Completions = completions;
-            this.IntendedCompletions = intendedCompletions;
-            this.IntendedOccurrences = intendedOccurrences;
-            this.ManualTrackedOccurrences = manualTrackedOccurrences;
-            this.AutomaticTrackedOccurrences = automaticTrackedOccurrences;
-            this.AutomaticTrackedOccurrenceEvidence = automaticTrackedOccurrenceEvidence;
-            this.CustomInit();
+            WeekStart = weekStart;
+            Completions = completions;
+            IntendedCompletions = intendedCompletions;
+            IntendedOccurrences = intendedOccurrences;
+            ManualTrackedOccurrences = manualTrackedOccurrences;
+            AutomaticTrackedOccurrences = automaticTrackedOccurrences;
+            AutomaticTrackedOccurrenceEvidence = automaticTrackedOccurrenceEvidence;
+            CustomInit();
         }
 
         /// <summary>

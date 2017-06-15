@@ -26,13 +26,13 @@ namespace Microsoft.HealthVault.Thing
             XPathNavigator sourceNav = commonNav.SelectSingleNode("source");
             if (sourceNav != null)
             {
-                this.Source = sourceNav.Value;
+                Source = sourceNav.Value;
             }
 
             XPathNavigator noteNav = commonNav.SelectSingleNode("note");
             if (noteNav != null)
             {
-                this.Note = noteNav.Value;
+                Note = noteNav.Value;
             }
 
             // Please leave this code until the data-xml/common/tags gets removed.
@@ -40,7 +40,7 @@ namespace Microsoft.HealthVault.Thing
             if (tagsNav != null)
             {
 #pragma warning disable CS0618 // Type or member is obsolete
-                this.Tags = tagsNav.Value;
+                Tags = tagsNav.Value;
 #pragma warning restore CS0618 // Type or member is obsolete
             }
 
@@ -53,7 +53,7 @@ namespace Microsoft.HealthVault.Thing
 
                 if (extension != null)
                 {
-                    this.Extensions.Add(extension);
+                    Extensions.Add(extension);
                 }
             }
 
@@ -67,13 +67,13 @@ namespace Microsoft.HealthVault.Thing
 
                 relationship.ParseXml(relationshipNav);
 
-                this.RelatedItems.Add(relationship);
+                RelatedItems.Add(relationship);
             }
 
             XPathNavigator clientIdNav = commonNav.SelectSingleNode("client-thing-id");
             if (clientIdNav != null)
             {
-                this.ClientId = clientIdNav.Value;
+                ClientId = clientIdNav.Value;
             }
         }
 
@@ -87,7 +87,7 @@ namespace Microsoft.HealthVault.Thing
                     Guid thingId;
                     if (Guid.TryParse(relThing.Split(',')[0], out thingId))
                     {
-                        this.RelatedItems.Add(new ThingRelationship(thingId));
+                        RelatedItems.Add(new ThingRelationship(thingId));
                     }
                 }
             }
@@ -98,39 +98,39 @@ namespace Microsoft.HealthVault.Thing
             // <common>
             writer.WriteStartElement("common");
 
-            if (!string.IsNullOrEmpty(this.Source))
+            if (!string.IsNullOrEmpty(Source))
             {
-                writer.WriteElementString("source", this.Source);
+                writer.WriteElementString("source", Source);
             }
 
-            if (!string.IsNullOrEmpty(this.Note))
+            if (!string.IsNullOrEmpty(Note))
             {
-                writer.WriteElementString("note", this.Note);
+                writer.WriteElementString("note", Note);
             }
 
 #pragma warning disable CS0618 // Type or member is obsolete
 
             // Please leave this code until the data-xml/common/tags gets removed.
-            if (!string.IsNullOrEmpty(this.Tags))
+            if (!string.IsNullOrEmpty(Tags))
             {
-                writer.WriteElementString("tags", this.Tags);
+                writer.WriteElementString("tags", Tags);
             }
 
 #pragma warning restore CS0618 // Type or member is obsolete
 
-            foreach (ThingExtension extension in this.Extensions)
+            foreach (ThingExtension extension in Extensions)
             {
                 extension.WriteExtensionXml(writer);
             }
 
-            foreach (ThingRelationship relationship in this.RelatedItems)
+            foreach (ThingRelationship relationship in RelatedItems)
             {
                 relationship.WriteXml("related-thing", writer);
             }
 
-            if (!string.IsNullOrEmpty(this.ClientId))
+            if (!string.IsNullOrEmpty(ClientId))
             {
-                writer.WriteElementString("client-thing-id", this.ClientId);
+                writer.WriteElementString("client-thing-id", ClientId);
             }
 
             // </common>

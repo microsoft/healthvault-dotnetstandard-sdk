@@ -1,4 +1,7 @@
 ﻿using System;
+using Microsoft.HealthVault.Client.Core;
+
+using System;
 
 namespace Microsoft.HealthVault.Client
 {

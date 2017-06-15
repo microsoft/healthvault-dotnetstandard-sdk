@@ -56,9 +56,9 @@ namespace Microsoft.HealthVault.ItemTypes
             Validator.ThrowIfStringNullOrEmpty(country, "country");
             Validator.ThrowIfStringNullOrEmpty(postalCode, "postalCode");
 
-            this.city = city;
-            this.country = country;
-            this.postalCode = postalCode;
+            _city = city;
+            _country = country;
+            _postalCode = postalCode;
         }
 
         /// <summary>
@@ -94,16 +94,16 @@ namespace Microsoft.HealthVault.ItemTypes
             Validator.ThrowIfStringNullOrEmpty(country, "country");
             Validator.ThrowIfStringNullOrEmpty(postalCode, "postalCode");
 
-            this.city = city;
-            this.country = country;
-            this.postalCode = postalCode;
+            _city = city;
+            _country = country;
+            _postalCode = postalCode;
 
             foreach (string streetString in street)
             {
-                this.street.Add(streetString);
+                _street.Add(streetString);
             }
 
-            if (this.street.Count == 0)
+            if (_street.Count == 0)
             {
                 throw new ArgumentException(Resources.AddressStreetMandatory, nameof(street));
             }
@@ -130,7 +130,7 @@ namespace Microsoft.HealthVault.ItemTypes
 
             if (descNav != null)
             {
-                this.description = descNav.Value;
+                _description = descNav.Value;
             }
 
             XPathNavigator isPrimaryNav =
@@ -138,7 +138,7 @@ namespace Microsoft.HealthVault.ItemTypes
 
             if (isPrimaryNav != null)
             {
-                this.isPrimary = isPrimaryNav.ValueAsBoolean;
+                _isPrimary = isPrimaryNav.ValueAsBoolean;
             }
 
             XPathNodeIterator streetIterator =
@@ -146,17 +146,17 @@ namespace Microsoft.HealthVault.ItemTypes
 
             foreach (XPathNavigator streetNav in streetIterator)
             {
-                this.street.Add(streetNav.Value);
+                _street.Add(streetNav.Value);
             }
 
-            this.city = navigator.SelectSingleNode("city").Value;
+            _city = navigator.SelectSingleNode("city").Value;
 
-            this.state = XPathHelper.GetOptNavValue(navigator, "state");
+            _state = XPathHelper.GetOptNavValue(navigator, "state");
 
-            this.postalCode = navigator.SelectSingleNode("postcode").Value;
-            this.country = navigator.SelectSingleNode("country").Value;
+            _postalCode = navigator.SelectSingleNode("postcode").Value;
+            _country = navigator.SelectSingleNode("country").Value;
 
-            this.county = XPathHelper.GetOptNavValue(navigator, "county");
+            _county = XPathHelper.GetOptNavValue(navigator, "county");
         }
 
         /// <summary>
@@ -191,44 +191,44 @@ namespace Microsoft.HealthVault.ItemTypes
             Validator.ThrowIfStringNullOrEmpty(nodeName, nameof(nodeName));
             Validator.ThrowIfArgumentNull(writer, nameof(writer), Resources.WriteXmlNullWriter);
 
-            if (this.street.Count == 0)
+            if (_street.Count == 0)
             {
                 throw new ThingSerializationException(Resources.AddressStreetNotSet);
             }
 
-            Validator.ThrowSerializationIfNull(this.city, Resources.AddressCityNotSet);
-            Validator.ThrowSerializationIfNull(this.country, Resources.AddressCountryNotSet);
-            Validator.ThrowSerializationIfNull(this.postalCode, Resources.AddressPostalCodeNotSet);
+            Validator.ThrowSerializationIfNull(_city, Resources.AddressCityNotSet);
+            Validator.ThrowSerializationIfNull(_country, Resources.AddressCountryNotSet);
+            Validator.ThrowSerializationIfNull(_postalCode, Resources.AddressPostalCodeNotSet);
 
             writer.WriteStartElement(nodeName);
 
-            if (!string.IsNullOrEmpty(this.description))
+            if (!string.IsNullOrEmpty(_description))
             {
-                writer.WriteElementString("description", this.description);
+                writer.WriteElementString("description", _description);
             }
 
-            if (this.isPrimary != null)
+            if (_isPrimary != null)
             {
                 writer.WriteElementString(
                     "is-primary",
-                    SDKHelper.XmlFromBool((bool)this.isPrimary));
+                    SDKHelper.XmlFromBool((bool)_isPrimary));
             }
 
-            foreach (string street in this.street)
+            foreach (string street in _street)
             {
                 writer.WriteElementString("street", street);
             }
 
-            writer.WriteElementString("city", this.city);
-            if (!string.IsNullOrEmpty(this.state))
+            writer.WriteElementString("city", _city);
+            if (!string.IsNullOrEmpty(_state))
             {
-                writer.WriteElementString("state", this.state);
+                writer.WriteElementString("state", _state);
             }
 
-            writer.WriteElementString("postcode", this.postalCode);
-            writer.WriteElementString("country", this.country);
+            writer.WriteElementString("postcode", _postalCode);
+            writer.WriteElementString("country", _country);
 
-            XmlWriterHelper.WriteOptString(writer, "county", this.county);
+            XmlWriterHelper.WriteOptString(writer, "county", _county);
 
             writer.WriteEndElement();
         }
@@ -251,16 +251,16 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public string Description
         {
-            get { return this.description; }
+            get { return _description; }
 
             set
             {
                 Validator.ThrowIfStringIsWhitespace(value, "Description");
-                this.description = value;
+                _description = value;
             }
         }
 
-        private string description;
+        private string _description;
 
         /// <summary>
         /// Gets or sets a value indicating whether the address is the primary
@@ -277,11 +277,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public bool? IsPrimary
         {
-            get { return this.isPrimary; }
-            set { this.isPrimary = value; }
+            get { return _isPrimary; }
+            set { _isPrimary = value; }
         }
 
-        private bool? isPrimary;
+        private bool? _isPrimary;
 
         /// <summary>
         /// Gets the street number, name, apartment, and so on.
@@ -291,9 +291,9 @@ namespace Microsoft.HealthVault.ItemTypes
         /// A string collection of address information.
         /// </value>
         ///
-        public Collection<string> Street => this.street;
+        public Collection<string> Street => _street;
 
-        private readonly Collection<string> street = new Collection<string>();
+        private readonly Collection<string> _street = new Collection<string>();
 
         /// <summary>
         /// Gets or sets the city.
@@ -310,17 +310,17 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public string City
         {
-            get { return this.city; }
+            get { return _city; }
 
             set
             {
-                Validator.ThrowIfArgumentNull(value, nameof(this.City), Resources.AddressCityMandatory);
-                Validator.ThrowIfStringIsWhitespace(value, nameof(this.City));
-                this.city = value;
+                Validator.ThrowIfArgumentNull(value, nameof(City), Resources.AddressCityMandatory);
+                Validator.ThrowIfStringIsWhitespace(value, nameof(City));
+                _city = value;
             }
         }
 
-        private string city;
+        private string _city;
 
         /// <summary>
         /// Gets or sets the state.
@@ -340,16 +340,16 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public string State
         {
-            get { return this.state; }
+            get { return _state; }
 
             set
             {
                 Validator.ThrowIfStringIsWhitespace(value, "State");
-                this.state = value;
+                _state = value;
             }
         }
 
-        private string state;
+        private string _state;
 
         /// <summary>
         /// Gets or sets the country.
@@ -366,17 +366,17 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public string Country
         {
-            get { return this.country; }
+            get { return _country; }
 
             set
             {
-                Validator.ThrowIfArgumentNull(value, nameof(this.Country), Resources.AddressCountryMandatory);
-                Validator.ThrowIfStringIsWhitespace(value, nameof(this.Country));
-                this.country = value;
+                Validator.ThrowIfArgumentNull(value, nameof(Country), Resources.AddressCountryMandatory);
+                Validator.ThrowIfStringIsWhitespace(value, nameof(Country));
+                _country = value;
             }
         }
 
-        private string country;
+        private string _country;
 
         /// <summary>
         /// Gets or sets the postal code.
@@ -393,17 +393,17 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public string PostalCode
         {
-            get { return this.postalCode; }
+            get { return _postalCode; }
 
             set
             {
-                Validator.ThrowIfArgumentNull(value, nameof(this.PostalCode), Resources.AddressPostalCodeMandatory);
-                Validator.ThrowIfStringIsWhitespace(value, nameof(this.PostalCode));
-                this.postalCode = value;
+                Validator.ThrowIfArgumentNull(value, nameof(PostalCode), Resources.AddressPostalCodeMandatory);
+                Validator.ThrowIfStringIsWhitespace(value, nameof(PostalCode));
+                _postalCode = value;
             }
         }
 
-        private string postalCode;
+        private string _postalCode;
 
         /// <summary>
         /// Gets or sets the county.
@@ -423,7 +423,7 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public string County
         {
-            get { return this.county; }
+            get { return _county; }
 
             set
             {
@@ -433,11 +433,11 @@ namespace Microsoft.HealthVault.ItemTypes
                     Validator.ThrowIfStringIsWhitespace(value, "County");
                 }
 
-                this.county = value;
+                _county = value;
             }
         }
 
-        private string county;
+        private string _county;
 
         /// <summary>
         /// Gets a string representation of the address.
@@ -454,39 +454,39 @@ namespace Microsoft.HealthVault.ItemTypes
 
             string listFormat = Resources.ListFormat;
 
-            if (this.IsPrimary != null && this.IsPrimary.Value)
+            if (IsPrimary != null && IsPrimary.Value)
             {
                 result.Append(Resources.IsPrimary);
             }
 
-            foreach (string street in this.Street)
+            foreach (string street in Street)
             {
                 result.Append(street);
                 result.Append(Resources.ListSeparator);
             }
 
-            result.Append(this.City);
+            result.Append(City);
 
-            if (!string.IsNullOrEmpty(this.County))
+            if (!string.IsNullOrEmpty(County))
             {
-                result.AppendFormat(listFormat, this.County);
+                result.AppendFormat(listFormat, County);
             }
 
-            if (!string.IsNullOrEmpty(this.State))
+            if (!string.IsNullOrEmpty(State))
             {
-                result.AppendFormat(listFormat, this.State);
+                result.AppendFormat(listFormat, State);
             }
 
-            result.AppendFormat(listFormat, this.PostalCode);
+            result.AppendFormat(listFormat, PostalCode);
 
-            if (!string.IsNullOrEmpty(this.Country))
+            if (!string.IsNullOrEmpty(Country))
             {
-                result.AppendFormat(listFormat, this.Country);
+                result.AppendFormat(listFormat, Country);
             }
 
-            if (!string.IsNullOrEmpty(this.Description))
+            if (!string.IsNullOrEmpty(Description))
             {
-                result.AppendFormat(listFormat, this.Description);
+                result.AppendFormat(listFormat, Description);
             }
 
             return result.ToString();

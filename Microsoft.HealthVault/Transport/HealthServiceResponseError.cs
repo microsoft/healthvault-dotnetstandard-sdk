@@ -12,7 +12,6 @@ namespace Microsoft.HealthVault.Transport
     /// than <see cref="HealthServiceStatusCode.Ok"/>.
     /// </summary>
     ///
-    [Serializable]
     public class HealthServiceResponseError
     {
         /// <summary>
@@ -31,11 +30,11 @@ namespace Microsoft.HealthVault.Transport
         ///
         public string Message
         {
-            get { return this.message; }
-            internal set { this.message = value; }
+            get { return _message; }
+            internal set { _message = value; }
         }
 
-        private string message;
+        private string _message;
 
         /// <summary>
         /// Gets the context of the server in which the error occurred.
@@ -53,12 +52,11 @@ namespace Microsoft.HealthVault.Transport
         ///
         internal HealthServiceErrorContext Context
         {
-            get { return this.context; }
-            set { this.context = value; }
+            get { return _context; }
+            set { _context = value; }
         }
 
-        [NonSerialized]
-        private HealthServiceErrorContext context;
+        private HealthServiceErrorContext _context;
 
         /// <summary>
         /// Gets the additional information specific to the method failure.
@@ -76,11 +74,11 @@ namespace Microsoft.HealthVault.Transport
         ///
         public string ErrorInfo
         {
-            get { return this.errorInfo; }
-            internal set { this.errorInfo = value; }
+            get { return _errorInfo; }
+            internal set { _errorInfo = value; }
         }
 
-        private string errorInfo;
+        private string _errorInfo;
 
         /// <summary>
         /// Gets the string representation of the <see cref="HealthServiceErrorContext"/>
@@ -95,7 +93,7 @@ namespace Microsoft.HealthVault.Transport
         public override string ToString()
         {
             string result =
-                string.Join(" ", this.GetType().ToString(), this.message);
+                string.Join(" ", GetType().ToString(), _message);
             return result;
         }
     }

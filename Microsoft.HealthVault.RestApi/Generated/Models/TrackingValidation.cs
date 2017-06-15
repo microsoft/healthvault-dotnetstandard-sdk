@@ -2,10 +2,14 @@
 // Changes may cause incorrect behavior and will be lost if the code is
 // regenerated.
 
-using Newtonsoft.Json;
-
 namespace Microsoft.HealthVault.RestApi.Generated.Models
 {
+    using Microsoft.HealthVault;
+    using Microsoft.HealthVault.RestApi;
+    using Microsoft.HealthVault.RestApi.Generated;
+    using Newtonsoft.Json;
+    using System.Linq;
+
     /// <summary>
     /// class for Tracking Validation
     /// </summary>
@@ -16,7 +20,7 @@ namespace Microsoft.HealthVault.RestApi.Generated.Models
         /// </summary>
         public TrackingValidation()
         {
-          this.CustomInit();
+          CustomInit();
         }
 
         /// <summary>
@@ -26,11 +30,11 @@ namespace Microsoft.HealthVault.RestApi.Generated.Models
         /// task.</param>
         /// <param name="xmlThingDocument">Gets or sets the XML thing
         /// document.</param>
-        public TrackingValidation(ActionPlanTask actionPlanTask = default(ActionPlanTask), string xmlThingDocument = default(string))
+        public TrackingValidation(ActionPlanTaskV2 actionPlanTask = default(ActionPlanTaskV2), string xmlThingDocument = default(string))
         {
-            this.ActionPlanTask = actionPlanTask;
-            this.XmlThingDocument = xmlThingDocument;
-            this.CustomInit();
+            ActionPlanTask = actionPlanTask;
+            XmlThingDocument = xmlThingDocument;
+            CustomInit();
         }
 
         /// <summary>
@@ -42,7 +46,7 @@ namespace Microsoft.HealthVault.RestApi.Generated.Models
         /// Gets or sets the action plan task.
         /// </summary>
         [JsonProperty(PropertyName = "actionPlanTask")]
-        public ActionPlanTask ActionPlanTask { get; set; }
+        public ActionPlanTaskV2 ActionPlanTask { get; set; }
 
         /// <summary>
         /// Gets or sets the XML thing document.

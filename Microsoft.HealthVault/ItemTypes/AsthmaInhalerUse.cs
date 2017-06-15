@@ -68,9 +68,9 @@ namespace Microsoft.HealthVault.ItemTypes
         public AsthmaInhalerUse(HealthServiceDateTime when, CodableValue drug, int doseCount)
             : base(TypeId)
         {
-            this.When = when;
-            this.Drug = drug;
-            this.DoseCount = doseCount;
+            When = when;
+            Drug = drug;
+            DoseCount = doseCount;
         }
 
         /// <summary>
@@ -104,35 +104,35 @@ namespace Microsoft.HealthVault.ItemTypes
 
             Validator.ThrowInvalidIfNull(inhalerUseNav, Resources.AsthmaInhalerUseUnexpectedNode);
 
-            this.when = new HealthServiceDateTime();
-            this.when.ParseXml(inhalerUseNav.SelectSingleNode("when"));
+            _when = new HealthServiceDateTime();
+            _when.ParseXml(inhalerUseNav.SelectSingleNode("when"));
 
-            this.drug = new CodableValue();
-            this.drug.ParseXml(inhalerUseNav.SelectSingleNode("drug"));
+            _drug = new CodableValue();
+            _drug.ParseXml(inhalerUseNav.SelectSingleNode("drug"));
 
             XPathNavigator strengthNav =
                 inhalerUseNav.SelectSingleNode("strength");
 
             if (strengthNav != null)
             {
-                this.strength = new CodableValue();
-                this.strength.ParseXml(strengthNav);
+                _strength = new CodableValue();
+                _strength.ParseXml(strengthNav);
             }
 
-            this.doseCount = inhalerUseNav.SelectSingleNode("dose-count").ValueAsInt;
+            _doseCount = inhalerUseNav.SelectSingleNode("dose-count").ValueAsInt;
 
             XPathNavigator deviceIdNav = inhalerUseNav.SelectSingleNode("device-id");
 
             if (deviceIdNav != null)
             {
-                this.deviceId = deviceIdNav.Value;
+                _deviceId = deviceIdNav.Value;
             }
 
             XPathNavigator purposeNav = inhalerUseNav.SelectSingleNode("dose-purpose");
             if (purposeNav != null)
             {
-                this.dosePurpose = new CodableValue();
-                this.dosePurpose.ParseXml(purposeNav);
+                _dosePurpose = new CodableValue();
+                _dosePurpose.ParseXml(purposeNav);
             }
         }
 
@@ -155,35 +155,35 @@ namespace Microsoft.HealthVault.ItemTypes
         public override void WriteXml(XmlWriter writer)
         {
             Validator.ThrowIfWriterNull(writer);
-            Validator.ThrowSerializationIfNull(this.when, Resources.AsthmaInhalerUseWhenNotSet);
-            Validator.ThrowSerializationIfNull(this.drug, Resources.AsthmaInhalerDrugNotSet);
-            Validator.ThrowSerializationIfNull(this.doseCount, Resources.AsthmaInhalerDoseCountNotSet);
+            Validator.ThrowSerializationIfNull(_when, Resources.AsthmaInhalerUseWhenNotSet);
+            Validator.ThrowSerializationIfNull(_drug, Resources.AsthmaInhalerDrugNotSet);
+            Validator.ThrowSerializationIfNull(_doseCount, Resources.AsthmaInhalerDoseCountNotSet);
 
             // <asthma-inhaler-use>
             writer.WriteStartElement("asthma-inhaler-use");
 
             // <when>
-            this.when.WriteXml("when", writer);
+            _when.WriteXml("when", writer);
 
             // <drug>
-            this.drug.WriteXml("drug", writer);
+            _drug.WriteXml("drug", writer);
 
             // <strength>
-            this.strength?.WriteXml("strength", writer);
+            _strength?.WriteXml("strength", writer);
 
             // <dose-count>
             writer.WriteElementString(
                 "dose-count",
-                ((int)this.doseCount).ToString(CultureInfo.InvariantCulture));
+                ((int)_doseCount).ToString(CultureInfo.InvariantCulture));
 
-            if (!string.IsNullOrEmpty(this.deviceId))
+            if (!string.IsNullOrEmpty(_deviceId))
             {
                 // <device-id>
-                writer.WriteElementString("device-id", this.deviceId);
+                writer.WriteElementString("device-id", _deviceId);
             }
 
             // <dose-purpose>
-            this.DosePurpose?.WriteXml("dose-purpose", writer);
+            DosePurpose?.WriteXml("dose-purpose", writer);
 
             // </asthma-inhaler-use>
             writer.WriteEndElement();
@@ -204,16 +204,16 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public HealthServiceDateTime When
         {
-            get { return this.when; }
+            get { return _when; }
 
             set
             {
-                Validator.ThrowIfArgumentNull(value, nameof(this.When), Resources.WhenNullValue);
-                this.when = value;
+                Validator.ThrowIfArgumentNull(value, nameof(When), Resources.WhenNullValue);
+                _when = value;
             }
         }
 
-        private HealthServiceDateTime when = new HealthServiceDateTime();
+        private HealthServiceDateTime _when = new HealthServiceDateTime();
 
         /// <summary>
         /// Gets or sets the drug being used in the inhaler.
@@ -234,16 +234,16 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public CodableValue Drug
         {
-            get { return this.drug; }
+            get { return _drug; }
 
             set
             {
-                Validator.ThrowIfArgumentNull(value, nameof(this.Drug), Resources.AsthmaInhalerUseDrugMandatory);
-                this.drug = value;
+                Validator.ThrowIfArgumentNull(value, nameof(Drug), Resources.AsthmaInhalerUseDrugMandatory);
+                _drug = value;
             }
         }
 
-        private CodableValue drug;
+        private CodableValue _drug;
 
         /// <summary>
         /// Gets or sets the strength of the dosage for each inhaler use.
@@ -260,11 +260,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public CodableValue Strength
         {
-            get { return this.strength; }
-            set { this.strength = value; }
+            get { return _strength; }
+            set { _strength = value; }
         }
 
-        private CodableValue strength;
+        private CodableValue _strength;
 
         /// <summary>
         /// Gets or sets the count of doses for each inhaler use.
@@ -278,13 +278,13 @@ namespace Microsoft.HealthVault.ItemTypes
         {
             get
             {
-                return this.doseCount ?? 0;
+                return _doseCount ?? 0;
             }
 
-            set { this.doseCount = value; }
+            set { _doseCount = value; }
         }
 
-        private int? doseCount;
+        private int? _doseCount;
 
         /// <summary>
         /// Gets or sets the identifier for the device used.
@@ -305,16 +305,16 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public string DeviceId
         {
-            get { return this.deviceId; }
+            get { return _deviceId; }
 
             set
             {
                 Validator.ThrowIfStringIsWhitespace(value, "DeviceId");
-                this.deviceId = value;
+                _deviceId = value;
             }
         }
 
-        private string deviceId;
+        private string _deviceId;
 
         /// <summary>
         /// Gets or sets the target of the inhaler usage.
@@ -339,11 +339,11 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public CodableValue DosePurpose
         {
-            get { return this.dosePurpose; }
-            set { this.dosePurpose = value; }
+            get { return _dosePurpose; }
+            set { _dosePurpose = value; }
         }
 
-        private CodableValue dosePurpose;
+        private CodableValue _dosePurpose;
 
         /// <summary>
         /// Gets a string representation of the asthma inhaler use item.
@@ -355,17 +355,17 @@ namespace Microsoft.HealthVault.ItemTypes
         ///
         public override string ToString()
         {
-            if (this.Drug != null)
+            if (Drug != null)
             {
                 return string.Format(
                         Resources.AsthmaInhalerUseToStringFormatWithDrug,
-                        this.Drug.Text,
-                        this.DoseCount);
+                        Drug.Text,
+                        DoseCount);
             }
 
             return string.Format(
                         Resources.AsthmaInhalerUseToStringFormat,
-                        this.DoseCount);
+                        DoseCount);
         }
     }
 }

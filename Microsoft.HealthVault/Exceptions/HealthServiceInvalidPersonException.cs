@@ -13,7 +13,6 @@ namespace Microsoft.HealthVault.Exceptions
     /// <see cref = "HealthServiceStatusCode.InvalidPerson"/>.
     /// </summary>
     ///
-    [Serializable]
     public sealed class HealthServiceInvalidPersonException : HealthServiceException
     {
         /// <summary>

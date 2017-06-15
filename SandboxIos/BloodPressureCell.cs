@@ -1,10 +1,9 @@
 using System;
-
+using CoreGraphics;
 using Foundation;
+using Microsoft.HealthVault.ItemTypes;
 using Microsoft.HealthVault.Thing;
 using UIKit;
-using Microsoft.HealthVault.ItemTypes;
-using CoreGraphics;
 
 namespace SandboxIos
 {
@@ -27,10 +26,10 @@ namespace SandboxIos
         {
             BloodPressure bloodPressure = (BloodPressure)thing;
 
-            this.diastolicLabel.Text = bloodPressure.Diastolic.ToString();
-            this.pulseLabel.Text = bloodPressure.Pulse.ToString();
-            this.systolicLabel.Text = bloodPressure.Systolic.ToString();
-            this.dateLabel.Text = bloodPressure.When.ToDateTime().ToString("g");
+            diastolicLabel.Text = bloodPressure.Diastolic.ToString();
+            pulseLabel.Text = bloodPressure.Pulse.ToString();
+            systolicLabel.Text = bloodPressure.Systolic.ToString();
+            dateLabel.Text = bloodPressure.When.ToDateTime().ToString("g");
         }
 
         public CGSize GetSize(IThing thing)

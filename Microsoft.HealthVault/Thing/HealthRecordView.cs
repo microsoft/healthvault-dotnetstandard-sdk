@@ -28,7 +28,7 @@ namespace Microsoft.HealthVault.Thing
     [DebuggerDisplay("Sections = {Sections}")]
     public class HealthRecordView
     {
-        private readonly HealthVaultConfiguration configuration;
+        private readonly HealthVaultConfiguration _configuration;
 
         /// <summary>
         /// Gets or sets the sections that will be retrieved when the
@@ -42,16 +42,16 @@ namespace Microsoft.HealthVault.Thing
         ///
         public ThingSections Sections
         {
-            get { return this.sections; }
+            get { return _sections; }
 
             set
             {
                 // Always add in Core so that we get the type-id element
-                this.sections = value | ThingSections.Core;
+                _sections = value | ThingSections.Core;
             }
         }
 
-        private ThingSections sections =
+        private ThingSections _sections =
             ThingSections.Core |
             ThingSections.Xml;
 
@@ -73,7 +73,7 @@ namespace Microsoft.HealthVault.Thing
 
         public HealthRecordView(HealthVaultConfiguration configuration)
         {
-            this.configuration = configuration;
+            _configuration = configuration;
         }
 
         /// <summary>
@@ -147,7 +147,7 @@ namespace Microsoft.HealthVault.Thing
 
             using (XmlWriter writer = XmlWriter.Create(result, settings))
             {
-                this.AddViewXml(writer);
+                AddViewXml(writer);
                 writer.Flush();
             }
 
@@ -228,18 +228,18 @@ namespace Microsoft.HealthVault.Thing
         {
             // First check to be sure we either have sections and/or
             // transforms defined.
-            if (this.Sections == ThingSections.None && this.TransformsToApply.Count == 0)
+            if (Sections == ThingSections.None && TransformsToApply.Count == 0)
             {
-                throw new ArgumentException(Resources.NoSectionsOrTransforms, nameof(this.sections));
+                throw new ArgumentException(Resources.NoSectionsOrTransforms, nameof(_sections));
             }
 
             // <format>
             writer.WriteStartElement("format");
 
-            this.AddSectionsXml(writer);
-            this.AddTransformXml(writer);
-            this.AddTypeFormatXml(writer);
-            this.AddBlobFormatXml(writer);
+            AddSectionsXml(writer);
+            AddTransformXml(writer);
+            AddTypeFormatXml(writer);
+            AddBlobFormatXml(writer);
 
             // </format>
             writer.WriteEndElement();
@@ -247,37 +247,37 @@ namespace Microsoft.HealthVault.Thing
 
         private void AddSectionsXml(XmlWriter writer)
         {
-            if ((this.Sections & ThingSections.Audits) != 0)
+            if ((Sections & ThingSections.Audits) != 0)
             {
                 WriteSection(writer, "audits");
             }
 
-            if ((this.Sections & ThingSections.Core) != 0)
+            if ((Sections & ThingSections.Core) != 0)
             {
                 WriteSection(writer, "core");
             }
 
-            if ((this.Sections & ThingSections.EffectivePermissions) != 0)
+            if ((Sections & ThingSections.EffectivePermissions) != 0)
             {
                 WriteSection(writer, "effectivepermissions");
             }
 
-            if ((this.Sections & ThingSections.BlobPayload) != 0)
+            if ((Sections & ThingSections.BlobPayload) != 0)
             {
                 WriteSection(writer, "blobpayload");
             }
 
-            if ((this.Sections & ThingSections.Tags) != 0)
+            if ((Sections & ThingSections.Tags) != 0)
             {
                 WriteSection(writer, "tags");
             }
 
-            if ((this.Sections & ThingSections.Signature) != 0)
+            if ((Sections & ThingSections.Signature) != 0)
             {
                 WriteSection(writer, "digitalsignatures");
             }
 
-            if ((this.Sections & ThingSections.Xml) != 0)
+            if ((Sections & ThingSections.Xml) != 0)
             {
                 writer.WriteStartElement("xml");
                 writer.WriteEndElement();
@@ -293,7 +293,7 @@ namespace Microsoft.HealthVault.Thing
 
         private void AddTransformXml(XmlWriter writer)
         {
-            foreach (string transformName in this.TransformsToApply)
+            foreach (string transformName in TransformsToApply)
             {
                 writer.WriteElementString("xml", transformName);
             }
@@ -301,17 +301,17 @@ namespace Microsoft.HealthVault.Thing
 
         private void AddTypeFormatXml(XmlWriter writer)
         {
-            if (this.TypeVersionFormat.Count == 0 && !this.configuration.UseLegacyTypeVersionSupport)
+            if (TypeVersionFormat.Count == 0 && !_configuration.UseLegacyTypeVersionSupport)
             {
                 // Add the supported type version formats from configuration.
-                foreach (Guid typeFormat in this.configuration.SupportedTypeVersions)
+                foreach (Guid typeFormat in _configuration.SupportedTypeVersions)
                 {
                     writer.WriteElementString("type-version-format", typeFormat.ToString());
                 }
             }
             else
             {
-                foreach (Guid typeFormat in this.TypeVersionFormat)
+                foreach (Guid typeFormat in TypeVersionFormat)
                 {
                     writer.WriteElementString("type-version-format", typeFormat.ToString());
                 }
@@ -320,25 +320,25 @@ namespace Microsoft.HealthVault.Thing
 
         private void AddBlobFormatXml(XmlWriter writer)
         {
-            if (this.BlobNames.Count > 0 || this.BlobFormat != BlobFormat.Unknown)
+            if (BlobNames.Count > 0 || BlobFormat != BlobFormat.Unknown)
             {
                 writer.WriteStartElement("blob-payload-request");
 
-                if (this.BlobNames.Count > 0)
+                if (BlobNames.Count > 0)
                 {
                     writer.WriteStartElement("blob-filters");
 
-                    for (int index = 0; index < this.BlobNames.Count; ++index)
+                    for (int index = 0; index < BlobNames.Count; ++index)
                     {
                         writer.WriteStartElement("blob-filter");
-                        writer.WriteElementString("blob-name", this.BlobNames[index]);
+                        writer.WriteElementString("blob-name", BlobNames[index]);
                         writer.WriteEndElement();
                     }
 
                     writer.WriteEndElement();
                 }
 
-                BlobFormat format = this.BlobFormat;
+                BlobFormat format = BlobFormat;
                 if (format == BlobFormat.Unknown)
                 {
                     format = BlobFormat.Default;

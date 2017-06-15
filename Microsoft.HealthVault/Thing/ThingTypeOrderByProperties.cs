@@ -20,16 +20,16 @@ namespace Microsoft.HealthVault.Thing
         /// </summary>
         public ThingTypeOrderByProperties(List<ThingTypeProperty> properties)
         {
-            this.properties = properties;
+            _properties = properties;
         }
 
         /// <summary>
         /// The set of properties that the thing-type can be
         /// ordered by in the result..
         /// </summary>
-        public List<ThingTypeProperty> Properties => this.properties ?? new List<ThingTypeProperty>();
+        public List<ThingTypeProperty> Properties => _properties ?? new List<ThingTypeProperty>();
 
-        private readonly List<ThingTypeProperty> properties;
+        private readonly List<ThingTypeProperty> _properties;
 
         /// <summary>
         /// This method converts the OrderByProperties xml to the

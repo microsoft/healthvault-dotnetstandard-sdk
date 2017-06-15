@@ -19,11 +19,11 @@ namespace Microsoft.HealthVault.Web.Configuration
     /// </summary>
     internal class WebConfigurationReader
     {
-        private static Lazy<WebHealthVaultConfiguration> generatedConfig = new Lazy<WebHealthVaultConfiguration>(GenerateConfiguration);
+        private static Lazy<WebHealthVaultConfiguration> s_generatedConfig = new Lazy<WebHealthVaultConfiguration>(GenerateConfiguration);
 
         public static WebHealthVaultConfiguration GetConfiguration()
         {
-            return generatedConfig.Value;
+            return s_generatedConfig.Value;
         }
 
         private static WebHealthVaultConfiguration GenerateConfiguration()

@@ -1,42 +1,42 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Foundation;
+using Microsoft.HealthVault.Client.Core;
 using Microsoft.HealthVault.Exceptions;
+using Security;
 using UIKit;
 using WebKit;
-using Security;
 
 namespace Microsoft.HealthVault.Client
 {
     internal class IosBrowserAuthBroker : NSObject, IBrowserAuthBroker, ISignInNavigationHandler
     {
-        private TaskCompletionSource<Uri> loginCompletionSource;
-        private readonly AsyncLock asyncLock = new AsyncLock();
-        private readonly object taskLockObject = new object();
-        private SignInViewController signInViewController;
-        private bool isTaskComplete;
-        private string endUrlString;
+        private TaskCompletionSource<Uri> _loginCompletionSource;
+        private readonly AsyncLock _asyncLock = new AsyncLock();
+        private readonly object _taskLockObject = new object();
+        private SignInViewController _signInViewController;
+        private bool _isTaskComplete;
+        private string _endUrlString;
 
         public async Task<Uri> AuthenticateAsync(Uri startUrl, Uri endUrl)
         {
-            using (await asyncLock.LockAsync().ConfigureAwait(false))
+            using (await _asyncLock.LockAsync().ConfigureAwait(false))
             {
                 try
                 {
-                    this.endUrlString = endUrl.AbsoluteUri;
-                    this.isTaskComplete = false;
-                    this.loginCompletionSource = new TaskCompletionSource<Uri>();
+                    _endUrlString = endUrl.AbsoluteUri;
+                    _isTaskComplete = false;
+                    _loginCompletionSource = new TaskCompletionSource<Uri>();
 
                     BeginInvokeOnMainThread(() =>
                     {
-                        signInViewController = new SignInViewController(this, startUrl.AbsoluteUri);
-                        IUIApplicationDelegate appDelegate = UIApplication.SharedApplication.Delegate;
-                        UIViewController rootViewController = appDelegate.GetWindow().RootViewController;
+                        _signInViewController = new SignInViewController(this, startUrl.AbsoluteUri);
+                        UIViewController rootViewController = UIApplication.SharedApplication.KeyWindow.RootViewController;
 
-                        rootViewController.PresentViewController(new UINavigationController(signInViewController), true, null);
+                        rootViewController.PresentViewController(new UINavigationController(_signInViewController), true, null);
                     });
 
-                    Uri loginUri = await this.loginCompletionSource.Task.ConfigureAwait(false);
+                    Uri loginUri = await _loginCompletionSource.Task.ConfigureAwait(false);
 
                     return loginUri;
                 }
@@ -44,27 +44,27 @@ namespace Microsoft.HealthVault.Client
                 {
                     BeginInvokeOnMainThread(() =>
                     {
-                        signInViewController.DismissViewController(false, null);
+                        _signInViewController.DismissViewController(false, null);
                     });
                 }
-            } 
+            }
         }
 
         private void SetTaskResult(Uri url, Exception ex)
         {
-            lock(taskLockObject)
+            lock (_taskLockObject)
             {
-                if (this.isTaskComplete == false)
+                if (_isTaskComplete == false)
                 {
-                    this.isTaskComplete = true;
+                    _isTaskComplete = true;
 
                     if (ex != null)
                     {
-                        this.loginCompletionSource.SetException(ex);
+                        _loginCompletionSource.SetException(ex);
                     }
                     else
                     {
-                        this.loginCompletionSource.SetResult(url);
+                        _loginCompletionSource.SetResult(url);
                     }
                 }
             }
@@ -72,7 +72,7 @@ namespace Microsoft.HealthVault.Client
 
         public void SignInCancelled()
         {
-            this.SetTaskResult(null, new OperationCanceledException());
+            SetTaskResult(null, new OperationCanceledException());
         }
 
         private void NavigationFailedWithError(NSError error)
@@ -83,30 +83,30 @@ namespace Microsoft.HealthVault.Client
                 return;
             }
 
-            this.SetTaskResult(null, new HealthServiceException(ClientResources.LoginError));
+            SetTaskResult(null, new HealthServiceException(ClientResources.LoginError));
         }
 
         [Export("webView:decidePolicyForNavigationResponse:decisionHandler:")]
         public void DecidePolicy(WKWebView webView, WKNavigationResponse navigationResponse, Action<WKNavigationResponsePolicy> decisionHandler)
         {
-           if (navigationResponse.Response.GetType() == typeof(NSHttpUrlResponse))
-           {
+            if (navigationResponse.Response.GetType() == typeof(NSHttpUrlResponse))
+            {
                 NSHttpUrlResponse response = (NSHttpUrlResponse)navigationResponse.Response;
                 if (response.StatusCode >= 400)
                 {
                     // The navigation request resulted in an error.
-                    this.SetTaskResult(null, new HealthServiceException(ClientResources.LoginError));
+                    SetTaskResult(null, new HealthServiceException(ClientResources.LoginError));
 
                     return;
                 }
 
                 string url = response.Url.AbsoluteString;
 
-                if (url.Contains(this.endUrlString))
+                if (url.Contains(_endUrlString))
                 {
-                    this.SetTaskResult(new Uri(url), null);
+                    SetTaskResult(new Uri(url), null);
                 }
-           }
+            }
 
             decisionHandler(WKNavigationResponsePolicy.Allow);
         }
@@ -129,20 +129,19 @@ namespace Microsoft.HealthVault.Client
         [Export("webView:didFailProvisionalNavigation:withError:")]
         public void DidFailProvisionalNavigation(WKWebView webView, WKNavigation navigation, NSError error)
         {
-            this.NavigationFailedWithError(error);
+            NavigationFailedWithError(error);
         }
 
         [Export("webView:didFailNavigation:withError:")]
         public void DidFailNavigation(WKWebView webView, WKNavigation navigation, NSError error)
         {
-            this.NavigationFailedWithError(error);
+            NavigationFailedWithError(error);
         }
 
         [Export("webViewWebContentProcessDidTerminate:")]
         public void ContentProcessDidTerminate(WKWebView webView)
         {
-            this.SetTaskResult(null, new HealthServiceException(ClientResources.LoginError));
+            SetTaskResult(null, new HealthServiceException(ClientResources.LoginError));
         }
-
     }
 }

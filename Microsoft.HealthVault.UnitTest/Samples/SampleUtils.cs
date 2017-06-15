@@ -1,16 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 using System.Xml.XPath;
 using Microsoft.HealthVault.Transport;
 
 namespace Microsoft.HealthVault.UnitTest.Samples
 {
-    static class SampleUtils
+    internal static class SampleUtils
     {
         /// <summary>
         /// Gets file stored in the Samples directory and marked as embedded resource

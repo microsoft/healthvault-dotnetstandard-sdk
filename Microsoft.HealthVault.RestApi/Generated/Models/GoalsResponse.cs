@@ -2,11 +2,16 @@
 // Changes may cause incorrect behavior and will be lost if the code is
 // regenerated.
 
-using System.Collections.Generic;
-using Newtonsoft.Json;
-
 namespace Microsoft.HealthVault.RestApi.Generated.Models
 {
+    using Microsoft.HealthVault;
+    using Microsoft.HealthVault.RestApi;
+    using Microsoft.HealthVault.RestApi.Generated;
+    using Newtonsoft.Json;
+    using System.Collections;
+    using System.Collections.Generic;
+    using System.Linq;
+
     /// <summary>
     /// The goal response.
     /// </summary>
@@ -17,7 +22,7 @@ namespace Microsoft.HealthVault.RestApi.Generated.Models
         /// </summary>
         public GoalsResponse()
         {
-          this.CustomInit();
+          CustomInit();
         }
 
         /// <summary>
@@ -27,9 +32,9 @@ namespace Microsoft.HealthVault.RestApi.Generated.Models
         /// <param name="nextLink">The URI for the next page of data</param>
         public GoalsResponse(IList<Goal> goals = default(IList<Goal>), string nextLink = default(string))
         {
-            this.Goals = goals;
-            this.NextLink = nextLink;
-            this.CustomInit();
+            Goals = goals;
+            NextLink = nextLink;
+            CustomInit();
         }
 
         /// <summary>

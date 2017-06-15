@@ -1,6 +1,4 @@
-﻿using Microsoft.HealthVault.Transport;
-
-namespace Microsoft.HealthVault
+﻿namespace Microsoft.HealthVault
 {
     /// <summary>
     /// Telemetry information that will be logged from clients
@@ -8,13 +6,13 @@ namespace Microsoft.HealthVault
     /// </summary>
     /// <remarks>
     /// Request from Clients are of format - {Category} / {FileVersion} {OsInformation}
-    /// 
+    ///
     /// Category values are specified in SdkTelemetryInformationCategories
-    /// 
+    ///
     /// For example Xamarin based android telemetry information will be:
-    /// 
+    ///
     /// HV-Xamarin-Android / 1.0.0.0 Android 7.1
-    /// 
+    ///
     /// </remarks>
     internal class SdkTelemetryInformation
     {
