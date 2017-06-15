@@ -29,6 +29,7 @@ namespace Microsoft.HealthVault.RestApi
         public override async Task ProcessHttpRequestAsync(HttpRequestMessage request, CancellationToken cancellationToken)
         {
             await _client.AuthorizeRestRequestAsync(request, _recordId);
+            request.Headers.Add("x-ms-version", KnownRestHeaders.Version);
         }
     }
 }
