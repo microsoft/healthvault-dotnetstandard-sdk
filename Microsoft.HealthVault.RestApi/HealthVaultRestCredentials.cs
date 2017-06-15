@@ -10,7 +10,6 @@ using System;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.HealthVault.Clients;
 using Microsoft.HealthVault.Rest;
 using Microsoft.Rest;
 
@@ -30,6 +29,7 @@ namespace Microsoft.HealthVault.RestApi
         public override async Task ProcessHttpRequestAsync(HttpRequestMessage request, CancellationToken cancellationToken)
         {
             await _authorizer.AuthorizeRestRequestAsync(request, _recordId);
+            request.Headers.Add("x-ms-version", KnownRestHeaders.Version);
         }
     }
 }

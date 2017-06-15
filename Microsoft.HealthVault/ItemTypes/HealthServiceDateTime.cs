@@ -501,6 +501,11 @@ namespace Microsoft.HealthVault.ItemTypes
                 return -1;
             }
 
+            if (Time == null)
+            {
+                return 0;
+            }
+
             return Time.CompareTo(other.TimeOfDay);
         }
 

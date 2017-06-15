@@ -87,7 +87,11 @@ namespace Microsoft.HealthVault.Thing
         /// issued when the item is created.
         /// </value>
         ///
-        public Guid Id => _thingId;
+        public Guid Id
+        {
+            get { return _thingId; }
+            set { _thingId = value; }
+        }
 
         private Guid _thingId;
 
@@ -106,7 +110,17 @@ namespace Microsoft.HealthVault.Thing
         /// is always equal to the <see cref="Id"/> of that item.
         /// </remarks>
         ///
-        public Guid VersionStamp => _versionStamp;
+        public Guid VersionStamp
+        {
+            get { return _versionStamp; }
+            set
+            {
+                if(value != Guid.Empty)
+                {
+                    _versionStamp = value;
+                }
+            }
+        }
 
         private Guid _versionStamp;
 
