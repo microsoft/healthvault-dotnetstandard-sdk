@@ -10,6 +10,8 @@ using System;
 using System.Threading.Tasks;
 using Microsoft.HealthVault.Connection;
 using Microsoft.HealthVault.PlatformInformation;
+using Microsoft.HealthVault.Thing;
+using Microsoft.HealthVault.Web.Configuration;
 using Microsoft.HealthVault.Web.Connection;
 using Microsoft.HealthVault.Web.Providers;
 
@@ -21,7 +23,12 @@ namespace Microsoft.HealthVault.Web
     public class WebHealthVaultFactory
     {
         /// <summary>
-        /// Creates an authenticated web connection when the reuest 
+        /// Enables applications to register custom thing types
+        /// </summary>
+        public static IThingTypeRegistrar ThingTypeRegistrar => Ioc.Get<IThingTypeRegistrar>();
+
+        /// <summary>
+        /// Creates an authenticated web connection when the reuest
         /// has been authenticated using [RequireSignIn] attribute.
         /// In case the request has not been authenticated, an anonymous
         /// connection is created.

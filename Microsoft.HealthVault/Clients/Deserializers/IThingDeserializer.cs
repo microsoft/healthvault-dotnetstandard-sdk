@@ -1,11 +1,12 @@
 using System.Collections.Generic;
+using System.Xml.XPath;
 using Microsoft.HealthVault.Thing;
 using Microsoft.HealthVault.Transport;
 
 namespace Microsoft.HealthVault.Clients.Deserializers
 {
     /// <summary>
-    /// Deserializes things from HealthServiceResonseData
+    /// Supports methods to deserialize things
     /// </summary>
     internal interface IThingDeserializer
     {
@@ -18,5 +19,12 @@ namespace Microsoft.HealthVault.Clients.Deserializers
         IReadOnlyCollection<ThingCollection> Deserialize(
             HealthServiceResponseData responseData,
             HealthRecordSearcher searcher);
+
+        /// <summary>
+        /// Given thing xml, deserializes to a thing
+        /// </summary>
+        /// <param name="thingXml">xml content in thing element</param>
+        /// <returns>ThingBase</returns>
+        ThingBase Deserialize(string thingXml);
     }
 }

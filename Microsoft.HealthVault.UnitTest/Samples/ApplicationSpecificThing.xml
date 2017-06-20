@@ -1,0 +1,43 @@
+﻿<thing>
+  <thing-id version-stamp="e6ecfb7c-4cc9-4267-8fd5-a5e49af7d40f">60ed4338-0b1b-4061-aad4-effe2b8bbccd</thing-id>
+  <type-id name="Application Specific">a5033c9d-08cf-4204-9bd3-cb412ce39fc0</type-id>
+  <thing-state>Active</thing-state>
+  <flags>0</flags>
+  <eff-date>2015-10-29T00:00:00Z</eff-date>
+  <created>
+    <timestamp>2015-12-02T18:49:00.007Z</timestamp>
+    <app-id name="Test Data">c6df61be-9944-43b0-83c1-2371501d28cf</app-id>
+    <person-id name="Test User">6c1b1c20-ecc1-40da-87f5-b93d083a6057</person-id>
+    <access-avenue>Offline</access-avenue>
+    <audit-action>Created</audit-action>
+    <master-app-id>6c1b1c20-ecc1-40da-87f5-b93d083a6057</master-app-id>
+  </created>
+  <updated>
+    <timestamp>2015-12-02T18:49:00.007Z</timestamp>
+    <app-id name="Test Data">c6df61be-9944-43b0-83c3-2371501d28cf</app-id>
+    <person-id name="Test User">6c1b1c20-ecc1-40da-87f5-b93d083a6057</person-id>
+    <access-avenue>Offline</access-avenue>
+    <audit-action>Created</audit-action>
+    <master-app-id>b6d73c26-28bb-44db-b91e-1ffc4311143e</master-app-id>
+  </updated>
+  <data-xml>
+    <app-specific>
+      <format-appid>some-appid</format-appid>
+      <format-tag>some-tag</format-tag>
+      <when>
+        <date>
+          <y>2017</y>
+          <m>6</m>
+          <d>20</d>
+        </date>
+        <time>
+          <h>0</h>
+          <m>0</m>
+          <s>0</s>
+          <f>0</f>
+        </time>
+      </when>
+      <summary />
+    </app-specific>
+  </data-xml>
+</thing>

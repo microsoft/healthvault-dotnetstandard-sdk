@@ -23,7 +23,7 @@ namespace Microsoft.HealthVault.Thing
     /// <br/><br/>
     /// Applications that implement a thing extension should
     /// derive from this class and register their extension by calling
-    /// <see cref="ItemTypeManager.RegisterExtensionHandler(string, Type)"/>.
+    /// <see cref="IThingTypeRegistrar.RegisterExtensionHandler(string, Type)"/>.
     /// Whenever the HealthVault SDK reads an extension with the specified
     /// extension source an instance of the derived ThingExtension will be
     /// created and it's <see cref="ThingExtension.ParseXml(IXPathNavigable)"/>

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using Microsoft.HealthVault.Configuration;
 using Microsoft.HealthVault.Extensions;
+using Microsoft.HealthVault.Thing;
 
 namespace Microsoft.HealthVault.Client
 {

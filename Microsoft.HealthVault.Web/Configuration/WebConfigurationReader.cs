@@ -19,11 +19,14 @@ namespace Microsoft.HealthVault.Web.Configuration
     /// </summary>
     internal class WebConfigurationReader
     {
-        private static Lazy<WebHealthVaultConfiguration> s_generatedConfig = new Lazy<WebHealthVaultConfiguration>(GenerateConfiguration);
+        private static readonly Lazy<WebHealthVaultConfiguration> GeneratedConfig = new Lazy<WebHealthVaultConfiguration>(GenerateConfiguration);
+        private static IThingTypeRegistrar s_thingTypeRegistrar;
 
         public static WebHealthVaultConfiguration GetConfiguration()
         {
-            return s_generatedConfig.Value;
+            s_thingTypeRegistrar = Ioc.Get<ThingTypeRegistrar>();
+
+            return GeneratedConfig.Value;
         }
 
         private static WebHealthVaultConfiguration GenerateConfiguration()
@@ -94,9 +97,11 @@ namespace Microsoft.HealthVault.Web.Configuration
 
             foreach (string typeVersionClassName in typeVersions)
             {
-                if (ItemTypeManager.TypeHandlersByClassName.ContainsKey(typeVersionClassName))
+                Guid supportedTypeId;
+
+                if (s_thingTypeRegistrar.RegisteredTypeHandlersByClassName.TryGetValue(typeVersionClassName, out supportedTypeId))
                 {
-                    supportedTypeVersions.Add(ItemTypeManager.TypeHandlersByClassName[typeVersionClassName].TypeId);
+                    supportedTypeVersions.Add(supportedTypeId);
                 }
                 else
                 {
