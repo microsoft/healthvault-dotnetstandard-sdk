@@ -13,6 +13,7 @@ using System.Text;
 using System.Xml;
 using System.Xml.Linq;
 using System.Xml.XPath;
+using Microsoft.HealthVault.Clients.Deserializers;
 using Microsoft.HealthVault.Exceptions;
 using Microsoft.HealthVault.Helpers;
 using Microsoft.HealthVault.ItemTypes;
@@ -847,7 +848,7 @@ namespace Microsoft.HealthVault.Thing
         /// </summary>
         ///
         /// <remarks>
-        /// This method is identical to calling <see cref="ItemTypeManager.DeserializeItem(string)"/>.
+        /// This method is identical to calling <see cref="ThingDeserializer.Deserialize(string)"/>.
         ///
         /// The item XML should come from a previous call to <see cref="ThingBase.Serialize"/>.
         /// </remarks>
@@ -858,7 +859,8 @@ namespace Microsoft.HealthVault.Thing
         ///
         public static ThingBase Deserialize(string itemXml)
         {
-            return ItemTypeManager.DeserializeItem(itemXml);
+            var thingDeserializer = Ioc.Get<IThingDeserializer>();
+            return thingDeserializer.Deserialize(itemXml);
         }
 
         #region private helpers

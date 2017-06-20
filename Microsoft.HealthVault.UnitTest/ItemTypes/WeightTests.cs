@@ -7,7 +7,10 @@
 // THE SOFTWARE IS PROVIDED *AS IS*, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 using System;
+using Grace.DependencyInjection;
+using Microsoft.HealthVault.Extensions;
 using Microsoft.HealthVault.ItemTypes;
+using Microsoft.HealthVault.Thing;
 using Microsoft.HealthVault.UnitTest.Samples;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -16,11 +19,18 @@ namespace Microsoft.HealthVault.UnitTest.ItemTypes
     [TestClass]
     public class WeightTests
     {
+        [TestInitialize]
+        public void TestInitialize()
+        {
+            Ioc.Container = new DependencyInjectionContainer();
+            Ioc.Container.RegisterSingleton<IThingTypeRegistrar, ThingTypeRegistrarInternal>();
+        }
+
         [TestMethod]
         public void WhenSerializesXml_ThenCorrectSerializationReturned()
         {
             var xml = SampleUtils.GetSampleContent("ThingSampleWeight.xml");
-            var weight = Weight.Deserialize(xml) as Weight;
+            var weight = ThingBase.Deserialize(xml) as Weight;
 
             Assert.IsNotNull(weight);
             Assert.AreEqual(new Guid("31501360-362b-4791-ae12-141386ac5da6"), weight.Key.Id);

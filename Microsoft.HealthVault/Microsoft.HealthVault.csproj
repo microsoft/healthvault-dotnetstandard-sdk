@@ -22,6 +22,11 @@
     <PackageReference Include="System.Xml.XPath.XDocument" Version="4.3.0" />
   </ItemGroup>
   <ItemGroup>
+    <Reference Include="System.Reflection.TypeExtensions">
+      <HintPath>C:\Users\suryar\.nuget\packages\System.Reflection.TypeExtensions\4.3.0\ref\netstandard1.3\System.Reflection.TypeExtensions.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
     <Compile Update="Resources.Designer.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>

@@ -26,6 +26,7 @@ using Microsoft.HealthVault.Extensions;
 using Microsoft.HealthVault.Person;
 using Microsoft.HealthVault.PlatformInformation;
 using Microsoft.HealthVault.Rest;
+using Microsoft.HealthVault.Thing;
 using Microsoft.HealthVault.Transport;
 
 namespace Microsoft.HealthVault.Connection
@@ -100,7 +101,7 @@ namespace Microsoft.HealthVault.Connection
         /// <returns>
         /// An instance implementing IThingClient
         /// </returns>
-        public IThingClient CreateThingClient() => new ThingClient(this, new ThingDeserializer(this));
+        public IThingClient CreateThingClient() => new ThingClient(this, new ThingDeserializer(this, Ioc.Get<IThingTypeRegistrar>()));
 
         #endregion
 
