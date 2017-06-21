@@ -110,8 +110,7 @@ namespace Microsoft.HealthVault.Client
                 }
 
                 // First run through shell with web browser to get additional records authorized.
-                var masterApplicationId = Configuration.MasterApplicationId;
-                await _shellAuthService.AuthorizeAdditionalRecordsAsync(ServiceInstance.ShellUrl, masterApplicationId).ConfigureAwait(false);
+                await _shellAuthService.AuthorizeAdditionalRecordsAsync(ServiceInstance.ShellUrl, ApplicationCreationInfo.AppInstanceId).ConfigureAwait(false);
 
                 // Update the person info to add the newly authorized records.
                 await GetAndSavePersonInfoAsync().ConfigureAwait(false);

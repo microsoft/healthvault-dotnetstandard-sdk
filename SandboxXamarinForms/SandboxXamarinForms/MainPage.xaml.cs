@@ -142,6 +142,11 @@ namespace SandboxXamarinForms
             OutputLabel.Text = $"There are {actionPlansResponse.Plans.Count} action plans";
         }
 
+        private async void AuthorizeAdditionalRecords_OnClicked(object sender, EventArgs e)
+        {
+            await _connection.AuthorizeAdditionalRecordsAsync();
+        }
+
         private async void Disconnect_OnClicked(object sender, EventArgs e)
         {
             await _connection.DeauthorizeApplicationAsync();
