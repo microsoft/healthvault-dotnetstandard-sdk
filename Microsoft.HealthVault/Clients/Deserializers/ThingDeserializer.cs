@@ -9,6 +9,8 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.IO;
+using System.Xml;
 using System.Xml.XPath;
 using Microsoft.HealthVault.Connection;
 using Microsoft.HealthVault.Helpers;
@@ -19,11 +21,24 @@ namespace Microsoft.HealthVault.Clients.Deserializers
 {
     internal class ThingDeserializer : IThingDeserializer
     {
+        private readonly Guid _applicationSpecificId = new Guid("a5033c9d-08cf-4204-9bd3-cb412ce39fc0");
+
         private readonly IHealthVaultConnection _connection;
 
-        public ThingDeserializer(IHealthVaultConnection connection)
+        private readonly IThingTypeRegistrar _thingTypeRegistrar;
+
+        private readonly Dictionary<string, Dictionary<string, Type>> _appSpecificHandlers;
+        private readonly Dictionary<Guid, Type> _typeHandlers;
+        private readonly Dictionary<string, Type> _extensionHandlers;
+
+        public ThingDeserializer(IHealthVaultConnection connection, IThingTypeRegistrar thingTypeRegistrar)
         {
             _connection = connection;
+            _thingTypeRegistrar = thingTypeRegistrar;
+
+            _appSpecificHandlers = _thingTypeRegistrar.RegisteredAppSpecificHandlers;
+            _typeHandlers = _thingTypeRegistrar.RegisteredTypeHandlers;
+            _extensionHandlers = _thingTypeRegistrar.RegisteredExtensionHandlers;
         }
 
         public IReadOnlyCollection<ThingCollection> Deserialize(
@@ -53,6 +68,36 @@ namespace Microsoft.HealthVault.Clients.Deserializers
             }
 
             return new ReadOnlyCollection<ThingCollection>(result);
+        }
+
+        public ThingBase Deserialize(string thingXml)
+        {
+            using (XmlReader thingReader = SDKHelper.GetXmlReaderForXml(thingXml, SDKHelper.XmlReaderSettings))
+            {
+                thingReader.NameTable.Add("wc");
+                thingReader.MoveToContent();
+
+                return DeserializeItem(thingReader);
+            }
+        }
+
+        public ThingExtension DeserializeExtension(XPathNavigator extensionNav)
+        {
+            ThingExtension result;
+
+            string source = extensionNav.GetAttribute("source", string.Empty);
+            if (_extensionHandlers.ContainsKey(source))
+            {
+                Type handler = _extensionHandlers[source];
+                result = (ThingExtension)Activator.CreateInstance(handler);
+            }
+            else
+            {
+                result = new ThingExtension(source);
+            }
+
+            result.ParseXml(extensionNav);
+            return result;
         }
 
         private ThingCollection CreateResultGroupFromResponse(
@@ -105,7 +150,7 @@ namespace Microsoft.HealthVault.Clients.Deserializers
             {
                 foreach (XPathNavigator thingNode in thingNodeIterator)
                 {
-                    ThingBase resultThingBase = ItemTypeManager.DeserializeItem(thingNode);
+                    ThingBase resultThingBase = DeserializeItem(thingNode);
 
                     result.AddResult(resultThingBase);
 
@@ -144,5 +189,87 @@ namespace Microsoft.HealthVault.Clients.Deserializers
 
             return result;
         }
+
+        public ThingBase DeserializeItem(XPathNavigator thingNav)
+        {
+            ThingBase result;
+            Guid typeId = new Guid(thingNav.SelectSingleNode("type-id").Value);
+
+            Type handler = null;
+            if (typeId == _applicationSpecificId)
+            {
+                // Handle application specific health item records by checking for handlers
+                // for the application ID and subtype tag. If the handler doesn't exist
+                // the default handler will be picked up below.
+
+                AppDataKey appDataKey = GetAppDataKey(thingNav);
+
+                if (appDataKey != null)
+                {
+                    if (_appSpecificHandlers.ContainsKey(appDataKey.AppId))
+                    {
+                        if (_appSpecificHandlers[appDataKey.AppId].ContainsKey(appDataKey.SubtypeTag))
+                        {
+                            handler = _appSpecificHandlers[appDataKey.AppId][appDataKey.SubtypeTag];
+                        }
+                    }
+                }
+            }
+
+            if (handler == null && _typeHandlers.ContainsKey(typeId))
+            {
+                handler = _typeHandlers[typeId];
+            }
+
+            if (handler != null)
+            {
+                result = (ThingBase)Activator.CreateInstance(handler);
+            }
+            else
+            {
+                result = new ThingBase(typeId);
+            }
+
+            result.ParseXml(thingNav, thingNav.OuterXml);
+
+            return result;
+        }
+
+        #region Deserialzer helpers
+
+        private AppDataKey GetAppDataKey(XPathNavigator thingNav)
+        {
+            AppDataKey result = null;
+            XPathNavigator appIdNav =
+                thingNav.SelectSingleNode("data-xml/app-specific/format-appid");
+
+            XPathNavigator subtypeNav =
+                thingNav.SelectSingleNode("data-xml/app-specific/format-tag");
+
+            if (appIdNav != null && subtypeNav != null)
+            {
+                result = new AppDataKey
+                {
+                    AppId = appIdNav.Value,
+                    SubtypeTag = subtypeNav.Value
+                };
+            }
+
+            return result;
+        }
+
+        private ThingBase DeserializeItem(XmlReader thingReader)
+        {
+            string thingString = thingReader.ReadOuterXml();
+            XmlReader reader = XmlReader.Create(new StringReader(thingString), SDKHelper.XmlReaderSettings);
+
+            XPathNavigator thingNav = new XPathDocument(reader).CreateNavigator().SelectSingleNode("thing");
+
+            ThingBase thingBase = DeserializeItem(thingNav);
+
+            return thingBase;
+        }
+
+        #endregion
     }
 }

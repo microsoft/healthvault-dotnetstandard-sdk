@@ -7,13 +7,14 @@
 // THE SOFTWARE IS PROVIDED *AS IS*, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 using System.Collections.Generic;
+using System.Xml.XPath;
 using Microsoft.HealthVault.Thing;
 using Microsoft.HealthVault.Transport;
 
 namespace Microsoft.HealthVault.Clients.Deserializers
 {
     /// <summary>
-    /// Deserializes things from HealthServiceResonseData
+    /// Supports methods to deserialize things
     /// </summary>
     internal interface IThingDeserializer
     {
@@ -26,5 +27,19 @@ namespace Microsoft.HealthVault.Clients.Deserializers
         IReadOnlyCollection<ThingCollection> Deserialize(
             HealthServiceResponseData responseData,
             HealthRecordSearcher searcher);
+
+        /// <summary>
+        /// Given thing xml, deserializes to a thing
+        /// </summary>
+        /// <param name="thingXml">xml content in thing element</param>
+        /// <returns>ThingBase</returns>
+        ThingBase Deserialize(string thingXml);
+
+        /// <summary>
+        /// Deserializes extension part of the thing xml
+        /// </summary>
+        /// <param name="extensionNav">XPathNavigator for the extension</param>
+        /// <returns>ThingExtension</returns>
+        ThingExtension DeserializeExtension(XPathNavigator extensionNav);
     }
 }

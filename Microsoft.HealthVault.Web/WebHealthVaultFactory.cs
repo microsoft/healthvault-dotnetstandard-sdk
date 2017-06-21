@@ -10,6 +10,8 @@ using System;
 using System.Threading.Tasks;
 using Microsoft.HealthVault.Connection;
 using Microsoft.HealthVault.PlatformInformation;
+using Microsoft.HealthVault.Thing;
+using Microsoft.HealthVault.Web.Configuration;
 using Microsoft.HealthVault.Web.Connection;
 using Microsoft.HealthVault.Web.Providers;
 
@@ -20,6 +22,11 @@ namespace Microsoft.HealthVault.Web
     /// </summary>
     public class WebHealthVaultFactory
     {
+        /// <summary>
+        /// Enables applications to register custom thing types
+        /// </summary>
+        public static IThingTypeRegistrar ThingTypeRegistrar => Ioc.Get<IThingTypeRegistrar>();
+
         /// <summary>
         /// Creates an authenticated web connection when the reuest
         /// has been authenticated using [RequireSignIn] attribute.
@@ -57,6 +64,19 @@ namespace Microsoft.HealthVault.Web
                 sessionCredential);
 
             return webHealthVaultConnection;
+        }
+
+        internal void RegisterApplicationSpecificHandlerInternal(
+            string subtypeTag,
+            Type applicationSpecificHandlerClass)
+        {
+            var thingRegistrar = Ioc.Get<IThingTypeRegistrar>();
+            var configuration = Ioc.Get<WebHealthVaultConfiguration>();
+
+            thingRegistrar.RegisterApplicationSpecificHandler(
+                configuration.MasterApplicationId.ToString(),
+                subtypeTag,
+                applicationSpecificHandlerClass);
         }
 
         // Enables unit test

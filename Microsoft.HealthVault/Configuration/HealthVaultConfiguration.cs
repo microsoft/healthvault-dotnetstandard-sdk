@@ -222,6 +222,11 @@ namespace Microsoft.HealthVault.Configuration
         /// </remarks>
         public bool IsMultiRecordApp { get; set; }
 
+        /// <summary>
+        /// Set this 
+        /// </summary>
+        public AppSpecificTypeConfiguration AppSpecificTypeConfiguration { get; set; }
+
         private static Uri EnsureTrailingSlash(Uri uri)
         {
             string uriString = uri.AbsoluteUri;

@@ -12,6 +12,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.HealthVault.Thing;
 
 namespace Microsoft.HealthVault.Client.NetFramework
 {
@@ -44,6 +45,15 @@ namespace Microsoft.HealthVault.Client.NetFramework
 
                     return s_current;
                 }
+            }
+        }
+
+        public static IThingTypeRegistrar ThingTypeRegistrar
+        {
+            get
+            {
+                ClientIoc.EnsureTypesRegistered();
+                return Ioc.Get<IThingTypeRegistrar>();
             }
         }
     }

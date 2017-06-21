@@ -10,6 +10,7 @@ using System;
 using System.Collections.Generic;
 using Microsoft.HealthVault.Configuration;
 using Microsoft.HealthVault.Extensions;
+using Microsoft.HealthVault.Thing;
 
 namespace Microsoft.HealthVault.Client
 {
@@ -53,6 +54,8 @@ namespace Microsoft.HealthVault.Client
                     string requiredPropertiesString = string.Join(", ", missingProperties);
                     throw new InvalidOperationException(Resources.MissingRequiredProperties.FormatResource(requiredPropertiesString));
                 }
+
+                var appSpecificTypeConfiguration = configuration.AppSpecificTypeConfiguration;
 
                 Ioc.Container.Configure(c => c.ExportInstance(configuration).As<HealthVaultConfiguration>());
 

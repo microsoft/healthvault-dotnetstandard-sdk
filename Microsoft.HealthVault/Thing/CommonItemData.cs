@@ -10,6 +10,7 @@ using System;
 using System.Collections.ObjectModel;
 using System.Xml;
 using System.Xml.XPath;
+using Microsoft.HealthVault.Clients.Deserializers;
 
 namespace Microsoft.HealthVault.Thing
 {
@@ -26,6 +27,8 @@ namespace Microsoft.HealthVault.Thing
     {
         internal void ParseXml(XPathNavigator commonNav)
         {
+            var thingDeserializer = Ioc.Get<IThingDeserializer>();
+
             XPathNavigator sourceNav = commonNav.SelectSingleNode("source");
             if (sourceNav != null)
             {
@@ -51,8 +54,7 @@ namespace Microsoft.HealthVault.Thing
 
             foreach (XPathNavigator extensionNav in extensionIterator)
             {
-                ThingExtension extension =
-                    ItemTypeManager.DeserializeExtension(extensionNav);
+                ThingExtension extension = thingDeserializer.DeserializeExtension(extensionNav);
 
                 if (extension != null)
                 {
