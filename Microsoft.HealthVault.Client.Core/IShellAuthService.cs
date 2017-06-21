@@ -15,6 +15,6 @@ namespace Microsoft.HealthVault.Client
     {
         Task<string> ProvisionApplicationAsync(Uri shellUrl, Guid masterAppId, string appCreationToken, string appInstanceId);
 
-        Task AuthorizeAdditionalRecordsAsync(Uri shellUrl, Guid masterAppId);
+        Task AuthorizeAdditionalRecordsAsync(Uri shellUrl, Guid appInstanceId);
     }
 }

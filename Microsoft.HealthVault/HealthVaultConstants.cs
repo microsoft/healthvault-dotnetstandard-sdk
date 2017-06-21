@@ -39,6 +39,7 @@ namespace Microsoft.HealthVault
         internal static class ShellRedirectTargets
         {
             internal const string Auth = "AUTH";
+            internal const string AppAuth = "APPAUTH";
             internal const string AppSignOut = "APPSIGNOUT";
             internal const string CreateApplication = "CREATEAPPLICATION";
         }
