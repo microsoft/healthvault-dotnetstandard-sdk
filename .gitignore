@@ -297,3 +297,5 @@ log.txt
 
 # Mac OS system files
 *.DS_Store
+/.vscode
+/.vscode

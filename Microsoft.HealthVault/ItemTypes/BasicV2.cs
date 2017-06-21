@@ -235,15 +235,15 @@ namespace Microsoft.HealthVault.ItemTypes
         private int? _birthYear;
 
         /// <summary>
-        /// Gets or sets the country of residence.
+        /// Gets or sets the country/region of residence.
         /// </summary>
         ///
         /// <remarks>
-        /// Set the value to <b>null</b> if the country should not be stored.
+        /// Set the value to <b>null</b> if the country/region should not be stored.
         /// </remarks>
         ///
         /// <value>
-        /// A codable value representing the country.
+        /// A codable value representing the country/region.
         /// </value>
         ///
         public CodableValue Country
@@ -255,7 +255,7 @@ namespace Microsoft.HealthVault.ItemTypes
         private CodableValue _country;
 
         /// <summary>
-        /// Gets or sets the postal code of the country of residence.
+        /// Gets or sets the postal code of the country/region of residence.
         /// </summary>
         ///
         /// <value>

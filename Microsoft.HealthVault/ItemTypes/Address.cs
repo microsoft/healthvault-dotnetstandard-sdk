@@ -41,7 +41,7 @@ namespace Microsoft.HealthVault.ItemTypes
         /// </param>
         ///
         /// <param name="country">
-        /// The name of the country.
+        /// The name of the country/region.
         /// </param>
         ///
         /// <param name="postalCode">
@@ -78,7 +78,7 @@ namespace Microsoft.HealthVault.ItemTypes
         /// </param>
         ///
         /// <param name="country">
-        /// The name of the country.
+        /// The name of the country/region.
         /// </param>
         ///
         /// <param name="postalCode">
@@ -355,11 +355,11 @@ namespace Microsoft.HealthVault.ItemTypes
         private string _state;
 
         /// <summary>
-        /// Gets or sets the country.
+        /// Gets or sets the country/region.
         /// </summary>
         ///
         /// <value>
-        /// A string representing the country name.
+        /// A string representing the country/region name.
         /// </value>
         ///
         /// <exception cref="ArgumentException">
