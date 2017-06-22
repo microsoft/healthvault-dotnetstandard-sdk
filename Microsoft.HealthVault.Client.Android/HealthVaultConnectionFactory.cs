@@ -25,16 +25,19 @@ namespace Microsoft.HealthVault.Client
         {
             get
             {
-                lock (s_instanceLock)
+                if (_current == null)
                 {
-                    if (_current == null)
+                    lock (s_instanceLock)
                     {
-                        ClientIoc.EnsureTypesRegistered();
-                        _current = new HealthVaultConnectionFactoryInternal();
+                        if (_current == null)
+                        {
+                            ClientIoc.EnsureTypesRegistered();
+                            _current = new HealthVaultConnectionFactoryInternal();
+                        }
                     }
-
-                    return _current;
                 }
+
+                return _current;
             }
         }
 
