@@ -6,6 +6,7 @@
 //
 // THE SOFTWARE IS PROVIDED *AS IS*, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+using Microsoft.HealthVault.ItemTypes;
 using Microsoft.HealthVault.Thing;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -44,7 +45,7 @@ namespace Microsoft.HealthVault.UnitTest.ItemTypes
         [TestMethod]
         public void WhenSerializesXml_ThenCorrectStringReturned()
         {           
-            Weight weight = new Weight(new HealthServiceDateTime(new NodaTime.LocalDateTime(2017, 6, 1, 12, 0, 0)), new WeightValue(60.0));
+            Weight weight = new Weight(new HealthServiceDateTime(new HealthServiceDate(2017, 6, 1), new ApproximateTime(12, 0, 0)), new WeightValue(60.0));
             var serialized = weight.Serialize();
             Assert.IsFalse(string.IsNullOrWhiteSpace(serialized));
             Assert.IsTrue(serialized.Contains("<type-id>3d34d87e-7fc1-4153-800f-f56592cb0d17</type-id>"));
