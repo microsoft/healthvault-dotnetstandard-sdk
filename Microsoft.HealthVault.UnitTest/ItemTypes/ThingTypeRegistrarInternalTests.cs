@@ -49,7 +49,7 @@ namespace Microsoft.HealthVault.UnitTest.ItemTypes
             var serialized = weight.Serialize();
             Assert.IsFalse(string.IsNullOrWhiteSpace(serialized));
             Assert.IsTrue(serialized.Contains("<type-id>3d34d87e-7fc1-4153-800f-f56592cb0d17</type-id>"));
-            Assert.IsTrue(serialized.Contains("<when><date><y>2017</y><m>6</m><d>1</d></date><time><h>12</h><m>0</m><s>0</s><f>0</f></time></when>"));
+            Assert.IsTrue(serialized.Contains("<when><date><y>2017</y><m>6</m><d>1</d></date><time><h>12</h><m>0</m><s>0</s></time></when>"));
             Assert.IsTrue(serialized.Contains("<kg>60</kg>"));
         }
     }
