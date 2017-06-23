@@ -3,7 +3,9 @@ using Microsoft.HealthVault.Clients;
 using Microsoft.HealthVault.Clients.Deserializers;
 using Microsoft.HealthVault.Connection;
 using Microsoft.HealthVault.Extensions;
+using Microsoft.HealthVault.ItemTypes;
 using Microsoft.HealthVault.Services;
+using Microsoft.HealthVault.Thing;
 using Microsoft.HealthVault.Transport;
 
 namespace Microsoft.HealthVault
@@ -25,6 +27,8 @@ namespace Microsoft.HealthVault
 
             Container.RegisterSingleton<IHealthWebRequestClient, HealthWebRequestClient>();
             Container.RegisterSingleton<ICryptographer, Cryptographer>();
+
+            Container.RegisterSingleton<IThingTypeRegistrar, ThingTypeRegistrar>();
 
             Container.RegisterTransient<IPersonClient, PersonClient>();
         }

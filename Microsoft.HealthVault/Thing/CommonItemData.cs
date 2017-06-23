@@ -48,8 +48,7 @@ namespace Microsoft.HealthVault.Thing
 
             foreach (XPathNavigator extensionNav in extensionIterator)
             {
-                ThingExtension extension =
-                    ItemTypeManager.DeserializeExtension(extensionNav);
+                ThingExtension extension = DeserializeExtension(extensionNav);
 
                 if (extension != null)
                 {
@@ -135,6 +134,29 @@ namespace Microsoft.HealthVault.Thing
 
             // </common>
             writer.WriteEndElement();
+        }
+
+        internal ThingExtension DeserializeExtension(XPathNavigator extensionNav)
+        {
+            ThingExtension result;
+            string source = extensionNav.GetAttribute("source", string.Empty);
+
+            var thingTypeRegistrar = Ioc.Get<IThingTypeRegistrar>();
+
+            var extensionHandlers = thingTypeRegistrar.RegisteredExtensionHandlers;
+
+            if (extensionHandlers.ContainsKey(source))
+            {
+                Type handler = extensionHandlers[source];
+                result = (ThingExtension)Activator.CreateInstance(handler);
+            }
+            else
+            {
+                result = new ThingExtension(source);
+            }
+
+            result.ParseXml(extensionNav);
+            return result;
         }
 
         /// <summary>

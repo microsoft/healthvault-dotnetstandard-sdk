@@ -24,6 +24,8 @@ namespace Microsoft.HealthVault.UnitTest.Clients
     public class ThingClientTests
     {
         private IConnectionInternal _connection;
+        private IThingTypeRegistrar _itemTypeManager;
+
         private ThingClient _client;
         private Guid _recordId;
 
@@ -31,6 +33,8 @@ namespace Microsoft.HealthVault.UnitTest.Clients
         public void InitializeTest()
         {
             _connection = Substitute.For<IConnectionInternal>();
+            _itemTypeManager = new ThingTypeRegistrar();
+
             _recordId = Guid.NewGuid();
         }
 
@@ -199,7 +203,8 @@ namespace Microsoft.HealthVault.UnitTest.Clients
 
         private void InitializeResponse(string sample)
         {
-            _client = new ThingClient(_connection, new ThingDeserializer(_connection));
+            _client = new ThingClient(_connection, new ThingDeserializer(_connection, _itemTypeManager));
+            _connection.CreateThingClient().Returns(_client);
 
             var infoReader = XmlReader.Create(new StringReader(sample), SDKHelper.XmlReaderSettings);
 
