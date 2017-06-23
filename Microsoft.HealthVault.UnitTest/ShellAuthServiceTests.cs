@@ -29,6 +29,7 @@ namespace Microsoft.HealthVault.UnitTest
         private static readonly Uri s_shellUrl = new Uri("https://contoso.com/shell");
 
         private static readonly Guid s_masterApplicationId = new Guid("30945bac-d221-4f89-8197-6983a390066d");
+        private static readonly Guid s_appInstanceId = new Guid(ApplicationInstanceId);
 
         [TestInitialize]
         public void TestInitialize()
@@ -62,7 +63,7 @@ namespace Microsoft.HealthVault.UnitTest
                 .Returns(successUri);
 
             ShellAuthService service = CreateService();
-            await service.AuthorizeAdditionalRecordsAsync(s_shellUrl, s_masterApplicationId);
+            await service.AuthorizeAdditionalRecordsAsync(s_shellUrl, s_appInstanceId);
 
             await _subBrowserAuthBroker
                 .Received()
@@ -126,7 +127,7 @@ namespace Microsoft.HealthVault.UnitTest
             }
 
             Assert.IsFalse(urlString.Contains(Uri.EscapeDataString("aib=")));
-            Assert.IsTrue(urlString.Contains(Uri.EscapeDataString("appid=" + s_masterApplicationId)));
+            Assert.IsTrue(urlString.Contains(Uri.EscapeDataString("appid=" + s_appInstanceId)));
 
             return true;
         }

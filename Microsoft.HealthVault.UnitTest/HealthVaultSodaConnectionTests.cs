@@ -196,7 +196,7 @@ namespace Microsoft.HealthVault.UnitTest
             await healthVaultSodaConnection.AuthorizeAdditionalRecordsAsync();
 
             await _subShellAuthService.Received()
-                .AuthorizeAdditionalRecordsAsync(new Uri("https://account.healthvault-ppe.com/"), s_masterApplicationId);
+                .AuthorizeAdditionalRecordsAsync(new Uri("https://account.healthvault-ppe.com/"), new Guid(ApplicationInstanceId));
 
             await _subLocalObjectStore.Received()
                 .WriteAsync(HealthVaultSodaConnection.PersonInfoKey, Arg.Any<object>());

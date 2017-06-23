@@ -51,7 +51,7 @@ namespace Microsoft.HealthVault.Client
                 query += "&aib=true";
             }
 
-            Uri successUri = await AuthenticateInBrowserAsync(shellUrl, query).ConfigureAwait(false);
+            Uri successUri = await AuthenticateInBrowserAsync(shellUrl, query, HealthVaultConstants.ShellRedirectTargets.CreateApplication).ConfigureAwait(false);
             string environmentInstanceId = ParseEnvironmentInstanceIdFromUri(successUri.ToString());
             if (environmentInstanceId == null)
             {
@@ -61,22 +61,22 @@ namespace Microsoft.HealthVault.Client
             return environmentInstanceId;
         }
 
-        public async Task AuthorizeAdditionalRecordsAsync(Uri shellUrl, Guid masterAppId)
+        public async Task AuthorizeAdditionalRecordsAsync(Uri shellUrl, Guid appInstanceId)
         {
             if (shellUrl == null)
             {
                 throw new ArgumentNullException(nameof(shellUrl));
             }
 
-            string query = $"?appid={masterAppId}&ismra={MraString}";
+            string query = $"appid={appInstanceId}&ismra={MraString}&mobile=true";
 
-            await AuthenticateInBrowserAsync(shellUrl, query).ConfigureAwait(false);
+            await AuthenticateInBrowserAsync(shellUrl, query, HealthVaultConstants.ShellRedirectTargets.AppAuth).ConfigureAwait(false);
         }
 
-        private async Task<Uri> AuthenticateInBrowserAsync(Uri shellUrl, string query)
+        private async Task<Uri> AuthenticateInBrowserAsync(Uri shellUrl, string query, string target)
         {
             UriBuilder provisionBuilder = GetShellUriBuilder(shellUrl);
-            string fullQuery = $"target={HealthVaultConstants.ShellRedirectTargets.CreateApplication}&targetqs=" + Uri.EscapeDataString(query);
+            string fullQuery = $"target={target}&targetqs=" + Uri.EscapeDataString(query);
             provisionBuilder.Query = fullQuery;
             Uri provisionUIUrl = provisionBuilder.Uri;
 

@@ -13,6 +13,7 @@
             <Button Clicked="MultiQuery_OnClicked" Text="Get Things Multi-Query" />
             <Button Clicked="GetItemTypeDef_OnClicked" Text="Get Item Type Definition" />
             <Button Clicked="GetActionPlans_OnClicked" Text="Get Action Plans" />
+            <Button Clicked="AuthorizeAdditionalRecords_OnClicked" Text="Authorize Additional Records" />
             <Button Clicked="Disconnect_OnClicked" Text="Disconnect" />
         </StackLayout>
         <Label x:Name="OutputLabel" />
