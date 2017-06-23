@@ -285,7 +285,7 @@ namespace Microsoft.HealthVault.ItemTypes
         private int? _birthYear;
 
         /// <summary>
-        /// Gets or sets the country of residence.
+        /// Gets or sets the country/region of residence.
         /// </summary>
         ///
         /// <value>
@@ -307,7 +307,7 @@ namespace Microsoft.HealthVault.ItemTypes
         private string _country;
 
         /// <summary>
-        /// Gets or sets the postal code of the country of residence.
+        /// Gets or sets the postal code of the country/region of residence.
         /// </summary>
         ///
         /// <value>

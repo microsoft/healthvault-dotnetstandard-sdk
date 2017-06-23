@@ -13,27 +13,27 @@ using System.Xml.XPath;
 namespace Microsoft.HealthVault.Application
 {
     /// <summary>
-    /// A location defined by country and state/province ISO 3166 codes.
+    /// A location defined by country/region and state/province ISO 3166 codes.
     /// </summary>
     public class Location
     {
         /// <summary>
-        /// Constructs a default instance of a location with no country or state/province.
+        /// Constructs a default instance of a location with no country/region or state/province.
         /// </summary>
         public Location()
         {
         }
 
         /// <summary>
-        /// Constructs a location instance with the specified country and state/province codes.
+        /// Constructs a location instance with the specified country/region and state/province codes.
         /// </summary>
         ///
         /// <param name="country">
-        /// An ISO 3166-1 two-letter country code.
+        /// An ISO 3166-1 two-letter country/region code.
         /// </param>
         ///
         /// <param name="stateProvince">
-        /// An ISO 3166-2 state/province code without the country prefix.
+        /// An ISO 3166-2 state/province code without the country/region prefix.
         /// </param>
         ///
         public Location(string country, string stateProvince)
@@ -43,11 +43,11 @@ namespace Microsoft.HealthVault.Application
         }
 
         /// <summary>
-        /// Gets or sets the country code.
+        /// Gets or sets the country/region code.
         /// </summary>
         ///
         /// <remarks>
-        /// An ISO 3166-1 two letter country code.
+        /// An ISO 3166-1 two letter country/region code.
         /// </remarks>
         ///
         public string Country
@@ -75,7 +75,7 @@ namespace Microsoft.HealthVault.Application
         /// </summary>
         ///
         /// <remarks>
-        /// An ISO 3166-2 state/province code without the country prefix.
+        /// An ISO 3166-2 state/province code without the country/region prefix.
         /// </remarks>
         ///
         public string StateProvince { get; set; }
