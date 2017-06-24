@@ -6,6 +6,7 @@
 //
 // THE SOFTWARE IS PROVIDED *AS IS*, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+using Microsoft.HealthVault.ItemTypes;
 using Microsoft.HealthVault.Thing;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -39,6 +40,17 @@ namespace Microsoft.HealthVault.UnitTest.ItemTypes
             thingTypeRegistrarInternal.RegisterExtensionHandler("some", typeof(CustomExtensionType));
 
             Assert.IsTrue(thingTypeRegistrarInternal.RegisteredExtensionHandlers.Count == 1);
+        }
+
+        [TestMethod]
+        public void WhenSerializesXml_ThenCorrectStringReturned()
+        {           
+            Weight weight = new Weight(new HealthServiceDateTime(new HealthServiceDate(2017, 6, 1), new ApproximateTime(12, 0, 0)), new WeightValue(60.0));
+            var serialized = weight.Serialize();
+            Assert.IsFalse(string.IsNullOrWhiteSpace(serialized));
+            Assert.IsTrue(serialized.Contains("<type-id>3d34d87e-7fc1-4153-800f-f56592cb0d17</type-id>"));
+            Assert.IsTrue(serialized.Contains("<when><date><y>2017</y><m>6</m><d>1</d></date><time><h>12</h><m>0</m><s>0</s></time></when>"));
+            Assert.IsTrue(serialized.Contains("<kg>60</kg>"));
         }
     }
 }
