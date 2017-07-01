@@ -10,13 +10,13 @@ namespace Microsoft.HealthVault.RestApi.Generated.Models
     using Microsoft.Rest;
 
     /// <summary>
-    /// Exception thrown for an invalid response with
-    /// MicrosoftKhronosCloudCommonErrorsErrorResponse information.
+    /// Exception thrown for an invalid response with ErrorResponse
+    /// information.
     /// </summary>
 #if LEGACY
     [System.Serializable]
 #endif
-    public class MicrosoftKhronosCloudCommonErrorsErrorResponseException : RestException
+    public class ErrorResponseException : RestException
     {
         /// <summary>
         /// Gets information about the associated HTTP request.
@@ -31,41 +31,41 @@ namespace Microsoft.HealthVault.RestApi.Generated.Models
         /// <summary>
         /// Gets or sets the body object.
         /// </summary>
-        public MicrosoftKhronosCloudCommonErrorsErrorResponse Body { get; set; }
+        public ErrorResponse Body { get; set; }
 
         /// <summary>
-        /// Initializes a new instance of the MicrosoftKhronosCloudCommonErrorsErrorResponseException class.
+        /// Initializes a new instance of the ErrorResponseException class.
         /// </summary>
-        public MicrosoftKhronosCloudCommonErrorsErrorResponseException()
+        public ErrorResponseException()
         {
         }
 
         /// <summary>
-        /// Initializes a new instance of the MicrosoftKhronosCloudCommonErrorsErrorResponseException class.
+        /// Initializes a new instance of the ErrorResponseException class.
         /// </summary>
         /// <param name="message">The exception message.</param>
-        public MicrosoftKhronosCloudCommonErrorsErrorResponseException(string message)
+        public ErrorResponseException(string message)
             : this(message, null)
         {
         }
 
         /// <summary>
-        /// Initializes a new instance of the MicrosoftKhronosCloudCommonErrorsErrorResponseException class.
+        /// Initializes a new instance of the ErrorResponseException class.
         /// </summary>
         /// <param name="message">The exception message.</param>
         /// <param name="innerException">Inner exception.</param>
-        public MicrosoftKhronosCloudCommonErrorsErrorResponseException(string message, System.Exception innerException)
+        public ErrorResponseException(string message, System.Exception innerException)
             : base(message, innerException)
         {
         }
 
 #if LEGACY
         /// <summary>
-        /// Initializes a new instance of the MicrosoftKhronosCloudCommonErrorsErrorResponseException class.
+        /// Initializes a new instance of the ErrorResponseException class.
         /// </summary>
         /// <param name="info">Serialization info.</param>
         /// <param name="context">Streaming context.</param>
-        protected MicrosoftKhronosCloudCommonErrorsErrorResponseException(System.Runtime.Serialization.SerializationInfo info, System.Runtime.Serialization.StreamingContext context)
+        protected ErrorResponseException(System.Runtime.Serialization.SerializationInfo info, System.Runtime.Serialization.StreamingContext context)
             : base(info, context)
         {
         }

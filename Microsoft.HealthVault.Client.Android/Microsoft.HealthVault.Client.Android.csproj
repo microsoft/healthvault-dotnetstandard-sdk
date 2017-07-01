@@ -64,7 +64,7 @@
     </Compile>
     <Compile Include="AndroidBrowserAuthBroker.cs" />
     <Compile Include="AndroidMessageHandlerFactory.cs" />
-    <Compile Include="AndroidHealthVaultConnectionFactory.cs" />
+    <Compile Include="HealthVaultConnectionFactory.cs" />
     <Compile Include="AndroidSecretStore.cs" />
     <Compile Include="EncryptionKeyService.cs" />
     <Compile Include="IAndroidBrowserAuthBroker.cs" />

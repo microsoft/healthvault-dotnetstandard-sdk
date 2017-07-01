@@ -58,9 +58,19 @@ namespace Microsoft.HealthVault.RestApi.Generated
         public virtual IGoals Goals { get; private set; }
 
         /// <summary>
+        /// Gets the IGoalRecommendations.
+        /// </summary>
+        public virtual IGoalRecommendations GoalRecommendations { get; private set; }
+
+        /// <summary>
         /// Gets the IOnboarding.
         /// </summary>
         public virtual IOnboarding Onboarding { get; private set; }
+
+        /// <summary>
+        /// Gets the ISleeps.
+        /// </summary>
+        public virtual ISleeps Sleeps { get; private set; }
 
         /// <summary>
         /// Initializes a new instance of the MicrosoftHealthVaultRestApi class.
@@ -267,8 +277,10 @@ namespace Microsoft.HealthVault.RestApi.Generated
             ActionPlanObjectives = new ActionPlanObjectives(this);
             ActionPlanTasks = new ActionPlanTasks(this);
             Goals = new Goals(this);
+            GoalRecommendations = new GoalRecommendations(this);
             Onboarding = new Onboarding(this);
-            BaseUri = new System.Uri("https://data.ppe.microsofthealth.net/");
+            Sleeps = new Sleeps(this);
+            BaseUri = new System.Uri("https://data.ppe.microsofthealth.net");
             SerializationSettings = new JsonSerializerSettings
             {
                 Formatting = Newtonsoft.Json.Formatting.Indented,
