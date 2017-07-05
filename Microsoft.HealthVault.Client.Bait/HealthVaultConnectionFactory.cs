@@ -8,6 +8,7 @@
 
 using System;
 using Microsoft.HealthVault.Client.Core;
+using Microsoft.HealthVault.Thing;
 
 namespace Microsoft.HealthVault.Client
 {
@@ -23,5 +24,10 @@ namespace Microsoft.HealthVault.Client
                 throw new NotImplementedException(ClientResources.BaitWithoutSwitchError);
             }
         }
+
+        /// <summary>
+        /// Gets ThingTypeRegistrar to allow apps to register custom thing types and thing extensions
+        /// </summary>
+        public static IThingTypeRegistrar ThingTypeRegistrar => throw new NotImplementedException(ClientResources.BaitWithoutSwitchError);
     }
 }

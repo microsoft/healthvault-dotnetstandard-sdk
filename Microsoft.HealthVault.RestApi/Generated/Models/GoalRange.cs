@@ -36,7 +36,8 @@ namespace Microsoft.HealthVault.RestApi.Generated.Models
         /// For ranges less than a specified value with no minimum, specify a
         /// maximum but no minimum.</param>
         /// <param name="units">The units of the range. Possible values
-        /// include: 'Unknown', 'Kilograms', 'Count', 'Calories'</param>
+        /// include: 'Unknown', 'Kilograms', 'Count', 'Calories',
+        /// 'MillimetersOfMercury'</param>
         public GoalRange(string name = default(string), string description = default(string), double? minimum = default(double?), double? maximum = default(double?), string units = default(string))
         {
             Name = name;
@@ -83,7 +84,7 @@ namespace Microsoft.HealthVault.RestApi.Generated.Models
 
         /// <summary>
         /// Gets or sets the units of the range. Possible values include:
-        /// 'Unknown', 'Kilograms', 'Count', 'Calories'
+        /// 'Unknown', 'Kilograms', 'Count', 'Calories', 'MillimetersOfMercury'
         /// </summary>
         [JsonProperty(PropertyName = "units")]
         public string Units { get; set; }

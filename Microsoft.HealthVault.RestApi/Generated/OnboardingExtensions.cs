@@ -41,7 +41,7 @@ namespace Microsoft.HealthVault.RestApi.Generated
             /// <param name='cancellationToken'>
             /// The cancellation token.
             /// </param>
-            public static async Task<OnboardingResponse> GenerateInviteCodeAsync(this IOnboarding operations, OnboardingRequest onboardingRequest, CancellationToken cancellationToken = default(CancellationToken))
+            public static async Task<OnboardingResponse> GenerateInviteCodeAsync(this IOnboarding operations, OnboardingRequest onboardingRequest, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken))
             {
                 using (var _result = await operations.GenerateInviteCodeWithHttpMessagesAsync(onboardingRequest, null, cancellationToken).ConfigureAwait(false))
                 {

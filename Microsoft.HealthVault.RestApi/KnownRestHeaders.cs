@@ -10,6 +10,6 @@ namespace Microsoft.HealthVault.RestApi
 {
     internal class KnownRestHeaders
     {
-        public const string Version = "1.0-preview";
+        public const string Version = "1.0-preview2";
     }
 }

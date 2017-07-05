@@ -51,11 +51,13 @@
     <Folder Include="Resources\" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\Microsoft.HealthVault.Client.Android\HealthVaultConnectionFactory.cs">
+      <Link>HealthVaultConnectionFactory.cs</Link>
+    </Compile>
     <Compile Include="..\SharedVersionInfo.cs">
       <Link>Properties\SharedVersionInfo.cs</Link>
     </Compile>
     <Compile Include="IosBrowserAuthBroker.cs" />
-    <Compile Include="IosHealthVaultConnectionFactory.cs" />
     <Compile Include="IosClientIoc.cs" />
     <Compile Include="IosMessageHandlerFactory.cs" />
     <Compile Include="IosSecretStore.cs" />

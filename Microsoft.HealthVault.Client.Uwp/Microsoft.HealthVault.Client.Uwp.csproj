@@ -112,12 +112,14 @@
     <None Include="project.json" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\Microsoft.HealthVault.Client.Android\HealthVaultConnectionFactory.cs">
+      <Link>HealthVaultConnectionFactory.cs</Link>
+    </Compile>
     <Compile Include="..\SharedVersionInfo.cs">
       <Link>Properties\SharedVersionInfo.cs</Link>
     </Compile>
     <Compile Include="DispatcherUtilities.cs" />
     <Compile Include="UwpBrowserAuthBroker.cs" />
-    <Compile Include="UwpHealthVaultConnectionFactory.cs" />
     <Compile Include="UwpClientIoc.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="UwpSecretStore.cs" />

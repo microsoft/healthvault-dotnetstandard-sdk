@@ -13,6 +13,7 @@ using System.Text;
 using System.Xml;
 using System.Xml.Linq;
 using System.Xml.XPath;
+using Microsoft.HealthVault.Clients.Deserializers;
 using Microsoft.HealthVault.Exceptions;
 using Microsoft.HealthVault.Helpers;
 using Microsoft.HealthVault.ItemTypes;
@@ -843,25 +844,6 @@ namespace Microsoft.HealthVault.Thing
 
         // The original XML that was fetched by the thing.
         private string _fetchedXml;
-
-        /// <summary>
-        /// Create a <see cref="ThingBase"/> instance from the item XML.
-        /// </summary>
-        ///
-        /// <remarks>
-        /// This method is identical to calling <see cref="ItemTypeManager.DeserializeItem(string)"/>.
-        ///
-        /// The item XML should come from a previous call to <see cref="ThingBase.Serialize"/>.
-        /// </remarks>
-        ///
-        /// <returns>
-        /// A instance of the <see cref="ThingBase"/> class.
-        /// </returns>
-        ///
-        public static ThingBase Deserialize(string itemXml)
-        {
-            return ItemTypeManager.DeserializeItem(itemXml);
-        }
 
         #region private helpers
 

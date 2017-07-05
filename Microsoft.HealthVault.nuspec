@@ -30,6 +30,7 @@
         <dependency id="System.Xml.XDocument" version="4.3.0" exclude="Build,Analyzers" />
         <dependency id="System.Xml.XPath" version="4.3.0" exclude="Build,Analyzers" />
         <dependency id="System.Xml.XPath.XDocument" version="4.3.0" exclude="Build,Analyzers" />
+        <dependency id="System.Reflection.TypeExtensions" version="4.3.0" exclude="Build,Analyzers" />
       </group>
     </dependencies>
   </metadata>

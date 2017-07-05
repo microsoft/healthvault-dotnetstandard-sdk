@@ -47,7 +47,7 @@ namespace Microsoft.HealthVault.RestApi.Generated
             /// <param name='cancellationToken'>
             /// The cancellation token.
             /// </param>
-            public static async Task<object> DeleteAsync(this IActionPlanObjectives operations, string actionPlanId, string objectiveId, CancellationToken cancellationToken = default(CancellationToken))
+            public static async Task<object> DeleteAsync(this IActionPlanObjectives operations, string actionPlanId, string objectiveId, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken))
             {
                 using (var _result = await operations.DeleteWithHttpMessagesAsync(actionPlanId, objectiveId, null, cancellationToken).ConfigureAwait(false))
                 {

@@ -24,7 +24,7 @@ namespace Microsoft.HealthVault.RestApi.Generated
             /// <param name='maxPageSize'>
             /// The maximum number of entries to return per page. Defaults to 1000.
             /// </param>
-            public static ActionPlansResponseActionPlanInstance Get(this IActionPlans operations, int? maxPageSize = default(int?))
+            public static ActionPlansResponseActionPlanInstanceV2 Get(this IActionPlans operations, int? maxPageSize = default(int?))
             {
                 return operations.GetAsync(maxPageSize).GetAwaiter().GetResult();
             }
@@ -41,7 +41,7 @@ namespace Microsoft.HealthVault.RestApi.Generated
             /// <param name='cancellationToken'>
             /// The cancellation token.
             /// </param>
-            public static async Task<ActionPlansResponseActionPlanInstance> GetAsync(this IActionPlans operations, int? maxPageSize = default(int?), CancellationToken cancellationToken = default(CancellationToken))
+            public static async Task<ActionPlansResponseActionPlanInstanceV2> GetAsync(this IActionPlans operations, int? maxPageSize = default(int?), System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken))
             {
                 using (var _result = await operations.GetWithHttpMessagesAsync(maxPageSize, null, cancellationToken).ConfigureAwait(false))
                 {
@@ -59,7 +59,7 @@ namespace Microsoft.HealthVault.RestApi.Generated
             /// The instance of the plan to update. The entire plan will be replaced with
             /// this version.
             /// </param>
-            public static ActionPlansResponseActionPlanInstance Replace(this IActionPlans operations, ActionPlanInstance actionPlan)
+            public static ActionPlansResponseActionPlanInstanceV2 Replace(this IActionPlans operations, ActionPlanInstanceV2 actionPlan)
             {
                 return operations.ReplaceAsync(actionPlan).GetAwaiter().GetResult();
             }
@@ -77,7 +77,7 @@ namespace Microsoft.HealthVault.RestApi.Generated
             /// <param name='cancellationToken'>
             /// The cancellation token.
             /// </param>
-            public static async Task<ActionPlansResponseActionPlanInstance> ReplaceAsync(this IActionPlans operations, ActionPlanInstance actionPlan, CancellationToken cancellationToken = default(CancellationToken))
+            public static async Task<ActionPlansResponseActionPlanInstanceV2> ReplaceAsync(this IActionPlans operations, ActionPlanInstanceV2 actionPlan, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken))
             {
                 using (var _result = await operations.ReplaceWithHttpMessagesAsync(actionPlan, null, cancellationToken).ConfigureAwait(false))
                 {
@@ -94,7 +94,7 @@ namespace Microsoft.HealthVault.RestApi.Generated
             /// <param name='actionPlan'>
             /// The instance of the plan to create.
             /// </param>
-            public static object Create(this IActionPlans operations, ActionPlan actionPlan)
+            public static object Create(this IActionPlans operations, ActionPlanV2 actionPlan)
             {
                 return operations.CreateAsync(actionPlan).GetAwaiter().GetResult();
             }
@@ -111,7 +111,7 @@ namespace Microsoft.HealthVault.RestApi.Generated
             /// <param name='cancellationToken'>
             /// The cancellation token.
             /// </param>
-            public static async Task<object> CreateAsync(this IActionPlans operations, ActionPlan actionPlan, CancellationToken cancellationToken = default(CancellationToken))
+            public static async Task<object> CreateAsync(this IActionPlans operations, ActionPlanV2 actionPlan, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken))
             {
                 using (var _result = await operations.CreateWithHttpMessagesAsync(actionPlan, null, cancellationToken).ConfigureAwait(false))
                 {
@@ -130,7 +130,7 @@ namespace Microsoft.HealthVault.RestApi.Generated
             /// in model will be updated. All other fields and colelctions
             /// will be left, as is, unless invalid.
             /// </param>
-            public static ActionPlansResponseActionPlanInstance Update(this IActionPlans operations, ActionPlanInstance actionPlan)
+            public static ActionPlansResponseActionPlanInstanceV2 Update(this IActionPlans operations, ActionPlanInstanceV2 actionPlan)
             {
                 return operations.UpdateAsync(actionPlan).GetAwaiter().GetResult();
             }
@@ -149,7 +149,7 @@ namespace Microsoft.HealthVault.RestApi.Generated
             /// <param name='cancellationToken'>
             /// The cancellation token.
             /// </param>
-            public static async Task<ActionPlansResponseActionPlanInstance> UpdateAsync(this IActionPlans operations, ActionPlanInstance actionPlan, CancellationToken cancellationToken = default(CancellationToken))
+            public static async Task<ActionPlansResponseActionPlanInstanceV2> UpdateAsync(this IActionPlans operations, ActionPlanInstanceV2 actionPlan, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken))
             {
                 using (var _result = await operations.UpdateWithHttpMessagesAsync(actionPlan, null, cancellationToken).ConfigureAwait(false))
                 {
@@ -166,7 +166,7 @@ namespace Microsoft.HealthVault.RestApi.Generated
             /// <param name='actionPlanId'>
             /// The action plan to update.
             /// </param>
-            public static ActionPlanInstance GetById(this IActionPlans operations, string actionPlanId)
+            public static ActionPlanInstanceV2 GetById(this IActionPlans operations, string actionPlanId)
             {
                 return operations.GetByIdAsync(actionPlanId).GetAwaiter().GetResult();
             }
@@ -183,7 +183,7 @@ namespace Microsoft.HealthVault.RestApi.Generated
             /// <param name='cancellationToken'>
             /// The cancellation token.
             /// </param>
-            public static async Task<ActionPlanInstance> GetByIdAsync(this IActionPlans operations, string actionPlanId, CancellationToken cancellationToken = default(CancellationToken))
+            public static async Task<ActionPlanInstanceV2> GetByIdAsync(this IActionPlans operations, string actionPlanId, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken))
             {
                 using (var _result = await operations.GetByIdWithHttpMessagesAsync(actionPlanId, null, cancellationToken).ConfigureAwait(false))
                 {
@@ -217,7 +217,7 @@ namespace Microsoft.HealthVault.RestApi.Generated
             /// <param name='cancellationToken'>
             /// The cancellation token.
             /// </param>
-            public static async Task<object> DeleteAsync(this IActionPlans operations, string actionPlanId, CancellationToken cancellationToken = default(CancellationToken))
+            public static async Task<object> DeleteAsync(this IActionPlans operations, string actionPlanId, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken))
             {
                 using (var _result = await operations.DeleteWithHttpMessagesAsync(actionPlanId, null, cancellationToken).ConfigureAwait(false))
                 {
@@ -275,7 +275,7 @@ namespace Microsoft.HealthVault.RestApi.Generated
             /// <param name='cancellationToken'>
             /// The cancellation token.
             /// </param>
-            public static async Task<ActionPlanAdherenceSummary> GetAdherenceAsync(this IActionPlans operations, System.DateTime startTime, System.DateTime endTime, string actionPlanId, string objectiveId = default(string), string taskId = default(string), CancellationToken cancellationToken = default(CancellationToken))
+            public static async Task<ActionPlanAdherenceSummary> GetAdherenceAsync(this IActionPlans operations, System.DateTime startTime, System.DateTime endTime, string actionPlanId, string objectiveId = default(string), string taskId = default(string), System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken))
             {
                 using (var _result = await operations.GetAdherenceWithHttpMessagesAsync(startTime, endTime, actionPlanId, objectiveId, taskId, null, cancellationToken).ConfigureAwait(false))
                 {

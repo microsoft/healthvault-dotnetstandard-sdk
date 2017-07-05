@@ -41,7 +41,8 @@ namespace Microsoft.HealthVault.RestApi.Generated.Models
         /// If the end date is in the future, this is the target date.</param>
         /// <param name="goalType">Specifies the type of data related to this
         /// goal. Possible values include: 'Unknown', 'Steps',
-        /// 'CaloriesBurned', 'Weight'</param>
+        /// 'CaloriesBurned', 'Weight', 'BloodPressureSystolic',
+        /// 'BloodPressureDiastolic'</param>
         /// <param name="recurrenceMetrics">The goal recurrence metrics.
         /// For example, A goal can be defined on a weekly interval, meaning
         /// the target is intended to be achieved every week. Walking 50000
@@ -105,7 +106,7 @@ namespace Microsoft.HealthVault.RestApi.Generated.Models
         /// <summary>
         /// Gets or sets specifies the type of data related to this goal.
         /// Possible values include: 'Unknown', 'Steps', 'CaloriesBurned',
-        /// 'Weight'
+        /// 'Weight', 'BloodPressureSystolic', 'BloodPressureDiastolic'
         /// </summary>
         [JsonProperty(PropertyName = "goalType")]
         public string GoalType { get; set; }

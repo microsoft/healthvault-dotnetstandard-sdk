@@ -38,9 +38,9 @@ namespace Microsoft.HealthVault.RestApi.Generated.Models
         /// <param name="endDate">The date that the task was ended.
         /// Read-only</param>
         /// <param name="organizationId">The ID of the organization that owns
-        /// this task</param>
+        /// this task. Read-only</param>
         /// <param name="organizationName">The name of the organization that
-        /// owns this task</param>
+        /// owns this task. Read-only</param>
         /// <param name="name">The friendly name of the task</param>
         /// <param name="shortDescription">The short description of the
         /// task</param>
@@ -122,13 +122,15 @@ namespace Microsoft.HealthVault.RestApi.Generated.Models
         public System.DateTime? EndDate { get; set; }
 
         /// <summary>
-        /// Gets or sets the ID of the organization that owns this task
+        /// Gets or sets the ID of the organization that owns this task.
+        /// Read-only
         /// </summary>
         [JsonProperty(PropertyName = "organizationId")]
         public string OrganizationId { get; set; }
 
         /// <summary>
-        /// Gets or sets the name of the organization that owns this task
+        /// Gets or sets the name of the organization that owns this task.
+        /// Read-only
         /// </summary>
         [JsonProperty(PropertyName = "organizationName")]
         public string OrganizationName { get; set; }

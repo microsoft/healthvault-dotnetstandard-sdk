@@ -13,6 +13,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.XPath;
+using Microsoft.HealthVault.Clients.Deserializers;
 using Microsoft.HealthVault.Connection;
 using Microsoft.HealthVault.Exceptions;
 using Microsoft.HealthVault.Helpers;
@@ -334,6 +335,13 @@ namespace Microsoft.HealthVault.Record
                 }
             }
 
+            var thingDeserializer = Ioc.Container.Locate<IThingDeserializer>(
+                new
+                {
+                    connection = connection,
+                    thingTypeRegistrar = Ioc.Get<IThingTypeRegistrar>()
+                });
+
             HealthServiceResponseData responseData = await connection.ExecuteAsync(HealthVaultMethods.GetValidGroupMembership, 1, parameters.ToString()).ConfigureAwait(false);
 
             XPathExpression infoPath =
@@ -350,7 +358,7 @@ namespace Microsoft.HealthVault.Record
             {
                 foreach (XPathNavigator membershipNav in membershipIterator)
                 {
-                    memberships.Add(ItemTypeManager.DeserializeItem(membershipNav.OuterXml));
+                    memberships.Add(thingDeserializer.Deserialize(membershipNav.OuterXml));
                 }
             }
 

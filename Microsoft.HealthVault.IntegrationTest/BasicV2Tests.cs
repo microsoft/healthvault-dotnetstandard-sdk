@@ -9,11 +9,14 @@
 using System;
 using System.Linq;
 using System.Threading.Tasks;
+using Grace.DependencyInjection;
 using Microsoft.HealthVault.Client;
 using Microsoft.HealthVault.Clients;
+using Microsoft.HealthVault.Extensions;
 using Microsoft.HealthVault.ItemTypes;
 using Microsoft.HealthVault.Person;
 using Microsoft.HealthVault.Record;
+using Microsoft.HealthVault.Thing;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Microsoft.HealthVault.IntegrationTest
@@ -21,6 +24,12 @@ namespace Microsoft.HealthVault.IntegrationTest
     [TestClass]
     public class BasicV2Tests
     {
+        [TestInitialize]
+        public void TestInitialize()
+        {
+            var container = Ioc.Container;
+        }
+
         [TestMethod]
         public async Task BasicInformationFields()
         {

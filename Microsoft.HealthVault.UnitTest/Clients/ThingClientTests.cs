@@ -32,6 +32,8 @@ namespace Microsoft.HealthVault.UnitTest.Clients
     public class ThingClientTests
     {
         private IConnectionInternal _connection;
+        private IThingTypeRegistrar _itemTypeManager;
+
         private ThingClient _client;
         private Guid _recordId;
 
@@ -39,6 +41,8 @@ namespace Microsoft.HealthVault.UnitTest.Clients
         public void InitializeTest()
         {
             _connection = Substitute.For<IConnectionInternal>();
+            _itemTypeManager = new ThingTypeRegistrar();
+
             _recordId = Guid.NewGuid();
         }
 
@@ -96,7 +100,7 @@ namespace Microsoft.HealthVault.UnitTest.Clients
         public async Task GetThingsMultiQuery()
         {
             InitializeResponse(SampleUtils.GetSampleContent("ThingsMultiQueryResult.xml"));
-            var result = await _client.GetThingsAsync(_recordId, new[] { this.GetBloodPressureThingQuery(), this.GetWeightThingQuery() });
+            var result = await _client.GetThingsAsync(_recordId, new [] { this.GetBloodPressureThingQuery(), this.GetWeightThingQuery() });
 
             // ensure that the connection was called with the proper values
             await _connection.Received().ExecuteAsync(
@@ -247,22 +251,22 @@ namespace Microsoft.HealthVault.UnitTest.Clients
 
         private void InitializeResponse(params string[] samples)
         {
-            _client = new ThingClient(_connection, new ThingDeserializer(_connection));
+            _client = new ThingClient(_connection, new ThingDeserializer(_connection, _itemTypeManager));
             _connection.CreateThingClient().Returns(_client);
 
             var responseData = new List<HealthServiceResponseData>();
 
             foreach (string sample in samples)
             {
-                var infoReader = XmlReader.Create(new StringReader(sample), SDKHelper.XmlReaderSettings);
+            var infoReader = XmlReader.Create(new StringReader(sample), SDKHelper.XmlReaderSettings);
 
-                infoReader.NameTable.Add("wc");
-                infoReader.ReadToFollowing("wc:info");
+            infoReader.NameTable.Add("wc");
+            infoReader.ReadToFollowing("wc:info");
 
-                var response = new HealthServiceResponseData
-                {
-                    InfoNavigator = new XPathDocument(new StringReader(sample)).CreateNavigator(),
-                };
+            var response = new HealthServiceResponseData
+            {
+                InfoNavigator = new XPathDocument(new StringReader(sample)).CreateNavigator(),
+            };
 
                 responseData.Add(response);
             }
@@ -275,7 +279,7 @@ namespace Microsoft.HealthVault.UnitTest.Clients
                     Arg.Any<string>(),
                     Arg.Any<Guid?>(),
                     Arg.Any<Guid?>()).Returns(responseData[0]);
-            }
+        }
             else
             {
                 _connection.ExecuteAsync(
