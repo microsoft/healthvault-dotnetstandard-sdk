@@ -157,6 +157,71 @@ namespace Microsoft.HealthVault.IntegrationTest
             Assert.AreEqual(weight.Value.Kilograms, returnedWeight.Value.Kilograms);
         }
 
+        [TestMethod]
+        public async Task GetThingById()
+        {
+            IHealthVaultSodaConnection connection = HealthVaultConnectionFactory.Current.GetOrCreateSodaConnection(Constants.Configuration);
+            IThingClient thingClient = connection.CreateThingClient();
+            PersonInfo personInfo = await connection.GetPersonInfoAsync();
+            HealthRecordInfo record = personInfo.SelectedRecord;
+
+            await DeletePreviousThings(thingClient, record);
+
+            LocalDateTime nowLocal = SystemClock.Instance.GetCurrentInstant().InZone(DateTimeZoneProviders.Tzdb.GetSystemDefault()).LocalDateTime;
+
+            var weight = new Weight(
+                new HealthServiceDateTime(nowLocal),
+                new WeightValue(81, new DisplayValue(81, "KG", "kg")));
+
+            await thingClient.CreateNewThingsAsync(
+                record.Id,
+                new List<IThing>
+                {
+                    weight
+                });
+
+            Weight remoteWeight = await thingClient.GetThingAsync<Weight>(record.Id, weight.Key.Id);
+
+            Assert.IsNotNull(remoteWeight);
+            Assert.AreEqual(weight.Key.Id, remoteWeight.Key.Id);
+            Assert.AreEqual(weight.Value.Value, remoteWeight.Value.Value);
+        }
+
+        [TestMethod]
+        public async Task CreateNewThingsReturnsIds()
+        {
+            IHealthVaultSodaConnection connection = HealthVaultConnectionFactory.Current.GetOrCreateSodaConnection(Constants.Configuration);
+            IThingClient thingClient = connection.CreateThingClient();
+            PersonInfo personInfo = await connection.GetPersonInfoAsync();
+            HealthRecordInfo record = personInfo.SelectedRecord;
+
+            await DeletePreviousThings(thingClient, record);
+
+            LocalDateTime nowLocal = SystemClock.Instance.GetCurrentInstant().InZone(DateTimeZoneProviders.Tzdb.GetSystemDefault()).LocalDateTime;
+
+            var bloodGlucose = new BloodGlucose(
+                new HealthServiceDateTime(nowLocal),
+                new BloodGlucoseMeasurement(
+                    4.2,
+                    new DisplayValue(4.2, "mmol/L", "mmol-per-l")),
+                new CodableValue("Whole blood", "wb", new VocabularyKey("glucose-measurement-type", "wc", "1")));
+
+            var weight = new Weight(
+                new HealthServiceDateTime(nowLocal),
+                new WeightValue(81, new DisplayValue(81, "KG", "kg")));
+
+            await thingClient.CreateNewThingsAsync(
+                record.Id,
+                new List<IThing>
+                {
+                    bloodGlucose,
+                    weight,
+                });
+
+            Assert.IsNotNull(bloodGlucose.Key, "Blood glucose was not assigned a key.");
+            Assert.IsNotNull(weight.Key, "Weight was not assigned a key.");
+        }
+
         private static async Task DeletePreviousThings(IThingClient thingClient, HealthRecordInfo record)
         {
             var query = CreateMultiThingQuery();

@@ -53,7 +53,7 @@ namespace Microsoft.HealthVault.Clients
                         where T : IThing;
 
         /// <summary>
-        /// Creates a new collection of things.
+        /// Creates a new collection of things, and updates each item with a Key that has its thing id and version id.
         /// </summary>
         /// <param name="recordId">The health record's ID.</param>
         /// <param name="things">The collection of things to create.</param>
