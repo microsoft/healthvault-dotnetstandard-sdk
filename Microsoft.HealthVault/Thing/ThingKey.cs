@@ -115,7 +115,7 @@ namespace Microsoft.HealthVault.Thing
             get { return _versionStamp; }
             set
             {
-                if(value != Guid.Empty)
+                if (value != Guid.Empty)
                 {
                     _versionStamp = value;
                 }
@@ -147,7 +147,7 @@ namespace Microsoft.HealthVault.Thing
         /// </summary>
         ///
         /// <param name="obj">
-        /// The <see cref="ThingKey"/> to compare against
+        /// The <see cref="ThingKey"/> to compare against this.
         /// </param>
         ///
         /// <returns>

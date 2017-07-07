@@ -289,7 +289,7 @@ namespace Microsoft.HealthVault.ItemTypes
         /// Formatting:
         /// Notes may come from systems that require a line-based approach to textual display. To support
         /// this, applications should render the spaces and newlines in the note, and use a fixed-width font.
-        /// The form transform for the lab test results type shows one way to do
+        /// The form transform for the lab test results type shows one way to do this.
         /// </remarks>
         ///
         /// <exception cref="ArgumentException">
