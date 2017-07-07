@@ -363,7 +363,7 @@ namespace Microsoft.HealthVault.ItemTypes
         /// </summary>
         ///
         /// <remarks>
-        /// A goal can be defined on a weekly interval, meaning the target is intended to be achieved every week. Walking 70000 steps in a week is an example of
+        /// A goal can be defined on a weekly interval, meaning the target is intended to be achieved every week. Walking 70000 steps in a week is an example of this.
         /// If there is no information about recurrence the value should be set to <b>null</b>.
         /// </remarks>
         ///
