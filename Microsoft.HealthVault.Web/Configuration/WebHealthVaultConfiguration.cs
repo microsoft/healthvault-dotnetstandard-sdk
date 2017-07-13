@@ -8,6 +8,8 @@
 
 using System;
 using System.Collections.Generic;
+using System.Security.Cryptography.X509Certificates;
+using System.Web;
 using Microsoft.HealthVault.Configuration;
 
 namespace Microsoft.HealthVault.Web.Configuration
@@ -61,6 +63,14 @@ namespace Microsoft.HealthVault.Web.Configuration
         /// This property corresponds to the "HV_ApplicationCertificatePassword" configuration value when reading from web.config.
         /// </remarks>
         public string ApplicationCertificatePassword { get; internal set; }
+
+        /// <summary>
+        /// Gets the Certificate Store to use
+        /// </summary>
+        /// <remarks>
+        /// This property corresponds to the "HV_AppCertStore" configuration value when reading from web.config
+        /// </remarks>
+        public StoreLocation CertStore { get; internal set; }
 
         /// <summary>
         /// Gets the Certificate Subject.

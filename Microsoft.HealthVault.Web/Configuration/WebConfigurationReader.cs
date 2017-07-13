@@ -11,6 +11,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 using System.Web;
 using System.Web.Configuration;
 using Microsoft.HealthVault.Configuration;
@@ -75,6 +76,7 @@ namespace Microsoft.HealthVault.Web.Configuration
                 AllowedRedirectSites = appSettings[ConfigKeys.AllowedRedirectSites],
                 ApplicationCertificateFileName = appSettings[ConfigKeys.ApplicationCertificateFileName],
                 ApplicationCertificatePassword = appSettings[ConfigKeys.ApplicationCertificatePassword],
+                CertStore = (StoreLocation)appSettings.GetTypedValue(ConfigKeys.CertStore, (int)ConfigDefaults.CertStore),
                 CertSubject = appSettings[ConfigKeys.CertSubject],
                 CookieDomain = appSettings[ConfigKeys.CookieDomain] ?? ConfigDefaults.CookieDomain,
                 CookieEncryptionKey = GetEncryptionKey(appSettings[ConfigKeys.CookieEncryptionKey]),
