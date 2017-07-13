@@ -34,7 +34,7 @@ namespace Microsoft.HealthVault.Web.Providers
             _configuration = configuration;
             _applicationId = configuration.MasterApplicationId;
 
-            _storeLocation = StoreLocation.LocalMachine;
+            _storeLocation = configuration.CertStore;
             _certSubject = "CN=" + GetApplicationCertificateSubject();
 
             _x509Certificate2 = GetApplicationCertificate();
