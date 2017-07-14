@@ -6,7 +6,7 @@
 //
 // THE SOFTWARE IS PROVIDED *AS IS*, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-using System.Diagnostics;
+using System;
 using System.Reflection;
 using System.Text.RegularExpressions;
 using Android.OS;
@@ -50,10 +50,12 @@ namespace Microsoft.HealthVault.Client
                 androidVersion = $"{(int)Build.VERSION.SdkInt}.{Build.VERSION.PreviewSdkInt}";
             }
 
+            Version version = new AssemblyName(Assembly.GetExecutingAssembly().FullName).Version;
+
             var sdkTelemetryInformation = new SdkTelemetryInformation
             {
                 Category = HealthVaultConstants.SdkTelemetryInformationCategories.AndroidClient,
-                FileVersion = FileVersionInfo.GetVersionInfo(Assembly.GetExecutingAssembly().Location).FileVersion,
+                FileVersion = version.ToString(),
                 OsInformation = $"Android {androidVersion}"
             };
 
