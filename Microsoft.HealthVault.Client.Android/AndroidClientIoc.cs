@@ -1,4 +1,4 @@
-using System.Diagnostics;
+using System;
 using System.Reflection;
 using System.Text.RegularExpressions;
 using Android.OS;
@@ -42,10 +42,12 @@ namespace Microsoft.HealthVault.Client
                 androidVersion = $"{(int)Build.VERSION.SdkInt}.{Build.VERSION.PreviewSdkInt}";
             }
 
+            Version version = new AssemblyName(Assembly.GetExecutingAssembly().FullName).Version;
+
             var sdkTelemetryInformation = new SdkTelemetryInformation
             {
                 Category = HealthVaultConstants.SdkTelemetryInformationCategories.AndroidClient,
-                FileVersion = FileVersionInfo.GetVersionInfo(Assembly.GetExecutingAssembly().Location).FileVersion,
+                FileVersion = version.ToString(),
                 OsInformation = $"Android {androidVersion}"
             };
 
