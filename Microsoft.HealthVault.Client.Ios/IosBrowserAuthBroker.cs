@@ -7,6 +7,7 @@
 // THE SOFTWARE IS PROVIDED *AS IS*, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Foundation;
 using Microsoft.HealthVault.Client.Core;
@@ -26,6 +27,17 @@ namespace Microsoft.HealthVault.Client
         private SignInViewController _signInViewController;
         private bool _isTaskComplete;
         private string _endUrlString;
+        private readonly HashSet<string> _browserLinks = new HashSet<string>
+        {
+            "https://account.healthvault.com/help.aspx?clcid=0x409",
+            "https://healthvault.uservoice.com/forums/561754-healthvault-for-consumers?clcid=0x409&mobile=false",
+            "https://go.microsoft.com/fwlink/?LinkId=521839&clcid=0x409",
+            "https://go.microsoft.com/fwlink/?LinkID=530144&clcid=0x409",
+            "https://account.healthvault.com/help.aspx?topicid=CodeofConduct&clcid=0x409",
+            "https://msdn.microsoft.com/healthvault",
+            "https://login.live.com/gls.srf?urlID=WinLiveTermsOfUse&mkt=EN-US&vv=1600",
+            "https://login.live.com/gls.srf?urlID=MSNPrivacyStatement&mkt=EN-US&vv=1600",
+        };
 
         public async Task<Uri> AuthenticateAsync(Uri startUrl, Uri endUrl)
         {
@@ -151,6 +163,20 @@ namespace Microsoft.HealthVault.Client
         public void ContentProcessDidTerminate(WKWebView webView)
         {
             SetTaskResult(null, new HealthServiceException(ClientResources.LoginError));
+        }
+
+        [Export("webView:decidePolicyForNavigationAction:decisionHandler:")]
+        public void DecidePolicy(WKWebView webView, WKNavigationAction navigationAction, Action<WKNavigationActionPolicy> decisionHandler)
+        {
+            if (_browserLinks.Contains(navigationAction.Request.Url.AbsoluteString))
+            {
+                UIApplication.SharedApplication.OpenUrl(navigationAction.Request.Url);
+
+                decisionHandler(WKNavigationActionPolicy.Cancel);
+                return;
+            }
+
+            decisionHandler(WKNavigationActionPolicy.Allow);
         }
     }
 }
