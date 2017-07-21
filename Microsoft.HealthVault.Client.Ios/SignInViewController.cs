@@ -65,6 +65,7 @@ namespace Microsoft.HealthVault.Client
                 configuration.UserContentController = contentController;
                 _webView = new WKWebView(View.Bounds, configuration);
                 _webView.NavigationDelegate = _navigationHandler;
+                _webView.AllowsBackForwardNavigationGestures = true;
 
                 // Add the web view to the view
                 View.AddSubview(_webView);
