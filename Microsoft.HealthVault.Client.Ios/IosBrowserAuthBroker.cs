@@ -29,14 +29,17 @@ namespace Microsoft.HealthVault.Client
         private string _endUrlString;
         private readonly HashSet<string> _browserLinks = new HashSet<string>
         {
-            "https://account.healthvault.com/help.aspx?clcid=0x409",
-            "https://healthvault.uservoice.com/forums/561754-healthvault-for-consumers?clcid=0x409&mobile=false",
-            "https://go.microsoft.com/fwlink/?LinkId=521839&clcid=0x409",
-            "https://go.microsoft.com/fwlink/?LinkID=530144&clcid=0x409",
-            "https://account.healthvault.com/help.aspx?topicid=CodeofConduct&clcid=0x409",
+            "https://account.healthvault.com/help.aspx",
+            "https://account.healthvault-ppe.com/help.aspx",
+            "https://config.healthvault.com/PrivacyStatement.aspx",
+            "https://config.healthvault.com/ServiceAgreement.aspx",
+            "https://config.healthvault-ppe.com/PrivacyStatement.aspx",
+            "https://config.healthvault-ppe.com/ServiceAgreement.aspx",
+            "https://go.microsoft.com/fwlink/",
+            "https://healthvault.uservoice.com/forums/561754-healthvault-for-consumers",
+            "https://login.live.com/gls.srf",
             "https://msdn.microsoft.com/healthvault",
-            "https://login.live.com/gls.srf?urlID=WinLiveTermsOfUse&mkt=EN-US&vv=1600",
-            "https://login.live.com/gls.srf?urlID=MSNPrivacyStatement&mkt=EN-US&vv=1600",
+            "https://www.healthvault.com/",
         };
 
         public async Task<Uri> AuthenticateAsync(Uri startUrl, Uri endUrl)
@@ -168,7 +171,14 @@ namespace Microsoft.HealthVault.Client
         [Export("webView:decidePolicyForNavigationAction:decisionHandler:")]
         public void DecidePolicy(WKWebView webView, WKNavigationAction navigationAction, Action<WKNavigationActionPolicy> decisionHandler)
         {
-            if (_browserLinks.Contains(navigationAction.Request.Url.AbsoluteString))
+            NSUrlComponents compoents = new NSUrlComponents(navigationAction.Request.Url, false)
+            {
+                Query = null
+            };
+
+            if (_browserLinks.Contains(compoents.Url.AbsoluteString) 
+                || compoents.Host.Equals("privacy.microsoft.com", StringComparison.InvariantCultureIgnoreCase)
+                || compoents.Host.Equals("www.microsoft.com", StringComparison.InvariantCultureIgnoreCase))
             {
                 UIApplication.SharedApplication.OpenUrl(navigationAction.Request.Url);
 
