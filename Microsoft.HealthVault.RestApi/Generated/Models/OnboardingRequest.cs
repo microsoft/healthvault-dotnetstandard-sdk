@@ -65,7 +65,7 @@ namespace Microsoft.HealthVault.RestApi.Generated.Models
             Email = email;
             ZipCode = zipCode;
             StateProvince = stateProvince;
-            CountryRegion = countryRegion; 
+            CountryRegion = countryRegion;
             Birthday = birthday;
             Gender = gender;
             Weight = weight;
