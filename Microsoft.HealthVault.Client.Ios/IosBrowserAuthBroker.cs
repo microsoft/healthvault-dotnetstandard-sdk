@@ -171,14 +171,14 @@ namespace Microsoft.HealthVault.Client
         [Export("webView:decidePolicyForNavigationAction:decisionHandler:")]
         public void DecidePolicy(WKWebView webView, WKNavigationAction navigationAction, Action<WKNavigationActionPolicy> decisionHandler)
         {
-            NSUrlComponents compoents = new NSUrlComponents(navigationAction.Request.Url, false)
+            NSUrlComponents components = new NSUrlComponents(navigationAction.Request.Url, false)
             {
                 Query = null
             };
 
-            if (_browserLinks.Contains(compoents.Url.AbsoluteString) 
-                || compoents.Host.Equals("privacy.microsoft.com", StringComparison.InvariantCultureIgnoreCase)
-                || compoents.Host.Equals("www.microsoft.com", StringComparison.InvariantCultureIgnoreCase))
+            if (_browserLinks.Contains(components.Url.AbsoluteString) 
+                || components.Host.Equals("privacy.microsoft.com", StringComparison.InvariantCultureIgnoreCase)
+                || components.Host.Equals("www.microsoft.com", StringComparison.InvariantCultureIgnoreCase))
             {
                 UIApplication.SharedApplication.OpenUrl(navigationAction.Request.Url);
 
