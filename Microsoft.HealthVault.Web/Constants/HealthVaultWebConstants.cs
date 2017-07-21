@@ -7,6 +7,7 @@
 // THE SOFTWARE IS PROVIDED *AS IS*, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 using System;
+using System.Security.Cryptography.X509Certificates;
 
 namespace Microsoft.HealthVault.Web.Constants
 {
@@ -19,6 +20,7 @@ namespace Microsoft.HealthVault.Web.Constants
             internal const string AppId = "HV_ApplicationId";
             internal const string ApplicationCertificateFileName = "HV_ApplicationCertificateFilename";
             internal const string ApplicationCertificatePassword = "HV_ApplicationCertificatePassword";
+            internal const string CertStore = "HV_AppCertStore";
             internal const string CertSubject = "HV_AppCertSubject";
             internal const string CookieDomain = "HV_CookieDomain";
             internal const string CookieEncryptionKey = "HV_CookieEncryptionKey";
@@ -46,6 +48,7 @@ namespace Microsoft.HealthVault.Web.Constants
         {
             internal const string CookieNameSuffix = "_HV";
             internal const bool IsMra = false;
+            internal const StoreLocation CertStore = StoreLocation.LocalMachine;
             internal const string CookieDomain = "";
             internal const string CookiePath = "";
             internal static readonly TimeSpan CookieTimeoutDuration = TimeSpan.FromMinutes(20);

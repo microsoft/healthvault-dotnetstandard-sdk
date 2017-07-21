@@ -36,9 +36,9 @@ namespace Microsoft.HealthVault.Configuration
         public static readonly Uri RestUrl = new Uri("https://data.microsofthealth.net");
 
         /// <summary>
-        /// Default sleep duration in seconds.
+        /// Default sleep duration.
         /// </summary>
-        public static readonly TimeSpan RetryOnInternal500SleepDuration = TimeSpan.FromMinutes(1);
+        public static readonly TimeSpan RetryOnInternal500SleepDuration = TimeSpan.FromSeconds(1);
 
         /// <summary>
         /// Base class for the app, web and soda configurations

@@ -231,6 +231,22 @@ namespace Microsoft.HealthVault.Application
                 appInfo.MeaningfulUseSources.Add(meaningfulUseSourceNav.Value);
             }
 
+            XPathNavigator bulkExtractionSettingsNav = app.SelectSingleNode("bulk-extraction-settings");
+            if (bulkExtractionSettingsNav != null)
+            {
+                XPathNavigator isOnboardedNav = bulkExtractionSettingsNav.SelectSingleNode("is-onboarded");
+                if (isOnboardedNav != null)
+                {
+                    appInfo.IsOnboardedToBdp = isOnboardedNav.ValueAsBoolean;
+                }
+
+                XPathNavigator isPermissionRequired = bulkExtractionSettingsNav.SelectSingleNode("is-permission-required");
+                if (isPermissionRequired != null)
+                {
+                    appInfo.IsBulkExtractionPermissionRequired = isPermissionRequired.ValueAsBoolean;
+                }
+            }
+
             return appInfo;
         }
 
@@ -423,6 +439,16 @@ namespace Microsoft.HealthVault.Application
                     {
                         writer.WriteElementString("source", source);
                     }
+
+                    writer.WriteEndElement();
+                }
+
+                if (IsOnboardedToBdp.HasValue && IsBulkExtractionPermissionRequired.HasValue)
+                {
+                    writer.WriteStartElement("bulk-extraction-settings");
+
+                    writer.WriteElementString("is-onboarded", SDKHelper.XmlFromBool(IsOnboardedToBdp.Value));
+                    writer.WriteElementString("is-permission-required", SDKHelper.XmlFromBool(IsBulkExtractionPermissionRequired.Value));
 
                     writer.WriteEndElement();
                 }
@@ -850,5 +876,28 @@ namespace Microsoft.HealthVault.Application
         /// </remarks>
         ///
         public Guid? ClientServiceToken { get; private set; }
+
+        /// <summary>
+        /// Did the application successfully complete the bulk extraction onboarding process?
+        /// </summary>
+        /// 
+        /// <remarks>
+        /// If set to true, the application has been successfully onboarded for bulk extraction.
+        /// If set to false, the application has not been onboarded for bulk extraction.
+        /// If no value, we don't have any status on the app's onboarding for bulk extraction yet.
+        /// </remarks>
+        public bool? IsOnboardedToBdp { get; set; }
+
+        /// <summary>
+        /// Does the application want the user consent/permission for bulk extraction 
+        /// a required rule or is it optional for the user to choose/subscribe to?
+        /// </summary>
+        /// 
+        /// <remarks>
+        /// If set to true, the user has to opt-in for bulk extraction to use the app.
+        /// If set to false, the user has the option to opt-in or not.
+        /// If no value, then no explicit choice has been made yet (Application has not onboarded yet).
+        /// </remarks>
+        public bool? IsBulkExtractionPermissionRequired { get; set; }
     }
 }
