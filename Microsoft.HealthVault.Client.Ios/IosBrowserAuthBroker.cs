@@ -7,6 +7,7 @@
 // THE SOFTWARE IS PROVIDED *AS IS*, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Foundation;
 using Microsoft.HealthVault.Client.Core;
@@ -26,6 +27,20 @@ namespace Microsoft.HealthVault.Client
         private SignInViewController _signInViewController;
         private bool _isTaskComplete;
         private string _endUrlString;
+        private readonly HashSet<string> _browserLinks = new HashSet<string>
+        {
+            "https://account.healthvault.com/help.aspx",
+            "https://account.healthvault-ppe.com/help.aspx",
+            "https://config.healthvault.com/PrivacyStatement.aspx",
+            "https://config.healthvault.com/ServiceAgreement.aspx",
+            "https://config.healthvault-ppe.com/PrivacyStatement.aspx",
+            "https://config.healthvault-ppe.com/ServiceAgreement.aspx",
+            "https://go.microsoft.com/fwlink/",
+            "https://healthvault.uservoice.com/forums/561754-healthvault-for-consumers",
+            "https://login.live.com/gls.srf",
+            "https://msdn.microsoft.com/healthvault",
+            "https://www.healthvault.com/",
+        };
 
         public async Task<Uri> AuthenticateAsync(Uri startUrl, Uri endUrl)
         {
@@ -151,6 +166,27 @@ namespace Microsoft.HealthVault.Client
         public void ContentProcessDidTerminate(WKWebView webView)
         {
             SetTaskResult(null, new HealthServiceException(ClientResources.LoginError));
+        }
+
+        [Export("webView:decidePolicyForNavigationAction:decisionHandler:")]
+        public void DecidePolicy(WKWebView webView, WKNavigationAction navigationAction, Action<WKNavigationActionPolicy> decisionHandler)
+        {
+            NSUrlComponents components = new NSUrlComponents(navigationAction.Request.Url, false)
+            {
+                Query = null
+            };
+
+            if (_browserLinks.Contains(components.Url.AbsoluteString) 
+                || components.Host.Equals("privacy.microsoft.com", StringComparison.InvariantCultureIgnoreCase)
+                || components.Host.Equals("www.microsoft.com", StringComparison.InvariantCultureIgnoreCase))
+            {
+                UIApplication.SharedApplication.OpenUrl(navigationAction.Request.Url);
+
+                decisionHandler(WKNavigationActionPolicy.Cancel);
+                return;
+            }
+
+            decisionHandler(WKNavigationActionPolicy.Allow);
         }
     }
 }
