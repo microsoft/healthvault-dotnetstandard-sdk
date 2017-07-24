@@ -40,8 +40,8 @@ namespace Microsoft.HealthVault.RestApi.Generated.Models
         /// <param name="email">Gets or sets the user's email address</param>
         /// <param name="zipCode">Gets and sets the user zip code/postal
         /// code</param>
-        /// <param name="state">Gets and sets the user's state</param>
-        /// <param name="country">Gets and sets the user's
+        /// <param name="stateProvince">Gets and sets the user's state/province</param>
+        /// <param name="countryRegion">Gets and sets the user's
         /// country/region</param>
         /// <param name="birthday">Gets and sets the user's birthday</param>
         /// <param name="gender">Gets and sets the user gender. Possible values
@@ -54,7 +54,7 @@ namespace Microsoft.HealthVault.RestApi.Generated.Models
         /// <param name="conditions">Gets or sets the list of health conditions
         /// that will be displayed to the user during consent
         /// collection</param>
-        public OnboardingRequest(string friendlyName = default(string), string applicationPatientId = default(string), string secretQuestion = default(string), string secretAnswer = default(string), string firstName = default(string), string lastName = default(string), string email = default(string), string zipCode = default(string), string state = default(string), string country = default(string), System.DateTime? birthday = default(System.DateTime?), string gender = default(string), int? weight = default(int?), int? height = default(int?), IList<string> actionPlanTemplateIds = default(IList<string>), IList<string> conditions = default(IList<string>))
+        public OnboardingRequest(string friendlyName = default(string), string applicationPatientId = default(string), string secretQuestion = default(string), string secretAnswer = default(string), string firstName = default(string), string lastName = default(string), string email = default(string), string zipCode = default(string), string stateProvince = default(string), string countryRegion = default(string), System.DateTime? birthday = default(System.DateTime?), string gender = default(string), int? weight = default(int?), int? height = default(int?), IList<string> actionPlanTemplateIds = default(IList<string>), IList<string> conditions = default(IList<string>))
         {
             FriendlyName = friendlyName;
             ApplicationPatientId = applicationPatientId;
@@ -64,8 +64,8 @@ namespace Microsoft.HealthVault.RestApi.Generated.Models
             LastName = lastName;
             Email = email;
             ZipCode = zipCode;
-            State = state;
-            Country = country;
+            StateProvince = stateProvince;
+            CountryRegion = countryRegion;
             Birthday = birthday;
             Gender = gender;
             Weight = weight;
@@ -129,16 +129,16 @@ namespace Microsoft.HealthVault.RestApi.Generated.Models
         public string ZipCode { get; set; }
 
         /// <summary>
-        /// Gets and sets the user's state
+        /// Gets and sets the user's state/province
         /// </summary>
-        [JsonProperty(PropertyName = "state")]
-        public string State { get; set; }
+        [JsonProperty(PropertyName = "stateProvince")]
+        public string StateProvince { get; set; }
 
         /// <summary>
         /// Gets and sets the user's country/region
         /// </summary>
-        [JsonProperty(PropertyName = "country")]
-        public string Country { get; set; }
+        [JsonProperty(PropertyName = "countryRegion")]
+        public string CountryRegion { get; set; }
 
         /// <summary>
         /// Gets and sets the user's birthday
