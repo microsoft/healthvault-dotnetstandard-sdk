@@ -222,6 +222,45 @@ namespace Microsoft.HealthVault.IntegrationTest
             Assert.IsNotNull(weight.Key, "Weight was not assigned a key.");
         }
 
+        [TestMethod]
+        public async Task TestDateSerialization()
+        {
+            IHealthVaultSodaConnection connection = HealthVaultConnectionFactory.Current.GetOrCreateSodaConnection(Constants.Configuration);
+            IThingClient thingClient = connection.CreateThingClient();
+            PersonInfo personInfo = await connection.GetPersonInfoAsync();
+            HealthRecordInfo record = personInfo.SelectedRecord;
+
+            ThingQuery query = new ThingQuery(BloodGlucose.TypeId);
+            var now = DateTime.UtcNow;
+            query.CreatedDateMin = Instant.FromDateTimeUtc(now.AddDays(-5));
+            query.CreatedDateMax = Instant.FromDateTimeUtc(now.AddDays(-4));
+            query.UpdatedDateMin = Instant.FromDateTimeUtc(now.AddDays(-3));
+            query.UpdatedDateMax = Instant.FromDateTimeUtc(now.AddDays(-2));
+            query.UpdatedEndDateMin = LocalDateTime.FromDateTime(now.AddDays(-1));
+            query.UpdatedEndDateMax = LocalDateTime.FromDateTime(now);
+
+            var results = await thingClient.GetThingsAsync(record.Id, query);
+            Assert.IsNotNull(results);
+            Assert.IsNotNull(results.Query);
+            Assert.IsNotNull(results.Query.CreatedDateMin);
+            Assert.AreEqual(results.Query.CreatedDateMin.Value.ToDateTimeUtc(), now.AddDays(-5));
+
+            Assert.IsNotNull(results.Query.CreatedDateMax);
+            Assert.AreEqual(results.Query.CreatedDateMax.Value.ToDateTimeUtc(), now.AddDays(-4));
+
+            Assert.IsNotNull(results.Query.UpdatedDateMin);
+            Assert.AreEqual(results.Query.UpdatedDateMin.Value.ToDateTimeUtc(), now.AddDays(-3));
+
+            Assert.IsNotNull(results.Query.UpdatedDateMax);
+            Assert.AreEqual(results.Query.UpdatedDateMax.Value.ToDateTimeUtc(), now.AddDays(-2));
+
+            Assert.IsNotNull(results.Query.UpdatedEndDateMin);
+            Assert.AreEqual(results.Query.UpdatedEndDateMin.Value, LocalDateTime.FromDateTime(now.AddDays(-1)));
+
+            Assert.IsNotNull(results.Query.UpdatedEndDateMax);
+            Assert.AreEqual(results.Query.UpdatedEndDateMax.Value, LocalDateTime.FromDateTime(now));
+        }
+
         private static async Task DeletePreviousThings(IThingClient thingClient, HealthRecordInfo record)
         {
             var query = CreateMultiThingQuery();

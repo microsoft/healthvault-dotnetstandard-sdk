@@ -1075,35 +1075,35 @@ namespace Microsoft.HealthVault.Thing
                     writer.WriteEndElement();
                 }
 
-                if (_createdDateMin != null)
+                if (_createdDateMin != null && _createdDateMin.HasValue)
                 {
                     // <created-date-min>
                     writer.WriteStartElement("created-date-min");
-                    writer.WriteValue(CreatedDateMin);
+                    writer.WriteValue(SDKHelper.XmlFromInstant(CreatedDateMin.Value));
                     writer.WriteEndElement();
                 }
 
-                if (_createdDateMax != null)
+                if (_createdDateMax != null && _createdDateMax.HasValue)
                 {
                     // <created-date-max>
                     writer.WriteStartElement("created-date-max");
-                    writer.WriteValue(CreatedDateMax);
+                    writer.WriteValue(SDKHelper.XmlFromInstant(CreatedDateMax.Value));
                     writer.WriteEndElement();
                 }
 
-                if (_updatedDateMin != null)
+                if (_updatedDateMin != null && _updatedDateMin.HasValue)
                 {
                     // <updated-date-min>
                     writer.WriteStartElement("updated-date-min");
-                    writer.WriteValue(UpdatedDateMin);
+                    writer.WriteValue(SDKHelper.XmlFromInstant(UpdatedDateMin.Value));
                     writer.WriteEndElement();
                 }
 
-                if (_updatedDateMax != null)
+                if (_updatedDateMax != null && _updatedDateMax.HasValue)
                 {
                     // <updated-date-max>
                     writer.WriteStartElement("updated-date-max");
-                    writer.WriteValue(UpdatedDateMax);
+                    writer.WriteValue(SDKHelper.XmlFromInstant(UpdatedDateMax.Value));
                     writer.WriteEndElement();
                 }
 
@@ -1115,19 +1115,19 @@ namespace Microsoft.HealthVault.Thing
                     writer.WriteEndElement();
                 }
 
-                if (_updatedEndDateMax != null)
+                if (_updatedEndDateMax != null && _updatedDateMax.HasValue)
                 {
                     // <updated-end-date-max>
                     writer.WriteStartElement("updated-end-date-max");
-                    writer.WriteValue(UpdatedEndDateMax);
+                    writer.WriteValue(SDKHelper.XmlFromLocalDateTime(UpdatedEndDateMax.Value));
                     writer.WriteEndElement();
                 }
 
-                if (_updatedEndDateMin != null)
+                if (_updatedEndDateMin != null && _updatedEndDateMin.HasValue)
                 {
                     // <updated-end-date-min>
                     writer.WriteStartElement("updated-end-date-min");
-                    writer.WriteValue(UpdatedEndDateMin);
+                    writer.WriteValue(SDKHelper.XmlFromLocalDateTime(UpdatedEndDateMin.Value));
                     writer.WriteEndElement();
                 }
 
