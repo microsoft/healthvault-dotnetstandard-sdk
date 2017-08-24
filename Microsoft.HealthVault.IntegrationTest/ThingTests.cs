@@ -223,7 +223,7 @@ namespace Microsoft.HealthVault.IntegrationTest
         }
 
         [TestMethod]
-        public async Task TestDateSerialization()
+        public async Task UsingDatesInThingsQueryReturnProperly()
         {
             IHealthVaultSodaConnection connection = HealthVaultConnectionFactory.Current.GetOrCreateSodaConnection(Constants.Configuration);
             IThingClient thingClient = connection.CreateThingClient();
