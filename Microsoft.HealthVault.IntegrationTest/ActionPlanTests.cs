@@ -41,11 +41,11 @@ namespace Microsoft.HealthVault.IntegrationTest
             Guid objectiveId = Guid.NewGuid();
             await restClient.ActionPlans.CreateAsync(CreateWeightActionPlan(objectiveId));
 
-            ActionPlansResponseActionPlanInstanceV2 plans = await restClient.ActionPlans.GetAsync();
+            ActionPlansResponseActionPlanInstance plans = await restClient.ActionPlans.GetAsync();
             Assert.AreEqual(1, plans.Plans.Count);
 
-            ActionPlanInstanceV2 planInstance = plans.Plans[0];
-            Assert.AreEqual(objectiveId.ToString(), planInstance.Objectives[0].Id);
+            ActionPlanInstance planInstance = plans.Plans[0];
+            Assert.AreEqual(objectiveId, planInstance.Objectives[0].Id);
             Assert.AreEqual(ObjectiveName, planInstance.Objectives[0].Name);
             Assert.AreEqual(PlanName, planInstance.Name);
         }
@@ -55,16 +55,19 @@ namespace Microsoft.HealthVault.IntegrationTest
             var plans = await api.ActionPlans.GetAsync();
             foreach (var plan in plans.Plans)
             {
-                await api.ActionPlans.DeleteAsync(plan.Id);
+                if (plan.Id != null)
+                {
+                    await api.ActionPlans.DeleteWithHttpMessagesAsync(plan.Id.Value);
+                }
             }
         }
 
-        private static ActionPlanV2 CreateWeightActionPlan(Guid objectiveId)
+        private static ActionPlan CreateWeightActionPlan(Guid objectiveId)
         {
-            var plan = new ActionPlanV2();
+            var plan = new ActionPlan();
             var objective = new Objective
             {
-                Id = objectiveId.ToString(),
+                Id = objectiveId,
                 Name = ObjectiveName,
                 Description = "Manage your weight better by measuring daily. ",
                 State = "Active",
@@ -83,7 +86,7 @@ namespace Microsoft.HealthVault.IntegrationTest
             plan.ThumbnailImageUrl = "https://img-prod-cms-rt-microsoft-com.akamaized.net/cms/api/am/imageFileData/RW6fN6?ver=6479";
             plan.Category = "Health";
             plan.Objectives = new Collection<Objective> { objective };
-            plan.AssociatedTasks = new Collection<ActionPlanTaskV2> { task };
+            plan.AssociatedTasks = new Collection<ActionPlanTask> { task };
 
             return plan;
         }
@@ -91,9 +94,9 @@ namespace Microsoft.HealthVault.IntegrationTest
         /// <summary>
         /// Creates a sample frequency based task associated with the specified objective.
         /// </summary>
-        private static ActionPlanTaskV2 CreateDailyWeightMeasurementActionPlanTask(string objectiveId, Guid planId = default(Guid))
+        private static ActionPlanTask CreateDailyWeightMeasurementActionPlanTask(Guid objectiveId, Guid planId = default(Guid))
         {
-            var task = new ActionPlanTaskV2
+            var task = new ActionPlanTask
             {
                 Name = "Measure your weight",
                 ShortDescription = "Measure your weight daily",
@@ -102,8 +105,8 @@ namespace Microsoft.HealthVault.IntegrationTest
                 ThumbnailImageUrl = "https://img-prod-cms-rt-microsoft-com.akamaized.net/cms/api/am/imageFileData/RW6fN6?ver=6479",
                 TaskType = "Other",
                 SignupName = "Measure your weight",
-                AssociatedObjectiveIds = new Collection<string> { objectiveId },
-                AssociatedPlanId = planId.ToString(), // Only needs to be set if adding as task after the plan
+                AssociatedObjectiveIds = new Collection<Guid?> { objectiveId },
+                AssociatedPlanId = planId, // Only needs to be set if adding as task after the plan
                 TrackingPolicy = new ActionPlanTrackingPolicy
                 {
                     IsAutoTrackable = true,
@@ -120,15 +123,15 @@ namespace Microsoft.HealthVault.IntegrationTest
                     }
                 },
                 CompletionType = "Frequency",
-                Schedules = new List<ScheduleV2>
+                Schedules = new List<Schedule>
                 {
-                    new ScheduleV2
+                    new Schedule
                     {
                         ReminderState = "Off",
                         ScheduledDays = new Collection<string> { "Everyday" }
                     }  
                 },
-                FrequencyTaskCompletionMetrics = new ActionPlanFrequencyTaskCompletionMetricsV2()
+                FrequencyTaskCompletionMetrics = new ActionPlanFrequencyTaskCompletionMetrics()
                 {
                     OccurrenceCount = 1,
                     WindowType = "Daily"

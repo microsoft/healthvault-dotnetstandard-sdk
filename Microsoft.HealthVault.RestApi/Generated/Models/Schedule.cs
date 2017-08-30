@@ -7,6 +7,7 @@ namespace Microsoft.HealthVault.RestApi.Generated.Models
     using Microsoft.HealthVault;
     using Microsoft.HealthVault.RestApi;
     using Microsoft.HealthVault.RestApi.Generated;
+    using Microsoft.Rest;
     using Newtonsoft.Json;
     using System.Collections;
     using System.Collections.Generic;
@@ -15,18 +16,18 @@ namespace Microsoft.HealthVault.RestApi.Generated.Models
     /// <summary>
     /// A schedule for an action plan task
     /// </summary>
-    public partial class ScheduleV2
+    public partial class Schedule
     {
         /// <summary>
-        /// Initializes a new instance of the ScheduleV2 class.
+        /// Initializes a new instance of the Schedule class.
         /// </summary>
-        public ScheduleV2()
+        public Schedule()
         {
           CustomInit();
         }
 
         /// <summary>
-        /// Initializes a new instance of the ScheduleV2 class.
+        /// Initializes a new instance of the Schedule class.
         /// </summary>
         /// <param name="reminderState">The reminder state of the task.
         /// Possible values include: 'Unknown', 'Off', 'OnTime',
@@ -39,7 +40,7 @@ namespace Microsoft.HealthVault.RestApi.Generated.Models
         /// 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday' }</param>
         /// <param name="scheduledTime">The time at which this task is
         /// scheduled</param>
-        public ScheduleV2(string reminderState = default(string), IList<string> scheduledDays = default(IList<string>), Time scheduledTime = default(Time))
+        public Schedule(string reminderState, IList<string> scheduledDays = default(IList<string>), Time scheduledTime = default(Time))
         {
             ReminderState = reminderState;
             ScheduledDays = scheduledDays;
@@ -75,5 +76,18 @@ namespace Microsoft.HealthVault.RestApi.Generated.Models
         [JsonProperty(PropertyName = "scheduledTime")]
         public Time ScheduledTime { get; set; }
 
+        /// <summary>
+        /// Validate the object.
+        /// </summary>
+        /// <exception cref="ValidationException">
+        /// Thrown if validation fails
+        /// </exception>
+        public virtual void Validate()
+        {
+            if (ReminderState == null)
+            {
+                throw new ValidationException(ValidationRules.CannotBeNull, "ReminderState");
+            }
+        }
     }
 }
