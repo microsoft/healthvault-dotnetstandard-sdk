@@ -31,11 +31,9 @@ namespace Microsoft.HealthVault.RestApi.Generated.Models
         /// ActionPlanTasksResponseActionPlanTaskInstance class.
         /// </summary>
         /// <param name="tasks">The collection of tasks</param>
-        /// <param name="nextLink">The URI for the next page of data</param>
-        public ActionPlanTasksResponseActionPlanTaskInstance(IList<ActionPlanTaskInstance> tasks = default(IList<ActionPlanTaskInstance>), string nextLink = default(string))
+        public ActionPlanTasksResponseActionPlanTaskInstance(IList<ActionPlanTaskInstance> tasks = default(IList<ActionPlanTaskInstance>))
         {
             Tasks = tasks;
-            NextLink = nextLink;
             CustomInit();
         }
 
@@ -49,12 +47,6 @@ namespace Microsoft.HealthVault.RestApi.Generated.Models
         /// </summary>
         [JsonProperty(PropertyName = "tasks")]
         public IList<ActionPlanTaskInstance> Tasks { get; set; }
-
-        /// <summary>
-        /// Gets or sets the URI for the next page of data
-        /// </summary>
-        [JsonProperty(PropertyName = "nextLink")]
-        public string NextLink { get; set; }
 
     }
 }

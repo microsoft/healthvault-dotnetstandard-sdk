@@ -35,7 +35,7 @@ namespace Microsoft.HealthVault.RestApi.Generated.Models
         /// outcome</param>
         /// <param name="associatedTasks">The Tasks associated with this
         /// plan</param>
-        public ObjectiveAdherenceSummary(string id = default(string), string name = default(string), string outcomeName = default(string), IList<ActionPlanTaskAdherenceSummary> associatedTasks = default(IList<ActionPlanTaskAdherenceSummary>))
+        public ObjectiveAdherenceSummary(System.Guid? id = default(System.Guid?), string name = default(string), string outcomeName = default(string), IList<ActionPlanTaskAdherenceSummary> associatedTasks = default(IList<ActionPlanTaskAdherenceSummary>))
         {
             Id = id;
             Name = name;
@@ -53,7 +53,7 @@ namespace Microsoft.HealthVault.RestApi.Generated.Models
         /// Gets or sets the unique identifier of the instance of the objective
         /// </summary>
         [JsonProperty(PropertyName = "id")]
-        public string Id { get; set; }
+        public System.Guid? Id { get; set; }
 
         /// <summary>
         /// Gets or sets the name of the objective
