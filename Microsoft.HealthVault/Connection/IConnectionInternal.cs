@@ -13,7 +13,7 @@ using Microsoft.HealthVault.Transport;
 
 namespace Microsoft.HealthVault.Connection
 {
-    internal interface IConnectionInternal : IHealthVaultConnection
+    public interface IConnectionInternal : IHealthVaultConnection
     {
         /// <summary>
         /// The HealthVault web-service instance.

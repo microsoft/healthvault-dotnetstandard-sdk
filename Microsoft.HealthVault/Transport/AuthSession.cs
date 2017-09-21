@@ -8,7 +8,7 @@
 
 namespace Microsoft.HealthVault.Transport
 {
-    internal class AuthSession
+    public class AuthSession
     {
         public string AuthToken { get; set; }
 

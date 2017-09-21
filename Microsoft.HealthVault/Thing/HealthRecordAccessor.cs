@@ -34,7 +34,7 @@ namespace Microsoft.HealthVault.Thing
     /// she granted him access.
     /// </remarks>
     ///
-    internal class HealthRecordAccessor
+    public class HealthRecordAccessor
     {
         /// <summary>
         /// Creates an instance of a HealthRecordAccessor object using

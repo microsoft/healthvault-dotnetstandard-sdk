@@ -10,7 +10,7 @@ using System;
 
 namespace Microsoft.HealthVault.Transport
 {
-    internal class OfflinePersonInfo
+    public class OfflinePersonInfo
     {
         public Guid OfflinePersonId { get; set; }
     }

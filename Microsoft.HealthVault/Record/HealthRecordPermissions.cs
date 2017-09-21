@@ -16,7 +16,7 @@ namespace Microsoft.HealthVault.Record
     /// authenticated person has for the record when using the current application.
     /// </summary>
     ///
-    internal class HealthRecordPermissions
+    public class HealthRecordPermissions
     {
         /// <summary>
         /// Constructor for HealthRecordPermissions.
