@@ -27,9 +27,9 @@ namespace Microsoft.HealthVault.RestApi.Generated
             /// <param name='objectiveId'>
             /// The instance of the objective to delete.
             /// </param>
-            public static object Delete(this IActionPlanObjectives operations, string actionPlanId, string objectiveId)
+            public static void Delete(this IActionPlanObjectives operations, System.Guid actionPlanId, System.Guid objectiveId)
             {
-                return operations.DeleteAsync(actionPlanId, objectiveId).GetAwaiter().GetResult();
+                operations.DeleteAsync(actionPlanId, objectiveId).GetAwaiter().GetResult();
             }
 
             /// <summary>
@@ -47,12 +47,9 @@ namespace Microsoft.HealthVault.RestApi.Generated
             /// <param name='cancellationToken'>
             /// The cancellation token.
             /// </param>
-            public static async Task<object> DeleteAsync(this IActionPlanObjectives operations, string actionPlanId, string objectiveId, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken))
+            public static async Task DeleteAsync(this IActionPlanObjectives operations, System.Guid actionPlanId, System.Guid objectiveId, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken))
             {
-                using (var _result = await operations.DeleteWithHttpMessagesAsync(actionPlanId, objectiveId, null, cancellationToken).ConfigureAwait(false))
-                {
-                    return _result.Body;
-                }
+                (await operations.DeleteWithHttpMessagesAsync(actionPlanId, objectiveId, null, cancellationToken).ConfigureAwait(false)).Dispose();
             }
 
     }

@@ -41,7 +41,7 @@ namespace Microsoft.HealthVault.RestApi.Generated.Models
         /// requested, whichever is earlier.</param>
         /// <param name="weeklyAdherence">A list of weekly adherence
         /// summaries</param>
-        public ActionPlanTaskAdherenceSummary(string id = default(string), string name = default(string), string windowType = default(string), System.DateTime? startDate = default(System.DateTime?), System.DateTime? endDate = default(System.DateTime?), IList<WeeklyAdherenceSummary> weeklyAdherence = default(IList<WeeklyAdherenceSummary>))
+        public ActionPlanTaskAdherenceSummary(System.Guid? id = default(System.Guid?), string name = default(string), string windowType = default(string), System.DateTime? startDate = default(System.DateTime?), System.DateTime? endDate = default(System.DateTime?), IList<WeeklyAdherenceSummary> weeklyAdherence = default(IList<WeeklyAdherenceSummary>))
         {
             Id = id;
             Name = name;
@@ -61,7 +61,7 @@ namespace Microsoft.HealthVault.RestApi.Generated.Models
         /// Gets or sets the Id of the task
         /// </summary>
         [JsonProperty(PropertyName = "id")]
-        public string Id { get; set; }
+        public System.Guid? Id { get; set; }
 
         /// <summary>
         /// Gets or sets the name of the task

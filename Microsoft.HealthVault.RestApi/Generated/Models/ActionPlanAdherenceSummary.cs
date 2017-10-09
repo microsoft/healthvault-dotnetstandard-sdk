@@ -36,7 +36,7 @@ namespace Microsoft.HealthVault.RestApi.Generated.Models
         /// summary.</param>
         /// <param name="objectives">The Collection of objectives for the
         /// plan</param>
-        public ActionPlanAdherenceSummary(string id = default(string), string name = default(string), System.DateTime? startDate = default(System.DateTime?), System.DateTime? endDate = default(System.DateTime?), IList<ObjectiveAdherenceSummary> objectives = default(IList<ObjectiveAdherenceSummary>))
+        public ActionPlanAdherenceSummary(System.Guid? id = default(System.Guid?), string name = default(string), System.DateTime? startDate = default(System.DateTime?), System.DateTime? endDate = default(System.DateTime?), IList<ObjectiveAdherenceSummary> objectives = default(IList<ObjectiveAdherenceSummary>))
         {
             Id = id;
             Name = name;
@@ -55,7 +55,7 @@ namespace Microsoft.HealthVault.RestApi.Generated.Models
         /// Gets or sets the ID of the plan
         /// </summary>
         [JsonProperty(PropertyName = "id")]
-        public string Id { get; set; }
+        public System.Guid? Id { get; set; }
 
         /// <summary>
         /// Gets or sets the name of the plan

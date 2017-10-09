@@ -16,6 +16,71 @@ namespace Microsoft.HealthVault.RestApi.Generated
     public static partial class GoalRecommendationsExtensions
     {
             /// <summary>
+            /// Get an instance of a specific goal recommendation
+            /// </summary>
+            /// <param name='operations'>
+            /// The operations group for this extension method.
+            /// </param>
+            /// <param name='goalRecommendationId'>
+            /// The goal recommendation identifier.
+            /// </param>
+            public static GoalRecommendationInstance GetById(this IGoalRecommendations operations, string goalRecommendationId)
+            {
+                return operations.GetByIdAsync(goalRecommendationId).GetAwaiter().GetResult();
+            }
+
+            /// <summary>
+            /// Get an instance of a specific goal recommendation
+            /// </summary>
+            /// <param name='operations'>
+            /// The operations group for this extension method.
+            /// </param>
+            /// <param name='goalRecommendationId'>
+            /// The goal recommendation identifier.
+            /// </param>
+            /// <param name='cancellationToken'>
+            /// The cancellation token.
+            /// </param>
+            public static async Task<GoalRecommendationInstance> GetByIdAsync(this IGoalRecommendations operations, string goalRecommendationId, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken))
+            {
+                using (var _result = await operations.GetByIdWithHttpMessagesAsync(goalRecommendationId, null, cancellationToken).ConfigureAwait(false))
+                {
+                    return _result.Body;
+                }
+            }
+
+            /// <summary>
+            /// Delete a goal recommendation instance
+            /// </summary>
+            /// <param name='operations'>
+            /// The operations group for this extension method.
+            /// </param>
+            /// <param name='goalRecommendationId'>
+            /// The identifier of the goal recommendation to delete.
+            /// </param>
+            public static void Delete(this IGoalRecommendations operations, string goalRecommendationId)
+            {
+                operations.DeleteAsync(goalRecommendationId).GetAwaiter().GetResult();
+            }
+
+            /// <summary>
+            /// Delete a goal recommendation instance
+            /// </summary>
+            /// <param name='operations'>
+            /// The operations group for this extension method.
+            /// </param>
+            /// <param name='goalRecommendationId'>
+            /// The identifier of the goal recommendation to delete.
+            /// </param>
+            /// <param name='cancellationToken'>
+            /// The cancellation token.
+            /// </param>
+            public static async Task DeleteAsync(this IGoalRecommendations operations, string goalRecommendationId, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken))
+            {
+                (await operations.DeleteWithHttpMessagesAsync(goalRecommendationId, null, cancellationToken).ConfigureAwait(false)).Dispose();
+            }
+
+            /// <summary>
             /// Get a collection of all goal recommendations
             /// </summary>
             /// <param name='operations'>
@@ -64,7 +129,7 @@ namespace Microsoft.HealthVault.RestApi.Generated
             /// <param name='goalRecommendation'>
             /// The instance of the goal recommendation to create.
             /// </param>
-            public static object Create(this IGoalRecommendations operations, GoalRecommendation goalRecommendation)
+            public static GoalRecommendationInstance Create(this IGoalRecommendations operations, GoalRecommendation goalRecommendation)
             {
                 return operations.CreateAsync(goalRecommendation).GetAwaiter().GetResult();
             }
@@ -81,7 +146,7 @@ namespace Microsoft.HealthVault.RestApi.Generated
             /// <param name='cancellationToken'>
             /// The cancellation token.
             /// </param>
-            public static async Task<object> CreateAsync(this IGoalRecommendations operations, GoalRecommendation goalRecommendation, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken))
+            public static async Task<GoalRecommendationInstance> CreateAsync(this IGoalRecommendations operations, GoalRecommendation goalRecommendation, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken))
             {
                 using (var _result = await operations.CreateWithHttpMessagesAsync(goalRecommendation, null, cancellationToken).ConfigureAwait(false))
                 {
@@ -90,74 +155,6 @@ namespace Microsoft.HealthVault.RestApi.Generated
             }
 
             /// <summary>
-            /// Get an instance of a specific goal recommendation
-            /// </summary>
-            /// <param name='operations'>
-            /// The operations group for this extension method.
-            /// </param>
-            /// <param name='goalRecommendationId'>
-            /// The goal recommendation identifier.
-            /// </param>
-            public static GoalRecommendationInstance GetById(this IGoalRecommendations operations, string goalRecommendationId)
-            {
-                return operations.GetByIdAsync(goalRecommendationId).GetAwaiter().GetResult();
-            }
-
-            /// <summary>
-            /// Get an instance of a specific goal recommendation
-            /// </summary>
-            /// <param name='operations'>
-            /// The operations group for this extension method.
-            /// </param>
-            /// <param name='goalRecommendationId'>
-            /// The goal recommendation identifier.
-            /// </param>
-            /// <param name='cancellationToken'>
-            /// The cancellation token.
-            /// </param>
-            public static async Task<GoalRecommendationInstance> GetByIdAsync(this IGoalRecommendations operations, string goalRecommendationId, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken))
-            {
-                using (var _result = await operations.GetByIdWithHttpMessagesAsync(goalRecommendationId, null, cancellationToken).ConfigureAwait(false))
-                {
-                    return _result.Body;
-                }
-            }
-
-            /// <summary>
-            /// Delete a goal recommendation instance
-            /// </summary>
-            /// <param name='operations'>
-            /// The operations group for this extension method.
-            /// </param>
-            /// <param name='goalRecommendationId'>
-            /// The identifier of the goal recommendation to delete.
-            /// </param>
-            public static object Delete(this IGoalRecommendations operations, string goalRecommendationId)
-            {
-                return operations.DeleteAsync(goalRecommendationId).GetAwaiter().GetResult();
-            }
-
-            /// <summary>
-            /// Delete a goal recommendation instance
-            /// </summary>
-            /// <param name='operations'>
-            /// The operations group for this extension method.
-            /// </param>
-            /// <param name='goalRecommendationId'>
-            /// The identifier of the goal recommendation to delete.
-            /// </param>
-            /// <param name='cancellationToken'>
-            /// The cancellation token.
-            /// </param>
-            public static async Task<object> DeleteAsync(this IGoalRecommendations operations, string goalRecommendationId, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken))
-            {
-                using (var _result = await operations.DeleteWithHttpMessagesAsync(goalRecommendationId, null, cancellationToken).ConfigureAwait(false))
-                {
-                    return _result.Body;
-                }
-            }
-
-            /// <summary>
             /// Updates the goal recommendation to acknowledged state
             /// </summary>
             /// <param name='operations'>
@@ -166,9 +163,9 @@ namespace Microsoft.HealthVault.RestApi.Generated
             /// <param name='goalRecommendationId'>
             /// The identifier of the goal recommendation to acknowledge.
             /// </param>
-            public static object Acknowledge(this IGoalRecommendations operations, string goalRecommendationId)
+            public static void Acknowledge(this IGoalRecommendations operations, string goalRecommendationId)
             {
-                return operations.AcknowledgeAsync(goalRecommendationId).GetAwaiter().GetResult();
+                operations.AcknowledgeAsync(goalRecommendationId).GetAwaiter().GetResult();
             }
 
             /// <summary>
@@ -183,12 +180,9 @@ namespace Microsoft.HealthVault.RestApi.Generated
             /// <param name='cancellationToken'>
             /// The cancellation token.
             /// </param>
-            public static async Task<object> AcknowledgeAsync(this IGoalRecommendations operations, string goalRecommendationId, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken))
+            public static async Task AcknowledgeAsync(this IGoalRecommendations operations, string goalRecommendationId, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken))
             {
-                using (var _result = await operations.AcknowledgeWithHttpMessagesAsync(goalRecommendationId, null, cancellationToken).ConfigureAwait(false))
-                {
-                    return _result.Body;
-                }
+                (await operations.AcknowledgeWithHttpMessagesAsync(goalRecommendationId, null, cancellationToken).ConfigureAwait(false)).Dispose();
             }
 
     }
