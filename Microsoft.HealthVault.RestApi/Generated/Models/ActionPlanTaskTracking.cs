@@ -53,7 +53,7 @@ namespace Microsoft.HealthVault.RestApi.Generated.Models
         /// <param name="feedback">Gets or sets the tracking feedback</param>
         /// <param name="evidence">Gets or sets the evidence of the task
         /// tracking</param>
-        public ActionPlanTaskTracking(string id = default(string), string trackingType = default(string), int? timeZoneOffset = default(int?), System.DateTime? trackingDateTime = default(System.DateTime?), System.DateTime? creationDateTime = default(System.DateTime?), string trackingStatus = default(string), System.DateTime? occurrenceStart = default(System.DateTime?), System.DateTime? occurrenceEnd = default(System.DateTime?), System.DateTime? completionStart = default(System.DateTime?), System.DateTime? completionEnd = default(System.DateTime?), string taskId = default(string), string feedback = default(string), ActionPlanTaskTrackingEvidence evidence = default(ActionPlanTaskTrackingEvidence))
+        public ActionPlanTaskTracking(string id = default(string), string trackingType = default(string), int? timeZoneOffset = default(int?), System.DateTime? trackingDateTime = default(System.DateTime?), System.DateTime? creationDateTime = default(System.DateTime?), string trackingStatus = default(string), System.DateTime? occurrenceStart = default(System.DateTime?), System.DateTime? occurrenceEnd = default(System.DateTime?), System.DateTime? completionStart = default(System.DateTime?), System.DateTime? completionEnd = default(System.DateTime?), System.Guid? taskId = default(System.Guid?), string feedback = default(string), ActionPlanTaskTrackingEvidence evidence = default(ActionPlanTaskTrackingEvidence))
         {
             Id = id;
             TrackingType = trackingType;
@@ -145,7 +145,7 @@ namespace Microsoft.HealthVault.RestApi.Generated.Models
         /// Gets or sets task Id
         /// </summary>
         [JsonProperty(PropertyName = "taskId")]
-        public string TaskId { get; set; }
+        public System.Guid? TaskId { get; set; }
 
         /// <summary>
         /// Gets or sets the tracking feedback
