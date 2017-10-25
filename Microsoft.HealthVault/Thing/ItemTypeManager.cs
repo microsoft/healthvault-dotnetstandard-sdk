@@ -30,7 +30,7 @@ namespace Microsoft.HealthVault.Thing
     /// to deserialize it.
     /// </summary>
     ///
-    public static class ItemTypeManager
+    internal static class ItemTypeManager
     {
         /// <summary>
         /// Registers the default type handlers.

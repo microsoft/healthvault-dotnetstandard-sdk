@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using System.Xml;
 using Microsoft.HealthVault.ItemTypes;
 
@@ -26,7 +22,7 @@ namespace SandboxUwp
             writer.WriteStartElement("app-specific");
             {
                 writer.WriteStartElement("format-appid");
-                writer.WriteValue(Settings.HVAppID);
+                writer.WriteValue("custom-data-type");
                 writer.WriteEndElement();
 
                 writer.WriteStartElement("format-tag");

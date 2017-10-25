@@ -20,7 +20,7 @@ namespace Microsoft.HealthVault.Thing
     /// <inheritdoc cref="IThingTypeRegistrar"/>
     /// </summary>
     /// <remarks>This will be a singleton in the application</remarks>
-    public class ThingTypeRegistrar : IThingTypeRegistrar
+    internal class ThingTypeRegistrar : IThingTypeRegistrar
     {
         private readonly object _appSpecificHandlerLock = new object();
         private readonly object _extensionHandlerLock = new object();

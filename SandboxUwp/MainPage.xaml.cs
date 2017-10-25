@@ -10,9 +10,9 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Xml.Linq;
 using Microsoft.HealthVault.Client;
 using Microsoft.HealthVault.Clients;
-using Microsoft.HealthVault.Clients.Deserializers;
 using Microsoft.HealthVault.Configuration;
 using Microsoft.HealthVault.ItemTypes;
 using Microsoft.HealthVault.Person;
@@ -22,7 +22,6 @@ using Microsoft.HealthVault.Vocabulary;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using NodaTime;
-using System.Xml.Linq;
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x409
 
@@ -36,10 +35,9 @@ namespace SandboxUwp
         private IHealthVaultSodaConnection _connection;
         private IClock _clock;
         private IDateTimeZoneProvider _dateTimeZoneProvider;
-        private IThingTypeRegistrar _thingTypeRegistrar;
-        private bool _isRegistered;
-        private ThingDeserializer _thingDeserializer;
-        private Guid _id;
+
+        private const string AppId = "d6318dff-5352-4a10-a140-6c82c6536a3b";
+        private const string CustomDataTypeSubtypeTag = "custom-data-type";
 
         public MainPage()
         {
@@ -52,12 +50,18 @@ namespace SandboxUwp
         private async void Connect_OnClick(object sender, RoutedEventArgs e)
         {
             OutputBlock.Text = "Connecting...";
-            _id = Guid.Parse("d6318dff-5352-4a10-a140-6c82c6536a3b");
+
             var configuration = new HealthVaultConfiguration
             {
-                MasterApplicationId = _id
+                MasterApplicationId = Guid.Parse(AppId)
             };
             _connection = HealthVaultConnectionFactory.Current.GetOrCreateSodaConnection(configuration);
+
+            HealthVaultConnectionFactory.ThingTypeRegistrar.RegisterApplicationSpecificHandler(
+                applicationId: AppId,
+                subtypeTag: CustomDataTypeSubtypeTag,
+                applicationSpecificHandlerClass: typeof(CustomDataType));
+
             await _connection.AuthenticateAsync();
 
             OutputBlock.Text = "Connected.";
@@ -90,7 +94,7 @@ namespace SandboxUwp
             LocalDateTime nowLocal = _clock.GetCurrentInstant().InZone(_dateTimeZoneProvider.GetSystemDefault()).LocalDateTime;
 
             await thingClient.CreateNewThingsAsync(
-                recordInfo.Id,
+                recordInfo.Id, 
                 new List<BloodPressure>
                 {
                     new BloodPressure(new HealthServiceDateTime(nowLocal), 117, 70)
@@ -131,7 +135,7 @@ namespace SandboxUwp
             LocalDateTime nowLocal = _clock.GetCurrentInstant().InZone(_dateTimeZoneProvider.GetSystemDefault()).LocalDateTime;
 
             await thingClient.CreateNewThingsAsync(
-                recordInfo.Id,
+                recordInfo.Id, 
                 new List<Height>
                 {
                     new Height(new HealthServiceDateTime(nowLocal), new Length(randHeight))
@@ -179,12 +183,6 @@ namespace SandboxUwp
             }
         }
 
-        private async void DeleteConnectionInfo_OnClick(object sender, RoutedEventArgs e)
-        {
-            await _connection.DeauthorizeApplicationAsync();
-            OutputBlock.Text = "Deleted connection information.";
-        }
-
         // Get custom data from HealthVault
         private async void Get_CustomData_OnClick(object sender, RoutedEventArgs e)
         {
@@ -200,21 +198,23 @@ namespace SandboxUwp
             }
             else
             {
-                List<CustomDataType> CustomDataTypes = new List<CustomDataType>();
+                List<CustomDataType> customDataTypes = new List<CustomDataType>();
 
-                foreach (ApplicationSpecific CustomDataType in healthData)
+                foreach (ApplicationSpecific customDataType in healthData)
                 {
-                    CustomDataType customData = new CustomDataType();
-                    customData.Values = new List<double>();
+                    CustomDataType customData = new CustomDataType
+                    {
+                        Values = new List<double>()
+                    };
 
-                    var appSpecificXml = CustomDataType?.ApplicationSpecificXml;
+                    var appSpecificXml = customDataType?.ApplicationSpecificXml;
                     if (appSpecificXml.Count <= 0)
                     {
                         continue;
                     }
                     XDocument doc = XDocument.Parse(appSpecificXml[0].CreateNavigator()?.OuterXml);
 
-                    foreach (XElement element in doc.Descendants("CustomDataType"))
+                    foreach (XElement element in doc.Descendants(CustomDataTypeSubtypeTag))
                     {
                         customData.StartTime = long.Parse(element.Attribute("StartTime").Value);
                         customData.EndTime = long.Parse(element.Attribute("EndTime").Value);
@@ -230,7 +230,7 @@ namespace SandboxUwp
                             double pressure = double.Parse(entry);
                             customData.Values.Add(pressure);
                         }
-                        CustomDataTypes.Add(customData);
+                        customDataTypes.Add(customData);
                     }
 
                 }
@@ -245,13 +245,6 @@ namespace SandboxUwp
             HealthRecordInfo recordInfo = personInfo.SelectedRecord;
             IThingClient thingClient = _connection.CreateThingClient();
 
-            if (!_isRegistered)
-            {
-                RegisterCustomType();
-            }
-
-            LocalDateTime nowLocal = _clock.GetCurrentInstant().InZone(_dateTimeZoneProvider.GetSystemDefault()).LocalDateTime;
-
             await thingClient.CreateNewThingsAsync(
                 recordInfo.Id,
                 new List<CustomDataType>
@@ -260,21 +253,19 @@ namespace SandboxUwp
                     {
                         StartTime = DateTime.Now.Ticks,
                         EndTime = DateTime.Now.Ticks + 1200,
-                        Values = new List<double>(){ 1.8, 2.5, 2.6, 3.7 },
-                        ApplicationId = Settings.HVAppID,
-                        SubtypeTag = "custom-data-type",
+                        Values = new List<double> { 1.8, 2.5, 2.6, 3.7 },
+                        ApplicationId = AppId,
+                        SubtypeTag = CustomDataTypeSubtypeTag,
                         Description = "CustomDataType"
                     }
                 });
             OutputBlock.Text = "Created custom data type.";
         }
 
-        private void RegisterCustomType()
+        private async void DeleteConnectionInfo_OnClick(object sender, RoutedEventArgs e)
         {
-            _thingTypeRegistrar = new ThingTypeRegistrar();
-            _thingTypeRegistrar.RegisterApplicationSpecificHandler(Settings.HVAppID, "custom-data-type", typeof(CustomDataType));
-            _thingDeserializer = new ThingDeserializer(_connection, _thingTypeRegistrar);
-            _isRegistered = true;
+            await _connection.DeauthorizeApplicationAsync();
+            OutputBlock.Text = "Deleted connection information.";
         }
     }
 }

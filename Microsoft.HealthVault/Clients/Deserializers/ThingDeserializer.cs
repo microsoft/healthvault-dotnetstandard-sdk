@@ -19,7 +19,7 @@ using Microsoft.HealthVault.Transport;
 
 namespace Microsoft.HealthVault.Clients.Deserializers
 {
-    public class ThingDeserializer : IThingDeserializer
+    internal class ThingDeserializer : IThingDeserializer
     {
         // TypeId of ApplicationSpecific thing type. Used to determine for deserialization purposes if a 
         // custom thing type will be used to deserialize the response xml.
