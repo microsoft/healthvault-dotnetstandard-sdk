@@ -7,15 +7,17 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
 
-    <StackPanel Orientation="Vertical" Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
-        <Button Name="ConnectButton" Click="Connect_OnClick">Connect</Button>
-        <Button Name="GetBP" Click="Get_BP_OnClick">Get BP</Button>
-        <Button Name="SetBP" Click="SetBP_OnClick">Set BP</Button>
-        <Button Name="GetHeight" Click="Get_Height_OnClick">Get Height</Button>
-        <Button Name="SetHeight" Click="Set_Height_OnClick">Set Height</Button>
-        <Button Name="GetUserImage" Click="GetUserImage_OnClick">Get User Image</Button>
-        <Button Name="GetVocab" Click="GetVocab_OnClick">Get Vocab</Button>
-        <Button Name="DeleteConnectionInfo" Click="DeleteConnectionInfo_OnClick">Delete connection info</Button>
-        <TextBlock Name="OutputBlock"></TextBlock>
+    <StackPanel Orientation="Vertical" VerticalAlignment="Center" Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+        <Button Name="ConnectButton" Click="Connect_OnClick" HorizontalAlignment="Center" Margin="10,10,10,10">Connect</Button>
+        <Button Name="GetBP" Click="Get_BP_OnClick" HorizontalAlignment="Center" Margin="10,10,10,10">Get BP</Button>
+        <Button Name="SetBP" Click="SetBP_OnClick" HorizontalAlignment="Center" Margin="10,10,10,10">Set BP</Button>
+        <Button Name="GetHeight" Click="Get_Height_OnClick" HorizontalAlignment="Center" Margin="10,10,10,10">Get Height</Button>
+        <Button Name="SetHeight" Click="Set_Height_OnClick" HorizontalAlignment="Center" Margin="10,10,10,10">Set Height</Button>
+        <Button Name="GetCustomDataTypeData" Click="Get_CustomData_OnClick" HorizontalAlignment="Center" Margin="10,10,10,10">Get Custom Data Type</Button>
+        <Button Name="SetCustomDataTypeData" Click="Set_CustomData_OnClick" HorizontalAlignment="Center" Margin="10,10,10,10">Set Custom Data Type</Button>
+        <Button Name="GetUserImage" Click="GetUserImage_OnClick" HorizontalAlignment="Center" Margin="10,10,10,10">Get User Image</Button>
+        <Button Name="GetVocab" Click="GetVocab_OnClick" HorizontalAlignment="Center" Margin="10,10,10,10">Get Vocab</Button>
+        <Button Name="DeleteConnectionInfo" Click="DeleteConnectionInfo_OnClick" HorizontalAlignment="Center" Margin="10,10,10,10">Delete connection info</Button>
+        <TextBlock Name="OutputBlock" HorizontalAlignment="Center" Margin="10,10,10,10"></TextBlock>
     </StackPanel>
 </Page>
