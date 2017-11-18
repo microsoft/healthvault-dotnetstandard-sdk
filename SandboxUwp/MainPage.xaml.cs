@@ -10,6 +10,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Xml.Linq;
 using Microsoft.HealthVault.Client;
 using Microsoft.HealthVault.Clients;
 using Microsoft.HealthVault.Configuration;
@@ -35,6 +36,9 @@ namespace SandboxUwp
         private IClock _clock;
         private IDateTimeZoneProvider _dateTimeZoneProvider;
 
+        private const string AppId = "d6318dff-5352-4a10-a140-6c82c6536a3b";
+        private const string CustomDataTypeSubtypeTag = "custom-data-type";
+
         public MainPage()
         {
             InitializeComponent();
@@ -49,9 +53,15 @@ namespace SandboxUwp
 
             var configuration = new HealthVaultConfiguration
             {
-                MasterApplicationId = Guid.Parse("d6318dff-5352-4a10-a140-6c82c6536a3b")
+                MasterApplicationId = Guid.Parse(AppId)
             };
             _connection = HealthVaultConnectionFactory.Current.GetOrCreateSodaConnection(configuration);
+
+            HealthVaultConnectionFactory.ThingTypeRegistrar.RegisterApplicationSpecificHandler(
+                applicationId: AppId,
+                subtypeTag: CustomDataTypeSubtypeTag,
+                applicationSpecificHandlerClass: typeof(CustomDataType));
+
             await _connection.AuthenticateAsync();
 
             OutputBlock.Text = "Connected.";
@@ -171,6 +181,85 @@ namespace SandboxUwp
             {
                 OutputBlock.Text = $"There are {vocab.Count} items";
             }
+        }
+
+        // Get custom data from HealthVault
+        private async void Get_CustomData_OnClick(object sender, RoutedEventArgs e)
+        {
+            PersonInfo personInfo = await _connection.GetPersonInfoAsync();
+            HealthRecordInfo recordInfo = personInfo.SelectedRecord;
+            IThingClient thingClient = _connection.CreateThingClient();
+
+            IReadOnlyCollection<ApplicationSpecific> healthData = await thingClient.GetThingsAsync<ApplicationSpecific>(recordInfo.Id);
+
+            if (healthData.Count == 0)
+            {
+                OutputBlock.Text = "No custom data found.";
+            }
+            else
+            {
+                List<CustomDataType> customDataTypes = new List<CustomDataType>();
+
+                foreach (ApplicationSpecific customDataType in healthData)
+                {
+                    CustomDataType customData = new CustomDataType
+                    {
+                        Values = new List<double>()
+                    };
+
+                    var appSpecificXml = customDataType?.ApplicationSpecificXml;
+                    if (appSpecificXml.Count <= 0)
+                    {
+                        continue;
+                    }
+                    XDocument doc = XDocument.Parse(appSpecificXml[0].CreateNavigator()?.OuterXml);
+
+                    foreach (XElement element in doc.Descendants(CustomDataTypeSubtypeTag))
+                    {
+                        customData.StartTime = long.Parse(element.Attribute("StartTime").Value);
+                        customData.EndTime = long.Parse(element.Attribute("EndTime").Value);
+
+                        var array = element.Attribute("Values")?.Value.Split(',');
+                        if (array == null)
+                        {
+                            continue;
+                        }
+
+                        foreach (var entry in array)
+                        {
+                            double pressure = double.Parse(entry);
+                            customData.Values.Add(pressure);
+                        }
+                        customDataTypes.Add(customData);
+                    }
+
+                }
+                OutputBlock.Text = "Custom data found.";
+            }
+        }
+
+        // Store custom data in HealthVault
+        private async void Set_CustomData_OnClick(object sender, RoutedEventArgs e)
+        {
+            PersonInfo personInfo = await _connection.GetPersonInfoAsync();
+            HealthRecordInfo recordInfo = personInfo.SelectedRecord;
+            IThingClient thingClient = _connection.CreateThingClient();
+
+            await thingClient.CreateNewThingsAsync(
+                recordInfo.Id,
+                new List<CustomDataType>
+                {
+                    new CustomDataType
+                    {
+                        StartTime = DateTime.Now.Ticks,
+                        EndTime = DateTime.Now.Ticks + 1200,
+                        Values = new List<double> { 1.8, 2.5, 2.6, 3.7 },
+                        ApplicationId = AppId,
+                        SubtypeTag = CustomDataTypeSubtypeTag,
+                        Description = "CustomDataType"
+                    }
+                });
+            OutputBlock.Text = "Created custom data type.";
         }
 
         private async void DeleteConnectionInfo_OnClick(object sender, RoutedEventArgs e)
