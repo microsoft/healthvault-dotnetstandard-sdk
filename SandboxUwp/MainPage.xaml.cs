@@ -214,6 +214,7 @@ namespace SandboxUwp
                     }
                     XDocument doc = XDocument.Parse(appSpecificXml[0].CreateNavigator()?.OuterXml);
 
+
                     foreach (XElement element in doc.Descendants("CustomDataType"))
                     {
                         customData.StartTime = long.Parse(element.Attribute("StartTime").Value);

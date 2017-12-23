@@ -32,11 +32,9 @@ namespace Microsoft.HealthVault.RestApi.Generated.Models
         /// </summary>
         /// <param name="goalRecommendations">The collection of goal
         /// recommendations</param>
-        /// <param name="nextLink">The URI for the next page of data</param>
-        public GoalRecommendationsResponse(IList<GoalRecommendationInstance> goalRecommendations = default(IList<GoalRecommendationInstance>), string nextLink = default(string))
+        public GoalRecommendationsResponse(IList<GoalRecommendationInstance> goalRecommendations = default(IList<GoalRecommendationInstance>))
         {
             GoalRecommendations = goalRecommendations;
-            NextLink = nextLink;
             CustomInit();
         }
 
@@ -50,12 +48,6 @@ namespace Microsoft.HealthVault.RestApi.Generated.Models
         /// </summary>
         [JsonProperty(PropertyName = "goalRecommendations")]
         public IList<GoalRecommendationInstance> GoalRecommendations { get; set; }
-
-        /// <summary>
-        /// Gets or sets the URI for the next page of data
-        /// </summary>
-        [JsonProperty(PropertyName = "nextLink")]
-        public string NextLink { get; set; }
 
     }
 }

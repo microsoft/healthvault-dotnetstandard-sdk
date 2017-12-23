@@ -7,6 +7,7 @@ namespace Microsoft.HealthVault.RestApi.Generated.Models
     using Microsoft.HealthVault;
     using Microsoft.HealthVault.RestApi;
     using Microsoft.HealthVault.RestApi.Generated;
+    using Microsoft.Rest;
     using Newtonsoft.Json;
     using System.Collections;
     using System.Collections.Generic;
@@ -29,18 +30,6 @@ namespace Microsoft.HealthVault.RestApi.Generated.Models
         /// <summary>
         /// Initializes a new instance of the ActionPlanTaskInstance class.
         /// </summary>
-        /// <param name="id">The Id of the task instance</param>
-        /// <param name="status">The status of the task. Possible values
-        /// include: 'Unknown', 'Archived', 'InProgress', 'Recommended',
-        /// 'Completed', 'Template'</param>
-        /// <param name="startDate">The date that the task was started.
-        /// Read-only</param>
-        /// <param name="endDate">The date that the task was ended.
-        /// Read-only</param>
-        /// <param name="organizationId">The ID of the organization that owns
-        /// this task. Read-only</param>
-        /// <param name="organizationName">The name of the organization that
-        /// owns this task. Read-only</param>
         /// <param name="name">The friendly name of the task</param>
         /// <param name="shortDescription">The short description of the
         /// task</param>
@@ -54,7 +43,6 @@ namespace Microsoft.HealthVault.RestApi.Generated.Models
         /// editor for the task. Possible values include: 'Unknown',
         /// 'BloodPressure', 'Other'</param>
         /// <param name="trackingPolicy">The tracking policy</param>
-        /// <param name="signupName">The text shown during task signup.</param>
         /// <param name="associatedPlanId">The ID of the associated plan. This
         /// is not needed when adding a task as part of a new plan</param>
         /// <param name="associatedObjectiveIds">The list of objective IDs the
@@ -62,11 +50,26 @@ namespace Microsoft.HealthVault.RestApi.Generated.Models
         /// <param name="completionType">The Completion Type of the Task.
         /// Possible values include: 'Unknown', 'Frequency',
         /// 'Scheduled'</param>
+        /// <param name="id">The Id of the task instance</param>
+        /// <param name="status">The status of the task. Possible values
+        /// include: 'Unknown', 'Archived', 'InProgress', 'Recommended',
+        /// 'Completed', 'Template'</param>
+        /// <param name="startDate">The date that the task was started.
+        /// Read-only</param>
+        /// <param name="endDate">The date that the task was ended.
+        /// Read-only</param>
+        /// <param name="organizationId">The ID of the organization that owns
+        /// this task. Read-only</param>
+        /// <param name="organizationName">The name of the organization that
+        /// owns this task. Read-only</param>
+        /// <param name="taskKey">The task key a provider sets and maintains
+        /// for a user's created task</param>
+        /// <param name="signupName">The text shown during task signup.</param>
         /// <param name="frequencyTaskCompletionMetrics">Completion metrics for
         /// frequency based tasks</param>
-        /// <param name="scheduledTaskCompletionMetrics">Completion metrics for
-        /// schedule based tasks</param>
-        public ActionPlanTaskInstance(string id = default(string), string status = default(string), System.DateTime? startDate = default(System.DateTime?), System.DateTime? endDate = default(System.DateTime?), string organizationId = default(string), string organizationName = default(string), string name = default(string), string shortDescription = default(string), string longDescription = default(string), string imageUrl = default(string), string thumbnailImageUrl = default(string), string taskType = default(string), ActionPlanTrackingPolicy trackingPolicy = default(ActionPlanTrackingPolicy), string signupName = default(string), string associatedPlanId = default(string), IList<string> associatedObjectiveIds = default(IList<string>), string completionType = default(string), ActionPlanFrequencyTaskCompletionMetrics frequencyTaskCompletionMetrics = default(ActionPlanFrequencyTaskCompletionMetrics), ActionPlanScheduledTaskCompletionMetrics scheduledTaskCompletionMetrics = default(ActionPlanScheduledTaskCompletionMetrics))
+        /// <param name="schedules">Schedules for when a task should be
+        /// completed.</param>
+        public ActionPlanTaskInstance(string name, string shortDescription, string longDescription, string imageUrl, string thumbnailImageUrl, string taskType, ActionPlanTrackingPolicy trackingPolicy, System.Guid associatedPlanId, IList<System.Guid?> associatedObjectiveIds, string completionType, System.Guid? id = default(System.Guid?), string status = default(string), System.DateTime? startDate = default(System.DateTime?), System.DateTime? endDate = default(System.DateTime?), string organizationId = default(string), string organizationName = default(string), System.Guid? taskKey = default(System.Guid?), string signupName = default(string), ActionPlanFrequencyTaskCompletionMetrics frequencyTaskCompletionMetrics = default(ActionPlanFrequencyTaskCompletionMetrics), IList<Schedule> schedules = default(IList<Schedule>))
         {
             Id = id;
             Status = status;
@@ -74,6 +77,7 @@ namespace Microsoft.HealthVault.RestApi.Generated.Models
             EndDate = endDate;
             OrganizationId = organizationId;
             OrganizationName = organizationName;
+            TaskKey = taskKey;
             Name = name;
             ShortDescription = shortDescription;
             LongDescription = longDescription;
@@ -86,7 +90,7 @@ namespace Microsoft.HealthVault.RestApi.Generated.Models
             AssociatedObjectiveIds = associatedObjectiveIds;
             CompletionType = completionType;
             FrequencyTaskCompletionMetrics = frequencyTaskCompletionMetrics;
-            ScheduledTaskCompletionMetrics = scheduledTaskCompletionMetrics;
+            Schedules = schedules;
             CustomInit();
         }
 
@@ -99,7 +103,7 @@ namespace Microsoft.HealthVault.RestApi.Generated.Models
         /// Gets or sets the Id of the task instance
         /// </summary>
         [JsonProperty(PropertyName = "id")]
-        public string Id { get; set; }
+        public System.Guid? Id { get; set; }
 
         /// <summary>
         /// Gets or sets the status of the task. Possible values include:
@@ -134,6 +138,13 @@ namespace Microsoft.HealthVault.RestApi.Generated.Models
         /// </summary>
         [JsonProperty(PropertyName = "organizationName")]
         public string OrganizationName { get; set; }
+
+        /// <summary>
+        /// Gets or sets the task key a provider sets and maintains for a
+        /// user's created task
+        /// </summary>
+        [JsonProperty(PropertyName = "taskKey")]
+        public System.Guid? TaskKey { get; set; }
 
         /// <summary>
         /// Gets or sets the friendly name of the task
@@ -192,13 +203,13 @@ namespace Microsoft.HealthVault.RestApi.Generated.Models
         /// adding a task as part of a new plan
         /// </summary>
         [JsonProperty(PropertyName = "associatedPlanId")]
-        public string AssociatedPlanId { get; set; }
+        public System.Guid AssociatedPlanId { get; set; }
 
         /// <summary>
         /// Gets or sets the list of objective IDs the task is associated with
         /// </summary>
         [JsonProperty(PropertyName = "associatedObjectiveIds")]
-        public IList<string> AssociatedObjectiveIds { get; set; }
+        public IList<System.Guid?> AssociatedObjectiveIds { get; set; }
 
         /// <summary>
         /// Gets or sets the Completion Type of the Task. Possible values
@@ -214,10 +225,65 @@ namespace Microsoft.HealthVault.RestApi.Generated.Models
         public ActionPlanFrequencyTaskCompletionMetrics FrequencyTaskCompletionMetrics { get; set; }
 
         /// <summary>
-        /// Gets or sets completion metrics for schedule based tasks
+        /// Gets or sets schedules for when a task should be completed.
         /// </summary>
-        [JsonProperty(PropertyName = "scheduledTaskCompletionMetrics")]
-        public ActionPlanScheduledTaskCompletionMetrics ScheduledTaskCompletionMetrics { get; set; }
+        [JsonProperty(PropertyName = "schedules")]
+        public IList<Schedule> Schedules { get; set; }
 
+        /// <summary>
+        /// Validate the object.
+        /// </summary>
+        /// <exception cref="ValidationException">
+        /// Thrown if validation fails
+        /// </exception>
+        public virtual void Validate()
+        {
+            if (Name == null)
+            {
+                throw new ValidationException(ValidationRules.CannotBeNull, "Name");
+            }
+            if (ShortDescription == null)
+            {
+                throw new ValidationException(ValidationRules.CannotBeNull, "ShortDescription");
+            }
+            if (LongDescription == null)
+            {
+                throw new ValidationException(ValidationRules.CannotBeNull, "LongDescription");
+            }
+            if (ImageUrl == null)
+            {
+                throw new ValidationException(ValidationRules.CannotBeNull, "ImageUrl");
+            }
+            if (ThumbnailImageUrl == null)
+            {
+                throw new ValidationException(ValidationRules.CannotBeNull, "ThumbnailImageUrl");
+            }
+            if (TaskType == null)
+            {
+                throw new ValidationException(ValidationRules.CannotBeNull, "TaskType");
+            }
+            if (TrackingPolicy == null)
+            {
+                throw new ValidationException(ValidationRules.CannotBeNull, "TrackingPolicy");
+            }
+            if (AssociatedObjectiveIds == null)
+            {
+                throw new ValidationException(ValidationRules.CannotBeNull, "AssociatedObjectiveIds");
+            }
+            if (CompletionType == null)
+            {
+                throw new ValidationException(ValidationRules.CannotBeNull, "CompletionType");
+            }
+            if (Schedules != null)
+            {
+                foreach (var element in Schedules)
+                {
+                    if (element != null)
+                    {
+                        element.Validate();
+                    }
+                }
+            }
+        }
     }
 }
