@@ -10,6 +10,6 @@ The master branch represents the latest development code, and release branches a
 
 This project has adopted the [Microsoft Open Source Code of Conduct](https://opensource.microsoft.com/codeofconduct/). For more information see the [Code of Conduct FAQ](https://opensource.microsoft.com/codeofconduct/faq/) or contact [opencode@microsoft.com](mailto:opencode@microsoft.com) with any additional questions or comments.
 
-## Contributing
+### Contributing
 
 We welcome contributions in the form of bugs, code, feedback and requests. For more detailed information regarding how to contribute, see our [contribution guidelines](CONTRIBUTING.md)
